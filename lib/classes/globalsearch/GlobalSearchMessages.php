@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * GlobalSearchModule for messages
+ *
+ * @author      Thomas Hackl <thomas.hackl@uni-passau.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       4.1
+ */
+class GlobalSearchMessages extends GlobalSearchModule
+{
+    /**
+     * Returns the displayname for this module
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return _('Nachrichten');
+    }
+
+    /**
+     * Transforms the search request into an sql statement, that provides the id (same as getId) as type and
+     * the object id, that is later passed to the filter.
+     *
+     * This function is required to make use of the mysql union parallelism
+     *
+     * @param string $search the input query string
+     * @param array $filter an array with search limiting filter information (e.g. 'category', 'semester', etc.)
+     * @return string SQL Query to discover elements for the search
+     */
+    public static function getSQL($search, $filter, $limit)
+    {
+        if (!$search) {
+            return null;
+        }
+
+        $query = DBManager::get()->quote("%{$search}%");
+        $user_id = DBManager::get()->quote($GLOBALS['user']->id);
+        $sql = "SELECT SQL_CALC_FOUND_ROWS `message`.*
+                FROM `message`
+                    JOIN `message_user` USING (`message_id`)
+                WHERE `user_id` = {$user_id}
+                    AND (`subject` LIKE {$query} OR `message` LIKE {$query})
+                ORDER BY `message`.`mkdate` DESC
+                LIMIT " . $limit;
+        return $sql;
+    }
+
+    /**
+     * Returns an array of information for the found element. Following informations (key: description) are necessary
+     *
+     * - name: The name of the object
+     * - url: The url to send the user to when he clicks the link
+     *
+     * Additional informations are:
+     *
+     * - additional: Subtitle for the hit
+     * - expand: Url if the user further expands the search
+     * - img: Avatar for the
+     *
+     * @param string $message_id
+     * @param striing $search
+     * @return array
+     */
+    public static function filter($message_id, $search)
+    {
+        $message = Message::buildExisting($message_id);
+
+        $username = $additional = _('unbekannt');
+        if ((string)$message->autor_id === '____%system%____') {
+            $username  = _('System');
+            $additonal = _('Systemnachricht');
+        } else {
+            $user = self::fromCache("user/{$message->autor_id}", function () use ($message) {
+                return User::findFull($message->autor_id);
+            });
+
+            if ($user) {
+                $username = $user->getFullName();
+                $additional = sprintf(
+                    '<a href="%s">%s</a>',
+                    URLHelper::getLink('dispatch.php/profile', ['username' => $user->username]),
+                    self::mark($user->getFullname(), $search)
+                );
+            }
+        }
+
+        return [
+            'name'        => self::mark($message->subject, $search),
+            'url'         => URLHelper::getURL("dispatch.php/messages/overview/{$message->id}", [], true),
+            'img'         => Icon::create('mail', 'clickable')->asImagePath(),
+            'date'        => strftime('%x', $message->mkdate),
+            'description' => self::mark($message->message, $search, true),
+            'additional'  => $additional,
+            'expand'      => self::getSearchURL($search),
+            'user'        => $username,
+        ];
+    }
+
+    /**
+     * Returns the URL that can be called for a full search.
+     *
+     * @param string $searchterm what to search for?
+     * @return string URL to the full search, containing the searchterm and the category
+     */
+    public static function getSearchURL($searchterm)
+    {
+        return URLHelper::getURL('dispatch.php/search/globalsearch', [
+            'q'        => $searchterm,
+            'category' => self::class
+        ]);
+    }
+
+}

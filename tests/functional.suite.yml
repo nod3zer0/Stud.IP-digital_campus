@@ -1,0 +1,6 @@
+bootstrap: _bootstrap.php
+error_level: E_ALL & ~E_STRICT & ~E_DEPRECATED & ~E_NOTICE
+actor: FunctionalTester
+modules:
+    enabled:
+        - \Helper\Functional

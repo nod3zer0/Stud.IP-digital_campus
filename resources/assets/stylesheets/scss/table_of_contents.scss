@@ -1,0 +1,261 @@
+$base-gray-color-5: mix($base-gray, #fff, 5%);
+
+ul.numberedchapters {
+    counter-reset: section;
+    list-style-type: none;
+
+    a:before {
+        counter-increment: section;
+        content: counters(section,".") " ";
+    }
+}
+
+label {
+    cursor: pointer;
+    margin-top: 7px;
+}
+
+label[for=cb-toc], label[for=cb-fullscreen] {
+}
+
+
+#cb-toc, #cb-toc-close {
+    visibility: hidden;
+    display: none;
+}
+
+#cb-toc:checked + .check-box + #cb-toc-close + article.toc_overview, button#toc-button:hover article.toc_overview {
+    visibility: visible;
+    width: 540px;
+    overflow: hidden;
+}
+
+#cb-toc-close:checked article.toc_overview {
+    visibility: hidden;
+    width: 0;
+}
+
+.toc_overview {
+    visibility: hidden;
+    width: 0%;
+    z-index: 100;
+    position: absolute;
+    right: 2px;
+    top: 176px;
+    background-color: $white;
+    min-height: 10%;
+    max-height: 100%;
+    border: 1px solid #d0d7e3;
+    margin-bottom: 10px;
+    -webkit-box-shadow: 2px 2px #ccc;
+    box-shadow: 2px 2px #ccc;
+
+
+    > section {
+        max-width: 100%;
+        overflow-y: scroll;
+        height: 580px;
+        margin-top: 7px;
+    }
+}
+
+#toc {
+    margin: 10px;
+    text-align: left;
+}
+
+#toc_header {
+    height: 58px;
+    overflow: hidden;
+    background-color: $white;
+    color: $black !important;
+    margin-bottom: -0.5em;
+    border-bottom: thin solid #d0d7e3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    label {
+        margin-right: 15px;
+    }
+}
+
+#toc_h1 {
+    color: $black;
+    font-weight: 500;
+    margin-left: 10px;
+    margin-bottom: unset;
+}
+.toc_transform {
+    transition: all 0.8s ease!important;
+}
+
+#main_content {
+    opacity: 1;
+
+}
+
+/* Table of contents */
+#toc_nav {
+    height: 40px;
+    position: fixed;
+    background-color: $brand-color-darker;
+}
+
+#toc_icon {
+    float: right;
+}
+
+section > .toc {
+    > li {
+        margin-bottom: 1.4em;
+        font-size: 1.2em;
+    }
+}
+
+.toc {
+    list-style: none;
+    padding: 0;
+    margin-left: 2%;
+
+    #chapter0 {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    > li {
+        font-size: 16px;
+        padding-top: 20px;
+
+        img, svg {
+            vertical-align: bottom;
+        }
+    }
+
+    li#chap1 {
+        margin-bottom: 1.8em;
+        font-size: 1em;
+
+        > div {
+            border-bottom: 1px solid #E9E9E9;
+            margin-bottom: 5px;
+        }
+    }
+
+    > li a {
+        display: inline-flex;
+        width: 100%;
+    }
+
+    li div {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    li div:hover {
+        background-color: $light-gray-color-20;
+        color: $base-color;
+
+    }
+
+    li.active > div {
+        color: $black;
+    }
+
+    li.active > div:hover {
+        color: $white;
+    }
+
+    li.active > div a {
+        color: $black;
+    }
+
+    .toc > li {
+        font-size: 14px;
+        padding-top: 3px;
+    }
+
+    .toc .toc {
+        list-style: disc;
+        margin-left: 4%;
+    }
+
+    .toc >li .selected {
+        font-weight: 700;
+        background-color: $light-gray-color-20;
+    }
+
+}
+
+#wikifooter {
+    background-color: $content-color-20;
+    border-top: 1px solid $brand-color-darker;
+    clear: both;
+    margin-left: 0;
+    padding: 0;
+    height: 58px;
+}
+
+#toc_bc_nav {
+    position: absolute;
+    right: 20px;
+}
+
+@media (max-width: 767px) {
+
+    #main_content header {
+        width:375px;
+    }
+
+    #toc {
+        max-width: 94%!important;
+    }
+
+    ul.breadcrumb {
+        list-style: none;
+        font-size: 18px;
+        padding-left: 10px;
+        width: 70%;
+    }
+
+    #toc_header {
+        width: 90%;
+    }
+
+    .consuming_mode .toc_overview {
+        top: 51px!important;
+    }
+}
+
+.wiki {
+    border: unset!important;
+}
+
+.action-menu {
+
+}
+
+#bc_username, #bc_version {
+    display: inline-block;
+}
+
+.consuming_mode .toc_overview {
+    top: 6px;
+}
+
+
+#toc-button {
+    background-image: url(../images/icons/blue/table-of-contents.svg);
+    background-size: 24px;
+
+    height: 24px;
+    width: 24px;
+    margin: 0 .5em;
+    border: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: 24px;
+    cursor: pointer;
+    outline: none;
+}

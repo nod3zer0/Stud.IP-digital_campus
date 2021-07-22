@@ -1,0 +1,252 @@
+$action-menu-icon-size: 20px;
+$action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
+
+.action-menu {
+    display: inline-block;
+    position: relative;
+    text-align: right;
+    vertical-align: middle;
+
+    &:not(.is-open) .action-menu-content {
+        display: none;
+    }
+}
+
+.action-menu-wrapper {
+    position: absolute;
+
+    &:not(.is-open) {
+        display: none;
+    }
+}
+
+.action-menu,
+.action-menu-wrapper {
+    z-index: 2;
+
+    .action-menu-content {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+
+        padding: 4px 8px;
+
+        background: white;
+        border: thin solid $dark-gray-color-45;
+        box-shadow: $action-menu-shadow;
+        font-weight: normal;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .action-menu-icon {
+        z-index: 1;
+
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+
+        // Create animated icon that changes to close icon on activation/hover
+        div {
+            width: ($action-menu-icon-size / 4);
+            height: ($action-menu-icon-size / 4);
+            transform: translate((-($action-menu-icon-size / 8)), 0);
+            transition: all .25s ease-in-out;
+
+            display: block;
+            position: absolute;
+            background:  $base-color;
+            border-radius: 50%;
+            opacity: 1;
+            left: 50%;
+
+            &:nth-child(1) {
+                top: 0px;
+            }
+
+            &:nth-child(2) {
+                top: ($action-menu-icon-size / 2);
+                transform: translate((-($action-menu-icon-size / 8)), (-($action-menu-icon-size / 8)));
+            }
+
+            &:nth-child(3) {
+                bottom: 0;
+            }
+        }
+    }
+
+    .action-menu-title {
+        font-weight: bold;
+        margin: 0.2em 0 0.3em;
+    }
+
+    .action-menu-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .action-menu-item {
+        line-height: 1;
+        padding: 0;
+
+        > a,
+        > label {
+            margin: 0;
+            padding: 3px 0;
+            display: block;
+        }
+
+        &.action-menu-item-disabled {
+            > a,
+            > label {
+                &,
+                &:hover {
+                    color: $dark-gray-color-80;
+                    cursor: default;
+                }
+            }
+        }
+
+        a img,
+        a svg,
+        .action-menu-no-icon,
+        input[type="image"] {
+            display: inline-block;
+            margin: 0 0.25em;
+            vertical-align: middle;
+
+            width: $action-menu-icon-size;
+            height: $action-menu-icon-size;
+        }
+
+        > button {
+            background: transparent;
+            border: 0;
+            line-height: 20px;
+            margin: 0;
+            padding: 3px 0;
+        }
+
+        > label,
+        > button {
+            color: $base-color;
+            cursor: pointer;
+            &:hover {
+                color: $active-color;
+            }
+        }
+    }
+
+    &.is-open {
+        z-index: 3;
+        .action-menu-icon {
+            div {
+                border-radius: 0;
+
+                &:nth-child(1) {
+                    left: 0;
+                    transform: rotate(45deg) translate((($action-menu-icon-size / 4) + 0.5), (($action-menu-icon-size / 4) + 0.5));
+                    width: 100%;
+                }
+
+                &:nth-child(2) {
+                    opacity: 0;
+                }
+
+                &:nth-child(3) {
+                    left: 0;
+                    transform: rotate(-45deg) translate(($action-menu-icon-size / 4), (-($action-menu-icon-size / 4)));
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    &.is-reversed {
+        .action-menu-content {
+            top: auto;
+            bottom: -4px;
+
+            .action-menu-list .action-menu-item:last-of-type {
+                padding-right: 20px;
+            }
+        }
+    }
+}
+
+
+/* copied from copyable-links.less and modified */
+.js-action-confirm-animation {
+    $animation-name: js-action-confirm-confirmation;
+    $animation-duration: 2s;
+
+    // Position confirmation message above the link
+    position: relative;
+
+    div {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        text-align: center;
+
+        @include icon(before, check-circle, status-green, 16px, 5px);
+    }
+
+    // Flip the link and confirmation message along the x axis
+    a,
+    div {
+        backface-visibility: hidden;
+        pointer-events: none;
+    }
+
+    a {
+        @keyframes #{$animation-name}-front {
+            0% {
+                opacity: 1;
+                transform: rotateX(0);
+            }
+            33% {
+                opacity: 0;
+                transform: rotateX(180deg);
+            }
+            66% {
+                opacity: 0;
+                transform: rotateX(180deg);
+            }
+            to {
+                opacity: 1;
+                transform: rotateX(0);
+            }
+        }
+        animation: #{$animation-name}-front $animation-duration linear;
+    }
+
+    div {
+        @keyframes #{$animation-name}-back {
+            0% {
+                opacity: 0;
+                transform: rotateX(180deg);
+            }
+            33% {
+                opacity: 1;
+                transform: rotateX(0);
+            }
+            66% {
+                opacity: 1;
+                transform: rotateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: rotateX(180deg);
+            }
+        }
+        animation: #{$animation-name}-back $animation-duration linear;
+    }
+}

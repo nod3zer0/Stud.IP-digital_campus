@@ -1,0 +1,439 @@
+/* --- ablaufplan / dates --------------------------------------------------- */
+.dates_items th, .dates_items td {
+    border-bottom: 3px solid #fff;
+}
+
+.dates_opened td {
+    border-bottom: 3px solid #f3f5f8;
+}
+
+.dates_content td {
+    padding: 10px;
+}
+
+#schedule {
+    width: 100%;
+    height: 100%;
+}
+
+#schedule_headings {
+    margin-left: 41px;
+    background-color: #e8eef7;
+}
+
+table.schedule_headings td {
+    background-color: #e8eef7;
+}
+
+div.schedule_day {
+    border-right: 3px double #ddd;
+    position: relative;
+}
+
+div.schedule_marker {
+    border-bottom: 1px dotted #ddd;
+    border-top: 1px solid #ddd;
+    padding: 0;
+}
+
+div.schedule_hours {
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    color: black;
+    padding-bottom: 1px;
+    padding-right: 3px;
+}
+
+div.schedule_entry {
+    font-size: 10px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0 0 2px;
+    position: absolute;
+
+    &.clickable { cursor: pointer; }
+
+    dl {
+        color: white;
+        height: 100%;
+        margin: 0;
+
+        &.hover:hover { opacity: 0.7; }
+
+        a {
+            color: white;
+            &:hover { text-decoration: underline; }
+        }
+        dd {
+            margin: 0;
+            overflow: hidden;
+            padding: 2px;
+            word-wrap: break-word;
+            font-weight: 600;
+        }
+    }
+}
+
+div.snatch {
+    bottom: 4px;
+    cursor: ns-resize;
+    padding-bottom: 2px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+
+    div {
+        border-top: 3px double white;
+        cursor: ns-resize;
+        height: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 10px;
+    }
+}
+
+#schedule_new_entry {
+    background-color: #e8eef7;
+    border: 2px solid #e0e0f0;
+    height: 230px;
+    position: absolute;
+    width: 400px;
+    z-index: 3;
+}
+#schedule_entry_new {
+    dl {
+        border: 1px solid #5c2d64;
+        background-color: #7c5783;
+    }
+    dt { background-color: #5c2d64; }
+}
+
+div.schedule_edit_entry, #schedule_settings {
+    background-color: #E8EEF7;
+    border: 2px solid #E0E0F0;
+    height: auto;
+    left: 50%;
+    margin-left: -25%;
+    max-height: 80em;
+    min-height: 15em;
+    min-width: 700px;
+    padding-bottom: 1em;
+    position: absolute;
+    top: 180px;
+    width: 50%;
+    z-index: 4;
+}
+
+div.schedule_edit_entry > form {
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+#schedule_entry_hours {
+    display: inline;
+    padding: 2px;
+}
+
+.schedule_icons {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+div.invisible_entry {
+    opacity: 0.8;
+}
+
+span.invisible_entry {
+    background-color: #600;
+    font-style: italic;
+}
+
+div.schedule_settings {
+    float: left;
+    margin-left: 10px;
+
+    div {
+        font-weight: bold;
+    }
+}
+
+.schedule-dialog {
+    display: block;
+    outline: 0px none;
+    z-index: 1002;
+
+    position: absolute;
+    height: 400px;
+    width: 600px;
+    top: 50%;
+    left: 50%;
+
+    margin: -200px 0 0 -300px;
+}
+
+td.schedule-adminbind {
+    & > span {
+        margin-right: 10px;
+    }
+}
+
+#color_picker {
+    div {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    span {
+        flex: 0 0 auto;
+
+        padding: 3px;
+        vertical-align: middle;
+    }
+
+    input[type="radio"] {
+        display: none;
+
+        &:checked + label {
+            outline: 1px solid @black;
+
+            position: relative;
+            .icon('before', 'accept', 'info', 24px);
+            &::before {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                filter: drop-shadow(0 0 2px @white);
+            }
+        }
+    }
+
+    label {
+        border: 1px solid @white;
+        display: inline-block;
+        height: 32px;
+        width: 32px;
+
+        &.schedule-category1 {
+            background-color: @calendar-category-1;
+        }
+        &.schedule-category2 {
+            background-color: @calendar-category-2;
+        }
+        &.schedule-category3 {
+            background-color: @calendar-category-3;
+        }
+        &.schedule-category4 {
+            background-color: @calendar-category-4;
+        }
+        &.schedule-category5 {
+            background-color: @calendar-category-5;
+        }
+        &.schedule-category6 {
+            background-color: @calendar-category-6;
+        }
+        &.schedule-category7 {
+            background-color: @calendar-category-7;
+        }
+        &.schedule-category8 {
+            background-color: @calendar-category-8;
+        }
+        &.schedule-category9 {
+            background-color: @calendar-category-9;
+        }
+        &.schedule-category10 {
+            background-color: @calendar-category-10;
+        }
+        &.schedule-category11 {
+            background-color: @calendar-category-11;
+        }
+        &.schedule-category12 {
+            background-color: @calendar-category-12;
+        }
+        &.schedule-category13 {
+            background-color: @calendar-category-13;
+        }
+        &.schedule-category14 {
+            background-color: @calendar-category-14;
+        }
+        &.schedule-category15 {
+            background-color: @calendar-category-15;
+        }
+        &.schedule-category255 {
+            background-color: @calendar-category-255;
+        }
+    }
+}
+
+div.schedule_entry {
+
+    dl {
+        &.schedule-category1 {
+            background-color: @calendar-category-1-aux;
+            border: 1px solid @calendar-category-1;
+            dt {
+                background-color: @calendar-category-1;
+                color: contrast(@calendar-category-1, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-1-aux, black, white);
+            }
+        }
+        &.schedule-category2 {
+            background-color: @calendar-category-2-aux;
+            border: 1px solid @calendar-category-2;
+            dt {
+                background-color: @calendar-category-2;
+                color: contrast(@calendar-category-2, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-2-aux, black, white);
+            }
+        }
+        &.schedule-category3 {
+            background-color: @calendar-category-3-aux;
+            border: 1px solid @calendar-category-3;
+            dt {
+                background-color: @calendar-category-3;
+                color: contrast(@calendar-category-3, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-3-aux, black, white);
+            }
+        }
+        &.schedule-category4 {
+            background-color: @calendar-category-4-aux;
+            border: 1px solid @calendar-category-4;
+            dt {
+                background-color: @calendar-category-4;
+                color: contrast(@calendar-category-4, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-4-aux, black, white);
+            }
+        }
+        &.schedule-category5 {
+            background-color: @calendar-category-5-aux;
+            border: 1px solid @calendar-category-5;
+            dt {
+                background-color: @calendar-category-5;
+                color: contrast(@calendar-category-5, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-5-aux, black, white);
+            }
+        }
+        &.schedule-category6 {
+            background-color: @calendar-category-6-aux;
+            border: 1px solid @calendar-category-6;
+            dt {
+                background-color: @calendar-category-6;
+                color: contrast(@calendar-category-6, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-6-aux, black, white);
+            }
+        }
+        &.schedule-category7 {
+            background-color: @calendar-category-7-aux;
+            border: 1px solid @calendar-category-7;
+            dt {
+                background-color: @calendar-category-7;
+                color: contrast(@calendar-category-7, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-7-aux, black, white);
+            }
+        }
+        &.schedule-category8 {
+            background-color: @calendar-category-8-aux;
+            border: 1px solid @calendar-category-8;
+            dt {
+                background-color: @calendar-category-8;
+                color: contrast(@calendar-category-8, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-8-aux, black, white);
+            }
+        }
+        &.schedule-category9 {
+            background-color: @calendar-category-9-aux;
+            border: 1px solid @calendar-category-9;
+            dt {
+                background-color: @calendar-category-9;
+                color: contrast(@calendar-category-9, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-9-aux, black, white);
+            }
+        }
+        &.schedule-category10 {
+            background-color: @calendar-category-10-aux;
+            border: 1px solid @calendar-category-10;
+            dt {
+                background-color: @calendar-category-10;
+                color: contrast(@calendar-category-10, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-10-aux, black, white);
+            }
+        }
+        &.schedule-category11 {
+            background-color: @calendar-category-11-aux;
+            border: 1px solid @calendar-category-11;
+            dt {
+                background-color: @calendar-category-11;
+                color: contrast(@calendar-category-11, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-11-aux, black, white);
+            }
+        }
+        &.schedule-category12 {
+            background-color: @calendar-category-12-aux;
+            border: 1px solid @calendar-category-12;
+            dt {
+                background-color: @calendar-category-12;
+                color: contrast(@calendar-category-12, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-12-aux, black, white);
+            }
+        }
+        &.schedule-category13 {
+            background-color: @calendar-category-13-aux;
+            border: 1px solid @calendar-category-13;
+            dt {
+                background-color: @calendar-category-13;
+                color: contrast(@calendar-category-13, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-13-aux, black, white);
+            }
+        }
+        &.schedule-category14 {
+            background-color: @calendar-category-14-aux;
+            border: 1px solid @calendar-category-14;
+            dt {
+                background-color: @calendar-category-14;
+                color: contrast(@calendar-category-14, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-14-aux, black, white);
+            }
+        }
+        &.schedule-category15 {
+            background-color: @calendar-category-15-aux;
+            border: 1px solid @calendar-category-15;
+            dt {
+                background-color: @calendar-category-15;
+                color: contrast(@calendar-category-15, black, white);
+            }
+            dd {
+                color: contrast(@calendar-category-15-aux, black, white);
+            }
+        }
+    }
+}

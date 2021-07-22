@@ -1,0 +1,587 @@
+// TODO: LESSify
+
+/* --- Styles fuer Terminkalender ------------------------------------------- */
+a.day {
+    font-weight: bold;
+}
+
+a.sday {
+    color: @red;
+    font-weight: bold;
+}
+
+a.hday {
+    color: @red-80;
+    font-weight: bold;
+}
+
+span.kwmin {
+    color: @dark-gray-color-80;
+    font-weight: bold;
+}
+
+a.lightday {
+    color: @base-color-40;
+    font-weight: bold;
+}
+
+a.lightsday {
+    color: @red-40;
+    font-weight: bold;
+}
+
+.inday {
+    font-size: 8pt;
+}
+
+.precol1w {
+    font-size: 12pt;
+    font-weight: bold;
+    color: @light-gray-color;
+    text-align: center;
+    vertical-align: top;
+}
+
+.precol2w {
+    font-size: 8pt;
+    font-weight: bold;
+    color: @light-gray-color;
+    text-align: center;
+}
+
+td.calhead, div.calhead {
+    font-size: 18pt;
+    font-weight: bold;
+    color: @light-gray-color;
+    text-align: center;
+}
+
+a:link.calhead {
+    color: @base-color-60;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+a:hover.calhead {
+    color: @red-60;
+}
+
+.calhead label {
+  cursor: pointer;
+  &:hover {
+    color: @base-color-40;
+  }
+
+  .media-breakpoint-small-down({
+    .button();
+
+    img {
+      padding-left: 0.5em;
+      vertical-align: middle;
+    }
+  })
+}
+
+.celltoday {
+    background-color: @red-20;
+}
+
+td.weekend {
+    background-color: @dark-gray-color-15;
+}
+
+td.weekday {
+    background-color: @dark-gray-color-5;
+}
+
+td.current {
+    padding: 2px;
+    border: 2px solid @red;
+}
+
+table.calendar-week, table.calendar-day {
+    border-spacing: 0;
+    table-layout: fixed;
+    td {
+        padding: 0;
+    }
+}
+
+table.calendar-month {
+    width: 100%;
+    tr td {
+        max-width: 90px;
+        min-width: 90px;
+        vertical-align: top;
+    }
+}
+
+td.month {
+    background-color: fadeout(darken(@dark-gray-color-15, 5), 30);
+    padding: 3px;
+    div {
+        width: 90%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+td.lightmonth {
+    background-color: fadeout(darken(@dark-gray-color-5, 5), 30);
+    padding: 3px;
+    div {
+        width: 90%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+table.calendar-month td.calendar-month-week {
+    text-align: center;
+    vertical-align: middle;
+    height: 80px;
+    width: 80px;
+}
+
+td.weekdayevents {
+    width: 90px;
+}
+
+nav.calendar-nav {
+  display: flex;
+  align-items: center;
+  padding-bottom: 1em;
+
+  > div {
+    flex: 1 1 auto;
+  }
+
+  .calhead {
+    color: @base-color;
+  }
+}
+
+.calendar-day-edit {
+    text-align: right;
+    font-size: 0.8em;
+}
+
+.calendar-week tbody tr, .calendar-day tbody tr {
+    transition: background-color 0.3s;
+    &:hover {
+        background-color: fadeout(@dark-gray-color-5, 40%);
+    }
+    & td {
+        padding: 3px;
+        border-bottom: 1px solid @dark-gray-color-5;
+    }
+}
+
+.calendar-day-event-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    a {
+        color: @dark-gray-color;
+    }
+}
+
+.calendar-category-mixin(@color-bg) {
+    vertical-align: top;
+    font-size: 11px;
+    color: @white;
+    padding: 0;
+    /* necessary for All-day Events */
+    a {
+        color: contrast(@color-bg, black, white, 60%);
+        font-weight: 600;
+    }
+}
+
+.calendar-single-year {
+  .calendar-single-year--table {
+
+    > thead th {
+      min-width: 5em;
+      text-align: left;
+    }
+
+    .yday {
+      white-space: nowrap;
+    }
+  }
+}
+/* --- Coloring Styles for Personal TERMIN Categories ---------------------------------------------- */
+select, ul, span {
+    option, li, span, input[type="radio"] {
+        &.calendar-category1 {
+            color: @calendar-category-1;
+        }
+        &.calendar-category2 {
+            color: @calendar-category-2;
+        }
+        &.calendar-category3 {
+            color: @calendar-category-3;
+        }
+        &.calendar-category4 {
+            color: @calendar-category-4;
+        }
+        &.calendar-category5 {
+            color: @calendar-category-5;
+        }
+        &.calendar-category6 {
+            color: @calendar-category-6;
+        }
+        &.calendar-category7 {
+            color: @calendar-category-7;
+        }
+        &.calendar-category8 {
+            color: @calendar-category-8;
+        }
+        &.calendar-category9 {
+            color: @calendar-category-9;
+        }
+        &.calendar-category10 {
+            color: @calendar-category-10;
+        }
+        &.calendar-category11 {
+            color: @calendar-category-11;
+        }
+        &.calendar-category12 {
+            color: @calendar-category-12;
+        }
+        &.calendar-category13 {
+            color: @calendar-category-13;
+        }
+        &.calendar-category14 {
+            color: @calendar-category-14;
+        }
+        &.calendar-category15 {
+            color: @calendar-category-15;
+        }
+        &.calendar-category255 {
+            color: @calendar-category-255;
+        }
+    }
+}
+
+table.calendar-week, table.calendar-day {
+    &  tbody tr td {
+        &.calendar-day-event {
+            div:first-child {
+                background-color: @calendar-day-event;
+                overflow: hidden;
+            }
+            background: @calendar-day-event-aux;
+            border: solid 1px @calendar-day-event;
+            .calendar-category-mixin(@calendar-day-event-aux);
+        }
+        &.calendar-category1, &.calendar-course-category5 {
+            div:first-child {
+                background-color: @calendar-category-1;
+                overflow: hidden;
+            }
+            background: @calendar-category-1-aux;
+            border: solid 1px @calendar-category-1;
+            .calendar-category-mixin(@calendar-category-1-aux);
+        }
+        &.calendar-category2, &.calendar-course-category1 {
+            div:first-child {
+                background-color: @calendar-category-2;
+                overflow: hidden;
+            }
+            background: @calendar-category-2-aux;
+            border: solid 1px @calendar-category-2;
+            .calendar-category-mixin(@calendar-category-2-aux);
+        }
+        &.calendar-category3, &.calendar-course-category2 {
+            div:first-child {
+                background-color:  @calendar-category-3;
+                overflow: hidden;
+            }
+            background:  @calendar-category-3-aux;
+            border: solid 1px @calendar-category-3;
+            .calendar-category-mixin(@calendar-category-3-aux);
+        }
+        &.calendar-category4, &.calendar-course-category3 {
+            div:first-child {
+                background-color: @calendar-category-4;
+                overflow: hidden;
+            }
+            background: @calendar-category-4-aux;
+            border: solid 1px @calendar-category-4;
+            .calendar-category-mixin(@calendar-category-4-aux);
+        }
+        &.calendar-category5, &.calendar-course-category4 {
+            div:first-child {
+                background-color: @calendar-category-5;
+                overflow: hidden;
+            }
+            background: @calendar-category-5-aux;
+            border: solid 1px @calendar-category-5;
+            .calendar-category-mixin(@calendar-category-5-aux);
+        }
+        &.calendar-category6, &.calendar-course-category6 {
+            div:first-child {
+                background-color: @calendar-category-6;
+                overflow: hidden;
+            }
+            background: @calendar-category-6-aux;
+            border: solid 1px @calendar-category-6;
+            .calendar-category-mixin(@calendar-category-6-aux);
+        }
+        &.calendar-category7, &.calendar-course-category8 {
+            div:first-child {
+                background-color: @calendar-category-7;
+                overflow: hidden;
+            }
+            background: @calendar-category-7-aux;
+            border: solid 1px @calendar-category-7;
+            .calendar-category-mixin(@calendar-category-7-aux);
+        }
+        &.calendar-category8, &.calendar-course-category9 {
+            div:first-child {
+                background-color: @calendar-category-8;
+                overflow: hidden;
+            }
+            background: @calendar-category-8-aux;
+            border: solid 1px @calendar-category-8;
+            .calendar-category-mixin(@calendar-category-8-aux);
+        }
+        &.calendar-category9, &.calendar-course-category10 {
+            div:first-child {
+                background-color: @calendar-category-9;
+                overflow: hidden;
+            }
+            background: @calendar-category-9-aux;
+            border: solid 1px @calendar-category-9;
+            .calendar-category-mixin(@calendar-category-9-aux);
+        }
+        &.calendar-category10, &.calendar-course-category11 {
+            div:first-child {
+                background-color: @calendar-category-10;
+                overflow: hidden;
+            }
+            background: @calendar-category-10-aux;
+            border: solid 1px @calendar-category-10;
+            .calendar-category-mixin(@calendar-category-10-aux);
+        }
+        &.calendar-category11, &.calendar-course-category12 {
+            div:first-child {
+                background-color: @calendar-category-11;
+                overflow: hidden;
+            }
+            background: @calendar-category-11-aux;
+            border: solid 1px @calendar-category-11;
+            .calendar-category-mixin(@calendar-category-11-aux);
+        }
+        &.calendar-category12, &.calendar-course-category13 {
+            div:first-child {
+                background-color: @calendar-category-12;
+                overflow: hidden;
+            }
+            background: @calendar-category-12-aux;
+            border: solid 1px @calendar-category-12;
+            .calendar-category-mixin(@calendar-category-12-aux);
+        }
+        &.calendar-category13, &.calendar-course-category14 {
+            div:first-child {
+                background-color: @calendar-category-13;
+                overflow: hidden;
+            }
+            background: @calendar-category-13-aux;
+            border: solid 1px @calendar-category-13;
+            .calendar-category-mixin(@calendar-category-13-aux);
+        }
+        &.calendar-category14, &.calendar-course-category15 {
+            div:first-child {
+                background-color: @calendar-category-14;
+                overflow: hidden;
+            }
+            background: @calendar-category-14-aux;
+            border: solid 1px @calendar-category-14;
+            .calendar-category-mixin(@calendar-category-14-aux);
+        }
+        &.calendar-category15, &.calendar-course-category7 {
+            div:first-child {
+                background-color: @calendar-category-15;
+                overflow: hidden;
+            }
+            background: @calendar-category-15-aux;
+            border: solid 1px @calendar-category-15;
+            .calendar-category-mixin(@calendar-category-15-aux);
+        }
+        &.calendar-category255, &.calendar-course-category255 {
+            div:first-child {
+                background-color: @calendar-category-255;
+                overflow: hidden;
+            }
+            background: @calendar-category-255-aux;
+            border: solid 1px @calendar-category-255;
+            .calendar-category-mixin(@calendar-category-255-aux);
+        }
+        /* Termin von im Stundenplan vorgemerkter Kurs */
+        &.calendar-course-category256 {
+            div:first-child {
+                background-color: #2D2C64;
+                overflow: hidden;
+            }
+            background: mix(#2D2C64, #fff, 60%);
+            border: solid 1px #2D2C64;
+            .calendar-category-mixin(mix(#2D2C64, #fff, 60%));
+        }
+    }
+}
+
+a.calendar-event-text1,
+a.Calendar-course-event-text5 {
+    color: @calendar-category-1;
+}
+
+a.calendar-event-text2,
+a.Calendar-course-event-text1{
+    color: @calendar-category-2;
+}
+
+a.calendar-event-text3,
+a.Calendar-course-event-text2 {
+    color: @calendar-category-3;
+}
+
+a.calendar-event-text4,
+a.Calendar-course-event-text3 {
+    color: @calendar-category-4;
+}
+
+a.calendar-event-text5,
+a.Calendar-course-event-text4 {
+    color: @calendar-category-5;
+}
+
+a.calendar-event-text6,
+a.Calendar-course-event-text6 {
+    color: @calendar-category-6;
+}
+
+a.calendar-event-text7 {
+    color: @calendar-category-7;
+}
+
+a.calendar-event-text8 {
+    color: @calendar-category-8;
+}
+
+a.calendar-event-text9 {
+    color: @calendar-category-9;
+}
+
+a.calendar-event-text10 {
+    color: @calendar-category-10;
+}
+
+a.calendar-event-text11 {
+    color: @calendar-category-11;
+}
+
+a.calendar-event-text12 {
+    color: @calendar-category-12;
+}
+
+a.calendar-event-text13 {
+    color: @calendar-category-13;
+}
+
+a.calendar-event-text14 {
+    color: @calendar-category-14;
+}
+
+a.calendar-event-text15,
+a.Calendar-course-event-text7 {
+    color: @calendar-category-15;
+}
+
+a.calendar-event-text255,
+a.Calendar-course-event-text255 {
+    color: @calendar-category-255;
+}
+.calendar-tooltip {
+    display: none;
+    font-size: 0.8em;
+}
+
+.calendar-group-events {
+    background: linear-gradient(to right, #8E8EB2, #BABAD4) repeat-x #8E8EB2;
+    border: solid 1px #505064;
+}
+
+#exc-dates {
+    padding: 2px;
+    list-style-type: none;
+    width: 7.5em;
+    min-height: 5em;
+    max-height: 10em;
+    overflow: auto;
+    border: 1px solid #888;
+
+    img {
+        vertical-align: text-top;
+    }
+    input:checked ~ span {
+        text-decoration: line-through;
+        opacity: 0.6;
+    }
+}
+
+/* --- Styles fuer TerminZeile ---------------------------------------------- */
+table.tabdaterow {
+    background-color: white;
+}
+
+td.tddaterowp {
+    border: 1px solid #FFFFFF;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    color: #009900;
+    font-size: 8pt;
+}
+
+td.tddaterowpx {
+    border: 1px solid #D00000;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    color: #009900;
+    font-size: 8pt;
+}
+
+
+.recurrences {
+    width: 100%;
+    float: none;
+    list-style: none;
+    text-align: left;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    li {
+        display: block;
+        width: 100%;
+    }
+    input.rec-select {
+    }
+    .rec-label {
+        cursor: pointer;
+    }
+    .rec-label:hover {
+    }
+    .rec-content {
+        display: none;
+        position: relative;
+        padding-left: 3em;
+    }
+    [id^="rec"]:checked + label.rec-label {
+    }
+    [id^="rec"]:checked ~ [id^="rec-content"] {
+    display: block;
+    }
+}

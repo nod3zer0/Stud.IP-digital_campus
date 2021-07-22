@@ -1,0 +1,116 @@
+.contentbar {
+    background-color: $dark-gray-color-5;
+    border: 1px solid $content-color-40;
+    gap: 10px;
+    margin-bottom: 15px;
+    min-height: 58px;
+    padding: 0px 9px 0px 9px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+
+    .contentbar_title {
+        align-items: center;
+        display: flex;
+        font-size: 1.3em;
+        max-width: 60%;
+
+        ul.breadcrumb {
+            list-style: none;
+            padding-left: 10px;
+            width: 100%;
+            display: inline-block;
+
+            div {
+                float: left;
+                max-width: 100%;
+            }
+
+            li {
+                display: inline;
+            }
+
+            li+li:before {
+                padding: 5px;
+                color: $black;
+                content: "/";
+            }
+
+        }
+    }
+
+    .textblock {
+        display: inline-block;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .contentbar_info {
+        align-items: center;
+        text-align: right;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 5px;
+        margin: 5px;
+
+        .contentbar-icons {
+            display: flex;
+
+            label, .consuming_mode_trigger, nav {
+                align-self: center;
+            }
+
+            .consuming_mode_trigger {
+                @media (max-width: 767px) {
+                    display: none !important;
+                }
+
+                @-moz-document url-prefix() {
+                    position: relative;
+                    top: -3px;
+                }
+            }
+
+            .consuming_mode_trigger:not(body.consuming_mode .consuming_mode_trigger) {
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                @include icon(before, fullscreen-on, clickable, 24px, 0px);
+                margin-left: 5px;
+            }
+
+            nav {
+                position: relative;
+                top: 2px;
+            }
+        }
+    }
+}
+
+body.consuming_mode {
+    #barBottomContainer, #flex-header, .secondary-navigation, #barTopStudip, #page_title_container {
+        max-height: 0px;
+        opacity: 0;
+        overflow: hidden;
+    }
+
+    #layout_wrapper {
+        padding-top: 0px;
+    }
+
+    #layout-sidebar {
+        margin-left: -280px;
+        opacity: 0;
+    }
+
+    .contentbar {
+        margin-left: 10px;
+        margin-right: -0;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .consuming_mode_trigger {
+        @include icon(before, fullscreen-off, clickable, 25px, 5px);
+    }
+}

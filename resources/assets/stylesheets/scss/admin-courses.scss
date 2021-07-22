@@ -1,0 +1,30 @@
+.button.has-notice,
+.button.has-no-notice {
+    &::before {
+        display: inline-block;
+        height: 16px;
+        vertical-align: sub;
+        width: 16px;
+    }
+    &::before {
+        margin-right: 0.5ex;
+    }
+}
+
+.button.has-notice {
+    &::before {
+        content: url("#{$image-path}/icons/blue/file-text.svg");
+    }
+    &:hover::before {
+        content: url("#{$image-path}/icons/white/file-text.svg");
+    }
+
+}
+.button.has-no-notice {
+    &::before {
+        content: url("#{$image-path}/icons/blue/file.svg");
+    }
+    &:hover::before {
+        content: url("#{$image-path}/icons/white/file.svg");
+    }
+}

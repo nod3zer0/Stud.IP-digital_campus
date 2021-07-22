@@ -1,0 +1,22 @@
+bootstrap: _bootstrap.php
+error_level: "E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE"
+actor: JsonapiTester
+modules:
+    enabled:
+        - Asserts
+        - \Helper\Credentials
+        - \Helper\Jsonapi
+        - \Helper\StudipDb
+
+    config:
+        \Helper\StudipDb:
+            dsn: 'mysql:host=%DB_STUDIP_HOST%;dbname=%DB_STUDIP_DATABASE%;charset=utf8mb4'
+            user: %DB_STUDIP_USER%
+            password: %DB_STUDIP_PASSWORD%
+coverage:
+    enabled: true
+    include:
+        - lib/classes/JsonApi/Routes/*
+        - lib/classes/JsonApi/Schemas/*
+    low_limit: 50
+    high_limit: 80

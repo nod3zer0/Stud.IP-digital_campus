@@ -1,0 +1,39 @@
+.consultation-note {
+    border-bottom: 1px solid @light-gray-color-40;
+    font-size: @font-size-small;
+    margin-bottom: 2px;
+    padding-bottom: 2px;
+
+    &-below {
+        border-bottom: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
+
+        border-top: 1px solid @light-gray-color-40;
+        margin-top: 2px;
+        padding-top: 2px;
+    }
+
+    &.shortened {
+        .icon('before', 'info-circle', 'info', 12, 5px);
+        transition: opacity 300ms;
+        &:not(:hover)::after {
+            opacity: 0.5;
+        }
+    }
+}
+.consultation-free {
+    color: @green;
+}
+.consultation-occupied {
+    color: @red;
+}
+
+.consultation-overview {
+    .block-is-expired th {
+        font-style: italic;
+    }
+    .slot-is-expired td {
+        background-color: @dark-gray-color-10;
+    }
+}

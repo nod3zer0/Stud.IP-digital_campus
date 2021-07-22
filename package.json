@@ -1,0 +1,127 @@
+{
+    "name": "@studip/core",
+    "version": "5.0.0",
+    "description": "Stud.IP",
+    "private": true,
+    "scripts": {
+        "wds": "webpack serve --progress --config webpack.dev-server.js",
+        "webpack-dev": "webpack --config webpack.dev.js --mode development",
+        "webpack-prod": "webpack --config webpack.prod.js --mode production",
+        "webpack-watch": "webpack --config webpack.dev.js --mode development --watch"
+    },
+    "author": "",
+    "license": "GPL-2.0",
+    "repository": {
+        "type": "svn",
+        "url": "https://develop.studip.de/svn/studip"
+    },
+    "engines": {
+        "node": ">=12"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.12.3",
+        "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+        "@babel/plugin-transform-runtime": "^7.12.1",
+        "@babel/preset-env": "^7.12.1",
+        "@babel/register": "^7.12.1",
+        "@elan-ev/reststate-vuex": "~1.0.4",
+        "@fullcalendar/core": "^4.3.1",
+        "@fullcalendar/daygrid": "^4.3.0",
+        "@fullcalendar/interaction": "^4.3.0",
+        "@fullcalendar/resource-common": "^4.3.1",
+        "@fullcalendar/resource-timegrid": "^4.3.0",
+        "@fullcalendar/resource-timeline": "^4.3.0",
+        "@fullcalendar/timegrid": "^4.3.0",
+        "autoprefixer": "^10.2.5",
+        "axios": "^0.21.0",
+        "babel-loader": "^8.2.1",
+        "blueimp-file-upload": "10.31.0",
+        "buffer": "^6.0.3",
+        "chart.js": "^2.9.4",
+        "chartist": "0.11.4",
+        "cropperjs": "1.5.9",
+        "css-loader": "^5.0.1",
+        "css-minimizer-webpack-plugin": "^1.1.5",
+        "easygettext": "^2.17.0",
+        "es6-promise": "4.2.8",
+        "eslint": "7.21.0",
+        "eslint-plugin-vue": "7.7.0",
+        "expose-loader": "1.0.1",
+        "favico.js": "0.3.10",
+        "file-saver": "^2.0.5",
+        "focus-trap-vue": "^1.1.1",
+        "highlight.js": "10.5.0",
+        "jquery": "3.5.1",
+        "jquery-nestable": "0.8.0",
+        "jquery-ui": "1.12.1",
+        "jquery-ui-timepicker-addon": "1.6.3",
+        "jquery-ui-touch-punch": "0.2.3",
+        "jquery.scrollto": "2.1.2",
+        "jspdf-yworks": "^2.1.1",
+        "jszip": "^3.6.0",
+        "less": "^3.12.2",
+        "less-loader": "7.1.0",
+        "lodash": "4.17.20",
+        "md5": "^2.3.0",
+        "mini-css-extract-plugin": "1.3.1",
+        "mitt": "2.1.0",
+        "multiselect": "0.9.12",
+        "pdfjs-dist": "^2.6.347",
+        "portal-vue": "^2.1.7",
+        "postcss": "^8.1.8",
+        "postcss-loader": "4.1.0",
+        "sass": "^1.29.0",
+        "sass-loader": "^10.1.0",
+        "select2": "4.0.13",
+        "sprintf-js": "^1.0.3",
+        "sticky-kit": "1.1.3",
+        "stream-browserify": "^3.0.0",
+        "style-loader": "^2.0.0",
+        "svgo": "^2.3.1",
+        "tablesorter": "2.31.3",
+        "vrp-vue-resizable": "1.2.7",
+        "vue": "^2.6.12",
+        "vue-gettext": "^2.1.12",
+        "vue-loader": "^15.9.6",
+        "vue-router": "^3.5.1",
+        "vue-select": "^3.11.2",
+        "vue-template-compiler": "^2.6.12",
+        "vue-twentytwenty": "^0.10.1",
+        "vue-typer": "^1.2.0",
+        "vuex": "^3.6.2",
+        "webpack": "5.6.0",
+        "webpack-cli": "4.2.0",
+        "webpack-dev-server": "3.11.0",
+        "webpack-merge": "5.4.0"
+    },
+    "babel": {
+        "presets": [
+            [
+                "@babel/preset-env"
+            ]
+        ],
+        "plugins": [
+            "@babel/plugin-syntax-dynamic-import",
+            "@babel/plugin-transform-runtime"
+        ]
+    },
+    "browserslist": [
+        "> 1%",
+        "last 2 versions",
+        "not IE <= 11"
+    ],
+    "eslintConfig": {
+        "env": {
+            "browser": true
+        },
+        "parserOptions": {
+            "ecmaVersion": 6,
+            "sourceType": "module"
+        }
+    },
+    "prettier": {
+        "printWidth": 120,
+        "singleQuote": true,
+        "tabWidth": 4
+    }
+}

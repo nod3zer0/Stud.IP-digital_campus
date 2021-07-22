@@ -1,0 +1,103 @@
+<?php
+
+/*
+ * Copyright (C) 2011 - Rasmus Fuhse <fuhse@data-quest.de>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ */
+
+require_once 'lib/calendar/CalendarColumn.class.php';
+
+class CalendarColumnCase extends \Codeception\Test\Unit {
+
+
+    function setUp() {
+    }
+
+
+    function tearDown() {
+    }
+
+
+    function test_class_should_exist() {
+        $this->assertTrue(class_exists('CalendarColumn'));
+    }
+
+    function test_create() {
+        $this->assertInstanceOf("CalendarColumn", CalendarColumn::create());
+    }
+
+    function test_get_id() {
+        $id = "test_id";
+        $column = new CalendarColumn($id);
+        $this->assertEquals($id, $column->getId());
+    }
+
+    function test_set_id() {
+        $id = "test_id";
+        $column = new CalendarColumn("falsche id");
+        $column->setId($id);
+        $this->assertEquals($id, $column->getId());
+    }
+
+    function test_set_title() {
+        $title = "test_title";
+        $column = new CalendarColumn();
+        $column->setTitle($title);
+        $this->assertEquals($title, $column->getTitle());
+    }
+
+    function test_set_url() {
+        $url = URLHelper::getURL("dispatch.php/profile", ["username" => get_username()]);
+        $column = CalendarColumn::create()->setURL($url);
+        $this->assertEquals($url, $column->getURL());
+    }
+
+    function test_add_entry() {
+        $entry = ['start' => "0800", 'end' => "1000", 'title' => "test_title"];
+        $column = CalendarColumn::create()->addEntry($entry);
+        $entry = ['start' => "1200", 'end' => "1230", 'title' => "test_title_number_2"];
+        $column->addEntry($entry);
+        $entries = $column->getEntries();
+        $this->assertInternalType("array", $entries);
+        $this->assertEquals(2, count($entries));
+        $this->assertNotEquals($entries[0], $entry);
+        $this->assertEquals($entry, $entries[1]);
+        $this->assertInternalType("array", $entries[1]);
+    }
+
+    function test_wrong_entry() {
+        $this->expectException(InvalidArgumentException::class);
+        $entry1 = ['start' => "0800", 'end' => "1000"];
+        $entry2 = ['start' => "1000", 'title' => "test_title"];
+        $entry3 = ['end' => "1500", 'title' => "test_title"];
+        $column = CalendarColumn::create()->addEntry($entry1);
+        $column = CalendarColumn::create()->addEntry($entry2);
+        $column = CalendarColumn::create()->addEntry($entry3);
+    }
+
+    function test_add_entries() {
+        $entries = [
+            ['start' => "0800", 'end' => "1000", 'title' => "test_title"],
+            ['start' => "1200", 'end' => "1400", 'title' => "test_title"]
+        ];
+        $column = CalendarColumn::create()->addEntries($entries);
+        $this->assertInternalType('array', $column->getEntries());
+    }
+
+    function test_erase_entries() {
+        $entry = ['start' => "0800", 'end' => "1000", 'title' => "test_title"];
+        $column = CalendarColumn::create()->addEntry($entry);
+        $column->eraseEntries();
+        $entries = $column->getEntries();
+        $this->assertInternalType("array", $entries);
+        $this->assertEquals(0, count($entries));
+    }
+
+
+    //Die anderen Methoden muss Till testen.
+
+}
