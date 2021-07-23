@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 $translationsFile = realpath(__DIR__ . '/../resources/locales/translations.json');
