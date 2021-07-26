@@ -733,6 +733,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                     $delete_sql = '(begin BETWEEN :begin AND :end
                         OR
                         end BETWEEN :begin AND :end)
+                        AND NOT ((begin = :end) OR (end = :begin))
                         AND
                         resource_id = :resource_id ';
                     $sql_params = [
@@ -769,6 +770,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                 $delete_sql = '(begin BETWEEN :begin AND :end
                     OR
                     end BETWEEN :begin AND :end)
+                    AND NOT ((begin = :end) OR (end = :begin))
                     AND
                     resource_id = :resource_id ';
                 $sql_params = [
