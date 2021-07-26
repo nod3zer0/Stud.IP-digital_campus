@@ -1,1 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54"><path d="M22 3v42h3V6h12l-8 2v43l20-6V3zm10 7.34 14-3.5v35.9l-14 4.2zM5 13v7.09L11.91 27 5 33.91V41l14-14L5 13z" fill="#00962d"/></svg>
+<svg id="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54"><defs><style>.cls-1{fill:#00962d;}</style></defs><g id="door-enter"><path class="cls-1" d="M22,3V45h3V6H37L29,8V51l20-6V3Zm10,7.34,14-3.5V42.74l-14,4.2Z"/><polygon class="cls-1" points="5 13 5 20.09 11.91 27 5 33.91 5 41 19 27 5 13"/></g></svg>
