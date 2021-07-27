@@ -1397,7 +1397,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             } else {
                 return sprintf(
                     _('Regelmäßige Termine (%s)'),
-                    $this->cycle->toString('short')
+                    $this->cycle->toString('full')
                 );
             }
         } elseif ($this->course) {
