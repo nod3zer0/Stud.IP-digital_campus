@@ -142,6 +142,21 @@ $start_pages = [
     </fieldset>
 <? endif; ?>
 
+    <? if ($show_room_management_autor_config) : ?>
+        <fieldset>
+            <legend><?= _('Raumverwaltung') ?></legend>
+            <label>
+                <input type="checkbox" name="resources_confirm_plan_drag_and_drop"
+                       value="1"
+                       <?= $config->RESOURCES_CONFIRM_PLAN_DRAG_AND_DROP ? 'checked' : '' ?>>
+                <?= _('Nach dem Verschieben einer Buchung per Drag & Drop im Belegungsplan eine Sicherheitsabfrage anzeigen') ?>
+                <?= tooltipIcon(
+                    _('Wenn diese Einstellung aktiviert ist, wird die Buchung erst dann verschoben, wenn die Sicherheitsabfrage mit „Ja“ beantwortet wurde.')
+                ) ?>
+            </label>
+        </fieldset>
+    <? endif ?>
+
     <footer>
         <?= \Studip\Button::create(_("Speichern")) ?>
     </footer>

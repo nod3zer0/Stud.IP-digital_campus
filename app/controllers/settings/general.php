@@ -31,6 +31,12 @@ class Settings_GeneralController extends Settings_SettingsController
         PageLayout::setTitle(_('Allgemeine Einstellungen anpassen'));
         Navigation::activateItem('/profile/settings/general');
         SkipLinks::addIndex(_('Allgemeine Einstellungen anpassen'), 'layout_content', 100);
+        $this->show_room_management_autor_config = Config::get()->RESOURCES_ENABLE
+                                                && (
+                                                    ResourceManager::userHasGlobalPermission($this->user, 'autor')
+                                                    ||
+                                                    RoomManager::userHasRooms($this->user, 'autor')
+                                                );
     }
 
     /**
@@ -63,6 +69,9 @@ class Settings_GeneralController extends Settings_SettingsController
         $this->config->store('SKIPLINKS_ENABLE', Request::int('skiplinks_enable'));
         $this->config->store('TOUR_AUTOSTART_DISABLE', Request::int('tour_autostart_disable'));
         $this->config->store('WIKI_COMMENTS_ENABLE', Request::int('wiki_comments_enable'));
+        if ($this->show_room_management_autor_config) {
+            $this->config->store('RESOURCES_CONFIRM_PLAN_DRAG_AND_DROP', Request::int('resources_confirm_plan_drag_and_drop'));
+        }
 
         if (Config::get()->WYSIWYG) {
             $this->config->store('WYSIWYG_DISABLED', !Request::int('wysiwyg_enabled'));

@@ -88,7 +88,14 @@
                         'display_all_requests' => $display_all_requests ? 1 : 0
                     ]
                 ]
-            ]
+            ],
+            'confirm' => (
+                UserConfig::get($GLOBALS['user']->id)->RESOURCES_CONFIRM_PLAN_DRAG_AND_DROP
+                ? [
+                    'drop' => _('Wollen Sie die Buchung wirklich ändern?')
+                ]
+                : []
+            )
         ],
         ['class' => 'resource-plan'],
         'resources-fullcalendar'
