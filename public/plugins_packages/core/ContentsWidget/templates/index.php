@@ -1,6 +1,6 @@
 <div class="contents-widget">
     <p>
-        <?= _('Suchen, erstellen und finden Sie freie Lernmaterialien!') ?>
+        <?= _('Erstellen und finden Sie persönliche Materialien zum Teilen mit anderen.') ?>
     </p>
     <ul class="content-items">
         <? foreach ($tiles as $key => $navigation): ?>
