@@ -244,9 +244,9 @@ class PluginManager
     /**
      * Sets the activation status of a plugin in the given context.
      *
-     * @param $id        id of the plugin
-     * @param $rangeId   context range id
-     * @param $active    plugin status (true or false)
+     * @param $id        string id of the plugin
+     * @param $rangeId   string context range id
+     * @param $active    bool plugin status (true or false)
      */
     public function setPluginActivated ($id, $rangeId, $active)
     {
@@ -267,6 +267,23 @@ class PluginManager
             call_user_func([get_class($plugin), 'onDeactivation'], $id, $rangeId);
             return $activation->delete();
         }
+    }
+
+    /**
+     * Sets the activation status of a plugin in the given context.
+     *
+     * @param $pluginid string of the plugin
+     * @param $user_id string user id
+     * @param $active  bool  plugin status (true or false)
+     */
+    public function setPluginActivatedForUser($pluginid, $user_id, $active)
+    {
+        $db = DBManager::get();
+        $state = $active ? 1 : 0;
+        unset($this->plugins_activated_cache[$user_id]);
+
+        return $db->execute("REPLACE INTO plugins_activated (pluginid, range_type, range_id, state)
+	                          VALUES (?, 'user', ?, ?)", [$pluginid, $user_id, $state]);
     }
 
     /**

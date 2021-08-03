@@ -125,7 +125,7 @@ class ProfileNavigation extends Navigation
         // Add consultations if appropriate
         if (Config::get()->CONSULTATION_ENABLED) {
             $plugin = PluginEngine::getPlugin('ConsultationModule');
-            if ($current_user && $plugin && $plugin->isActivated($current_user->id, 'user')) {
+            if ($current_user && $plugin && PluginManager::getInstance()->isPluginActivatedForUser($plugin->getPluginId(), $current_user->id)) {
                 $this->addSubNavigation('consultation', new ConsultationNavigation($current_user));
             }
         }

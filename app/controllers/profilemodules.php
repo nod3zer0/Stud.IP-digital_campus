@@ -254,7 +254,7 @@ class ProfileModulesController extends AuthenticatedController
 
         $state = (bool) $state;
         if ($state != $manager->isPluginActivatedForUser($item, $this->user->id)
-            && $manager->setPluginActivated($item, $this->user->id, $state, 'user'))
+            && $manager->setPluginActivatedForUser($item, $this->user->id, $state))
         {
             return [$state, $this->plugins[$item]->getPluginName()];
         }
