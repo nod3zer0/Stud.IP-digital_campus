@@ -66,24 +66,11 @@ echo $flash['message'];
                     ) ?>
 
                     <?php
-                    $user_has_permissions = false;
-                    if ($rr->room && !$GLOBALS['perm']->have_perm('root')) {
-                        $user_has_permissions = (
-                            $rr->room->userHasPermission($current_user, 'admin') &&
-                            (RoomRequest::countBySql(
-                                    "id = :request_id
-                                AND closed = '0'
-                                AND user_id = :user_id",
-                                    [
-                                        'request_id' => $rr->id,
-                                        'user_id'    => $current_user->id
-                                    ]
-                                ) > 0
-                            )
-                        );
-                    } else {
-                        $user_has_permissions = ResourceManager::userHasGlobalPermission($current_user, 'admin');
-                    } ?>
+                    $user_has_permissions = ResourceManager::userHasGlobalPermission($current_user, 'admin');
+                    if ($rr->room && !$user_has_permissions) {
+                        $user_has_permissions = $rr->room->userHasPermission($current_user, 'admin');
+                    }
+                    ?>
 
                     <? if ($user_has_permissions && (int)$rr->closed === 0): ?>
                         <? $actionMenu->addLink(
