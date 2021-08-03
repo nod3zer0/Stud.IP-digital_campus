@@ -67,7 +67,7 @@
 
         <?= sprintf(
             _('Terminliste von %s'),
-            htmlReady($current_user->getFullName())
+            htmlReady($range->getFullName())
         ) ?>
     </h1>
 <? foreach ($blocks as $block): ?>
