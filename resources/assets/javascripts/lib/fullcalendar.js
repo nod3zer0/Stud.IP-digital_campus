@@ -443,20 +443,38 @@ class Fullcalendar
                 info.event.source.refetch();
             },
             eventDrop (info) {
-                if ($(info.view.context.calendar.el).hasClass('institute-plan')) {
-                    var start = info.event.start;
-                    var cal_start = info.view.activeStart;
-                    if ((start.getHours() - cal_start.getHours()) % 2 === 1) {
-                        info.event.moveDates('-01:00');
-                    }
-                    STUDIP.Fullcalendar.institutePlanDropEventHandler(info);
-                } else {
-                    if (info.view.viewSpec.options.studip_functions.drop_event) {
-                        info.view.viewSpec.options.studip_functions.drop_event(info);
+                let handle_drop = function() {
+                    if ($(info.view.context.calendar.el).hasClass('institute-plan')) {
+                        var start = info.event.start;
+                        var cal_start = info.view.activeStart;
+                        if ((start.getHours() - cal_start.getHours()) % 2 === 1) {
+                            info.event.moveDates('-01:00');
+                        }
+                        STUDIP.Fullcalendar.institutePlanDropEventHandler(info);
                     } else {
-                        STUDIP.Fullcalendar.defaultDropEventHandler(info);
+                        if (info.view.viewSpec.options.studip_functions.drop_event) {
+                            info.view.viewSpec.options.studip_functions.drop_event(info);
+                        } else {
+                            STUDIP.Fullcalendar.defaultDropEventHandler(info);
+                        }
+                        info.event.source.refetch();
                     }
-                    info.event.source.refetch();
+                };
+
+                let calendar_config = JSON.parse(info.view.context.calendar.el.dataset.config);
+                if (calendar_config.confirm) {
+                    if (calendar_config.confirm.drop) {
+                        STUDIP.Dialog.confirm(calendar_config.confirm.drop)
+                            .done(handle_drop)
+                            .fail(function() {
+                                //Revert the dropped element:
+                                info.revert();
+                            });
+                    } else {
+                        handle_drop();
+                    }
+                } else {
+                    handle_drop();
                 }
             },
             eventRender (info) {
