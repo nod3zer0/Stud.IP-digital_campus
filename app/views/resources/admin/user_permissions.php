@@ -206,8 +206,34 @@
             </tbody>
         </table>
     <? endif ?>
-<? else: ?>
-    <?= MessageBox::info(
-        _('Es wurde keine Person ausgewählt!')
-    ) ?>
+<? elseif ($users) : ?>
+    <table class="default sortable-table" data-sortlist="[[0, 0]]">
+        <caption>
+            <?= _('Personen mit Berechtigungen an der Raumverwaltung') ?>
+        </caption>
+        <thead>
+            <tr>
+                <th data-sort="text"><?= _('Nachname, Vorname') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <? foreach ($users as $user) : ?>
+                <tr>
+                    <td>
+                        <a href="<?= $controller->link_for(
+                                 'resources/admin/user_permissions',
+                                 ['user_id' => $user->id]
+                                 ) ?>">
+                            <?= htmlReady($user->getFullName('full_rev')) ?>
+                            <?= Icon::create('link-intern')->asImg(
+                                [
+                                    'class' => 'text-bottom'
+                                ]
+                            ) ?>
+                        </a>
+                    </td>
+                </tr>
+            <? endforeach ?>
+        </tbody>
+    </table>
 <? endif ?>

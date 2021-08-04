@@ -196,6 +196,32 @@ class Resources_AdminController extends AuthenticatedController
                 $last_activity_date = $this->now->sub($this->last_activity);
                 $this->last_activity_date = $last_activity_date->format('d.m.Y H:i');
             }
+        } else {
+            //No user selected. Show a list of all users that have
+            //at least one permission in the room management system.
+            if ($user_id) {
+                //User-ID specified, but no user could be found.
+                PageLayout::postError(
+                    _('Die angegebene Person wurde nicht gefunden!')
+                );
+            }
+
+            $this->users = User::findBySql(
+                '`user_id` IN (
+                    SELECT `user_id`
+                    FROM `resource_permissions`
+                    UNION
+                    SELECT `user_id`
+                    FROM `resource_temporary_permissions`
+                )
+                ORDER BY `nachname` ASC, `vorname` ASC'
+            );
+            if (!$this->users) {
+                //No user found.
+                PageLayout::postInfo(
+                    _('Es gibt keine Personen, zu denen Berechtigungen in der Raumverwaltung eingetragen sind!')
+                );
+            }
         }
     }
 
