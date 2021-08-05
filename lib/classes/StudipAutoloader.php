@@ -309,7 +309,7 @@ class StudipAutoloader
      */
     private static function sanitizePath($path)
     {
-        if (mb_strpos($path, $GLOBALS['STUDIP_BASE_PATH']) === 0) {
+        if (isset($GLOBALS['STUDIP_BASE_PATH']) && strpos($path, $GLOBALS['STUDIP_BASE_PATH']) === 0) {
             return ltrim(str_replace($GLOBALS['STUDIP_BASE_PATH'], '', $path), DIRECTORY_SEPARATOR);
         }
         return $path;

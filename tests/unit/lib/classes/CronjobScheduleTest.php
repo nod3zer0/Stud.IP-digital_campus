@@ -18,7 +18,7 @@ class CronjobScheduleTest extends \Codeception\Test\Unit
     {
         date_default_timezone_set('Europe/Berlin');
 
-        StudipTestHelper::set_up_tables(['cronjobs_schedules']);
+        StudipTestHelper::set_up_tables(['cronjobs_schedules', 'cronjobs_tasks']);
     }
 
     function tearDown()

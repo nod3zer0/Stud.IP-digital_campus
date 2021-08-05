@@ -182,7 +182,7 @@ class StudipCacheFactory
      */
     public static function loadCacheClass()
     {
-        $cacheConfig = Config::get()->SYSTEMCACHE;
+        $cacheConfig = self::getConfig()->SYSTEMCACHE;
 
         $cache_class = $cacheConfig['type'] ?: null;
 
@@ -222,7 +222,7 @@ class StudipCacheFactory
      */
     public static function retrieveConstructorArguments()
     {
-        $cacheConfig = Config::get()->SYSTEMCACHE;
+        $cacheConfig = self::getConfig()->SYSTEMCACHE;
 
         return $cacheConfig ?: [];
     }

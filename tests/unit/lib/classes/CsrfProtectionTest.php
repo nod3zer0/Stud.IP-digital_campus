@@ -117,8 +117,8 @@ class CSRFRequestTest extends \Codeception\Test\Unit
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XmlHttpRequest';
         unset($_POST['security_token']);
+        $this->expectException(InvalidSecurityTokenException::class);
         CSRFProtection::verifyUnsafeRequest();
-        $this->assertTrue(true);
     }
 
     function testUnsafeXHRWithToken()

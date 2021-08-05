@@ -109,7 +109,7 @@ if (!class_exists('StudipTestHelper')) {
         static function set_up_tables($tables)
         {
             // first step, set fake cache
-            $testconfig = new Config(['cache_class' => 'StudipArrayCache']);
+            $testconfig = new Config(['SYSTEMCACHE' => ['type' => 'StudipArrayCache']]);
             Config::set($testconfig);
             StudipCacheFactory::setConfig($testconfig);
 
