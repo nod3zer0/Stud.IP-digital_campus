@@ -332,7 +332,8 @@ class Resources_RoomPlanningController extends AuthenticatedController
                         'id'          => 'export-resource-bookings-action'
                     ]
                 );
-
+            }
+            if($GLOBALS['perm']->have_perm('admin')) {
                 if ($this->resource instanceof Room) {
                     $actions->addLink(
                         _('Raumeigenschaften anzeigen'),
