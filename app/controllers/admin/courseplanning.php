@@ -851,7 +851,7 @@ class Admin_CourseplanningController extends AuthenticatedController
         }
 
         $seminars   = array_map('reset', $courses);
-        $visit_data = get_objects_visits(array_keys($seminars), 'sem', null, null, MyRealmModel::getDefaultModules());
+        $visit_data = get_objects_visits(array_keys($seminars), 'sem', null, null, array_keys(MyRealmModel::getDefaultModules()));
 
         if (!empty($seminars)) {
             foreach ($seminars as $seminar_id => $seminar) {
