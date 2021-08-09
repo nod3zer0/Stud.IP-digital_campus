@@ -17,7 +17,7 @@
             Icon::create('info-circle'),
             ['data-dialog' => '']
         );
-        if ($room->userHasPermission($current_user, 'autor') || $room->booking_plan_is_public) {
+        if ($room->userHasPermission($current_user, 'autor')) {
             $actions->addLink(
                 $room->getActionLink('booking_plan'),
                 _('Wochenbelegung'),
@@ -30,12 +30,21 @@
                 Icon::create('timetable'),
                 ['target' => '_blank']
             );
-            $actions->addLink(
-                $room->getActionLink('booking_plan'),
-                _('Belegungsplan'),
-                Icon::create('timetable'),
-                ['data-dialog' => 'size=big']
-            );
+        } else {
+            if ($room->booking_plan_is_public) {
+                $actions->addLink(
+                    $room->getActionLink('booking_plan'),
+                    _('Belegungsplan'),
+                    Icon::create('timetable'),
+                    ['data-dialog' => 'size=big']
+                );
+                $actions->addLink(
+                    $room->getActionLink('semester_plan'),
+                    _('Semesterbelegung'),
+                    Icon::create('timetable'),
+                    ['data-dialog' => 'size=big']
+                );
+            }
         }
         if ($room->requestable && $room->userHasRequestRights($current_user)) {
             $actions->addLink(
