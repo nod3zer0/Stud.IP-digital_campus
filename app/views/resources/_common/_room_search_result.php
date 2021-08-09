@@ -31,18 +31,20 @@
                 ['target' => '_blank']
             );
         } else {
-            $actions->addLink(
-                $room->getActionLink('booking_plan'),
-                _('Belegungsplan'),
-                Icon::create('timetable'),
-                ['data-dialog' => 'size=big']
-            );
-            $actions->addLink(
-                $room->getActionLink('semester_plan'),
-                _('Semesterbelegung'),
-                Icon::create('timetable'),
-                ['data-dialog' => 'size=big']
-            );
+            if ($room->booking_plan_is_public && Config::get()->RESOURCES_SHOW_PUBLIC_ROOM_PLANS) {
+                $actions->addLink(
+                    $room->getActionLink('booking_plan'),
+                    _('Belegungsplan'),
+                    Icon::create('timetable'),
+                    ['data-dialog' => 'size=big']
+                );
+                $actions->addLink(
+                    $room->getActionLink('semester_plan'),
+                    _('Semesterbelegung'),
+                    Icon::create('timetable'),
+                    ['data-dialog' => 'size=big']
+                );
+            }
         }
         if ($room->requestable && $room->userHasRequestRights($current_user)) {
             $actions->addLink(
