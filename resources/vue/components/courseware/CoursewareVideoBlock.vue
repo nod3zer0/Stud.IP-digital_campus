@@ -32,11 +32,11 @@
                             <option value="web"><translate>Web-Adresse</translate></option>
                         </select>
                     </label>
-                    <label v-if="currentSource === 'web'">
+                    <label v-show="currentSource === 'web'">
                         <translate>URL</translate>
                         <input type="text" v-model="currentWebUrl" />
                     </label>
-                    <label v-if="currentSource === 'studip'">
+                    <label v-show="currentSource === 'studip'">
                         <translate>Datei</translate>
                         <courseware-file-chooser
                             v-model="currentFileId"
@@ -152,7 +152,7 @@ export default {
             attributes.payload = {};
             attributes.payload.title = this.currentTitle;
             attributes.payload.source = this.currentSource;
-            if (this.currentSource === 'studip' && this.currentFile !== undefined) {
+            if (this.currentSource === 'studip' && this.currentFile !== undefined && this.currentFileId !== '') {
                 attributes.payload.file_id = this.currentFile.id;
                 attributes.payload.web_url = '';
             } else if (this.currentSource === 'web' && this.currentWebUrl !== '') {
@@ -184,7 +184,10 @@ export default {
             this.currentAspect = this.aspect;
             this.currentContextMenu = this.contextMenu;
             this.currentAutoplay = this.autoplay;
-            this.loadFile();
+            if (this.fileId !== '') {
+                this.loadFile();
+            }
+            
 
         },
         async loadFile() {
