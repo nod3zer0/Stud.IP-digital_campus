@@ -172,7 +172,12 @@ class OpenGraphURL extends SimpleORMap
                 ],
             ]);
 
-            $content = file_get_contents($this['url'], false, $context);
+            $content = @file_get_contents($this['url'], false, $context);
+
+            if ($content === false) {
+                return;
+            }
+
             $content = mb_encode_numericentity($content, [0x80, 0xffff, 0, 0xffff], $currentEncoding);
             $old_libxml_error = libxml_use_internal_errors(true);
             $doc = new DOMDocument();
