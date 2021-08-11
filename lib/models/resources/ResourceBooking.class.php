@@ -1865,6 +1865,9 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
             //Nothing we can do here.
             return;
         }
+        if (User::findCurrent()->id === $booking_user->id) {
+            return;
+        }
 
         $template_factory = new Flexi_TemplateFactory(
             $GLOBALS['STUDIP_BASE_PATH'] . '/locale/'
