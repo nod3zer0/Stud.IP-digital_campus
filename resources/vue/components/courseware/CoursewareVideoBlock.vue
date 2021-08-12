@@ -11,7 +11,7 @@
             <template #content>
                 <div v-if="currentTitle !== '' && currentURL" class="cw-block-title">{{ currentTitle }}</div>
                 <video
-                    v-if="currentURL"
+                    v-show="currentURL"
                     :src="currentURL"
                     :type="currentFile !== '' ? currentFile.mime_type : ''"
                     controls
@@ -176,7 +176,7 @@ export default {
                 containerId: this.block.relationships.container.data.id,
             });
         },
-        initCurrentData() {
+        async initCurrentData() {
             this.currentSource = this.source;
             this.currentTitle = this.title;
             this.currentWebUrl = this.webUrl;
@@ -185,10 +185,8 @@ export default {
             this.currentContextMenu = this.contextMenu;
             this.currentAutoplay = this.autoplay;
             if (this.fileId !== '') {
-                this.loadFile();
+                await this.loadFile();
             }
-            
-
         },
         async loadFile() {
             const id = this.currentFileId;
@@ -212,9 +210,8 @@ export default {
             this.currentFileId = file.id;
         },
         contextHandler(e) {
-            if (this.currentContextMenu === '0') {
+            if (this.currentContextMenu === 'disabled') {
                 e.preventDefault();
-                console.log('context menu disabled');
             }
         },
     },
