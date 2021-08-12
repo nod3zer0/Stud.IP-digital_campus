@@ -23,10 +23,6 @@
             </header>
 
             <table class="default">
-                <colgroup>
-                    <col style="width: 70%">
-                    <col>
-                </colgroup>
                 <thead>
                     <tr>
                         <th>
