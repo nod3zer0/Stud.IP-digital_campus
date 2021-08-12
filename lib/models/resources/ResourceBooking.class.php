@@ -125,7 +125,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
             StudipLog::log(
                 'RES_ASSIGN_SEM',
                 $this->resource_id,
-                $this->range_id,
+                $this->course_id,
                 $this->__toString(),
                 null,
                 $GLOBALS['user']->id
@@ -149,7 +149,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
             StudipLog::log(
                 'RES_ASSIGN_DEL_SEM',
                 $this->resource_id,
-                $this->range_id,
+                $this->course_id,
                 $this->__toString(),
                 null,
                 $GLOBALS['user']->id
