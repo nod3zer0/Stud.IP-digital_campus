@@ -192,10 +192,6 @@ class PluginManager
      */
     public function isPluginActivated ($id, $context)
     {
-        if (!DBSchemaVersion::exists('studip', '20210201')) {
-            return null;
-        }
-
         if (!$context) {
             return null;
         }

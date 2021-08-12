@@ -3,17 +3,11 @@ class MigrationHistoryReworked extends Migration
 {
     public function description()
     {
-        return 'Reverts migration 20201114 and adds appropriate log actions';
+        return 'Add log actions for migrations';
     }
 
     public function up()
     {
-        // Drop columns
-        $query = "ALTER TABLE `schema_versions`
-                  DROP COLUMN `user_id`,
-                  DROP COLUMN `mkdate`";
-        DBManager::get()->exec($query);
-
         // Add log actions
         $query = "INSERT IGNORE INTO log_actions (
                     `action_id`, `name`, `description`, `info_template`, `active`, `expires`, `mkdate`, `chdate`
@@ -46,11 +40,5 @@ class MigrationHistoryReworked extends Migration
         $statement = DBManager::get()->prepare($query);
         $statement->execute([':name' => 'MIGRATE_UP']);
         $statement->execute([':name' => 'MIGRATE_DOWN']);
-
-        // Add columns
-        $query = "ALTER TABLE `schema_versions`
-                  ADD COLUMN `user_id` CHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL DEFAULT NULL,
-                  ADD COLUMN `mkdate` INT(11) UNSIGNED NULL DEFAULT NULL";
-        DBManager::get()->exec($query);
     }
 }

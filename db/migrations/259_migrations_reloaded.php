@@ -1,58 +1,35 @@
 <?php
+
 class MigrationsReloaded extends Migration
 {
     public function description()
     {
-        return 'switch from a single successive migration version number to '
-             . 'a collection of already executed migrations';
+        return 'add branch column to schema_version';
     }
 
     public function up()
     {
-        $query = "CREATE TABLE IF NOT EXISTS `schema_versions` (
-                    `domain` VARCHAR(255) COLLATE latin1_bin NOT NULL,
-                    `version` BIGINT(20) UNSIGNED NOT NULL,
-                    PRIMARY KEY `domain` (`domain`, `version`)
-                ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC";
-        DBManager::get()->exec($query);
+        $db = DBManager::get();
 
-        $query = "SELECT `domain`, `version`
-                  FROM `schema_version`
-                  WHERE `version` > 0";
-        $rows = DBManager::get()->query($query)->fetchAll(PDO::FETCH_NUM);
-
-        $query = "INSERT INTO `schema_versions`
-                  VALUES (:domain, :version)";
-        $statement = DBManager::get()->prepare($query);
-        foreach ($rows as list($domain, $version)) {
-            $statement->bindValue(':domain', $domain);
-
-            for ($i = 1; $i <= $version; $i += 1) {
-                $statement->bindValue(':version', $i);
-                $statement->execute();
-            }
-        }
-
-       $query = "DROP TABLE IF EXISTS `schema_version`";
-       DBManager::get()->exec($query);
+        $sql = "ALTER TABLE schema_version
+                CHANGE domain domain VARCHAR(255) COLLATE latin1_bin NOT NULL,
+                ADD branch VARCHAR(64) COLLATE latin1_bin NOT NULL DEFAULT '0' AFTER domain,
+                DROP PRIMARY KEY,
+                ADD PRIMARY KEY (domain, branch)";
+        $db->exec($sql);
     }
 
     public function down()
     {
-        $query = "CREATE TABLE IF NOT EXISTS `schema_version` (
-                    `domain` VARCHAR(255) COLLATE latin1_bin NOT NULL,
-                    `version` INT(11) UNSIGNED NOT NULL,
-                    PRIMARY KEY (`domain`)
-                  ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC";
-        DBManager::get()->exec($query);
+        $db = DBManager::get();
 
-        $query = "INSERT IGNORE INTO `schema_version`
-                  SELECT `domain`, MAX(`version`)
-                  FROM `schema_versions`
-                  GROUP BY `domain`";
-        DBManager::get()->exec($query);
+        $sql = "DELETE FROM schema_version WHERE branch != '0'";
+        $db->exec($sql);
 
-        $query = "DROP TABLE IF EXISTS `schema_versions`";
-        DBManager::get()->exec($query);
+        $sql = 'ALTER TABLE schema_version
+                DROP PRIMARY KEY,
+                ADD PRIMARY KEY (domain),
+                DROP branch';
+        $db->exec($sql);
     }
-};
+}

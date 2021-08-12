@@ -17,8 +17,11 @@ class WebMigrateController extends StudipController
 
         parent::before_filter($action, $args);
 
+        DBSchemaVersion::validateSchemaVersion();
+
         $this->target   = Request::int('target');
-        $this->version  = new DBSchemaVersion('studip');
+        $this->branch   = Request::get('branch', '0');
+        $this->version  = new DBSchemaVersion('studip', $this->branch);
         $this->migrator = new Migrator(
             "{$GLOBALS['STUDIP_BASE_PATH']}/db/migrations",
             $this->version,
@@ -45,9 +48,7 @@ class WebMigrateController extends StudipController
 
         $this->lock->lock(['timestamp' => time(), 'user_id' => $GLOBALS['user']->id]);
 
-        foreach (Request::getArray('versions') as $version) {
-            $this->migrator->execute($version, 'up');
-        }
+        $this->migrator->migrateTo($this->target);
 
         $this->lock->release();
 
@@ -78,50 +79,31 @@ class WebMigrateController extends StudipController
 
     public function history_action()
     {
-        $this->history = array_diff_key(
-            $this->migrator->relevantMigrations(0),
-            $this->migrator->relevantMigrations(null)
-        );
-    }
-
-    public function revert_action()
-    {
-        ob_start();
-        set_time_limit(0);
-
-        $this->lock->lock(['timestamp' => time(), 'user_id' => $GLOBALS['user']->id]);
-
-        foreach (Request::getArray('versions') as $version) {
-            $this->migrator->execute($version, 'down');
-        }
-
-        $this->lock->release();
-
-        $announcements = ob_get_clean();
-        PageLayout::postSuccess(
-            _('Die Datenbank wurde erfolgreich migriert.'),
-            array_filter(explode("\n", $announcements))
-        );
-
-        $_SESSION['migration-check'] = [
-            'timestamp' => time(),
-            'count'     => 0,
-        ];
-
-        $this->redirect('history');
+        $this->migrations = $this->migrator->relevantMigrations(0);
+        $this->offset = -1;
+        $this->target = 0;
+        $this->render_action('index');
     }
 
     public function setupSidebar($action)
     {
         $views = Sidebar::get()->addWidget(new ViewsWidget());
         $views->addLink(
-            _('Offene Migrationen'),
-            $this->url_for('index')
+            _('Migrationen ausführen'),
+            $this->url_for('index', ['branch' => $this->branch])
         )->setActive($action === 'index');
         $views->addLink(
-            _('Ausgeführte Migrationen'),
-            $this->url_for('history')
+            _('Migrationen zurücknehmen'),
+            $this->url_for('history', ['branch' => $this->branch])
         )->setActive($action === 'history');
+
+        $widget = new SelectWidget(_('Branch'), $this->url_for($action), 'branch');
+        Sidebar::get()->addWidget($widget);
+
+        foreach ($this->version->getAllBranches() as $branch) {
+            $element = new SelectElement($branch, $branch ?: 'default', $branch == $this->branch);
+            $widget->addElement($element);
+        }
 
         $widget = Sidebar::get()->addWidget(new SidebarWidget());
         $widget->setTitle(_('Aktueller Versionsstand'));

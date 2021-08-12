@@ -14,32 +14,32 @@
 interface SchemaVersion
 {
     /**
-     * Returns current schema version (as maximum number).
+     * Retrieve the branch of this schema.
      *
+     * @return string schema branch
+     */
+    public function getBranch();
+
+    /**
+     * Retrieve all branches of this schema.
+     *
+     * @return array all schema branches
+     */
+    public function getAllBranches();
+
+    /**
+     * Returns current schema version.
+     *
+     * @param string $branch schema branch (optional)
      * @return int schema version
      */
-    public function get();
+    public function get($branch = 0);
 
     /**
-     * Returns whether the given version is already present for the given
-     * domain.
+     * Sets the new schema version.
      *
-     * @param  int $version Version number
-     * @return bool
+     * @param int $version new schema version
+     * @param string $branch schema branch (optional)
      */
-    public function contains($version);
-
-    /**
-     * Adds a schema version.
-     *
-     * @param int $version schema version
-     */
-    public function add($version);
-
-    /**
-     * Removes a schema version.
-     *
-     * @param int $version schema version
-     */
-    public function remove($version);
+    public function set($version, $branch = 0);
 }

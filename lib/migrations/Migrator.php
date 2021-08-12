@@ -38,16 +38,14 @@
  *
  * (\d+)_([a-z_]+).php   // (index)_(name).php
  *
- * 20180524110400_my_first_migration.php
- * 20180812152300_another_migration.php
- * 20181110100900_and_one_last.php
+ * 001_my_first_migration.php
+ * 002_another_migration.php
+ * 003_and_one_last.php
  *
- * Those numbers are used to order your migrations. Use the current time to
- * define the chronological order of migrations. Gaps are allowed. In previous
- * versions of the migration system, the numbers were naturally ordered starting
- * with 1 but that proved to be rather unflexible regarding bug fixes that
- * needed a migration to be executed. Thus, every executed migration number is
- * stored and you may add a migration lateron between two other migrations.
+ * Those numbers are used to order your migrations. The first migration has
+ * to be a 1 (but you can use leading 0). Every following migration has to be
+ * the successor to the previous migration. No gaps are allowed. Just use
+ * natural numbers starting with 1.
  *
  * When migrating those numbers are used to determine the migrations needed to
  * fulfill the target version.
@@ -102,7 +100,7 @@
  *   $migrator = new Migrator($path, $version, $verbose);
  *
  *   # now migrate to target version
- *   $migrator->migrateTo(20181128100139);
+ *   $migrator->migrateTo(5);
  *
  * If you want to migrate to the highest migration, you can just use NULL as
  * parameter:
@@ -116,8 +114,6 @@
  */
 class Migrator
 {
-    const FILE_REGEXP = '/\b(\d+)([_-][_a-z0-9]+)+\.php$/';
-
     /**
      * Direction of migration, either "up" or "down"
      *
@@ -135,9 +131,9 @@ class Migrator
     /**
      * Specifies the target version, may be NULL (alias for "highest migration")
      *
-     * @var int
+     * @var array
      */
-    private $target_version;
+    private $target_versions;
 
     /**
      * How verbose shall the migrator be?
@@ -192,8 +188,8 @@ class Migrator
      * the current schema version (provided by the SchemaVersion object) and a
      * target version calling the methods #up and #down in sequence.
      *
-     * @param mixed  the target version as an integer or NULL thus migrating to
-     *               the top migration
+     * @param mixed  the target version as an integer, array or NULL thus
+     *               migrating to the top migrations
      */
     public function migrateTo($target_version)
     {
@@ -201,83 +197,87 @@ class Migrator
 
         # you're on the right version
         if (empty($migrations)) {
-            $this->log("You are already at %d.\n", $this->schema_version->get());
+            $this->log('You are already at %d.', $this->schema_version->get());
             return;
         }
 
         $this->log(
-            "Currently at version %d. Now migrating %s to %d.\n",
+            'Currently at version %d. Now migrating %s to %d.',
             $this->schema_version->get(),
             $this->direction,
-            $this->target_version
+            max($this->target_versions)
         );
 
-        foreach ($migrations as $version => $migration) {
-            $this->execute($version, $this->direction, $migration);
+        foreach ($migrations as $number => $migration) {
+            list($branch, $version) = $this->migrationBranchAndVersion($number);
+
+            $action = $this->isUp() ? 'Migrating' : 'Reverting';
+            $migration->announce("{$action} %s", $number);
+
+            if ($migration->description()) {
+                $this->log($migration->description());
+                $this->log(str_repeat('-', 79));
+            }
+
+            $time_start = microtime(true);
+            $migration->migrate($this->direction);
+
+            $action = $this->isUp() ? 'Migrated' : 'Reverted';
+            $this->log('');
+            $migration->announce("{$action} in %ss", round(microtime(true) - $time_start, 3));
+            $this->log('');
+
+            $this->schema_version->set($this->isDown() ? $version - 1 : $version, $branch);
+
+            $action = $this->isUp() ? 'MIGRATE_UP' : 'MIGRATE_DOWN';
+            StudipLog::log($action, $number, $this->schema_version->getDomain());
         }
     }
 
     /**
-     * Executes a migration's up or down method
+     * Calculate the selected target versions for all relevant branches. If a
+     * single branch is selected for migration, only that branch and all its
+     * children are considered relevant.
      *
-     * @param  string $version      Version to execute
-     * @param  string $direction    Up or down
-     * @param  Migration $migration Migration to execute (optional, will be
-     *                              loaded if missing)
+     * @param mixed  the target version as an integer, array or NULL thus
+     *               migrating to the top migrations
+     *
+     * @return array an associative array, whose keys are the branch names
+     *               and whose values are the target versions
      */
-    public function execute($version, $direction, Migration $migration = null)
+    public function targetVersions($target_version)
     {
-        if ($this->isUp($direction) && $this->schema_version->contains($version)) {
-            $this->log("Version {$version} is already present.\n");
-            return;
+        $top_versions = $this->topVersion(true);
+        $target_branch = $this->schema_version->getBranch();
+  
+        if (is_array($target_version)) {
+            return $target_version;
         }
-
-        if ($this->isDown($direction) && !$this->schema_version->contains($version)) {
-            $this->log("Version {$version} is not present.\n");
-            return;
-        }
-
-        if ($migration === null) {
-            $migrations = $this->migrationClasses();
-            if (!isset($migrations[$version])) {
-                throw new Exception("Version {$version} is invalid");
+  
+        $max_version = $target_branch ? $target_branch . '.' . $target_version : $target_version;
+  
+        foreach ($top_versions as $branch => $version) {
+            if ($branch == $target_branch) {
+                if (isset($target_version)) {
+                    $top_versions[$branch] = $target_version;
+                }
+            } else if ($target_branch && strpos($branch, $target_branch . '.') !== 0) {
+                unset($top_versions[$branch]);
+            } else if (isset($target_version) && version_compare($branch, $max_version) >= 0) {
+                $top_versions[$branch] = 0;
             }
-            list($file, $class) = $migrations[$version];
-            $migration = $this->loadMigration($file, $class);
         }
-
-        $action = $this->isUp($direction) ? 'Migrating' : 'Reverting';
-
-        $this->announce("{$action} %d", $version);
-        if ($migration->description()) {
-            $this->log($migration->description());
-            $this->log(self::mark('', '-'));
-        }
-
-        $time_start = microtime(true);
-        $migration->migrate($direction);
-
-        $action = $this->isUp($direction) ? 'Migrated' : 'Reverted';
-        $this->log('');
-        $this->announce("{$action} in %ss", round(microtime(true) - $time_start, 3));
-        $this->log('');
-
-        // Update schema version
-        if ($this->isDown($direction)) {
-            $this->schema_version->remove($version);
-        } else {
-            $this->schema_version->add($version);
-        }
-
+  
+        return $top_versions;
     }
-
+  
     /**
      * Invoking this method will return a list of migrations with an index between
      * the current schema version (provided by the SchemaVersion object) and a
      * target version calling the methods #up and #down in sequence.
      *
-     * @param mixed  the target version as an integer or NULL thus migrating to
-     *               the top migration
+     * @param mixed  the target version as an integer, array or NULL thus
+     *               migrating to the top migrations
      *
      * @return array an associative array, whose keys are the migration's
      *               version and whose values are the migration objects
@@ -287,35 +287,29 @@ class Migrator
         // Load migrations
         $migrations = $this->migrationClasses();
 
-        // Determine correct target version
-        $this->target_version = $target_version === null
-                              ? $this->topVersion()
-                              : (int) $target_version;
-
-        // Determine max version (might differ from max schema version in db in
-        // development systems)
-        $max_version = min($this->topVersion(), $this->schema_version->get());
+        // Determine correct target versions
+        $this->target_versions = $this->targetVersions($target_version);
 
         // Determine migration direction
-        if ($this->target_version > 0 && $this->target_version >= $max_version) {
-            $this->direction = 'up';
-        } else {
-            $this->direction = 'down';
+        foreach ($this->target_versions as $branch => $version) {
+            if ($this->schema_version->get($branch) < $version) {
+                $this->direction = 'up';
+                break;
+            } else if ($version < $this->schema_version->get($branch)) {
+                $this->direction = 'down';
+                break;
+            }
         }
 
         // Sort migrations in correct order
-        uksort($migrations, function ($a, $b) {
-            if (mb_strlen($a) > 8 && mb_strlen($b) > 8) {
-                return $a - $b;
-            }
-            return mb_substr($a, 0, 8) - mb_substr($b, 0, 8);
-        });
+        uksort($migrations, 'version_compare');
 
         if (!$this->isUp()) {
             $migrations = array_reverse($migrations, true);
         }
 
         $result = [];
+
         foreach ($migrations as $version => $migration_file_and_class) {
             if (!$this->relevantMigration($version)) {
                 continue;
@@ -323,10 +317,15 @@ class Migrator
 
             list($file, $class) = $migration_file_and_class;
 
-            try {
-                $result[$version] = $this->loadMigration($file, $class);
-            } catch (Exception $e) {
+            $migration = require_once $file;
+
+            if (!$migration instanceof Migration) {
+                $migration = new $class($this->verbose);
+            } else {
+                $migration->setVerbose($this->verbose);
             }
+
+            $result[$version] = $migration;
         }
 
         return $result;
@@ -342,37 +341,20 @@ class Migrator
      */
     private function relevantMigration($version)
     {
-        if ($this->isUp()) {
-            return !$this->schema_version->contains($version)
-                && $version <= $this->target_version;
-        } elseif ($this->isDown()) {
-            return $this->schema_version->contains($version)
-                && $version > $this->target_version;
+        list($branch, $version) = $this->migrationBranchAndVersion($version);
+        $current_version = $this->schema_version->get($branch);
+
+        if (!isset($this->target_versions[$branch])) {
+            return false;
+        } else if ($this->isUp()) {
+            return $current_version < $version
+                && $version <= $this->target_versions[$branch];
+        } else if ($this->isDown()) {
+            return $current_version >= $version
+                && $version > $this->target_versions[$branch];
         }
 
         return false;
-    }
-
-    /**
-     * Loads a migration from the given file and creates and instance of it.
-     *
-     * @param string $file  File name of migration to load
-     * @param string $class Class name to expect to be loaded from the file
-     * @return Migration instance
-     */
-    private function loadMigration($file, $class)
-    {
-        if (class_exists($class)) {
-            $migration = new $class($this->verbose);
-        } else {
-            $migration = require $file;
-            if (!$migration instanceof Migration) {
-                $migration = new $class($this->verbose);
-            } else {
-                $migration->setVerbose($this->verbose);
-            }
-        }
-        return $migration;
     }
 
     /**
@@ -380,9 +362,9 @@ class Migrator
      *
      * @return bool  TRUE if migrating up, FALSE otherwise
      */
-    private function isUp($direction = null)
+    private function isUp()
     {
-        return ($direction ?: $this->direction) === 'up';
+        return $this->direction === 'up';
     }
 
     /**
@@ -390,9 +372,9 @@ class Migrator
      *
      * @return bool  TRUE if migrating down, FALSE otherwise
      */
-    private function isDown($direction = null)
+    private function isDown()
     {
-        return ($direction ?: $this->direction) === 'down';
+        return $this->direction === 'down';
     }
 
     /**
@@ -433,10 +415,7 @@ class Migrator
      */
     protected function migrationFiles()
     {
-        $files = glob($this->migrations_path . '/*.php');
-        $files = array_filter($files, function ($file) {
-            return preg_match(self::FILE_REGEXP, $file);
-        });
+        $files = glob($this->migrations_path . '/[0-9]*_*.php');
         return $files;
     }
 
@@ -450,19 +429,43 @@ class Migrator
     protected function migrationVersionAndName($migration_file)
     {
         $matches = [];
-        preg_match(self::FILE_REGEXP, $migration_file, $matches);
-        return [(int) $matches[1], $matches[2]];
+        preg_match('/\b([0-9.]+)_([_a-z0-9]*)\.php$/', $migration_file, $matches);
+        return [$matches[1], $matches[2]];
+    }
+
+    /**
+     * Split a migration version into its branch and version parts.
+     *
+     * @param string  a migration version
+     * @return array  an array of two elements containing the migration's branch
+     *                and version on this branch.
+     */
+    public function migrationBranchAndVersion($version)
+    {
+        if (preg_match('/^(.*)\.([0-9]+)$/', $version, $matches)) {
+            $branch = preg_replace('/\b0+/', '', $matches[1]);
+            $version = (int) $matches[2];
+        } else {
+            $branch = '0';
+            $version = (int) $version;
+        }
+        return [$branch, $version];
     }
 
     /**
      * Returns the top migration's version.
      *
+     * @param bool  return top version for all branches, not just default one
      * @return int  the top migration's version.
      */
-    public function topVersion()
+    public function topVersion($all_branches = false)
     {
-        $versions = array_keys($this->migrationClasses());
-        return $versions ? max($versions) : 0;
+        $versions = [0];
+        foreach (array_keys($this->migrationClasses()) as $version) {
+            list($branch, $version) = $this->migrationBranchAndVersion($version);
+            $versions[$branch] = max($versions[$branch], $version);
+        }
+        return $all_branches ? $versions : $versions[$this->schema_version->getBranch()];
     }
 
     /**
@@ -479,39 +482,6 @@ class Migrator
         }
 
         $args = func_get_args();
-        vprintf(trim(array_shift($args)) . "\n", $args);
-    }
-
-
-    /**
-     * Overridable method used to return a textual representation of a stronger
-     * ouput of what's going on in me. You can use me as you would use printf.
-     *
-     * @param string $format just a dummy value, instead use this method as you
-     *                       would use printf & co.
-     */
-    protected function announce($format)
-    {
-        # format message
-        $args = func_get_args();
-        $message = vsprintf(array_shift($args), $args);
-
-        return $this->log(self::mark($message));
-    }
-
-    /**
-     * Pads and highlights a given text to a specific length with the given
-     * sign.
-     *
-     * @param string $text
-     * @param string $sign
-     */
-    public static function mark($text, $sign = '=')
-    {
-        $text = trim($text);
-        if ($text) {
-            $text = " {$text} ";
-        }
-        return str_pad("{$sign}{$sign}{$text}", 79, $sign, STR_PAD_RIGHT);
+        vprintf(array_shift($args) . "\n", $args);
     }
 }

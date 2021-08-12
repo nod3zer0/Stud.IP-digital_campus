@@ -13,9 +13,7 @@ class MigrationTest extends \Codeception\Test\Unit
 
     public function setUp(): void
     {
-        $this->before = isset($GLOBALS['CACHING_ENABLE'])
-                      ? $GLOBALS['CACHING_ENABLE']
-                      : null;
+        $this->before = $GLOBALS['CACHING_ENABLE'] ?? null;
         $GLOBALS['CACHING_ENABLE'] = false;
 
         require_once 'lib/classes/StudipCache.class.php';
@@ -41,30 +39,26 @@ class MigrationTest extends \Codeception\Test\Unit
     {
         return new class() implements SchemaVersion
         {
-            private $versions = [];
+            private $versions = [0];
 
-            public function get()
+            public function getBranch()
             {
-                return count($this->versions) > 0 ? max($this->versions) : 0;
+                return 0;
             }
 
-            public function contains($version)
+            public function getAllBranches()
             {
-                return in_array($version, $this->versions);
+                return array_keys($this->versions);
             }
 
-            public function add($version)
+            public function get($branch = 0)
             {
-                if (!$this->contains($version)) {
-                    $this->versions[] = $version;
-                }
+                return $this->versions[$branch];
             }
 
-            public function remove($version)
+            public function set($version, $branch = 0)
             {
-                if ($this->contains($version)) {
-                    $this->versions = array_diff($this->versions, [$version]);
-                }
+                $this->versions[$branch] = (int) $version;
             }
         };
     }
@@ -72,27 +66,9 @@ class MigrationTest extends \Codeception\Test\Unit
     private function getMigrator($schema_version = null)
     {
         return new Migrator(
-            __DIR__ . '/test-migrations',
+            TEST_FIXTURES_PATH . 'migrations',
             $schema_version ?: $this->getSchemaVersion()
         );
-    }
-
-    public function testSchemaVersion()
-    {
-        $schema_version = $this->getSchemaVersion();
-        $this->assertSame(0, $schema_version->get());
-
-        $schema_version->add(1);
-        $this->assertTrue($schema_version->contains(1));
-        $this->assertSame(1, $schema_version->get());
-
-        $schema_version->add(2);
-        $this->assertTrue($schema_version->contains(2));
-        $this->assertSame(2, $schema_version->get());
-
-        $schema_version->remove(1);
-        $this->assertFalse($schema_version->contains(1));
-        $this->assertSame(2, $schema_version->get());
     }
 
     public function testRelevance()
@@ -102,7 +78,7 @@ class MigrationTest extends \Codeception\Test\Unit
         $relevant = $migrator->relevantMigrations(null);
         $this->assertSame(4, count($relevant));
 
-        $migrator->migrateTo(10);
+        $migrator->migrateTo(2);
 
         $relevant = $migrator->relevantMigrations(null);
         $this->assertSame(1, count($relevant));
@@ -113,7 +89,7 @@ class MigrationTest extends \Codeception\Test\Unit
         $schema_version = $this->getSchemaVersion();
         $migrator = $this->getMigrator($schema_version);
         $migrator->migrateTo(null);
-        $this->assertSame(20190417, $schema_version->get());
+        $this->assertSame(10, $schema_version->get());
         $this->assertSame(0, count($migrator->relevantMigrations(null)));
 
         return $schema_version;
@@ -133,13 +109,12 @@ class MigrationTest extends \Codeception\Test\Unit
     public function testGaps()
     {
         $schema_version = $this->getSchemaVersion();
-        $schema_version->add(2);
-        $schema_version->add(10);
+        $schema_version->set(10);
 
         $migrator = $this->getMigrator($schema_version);
 
         $relevant = $migrator->relevantMigrations(null);
-        $this->assertSame(2, count($relevant));
-        $this->assertEquals([1, 20190417], array_keys($relevant));
+        $this->assertSame(1, count($relevant));
+        $this->assertEquals(['2.1'], array_keys($relevant));
     }
 }

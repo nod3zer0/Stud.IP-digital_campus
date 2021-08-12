@@ -1,18 +1,4 @@
 <?php
-$requirements = [
-    "lib/functions.php",
-    $GLOBALS["RELATIVE_PATH_EXTERN"]."/extern_config.inc.php",
-    $GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternConfig.class.php",
-    $GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternConfigIni.class.php",
-    $GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternConfigDb.class.php",
-];
-
-foreach ($requirements as $file) {
-    if (!file_exists($file)) {
-        throw new Exception('Migration is not compatible with your Stud.IP version');
-    }
-    require_once $file;
-}
 
 class Step87ExternConfigurations extends Migration
 {

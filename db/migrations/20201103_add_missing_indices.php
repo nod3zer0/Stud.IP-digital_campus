@@ -13,6 +13,14 @@ class AddMissingIndices extends Migration
 
     public function up()
     {
+        // avoid running this migration twice
+        $query = "SHOW INDEX FROM activities WHERE Key_name = 'object_id'";
+        $result = DBManager::get()->query($query);
+
+        if ($result && $result->rowCount() > 0) {
+            return;
+        }
+
         $query = "ALTER TABLE `activities`
                   ADD INDEX `object_id` (`object_id`(32))";
         DBManager::get()->exec($query);
