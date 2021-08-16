@@ -210,7 +210,7 @@ class Step00349 extends Migration
             }
         }
 
-        $db->exec("DELETE FROM `object_user_visits` WHERE `type` IN ('literature', 'forum')");
+        $db->exec("DELETE FROM `object_user_visits` WHERE `type` IN ('literature', 'forum', '')");
         $db->exec("ALTER TABLE `object_user_visits` ADD `plugin_id` INT NOT NULL AFTER `type`");
         foreach ($ouv_mapping as $type => $plugin_id) {
             if (is_string($plugin_id)) {
