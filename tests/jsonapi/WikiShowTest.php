@@ -55,7 +55,7 @@ class WikiShowTest extends \Codeception\Test\Unit
     private function createWikiPage($rangeId, $keyword, $body)
     {
         $wikiPage = new \WikiPage([$rangeId, $keyword, 0]);
-        $wikiPage->body = studip_utf8decode($body);
+        $wikiPage->body = $body;
         $wikiPage->user_id = 'nobody';
         $wikiPage->store();
 

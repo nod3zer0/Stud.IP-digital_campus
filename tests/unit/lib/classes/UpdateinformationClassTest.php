@@ -13,11 +13,11 @@
 class UpdateInformationCase extends \Codeception\Test\Unit
 {
 
-    function setUp() {
+    function setUp(): void {
     }
 
 
-    function tearDown() {
+    function tearDown(): void {
     }
 
 
@@ -26,9 +26,9 @@ class UpdateInformationCase extends \Codeception\Test\Unit
         UpdateInformation::setInformation("test.myfunc", $old_data);
         UpdateInformation::setInformation("test.myfunc2", "strangedata");
         $new_data = UpdateInformation::getInformation();
-        $this->assertInternalType("array", $new_data);
-        $this->assertInternalType("array", $new_data['test.myfunc']);
-        $this->assertInternalType("string", $new_data['test.myfunc2']);
+        $this->assertIsArray($new_data);
+        $this->assertIsArray($new_data['test.myfunc']);
+        $this->assertIsString($new_data['test.myfunc2']);
         $this->assertEquals("TestValue", $new_data['test.myfunc']['test']);
         $this->assertEquals("strangedata", $new_data['test.myfunc2']);
     }

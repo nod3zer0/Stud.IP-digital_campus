@@ -23,7 +23,7 @@ class WikiIndexTest extends \Codeception\Test\Unit
     {
         $credentials = $this->tester->getCredentialsForTestAutor();
         $rangeId = 'a07535cf2f8a72df33c12ddfa4b53dde';
-        $body = studip_utf8decode('Es gibt im Moment in diese Mannschaft, oh, einige Spieler vergessen ihren Profi was sie sind. Ich lese nicht sehr viele Zeitungen, aberich habe gehört viele Situationen. Erstens: Wir haben nicht offensivgespielt.');
+        $body = 'Es gibt im Moment in diese Mannschaft, oh, einige Spieler vergessen ihren Profi was sie sind. Ich lese nicht sehr viele Zeitungen, aberich habe gehört viele Situationen. Erstens: Wir haben nicht offensivgespielt.';
 
         $this->createWikiPage($credentials['id'], $rangeId, 'yxilo', $body);
         $this->createWikiPage($credentials['id'], $rangeId, 'ulyq', $body);
@@ -37,7 +37,7 @@ class WikiIndexTest extends \Codeception\Test\Unit
         $this->tester->assertCount(count($countPages), $wikiPages);
 
         $wikiPage = current($wikiPages);
-        $this->tester->assertEquals($body, studip_utf8decode($wikiPage->attribute('content')));
+        $this->tester->assertEquals($body, $wikiPage->attribute('content'));
 
         $this->tester->storeJsonMd('get_wiki_pages', $response, 2, '[...]');
     }
@@ -46,6 +46,7 @@ class WikiIndexTest extends \Codeception\Test\Unit
     private function getWikiIndex($credentials, $rangeId)
     {
         $app = $this->tester->createApp($credentials, 'get', '/courses/{id}/wiki', WikiIndex::class);
+        $app->get('/wiki-pages/{id}', function () {})->setName('get-wiki-page');
 
         return $this->tester->sendMockRequest(
             $app,

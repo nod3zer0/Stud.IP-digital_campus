@@ -26,12 +26,12 @@ define('DYNAMIC_ASSETS_URL', 'http://www%d.example.com/public/');
 class AssetsTestCase extends \Codeception\Test\Unit {
 
 
-  function setUp() {
+  function setUp(): void {
     Assets::set_assets_url(STATIC_ASSETS_URL);
   }
 
 
-  function tearDown() {
+  function tearDown(): void {
     Assets::set_assets_url('');
   }
 
@@ -57,12 +57,12 @@ class DynamicAssetsTestCase extends \Codeception\Test\Unit
 {
 
 
-  function setUp() {
+  function setUp(): void {
     Assets::set_assets_url(DYNAMIC_ASSETS_URL);
   }
 
 
-  function tearDown() {
+  function tearDown(): void {
     Assets::set_assets_url('');
   }
 
@@ -90,12 +90,12 @@ class AssetsHelpersTestCase extends \Codeception\Test\Unit
 {
 
 
-  function setUp() {
+  function setUp(): void {
     Assets::set_assets_url(STATIC_ASSETS_URL);
   }
 
 
-  function tearDown() {
+  function tearDown(): void {
     Assets::set_assets_url('');
   }
 

@@ -14,7 +14,7 @@ class ObjectBuilderTest extends \Codeception\Test\Unit
     protected $another_object;
     protected $another_changed_object;
 
-    public function setUp ()
+    public function setUp (): void
     {
         require_once 'lib/functions.php';
         require_once 'lib/classes/ObjectBuilder.php';
@@ -82,21 +82,17 @@ class ObjectBuilderTest extends \Codeception\Test\Unit
         );
     }
 
-    /**
-     * @expectedException UnexpectedValueException
-     */
     public function testExceptionOnExpectedType()
     {
+        $this->expectException(\UnexpectedValueException::class);
         $this->assertInstanceOf('ObjectBuilderTestMock', ObjectBuilder::build([
             ObjectBuilder::OBJECT_IDENTIFIER => 'AnotherObjectBuilderTestMock',
         ], 'FooBar'));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testExceptionOnNull()
     {
+        $this->expectException(\InvalidArgumentException::class);
         ObjectBuilder::build(null);
     }
 
@@ -151,11 +147,9 @@ class ObjectBuilderTest extends \Codeception\Test\Unit
         ));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidJsonInput()
     {
+        $this->expectException(\InvalidArgumentException::class);
         ObjectBuilder::build(
             json_encode($this->simple_array_definition) . 'brokenJSON'
         );
@@ -238,7 +232,7 @@ class ObjectBuilderTest extends \Codeception\Test\Unit
             $this->another_simple_array_definition,
         ]);
 
-        $this->assertInternalType('array', $restored);
+        $this->assertIsArray($restored);
         $this->assertCount(2, $restored);
 
         $this->assertInstanceOf('ObjectBuilderTestMock', $restored[0]);
@@ -282,4 +276,3 @@ class AnotherObjectBuilderTestMock extends ObjectBuilderTestMock
         $this->woken_up = true;
     }
 }
-

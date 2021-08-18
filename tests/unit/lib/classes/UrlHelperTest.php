@@ -12,7 +12,7 @@
 
 class URLHelperTest extends \Codeception\Test\Unit
 {
-    public function tearDown ()
+    public function tearDown(): void
     {
         // remove all link params
         foreach (URLHelper::getLinkParams() as $param => $value) {
