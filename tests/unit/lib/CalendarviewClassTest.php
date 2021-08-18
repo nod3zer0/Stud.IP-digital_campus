@@ -14,11 +14,11 @@ require_once 'lib/calendar/CalendarView.class.php';
 class CalendarViewCase extends \Codeception\Test\Unit {
 
 
-    function setUp() {
+    function setUp(): void {
     }
 
 
-    function tearDown() {
+    function tearDown(): void {
     }
 
 
@@ -56,7 +56,7 @@ class CalendarViewCase extends \Codeception\Test\Unit {
         $id2 = 4;
         $view->addColumn($title2, "", $id2);
         $columns = $view->getColumns();
-        $this->assertInternalType("array", $columns);
+        $this->assertIsArray($columns);
         $this->assertInstanceOf("CalendarColumn", $columns[0]);
         $this->assertEquals($title1, $columns[0]->getTitle());
         $this->assertEquals($id1, $columns[0]->getId());
@@ -87,7 +87,7 @@ class CalendarViewCase extends \Codeception\Test\Unit {
         ];
         $view->addEntry($entry);
         $entries = $view->getEntries();
-        $this->assertInternalType("array", $entries);
+        $this->assertIsArray($entries);
         $this->assertNotNull($entries['day_'.$id]);
     }
 
@@ -101,5 +101,3 @@ class CalendarViewCase extends \Codeception\Test\Unit {
     //Die anderen Methoden muss Till testen.
 
 }
-
-

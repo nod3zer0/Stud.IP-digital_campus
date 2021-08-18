@@ -55,6 +55,7 @@ class WikiCreateTest extends \Codeception\Test\Unit
             '/courses/{id}/wiki',
             WikiCreate::class
         );
+        $app->get('/wiki-pages/{id}', function () {})->setName('get-wiki-page');
 
         return $this->tester->sendMockRequest(
             $app,

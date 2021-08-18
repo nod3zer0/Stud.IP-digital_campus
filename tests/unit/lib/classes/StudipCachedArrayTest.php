@@ -13,7 +13,7 @@ class StudipCachedArrayTest extends \Codeception\Test\Unit
 {
     private $cache;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cache = new TestCache();
     }

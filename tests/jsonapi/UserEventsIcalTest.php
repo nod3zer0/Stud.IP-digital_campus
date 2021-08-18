@@ -42,7 +42,7 @@ class UserEventsIcalTest extends \Codeception\Test\Unit
         $response = $app($requestBuilder->getRequest(), new \Slim\Http\Response());
 
         $this->tester->assertEquals(200, $response->getStatusCode());
-        $this->tester->assertContains('BEGIN:VEVENT', (string) $response->getBody());
-        $this->tester->assertContains('SUMMARY:blypyp', (string) $response->getBody());
+        $this->tester->assertStringContainsString('BEGIN:VEVENT', (string) $response->getBody());
+        $this->tester->assertStringContainsString('SUMMARY:blypyp', (string) $response->getBody());
     }
 }

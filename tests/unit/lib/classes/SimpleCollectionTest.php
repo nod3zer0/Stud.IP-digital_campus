@@ -251,11 +251,11 @@ class SimpleCollectionTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage unknown operator: foo
      */
     public function testInvalidCompOperatorException($a)
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('unknown operator: foo');
         SimpleCollection::getCompFunc('foo', null);
     }
 

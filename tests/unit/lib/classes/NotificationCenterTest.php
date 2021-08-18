@@ -33,7 +33,7 @@ class NotificationCenterTestSoundexPredicate
 
 class NotificationCenterTest extends \Codeception\Test\Unit
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->observer = $this->createMock("Observer");
         $this->subject = new stdClass();
@@ -50,7 +50,7 @@ class NotificationCenterTest extends \Codeception\Test\Unit
         NotificationCenter::addObserver($this->observer, 'update', 'Namespaced\\SormDidUpdate', $this->subject);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         NotificationCenter::removeObserver($this->observer);
     }

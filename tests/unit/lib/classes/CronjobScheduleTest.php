@@ -14,14 +14,14 @@ class CronjobTestSchedule extends SimpleORMap
 
 class CronjobScheduleTest extends \Codeception\Test\Unit
 {
-    function setUp()
+    function setUp(): void
     {
         date_default_timezone_set('Europe/Berlin');
 
         StudipTestHelper::set_up_tables(['cronjobs_schedules', 'cronjobs_tasks']);
     }
 
-    function tearDown()
+    function tearDown(): void
     {
         StudipTestHelper::tear_down_tables();
     }

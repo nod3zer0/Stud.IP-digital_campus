@@ -22,7 +22,7 @@ require_once 'lib/phplib/Seminar_Perm.class.php';
  */
 class AvatarTestCase extends  \Codeception\Test\Unit {
 
-    function setUp()
+    function setUp(): void
     {
         $stub = $this->createMock('Seminar_Perm');
         // Configure the stub.
@@ -37,7 +37,7 @@ class AvatarTestCase extends  \Codeception\Test\Unit {
         $this->avatar = Avatar::getAvatar($this->avatar_id);
     }
 
-  function tearDown() {
+  function tearDown(): void {
     unset($GLOBALS['DYNAMIC_CONTENT_PATH'], $GLOBALS['DYNAMIC_CONTENT_URL']);
   }
 
@@ -70,7 +70,7 @@ class AvatarTestCase extends  \Codeception\Test\Unit {
 class CourseAvatarTestCase extends \Codeception\Test\Unit
 {
 
-  function setUp() {
+  function setUp(): void {
     $this->avatar_id = "123456789";
     $this->avatar = CourseAvatar::getAvatar($this->avatar_id);
 
@@ -96,7 +96,7 @@ class CourseAvatarTestCase extends \Codeception\Test\Unit
     }
   }
 
-  function tearDown() {
+  function tearDown(): void {
     stream_wrapper_unregister("var");
     unset($GLOBALS['DYNAMIC_CONTENT_PATH'], $GLOBALS['DYNAMIC_CONTENT_URL']);
   }

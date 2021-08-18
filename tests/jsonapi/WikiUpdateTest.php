@@ -48,6 +48,7 @@ class WikiUpdateTest extends \Codeception\Test\Unit
             ],
         ];
         $app = $this->tester->createApp($credentials, 'patch', '/wiki-pages/{id}', WikiUpdate::class);
+        $app->get('/wiki-pages/{id}', function () {})->setName('get-wiki-page');
 
         return $this->tester->sendMockRequest(
                 $app,
@@ -62,7 +63,7 @@ class WikiUpdateTest extends \Codeception\Test\Unit
     private function createWikiPage($rangeId, $keyword, $body)
     {
         $wikiPage = new \WikiPage([$rangeId, $keyword, 0]);
-        $wikiPage->body = studip_utf8decode($body);
+        $wikiPage->body = $body;
         $wikiPage->user_id = 'nobody';
         $wikiPage->store();
 

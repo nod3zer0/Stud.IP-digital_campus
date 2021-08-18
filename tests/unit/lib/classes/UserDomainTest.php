@@ -8,12 +8,12 @@
 
 class UserDomainTest extends \Codeception\Test\Unit
 {
-    public function setUp()
+    public function setUp(): void
     {
         StudipTestHelper::set_up_tables(['userdomains']);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         StudipTestHelper::tear_down_tables();
     }

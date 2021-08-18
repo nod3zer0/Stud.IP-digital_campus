@@ -12,7 +12,7 @@
 
 class CSRFProtectionTokenTest extends \Codeception\Test\Unit
 {
-    function setUp()
+    function setUp(): void
     {
         if (session_id() === '') {
             session_id("test-session");
@@ -21,7 +21,7 @@ class CSRFProtectionTokenTest extends \Codeception\Test\Unit
         $_SESSION = [];
     }
 
-    function tearDown()
+    function tearDown(): void
     {
         $_SESSION = $this->original_session;
     }
@@ -52,7 +52,7 @@ class CSRFProtectionTokenTest extends \Codeception\Test\Unit
     function testTokenIsAString()
     {
         $token = CSRFProtection::token();
-        $this->assertInternalType("string", $token);
+        $this->assertIsString($token);
     }
 
     function testTokenTag()
@@ -65,7 +65,7 @@ class CSRFProtectionTokenTest extends \Codeception\Test\Unit
 class CSRFRequestTest extends \Codeception\Test\Unit
 {
 
-    function setUp()
+    function setUp(): void
     {
         if (session_id() === '') {
             session_id("test-session");
@@ -77,7 +77,7 @@ class CSRFRequestTest extends \Codeception\Test\Unit
         $_SERVER['HTTP_X_REQUESTED_WITH'] = null;
     }
 
-    function tearDown()
+    function tearDown(): void
     {
         list($_SESSION, $_POST, $_SERVER) = $this->original_state;
     }

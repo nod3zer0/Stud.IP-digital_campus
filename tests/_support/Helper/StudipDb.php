@@ -5,7 +5,7 @@ namespace Helper;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 
-require_once 'StudipPDO.php';
+require_once('lib/classes/StudipPDO.class.php');
 
 class StudipDb extends \Codeception\Module
 {

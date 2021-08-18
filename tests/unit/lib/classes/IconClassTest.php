@@ -10,13 +10,13 @@
 
 class IconClassTest extends \Codeception\Test\Unit
 {
-    function setUp()
+    function setUp(): void
     {
         $this->memo_assets_url = Assets::url();
         Assets::set_assets_url('');
     }
 
-    function tearDown()
+    function tearDown(): void
     {
         Assets::set_assets_url($this->memo_assets_url);
     }

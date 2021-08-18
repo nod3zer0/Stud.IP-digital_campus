@@ -12,7 +12,7 @@
 
 class RequestTest extends \Codeception\Test\Unit
 {
-    public function setUp ()
+    public function setUp (): void
     {
         $_GET['a']    = 'test';
         $_POST['b']   = '\\h1"';
@@ -208,7 +208,7 @@ class RequestTest extends \Codeception\Test\Unit
         $this->assertTrue(Request::submittedSome('null', 's', 'v'));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Config::set(null);
     }
@@ -216,7 +216,7 @@ class RequestTest extends \Codeception\Test\Unit
 
 class RequestMethodTest extends \Codeception\Test\Unit
 {
-    public function setUp ()
+    public function setUp (): void
     {
         unset($_SERVER['REQUEST_METHOD']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);

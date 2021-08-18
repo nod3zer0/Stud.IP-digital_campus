@@ -46,12 +46,12 @@ class auth_user_md5 extends SimpleORMap
 
 class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 {
-    function setUp()
+    function setUp(): void
     {
         StudipTestHelper::set_up_tables(['auth_user_md5']);
     }
 
-    function tearDown()
+    function tearDown(): void
     {
         StudipTestHelper::tear_down_tables();
     }
@@ -229,11 +229,11 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage unknown not found.
      */
     public function testInvalidColumnException($a)
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('unknown not found.');
         $a->unknown = 1;
     }
 

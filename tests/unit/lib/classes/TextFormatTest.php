@@ -191,7 +191,7 @@ function markupSum($markup, $matches)
 
 class TextFormatTest extends \Codeception\Test\Unit
 {
-    public function setUp()
+    public function setUp(): void
     {
         $markup = new TextFormat();
 
