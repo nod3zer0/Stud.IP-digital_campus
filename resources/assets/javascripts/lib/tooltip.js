@@ -90,14 +90,23 @@ class Tooltip {
      * @param {int} x - Horizontal offset
      * @param {int} y - Vertical offset
      */
-    translateArrows(x, y) {
+    translateArrows(x, y, left_arrow = false) {
         CSS.removeRule(`#${this.id}::before`);
         CSS.removeRule(`#${this.id}::after`);
 
         if (x !== 0 || y !== 0) {
-            const rule = `translate(${x}px, ${y}px);`;
-            CSS.addRule(`#${this.id}::before`, { transform: rule }, ['-ms-', '-webkit-']);
-            CSS.addRule(`#${this.id}::after`, { transform: rule }, ['-ms-', '-webkit-']);
+            let before_rule = {
+                transform: `translate(${x}px, ${y}px);`
+            };
+            if (left_arrow) {
+                before_rule.transform = `translate(${x}px, ${y}px) rotate(90deg);`;
+            }
+            let after_rule = before_rule;
+            if (left_arrow) {
+                after_rule['border-width'] = '9px';
+            }
+            CSS.addRule(`#${this.id}::before`, before_rule, ['-ms-', '-webkit-']);
+            CSS.addRule(`#${this.id}::after`, after_rule, ['-ms-', '-webkit-']);
         }
     }
 
@@ -133,18 +142,39 @@ class Tooltip {
         const width = this.element.outerWidth(true);
         const height = this.element.outerHeight(true);
         const maxWidth = $(document).width();
+        const maxHeight = $(document).height();
         let x = this.x - width / 2;
         let y = this.y - height;
-        let arrowOffset = 0;
+        //The arrow offset is the offset from the bottom right corner of
+        //the tooltip "frame".
+        let arrow_offset_x = 0;
+        let arrow_offset_y = 0;
+        let left_arrow = false;
 
-        if (x < Tooltip.threshold) {
-            arrowOffset = x - Tooltip.threshold;
-            x = Tooltip.threshold;
-        } else if (x + width > maxWidth - Tooltip.threshold) {
-            arrowOffset = x + width - maxWidth + Tooltip.threshold;
-            x = maxWidth - width - Tooltip.threshold;
+        if (y < 0) {
+            y = 0;
+            x = this.x + 20;
+            //Put the arrow on the left side and move the tooltip,
+            //if there is still enough place left on the right.
+            left_arrow = true;
+            arrow_offset_y = -height + this.y + 10;
+            if (arrow_offset_y > -20) {
+                y+= arrow_offset_y + 20;
+                arrow_offset_y = -20;
+            }
+            arrow_offset_x = -width / 2 - 8;
+        } else if (y + height > maxHeight) {
+            y = maxHeight - height;
         }
-        this.translateArrows(arrowOffset, 0);
+
+        if (x < 0) {
+            arrow_offset_x = 0;
+            x = 0;
+        } else if (x + width > maxWidth) {
+            arrow_offset_x = x + width - maxWidth;
+            x = maxWidth - width;
+        }
+        this.translateArrows(arrow_offset_x, arrow_offset_y, left_arrow);
 
         this.element.css({
             left: x,
