@@ -82,7 +82,7 @@ class Course_ManagementController extends AuthenticatedController
                     $is_visible = $course->visible;
                     if ($course->isOpenEnded() || $course->end_semester->visible) {
                         $actions->addLink(
-                            _('Sichtbarkeit ändern') . ' (' .  ($is_visible ? _('sichtbar') : _('unsichtbar')) . ')',
+                            ($is_visible ? _('Veranstaltung verstecken') : _('Veranstaltung sichtbar schalten')),
                             URLHelper::getURL($this->url_for('course/management/change_visibility'), ['studip_ticket' => Seminar_Session::get_ticket()]),
                             Icon::create('visibility-' . ($is_visible ? 'visible' : 'invisible'))
                         );
