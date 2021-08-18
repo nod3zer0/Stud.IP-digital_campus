@@ -46,7 +46,9 @@
     .content-item {
         background-color: $dark-gray-color-5;
         border: solid thin $light-gray-color-40;
-        height: 150px;
+        height: 130px;
+        padding-bottom: 10px;
+        padding-top: 10px;
 
         .content-item-link {
             color: unset;
@@ -57,11 +59,14 @@
 
             .content-item-img-wrapper {
                 margin: 15px;
+                margin-right: 20px;
                 margin-top: 0;
                 width: 64px;
             }
 
             .content-item-text {
+                padding-top: -2px;
+
                 .content-item-title {
                     color: $base-color;
                     font-size: 2rem;
