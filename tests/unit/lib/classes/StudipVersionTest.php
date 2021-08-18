@@ -14,11 +14,11 @@
 
 class StudipVersionTest extends \Codeception\Test\Unit
 {
-    function setUp() {
+    function setUp(): void {
         $this->version = $GLOBALS['SOFTWARE_VERSION'];
     }
 
-    function tearDown()
+    function tearDown(): void
     {
         $GLOBALS['SOFTWARE_VERSION'] = $this->version;
     }

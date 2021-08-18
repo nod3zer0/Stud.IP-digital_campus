@@ -14,7 +14,7 @@ require_once 'lib/navigation/Navigation.php';
 
 class NavigationTest extends \Codeception\Test\Unit
 {
-    public function setUp ()
+    public function setUp(): void
     {
         Navigation::setRootNavigation(new Navigation(''));
     }

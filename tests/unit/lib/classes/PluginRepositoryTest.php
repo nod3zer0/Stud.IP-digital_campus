@@ -14,7 +14,7 @@ require_once 'lib/plugins/engine/PluginRepository.class.php';
 
 class PluginRepositoryTest extends \Codeception\Test\Unit
 {
-    public function setUp ()
+    public function setUp (): void
     {
         $GLOBALS['SOFTWARE_VERSION'] = '1.9.0';
         $GLOBALS['CACHING_ENABLE'] = false;

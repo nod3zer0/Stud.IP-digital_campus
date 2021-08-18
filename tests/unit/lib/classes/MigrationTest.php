@@ -11,7 +11,7 @@ class MigrationTest extends \Codeception\Test\Unit
     protected $migrator;
     protected $before = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->before = isset($GLOBALS['CACHING_ENABLE'])
                       ? $GLOBALS['CACHING_ENABLE']
@@ -28,7 +28,7 @@ class MigrationTest extends \Codeception\Test\Unit
         require_once 'lib/migrations/SchemaVersion.php';
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if ($this->before !== null) {
             $GLOBALS['CACHING_ENABLE'] = $this->before;

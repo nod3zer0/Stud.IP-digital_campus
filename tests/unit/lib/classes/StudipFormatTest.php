@@ -19,11 +19,11 @@ function markupBold($markup, $matches, $contents)
 
 class StudipFormatTest extends \Codeception\Test\Unit
 {
-    function setUp() {
+    function setUp(): void {
         $this->old_rules = StudipCoreFormat::getStudipMarkups();
     }
 
-    function tearDown()
+    function tearDown(): void
     {
         foreach(StudipCoreFormat::getStudipMarkups() as $key => $value) {
             StudipCoreFormat::removeStudipMarkup($key);

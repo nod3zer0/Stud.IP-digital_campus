@@ -12,22 +12,31 @@
  * @category    Stud.IP
  */
 
-class TestStudipPDO extends StudipPDO
+class StudipPdoTest extends \Codeception\Test\Unit
 {
-    public static function doReplaceStrings($statement)
+    public function setUp(): void
     {
-        return parent::replaceStrings($statement);
-    }
-}
+        $this->testPdo = new class ('sqlite::memory:') extends StudipPDO {
+            public static function doReplaceStrings($statement)
+            {
+                return parent::replaceStrings($statement);
+            }
+        };
 
-class StudipPDOTest extends \Codeception\Test\Unit
-{
+        $this->testPdo->beginTransaction();
+    }
+
+    public function tearDown(): void
+    {
+        $this->testPdo->rollBack();
+    }
+
     public function testSimpleString()
     {
         $query  = 'SELECT * FROM bar';
         $expect = $query;
 
-        $this->assertEquals($expect, TestStudipPDO::doReplaceStrings($query));
+        $this->assertEquals($expect, $this->testPdo::doReplaceStrings($query));
     }
 
     public function testDoubleQuotedString()
@@ -35,12 +44,12 @@ class StudipPDOTest extends \Codeception\Test\Unit
         $query  = 'SELECT "\'foo""\\"" FROM bar WHERE foo = "\\\\"';
         $expect = 'SELECT ? FROM bar WHERE foo = ?';
 
-        $this->assertEquals($expect, TestStudipPDO::doReplaceStrings($query));
+        $this->assertEquals($expect, $this->testPdo::doReplaceStrings($query));
 
         $query  = str_repeat($query, 100);
         $expect = str_repeat($expect, 100);
 
-        $this->assertEquals($expect, TestStudipPDO::doReplaceStrings($query));
+        $this->assertEquals($expect, $this->testPdo::doReplaceStrings($query));
     }
 
     public function testSingleQuotedString()
@@ -48,12 +57,12 @@ class StudipPDOTest extends \Codeception\Test\Unit
         $query  = 'SELECT \'"foo\'\'\\\'\' FROM bar WHERE foo = \'\\\\\'';
         $expect = 'SELECT ? FROM bar WHERE foo = ?';
 
-        $this->assertEquals($expect, TestStudipPDO::doReplaceStrings($query));
+        $this->assertEquals($expect, $this->testPdo::doReplaceStrings($query));
 
         $query  = str_repeat($query, 100);
         $expect = str_repeat($expect, 100);
 
-        $this->assertEquals($expect, TestStudipPDO::doReplaceStrings($query));
+        $this->assertEquals($expect, $this->testPdo::doReplaceStrings($query));
     }
 
     public function testMixedQuotedString()
@@ -61,12 +70,12 @@ class StudipPDOTest extends \Codeception\Test\Unit
         $query  = 'SELECT """\'", \'"\' FROM bar WHERE foo IN (\'\'\'"\'"")';
         $expect = 'SELECT ?, ? FROM bar WHERE foo IN (??)';
 
-        $this->assertEquals($expect, TestStudipPDO::doReplaceStrings($query));
+        $this->assertEquals($expect, $this->testPdo::doReplaceStrings($query));
 
         $query  = str_repeat($query, 100);
         $expect = str_repeat($expect, 100);
 
-        $this->assertEquals($expect, TestStudipPDO::doReplaceStrings($query));
+        $this->assertEquals($expect, $this->testPdo::doReplaceStrings($query));
     }
 
     public function testUnterminatedSingleQuote()
@@ -74,7 +83,7 @@ class StudipPDOTest extends \Codeception\Test\Unit
         $query  = 'SELECT \'1\' ORDER BY \'au.username asc';
         $expect = 'SELECT ? ORDER BY \'au.username asc';
 
-        $this->assertEquals($expect, TestStudipPDO::doReplaceStrings($query));
+        $this->assertEquals($expect, $this->testPdo::doReplaceStrings($query));
     }
 
     public function testUnterminatedDoubleQuote()
@@ -82,6 +91,6 @@ class StudipPDOTest extends \Codeception\Test\Unit
         $query  = 'SELECT "1" ORDER BY "au.username asc';
         $expect = 'SELECT ? ORDER BY "au.username asc';
 
-        $this->assertEquals($expect, TestStudipPDO::doReplaceStrings($query));
+        $this->assertEquals($expect, $this->testPdo::doReplaceStrings($query));
     }
 }

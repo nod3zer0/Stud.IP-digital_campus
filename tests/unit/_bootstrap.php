@@ -38,8 +38,13 @@ require_once 'varstream.php';
 define("TEST_FIXTURES_PATH", dirname(__DIR__) . "/_data/");
 
 require __DIR__ . '/../../composer/autoload.php';
+
+global $STUDIP_BASE_PATH;
+$STUDIP_BASE_PATH = realpath(dirname(dirname(__FILE__)) . '/..');
+
 require 'lib/classes/StudipAutoloader.php';
 require 'lib/functions.php';
+require 'lib/visual.inc.php';
 
 StudipAutoloader::setBasePath(realpath(__DIR__ . '/../..'));
 StudipAutoloader::register();

@@ -2,11 +2,11 @@
 
 class StringManipulationTest extends \Codeception\Test\Unit
 {
-    public function setUp()
+    public function setUp(): void
     {
         require_once 'lib/functions.php';
     }
-    
+
     /**
      * @dataProvider camelCaseProvider
      */

@@ -14,11 +14,11 @@ require_once 'lib/calendar/CalendarColumn.class.php';
 class CalendarColumnCase extends \Codeception\Test\Unit {
 
 
-    function setUp() {
+    function setUp(): void {
     }
 
 
-    function tearDown() {
+    function tearDown(): void {
     }
 
 
@@ -62,11 +62,11 @@ class CalendarColumnCase extends \Codeception\Test\Unit {
         $entry = ['start' => "1200", 'end' => "1230", 'title' => "test_title_number_2"];
         $column->addEntry($entry);
         $entries = $column->getEntries();
-        $this->assertInternalType("array", $entries);
+        $this->assertIsArray($entries);
         $this->assertEquals(2, count($entries));
         $this->assertNotEquals($entries[0], $entry);
         $this->assertEquals($entry, $entries[1]);
-        $this->assertInternalType("array", $entries[1]);
+        $this->assertIsArray($entries[1]);
     }
 
     function test_wrong_entry() {
@@ -85,7 +85,7 @@ class CalendarColumnCase extends \Codeception\Test\Unit {
             ['start' => "1200", 'end' => "1400", 'title' => "test_title"]
         ];
         $column = CalendarColumn::create()->addEntries($entries);
-        $this->assertInternalType('array', $column->getEntries());
+        $this->assertIsArray($column->getEntries());
     }
 
     function test_erase_entries() {
@@ -93,7 +93,7 @@ class CalendarColumnCase extends \Codeception\Test\Unit {
         $column = CalendarColumn::create()->addEntry($entry);
         $column->eraseEntries();
         $entries = $column->getEntries();
-        $this->assertInternalType("array", $entries);
+        $this->assertIsArray($entries);
         $this->assertEquals(0, count($entries));
     }
 

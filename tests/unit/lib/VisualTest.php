@@ -17,7 +17,7 @@ require_once 'lib/classes/SmileyFormat.php';
 
 class VisualFunctionsTest extends \Codeception\Test\Unit
 {
-    public function setUp()
+    public function setUp(): void
     {
         static $config = [
             'LOAD_EXTERNAL_MEDIA' => 'allow',
@@ -30,7 +30,7 @@ class VisualFunctionsTest extends \Codeception\Test\Unit
         $GLOBALS['SYMBOL_SHORT'] = [];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $GLOBALS['SMILEY_NO_DB'] = false;
     }

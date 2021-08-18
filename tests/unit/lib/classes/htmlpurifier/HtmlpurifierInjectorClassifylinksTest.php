@@ -27,7 +27,7 @@ require_once 'lib/classes/htmlpurifier/HTMLPurifier_Injector_ClassifyLinks.php';
  */
 class HTMLPurifier_Injector_ClassifyLinksTest extends \Codeception\Test\Unit
 {
-    public function setUp()
+    public function setUp(): void
     {
         $config = new Config([
             'CONVERT_IDNA_URL' => false,
@@ -106,7 +106,7 @@ class HTMLPurifier_Injector_ClassifyLinksTest extends \Codeception\Test\Unit
         ];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Config::set(null);
     }

@@ -10,7 +10,7 @@
 
 class StudipFileloaderTestCase extends \Codeception\Test\Unit {
 
-    public function setUp() {
+    public function setUp(): void {
         ArrayFileStream::set_filesystem(
             [
                 'pathto' => [
@@ -23,7 +23,7 @@ class StudipFileloaderTestCase extends \Codeception\Test\Unit {
         }
     }
 
-    public function tearDown() {
+    public function tearDown(): void {
         stream_wrapper_unregister("var");
     }
 
