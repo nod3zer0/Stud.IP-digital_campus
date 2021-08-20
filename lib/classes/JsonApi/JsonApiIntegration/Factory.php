@@ -2,9 +2,12 @@
 
 namespace JsonApi\JsonApiIntegration;
 
+use Neomerx\JsonApi\Contracts\Parser\EditableContextInterface;
+use Neomerx\JsonApi\Contracts\Parser\ParserInterface;
+use Neomerx\JsonApi\Contracts\Schema\LinkInterface;
+use Neomerx\JsonApi\Contracts\Schema\SchemaContainerInterface;
 use Neomerx\JsonApi\Factories\Factory as NeomerxFactory;
-use Neomerx\JsonApi\Contracts\Schema\ContainerInterface;
-use Neomerx\JsonApi\Contracts\Encoder\Parser\ParserManagerInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 /**
  * Die "normale" \Neomerx\JsonApi\Factories\Factory stellt in
@@ -19,38 +22,21 @@ use Neomerx\JsonApi\Contracts\Encoder\Parser\ParserManagerInterface;
  */
 class Factory extends NeomerxFactory
 {
-    private $diContainer;
-
-    public function setDependencyInjectionContainer(\Psr\Container\ContainerInterface $diContainer)
-    {
-        $this->diContainer = $diContainer;
-    }
-
-    public function getDependencyInjectionContainer()
-    {
-        return $this->diContainer;
+    /**
+     * @inheritdoc
+     */
+    public function createParser(
+        SchemaContainerInterface $container,
+        EditableContextInterface $context
+    ): ParserInterface {
+        return new Parser($this, $container, $context);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function createContainer(array $providers = [])
+    public function createSchemaContainer(iterable $schemas): SchemaContainerInterface
     {
-        $container = new Container($this, $providers);
-
-        $container->setLogger($this->logger);
-
-        return $container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createParser(ContainerInterface $container, ParserManagerInterface $manager)
-    {
-        $parser = new EncoderParser($this, $this, $this, $container, $manager);
-        $parser->setLogger($this->logger);
-
-        return $parser;
+        return new SchemaContainer($this, $schemas);
     }
 }

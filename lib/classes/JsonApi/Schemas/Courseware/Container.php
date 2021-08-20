@@ -3,7 +3,8 @@
 namespace JsonApi\Schemas\Courseware;
 
 use JsonApi\Schemas\SchemaProvider;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class Container extends SchemaProvider
 {
@@ -15,12 +16,10 @@ class Container extends SchemaProvider
     const REL_EDITBLOCKER = 'edit-blocker';
     const REL_STRUCTURAL_ELEMENT = 'structural-element';
 
-    protected $resourceType = self::TYPE;
-
     /**
      * {@inheritdoc}
      */
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->id;
     }
@@ -28,7 +27,7 @@ class Container extends SchemaProvider
     /**
      * {@inheritdoc}
      */
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
             'position' => (int) $resource['position'],
@@ -46,8 +45,11 @@ class Container extends SchemaProvider
     /**
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $shouldInclude = function ($key) use ($includeList) {
@@ -58,48 +60,40 @@ class Container extends SchemaProvider
 
         $relationships[self::REL_OWNER] = $resource['owner_id']
             ? [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->owner)
-                        ->getSelfSubLink($resource->owner),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->owner),
                 ],
-                self::DATA => $resource->owner,
+                self::RELATIONSHIP_DATA => $resource->owner,
             ]
-            : [self::DATA => $resource->owner];
+            : [self::RELATIONSHIP_DATA => $resource->owner];
 
         $relationships[self::REL_EDITOR] = $resource['editor_id']
             ? [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->editor)
-                        ->getSelfSubLink($resource->editor),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->editor),
                 ],
-                self::DATA => $resource->editor,
+                self::RELATIONSHIP_DATA => $resource->editor,
             ]
-            : [self::DATA => null];
+            : [self::RELATIONSHIP_DATA => null];
 
         $relationships[self::REL_EDITBLOCKER] = $resource['edit_blocker_id']
             ? [
-                self::SHOW_SELF => true,
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->edit_blocker)
-                        ->getSelfSubLink($resource->edit_blocker),
+                self::RELATIONSHIP_LINKS_SELF => true,
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->edit_blocker),
                 ],
-                self::DATA => $resource->edit_blocker,
+                self::RELATIONSHIP_DATA => $resource->edit_blocker,
             ]
-            : [self::SHOW_SELF => true, self::DATA => null];
+            : [self::RELATIONSHIP_LINKS_SELF => true, self::RELATIONSHIP_DATA => null];
 
         $relationships[self::REL_STRUCTURAL_ELEMENT] = $resource['structural_element_id']
             ? [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->structural_element)
-                        ->getSelfSubLink($resource->structural_element),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->structural_element),
                 ],
-                self::DATA => $resource->structural_element,
+                self::RELATIONSHIP_DATA => $resource->structural_element,
             ]
-            : [self::DATA => null];
+            : [self::RELATIONSHIP_DATA => null];
 
         return $relationships;
     }
@@ -107,13 +101,13 @@ class Container extends SchemaProvider
     private function addBlocksRelationship(array $relationships, $resource, $includeData)
     {
         $relation = [
-            self::SHOW_SELF => true,
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_BLOCKS),
             ],
         ];
 
-        $relation[self::DATA] = $resource->blocks;
+        $relation[self::RELATIONSHIP_DATA] = $resource->blocks;
 
         $relationships[self::REL_BLOCKS] = $relation;
 

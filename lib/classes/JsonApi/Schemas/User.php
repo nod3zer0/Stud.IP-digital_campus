@@ -2,7 +2,9 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Factories\FactoryInterface;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class User extends SchemaProvider
 {
@@ -24,17 +26,11 @@ class User extends SchemaProvider
     const REL_SCHEDULE = 'schedule';
 
     /**
-     * Hier wird der Typ des Schemas festgelegt.
-     * {@inheritdoc}
-     */
-    protected $resourceType = self::TYPE;
-
-    /**
      * Diese Method entscheidet über die JSON-API-spezifische ID von
      * \User-Objekten.
      * {@inheritdoc}
      */
-    public function getId($user)
+    public function getId($user): ?string
     {
         return $user->id;
     }
@@ -44,7 +40,7 @@ class User extends SchemaProvider
      * für die Ausgabe vorbereitet werden.
      * {@inheritdoc}
      */
-    public function getAttributes($user)
+    public function getAttributes($user, ContextInterface $context): iterable
     {
         $attrs = [
             'username' => $user->username,
@@ -60,10 +56,10 @@ class User extends SchemaProvider
         return $attrs + iterator_to_array($this->getProfileAttributes($user));
     }
 
-    private function getProfileAttributes(\User $user)
+    private function getProfileAttributes(\User $user): iterable
     {
         $visibilities = $this->getVisibilities($user);
-        $observer = $this->getDiContainer()->get('studip-current-user');
+        $observer = $this->currentUser;
 
         $fields = [
             ['phone', 'privatnr', 'private_phone'],
@@ -72,13 +68,15 @@ class User extends SchemaProvider
         ];
 
         foreach ($fields as list($attr, $field, $vis)) {
-            $value = ($user[$field] && is_element_visible_for_user($observer->id, $user->id, $visibilities[$vis]))
-                   ? strip_tags((string) $user[$field]) : null;
+            $value =
+                $user[$field] && is_element_visible_for_user($observer->id, $user->id, $visibilities[$vis])
+                    ? strip_tags((string) $user[$field])
+                    : null;
             yield $attr => $value;
         }
     }
 
-    private function getVisibilities(\User $user)
+    private function getVisibilities(\User $user): array
     {
         $visibilities = get_local_visibility_by_id($user->id, 'homepage');
         if (is_array(json_decode($visibilities, true))) {
@@ -91,26 +89,26 @@ class User extends SchemaProvider
     /**
      * @inheritdoc
      */
-    public function getPrimaryMeta($resource)
+    public function hasResourceMeta($resource): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResourceMeta($resource)
     {
         $avatar = \Avatar::getAvatar($resource->id);
 
         return [
             'avatar' => [
-                'small'    => $avatar->getURL(\Avatar::SMALL),
-                'medium'   => $avatar->getURL(\Avatar::MEDIUM),
-                'normal'   => $avatar->getURL(\Avatar::NORMAL),
-                'original' => $avatar->getURL(\Avatar::ORIGINAL)
-            ]
-         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getInclusionMeta($resource)
-    {
-        return $this->getPrimaryMeta($resource);
+                'small' => $avatar->getURL(\Avatar::SMALL),
+                'medium' => $avatar->getURL(\Avatar::MEDIUM),
+                'normal' => $avatar->getURL(\Avatar::NORMAL),
+                'original' => $avatar->getURL(\Avatar::ORIGINAL),
+            ],
+        ];
     }
 
     /**
@@ -119,8 +117,11 @@ class User extends SchemaProvider
      * eines Nutzers bei Bedarf am \User.
      * {@inheritdoc}
      */
-    public function getRelationships($user, $isPrimary, array $includeList)
+    public function getRelationships($user, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
             return $isPrimary && in_array($key, $includeList);
         };
@@ -140,7 +141,7 @@ class User extends SchemaProvider
             $relationships = $this->getConfigValuesRelationship(
                 $relationships,
                 $user,
-                $shouldInclude(self::REL_CONTACTS)
+                $shouldInclude(self::REL_CONFIG_VALUES)
             );
             $relationships = $this->getContactsRelationship(
                 $relationships,
@@ -157,46 +158,18 @@ class User extends SchemaProvider
                 $user,
                 $shouldInclude(self::REL_COURSE_MEMBERSHIPS)
             );
-            $relationships = $this->getEventsRelationship(
-                $relationships,
-                $user,
-                $shouldInclude(self::REL_EVENTS)
-            );
-            $relationships = $this->getFileRefsRelationship(
-                $relationships,
-                $user,
-                $shouldInclude(self::REL_FILES)
-            );
-            $relationships = $this->getFoldersRelationship(
-                $relationships,
-                $user,
-                $shouldInclude(self::REL_FOLDERS)
-            );
-            $relationships = $this->getInboxRelationship(
-                $relationships,
-                $user,
-                $shouldInclude(self::REL_INBOX)
-            );
+            $relationships = $this->getEventsRelationship($relationships, $user, $shouldInclude(self::REL_EVENTS));
+            $relationships = $this->getFileRefsRelationship($relationships, $user, $shouldInclude(self::REL_FILES));
+            $relationships = $this->getFoldersRelationship($relationships, $user, $shouldInclude(self::REL_FOLDERS));
+            $relationships = $this->getInboxRelationship($relationships, $user, $shouldInclude(self::REL_INBOX));
             $relationships = $this->getInstituteMembershipsRelationship(
                 $relationships,
                 $user,
                 $shouldInclude(self::REL_INSTITUTE_MEMBERSHIPS)
             );
-            $relationships = $this->getNewsRelationship(
-                $relationships,
-                $user,
-                $shouldInclude(self::REL_NEWS)
-            );
-            $relationships = $this->getOutboxRelationship(
-                $relationships,
-                $user,
-                $shouldInclude(self::REL_OUTBOX)
-            );
-            $relationships = $this->getScheduleRelationship(
-                $relationships,
-                $user,
-                $shouldInclude(self::REL_SCHEDULE)
-            );
+            $relationships = $this->getNewsRelationship($relationships, $user, $shouldInclude(self::REL_NEWS));
+            $relationships = $this->getOutboxRelationship($relationships, $user, $shouldInclude(self::REL_OUTBOX));
+            $relationships = $this->getScheduleRelationship($relationships, $user, $shouldInclude(self::REL_SCHEDULE));
         }
 
         return $relationships;
@@ -205,13 +178,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getActivityStreamRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getActivityStreamRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_ACTIVITYSTREAM] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_ACTIVITYSTREAM),
             ],
         ];
@@ -222,13 +192,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getBlubberRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getBlubberRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_BLUBBER] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_BLUBBER),
             ],
         ];
@@ -239,14 +206,11 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getConfigValuesRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getConfigValuesRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_CONFIG_VALUES] = [
-            self::SHOW_SELF => true,
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_CONFIG_VALUES),
             ],
         ];
@@ -257,14 +221,11 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getContactsRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getContactsRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_CONTACTS] = [
-            self::SHOW_SELF => true,
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_CONTACTS),
             ],
         ];
@@ -275,13 +236,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getCoursesRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getCoursesRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_COURSES] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_COURSES),
             ],
         ];
@@ -292,13 +250,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getCourseMembershipsRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getCourseMembershipsRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_COURSE_MEMBERSHIPS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_COURSE_MEMBERSHIPS),
             ],
         ];
@@ -309,13 +264,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getFileRefsRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getFileRefsRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_FILES] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_FILES),
             ],
         ];
@@ -326,13 +278,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getFoldersRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getFoldersRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_FOLDERS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_FOLDERS),
             ],
         ];
@@ -343,13 +292,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getInboxRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getInboxRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_INBOX] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_INBOX),
             ],
         ];
@@ -360,13 +306,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getInstituteMembershipsRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getInstituteMembershipsRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_INSTITUTE_MEMBERSHIPS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_INSTITUTE_MEMBERSHIPS),
             ],
         ];
@@ -377,13 +320,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getEventsRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getEventsRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_EVENTS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_EVENTS),
             ],
         ];
@@ -394,13 +334,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getNewsRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getNewsRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_NEWS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_NEWS),
             ],
         ];
@@ -411,13 +348,10 @@ class User extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getOutboxRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getOutboxRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_OUTBOX] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_OUTBOX),
             ],
         ];
@@ -425,17 +359,13 @@ class User extends SchemaProvider
         return $relationships;
     }
 
-
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function getScheduleRelationship(
-        array $relationships,
-        \User $user,
-        $includeData
-    ) {
+    private function getScheduleRelationship(array $relationships, \User $user, $includeData)
+    {
         $relationships[self::REL_SCHEDULE] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_SCHEDULE),
             ],
         ];

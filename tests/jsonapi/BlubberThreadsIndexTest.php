@@ -118,10 +118,9 @@ class BlubberThreadsIndexTest extends \Codeception\Test\Unit
         // given
         $credentials = $this->tester->getCredentialsForTestAutor();
 
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () use ($credentials) {
-            $courseId = 'missing';
-            $this->fetchCourseThreads($credentials, $courseId);
-        });
+        $courseId = 'missing';
+        $response = $this->fetchCourseThreads($credentials, $courseId);
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 
     public function testIndexAllThreadsOfAnInstitute()
@@ -151,10 +150,9 @@ class BlubberThreadsIndexTest extends \Codeception\Test\Unit
         // given
         $credentials = $this->tester->getCredentialsForTestAutor();
 
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () use ($credentials) {
-            $instituteId = 'missing';
-            $this->fetchInstituteThreads($credentials, $instituteId);
-        });
+        $instituteId = 'missing';
+        $response = $this->fetchInstituteThreads($credentials, $instituteId);
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 
     public function testIndexAllThreadsWithSinceFilter()
@@ -265,7 +263,8 @@ class BlubberThreadsIndexTest extends \Codeception\Test\Unit
         );
     }
 
-    private function fetchCourseThreads(array $credentials, string $courseId, array $filters = [])
+    private function fetchCourseThreads
+        (array $credentials, string $courseId, array $filters = [])
     {
         $requestBuilder = $this->tester
                         ->createRequestBuilder($credentials)

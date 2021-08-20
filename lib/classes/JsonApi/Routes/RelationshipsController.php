@@ -5,7 +5,7 @@ namespace JsonApi\Routes;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\UnsupportedRequestError;
 use JsonApi\JsonApiController;
-use Neomerx\JsonApi\Contracts\Document\DocumentInterface;
+use Neomerx\JsonApi\Contracts\Schema\DocumentInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

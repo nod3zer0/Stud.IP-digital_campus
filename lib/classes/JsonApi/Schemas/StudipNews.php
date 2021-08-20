@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class StudipNews extends SchemaProvider
 {
@@ -10,8 +11,6 @@ class StudipNews extends SchemaProvider
     const REL_AUTHOR = 'author';
     const REL_COMMENTS = 'comments';
     const REL_RANGES = 'ranges';
-
-    protected $resourceType = self::TYPE;
 
     public static function getRangeClasses()
     {
@@ -34,12 +33,12 @@ class StudipNews extends SchemaProvider
         ];
     }
 
-    public function getId($news)
+    public function getId($news): ?string
     {
-        return $news->news_id;
+        return $news->getId();
     }
 
-    public function getAttributes($news)
+    public function getAttributes($news, ContextInterface $context): iterable
     {
         return [
             'title' => (string) $news->topic,
@@ -55,8 +54,11 @@ class StudipNews extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRelationships($news, $isPrimary, array $includeList)
+    public function getRelationships($news, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $relationships = $this->addAuthorRelationship($relationships, $news, $includeList);
@@ -72,10 +74,10 @@ class StudipNews extends SchemaProvider
               ? $news->owner
               : \User::build(['id' => $news->user_id], false);
         $relationships[self::REL_AUTHOR] = [
-            self::LINKS => [
-                Link::RELATED => new Link('/users/'.$news->user_id),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($news->owner),
             ],
-            self::DATA => $data,
+            self::RELATIONSHIP_DATA => $data,
         ];
 
         return $relationships;
@@ -87,9 +89,9 @@ class StudipNews extends SchemaProvider
     private function addCommentsRelationship($relationships, $news, $includeList)
     {
         $relationships[self::REL_COMMENTS] = [
-            self::LINKS => [
-                Link::RELATED => $this->getRelationshipRelatedLink($news, self::REL_COMMENTS)
-            ]
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->getRelationshipRelatedLink($news, self::REL_COMMENTS),
+            ],
         ];
 
         return $relationships;
@@ -98,8 +100,8 @@ class StudipNews extends SchemaProvider
     private function addRangesRelationship($relationships, $news, $includeList)
     {
         $relationships[self::REL_RANGES] = [
-            self::SHOW_SELF => true,
-            self::DATA => $this->prepareRanges($news, $includeList),
+            self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_DATA => $this->prepareRanges($news, $includeList),
         ];
 
         return $relationships;
@@ -112,7 +114,7 @@ class StudipNews extends SchemaProvider
         return $news->news_ranges->map(function ($range) use ($include) {
             switch ($range->type) {
                 case 'global':
-                    return $this->getDiContainer()->get('studip-system-object');
+                    return new \Jsonapi\Models\Studip();
 
                 case 'sem':
                     return $include

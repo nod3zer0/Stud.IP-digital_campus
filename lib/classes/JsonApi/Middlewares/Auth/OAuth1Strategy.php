@@ -2,15 +2,23 @@
 
 namespace JsonApi\Middlewares\Auth;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class OAuth1Strategy implements Strategy
 {
-    protected $user;
+    /** @var callable */
+    protected $authenticator;
 
+    /** @var Request */
     protected $request;
 
+    /** @var ?\User */
+    protected $user;
+
+    /**
+     * @param callable $authenticator
+     */
     public function __construct(Request $request, $authenticator)
     {
         $this->request = $request;
@@ -40,7 +48,7 @@ class OAuth1Strategy implements Strategy
         return $response; //->withHeader('WWW-Authenticate', sprintf('Basic realm="%s"', 'Stud.IP JSON-API'));
     }
 
-    private function detect()
+    private function detect(): ?\User
     {
         if (!\OAuthRequestVerifier::requestIsSigned()) {
             return null;
@@ -75,10 +83,11 @@ class OAuth1Strategy implements Strategy
             return null;
         }
 
+        /** @var \User */
         return \User::find($userId);
     }
 
-    private function getParamsFromAuthorizationHeader(Request $request, array $params)
+    private function getParamsFromAuthorizationHeader(Request $request, array $params): array
     {
         if ($request->hasHeader('Authorization')) {
             $auth = $request->getHeaderLine('Authorization');

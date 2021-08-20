@@ -38,6 +38,7 @@ class UserScheduleShowTest extends \Codeception\Test\Unit
         $scheduleId = \DBManager::get()->lastInsertId();
 
         $app = $this->tester->createApp($credentials, 'get', '/users/{id}/schedule', UserScheduleShow::class, 'get-schedule');
+        $app->get('/xxx', function () {})->setName('get-semester');
 
         $requestBuilder = $this->tester->createRequestBuilder($credentials);
         $requestBuilder->setUri('/users/'.$credentials['id'].'/schedule')->fetch();

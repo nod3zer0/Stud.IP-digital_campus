@@ -1,16 +1,12 @@
 <?php
 
 require_once 'NewsTestHelper.php';
-use JsonApi\Models\C;
 
-use JsonApi\Routes\News\CourseNewsCreate;
-use JsonApi\Routes\News\UserNewsCreate;
-use JsonApi\Routes\News\StudipNewsCreate;
 use JsonApi\Routes\News\CommentCreate;
-use JsonApi\Routes\News\NewsUpdate; 
-use JsonApi\Errors\AuthorizationFailedException;
-use JsonApi\Errors\RecordNotFoundException;
-use JsonApi\Routes\News\CommentsDelete;
+use JsonApi\Routes\News\CourseNewsCreate;
+use JsonApi\Routes\News\NewsUpdate;
+use JsonApi\Routes\News\StudipNewsCreate;
+use JsonApi\Routes\News\UserNewsCreate;
 
 class NewsCreateTest extends \Codeception\Test\Unit
 {
@@ -53,49 +49,43 @@ class NewsCreateTest extends \Codeception\Test\Unit
         $this->tester->assertNotNull($resourceObject->attribute('content'));
         $newsId = $news->id;
     }
+
     public function testShouldNotStudipNewsCreate()
     {
+        $credentials = $this->tester->getCredentialsForTestDozent();
+        $title = 'A public testing title';
+        $content = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit';
+        $entry_json = $this->buildValidResourceEntry($content, $title);
+        $app = $this->tester->createApp($credentials, 'post', '/news', StudipNewsCreate::class);
 
-        $this->tester->expectThrowable(AuthorizationFailedException::class, function () {
-            $credentials = $this->tester->getCredentialsForTestDozent();
-            $title = 'A public testing title';
-            $content = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit';
-            $entry_json = $this->buildValidResourceEntry($content, $title);
-            $app = $this->tester->createApp($credentials, 'post', '/news', StudipNewsCreate::class);
-  
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/news')
-                ->create()
-                ->setJsonApiBody($entry_json);
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/news')
+            ->create()
+            ->setJsonApiBody($entry_json);
 
-          $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-          $this->tester->assertTrue($response->isSuccessfulDocument([201]));
-          $document = $response->document();
-          $resourceObject = $document->primaryResource();
-          $this->tester->assertNotNull($resourceObject->attribute('title'));
-          $this->tester->assertNotNull($resourceObject->attribute('content'));
-          $newsId = $news->id;
-
-        });
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $this->tester->assertFalse($response->isSuccessfulDocument());
+        $this->tester->assertSame(403, $response->getStatusCode());
     }
-    public function testShouldNewsUpdate() {
+
+    public function testShouldNewsUpdate()
+    {
         $title = 'A course testing title';
         $credentials = $this->tester->getCredentialsForTestDozent();
         $content = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit';
         $news = $this->createNews($credentials, $title, $content);
-        
+
         $changedContent = 'Lorem ipsum dolor sit amet';
         $entry_json = $this->buildValidUpdateEntry($changedContent);
         $app = $this->tester->createApp($credentials, 'patch', '/news/{id}', NewsUpdate::class);
-        
+
         $requestBuilder = $this->tester->createRequestBuilder($credentials);
         $requestBuilder
             ->setUri('/news/'.$news->id)
             ->update()
             ->setJsonApiBody($entry_json);
-            
-    
+
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
         $this->tester->assertTrue($response->isSuccessfulDocument());
 
@@ -128,10 +118,9 @@ class NewsCreateTest extends \Codeception\Test\Unit
         $this->tester->assertNotNull($resourceObject->attribute('content'));
         $newsId = $news->id;
     }
+
     public function testShouldNotCourseNewsCreate()
     {
-      $this->tester->expectThrowable(AuthorizationFailedException::class, function () {
-
         $credentials = $this->tester->getCredentialsForTestAutor();
         $courseId = 'a07535cf2f8a72df33c12ddfa4b53dde';
         $title = 'A course testing title';
@@ -147,15 +136,9 @@ class NewsCreateTest extends \Codeception\Test\Unit
 
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
 
-        $this->tester->assertTrue($response->isSuccessfulDocument([201]));
-        $document = $response->document();
-        $resourceObject = $document->primaryResource();
-        $this->tester->assertNotNull($resourceObject->attribute('title'));
-        $this->tester->assertNotNull($resourceObject->attribute('content'));
-        $newsId = $news->id;
-
-      });
+        $this->tester->assertSame(403, $response->getStatusCode());
     }
+
     public function testShouldUserNewsCreate()
     {
         $credentials = $this->tester->getCredentialsForTestAutor();
@@ -172,7 +155,6 @@ class NewsCreateTest extends \Codeception\Test\Unit
             ->setJsonApiBody($entry_json);
 
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-
         $this->tester->assertTrue($response->isSuccessfulDocument([201]));
         $document = $response->document();
         $resourceObject = $document->primaryResource();
@@ -180,10 +162,9 @@ class NewsCreateTest extends \Codeception\Test\Unit
         $this->tester->assertNotNull($resourceObject->attribute('content'));
         $newsId = $news->id;
     }
+
     public function testShouldNotUserNewsCreate()
     {
-      $this->tester->expectThrowable(AuthorizationFailedException::class, function () {
-
         $credentials = $this->tester->getCredentialsForTestAutor();
         $otherUser = $this->tester->getCredentialsForTestDozent();
         $userId = $otherUser['id'];
@@ -199,16 +180,9 @@ class NewsCreateTest extends \Codeception\Test\Unit
             ->setJsonApiBody($entry_json);
 
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-
-        $this->tester->assertTrue($response->isSuccessfulDocument([201]));
-        $document = $response->document();
-        $resourceObject = $document->primaryResource();
-        $this->tester->assertNotNull($resourceObject->attribute('title'));
-        $this->tester->assertNotNull($resourceObject->attribute('content'));
-        $newsId = $news->id;
-
-      });
+        $this->assertSame(403, $response->getStatusCode());
     }
+
     public function testShouldCommentCreate()
     {
         $title = 'A course testing title';
@@ -227,37 +201,29 @@ class NewsCreateTest extends \Codeception\Test\Unit
 
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
 
-        $this->tester->assertTrue($response->isSuccessfulDocument([201]));
+        $this->tester->assertTrue($response->isSuccessfulDocument());
         $document = $response->document();
         $resourceObject = $document->primaryResource();
         $this->tester->assertNotNull($resourceObject->attribute('content'));
     }
+
     public function testShouldNotCommentCreate()
     {
-        //missing title
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () {
-            $title = 'A course testing title';
-            $credentials = $this->tester->getCredentialsForTestDozent();
-            $content = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit';
-            $news = $this->createNews($credentials, $title, $content);
-            $comment = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit';
-            $entry_json = $this->buildValidCommentEntry($comment);
+        $title = 'A course testing title';
+        $credentials = $this->tester->getCredentialsForTestDozent();
+        $content = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit';
+        $news = $this->createNews($credentials, $title, $content);
+        $comment = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit';
+        $entry_json = $this->buildValidCommentEntry($comment);
 
-            $app = $this->tester->createApp($credentials, 'post', '/news/{id}/comments', CommentCreate::class);
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/news/badId/comments')
-                ->create()
-                ->setJsonApiBody($entry_json);
+        $app = $this->tester->createApp($credentials, 'post', '/news/{id}/comments', CommentCreate::class);
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/news/badId/comments')
+            ->create()
+            ->setJsonApiBody($entry_json);
 
-            $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-
-            $this->tester->assertTrue($response->isSuccessfulDocument([201]));
-            $document = $response->document();
-            $resourceObject = $document->primaryResource();
-            $this->tester->assertNotNull($resourceObject->attribute('content'));
-        });
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $this->tester->assertFalse($response->isSuccessfulDocument());
     }
-    
-
 }

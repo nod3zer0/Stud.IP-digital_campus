@@ -2,7 +2,7 @@
 
 namespace JsonApi\Errors;
 
-use Neomerx\JsonApi\Document\Error;
+use Neomerx\JsonApi\Schema\Error;
 use Neomerx\JsonApi\Exceptions\JsonApiException;
 
 /**
@@ -15,7 +15,7 @@ class AuthorizationFailedException extends JsonApiException
      */
     public function __construct()
     {
-        $error = new Error('Forbidden', null, 403);
+        $error = new Error(null, null, null, '403', null, 'Forbidden');
         parent::__construct($error, 403);
     }
 }

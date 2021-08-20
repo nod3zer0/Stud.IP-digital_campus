@@ -50,13 +50,9 @@ class BlubberCommentsUpdateTest extends \Codeception\Test\Unit
         $comment = $this->createBlubberComment($credentialsAutor, $thread, 'Autolykos knows him.');
         $this->tester->assertEquals($num + 1, \BlubberComment::countBySQL('1'));
 
-        $this->tester->expectThrowable(\JsonApi\Errors\AuthorizationFailedException::class, function () use (
-            $credentialsDozent,
-            $comment
-        ) {
-            $content = 'Who knows Erginos?';
-            $this->updateBlubberCommentJSONAPI($credentialsDozent, $comment, $content);
-        });
+        $content = 'Who knows Erginos?';
+        $response = $this->updateBlubberCommentJSONAPI($credentialsDozent, $comment, $content);
+        $this->tester->assertSame(403, $response->getStatusCode());
     }
 
     public function testUpdateOtherCommentSuccess()

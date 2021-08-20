@@ -3,7 +3,8 @@
 namespace JsonApi\Schemas\Courseware;
 
 use JsonApi\Schemas\SchemaProvider;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class StructuralElement extends SchemaProvider
 {
@@ -21,12 +22,10 @@ class StructuralElement extends SchemaProvider
     const REL_PARENT = 'parent';
     const REL_USER = 'user';
 
-    protected $resourceType = self::TYPE;
-
     /**
      * {@inheritdoc}
      */
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->id;
     }
@@ -34,9 +33,9 @@ class StructuralElement extends SchemaProvider
     /**
      * {@inheritdoc}
      */
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
-        $user = $this->getDiContainer()->get('studip-current-user');
+        $user = $this->currentUser;
 
         return [
             'position' => (int) $resource['position'],
@@ -65,8 +64,11 @@ class StructuralElement extends SchemaProvider
      * @param bool                                 $isPrimary
      * @param array                                $includeList
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $shouldInclude = function ($key) use ($includeList) {
@@ -74,86 +76,74 @@ class StructuralElement extends SchemaProvider
         };
 
         $relationships[self::REL_CHILDREN] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_CHILDREN),
             ],
-            self::DATA => $resource->children,
+            self::RELATIONSHIP_DATA => $resource->children,
         ];
 
         $relationships[self::REL_CONTAINERS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_CONTAINERS),
             ],
-            self::DATA => $resource->containers,
+            self::RELATIONSHIP_DATA => $resource->containers,
         ];
 
         if ($resource->course) {
             $relationships[self::REL_COURSE] = [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->course)
-                        ->getSelfSubLink($resource->course),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->course),
                 ],
-                self::DATA => $resource->course,
+                self::RELATIONSHIP_DATA => $resource->course,
             ];
         }
 
         if ($resource->user) {
             $relationships[self::REL_USER] = [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->user)
-                        ->getSelfSubLink($resource->user),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->user),
                 ],
-                self::DATA => $resource->user,
+                self::RELATIONSHIP_DATA => $resource->user,
             ];
         }
 
         $relationships[self::REL_OWNER] = $resource['owner_id']
             ? [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->owner)
-                        ->getSelfSubLink($resource->owner),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->owner),
                 ],
-                self::DATA => $resource->owner,
+                self::RELATIONSHIP_DATA => $resource->owner,
             ]
-            : [self::DATA => null];
+            : [self::RELATIONSHIP_DATA => null];
 
         $relationships[self::REL_EDITOR] = $resource['editor_id']
             ? [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->editor)
-                        ->getSelfSubLink($resource->editor),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->editor),
                 ],
-                self::DATA => $resource->editor,
+                self::RELATIONSHIP_DATA => $resource->editor,
             ]
-            : [self::DATA => $resource->editor];
+            : [self::RELATIONSHIP_DATA => $resource->editor];
 
         $relationships[self::REL_EDITBLOCKER] = $resource['edit_blocker_id']
             ? [
-                self::SHOW_SELF => true,
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->edit_blocker)
-                        ->getSelfSubLink($resource->edit_blocker),
+                self::RELATIONSHIP_LINKS_SELF => true,
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->edit_blocker),
                 ],
-                self::DATA => $resource->edit_blocker,
+                self::RELATIONSHIP_DATA => $resource->edit_blocker,
             ]
-            : [self::SHOW_SELF => true, self::DATA => null];
+            : [self::RELATIONSHIP_LINKS_SELF => true, self::RELATIONSHIP_DATA => null];
 
         $relationships[self::REL_PARENT] = $resource->parent_id
             ? [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->parent)
-                        ->getSelfSubLink($resource->parent),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->parent),
                 ],
 
-                self::DATA => $resource->parent,
+                self::RELATIONSHIP_DATA => $resource->parent,
             ]
-            : [self::DATA => null];
+            : [self::RELATIONSHIP_DATA => null];
 
         $relationships = $this->addAncestorsRelationship(
             $relationships,
@@ -174,14 +164,14 @@ class StructuralElement extends SchemaProvider
     private function addAncestorsRelationship(array $relationships, $resource, $includeData)
     {
         $relation = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_ANCESTORS),
             ],
         ];
 
         if ($includeData) {
             $related = $resource->findAncestors();
-            $relation[self::DATA] = $related;
+            $relation[self::RELATIONSHIP_DATA] = $related;
         }
 
         $relationships[self::REL_ANCESTORS] = $relation;
@@ -192,14 +182,14 @@ class StructuralElement extends SchemaProvider
     private function addDescendantsRelationship(array $relationships, $resource, $includeData)
     {
         $relation = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_DESCENDANTS),
             ],
         ];
 
         if ($includeData) {
             $related = $resource->findDescendants();
-            $relation[self::DATA] = $related;
+            $relation[self::RELATIONSHIP_DATA] = $related;
         }
 
         $relationships[self::REL_DESCENDANTS] = $relation;
@@ -210,11 +200,11 @@ class StructuralElement extends SchemaProvider
     private function addImageRelationship(array $relationships, $resource, $includeData)
     {
         $relation = [
-            self::DATA => $resource->image ?: null,
+            self::RELATIONSHIP_DATA => $resource->image ?: null,
         ];
 
         if ($resource->image) {
-            $relation[self::META] = [
+            $relation[self::RELATIONSHIP_META] = [
                 'download-url' => $resource->image->getFileType()->getDownloadURL(),
             ];
         }

@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class ConsultationBlock extends SchemaProvider
 {
@@ -10,14 +11,12 @@ class ConsultationBlock extends SchemaProvider
     const REL_SLOTS = 'slots';
     const REL_RANGE = 'range';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->id;
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
             'start' => date('c', $resource->start),
@@ -47,8 +46,11 @@ class ConsultationBlock extends SchemaProvider
      * spezifiziert werden.
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
             return $isPrimary && in_array($key, $includeList);
         };
@@ -78,10 +80,10 @@ class ConsultationBlock extends SchemaProvider
         }
 
         $relationships[self::REL_SLOTS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_SLOTS),
             ],
-            self::DATA => $relatedSlots,
+            self::RELATIONSHIP_DATA => $relatedSlots,
         ];
 
         return $relationships;
@@ -92,10 +94,10 @@ class ConsultationBlock extends SchemaProvider
         $range = $resource->range;
 
         $relationships[self::REL_RANGE] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getLinkForRange($range),
             ],
-            self::DATA => $includeData ? $range : $this->getMinimalRange($range),
+            self::RELATIONSHIP_DATA => $includeData ? $range : $this->getMinimalRange($range),
         ];
 
         return $relationships;
@@ -103,16 +105,12 @@ class ConsultationBlock extends SchemaProvider
 
     private function getLinkForRange(Range $range)
     {
-        if ($range instanceof \Course) {
-            return new Link("/courses/{$range->id}");
-        }
-
-        if ($range instanceof \Institute) {
-            return new Link("/institutes/{$range->id}");
-        }
-
-        if ($range instanceof \User) {
-            return new Link("/users/{$range->id}");
+        if (
+            $range instanceof \Course ||
+            $range instanceof \Institute ||
+            $range instanceof \User
+        ) {
+            return $this->createLinkToResource($range);
         }
 
         throw new \Exception('Unknown range type');

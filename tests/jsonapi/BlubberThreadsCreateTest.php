@@ -69,14 +69,14 @@ class BlubberThreadsCreateTest extends \Codeception\Test\Unit
         // given
         $credentials = $this->tester->getCredentialsForTestAutor();
 
-        $this->expectException(JsonApi\Errors\BadRequestException::class);
-        $this->createThread($credentials, 'course');
+        $response = $this->createThread($credentials, 'course');
+        $this->tester->assertSame(400, $response->getStatusCode());
 
-        $this->expectException(JsonApi\Errors\BadRequestException::class);
-        $this->createThread($credentials, 'institute');
+        $response = $this->createThread($credentials, 'institute');
+        $this->tester->assertSame(400, $response->getStatusCode());
 
-        $this->expectException(JsonApi\Errors\BadRequestException::class);
-        $this->createThread($credentials, 'public');
+        $response = $this->createThread($credentials, 'public');
+        $this->tester->assertSame(400, $response->getStatusCode());
     }
 
 

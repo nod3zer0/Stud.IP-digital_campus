@@ -4,13 +4,12 @@ namespace JsonApi\Routes\Files;
 
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\InternalServerError;
-use JsonApi\Providers\JsonApiConfig as C;
 use JsonApi\Schemas\FileRef as FileRefSchema;
 use JsonApi\Schemas\Folder as FolderSchema;
 use JsonApi\Schemas\ContentTermsOfUse as ContentTermsOfUseSchema;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Http\UploadedFile;
+use Slim\Psr7\UploadedFile;
 
 trait RoutesHelperTrait
 {
@@ -292,11 +291,11 @@ trait RoutesHelperTrait
      */
     private function redirectToFileRef(Response $response, \FileRef $fileRef)
     {
-        $pathinfo = $this->getSchema($fileRef)->getSelfSubLink($fileRef)->getSubHref();
+        $pathinfo = $this->getSchema($fileRef)->getSelfLink($fileRef)->getStringRepresentation($this->container->get('json-api-integration-urlPrefix'));
         $old = \URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
-        $url = \URLHelper::getURL($this->container->get(C::JSON_URL_PREFIX).$pathinfo, [], true);
+        $url = \URLHelper::getURL($pathinfo, [], true);
         \URLHelper::setBaseURL($old);
 
-        return $response->withRedirect($url, 201);
+        return $response->withHeader('Location', $url)->withStatus(201);
     }
 }

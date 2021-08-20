@@ -2096,6 +2096,11 @@ trait JsonapiTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
+     * @param array    $credentials
+     * @param callable $function
+     *
+     * @return mixed
+     *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @see \Helper\Jsonapi::withPHPLib()
      */
@@ -2107,7 +2112,13 @@ trait JsonapiTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
+     * @param array    $credentials
+     * @param string   $method
+     * @param string   $pattern
+     * @param callable $callable
+     * @param ?string  $name
      *
+     * @return \Slim\App
      * @see \Helper\Jsonapi::createApp()
      */
     public function createApp($credentials, $method, $pattern, $callable, $name = NULL) {
@@ -2118,7 +2129,9 @@ trait JsonapiTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
+     * @param array|null $credentials
      *
+     * @return JsonApiRequestBuilder
      * @see \Helper\Jsonapi::createRequestBuilder()
      */
     public function createRequestBuilder($credentials = NULL) {
@@ -2129,10 +2142,12 @@ trait JsonapiTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
+     * @param \Slim\App $app
      *
+     * @return JsonApiResponse
      * @see \Helper\Jsonapi::sendMockRequest()
      */
-    public function sendMockRequest($app, \Slim\Http\Request $request) {
+    public function sendMockRequest($app, \Slim\Psr7\Request $request) {
         return $this->getScenario()->runStep(new \Codeception\Step\Action('sendMockRequest', func_get_args()));
     }
 
@@ -2143,7 +2158,7 @@ trait JsonapiTesterActions
      *
      * @see \Helper\Jsonapi::storeJsonMD()
      */
-    public function storeJsonMD($filename, \Psr\Http\Message\ResponseInterface $response, $limit = NULL, $ellipsis = NULL) {
+    public function storeJsonMD(string $filename, \Psr\Http\Message\ResponseInterface $response, ?int $limit = NULL, ?string $ellipsis = NULL): string {
         return $this->getScenario()->runStep(new \Codeception\Step\Action('storeJsonMD', func_get_args()));
     }
 }

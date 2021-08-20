@@ -48,25 +48,20 @@ class ForumCategoriesCreateTest extends \Codeception\Test\Unit
 
     public function testShouldNotCreateCategory()
     {
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () {
-            $credentials = $this->tester->getCredentialsForTestAutor();
-            $cat = $this->createCategory($credentials);
-            $course_id = 'badCourse';
-            $cat_document = $this->buildValidResourceCategory();
-            $app = $this->tester->createApp($credentials, 'POST', '/courses/{id}/forum-categories', ForumCategoriesCreate::class);
+        $credentials = $this->tester->getCredentialsForTestAutor();
+        $cat = $this->createCategory($credentials);
+        $course_id = 'badCourse';
+        $cat_document = $this->buildValidResourceCategory();
+        $app = $this->tester->createApp($credentials, 'POST', '/courses/{id}/forum-categories', ForumCategoriesCreate::class);
 
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/courses/'.$course_id.'/forum-categories')
-                ->create()
-                ->setJsonApiBody($cat_document);
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/courses/'.$course_id.'/forum-categories')
+            ->create()
+            ->setJsonApiBody($cat_document);
 
-            $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
 
-            $this->tester->assertTrue($response->isSuccessfulDocument([201]));
-            $document = $response->document();
-            $resourceObject = $document->primaryResource();
-            $this->tester->assertSame($cat->entry_name, $resourceObject->attribute('title'));
-        });
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 }

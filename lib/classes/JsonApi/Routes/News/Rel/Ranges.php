@@ -105,7 +105,7 @@ class Ranges extends RelationshipsController
         return array_filter(
             $news->news_ranges->map(function ($range) use ($types) {
                 if ('global' === $range->type) {
-                    return $this->container['studip-system-object'];
+                    return $this->getGlobalRange();
                 } elseif (isset($types[$range->type])) {
                     $klass = $types[$range->type];
 
@@ -172,7 +172,7 @@ class Ranges extends RelationshipsController
     {
         switch ($type) {
             case \JsonApi\Schemas\Studip::TYPE:
-                return $this->container['studip-system-object'];
+                return $this->getGlobalRange();
 
             case \JsonApi\Schemas\Course::TYPE:
                 return \Course::find($rangeId);
@@ -185,6 +185,11 @@ class Ranges extends RelationshipsController
         }
 
         return null;
+    }
+
+    private function getGlobalRange()
+    {
+        return new \JsonApi\Model\Studip();
     }
 
     private function addRanges(\StudipNews $news, array $ranges)

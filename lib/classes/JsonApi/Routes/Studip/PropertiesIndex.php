@@ -16,7 +16,7 @@ class PropertiesIndex extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $studip = $this->container['studip-system-object'];
+        $studip = new \JsonApi\Models\Studip();
 
         return $this->getContentResponse($studip->getProperties());
     }

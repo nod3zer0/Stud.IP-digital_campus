@@ -2,6 +2,8 @@
 
 namespace JsonApi\Routes\Blubber;
 
+use Psr\Http\Message\ServerRequestInterface as Request;
+
 trait FilterTrait
 {
     private function validateFilters()
@@ -21,7 +23,7 @@ trait FilterTrait
         }
     }
 
-    private function getFilters()
+    private function getFilters(): array
     {
         $filtering = $this->getQueryParameters()->getFilteringParameters() ?? [];
 

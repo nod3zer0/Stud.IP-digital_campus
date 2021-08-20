@@ -25,8 +25,6 @@ class ThreadsIndex extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $this->validateFilters();
-
         $contextType = $args['type'];
         if (!in_array($contextType, ['all', 'public', 'private', 'course', 'institute'])) {
             throw new BadRequestException('Wrong context type.');
@@ -34,7 +32,9 @@ class ThreadsIndex extends JsonApiController
 
         switch ($contextType) {
             case 'all':
-                list($threads, $total) = $this->getAllThreads($this->getUser($request));
+                $this->validateFilters();
+                $filters = $this->getFilters();
+                list($threads, $total) = $this->getAllThreads($filters, $this->getUser($request));
                 break;
 
             case 'public':
@@ -57,9 +57,8 @@ class ThreadsIndex extends JsonApiController
         return $this->getPaginatedContentResponse($threads, $total);
     }
 
-    private function getAllThreads(\User $observer)
+    private function getAllThreads(array $filters, \User $observer)
     {
-        $filters = $this->getFilters();
         list($offset, $limit) = $this->getOffsetAndLimit();
 
         $threads = \BlubberThread::findMyGlobalThreads(

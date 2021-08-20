@@ -12,7 +12,7 @@ class FileRefsCreateByUpload extends NonJsonApiController
 {
     use RoutesHelperTrait;
 
-    public function invoke(Request $request, Response $response, $args)
+    public function invoke(Request $request, Response $response, array $args): Response
     {
         if (!$folder = \FileManager::getTypedFolder($args['id'])) {
             throw new RecordNotFoundException();

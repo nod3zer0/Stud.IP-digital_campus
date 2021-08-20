@@ -2,21 +2,22 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class SeminarCycleDate extends SchemaProvider
 {
     const TYPE = 'seminar-cycle-dates';
     const REL_OWNER = 'owner';
 
-    protected $resourceType = self::TYPE;
 
-    public function getId($entry)
+
+    public function getId($entry): ?string
     {
         return $entry->id;
     }
 
-    public function getAttributes($entry)
+    public function getAttributes($entry, ContextInterface $context): iterable
     {
         $course = \Course::find($entry->seminar_id);
 
@@ -37,14 +38,17 @@ class SeminarCycleDate extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRelationships($entry, $isPrimary, array $includeList)
+    public function getRelationships($entry, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         if ($course = \Course::find($entry->seminar_id)) {
-            $link = $this->getSchemaContainer()->getSchema($course)->getSelfSubLink($course);
+            $link = $this->createLinkToResource($course);
             $relationships = [
-                self::REL_OWNER => [self::LINKS => [Link::RELATED => $link], self::DATA => $course],
+                self::REL_OWNER => [self::RELATIONSHIP_LINKS => [Link::RELATED => $link], self::RELATIONSHIP_DATA => $course],
             ];
         }
 

@@ -3,7 +3,8 @@
 namespace JsonApi\Schemas;
 
 use JsonApi\Routes\Files\Authority as FilesAuthority;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class File extends SchemaProvider
 {
@@ -12,19 +13,12 @@ class File extends SchemaProvider
     const REL_FILE_REFS = 'file-refs';
     const REL_OWNER = 'owner';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->getId();
     }
 
-    public function getInclusionMeta($resource)
-    {
-        return $this->getPrimaryMeta($resource);
-    }
-
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
             'name' => $resource['name'],
@@ -36,8 +30,7 @@ class File extends SchemaProvider
         ];
 
         if ($resource['metadata']['url']) {
-            $user = $this->getDiContainer()->get('studip-current-user');
-            if (FilesAuthority::canUpdateFile($user, $resource)) {
+            if (FilesAuthority::canUpdateFile($this->currentUser, $resource)) {
                 $attributes['url'] = $resource['metadata']['url'];
             }
         }
@@ -48,8 +41,11 @@ class File extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         if ($isPrimary) {
@@ -65,8 +61,8 @@ class File extends SchemaProvider
         $refs = $resource->refs;
 
         $relationships[self::REL_FILE_REFS] = [
-            self::SHOW_SELF => true,
-            self::DATA => $refs,
+            self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_DATA => $refs,
         ];
 
         return $relationships;
@@ -76,11 +72,10 @@ class File extends SchemaProvider
     {
         if ($resource->user_id) {
             $relationships[self::REL_OWNER] = [
-            self::LINKS => [
-            Link::RELATED => $this->getSchemaContainer()
-                          ->getSchema($resource->owner)->getSelfSubLink($resource->owner),
-                          ],
-                        ];
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->owner),
+                ],
+            ];
         }
 
         return $relationships;

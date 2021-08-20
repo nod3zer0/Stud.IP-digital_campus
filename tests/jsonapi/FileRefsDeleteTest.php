@@ -41,9 +41,8 @@ class FileRefsDeleteTest extends \Codeception\Test\Unit
         $credentials = $this->tester->getCredentialsForTestDozent();
         $missingId = 'missing-id';
 
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () use ($credentials, $missingId) {
-            $this->sendDeleteFileRef($credentials, $missingId);
-        });
+        $response = $this->sendDeleteFileRef($credentials, $missingId);
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 
     // **** helper functions ****

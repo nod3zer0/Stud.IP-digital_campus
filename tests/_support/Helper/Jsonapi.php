@@ -2,12 +2,14 @@
 
 namespace Helper;
 
+use DI\ContainerBuilder;
+use JsonApi\Errors\JsonApiErrorRenderer;
 use JsonApi\Middlewares\Authentication;
-use JsonApi\Middlewares\JsonApi as JsonApiMiddleware;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Slim\Factory\AppFactory;
+use Slim\Interfaces\ErrorHandlerInterface;
+use Slim\Psr7\Factory\ServerRequestFactory;
+use Slim\Psr7\Request;
 use WoohooLabs\Yang\JsonApi\Request\JsonApiRequestBuilder;
 use WoohooLabs\Yang\JsonApi\Response\JsonApiResponse;
 
@@ -17,9 +19,15 @@ use WoohooLabs\Yang\JsonApi\Response\JsonApiResponse;
 class Jsonapi extends \Codeception\Module
 {
     /**
+     * @param array    $credentials
+     * @param callable $function
+     *
+     * @return mixed
+     *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function withPHPLib($credentials, $function) {
+    public function withPHPLib($credentials, $function)
+    {
         // EVIL HACK
         $oldPerm = $GLOBALS['perm'];
         $oldUser = $GLOBALS['user'];
@@ -35,112 +43,154 @@ class Jsonapi extends \Codeception\Module
         return $result;
     }
 
+    /**
+     * @param array    $credentials
+     * @param string   $method
+     * @param string   $pattern
+     * @param callable $callable
+     * @param ?string  $name
+     *
+     * @return \Slim\App
+     */
     public function createApp($credentials, $method, $pattern, $callable, $name = null)
     {
-        return $this->createApp0(
-            $credentials,
-            function () use ($method, $pattern, $callable, $name) {
-                $route = $this->map([$method], $pattern, $callable);
-                if (isset($name)) {
-                    $route->setName($name);
-                }
+        return $this->createApp0($credentials, function ($app) use ($method, $pattern, $callable, $name) {
+            $route = $app->map([strtoupper($method)], $pattern, $callable);
+            if (isset($name)) {
+                $route->setName($name);
             }
-        );
+        });
     }
 
+    /**
+     * @param array|null $credentials
+     *
+     * @return JsonApiRequestBuilder
+     */
     public function createRequestBuilder($credentials = null)
     {
-        $env = [];
+        $serverParams = [];
         if ($credentials) {
-            $env = [
+            $serverParams = [
                 'PHP_AUTH_USER' => $credentials['username'],
                 'PHP_AUTH_PW' => $credentials['password'],
             ];
         }
+        $factory = new ServerRequestFactory();
+        $request = $factory->createServerRequest('GET', '', $serverParams);
 
-        $requestBuilder = new JsonApiRequestBuilder(
-            Request::createFromEnvironment(
-                Environment::mock($env)
-            )
-        );
+        $requestBuilder = new JsonApiRequestBuilder($request);
 
-        $requestBuilder
-            ->setProtocolVersion('1.0')
-            ->setHeader('Accept-Charset', 'utf-8');
+        $requestBuilder->setProtocolVersion('1.0')->setHeader('Accept-Charset', 'utf-8');
 
         return $requestBuilder;
     }
 
+    /**
+     * @param \Slim\App $app
+     *
+     * @return JsonApiResponse
+     */
     public function sendMockRequest($app, Request $request)
     {
+        /** @var \DI\Container */
         $container = $app->getContainer();
-        $container['request'] = function ($container) use ($request) {
-            return $request;
-        };
-        $response = $app($request, new Response());
+        $container->set('request', $request);
+
+        $response = $app->handle($request);
 
         return new JsonApiResponse($response);
     }
 
-    private function createApp0($credentials, $routerFn)
+    /**
+     * @param array|null $credentials
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    private function createApp0($credentials, callable $routerFn): \Slim\App
     {
         $app = $this->appFactory();
-
-        $authenticator = function ($username, $password) use ($credentials) {
-            // must return a \User
-            if ($username === $credentials['username'] && $password === $credentials['password']) {
-                return \User::find($credentials['id']);
-            }
-
-            return null;
-        };
 
         $group = $app->group('', $routerFn);
 
         if ($credentials) {
-            $group->add(function ($request, $response, $next) {
-                $user = $request->getAttribute(Authentication::USER_KEY, null);
+            $authenticator = function ($username, $password) use ($credentials) {
+                // must return a \User
+                if ($username === $credentials['username'] && $password === $credentials['password']) {
+                    $user = \User::find($credentials['id']);
 
-                $GLOBALS['auth'] = new \Seminar_Auth();
-                $GLOBALS['auth']->auth = array(
-                    'uid' => $user->user_id,
-                    'uname' => $user->username,
-                    'perm' => $user->perms,
-                );
+                    return $user;
+                }
 
-                $GLOBALS['user'] = new \Seminar_User($user->user_id);
+                return null;
+            };
 
-                $GLOBALS['perm'] = new \Seminar_Perm();
-                $GLOBALS['MAIL_VALIDATE_BOX'] = false;
+            $group
+                ->add(function ($request, $handler) {
+                    $user = $request->getAttribute(Authentication::USER_KEY, null);
 
-                return $next($request, $response);
-            })->add(new Authentication($authenticator));
+                    $GLOBALS['auth'] = new \Seminar_Auth();
+                    $GLOBALS['auth']->auth = [
+                        'uid' => $user->id,
+                        'uname' => $user->username,
+                        'perm' => $user->perms,
+                    ];
+                    $GLOBALS['user'] = new \Seminar_User($user->id);
+                    $GLOBALS['perm'] = new \Seminar_Perm();
+                    $GLOBALS['MAIL_VALIDATE_BOX'] = false;
+                    $y = new \Seminar_User($user->id);
+                    $x = $y->getAuthenticatedUser();
+
+
+                    $dbManager = \DBManager::get();
+                    $stmt = $dbManager->prepare("SELECT * FROM auth_user_md5 LEFT JOIN user_info USING (user_id) WHERE user_id = ?");
+                    $stmt->execute([$user->id]);
+
+                    return $handler->handle($request);
+                })
+                ->add(new Authentication($authenticator));
         }
-
-        $group->add(new JsonApiMiddleware($app));
 
         return $app;
     }
 
-    private function appFactory()
+    private function appFactory(): \Slim\App
     {
-        $factory = new \JsonApi\AppFactory();
+        $containerBuilder = new ContainerBuilder();
 
-        return $factory->makeApp();
+        $settings = require 'lib/classes/JsonApi/settings.php';
+        $settings($containerBuilder);
+
+        $dependencies = require 'lib/classes/JsonApi/dependencies.php';
+        $dependencies($containerBuilder);
+
+        // Build PHP_DI Container
+        $container = $containerBuilder->build();
+
+        // Instantiate the app
+        AppFactory::setContainer($container);
+        $app = AppFactory::create();
+        $container->set(\Slim\App::class, $app);
+
+        // Register middleware
+        $middleware = require 'lib/classes/JsonApi/middleware.php';
+        $middleware($app);
+
+        // Add Error Middleware
+        $errorMiddleware = $app->addErrorMiddleware(true, true, true);
+        $errorMiddleware->setDefaultErrorHandler(new \JsonApi\Errors\ErrorHandler($app));
+
+        return $app;
     }
 
     public function storeJsonMD(
-        $filename,
+        string $filename,
         ResponseInterface $response,
-        $limit = null,
-        $ellipsis = null
-    ) {
+        int $limit = null,
+        string $ellipsis = null
+    ): string {
         $body = "{$response->getBody()}";
-        $body = preg_replace(
-            '!plugins.php\\\\/argonautsplugin!',
-            'https:\\/\\/example.com',
-            $body
-        );
+        $body = preg_replace('!plugins.php\\\\/argonautsplugin!', 'https:\\/\\/example.com', $body);
         $body = preg_replace('!\\\\/!', '/', $body);
         $body = preg_replace(['!%5B!', '!%5D!'], ['[', ']'], $body);
 
@@ -156,19 +206,19 @@ class Jsonapi extends \Codeception\Module
         $jsonPretty = new \Camspiers\JsonPretty\JsonPretty();
         $json = $jsonPretty->prettify($jsonBody, JSON_UNESCAPED_SLASHES, '  ');
 
-        $dirname = codecept_output_dir().'json-for-slate/';
+        $dirname = codecept_output_dir() . 'json-for-slate/';
         if (!file_exists($dirname)) {
             @mkdir($dirname);
         }
 
         if (file_exists($dirname)) {
-            if (substr($filename, -3) !== '.md') {
+            if ('.md' !== substr($filename, -3)) {
                 $filename .= '.md';
             }
-            if ($filename[0] !== '_') {
-                $filename = '_'.$filename;
+            if ('_' !== $filename[0]) {
+                $filename = '_' . $filename;
             }
-            file_put_contents($dirname.$filename, "```json\n".$json."\n```\n");
+            file_put_contents($dirname . $filename, "```json\n" . $json . "\n```\n");
         }
 
         return $json;

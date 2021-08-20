@@ -45,9 +45,8 @@ class FileRefsShowTest extends \Codeception\Test\Unit
     {
         $credentials = $this->tester->getCredentialsForTestDozent();
 
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () use ($credentials) {
-            $this->sendShowFileRef($credentials, 'missing-id');
-        });
+        $response = $this->sendShowFileRef($credentials, 'missing-id');
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 
     // **** helper functions ****

@@ -14,7 +14,7 @@ use Studip\Activity\InstituteContext;
 use Studip\Activity\Stream;
 use Studip\Activity\UserContext;
 
-function canShowActivityStream(\User $observer, $userId)
+function canShowActivityStream(\User $observer, string $userId): bool
 {
     if (!$GLOBALS['perm']->have_perm('root', $observer->id)) {
         return true;
@@ -31,7 +31,7 @@ class ActivityStreamShow extends JsonApiController
 
     protected $allowedPagingParameters = ['offset', 'limit'];
 
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         if (!canShowActivityStream($this->getUser($request), $userId = $args['id'])) {
             throw new AuthorizationFailedException();
@@ -41,28 +41,18 @@ class ActivityStreamShow extends JsonApiController
             throw new RecordNotFoundException();
         }
 
-        $urlFilter = $this->getUrlFilter($request);
+        $urlFilter = $this->getUrlFilter();
+        /** @var \User $user */
         $contexts = $this->createContexts($user);
         $filter = $this->createFilter($urlFilter);
 
         try {
-            if (!$stream = $this->createStream($contexts, $filter)) {
-                $data = [];
-                $total = 0;
-            } else {
-                list($offset, $limit) = $this->getOffsetAndLimit();
-                $total = count($stream);
-                $data = array_slice($stream->getIterator()->getArrayCopy(), $offset, $limit);
-            }
+            $stream = $this->createStream($contexts, $filter);
+            list($offset, $limit) = $this->getOffsetAndLimit();
+            $total = count($stream);
+            $data = array_slice($stream->getIterator()->getArrayCopy(), $offset, $limit);
         } catch (\Exception $exception) {
-            $error = new \Neomerx\JsonApi\Document\Error(
-                'internal-server-error',
-                null,
-                500,
-                'internal-server-error',
-                $exception->getMessage()
-            );
-            throw new \Neomerx\JsonApi\Exceptions\JsonApiException($error, 500);
+            throw new \JsonApi\Errors\InternalServerError($exception->getMessage());
         }
 
         $meta = ['filter' => $urlFilter];
@@ -70,7 +60,7 @@ class ActivityStreamShow extends JsonApiController
         return $this->getPaginatedContentResponse($data, $total, 200, null, $meta);
     }
 
-    private function getUrlFilter()
+    private function getUrlFilter(): array
     {
         $params = $this->getQueryParameters();
         $filtering = $params->getFilteringParameters();
@@ -100,7 +90,7 @@ class ActivityStreamShow extends JsonApiController
         return $filter;
     }
 
-    private function createContexts(\User $user)
+    private function createContexts(\User $user): array
     {
         $contexts = [
             new SystemContext($user),
@@ -125,7 +115,7 @@ class ActivityStreamShow extends JsonApiController
         return $contexts;
     }
 
-    private function createFilter($urlFilter)
+    private function createFilter(array $urlFilter): Filter
     {
         $filter = new Filter();
 
@@ -137,8 +127,6 @@ class ActivityStreamShow extends JsonApiController
                         $word,
                         [
                             'activity',
-                            // TODO: Polishing
-                            // 'blubber',
                             'documents',
                             'forum',
                             'message',
@@ -162,7 +150,7 @@ class ActivityStreamShow extends JsonApiController
         return $filter;
     }
 
-    private function createStream($contexts, $filter)
+    private function createStream(array $contexts, Filter $filter): Stream
     {
         return new Stream($contexts, $filter);
     }

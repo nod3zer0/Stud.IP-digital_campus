@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class FeedbackElement extends SchemaProvider
 {
@@ -12,14 +13,14 @@ class FeedbackElement extends SchemaProvider
     const REL_ENTRIES = 'entries';
     const REL_RANGE = 'range';
 
-    protected $resourceType = self::TYPE;
 
-    public function getId($resource)
+
+    public function getId($resource): ?string
     {
         return (int) $resource->id;
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
             'question' => (string) $resource['question'],
@@ -38,7 +39,15 @@ class FeedbackElement extends SchemaProvider
     /**
      * @inheritdoc
      */
-    public function getPrimaryMeta($resource)
+    public function hasResourceMeta($resource): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getResourceMeta($resource)
     {
         return $resource['mode'] === 0
             ? null
@@ -55,8 +64,11 @@ class FeedbackElement extends SchemaProvider
      * spezifiziert werden.
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
             return $isPrimary && in_array($key, $includeList);
         };
@@ -76,12 +88,10 @@ class FeedbackElement extends SchemaProvider
         $userId = $resource['user_id'];
         $related = $includeData ? \User::find($userId) : \User::build(['id' => $userId], false);
         $relationships[self::REL_AUTHOR] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($related)
-                    ->getSelfSubLink($related)
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($related)
             ],
-            self::DATA => $related
+            self::RELATIONSHIP_DATA => $related
         ];
 
         return $relationships;
@@ -92,53 +102,47 @@ class FeedbackElement extends SchemaProvider
         if ($courseId = $resource['course_id']) {
             $related = $includeData ? \Course::find($courseId) : \Course::build(['id' => $courseId], false);
             $relationships[self::REL_COURSE] = [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($related)
-                        ->getSelfSubLink($related)
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($related)
                 ],
-                self::DATA => $related
+                self::RELATIONSHIP_DATA => $related
             ];
         }
 
         return $relationships;
     }
 
-    private function getEntriesRelationship(array $relationships, \FeedbackElement $resource, $includeData): array
+    private function getEntriesRelationship(array $relationships, \FeedbackElement $resource, bool $includeData): array
     {
         $relationships[self::REL_ENTRIES] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_ENTRIES)
             ],
-            self::DATA => $resource->entries
+            self::RELATIONSHIP_DATA => $resource->entries
         ];
 
         return $relationships;
     }
 
-    private function getRangeRelationship(array $relationships, \FeedbackElement $resource, $includeData): array
+    private function getRangeRelationship(array $relationships, \FeedbackElement $resource, bool $includeData): array
     {
         $rangeType = $resource['range_type'];
-        $rangeSchema = null;
+        $link = null;
 
         try {
-            $rangeSchema = $this->getSchemaContainer()->getSchemaByType($rangeType);
-        } catch (\InvalidArgumentException $e) {
-        }
-
-        if (
-            isset($rangeSchema) &&
-            is_subclass_of($rangeType, \FeedbackRange::class) &&
-            is_subclass_of($rangeType, \SimpleORMap::class)
-        ) {
-            if ($range = $rangeType::find($resource['range_id'])) {
-                $link = $rangeSchema->getSelfSubLink($range);
-
-                $relationships[self::REL_RANGE] = [
-                    self::LINKS => [Link::RELATED => $link],
-                    self::DATA => $range
-                ];
+            $link = $this->createLinkToResource($rangeType);
+            if (
+                is_subclass_of($rangeType, \FeedbackRange::class) &&
+                is_subclass_of($rangeType, \SimpleORMap::class)
+            ) {
+                if ($range = $rangeType::find($resource['range_id'])) {
+                    $relationships[self::REL_RANGE] = [
+                        self::RELATIONSHIP_LINKS => [Link::RELATED => $link],
+                        self::RELATIONSHIP_DATA => $range
+                    ];
+                }
             }
+        } catch (\InvalidArgumentException $e) {
         }
 
         return $relationships;

@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class FeedbackEntry extends SchemaProvider
 {
@@ -10,20 +11,18 @@ class FeedbackEntry extends SchemaProvider
     const REL_AUTHOR = 'author';
     const REL_FEEDBACK = 'feedback-element';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->id;
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
             'comment' => (string) $resource['comment'],
-            'rating' => $resource->feedback->mode === 0 ? null : $resource['rating'],
+            'rating' => 0 === $resource->feedback->mode ? null : $resource['rating'],
             'mkdate' => date('c', $resource['mkdate']),
-            'chdate' => date('c', $resource['chdate'])
+            'chdate' => date('c', $resource['chdate']),
         ];
 
         return $attributes;
@@ -32,10 +31,14 @@ class FeedbackEntry extends SchemaProvider
     /**
      * In dieser Methode können Relationships zu anderen Objekten
      * spezifiziert werden.
+     *
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
             return $isPrimary && in_array($key, $includeList);
         };
@@ -57,12 +60,10 @@ class FeedbackEntry extends SchemaProvider
         $userId = $resource['user_id'];
         $related = $includeData ? \User::find($userId) : \User::build(['id' => $userId], false);
         $relationships[self::REL_AUTHOR] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($related)
-                    ->getSelfSubLink($related)
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($related),
             ],
-            self::DATA => $related
+            self::RELATIONSHIP_DATA => $related,
         ];
 
         return $relationships;
@@ -78,12 +79,10 @@ class FeedbackEntry extends SchemaProvider
             : \FeedbackElement::build(['id' => $resource->feedback_id], false);
 
         $relationships[self::REL_FEEDBACK] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($related)
-                    ->getSelfSubLink($related)
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($related),
             ],
-            self::DATA => $related
+            self::RELATIONSHIP_DATA => $related,
         ];
 
         return $relationships;

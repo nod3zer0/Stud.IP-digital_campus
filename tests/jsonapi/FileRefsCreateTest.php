@@ -1,10 +1,10 @@
-<?php
-
+><?php
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\Errors\UnprocessableEntityException;
-use JsonApi\Routes\Files\FileRefsCreate;
+use JsonApi\Routes\Files\NegotiateFileRefsCreate as FileRefsCreate;
 use JsonApi\Schemas\ContentTermsOfUse;
 use JsonApi\Schemas\FileRef;
+use Slim\Psr7\Factory\ServerRequestFactory;
 
 require_once 'FilesTestHelper.php';
 
@@ -36,13 +36,7 @@ class FileRefsCreateTest extends \Codeception\Test\Unit
         $name = 'filename.jpg';
         $description = 'a description';
 
-        $response = $this->sendCreateFileRefInFolder(
-            $credentials,
-            $folder,
-            $name,
-            $description,
-            $license
-        );
+        $response = $this->sendCreateFileRefInFolder($credentials, $folder, $name, $description, $license);
 
         $this->assertFileRefCreated($response, $name, $description, $license);
     }
@@ -56,18 +50,8 @@ class FileRefsCreateTest extends \Codeception\Test\Unit
         $name = 'filename.jpg';
         $description = 'a description';
 
-        $this->tester->expectThrowable(
-            RecordNotFoundException::class,
-            function () use ($credentials, $missingFolder, $name, $description, $license) {
-                $this->sendCreateFileRefInFolder(
-                    $credentials,
-                    $missingFolder,
-                    $name,
-                    $description,
-                    $license
-                );
-            }
-        );
+        $response = $this->sendCreateFileRefInFolder($credentials, $missingFolder, $name, $description, $license);
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 
     public function testShouldFailOnEmptyName()
@@ -80,18 +64,8 @@ class FileRefsCreateTest extends \Codeception\Test\Unit
         $name = '';
         $description = 'a description';
 
-        $this->tester->expectThrowable(
-            UnprocessableEntityException::class,
-            function () use ($credentials, $folder, $name, $description, $license) {
-                $this->sendCreateFileRefInFolder(
-                    $credentials,
-                    $folder,
-                    $name,
-                    $description,
-                    $license
-                );
-            }
-        );
+        $response = $this->sendCreateFileRefInFolder($credentials, $folder, $name, $description, $license);
+        $this->tester->assertSame(422, $response->getStatusCode());
     }
 
     public function testShouldFailOnMissingLicense()
@@ -103,18 +77,8 @@ class FileRefsCreateTest extends \Codeception\Test\Unit
         $name = 'a-real-filename.gif';
         $description = 'a description';
 
-        $this->tester->expectThrowable(
-            UnprocessableEntityException::class,
-            function () use ($credentials, $folder, $name, $description) {
-                $this->sendCreateFileRefInFolder(
-                    $credentials,
-                    $folder,
-                    $name,
-                    $description,
-                    null
-                );
-            }
-        );
+        $response = $this->sendCreateFileRefInFolder($credentials, $folder, $name, $description, null);
+        $this->tester->assertSame(422, $response->getStatusCode());
     }
 
     public function testShouldCreateLinkIfSameUser()
@@ -133,8 +97,8 @@ class FileRefsCreateTest extends \Codeception\Test\Unit
             $credentials,
             $folder,
             $file,
-            $name = "another-name.jpg",
-            $description = "another description",
+            $name = 'another-name.jpg',
+            $description = 'another description',
             $license
         );
 
@@ -162,8 +126,8 @@ class FileRefsCreateTest extends \Codeception\Test\Unit
             $credentialsAutor,
             $folder,
             $file,
-            $name = "another-name.jpg",
-            $description = "another description",
+            $name = 'another-name.jpg',
+            $description = 'another description',
             $license
         );
 
@@ -174,20 +138,47 @@ class FileRefsCreateTest extends \Codeception\Test\Unit
         $this->assertFileRefCreated($response, $name, $description, $license);
     }
 
+    public function testShouldCreateFileRefByUpload()
+    {
+        $credentials = $this->tester->getCredentialsForTestDozent();
+        $courseId = 'a07535cf2f8a72df33c12ddfa4b53dde';
+        $folder = $this->prepareTopFolder($credentials, $courseId);
+        $license = $this->getSampleLicense();
+
+        $name = 'tiny.gif';
+        $filename = __DIR__ . '/' . $name;
+        $description = 'a description';
+        $content = base64_decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
+        if (!file_exists($filename)) {
+            file_put_contents($filename, $content);
+        }
+        $this->tester->assertTrue(file_exists($filename));
+        $file = new \Slim\Psr7\UploadedFile($this->fileToStreamInterface($filename), $name);
+
+        $app = $this->tester->createApp($credentials, 'POST', '/folders/{id}/file-refs', FileRefsCreate::class);
+
+        $factory = new ServerRequestFactory();
+        $serverParams = [
+            'PHP_AUTH_USER' => $credentials['username'],
+            'PHP_AUTH_PW' => $credentials['password'],
+        ];
+        $request = $factory->createServerRequest('POST', '/folders/' . $folder->id . '/file-refs', $serverParams);
+        $request = $request->withUploadedFiles([$file])->withHeader('Content-Type', 'multipart/form-data');
+
+        $response = $this->tester->sendMockRequest($app, $request);
+        $this->tester->assertSame(201, $response->getStatusCode());
+        $this->tester->assertArrayHasKey('Location', $response->getHeaders());
+    }
+
     // **** helper functions ****
     private function sendCreateFileRefInFolder($user, $folder, $name, $description, $license)
     {
-        $app = $this->tester->createApp(
-            $user,
-            'POST',
-            '/folders/{id}/file-refs',
-            FileRefsCreate::class
-        );
+        $app = $this->tester->createApp($user, 'POST', '/folders/{id}/file-refs', FileRefsCreate::class);
 
         $requestBuilder = $this->tester->createRequestBuilder($user);
         $requestBuilder
             ->setJsonApiBody($this->prepareValidFileRefBody($name, $description, $license))
-            ->setUri('/folders/'.($folder->id).'/file-refs')
+            ->setUri('/folders/' . $folder->id . '/file-refs')
             ->create();
 
         return $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
@@ -195,24 +186,12 @@ class FileRefsCreateTest extends \Codeception\Test\Unit
 
     private function sendCopyFileInFolder($credentials, $folder, $file, $name, $description, $license)
     {
-        $app = $this->tester->createApp(
-            $credentials,
-            'POST',
-            '/folders/{id}/file-refs',
-            FileRefsCreate::class
-        );
+        $app = $this->tester->createApp($credentials, 'POST', '/folders/{id}/file-refs', FileRefsCreate::class);
 
         $requestBuilder = $this->tester->createRequestBuilder($credentials);
         $requestBuilder
-            ->setJsonApiBody(
-                $this->prepareValidFileRefBody(
-                    $name,
-                    $description,
-                    $license,
-                    $file
-                )
-            )
-            ->setUri('/folders/'.($folder->id).'/file-refs')
+            ->setJsonApiBody($this->prepareValidFileRefBody($name, $description, $license, $file))
+            ->setUri('/folders/' . $folder->id . '/file-refs')
             ->create();
 
         return $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
@@ -234,5 +213,12 @@ class FileRefsCreateTest extends \Codeception\Test\Unit
 
         $resourceLink = $resource->relationship('terms-of-use')->firstResourceLink();
         $this->tester->assertSame($license->id, $resourceLink['id']);
+    }
+
+    private function fileToStreamInterface(string $filename)
+    {
+        $factory = new \Slim\Psr7\Factory\StreamFactory();
+
+        return $factory->createStreamFromFile($filename);
     }
 }

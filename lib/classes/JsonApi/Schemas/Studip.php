@@ -2,13 +2,13 @@
 
 namespace JsonApi\Schemas;
 
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+
 class Studip extends SchemaProvider
 {
     const TYPE = 'global';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->getId();
     }
@@ -16,7 +16,12 @@ class Studip extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getAttributes($news)
+    public function getAttributes($news, ContextInterface $context): iterable
+    {
+        return [];
+    }
+
+    public function getRelationships($user, ContextInterface $context): iterable
     {
         return [];
     }

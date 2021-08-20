@@ -4,13 +4,6 @@ namespace JsonApi\Models;
 
 class Studip
 {
-    private $container;
-
-    public function __construct($container)
-    {
-        $this->container = $container;
-    }
-
     public function getId()
     {
         return 'studip';
