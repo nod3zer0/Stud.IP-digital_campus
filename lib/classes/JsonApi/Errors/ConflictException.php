@@ -2,7 +2,7 @@
 
 namespace JsonApi\Errors;
 
-use Neomerx\JsonApi\Document\Error;
+use Neomerx\JsonApi\Schema\Error;
 use Neomerx\JsonApi\Exceptions\JsonApiException;
 
 /**
@@ -15,7 +15,7 @@ class ConflictException extends JsonApiException
      */
     public function __construct($error = null)
     {
-        $error = new Error($error ?: 'Conflict', null, 409);
-        parent::__construct($error, 409);
+        $errorObject = new Error(null, null, null, 409, null, 'Conflict', $error);
+        parent::__construct($errorObject, 409);
     }
 }

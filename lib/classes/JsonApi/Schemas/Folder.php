@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class Folder extends SchemaProvider
 {
@@ -14,16 +15,14 @@ class Folder extends SchemaProvider
     const REL_FILE_REFS = 'file-refs';
     const REL_FOLDERS = 'folders';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->getId();
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
-        $user = $this->getDiContainer()->get('studip-current-user');
+        $user = $this->currentUser;
 
         $attributes = [
             'folder-type' => $resource->folder_type,
@@ -51,8 +50,11 @@ class Folder extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameters)
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         if ($isPrimary) {
@@ -71,11 +73,9 @@ class Folder extends SchemaProvider
     {
         if ($resource->user_id && $resource->owner) {
             $relationships[self::REL_OWNER] = [
-                self::DATA => $resource->owner,
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($resource->owner)
-                    ->getSelfSubLink($resource->owner),
+                self::RELATIONSHIP_DATA => $resource->owner,
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->owner),
                 ],
             ];
         }
@@ -88,11 +88,9 @@ class Folder extends SchemaProvider
         if ($resource->parent_id) {
             $parent = $resource->parentfolder->getTypedFolder();
             $relationships[self::REL_PARENT] = [
-                self::DATA => $parent,
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($parent)
-                    ->getSelfSubLink($parent),
+                self::RELATIONSHIP_DATA => $parent,
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($parent),
                 ],
             ];
         }
@@ -117,12 +115,11 @@ class Folder extends SchemaProvider
     {
         $rangeType = $resource->range_type;
         if ($range = $resource->$rangeType) {
-            $schema = $this->getSchemaContainer()->getSchema($range);
 
             return [
-                self::DATA => $range,
-                self::LINKS => [
-                    Link::RELATED => $schema->getSelfSubLink($range),
+                self::RELATIONSHIP_DATA => $range,
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($range),
                 ],
             ];
         }
@@ -133,7 +130,7 @@ class Folder extends SchemaProvider
     private function getDefaultRangeRelationship($resource)
     {
         return [
-            self::META => [
+            self::RELATIONSHIP_META => [
                 'range_id' => $resource->range_id,
                 'range_type' => $resource->range_type,
             ],
@@ -145,7 +142,7 @@ class Folder extends SchemaProvider
         if ($resource->range_type === 'course') {
             if (\Feedback::isActivated($resource->range_id)) {
                 $relationships[self::REL_FEEDBACK] = [
-                    self::LINKS => [
+                    self::RELATIONSHIP_LINKS => [
                         Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_FEEDBACK)
                     ],
                 ];
@@ -158,7 +155,7 @@ class Folder extends SchemaProvider
     private function getFoldersRelationship(array $relationships, $resource)
     {
         $relationships[self::REL_FOLDERS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_FOLDERS),
             ],
         ];
@@ -169,7 +166,7 @@ class Folder extends SchemaProvider
     private function getFilesRelationship(array $relationships, $resource)
     {
         $relationships[self::REL_FILE_REFS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_FILE_REFS),
             ],
         ];

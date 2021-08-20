@@ -1,7 +1,5 @@
 <?php
 
-// TODO: das gehört bestimmt nicht in Routes
-
 namespace JsonApi\Routes;
 
 trait ArrayHelperTrait

@@ -2,21 +2,22 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class SemType extends SchemaProvider
 {
     const REL_SEM_CLASS = 'sem-class';
     const TYPE = 'sem-types';
 
-    protected $resourceType = self::TYPE;
 
-    public function getId($resource)
+
+    public function getId($resource): ?string
     {
         return $resource['id'];
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
             'name' => $resource['name'],
@@ -25,19 +26,20 @@ class SemType extends SchemaProvider
         ];
     }
 
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         // SemClass
         $related = $resource->getClass();
         $relationships[self::REL_SEM_CLASS] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                                      ->getSchema($related)
-                                      ->getSelfSubLink($related)
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($related)
             ],
-            self::DATA => $related,
+            self::RELATIONSHIP_DATA => $related,
         ];
 
         return $relationships;

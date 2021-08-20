@@ -31,9 +31,9 @@ class UserEventsIcal extends NonJsonApiController
         }
 
         $content = implode($export->getExport());
+        $response->getBody()->write($content);
 
         return $response->withHeader('Content-Type', 'text/calendar')
-            ->withHeader('Content-Disposition', 'attachment; '.encode_header_parameter('filename', 'studip.ics'))
-            ->write($content);
+            ->withHeader('Content-Disposition', 'attachment; ' . encode_header_parameter('filename', 'studip.ics'));
     }
 }

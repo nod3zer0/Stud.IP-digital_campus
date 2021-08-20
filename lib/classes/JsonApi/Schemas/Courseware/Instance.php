@@ -3,7 +3,8 @@
 namespace JsonApi\Schemas\Courseware;
 
 use JsonApi\Schemas\SchemaProvider;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class Instance extends SchemaProvider
 {
@@ -12,12 +13,10 @@ class Instance extends SchemaProvider
     const REL_BOOKMARKS = 'bookmarks';
     const REL_ROOT = 'root';
 
-    protected $resourceType = self::TYPE;
-
     /**
      * {@inheritdoc}
      */
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         $root = $resource->getRoot();
 
@@ -27,9 +26,9 @@ class Instance extends SchemaProvider
     /**
      * {@inheritdoc}
      */
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
-        $user = $this->getDiContainer()->get('studip-current-user');
+        $user = $this->currentUser;
 
         return [
             'block-types' => array_map([$this, 'mapBlockType'], $resource->getBlockTypes()),
@@ -70,26 +69,27 @@ class Instance extends SchemaProvider
     /**
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
-        $user = $this->getDiContainer()->get('studip-current-user');
+        $user = $this->currentUser;
         $relationships[self::REL_BOOKMARKS] = [
-            self::SHOW_SELF => true,
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_BOOKMARKS),
             ],
-            self::DATA => $resource->getUsersBookmarks($user),
+            self::RELATIONSHIP_DATA => $resource->getUsersBookmarks($user),
         ];
 
         $relationships[self::REL_ROOT] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($resource->getRoot())
-                    ->getSelfSubLink($resource->getRoot()),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($resource->getRoot()),
             ],
-            self::DATA => $resource->getRoot(),
+            self::RELATIONSHIP_DATA => $resource->getRoot(),
         ];
 
         return $relationships;

@@ -2,8 +2,9 @@
 
 namespace JsonApi\Middlewares;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 class DummyNavigation extends \Navigation implements \ArrayAccess
 {
@@ -56,10 +57,16 @@ class DummyNavigation extends \Navigation implements \ArrayAccess
 
 class StudipMockNavigation
 {
-    public function __invoke(Request $request, Response $response, $next)
+    /**
+     * @param Request                 $request das PSR-7 Request-Objekt
+     * @param RequestHandlerInterface $handler das PSR-7 Response-Objekt
+     *
+     * @return ResponseInterface die neue Response
+     */
+    public function __invoke(Request $request, RequestHandler $handler)
     {
         \Navigation::setRootNavigation(new DummyNavigation('stuff'));
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 }

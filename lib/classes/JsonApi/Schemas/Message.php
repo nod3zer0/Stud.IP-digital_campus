@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class Message extends SchemaProvider
 {
@@ -10,16 +11,14 @@ class Message extends SchemaProvider
     const REL_SENDER = 'sender';
     const REL_RECIPIENTS = 'recipients';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($message)
+    public function getId($message): ?string
     {
         return $message->id;
     }
 
-    public function getAttributes($message)
+    public function getAttributes($message, ContextInterface $context): iterable
     {
-        $user = $this->getDiContainer()->get('studip-current-user');
+        $user = $this->currentUser;
 
         return [
             'subject' => $message->subject,
@@ -31,8 +30,11 @@ class Message extends SchemaProvider
         ];
     }
 
-    public function getRelationships($message, $isPrimary, array $includeList)
+    public function getRelationships($message, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
             return $isPrimary && in_array($key, $includeList);
         };
@@ -54,15 +56,15 @@ class Message extends SchemaProvider
         $data = null;
         if ($userId) {
             $data = $includeData ? \User::find($userId) : \User::build(['id' => $userId], false);
-        }
 
-        $relationships[self::REL_SENDER] = [
-            // self::SHOW_SELF => true,
-            self::LINKS => [
-                Link::RELATED => new Link('/users/'.$userId),
-            ],
-            self::DATA => $data,
-        ];
+            $relationships[self::REL_SENDER] = [
+                // self::RELATIONSHIP_LINKS_SELF => true,
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($data),
+                ],
+                self::RELATIONSHIP_DATA => $data,
+            ];
+        }
 
         return $relationships;
     }
@@ -73,11 +75,8 @@ class Message extends SchemaProvider
     private function getRecipientsRelationship(array $relationships, \Message $message, $includeData)
     {
         $relationships[self::REL_RECIPIENTS] = [
-            // self::SHOW_SELF => true,
-            self::LINKS => [
-                // Link::RELATED => new Link('/users/'.$userId),
-            ],
-            self::DATA => $message->receivers->map(function ($i) { return $i->user; }),
+            // self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_DATA => $message->receivers->map(function ($i) { return $i->user; }),
         ];
 
         return $relationships;

@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Schema\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 
 class BlubberComment extends SchemaProvider
 {
@@ -11,14 +12,12 @@ class BlubberComment extends SchemaProvider
     const REL_MENTIONS = 'mentions';
     const REL_THREAD = 'thread';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->id;
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
             # `network` VARCHAR(64) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
@@ -37,8 +36,11 @@ class BlubberComment extends SchemaProvider
      * spezifiziert werden.
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
             return $isPrimary && in_array($key, $includeList);
         };
@@ -62,12 +64,12 @@ class BlubberComment extends SchemaProvider
     {
         if (!$resource['external_contact']) {
             $userId = $resource['user_id'];
-
+            $data = $includeData ? \User::find($userId) : \User::build(['id' => $userId], false);
             $relationships[self::REL_AUTHOR] = [
-                self::LINKS => [
-                    Link::RELATED => new Link('/users/'.$userId),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($data),
                 ],
-                self::DATA => $includeData ? \User::find($userId) : \User::build(['id' => $userId], false),
+                self::RELATIONSHIP_DATA => $data,
             ];
         }
 
@@ -85,10 +87,10 @@ class BlubberComment extends SchemaProvider
         }
 
         $relationships[self::REL_MENTIONS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_MENTIONS),
             ],
-            self::DATA => $relatedUsers,
+            self::RELATIONSHIP_DATA => $relatedUsers,
         ];
 
         return $relationships;
@@ -103,11 +105,10 @@ class BlubberComment extends SchemaProvider
         }
 
         $relationships[self::REL_THREAD] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                                      ->getSchema($related)->getSelfSubLink($related),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($related),
             ],
-            self::DATA => $related,
+            self::RELATIONSHIP_DATA => $related,
         ];
 
         return $relationships;

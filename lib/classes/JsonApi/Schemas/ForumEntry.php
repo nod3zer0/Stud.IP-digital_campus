@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Schema\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use JsonApi\Models\ForumCat;
 
 class ForumEntry extends SchemaProvider
@@ -11,14 +12,12 @@ class ForumEntry extends SchemaProvider
     const REL_CAT = 'category';
     const REL_ENTRY = 'entries';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($entry)
+    public function getId($entry): ?string
     {
         return $entry->topic_id;
     }
 
-    public function getAttributes($entry)
+    public function getAttributes($entry, ContextInterface $context): iterable
     {
         return [
             'title' => $entry->name,
@@ -30,8 +29,11 @@ class ForumEntry extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRelationships($entry, $isPrimary, array $includeList)
+    public function getRelationships($entry, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
         if ($isPrimary) {
             $relationships = $this->addCategoryRelationship($relationships, $entry, $includeList);
@@ -43,16 +45,16 @@ class ForumEntry extends SchemaProvider
 
     private function addCategoryRelationship($relationships, $entry, $includeList)
     {
-        $cat_link = new Link('/forum-categories/'.($entry->category)->id);
+        $cat_link = $this->createLinkToResource($entry->category);
         $cat_data = in_array(self::REL_CAT, $includeList)
             ? ForumCat::find($entry->category->id)
             : ForumCat::buildExisting(['id' => $entry->category->id]);
 
         $relationships[self::REL_CAT] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $cat_link,
             ],
-            self::DATA => $cat_data,
+            self::RELATIONSHIP_DATA => $cat_data,
         ];
 
         return $relationships;
@@ -64,9 +66,9 @@ class ForumEntry extends SchemaProvider
     private function addChildEntryRelationship($relationships, $entry, $includeList)
     {
         $relationships[self::REL_ENTRY] = [
-            self::DATA => $entry->getChildEntries($entry->id),
+            self::RELATIONSHIP_DATA => $entry->getChildEntries($entry->id),
 
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($entry, self::REL_ENTRY),
             ],
         ];

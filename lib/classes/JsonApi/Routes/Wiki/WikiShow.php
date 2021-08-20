@@ -3,10 +3,7 @@
 namespace JsonApi\Routes\Wiki;
 
 use JsonApi\Errors\AuthorizationFailedException;
-use JsonApi\Errors\BadRequestException;
 use JsonApi\JsonApiController;
-use Neomerx\JsonApi\Contracts\Http\ResponsesInterface;
-use Neomerx\JsonApi\Document\Link;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

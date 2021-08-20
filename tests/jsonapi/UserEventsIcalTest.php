@@ -39,7 +39,7 @@ class UserEventsIcalTest extends \Codeception\Test\Unit
         $requestBuilder = $this->tester->createRequestBuilder($credentials);
         $requestBuilder->setUri('/users/'.$credentials['id'].'/events.ics')->fetch();
 
-        $response = $app($requestBuilder->getRequest(), new \Slim\Http\Response());
+        $response = $app->handle($requestBuilder->getRequest());
 
         $this->tester->assertEquals(200, $response->getStatusCode());
         $this->tester->assertStringContainsString('BEGIN:VEVENT', (string) $response->getBody());

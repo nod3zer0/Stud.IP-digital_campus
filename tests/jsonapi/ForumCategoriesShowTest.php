@@ -47,24 +47,16 @@ class ForumCategoriesShowTest extends \Codeception\Test\Unit
 
     public function testShouldNotShowCategories()
     {
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () {
-            $credentials = $this->tester->getCredentialsForTestDozent();
+        $credentials = $this->tester->getCredentialsForTestDozent();
 
-            $app = $this->tester->createApp($credentials, 'get', '/forum-categories/{id}', ForumCategoriesShow::class);
+        $app = $this->tester->createApp($credentials, 'get', '/forum-categories/{id}', ForumCategoriesShow::class);
 
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/forum-categories/'.'badId')
-                ->fetch();
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/forum-categories/'.'badId')
+            ->fetch();
 
-            $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-
-            $this->tester->assertTrue($response->isSuccessfulDocument([200]));
-            $document = $response->document();
-            $resourceObject = $document->primaryResource();
-
-            $this->tester->assertSame($cat->entry_name, $resourceObject->attribute('title'));
-            $this->tester->assertSame((int) $cat->pos, $resourceObject->attribute('position'));
-        });
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 }

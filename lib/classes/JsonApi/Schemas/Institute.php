@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class Institute extends SchemaProvider
 {
@@ -13,14 +14,12 @@ class Institute extends SchemaProvider
     const REL_FOLDERS = 'folders';
     const REL_STATUS_GROUPS = 'status-groups';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($institute)
+    public function getId($institute): ?string
     {
         return $institute->id;
     }
 
-    public function getAttributes($institute)
+    public function getAttributes($institute, ContextInterface $context): iterable
     {
         return [
             'name' => $institute['Name'],
@@ -37,8 +36,11 @@ class Institute extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
@@ -47,20 +49,20 @@ class Institute extends SchemaProvider
 
         $filesLink = $this->getRelationshipRelatedLink($resource, self::REL_FILES);
         $relationships[self::REL_FILES] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $filesLink,
             ],
         ];
 
         $foldersLink = $this->getRelationshipRelatedLink($resource, self::REL_FOLDERS);
         $relationships[self::REL_FOLDERS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $foldersLink,
             ],
         ];
 
         $relationships[self::REL_BLUBBER] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_BLUBBER),
             ],
         ];
@@ -80,13 +82,13 @@ class Institute extends SchemaProvider
         $includeData
     ) {
         $relation = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_STATUS_GROUPS),
             ]
         ];
         if ($includeData) {
             $related = $resource->status_groups;
-            $relation[self::DATA] = $related;
+            $relation[self::RELATIONSHIP_DATA] = $related;
         }
 
         return array_merge($relationships, [self::REL_STATUS_GROUPS => $relation]);

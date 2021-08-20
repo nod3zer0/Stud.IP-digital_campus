@@ -35,7 +35,7 @@ class NewsShowTest extends \Codeception\Test\Unit
         $news = $this->createNews($credentials, $title, $content, $range_id);
         $newsId = $news->id;
         $app = $this->tester->createApp($credentials, 'get', '/studip/news', GlobalNewsShow::class);
-        
+
         $response = $this->tester->sendMockRequest(
             $app,
             $this->tester->createRequestBuilder($credentials)
@@ -47,11 +47,12 @@ class NewsShowTest extends \Codeception\Test\Unit
         $this->tester->assertSame(200, $response->getStatusCode());
         $this->tester->assertTrue($response->isSuccessfulDocument([200]));
         $document = $response->document();
-        $resourceObject = $document->primaryResource();
+        $resourceObjects = $document->primaryResources();
+        $resourceObject = current($resourceObjects);
         $this->tester->assertNotNull($resourceObject->attribute('title'));
         $this->tester->assertNotNull($resourceObject->attribute('content'));
         $this->tester->assertNotNull($document->isSingleResourceDocument());
-        $this->tester->assertSame($newsId, $document->primaryResource()->id());
+        $this->tester->assertSame($newsId, $resourceObject->id());
 
         $this->tester->storeJsonMd('show_news', $response);
     }
@@ -64,7 +65,7 @@ class NewsShowTest extends \Codeception\Test\Unit
         $news = $this->createNews($credentials, $title, $content, $course_id);
         $newsId = $news->id;
         $app = $this->tester->createApp($credentials, 'get', '/courses/{id}/news', ByCourseIndex::class);
-        
+
         $response = $this->tester->sendMockRequest(
             $app,
             $this->tester->createRequestBuilder($credentials)
@@ -74,10 +75,11 @@ class NewsShowTest extends \Codeception\Test\Unit
         );
         $this->tester->assertTrue($response->isSuccessfulDocument());
         $document = $response->document();
-        $resourceObject = $document->primaryResource();
+        $resourceObjects = $document->primaryResources();
+        $resourceObject = current($resourceObjects);
         $this->tester->assertNotNull($resourceObject->attribute('title'));
         $this->tester->assertNotNull($resourceObject->attribute('content'));
-        
+
     }
 
     public function testShouldShowNewsByCurrentUser()
@@ -92,8 +94,7 @@ class NewsShowTest extends \Codeception\Test\Unit
         $this->tester->assertSame(200, $response->getStatusCode());
         $this->tester->assertTrue($response->isSuccessfulDocument([200]));
         $document = $response->document();
-        $this->tester->assertNotNull($document->primaryResource());
-        $this->tester->assertSame($newsId, $document->primaryResource()->id());
+        $this->tester->assertNotEmpty($document->primaryResources());
     }
 
     public function testShouldNotShowNewsByCurrentUser()
@@ -107,7 +108,7 @@ class NewsShowTest extends \Codeception\Test\Unit
         $this->tester->assertSame(200, $response->getStatusCode());
         $this->tester->assertTrue($response->isSuccessfulDocument([200]));
         $document = $response->document();
-        $this->tester->assertNull($document->primaryResource());
+        $this->tester->assertEmpty($document->primaryResources());
     }
 
     private function getNoNewsByUser($credentials)

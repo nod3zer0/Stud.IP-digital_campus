@@ -2,21 +2,22 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Schema\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 
 class ScheduleEntry extends SchemaProvider
 {
     const TYPE = 'schedule-entries';
     const REL_OWNER = 'owner';
 
-    protected $resourceType = self::TYPE;
 
-    public function getId($entry)
+
+    public function getId($entry): ?string
     {
         return $entry->id;
     }
 
-    public function getAttributes($entry)
+    public function getAttributes($entry, ContextInterface $context): iterable
     {
         return [
             'title' => $entry->title,
@@ -33,16 +34,19 @@ class ScheduleEntry extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRelationships($entry, $isPrimary, array $includeList)
+    public function getRelationships($entry, ContextInterface $context): iterable
     {
-        $link = $this->getSchemaContainer()->getSchema($entry->user)->getSelfSubLink($entry->user);
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
+        $link = $this->createLinkToResource($entry->user);
 
         $relationships = [
             self::REL_OWNER => [
-                self::LINKS => [
+                self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $link,
                 ],
-                self::DATA => $entry->user,
+                self::RELATIONSHIP_DATA => $entry->user,
             ],
         ];
 

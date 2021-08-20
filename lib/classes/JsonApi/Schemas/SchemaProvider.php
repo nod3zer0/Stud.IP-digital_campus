@@ -2,38 +2,60 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Contracts\Schema\ContainerInterface;
-use Neomerx\JsonApi\Contracts\Schema\SchemaFactoryInterface;
+use JsonApi\Errors\InternalServerError;
+use Neomerx\JsonApi\Contracts\Factories\FactoryInterface;
+use Neomerx\JsonApi\Contracts\Schema\LinkInterface;
+use Neomerx\JsonApi\Contracts\Schema\SchemaContainerInterface;
+use Neomerx\JsonApi\Schema\BaseSchema;
 
-abstract class SchemaProvider extends \Neomerx\JsonApi\Schema\SchemaProvider
+abstract class SchemaProvider extends BaseSchema
 {
-    private $schemaContainer;
-    private $diContainer;
+    /** @var SchemaContainerInterface */
+    protected $schemaContainer;
 
-    /**
-     * @param SchemaFactoryInterface $factory
-     * @param ContainerInterface     $factory
-     */
-    public function __construct(SchemaFactoryInterface $factory, ContainerInterface $schemaContainer)
+    /** @var ?\User */
+    protected $currentUser;
+
+    public function __construct(FactoryInterface $factory, SchemaContainerInterface $schemaContainer, ?\User $user)
     {
-        parent::__construct($factory);
-
         $this->schemaContainer = $schemaContainer;
-        $this->diContainer = $factory->getDependencyInjectionContainer();
+        $this->currentUser = $user;
+
+        parent::__construct($factory);
+    }
+
+    const TYPE = '';
+
+    public function getType(): string
+    {
+        return static::TYPE;
     }
 
     /**
-     * Return the set schema container.
-     *
-     * @return ContainerInterface the schema container
+     * @inheritdoc
      */
-    protected function getSchemaContainer()
+    public function isAddSelfLinkInRelationshipByDefault(string $relationshipName): bool
     {
-        return $this->schemaContainer;
+        return false;
     }
 
-    public function getDiContainer()
+    /**
+     * @inheritdoc
+     */
+    public function isAddRelatedLinkInRelationshipByDefault(string $relationshipName): bool
     {
-        return $this->diContainer;
+        return false;
+    }
+
+    /**
+     * @param mixed $resource
+     */
+    public function createLinkToResource($resource): LinkInterface
+    {
+        if (!$this->schemaContainer->hasSchema($resource)) {
+            throw new InternalServerError('Cannot create links to objects without schema.');
+        }
+
+        return $this->schemaContainer->getSchema($resource)->getSelfLink($resource);
     }
 }

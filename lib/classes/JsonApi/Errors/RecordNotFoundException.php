@@ -2,7 +2,7 @@
 
 namespace JsonApi\Errors;
 
-use Neomerx\JsonApi\Document\Error;
+use Neomerx\JsonApi\Schema\Error;
 use Neomerx\JsonApi\Exceptions\JsonApiException;
 
 /**
@@ -15,7 +15,7 @@ class RecordNotFoundException extends JsonApiException
      */
     public function __construct($error = null)
     {
-        $error = new Error($error ?: 'Not Found', null, 404);
-        parent::__construct($error, 404);
+        $errorObject = new Error(null, null, null, 404, null, 'Not Found', $error);
+        parent::__construct($errorObject, 404);
     }
 }

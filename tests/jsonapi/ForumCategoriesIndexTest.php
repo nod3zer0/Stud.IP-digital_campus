@@ -39,29 +39,22 @@ class ForumCategoriesIndexTest extends \Codeception\Test\Unit
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
 
         $this->tester->assertTrue($response->isSuccessfulDocument([200]));
-        $document = $response->document();
-        $resourceObject = $document->primaryResource();
     }
 
     public function testShouldNotShowCategory()
     {
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () {
-            $credentials = $this->tester->getCredentialsForTestDozent();
-            $course_id = 'a07535cf2f8a72df33c12ddfa4b53dde';
-            $cat = $this->createCategory($credentials);
+        $credentials = $this->tester->getCredentialsForTestDozent();
+        $course_id = 'a07535cf2f8a72df33c12ddfa4b53dde';
+        $cat = $this->createCategory($credentials);
 
-            $app = $this->tester->createApp($credentials, 'get', '/course/{id}/forum-categories', ForumCategoriesIndex::class);
+        $app = $this->tester->createApp($credentials, 'get', '/course/{id}/forum-categories', ForumCategoriesIndex::class);
 
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/course/badID/forum-categories')
-                ->fetch();
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/course/badID/forum-categories')
+            ->fetch();
 
-            $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-
-            $this->tester->assertTrue($response->isSuccessfulDocument([200]));
-            $document = $response->document();
-            $resourceObject = $document->primaryResource();
-        });
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 }

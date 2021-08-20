@@ -12,7 +12,7 @@ class FileRefsContentHead extends NonJsonApiController
 {
     use EtagHelperTrait;
 
-    public function invoke(Request $request, Response $response, $args)
+    public function invoke(Request $request, Response $response, array $args): Response
     {
         if (!$fileRef = \FileRef::find($args['id'])) {
             throw new RecordNotFoundException();
@@ -21,7 +21,6 @@ class FileRefsContentHead extends NonJsonApiController
         if (!Authority::canDownloadFileRef($this->getUser($request), $fileRef)) {
             throw new AuthorizationFailedException();
         }
-
         list(, $response) = $this->handleEtag($request, $response, $fileRef, true);
 
         return $response;

@@ -8,7 +8,6 @@ use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\NonJsonApiController;
-use JsonApi\Providers\JsonApiConfig as C;
 
 class FoldersCopy extends NonJsonApiController
 {
@@ -45,7 +44,7 @@ class FoldersCopy extends NonJsonApiController
     {
         $pathinfo = $this->getSchema($folder)->getSelfSubLink($folder)->getSubHref();
         $old = \URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
-        $url = \URLHelper::getURL($this->container->get(C::JSON_URL_PREFIX).$pathinfo, [], true);
+        $url = \URLHelper::getURL($this->container->get('json-api-integration-urlPrefix').$pathinfo, [], true);
         \URLHelper::setBaseURL($old);
 
         return $response->withRedirect($url, 201);

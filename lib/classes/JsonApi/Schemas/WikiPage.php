@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class WikiPage extends SchemaProvider
 {
@@ -15,23 +16,7 @@ class WikiPage extends SchemaProvider
     const REL_PARENT = 'parent';
     const REL_RANGE = 'range';
 
-    protected $resourceType = self::TYPE;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getResourceLinks($resource)
-    {
-        $url = $this->getDiContainer()->get('router')->pathFor(
-            'get-wiki-page',
-            ['id' => sprintf("%s_%s", $resource->range_id, $resource->keyword)]
-        );
-        $links = [ Link::SELF => $this->createLink($url) ];
-
-        return $links;
-    }
-
-    public static function getRangeClasses()
+    public static function getRangeClasses(): array
     {
         return [
             'sem' => \Course::class,
@@ -39,7 +24,7 @@ class WikiPage extends SchemaProvider
         ];
     }
 
-    public static function getRangeTypes()
+    public static function getRangeTypes(): array
     {
         return [
             'sem' => Course::TYPE,
@@ -47,6 +32,11 @@ class WikiPage extends SchemaProvider
         ];
     }
 
+    /**
+     * @param mixed $resource
+     *
+     * @return ?string
+     */
     public static function getRangeClass($resource)
     {
         $classes = self::getRangeClasses();
@@ -59,6 +49,11 @@ class WikiPage extends SchemaProvider
         ];
     }
 
+    /**
+     * @param mixed $resource
+     *
+     * @return ?string
+     */
     public static function getRangeType($resource)
     {
         $types = self::getRangeTypes();
@@ -71,7 +66,7 @@ class WikiPage extends SchemaProvider
         ];
     }
 
-    public function getId($wiki)
+    public function getId($wiki): ?string
     {
         return sprintf(
             '%s_%s',
@@ -80,7 +75,7 @@ class WikiPage extends SchemaProvider
         );
     }
 
-    public function getAttributes($wiki)
+    public function getAttributes($wiki, ContextInterface $context): iterable
     {
         return [
             'keyword' => $wiki->keyword,
@@ -90,8 +85,11 @@ class WikiPage extends SchemaProvider
         ];
     }
 
-    public function getRelationships($wiki, $isPrimary, array $includeList)
+    public function getRelationships($wiki, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         if ($isPrimary) {
@@ -105,18 +103,16 @@ class WikiPage extends SchemaProvider
         return $relationships;
     }
 
-    private function addParentRelationship($relationships, $wiki, $includeList)
+    private function addParentRelationship(array $relationships, \WikiPage $wiki, array $includeList): array
     {
         $related = $wiki->parent;
         $relationships[self::REL_PARENT] = [
-            self::SHOW_SELF => true,
-            self::DATA => $related
+            self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_DATA => $related
         ];
         if ($related) {
-            $relationships[self::REL_PARENT][self::LINKS] = [
-                Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($related)
-                    ->getSelfSubLink($related)
+            $relationships[self::REL_PARENT][self::RELATIONSHIP_LINKS] = [
+                Link::RELATED => $this->createLinkToResource($related),
             ];
         }
 
@@ -126,10 +122,10 @@ class WikiPage extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function addChildrenRelationship($relationships, $wiki, $includeList)
+    private function addChildrenRelationship(array $relationships, \WikiPage $wiki, array $includeList): array
     {
         $relationships[self::REL_CHILDREN] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($wiki, self::REL_CHILDREN),
             ],
         ];
@@ -140,10 +136,10 @@ class WikiPage extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function addDescendantsRelationship($relationships, $wiki, $includeList)
+    private function addDescendantsRelationship(array $relationships, \WikiPage $wiki, array $includeList): array
     {
         $relationships[self::REL_DESCENDANTS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($wiki, self::REL_DESCENDANTS),
             ],
         ];
@@ -151,37 +147,54 @@ class WikiPage extends SchemaProvider
         return $relationships;
     }
 
+    /**
+     * @param array $relationships
+     * @param \WikiPage $wiki
+     * @param array $includeList
+     *
+     * @return array
+     */
     private function addAuthorRelationship($relationships, $wiki, $includeList)
     {
-        $data = in_array(self::REL_AUTHOR, $includeList)
-              ? $wiki->author
-              : \User::build(['id' => $wiki->user_id], false);
-        $relationships[self::REL_AUTHOR] = [
-            self::LINKS => [
-                Link::RELATED => new Link('/users/' . $wiki->user_id),
-            ],
-            self::DATA => $data,
-        ];
+        if ($wiki->author) {
+            $relationships[self::REL_AUTHOR] = [
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($wiki->author),
+                ],
+                self::RELATIONSHIP_DATA => $wiki->author,
+            ];
+        }
 
         return $relationships;
     }
 
+    /**
+     * @param array $relationships
+     * @param \WikiPage $wiki
+     * @param array $includeList
+     *
+     * @return array
+     */
     private function addRangeRelationship($relationships, $wiki, $includeList)
     {
+        $range = $this->prepareRange($wiki);
         $relationships[self::REL_RANGE] = [
-            self::LINKS => [
-                Link::RELATED => new Link('/' . self::getRangeType($wiki) . '/' . $wiki->range_id),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($range),
             ],
-            self::DATA => $this->prepareRange($wiki, $includeList),
+            self::RELATIONSHIP_DATA => $range,
         ];
 
         return $relationships;
     }
 
-    private function prepareRange($wiki)
+    private function prepareRange(\WikiPage $wiki): \Range
     {
         $class = self::getRangeClass($wiki);
 
-        return $class::build(['id' => $wiki->range_id], false);
+        /** @var \Range $range */
+        $range = $class::build(['id' => $wiki->range_id], false);
+
+        return  $range;
     }
 }

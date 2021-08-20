@@ -16,16 +16,16 @@ interface Strategy
     /**
      * Get the currently authenticated user.
      *
-     * @return \User|null
+     * @return ?\User
      */
     public function user();
 
     /**
      * Validate a user's credentials.
      *
-     * @param array $credentials
+     * @param Response $response the current response
      *
-     * @return bool
+     * @return Response the new response containing the challenge
      */
     public function addChallenge(Response $response);
 }

@@ -2,15 +2,24 @@
 
 namespace JsonApi\Middlewares\Auth;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class HttpBasicAuthStrategy implements Strategy
 {
-    protected $user;
+    /** @var callable */
+    protected $authenticator;
 
+    /** @var Request */
     protected $request;
 
+    /** @var ?\User */
+    protected $user;
+
+    /**
+     * @param Request $request
+     * @param callable $authenticator
+     */
     public function __construct(Request $request, $authenticator)
     {
         $this->request = $request;

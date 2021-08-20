@@ -2,7 +2,7 @@
 
 namespace JsonApi\Errors;
 
-use Neomerx\JsonApi\Document\Error;
+use Neomerx\JsonApi\Schema\Error;
 use Neomerx\JsonApi\Exceptions\JsonApiException;
 
 /**
@@ -15,7 +15,7 @@ class HttpRangeException extends JsonApiException
      */
     public function __construct($error = null)
     {
-        $error = new Error($error ?: 'Requested Range Not Satisfiable.', null, 416);
-        parent::__construct($error, 416);
+        $errorObject = new Error(null, null, null, 416, null, 'Requested Range Not Satisfiable.', $error);
+        parent::__construct($errorObject, 416);
     }
 }

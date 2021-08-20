@@ -2,21 +2,20 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class SemClass extends SchemaProvider
 {
     const REL_SEM_TYPES = 'sem-types';
     const TYPE = 'sem-classes';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource['id'];
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
             'name' => (string) $resource['name'],
@@ -32,8 +31,11 @@ class SemClass extends SchemaProvider
         ];
     }
 
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
@@ -53,14 +55,14 @@ class SemClass extends SchemaProvider
     private function addSemTypesRelationship(array $relationships, $resource, $includeData)
     {
         $relation = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_SEM_TYPES),
-            ]
+            ],
         ];
 
         if ($includeData) {
             $related = $resource->getSemTypes();
-            $relation[self::DATA] = $related;
+            $relation[self::RELATIONSHIP_DATA] = $related;
         }
 
         $relationships[self::REL_SEM_TYPES] = $relation;

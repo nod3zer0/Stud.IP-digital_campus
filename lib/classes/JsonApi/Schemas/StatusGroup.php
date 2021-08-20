@@ -2,21 +2,20 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class StatusGroup extends SchemaProvider
 {
     const REL_RANGE = 'range';
     const TYPE = 'status-groups';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->id;
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         $stringOrNull = function ($item) {
             return trim($item) != '' ? (string) $item : null;
@@ -42,8 +41,11 @@ class StatusGroup extends SchemaProvider
         ];
     }
 
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
@@ -68,14 +70,12 @@ class StatusGroup extends SchemaProvider
         $related = $this->findRange($resource);
 
         $relation = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                                      ->getSchema($related)
-                                      ->getSelfSubLink($related)
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($related)
             ]
         ];
         if ($includeData) {
-            $relation[self::DATA] = $related;
+            $relation[self::RELATIONSHIP_DATA] = $related;
         }
 
         return array_merge($relationships, [self::REL_RANGE => $relation]);

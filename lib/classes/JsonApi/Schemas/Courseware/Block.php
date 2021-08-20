@@ -5,7 +5,8 @@ namespace JsonApi\Schemas\Courseware;
 use Courseware\UserDataField;
 use Courseware\UserProgress;
 use JsonApi\Schemas\SchemaProvider;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class Block extends SchemaProvider
 {
@@ -21,12 +22,10 @@ class Block extends SchemaProvider
     const REL_USERPROGRESS = 'user-progress';
     const REL_FILES = 'file-refs';
 
-    protected $resourceType = self::TYPE;
-
     /**
      * {@inheritdoc}
      */
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->id;
     }
@@ -34,7 +33,7 @@ class Block extends SchemaProvider
     /**
      * {@inheritdoc}
      */
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
             'position' => (int) $resource['position'],
@@ -50,87 +49,82 @@ class Block extends SchemaProvider
     /**
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $relationships[self::REL_COMMENTS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_COMMENTS),
             ],
-            self::DATA => $resource->comments,
+            self::RELATIONSHIP_DATA => $resource->comments,
         ];
 
         $relationships[self::REL_CONTAINER] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($resource->container)
-                    ->getSelfSubLink($resource->container),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($resource->container),
             ],
-            self::DATA => $resource->container,
+            self::RELATIONSHIP_DATA => $resource->container,
         ];
 
         $relationships[self::REL_OWNER] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($resource->owner)
-                    ->getSelfSubLink($resource->owner),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($resource->owner),
             ],
-            self::DATA => $resource->owner,
+            self::RELATIONSHIP_DATA => $resource->owner,
         ];
 
         $relationships[self::REL_EDITOR] = $resource['editor_id']
             ? [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->editor)
-                        ->getSelfSubLink($resource->editor),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->editor),
                 ],
-                self::DATA => $resource->editor,
+                self::RELATIONSHIP_DATA => $resource->editor,
             ]
-            : [self::DATA => null];
+            : [self::RELATIONSHIP_DATA => null];
 
 
         $relationships[self::REL_EDITBLOCKER] = $resource['edit_blocker_id']
             ? [
-                self::SHOW_SELF => true,
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                        ->getSchema($resource->edit_blocker)
-                        ->getSelfSubLink($resource->edit_blocker),
+                self::RELATIONSHIP_LINKS_SELF => true,
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->edit_blocker),
                 ],
-                self::DATA => $resource->edit_blocker,
+                self::RELATIONSHIP_DATA => $resource->edit_blocker,
             ]
-            : [self::SHOW_SELF => true, self::DATA => null];
+            : [self::RELATIONSHIP_LINKS_SELF => true, self::RELATIONSHIP_DATA => null];
 
         $relationships[self::REL_FEEDBACK] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_FEEDBACK),
             ],
         ];
 
-        $user = $this->getDiContainer()->get('studip-current-user');
+        $user = $this->currentUser;
         $userDataField = UserDataField::getUserDataField($user, $resource);
         $relationships[self::REL_USERDATAFIELD] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_USERDATAFIELD),
             ],
-            self::DATA => $userDataField,
+            self::RELATIONSHIP_DATA => $userDataField,
         ];
 
         $userProgress = UserProgress::getUserProgress($user, $resource);
         $relationships[self::REL_USERPROGRESS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_USERPROGRESS),
             ],
-            self::DATA => $userProgress,
+            self::RELATIONSHIP_DATA => $userProgress,
         ];
 
         if ($resource->files) {
             $filesLink = $this->getRelationshipRelatedLink($resource, self::REL_FILES);
 
             $relationships[self::REL_FILES] = [
-                self::LINKS => [
+                self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $filesLink,
                 ],
             ];

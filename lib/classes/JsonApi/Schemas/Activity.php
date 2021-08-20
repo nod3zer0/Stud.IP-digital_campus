@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 use Studip\Activity\Activity as StudipActivity;
 
 class Activity extends SchemaProvider
@@ -16,14 +17,14 @@ class Activity extends SchemaProvider
      * Hier wird der Typ des Schemas festgelegt.
      * {@inheritdoc}
      */
-    protected $resourceType = self::TYPE;
+
 
     /**
      * Diese Method entscheidet über die JSON-API-spezifische ID von
      * Activity-Objekten.
      * {@inheritdoc}
      */
-    public function getId($activity)
+    public function getId($activity): ?string
     {
         return $activity->id;
     }
@@ -33,7 +34,7 @@ class Activity extends SchemaProvider
      * für die Ausgabe vorbereitet werden.
      * {@inheritdoc}
      */
-    public function getAttributes($activity)
+    public function getAttributes($activity, ContextInterface $context): iterable
     {
         if (preg_match('/\\\\([^\\\\]+)Provider$/', $activity->provider, $matches)) {
             $activityType = strtolower($matches[1]);
@@ -57,8 +58,11 @@ class Activity extends SchemaProvider
      * spezifiziert werden.
      * {@inheritdoc}
      */
-    public function getRelationships($activity, $isPrimary, array $includeList)
+    public function getRelationships($activity, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
             return $isPrimary && in_array($key, $includeList);
         };
@@ -78,9 +82,10 @@ class Activity extends SchemaProvider
         $actorId = $activity->actor_id;
 
         if ($actorType === 'user') {
+            $actor = $include ? \User::findFull($actorId) : \User::build(['id' => $actorId], false);
             $relationships[self::REL_ACTOR] = [
-                self::LINKS => [Link::RELATED => new Link('/users/'.$actorId)],
-                self::DATA => $include ? \User::findFull($actorId) : \User::build(['id' => $actorId], false),
+                self::RELATIONSHIP_LINKS => [Link::RELATED => $this->createLinkToResource($actor)],
+                self::RELATIONSHIP_DATA => $actor
             ];
         }
 
@@ -90,8 +95,6 @@ class Activity extends SchemaProvider
     private function getObjectRelationship(array $relationships, StudipActivity $activity, $include)
     {
         $mapping = [
-            // TODO: Polishing
-            // 'blubber' => \BlubberPosting::class,
             'documents' => \FileRef::class,
             'forum' => \JsonApi\Models\ForumEntry::class,
             'message' => \Message::class,
@@ -114,17 +117,17 @@ class Activity extends SchemaProvider
             }
 
             if ($data) {
-                $link = $this->getSchemaContainer()->getSchema($data)->getSelfSubLink($data);
+                $link = $this->createLinkToResource($data);
                 $relationships[self::REL_OBJECT] = [
-                    self::LINKS => [
+                    self::RELATIONSHIP_LINKS => [
                         Link::RELATED => $link
                     ],
-                    self::DATA => $data,
+                    self::RELATIONSHIP_DATA => $data,
                 ];
             }
         } else {
             $relationships[self::REL_OBJECT] = [
-                self::META => [
+                self::RELATIONSHIP_META => [
                     'object-type' => $activity->object_type,
                     'object-id' => $activity->object_id,
                 ],
@@ -137,12 +140,12 @@ class Activity extends SchemaProvider
     private function getContextRelationship(array $relationships, StudipActivity $activity, $include)
     {
         if ($data = $this->getContext($activity, $include)) {
-            $link = $this->getSchemaContainer()->getSchema($data)->getSelfSubLink($data);
+            $link = $this->createLinkToResource($data);
             $relationships[self::REL_CONTEXT] = [
-                self::LINKS => [
+                self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $link
                 ],
-                self::DATA => $data,
+                self::RELATIONSHIP_DATA => $data,
             ];
         }
 

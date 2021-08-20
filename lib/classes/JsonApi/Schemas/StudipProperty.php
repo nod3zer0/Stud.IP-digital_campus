@@ -2,18 +2,18 @@
 
 namespace JsonApi\Schemas;
 
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+
 class StudipProperty extends SchemaProvider
 {
     const TYPE = 'studip-properties';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->field;
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
             'description' => $resource->description,
@@ -21,10 +21,15 @@ class StudipProperty extends SchemaProvider
         ];
     }
 
+    public function getRelationships($resource, ContextInterface $context): iterable
+    {
+        return [];
+    }
+
     /**
      * @inheritdoc
      */
-    public function getResourceLinks($resource)
+    public function getLinks($resource): iterable
     {
         return [];
     }

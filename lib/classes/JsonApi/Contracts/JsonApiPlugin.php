@@ -28,6 +28,8 @@ interface JsonApiPlugin
      *
      * @param \Slim\App $app die Slim-Applikation, in der das Plugin
      *                       Routen eintragen möchte
+     *
+     * @return void
      */
     public function registerAuthenticatedRoutes(\Slim\App $app);
 
@@ -51,6 +53,8 @@ interface JsonApiPlugin
      *
      * @param \Slim\App $app die Slim-Applikation, in der das Plugin
      *                       Routen eintragen möchte
+     *
+     * @return void
      */
     public function registerUnauthenticatedRoutes(\Slim\App $app);
 

@@ -2,8 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use JsonApi\Providers\JsonApiConfig as C;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class LibraryFile extends SchemaProvider
 {
@@ -18,24 +18,29 @@ class LibraryFile extends SchemaProvider
 
     const META_CONTENT = 'content';
 
-    protected $resourceType = self::TYPE;
 
-    public function getId($resource)
+
+    public function getId($resource): ?string
     {
         return $resource->getId();
     }
 
-    public function getPrimaryMeta($resource)
+    /**
+     * @inheritdoc
+     */
+    public function hasResourceMeta($resource): bool
     {
-        $link = $this->getDiContainer()->get(C::JSON_URL_PREFIX)
-              .$this->getRelationshipRelatedLink($resource, self::META_CONTENT)->getSubHref();
+        return true;
+    }
 
+    public function getResourceMeta($resource)
+    {
         return [
-            'download-url' => $link,
+            'download-url' => $resource->getDownloadURL(),
         ];
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
             'name' => $resource->getFilename(),
@@ -49,16 +54,16 @@ class LibraryFile extends SchemaProvider
             'filesize' => (int) $resource->getSize()
         ];
 
-        $user = $this->getDiContainer()->get('studip-current-user');
+        $userId = $this->currentUser->id;
         if ($folder = $resource->getFolderType()) {
             $filetype = $resource->getFileType();
             $attributes = array_merge(
                 $attributes,
                 [
-                    'is-readable' => $folder->isReadable($user->id),
-                    'is-downloadable' => $filetype->isDownloadable($user->id),
-                    'is-editable' => $filetype->isEditable($user->id),
-                    'is-writable' => $filetype->isWritable($user->id),
+                    'is-readable' => $folder->isReadable($userId),
+                    'is-downloadable' => $filetype->isDownloadable($userId),
+                    'is-editable' => $filetype->isEditable($userId),
+                    'is-writable' => $filetype->isWritable($userId),
                 ]
             );
         }
@@ -69,8 +74,11 @@ class LibraryFile extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $relationships = $this->getFeedbackRelationship($relationships, $resource);
@@ -93,7 +101,7 @@ class LibraryFile extends SchemaProvider
         if ($folder = $resource->getFolderType()) {
             if ($folder->range_id && $folder->range_type === 'course' && \Feedback::isActivated($folder->range_id)) {
                 $relationships[self::REL_FEEDBACK] = [
-                    self::LINKS => [
+                    self::RELATIONSHIP_LINKS => [
                         Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_FEEDBACK)
                     ],
                 ];
@@ -107,11 +115,9 @@ class LibraryFile extends SchemaProvider
     {
         if ($resource->file) {
             $relationships[self::REL_FILE] = [
-                self::DATA => $resource->file,
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($resource->file)
-                    ->getSelfSubLink($resource->file),
+                self::RELATIONSHIP_DATA => $resource->file,
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->file),
                 ],
             ];
         }
@@ -122,16 +128,15 @@ class LibraryFile extends SchemaProvider
     private function addOwnerRelationship(array $relationships, \FileRef $resource)
     {
         $relationships[self::REL_OWNER] = [
-            self::META => [
+            self::RELATIONSHIP_META => [
                 'name' => $resource->getAuthorName(),
             ],
-            self::DATA => $resource->owner,
+            self::RELATIONSHIP_DATA => $resource->owner,
         ];
 
         if (isset($resource->owner)) {
-            $relationships[self::REL_OWNER][self::LINKS] = [
-                Link::RELATED => $this->getSchemaContainer()
-                ->getSchema($resource->owner)->getSelfSubLink($resource->owner),
+            $relationships[self::REL_OWNER][self::RELATIONSHIP_LINKS] = [
+                Link::RELATED => $this->createLinkToResource($resource->owner),
             ];
         }
 
@@ -143,11 +148,9 @@ class LibraryFile extends SchemaProvider
         if ($resource->folder_id) {
             $folder = $resource->getFolderType();
             $relationships[self::REL_PARENT] = [
-                self::DATA => $folder,
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($folder)
-                    ->getSelfSubLink($folder),
+                self::RELATIONSHIP_DATA => $folder,
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($folder),
                 ],
             ];
         }
@@ -155,18 +158,17 @@ class LibraryFile extends SchemaProvider
         return $relationships;
     }
 
-    private function addRangeRelationship(array $relationships, \FileRef $resource)
+    private function addRangeRelationship(array $relationships, \FileRef $resource): array
     {
         if ($folder = $resource->getFolderType()) {
             if ($folder->range_id) {
                 try {
                     $rangeType = $folder->range_type;
                     if ($range = $folder->$rangeType) {
-                        $schema = $this->getSchemaContainer()->getSchema($range);
                         $relationships[self::REL_RANGE] = [
-                            self::DATA => $range,
-                            self::LINKS => [
-                                Link::RELATED => $schema->getSelfSubLink($range),
+                            self::RELATIONSHIP_DATA => $range,
+                            self::RELATIONSHIP_LINKS => [
+                                Link::RELATED => $this->createLinkToResource($range),
                             ],
                         ];
                     }
@@ -181,8 +183,8 @@ class LibraryFile extends SchemaProvider
     private function addTermsRelationship(array $relationships, \FileRef $resource)
     {
         $relationships[self::REL_TERMS] = [
-            self::DATA => $resource->content_terms_of_use_id ? $resource->terms_of_use : null,
-            self::SHOW_SELF => true,
+            self::RELATIONSHIP_DATA => $resource->content_terms_of_use_id ? $resource->terms_of_use : null,
+            self::RELATIONSHIP_LINKS_SELF => true,
         ];
 
         return $relationships;

@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class StudyArea extends SchemaProvider
 {
@@ -12,14 +13,12 @@ class StudyArea extends SchemaProvider
     const REL_PARENT = 'parent';
     const TYPE = 'study-areas';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource['id'];
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
             'name' => (string) $resource['name'],
@@ -29,8 +28,11 @@ class StudyArea extends SchemaProvider
         ];
     }
 
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
@@ -48,14 +50,14 @@ class StudyArea extends SchemaProvider
     private function addChildrenRelationship(array $relationships, $resource, $includeData)
     {
         $relationships[self::REL_CHILDREN] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_CHILDREN),
             ],
         ];
 
         if ($includeData) {
             $children = $resource->getChildren();
-            $relationships[self::REL_CHILDREN][self::DATA] = $children;
+            $relationships[self::REL_CHILDREN][self::RELATIONSHIP_DATA] = $children;
         }
 
         return $relationships;
@@ -64,14 +66,14 @@ class StudyArea extends SchemaProvider
     private function addCoursesRelationship(array $relationships, $resource, $includeData)
     {
         $relationships[self::REL_COURSES] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_COURSES),
             ],
         ];
 
         if ($includeData) {
             $children = $resource->courses;
-            $relationships[self::REL_COURSES][self::DATA] = $children;
+            $relationships[self::REL_COURSES][self::RELATIONSHIP_DATA] = $children;
         }
 
         return $relationships;
@@ -80,13 +82,13 @@ class StudyArea extends SchemaProvider
     private function addInstituteRelationship(array $relationships, $resource, $includeData)
     {
         $relationships[self::REL_INSTITUTE] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_INSTITUTE),
             ],
         ];
 
         if ($includeData) {
-            $relationships[self::REL_INSTITUTE][self::DATA] = $resource->institute;
+            $relationships[self::REL_INSTITUTE][self::RELATIONSHIP_DATA] = $resource->institute;
         }
 
         return $relationships;
@@ -95,13 +97,13 @@ class StudyArea extends SchemaProvider
     private function addParentRelationship(array $relationships, $resource, $includeData)
     {
         $relationships[self::REL_PARENT] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_PARENT),
             ],
         ];
 
         if ($includeData) {
-            $relationships[self::REL_PARENT][self::DATA] = $resource->getParent();
+            $relationships[self::REL_PARENT][self::RELATIONSHIP_DATA] = $resource->getParent();
         }
 
         return $relationships;

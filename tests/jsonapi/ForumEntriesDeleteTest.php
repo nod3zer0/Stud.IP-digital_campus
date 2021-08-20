@@ -46,20 +46,18 @@ class ForumEntriesDeleteTest extends \Codeception\Test\Unit
 
     public function testShouldNotDeleteEntry()
     {
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () {
-            $credentials = $this->tester->getCredentialsForTestDozent();
-            $cat = $this->createCategory($credentials);
-            $entry = $this->createEntry($credentials, $cat->id);
-            $app = $this->tester->createApp($credentials, 'delete', '/forum-entries/{id}', ForumEntriesDelete::class);
+        $credentials = $this->tester->getCredentialsForTestDozent();
+        $cat = $this->createCategory($credentials);
+        $entry = $this->createEntry($credentials, $cat->id);
+        $app = $this->tester->createApp($credentials, 'delete', '/forum-entries/{id}', ForumEntriesDelete::class);
 
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/forum-entries/badId')
-                ->delete()
-                ->setJsonApiBody($entry_json);
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/forum-entries/badId')
+            ->delete()
+            ->setJsonApiBody($entry_json);
 
-            $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-            $this->tester->assertIsEmpty(ForumEntry::find($entry->id));
-        });
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 }

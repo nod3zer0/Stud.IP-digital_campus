@@ -8,9 +8,9 @@ use JsonApi\JsonApiController;
 
 class DiscoveryIndex extends JsonApiController
 {
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response)
     {
-        $routes = $this->container->get('router')->getRoutes();
+        $routes = $this->container->get(\Slim\App::class)->getRouteCollector()->getRoutes();
 
         return $this->getContentResponse($routes);
     }

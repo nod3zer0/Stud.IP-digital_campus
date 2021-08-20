@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class InstituteMember extends SchemaProvider
 {
@@ -10,14 +11,14 @@ class InstituteMember extends SchemaProvider
     const REL_INSTITUTE = 'institute';
     const REL_USER = 'user';
 
-    protected $resourceType = self::TYPE;
 
-    public function getId($membership)
+
+    public function getId($membership): ?string
     {
         return $membership->id;
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         $defaultNull = function ($key) use ($resource) {
             return $resource->$key ?: null;
@@ -40,21 +41,24 @@ class InstituteMember extends SchemaProvider
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [
             self::REL_USER => [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()->getSchema($resource->user)->getSelfSubLink($resource->user),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->user),
                 ],
-                self::DATA => $resource->user,
+                self::RELATIONSHIP_DATA => $resource->user,
             ],
 
             self::REL_INSTITUTE => [
-                self::LINKS => [
-                    Link::RELATED => $this->getSchemaContainer()->getSchema($resource->institute)->getSelfSubLink($resource->institute),
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->institute),
                 ],
-                self::DATA => $resource->institute,
+                self::RELATIONSHIP_DATA => $resource->institute,
             ],
         ];
 

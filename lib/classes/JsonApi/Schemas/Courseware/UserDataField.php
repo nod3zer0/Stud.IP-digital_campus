@@ -3,7 +3,8 @@
 namespace JsonApi\Schemas\Courseware;
 
 use JsonApi\Schemas\SchemaProvider;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class UserDataField extends SchemaProvider
 {
@@ -12,12 +13,10 @@ class UserDataField extends SchemaProvider
     const REL_BLOCK = 'block';
     const REL_USER = 'user';
 
-    protected $resourceType = self::TYPE;
-
     /**
      * {@inheritdoc}
      */
-    public function getId($resource)
+    public function getId($resource): ?string
     {
         return $resource->id;
     }
@@ -25,7 +24,7 @@ class UserDataField extends SchemaProvider
     /**
      * {@inheritdoc}
      */
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
             'payload' => $resource['payload']->getIterator(),
@@ -37,26 +36,25 @@ class UserDataField extends SchemaProvider
     /**
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         $relationships[self::REL_BLOCK] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($resource->block)
-                    ->getSelfSubLink($resource->block),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($resource->block),
             ],
-            self::DATA => $resource->block,
+            self::RELATIONSHIP_DATA => $resource->block,
         ];
 
         $relationships[self::REL_USER] = [
-            self::LINKS => [
-                Link::RELATED => $this->getSchemaContainer()
-                    ->getSchema($resource->user)
-                    ->getSelfSubLink($resource->user),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($resource->user),
             ],
-            self::DATA => $resource->user,
+            self::RELATIONSHIP_DATA => $resource->user,
         ];
 
         return $relationships;

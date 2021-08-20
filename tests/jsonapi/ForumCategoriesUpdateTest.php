@@ -47,24 +47,18 @@ class ForumCategoriesUpdateTest extends \Codeception\Test\Unit
 
     public function testShouldNotUpdateCategory()
     {
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () {
-            $credentials = $this->tester->getCredentialsForTestAutor();
-            $cat = $this->createCategory($credentials);
-            $cat_document = $this->buildValidResourceCategoryUpdate();
-            $app = $this->tester->createApp($credentials, 'PATCH', '/forum-categories/{id}', ForumCategoriesUpdate::class);
+        $credentials = $this->tester->getCredentialsForTestAutor();
+        $cat = $this->createCategory($credentials);
+        $cat_document = $this->buildValidResourceCategoryUpdate();
+        $app = $this->tester->createApp($credentials, 'PATCH', '/forum-categories/{id}', ForumCategoriesUpdate::class);
 
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/forum-categories/badId')
-                ->update()
-                ->setJsonApiBody($cat_document);
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/forum-categories/badId')
+            ->update()
+            ->setJsonApiBody($cat_document);
 
-            $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-
-            $this->tester->assertTrue($response->isSuccessfulDocument([200]));
-            $document = $response->document();
-            $resourceObject = $document->primaryResource();
-            $this->tester->assertNotEquals($cat->entry_name, $resourceObject->attribute('title'));
-        });
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 }

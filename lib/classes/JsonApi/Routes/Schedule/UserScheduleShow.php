@@ -7,8 +7,7 @@ use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
 use JsonApi\Models\ScheduleEntry;
 use JsonApi\Routes\Users\Authority;
-use Neomerx\JsonApi\Contracts\Http\ResponsesInterface;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Schema\Link;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -48,13 +47,13 @@ class UserScheduleShow extends JsonApiController
                 ScheduleEntry::findByUser_id($otherUser->id),
                 $this->getCycles($otherUser, $semester)
             ),
-            ResponsesInterface::HTTP_OK,
+            200,
             [Link::SELF => $this->getSelfLink($otherUser, $semester)],
             $this->getMeta($semester)
         );
     }
 
-    private function getCycles(\User $user, \Semester $semester)
+    private function getCycles(\User $user, \Semester $semester): array
     {
         // get all virtually added seminars
         $stmt = \DBManager::get()->prepare(
@@ -76,42 +75,41 @@ class UserScheduleShow extends JsonApiController
                 AND (semester_courses.semester_id IS NULL OR semester_courses.semester_id = :semester_id)
         ');
         $stmt->execute([
-            'userid'      => $user->id,
-            'begin'       => $semester->beginn,
+            'userid' => $user->id,
+            'begin' => $semester->beginn,
             'semester_id' => $semester->id,
         ]);
 
         return array_reduce(
             array_unique(array_merge($ids, $stmt->fetchFirst())),
             function ($cycles, $seminarId) {
-                return array_merge($cycles,
-                                   array_filter(
-                                       \Course::find($seminarId)->cycles->getArrayCopy(),
-                                       function ($cycle) {
-                                           return $cycle['is_visible'];
-                                       }
-                                   )
+                return array_merge(
+                    $cycles,
+                    array_filter(
+                        \Course::find($seminarId)->cycles->getArrayCopy(),
+                        function ($cycle) {
+                            return $cycle['is_visible'];
+                        }
+                    )
                 );
             },
             []
         );
     }
 
-    private function getSelfLink($user, $semester)
+    private function getSelfLink(\User $user, \Semester $semester): Link
     {
-        $url = $this->container['router']->pathFor(
-            'get-schedule',
-            ['id' => $user->id],
-            ['filter[timestamp]' => $semester->beginn]
-        );
+        $routeParser = $this->app->getRouteCollector()->getRouteParser();
+        $url = $routeParser->urlFor('get-schedule', ['id' => $user->id], ['filter[timestamp]' => $semester->beginn]);
 
-        return new Link($url);
+        return new Link(false, $url, false);
     }
 
-    private function getMeta($semester)
+    private function getMeta(\Semester $semester): array
     {
-        return [
-            'semester' => $this->getResourceLocationUrl($semester),
-        ];
+        $routeParser = $this->app->getRouteCollector()->getRouteParser();
+        $url = $routeParser->urlFor('get-semester', ['id' => $semester->id]);
+
+        return [ 'semester' => $url ];
     }
 }

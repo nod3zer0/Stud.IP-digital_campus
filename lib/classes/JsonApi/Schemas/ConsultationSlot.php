@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class ConsultationSlot extends SchemaProvider
 {
@@ -10,14 +11,14 @@ class ConsultationSlot extends SchemaProvider
     const REL_BLOCK = 'block';
     const REL_BOOKINGS = 'bookings';
 
-    protected $resourceType = self::TYPE;
 
-    public function getId($resource)
+
+    public function getId($resource): ?string
     {
         return $resource->id;
     }
 
-    public function getAttributes($resource)
+    public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
             'note'      => $resource->note,
@@ -38,8 +39,11 @@ class ConsultationSlot extends SchemaProvider
      * spezifiziert werden.
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $shouldInclude = function ($key) use ($isPrimary, $includeList) {
             return $isPrimary && in_array($key, $includeList);
         };
@@ -63,10 +67,10 @@ class ConsultationSlot extends SchemaProvider
         $block = $resource->block;
 
         $relationships[self::REL_BLOCK] = [
-            self::LINKS => [
-                Link::RELATED => new Link("/consultation-block/{$block->id}"),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($block),
             ],
-            self::DATA => $includeData ? $block : \ConsultationBlock::build(['id' => $block->id], false),
+            self::RELATIONSHIP_DATA => $includeData ? $block : \ConsultationBlock::build(['id' => $block->id], false),
         ];
 
         return $relationships;
@@ -83,10 +87,10 @@ class ConsultationSlot extends SchemaProvider
         }
 
         $relationships[self::REL_BOOKINGS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_BOOKINGS),
             ],
-            self::DATA => $relatedBookings,
+            self::RELATIONSHIP_DATA => $relatedBookings,
         ];
 
         return $relationships;

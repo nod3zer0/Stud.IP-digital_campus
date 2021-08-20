@@ -2,7 +2,7 @@
 
 namespace JsonApi\Errors;
 
-use Neomerx\JsonApi\Document\Error;
+use Neomerx\JsonApi\Schema\Error;
 use Neomerx\JsonApi\Exceptions\JsonApiException;
 
 /**
@@ -15,7 +15,7 @@ class InternalServerError extends JsonApiException
      */
     public function __construct($detail = null, array $source = null)
     {
-        $error = new Error('Internal Server Error', null, 500, null, null, $detail, $source);
+        $error = new Error(null, null, null, 500, null, 'Internal Server Error', $detail, $source);
         parent::__construct($error, 500);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace JsonApi\Errors;
 
-use Neomerx\JsonApi\Document\Error;
+use Neomerx\JsonApi\Schema\Error;
 use Neomerx\JsonApi\Exceptions\JsonApiException;
 
 /**
@@ -15,7 +15,7 @@ class NotImplementedException extends JsonApiException
      */
     public function __construct($detail = null, array $source = null)
     {
-        $error = new Error('Not Implemented Error', null, 501, null, null, $detail, $source);
+        $error = new Error(null, null, null, 501, null, 'Not Implemented Error', $detail, $source);
         parent::__construct($error, 501);
     }
 }

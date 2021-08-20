@@ -61,42 +61,35 @@ class ForumEntriesShowTest extends \Codeception\Test\Unit
 
     public function testShouldNotShowEntry()
     {
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () {
-            $credentials = $this->tester->getCredentialsForRoot();
-            $app = $this->tester->createApp($credentials, 'get', '/forum-entries/{id}', ForumEntriesShow::class);
+        $credentials = $this->tester->getCredentialsForRoot();
+        $app = $this->tester->createApp($credentials, 'get', '/forum-entries/{id}', ForumEntriesShow::class);
 
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/forum-entries/'.'badEntry')
-                ->fetch();
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/forum-entries/'.'badEntry')
+            ->fetch();
 
-            $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-
-            $this->tester->assertTrue($response->isSuccessfulDocument([200]));
-        });
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 
     public function testShouldNotShowEntriesForCategory()
     {
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () {
-            $credentials = $this->tester->getCredentialsForRoot();
-            $cat = $this->createCategory($credentials);
-            $this->createEntry($credentials, $cat->id);
-            $this->createEntry($credentials, $cat->id);
-            $this->createEntry($credentials, $cat->id);
+        $credentials = $this->tester->getCredentialsForRoot();
+        $cat = $this->createCategory($credentials);
+        $this->createEntry($credentials, $cat->id);
+        $this->createEntry($credentials, $cat->id);
+        $this->createEntry($credentials, $cat->id);
 
-            $app = $this->tester->createApp($credentials, 'get', '/forum-categories/{id}/entries', ForumCategoryEntriesIndex::class);
+        $app = $this->tester->createApp($credentials, 'get', '/forum-categories/{id}/entries', ForumCategoryEntriesIndex::class);
 
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/forum-categories/badID/entries')
-                ->fetch();
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/forum-categories/badID/entries')
+            ->fetch();
 
-            $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-            $document = $response->document();
-            $resourceObject = $document->primaryResource();
-            $this->tester->assertNotNull($resourceObject);
-        });
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 
     public function testShouldShowEntriesForCategory()
@@ -116,7 +109,7 @@ class ForumEntriesShowTest extends \Codeception\Test\Unit
 
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
         $document = $response->document();
-        $resourceObject = $document->primaryResource();
+        $resourceObject = $document->primaryResources();
         $this->tester->assertNotNull($resourceObject);
     }
 
@@ -137,30 +130,26 @@ class ForumEntriesShowTest extends \Codeception\Test\Unit
 
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
         $document = $response->document();
-        $resourceObject = $document->primaryResource();
+        $resourceObject = $document->primaryResources();
         $this->tester->assertNotNull($resourceObject);
     }
 
     public function testShouldNotShowEntriesForEntry()
     {
-        $this->tester->expectThrowable(RecordNotFoundException::class, function () {
-            $credentials = $this->tester->getCredentialsForRoot();
-            $cat = $this->createCategory($credentials);
-            $targetEntry = $this->createEntry($credentials, $cat->id);
-            $this->createEntry($credentials, $targetEntry->id);
-            $this->createEntry($credentials, $targetEntry->id);
-            $this->createEntry($credentials, $targetEntry->id);
-            $app = $this->tester->createApp($credentials, 'get', '/forum-entries/{id}/entries', ForumEntryEntriesIndex::class);
+        $credentials = $this->tester->getCredentialsForRoot();
+        $cat = $this->createCategory($credentials);
+        $targetEntry = $this->createEntry($credentials, $cat->id);
+        $this->createEntry($credentials, $targetEntry->id);
+        $this->createEntry($credentials, $targetEntry->id);
+        $this->createEntry($credentials, $targetEntry->id);
+        $app = $this->tester->createApp($credentials, 'get', '/forum-entries/{id}/entries', ForumEntryEntriesIndex::class);
 
-            $requestBuilder = $this->tester->createRequestBuilder($credentials);
-            $requestBuilder
-                ->setUri('/forum-entries/badTopic/entries')
-                ->fetch();
+        $requestBuilder = $this->tester->createRequestBuilder($credentials);
+        $requestBuilder
+            ->setUri('/forum-entries/badTopic/entries')
+            ->fetch();
 
-            $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
-            $document = $response->document();
-            $resourceObject = $document->primaryResource();
-            $this->tester->assertNotNull($resourceObject);
-        });
+        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+        $this->tester->assertSame(404, $response->getStatusCode());
     }
 }

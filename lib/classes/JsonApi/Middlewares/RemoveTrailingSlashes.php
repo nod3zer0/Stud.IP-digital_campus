@@ -2,8 +2,10 @@
 
 namespace JsonApi\Middlewares;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Slim\Psr7\Response;
 
 /**
  * Diese Klasse definiert eine Middleware, die Requests  umleitet,
@@ -18,26 +20,35 @@ class RemoveTrailingSlashes
      * delegiert, sondern eine Response mit `Location`-Header also
      * einem Redirect zurückgegeben.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request  das
-     *                                                           PSR-7 Request-Objekt
-     * @param \Psr\Http\Message\ResponseInterface      $response das PSR-7
-     *                                                           Response-Objekt
-     * @param callable                                 $next     das nächste Middleware-Callable
+     * @param Request        $request das Request-Objekt
+     * @param RequestHandler $handler der PSR-15 Request Handler
      *
-     * @return \Psr\Http\Message\ResponseInterface die neue Response
+     * @return ResponseInterface das neue Response-Objekt
      */
-    public function __invoke(Request $request, Response $response, $next)
+    public function __invoke(Request $request, RequestHandler $handler)
     {
         $uri = $request->getUri();
         $path = $uri->getPath();
-        if ($path != '/' && substr($path, -1) == '/') {
+
+        if ('/' != $path && '/' == substr($path, -1)) {
+            // recursively remove slashes when its more than 1 slash
+            $path = rtrim($path, '/');
+
             // permanently redirect paths with a trailing slash
             // to their non-trailing counterpart
-            $uri = $uri->withPath(substr($path, 0, -1));
+            $uri = $uri->withPath($path);
 
-            return $response->withRedirect((string) $uri, 301);
+            if ('GET' == $request->getMethod()) {
+                $response = new Response();
+
+                return $response
+                    ->withHeader('Location', (string) $uri)
+                    ->withStatus(301);
+            } else {
+                $request = $request->withUri($uri);
+            }
         }
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 }

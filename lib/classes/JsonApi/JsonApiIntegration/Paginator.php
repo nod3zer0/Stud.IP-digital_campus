@@ -11,6 +11,20 @@ namespace JsonApi\JsonApiIntegration;
  */
 class Paginator
 {
+    /** @var int|null */
+    private $total;
+
+    /** @var int */
+    private $offset;
+
+    /** @var int */
+    private $limit;
+
+    /**
+     * @param int|null $total
+     * @param int      $offset
+     * @param int      $limit
+     */
     public function __construct($total, $offset, $limit)
     {
         $this->total = $total;
@@ -18,16 +32,16 @@ class Paginator
         $this->limit = $limit;
     }
 
-    public function getFirstPageOffsetAndLimit()
+    public function getFirstPageOffsetAndLimit(): array
     {
-        if ($this->limit === 0) {
+        if (0 === $this->limit) {
             return [0, 0];
         }
 
         return [0, $this->limit];
     }
 
-    public function getLastPageOffsetAndLimit()
+    public function getLastPageOffsetAndLimit(): ?array
     {
         if (!isset($this->total)) {
             return null;
@@ -42,7 +56,7 @@ class Paginator
         return [$last, $this->limit];
     }
 
-    public function getPrevPageOffsetAndLimit()
+    public function getPrevPageOffsetAndLimit(): ?array
     {
         if ($this->limit === 0) {
             return null;
@@ -55,7 +69,7 @@ class Paginator
         return [max(0, $this->offset - $this->limit), $this->limit];
     }
 
-    public function getNextPageOffsetAndLimit()
+    public function getNextPageOffsetAndLimit(): ?array
     {
         if ($this->limit === 0) {
             return null;

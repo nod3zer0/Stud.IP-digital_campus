@@ -3,7 +3,8 @@
 namespace JsonApi\Schemas;
 
 use JsonApi\Errors\InternalServerError;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class BlubberStatusgruppeThread extends BlubberThread
 {
@@ -14,12 +15,15 @@ class BlubberStatusgruppeThread extends BlubberThread
      * spezifiziert werden.
      * {@inheritdoc}
      */
-    public function getRelationships($resource, $isPrimary, array $includeList)
+    public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $relationships = parent::getRelationships($resource, $isPrimary, $includeList);
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
+        $relationships = parent::getRelationships($resource, $context);
 
         $relationships[self::REL_STATUSGRUPPE] = [
-            self::DATA => \Statusgruppen::build(
+            self::RELATIONSHIP_DATA => \Statusgruppen::build(
                 [
                     'statusgruppe_id' => $resource['metadata']['statusgruppe_id']
                 ],

@@ -2,7 +2,8 @@
 
 namespace JsonApi\Schemas;
 
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class StudipComment extends SchemaProvider
 {
@@ -10,14 +11,12 @@ class StudipComment extends SchemaProvider
     const REL_AUTHOR = 'author';
     const REL_NEWS = 'news';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($comment)
+    public function getId($comment): ?string
     {
         return $comment->comment_id;
     }
 
-    public function getAttributes($comment)
+    public function getAttributes($comment, ContextInterface $context): iterable
     {
         return [
             'content' => $comment->content,
@@ -26,25 +25,31 @@ class StudipComment extends SchemaProvider
         ];
     }
 
-    public function getRelationships($comment, $isPrimary, array $includeList)
+    public function getRelationships($comment, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
         $relationships = [];
 
         if ($isPrimary) {
-            $relationships[self::REL_AUTHOR] = [
-                self::LINKS => [
-                    Link::RELATED => new Link('/users/'.$comment->user_id),
-                ],
-                self::DATA => \User::build(['id' => $comment->user_id], false),
-            ];
-            $relationships[self::REL_NEWS] = [
-                self::LINKS => [
-                    Link::RELATED => new Link('/news/'.$comment->object_id),
-                ],
-                self::DATA => in_array(self::REL_NEWS, $includeList)
-                ? $comment->news :
-                \StudipNews::build(['id' => $comment->object_id], false),
-            ];
+            if ($author = \User::find($comment->user_id)) {
+                $relationships[self::REL_AUTHOR] = [
+                    self::RELATIONSHIP_LINKS => [
+                        Link::RELATED => $this->createLinkToResource($author),
+                    ],
+                    self::RELATIONSHIP_DATA => $author,
+                ];
+            }
+
+            if ($news = \StudipNews::find($comment->object_id)) {
+                $relationships[self::REL_NEWS] = [
+                    self::RELATIONSHIP_LINKS => [
+                        Link::RELATED => $this->createLinkToResource($news),
+                    ],
+                    self::RELATIONSHIP_DATA => $news,
+                ];
+            }
         }
 
         return $relationships;

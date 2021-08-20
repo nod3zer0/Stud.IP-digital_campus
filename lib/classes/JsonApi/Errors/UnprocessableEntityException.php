@@ -2,7 +2,7 @@
 
 namespace JsonApi\Errors;
 
-use Neomerx\JsonApi\Document\Error;
+use Neomerx\JsonApi\Schema\Error;
 use Neomerx\JsonApi\Exceptions\JsonApiException;
 
 /**
@@ -15,7 +15,7 @@ class UnprocessableEntityException extends JsonApiException
      */
     public function __construct($detail = null, array $source = null)
     {
-        $error = new Error('Unprocesssable Entity', null, 422, null, null, $detail, $source);
+        $error = new Error(null, null, null, 422, null, 'Unprocesssable Entity', $detail, $source);
         parent::__construct($error, 422);
     }
 }

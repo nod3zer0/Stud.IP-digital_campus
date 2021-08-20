@@ -3,7 +3,8 @@
 namespace JsonApi\Schemas;
 
 use JsonApi\Routes\Files\Authority as FilesAuth;
-use Neomerx\JsonApi\Document\Link;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 
 class Course extends SchemaProvider
 {
@@ -26,14 +27,12 @@ class Course extends SchemaProvider
     const REL_STATUS_GROUPS = 'status-groups';
     const REL_WIKI_PAGES = 'wiki-pages';
 
-    protected $resourceType = self::TYPE;
-
-    public function getId($course)
+    public function getId($course): ?string
     {
         return $course->seminar_id;
     }
 
-    public function getAttributes($course)
+    public function getAttributes($course, ContextInterface $context): iterable
     {
         $stringOrNull = function ($item) {
             return trim($item) != '' ? (string) $item : null;
@@ -54,8 +53,12 @@ class Course extends SchemaProvider
         ];
     }
 
-    public function getRelationships($course, $isPrimary, array $includeList)
+    public function getRelationships($course, ContextInterface $context): iterable
     {
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        $includeList = $context->getIncludePaths();
+
+
         $relationships = [];
 
         $relationships[self::REL_INSTITUTE] = $this->getInstitute($course, in_array(self::REL_INSTITUTE, $includeList));
@@ -89,10 +92,10 @@ class Course extends SchemaProvider
     private function getInstitute(\Course $course, $shouldInclude)
     {
         return [
-            self::LINKS => [
-                Link::RELATED => new Link('/institutes/'.$course->institut_id),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($course->home_institut),
             ],
-            self::DATA => $course->home_institut,
+            self::RELATIONSHIP_DATA => $course->home_institut,
         ];
     }
 
@@ -103,10 +106,10 @@ class Course extends SchemaProvider
         }
 
         return [
-            self::LINKS => [
-                Link::RELATED => new Link('/semesters/'.$semester->id),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($semester),
             ],
-            self::DATA => $semester,
+            self::RELATIONSHIP_DATA => $semester,
         ];
     }
 
@@ -117,29 +120,29 @@ class Course extends SchemaProvider
         }
 
         return [
-            self::LINKS => [
-                Link::RELATED => new Link('/semesters/'.$semester->id),
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($semester),
             ],
-            self::DATA => $semester,
+            self::RELATIONSHIP_DATA => $semester,
         ];
     }
 
     private function getFilesRelationship(array $relationships, \Course $resource)
     {
-        $user = $this->getDiContainer()->get('studip-current-user');
+        $user = $this->currentUser;
 
         if ($user && FilesAuth::canShowFileArea($user, $resource)) {
             $filesLink = $this->getRelationshipRelatedLink($resource, self::REL_FILES);
 
             $relationships[self::REL_FILES] = [
-                self::LINKS => [
+                self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $filesLink,
                 ],
             ];
 
             $foldersLink = $this->getRelationshipRelatedLink($resource, self::REL_FOLDERS);
             $relationships[self::REL_FOLDERS] = [
-                self::LINKS => [
+                self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $foldersLink,
                 ],
             ];
@@ -157,7 +160,7 @@ class Course extends SchemaProvider
         $includeData
     ) {
         $relationships[self::REL_FORUM_CATEGORIES] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($course, self::REL_FORUM_CATEGORIES)
             ],
         ];
@@ -174,7 +177,7 @@ class Course extends SchemaProvider
         $includeData
     ) {
         $relationships[self::REL_BLUBBER] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($course, self::REL_BLUBBER),
             ],
         ];
@@ -191,7 +194,7 @@ class Course extends SchemaProvider
         $includeData
     ) {
         $relationships[self::REL_EVENTS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($course, self::REL_EVENTS)
             ],
         ];
@@ -210,7 +213,7 @@ class Course extends SchemaProvider
 
         if (\Feedback::isActivated($course->id)) {
             $relationships[self::REL_FEEDBACK] = [
-                self::LINKS => [
+                self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $this->getRelationshipRelatedLink($course, self::REL_FEEDBACK)
                 ],
             ];
@@ -228,8 +231,8 @@ class Course extends SchemaProvider
         $includeData
     ) {
         $relationships[self::REL_MEMBERSHIPS] = [
-            self::SHOW_SELF => true,
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($course, self::REL_MEMBERSHIPS)
             ],
         ];
@@ -246,7 +249,7 @@ class Course extends SchemaProvider
         $includeData
     ) {
         $relationships[self::REL_NEWS] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($course, self::REL_NEWS)
             ],
         ];
@@ -263,7 +266,7 @@ class Course extends SchemaProvider
         $includeData
     ) {
         $relationships[self::REL_WIKI_PAGES] = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($course, self::REL_WIKI_PAGES)
             ],
         ];
@@ -286,7 +289,7 @@ class Course extends SchemaProvider
         );
 
         $relationships[self::REL_PARTICIPATING_INSTITUTES] = [
-            self::DATA => $institutes
+            self::RELATIONSHIP_DATA => $institutes
         ];
 
         return $relationships;
@@ -301,7 +304,7 @@ class Course extends SchemaProvider
         $includeData
     ) {
         $relationships[self::REL_SEM_CLASS] = [
-            self::DATA => $course->getSemClass()
+            self::RELATIONSHIP_DATA => $course->getSemClass()
         ];
 
         return $relationships;
@@ -316,7 +319,7 @@ class Course extends SchemaProvider
         $includeData
     ) {
         $relationships[self::REL_SEM_TYPE] = [
-            self::DATA => $course->getSemType()
+            self::RELATIONSHIP_DATA => $course->getSemType()
         ];
 
         return $relationships;
@@ -328,13 +331,13 @@ class Course extends SchemaProvider
         $includeData
     ) {
         $relation = [
-            self::LINKS => [
+            self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_STATUS_GROUPS),
             ]
         ];
         if (in_array(self::REL_STATUS_GROUPS, $includeData)) {
             $related = \Statusgruppen::findBySeminar_id($resource->id);
-            $relation[self::DATA] = $related;
+            $relation[self::RELATIONSHIP_DATA] = $related;
         }
 
         return array_merge($relationships, [self::REL_STATUS_GROUPS => $relation]);
