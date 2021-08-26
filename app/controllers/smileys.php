@@ -30,7 +30,7 @@ class SmileysController extends AuthenticatedController
         PageLayout::setTitle(_('Smiley-Übersicht'));
 
         $this->favorites_activated = SmileyFavorites::isEnabled()
-                                     && $GLOBALS['user']->id != nobody;
+                                     && $GLOBALS['user']->id != 'nobody';
 
         if ($this->favorites_activated) {
             $this->favorites = new SmileyFavorites($GLOBALS['user']->id);
