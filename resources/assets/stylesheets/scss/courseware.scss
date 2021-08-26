@@ -1348,11 +1348,11 @@ $icons: (
 
 .cw-tabs {
     .cw-tab {
-        visibility: hidden;
+        display: none;
         height: 0;
 
         &.cw-tab-active {
-            visibility: visible;
+            display: block;
             height: unset;
         }
     }

@@ -10,7 +10,7 @@
         <template v-slot:containerContent>
             <courseware-tabs>
                 <courseware-tab
-                    v-for="(section, index) in container.attributes.payload.sections"
+                    v-for="(section, index) in currentSections"
                     :key="index"
                     :index="index"
                     :name="section.name"
@@ -18,7 +18,7 @@
                     :selected="index === 0"
                 >
                     <ul class="cw-container-tabs-block-list">
-                        <li v-for="block in blocks" :key="block.id" class="cw-block-item">
+                        <li v-for="block in section.blocks" :key="block.id" class="cw-block-item">
                             <component
                                 v-if="section.blocks.includes(block.id)"
                                 :is="component(block)"
@@ -96,7 +96,8 @@ export default {
     },
     data() {
         return {
-            currentContainer: {},
+            currentContainer: null,
+            currentSections: [],
             textDeleteSection: this.$gettext('Sektion entfernen'),
             selectAttributes: {'ref': 'openIndicator', 'role': 'presentation', 'class': 'vs__open-indicator'}
         };
@@ -130,6 +131,14 @@ export default {
         initCurrentData() {
             // clone container to make edit reversible
             this.currentContainer = JSON.parse(JSON.stringify(this.container));
+
+            let view = this;
+            let sections = this.currentContainer.attributes.payload.sections;
+            sections.forEach(section => {
+                section.blocks = section.blocks.map((id) => view.blockById({id}));
+            });
+
+            this.currentSections = sections;
         },
         addSection() {
             this.currentContainer.attributes.payload.sections.push({ name: '', icon: '', blocks: [] });
@@ -164,7 +173,11 @@ export default {
             this.initCurrentData();
         },
         component(block) {
-            return 'courseware-' + block.attributes["block-type"] + '-block';
+            if (block.attributes) {
+                return 'courseware-' + block.attributes["block-type"] + '-block';
+            } else {
+                console.debug(block);
+            }
         },
         updateContent(blockAdder) {
             if(blockAdder.container.id === this.container.id) {
@@ -172,5 +185,10 @@ export default {
             }
         }
     },
+    watch: {
+        blocks() {
+            this.initCurrentData();
+        }
+    }
 };
 </script>
