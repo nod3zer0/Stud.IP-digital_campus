@@ -1558,7 +1558,7 @@ class FileManager
                             break;
                         }
                     }
-                    stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+                    stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT);
                 }
             }
         } else {
