@@ -4,8 +4,8 @@
         <div class="cw-block-features-content">
             <slot name="edit" />
             <div class="cw-button-box">
-                <button class="button" @click="$emit('store'); exitHandler = false;"><translate>Speichern</translate></button>
-                <button class="button" @click="$emit('close'); exitHandler = false;"><translate>Abbrechen</translate></button>
+                <button class="button accept" @click="$emit('store'); exitHandler = false;"><translate>Speichern</translate></button>
+                <button class="button cancel" @click="$emit('close'); exitHandler = false;"><translate>Abbrechen</translate></button>
             </div>
         </div>
     </section>

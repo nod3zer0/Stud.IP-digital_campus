@@ -21,7 +21,7 @@ class DialogCards extends BlockType
 
     public static function getTitle(): string
     {
-        return _('Dialogkarten');
+        return _('Lernkarten');
     }
 
     public static function getDescription(): string

@@ -8,7 +8,7 @@
                 </nav>
                 <nav class="cw-ribbon-breadcrumb">
                     <ul>
-                         <slot v-if="breadcrumbFallback" name="breadcrumbFallback" />
+                        <slot v-if="breadcrumbFallback" name="breadcrumbFallback" />
                         <slot v-else name="breadcrumbList" />
                     </ul>
                 </nav>

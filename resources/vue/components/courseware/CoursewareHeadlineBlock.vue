@@ -100,7 +100,7 @@
                         <translate>Icon-Farbe</translate>
                         <v-select
                             :options="iconColors"
-                            label="value"
+                            label="name"
                             :reduce="iconColor => iconColor.class"
                             :clearable="false"
                             v-model="currentIconColor"

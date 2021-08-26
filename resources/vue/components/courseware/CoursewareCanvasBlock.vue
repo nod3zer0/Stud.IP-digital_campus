@@ -125,7 +125,7 @@
                         <translate>Werte anderer Nutzer anzeigen</translate>
                         <select v-model="currentShowUserData">
                             <option value="off"><translate>deaktiviert</translate></option>
-                            <option value="teacher"><translate>nur für Lehrede</translate></option>
+                            <option value="teacher"><translate>nur für Lehrende</translate></option>
                             <option value="all"><translate>für alle</translate></option>
                         </select>
                     </label>
