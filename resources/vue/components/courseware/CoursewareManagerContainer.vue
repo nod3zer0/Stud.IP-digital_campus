@@ -136,7 +136,9 @@ export default {
                 let blocks = 0;
 
                 this.sectionsWithBlocksCurrentState.forEach((section) => {
-                    blocks += section.blocks.length;
+                    if (section.blocks !== undefined) {
+                        blocks += section.blocks.length;
+                    }
                 });
 
                 return blocks;
@@ -173,15 +175,17 @@ export default {
             const blockSections = JSON.parse(JSON.stringify(this.container.attributes.payload.sections)); //copy array AND objects without references
 
             blockSections.forEach((section) => {
-                section.blocks = section.blocks.flatMap(
-                    (id) => {
-                        return this.blockById({ id }) ?? [] //remove blocks which could not be loaded
-                    }
-                );
+                if(section.blocks !== undefined) {
+                    section.blocks = section.blocks.flatMap(
+                        (id) => {
+                            return this.blockById({ id }) ?? [] //remove blocks which could not be loaded
+                        }
+                    );
 
-                section.blocks.sort((a, b) => {
-                    return a.attributes.position > b.attributes.position;
-                });
+                    section.blocks.sort((a, b) => {
+                        return a.attributes.position > b.attributes.position;
+                    });
+                }
             });
 
             return blockSections;
@@ -196,7 +200,9 @@ export default {
             const container = this.container;
 
             this.sectionsWithBlocksCurrentState.forEach((section, index)=> {
-                container.attributes.payload.sections[index].blocks = section.blocks.map(({ id }) => ( id ));
+                if (section.blocks !== undefined) {
+                    container.attributes.payload.sections[index].blocks = section.blocks.map(({ id }) => ( id ));
+                }
             });
 
             await this.lockObject({id: container.id, type: 'courseware-containers'});
