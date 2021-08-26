@@ -66,6 +66,12 @@ class Api_OauthController extends StudipController
 
         try {
             $consumer = RESTAPI\Consumer\Base::detectConsumer('oauth', 'request');
+            if (!$consumer) {
+                $this->response->set_status(400, 'No consumer detected');
+                $this->render_nothing();
+                return;
+            }
+
             if (Request::submitted('allow')) {
                 $result = $consumer->grantAccess($GLOBALS['user']->id);
 
