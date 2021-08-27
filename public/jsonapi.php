@@ -35,7 +35,7 @@ $app = AppFactory::create();
 $container->set(\Slim\App::class, $app);
 
 // Set the base path
-$app->setBasePath('/jsonapi.php');
+$app->setBasePath($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] . 'jsonapi.php');
 
 // Register middleware
 $middleware = require 'lib/classes/JsonApi/middleware.php';
