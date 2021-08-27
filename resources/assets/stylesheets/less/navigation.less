@@ -85,7 +85,9 @@ body:not(.fixed) #barTopMenu {
     // Hide all navigation item title on hover and display only the currently
     // hovered one
     .navtitle {
-        transition: opacity 300ms; // Smooth change when entering
+        @media not (prefers-reduced-motion) {
+            transition: opacity 300ms; // Smooth change when entering
+        }
     }
     &:hover {
         > li.active .navtitle {
@@ -93,7 +95,9 @@ body:not(.fixed) #barTopMenu {
         }
         > li:hover .navtitle {
             opacity: 1;
-            transition: opacity 0ms; // Quick change when leaving
+            @media not (prefers-reduced-motion) {
+                transition: opacity 0ms; // Quick change when leaving
+            }
         }
     }
 
@@ -125,13 +129,17 @@ body:not(.fixed) #barTopMenu {
 
         // Rotate icon
         > label img {
-            transition: transform 300ms;
+            @media not (prefers-reduced-motion) {
+                transition: transform 300ms;
+            }
             transform: rotate(90deg);
         }
 
         // Define transition duration for possible badge on overflow
         > label > a[data-badge]::before {
-            transition: opacity 300ms;
+            @media not (prefers-reduced-motion) {
+                transition: opacity 300ms;
+            }
         }
 
         // Display menu on activation
@@ -225,7 +233,9 @@ label[for="barTopMenu-toggle"] {
     height: 0;
     max-height: 0;
     opacity: 0;
-    transition: all 300ms;
+    @media not (prefers-reduced-motion) {
+        transition: all 300ms;
+    }
 
     // 1/4 of the screen's width, creates a bigger hover area
     width: 25vw;

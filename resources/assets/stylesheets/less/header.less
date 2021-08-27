@@ -200,7 +200,10 @@
     overflow-x: hidden;
     padding: 0;
     text-indent: -150px;
-    transition: all 500ms;
+
+    @media not (prefers-reduced-motion) {
+        transition: all 500ms;
+    }
 }
 body.fixed {
     #barBottomLeft {
