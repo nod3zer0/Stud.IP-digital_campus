@@ -12,6 +12,7 @@
                 <courseware-block-actions
                     :block="block"
                     :canEdit="canEdit"
+                    :deleteOnly="deleteOnly"
                     @editBlock="displayFeature('Edit')"
                     @showFeedback="displayFeature('Feedback')"
                     @showComments="displayFeature('Comments')"
@@ -101,9 +102,14 @@ export default {
     props: {
         block: Object,
         canEdit: Boolean,
+        deleteOnly: {
+            type: Boolean,
+            default: false
+        },
         isTeacher: Boolean,
         preview: Boolean,
         defaultGrade: {
+            type: Boolean,
             default: true,
         },
     },
@@ -152,7 +158,7 @@ export default {
         blockTitle() {
             const type = this.block.attributes['block-type'];
 
-            return this.blockTypes.find((blockType) => blockType.type === type)?.title || '';
+            return this.blockTypes.find((blockType) => blockType.type === type)?.title || this.$gettext('Fehler');
         },
     },
     mounted() {

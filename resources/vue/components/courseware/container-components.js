@@ -13,6 +13,7 @@ import CoursewareDialogCardsBlock from './CoursewareDialogCardsBlock.vue';
 import CoursewareDocumentBlock from './CoursewareDocumentBlock.vue';
 import CoursewareDownloadBlock from './CoursewareDownloadBlock.vue';
 import CoursewareEmbedBlock from './CoursewareEmbedBlock.vue';
+import CoursewareErrorBlock from './CoursewareErrorBlock.vue';
 import CoursewareFolderBlock from './CoursewareFolderBlock.vue';
 import CoursewareGalleryBlock from './CoursewareGalleryBlock.vue';
 import CoursewareHeadlineBlock from './CoursewareHeadlineBlock.vue';
@@ -41,6 +42,7 @@ const ContainerComponents = {
     CoursewareDocumentBlock,
     CoursewareDownloadBlock,
     CoursewareEmbedBlock,
+    CoursewareErrorBlock,
     CoursewareFolderBlock,
     CoursewareGalleryBlock,
     CoursewareHeadlineBlock,

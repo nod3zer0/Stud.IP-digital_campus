@@ -160,7 +160,8 @@ abstract class BlockType
     {
         if (!($class = self::findBlockType($block['block_type']))) {
             // TODO: Hier müsste es eine weniger allgemeine Exception geben.
-            throw new \RuntimeException('Invalid `block_type` attribute in database.');
+            // throw new \RuntimeException('Invalid `block_type` attribute in database.');
+            return new \Courseware\BlockTypes\Error($block);
         }
 
         return new $class($block);

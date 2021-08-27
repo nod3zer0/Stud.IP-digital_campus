@@ -191,4 +191,16 @@ class Block extends \SimpleORMap
 
         return $block;
     }
+
+    public function getBlockType(): ?string
+    {
+        if ($this->type->findBlockType($this->block_type)) {
+            return $this->block_type;
+        } else {
+            $this->payload = json_encode(array(
+                'original_block_type' => $this->block_type
+            ));
+            return 'error';
+        }
+    }
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="cw-companion-box" :class="[mood]">
         <div>
-            <p>{{ msgCompanion }}</p>
+            <p v-html="msgCompanion"></p>
             <slot name="companionActions"></slot>
         </div>
     </div>

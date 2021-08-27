@@ -23,6 +23,10 @@ export default {
     },
     props: {
         canEdit: Boolean,
+        deleteOnly: {
+            type: Boolean,
+            default: false
+        },
         block: Object,
     },
     data() {
@@ -44,29 +48,34 @@ export default {
         },
     },
     mounted() {
+        if (this.deleteOnly) {
+            this.menuItems = [];
+        }
         if (this.canEdit) {
-            this.menuItems.push({ id: 1, label: this.$gettext('Block bearbeiten'), icon: 'edit', emit: 'editBlock' });
+            if (!this.deleteOnly) {
+                this.menuItems.push({ id: 1, label: this.$gettext('Block bearbeiten'), icon: 'edit', emit: 'editBlock' });
+                this.menuItems.push({
+                    id: 2,
+                    label: this.block.attributes.visible
+                        ? this.$gettext('unsichtbar setzen')
+                        : this.$gettext('sichtbar setzen'),
+                    icon: this.block.attributes.visible ? 'visibility-visible' : 'visibility-invisible', // do we change the icons ?
+                    emit: 'setVisibility',
+                });
+                this.menuItems.push({
+                    id: 5,
+                    label: this.$gettext('Feedback anzeigen'),
+                    icon: 'comment',
+                    emit: 'showFeedback',
+                });
+                this.menuItems.push({
+                    id: 7,
+                    label: this.$gettext('Informationen zum Block'),
+                    icon: 'info',
+                    emit: 'showInfo',
+                });
+            }
             this.menuItems.push({
-                id: 2,
-                label: this.block.attributes.visible
-                    ? this.$gettext('unsichtbar setzen')
-                    : this.$gettext('sichtbar setzen'),
-                icon: this.block.attributes.visible ? 'visibility-visible' : 'visibility-invisible', // do we change the icons ?
-                emit: 'setVisibility',
-            });
-            this.menuItems.push({
-                id: 5,
-                label: this.$gettext('Feedback anzeigen'),
-                icon: 'comment',
-                emit: 'showFeedback',
-            });
-            this.menuItems.push({
-                id: 7,
-                label: this.$gettext('Informationen zum Block'),
-                icon: 'info',
-                emit: 'showInfo',
-            });
-            this.menuItems.push({ 
                 id: 9,
                 label: this.$gettext('Block löschen'), 
                 icon: 'trash',

@@ -37,7 +37,7 @@ class Block extends SchemaProvider
     {
         return [
             'position' => (int) $resource['position'],
-            'block-type' => (string) $resource['block_type'],
+            'block-type' => (string) $resource->getBlockType(),
             'title' => (string) $resource->type->getTitle(),
             'visible' => (bool) $resource['visible'],
             'payload' => $resource->type->getPayload(),

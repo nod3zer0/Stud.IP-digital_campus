@@ -1,0 +1,8 @@
+{
+    "title": "Payload schema of Courseware\\BlockType\\Error",
+    "type": "object",
+    "properties": {},
+    "required": [],
+    "additionalProperties": false
+}
+
