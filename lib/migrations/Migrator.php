@@ -194,16 +194,17 @@ class Migrator
     public function migrateTo($target_version)
     {
         $migrations = $this->relevantMigrations($target_version);
+        $target_branch = $this->schema_version->getBranch();
 
         # you're on the right version
         if (empty($migrations)) {
-            $this->log('You are already at %d.', $this->schema_version->get());
+            $this->log('You are already at %d.', $this->schema_version->get($target_branch));
             return;
         }
 
         $this->log(
             'Currently at version %d. Now migrating %s to %d.',
-            $this->schema_version->get(),
+            $this->schema_version->get($target_branch),
             $this->direction,
             max($this->target_versions)
         );

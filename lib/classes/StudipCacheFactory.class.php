@@ -189,7 +189,7 @@ class StudipCacheFactory
         # default class
         if (is_null($cache_class)) {
             $version = new DBSchemaVersion();
-            if ($version->get() < 224) {
+            if ($version->get(1) < 224) {
                 // db cache is not yet available, use StudipMemoryCache
                 return 'StudipMemoryCache';
             }

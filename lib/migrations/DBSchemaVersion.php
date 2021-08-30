@@ -93,7 +93,8 @@ class DBSchemaVersion implements SchemaVersion
     private function initSchemaInfo()
     {
         if (!$this->branchSupported()) {
-            $query = "SELECT 0, version FROM schema_version WHERE domain = ?";
+            $branch = $this->domain === 'studip' ? 1 : 0;
+            $query = "SELECT $branch, version FROM schema_version WHERE domain = ?";
         } else {
             $query = "SELECT branch, version FROM schema_version WHERE domain = ? ORDER BY branch";
         }
@@ -101,8 +102,8 @@ class DBSchemaVersion implements SchemaVersion
         $statement->execute([$this->domain]);
         $versions = $statement->fetchAll(PDO::FETCH_COLUMN | PDO::FETCH_GROUP | PDO::FETCH_UNIQUE);
 
-        if ($versions) {
-            $this->versions = array_map('intval', $versions);
+        foreach ($versions as $branch => $version) {
+            $this->versions[$branch] = (int) $version;
         }
     }
 
@@ -114,7 +115,7 @@ class DBSchemaVersion implements SchemaVersion
      */
     public function get($branch = 0)
     {
-        return $this->versions[$branch ?: $this->branch];
+        return $this->versions[$branch];
     }
 
     /**
@@ -125,7 +126,7 @@ class DBSchemaVersion implements SchemaVersion
      */
     public function set($version, $branch = 0)
     {
-        $this->versions[$branch ?: $this->branch] = (int) $version;
+        $this->versions[$branch] = (int) $version;
 
         if (!$this->branchSupported()) {
             $query = "INSERT INTO schema_version (domain, version)
@@ -143,7 +144,7 @@ class DBSchemaVersion implements SchemaVersion
             $statement = DBManager::get()->prepare($query);
             $statement->execute([
                 $this->domain,
-                $branch ?: $this->branch,
+                $branch,
                 $version
             ]);
         }
@@ -164,13 +165,17 @@ class DBSchemaVersion implements SchemaVersion
 
         if ($result && $result->rowCount() > 0) {
             $backported_migrations = [
-                20200306, 20200306, 20200713, 20200811, 20200909,
-                20200910, 20201002, 20201103, 202011031, 20210317
+                20200306, 20200713, 20200811, 20200909, 20200910,
+                20201002, 20201103, 202011031, 20210317
             ];
 
             $query = "DELETE FROM schema_versions
                       WHERE domain = 'studip' AND version in (?)";
             $db->execute($query, [$backported_migrations]);
+
+            $query = "DELETE FROM schema_versions
+                      WHERE domain = 'studip' AND LENGTH(version) > 8";
+            $db->exec($query);
 
             $query = "CREATE TABLE schema_version (
                         domain VARCHAR(255) COLLATE latin1_bin NOT NULL,
@@ -187,6 +192,22 @@ class DBSchemaVersion implements SchemaVersion
 
             $query = "DROP TABLE schema_versions";
             $db->exec($query);
+
+            $schema_mapping = [
+                20190917 => 269,
+                20200307 => 285,
+                20200522 => 290,
+                20210603 => 328
+            ];
+
+            $query = "UPDATE schema_version SET branch = '1' WHERE domain = 'studip'";
+            $db->exec($query);
+
+            foreach ($schema_mapping as $old_version => $new_version) {
+                $query = "UPDATE schema_version SET version = ?
+                          WHERE domain = 'studip' AND version = ?";
+                $db->execute($query, [$new_version, $old_version]);
+            }
         }
     }
 }

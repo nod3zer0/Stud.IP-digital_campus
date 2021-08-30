@@ -107,6 +107,6 @@ class WebMigrateController extends StudipController
 
         $widget = Sidebar::get()->addWidget(new SidebarWidget());
         $widget->setTitle(_('Aktueller Versionsstand'));
-        $widget->addElement(new WidgetElement($this->version->get()));
+        $widget->addElement(new WidgetElement($this->version->get($this->branch)));
     }
 }
