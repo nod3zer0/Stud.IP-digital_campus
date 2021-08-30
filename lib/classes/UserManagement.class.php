@@ -1276,7 +1276,10 @@ class UserManagement
         // include language-specific subject and mailbody
         setTempLanguage($this->user_data['auth_user_md5.user_id']);
 
-        $subject = _("[Stud.IP - %s] Passwortänderung");
+        $subject = sprintf(
+            _("[Stud.IP - %s] Passwortänderung"),
+            Config::get()->UNI_NAME_CLEAN
+        );
 
         $mailbody = sprintf(
             _("Dies ist eine Informationsmail des Stud.IP-Systems\n"
