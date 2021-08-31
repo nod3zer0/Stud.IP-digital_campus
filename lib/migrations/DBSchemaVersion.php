@@ -45,6 +45,7 @@ class DBSchemaVersion implements SchemaVersion
         $this->domain = $domain;
         $this->branch = $branch;
         $this->versions = [0];
+        $this->validateSchemaVersion();
         $this->initSchemaInfo();
     }
 
@@ -158,7 +159,7 @@ class DBSchemaVersion implements SchemaVersion
     /**
      * Validate correct structure of schema_version table.
      */
-    public static function validateSchemaVersion()
+    private function validateSchemaVersion()
     {
         $db = DBManager::get();
         $result = $db->query("SHOW TABLES LIKE 'schema_versions'");

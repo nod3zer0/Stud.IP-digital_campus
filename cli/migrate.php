@@ -53,8 +53,6 @@ if (isset($_SERVER['argv'])) {
         }
     }
 
-    DBSchemaVersion::validateSchemaVersion();
-
     $version = new DBSchemaVersion($domain, $branch);
     $migrator = new Migrator($path, $version, $verbose);
 

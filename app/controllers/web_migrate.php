@@ -17,8 +17,6 @@ class WebMigrateController extends StudipController
 
         parent::before_filter($action, $args);
 
-        DBSchemaVersion::validateSchemaVersion();
-
         $this->target   = Request::int('target');
         $this->branch   = Request::get('branch', '0');
         $this->version  = new DBSchemaVersion('studip', $this->branch);
