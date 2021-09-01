@@ -41,6 +41,11 @@ class MigrationTest extends \Codeception\Test\Unit
         {
             private $versions = [0];
 
+            public function getDomain()
+            {
+                return 'test';
+            }
+
             public function getBranch()
             {
                 return 0;
@@ -81,7 +86,7 @@ class MigrationTest extends \Codeception\Test\Unit
         $migrator->migrateTo(2);
 
         $relevant = $migrator->relevantMigrations(null);
-        $this->assertSame(1, count($relevant));
+        $this->assertSame(2, count($relevant));
     }
 
     public function testMigrationUp()
