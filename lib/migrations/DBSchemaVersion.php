@@ -201,6 +201,7 @@ class DBSchemaVersion implements SchemaVersion
                 20190917 => 269,
                 20200307 => 285,
                 20200522 => 290,
+                20210511 => 327,
                 20210603 => 328
             ];
 
