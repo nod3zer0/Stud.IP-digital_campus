@@ -17,7 +17,7 @@ class StructuralElementsImageUpload extends NonJsonApiController
 {
     use CoursewareInstancesHelper, FilesRoutesHelper;
 
-    public function invoke(Request $request, Response $response, $args)
+    public function invoke(Request $request, Response $response, array $args)
     {
         if (!($structuralElement = StructuralElement::find($args['id']))) {
             throw new RecordNotFoundException();

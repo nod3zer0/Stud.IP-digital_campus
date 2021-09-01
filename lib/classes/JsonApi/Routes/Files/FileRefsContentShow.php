@@ -14,7 +14,7 @@ class FileRefsContentShow extends NonJsonApiController
 {
     use EtagHelperTrait;
 
-    public function invoke(Request $request, Response $response, $args)
+    public function invoke(Request $request, Response $response, array $args)
     {
         if (!$fileRef = \FileRef::find($args['id'])) {
             throw new RecordNotFoundException();
