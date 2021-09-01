@@ -105,9 +105,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             });
         }
 
-        $fields = array_keys($temp);
-        sort($fields, SORT_NATURAL |  SORT_FLAG_CASE);
-        return $fields;
+        return array_keys($temp);
     }
 
     /**

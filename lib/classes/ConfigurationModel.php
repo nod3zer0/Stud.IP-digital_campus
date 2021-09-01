@@ -57,6 +57,11 @@ class ConfigurationModel
                 $allconfigs[] = $metadata;
             }
         }
+
+        usort($allconfigs, function ($a, $b) {
+            return strcmp($a['field'], $b['field']);
+        });
+
         return $allconfigs;
     }
 

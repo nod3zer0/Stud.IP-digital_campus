@@ -80,8 +80,6 @@ class Admin_ConfigurationController extends AuthenticatedController
      */
     public function edit_configuration_action()
     {
-
-
         $field = Request::get('field');
         $value = Request::get('value');
 
