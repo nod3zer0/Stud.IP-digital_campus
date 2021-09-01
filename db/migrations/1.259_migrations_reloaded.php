@@ -17,6 +17,9 @@ class MigrationsReloaded extends Migration
                 DROP PRIMARY KEY,
                 ADD PRIMARY KEY (domain, branch)";
         $db->exec($sql);
+
+        $sql = "UPDATE schema_version SET branch = '1' WHERE domain = 'studip'";
+        $db->exec($sql);
     }
 
     public function down()

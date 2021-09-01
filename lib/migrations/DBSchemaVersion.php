@@ -157,7 +157,8 @@ class DBSchemaVersion implements SchemaVersion
     }
 
     /**
-     * Validate correct structure of schema_version table.
+     * Validate correct structure of schema_version table. This
+     * will upgrade the schema from 4.4 style to 5.1 if necessary.
      */
     private function validateSchemaVersion()
     {
@@ -170,10 +171,12 @@ class DBSchemaVersion implements SchemaVersion
                 20201002, 20201103, 202011031, 20210317
             ];
 
+            // drop backported migrations
             $query = "DELETE FROM schema_versions
                       WHERE domain = 'studip' AND version in (?)";
             $db->execute($query, [$backported_migrations]);
 
+            // drop migrations with irregular numbers
             $query = "DELETE FROM schema_versions
                       WHERE domain = 'studip' AND LENGTH(version) > 8";
             $db->exec($query);
