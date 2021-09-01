@@ -202,7 +202,7 @@ class DBSchemaVersion implements SchemaVersion
                 20200307 => 285,
                 20200522 => 290,
                 20210511 => 327,
-                20210603 => 328
+                20210603 => 327
             ];
 
             $query = "UPDATE schema_version SET branch = '1' WHERE domain = 'studip'";
