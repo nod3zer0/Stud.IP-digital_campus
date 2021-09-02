@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class BlocksCopy extends NonJsonApiController
 {
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response, array $args)
     {
 
         $data = $request->getParsedBody()['data'];

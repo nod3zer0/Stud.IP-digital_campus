@@ -100,12 +100,28 @@ abstract class Migration
      *
      * @param string $format,... printf-style format string and parameters
      */
-    protected function announce($format /* , ... */)
+    public function announce($format /* , ... */)
     {
         # format message
         $args = func_get_args();
         $message = vsprintf(array_shift($args), $args);
 
-        return $this->write(Migrator::mark($message));
+        return $this->write($this->mark($message));
     }
+
+    /**
+     * Pads and highlights a given text to a specific length with the given
+     * sign.
+     *
+     * @param string $text
+     * @param string $sign
+     */
+    protected function mark($text, $sign = '=')
+    {
+        $text = trim($text);
+        if ($text) {
+            $text = " {$text} ";
+        }
+        return str_pad("{$sign}{$sign}{$text}", 79, $sign, STR_PAD_RIGHT);
+     }
 }

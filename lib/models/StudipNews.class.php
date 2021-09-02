@@ -109,9 +109,6 @@ class StudipNews extends SimpleORMap implements PrivacyObject
 
     public static function CountUnread($range_id = 'studip', $user_id = false)
     {
-        if (!DBSchemaVersion::exists('studip', '20210201')) {
-            return 0;
-        }
         $query = "SELECT SUM(nw.chdate > IFNULL(b.visitdate, :threshold) AND nw.user_id != :user_id)
                   FROM news_range a
                   LEFT JOIN news nw ON (a.news_id = nw.news_id AND UNIX_TIMESTAMP() BETWEEN date AND date + expire)

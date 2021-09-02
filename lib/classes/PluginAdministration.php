@@ -251,7 +251,8 @@ class PluginAdministration
 
             if (is_dir($new_pluginpath . '/migrations')) {
                 $migrator = new Migrator($new_pluginpath . '/migrations', $schema_version);
-                $new_version = $migrator->topVersion();
+                $all_branches = array_fill_keys($schema_version->getAllBranches(), 0);
+                $new_version = $migrator->topVersion(true) + $all_branches;
             }
 
             $migrator = new Migrator($plugindir . '/migrations', $schema_version);

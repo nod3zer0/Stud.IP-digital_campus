@@ -389,6 +389,7 @@
 
 <script>
 import ContainerComponents from './container-components.js';
+import CoursewarePluginComponents from './plugin-components.js'
 import CoursewareStructuralElementPermissions from './CoursewareStructuralElementPermissions.vue';
 import CoursewareAccordionContainer from './CoursewareAccordionContainer.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
@@ -965,6 +966,6 @@ export default {
         this.pluginManager.registerComponentsLocally(this);
     },
     // this line provides all the components to courseware plugins
-    provide: () => ({ containerComponents: ContainerComponents }),
+    provide: () => ({ containerComponents: ContainerComponents, coursewarePluginComponents: CoursewarePluginComponents }),
 };
 </script>

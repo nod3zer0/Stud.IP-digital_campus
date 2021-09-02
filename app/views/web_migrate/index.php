@@ -3,53 +3,43 @@
 <? else: ?>
 <form method="post" action="<?= $controller->link_for('migrate') ?>">
     <?= CSRFProtection::tokenTag() ?>
-<? if (isset($target)): ?>
-    <input type="hidden" name="target" value="<?= htmlReady($target) ?>">
-<? endif ?>
-<? if (STUDIP\ENV !== 'development'): ?>
-    <?= addHiddenFields('versions', array_keys($migrations)) ?>
-<? endif; ?>
-
+    <? if (isset($target)): ?>
+        <input type="hidden" name="target" value="<?= htmlReady($target) ?>">
+    <? endif ?>
+    <input type="hidden" name="branch" value="<?= htmlReady($branch) ?>">
 
     <table class="default" id="migration-list">
         <caption>
-        <? if (STUDIP\ENV === 'development'): ?>
-            <?= _('Die markierten Anpassungen werden beim Klick auf "Starten" ausgeführt:') ?>
-        <? else: ?>
             <?= _('Die hier aufgeführten Anpassungen werden beim Klick auf "Starten" ausgeführt:') ?>
-        <? endif; ?>
         </caption>
         <colgroup>
-        <? if (STUDIP\ENV === 'development' && !$lock->isLocked($lock_data)): ?>
             <col style="width: 24px">
-        <? endif; ?>
             <col style="width: 120px">
+            <col>
             <col>
         </colgroup>
         <thead>
             <tr>
-            <? if (STUDIP\ENV === 'development' && !$lock->isLocked($lock_data)): ?>
-                <th>
-                    <input type="checkbox"
-                           data-proxyfor="#migration-list tbody :checkbox"
-                           data-activates="#migration-list tfoot .button">
-                </th>
-            <? endif; ?>
+                <th></th>
                 <th><?= _('Nr.') ?></th>
+                <th><?= _('Name') ?></th>
                 <th><?= _('Beschreibung') ?></th>
             </tr>
         </thead>
         <tbody>
         <? foreach ($migrations as $number => $migration): ?>
+            <? $version = $migrator->migrationBranchAndVersion($number) ?>
             <tr>
-            <? if (STUDIP\ENV === 'development' && !$lock->isLocked($lock_data)): ?>
                 <td>
-                    <input type="checkbox" checked
-                           name="versions[]" value="<?= htmlReady($number) ?>">
+                    <? if ($version[0] === $branch): ?>
+                        <input type="radio" name="target" value="<?= $version[1] + $offset ?>">
+                    <? endif ?>
                 </td>
-            <? endif; ?>
                 <td>
                     <?= htmlReady($number) ?>
+                </td>
+                <td>
+                    <?= htmlReady(get_class($migration)) ?>
                 </td>
                 <td>
                 <? if ($migration->description()): ?>
@@ -63,7 +53,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="<?= 2 + (int) (STUDIP\ENV === 'development') ?>">
+                <td colspan="4">
                 <? if ($lock->isLocked($lock_data)):
                     $user = User::find($lock_data['user_id']);
                 ?>

@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class UserEventsIcal extends NonJsonApiController
 {
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response, array $args)
     {
         if (!$observedUser = \User::find($args['id'])) {
             throw new RecordNotFoundException();

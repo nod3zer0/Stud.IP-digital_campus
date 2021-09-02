@@ -14,7 +14,7 @@ class FoldersCopy extends NonJsonApiController
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameters)
      */
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response, array $args)
     {
         if (!$sourceFolder = \FileManager::getTypedFolder($args['id'])) {
             throw new RecordNotFoundException('Could not find source folder.');

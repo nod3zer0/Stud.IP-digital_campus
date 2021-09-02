@@ -12,6 +12,14 @@ class AddMissingIndicesResources extends Migration
 
     public function up()
     {
+        // avoid running this migration twice
+        $query = "SHOW INDEX FROM resource_temporary_permissions WHERE Key_name = 'user_id'";
+        $result = DBManager::get()->query($query);
+
+        if ($result && $result->rowCount() > 0) {
+            return;
+        }
+
         $query = "ALTER TABLE `resource_temporary_permissions` ADD INDEX (`user_id`)";
         DBManager::get()->exec($query);
 

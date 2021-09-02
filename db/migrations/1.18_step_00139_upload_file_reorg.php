@@ -1,14 +1,4 @@
 <?php
-$requirements = [
-    __DIR__ . '/lib/datei.inc.php',
-];
-
-foreach ($requirements as $file) {
-    if (!file_exists($file)) {
-        throw new Exception('Migration is not compatible with your Stud.IP version');
-    }
-    require_once $file;
-}
 
 class Step00139UploadFileReorg extends Migration
 {

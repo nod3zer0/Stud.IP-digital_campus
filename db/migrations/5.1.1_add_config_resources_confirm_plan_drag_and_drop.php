@@ -14,7 +14,7 @@ class AddConfigResourcesConfirmPlanDragAndDrop extends Migration
         $db = DBManager::get();
 
         $db->exec(
-            "INSERT INTO `config`
+            "INSERT IGNORE INTO `config`
             (`field`, `value`, `type`, `range`,
             `section`,
             `mkdate`, `chdate`,

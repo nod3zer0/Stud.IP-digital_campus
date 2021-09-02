@@ -8,6 +8,14 @@ class ChangeBlubberThreadFollowing extends Migration
 
     public function up()
     {
+        // avoid running this migration twice
+        $query = "SHOW TABLES LIKE 'blubber_threads_followstates'";
+        $result = DBManager::get()->query($query);
+
+        if ($result && $result->rowCount() > 0) {
+            return;
+        }
+
         // Alter table to reflect new state
         $query = "RENAME TABLE `blubber_threads_unfollow` TO `blubber_threads_followstates`";
         DBManager::get()->exec($query);

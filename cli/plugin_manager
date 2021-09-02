@@ -132,18 +132,22 @@ if ($args) {
 
             // show usage
             if (!$pluginname) {
-                echo 'Usage: '. $args[0] .' migrate PLUGINNAME [-l] [-t] [-v]' . "\n";
+                echo 'Usage: '. $args[0] .' migrate PLUGINNAME [-l] [-v] [-t target] [-b branch]' . "\n";
                 exit(1);
             }
 
             // parse options
-            list($errors, $options, $args) = getopts(array('l' => 'Ss l list', 'v' => 'Ss v verbose', 't'=> 'Vs t target'));
+            list($errors, $options, $args) = getopts(array('l' => 'Ss l list', 'v' => 'Ss v verbose', 't' => 'Vs t target', 'b' => 'Vs b branch'));
             $list = false;
             $verbose = false;
             $target = NULL;
+            $branch = '0';
 
             foreach ($options as $option => $value) {
                 switch ($option) {
+                    case 'b':
+                        $branch = ($value === false) ? '0' : $value;
+                        break;
                     case 'l':
                         $list = $value;
                         break;
@@ -166,7 +170,7 @@ if ($args) {
 
                     if (is_dir($plugindir . '/migrations')) {
                         // if there are migrations, migrate
-                        $schema_version = new DBSchemaVersion($plugin['name']);
+                        $schema_version = new DBSchemaVersion($plugin['name'], $branch);
                         $migrator = new Migrator($plugindir . '/migrations', $schema_version, $verbose);
 
                         if ($list) {
@@ -175,7 +179,7 @@ if ($args) {
                             foreach ($migrations as $number => $migration) {
                                 $description = $migration->description() ?: '(no description)';
 
-                                printf("%3d %-20s %s\n", $number, get_class($migration), $description);
+                                printf("%6s %-20s %s\n", $number, get_class($migration), $description);
                             }
                         } else {
                             $migrator->migrateTo($target);
@@ -214,7 +218,7 @@ if ($args) {
                     if (is_dir($plugindir . '/migrations')) {
                         $schema_version = new DBSchemaVersion($plugin['name']);
                         $migrator = new Migrator($plugindir . '/migrations', $schema_version);
-                        $migrator->migrate_to(0);
+                        $migrator->migrateTo(0);
                     }
 
                     echo 'Das Plugin '. $plugin['name'] .' wurde ausgetragen.' . "\n";
