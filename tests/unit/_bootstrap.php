@@ -40,7 +40,7 @@ define("TEST_FIXTURES_PATH", dirname(__DIR__) . "/_data/");
 require __DIR__ . '/../../composer/autoload.php';
 
 global $STUDIP_BASE_PATH;
-$STUDIP_BASE_PATH = realpath(dirname(dirname(__FILE__)) . '/..');
+$STUDIP_BASE_PATH = realpath(dirname(__DIR__) . '/..');
 
 require 'lib/classes/StudipAutoloader.php';
 require 'lib/functions.php';
