@@ -304,23 +304,36 @@ class Resources_ExportController extends AuthenticatedController
 
         foreach ($resources as $resource) {
             //Retrieve the bookings in the specified time range:
-            $bookings = ResourceBooking::findByResourceAndTimeRanges(
-                $resource,
+            $intervals = ResourceBookingInterval::findBySql(
+                '`resource_id` = :resource_id
+                AND
+                (`begin` BETWEEN :begin AND :end
+                OR `end` BETWEEN :begin AND :end)
+                ORDER BY `begin` ASC, `end` ASC',
                 [
-                    [
-                        'begin' => $this->begin->getTimestamp(),
-                        'end'   => $this->end->getTimestamp()
-                    ]
-                ],
-                [0, 1, 2, 3]
+                    'resource_id' => $resource->id,
+                    'begin' => $this->begin->getTimestamp(),
+                    'end'   => $this->end->getTimestamp()
+                ]
             );
 
             //Prepare data for export:
 
-            foreach ($bookings as $booking) {
+            foreach ($intervals as $interval) {
+                $booking = $interval->booking;
+                if (!$booking instanceof ResourceBooking) {
+                    continue;
+                }
+                $description = $booking->description;
+                if (!$booking->isSimpleBooking()) {
+                    $course = $booking->assigned_course_date->course;
+                    if ($course instanceof Course) {
+                        $description = $course->getFullName();
+                    }
+                }
                 $booking_data[] = [
-                    date('d.m.Y H:i', $booking->begin),
-                    date('d.m.Y H:i', $booking->end),
+                    date('d.m.Y H:i', ($interval->begin + $booking->preparation_time)),
+                    date('d.m.Y H:i', $interval->end),
                     sprintf(
                         _('%u min.'),
                         intval($booking->preparation_time / 60)
@@ -339,7 +352,7 @@ class Resources_ExportController extends AuthenticatedController
                     )
                     )
                     ),
-                    $booking->description,
+                    $description,
                     $booking->booking_user ? $booking->booking_user->getFullName() : '',
                     implode(', ', $booking->getAssignedUsers()),
                     $booking->internal_comment
