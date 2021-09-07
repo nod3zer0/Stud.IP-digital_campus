@@ -64,8 +64,6 @@ jQuery(document).on('click', '.messagebox .messagebox_buttons a', function () {
         });
     }
     return false;
-}).on('focus', '.messagebox .messagebox_buttons a', function () {
-    jQuery(this).blur(); // Get rid of the ugly "clicked border" due to the text-indent
 });
 
 
