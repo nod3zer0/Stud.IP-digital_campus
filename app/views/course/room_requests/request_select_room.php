@@ -32,19 +32,7 @@
                 <? foreach ($available_rooms as $room): ?>
                     <div class="flex-row">
                         <label class="horizontal">
-                            <? if ($overlaps[$room->id] <= 0.0): ?>
-                                <?= Icon::create('check-circle', Icon::ROLE_STATUS_GREEN)->asImg(
-                                    ['class' => 'text-bottom']
-                                ) ?>
-                            <? elseif ($overlaps[$room->id] >= 1.0): ?>
-                                <?= Icon::create('decline-circle', Icon::ROLE_STATUS_RED)->asImg(
-                                    ['class' => 'text-bottom']
-                                ) ?>
-                            <? else: ?>
-                                <?= Icon::create('exclaim-circle', Icon::ROLE_STATUS_YELLOW)->asImg(
-                                    ['class' => 'text-bottom']
-                                ) ?>
-                            <? endif ?>
+                            <?= $available_room_icons[$room->id] ?>
                             <input type="radio" name="selected_room_id"
                                    data-activates="button[type='submit'][name='select_room']"
                                    value="<?= htmlReady($room->id) ?>">

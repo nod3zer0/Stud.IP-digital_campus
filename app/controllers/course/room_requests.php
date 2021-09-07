@@ -600,26 +600,68 @@ class Course_RoomRequestsController extends AuthenticatedController
                 null
             ];
         }
+        $this->matching_rooms = [];
         if (!$this->room_name && !$this->selected_properties) {
             //Load all requestable rooms:
-            $this->available_rooms = RoomManager::findRooms(
+            $this->matching_rooms = RoomManager::findRooms(
                 '',
                 null,
                 null,
                 [],
-                $this->request->getTimeIntervals(),
+                [],
                 'name ASC, mkdate ASC'
             );
         } else {
             //Search rooms by the selected properties:
-            $this->available_rooms = RoomManager::findRooms(
+            $this->matching_rooms = RoomManager::findRooms(
                 $this->room_name,
                 null,
                 null,
                 $search_properties,
-                $this->request->getTimeIntervals(),
+                [],
                 'name ASC, mkdate ASC'
             );
+        }
+        $this->available_room_icons = [];
+        $request_time_intervals = $this->request->getTimeIntervals();
+        $request_date_amount = count($request_time_intervals);
+        foreach ($this->matching_rooms as $room) {
+            $request_dates_booked = 0;
+            foreach ($request_time_intervals as $interval) {
+                $booked = ResourceBookingInterval::countBySql(
+                    'resource_id = :room_id
+                    AND
+                    (begin BETWEEN :begin AND :end
+                    OR end BETWEEN :begin AND :end)',
+                    [
+                        'room_id' => $room->id,
+                        'begin' => $interval['begin'],
+                        'end' => $interval['end']
+                    ]
+                ) > 0;
+                if ($booked) {
+                    $request_dates_booked++;
+                }
+            }
+            if ($request_dates_booked == 0) {
+                $this->available_room_icons[$room->id] =
+                    Icon::create('check-circle', Icon::ROLE_STATUS_GREEN)->asImg(
+                        [
+                            'class' => 'text-bottom',
+                            'title' => _('freier Raum')
+                        ]
+                    );
+                $this->available_rooms[] = $room;
+            } elseif ($request_dates_booked < $request_time_intervals) {
+                $this->available_room_icons[$room->id] =
+                    Icon::create('exclaim-circle', Icon::ROLE_STATUS_YELLOW)->asImg(
+                        [
+                            'class' => 'text-bottom',
+                            'title' => _('teilweise belegter Raum')
+                        ]
+                    );
+                $this->available_rooms[] = $room;
+            }
         }
 
         if (Request::isPost()) {
