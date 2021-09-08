@@ -40,5 +40,6 @@ tests/_helpers/CodeGuy.php
 tests/_helpers/TestGuy.php
 tests/_helpers/WebGuy.php
 tests/_helpers/_generated
+tests/_output/
 
 .idea
