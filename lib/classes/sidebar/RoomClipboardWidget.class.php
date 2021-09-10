@@ -18,6 +18,8 @@ class RoomClipboardWidget extends ClipboardWidget
 
         parent::__construct(['Room']);
 
+        $current_user = User::findCurrent();
+
         $this->addLink(
             _('Gruppenbelegungsplan anzeigen'),
             URLHelper::getURL('dispatch.php/room_management/planning/index/CLIPBOARD_ID'),
@@ -28,16 +30,17 @@ class RoomClipboardWidget extends ClipboardWidget
             ]
         );
 
-        $this->addLink(
-            _('Raumgruppe buchen'),
-            URLHelper::getURL('dispatch.php/resources/booking/add/clipboard_CLIPBOARD_ID'),
-            Icon::create('link-intern'),
-            ['class' => 'room-clipboard-group-action',
-             'data-show_in_dialog' => 'size=auto',
-             'data-needs_items'=> '1']
-        );
-
-        if (ResourceManager::userHasGlobalPermission(User::findCurrent(), 'admin')) {
+        if (ResourceManager::userHasGlobalPermission($current_user, 'autor')) {
+            $this->addLink(
+                _('Raumgruppe buchen'),
+                URLHelper::getURL('dispatch.php/resources/booking/add/clipboard_CLIPBOARD_ID'),
+                Icon::create('link-intern'),
+                ['class' => 'room-clipboard-group-action',
+                 'data-show_in_dialog' => 'size=auto',
+                 'data-needs_items'=> '1']
+            );
+        }
+        if (ResourceManager::userHasGlobalPermission($current_user, 'admin')) {
             $this->addLink(
                 _('Berechtigungen für die gesamte Raumgruppe setzen'),
                 URLHelper::getURL('dispatch.php/resources/room_group/permissions/CLIPBOARD_ID'),
