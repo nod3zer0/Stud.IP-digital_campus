@@ -39,7 +39,7 @@ const Files = {
         //tables are displayed in one page.
         var tables = jQuery('.vue-file-table');
         if (tables.length) {
-            for (var table of tables) {
+            for (let table of tables) {
                 STUDIP.Vue.load().then(({createApp}) => {
                     createApp({
                         el: table,
