@@ -11,7 +11,6 @@ module.exports = {
                 "onlyMatchedOnce": false
             }
         },
-        'removeDimensions',
         'convertStyleToAttrs',
         'removeDoctype',
         'removeXMLProcInst',
