@@ -37,9 +37,10 @@ class BlocksCopy extends NonJsonApiController
 
         $new_block = $this->copyBlock($user, $block, $container);
 
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write((string) json_encode($new_block));
 
-        return $response->withJson($new_block);
-
+        return $response;
     }
 
     private function copyBlock(\User $user, \Courseware\Block $remote_block, \Courseware\Container $container)
