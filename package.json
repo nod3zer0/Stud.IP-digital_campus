@@ -24,7 +24,7 @@
         "@babel/plugin-transform-runtime": "^7.12.1",
         "@babel/preset-env": "^7.12.1",
         "@babel/register": "^7.12.1",
-        "@elan-ev/reststate-vuex": "~1.0.4",
+        "@elan-ev/reststate-vuex": "~1.0.5",
         "@fullcalendar/core": "^4.3.1",
         "@fullcalendar/daygrid": "^4.3.0",
         "@fullcalendar/interaction": "^4.3.0",
