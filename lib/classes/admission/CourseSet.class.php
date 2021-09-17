@@ -1005,11 +1005,21 @@ class CourseSet
         }
         if (!$short || $this->hasAdmissionRule('LimitedAdmission')) {
             $courses = Course::findAndMapMany(function($c) {
-                return ['id' => $c->id,
-                             'name' => $c->getFullname('number-name-semester')];
+                return [
+                    'id' => $c->id,
+                    'name' => $c->getFullname('number-name-semester'),
+                    'visible' => $c->visible
+                ];
             },
                 array_keys($this->courses),
                 'ORDER BY start_time,VeranstaltungsNummer,Name');
+            if (!$GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)) {
+                $courses = array_filter($courses,
+                    function ($c) {
+                        return $c['visible'];
+                    }
+                );
+            }
             $tpl->set_attribute('is_limited', $this->hasAdmissionRule('LimitedAdmission'));
             $tpl->set_attribute('courses', $courses);
         }

@@ -25,9 +25,10 @@
         <?php foreach ($courses as $course) { ?>
         <li>
         <? if ($is_limited) : ?>
-            <a href="<?= URLHelper::getLink('dispatch.php/course/details/', ['cid' => null, 'sem_id' => $course['id']])?>"><?= htmlReady($course['name']) ?></a>
+            <a href="<?= URLHelper::getLink('dispatch.php/course/details/', ['cid' => null, 'sem_id' => $course['id']])?>"><?= htmlReady($course['name']) . (!$course['visible'] ? ' (' . _("versteckt") . ')' : '') ?></a>
         <? else : ?>
             <?= htmlReady($course['name']) ?>
+            <?= (!$course['visible'] ? ' (' . _("versteckt") . ')' : '') ?>
         <? endif ?>
         </li>
         <?php } ?>

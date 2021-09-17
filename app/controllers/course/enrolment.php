@@ -124,7 +124,6 @@ class Course_EnrolmentController extends AuthenticatedController
                     } else {
                         $msg = _("Die Plätze in dieser Veranstaltung werden automatisch verteilt.");
                         if ($limit = $courseset->getAdmissionRule('LimitedAdmission')) {
-                            $msg_details[] = sprintf(_("Diese Veranstaltung gehört zu einem Anmeldeset mit %s Veranstaltungen. Sie können maximal %s davon belegen. Bei der Verteilung werden die von Ihnen gewünschten Prioritäten berücksichtigt."), count($courseset->getCourses()), $limit->getMaxNumber());
                             $this->user_max_limit = $limit->getMaxNumberForUser($user_id);
                             if (Config::get()->IMPORTANT_SEMNUMBER) {
                                 $order = "ORDER BY VeranstaltungsNummer, Name";
@@ -132,6 +131,14 @@ class Course_EnrolmentController extends AuthenticatedController
                                 $order = "ORDER BY Name";
                             }
                             $this->priocourses = Course::findMany($courseset->getCourses(), $order);
+                            if (!$GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)) {
+                                $this->priocourses = array_filter($this->priocourses,
+                                    function ($c) {
+                                        return $c->visible;
+                                    }
+                                );
+                            }
+                            $msg_details[] = sprintf(_("Diese Veranstaltung gehört zu einem Anmeldeset mit %s Veranstaltungen. Sie können maximal %s davon belegen. Bei der Verteilung werden die von Ihnen gewünschten Prioritäten berücksichtigt."), count($this->priocourses), $limit->getMaxNumber());
                             $this->user_prio = AdmissionPriority::getPrioritiesByUser($courseset->getId(), $user_id);
                             $this->max_limit = $limit->getMaxNumber();
                             $this->prio_stats = AdmissionPriority::getPrioritiesStats($courseset->getId());
