@@ -53,7 +53,8 @@ class Resources_RoomRequestController extends AuthenticatedController
             if (Request::get('reset_filter')) {
                 $this->filter = [
                     'marked'       => -1,
-                    'own_requests' => 1
+                    'own_requests' => 1,
+                    'request_status' => 'open'
                 ];
             } else {
                 if (Request::option('institut_id')) {
@@ -61,6 +62,9 @@ class Resources_RoomRequestController extends AuthenticatedController
                 }
                 if (Request::option('semester_id')) {
                     $GLOBALS['user']->cfg->store('MY_COURSES_SELECTED_CYCLE', Request::option('semester_id'));
+                }
+                if (Request::option('request_status')) {
+                    $this->filter['request_status'] = Request::get('request_status');
                 }
                 if (!Semester::find($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE)) {
                     $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE = Semester::findCurrent()->id;
@@ -183,7 +187,15 @@ class Resources_RoomRequestController extends AuthenticatedController
      */
     protected function getFilteredRoomRequests()
     {
-        $sql = "resource_requests.closed < '1' AND (resource_id IN ( :room_ids) ";
+        $sql = '';
+        if ($this->filter['request_status'] == 'closed') {
+            $sql .= "resource_requests.closed IN ('1', '2') ";
+        } elseif ($this->filter['request_status'] == 'denied') {
+            $sql .= "resource_requests.closed = '3' ";
+        } else {
+            $sql .= "resource_requests.closed < '1' ";
+        }
+        $sql .= "AND (resource_id IN ( :room_ids) ";
         $sql_params = [
             'room_ids' => $this->selected_room_ids
         ];
@@ -408,6 +420,20 @@ class Resources_RoomRequestController extends AuthenticatedController
         $semester_selector->setSelection($this->filter['semester']);
         $sidebar->addWidget($semester_selector);
 
+        $request_status_selector = new SelectWidget(
+            _('Status der Anfrage'),
+            $this->overviewURL(),
+            'request_status'
+        );
+        $request_status_selector->setOptions(
+            [
+                'open' => _('offen'),
+                'closed' => _('bearbeitet'),
+                'denied' => _('abgelehnt')
+            ]
+        );
+        $sidebar->addWidget($request_status_selector);
+
         $list = new SelectWidget(
             _('Veranstaltungstypfilter'),
             $this->overviewURL(),
@@ -608,6 +634,8 @@ class Resources_RoomRequestController extends AuthenticatedController
             $this->entries_per_page
         );
         $this->requests = $requests;
+
+        $this->request_status = $this->filter['request_status'];
     }
 
     public function index_action($request_id = null)

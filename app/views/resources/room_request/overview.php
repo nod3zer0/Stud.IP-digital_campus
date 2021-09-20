@@ -3,14 +3,34 @@
           action="<?= $controller->link_for('room_request/assign') ?>">
         <table class="default sortable-table request-list" data-sortlist="[[8, 0]]">
             <caption>
-                <?= sprintf(
-                    ngettext(
-                        'Anfragenliste (%d Anfrage)',
-                        'Anfragenliste (%d Anfragen)',
+                <? if ($request_status == 'closed') : ?>
+                    <?= sprintf(
+                        ngettext(
+                            'Anfragenliste (%d bearbeitete Anfrage)',
+                            'Anfragenliste (%d bearbeitete Anfragen)',
+                            $count_requests
+                        ),
                         $count_requests
-                    ),
-                    $count_requests
-                ) ?>
+                    ) ?>
+                <? elseif ($request_status == 'denied') : ?>
+                    <?= sprintf(
+                        ngettext(
+                            'Anfragenliste (%d abgelehnte Anfrage)',
+                            'Anfragenliste (%d abgelehnte Anfragen)',
+                            $count_requests
+                        ),
+                        $count_requests
+                    ) ?>
+                <? else : ?>
+                    <?= sprintf(
+                        ngettext(
+                            'Anfragenliste (%d Anfrage)',
+                            'Anfragenliste (%d Anfragen)',
+                            $count_requests
+                        ),
+                        $count_requests
+                    ) ?>
+                <? endif ?>
             </caption>
             <thead>
                 <tr>
