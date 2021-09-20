@@ -93,6 +93,21 @@ class Resources_SearchController extends AuthenticatedController
                 }
                 PageLayout::postMessage($message);
             }
+
+            $this->booking_plan_action_params = [];
+
+            if ($this->form_submitted) {
+                //Check if the time range criteria has been set.
+                //If so, set the begin date as parameter for the
+                //booking plan action URL.
+                $criteria = $room_search_widget->getSelectedCriteria();
+                if (isset($criteria['special__time_range']) && $criteria['special__time_range']) {
+                    $begin = $criteria['special__time_range']['range']['begin'];
+                    if ($begin instanceof DateTime) {
+                        $this->booking_plan_action_params['defaultDate'] = $begin->format('Y-m-d');
+                    }
+                }
+            }
         }
     }
 }

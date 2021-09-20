@@ -20,7 +20,8 @@
                     $current_user,
                     'admin'
                 ),
-                'cliboard_widget_id' => $clipboard_widget_id
+                'cliboard_widget_id' => $clipboard_widget_id,
+                'booking_plan_action_params' => $booking_plan_action_params
             ]
         ) ?>
     <? endforeach ?>

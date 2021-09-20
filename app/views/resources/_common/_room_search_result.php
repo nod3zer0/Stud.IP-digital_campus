@@ -19,7 +19,7 @@
         );
         if ($room->userHasPermission($current_user, 'autor')) {
             $actions->addLink(
-                $room->getActionLink('booking_plan'),
+                $room->getActionLink('booking_plan', $booking_plan_action_params),
                 _('Wochenbelegung'),
                 Icon::create('timetable'),
                 ['target' => '_blank']
@@ -33,7 +33,7 @@
         } else {
             if ($room->booking_plan_is_public && Config::get()->RESOURCES_SHOW_PUBLIC_ROOM_PLANS) {
                 $actions->addLink(
-                    $room->getActionLink('booking_plan'),
+                    $room->getActionLink('booking_plan', $booking_plan_action_params),
                     _('Belegungsplan'),
                     Icon::create('timetable'),
                     ['data-dialog' => 'size=big']
