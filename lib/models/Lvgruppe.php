@@ -479,6 +479,7 @@ class Lvgruppe extends ModuleManagementModelTreeItem
                         . 'AND (sem.visible = 1 OR (sem.visible = 0 AND seminar_user.user_id = :user_id))');
                     $stmt->execute([
                         ':id' => $this->getId(),
+                        ':semester_id' => $semester->semester_id,
                         ':semester_beginn' => $semester->beginn,
                         ':semester_ende' => $semester->ende,
                         ':user_id' => $only_visible
