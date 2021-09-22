@@ -154,7 +154,7 @@ function object_get_visit($object_id, $plugin_id, $mode = "last", $open_object_i
  * @param  string|null $mode             The return-mode: 'last' for the last visit, other for actual-visit;
  *                                       pass null to get an array of visit date and last visit date
  * @param  mixed       $user_id          User id to gather the data for, pass null for current user
- * @param  array       $additional_types Additional types to get data for. The returned array is then enlarged
+ * @param  array       $additional_plugins Additional types to get data for. The returned array is then enlarged
  *                                       by one dimension
  * @return array       associate array with the object id as key and the according data as value
  *

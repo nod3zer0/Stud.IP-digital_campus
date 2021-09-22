@@ -302,7 +302,6 @@ class MyRealmModel
 
         // filtering courses
         $member_ships = User::findCurrent()->course_memberships->toGroupedArray('seminar_id', 'status gruppe');
-        $visits = get_objects_visits($courses->pluck('id'), 0, null, null, array_keys(self::getDefaultModules()));
         $children = [];
         $semester_assign = [];
 
@@ -313,6 +312,8 @@ class MyRealmModel
             $_course['end_semester']   = $course->end_semester->name;
             $_course['sem_class']      = $course->getSemClass();
             $_course['obj_type']       = 'sem';
+
+            $visits = get_objects_visits([$course->id], 0, null, null, $course->tools->pluck('plugin_id'));
 
             if ($group_field === 'sem_tree_id') {
                 $_course['sem_tree'] = $course->study_areas->toArray();
@@ -515,15 +516,8 @@ class MyRealmModel
         $statement->execute();
 
         // Update all activated modules
-        foreach (self::getDefaultModules() as $id => $module) {
-            // Skip modules that were already handled above
-            if ($module === 'vote') {
-                continue;
-            }
-
-            if ($object->tools->findBy('plugin_id', $id)) {
-                object_set_visit($object->id, $id);
-            }
+        foreach ($object->tools as $module) {
+            object_set_visit($object->id, $module->plugin_id);
         }
 
         // Update object itself
@@ -597,35 +591,26 @@ class MyRealmModel
         if (empty($memberShips)) {
             return null;
         }
-
+        $institutes = [];
         $insts = new SimpleCollection($memberShips);
-        $ids = $insts->pluck('institut_id');
-        $visits = get_objects_visits($ids, 0, null, null, array_keys(self::getDefaultModules('institute')));
-
-        $institutes = $insts->map(function ($a) use ($visits) {
-            $inst                   = $a->institute->toArray();
-            $inst['tools']          = $a->institute->tools;
-            $inst['perms']          = $a->inst_perms;
-            $inst['visitdate']      = $visits[$a->institut_id]['inst']['visitdate'];
-            $inst['last_visitdate'] = $visits[$a->institut_id]['inst']['last_visitdate'];
-
-            return $inst;
-        });
-
-
-        if ($institutes) {
-            foreach ($institutes as $index => $inst) {
-                $institutes[$index]['obj_type']   = 'inst';
-                $institutes[$index]['navigation'] = self::getAdditionalNavigations(
-                    $inst['institut_id'],
-                    $institutes[$index],
-                    SemClass::getDefaultInstituteClass($inst['type']),
-                    $GLOBALS['user']->id,
-                    $visits[$inst['institut_id']]
-                );
-            }
-            unset($Modules);
+        foreach ($insts as $inst) {
+            $index = $inst->institute->id;
+            $visits = get_objects_visits([$index], 0, null, null, $inst->institute->tools->pluck('plugin_id'));
+            $institutes[$index] = $inst->institute->toArray();
+            $institutes[$index]['tools'] = $inst->institute->tools;
+            $institutes[$index]['perms'] = $inst->inst_perms;
+            $institutes[$index]['visitdate'] = $visits[$index][0]['visitdate'];
+            $institutes[$index]['last_visitdate'] = $visits[$index][0]['last_visitdate'];
+            $institutes[$index]['obj_type']   = 'inst';
+            $institutes[$index]['navigation'] = self::getAdditionalNavigations(
+                $index,
+                $institutes[$index],
+                SemClass::getDefaultInstituteClass($inst->institute->type),
+                $GLOBALS['user']->id,
+                $visits[$index]
+            );
         }
+
 
         return $institutes;
     }
@@ -801,14 +786,14 @@ class MyRealmModel
             )
         );
 
-        $visit_data = get_objects_visits(array_keys($studygroups), 'sem', null, null, array_keys(self::getDefaultModules()));
-
         $data_fields = 'name seminar_id visible veranstaltungsnummer start_time duration_time status visible '
                      . 'chdate admission_binding admission_prelim';
         $studygroup_data = [];
         foreach ($studygroup_memberships as $membership) {
             $studygroup = $studygroups[$membership->seminar_id];
+            $visit_data = get_objects_visits([$studygroup->id], 0, null, null, $studygroup->tools->pluck('plugin_id'));
             $data = $studygroup->toArray($data_fields);
+            $data['tools'] = $studygroup->tools;
             $data['sem_class'] = $studygroup->getSemClass();
             $data['start_semester'] = $studygroup->start_semester->name;
             $data['end_semester'] = $studygroup->end_semester->name;
