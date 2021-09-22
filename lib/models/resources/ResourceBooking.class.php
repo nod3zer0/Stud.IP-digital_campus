@@ -1685,6 +1685,8 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                     $booking_view_urls
                 );
             }
+
+            $event_title = '';
             $prefix = '';
             $icon = '';
 
@@ -1703,7 +1705,17 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                 $icon = 'refresh';
             }
 
-            $event_title = $prefix . $this->getAssignedUserName();
+            if ($this->assigned_course_date instanceof CourseDate) {
+                $course = $this->assigned_course_date->course;
+                if ($course instanceof Course) {
+                    $has_perms = $GLOBALS['perm']->have_studip_perm('user', $course->id, $user->id);
+                    if ($has_perms || $course->visible) {
+                        $event_title = $prefix . $this->getAssignedUserName();
+                    }
+                }
+            } else {
+                $event_title = $prefix . $this->getAssignedUserName();
+            }
 
             $interval_api_urls = $booking_api_urls;
             if ($booking_is_editable) {
