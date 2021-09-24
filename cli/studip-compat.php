@@ -117,7 +117,7 @@ $reduce = function ($folder) {
 // Get rules
 if (!$version) {
     $rules = [];
-    foreach (glob(__DIR__ . '/compatbility-rules/*.php') as $file) {
+    foreach (glob(__DIR__ . '/compatibility-rules/*.php') as $file) {
         $version_rules = require $file;
         $rules = array_merge($rules, $version_rules);
     }
