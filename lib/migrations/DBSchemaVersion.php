@@ -168,7 +168,8 @@ class DBSchemaVersion implements SchemaVersion
         if ($result && $result->rowCount() > 0) {
             $backported_migrations = [
                 20200306, 20200713, 20200811, 20200909, 20200910,
-                20201002, 20201103, 202011031, 20210317
+                20201002, 20201103, 202011031, 20210317, 20210422,
+                20210425, 20210503
             ];
 
             // drop backported migrations
