@@ -106,7 +106,9 @@ $getInstalledLanguages = function () {
 
     <? include 'lib/include/header.php' ?>
 
-    <? $contextable = Context::get() && Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive(); ?>
+    <? $contextable = Context::get() && (
+        (Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive()) ||
+        (Navigation::hasItem('/admin/institute') && Navigation::getItem('/admin/institute')->isActive())); ?>
     <div id="layout_page" <? if (!($contextable)) echo 'class="contextless"'; ?>>
 
     <? if (PageLayout::isHeaderEnabled() && is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody' && Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive() && $_SESSION['seminar_change_view_'.Context::getId()]) : ?>
