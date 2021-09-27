@@ -313,8 +313,13 @@ class UserFilterField
         $parameters = [$userId];
         // Additional requirements given...
         if (is_array($additional)) {
+
+            // Don't use the same database field twice as this can only get ugly.
+            $usedFields = [$this->userDataDbField];
+
             foreach ($additional as $a_condition) {
-                if ($a_condition->id != $this->id && $this->userDataDbTable == $a_condition->userDataDbTable) {
+                if ($a_condition->id != $this->id && $this->userDataDbTable == $a_condition->userDataDbTable &&
+                        !in_array($a_condition->userDataDbField, $usedFields)) {
                     $query .= " AND `" . $a_condition->userDataDbField . "` " . $a_condition->compareOperator . "?";
                     $parameters[] = $a_condition->value;
                 }
