@@ -93,7 +93,7 @@ class DateFormatter {
                 }
             }
         }
-        return formatReady($dateWithRooms);
+        return $dateWithRooms;
     }
 
     private function internalFormatDateAndRoom($date)
