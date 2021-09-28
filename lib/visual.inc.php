@@ -623,6 +623,7 @@ function tooltip2($text, $with_alt = TRUE, $with_popup = FALSE) {
         $ret['alt'] = $text;
     }
     $ret['title'] = $text;
+    $ret['tabindex'] = '0';
 
     return $ret;
 }

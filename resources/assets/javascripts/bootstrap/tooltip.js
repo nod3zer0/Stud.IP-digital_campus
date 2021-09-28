@@ -10,10 +10,10 @@ var timeout = null;
 
 STUDIP.Tooltip.threshold = 6;
 
-$(document).on('mouseenter mouseleave', '[data-tooltip],.tooltip:has(.tooltip-content)', function(event) {
+$(document).on('mouseenter mouseleave focusin focusout', '[data-tooltip],.tooltip:has(.tooltip-content)', function(event) {
     let data = $(this).data();
 
-    const visible = event.type === 'mouseenter';
+    const visible = event.type === 'mouseenter' || event.type === 'focusin';
     const offset = $(this).offset();
     const x = offset.left + $(this).outerWidth(true) / 2;
     const y = offset.top;
@@ -61,8 +61,8 @@ $(document).on('mouseenter mouseleave', '[data-tooltip],.tooltip:has(.tooltip-co
     } else {
         timeout = setTimeout(() => data.tooltipObject.hide(), delay);
     }
-}).on('mouseenter', '.studip-tooltip', () => {
+}).on('mouseenter focusin', '.studip-tooltip', () => {
     clearTimeout(timeout);
-}).on('mouseleave', '.studip-tooltip', function() {
+}).on('mouseleave focusout', '.studip-tooltip', function() {
     $(this).hide();
 });
