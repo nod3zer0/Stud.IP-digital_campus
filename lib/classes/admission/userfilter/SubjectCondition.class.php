@@ -22,6 +22,8 @@ class SubjectCondition extends UserFilterField
     public $userDataDbTable = 'user_studiengang';
     public $userDataDbField = 'fach_id';
 
+    public $sortOrder = 2;
+
     // --- OPERATIONS ---
 
     /**

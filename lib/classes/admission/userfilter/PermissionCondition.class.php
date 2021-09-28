@@ -15,6 +15,8 @@
  */
 class PermissionCondition extends UserFilterField
 {
+    public $sortOrder = 7;
+
     /**
      * @see UserFilterField::__construct
      */

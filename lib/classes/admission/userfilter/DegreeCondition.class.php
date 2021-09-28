@@ -22,6 +22,8 @@ class DegreeCondition extends UserFilterField
     public $userDataDbTable = 'user_studiengang';
     public $userDataDbField = 'abschluss_id';
 
+    public $sortOrder = 1;
+
     /**
      * @see UserFilterField::__construct
      */

@@ -18,6 +18,8 @@ class DatafieldCondition extends UserFilterField
 
     public $datafield_id, $null_yields, $datafield_name;
 
+    public $sortOrder = 6;
+
     public static function getParameterizedTypes()
     {
         $ret = [];

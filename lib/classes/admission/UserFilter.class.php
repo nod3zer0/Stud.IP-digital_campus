@@ -101,6 +101,9 @@ class UserFilter
      */
     public function getFields()
     {
+        uasort($this->fields, function($a, $b) {
+            return $a->sortOrder -  $b->sortOrder;
+        });
         return $this->fields;
     }
 

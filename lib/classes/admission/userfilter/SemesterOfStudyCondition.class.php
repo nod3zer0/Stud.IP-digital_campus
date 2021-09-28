@@ -22,6 +22,8 @@ class SemesterOfStudyCondition extends UserFilterField
     public $userDataDbTable = 'user_studiengang';
     public $userDataDbField = 'semester';
 
+    public $sortOrder = 4;
+
     // --- OPERATIONS ---
 
     /**

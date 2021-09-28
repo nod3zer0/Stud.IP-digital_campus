@@ -51,6 +51,12 @@ class UserFilterField
      */
     public $value = null;
 
+    /*
+     * Provide some kind of sort order for filter fields. By default,
+     * all subclasses without an explicitly given order will be sorted at the end.
+     */
+    public $sortOrder = 99;
+
     public static $isParameterized = false;
 
     /**

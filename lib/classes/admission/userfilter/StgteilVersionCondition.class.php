@@ -22,6 +22,8 @@ class StgteilVersionCondition extends UserFilterField
     public $userDataDbTable = 'user_studiengang';
     public $userDataDbField = 'version_id';
 
+    public $sortOrder = 5;
+
     public static $isParameterized = true;
 
     public static function getParameterizedTypes()
