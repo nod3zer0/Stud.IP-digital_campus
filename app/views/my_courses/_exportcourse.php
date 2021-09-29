@@ -1,15 +1,10 @@
 <? foreach ($course_collection as $course):
     $teachers   = CourseMember::findByCourseAndStatus($course['seminar_id'], 'dozent');
-    $collection = SimpleCollection::createFromArray($teachers);
-    $dozenten =  $collection->map(function (CourseMember $teacher) {
-        return [
-            'user_id'  => $teacher->user_id,
-            'username' => $teacher->username,
-            'Nachname' => $teacher->nachname,
-            'fullname' => $teacher->getUserFullname('no_title_rev'),
-        ];
+    $dozenten = SimpleCollection::createFromArray($teachers)->map(function (CourseMember $teacher) {
+        return $teacher->getUserFullname('no_title');
     });
 
+    $mvv_pathes = [];
     if ($with_modules) {
         $trail_classes = ['Modulteil', 'StgteilabschnittModul', 'StgteilAbschnitt', 'StgteilVersion'];
         $mvv_object_pathes = MvvCourse::get($course['seminar_id'])->getTrails($trail_classes);
@@ -31,6 +26,12 @@
             }
         }
     }
+    $mvv_pathes = array_map(function ($path) {
+        return implode(' > ', reset($path));
+    }, $mvv_pathes);
+    $mvv_pathes = array_unique($mvv_pathes);
+    sort($mvv_pathes);
+
     $sem_class = $course['sem_class'];
 ?>
 
@@ -52,18 +53,24 @@
 <? if ($dozenten): ?>
 <tr>
 <th><?= _('Lehrende') ?></th>
-<td><? foreach ($dozenten as $dozent): ?>
-<?= $colon ? ', ' : '' ?><?= htmlReady($dozent['fullname']) ?><? $this->colon = true; ?>
-<? endforeach; ?></td>
+<td>
+<ul>
+<? foreach ($dozenten as $dozent): ?>
+<li><?= htmlReady($dozent) ?></li>
+<? endforeach; ?>
+</ul>
+</td>
 </tr>
 <? endif; ?>
 <? if ($mvv_pathes): ?>
 <tr nobr="true">
 <th><?= _('Module') ?></th>
 <td>
-<? foreach ($mvv_pathes as $i => $mvv_path) : ?>
-<span <? if ($i%2==1) echo 'style="background-color:#eaeaea;"'; ?>><?= htmlReady(implode(' > ', reset(array_values($mvv_path)))) ?></span><br>
+<ul>
+<? foreach ($mvv_pathes as $mvv_path) : ?>
+<li><?= htmlReady($mvv_path) ?></li>
 <? endforeach; ?>
+</ul>
 </td>
 </tr>
 <? endif; ?>
