@@ -26,7 +26,7 @@
                     ) ?>
                 </p>
 
-                <a onclick="javascript:void 0" class=button><?= _('Auswählen') ?></a>
+                <a class="button" tabindex="0"><?= _('Auswählen') ?></a>
             </label>
 
             <input type="hidden" name="cropped-image" id="cropped-image" value="">

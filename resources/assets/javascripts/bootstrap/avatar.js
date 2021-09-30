@@ -43,4 +43,13 @@ STUDIP.domReady(() => {
             });
         });
     }
+
+    //"Redirecting" the event is necessary so that the avatar image upload
+    //is accessible by pressing the enter key when its focused.
+    jQuery(document).on('keydown', 'form.settings-avatar label.file-upload a.button', function(event) {
+        if (event.code == "Enter") {
+            //The enter key has been pressed.
+            jQuery(this).parent('.file-upload').trigger('click');
+        }
+    });
 });
