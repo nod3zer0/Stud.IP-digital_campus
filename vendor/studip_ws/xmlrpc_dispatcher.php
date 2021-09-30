@@ -36,19 +36,21 @@ class Studip_Ws_XmlrpcDispatcher extends Studip_Ws_Dispatcher {
   function dispatch($msg = NULL) {
 
     # ensure correct invocation
-    if (is_null($msg) || !is_a($msg, 'xmlrpcmsg'))
+    if (is_null($msg) || !is_a($msg, 'PhpXmlrpc\Request'))
       return $this->throw_exception('functions_parameters_type must not be '.
                                     'phpvals.');
+
+    $encoder = new PhpXmlRpc\Encoder();
 
     # get decoded parameters
     $len = $msg->getNumParams();
     $argument_array = array();
     for ($i = 0; $i < $len; ++$i)
-      $argument_array[] = php_xmlrpc_decode($msg->getParam($i));
+      $argument_array[] = $encoder->decode($msg->getParam($i));
 
     # return result
     return new xmlrpcresp(
-      php_xmlrpc_encode($this->invoke($msg->method(), $argument_array)));
+      $encoder->encode($this->invoke($msg->method(), $argument_array)));
   }
 
 
