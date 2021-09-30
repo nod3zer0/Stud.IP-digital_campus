@@ -252,7 +252,9 @@ class StartNavigation extends Navigation
         $this->addSubNavigation('contents', $navigation);
 
         // oer
-        $this->addSubNavigation('oer', new Navigation(_('OER Campus'), 'dispatch.php/oer/market'));
+        if (Config::get()->OERCAMPUS_ENABLED) {
+            $this->addSubNavigation('oer', new Navigation(_('OER Campus'), 'dispatch.php/oer/market'));
+        }
 
         // messaging
         $navigation = new Navigation(_('Nachrichten'));
