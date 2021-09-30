@@ -2346,9 +2346,9 @@ class Seminar
     public function getSlotModule($slot)
     {
         $module = 'Core' . ucfirst($slot);
-       if ($this->course->isToolActive($module)) {
-           return PluginEngine::getPlugin($module);;
-       }
+        if ($this->course->isToolActive($module)) {
+            return PluginEngine::getPlugin($module);
+        }
     }
 
     /**

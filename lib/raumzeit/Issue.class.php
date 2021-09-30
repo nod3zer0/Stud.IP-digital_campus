@@ -147,12 +147,10 @@ class Issue {
 
         if ($this->hasForum) {
             $sem = Seminar::getInstance($this->seminar_id);
-            $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
-            
-            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-                if (get_class($plugin) == $forum_slot) {
-                    $plugin->setThreadForIssue($this->issue_id, $this->title, $this->description);
-                }
+            $forum_module = $sem->getSlotModule('forum');
+
+            if ($forum_module instanceof ForumModule) {
+                $forum_module->setThreadForIssue($this->issue_id, $this->title, $this->description);
             }
         }
         
@@ -205,12 +203,10 @@ class Issue {
 
         // check, if there is a forums-connection
         $sem = Seminar::getInstance($this->seminar_id);
-        $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
-            
-        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-            if (get_class($plugin) == $forum_slot) {
-                $this->hasForum = $plugin->getLinkToThread($this->issue_id) ? true : false;
-            }
+        $forum_module = $sem->getSlotModule('forum');
+
+        if ($forum_module instanceof ForumModule) {
+            $this->hasForum = $forum_module->getLinkToThread($this->issue_id) ? true : false;
         }
 
         $this->readSingleDates();
@@ -249,16 +245,13 @@ class Issue {
 
             // find the ForumModule which takes the role of the CoreForum in the current Seminar
             $sem = Seminar::getInstance($this->seminar_id);
-            $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
-            
-            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-                if (get_class($plugin) == $forum_slot) {
-                    
-                    // only link if there is none yet
-                    if (!$plugin->getLinkToThread($this->issue_id)) {
-                        $plugin->setThreadForIssue($this->issue_id, $this->title, $this->description);
-                        $this->messages[] = sprintf(_("Ordner im Forum für das Thema \"%s\" angelegt."), $this->toString());
-                    }
+            $forum_module = $sem->getSlotModule('forum');
+
+            if ($forum_module instanceof ForumModule) {
+                // only link if there is none yet
+                if (!$forum_module->getLinkToThread($this->issue_id)) {
+                    $forum_module->setThreadForIssue($this->issue_id, $this->title, $this->description);
+                    $this->messages[] = sprintf(_("Ordner im Forum für das Thema \"%s\" angelegt."), $this->toString());
                 }
             }
         }
