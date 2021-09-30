@@ -12,7 +12,7 @@
  * @category    Stud.IP
  */
 
-require_once 'app/controllers/studip_controller.php';
+require_once 'composer/jasig/phpcas/CAS.php';
 require_once 'lib/classes/cas/CAS_PGTStorage_Cache.php';
 
 class CasController extends StudipController
