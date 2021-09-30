@@ -49,7 +49,7 @@ class Studip_Ws_XmlrpcDispatcher extends Studip_Ws_Dispatcher {
       $argument_array[] = $encoder->decode($msg->getParam($i));
 
     # return result
-    return new xmlrpcresp(
+    return new PhpXmlRpc\Response(
       $encoder->encode($this->invoke($msg->method(), $argument_array)));
   }
 
@@ -63,7 +63,7 @@ class Studip_Ws_XmlrpcDispatcher extends Studip_Ws_Dispatcher {
    */
   function throw_exception($message/*, ...*/) {
     $args = func_get_args();
-    return new xmlrpcresp(0, $GLOBALS['xmlrpcerruser'] + 1,
+    return new PhpXmlRpc\Response(0, $GLOBALS['xmlrpcerruser'] + 1,
                           vsprintf(array_shift($args), $args));
   }
 
