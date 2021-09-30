@@ -57,34 +57,7 @@
 
 <? if ($allow_change): ?>
 <form action="<?= $controller->url_for('settings/userdomains/store') ?>" method="post" class="default">
-    <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
-    <?= CSRFProtection::tokenTag() ?>
-
-    <fieldset>
-        <legend><?= _('Nutzerdomäne hinzufügen') ?></legend>
-</form>
-
-        <a name="userdomains"></a>
-
-        <label>
-            <?= _('Wählen Sie eine Nutzerdomäne aus der folgenden Liste aus:') ?>
-
-            <? if (!empty($domains)) : ?>
-                <select name="new_userdomain" id="new_userdomain">
-                    <option selected value="none"><?= _('-- Bitte Nutzerdomäne auswählen --') ?></option>
-                    <? foreach ($domains as $domain) : ?>
-                        <option value="<?= $domain->getID() ?>"><?= htmlReady(my_substr($domain->name, 0, 50)) ?></option>
-                    <? endforeach ?>
-                </select>
-            <? endif ?>
-        </label>
-    </fieldset>
-
-    <footer>
-        <?= Button::create(_('Übernehmen'), 'store', ['title' => _('Änderungen übernehmen')]) ?>
-    </footer>
-<form action="<?= $controller->url_for('settings/userdomains/store') ?>" method="post" class="default">
-    <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
+    <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
     <fieldset>
