@@ -509,7 +509,7 @@ class Course_StudygroupController extends AuthenticatedController
 
         Request::set('choose_member_parameter', $this->flash['choose_member_parameter']);
 
-        $this->studip_module = checkObjectModule('participants');
+        $this->studip_module = checkObjectModule('StudygroupParticipants');
         object_set_visit_module($this->studip_module->getPluginId());
 
 
