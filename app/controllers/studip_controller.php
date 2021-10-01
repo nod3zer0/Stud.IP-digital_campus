@@ -244,7 +244,7 @@ abstract class StudipController extends Trails_Controller
      * if second parameter is an array it is passed to URLHeper
      *
      * @param  string   a string containing a controller and optionally an action
-     * @param  strings  optional arguments
+     * @param  string[] optional arguments
      *
      * @return string  a URL to this route
      */
@@ -270,7 +270,7 @@ abstract class StudipController extends Trails_Controller
         $to = implode('/', $args);
 
         //preserve fragment
-        list($to, $fragment) = explode('#', $to);
+        [$to, $fragment] = explode('#', $to);
 
         // Try to create route if none given
         if (!$to) {
@@ -289,7 +289,7 @@ abstract class StudipController extends Trails_Controller
 
         $url = preg_match('#^(/|\w+://)#', $to)
              ? $to
-             : call_user_func('parent::url_for', $to);
+             : parent::url_for($to);
         if ($fragment) {
             $url .= '#' . $fragment;
         }
@@ -309,7 +309,20 @@ abstract class StudipController extends Trails_Controller
      */
     public function link_for($to = ''/* , ... */)
     {
-        return htmlReady(call_user_func_array([$this, 'url_for'], func_get_args()));
+        return htmlReady($this->url_for(...func_get_args()));
+    }
+
+    /**
+     * Redirects the user another page. Accepts multiple parameters just like
+     * url_for().
+     *
+     * @param string $to
+     * @see StudipController::url_for()
+     */
+    public function redirect($to)
+    {
+        $to = $this->url_for(...func_get_args());
+        return parent::redirect($to);
     }
 
     /**
@@ -328,7 +341,7 @@ abstract class StudipController extends Trails_Controller
         $from_dialog = Request::isDialog();
 
         if (func_num_args() > 1 || $from_dialog) {
-            $to = call_user_func_array([$this, 'url_for'], func_get_args());
+            $to = $this->url_for(...func_get_args());
         }
 
         if ($from_dialog) {
@@ -520,7 +533,7 @@ abstract class StudipController extends Trails_Controller
     {
         $args = func_get_args();
         $uri = array_shift($args);
-        list($controller_path, $unconsumed) = '' === $uri ? $this->dispatcher->default_route() : $this->dispatcher->parse($uri);
+        [$controller_path, $unconsumed] = '' === $uri ? $this->dispatcher->default_route() : $this->dispatcher->parse($uri);
 
         $controller = $this->dispatcher->load_controller($controller_path);
         $assigns = $this->get_assigned_variables();
@@ -531,7 +544,7 @@ abstract class StudipController extends Trails_Controller
         $controller->layout = null;
         $controller->parent_controller = $this;
         array_unshift($args, $unconsumed);
-        return call_user_func_array([$controller, 'perform_relayed'], $args);
+        return $controller->perform_relayed(...$args);
     }
 
     /**
@@ -547,14 +560,14 @@ abstract class StudipController extends Trails_Controller
         $args = func_get_args();
         $unconsumed = array_shift($args);
 
-        list($action, $extracted_args, $format) = $this->extract_action_and_args($unconsumed);
+        [$action, $extracted_args, $format] = $this->extract_action_and_args($unconsumed);
         $this->format = isset($format) ? $format : 'html';
         $this->current_action = $action;
         $args = array_merge($extracted_args, $args);
         $callable = $this->map_action($action);
 
         if (is_callable($callable)) {
-            call_user_func_array($callable, $args);
+            $callable(...$args);
         } else {
             $this->does_not_understand($action, $args);
         }
@@ -643,14 +656,14 @@ abstract class StudipController extends Trails_Controller
      *    <code>$controller->action_url('baz/' . $param)</code>
      *
      * @param string $action Name of the action
-     * @return url to the requested action
+     * @return string url to the requested action
      */
     public function action_url($action)
     {
         $arguments = func_get_args();
         array_unshift($arguments, $this->controller_path());
 
-        return call_user_func_array([$this, 'url_for'], $arguments);
+        return $this->url_for(...$arguments);
     }
 
     /**
@@ -667,20 +680,20 @@ abstract class StudipController extends Trails_Controller
      *    <code>$controller->action_link('baz/' . $param)</code>
      *
      * @param string $action Name of the action
-     * @return url to the requested action
+     * @return string to the requested action
      */
     public function action_link($action)
     {
         $arguments = func_get_args();
         array_unshift($arguments, $this->controller_path());
 
-        return call_user_func_array([$this, 'link_for'], $arguments);
+        return $this->link_for(...$arguments);
     }
 
     /**
      * Returns the url path to this controller.
      *
-     * @return url path to this controller
+     * @return string url path to this controller
      */
     protected function controller_path()
     {
@@ -714,7 +727,7 @@ abstract class StudipController extends Trails_Controller
     protected function getBodyElementIdForControllerAndAction($unconsumed_path)
     {
         // Extract action from unconsumed path segment
-        list($action) = $this->extract_action_and_args($unconsumed_path);
+        [$action] = $this->extract_action_and_args($unconsumed_path);
 
         // Extract controller name from class name
         $controller = preg_replace('/Controller$/', '', get_class($this));
