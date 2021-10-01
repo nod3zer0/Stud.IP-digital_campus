@@ -759,6 +759,7 @@ export const actions = {
 
         const options = {
             include: 'course',
+            'page[limit]': 10000,
         };
 
         return dispatch('course-memberships/loadRelated', { parent, relationship, options }, { root: true }).then(
@@ -813,6 +814,7 @@ export const actions = {
 
         const options = {
             include: 'course',
+            'page[limit]': 10000,
         };
 
         return dispatch('course-memberships/loadRelated', { parent, relationship, options }, { root: true }).then(
