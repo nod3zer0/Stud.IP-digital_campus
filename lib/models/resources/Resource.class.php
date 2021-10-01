@@ -1465,7 +1465,7 @@ class Resource extends SimpleORMap implements StudipItem
     public function getInfolabelPrperties()
     {
         return SimpleCollection::createFromArray(
-            ResourceProperty::findBySQL('INNER JOIN `resource_property_definitions` USING (`property_id`) 
+            ResourceProperty::findBySQL('INNER JOIN `resource_property_definitions` USING (`property_id`)
                 WHERE `info_label` = 1 AND `state` != "" AND `resource_id` = ?', [$this->id]
             )
         );
@@ -2435,7 +2435,7 @@ class Resource extends SimpleORMap implements StudipItem
                 return false;
             }
         } elseif ($permission === 'autor') {
-            if (GlobalResourceLock::currentlyLocked()) {
+            if ($perm_level != 'admin' && GlobalResourceLock::currentlyLocked()) {
                 //A global resource lock means no writing actions are permitted.
                 return false;
             }
@@ -2445,7 +2445,7 @@ class Resource extends SimpleORMap implements StudipItem
                 return false;
             }
         } elseif ($permission === 'tutor') {
-            if (GlobalResourceLock::currentlyLocked()) {
+            if ($perm_level != 'admin' && GlobalResourceLock::currentlyLocked()) {
                 //A global resource lock means no writing actions are permitted.
                 return false;
             }
