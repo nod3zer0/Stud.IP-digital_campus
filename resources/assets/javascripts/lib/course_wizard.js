@@ -86,7 +86,11 @@ const CourseWizard = {
                 .attr('src', STUDIP.ASSETS_URL + 'images/icons/blue/trash.svg')
                 .attr('name', 'remove_' + elClass + '[' + id + ']')
                 .attr('value', '1')
-                .attr('onclick', "return STUDIP.CourseWizard.removePerson('" + id + "')");
+                .attr('onclick', "return STUDIP.CourseWizard.removePerson('" + id + "')")
+                .css({
+                    width: 16,
+                    height: 16
+                });
             wrapper.append(input);
             var nametext = $('<span>')
                 .html(name)
