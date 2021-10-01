@@ -30,7 +30,7 @@ class AddSeminareSemesterTable extends Migration
             INNER JOIN `semester_data` ON (`seminare`.`start_time` < `semester_data`.`ende`
                      AND (
                          (`seminare`.`start_time` >= `semester_data`.`beginn` AND `seminare`.`duration_time` = '0')
-                         OR (`seminare`.`duration_time` > 0 AND `seminare`.`start_time` + `seminare`.`duration_time` > `semester_data`.`beginn`)
+                         OR (`seminare`.`duration_time` > 0 AND `seminare`.`start_time` + `seminare`.`duration_time` >= `semester_data`.`beginn`)
                      )
                 )"
         );
