@@ -149,8 +149,12 @@ class ConnectedCMS
         // check for SOAP-Interface
         if (in_array($this->CLASS_PREFIX, ['Ilias3','Ilias4','Ilias5']))
         {
-            $check = @get_headers($this->ABSOLUTE_PATH_ELEARNINGMODULES . 'login.php');
-            if (strpos($check[0], '200') === false) {
+            $ch = curl_init($this->ABSOLUTE_PATH_ELEARNINGMODULES . 'login.php');
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_exec($ch);
+
+            if (curl_getinfo($ch, CURLINFO_RESPONSE_CODE) !== 200) {
                 $msg["path"]["error"] = sprintf(_("Die Verbindung zum System \"%s\" konnte nicht hergestellt werden. Der Pfad \"$this->ABSOLUTE_PATH_ELEARNINGMODULES\" ist ungültig."), $this->name);
 
             } else {

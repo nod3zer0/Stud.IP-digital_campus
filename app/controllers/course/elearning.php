@@ -35,8 +35,8 @@ class Course_ElearningController extends AuthenticatedController
         PageLayout::setTitle(Context::getHeaderLine(). " - " . _("Lernmodule"));
 
         checkObject(); // do we have an open object?
-        checkObjectModule('elearning_interface');
-        object_set_visit_module('elearning_interface');
+        $module = checkObjectModule('ElearningInterface');
+        object_set_visit_module($module->getPluginId());
 
         $this->search_key = Request::get('search_key');
         $GLOBALS['search_key'] = $this->search_key;
