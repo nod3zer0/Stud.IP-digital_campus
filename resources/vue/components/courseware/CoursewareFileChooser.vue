@@ -74,7 +74,9 @@ export default {
         },
         filterFiles(loadArray) {
             const filterFile = (file) => {
-                if (this.relatedTermOfUse({parent: file, relationship: 'terms-of-use'}).attributes['download-condition'] !== 0) {
+                let fileTermsOfUse = this.relatedTermOfUse({parent: file, relationship: 'terms-of-use'});
+
+                if (fileTermsOfUse !== null && fileTermsOfUse.attributes['download-condition'] !== 0) {
                     return false;
                 }
                 if (this.selectedFolderId !== '' && this.selectedFolderId !== file.relationships.parent.data.id) {
