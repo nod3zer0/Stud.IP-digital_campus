@@ -1657,7 +1657,7 @@ v i e w  w i d g e t
         @include background-icon(export, clickable);
     }
     .cw-action-widget-oer{
-        @include background-icon(service, clickable);
+        @include background-icon(oer-campus, clickable);
     }
 }
 
@@ -2385,6 +2385,19 @@ m a n a g e r
         &.cw-collapsible-content-open {
             display: block;
         }
+    }
+}
+
+.cw-import-zip {
+    margin-bottom: 1em;
+
+    header {
+        font-size: 1.15;
+        font-weight: 700;
+    }
+    .progress-bar-wrapper {
+        width: 100%;
+        border: solid thin $content-color-40;
     }
 }
 
@@ -3654,6 +3667,7 @@ headline block
 .cw-block-headline {
     .cw-block-headline-content {
         min-height: 600px;
+        overflow: hidden;
         background-position: center;
         background-size: 1095px;
 
@@ -3670,11 +3684,11 @@ headline block
             }
             h1 {
                 font-size: 10em;
-                line-height: 1.6em;
+                line-height: 1.2em;
             }
             h2 {
                 font-size: 2em;
-                line-height: 1.6em;
+                line-height: 1em;
             }
         }
         &.bigicon_top {
@@ -3719,7 +3733,7 @@ headline block
                 width: 100%;
                 .cw-block-headline-title {
                     h1 {
-                        margin-top: 1.5em;
+                        margin-top: 2em;
                         border: none;
                         font-size: 5em;
                         text-align: center;
@@ -3816,6 +3830,141 @@ headline block
                             font-size: 18px;
                             text-align: center;
                             margin-top: 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.cw-container-colspan-half {
+    .cw-block-headline {
+        .cw-block-headline-content {
+            min-height: 300px;
+    
+            &.half {
+                min-height: 150px;
+            }
+            &.heavy {
+                h1 {
+                    font-size: 4.5em;
+                }
+                h2 {
+                    font-size: 1.25em;
+                }
+            }
+            &.bigicon_top {
+                .icon-layer {
+                    background-position: center calc(50% - 4em);
+                    min-height: 300px;
+    
+                    &.half {
+                        min-height: 150px;
+                    }
+
+                    @each $icon in $icons {
+                        &.icon-black-#{$icon} {
+                            @include background-icon($icon, info, 98);
+                        }
+                        &.icon-white-#{$icon} {
+                            @include background-icon($icon, info-alt, 98);
+                        }
+                        &.icon-studip-blue-#{$icon} {
+                            @include background-icon($icon, clickable, 98);
+                        }
+                        &.icon-studip-red-#{$icon} {
+                            @include background-icon($icon, status-red, 98);
+                        }
+                        &.icon-studip-yellow-#{$icon} {
+                            @include background-icon($icon, status-yellow, 98);
+                        }
+                        &.icon-studip-green-#{$icon} {
+                            @include background-icon($icon, status-green, 98);
+                        }
+                    };
+    
+                    &.half {
+                        background-size: 72px;
+                        background-position: center calc(50% - 2em);
+                    }
+                }
+    
+    
+                .cw-block-headline-textbox {
+                    .cw-block-headline-title {
+                        h1 {
+                            margin-top: 2.5em;
+                            font-size: 2em;
+                        }
+                    }
+    
+                    .cw-block-headline-subtitle {
+                        h2 {
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+            &.bigicon_before {
+                .icon-layer {
+                    min-height: 300px;
+
+                    &.half {
+                        min-height: 150px;
+                    }
+                    background-position: 2em center;
+                    @each $icon in $icons {
+                        &.icon-black-#{$icon} {
+                            @include background-icon($icon, info, 92);
+                        }
+                        &.icon-white-#{$icon} {
+                            @include background-icon($icon, info-alt, 92);
+                        }
+                        &.icon-studip-blue-#{$icon} {
+                            @include background-icon($icon, clickable, 92);
+                        }
+                        &.icon-studip-red-#{$icon} {
+                            @include background-icon($icon, status-red, 92);
+                        }
+                        &.icon-studip-yellow-#{$icon} {
+                            @include background-icon($icon, status-yellow, 92);
+                        }
+                        &.icon-studip-green-#{$icon} {
+                            @include background-icon($icon, status-green, 92);
+                        }
+                    };
+                }
+    
+                .cw-block-headline-textbox {
+                    .cw-block-headline-title {
+                        h1 {
+                            font-size: 2.5em;
+                        }
+                    }
+
+                }
+            }
+    
+            &.ribbon {
+                .icon-layer {
+                    min-height: 300px;
+
+                    &.half {
+                        min-height: 150px;
+                    }
+    
+                    .cw-block-headline-textbox {
+                        .cw-block-headline-title {
+                                h1 {
+                                font-size: 2.5em;
+                            }
+                        }
+    
+                        .cw-block-headline-subtitle {
+                            h2 {
+                                font-size: 12px;
+                            }
                         }
                     }
                 }

@@ -43,7 +43,7 @@ export default {
                 return [];
             }
 
-            return this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id }));
+            return this.container.attributes.payload.sections[0].blocks.map((id) => this.blockById({ id })).filter((a) => a);
         },
         showEditMode() {
             return this.$store.getters.viewMode === 'edit';
@@ -51,7 +51,6 @@ export default {
     },
     methods: {
         storeContainer(data) {
-            console.log(data);
         },
         component(block) {
             if (block.attributes["block-type"] !== undefined) {

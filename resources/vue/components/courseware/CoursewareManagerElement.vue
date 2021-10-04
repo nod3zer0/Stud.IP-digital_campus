@@ -247,16 +247,11 @@ export default {
             }
         },
         containers() {
-            if (!this.currentElement) {
+            if (!this.currentElement || !this.currentElement.relationships) {
                 return [];
             }
 
-            const containers = this.$store.getters['courseware-containers/related']({
-                parent: this.currentElement,
-                relationship: 'containers',
-            });
-
-            return containers;
+            return this.currentElement.relationships.containers.data.map(({id}) => this.containerById({ id }));
         },
         children() {
             if (!this.currentElement) {

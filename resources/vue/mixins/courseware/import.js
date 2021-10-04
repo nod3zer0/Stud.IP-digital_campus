@@ -4,7 +4,9 @@ export default {
     data() {
         return {
             importFolder: null,
-            file_mapping: {}
+            file_mapping: {},
+            elementCounter: 0,
+            importElementCounter: 0,
         };
     },
 
@@ -16,30 +18,57 @@ export default {
     },
 
     methods: {
-        animateImport() {},
 
         async importCourseware(element, parent_id, files)
         {
             // import all files
             await this.uploadAllFiles(files);
 
-            this.animateImport();
+            this.elementCounter = await this.countImportElements([element]);
+            this.setImportStructuresState('');
+            this.importElementCounter = 0;
 
             await this.importStructuralElement([element], parent_id, files);
 
+        },
+
+        countImportElements(element) {
+            let counter = 0;
+            if (element.length) {
+                for (var i = 0; i < element.length; i++) {
+                    counter++;
+                    if (element[i].children?.length > 0) {
+                        counter += this.countImportElements(element[i].children);
+                    }
+
+                    if (element[i].containers?.length > 0) {
+                        for (var j = 0; j < element[i].containers.length; j++) {
+                            counter++;
+                            let container = element[i].containers[j];
+                            if (container.blocks?.length) {
+                                for (var k = 0; k < container.blocks.length; k++) {
+                                    counter++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return counter;
         },
 
         async importStructuralElement(element, parent_id, files) {
             if (element.length) {
                 for (var i = 0; i < element.length; i++) {
                     // TODO: create element on server and fetch new id
+                    this.setImportStructuresState('Lege Seite an: ' + element[i].attributes.title);
                     await this.createStructuralElement({
                         attributes: element[i].attributes,
                         parentId: parent_id,
                         currentId: parent_id,
                     });
-
-                    this.animateImport();
+                    this.importElementCounter++;
 
                     let new_element = this.$store.getters['courseware-structural-elements/lastCreated'];
                     if (element[i].children?.length > 0) {
@@ -50,19 +79,24 @@ export default {
                         for (var j = 0; j < element[i].containers.length; j++) {
                             let container = element[i].containers[j];
                             // TODO: create element on server and fetch new id
+                            this.setImportStructuresState('Lege Abschnitt an: ' + container.attributes.title);
                             await this.createContainer({
                                 attributes: container.attributes,
                                 structuralElementId: new_element.id,
                             });
-
-                            this.animateImport();
+                            this.importElementCounter++;
 
                             let new_container = this.$store.getters['courseware-containers/lastCreated'];
+                            await this.unlockObject({ id: new_container.id, type: 'courseware-containers' });
 
                             if (container.blocks?.length) {
+                                let new_block = null;
                                 for (var k = 0; k < container.blocks.length; k++) {
-                                    await this.importBlock(container.blocks[k], new_container, files);
+                                    new_block = await this.importBlock(container.blocks[k], new_container, files);
+                                    this.importElementCounter++;
+                                    await this.updateContainerPayload(new_container, new_element.id, container.blocks[k].id, new_block.id);
                                 }
+
                             }
                         }
                     }
@@ -72,12 +106,11 @@ export default {
 
         async importBlock(block, block_container, files) {
             // TODO: create element
+            this.setImportStructuresState('Lege neuen Block an: ' + block.attributes.title);
             await this.createBlockInContainer({
                 container: {type: block_container.type, id: block_container.id},
                 blockType: block.attributes['block-type'],
             });
-
-            this.animateImport();
 
             let new_block = this.$store.getters['courseware-blocks/lastCreated'];
 
@@ -94,20 +127,41 @@ export default {
                     block.attributes.payload = JSON.parse(payload);
                 }
             }
-
+            this.setImportStructuresState('Aktualisiere neuen Block: ' + block.attributes.title);
             await this.updateBlockInContainer({
                 attributes: block.attributes,
                 blockId: new_block.id,
                 containerId: block_container.id,
             });
 
-            this.animateImport();
+            return new_block;
+        },
+
+        async updateContainerPayload(container, structuralElementId, oldBlockId, newBlockId) {
+
+            container.attributes.payload.sections.forEach((section, index) => {
+                let blockIndex = section.blocks.findIndex(blockID => blockID === oldBlockId);
+                
+                if(blockIndex > -1) {
+                    container.attributes.payload.sections[index].blocks[blockIndex] = newBlockId; 
+                }
+            });
+
+            await this.lockObject({ id: container.id, type: 'courseware-containers' });
+            await this.updateContainer({
+                container: container,
+                structuralElementId: structuralElementId
+            });
+            await this.unlockObject({ id: container.id, type: 'courseware-containers' });
         },
 
 
         async uploadAllFiles(files) {
             // create folder for importing the files into
+            this.setImportFilesProgress(0);
+            this.setImportFilesState('');
             let now = new Date();
+            this.setImportFilesState('Lege Import Ordner an...');
             let main_folder = await this.createRootFolder({
                 context: this.context,
                 folder: {
@@ -118,16 +172,14 @@ export default {
                 }
             });
 
-            this.animateImport();
-
             let folders = {};
 
             // upload all files to the newly created folder
             if (main_folder) {
                 for (var i = 0; i < files.length; i++) {
-
                     // if the subfolder with the referenced id does not exist yet, create it
                     if (!folders[files[i].folder.id]) {
+                        this.setImportFilesState(this.$gettext('Lege Ordner an') + ': ' + files[i].folder.name);
                         folders[files[i].folder.id] = await this.createFolder({
                             context: this.context,
                             parent: {
@@ -137,7 +189,7 @@ export default {
                                 }
                             },
                             folder: {
-                                type: files[i].folder.type,
+                                type: 'StandardFolder',
                                 name: files[i].folder.name
                             }
                         });
@@ -155,8 +207,8 @@ export default {
                             filedata: filedata,
                             folder: folders[files[i].folder.id]
                         });
-
-                        this.animateImport();
+                        this.setImportFilesState(this.$gettext('Erzeuge Datei') + ': ' + files[i].attributes.name);
+                        this.setImportFilesProgress(parseInt(i / files.length * 100));
 
                         //file mapping
                         this.file_mapping[files[i].id] = {
@@ -168,6 +220,8 @@ export default {
             } else {
                 return false;
             }
+            this.setImportFilesProgress(100);
+            this.setImportFilesState('');
 
             return true;
         },
@@ -176,10 +230,26 @@ export default {
             'createBlockInContainer',
             'createContainer',
             'createStructuralElement',
+            'updateContainer',
             'updateBlockInContainer',
             'createFolder',
             'createRootFolder',
-            'createFile'
+            'createFile',
+            'lockObject',
+            'unlockObject',
+            'setImportFilesState',
+            'setImportFilesProgress',
+            'setImportStructuresState',
+            'setImportStructuresProgress',
         ]),
+    },
+    watch: {
+        importElementCounter(counter) {
+            if (this.elementCounter !== 0) {
+                this.setImportStructuresProgress(parseInt(counter / this.elementCounter * 100));
+            } else {
+                this.setImportStructuresProgress(100);
+            }
+        }
     },
 };

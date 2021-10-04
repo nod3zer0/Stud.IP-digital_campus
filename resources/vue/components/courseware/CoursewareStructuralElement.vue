@@ -297,22 +297,29 @@
             :confirmClass="'accept'"
             :closeText="textExport.close"
             :closeClass="'cancel'"
+            height="350"
             @close="showElementExportDialog(false)"
             @confirm="exportCurrentElement"
         >
             <template v-slot:dialogContent>
-                <translate>Hiermit exportieren Sie die Seite "{{ currentElement.attributes.title }}" als ZIP-Datei.</translate>
+                <div v-show="!exportRunning">
+                    <translate>Hiermit exportieren Sie die Seite "{{ currentElement.attributes.title }}" als ZIP-Datei.</translate>
 
-                <div class="cw-element-export">
-                    <label>
-                        <input type="checkbox" v-model="exportChildren">
-                        <translate>Unterseiten exportieren</translate>
-                    </label>
+                    <div class="cw-element-export">
+                        <label>
+                            <input type="checkbox" v-model="exportChildren">
+                            <translate>Unterseiten exportieren</translate>
+                        </label>
+                    </div>
                 </div>
 
-                <translate v-if="exportRunning">
-                    Export läuft...
-                </translate>
+                <courseware-companion-box v-show="exportRunning" :msgCompanion="$gettext('Export läuft, bitte haben sie einen Moment Geduld...')" mood="pointing"/>
+                <div v-show="exportRunning" class="cw-import-zip">
+                    <header>{{exportState}}:</header>
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar" role="progressbar" :style="{width: exportProgress + '%'}" :aria-valuenow="exportProgress" aria-valuemin="0" aria-valuemax="100">{{ exportProgress }}%</div>
+                    </div>
+                </div>
             </template>
 
         </studip-dialog>
@@ -483,8 +490,11 @@ export default {
             showInfoDialog: 'showStructuralElementInfoDialog',
             showDeleteDialog : 'showStructuralElementDeleteDialog',
             showOerDialog : 'showStructuralElementOerDialog',
+            oerEnabled: 'oerEnabled',
             oerTitle: 'oerTitle',
-            licenses: 'licenses'
+            licenses: 'licenses',
+            exportState: 'exportState',
+            exportProgress: 'exportProgress'
         }),
 
         textOer() {
@@ -694,7 +704,10 @@ export default {
                 menu.push({ id: 1, label: this.$gettext('Seite bearbeiten'), icon: 'edit', emit: 'editCurrentElement' });
                 menu.push({ id: 2, label: this.$gettext('Seite hinzufügen'), icon: 'add', emit: 'addElement' });
                 menu.push({ id: 5, label: this.$gettext('Seite exportieren'), icon: 'export', emit: 'showExportOptions' });
-                menu.push({ id: 6, label: this.textOer.title, icon: 'service', emit: 'oerCurrentElement' });
+                
+            }
+            if (this.canEdit && this.oerEnabled) {
+                menu.push({ id: 6, label: this.textOer.title, icon: 'oer-campus', emit: 'oerCurrentElement' });
             }
             if(!this.isRoot && this.canEdit) {
                 menu.push({ id: 7, label: this.$gettext('Seite löschen'), icon: 'trash', emit: 'deleteCurrentElement' });

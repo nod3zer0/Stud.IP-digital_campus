@@ -25,6 +25,7 @@ const mountApp = (STUDIP, createApp, element) => {
     let elem_id = null;
     let entry_id = null;
     let entry_type = null;
+    let oer_enabled = null;
     let oer_title = null;
     let licenses = null;
     let elem;
@@ -41,6 +42,10 @@ const mountApp = (STUDIP, createApp, element) => {
 
             if (elem.attributes['entry-id'] !== undefined) {
                 entry_id = elem.attributes['entry-id'].value;
+            }
+
+            if (elem.attributes['oer-enabled'] !== undefined) {
+                oer_enabled = elem.attributes['oer-enabled'].value;
             }
 
             if (elem.attributes['oer-title'] !== undefined) {
@@ -116,6 +121,7 @@ const mountApp = (STUDIP, createApp, element) => {
 
     store.dispatch('coursewareCurrentElement', elem_id);
 
+    store.dispatch('oerEnabled', oer_enabled);
     store.dispatch('oerTitle', oer_title);
     store.dispatch('licenses', licenses);
 

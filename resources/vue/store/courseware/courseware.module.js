@@ -8,6 +8,7 @@ const getDefaultState = () => {
         context: {},
         courseware: {},
         currentElement: {},
+        oerEnabled: null,
         oerTitle: null,
         licenses: null, // we need a route for License SORM
         httpClient: null,
@@ -31,6 +32,14 @@ const getDefaultState = () => {
         showStructuralElementInfoDialog: false,
         showStructuralElementDeleteDialog: false,
         showStructuralElementOerDialog: false,
+
+        importFilesState: '',
+        importFilesProgress: 0,
+        importStructuresState: '',
+        importStructuresProgress: 0,
+
+        exportState: '',
+        exportProgress: 0,
     };
 };
 
@@ -48,6 +57,9 @@ const getters = {
     },
     currentElement(state) {
         return state.currentElement;
+    },
+    oerEnabled(state) {
+        return state.oerEnabled;
     },
     oerTitle(state) {
         return state.oerTitle;
@@ -129,7 +141,25 @@ const getters = {
     },
     showStructuralElementDeleteDialog(state) {
         return state.showStructuralElementDeleteDialog;
-    }
+    },
+    importFilesState(state) {
+        return state.importFilesState;
+    },
+    importFilesProgress(state) {
+        return state.importFilesProgress;
+    },
+    importStructuresState(state) {
+        return state.importStructuresState;
+    },
+    importStructuresProgress(state) {
+        return state.importStructuresProgress;
+    },
+    exportState(state) {
+        return state.exportState;
+    },
+    exportProgress(state) {
+        return state.exportProgress;
+    },
 };
 
 export const state = { ...initialState };
@@ -205,7 +235,7 @@ export const actions = {
     async createRootFolder({ dispatch, rootGetters }, { context, folder }) {
         // get root folder for this context
         await dispatch(
-            'courses/loadRelated',
+            `${context.type}/loadRelated`,
             {
                 parent: context,
                 relationship: 'folders',
@@ -213,7 +243,7 @@ export const actions = {
             { root: true }
         );
 
-        let folders = await rootGetters['courses/related']({
+        let folders = await rootGetters[`${context.type}/related`]({
             parent: context,
             relationship: 'folders',
         });
@@ -244,7 +274,7 @@ export const actions = {
             },
         };
 
-        return state.httpClient.post(`courses/${context.id}/folders`, newFolder).then((response) => {
+        return state.httpClient.post(`${context.type}/${context.id}/folders`, newFolder).then((response) => {
             return response.data.data;
         });
     },
@@ -263,7 +293,7 @@ export const actions = {
             },
         };
 
-        return state.httpClient.post(`courses/${context.id}/folders`, newFolder).then((response) => {
+        return state.httpClient.post(`${context.type}/${context.id}/folders`, newFolder).then((response) => {
             return response.data.data;
         });
     },
@@ -597,6 +627,10 @@ export const actions = {
         context.commit('coursewareContextSet', id);
     },
 
+    oerEnabled(context, enabled) {
+        context.commit('oerEnabledSet', enabled);
+    },
+
     oerTitle(context, title) {
         context.commit('oerTitleSet', title);
     },
@@ -671,6 +705,26 @@ export const actions = {
 
     showElementDeleteDialog(context, bool) {
         context.commit('setShowStructuralElementDeleteDialog', bool)
+    },
+
+    setImportFilesState({commit}, state ) {
+        commit('setImportFilesState', state)
+    },
+    setImportFilesProgress({commit}, percent ) {
+        commit('setImportFilesProgress', percent)
+    },
+    setImportStructuresState({commit}, state ) {
+        commit('setImportStructuresState', state)
+    },
+    setImportStructuresProgress({commit}, percent ) {
+        commit('setImportStructuresProgress', percent)
+    },
+
+    setExportState({commit}, state) {
+        commit('setExportState', state)
+    },
+    setExportProgress({commit}, percent) {
+        commit('setExportProgress', percent)
     },
 
     addBookmark({ dispatch, rootGetters }, structuralElement) {
@@ -893,6 +947,10 @@ export const mutations = {
         state.context = data;
     },
 
+    oerEnabledSet(state, data) {
+        state.oerEnabled = data;
+    },
+
     oerTitleSet(state, data) {
         state.oerTitle = data;
     },
@@ -979,7 +1037,31 @@ export const mutations = {
 
     setShowStructuralElementDeleteDialog(state, showDelete) {
         state.showStructuralElementDeleteDialog = showDelete;
+    },
+
+    setImportFilesState(state, importFilesState) {
+        state.importFilesState = importFilesState;
+    },
+
+    setImportFilesProgress(state, importFilesProgress) {
+        state.importFilesProgress = importFilesProgress;
+    },
+
+    setImportStructuresState(state, importStructuresState) {
+        state.importStructuresState = importStructuresState;
+    },
+
+    setImportStructuresProgress(state, importStructuresProgress) {
+        state.importStructuresProgress = importStructuresProgress;
+    },
+
+    setExportState(state, exportState) {
+        state.exportState = exportState;
+    },
+    setExportProgress(state, exportProgress) {
+        state.exportProgress = exportProgress;
     }
+
 };
 
 export default {

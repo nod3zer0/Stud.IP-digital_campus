@@ -20,7 +20,6 @@
                     <ul class="cw-container-tabs-block-list">
                         <li v-for="block in section.blocks" :key="block.id" class="cw-block-item">
                             <component
-                                v-if="section.blocks.includes(block.id)"
                                 :is="component(block)"
                                 :block="block"
                                 :canEdit="canEdit"
@@ -111,7 +110,7 @@ export default {
                 return [];
             }
 
-            return this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id }));
+            return this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id })).filter((a) => a);
         },
         showEditMode() {
             return this.$store.getters.viewMode === 'edit';
@@ -135,7 +134,7 @@ export default {
             let view = this;
             let sections = this.currentContainer.attributes.payload.sections;
             sections.forEach(section => {
-                section.blocks = section.blocks.map((id) => view.blockById({id}));
+                section.blocks = section.blocks.map((id) =>  view.blockById({id})).filter((a) => a);
             });
 
             this.currentSections = sections;

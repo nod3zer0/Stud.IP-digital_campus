@@ -127,7 +127,7 @@ export default {
             return this.container.attributes['container-type'];
         },
         hasSections() {
-            return this.containerType() === 'tabs' || this.containerType() === 'accordion';
+            return this.containerType === 'tabs' || this.containerType === 'accordion';
         },
         getBlocksCount() {
             if (this.sectionsWithBlocksCurrentState === null) {
@@ -146,7 +146,7 @@ export default {
          }
     },
     mounted() {
-        this.sectionsWithBlocksCurrentState = this.getSectionsWithBlocks();
+        this.initSections();
     },
     methods: {
         ...mapActions({
@@ -181,35 +181,32 @@ export default {
                             return this.blockById({ id }) ?? [] //remove blocks which could not be loaded
                         }
                     );
-
-                    section.blocks.sort((a, b) => {
-                        return a.attributes.position > b.attributes.position;
-                    });
                 }
             });
 
             return blockSections;
         },
+        initSections() {
+            this.sectionsWithBlocksCurrentState = this.getSectionsWithBlocks();
+        },
         insertBlock(data) {
             this.$emit('insertBlock', data);
+            this.initSections();
         },
         sortBlocks() {
             this.sortBlocksActive = true;
         },
         async storeBlocksSort() {
-            const container = this.container;
+            const container = JSON.parse(JSON.stringify(this.container));
 
             this.sectionsWithBlocksCurrentState.forEach((section, index)=> {
                 if (section.blocks !== undefined) {
                     container.attributes.payload.sections[index].blocks = section.blocks.map(({ id }) => ( id ));
                 }
             });
-
             await this.lockObject({id: container.id, type: 'courseware-containers'});
             await this.updateContainer({ container: container, structuralElementId: this.container.relationships['structural-element'].data.id });
             await this.unlockObject({id: container.id, type: 'courseware-containers'});
-
-            await this.sortBlocksInContainer({ container: this.container, sections: this.sectionsWithBlocksCurrentState });
 
             this.sortBlocksActive = false;
         },
@@ -261,6 +258,16 @@ export default {
                 }
             });
         },
+    },
+    watch: {
+        container: {
+            handler(state, prevState) {
+                if (state.attributes.payload.sections[0].blocks !== prevState.attributes.payload.sections[0].blocks) {
+                    this.initSections();
+                }
+            },
+            deep: true
+        }
     },
 };
 </script>

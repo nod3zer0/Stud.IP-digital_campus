@@ -49,6 +49,8 @@ class Contents_CoursewareController extends AuthenticatedController
      */
     public function courseware_action($action = false, $widgetId = null)
     {
+        global $perm;
+
         Navigation::activateItem('/contents/courseware/courseware');
         $this->user_id = $GLOBALS['user']->id;
 
@@ -85,6 +87,8 @@ class Contents_CoursewareController extends AuthenticatedController
             array_push($this->licenses, $license->toArray());
         }
         $this->licenses = json_encode($this->licenses);
+
+        $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS);
     }
 
     private function setCoursewareSidebar()

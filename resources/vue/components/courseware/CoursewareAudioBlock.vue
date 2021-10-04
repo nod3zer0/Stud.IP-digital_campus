@@ -41,8 +41,8 @@
                         <button class="cw-audio-button cw-audio-stopbutton" @click="stopAudio" />
                     </div>
                 </div>
-                <div v-if="hasPlaylist" class="cw-audio-playlist-wrapper">
-                    <ul class="cw-audio-playlist">
+                <div class="cw-audio-playlist-wrapper">
+                    <ul v-show="hasPlaylist" class="cw-audio-playlist">
                         <li
                             v-for="(file, index) in files"
                             :key="file.id"
@@ -56,6 +56,9 @@
                             {{ file.name }}
                         </li>
                     </ul>
+                    <div v-if="emptyAudio" class="cw-audio-empty">
+                        <p><translate>Es ist keine Audio-Datei verfügbar</translate></p>
+                    </div>
                     <div v-if="showRecorder && canGetMediaDevices" class="cw-audio-playlist-recorder">
                         <button 
                             v-show="!userRecorderEnabled"
@@ -103,9 +106,6 @@
                             <translate>Aufnahme läuft</translate>: {{seconds2time(timer)}}
                         </span>
                     </div>
-                </div>
-                <div v-if="emptyAudio" class="cw-audio-empty">
-                    <p><translate>Es ist keine Audio-Datei verfügbar</translate></p>
                 </div>
             </template>
             <template v-if="canEdit" #edit>
@@ -302,7 +302,7 @@ export default {
             return '';
         },
         emptyAudio() {
-            if (this.currentSource === 'studip_folder' && this.currentFolderId !== '') {
+            if (this.currentSource === 'studip_folder' && this.currentFolderId !== '' && this.files.length > 0) {
                 return false;
             }
             if (this.currentSource === 'studip_file' && this.currentFileId !== '') {

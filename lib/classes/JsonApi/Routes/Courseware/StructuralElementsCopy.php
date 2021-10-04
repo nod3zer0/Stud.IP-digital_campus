@@ -32,7 +32,12 @@ class StructuralElementsCopy extends NonJsonApiController
             throw new AuthorizationFailedException();
         }
 
-        $new_container = $this->copyElement($user, $remote_element, $parent_element);
+        $new_element = $this->copyElement($user, $remote_element, $parent_element);
+
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write((string) json_encode($new_element));
+
+        return $response;
     }
 
     private function copyElement(\User $user, \Courseware\StructuralElement $remote_element, \Courseware\StructuralElement $parent_element)

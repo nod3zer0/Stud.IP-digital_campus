@@ -20,13 +20,22 @@ export default {
                 json: [],
                 download: [],
             },
+            elementCounter: 0,
+            exportElementCounter: 0,
         };
     },
 
     methods: {
         async sendExportZip(root_id = null, options) {
+            let view = this;
             let zip = await this.createExportFile(root_id, options);
-            await zip.generateAsync({ type: 'blob' }).then(function (content) {
+            this.setExportState(this.$gettext('Erstelle Zip-Archiv'));
+            this.setExportProgress(0);
+            await zip.generateAsync({ type: 'blob' }, function updateCallback(metadata) {
+                view.setExportProgress(metadata.percent.toFixed(0));
+            }).then(function (content) {
+                view.setExportState('');
+                view.setExportProgress(0);
                 FileSaver.saveAs(content, 'courseware-export-' + new Date().toISOString().slice(0, 10) + '.zip');
             });
         },
@@ -38,7 +47,8 @@ export default {
                 root_id = this.courseware.relationships.root.data.id;
                 completeExport = true;
             }
-
+            this.setExportState(this.$gettext('Exportiere Elemente'));
+            this.setExportProgress(0);
             let exportData = await this.exportCourseware(root_id, options);
 
             let zip = new JSZip();
@@ -50,6 +60,10 @@ export default {
             }
 
             // add all additional files from blocks
+            let i = 1;
+            let filesCounter = Object.keys(exportData.files.download).length;
+            this.setExportState(this.$gettext('Lade Dateien'));
+            this.setExportProgress(0);
             for (let id in exportData.files.download) {
                 zip.file(
                     id,
@@ -59,6 +73,8 @@ export default {
                             return textString;
                         })
                 );
+                this.setExportProgress(parseInt(i / filesCounter * 100));
+                i++;
             }
 
             return zip;
@@ -78,6 +94,8 @@ export default {
 
             // load whole courseware nonetheless, only export relevant elements
             let elements = await this.$store.getters['courseware-structural-elements/all'];
+            this.exportElementCounter = 0;
+            this.elementCounter = await this.countElements([root_element]);
 
             root_element.containers = [];
             if (root_element.relationships.containers?.data?.length) {
@@ -89,6 +107,7 @@ export default {
                             })
                         )
                     );
+                    this.exportElementCounter++;
                 }
             }
 
@@ -113,6 +132,28 @@ export default {
                 files: this.exportFiles,
                 settings: settings
             };
+        },
+
+        countElements(element) {
+            let counter = 0;
+            if (element.length) {
+                for (var i = 0; i < element.length; i++) {
+                    counter++;
+                    if (element[i].relationships.children?.data?.length > 0) {
+                        let children = [];
+                        element[i].relationships.children?.data.forEach(child => {
+                            children.push(this.structuralElementById({id: child.id}));
+                        });
+                        counter += this.countElements(children);
+                    }
+
+                    if (element[i].relationships.containers?.data?.length > 0) {
+                        counter += element[i].relationships.containers.data.length
+                    }
+                }
+            }
+
+            return counter;
         },
 
         async exportToOER(element, options) {
@@ -155,6 +196,7 @@ export default {
             for (var i = 0; i < data.length; i++) {
                 if (data[i].relationships.parent.data?.id === parentId) {
                     let new_childs = await this.exportStructuralElement(data[i].id, data);
+                    this.exportElementCounter++;
                     let content = { ...data[i] };
                     content.containers = [];
 
@@ -172,6 +214,7 @@ export default {
                                     })
                                 )
                             );
+                            this.exportElementCounter++;
                         }
                     }
 
@@ -255,7 +298,16 @@ export default {
             'loadStructuralElement',
             'loadFileRefs',
             'loadFolder',
-            'companionInfo'
+            'companionInfo',
+            'setExportState',
+            'setExportProgress'
         ]),
+    },
+    watch: {
+        exportElementCounter(counter) {
+            if (this.elementCounter !== 0) {
+                this.setExportProgress(parseInt(counter / this.elementCounter * 100));
+            }
+        }
     },
 };

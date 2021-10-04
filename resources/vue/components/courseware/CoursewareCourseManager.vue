@@ -18,10 +18,13 @@
                 >
                     <translate>Alles exportieren</translate>
                 </button>
-                <br>
-                <translate v-if="exportRunning">
-                    Export läuft, bitte haben sie einen Moment Geduld...
-                </translate>
+                <courseware-companion-box v-show="exportRunning" :msgCompanion="$gettext('Export läuft, bitte haben sie einen Moment Geduld...')" mood="pointing"/>
+                <div v-if="exportRunning" class="cw-import-zip">
+                    <header>{{exportState}}:</header>
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar" role="progressbar" :style="{width: exportProgress + '%'}" :aria-valuenow="exportProgress" aria-valuemin="0" aria-valuemax="100">{{ exportProgress }}%</div>
+                    </div>
+                </div>
             </courseware-tab>
         </courseware-tabs>
 
@@ -88,34 +91,41 @@
             </courseware-tab>
 
             <courseware-tab :name="$gettext('Importieren')">
+                <courseware-companion-box v-show="!importRunning && importDone" :msgCompanion="$gettext('Import erfolgreich!')" mood="special"/>
+                <courseware-companion-box v-show="importRunning" :msgCompanion="$gettext('Import läuft. Bitte verlassen Sie die Seite nicht bis der Import abgeschlossen wurde.')" mood="pointing"/>
                 <button
+                    v-show="!importRunning"
                     class="button"
                     @click.prevent="chooseFile"
-                    :class="{
-                        disabled: importRunning,
-                    }"
                 >
-                    Importdatei auswählen
+                    <translate>Importdatei auswählen</translate>
                 </button>
 
-                <div v-if="importZip">
-                    <b>{{ importZip.name }}</b
-                    ><br />
-                    <translate>Größe</translate>: <span>{{ getFileSizeText(importZip.size) }}</span>
+                <div v-if="importZip" class="cw-import-zip">
+                    <header>{{ importZip.name }}</header>
+                    <p><translate>Größe</translate>: {{ getFileSizeText(importZip.size) }}</p>
                 </div>
 
-                <br v-else />
+                <div v-if="importRunning" class="cw-import-zip">
+                    <header><translate>Importiere Dateien</translate>:</header>
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar" role="progressbar" :style="{width: importFilesProgress + '%'}" :aria-valuenow="importFilesProgress" aria-valuemin="0" aria-valuemax="100">{{ importFilesProgress }}%</div>
+                    </div>
+                    {{ importFilesState }}
+                </div>
 
-                <div v-if="importState">
-                    {{ importState }}
+                <div v-if="fileImportDone && importRunning" class="cw-import-zip">
+                    <header><translate>Importiere Elemente</translate>:</header>
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar" role="progressbar" :style="{width: importStructuresProgress + '%'}" :aria-valuenow="importStructuresProgress" aria-valuemin="0" aria-valuemax="100">{{ importStructuresProgress }}%</div>
+                    </div>
+                    {{ importStructuresState }}
                 </div>
 
                 <button
+                    v-show="importZip && !importRunning"
                     class="button"
                     @click.prevent="doImportCourseware"
-                    :class="{
-                        disabled: importRunning || !importZip,
-                    }"
                 >
                     <translate>Alles importieren</translate>
                 </button>
@@ -131,6 +141,7 @@ import CoursewareTab from './CoursewareTab.vue';
 import CoursewareCollapsibleBox from './CoursewareCollapsibleBox.vue';
 import CoursewareManagerElement from './CoursewareManagerElement.vue';
 import CoursewareManagerCopySelector from './CoursewareManagerCopySelector.vue';
+import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareImport from '@/vue/mixins/courseware/import.js';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import { mapActions, mapGetters } from 'vuex';
@@ -146,6 +157,7 @@ export default {
         CoursewareCollapsibleBox,
         CoursewareManagerElement,
         CoursewareManagerCopySelector,
+        CoursewareCompanionBox,
     },
 
     mixins: [CoursewareImport, CoursewareExport],
@@ -155,8 +167,6 @@ export default {
             exportRunning: false,
             importRunning: false,
             importZip: null,
-            importState: '',
-            importPos: 0,
             currentElement: {},
             currentId: null,
             selfElement: {},
@@ -169,6 +179,12 @@ export default {
         ...mapGetters({
             courseware: 'courseware',
             structuralElementById: 'courseware-structural-elements/byId',
+            importFilesState: 'importFilesState',
+            importFilesProgress: 'importFilesProgress',
+            importStructuresState: 'importStructuresState',
+            importStructuresProgress: 'importStructuresProgress',
+            exportState: 'exportState',
+            exportProgress: 'exportProgress'
         }),
         moveSelfPossible() {
             if (this.selfElement.relationships === undefined) {
@@ -186,6 +202,12 @@ export default {
         moveSelfChildPossible() {
             return this.currentId !== this.selfId;
         },
+        fileImportDone() {
+            return this.importFilesProgress === 100;
+        },
+        importDone() {
+            return this.importFilesProgress === 100 && this.importStructuresProgress === 100;
+        }
     },
 
     methods: {
@@ -199,6 +221,8 @@ export default {
             unlockObject: 'unlockObject',
             addBookmark: 'addBookmark',
             companionInfo: 'companionInfo',
+            setImportFilesProgress: 'setImportFilesProgress',
+            setImportStructuresProgress: 'setImportStructuresProgress',
         }),
         async reloadElements() {
             await this.setCurrentId(this.currentId);
@@ -220,16 +244,6 @@ export default {
         initSelf() {
             this.selfElement = this.structuralElementById({ id: this.selfId });
         },
-        animateImport() {
-            // get number of dots
-            this.importPos++;
-
-            if (this.importPos > 3) {
-                this.importPos = 0;
-            }
-
-            this.importState = this.$gettext('Import läuft') + '.'.repeat(this.importPos);
-        },
 
         async doExportCourseware() {
             if (this.exportRunning) {
@@ -239,12 +253,15 @@ export default {
             this.exportRunning = true;
 
             await this.loadCoursewareStructure();
-            await this.sendExportZip();
+            await this.sendExportZip(
+                this.courseware.relationships.root.data.id,
+                {withChildren: true}
+            );
 
             this.exportRunning = false;
         },
 
-        setImport() {
+        setImport(event) {
             this.importZip = event.target.files[0];
         },
 
@@ -254,7 +271,6 @@ export default {
             }
 
             this.importRunning = true;
-            this.animateImport();
 
             let view = this;
 
@@ -273,13 +289,14 @@ export default {
                 await view.importCourseware(courseware, parent_id, files);
             });
 
-            this.importState = this.$gettext('Import erfolgreich!');
             this.importZip = null;
             this.importRunning = false;
         },
 
         chooseFile() {
             this.$refs.importFile.click();
+            this.setImportFilesProgress(0);
+            this.setImportStructuresProgress(0);
         },
         getFileSizeText(size) {
             if (size / 1024 < 1000) {

@@ -35,6 +35,11 @@ class ContainersCopy extends NonJsonApiController
         }
 
         $new_container = $this->copyContainer($user, $container, $element);
+
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write((string) json_encode($new_container));
+
+        return $response;
     }
 
     private function copyContainer(\User $user, \Courseware\Container $remote_container, \Courseware\StructuralElement $element)

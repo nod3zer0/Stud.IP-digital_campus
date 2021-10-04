@@ -9,16 +9,15 @@
     >
         <template v-slot:containerContent>
             <courseware-collapsible-box
-                v-for="(section, index) in container.attributes.payload.sections"
+                v-for="(section, index) in currentSections"
                 :key="index"
                 :title="section.name"
                 :icon="section.icon"
                 :open="index === 0"
             >
                 <ul class="cw-container-accordion-block-list">
-                    <li v-for="block in blocks" :key="block.id" class="cw-block-item">
+                    <li v-for="block in section.blocks" :key="block.id" class="cw-block-item">
                         <component
-                            v-if="section.blocks.includes(block.id)"
                             :is="component(block)"
                             :block="block"
                             :canEdit="canEdit"
@@ -92,6 +91,7 @@ export default {
     data() {
         return {
             currentContainer: {},
+            currentSections: [],
         };
     },
     computed: {
@@ -103,7 +103,7 @@ export default {
                 return [];
             }
 
-            return this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id }));
+            return this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id })).filter((a) => a);
         },
         showEditMode() {
             return this.$store.getters.viewMode === 'edit';
@@ -123,6 +123,14 @@ export default {
         initCurrentData() {
             // clone container to make edit reversible
             this.currentContainer = JSON.parse(JSON.stringify(this.container));
+
+            let view = this;
+            let sections = this.currentContainer.attributes.payload.sections;
+            sections.forEach(section => {
+                section.blocks = section.blocks.map((id) =>  view.blockById({id})).filter((a) => a);
+            });
+
+            this.currentSections = sections;
         },
         addSection() {
             this.currentContainer.attributes.payload.sections.push({ name: '', icon: '', blocks: [] });
