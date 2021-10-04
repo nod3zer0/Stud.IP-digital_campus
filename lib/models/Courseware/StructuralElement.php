@@ -238,6 +238,10 @@ class StructuralElement extends \SimpleORMap
             return true;
         }
 
+        if (!$this->releasedForReaders($this)) {
+            return false;
+        }
+
         if (!count($this->read_approval)) {
             return $this->canReadSequential($user);
         }
@@ -280,6 +284,30 @@ class StructuralElement extends \SimpleORMap
         }
 
         return $this->previousProgressAchieved($user);
+    }
+
+    /**
+     * @return bool true if the user may read this instance in time interval
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    private function releasedForReaders(StructuralElement $element): bool
+    {
+        $released = false;
+        if (!$element->release_date || $element->release_date <= time()) {
+            $released = true;
+        }
+
+        if ($element->withdraw_date && $element->withdraw_date <= time()) {
+            $released = false;
+        }
+
+        $parent_released = true;
+        if (!$element->isRootNode()) {
+            $parent_released = $this->releasedForReaders($element->parent);
+        }
+
+        return $released && $parent_released;
     }
 
     /**

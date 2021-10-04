@@ -119,6 +119,9 @@ class StructuralElementsUpdate extends JsonApiController
                 }
             }
 
+            $resource->release_date = $json['data']['attributes']['release-date'];
+            $resource->withdraw_date = $json['data']['attributes']['withdraw-date'];
+
             // update parent
             if (self::arrayHas($json, 'data.relationships.parent')) {
                 $parent = $this->getParentFromJson($json);

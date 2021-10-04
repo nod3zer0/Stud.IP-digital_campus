@@ -50,14 +50,16 @@ export default {
             for (var i = 0; i < data.length; i++) {
                 if (data[i].relationships.parent.data?.id == parentId) {
                     let new_childs = this.loadChildren(data[i].id, data, depth + 1);
-                    children.push({
-                        name: data[i].attributes.title,
-                        position: data[i].attributes.position,
-                        element_id: data[i].id,
-                        children: new_childs,
-                        depth: depth,
-                        current: this.currentElementId === data[i].id
-                    });
+                    if (data[i].attributes['can-read']) {
+                        children.push({
+                            name: data[i].attributes.title,
+                            position: data[i].attributes.position,
+                            element_id: data[i].id,
+                            children: new_childs,
+                            depth: depth,
+                            current: this.currentElementId === data[i].id
+                        });
+                    }
                 }
             }
 
