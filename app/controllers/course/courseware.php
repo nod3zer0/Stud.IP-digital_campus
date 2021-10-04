@@ -2,6 +2,7 @@
 
 use Courseware\StructuralElement;
 use Courseware\Instance;
+use Courseware\UserProgress;
 
 /**
  * @property ?string $entry_element_id
@@ -42,7 +43,7 @@ class Course_CoursewareController extends AuthenticatedController
             ]);
         }
 
-        // load courseware for seminar
+        // load courseware for course
         if (!$this->entry_element_id || !$struct || !$struct->canRead($GLOBALS['user'])) {
             $course = Course::find(Context::getId());
 
@@ -110,8 +111,19 @@ class Course_CoursewareController extends AuthenticatedController
         $data = [];
 
         $cid = Context::getId();
+        $course = Course::find($cid);
+        $course_members = $course->getMembersWithStatus('autor');
+        $course_member_ids = array_column($course_members, 'user_id');
 
         $elements = StructuralElement::findBySQL('range_id = ?', [$cid]);
+
+        if ($course_progress) {
+            $cw_user_progresses = UserProgress::findBySQL('user_id IN (?)', [$course_member_ids]);
+        } else {
+            $cw_user_progresses = UserProgress::findBySQL('user_id = ?', [
+                $GLOBALS['user']->id,
+            ]);
+        }
 
         foreach ($elements as $element) {
             $el = [
@@ -121,7 +133,7 @@ class Course_CoursewareController extends AuthenticatedController
                 'parent_name' => $element->parent->title,
                 'children' => $this->getChildren($element->children),
             ];
-            $el['progress'] = $this->getProgress($element, $course_progress);
+            $el['progress'] = $this->getProgress($course, $element, $course_progress, $cw_user_progresses, $course_member_ids);
 
             array_push($data, $el);
         }
@@ -156,16 +168,15 @@ class Course_CoursewareController extends AuthenticatedController
         return $data;
     }
 
-    private function getProgress(StructuralElement $element, bool $course_progress = false): array
+    private function getProgress(Course $course, StructuralElement $element, bool $course_progress = false, array $cw_user_progresses, array $course_member_ids): array
     {
         $descendants = $element->findDescendants();
         $count = count($descendants);
         $progress = 0;
         $own_progress = 0;
-        $course = Seminar::GetInstance(Context::getId());
 
         foreach ($descendants as $el) {
-            $block = $this->getBlocks($el->id, $course_progress, $course);
+            $block = $this->getBlocks($el->id, $course_progress, $cw_user_progresses, $course, $course_member_ids);
             if ($block['counter'] > 0) {
                 $progress += $block['progress'] / $block['counter'];
             } else {
@@ -173,7 +184,7 @@ class Course_CoursewareController extends AuthenticatedController
             }
         }
 
-        $own_blocks = $this->getBlocks($element->id, $course_progress, $course);
+        $own_blocks = $this->getBlocks($element->id, $course_progress, $cw_user_progresses, $course, $course_member_ids);
 
         if ($own_blocks['counter'] > 0) {
             $own_progress = $own_blocks['progress'] / $own_blocks['counter'];
@@ -191,7 +202,7 @@ class Course_CoursewareController extends AuthenticatedController
         return ['total' => round($progress, 2) * 100, 'current' => round($own_progress, 2) * 100];
     }
 
-    private function getBlocks(string $element_id, bool $course_progress = false, $course): array
+    private function getBlocks(string $element_id, bool $course_progress = false, array $cw_user_progresses, Course $course, array $course_member_ids): array
     {
         $containers = Courseware\Container::findBySQL('structural_element_id = ?', [intval($element_id)]);
         $blocks = [];
@@ -201,16 +212,22 @@ class Course_CoursewareController extends AuthenticatedController
 
         foreach ($containers as $container) {
             $counter = $container->countBlocks();
+
             $blocks['counter'] += $counter;
             if ($counter > 0) {
                 $blks = Courseware\Block::findBySQL('container_id = ?', [$container->id]);
                 foreach ($blks as $item) {
                     if ($course_progress) {
                         if ($users_counter > 0) {
-                            $progresses = Courseware\UserProgress::findBySQL('block_id = ?', [$item->id]);
+                            $progresses = array_filter($cw_user_progresses, function($progress) use ($item) {
+                                if ($progress->block_id === $item->id) {
+                                    return true;
+                                }
+                            });
+
                             $users_progress = 0;
                             foreach ($progresses as $prog) {
-                                if (array_key_exists($prog->user_id, $course->getMembersWithStatus('autor'))) {
+                                if (in_array($prog->user_id, $course_member_ids)) {
                                     $users_progress += $prog->grade;
                                 }
                             }
@@ -218,11 +235,16 @@ class Course_CoursewareController extends AuthenticatedController
                             $blocks['progress'] += $users_progress / $users_counter;
                         }
                     } else {
-                        $progress = Courseware\UserProgress::findOneBySQL('user_id = ? and block_id = ?', [
-                            $GLOBALS['user']->id,
-                            $item->id,
-                        ]);
-                        $blocks['progress'] += $progress->grade;
+                        $uid = $GLOBALS['user']->id;
+                        $progresses = array_filter($cw_user_progresses, function($progress) use ($item, $uid) {
+                            if ($progress->block_id === $item->id && $progress->user_id === $uid) {
+                                return true;
+                            }
+                        });
+                        $progress = reset($progresses);
+                        if ($progress !== null) {
+                            $blocks['progress'] += intval($progress->grade);
+                        }
                     }
                 }
             }
