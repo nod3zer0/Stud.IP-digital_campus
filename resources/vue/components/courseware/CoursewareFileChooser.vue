@@ -122,7 +122,7 @@ export default {
         async getCourseFiles() {
             const parent = { type: 'courses', id: `${this.context.id}` };
             const relationship = 'file-refs';
-            const options = { include: 'terms-of-use' };
+            const options = { include: 'terms-of-use', 'page[limit]': 10000 };
             await this.loadRelatedFileRefs({ parent, relationship, options });
 
             this.loadedCourseFiles = this.relatedFileRefs({ parent, relationship });
@@ -131,7 +131,7 @@ export default {
         async getUserFiles() {
             const parent = { type: 'users', id: `${this.userId}` };
             const relationship = 'file-refs';
-            const options = { include: 'terms-of-use' };
+            const options = { include: 'terms-of-use', 'page[limit]': 10000 };
             await this.loadRelatedFileRefs({ parent, relationship, options });
 
             this.loadedUserFiles = this.relatedFileRefs({ parent, relationship });
