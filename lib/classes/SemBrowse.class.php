@@ -1353,7 +1353,7 @@ class SemBrowse {
      */
     public static function setSemesterSelector($submit_url)
     {
-        $semesters = Semester::findAllVisible(false);
+        $semesters = Semester::findAllVisible();
         $sidebar = Sidebar::Get();
         $list = new SelectWidget(_('Semester'),
                 $submit_url, 'search_sem_sem');
