@@ -1,0 +1,45 @@
+div.avatar-widget {
+    .profile-avatar {
+        display: block;
+        margin: 5px;
+        padding: 0;
+        color: $white;
+
+        width: $avatar-normal;
+        height: $avatar-normal;
+
+        position: relative;
+
+        .avatar-overlay {
+            position: absolute;
+            left: 0;
+            top: 0;
+            transition: opacity .5s ease-in-out;
+            background-color: fade-out($base-color, 0.333);
+            opacity: 0;
+            width: $avatar-normal;
+            height: $avatar-normal;
+            text-align: center;
+
+            .text {
+                position: absolute;
+                bottom: 1em;
+                width: $avatar-normal;
+            }
+        }
+
+        &:hover, &:focus {
+            .avatar-overlay {
+                opacity: 1;
+            }
+        }
+
+        &.dragging .avatar-overlay {
+            left: -2px;
+            top: -2px;
+            background-color: fade-out($base-color-40, 0.333);
+            border: 2px dashed $base-color;
+            opacity: 1;
+        }
+    }
+}

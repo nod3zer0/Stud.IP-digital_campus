@@ -30,6 +30,12 @@ $headings-color:          #444444;
 $bar-bottom-container-height: 40px;
 $header-height: 80px;
 
+//Avatar sizes:
+$avatar-small:  25px;
+$avatar-medium: 100px;
+$avatar-normal: 250px;
+
+
 :root {
     // The special handling for -- as #{"--"} seems to be neccessary to make
     // scss evaluate the color variables

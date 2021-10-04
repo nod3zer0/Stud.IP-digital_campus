@@ -3,15 +3,15 @@
 /* --- Avatars of users, courses and institutes ----------------------------- */
 .avatar-small {
     vertical-align: middle;
-    .size(25px, 25px);
+    .size(@avatar-small, @avatar-small);
 }
 .avatar-medium {
-    max-width: 100px;
-    height: 100px;
+    max-width: @avatar-medium;
+    height: @avatar-medium;
 }
 .avatar-normal {
-    max-width: 250px;
-    height: 250px;
+    max-width: @avatar-normal;
+    height: @avatar-normal;
 }
 
 .course-avatar-small {
@@ -37,56 +37,6 @@
     width: 60px;
 }
 
-div.avatar-widget {
-    position: relative;
-
-    .profile-avatar {
-        vertical-align: middle;
-        margin: 5px 0px;
-        position: relative;
-    }
-
-    div.avatar-overlay {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-
-        margin: 0;
-        padding: 0;
-
-        transition: opacity .5s ease-in-out;
-        background-color: fadeout(@base-color, 33.3%);
-        opacity: 0;
-
-        &:hover {
-            opacity: 1;
-        }
-
-        &.dragging {
-            left: -2px;
-            top: -2px;
-            background-color: fadeout(@base-color-40, 33.3%);
-            border: 2px dashed @base-color;
-            opacity: 1;
-        }
-
-        a {
-            color: @white;
-            display: block;
-            height: 100%;
-            width: 100%;
-
-            span {
-                position: absolute;
-                bottom: 1em;
-                left: 0;
-                width: 100%;
-            }
-        }
-    }
-}
 
 #custom_avatar label {
     display: block;
