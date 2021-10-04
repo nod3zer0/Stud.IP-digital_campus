@@ -104,8 +104,12 @@ class Block extends \SimpleORMap
         $config['additional_fields']['files'] = [
             'get' => function ($block) {
                 return array_filter($block->type->getFiles(), function ($file_ref) {
-                    $file = $file_ref->getFileType();
-                    return $file->isDownloadable();
+                    if ($file_ref) {
+                        $file = $file_ref->getFileType();
+                        return $file->isDownloadable();
+                    } else {
+                        return false;
+                    }
                 });
             },
         ];
