@@ -35,16 +35,9 @@ class ConsultationBooking extends SchemaProvider
      */
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
-
         $relationships = [];
-        $relationships = $this->getSlotRelationship($relationships, $resource, $shouldInclude(self::REL_SLOT));
-        $relationships = $this->getUserRelationship($relationships, $resource, $shouldInclude(self::REL_USER));
+        $relationships = $this->getSlotRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_SLOT));
+        $relationships = $this->getUserRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_USER));
 
         return $relationships;
     }

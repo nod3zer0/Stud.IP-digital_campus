@@ -30,19 +30,12 @@ class StudyArea extends SchemaProvider
 
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
         $relationships = [];
 
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
-
-        $relationships = $this->addChildrenRelationship($relationships, $resource, $shouldInclude(self::REL_CHILDREN));
-        $relationships = $this->addCoursesRelationship($relationships, $resource, $shouldInclude(self::REL_COURSES));
-        $relationships = $this->addInstituteRelationship($relationships, $resource, $shouldInclude(self::REL_INSTITUTE));
-        $relationships = $this->addParentRelationship($relationships, $resource, $shouldInclude(self::REL_PARENT));
+        $relationships = $this->addChildrenRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_CHILDREN));
+        $relationships = $this->addCoursesRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_COURSES));
+        $relationships = $this->addInstituteRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_INSTITUTE));
+        $relationships = $this->addParentRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_PARENT));
 
         return $relationships;
     }

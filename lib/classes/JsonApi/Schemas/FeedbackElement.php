@@ -66,19 +66,12 @@ class FeedbackElement extends SchemaProvider
      */
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
-
         $relationships = [];
 
-        $relationships = $this->getAuthorRelationship($relationships, $resource, $shouldInclude(self::REL_AUTHOR));
-        $relationships = $this->getCourseRelationship($relationships, $resource, $shouldInclude(self::REL_COURSE));
-        $relationships = $this->getEntriesRelationship($relationships, $resource, $shouldInclude(self::REL_ENTRIES));
-        $relationships = $this->getRangeRelationship($relationships, $resource, $shouldInclude(self::REL_RANGE));
+        $relationships = $this->getAuthorRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_AUTHOR));
+        $relationships = $this->getCourseRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_COURSE));
+        $relationships = $this->getEntriesRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_ENTRIES));
+        $relationships = $this->getRangeRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_RANGE));
 
         return $relationships;
     }

@@ -33,20 +33,12 @@ class SemClass extends SchemaProvider
 
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
         $relationships = [];
 
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
-
-        // SemTypes
         $relationships = $this->addSemTypesRelationship(
             $relationships,
             $resource,
-            $shouldInclude(self::REL_SEM_TYPES)
+            $this->shouldInclude($context, self::REL_SEM_TYPES)
         );
 
         return $relationships;

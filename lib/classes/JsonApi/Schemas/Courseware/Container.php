@@ -47,16 +47,8 @@ class Container extends SchemaProvider
      */
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
         $relationships = [];
-
-        $shouldInclude = function ($key) use ($includeList) {
-            return in_array($key, $includeList);
-        };
-
-        $relationships = $this->addBlocksRelationship($relationships, $resource, $shouldInclude(self::REL_BLOCKS));
+        $relationships = $this->addBlocksRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_BLOCKS));
 
         $relationships[self::REL_OWNER] = $resource['owner_id']
             ? [

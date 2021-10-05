@@ -38,14 +38,7 @@ class Institute extends SchemaProvider
      */
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
         $relationships = [];
-
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
 
         $filesLink = $this->getRelationshipRelatedLink($resource, self::REL_FILES);
         $relationships[self::REL_FILES] = [
@@ -70,7 +63,7 @@ class Institute extends SchemaProvider
         $relationships = $this->addStatusGroupsRelationship(
             $relationships,
             $resource,
-            $shouldInclude(self::REL_STATUS_GROUPS)
+            $this->shouldInclude($context, self::REL_STATUS_GROUPS)
         );
 
         return $relationships;

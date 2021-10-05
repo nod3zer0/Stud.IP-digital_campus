@@ -32,18 +32,11 @@ class Message extends SchemaProvider
 
     public function getRelationships($message, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
-
         $relationships = [];
 
         if ($isPrimary) {
-            $relationships = $this->getSenderRelationship($relationships, $message, $shouldInclude(self::REL_SENDER));
-            $relationships = $this->getRecipientsRelationship($relationships, $message, $shouldInclude(self::REL_RECIPIENTS));
+            $relationships = $this->getSenderRelationship($relationships, $message, $this->shouldInclude($context, self::REL_SENDER));
+            $relationships = $this->getRecipientsRelationship($relationships, $message, $this->shouldInclude($context, self::REL_RECIPIENTS));
         }
 
         return $relationships;

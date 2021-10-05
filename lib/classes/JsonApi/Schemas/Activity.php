@@ -60,18 +60,11 @@ class Activity extends SchemaProvider
      */
     public function getRelationships($activity, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
-
         $relationships = [];
 
-        $relationships = $this->getActorRelationship($relationships, $activity, $shouldInclude('actor'));
-        $relationships = $this->getObjectRelationship($relationships, $activity, $shouldInclude('object'));
-        $relationships = $this->getContextRelationship($relationships, $activity, $shouldInclude('context'));
+        $relationships = $this->getActorRelationship($relationships, $activity, $this->shouldInclude($context, 'actor'));
+        $relationships = $this->getObjectRelationship($relationships, $activity, $this->shouldInclude($context, 'object'));
+        $relationships = $this->getContextRelationship($relationships, $activity, $this->shouldInclude($context, 'context'));
 
         return $relationships;
     }

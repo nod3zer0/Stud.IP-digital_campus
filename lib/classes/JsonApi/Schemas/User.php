@@ -120,56 +120,51 @@ class User extends SchemaProvider
     public function getRelationships($user, ContextInterface $context): iterable
     {
         $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
 
         $relationships = [];
         if ($isPrimary) {
             $relationships = $this->getActivityStreamRelationship(
                 $relationships,
                 $user,
-                $shouldInclude(self::REL_ACTIVITYSTREAM)
+                $this->shouldInclude($context, self::REL_ACTIVITYSTREAM)
             );
             $relationships = $this->getBlubberRelationship(
                 $relationships,
                 $user,
-                $shouldInclude(self::REL_BLUBBER)
+                $this->shouldInclude($context, self::REL_BLUBBER)
             );
             $relationships = $this->getConfigValuesRelationship(
                 $relationships,
                 $user,
-                $shouldInclude(self::REL_CONFIG_VALUES)
+                $this->shouldInclude($context, self::REL_CONFIG_VALUES)
             );
             $relationships = $this->getContactsRelationship(
                 $relationships,
                 $user,
-                $shouldInclude(self::REL_CONTACTS)
+                $this->shouldInclude($context, self::REL_CONTACTS)
             );
             $relationships = $this->getCoursesRelationship(
                 $relationships,
                 $user,
-                $shouldInclude(self::REL_COURSES)
+                $this->shouldInclude($context, self::REL_COURSES)
             );
             $relationships = $this->getCourseMembershipsRelationship(
                 $relationships,
                 $user,
-                $shouldInclude(self::REL_COURSE_MEMBERSHIPS)
+                $this->shouldInclude($context, self::REL_COURSE_MEMBERSHIPS)
             );
-            $relationships = $this->getEventsRelationship($relationships, $user, $shouldInclude(self::REL_EVENTS));
-            $relationships = $this->getFileRefsRelationship($relationships, $user, $shouldInclude(self::REL_FILES));
-            $relationships = $this->getFoldersRelationship($relationships, $user, $shouldInclude(self::REL_FOLDERS));
-            $relationships = $this->getInboxRelationship($relationships, $user, $shouldInclude(self::REL_INBOX));
+            $relationships = $this->getEventsRelationship($relationships, $user, $this->shouldInclude($context, self::REL_EVENTS));
+            $relationships = $this->getFileRefsRelationship($relationships, $user, $this->shouldInclude($context, self::REL_FILES));
+            $relationships = $this->getFoldersRelationship($relationships, $user, $this->shouldInclude($context, self::REL_FOLDERS));
+            $relationships = $this->getInboxRelationship($relationships, $user, $this->shouldInclude($context, self::REL_INBOX));
             $relationships = $this->getInstituteMembershipsRelationship(
                 $relationships,
                 $user,
-                $shouldInclude(self::REL_INSTITUTE_MEMBERSHIPS)
+                $this->shouldInclude($context, self::REL_INSTITUTE_MEMBERSHIPS)
             );
-            $relationships = $this->getNewsRelationship($relationships, $user, $shouldInclude(self::REL_NEWS));
-            $relationships = $this->getOutboxRelationship($relationships, $user, $shouldInclude(self::REL_OUTBOX));
-            $relationships = $this->getScheduleRelationship($relationships, $user, $shouldInclude(self::REL_SCHEDULE));
+            $relationships = $this->getNewsRelationship($relationships, $user, $this->shouldInclude($context, self::REL_NEWS));
+            $relationships = $this->getOutboxRelationship($relationships, $user, $this->shouldInclude($context, self::REL_OUTBOX));
+            $relationships = $this->getScheduleRelationship($relationships, $user, $this->shouldInclude($context, self::REL_SCHEDULE));
         }
 
         return $relationships;

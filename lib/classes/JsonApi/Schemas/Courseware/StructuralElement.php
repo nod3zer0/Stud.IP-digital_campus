@@ -60,20 +60,12 @@ class StructuralElement extends SchemaProvider
     /**
      * {@inheritdoc}
      *
-     * @param \Courseware\Models\StructuralElement $resource
-     * @param bool                                 $isPrimary
-     * @param array                                $includeList
+     * @param StructuralElement $resource
+     * @param ContextInterface $context
      */
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
         $relationships = [];
-
-        $shouldInclude = function ($key) use ($includeList) {
-            return in_array($key, $includeList);
-        };
 
         $relationships[self::REL_CHILDREN] = [
             self::RELATIONSHIP_LINKS => [
@@ -148,15 +140,20 @@ class StructuralElement extends SchemaProvider
         $relationships = $this->addAncestorsRelationship(
             $relationships,
             $resource,
-            $shouldInclude(self::REL_ANCESTORS)
+            $this->shouldInclude($context, self::REL_ANCESTORS)
         );
+
         $relationships = $this->addDescendantsRelationship(
             $relationships,
             $resource,
-            $shouldInclude(self::REL_DESCENDANTS)
+            $this->shouldInclude($context, self::REL_DESCENDANTS)
         );
 
-        $relationships = $this->addImageRelationship($relationships, $resource, $shouldInclude(self::REL_IMAGE));
+        $relationships = $this->addImageRelationship(
+            $relationships,
+            $resource,
+            $this->shouldInclude($context, self::REL_IMAGE)
+        );
 
         return $relationships;
     }

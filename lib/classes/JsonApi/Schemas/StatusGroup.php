@@ -43,20 +43,12 @@ class StatusGroup extends SchemaProvider
 
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
         $relationships = [];
 
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
-
-        // range-id
         $relationships = $this->addRangeRelationship(
             $relationships,
             $resource,
-            $shouldInclude(self::REL_RANGE)
+            $this->shouldInclude($context, self::REL_RANGE)
         );
 
         return $relationships;

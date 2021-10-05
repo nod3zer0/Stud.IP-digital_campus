@@ -38,22 +38,16 @@ class BlubberComment extends SchemaProvider
      */
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
-        $shouldInclude = function ($key) use ($isPrimary, $includeList) {
-            return $isPrimary && in_array($key, $includeList);
-        };
-
         $relationships = [];
-        $relationships = $this->getAuthorRelationship($relationships, $resource, $shouldInclude(self::REL_AUTHOR));
+        $relationships = $this->getAuthorRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_AUTHOR));
 
+        $isPrimary = $context->getPosition()->getLevel() === 0;
         if (!$isPrimary) {
             return $relationships;
         }
 
-        $relationships = $this->getMentionsRelationship($relationships, $resource, $shouldInclude(self::REL_MENTIONS));
-        $relationships = $this->getThreadRelationship($relationships, $resource, $shouldInclude(self::REL_THREAD));
+        $relationships = $this->getMentionsRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_MENTIONS));
+        $relationships = $this->getThreadRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_THREAD));
 
         return $relationships;
     }

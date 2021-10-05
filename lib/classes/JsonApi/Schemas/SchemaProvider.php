@@ -4,6 +4,7 @@ namespace JsonApi\Schemas;
 
 use JsonApi\Errors\InternalServerError;
 use Neomerx\JsonApi\Contracts\Factories\FactoryInterface;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Contracts\Schema\LinkInterface;
 use Neomerx\JsonApi\Contracts\Schema\SchemaContainerInterface;
 use Neomerx\JsonApi\Schema\BaseSchema;
@@ -57,5 +58,18 @@ abstract class SchemaProvider extends BaseSchema
         }
 
         return $this->schemaContainer->getSchema($resource)->getSelfLink($resource);
+    }
+
+    /**
+     * @param ContextInterface $context
+     * @param string $key
+     *
+     * @return bool true, if the given relationship should be included in the response
+     */
+    public function shouldInclude(ContextInterface $context, string $key): bool
+    {
+        $path = $context->getPosition()->getLevel() ? $context->getPosition()->getPath() . '.' : '';
+
+        return in_array($path . $key, $context->getIncludePaths());
     }
 }
