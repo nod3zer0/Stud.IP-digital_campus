@@ -10,7 +10,7 @@
             @closeEdit="closeEdit"
         >
             <template #content>
-                <section class="cw-block-content" v-html="currentText"></section>
+                <section class="cw-block-content" v-html="currentText" ref="content"></section>
             </template>
             <template v-if="canEdit" #edit>
                 <studip-wysiwyg v-model="currentText"></studip-wysiwyg>
@@ -48,6 +48,7 @@ export default {
     },
     mounted() {
         this.currentText = this.text;
+        this.loadMathjax();
     },
     methods: {
         ...mapActions({
@@ -55,6 +56,7 @@ export default {
         }),
         closeEdit() {
             this.currentText = this.text;
+            this.loadMathjax();
         },
         async storeText() {
             let attributes = this.block.attributes;
@@ -65,7 +67,26 @@ export default {
                 containerId: this.block.relationships.container.data.id,
             });
             this.$refs.defaultBlock.displayFeature(false);
+            this.loadMathjax();
         },
+        loadMathjax() {
+            let mathjaxP;
+            let view = this;
+
+            if (window.MathJax && window.MathJax.Hub) {
+                mathjaxP = Promise.resolve(window.MathJax);
+            } else if (window.STUDIP && window.STUDIP.loadChunk) {
+                mathjaxP = window.STUDIP.loadChunk('mathjax');
+            }
+
+            mathjaxP && mathjaxP
+            .then(({ Hub }) => {
+                Hub.Queue(['Typeset', Hub, view.$refs.content]);
+            })
+            .catch(() => {
+                console.log('Warning: Could not load MathJax.');
+            });
+        }
     },
 };
 </script>
