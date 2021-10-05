@@ -98,7 +98,10 @@
         ) ?>
     </ul>
     <?= \Studip\Button::create(_('Suchen'), 'room_search') ?>
-    <?= \Studip\Button::create(_('Zurücksetzen'), 'room_search_reset') ?>
+    <?= \Studip\LinkButton::create(
+        _('Zurücksetzen'),
+        URLHelper::getURL('dispatch.php/resources/search/rooms', ['room_search_reset' => '1'])
+    ) ?>
     <label>
         <?= _('Filter hinzufügen') ?>:
         <select class="criteria-selector"
