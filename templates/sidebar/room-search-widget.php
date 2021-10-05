@@ -1,6 +1,5 @@
 <form class="default room-search-form" action="<?= $action_link ?>"
-      method="post">
-    <input type="hidden" name="extended_search">
+      method="get">
 
     <ul class="criteria-list">
         <?= $this->render_partial(
@@ -125,15 +124,3 @@
         </select>
     </label>
 </form>
-<script type="text/javascript">
-/*  jQuery('.room-search-form .criteria-list input[type="date"]').datepicker(
-     {
-         dateFormat: 'yy-mm-dd'
-     }
- );
- jQuery('.room-search-form .criteria-list input[type="time"]').timepicker(
-     {
-         timeFormat: 'G:i'
-     }
- ); */
-</script>
