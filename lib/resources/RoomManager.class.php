@@ -592,7 +592,7 @@ class RoomManager
         }
 
         $result = [];
-        if (is_array($time_ranges)) {
+        if (!empty($time_ranges)) {
             //We must check if the room is available:
             foreach ($filtered_rooms as $room) {
                 $room_is_available = true;
