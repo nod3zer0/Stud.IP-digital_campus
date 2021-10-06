@@ -66,6 +66,7 @@ class Resources_SearchController extends AuthenticatedController
 
         $this->form_submitted = false;
 
+
         if ($this->tree_selected_resource) {
             $resource = Resource::find($this->tree_selected_resource);
             if (!$resource) {
@@ -97,6 +98,14 @@ class Resources_SearchController extends AuthenticatedController
             $this->booking_plan_action_params = [];
 
             if ($this->form_submitted) {
+                $actions = new ShareWidget();
+                $actions->addCopyableLink(
+                    _('URL zur Suche kopieren'),
+                    $_SERVER['REQUEST_URI'],
+                    Icon::create('group')
+                );
+                $sidebar->insertWidget($actions, ':first');
+
                 //Check if the time range criteria has been set.
                 //If so, set the begin date as parameter for the
                 //booking plan action URL.
@@ -108,6 +117,7 @@ class Resources_SearchController extends AuthenticatedController
                     }
                 }
             }
+
         }
     }
 }
