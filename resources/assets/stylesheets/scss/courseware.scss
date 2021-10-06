@@ -1451,9 +1451,6 @@ b l o c k a d d e r
 }
 
 .cw-block-adder-area {
-    @include background-icon(add, clickable);
-    background-repeat: no-repeat;
-    background-position: calc(50% - 5em) calc(50% - 1px);
     border: solid thin $content-color-40;
     padding: 1em 0;
     color: $base-color;
@@ -1465,13 +1462,11 @@ b l o c k a d d e r
     &.cw-block-adder-active {
         border: solid thin $base-color;
         background-color: $base-color;
-        @include background-icon(add, info-alt);
         color: $white;
     }
-    &.cw-block-adder-disabled {
-        @include background-icon(add, inactive);
-        color: $dark-gray-color-80;
-        cursor: default;
+
+    img {
+        vertical-align: text-bottom;
     }
 }
 .cw-block-helper-buttons {

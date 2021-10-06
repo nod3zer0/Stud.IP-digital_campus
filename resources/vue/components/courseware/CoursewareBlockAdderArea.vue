@@ -1,15 +1,20 @@
 <template>
     <div
         class="cw-block-adder-area"
-        :class="{ 'cw-block-adder-active': adderActive, 'cw-block-adder-disabled': adderDisable }"
+        :class="{ 'cw-block-adder-active': adderActive }"
         @click="selectBlockAdder"
     >
-        <translate>Block hinzufügen</translate>
+        <studip-icon v-show="!adderActive" shape="add" />
+        <studip-icon v-show="adderActive" shape="add" role="info_alt"/>
+        <span v-show="!adderActive"><translate>Block zu diesem Abschnitt hinzufügen</translate></span>
+        <span v-show="adderActive"><translate>Abschnitt aktiv - Blöcke werden hier eingefügt</translate></span>
     </div>
 </template>
 
 <script>
+import StudipIcon from '../StudipIcon.vue';
 export default {
+  components: { StudipIcon },
     name: 'courseware-block-adder-area',
     props: {
         container: Object,
@@ -30,9 +35,6 @@ export default {
     },
     methods: {
         selectBlockAdder() {
-            if (this.adderDisable) {
-                return false;
-            }
             if (this.adderActive) {
                 this.adderActive = false;
                 this.$store.dispatch('coursewareBlockAdder', {});
@@ -47,7 +49,13 @@ export default {
         adderStorage(newValue, oldValue) {
             if (Object.keys(newValue).length === 0) {
                 this.adderActive = false;
-                this.$emit('updateContainerContent', oldValue)
+                this.$emit('updateContainerContent', oldValue);
+            } else {
+                if (newValue.container.id === this.container.id && newValue.section === this.section) {
+                    this.adderActive = true;
+                } else {
+                    this.adderActive = false;
+                }
             }
         },
     },
