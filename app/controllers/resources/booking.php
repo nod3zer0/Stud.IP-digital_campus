@@ -1873,4 +1873,118 @@ class Resources_BookingController extends AuthenticatedController
             }
         }
     }
+
+
+    /**
+     * Transforms a reservation to a booking and vice versa.
+     */
+    public function transform_action($booking_id = null)
+    {
+        $resource = $this->booking->resource;
+        if (!$resource) {
+            PageLayout::postError(_('Die Buchung ist ungültig!'));
+            return;
+        }
+        $resource = $resource->getDerivedClassInstance();
+        if (!$resource) {
+            PageLayout::postError(_('Die Buchung ist ungültig!'));
+            return;
+        }
+
+        if ($this->booking->booking_type == '0') {
+            PageLayout::setTitle(_('Buchung in Reservierung umwandeln'));
+        } elseif ($this->booking->booking_type == '1') {
+            PageLayout::setTitle(_('Reservierung in Buchung umwandeln'));
+        } else {
+            PageLayout::postError(
+                _('Die Buchung hat keinen passenden Buchungstyp!')
+            );
+            return;
+        }
+
+        if (!$resource->userHasBookingRights(User::findCurrent())) {
+            throw new AccessDeniedException();
+        }
+
+        $intervals = $this->booking->getTimeIntervals();
+
+        if (!$intervals) {
+            PageLayout::postError(_('Die Buchung ist ungültig!'));
+            return;
+        }
+
+        if ($this->booking->booking_type == '1') {
+            $fully_available = true;
+            foreach ($intervals as $interval) {
+                $begin = new DateTime();
+                $begin->setTimestamp($interval->begin);
+                $end = new DateTime();
+                $end->setTimestamp($interval->end);
+                if (!$resource->isAvailable($begin, $end)) {
+                    PageLayout::postError(
+                        sprintf(
+                            _('Die Reservierung kann nicht in eine Buchung umgewandelt werden, weil der Zeitbereich von %1$s bis %2$s bereits belegt ist!'),
+                            $begin->format('d.m.Y H:i'),
+                            $end->format('d.m.Y H:i')
+                        )
+                    );
+                    $fully_available = false;
+                    break;
+                }
+            }
+            if (!$fully_available) {
+                return;
+            }
+        }
+
+        if (Request::submitted('transform')) {
+            CSRFProtection::verifyUnsafeRequest();
+
+            if ($this->booking->booking_type == '0') {
+                $this->booking->booking_type = '1';
+            } elseif ($this->booking->booking_type == '1') {
+                $this->booking->booking_type = '0';
+            }
+
+            $saved = false;
+            if ($this->booking->isDirty()) {
+                $saved = $this->booking->store();
+            } else {
+                $saved = true;
+            }
+            if ($saved) {
+                if ($this->booking->booking_type == '0') {
+                    PageLayout::postSuccess(
+                        _('Die Buchung wurde gespeichert.')
+                    );
+                } elseif ($this->booking->booking_type == '1') {
+                    PageLayout::postSuccess(
+                        _('Die Reservierung wurde gespeichert.')
+                    );
+                }
+                $this->response->add_header('X-Dialog-Close', '1');
+                $this->render_nothing();
+            } else {
+                if ($this->booking->booking_type == '0') {
+                    PageLayout::postError(
+                        _('Die Buchung konnte nicht gespeichert werden.')
+                    );
+                } elseif ($this->booking->booking_type == '1') {
+                    PageLayout::postError(
+                        _('Die Reservierung konnte nicht gespeichert werden.')
+                    );
+                }
+            }
+        } else {
+            if ($this->booking->booking_type == '0') {
+                PageLayout::postWarning(
+                    _('Soll die folgende Buchung wirklich in eine Reservierung umgewandelt werden?')
+                );
+            } else {
+                PageLayout::postWarning(
+                    _('Soll die folgende Reservierung wirklich in eine Buchung umgewandelt werden?')
+                );
+            }
+        }
+    }
 }

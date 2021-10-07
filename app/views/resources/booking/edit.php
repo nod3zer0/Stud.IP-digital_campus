@@ -22,6 +22,23 @@
             'data-dialog' => 'size=auto'
         ]
     ) ?>
+    <? if ($booking->booking_type == '1') : ?>
+        <?= \Studip\LinkButton::create(
+            _('In Buchung umwandeln'),
+            $controller->url_for('resources/booking/transform/' . $booking->id),
+            [
+                'data-dialog' => 'size=auto'
+            ]
+        ) ?>
+    <? elseif ($booking->booking_type == '0') : ?>
+        <?= \Studip\LinkButton::create(
+            _('In Reservierung umwandeln'),
+            $controller->url_for('resources/booking/transform/' . $booking->id),
+            [
+                'data-dialog' => 'size=auto'
+            ]
+        ) ?>
+    <? endif ?>
     <?= \Studip\LinkButton::create(
         _('Löschen'),
         $controller->url_for('resources/booking/delete/' . $booking->id),
@@ -30,4 +47,3 @@
         ]
     ) ?>
 </div>
-
