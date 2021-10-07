@@ -1523,6 +1523,8 @@ class Resources_RoomRequestController extends AuthenticatedController
         $resolve = Request::submitted('resolve') || $force_resolve;
         $this->show_force_resolve_button = false;
 
+        $this->booked_room_infos = [];
+
         if ($resolve) {
             CSRFProtection::verifyUnsafeRequest();
             $this->selected_rooms = array_filter(Request::getArray('selected_rooms'));
@@ -1616,6 +1618,16 @@ class Resources_RoomRequestController extends AuthenticatedController
                         );
                         if ($booking instanceof ResourceBooking) {
                             $bookings[] = $booking;
+                            if ($this->booked_room_infos[$room->id]) {
+                                if ($this->booked_room_infos[$room->id]['first_booking_date'] > $booking->begin) {
+                                    $this->booked_room_infos[$room->id]['first_booking_date'] = $booking->begin;
+                                }
+                            } else {
+                                $this->booked_room_infos[$room->id] = [
+                                    'room' => $room,
+                                    'first_booking_date' => $booking->begin
+                                ];
+                            }
                         }
                     } catch (Exception $e) {
                         $errors[] = $e->getMessage();
@@ -1730,6 +1742,22 @@ class Resources_RoomRequestController extends AuthenticatedController
                         _('Die Anfrage wurde aufgelöst, konnte aber nicht geschlossen werden!')
                     );
                 }
+            }
+
+            if ($this->booked_room_infos) {
+                //Sort the array:
+                uasort(
+                    $this->booked_room_infos,
+                    function ($a, $b) {
+                        if ($a['room']->name > $b['room']->name) {
+                            return 1;
+                        } elseif ($a['room']->name < $b['room']->name) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                );
             }
         }
     }

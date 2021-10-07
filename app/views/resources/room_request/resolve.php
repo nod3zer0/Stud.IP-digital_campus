@@ -2,6 +2,35 @@
       data-dialog="size=big;<?= Request::submitted('reload-on-close') ? 'reload-on-close' : ''; ?>"
       action="<?= $controller->link_for('resources/room_request/resolve/' . $request->id) ?>">
     <?= CSRFProtection::tokenTag() ?>
+    <? if ($booked_room_infos): ?>
+        <article class="studip">
+            <header>
+                <h1><?= _('Gebuchte Räume') ?></h1>
+            </header>
+            <section>
+                <ul class="list-csv">
+                    <? foreach ($booked_room_infos as $room_info) : ?>
+                        <li>
+                            <a href="<?= $room_info['room']->getActionLink(
+                                     'booking_plan',
+                                     ['defaultDate' => date('Y-m-d', $room_info['first_booking_date'])]
+                                     ) ?>" target="_blank"
+                               title="<?= _('Belegungsplan anzeigen') ?>">
+                                <?= htmlReady($room_info['room']->getFullName()) ?>
+                                <?= Icon::create('link-intern')->asImg(
+                                    [
+                                        'class' => 'text-bottom',
+                                        'title' => ''
+                                    ]
+                                ) ?>
+                            </a>
+                        </li>
+                    <? endforeach ?>
+                </ul>
+            </section>
+        </article>
+    <? endif ?>
+    <section class="splitted-layout">
     <? if ($show_info) : ?>
         <article class="studip left-part">
             <header>
@@ -328,6 +357,7 @@
             </article>
         <? endif ?>
     <? endif ?>
+    </section>
     <footer data-dialog-button>
         <? if ($prev_request) : ?>
             <?= \Studip\LinkButton::create(
