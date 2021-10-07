@@ -177,6 +177,12 @@
                 ],
                 ['class' => 'resource-plan']
             ) ?>
+            <? if ($additional_text != '') : ?>
+                <div>
+                    <br>
+                    <?= formatReady($additional_text) ?>
+                </div>
+            <? endif ?>
         </section>
     <? endforeach ?>
 <? endif ?>

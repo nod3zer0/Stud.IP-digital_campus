@@ -128,6 +128,12 @@
                 <? endforeach ?>
             </select>
         </label>
+        <label>
+            <?= _('Zusatztext, der beim Seriendruck unter jedem Raumplan angezeigt werden soll') ?>
+            <textarea class="add_toolbar wysiwyg" name="additional_text" cols="75" rows="4">
+                <?= wysiwygReady($config->RESOURCES_ADDITIONAL_TEXT_ROOM_EXPORT) ?>
+            </textarea>
+        </label>
     </fieldset>
     <?= \Studip\Button::create(_('Speichern'), 'save') ?>
 </form>

@@ -1209,6 +1209,10 @@ class Resources_AdminController extends AuthenticatedController
                 'RESOURCES_BOOKING_PLAN_END_HOUR',
                 $this->resources_booking_plan_end_hour
             );
+            $this->config->store(
+                'RESOURCES_ADDITIONAL_TEXT_ROOM_EXPORT',
+                Studip\Markup::purifyHtml(Request::get('additional_text'))
+            );
 
             $this->config->store(
                 'RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT',

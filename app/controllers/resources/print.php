@@ -142,6 +142,10 @@ class Resources_PrintController extends AuthenticatedController
             2 => _('Sperrbuchung'),
             3 => _('Planungsbuchung')
         ];
+
+        // Get additional text to print
+        $this->additional_text = Config::get()->RESOURCES_ADDITIONAL_TEXT_ROOM_EXPORT;
+
         if (!$this->clipboard_selected && !$this->print_schedules) {
             //We have to load all selectable clipboards of the current user:
             $this->available_clipboards = Clipboard::getClipboardsForUser(
