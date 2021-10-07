@@ -99,6 +99,19 @@
                 </tbody>
             </table>
         <? endif ?>
+        <fieldset>
+            <legend><?= _('Belegungstypen auswählen') ?></legend>
+            <label>
+                <?= _('Zu exportierende Belegungstypen') ?>
+                <select name="bookingtypes[]" multiple class="nested-select">
+                    <? foreach ($booking_types as $index => $name) : ?>
+                        <option value="<?= $index ?>"
+                            <?= in_array($index, $selected_booking_types) ? ' selected' : '' ?>>
+                            <?= htmlReady($name) ?></option>
+                    <? endforeach ?>
+                </select>
+            </label>
+        </fieldset>
         <div data-dialog-button>
             <?= \Studip\Button::create(_('Liste mit Buchungen exportieren')) ?>
         </div>

@@ -1056,6 +1056,13 @@ class Resources_AdminController extends AuthenticatedController
         $this->resources_booking_plan_end_hour   =
             $this->config->RESOURCES_BOOKING_PLAN_END_HOUR;
 
+        $this->bookingtypes = [
+            0 => _('Buchung'),
+            1 => _('Reservierung'),
+            2 => _('Sperrbuchung'),
+            3 => _('Planungsbuchung')
+        ];
+
         if (Request::submitted('save')) {
 
             //Get colors:
@@ -1203,6 +1210,11 @@ class Resources_AdminController extends AuthenticatedController
                 $this->resources_booking_plan_end_hour
             );
 
+            $this->config->store(
+                'RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT',
+                Request::intArray('export_booking_types')
+            );
+
             PageLayout::postSuccess(
                 _('Die Konfigurationsoptionen wurden gespeichert!')
             );
@@ -1212,5 +1224,7 @@ class Resources_AdminController extends AuthenticatedController
             "colour_id LIKE 'Resources%'
            ORDER BY colour_id ASC"
         );
+
+        $this->export_bookingtypes_default = $this->config->RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT;
     }
 }

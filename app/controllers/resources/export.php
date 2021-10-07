@@ -119,6 +119,16 @@ class Resources_ExportController extends AuthenticatedController
             $this->range_id   = Request::get('range_id');
         }
 
+        // All available booking types.
+        $this->booking_types = [
+            0 => _('Buchung'),
+            1 => _('Reservierung'),
+            2 => _('Sperrbuchung'),
+            3 => _('Planungsbuchung')
+        ];
+        $this->selected_booking_types = Request::intArray('bookingtypes') ?:
+            Config::get()->RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT;
+
         //Build sidebar
 
         $sidebar = Sidebar::get();
@@ -214,6 +224,16 @@ class Resources_ExportController extends AuthenticatedController
             );
             $this->end->setTime(23, 59, 59);
         }
+
+
+        // All available booking types.
+        $this->booking_types = [
+            0 => _('Buchung'),
+            1 => _('Reservierung'),
+            2 => _('Sperrbuchung'),
+            3 => _('Planungsbuchung')
+        ];
+        $this->selected_booking_types = Config::get()->RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT;
     }
 
 
@@ -317,11 +337,14 @@ class Resources_ExportController extends AuthenticatedController
                 ]
             );
 
+            $types = Request::intArray('bookingtypes') ?:
+                Config::get()->RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT;
+
             //Prepare data for export:
 
             foreach ($intervals as $interval) {
                 $booking = $interval->booking;
-                if (!$booking instanceof ResourceBooking) {
+                if (!$booking instanceof ResourceBooking || !in_array($booking->booking_type, $types)) {
                     continue;
                 }
                 $description = $booking->description;

@@ -114,5 +114,20 @@
                    value="<?= htmlReady($config->RESOURCES_MIN_BOOKING_TIME) ?>">
         </label>
     </fieldset>
+    <fieldset>
+        <legend><?= _('Export') ?></legend>
+        <label>
+            <?= _('Voreinstellung zu exportierender Buchungstypen') ?>
+            <select name="export_booking_types[]" class="nested-select" multiple>
+                <option value="">-- <?= _('Bitte auswählen') ?> --</option>
+                <? foreach ($bookingtypes as $index => $name) : ?>
+                    <option value="<?= $index ?>"<?= in_array($index, $export_bookingtypes_default) ?
+                        ' selected' : '' ?>>
+                        <?= htmlReady($name) ?>
+                    </option>
+                <? endforeach ?>
+            </select>
+        </label>
+    </fieldset>
     <?= \Studip\Button::create(_('Speichern'), 'save') ?>
 </form>

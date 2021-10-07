@@ -378,7 +378,7 @@ class Resources extends \RESTAPI\RouteMap
         //Get parameters:
         $booking_types = [];
         if (!$nobody_access) {
-            $booking_types = \Request::getArray('booking_types');
+            $booking_types = explode(',', \Request::get('booking_types'));
         }
 
         $begin_timestamp = $begin->getTimestamp();

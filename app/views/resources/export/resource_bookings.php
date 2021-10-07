@@ -9,8 +9,8 @@
             <input type="hidden" name="selected_resources[]"
                    value="<?= htmlReady($resource->id)?>">
         <? endif ?>
-        <article class="widget">
-            <header><?= _('Zeitbereich auswählen') ?></header>
+        <fieldset>
+            <legend><?= _('Zeitbereich auswählen') ?></legend>
             <section>
                 <label>
                     <?= _('Startzeitpunkt') ?>
@@ -27,7 +27,22 @@
                            value="<?= $end->format('H:i')?>">
                 </label>
             </section>
-        </article>
+        </fieldset>
+        <fieldset>
+            <legend><?= _('Belegungstypen auswählen') ?></legend>
+            <section>
+                <label>
+                    <?= _('Zu exportierende Belegungstypen') ?>
+                    <select name="bookingtypes[]" multiple class="nested-select">
+                        <? foreach ($booking_types as $index => $name) : ?>
+                            <option value="<?= $index ?>"
+                                <?= in_array($index, $selected_booking_types) ? ' selected' : '' ?>>
+                                <?= htmlReady($name) ?></option>
+                        <? endforeach ?>
+                    </select>
+                </label>
+            </section>
+        </fieldset>
         <div data-dialog-button>
             <?= \Studip\Button::create(
                 _('Exportieren'),

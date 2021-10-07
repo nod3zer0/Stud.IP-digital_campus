@@ -6,6 +6,9 @@
             <input type="hidden" name="clipboard_id" value="<?= htmlReady($selected_clipboard_id) ?>">
             <input type="hidden" name="schedule_type" value="<?= htmlReady($schedule_type) ?>">
             <input type="hidden" name="date" value="<?= htmlReady($selected_date_string) ?>">
+            <? foreach ($selected_booking_types as $type) : ?>
+                <input type="hidden" name="bookingtypes[]" value="<?= $type ?>">
+            <? endforeach ?>
             <fieldset>
                 <? if (!$available_rooms): ?>
                     <?= MessageBox::info(
@@ -91,6 +94,16 @@
                                value="<?= date('d.m.Y') ?>"
                                class="has-date-picker">
                     </label>
+                    <label>
+                        <?= _('Zu exportierende Belegungstypen') ?>
+                        <select name="bookingtypes[]" multiple class="nested-select">
+                            <? foreach ($booking_types as $index => $name) : ?>
+                                <option value="<?= $index ?>"
+                                    <?= in_array($index, $selected_booking_types) ? ' selected' : '' ?>>
+                                    <?= htmlReady($name) ?></option>
+                            <? endforeach ?>
+                        </select>
+                    </label>
                 </fieldset>
                 <div data-dialog-button>
                     <?= \Studip\Button::create(
@@ -156,7 +169,7 @@
                             ),
                             'method' => 'GET',
                             'extraParams' => [
-                                'booking_types' => [0,1,2],
+                                'booking_types' => $selected_booking_types,
                                 'display_requests' => 1
                             ]
                         ]

@@ -128,10 +128,20 @@ class Resources_PrintController extends AuthenticatedController
         //and In both cases we must collect the selected
         //clipboard, the selected date and the selected schedule type.
         //Furthermore a date and the type of schedule has been selected.
+        // Also check for booking types to export.
         $this->selected_clipboard_id = Request::get('clipboard_id');
         $this->schedule_type = Request::get('schedule_type');
         $this->selected_date_string = Request::get('date');
+        $this->selected_booking_types = Request::intArray('bookingtypes') ?:
+            Config::get()->RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT;
 
+        // All available booking types.
+        $this->booking_types = [
+            0 => _('Buchung'),
+            1 => _('Reservierung'),
+            2 => _('Sperrbuchung'),
+            3 => _('Planungsbuchung')
+        ];
         if (!$this->clipboard_selected && !$this->print_schedules) {
             //We have to load all selectable clipboards of the current user:
             $this->available_clipboards = Clipboard::getClipboardsForUser(
