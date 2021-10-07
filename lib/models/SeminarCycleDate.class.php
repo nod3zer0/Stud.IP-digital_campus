@@ -340,11 +340,17 @@ class SeminarCycleDate extends SimpleORMap
             $date->date = mktime(date('G', strtotime($this->start_time)), date('i', strtotime($this->start_time)), 0, date('m', $tos), date('d', $tos), date('Y', $tos)) + $day * 24 * 60 * 60;
             $date->end_time = mktime(date('G', strtotime($this->end_time)), date('i', strtotime($this->end_time)), 0, date('m', $toe), date('d', $toe), date('Y', $toe)) + $day * 24 * 60 * 60;
 
-            if ($date instanceof CourseDate &&
-                    ($date->date < $tos || $date->end_time > $toe || $old_cycle->weekday != $this->weekday)) {
-
-                if (!is_null($date->room_booking)) {
+            if ($date instanceof CourseDate && !is_null($date->room_booking)) {
+                //Check if the time range of the date has decreased and did not exceed the
+                //boundaries of the existing room booking. In that case, the room booking is shortened.
+                if ($date->date < $tos || $date->end_time > $toe) {
+                    //The room booking must be deleted.
                     $date->room_booking->delete();
+                } else {
+                    //The room booking must be shortened.
+                    $date->room_booking->begin = $date->date;
+                    $date->room_booking->end = $date->end_time;
+                    $date->room_booking->store();
                 }
             }
 
