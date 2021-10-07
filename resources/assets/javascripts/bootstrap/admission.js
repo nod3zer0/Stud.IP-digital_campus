@@ -14,6 +14,11 @@ STUDIP.domReady(function () {
 
     $('#courseset-form .autosave').on('click', (event) => {
         STUDIP.Admission.autosaveCourseset();
-    })
+    });
 
+    STUDIP.ready(() => {
+        $('#toggle-date-link').on('click', (event) => {
+            $('#admissionrule-valid-date').toggleClass('hidden-js');
+        });
+    });
 });
