@@ -83,7 +83,7 @@
                     )
                 ) ?>)
             <? endif ?>
-            <?= tooltipIcon(join("\n", $request->getTimeIntervalStrings())) ?>
+            <?= tooltipIcon(nl2br(join("\n", $request->getTimeIntervalStrings())), false, true) ?>
         <? endif ?>
     </td>
     <? $priority = $request->getPriority() ?>

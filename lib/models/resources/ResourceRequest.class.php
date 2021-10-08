@@ -1195,16 +1195,27 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
     public function getTimeIntervalStrings()
     {
         $strings   = [];
-        $intervals = $this->getTimeIntervals();
+        $intervals = $this->getTimeIntervals(false, true);
         foreach ($intervals as $interval) {
+            $room = '';
+            $date = call_user_func([$interval['range'], 'find'], $interval['range_id']);
+            if ($room_obj = Room::find($date->room_booking->resource_id)) {
+                $room = $room_obj->name;
+            }
+
             $same_day = (date('Ymd', $interval['begin'])
                 == date('Ymd', $interval['end'])
             );
             if ($same_day) {
-                $strings[] = strftime('%a %x %R', $interval['begin']) . ' - ' . strftime('%R', $interval['end']);
+                $strings[] = strftime('%a. %x %R', $interval['begin'])
+                    . ' - ' . strftime('%R', $interval['end'])
+                    . ($room ? ', '. $room : '');
             } else {
-                $strings[] = strftime('%a %x %R', $interval['begin']) . ' - ' . strftime('%a %x %R', $interval['end']);
+                $strings[] = strftime('%a. %x %R', $interval['begin'])
+                    . ' - ' . strftime('%a %x %R', $interval['end'])
+                    . ($room ? ', '. $room : '');
             }
+
         }
         return $strings;
     }
