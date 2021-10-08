@@ -396,7 +396,7 @@
 
 <script>
 import ContainerComponents from './container-components.js';
-import CoursewarePluginComponents from './plugin-components.js'
+import CoursewarePluginComponents from './plugin-components.js';
 import CoursewareStructuralElementPermissions from './CoursewareStructuralElementPermissions.vue';
 import CoursewareAccordionContainer from './CoursewareAccordionContainer.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
@@ -430,7 +430,7 @@ export default {
         IsoDate,
         StudipDialog,
     },
-    props: {},
+    props: ['orderedStructuralElements'],
 
     mixins: [CoursewareExport],
 
@@ -481,6 +481,9 @@ export default {
             courseware: 'courseware',
             consumeMode: 'consumeMode',
             containerById: 'courseware-containers/byId',
+            relatedContainers: 'courseware-containers/related',
+            relatedStructuralElements: 'courseware-structural-elements/related',
+            relatedUsers: 'users/related',
             structuralElementById: 'courseware-structural-elements/byId',
             userIsTeacher: 'userIsTeacher',
             pluginManager: 'pluginManager',
@@ -488,13 +491,13 @@ export default {
             showAddDialog: 'showStructuralElementAddDialog',
             showExportDialog: 'showStructuralElementExportDialog',
             showInfoDialog: 'showStructuralElementInfoDialog',
-            showDeleteDialog : 'showStructuralElementDeleteDialog',
-            showOerDialog : 'showStructuralElementOerDialog',
+            showDeleteDialog: 'showStructuralElementDeleteDialog',
+            showOerDialog: 'showStructuralElementOerDialog',
             oerEnabled: 'oerEnabled',
             oerTitle: 'oerTitle',
             licenses: 'licenses',
             exportState: 'exportState',
-            exportProgress: 'exportProgress'
+            exportProgress: 'exportProgress',
         }),
 
         textOer() {
@@ -502,7 +505,7 @@ export default {
                 title: this.$gettext('Seite auf') + ' ' + this.oerTitle + ' ' + this.$gettext('veröffentlichen'),
                 confirm: this.$gettext('Veröffentlichen'),
                 close: this.$gettext('Schließen'),
-            }
+            };
         },
 
         inCourse() {
@@ -555,87 +558,38 @@ export default {
         },
 
         ancestors() {
-            if (!this.currentElement) {
-                return [];
-            }
-            if (this.currentElement.relationships.ancestors.data) {
-                return this.currentElement.relationships.ancestors.data.map(({ id }) =>
-                    this.structuralElementById({ id })
-                );
-            }
-            return [];
-        },
-        parent() {
             if (!this.structuralElement) {
                 return [];
             }
-            if (this.structuralElement.relationships.parent.data) {
-                let id = this.structuralElement.relationships.parent.data.id;
-                return this.structuralElementById({ id });
-            }
-            return [];
-        },
-        hasSiblings() {
-            if (this.parent.length !== 0) {
-                return this.parent.relationships.children.data.length > 1;
-            } else {
-                return false;
-            }
+
+            return this.relatedStructuralElements({ parent: this.structuralElement, relationship: 'ancestors' });
         },
         prevElement() {
-            if (this.hasSiblings) {
-                let view = this;
-                let siblings = this.parent.relationships.children.data;
-                let id = '';
-                siblings.forEach((el, index) => {
-                    if (el.id === view.currentId && index !== 0) {
-                        id = siblings[index - 1].id;
-                    }
-                });
-                if (id === '') {
-                    return this.parent;
-                } else {
-                    return this.structuralElementById({ id });
-                }
-            } else if (this.parent.length !== 0) {
-                return this.parent;
-            } else {
+            const currentIndex = this.orderedStructuralElements.indexOf(this.structuralElement.id);
+            if (currentIndex <= 0) {
                 return null;
             }
+            const previousId = this.orderedStructuralElements[currentIndex - 1];
+            const previous = this.structuralElementById({ id: previousId });
+
+            return previous;
         },
         nextElement() {
-            let view = this;
-            if (this.structuralElement.relationships.children.data.length > 0) {
-                let id = this.structuralElement.relationships.children.data[0].id;
-                return this.structuralElementById({ id });
-            } else if (this.hasSiblings) {
-                let siblings = this.parent.relationships.children.data;
-                let id = '';
-                siblings.forEach((el, index) => {
-                    if (el.id === view.currentId && siblings.length > index + 1) {
-                        id = siblings[index + 1].id;
-                    }
-                });
-                if (id === '') {
-                    return this.getNextParentSibling(this.currentId);
-                } else {
-                    return this.structuralElementById({ id });
-                }
-            } else {
-                return this.getNextParentSibling(this.currentId);
+            const currentIndex = this.orderedStructuralElements.indexOf(this.structuralElement.id);
+            const lastIndex = this.orderedStructuralElements.length - 1;
+            if (currentIndex === -1 || currentIndex === lastIndex) {
+                return null;
             }
+            const nextId = this.orderedStructuralElements[currentIndex + 1];
+            const next = this.structuralElementById({ id: nextId });
+
+            return next;
         },
         empty() {
             if (this.containers === null) {
                 return true;
             } else {
-                let noBlockFound = true;
-                this.containers.forEach((container) => {
-                    if (container.relationships.blocks.data.length > 0) {
-                        noBlockFound = false;
-                    }
-                });
-                return noBlockFound;
+                return !this.containers.some((container) => container.relationships.blocks.data.length > 0);
             }
         },
         containers() {
@@ -643,12 +597,12 @@ export default {
                 return [];
             }
 
-            const containers = this.$store.getters['courseware-containers/related']({
-                parent: this.structuralElement,
-                relationship: 'containers',
-            });
-
-            return containers;
+            return (
+                this.relatedContainers({
+                    parent: this.structuralElement,
+                    relationship: 'containers',
+                }) ?? []
+            );
         },
         noContainers() {
             if (this.containers === null) {
@@ -679,7 +633,7 @@ export default {
         },
 
         owner() {
-            const owner = this.$store.getters['users/related']({
+            const owner = this.relatedUsers({
                 parent: this.structuralElement,
                 relationship: 'owner',
             });
@@ -688,7 +642,7 @@ export default {
         },
 
         editor() {
-            const editor = this.$store.getters['users/related']({
+            const editor = this.relatedUsers({
                 parent: this.structuralElement,
                 relationship: 'editor',
             });
@@ -764,7 +718,7 @@ export default {
         },
     },
 
-    async mounted() {
+    mounted() {
         if (!this.currentId) {
             this.setCurrentId(this.$route.params.id);
         }
@@ -797,7 +751,7 @@ export default {
             this.initCurrent();
         },
         initCurrent() {
-            this.currentElement = JSON.parse(JSON.stringify(this.structuralElement));
+            this.currentElement = _.cloneDeep(this.structuralElement);
             this.uploadFileError = '';
         },
         async menuAction(action) {
@@ -940,29 +894,6 @@ export default {
         },
         containerComponent(container) {
             return 'courseware-' + container.attributes['container-type'] + '-container';
-        },
-        getNextParentSibling(element_id) {
-            let current = this.structuralElementById({ id: element_id });
-            if (current.relationships.parent.data === null) {
-                return null;
-            }
-            let parent = this.structuralElementById({ id: current.relationships.parent.data.id });
-            if (parent.relationships.parent.data === null) {
-                return null;
-            }
-            let grandParent = this.structuralElementById({ id: parent.relationships.parent.data.id });
-            let parentSiblings = grandParent.relationships.children.data;
-            let id = '';
-            parentSiblings.forEach((el, index) => {
-                if (parseInt(el.id, 10) === parseInt(parent.id, 10) && parentSiblings.length > index + 1) {
-                    id = parentSiblings[index + 1].id;
-                }
-            });
-            if (id === '') {
-                this.getNextParentSibling(parent.id);
-            } else {
-                return this.structuralElementById({ id });
-            }
         },
         setBookmark() {
             this.addBookmark(this.structuralElement);
