@@ -196,7 +196,7 @@ class SemClass implements ArrayAccess
 
     public function getAdminModuleObject()
     {
-        if ($this->studygroup_mode) {
+        if ($this->data['studygroup_mode']) {
             $module = 'CoreStudygroupAdmin';
         } else {
             $module = 'CoreAdmin';
