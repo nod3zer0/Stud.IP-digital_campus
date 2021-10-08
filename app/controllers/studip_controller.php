@@ -321,7 +321,9 @@ abstract class StudipController extends Trails_Controller
      */
     public function redirect($to)
     {
-        $to = $this->url_for(...func_get_args());
+        if (func_num_args() > 1) {
+            $to = $this->url_for(...func_get_args());
+        }
         return parent::redirect($to);
     }
 
