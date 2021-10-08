@@ -209,7 +209,13 @@ class Resources_RoomRequestController extends AuthenticatedController
         }
 
         if ($this->filter['request_periods'] == 'periodic') {
-            $sql .= " AND resource_requests.termin_id = '' ";
+            // get rid of requests for single dates AND requests for multiple single dates
+            $sql .= " AND resource_requests.termin_id = ''
+            AND NOT EXISTS
+            (
+                SELECT * FROM resource_request_appointments
+                WHERE resource_request_appointments.request_id = resource_requests.id
+            )";
         }
         if ($this->filter['request_periods'] == 'aperiodic') {
             $sql .= " AND resource_requests.termin_id <> '' ";
