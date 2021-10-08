@@ -26,6 +26,7 @@ class Course_FilesController extends AuthenticatedController
             throw new CheckObjectException(_('Es wurde keine passende Veranstaltung gefunden.'));
         }
         $this->course = Context::get();
+        object_set_visit_module($this->studip_module->getPluginId());
         $this->last_visitdate = object_get_visit($this->course->id, $this->studip_module->getPluginId());
 
         PageLayout::setHelpKeyword('Basis.Dateien');

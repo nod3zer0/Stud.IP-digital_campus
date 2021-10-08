@@ -171,7 +171,7 @@ function get_objects_visits(array $object_ids, $plugin_id, $mode = 'last', $user
     $thresholds = array_combine($plugin_ids, array_fill(
         0,
         count($plugin_ids),
-        $mode === null ? ['last_visitdate' => $threshold, 'visitdate' => $threshold] : $threshold
+        $mode === null ? ['last_visitdate' => null, 'visitdate' => null] : null
     ));
     $result = array_combine(
         $object_ids,
@@ -206,6 +206,45 @@ function get_objects_visits(array $object_ids, $plugin_id, $mode = 'last', $user
         $result[$row['object_id']][$row['plugin_id']] = $return;
     }
 
+    foreach ($result as $object_id => $plugins) {
+        $seminar_data = $plugins[0];
+        if ($mode === null && !isset($seminar_data['visitdate'])) {
+            $seminar_data = ['last_visitdate' => $threshold, 'visitdate' => $threshold];
+            $result[$object_id][0] = $seminar_data;
+        }
+        if ($mode !== null && !isset($seminar_data)) {
+            $seminar_data = $threshold;
+            $result[$object_id][0] = $seminar_data;
+        }
+        foreach ($plugins as $plugin_id => $data) {
+            if ($plugin_id == 0) continue;
+            if ($mode === null) {
+                if (isset($data['visitdate']) || object_id_to_type($plugin_id)) {
+                    $result[$object_id][$plugin_id] = [
+                        'visitdate'      => $data['visitdate'] ?? max($threshold, (int)$data['visitdate']),
+                        'last_visitdate' => $data['last_visitdate'] ?? max($threshold, (int)$data['last_visitdate'])
+                    ];
+                } else {
+                    $result[$object_id][$plugin_id] = [
+                        'visitdate'      => $data['visitdate'] ?? max($seminar_data['visitdate'], (int)$data['visitdate']),
+                        'last_visitdate' => $data['last_visitdate'] ?? max($seminar_data['last_visitdate'], (int)$data['last_visitdate'])
+                    ];
+                }
+            } elseif ($mode === 'last') {
+                if (isset($data) || object_id_to_type($plugin_id)) {
+                    $result[$object_id][$plugin_id] = $data ?? max($threshold, (int)$data);
+                } else {
+                    $result[$object_id][$plugin_id] = $data ?? max($seminar_data['last_visitdate'], (int)$data);
+                }
+            } else {
+                if (isset($data) || object_id_to_type($plugin_id)) {
+                    $result[$object_id][$plugin_id] = $data ?? max($threshold, (int)$data);
+                } else {
+                    $result[$object_id][$plugin_id] = $data ?? max($seminar_data['visitdate'], (int)$data);
+                }
+            }
+        }
+    }
     // Reduce array if not additional types were passed
     if (func_num_args() < 5) {
         // Unfortunately array_column() will dispose the array key
@@ -334,6 +373,48 @@ function object_type_to_id($type)
         if ($plugin) {
             return $plugin->getPluginId();
         }
+    }
+
+}
+
+/**
+ * converts a plugin id to old ouv type
+ * @param $id int former used type of visited objects or module (i.e. news, documents, wiki)
+ * @return string
+ */
+function object_id_to_type($id)
+{
+    if (!is_numeric($id)) {
+        return null;
+    }
+    $ouv_mapping = [
+        'sem' => 0,
+        'inst'=> 0,
+        'basicdata' => 0,
+        'vote' => -1,
+        'eval' => -2,
+        'news' => 'CoreOverview',
+        'documents' => 'CoreDocuments',
+        'schedule' => 'CoreSchedule',
+        'scm' =>  'CoreScm',
+        'wiki' => 'CoreWiki',
+        'elearning_interface' => 'CoreElearningInterface',
+        'ilias_interface' => 'IliasInterfaceModule',
+        'participants' => 'CoreParticipants'
+    ];
+
+    if (!in_array($id, [0, -1, -2])) {
+        $plugin = PluginManager::getInstance()->getPluginById($id);
+        if ($plugin) {
+            $search = get_class($plugin);
+        }
+    } else {
+        $search = (int)$id;
+    }
+    if (isset($search)) {
+        return array_search($search, $ouv_mapping, true) ?: null;
+    } else {
+        return null;
     }
 
 }
