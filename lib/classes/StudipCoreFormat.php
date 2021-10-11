@@ -515,8 +515,7 @@ class StudipCoreFormat extends TextFormat
 
         $intern = $domain === $_SERVER['HTTP_HOST'];
 
-        return sprintf('<a class="%s" href="mailto:%s">%s</a>',
-            $intern ? "link-intern" : "link-extern",
+        return sprintf('<a href="mailto:%1$s">%2$s</a>',
             $email,
             $link_text
         );
@@ -655,13 +654,23 @@ class StudipCoreFormat extends TextFormat
         $linkmarkup->removeMarkup('links');
         $linkmarkup->removeMarkup('wiki-links');
 
-        return sprintf('<a class="%s" href="%s"%s>%s</a>%s',
-            $intern ? 'link-intern' : 'link-extern',
-            $url,
-            $intern ? '' : ' target="_blank" rel="noreferrer noopener"',
-            $linkmarkup->format($title),
-            $postfix
-        );
+        if (strpos($url, 'mailto:') === 0) {
+            return sprintf(
+                '<a href="%1$s">%2$s</a>%3$s',
+                $url,
+                $linkmarkup->format($title),
+                $postfix
+            );
+        } else {
+            return sprintf(
+                '<a class="%s" href="%s"%s>%s</a>%s',
+                $intern ? 'link-intern' : 'link-extern',
+                $url,
+                $intern ? '' : ' target="_blank" rel="noreferrer noopener"',
+                $linkmarkup->format($title),
+                $postfix
+            );
+        }
     }
 
     protected static function htmlAnchor($markup, $matches, $contents)
