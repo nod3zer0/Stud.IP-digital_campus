@@ -55,6 +55,20 @@
                              ? 'checked="checked"'
                              : ''?>>
                     <?= Icon::create('check-circle', Icon::ROLE_STATUS_GREEN)->asImg(['class' => 'text-bottom']) ?>
+
+                    <? $stats = 0; array_walk($data['intervals'], function(&$item, $key, $room_id) use (&$stats) {
+                            if ($item['booked_room'] == $room_id) {
+                                $stats++;
+                            }
+                    }, $room->id) ?>
+
+                    <? if ($stats > 0) : ?>
+                        <?= tooltipIcon(sprintf(
+                            _('%s von %s Terminen sind in diesem Raum'),
+                            $stats, sizeof($data['intervals'])
+                        ));
+                        ?>
+                    <? endif ?>
                 <? else: ?>
                     <input type="radio" name="<?= htmlReady($room_radio_name) ?>"
                            value="1" disabled="disabled"
@@ -71,11 +85,12 @@
                 $room_radio_name = 'selected_rooms[' . $range_index . ']';
                 ?>
                 <td>
-                    <? if ($available): ?>
+                    <? if ($available || $interval['booked_room'] == $room->id): ?>
                         <input type="radio" name="<?= htmlReady($room_radio_name) ?>"
                                class="text-bottom radio-<?= htmlReady($room->id) ?>"
                                value="<?= htmlReady($room->id) ?>"
-                               <?= $selected_dates[$range_index] == $room->id
+                               <?= ($selected_dates[$range_index] == $room->id
+                                     || $interval['booked_room'] == $room->id)
                                  ? 'checked="checked"'
                                  : ''?>>
                         <?= Icon::create('check-circle', Icon::ROLE_STATUS_GREEN)->asImg(['class' => 'text-bottom']) ?>

@@ -926,11 +926,20 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                         'end'   => $appointment->appointment->end_time
                     ];
                 }
+
+                $date = CourseDate::find($appointment->appointment_id);
                 $interval['range']                 = 'CourseDate';
                 $interval['range_id']              = $appointment->appointment_id;
+                $interval['booked_room']           = $date->room_booking->resource_id;
+                $interval['booking_id']            = $date->room_booking->id;
                 $time_intervals['']['intervals'][] = $interval;
             }
-            return $time_intervals;
+
+            if (empty($time_intervals['']['intervals'])) {
+                return [];
+            } else {
+                return $time_intervals;
+            }
         } elseif ($this->termin_id) {
             if ($with_preparation_time) {
                 $interval = [
@@ -943,14 +952,23 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                     'end'   => $this->date->end_time
                 ];
             }
-            $interval['range']    = 'CourseDate';
-            $interval['range_id'] = $this->termin_id;
-            return [
-                '' => [
-                    'metadate'  => null,
-                    'intervals' => [$interval]
-                ]
-            ];
+
+            $date = CourseDate::find($this->termin_id);
+            $interval['range']       = 'CourseDate';
+            $interval['range_id']    = $this->termin_id;
+            $interval['booked_room'] = $date->room_booking->resource_id;
+            $interval['booking_id']  = $date->room_booking->id;
+
+            if (!empty($interval)) {
+                return [
+                    '' => [
+                        'metadate'  => null,
+                        'intervals' => [$interval]
+                    ]
+                ];
+            } else {
+                return [];
+            }
         } elseif ($this->metadate_id) {
             $time_intervals = [
                 $this->metadate_id => [
@@ -972,6 +990,8 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 }
                 $interval['range']                                 = 'CourseDate';
                 $interval['range_id']                              = $date->id;
+                $interval['booked_room']                           = $date->room_booking->resource_id;
+                $interval['booking_id']                            = $date->room_booking->id;
                 $time_intervals[$this->metadate_id]['intervals'][] = $interval;
             }
             return $time_intervals;
@@ -998,6 +1018,8 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                             }
                             $interval['range']                         = 'CourseDate';
                             $interval['range_id']                      = $date->id;
+                            $interval['booked_room']                   = $date->room_booking->resource_id;
+                            $interval['booking_id']                    = $date->room_booking->id;
                             $time_intervals[$cycle->id]['intervals'][] = $interval;
                         }
                     }
@@ -1026,7 +1048,13 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                     }
                     $interval['range']                 = 'CourseDate';
                     $interval['range_id']              = $date->id;
+                    $interval['booked_room']           = $date->room_booking->resource_id;
+                    $interval['booking_id']            = $date->room_booking->id;
                     $time_intervals['']['intervals'][] = $interval;
+                }
+
+                if (empty($time_intervals['']['intervals'])) {
+                    unset($time_intervals['']);
                 }
             }
             return $time_intervals;
@@ -1044,6 +1072,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             }
             $interval['range']    = 'User';
             $interval['range_id'] = $this->user_id;
+
             return [
                 '' => [
                     'metadate'  => null,
@@ -1099,8 +1128,13 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                     ];
                 }
                 if ($with_range) {
-                    $interval['range']    = 'ResourceRequestAppointment';
-                    $interval['range_id'] = $appointment->appointment_id;
+                    $date = CourseDate::find($appointment->appointment_id);
+
+                    $interval['range']       = 'ResourceRequestAppointment';
+                    $interval['range_id']    = $appointment->appointment_id;
+                    $interval['booked_room'] = $date->room_booking->resource_id;
+                    $interval['booking_id']  = $date->room_booking->id;
+
                 }
                 $time_intervals[] = $interval;
             }
@@ -1118,8 +1152,10 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 ];
             }
             if ($with_range) {
-                $interval['range']    = 'CourseDate';
-                $interval['range_id'] = $this->termin_id;
+                $interval['range']       = 'CourseDate';
+                $interval['range_id']    = $this->termin_id;
+                $interval['booked_room'] = $this->date->room_booking->resource_id;
+                $interval['booking_id']  = $this->date->room_booking->id;
             }
             return [$interval];
         } elseif ($this->metadate_id) {
@@ -1137,8 +1173,10 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                     ];
                 }
                 if ($with_range) {
-                    $interval['range']    = 'CourseDate';
-                    $interval['range_id'] = $date->id;
+                    $interval['range']       = 'CourseDate';
+                    $interval['range_id']    = $date->id;
+                    $interval['booked_room'] = $date->room_booking->resource_id;
+                    $interval['booking_id']  = $date->room_booking->id;
                 }
                 $time_intervals[] = $interval;
             }
@@ -1159,8 +1197,10 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                         ];
                     }
                     if ($with_range) {
-                        $interval['range']    = 'CourseDate';
-                        $interval['range_id'] = $date->id;
+                        $interval['range']       = 'CourseDate';
+                        $interval['range_id']    = $date->id;
+                        $interval['booked_room'] = $date->room_booking->resource_id;
+                        $interval['booking_id']  = $date->room_booking->id;
                     }
                     $time_intervals[] = $interval;
                 }
@@ -1350,10 +1390,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         } elseif ($this->course_id) {
             $course = new Seminar($this->course_id);
             if ($course) {
-                $strings[] = $course->getDatesExport(
+                $strings[] = $course->getDatesTemplate('dates/seminar_html_roomplanning',
                     [
-                        'short'     => true,
-                        'shrink'    => true,
+                        'shrink'    => false,
                         'show_room' => true
                     ]
                 );

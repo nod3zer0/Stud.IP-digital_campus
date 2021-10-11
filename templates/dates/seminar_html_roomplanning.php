@@ -27,14 +27,15 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
             [
                 'assigned' => $cycle['assigned_rooms'],
                 'freetext' => $cycle['freetext_rooms'],
-                'plain'    => true]
+                'link'     => true
+            ]
         );
     endif;
 
     $output[] = $cycle_output;
   endforeach;
 
-  echo implode(", \n", $output);
+  echo implode(", <br>", $output);
 
   $freetext_rooms = [];
 
@@ -49,7 +50,7 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
         endif;
     endforeach;
     unset($irregular_rooms['']);
-    echo sizeof($output) ? ", \n" : '';
+    echo sizeof($output) ? ", <br>" : '';
 
     $rooms = array_merge(getPlainRooms($irregular_rooms, false), array_keys($freetext_rooms));
 
@@ -60,9 +61,11 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
 
                 if ($show_room && $date['resource_id']) :
                     echo ', '. _('Ort:') . ' ';
-                    echo Room::find($date['resource_id']);
+                    $room_obj = Room::find($date['resource_id']);
+                    echo '<a href="' . $room_obj->getActionLink('show') . '" target="_blank">'
+                    . htmlReady($room_obj->name) . '</a>';
                 endif;
-                echo "\n";
+                echo "<br>";
             endforeach;
         else :
             echo _("Termine am") . implode(', ', shrink_dates($irregular));
@@ -76,6 +79,7 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
                     echo implode(', ', $rooms);
                 endif;
             endif;
+            echo "<br>";
         endif;
     endif;
   endif;

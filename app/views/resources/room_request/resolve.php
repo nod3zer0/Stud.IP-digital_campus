@@ -284,7 +284,7 @@
                         </thead>
                         <tbody>
                         <tr class="nohover">
-                            <td><?= _('Keine Auswahl') ?></td>
+                            <td><?= _('Keine Auswahl / keine Änderung') ?></td>
                             <? if (count($request_time_intervals) > 1) : ?>
                                 <td>
                                     <input type="checkbox" data-proxyfor="input.radio-null"
@@ -372,6 +372,7 @@
             <? else: ?>
                 <?= \Studip\Button::create(_('Anfrage auflösen'), 'resolve') ?>
             <? endif ?>
+            <?= \Studip\Button::create(_('Anfrage zwischenspeichern'), 'save_only') ?>
             <? if ($request->isSimpleRequest()
                 && !$request->isReadOnlyForUser($current_user)): ?>
                 <?= \Studip\LinkButton::create(
