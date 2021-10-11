@@ -73,13 +73,16 @@ export default {
             containerAdder: 'containerAdder',
             adderStorage: 'blockAdder',
             viewMode: 'viewMode',
-            context: 'context'
+            context: 'context',
+            userById: 'users/byId',
+            userId: 'userId',
         }),
         showEditMode() {
             return this.viewMode === 'edit';
         },
         displaySettings() {
-            return this.context.type === 'courses' && this.isTeacher;
+            let user = this.userById({ id: this.userId });
+            return this.context.type === 'courses' && (this.isTeacher || ['root', 'admin'].includes(user.attributes.permission));
         },
         isTeacher() {
             return this.userIsTeacher;
