@@ -891,6 +891,8 @@ class Course_RoomRequestsController extends AuthenticatedController
                 }
                 return;
             } elseif (Request::submitted('save') || Request::submitted('save_and_close')) {
+                // if a closed request is stored again, reopen it
+
                 if ($this->seats < 1) {
                     PageLayout::postError(
                         _('Es wurde keine Anzahl an Sitzplätzen angegeben!')
@@ -929,6 +931,11 @@ class Course_RoomRequestsController extends AuthenticatedController
                 } else {
                     $this->request->resource_id = '';
                     $this->request->category_id = $this->category_id;
+                }
+
+                if ($this->request->closed != 0) {
+                    PageLayout::postInfo(_('Die Raumanfrage wurde wieder geöffnet und damit erneut gestellt.'));
+                    $this->request->closed = 0;
                 }
 
                 $storing_successful = false;
