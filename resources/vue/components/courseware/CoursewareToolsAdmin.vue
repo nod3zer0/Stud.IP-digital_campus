@@ -6,8 +6,8 @@
                 <label>
                     <span><translate>Art der Kapitelabfolge</translate></span>
                     <select class="size-s" v-model="currentProgression">
-                        <option value="false"><translate>Frei</translate></option>
-                        <option value="true"><translate>Sequentiell</translate></option>
+                        <option value="0"><translate>Frei</translate></option>
+                        <option value="1"><translate>Sequentiell</translate></option>
                     </select>
                 </label>
 
@@ -47,7 +47,7 @@ export default {
         }),
         initData() {
             this.currentPermissionLevel = this.courseware.attributes['editing-permission-level'];
-            this.currentProgression = this.courseware.attributes['sequential-progression'];
+            this.currentProgression = this.courseware.attributes['sequential-progression'] ? '1' : '0';
         },
         store() {
             this.companionSuccess({
