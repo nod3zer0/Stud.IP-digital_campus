@@ -56,20 +56,22 @@ export default {
 
 function buildNodes(structuralElements, relatedStructuralElement) {
     return structuralElements.reduce((memo, element) => {
-        memo.push({
-            id: element.id,
-            parent:
-                relatedStructuralElement({
-                    parent: element,
-                    relationship: 'parent',
-                })?.id ?? null,
+        if (element.attributes['can-read']) {
+            memo.push({
+                id: element.id,
+                parent:
+                    relatedStructuralElement({
+                        parent: element,
+                        relationship: 'parent',
+                    })?.id ?? null,
 
-            children:
-                relatedStructuralElement({
-                    parent: element,
-                    relationship: 'children',
-                })?.map((child) => child.id) ?? [],
-        });
+                children:
+                    relatedStructuralElement({
+                        parent: element,
+                        relationship: 'children',
+                    })?.map((child) => child.id) ?? [],
+            });
+        }
 
         return memo;
     }, []);

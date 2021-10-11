@@ -111,7 +111,10 @@ export default {
             let children = this.structuralElement.relationships.children.data;
             let childElements = [];
             children.forEach((element) => {
-                childElements.push(view.structuralElementById({ id: element.id }));
+                let childElement = view.structuralElementById({ id: element.id });
+                if (childElement.attributes['can-read']) {
+                    childElements.push(childElement);
+                }
             });
 
             return childElements;
