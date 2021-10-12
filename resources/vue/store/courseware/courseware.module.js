@@ -206,17 +206,11 @@ export const actions = {
         };
         const relationship = 'file-refs';
 
-        return dispatch('loadRelatedPaginated', {
-            type: 'file-refs',
-            parent,
-            relationship,
-        }).then(() => {
-            const refs = rootGetters['file-refs/related']({
+        return dispatch('file-refs/loadRelated', { parent, relationship }, { root: true })
+            .then(() => rootGetters['file-refs/related']({
                 parent,
                 relationship,
-            });
-            return refs;
-        });
+            }));
     },
 
     async createFile(context, { file, filedata, folder }) {
