@@ -56,6 +56,7 @@ export default {
             if (block.attributes["block-type"] !== undefined) {
                 return 'courseware-' + block.attributes["block-type"] + '-block';
             }
+            return null;
         },
     },
     mounted() {},

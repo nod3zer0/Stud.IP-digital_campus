@@ -121,8 +121,7 @@ export default {
             unlockObject: 'unlockObject',
         }),
         initCurrentData() {
-            // clone container to make edit reversible
-            this.currentContainer = JSON.parse(JSON.stringify(this.container));
+            this.currentContainer = _.cloneDeep(this.container);
 
             let view = this;
             let sections = this.currentContainer.attributes.payload.sections;
@@ -157,6 +156,9 @@ export default {
             this.currentContainer.attributes.payload.sections.splice(index, 1);
         },
         async storeContainer() {
+            this.currentContainer.attributes.payload.sections.forEach(section => {
+                section.blocks = section.blocks.map((block) => {return block.id;});
+            });
             await this.updateContainer({
                 container: this.currentContainer,
                 structuralElementId: this.currentContainer.relationships['structural-element'].data.id,
@@ -165,7 +167,10 @@ export default {
             this.initCurrentData();
         },
         component(block) {
-            return 'courseware-' + block.attributes["block-type"] + '-block';
+            if (block.attributes) {
+                return 'courseware-' + block.attributes["block-type"] + '-block';
+            }
+            return null;
         },
         updateContent(blockAdder) {
             if(blockAdder.container.id === this.container.id) {
@@ -173,5 +178,10 @@ export default {
             }
         }
     },
+    watch: {
+        blocks() {
+            this.initCurrentData();
+        }
+    }
 };
 </script>
