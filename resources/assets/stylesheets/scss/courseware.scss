@@ -703,7 +703,11 @@ ribbon end
         list-style: none;
     }
 
-    .cw-container-tabs-block-list,
+    .cw-container-tabs-block-list {
+        list-style: none;
+        padding: 1em 1em 0 1em;
+    }
+
     .cw-container-accordion-block-list {
         list-style: none;
         padding: 0 1em;
