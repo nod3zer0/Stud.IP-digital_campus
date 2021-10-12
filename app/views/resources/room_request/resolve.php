@@ -233,7 +233,7 @@
             </article>
             <article class="studip assign-dates">
                 <header><h1><?= _('Termine zuordnen') ?></h1></header>
-                <div>
+
                     <table id="resolve-dates-table" class="default">
                         <thead>
                         <tr>
@@ -353,7 +353,7 @@
                         <? endif ?>
                         </tbody>
                     </table>
-                </div>
+
             </article>
         <? endif ?>
     <? endif ?>
