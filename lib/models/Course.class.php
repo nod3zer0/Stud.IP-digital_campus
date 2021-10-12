@@ -193,8 +193,8 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         $config['has_and_belongs_to_many']['domains'] = [
             'class_name'        => 'UserDomain',
             'thru_table'        => 'seminar_userdomains',
-            'ondelete'          => 'delete',
-            'onstore'           => 'store',
+            'on_delete'          => 'delete',
+            'on_store'           => 'store',
             'order_by'          => 'ORDER BY name',
         ];
 

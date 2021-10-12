@@ -19,15 +19,15 @@ class UserDomain extends SimpleORMap
             'class_name'        => 'User',
             'thru_table'        => 'user_userdomains',
             'assoc_foreign_key' => 'user_id',
-            'ondelete'          => 'delete',
-            'onstore'           => 'store',
+            'on_delete'          => 'delete',
+            'on_store'           => 'store',
         ];
 
         $config['has_and_belongs_to_many']['courses'] = [
             'class_name'        => 'Course',
             'thru_table'        => 'seminar_userdomains',
-            'ondelete'          => 'delete',
-            'onstore'           => 'store',
+            'on_delete'          => 'delete',
+            'on_store'           => 'store',
         ];
 
         $config['registered_callbacks']['before_store'][] = function ($domain) {
