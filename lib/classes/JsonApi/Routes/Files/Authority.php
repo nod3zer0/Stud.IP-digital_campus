@@ -55,12 +55,7 @@ class Authority
 
     public static function canShowFileRef(User $user, \FileRef $fileRef)
     {
-        $folder = $fileRef->foldertype;
-
-        return
-            $folder
-            && $folder->isVisible($user->id)
-            && $folder->isReadable($user->id);
+        return $fileRef->getFileType()->isVisible($user->id) || $fileRef->getFileType()->isDownloadable($user->id);
     }
 
     public static function canUpdateFileRef(User $user, \FileRef $fileRef)
