@@ -204,11 +204,14 @@ export const actions = {
             type: 'courseware-blocks',
             id: block_id,
         };
-
         const relationship = 'file-refs';
 
-        return dispatch('courseware-blocks/loadRelated', { parent, relationship }, { root: true }).then(() => {
-            const refs = rootGetters['courseware-blocks/related']({
+        return dispatch('loadRelatedPaginated', {
+            type: 'file-refs',
+            parent,
+            relationship,
+        }).then(() => {
+            const refs = rootGetters['file-refs/related']({
                 parent,
                 relationship,
             });
@@ -804,36 +807,61 @@ export const actions = {
         context.commit('cwManagerFilingDataSet', msg);
     },
 
-    loadUsersCourses({ dispatch, rootGetters, state }, userId) {
+    async loadRelatedPaginated({ dispatch, rootGetters }, { type, parent, relationship, options }) {
+        const limit = 100;
+        let offset = 0;
+
+        do {
+            const optionsWithPages = {
+                ...options,
+                'page[offset]': offset++,
+                'page[limit]': limit,
+            };
+            await dispatch(
+                `${type}/loadRelated`,
+                {
+                    parent,
+                    relationship,
+                    options: optionsWithPages,
+                    resetRelated: false
+                },
+                { root: true }
+            );
+        } while (rootGetters[`${type}/all`].length < rootGetters[`${type}/lastMeta`].page.total);
+    },
+
+    async loadUsersCourses({ dispatch, rootGetters, state }, userId) {
         const parent = {
             type: 'users',
             id: userId,
         };
         const relationship = 'course-memberships';
-
         const options = {
-            include: 'course',
-            'page[limit]': 10000,
+            include: 'course'
         };
+        await dispatch('loadRelatedPaginated', {
+            type: 'course-memberships',
+            parent,
+            relationship,
+            options
+        });
 
-        return dispatch('course-memberships/loadRelated', { parent, relationship, options }, { root: true }).then(
-            () => {
-                const memberships = rootGetters['course-memberships/related']({
-                    parent,
-                    relationship,
-                });
-                let courses = [];
-                memberships.forEach((membership) => {
-                    if (
-                        membership.attributes.permission === 'dozent' &&
-                        state.context.id !== membership.relationships.course.data.id
-                    ) {
-                        courses.push(rootGetters['courses/related']({ parent: membership, relationship: 'course' }));
-                    }
-                });
-                return courses;
+        const memberships = rootGetters['course-memberships/related']({
+            parent,
+            relationship,
+        });
+
+        let courses = [];
+        memberships.forEach((membership) => {
+            if (
+                membership.attributes.permission === 'dozent' &&
+                    state.context.id !== membership.relationships.course.data.id
+            ) {
+                courses.push(rootGetters['courses/related']({ parent: membership, relationship: 'course' }));
             }
-        );
+        });
+
+        return courses;
     },
 
     loadRemoteCoursewareStructure({ dispatch, rootGetters }, { rangeId, rangeType }) {
@@ -859,47 +887,48 @@ export const actions = {
         );
     },
 
-    loadTeacherStatus({ dispatch, rootGetters, state, commit, getters }, userId) {
+    async loadTeacherStatus({ dispatch, rootGetters, state, commit, getters }, userId) {
         const parent = {
             type: 'users',
             id: userId,
         };
         const relationship = 'course-memberships';
-
         const options = {
             include: 'course',
-            'page[limit]': 10000,
         };
+        await dispatch('loadRelatedPaginated', {
+            type: 'course-memberships',
+            parent,
+            relationship,
+            options
+        });
 
-        return dispatch('course-memberships/loadRelated', { parent, relationship, options }, { root: true }).then(
-            () => {
-                const memberships = rootGetters['course-memberships/related']({
-                    parent,
-                    relationship,
-                });
-                let isTeacher = false;
-                memberships.forEach((membership) => {
-                    if (getters.courseware.attributes['editing-permission-level'] === 'dozent') {
-                        if (
-                            membership.attributes.permission === 'dozent' &&
-                            state.context.id === membership.relationships.course.data.id
-                        ) {
-                            isTeacher = true;
-                        }
-                    }
-                    if (getters.courseware.attributes['editing-permission-level'] === 'tutor') {
-                        if (
-                            (membership.attributes.permission === 'dozent' ||
-                                membership.attributes.permission === 'tutor') &&
-                            state.context.id === membership.relationships.course.data.id
-                        ) {
-                            isTeacher = true;
-                        }
-                    }
-                });
-                return commit('setUserIsTeacher', isTeacher);
+        const memberships = rootGetters['course-memberships/related']({
+            parent,
+            relationship,
+        });
+        let isTeacher = false;
+        memberships.forEach((membership) => {
+            if (getters.courseware.attributes['editing-permission-level'] === 'dozent') {
+                if (
+                    membership.attributes.permission === 'dozent' &&
+                        state.context.id === membership.relationships.course.data.id
+                ) {
+                    isTeacher = true;
+                }
             }
-        );
+            if (getters.courseware.attributes['editing-permission-level'] === 'tutor') {
+                if (
+                    (membership.attributes.permission === 'dozent' ||
+                     membership.attributes.permission === 'tutor') &&
+                        state.context.id === membership.relationships.course.data.id
+                ) {
+                    isTeacher = true;
+                }
+            }
+        });
+
+        return commit('setUserIsTeacher', isTeacher);
     },
 
     loadFeedback({ dispatch }, blockId) {
@@ -909,7 +938,12 @@ export const actions = {
             include: 'user',
         };
 
-        return dispatch('courseware-block-feedback/loadRelated', { parent, relationship, options }, { root: true });
+        return dispatch('loadRelatedPaginated', {
+            type: 'course-block-feedback',
+            parent,
+            relationship,
+            options
+        });
     },
 
     async createFeedback({ dispatch }, { blockId, feedback }) {
