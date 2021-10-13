@@ -90,7 +90,7 @@ class ToolActivation extends SimpleORMap
         if ($this->metadata['visibility'] === 'tutor') {
             return 'tutor';
         } else {
-            return 'autor';
+            return 'user';
         }
     }
 
