@@ -387,10 +387,12 @@ class FilesController extends AuthenticatedController
             $this->all_files = [];
             $count_visible = 0;
             foreach ($all_file_refs as $file_ref) {
-                $vue_data = FilesystemVueDataManager::getFileVueData(
-                    $file_ref->getFileType(),
-                    $this->topFolder
-                );
+                if ($file_ref->getFileType()->isVisible($GLOBALS['user']->id)) {
+                    $vue_data = FilesystemVueDataManager::getFileVueData(
+                        $file_ref->getFileType(),
+                        $this->topFolder
+                    );
+                }
                 if (isset($vue_data['download_url'])) {
                     $this->all_files[] = $vue_data;
                     if (++$count_visible === 5) break;
@@ -471,7 +473,6 @@ class FilesController extends AuthenticatedController
             //]
             $folders = [];
             $new_file_refs = FileRef::findAll($GLOBALS['user']->id, $this->begin, $this->end, $this->course_id, $this->page_size, $offset);
-
             //Group the file refs by their folder:
             foreach ($new_file_refs as $file_ref) {
                 if (!is_array($folders[$file_ref->folder_id])) {

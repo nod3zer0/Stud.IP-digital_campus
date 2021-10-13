@@ -191,7 +191,7 @@ class GlobalSearchFiles extends GlobalSearchModule implements GlobalSearchFullte
             return Folder::find($fileref->folder_id)->getTypedFolder();
         });
 
-        if (!$folder->isFileDownloadable($fileref, $GLOBALS['user']->id)) {
+        if (!($folder->isVisible($GLOBALS['user']->id) && $folder->isReadable($GLOBALS['user']->id))) {
             return null;
         }
 
