@@ -55,7 +55,9 @@ class CoreStudygroupAdmin extends CorePlugin implements StudipModule
      */
     public function getMetadata()
     {
-         return [];
+        return [
+            'displayname' => _('Verwaltung')
+        ];
     }
 
     public function isActivatableForContext(Range $context)
