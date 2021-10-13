@@ -225,7 +225,7 @@ class VisualFunctionsTest extends \Codeception\Test\Unit
     public function testMail()
     {
         $input = '[Mail]some.user+tag@example.com';
-        $expected = '<a class="link-extern" href="mailto:some.user+tag@example.com">Mail</a>';
+        $expected = '<a href="mailto:some.user+tag@example.com">Mail</a>';
         $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
