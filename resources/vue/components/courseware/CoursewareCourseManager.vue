@@ -234,8 +234,8 @@ export default {
             await this.loadStructuralElement(this.currentId);
             this.initCurrent();
         },
-        async initCurrent() {
-            this.currentElement = await this.structuralElementById({ id: this.currentId });
+        initCurrent() {
+            this.currentElement = _.cloneDeep(this.structuralElementById({ id: this.currentId }));
         },
         async setSelfId(target) {
             this.selfId = target;
@@ -243,7 +243,7 @@ export default {
             this.initSelf();
         },
         initSelf() {
-            this.selfElement = this.structuralElementById({ id: this.selfId });
+            this.selfElement = _.cloneDeep(this.structuralElementById({ id: this.selfId }));
         },
 
         async doExportCourseware() {
