@@ -35,7 +35,7 @@ class Download extends BlockType
             'title' => '',
             'info' => '',
             'success' => '',
-            'grade' => 'false',
+            'grade' => false,
             'file_id' => '',
         ];
     }

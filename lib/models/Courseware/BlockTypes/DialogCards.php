@@ -56,6 +56,28 @@ class DialogCards extends BlockType
         return $payload;
     }
 
+    /**
+     * get all files related to this block.
+     *
+     * @return \FileRef[] list of file references related to this block
+     */
+    public function getFiles(): array
+    {
+        $payload = $this->getPayload();
+        $files = [];
+
+        foreach ($payload['cards'] as &$card) {
+            if ($card['front_file_id'] && $fileRef = \FileRef::find($card['front_file_id'])) {
+                $files[] = $fileRef;
+            }
+            if ($card['back_file_id'] && $fileRef = \FileRef::find($card['back_file_id'])) {
+                $files[] = $fileRef;
+            }
+        }
+
+        return $files;
+    }
+
     public function copyPayload(string $rangeId = ''): array
     {
         $payload = $this->getPayload();

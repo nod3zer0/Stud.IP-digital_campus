@@ -266,22 +266,41 @@ export default {
 
         async exportFileRefs(block_id) {
             // load file-ref data
-            let refs = await this.loadFileRefs(block_id);
+            let refs =  []
+            try {
+                refs = await this.loadFileRefs(block_id);
+            } catch(e) {
+                //TODO: Companion explains error
+            }
 
             // add infos to exportFiles JSON
             for (let ref_id in refs) {
-                let fileref  = {};
+                let fileref = {};
                 let folderId = refs[ref_id].relationships.parent.data.id;
-                await this.loadFolder(folderId);
-                let folder   = this.folderById({id: folderId});
-
+                let folder = null;
                 fileref.attributes = refs[ref_id].attributes;
                 fileref.related_block_id = block_id;
                 fileref.id = refs[ref_id].id;
-                fileref.folder = {
-                    id: folder.id,
-                    name: folder.attributes.name,
-                    type: folder.attributes['folder-type']
+
+                try {
+                    await this.loadFolder(folderId);
+                    folder = this.folderById({id: folderId});
+                } catch(e) {
+                    //TODO: Companion explains error
+                }
+
+                if (folder) {
+                    fileref.folder = {
+                        id: folder.id,
+                        name: folder.attributes.name,
+                        type: folder.attributes['folder-type']
+                    }
+                } else {
+                    fileref.folder = {
+                        id: folderId,
+                        name: 'Unknown',
+                        type: 'StandardFolder'
+                    }
                 }
 
                 this.exportFiles.json.push(fileref);

@@ -283,10 +283,9 @@ abstract class BlockType
     protected function getFileById(string $fileId)
     {
         $file_ref = \FileRef::find($fileId);
-        $file = $file_ref->getFileType();
         $user = \User::findCurrent();
 
-        if ($file_ref && $file->isDownloadable($user->id)) {
+        if ($file_ref && $file_ref->getFileType()->isDownloadable($user->id)) {
             return $file_ref->toArray();
         } else {
             return [];

@@ -169,7 +169,7 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import contentIcons from './content-icons.js';
 
 export default {
@@ -196,9 +196,15 @@ export default {
             currentBackgroundType: '',
             currentBackgroundImageId: '',
             currentBackgroundImage: {},
+            currentBackgroundURL: '',
         };
     },
     computed: {
+        ...mapGetters({
+            fileRefById: 'file-refs/byId',
+            urlHelper: 'urlHelper',
+            relatedTermOfUse: 'terms-of-use/related',
+        }),
         title() {
             return this.block?.attributes?.payload?.title;
         },
@@ -292,16 +298,14 @@ export default {
             }
 
             return style;
-        },
-        currentBackgroundURL() {
-            return this.currentBackgroundImage.download_url;
-        },
+        }
     },
     mounted() {
         this.initCurrentData();
     },
     methods: {
         ...mapActions({
+            loadFileRef: 'file-refs/loadById',
             updateBlock: 'updateBlockInContainer',
         }),
         initCurrentData() {
@@ -315,13 +319,31 @@ export default {
             this.currentIconColor = this.iconColor;
             this.currentBackgroundType = this.backgroundType;
             this.currentBackgroundImageId = this.backgroundImageId;
-            if (typeof this.backgroundImage === 'object' && !Array.isArray(this.backgroundImage)) {
-                this.currentBackgroundImage = this.backgroundImage;
+            if (this.currentBackgroundImageId !== '') {
+                this.loadFile();
+            }
+        },
+        async loadFile() {
+            const id = this.currentBackgroundImageId;
+            const options = { include: 'terms-of-use' };
+            await this.loadFileRef({ id: id, options });
+            const fileRef = this.fileRefById({ id: id });
+            if (fileRef && this.relatedTermOfUse({parent: fileRef, relationship: 'terms-of-use'}).attributes['download-condition'] === 0) {
+                this.updateCurrentBackgroundImage({
+                    id: fileRef.id,
+                    name: fileRef.attributes.name,
+                    download_url: this.urlHelper.getURL(
+                        'sendfile.php',
+                        { type: 0, file_id: fileRef.id, file_name: fileRef.attributes.name },
+                        true
+                    ),
+                });
             }
         },
         updateCurrentBackgroundImage(file) {
             this.currentBackgroundImage = file;
             this.currentBackgroundImageId = file.id;
+            this.currentBackgroundURL = file.download_url;
         },
         closeEdit() {
             this.initCurrentData();
@@ -333,12 +355,19 @@ export default {
             attributes.payload.subtitle = this.currentSubtitle;
             attributes.payload.style = this.currentStyle;
             attributes.payload.height = this.currentHeight;
-            attributes.payload.background_color = this.currentBackgroundColor;
             attributes.payload.text_color = this.currentTextColor;
             attributes.payload.icon = this.currentIcon;
             attributes.payload.icon_color = this.currentIconColor;
-            attributes.payload.background_image_id = this.currentBackgroundImageId;
             attributes.payload.background_type = this.currentBackgroundType;
+            attributes.payload.background_color = '';
+            attributes.payload.background_image_id = '';
+
+            if (this.currentBackgroundType === 'color') {
+                attributes.payload.background_color = this.currentBackgroundColor;
+            }
+            if (this.currentBackgroundType === 'image') {
+                attributes.payload.background_image_id = this.currentBackgroundImageId;
+            }
 
             this.updateBlock({
                 attributes: attributes,

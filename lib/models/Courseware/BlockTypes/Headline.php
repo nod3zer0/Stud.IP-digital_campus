@@ -53,17 +53,21 @@ class Headline extends BlockType
         return Schema::fromJsonString(file_get_contents($schemaFile));
     }
 
-    public function getPayload()
+    /**
+     * get all files related to this block.
+     *
+     * @return \FileRef[] list of file references related to this block
+     */
+    public function getFiles(): array
     {
-        $payload = $this->decodePayloadString($this->block['payload']);
+        $payload = $this->getPayload();
+        $files = [];
 
-        if ('' != $payload['background_image_id']) {
-            $payload['background_image'] = $this->getFileById($payload['background_image_id']);
-        } else {
-            $payload['background_image'] = [];
+        if ($payload['background_image_id'] && $fileRef = \FileRef::find($payload['background_image_id'])) {
+            $files[] = $fileRef;
         }
 
-        return $payload;
+        return $files;
     }
 
     public function copyPayload(string $rangeId = ''): array

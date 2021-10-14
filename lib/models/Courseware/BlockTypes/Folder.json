@@ -13,7 +13,7 @@
         }
     },
     "required": [
-        "type", "folder_id"
+        "folder_id"
     ],
     "additionalProperties": false
 }
