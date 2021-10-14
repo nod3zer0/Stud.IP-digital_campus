@@ -359,20 +359,12 @@
     }
 
     .empty_blubber_background {
-        padding-top: 100px;
-        background-image: url('#{$icon-path}/lightblue/blubber.svg'), url('#{$icon-path}/blue/blubber.svg'), url('#{$icon-path}/lightblue/blubber.svg');
-        background-repeat: no-repeat;
-        background-size: 40% 40%, 30% 30%, 70% 70%;
-        background-position: 70% 50%, 30% 45%, center 0%;
-        background-blend-mode: normal, normal, overlay;
+        @include empty-placeholder-image('blubber');
         background-color: mix($dark-gray-color-5, rgba(255, 255, 255, 0), 70%);
-        text-align: center;
-        height: 40vh;
-        color: $content-color;
-        font-size: 1.6em;
+
         > :first-child {
             position: relative;
-            top: 170px;
+            top: 30vh;
         }
     }
 }

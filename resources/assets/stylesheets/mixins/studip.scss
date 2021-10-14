@@ -44,9 +44,7 @@
     border: 0;
 }
 
-
-
-@mixin background-icon($icon, $role: clickable, $size: 16) {
+@function icon-path($icon, $role: clickable) {
     $icon: unquote($icon);
     $role: unquote($role);
 
@@ -58,7 +56,7 @@
     } @else if $role == inactive {
         $color: 'grey';
     } @else if $role == navigation {
-        $color: 'lightblue';
+        $color: 'blue';
     } @else if $role == new or $role == attention or $role == status-red {
         $color: 'red';
     } @else if $role == info_alt or $role == info-alt {
@@ -67,14 +65,11 @@
         $color: 'yellow';
     }
 
-    @if $size {
-        @if unitless($size) {
-            $size: $size * 1px;
-        }
-        background-size: $size;
-    }
+    @return "#{$icon-path}/#{$color}/#{$icon}.svg";
+}
 
-    $svg: "#{$icon-path}/#{$color}/#{$icon}.svg";
+@mixin background-icon($icon, $role: clickable, $size: 16) {
+    $svg: icon-path($icon, $role);
 
     background-image: url("#{$svg}");
     background-size: $size;
@@ -105,6 +100,52 @@
             }
         }
     }
+}
+
+@mixin empty-placeholder-image($icon, $background-color: $dark-gray-color-5) {
+    &::before,
+    &::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        content: '';
+        display: block;
+        background-image: url(icon-path($icon));
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+    &::before {
+        height: 280px;
+        width: 280px;
+        opacity: 0.3;
+        transform: translate(-50%, -50%);
+    }
+    &::after {
+        height: 180px;
+        width: 180px;
+        opacity: 0.6;
+        transform: translate(20px, -50px);
+
+    }
+
+    padding-top: 100px;
+    background-image: url(icon-path($icon));
+    background-repeat: no-repeat;
+    background-size: 140px;
+    background-position: calc(50% - 100px) calc(50% + 40px);
+
+    @if ($background-color) {
+        background-color: mix($background-color, rgba(255, 255, 255, 0), 70%);
+    }
+
+    text-align: center;
+    height: 40vh;
+    color: $content-color;
+    font-size: 1.6em;
+    position: relative;
+
 }
 
 // Scrollboxes

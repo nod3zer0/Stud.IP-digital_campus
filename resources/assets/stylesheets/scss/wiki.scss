@@ -60,31 +60,13 @@ a.wiki-restricted {
     padding-left: $icon-size;
 }
 
-.wiki-background {
-    @include background-icon(wiki, navigation, 260);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: hsla(0,0%,100%,0.70);
-    background-blend-mode: overlay;
+.wiki-empty-background {
+    @include empty-placeholder-image('wiki', false);
 }
 
 .flex {
     display: flex;
     justify-content: center;
-}
-
-.image1 {
-    height: 140px;
-    width: 160px;
-    margin-top: 90px;
-    margin-left: 10px;
-}
-
-.image2 {
-    height: 180px;
-    width: 200px;
-    margin-top: 120px;
-    margin-left: 10px;
 }
 
 .wiki-teaser {

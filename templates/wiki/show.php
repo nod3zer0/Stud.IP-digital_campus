@@ -2,12 +2,7 @@
 <article class="studip wiki" id="main_content" role="main">
     <section>
         <? if ($wikipage->keyword == 'WikiWikiWeb' && $wikipage->isNew()): ?>
-            <div class="wiki-background">
-                <div class="flex">
-                    <img src='assets/images/icons/blue/wiki.svg' class="image1">
-                    <img src='assets/images/icons/lightblue/wiki.svg' class="image2">
-                </div>
-            </div>
+            <div class="wiki-empty-background"></div>
             <div class="flex">
                 <div class="wiki-teaser">
                     <?= _('Mach die Welt ein Stückchen schlauer.') ?>
