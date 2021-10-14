@@ -312,6 +312,7 @@ export default {
                 });
                 await this.unlockObject({ id: element.id, type: 'courseware-structural-elements' });
                 this.loadStructuralElement(this.currentElement.id);
+                this.$emit('reloadElement');
                 this.$store.dispatch('cwManagerFilingData', {});
             } else if(source === 'remote' || source === 'own') {
                 //create Element
@@ -341,6 +342,7 @@ export default {
                     structuralElementId: this.currentElement.id
                 });
                 await this.unlockObject({id: container.id, type: 'courseware-containers'});
+                this.$emit('reloadElement');
                 this.$store.dispatch('cwManagerFilingData', {});
             } else if (source === 'remote' || source === 'own') {
                 let parentId = this.filingData.parentItem.id;

@@ -6,6 +6,7 @@
                     type="current"
                     :currentElement="currentElement"
                     @selectElement="setCurrentId"
+                    @reloadElement="reloadElements"
                 />
             </courseware-tab>
             <courseware-tab :name="$gettext('Export')">
