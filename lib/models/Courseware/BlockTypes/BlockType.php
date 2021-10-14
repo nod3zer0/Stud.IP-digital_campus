@@ -303,14 +303,17 @@ abstract class BlockType
     protected function copyFileById(string $fileId, string $rangeId): string
     {
         $user = \User::findCurrent();
+        if ($file_ref = \FileRef::find($fileId)) {
+            $copiedFile = \FileManager::copyFile(
+                $file_ref->getFiletype(),
+                $this->getDestinationFolder($user, $rangeId),
+                $user
+            );
 
-        $copiedFile = \FileManager::copyFile(
-            \FileRef::find($fileId)->getFiletype(),
-            $this->getDestinationFolder($user, $rangeId),
-            $user
-        );
+            return $copiedFile->id;
+        }
 
-        return $copiedFile->id;
+        return '';
     }
 
     /**
@@ -325,14 +328,17 @@ abstract class BlockType
     {
         $user = \User::findCurrent();
         $destinationFolder = $this->getDestinationFolder($user, $rangeId);
-        $sourceFolder = \Folder::find($folderId)->getTypedFolder();
-        $copiedFolder = \FileManager::copyFolder(
-            $sourceFolder,
-            $destinationFolder,
-            $user
-        );
+        if ($sourceFolder = \Folder::find($folderId)) {
+            $copiedFolder = \FileManager::copyFolder(
+                $sourceFolder->getTypedFolder(),
+                $destinationFolder,
+                $user
+            );
 
-        return $copiedFolder->id;
+            return $copiedFolder->id;
+        }
+
+        return '';
     }
 
     private function getDestinationFolder(\User $user, string $rangeId): \StandardFolder
