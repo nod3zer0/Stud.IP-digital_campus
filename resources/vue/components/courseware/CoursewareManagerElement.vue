@@ -1,6 +1,7 @@
 <template>
     <div class="cw-manager-element">
         <div v-if="currentElement">
+            <courseware-companion-box v-if="insertingInProgress" :msgCompanion="text.inProgress" mood="pointing" />
             <div class="cw-manager-element-title">
                 <div class="cw-manager-element-breadcrumb">
                     <span
@@ -112,6 +113,7 @@ import CoursewareCollapsibleBox from './CoursewareCollapsibleBox.vue';
 import CoursewareManagerContainer from './CoursewareManagerContainer.vue';
 import CoursewareManagerElementItem from './CoursewareManagerElementItem.vue';
 import CoursewareManagerFiling from './CoursewareManagerFiling.vue';
+import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import { mapActions, mapGetters } from 'vuex';
 import { forEach } from 'jszip';
 
@@ -122,6 +124,7 @@ export default {
         CoursewareManagerContainer,
         CoursewareManagerElementItem,
         CoursewareManagerFiling,
+        CoursewareCompanionBox,
         StudipIcon,
     },
     props: {
@@ -151,6 +154,9 @@ export default {
             sortArrayContainers: [],
             discardStateArrayContainers: [],
             insertingInProgress: false,
+            text: {
+                inProgress: this.$gettext('Vorgang läuft. Bitte warten Sie einen Moment.')
+            },
         };
     },
     computed: {
