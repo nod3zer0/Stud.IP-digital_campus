@@ -150,6 +150,7 @@ export default {
             discardStateArrayChildren: [],
             sortArrayContainers: [],
             discardStateArrayContainers: [],
+            insertingInProgress: false,
         };
     },
     computed: {
@@ -300,115 +301,126 @@ export default {
             this.$emit('selectElement', target);
         },
         async insertElement(data) {
-            let source = data.source;
-            let element = data.element;
-            if (source === 'self') {
-                element.relationships.parent.data.id = this.filingData.parentItem.id;
-                element.attributes.position = this.filingData.parentItem.relationships.children.data.length;
-                await this.lockObject({ id: element.id, type: 'courseware-structural-elements' });
-                await this.updateStructuralElement({
-                    element: element,
-                    id: element.id,
-                });
-                await this.unlockObject({ id: element.id, type: 'courseware-structural-elements' });
-                this.loadStructuralElement(this.currentElement.id);
-                this.$emit('reloadElement');
-                this.$store.dispatch('cwManagerFilingData', {});
-            } else if(source === 'remote' || source === 'own') {
-                //create Element
-                let parentId = this.filingData.parentItem.id;
-                await this.copyStructuralElement({
-                    parentId: parentId,
-                    element: element,
-                });
-                this.$emit('loadSelf', parentId);
-                this.$store.dispatch('cwManagerFilingData', {});
-            } else {
-                console.log('unreliable source:');
-                console.log(source);
-                console.log(element);
+            if(!this.insertingInProgress) {
+                this.insertingInProgress = true;
+                let source = data.source;
+                let element = data.element;
+                if (source === 'self') {
+                    element.relationships.parent.data.id = this.filingData.parentItem.id;
+                    element.attributes.position = this.filingData.parentItem.relationships.children.data.length;
+                    await this.lockObject({ id: element.id, type: 'courseware-structural-elements' });
+                    await this.updateStructuralElement({
+                        element: element,
+                        id: element.id,
+                    });
+                    await this.unlockObject({ id: element.id, type: 'courseware-structural-elements' });
+                    this.loadStructuralElement(this.currentElement.id);
+                    this.$emit('reloadElement');
+                    this.$store.dispatch('cwManagerFilingData', {});
+                } else if(source === 'remote' || source === 'own') {
+                    //create Element
+                    let parentId = this.filingData.parentItem.id;
+                    await this.copyStructuralElement({
+                        parentId: parentId,
+                        element: element,
+                    });
+                    this.$emit('loadSelf', parentId);
+                    this.$store.dispatch('cwManagerFilingData', {});
+                } else {
+                    console.log('unreliable source:');
+                    console.log(source);
+                    console.log(element);
+                }
+                this.insertingInProgress = false;
             }
-
         },
         async insertContainer(data) {
-            let source = data.source;
-            let container = data.container;
-            if (source === 'self') {
-                container.relationships['structural-element'].data.id = this.filingData.parentItem.id;
-                container.attributes.position = this.filingData.parentItem.relationships.containers.data.length;
-                await this.lockObject({id: container.id, type: 'courseware-containers'});
-                await this.updateContainer({
-                    container: container,
-                    structuralElementId: this.currentElement.id
-                });
-                await this.unlockObject({id: container.id, type: 'courseware-containers'});
-                this.$emit('reloadElement');
-                this.$store.dispatch('cwManagerFilingData', {});
-            } else if (source === 'remote' || source === 'own') {
-                let parentId = this.filingData.parentItem.id;
-                await this.copyContainer({
-                    parentId: parentId,
-                    container: container,
-                });
-                this.$emit('loadSelf', parentId);
-                this.$store.dispatch('cwManagerFilingData', {});
-            } else {
-                console.log('unreliable source:');
-                console.log(source);
-                console.log(container);
+            if(!this.insertingInProgress) {
+                this.insertingInProgress = true;
+                let source = data.source;
+                let container = data.container;
+                if (source === 'self') {
+                    container.relationships['structural-element'].data.id = this.filingData.parentItem.id;
+                    container.attributes.position = this.filingData.parentItem.relationships.containers.data.length;
+                    await this.lockObject({id: container.id, type: 'courseware-containers'});
+                    await this.updateContainer({
+                        container: container,
+                        structuralElementId: this.currentElement.id
+                    });
+                    await this.unlockObject({id: container.id, type: 'courseware-containers'});
+                    this.$emit('reloadElement');
+                    this.$store.dispatch('cwManagerFilingData', {});
+                } else if (source === 'remote' || source === 'own') {
+                    let parentId = this.filingData.parentItem.id;
+                    await this.copyContainer({
+                        parentId: parentId,
+                        container: container,
+                    });
+                    this.$emit('loadSelf', parentId);
+                    this.$store.dispatch('cwManagerFilingData', {});
+                } else {
+                    console.log('unreliable source:');
+                    console.log(source);
+                    console.log(container);
+                }
+                this.insertingInProgress = false;
             }
 
         },
         async insertBlock(data) {
-            let source = data.source;
-            let block = data.block;
-            if (source === 'self') {
-                let sourceContainer = await this.containerById({id: block.relationships.container.data.id});
-                sourceContainer.attributes.payload.sections.forEach(section => {
-                    let index = section.blocks.indexOf(block.id);
-                    if(index !== -1) {
-                        section.blocks.splice(index, 1);
-                    }
-                });
-                await this.lockObject({id: sourceContainer.id, type: 'courseware-containers'});
-                await this.updateContainer({
-                    container: sourceContainer,
-                    structuralElementId: sourceContainer.relationships['structural-element'].data.id
-                });
-                await this.unlockObject({id: sourceContainer.id, type: 'courseware-containers'});
+            if(!this.insertingInProgress) {
+                this.insertingInProgress = true;
+                let source = data.source;
+                let block = data.block;
+                if (source === 'self') {
+                    let sourceContainer = await this.containerById({id: block.relationships.container.data.id});
+                    sourceContainer.attributes.payload.sections.forEach(section => {
+                        let index = section.blocks.indexOf(block.id);
+                        if(index !== -1) {
+                            section.blocks.splice(index, 1);
+                        }
+                    });
+                    await this.lockObject({id: sourceContainer.id, type: 'courseware-containers'});
+                    await this.updateContainer({
+                        container: sourceContainer,
+                        structuralElementId: sourceContainer.relationships['structural-element'].data.id
+                    });
+                    await this.unlockObject({id: sourceContainer.id, type: 'courseware-containers'});
 
-                let destinationContainer = await this.containerById({id: this.filingData.parentItem.id});
-                destinationContainer.attributes.payload.sections[destinationContainer.attributes.payload.sections.length-1].blocks.push(block.id);
-                await this.lockObject({id: destinationContainer.id, type: 'courseware-containers'});
-                await this.updateContainer({
-                    container: destinationContainer,
-                    structuralElementId: destinationContainer.relationships['structural-element'].data.id
-                });
-                await this.unlockObject({id: destinationContainer.id, type: 'courseware-containers'});
+                    let destinationContainer = await this.containerById({id: this.filingData.parentItem.id});
+                    destinationContainer.attributes.payload.sections[destinationContainer.attributes.payload.sections.length-1].blocks.push(block.id);
+                    await this.lockObject({id: destinationContainer.id, type: 'courseware-containers'});
+                    await this.updateContainer({
+                        container: destinationContainer,
+                        structuralElementId: destinationContainer.relationships['structural-element'].data.id
+                    });
+                    await this.unlockObject({id: destinationContainer.id, type: 'courseware-containers'});
 
-                block.relationships.container.data.id = this.filingData.parentItem.id;
-                block.attributes.position = this.filingData.parentItem.relationships.blocks.data.length;
-                await this.lockObject({id: block.id, type: 'courseware-blocks'});
-                await this.updateBlock({
-                    block: block,
-                    containerId: this.filingData.parentItem.id
-                });
-                await this.unlockObject({id: block.id, type: 'courseware-blocks'});
-                await this.loadContainer(sourceContainer.id);
-                await this.loadContainer(destinationContainer.id);
-                this.$emit('reloadElement');
-                this.$store.dispatch('cwManagerFilingData', {});
-            } else if (source === 'remote' || source === 'own') {
-                let parentId = this.filingData.parentItem.id;
-                await this.copyBlock({
-                    parentId: parentId,
-                    block: block,
-                });
-                await this.loadContainer(parentId);
-                this.$emit('loadSelf',this.filingData.parentItem.relationships['structural-element'].data.id);
-                this.$store.dispatch('cwManagerFilingData', {});
-            } else {
-                console.debug('unreliable source:', source, block);
+                    block.relationships.container.data.id = this.filingData.parentItem.id;
+                    block.attributes.position = this.filingData.parentItem.relationships.blocks.data.length;
+                    await this.lockObject({id: block.id, type: 'courseware-blocks'});
+                    await this.updateBlock({
+                        block: block,
+                        containerId: this.filingData.parentItem.id
+                    });
+                    await this.unlockObject({id: block.id, type: 'courseware-blocks'});
+                    await this.loadContainer(sourceContainer.id);
+                    await this.loadContainer(destinationContainer.id);
+                    this.$emit('reloadElement');
+                    this.$store.dispatch('cwManagerFilingData', {});
+                } else if (source === 'remote' || source === 'own') {
+                    let parentId = this.filingData.parentItem.id;
+                    await this.copyBlock({
+                        parentId: parentId,
+                        block: block,
+                    });
+                    await this.loadContainer(parentId);
+                    this.$emit('loadSelf',this.filingData.parentItem.relationships['structural-element'].data.id);
+                    this.$store.dispatch('cwManagerFilingData', {});
+                } else {
+                    console.debug('unreliable source:', source, block);
+                }
+                this.insertingInProgress = false;
             }
         },
 
