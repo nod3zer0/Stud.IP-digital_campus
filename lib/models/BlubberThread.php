@@ -279,7 +279,7 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
                 ['olderthan' => $olderthan]
             );
         }
-        $query->orderBy("IFNULL(MAX(blubber_comments.mkdate), blubber_threads.mkdate) DESC");
+        $query->orderBy("MAX(blubber_comments.mkdate) DESC, blubber_threads.mkdate DESC");
         $query->limit($limit);
 
         $threads = $query->fetchAll(static::class);
@@ -291,7 +291,7 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
         $since = 0;
         $olderthan = time();
         foreach ($upgraded_threads as $thread) {
-            $active_time = $thread->getLatestActivity();
+            $active_time = $thread->getLatestActivity(true);
             $since = max($since, $active_time);
             $olderthan = min($olderthan, $active_time);
         }
@@ -581,10 +581,13 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
         return OpenGraph::extract($this['content']);
     }
 
-    public function getLatestActivity()
+    public function getLatestActivity(bool $include_mkdate = false)
     {
         $newest_comment = BlubberComment::findOneBySQL("thread_id = ? ORDER BY mkdate DESC", [$this->getId()]);
-        return $newest_comment ? $newest_comment['mkdate'] : $this['mkdate'];
+        if ($newest_comment) {
+            return $newest_comment->mkdate;
+        }
+        return $include_mkdate ? $this->mkdate : null;
     }
 
     public function getURL()

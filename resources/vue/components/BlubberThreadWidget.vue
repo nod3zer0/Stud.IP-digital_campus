@@ -104,7 +104,11 @@
         },
         computed: {
             sortedThreads () {
-                return this.threads.sort((a, b) => b.timestamp - a.timestamp);
+                return this.threads.sort((a, b) => {
+                    return b.timestamp - a.timestamp
+                        || b.mkdate - a.mkdate
+                        || b.name.localeCompare(a.name);
+                });
             }
         }
     }
