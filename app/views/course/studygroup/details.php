@@ -4,7 +4,10 @@
     </header>
     <section>
         <dl style="margin: 0">
-        <? if ($studygroup->description): ?>
+            <dt><?= _('Name der Studiengruppe') ?></dt>
+            <dd><?= htmlReady($studygroup->name) ?></dd>
+
+        <? if ((string) $studygroup->description): ?>
             <dt><?= _('Beschreibung') ?></dt>
             <dd><?= formatLinks($studygroup->description) ?></dd>
         <? endif; ?>
