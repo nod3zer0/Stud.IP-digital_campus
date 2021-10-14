@@ -12,7 +12,13 @@ abstract class ConsultationController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        $this->range = Context::get() ?: User::findByUsername(Request::username('username', $GLOBALS['user']->username));
+        if (Request::submitted('username')) {
+            $this->range = User::findByUsername(Request::username('username'));
+        } elseif (Request::submitted('cid')) {
+            $this->range = Context::get();
+        } else {
+            $this->range = $GLOBALS['user']->getAuthenticatedUser();
+        }
 
         if ($this->range instanceof User) {
             URLHelper::addLinkParam('username', $this->range->username);
