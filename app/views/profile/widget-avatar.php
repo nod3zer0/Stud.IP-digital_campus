@@ -30,8 +30,9 @@
     <? if ($score && $score_title): ?>
         <div class="minor">
             <a href="<?= URLHelper::getLink('dispatch.php/score') ?>" title="<?= _('Zur Rangliste') ?>">
-                <div><?= _('Stud.IP-Punkte') ?>: <?= number_format($score, 0, ',', '.') ?></div>
-                <div><?= _('Rang') ?>: <?= htmlReady($score_title) ?></div>
+                <?= _('Stud.IP-Punkte') ?>: <?= number_format($score, 0, ',', '.') ?>
+                <br />
+                <?= _('Rang') ?>: <?= htmlReady($score_title) ?>
             </a>
         </div>
     <? endif; ?>
