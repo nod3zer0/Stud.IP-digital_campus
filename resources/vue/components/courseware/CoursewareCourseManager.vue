@@ -131,6 +131,10 @@
                     <translate>Alles importieren</translate>
                 </button>
 
+                <ul v-if="importErrors.length > 0">
+                    <li v-for="error in importErrors"> {{error}} </li>
+                </ul>
+
                 <input ref="importFile" type="file" accept=".zip" @change="setImport" style="visibility: hidden" />
             </courseware-tab>
         </courseware-tabs>
@@ -184,6 +188,7 @@ export default {
             importFilesProgress: 'importFilesProgress',
             importStructuresState: 'importStructuresState',
             importStructuresProgress: 'importStructuresProgress',
+            importErrors: 'importErrors',
             exportState: 'exportState',
             exportProgress: 'exportProgress'
         }),

@@ -37,6 +37,7 @@ const getDefaultState = () => {
         importFilesProgress: 0,
         importStructuresState: '',
         importStructuresProgress: 0,
+        importErrors: [],
 
         exportState: '',
         exportProgress: 0,
@@ -153,6 +154,9 @@ const getters = {
     },
     importStructuresProgress(state) {
         return state.importStructuresProgress;
+    },
+    importErrors(state) {
+        return state.importErrors;
     },
     exportState(state) {
         return state.exportState;
@@ -716,6 +720,9 @@ export const actions = {
     setImportStructuresProgress({commit}, percent ) {
         commit('setImportStructuresProgress', percent)
     },
+    setImportErrors({commit}, errors) {
+        commit('setImportErrors', errors);
+    },
 
     setExportState({commit}, state) {
         commit('setExportState', state)
@@ -1073,6 +1080,9 @@ export const mutations = {
 
     setImportFilesProgress(state, importFilesProgress) {
         state.importFilesProgress = importFilesProgress;
+    },
+    setImportErrors(state, importErrors) {
+        state.importErrors = importErrors;
     },
 
     setImportStructuresState(state, importStructuresState) {

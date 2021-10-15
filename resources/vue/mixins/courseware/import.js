@@ -7,6 +7,7 @@ export default {
             file_mapping: {},
             elementCounter: 0,
             importElementCounter: 0,
+            currentImportErrors: [],
         };
     },
 
@@ -27,6 +28,7 @@ export default {
             this.elementCounter = await this.countImportElements([element]);
             this.setImportStructuresState('');
             this.importElementCounter = 0;
+            this.setImportErrors([]);
 
             await this.importStructuralElement([element], parent_id, files);
 
@@ -61,7 +63,6 @@ export default {
         async importStructuralElement(element, parent_id, files) {
             if (element.length) {
                 for (var i = 0; i < element.length; i++) {
-                    // TODO: create element on server and fetch new id
                     this.setImportStructuresState('Lege Seite an: ' + element[i].attributes.title);
                     await this.createStructuralElement({
                         attributes: element[i].attributes,
@@ -93,8 +94,10 @@ export default {
                                 let new_block = null;
                                 for (var k = 0; k < container.blocks.length; k++) {
                                     new_block = await this.importBlock(container.blocks[k], new_container, files);
-                                    this.importElementCounter++;
-                                    await this.updateContainerPayload(new_container, new_element.id, container.blocks[k].id, new_block.id);
+                                    if (new_block !== null) {
+                                        this.importElementCounter++;
+                                        await this.updateContainerPayload(new_container, new_element.id, container.blocks[k].id, new_block.id);
+                                    }
                                 }
 
                             }
@@ -105,12 +108,17 @@ export default {
         },
 
         async importBlock(block, block_container, files) {
-            // TODO: create element
             this.setImportStructuresState('Lege neuen Block an: ' + block.attributes.title);
-            await this.createBlockInContainer({
-                container: {type: block_container.type, id: block_container.id},
-                blockType: block.attributes['block-type'],
-            });
+            try {
+                await this.createBlockInContainer({
+                    container: {type: block_container.type, id: block_container.id},
+                    blockType: block.attributes['block-type'],
+                });
+            } catch(error) {
+                this.currentImportErrors.push(this.$gettext('Block konnte nicht erstellt werden') + ': ' + block.attributes.title);
+
+                return null;
+            }
 
             let new_block = this.$store.getters['courseware-blocks/lastCreated'];
 
@@ -154,7 +162,6 @@ export default {
             });
             await this.unlockObject({ id: container.id, type: 'courseware-containers' });
         },
-
 
         async uploadAllFiles(files) {
             // create folder for importing the files into
@@ -241,6 +248,7 @@ export default {
             'setImportFilesProgress',
             'setImportStructuresState',
             'setImportStructuresProgress',
+            'setImportErrors',
         ]),
     },
     watch: {
@@ -249,6 +257,11 @@ export default {
                 this.setImportStructuresProgress(parseInt(counter / this.elementCounter * 100));
             } else {
                 this.setImportStructuresProgress(100);
+            }
+        },
+        currentImportErrors(errors) {
+            if(errors.length > 0) {
+                this.setImportErrors(errors);
             }
         }
     },

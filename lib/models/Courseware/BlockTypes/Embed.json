@@ -16,25 +16,10 @@
         },
         "endtime": {
             "type": "string"
-        },
-        "oembed_request": {
-            "type": "string"
-        },
-        "oembed-unauthorized": {
-            "type": "boolean"
-        },
-        "oembed-not-found": {
-            "type": "boolean"
-        },
-        "oembed": {
-            "type": "object"
-        },
-        "request": {
-            "type": "string"
         }
     },
     "required": [
         "url", "source"
     ],
-    "additionalProperties": false
+    "additionalProperties": true
 }
