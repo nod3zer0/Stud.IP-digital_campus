@@ -157,8 +157,7 @@ class ExternModuleTemplateNews extends ExternModule {
         }
         if ($nameformat == 'last') $local_fullname_sql['last'] = ' Nachname ';
 
-        $_news = StudipNews::GetNewsByRange($this->config->range_id);
-        $news =& $_news;
+        $news = StudipNews::GetNewsByRange($this->config->range_id, false, true);
         if (!count($news)) {
             $content['NEWS']['NO-NEWS']['NO-NEWS_TEXT'] = $this->config->getValue('Main', "nodatatext");
         }
@@ -181,7 +180,7 @@ class ExternModuleTemplateNews extends ExternModule {
                     $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['NEWS_ADMIN-MESSAGE'] = preg_replace('# \(?(.*)\)?#', '$1', $admin_msg);
                 }
 
-                if (!$news_content) {
+                if (!(string) $news_detail->body) {
                     $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['NEWS_BODY'] = _('Keine Beschreibung vorhanden.');
                 } else {
                     $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['NEWS_BODY'] =  ExternModule::ExtFormatReady((string) $news_detail->body);
@@ -210,6 +209,7 @@ class ExternModuleTemplateNews extends ExternModule {
                     $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl(['link_args' => 'username=' . $temp['username']]);
                 }
                 $i++;
+
             } else if ($news_detail->date < $now) {
                 //archivierte News ausgeben
                 if ($news_detail->chdate_uid){
@@ -219,7 +219,7 @@ class ExternModuleTemplateNews extends ExternModule {
                     $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_NEWS_ADMIN-MESSAGE'] = preg_replace('# \(?(.*)\)?#', '$1', $admin_msg);
                 }
 
-                if (!$news_content) {
+                if (!(string) $news_detail->body) {
                     $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_NEWS_BODY'] = _("Keine Beschreibung vorhanden.");
                 } else {
                     $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_NEWS_BODY'] =  ExternModule::ExtFormatReady((string) $news_detail->body);
