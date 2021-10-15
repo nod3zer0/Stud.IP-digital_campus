@@ -78,22 +78,28 @@ export default {
         },
     },
     methods: {
-        ...mapActions({ loadRelatedFolders: 'folders/loadRelated' }),
+        ...mapActions({
+            loadRelatedFolders: 'folders/loadRelated' 
+        }),
+
         changeSelection() {
             this.$emit('input', this.currentValue);
         },
 
         getCourseFolders() {
-            return this.loadRelatedFolders({
-                parent: this.courseObject,
-                relationship: 'folders',
-            });
+            const parent = this.courseObject;
+            const relationship = 'folders';
+            const options = { 'page[limit]': 10000 };
+
+            return this.loadRelatedFolders({ parent, relationship, options });
         },
+
         getUserFolders() {
-            return this.loadRelatedFolders({
-                parent: this.userObject,
-                relationship: 'folders',
-            });
+            const parent = this.userObject;
+            const relationship = 'folders';
+            const options = { 'page[limit]': 10000 };
+
+            return this.loadRelatedFolders({ parent, relationship, options });
         },
     },
     mounted() {
