@@ -878,6 +878,8 @@ class Course_RoomRequestsController extends AuthenticatedController
                 $session_data['reply_lecturers'] = $this->reply_lecturers;
                 $session_data['preparation_time'] = $this->preparation_time;
                 $session_data['category_id'] = $this->category_id;
+                //Set the request-ID in the session to make it clear that the request has been modified:
+                $session_data['request_id'] = $this->request->id;
                 if (Request::submitted('select_other_room')) {
                     $this->redirect('course/room_requests/request_select_room/' . $this->request_id);
                 } elseif (Request::submitted('reset_category')) {
