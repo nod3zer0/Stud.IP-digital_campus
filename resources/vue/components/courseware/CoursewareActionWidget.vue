@@ -1,12 +1,22 @@
 <template>
-    <ul class="widget-list widget-links cw-action-widget">
-        <li v-show="canEdit" class="cw-action-widget-edit" @click="editElement"><translate>Seite bearbeiten</translate></li>
-        <li v-show="canEdit" class="cw-action-widget-add" @click="addElement"><translate>Seite hinzufügen</translate></li>
+    <ul class="widget-list widget-links cw-action-widget" v-if="structuralElement">
+        <li v-show="canEdit" class="cw-action-widget-edit" @click="editElement">
+            <translate>Seite bearbeiten</translate>
+        </li>
+        <li v-show="canEdit" class="cw-action-widget-add" @click="addElement">
+            <translate>Seite hinzufügen</translate>
+        </li>
         <li class="cw-action-widget-info" @click="showElementInfo"><translate>Informationen anzeigen</translate></li>
         <li class="cw-action-widget-star" @click="createBookmark"><translate>Lesezeichen setzen</translate></li>
-        <li v-show="canEdit" @click="exportElement" class="cw-action-widget-export"><translate>Seite exportieren</translate></li>
-        <li v-show="canEdit && oerEnabled" @click="oerElement" class="cw-action-widget-oer"><translate>Seite auf %{oerTitle} veröffentlichen</translate></li>
-        <li v-show="!isRoot && canEdit" class="cw-action-widget-trash" @click="deleteElement"><translate>Seite löschen</translate></li>
+        <li v-show="canEdit" @click="exportElement" class="cw-action-widget-export">
+            <translate>Seite exportieren</translate>
+        </li>
+        <li v-show="canEdit && oerEnabled" @click="oerElement" class="cw-action-widget-oer">
+            <translate>Seite auf %{oerTitle} veröffentlichen</translate>
+        </li>
+        <li v-show="!isRoot && canEdit" class="cw-action-widget-trash" @click="deleteElement">
+            <translate>Seite löschen</translate>
+        </li>
     </ul>
 </template>
 
@@ -17,29 +27,16 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-action-widget',
+    props: ['structuralElement'],
     components: {
-        StudipIcon
+        StudipIcon,
     },
     mixins: [CoursewareExport],
-    data() {
-        return {
-            currentId: null,
-            currentElement: {},
-        }
-    },
     computed: {
-         ...mapGetters({
-            structuralElementById: 'courseware-structural-elements/byId',
+        ...mapGetters({
             oerEnabled: 'oerEnabled',
             oerTitle: 'oerTitle',
         }),
-        structuralElement() {
-            if (!this.currentId) {
-                return null;
-            }
-
-            return this.structuralElementById({ id: this.currentId });
-        },
         isRoot() {
             if (!this.structuralElement) {
                 return true;
@@ -53,15 +50,12 @@ export default {
             }
             return this.structuralElement.attributes['can-edit'];
         },
-    },
-    async mounted() {
-        if (!this.currentId) {
-            this.setCurrentId(this.$route.params.id);
-        }
+        currentId() {
+            return this.structuralElement?.id;
+        },
     },
     methods: {
         ...mapActions({
-            loadStructuralElement: 'loadStructuralElement',
             showElementEditDialog: 'showElementEditDialog',
             showElementAddDialog: 'showElementAddDialog',
             showElementDeleteDialog: 'showElementDeleteDialog',
@@ -70,19 +64,8 @@ export default {
             showElementOerDialog: 'showElementOerDialog',
             companionInfo: 'companionInfo',
             addBookmark: 'addBookmark',
-            lockObject: 'lockObject'
+            lockObject: 'lockObject',
         }),
-        async setCurrentId(id) {
-            this.currentId = id;
-            await this.loadStructuralElement(this.currentId);
-            this.initCurrent();
-        },
-        initCurrent() {
-            this.currentElement = JSON.parse(JSON.stringify(this.structuralElement));
-            if (!this.currentElement.attributes.payload.meta) {
-                this.currentElement.attributes.payload.meta = {};
-            }
-        },
         async editElement() {
             await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
             this.showElementEditDialog(true);
@@ -106,12 +89,7 @@ export default {
         },
         oerElement() {
             this.showElementOerDialog(true);
-        }
-    },
-    watch: {
-        $route(to) {
-            this.setCurrentId(to.params.id);
         },
     },
-}
+};
 </script>

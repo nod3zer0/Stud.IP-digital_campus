@@ -1,18 +1,18 @@
 <template>
     <div v-if="courseware">
         <courseware-structural-element
+            :structural-element="selected"
             :ordered-structural-elements="orderedStructuralElements"
+            @select="selectStructuralElement"
         ></courseware-structural-element>
         <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions">
-            <courseware-action-widget></courseware-action-widget>
+            <courseware-action-widget :structural-element="selected"></courseware-action-widget>
         </MountingPortal>
         <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
             <courseware-view-widget></courseware-view-widget>
         </MountingPortal>
     </div>
-    <div v-else>
-        <translate>Inhalte werden geladen</translate>...
-    </div>
+    <div v-else><translate>Inhalte werden geladen</translate>...</div>
 </template>
 
 <script>
@@ -27,25 +27,48 @@ export default {
         CoursewareViewWidget,
         CoursewareActionWidget,
     },
-    data: () => ({ orderedStructuralElements: [] }),
+    data: () => ({
+        selected: null,
+        orderedStructuralElements: [],
+    }),
     computed: {
         ...mapGetters({
             courseware: 'courseware',
             relatedStructuralElement: 'courseware-structural-elements/related',
             structuralElements: 'courseware-structural-elements/all',
+            structuralElementById: 'courseware-structural-elements/byId',
             userId: 'userId',
         }),
     },
     methods: {
-        ...mapActions(['loadCoursewareStructure', 'loadTeacherStatus', 'coursewareBlockAdder']),
+        ...mapActions([
+            'coursewareBlockAdder',
+            'loadCoursewareStructure',
+            'loadStructuralElement',
+            'loadTeacherStatus',
+        ]),
+        async selectStructuralElement(id) {
+            if (!id) {
+                return;
+            }
+
+            await this.loadStructuralElement(id);
+            this.selected = this.structuralElementById({ id });
+        },
     },
     async mounted() {
         await this.loadCoursewareStructure();
         await this.loadTeacherStatus(this.userId);
+        const selectedId = this.$route.params?.id;
+        await this.selectStructuralElement(selectedId);
     },
     watch: {
-        $route() {
-            this.coursewareBlockAdder({}); //reset block adder on navigate
+        $route(to) {
+            // reset block adder on navigate
+            this.coursewareBlockAdder({});
+
+            const selectedId = to.params?.id;
+            this.selectStructuralElement(selectedId);
         },
         structuralElements(newElements, oldElements) {
             const nodes = buildNodes(this.structuralElements, this.relatedStructuralElement.bind(this));
