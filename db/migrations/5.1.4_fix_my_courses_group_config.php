@@ -1,6 +1,11 @@
 <?php
 final class FixMyCoursesGroupConfig extends Migration
 {
+    public function description()
+    {
+        return 'Ensures correct format of MY_COURSES_OPEN_GROUPS user config option';
+    }
+
     public function up()
     {
         ConfigValue::findEachBySQL(
