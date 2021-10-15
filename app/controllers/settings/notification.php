@@ -180,8 +180,10 @@ class Settings_NotificationController extends Settings_SettingsController
      */
     public function open_action($id)
     {
-        $open      = $this->config->MY_COURSES_OPEN_GROUPS;
-        $open[$id] = true;
+        $open = $this->config->MY_COURSES_OPEN_GROUPS;
+        if (!in_array($id, $open)) {
+            $open[] = $id;
+        }
         $this->config->store('MY_COURSES_OPEN_GROUPS', $open);
 
         $this->redirect('settings/notification');
@@ -195,7 +197,7 @@ class Settings_NotificationController extends Settings_SettingsController
     public function close_action($id)
     {
         $open = $this->config->MY_COURSES_OPEN_GROUPS;
-        unset($open[$id]);
+        $open = array_diff($open, [$id]);
         $this->config->store('MY_COURSES_OPEN_GROUPS', $open);
 
         $this->redirect('settings/notification');
