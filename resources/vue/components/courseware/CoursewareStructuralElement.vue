@@ -1045,11 +1045,11 @@ export default {
         },
         async deleteCurrentElement() {
             let parent_id = this.structuralElement.relationships.parent.data.id;
+            this.showElementDeleteDialog(false);
             await this.deleteStructuralElement({
                 id: this.currentId,
                 parentId: this.structuralElement.relationships.parent.data.id,
             });
-            this.showElementDeleteDialog(false);
             this.$router.push(parent_id);
         },
         async createElement() {
