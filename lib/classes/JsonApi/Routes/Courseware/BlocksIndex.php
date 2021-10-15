@@ -14,6 +14,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class BlocksIndex extends JsonApiController
 {
+    protected $allowedPagingParameters = ['offset', 'limit'];
+
     protected $allowedIncludePaths = [
         'container',
         'owner',

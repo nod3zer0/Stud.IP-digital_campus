@@ -13,6 +13,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class StructuralElementsIndex extends JsonApiController
 {
+    protected $allowedPagingParameters = ['offset', 'limit'];
+
     protected $allowedIncludePaths = [
         'ancestors',
         'containers',
