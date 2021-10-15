@@ -221,9 +221,10 @@ final class TwoFactorAuth
         echo $GLOBALS['template_factory']->render(
             'tfa-validate.php',
             $_SESSION[self::SESSION_DATA] + [
-                'secret'  => $this->secret,
-                'text'    => $text,
-                'blocked' => $this->isBlocked(),
+                'secret'   => $this->secret,
+                'text'     => $text,
+                'blocked'  => $this->isBlocked(),
+                'duration' => Config::get()->TFA_TRUST_DURATION,
             ],
             'layouts/base.php'
         );
@@ -250,11 +251,14 @@ final class TwoFactorAuth
      */
     private function registerSecretInCookie()
     {
+        $lifetime_in_days = Config::get()->TFA_TRUST_DURATION;
+        $lifetime = $lifetime_in_days > 0 ? strtotime("+{$lifetime_in_days} days") : 2147483647;
+
         $timeslice = mt_rand(0, PHP_INT_MAX);
         setcookie(
             self::COOKIE_KEY,
             implode(':', [$this->secret->getToken($timeslice), $timeslice]),
-            strtotime('+30 days'),
+            $lifetime,
             $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']
         );
     }

@@ -11,6 +11,7 @@
 <? else: ?>
         <p><?= htmlReady($text ?: _('Bitte geben Sie ein gültiges Token ein')) ?></p>
     <? if ($secret->type === 'app' && !$secret->confirmed): ?>
+        <?= formatReady(Config::get()->TFA_TEXT_APP) ?>
         <p>
             <?= _('Scannen Sie diesen Code mit Ihrer App ein und geben Sie '
                 . 'anschliessend ein gültiges Token ein.') ?>
@@ -53,7 +54,18 @@
     <? if ($global): ?>
         <label>
             <input type="checkbox" name="tfa-trusted" value="1">
-            <?= _('Diesem Gerät für 30 Tage vertrauen.') ?>
+        <? if ($duration > 0): ?>
+            <?= sprintf(
+                ngettext(
+                    'Diesem Gerät für %u Tag vertrauen.',
+                    'Diesem Gerät für %u Tage vertrauen.',
+                    $duration
+                ),
+                $duration
+            ) ?>
+        <? else: ?>
+            <?= _('Diesem Gerät dauerhaft vertrauen') ?>
+        <? endif; ?>
         </label>
     <? endif; ?>
     </fieldset>
