@@ -404,9 +404,9 @@ function object_id_to_type($id)
     ];
 
     if (!in_array($id, [0, -1, -2])) {
-        $plugin = PluginManager::getInstance()->getPluginById($id);
+        $plugin = PluginManager::getInstance()->getPluginInfoById($id);
         if ($plugin) {
-            $search = get_class($plugin);
+            $search = $plugin['class'];
         }
     } else {
         $search = (int)$id;
