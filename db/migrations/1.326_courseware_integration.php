@@ -152,7 +152,7 @@ class CoursewareIntegration extends \Migration
             ':description' => 'Mit dieser Konfigurationseinstellung wird für eine Courseware festgelegt, welche Rechtestufe Inhalte editieren dürfen.',
             ':range'       => 'range',
             ':type'        => 'string',
-            ':value'       => 'dozent'
+            ':value'       => 'tutor'
         ]);
         $statement->execute([
             ':name'        => 'COURSEWARE_LAST_ELEMENT',
