@@ -169,7 +169,7 @@ class DBSchemaVersion implements SchemaVersion
             $backported_migrations = [
                 20200306, 20200713, 20200811, 20200909, 20200910,
                 20201002, 20201103, 202011031, 20210317, 20210422,
-                20210425, 20210503
+                20210425, 20210503, 20211015
             ];
 
             // drop backported migrations
