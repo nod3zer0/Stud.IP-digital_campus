@@ -64,7 +64,7 @@
                 <?= _('Niveau') ?>
             </span>
             <select name="difficulty">
-                <? for ($i = 1; $i<=12; $i++): ?> 
+                <? for ($i = 1; $i<=12; $i++): ?>
                     <option value="<?= $i?>"><?= $i?></option>
                 <? endfor; ?>
             </select>
@@ -111,7 +111,7 @@
             </select>
         </label>
 
-        <label class="file-upload">
+        <label class="file-upload enter-accessible" tabindex="0">
             <?= _('Vorschaubild hochladen') ?>
             <input id="previewfile" name="previewfile" type="file" accept="image/*">
         </label>
