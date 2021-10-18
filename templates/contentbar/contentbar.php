@@ -16,7 +16,7 @@
         <div class="contentbar-icons">
             <? if ($toc->hasChildren()) : ?>
                 <input type="checkbox" id="cb-toc">
-                <label for="cb-toc" class="check-box" title="<?= _('Inhaltsverzeichnis') ?>" >
+                <label for="cb-toc" class="check-box enter-accessible" title="<?= _('Inhaltsverzeichnis') ?>" tabindex="0">
                     <?= Icon::create('table-of-contents')->asImg(24) ?>
                 </label>
                 <?= $ttpl->render() ?>

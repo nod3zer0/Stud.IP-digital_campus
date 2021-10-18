@@ -2,7 +2,7 @@
 <article class="toc_overview toc_transform" id="toc">
     <header id="toc_header">
         <h1 id="toc_h1"><?= sprintf(_('Inhalt (%u Elemente)'), htmlReady($root->countAllChildren())) ?></h1>
-        <label for="cb-toc" class="check-box" title="<?= _('Schließen')?>">
+        <label for="cb-toc" class="check-box enter-accessible" title="<?= _('Schließen')?>" tabindex="0">
             <?= Icon::create('decline')->asImg(24) ?>
         </label>
     </header>

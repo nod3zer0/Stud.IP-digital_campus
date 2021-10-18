@@ -227,3 +227,12 @@ $(document).on('change', 'input[data-must-equal]', function() {
         this.setCustomValidity('');
     }
 });
+
+//Generalisation: The enter-accessible class allows an element to be accessible via keyboard
+//by triggering the click event when the enter key is pressed.
+$(document).on('keydown', '.enter-accessible', function(event) {
+    if (event.code == 'Enter') {
+        //The enter key has been pressed.
+        $(this).trigger('click');
+    }
+});
