@@ -143,7 +143,8 @@ const Search = {
 
         $(`a#search_category_${name}`)
             .removeClass('no-result')
-            .text(`${value.name}  (${counter}${value.plus ? '+' : ''})`);
+            .text(`${value.name}  (${counter}${value.plus ? '+' : ''})`)
+            .attr('tabindex', '0');
 
         // We have more search results than shown, provide link to
         // full search if available.
@@ -326,7 +327,7 @@ const Search = {
      * Grey out all categories in the sidebar with no results.
      */
     greyOutSearchCategories: function () {
-        $('a[id^="search_category_"]').addClass('no-result');
+        $('a[id^="search_category_"]').addClass('no-result').attr('tabindex', '-1');
     },
 
     /**
@@ -371,6 +372,7 @@ const Search = {
             $('#show_all_categories').closest('li').addClass('active');
         } else {
             $(`#search_category_${category}`).closest('li').addClass('active');
+            $(`#search_category_${category}`).attr('tabindex', '0');
         }
         STUDIP.Search.showFilter(category);
 
