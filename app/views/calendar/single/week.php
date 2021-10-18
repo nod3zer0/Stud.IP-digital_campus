@@ -1,6 +1,6 @@
 <?
 // add skip link
-SkipLinks::addIndex(_('Wochenansicht'), 'main_content', 100);
+SkipLinks::addIndex(_('Wochenansicht'), 'layout_content', 100);
 $at = date('G', $atime);
 if ($at >= $settings['start']
     && $at <= $settings['end'] || !$atime) {
