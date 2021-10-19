@@ -555,6 +555,7 @@ export default {
             licenses: 'licenses',
             exportState: 'exportState',
             exportProgress: 'exportProgress',
+            userId: 'userId',
         }),
 
         currentId() {
@@ -907,6 +908,18 @@ export default {
 
             return '';
         },
+        blocked() {
+            return this.structuralElement?.relationships['edit-blocker'].data !== null;
+        },
+        blockerId() {
+            return this.blocked ? this.structuralElement?.relationships['edit-blocker'].data?.id : null;
+        },
+        blockedByThisUser() {
+            return this.blocked && this.userId === this.blockerId;
+        },
+        blockedByAnotherUser() {
+            return this.blocked && this.userId !== this.blockerId;
+        },
     },
 
     methods: {
@@ -936,7 +949,22 @@ export default {
         async menuAction(action) {
             switch (action) {
                 case 'editCurrentElement':
-                    await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                    if (this.blockedByAnotherUser) {
+                        this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+
+                        return false;
+                    }
+                    try {
+                        await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                    } catch(error) {
+                        if (error.status === 409) {
+                            this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+                        } else {
+                            console.log(error);
+                        }
+
+                        return false;
+                    }
                     this.showElementEditDialog(true);
                     break;
                 case 'addElement':

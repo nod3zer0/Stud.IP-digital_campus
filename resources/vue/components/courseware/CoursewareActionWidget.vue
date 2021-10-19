@@ -36,6 +36,7 @@ export default {
         ...mapGetters({
             oerEnabled: 'oerEnabled',
             oerTitle: 'oerTitle',
+            userId: 'userId',
         }),
         isRoot() {
             if (!this.structuralElement) {
@@ -53,6 +54,18 @@ export default {
         currentId() {
             return this.structuralElement?.id;
         },
+        blocked() {
+            return this.structuralElement?.relationships['edit-blocker'].data !== null;
+        },
+        blockerId() {
+            return this.blocked ? this.structuralElement?.relationships['edit-blocker'].data?.id : null;
+        },
+        blockedByThisUser() {
+            return this.blocked && this.userId === this.blockerId;
+        },
+        blockedByAnotherUser() {
+            return this.blocked && this.userId !== this.blockerId;
+        },
     },
     methods: {
         ...mapActions({
@@ -67,7 +80,22 @@ export default {
             lockObject: 'lockObject',
         }),
         async editElement() {
-            await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+            if (this.blockedByAnotherUser) {
+                this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+
+                return false;
+            }
+            try {
+                await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+            } catch(error) {
+                if (error.status === 409) {
+                    this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+                } else {
+                    console.log(error);
+                }
+
+                return false;
+            }
             this.showElementEditDialog(true);
         },
         async deleteElement() {

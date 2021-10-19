@@ -50,7 +50,7 @@
 <script>
 import CoursewareContainerActions from './CoursewareContainerActions.vue';
 import StudipDialog from '../StudipDialog.vue';
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'courseware-default-container',
@@ -76,11 +76,26 @@ export default {
         };
     },
     computed: {
+        ...mapGetters({
+            userId: 'userId',
+        }),
         showEditMode() {
             return this.$store.getters.viewMode === 'edit';
         },
         colSpan() {
             return this.container.attributes.payload.colspan ? this.container.attributes.payload.colspan : 'full';
+        },
+        blocked() {
+            return this.container?.relationships['edit-blocker'].data !== null;
+        },
+        blockerId() {
+            return this.blocked ? this.container?.relationships['edit-blocker'].data?.id : null;
+        },
+        blockedByThisUser() {
+            return this.blocked && this.userId === this.blockerId;
+        },
+        blockedByAnotherUser() {
+            return this.blocked && this.userId !== this.blockerId;
         },
     },
     methods: {
@@ -90,7 +105,23 @@ export default {
             unlockObject: 'unlockObject',
         }),
         async displayEditDialog() {
-            await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
+            if (this.blockedByAnotherUser) {
+                this.companionInfo({ info: this.$gettext('Dieser Abschnitt wird bereits bearbeitet.') });
+
+                return false;
+            }
+            try {
+                await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
+            } catch(error) {
+                if (error.status === 409) {
+                    this.companionInfo({ info: this.$gettext('Dieser Abschnitt wird bereits bearbeitet.') });
+                } else {
+                    console.log(error);
+                }
+
+                return false;
+            }
+
             this.showEditDialog = true;
         },
         async closeEdit() {
