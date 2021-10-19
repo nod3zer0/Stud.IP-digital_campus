@@ -47,12 +47,12 @@
                             <div v-html="comment.html" class="html"></div>
                             <textarea class="edit"
                                       v-html="comment.content"
-                                      @keyup.enter.exact="saveComment"
+                                      @keydown.enter.exact="saveComment"
                                       @keyup.escape.exact="editComment"></textarea>
                         </div>
                         <div class="time">
                             <studip-date-time :timestamp="comment.mkdate" :relative="true"></studip-date-time>
-                            <a href="" v-if="comment.writable" @click.prevent="editComment" class="edit_comment" :title="$gettext('Bearbeiten.')">
+                            <a href="" v-if="comment.writable" @click.prevent.stop="editComment" class="edit_comment" :title="$gettext('Bearbeiten.')">
                                 <studip-icon shape="edit" size="14" role="inactive"></studip-icon>
                             </a>
                             <a href="" @click.prevent="answerComment" class="answer_comment" :title="$gettext('Hierauf antworten.')">
