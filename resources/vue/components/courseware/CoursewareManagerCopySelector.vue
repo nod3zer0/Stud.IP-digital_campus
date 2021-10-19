@@ -1,24 +1,42 @@
 <template>
     <div class="cw-manager-copy-selector">
         <div v-if="sourceEmpty" class="cw-manager-copy-selector-source">
-            <button class="hugebutton" @click="selectSource('own'); loadOwnCourseware()"><translate>Aus meine Inhalte kopieren</translate></button>
-            <button class="hugebutton" @click="selectSource('remote')"><translate>Aus Veranstaltung kopieren</translate></button>
+            <button class="button" @click="selectSource('own'); loadOwnCourseware()"><translate>Aus meine Inhalte kopieren</translate></button>
+            <button class="button" @click="selectSource('remote')"><translate>Aus Veranstaltung kopieren</translate></button>
         </div>
         <div v-else>
             <button class="button" @click="reset"><translate>Quelle auswählen</translate></button>
+            <button v-show="!sourceOwn && hasRemoteCid" class="button" @click="selectNewCourse"><translate>Veranstaltung auswählen</translate></button>
             <div v-if="sourceRemote">
                 <h2 v-if="!hasRemoteCid"><translate>Veranstaltungen</translate></h2>
                 <ul v-if="!hasRemoteCid">
-                    <li v-for="course in courses" :key="course.id" >
-                        <button class="hugebutton" @click="loadRemoteCourseware(course.id)">{{course.attributes.title}}</button>
+                    <li v-for="semester in semesterMap" :key="semester.id">
+                    <h3>{{semester.attributes.title}}</h3>
+                        <ul>
+                            <li
+                                v-for="course in coursesBySemester(semester)"
+                                :key="course.id"
+                                class="cw-manager-copy-selector-course"
+                                @click="loadRemoteCourseware(course.id)"
+                            >
+                            <studip-icon :shape="getCourseIcon(course)" />
+                                {{course.attributes.title}}
+                            </li>
+                        </ul>
                     </li>
+
                 </ul>
                 <courseware-manager-element
-                    v-if="hasRemoteCid"
+                    v-if="remoteId !== '' && hasRemoteCid"
                     type="remote"
                     :currentElement="remoteElement"
                     @selectElement="setRemoteId"
                     @loadSelf="loadSelf"
+                />
+                <courseware-companion-box
+                    v-if="remoteId === '' && hasRemoteCid"
+                    :msgCompanion="$gettext('In dieser Veranstaltung wurden noch keine Inhalte angelegt')"
+                    mood="sad"
                 />
             </div>
             <div v-if="sourceOwn">
@@ -61,12 +79,14 @@ export default {
         ownCoursewareInstance: {},
         ownId: '',
         ownElement: {},
+        semesterMap: [],
 
     }},
     computed: {
         ...mapGetters({
             userId: 'userId',
             structuralElementById: 'courseware-structural-elements/byId',
+            semesterById: 'semesters/byId',
         }),
         sourceEmpty() {
             return this.source === '';
@@ -80,12 +100,16 @@ export default {
         hasRemoteCid() {
             return this.remoteCid !== '';
         },
+        loadedCourses() {
+            return this.courses.sort((a, b) => a.attributes.title > b.attributes.title);
+        }
     },
     methods: {
         ...mapActions({
             loadUsersCourses: 'loadUsersCourses',
             loadStructuralElement: 'loadStructuralElement',
             loadRemoteCoursewareStructure: 'loadRemoteCoursewareStructure',
+            loadSemester: 'semesters/loadById',
         }),
         selectSource(source) {
             this.source = source;
@@ -96,7 +120,7 @@ export default {
             if (this.remoteCoursewareInstance !== null) {
                 this.setRemoteId(this.remoteCoursewareInstance.relationships.root.data.id);
             } else {
-                console.debug('can not load');
+                this.remoteId = '';
             }
             
         },
@@ -105,13 +129,16 @@ export default {
             if (this.ownCoursewareInstance !== null) {
                 this.setOwnId(this.ownCoursewareInstance.relationships.root.data.id);
             } else {
-                console.debug('can not load');
+                this.ownId = '';
             }
-            
         },
         reset() {
             this.selectSource('');
             this.remoteCid = '';
+        },
+        selectNewCourse() {
+            this.remoteCid = '';
+            this.remoteId = '';
         },
         async setRemoteId(target) {
             this.remoteId = target;
@@ -131,10 +158,41 @@ export default {
         },
         loadSelf(data) {
             this.$emit('loadSelf', data);
+        },
+        loadSemesterMap() {
+            let view = this;
+            let semesters = [];
+            this.courses.every(course => {
+                let semId = course.relationships['start-semester'].data.id;
+                if(!semesters.includes(semId)) {
+                    semesters.push(semId);
+                }
+                return true;
+            });
+            semesters.every(semester => {
+                view.loadSemester({id: semester}).then( () => {
+                    view.semesterMap.push(view.semesterById({id: semester}));
+                    view.semesterMap.sort((a, b) => a.attributes.start < b.attributes.start);
+                });
+                return true;
+            });
+        },
+        coursesBySemester(semester) {
+            return this.loadedCourses.filter(course => {
+                return course.relationships['start-semester'].data.id === semester.id}
+            );
+        },
+        getCourseIcon(course) {
+            if (course.attributes['course-type'] === 99) {
+                return 'studygroup';
+            }
+
+            return 'seminar';
         }
     },
     async mounted() {
         this.courses = await this.loadUsersCourses(this.userId);
+        this.loadSemesterMap();
     }
 
 }
