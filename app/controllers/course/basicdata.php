@@ -703,7 +703,7 @@ class Course_BasicdataController extends AuthenticatedController
         } else {
             $sem = Seminar::getInstance($course_id);
             $deputy = Deputy::find([$deputy_id, $course_id]);
-            if ($deputy && $deputy->delete) {
+            if ($deputy && $deputy->delete()) {
                 // Remove user from subcourses as well.
                 if($sem->children) {
                     $children_ids = $sem->children->pluck('seminar_id');
