@@ -65,7 +65,7 @@
             <ul>
                 <?php foreach ($group->dates as $d) : ?>
                     <li>
-                        <?= htmlReady($d->toString()) ?>
+                        <?= htmlReady($d->getFullname()) ?>
                     </li>
                 <?php endforeach ?>
             </ul>

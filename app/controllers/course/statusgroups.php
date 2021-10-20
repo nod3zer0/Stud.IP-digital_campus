@@ -869,7 +869,7 @@ class Course_StatusgroupsController extends AuthenticatedController
                     $dates = CourseDate::findBySeminar_id($this->course_id);
                     $singledates = array_filter($dates, function ($d) { return !((bool) $d->metadate_id); });
                     foreach ($singledates as $d) {
-                        $name = $d->toString();
+                        $name = $d->getFullname();
 
                         // Append description to group title if applicable.
                         if ($d->description) {
