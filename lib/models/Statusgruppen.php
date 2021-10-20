@@ -143,6 +143,8 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
         // Set assigned dates.
         if ($dates) {
             $group->dates = CourseDate::findMany($dates);
+        } else {
+            $group->dates = [];
         }
 
         $group->store();
