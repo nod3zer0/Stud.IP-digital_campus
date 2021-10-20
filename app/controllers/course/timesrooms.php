@@ -1051,15 +1051,13 @@ class Course_TimesroomsController extends AuthenticatedController
             $this->has_bookings = $count > 0;
         }
 
-
-        $course = Course::find($this->course->id);
         if ($this->course->isOpenEnded()) { // course with endless lifespan
-            $end_semester = Semester::findBySQL("beginn >= ? ", [$this->course->start_time]);
+            $end_semester = Semester::findBySQL("beginn >= ? ORDER BY beginn", [$this->course->start_time]);
         } else { // course over more than one semester
-            $end_semester = $course->semesters;
+            $end_semester = $this->course->semesters;
         }
 
-        $this->start_weeks = $this->course->end_semester->getStartWeeks();
+        $this->start_weeks = $this->course->start_semester->getStartWeeks($this->course->duration_time);
 
         if (!empty($end_semester)) {
             $this->end_semester_weeks = [];
