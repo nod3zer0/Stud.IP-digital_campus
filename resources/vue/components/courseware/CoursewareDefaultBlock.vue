@@ -135,6 +135,7 @@ export default {
             userId: 'userId',
             viewMode: 'viewMode',
             getComments: 'courseware-block-comments/related',
+            containerById: 'courseware-containers/byId',
         }),
         showEditMode() {
             let show = this.viewMode === 'edit' || this.blockedByThisUser;
@@ -179,6 +180,7 @@ export default {
             unlockObject: 'unlockObject',
             loadComments: 'courseware-block-comments/loadRelated',
             loadContainer: 'loadContainer',
+            updateContainer: 'updateContainer',
         }),
         async displayFeature(element) {
             if (this.showEdit && element === 'Edit') {
@@ -252,11 +254,36 @@ export default {
             }
         },
         async executeDelete() {
-            await this.deleteBlock({
-                blockId: this.block.id,
-                containerId: this.block.relationships.container.data.id,
+            const containerId = this.block.relationships.container.data.id;
+            await this.loadContainer(containerId);
+            let container = this.containerById({id: containerId});
+            const structuralElementId = container.relationships['structural-element'].data.id;
+            let containerBlocks = container.relationships.blocks.data.map(block => {
+                return block.id;
             });
-            // this.showDeleteDialog = false;
+            let sections = container.attributes.payload.sections;
+
+            // lock parent container
+            await this.lockObject({ id: containerId, type: 'courseware-containers' }); 
+            // update container information
+            for (let i = 0; i < sections.length; i++) {
+                for (let j = 0; j < sections[i].blocks.length; j++) {
+                    let blockId = sections[i].blocks[j];
+                    if (!containerBlocks.includes(blockId) || blockId === this.block.id) {
+                        sections[i].blocks.splice(j, 1);
+                        j--;
+                    }
+                }
+            }
+            // update container
+            await this.updateContainer({ container, structuralElementId });
+            // unlock container
+            await this.unlockObject({ id: containerId, type: 'courseware-containers' });
+            await this.loadContainer(containerId);
+            this.deleteBlock({
+                blockId: this.block.id,
+                containerId: containerId,
+            });
         },
 
         async loadComments() {
