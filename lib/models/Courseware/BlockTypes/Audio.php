@@ -37,7 +37,7 @@ class Audio extends BlockType
             'file_id' => '',
             'folder_id' => '',
             'web_url' => '',
-            'recorder_enabled' => 'false'
+            'recorder_enabled' => false
         ];
     }
 
@@ -49,9 +49,9 @@ class Audio extends BlockType
     }
 
     /**
-     * get all files related to this bloc.
+     * get all files related to this block.
      *
-     * @return \FileRef[] list of file references realted to this block
+     * @return \FileRef[] list of file references related to this block
      */
     public function getFiles(): array
     {

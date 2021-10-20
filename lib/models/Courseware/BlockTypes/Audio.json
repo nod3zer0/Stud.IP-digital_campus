@@ -18,7 +18,7 @@
             "type": "string"
         },
         "recorder_enabled": {
-            "type": "string"
+            "type": "boolean"
         }
     },
     "required": [

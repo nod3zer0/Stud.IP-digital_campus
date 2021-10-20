@@ -310,7 +310,7 @@ abstract class BlockType
                 $user
             );
 
-            return $copiedFile->id;
+            return isset($copiedFile) ? $copiedFile->id : '';
         }
 
         return '';
