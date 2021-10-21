@@ -1028,6 +1028,7 @@ export default {
                     this.uploadFileError = this.$gettext('Fehler beim Hochladen der Datei.');
                 });
             }
+            this.showElementEditDialog(false);
 
             if (this.currentElement.attributes['release-date'] !== '') {
                 this.currentElement.attributes['release-date'] =
@@ -1045,7 +1046,7 @@ export default {
             });
             await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
             this.$emit('select', this.currentId);
-            this.showElementEditDialog(false);
+            this.initCurrent();
         },
 
         async exportCurrentElement(data) {
