@@ -22,7 +22,7 @@ final class FixMyCoursesGroupConfig extends Migration
                     }
                 }
 
-                if ($changed) {
+                if ($value->value[0] === '{' || $changed) {
                     $value->value = json_encode(array_values($groups));
                     $value->store();
                 }
