@@ -188,6 +188,9 @@ class ExternEditModule extends ExternEditHtml {
         if (!is_array($hide_fields)) {
             $hide_fields = [];
         }
+        if (!is_array($hide_fields["sort"])) {
+            $hide_fields["sort"] = [];
+        }
         $sort = $this->getValue("sort");
 
 
@@ -196,23 +199,21 @@ class ExternEditModule extends ExternEditHtml {
         $out .= "<td><b>" . _("Datenfeld") . "</b></td>\n";
         $out .= "<td><b>" . _("Sortierung") . "</b></td>\n";
 
-        if(!empty($field_names)) {
+        if ($field_names) {
             for ($i = 0; $i < count($field_names); $i++) {
                 $out .= "<tr valign=\"middle\">\n";
                 $out .= "<td>&nbsp;{$field_names[$i]}</td>";
-                if (!in_array($i, $hide_fields)) {
+                if (!in_array($i, $hide_fields["sort"])) {
                     $out .= "<td><select name=\"{$this->element_name}_sort[$i]\" ";
                     $out .= "size=\"1\">\n";
                     $out .= "<option value=\"0\"" . ($sort[$i] == 1 ? " selected" : "")
                         . ">" . _("keine") . "</option>";
-                    if (!empty($hide_fields["sort"])) {
-                        for ($j = 1; $j <= (count($field_names) - count($hide_fields["sort"])); $j++) {
-                            if ($sort[$i] == $j)
-                                $selected = " selected";
-                            else
-                                $selected = "";
-                            $out .= "<option value=\"$j\"$selected>$j</option>";
-                        }
+                    for ($j = 1; $j <= (count($field_names) - count($hide_fields["sort"])); $j++) {
+                        if ($sort[$i] == $j)
+                            $selected = " selected";
+                        else
+                            $selected = "";
+                        $out .= "<option value=\"$j\"$selected>$j</option>";
                     }
                     $out .= "\n</select>\n</td>\n";
                 }
