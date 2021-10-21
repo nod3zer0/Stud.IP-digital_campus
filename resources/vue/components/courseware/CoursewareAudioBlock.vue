@@ -356,7 +356,7 @@ export default {
             attributes.payload.file_id = '';
             attributes.payload.web_url = '';
             attributes.payload.folder_id = '';
-            attributes.payload.recorder_enabled = 'false';
+            attributes.payload.recorder_enabled = false;
             if (this.currentSource === 'studip_file') {
                 attributes.payload.file_id = this.currentFileId;
             } else if (this.currentSource === 'web') {
