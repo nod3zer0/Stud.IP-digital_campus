@@ -172,7 +172,7 @@ export default {
                 return [];
             }
 
-            const blockSections = JSON.parse(JSON.stringify(this.container.attributes.payload.sections)); //copy array AND objects without references
+            const blockSections = _.cloneDeep(this.container.attributes.payload.sections);
 
             blockSections.forEach((section) => {
                 if(section.blocks !== undefined) {
@@ -261,10 +261,8 @@ export default {
     },
     watch: {
         container: {
-            handler(state, prevState) {
-                if (state.attributes.payload.sections[0].blocks !== prevState.attributes.payload.sections[0].blocks) {
-                    this.initSections();
-                }
+            handler() {
+                this.initSections();
             },
             deep: true
         }
