@@ -64,7 +64,7 @@ $is_exTermin = $termin instanceof CourseExDate;
         </a>
         <?= $room_holiday ?: '' ?>
     <? elseif ($freeTextRoom = $termin->getRoomName()) : ?>
-        <?= sprintf('(%s)', formatReady($freeTextRoom)) ?>
+        <?= sprintf('(%s)', formatLinks($freeTextRoom)) ?>
     <? else : ?>
         <?= _('Keine Raumangabe') ?>
         <?= $room_holiday ?: '' ?>
