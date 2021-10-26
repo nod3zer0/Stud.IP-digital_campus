@@ -133,6 +133,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         }
         $config['registered_callbacks']['after_create'][] = 'cbLogNewRequest';
         $config['registered_callbacks']['after_store'][] = 'cbAfterStore';
+        $config['registered_callbacks']['after_delete'][] = 'cbAfterDelete';
 
 
         parent::configure($config);
@@ -556,7 +557,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
     public function cbLogNewRequest()
     {
         $this->sendNewRequestMail();
-        StudipLog::log('RES_REQUEST_NEW', $this->id, $this->resource_id);
+        StudipLog::log('RES_REQUEST_NEW', $this->course_id, $this->resource_id, $this->getLoggingInfoText());
     }
 
     /**
@@ -565,9 +566,21 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
      */
     public function cbAfterStore()
     {
-        if($this->closed == '3') {
-            $this->sendRequestDeniedMail();
+        if ($this->isFieldDirty('closed')) {
+            if ($this->closed == 3) {
+                $this->sendRequestDeniedMail();
+                StudipLog::log('RES_REQUEST_DENY', $this->course_id, $this->resource_id, $this->getLoggingInfoText());
+            } elseif ($this->closed == 1 || $this->closed == 2) {
+                StudipLog::log('RES_REQUEST_RESOLVE', $this->course_id, $this->resource_id, $this->getLoggingInfoText());
+            }
+        } else {
+            StudipLog::log('RES_REQUEST_UPDATE', $this->course_id, $this->resource_id, $this->getLoggingInfoText());
         }
+    }
+
+    public function cbAfterDelete()
+    {
+        StudipLog::log('RES_REQUEST_DEL', $this->course_id, $this->resource_id, $this->getLoggingInfoText());
     }
 
     /**
@@ -2359,5 +2372,35 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         $first = $this->getTimeIntervals()[0];
         $diff  = round(($first['begin'] - time()) / 86400);
         return $diff;
+    }
+
+    public function getLoggingInfoText()
+    {
+        $props = '';
+        foreach ($this->getPropertyData() as $name => $state) {
+            $props .= $name . '=' . $state . ' ';
+        }
+        $info['Anfrage'] = $this->getType();
+        $info['Status'] = $this->getStatus();
+        if ($this->category) {
+            $info['Raumtyp'] = $this->category->name;
+        }
+        if ($this->termin_id) {
+            $info['Termin'] = $this->termin_id;
+        }
+        if ($this->metadate_id) {
+            $info['Metadate'] = $this->metadate_id;
+        }
+        if ($props) {
+            $info['Eigenschaften'] = $props;
+        }
+        if ($this->comment) {
+            $info['Kommentar'] = $this->comment;
+        }
+        $txt = '';
+        foreach ($info as $n => $m) {
+            $txt .= $n . ': ' . $m . ', ';
+        }
+        return trim($txt, ' ,');
     }
 }

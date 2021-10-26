@@ -539,6 +539,7 @@ class Course_RoomRequestsController extends AuthenticatedController
                     foreach ($this->selected_properties as $name => $state) {
                         $result = $this->request->setProperty($name, $state);
                     }
+                    $this->request->store();
                     //Delete the session data:
                     $session_data = [];
                     PageLayout::postSuccess(_('Die Anfrage wurde gespeichert!'));
@@ -958,6 +959,7 @@ class Course_RoomRequestsController extends AuthenticatedController
                     } else {
                         $result = $this->request->setProperty('seats', $this->seats);
                     }
+                    $this->request->store();
                     //Delete the session data:
                     $session_data = [];
                     PageLayout::postSuccess(_('Die Anfrage wurde gespeichert!'));
