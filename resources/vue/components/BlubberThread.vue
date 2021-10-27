@@ -77,7 +77,8 @@
             <a class="send" @click="submit" :title="$gettext('Abschicken')">
                 <studip-icon shape="arr_2up" size="30"></studip-icon>
             </a>
-            <label class="upload" :title="$gettext('Datei hochladen')">
+            <label class="upload" :title="$gettext('Datei hochladen')" tabindex="0"
+                   @keydown="simulateClick" ref="blubber_upload_file_label">
                 <input type="file" multiple style="display: none;" @change="upload">
                 <studip-icon shape="upload" size="30"></studip-icon>
             </label>
@@ -359,6 +360,12 @@
             },
             hasContent (input) {
                 return input && input.trim().length > 0;
+            },
+            simulateClick (event) {
+                if (event.code == "Enter") {
+                    //The enter key has been pressed.
+                    this.$refs.blubber_upload_file_label.click();
+                }
             }
         },
         directives: {
