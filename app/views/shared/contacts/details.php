@@ -55,13 +55,13 @@
                                     <?
                                         $actions = ActionMenu::get();
                                         $actions->addLink(
-                                            $controller->url_for('shared/contacts/add_ansprechpartner', $origin, $rel['range_type'], $rel['range_id'], $rel['contact_id'], $rel['category']),
+                                            $controller->url_for('shared/contacts/edit_ansprechpartner', $rel['contact_range_id'], $origin),
                                             _('Ansprechpartner bearbeiten'),
                                             Icon::create('edit'),
                                             ['data-dialog' => 'size=auto']
                                         );
                                         $actions->addLink(
-                                            $controller->url_for('shared/contacts/delete_range', $rel['range_id'], $rel['contact_id'], $rel['category']),
+                                            $controller->url_for('shared/contacts/delete_range', $rel['contact_range_id']),
                                             _('Ansprechpartner-Zuordnung löschen'),
                                             Icon::create('trash'),
                                             [

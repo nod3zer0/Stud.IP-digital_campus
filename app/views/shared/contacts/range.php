@@ -8,12 +8,16 @@
 <table id="mvv_contacts" class="default sortable-table" data-sortlist="[[0, 0]]">
     <caption>
         <span class="actions">
-            <a href="<?= $controller->url_for('shared/contacts/add_ansprechpartner', 'range', $range_type, $range_id);?>" data-dialog="size=auto">
-                <?= Icon::create('headache+add', Icon::ROLE_CLICKABLE, ['title' => _('Ansprechpartner hinzufügen')]); ?>
-            </a>
-            <a href="<?= $controller->url_for('shared/contacts/sort', $range_id);?>" data-dialog="size=auto">
-                <?= Icon::create('arr_2up', Icon::ROLE_CLICKABLE, ['title' => _('Reihenfolge der Ansprechpartner ändern')]); ?>
-            </a>
+            <? if ($perm_contacts >= MvvPerm::PERM_CREATE) : ?>
+                <a href="<?= $controller->url_for('shared/contacts/add_ansprechpartner', 'range', $range_type, $range_id);?>" data-dialog="size=auto">
+                    <?= Icon::create('headache+add', Icon::ROLE_CLICKABLE, ['title' => _('Ansprechpartner hinzufügen')]); ?>
+                </a>
+            <? endif ?>
+            <? if (reset($contacts) && MvvPerm::get(reset($contacts))->haveFieldPerm('position', MvvPerm::PERM_WRITE)) : ?>
+                <a href="<?= $controller->url_for('shared/contacts/sort', $range_id, $range_type);?>" data-dialog="size=auto">
+                    <?= Icon::create('arr_2up', Icon::ROLE_CLICKABLE, ['title' => _('Reihenfolge der Ansprechpartner ändern')]); ?>
+                </a>
+            <? endif ?>
         </span>
     </caption>
     <thead>
@@ -43,21 +47,25 @@
             <td class="actions">
             <?
                 $actions = ActionMenu::get();
-                $actions->addLink(
-                    $controller->url_for('shared/contacts/add_ansprechpartner', 'range', $mvv_contact->range_type, $mvv_contact->range_id, $mvv_contact->contact_id, $mvv_contact->category),
-                    _('Ansprechpartner bearbeiten'),
-                    Icon::create('edit'),
-                    ['data-dialog' => 'size=auto']
-                );
-                $actions->addLink(
-                    $controller->url_for('shared/contacts/delete_range', $mvv_contact->range_id, $mvv_contact->contact_id, $mvv_contact->category),
-                    _('Ansprechpartner-Zuordnung löschen'),
-                    Icon::create('trash'),
-                    [
-                        'data-confirm' => _('Wollen Sie die Zuordnung des Ansprechpartners wirklich entfernen?'),
-                        'data-dialog' => 'size=auto'
-                    ]
-                );
+                if ($perm_contacts >= MvvPerm::PERM_WRITE) {
+                    $actions->addLink(
+                        $controller->url_for('shared/contacts/edit_ansprechpartner', $mvv_contact->id, 'range'),
+                        _('Ansprechpartner bearbeiten'),
+                        Icon::create('edit'),
+                        ['data-dialog' => 'size=auto']
+                    );
+                }
+                if ($perm_contacts >= MvvPerm::PERM_CREATE) {
+                    $actions->addLink(
+                        $controller->url_for('shared/contacts/delete_range', $mvv_contact->id),
+                        _('Ansprechpartner-Zuordnung löschen'),
+                        Icon::create('trash'),
+                        [
+                            'data-confirm' => _('Wollen Sie die Zuordnung des Ansprechpartners wirklich entfernen?'),
+                            'data-dialog' => 'size=auto'
+                        ]
+                    );
+                }
                 echo $actions;
             ?>
             </td>

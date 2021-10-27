@@ -16,6 +16,8 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
         parent::before_filter($action, $args);
         Navigation::activateItem($this->me . '/studiengaenge/studiengangteile');
         $this->action = $action;
+        PageLayout::addStyleSheet('studip-statusgroups.css');
+        PageLayout::addScript('studip-statusgroups.js');
     }
 
     public function index_action()

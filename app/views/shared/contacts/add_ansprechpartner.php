@@ -83,19 +83,19 @@ jQuery(function ($) {
             </label>
             <label>
                 <?= _('Vorname (optional)') ?>
-                <input name="exansp_vorname" type="text" value=""<?= $perm_extern->disable('vorname'); ?>>
+                <input name="exansp_vorname" type="text" value="<?= htmlReady($ext_contact->vorname) ?>"<?= $perm_extern->disable('vorname'); ?>>
             </label>
             <label>
                 <?= _('Homepage') ?>
                 <?= MvvI18N::input('exansp_web', $ext_contact->homepage, ['maxlength' => '255'])->checkPermission($ext_contact) ?>
             </label>
             <label>
-                <?= _('E-Mail') ?>
-                <input name="exansp_mail" type="text" value=""<?= $perm_extern->disable('mail'); ?>>
+                <?= _('Email') ?>
+                <input name="exansp_mail" type="text" value="<?= htmlReady($ext_contact->mail) ?>"<?= $perm_extern->disable('mail'); ?>>
             </label>
             <label>
                 <?= _('Telefon') ?>
-                <input name="exansp_tel" type="text" value=""<?= $perm_extern->disable('tel'); ?>>
+                <input name="exansp_tel" type="text" value="<?= htmlReady($ext_contact->tel) ?>"<?= $perm_extern->disable('tel'); ?>>
             </label>
         </fieldset>
     </div>

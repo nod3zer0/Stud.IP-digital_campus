@@ -452,7 +452,7 @@ if ($GLOBALS['MVV_MODUL']['SPRACHE']['default'] != $display_language) {
         </legend>
         <label>
             <?= _('Ansprechpartner'); ?>
-            <?= $this->render_partial('shared/contacts/range', ['perm_contacts' => $perm->haveFieldPerm('contact_assignments', MvvPerm::PERM_CREATE), 'range_type' => 'Modul', 'range_id' => $modul->id]) ?>
+            <?= $this->render_partial('shared/contacts/range', ['perm_contacts' => $perm->getFieldPerm('contact_assignments'), 'range_type' => 'Modul', 'range_id' => $modul->id, 'contacts' => $contacts->getArrayCopy()]) ?>
         </label>
 
         <label><?= _('Weitere verantwortliche Personen') ?>

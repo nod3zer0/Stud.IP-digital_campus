@@ -118,6 +118,17 @@ class Shared_ContactsController extends MVVController
             $this->range_type = MvvContactRange::getRangeTypeByRangeId($this->range_id);
         }
         $this->contacts = MvvContactRange::findBySQL('range_id = ? ORDER BY position ASC', [$this->range_id]);
+        $one_contact = reset($this->contacts);
+        $this->perm_contacts = 0;
+        if (is_object($one_contact)) {
+            $range_type = $one_contact->range_type;
+            $range_object = $range_type::find($one_contact->range_id);
+            if (!$range_object) {
+                $this->perm_contacts = MvvPerm::get(Request::get('range_type'))->getFieldPerm('contact_assignments');
+            } else {
+                $this->perm_contacts = MvvPerm::get($range_object)->getFieldPerm('contact_assignments');
+            }
+        }
         if (!isset($this->contact_id)) {
             $this->contact_id = null;
         }
@@ -125,12 +136,12 @@ class Shared_ContactsController extends MVVController
 
     public function details_action($origin, $contact_id)
     {
-        $contact_range = MvvContactRange::findOneBySQL('contact_id=?', [$contact_id]);
-        if (!$contact_range) {
+        $this->contact_range = MvvContactRange::findOneBySQL('contact_id = ?', [$contact_id]);
+        if (!$this->contact_range) {
             throw new Trails_Exception(404);
         }
 
-        $this->relations = $contact_range->getRelations($this->filter);
+        $this->relations = $this->contact_range->getRelations($this->filter);
         $this->origin = $origin;
 
         if (!Request::isXhr()) {
@@ -399,9 +410,27 @@ class Shared_ContactsController extends MVVController
         }
     }
 
+    public function edit_ansprechpartner_action($contact_range_id, $origin = 'index')
+    {
+        $this->contact_range = MvvContactRange::find($contact_range_id);
+        if ($this->contact_range) {
+            if ($this->contact_range->contact->contact_status === 'extern') {
+                PageLayout::setTitle(_('Externen Ansprechpartner bearbeiten'));
+                $this->extern_contact = MvvExternContact::find($this->contact_range->contact_id);
+            } else if ($this->contact_range->contact->contact_status === 'intern') {
+                PageLayout::setTitle(_('Internen Ansprechpartner bearbeiten'));
+            } else if ($this->contact_range->contact->contact_status === 'institution') {
+                PageLayout::setTitle(_('Zugeordnete Einrichtung bearbeiten'));
+            } else {
+                throw new Exception(_('Unbekannter Zuordnungs-Typ.'));
+            }
+        }
+        $this->origin = $origin;
+    }
+
     public function add_ansprechpartner_action($origin = 'index', $range_type = null, $range_id = null, $user_id = null, $category = null)
     {
-        PageLayout::setTitle(_('Ansprechpartner des Studienganges'));
+        PageLayout::setTitle(_('Ansprechpartner zuordnen'));
 
         $this->extcontact_search_obj = new SQLSearch("SELECT extern_contact_id, mvv_extern_contacts.name "
                 . "FROM mvv_extern_contacts "
@@ -413,7 +442,8 @@ class Shared_ContactsController extends MVVController
         $this->ext_contact = $ext_contact;
 
         if (Request::submitted('store_ansprechpartner')) {
-
+            CSRFProtection::verifySecurityToken();
+            
             if (!$user_id) {
                 if (Request::get('exansp_name')) {
                     $ext_contact->name = Request::i18n('exansp_name');
@@ -491,12 +521,12 @@ class Shared_ContactsController extends MVVController
         }
 
         if ($user_id && $category) {
-            $contact_range = MvvContactRange::findOneBySQL("contact_id =? AND range_id =? AND category=?",[$user_id, $range_id, $category]);
+            $contact_range = MvvContactRange::findOneBySQL("contact_id = ? AND range_id = ? AND category = ?", [$user_id, $range_id, $category]);
             $this->ansp_status = $contact_range->contact->contact_status;
             $this->ansp_altmail = $contact_range->contact->alt_mail;
             $this->ansp_typ = $contact_range->type;
             $this->ansp_kat = $contact_range->category;
-            $this->ansp_name = $contact_range->name;
+            $this->ansp_name = $contact_range->contact->getContactName();
         } else {
             $this->ansp_name = '';
         }
@@ -508,11 +538,46 @@ class Shared_ContactsController extends MVVController
         $this->origin = $origin;
     }
 
-    public function delete_range_action($range_id, $contact_id, $category)
-    {
-        CSRFProtection::verifyRequest();
+    public function store_ansprechpartner_action ($contact_range_id, $origin = 'index') {
+        CSRFProtection::verifySecurityToken();
+        
+        $contact_range = MvvContactRange::find($contact_range_id);
+        if (!$contact_range) {
+            throw new Exception(_('Fehlerhafte Zuordnung!'));
+        }
+        $contact_range->type = Request::option('contact_type', '');
+        $contact_range->category = Request::option('contact_category');
+        if ($contact_range->contact->contact_status === 'extern') {
+            $extern_contact = MvvExternContact::find($contact_range->contact_id);
+            $extern_contact->name     = Request::get('contact_name');
+            $extern_contact->vorname  = Request::get('contact_vorname');
+            $extern_contact->homepage = Request::get('contact_homepage', '');
+            $extern_contact->mail     = Request::get('contact_mail', '');
+            $extern_contact->tel      = Request::get('contact_tel', '');
+            if (!strlen($extern_contact->name)) {
+                PageLayout::postError('Es muss ein Name angegeben werden!');
+            }
+            $extern_contact->store();
+        }
+        $contact_range->contact->alt_mail = Request::get('contact_altmail', '');
+        $contact_range->contact->store();
+        $contact_range->store();
+        PageLayout::postSuccess(_('Der Ansprechpartner wurde gespeichert.'));
+        if ($origin === 'range') {
+            $this->response->add_header('X-Dialog-Execute', 'STUDIP.MVV.Contact.reload_contacttable("' . $contact_range->range_id . '", "' . $contact_range->range_type . '")');
+            $this->response->add_header('X-Dialog-Close', 1);
+        } else {
+            $this->response->add_header('X-Dialog-Close', 1);
+            $this->response->add_header('X-Location', $this->url_for('/index', ['contact_id' => $mvv_contact->id]));
+        }
+        $this->render_nothing();
+    }
 
-        $range = MvvContactRange::findOneBySQL("contact_id =? AND range_id =? AND category=?",[$contact_id, $range_id, $category]);
+    public function delete_range_action($contact_range_id)
+    {
+        CSRFProtection::verifySecurityToken();
+
+        $range = MvvContactRange::find($contact_range_id);
         $contact = $range->contact;
 
         if (!($range && MvvPerm::get($contact)->haveFieldPerm('ranges', MvvPerm::PERM_CREATE))) {
@@ -570,27 +635,32 @@ class Shared_ContactsController extends MVVController
         }
     }
 
-    public function sort_action($range_id = null)
+    public function sort_action($range_id = null, $range_type = '')
     {
         if (Request::submitted('order')) {
             $ordered = json_decode(Request::get('ordering'), true);
             if (is_array($ordered)) {
                 $ok = false;
+                $range_type = '';
                 foreach ($ordered as $p => $user_kat_id) {
                     $usr_kat_split = explode('_', $user_kat_id['id']);
-                    if ($mvv_contact_range = MvvContactRange::findOneBySQL("contact_id =? AND range_id =? AND category=?",[$usr_kat_split[0], $range_id, $usr_kat_split[1]])) {
+                    if ($mvv_contact_range = MvvContactRange::findOneBySQL("contact_id = ? AND range_id = ? AND category = ?",
+                            [$usr_kat_split[0], $range_id, $usr_kat_split[1]])) {
                         $mvv_contact_range->position = $p + 1;
                         $ok += $mvv_contact_range->store();
+                        $range_type = $mvv_contact_range->range_type;
                     }
                 }
-                if (Request::isXhr()) {
-                    header('X-Dialog-Close: 1');
-                    exit;
-                }
+                $this->response->add_header('X-Dialog-Execute', 'STUDIP.MVV.Contact.reload_contacttable("' . $range_id . '", "' . $range_type . '")');
+                $this->response->add_header('X-Dialog-Close', 1);
+                $this->render_nothing();
+                return;
             }
         }
         $this->range_id = $range_id;
-        $this->contacts = MvvContactRange::findBySQL('range_id = ? ORDER BY position ASC', [$range_id]);
+        $this->range_type = $range_type;
+        $this->contacts = MvvContactRange::findBySQL('range_id = ? AND range_type = ? ORDER BY position ASC',
+                [$range_id, $range_type]);
         PageLayout::setTitle(_('Reihenfolge ändern'));
     }
 

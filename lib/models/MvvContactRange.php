@@ -180,7 +180,8 @@ class MvvContactRange extends ModuleManagementModel
             default:
                 return array_merge(
                     $GLOBALS['MVV_STUDIENGANG']['PERSONEN_GRUPPEN']['values'],
-                    $GLOBALS['MVV_MODUL']['PERSONEN_GRUPPEN']['values']
+                    $GLOBALS['MVV_MODUL']['PERSONEN_GRUPPEN']['values'],
+                    $GLOBALS['MVV_STGTEIL']['PERSONEN_GRUPPEN']['values']
                 );
         }
     }

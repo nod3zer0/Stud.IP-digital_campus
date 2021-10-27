@@ -324,7 +324,7 @@
         <legend>
             <?= _('Ansprechpartner'); ?>
         </legend>
-        <?= $this->render_partial('shared/contacts/range', ['perm_contacts' => $perm->haveFieldPerm('contact_assignments', MvvPerm::PERM_CREATE), 'range_type' => 'Studiengang', 'range_id' => $studiengang->id]) ?>
+        <?= $this->render_partial('shared/contacts/range', ['perm_contacts' => $perm->getFieldPerm('contact_assignments'), 'range_type' => 'Studiengang', 'range_id' => $studiengang->id, 'contacts' => $contacts->getArrayCopy()]) ?>
     </fieldset>
 
     <?= $plugin_hook_content ?>
