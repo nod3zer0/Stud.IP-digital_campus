@@ -442,17 +442,6 @@ class Course_StudygroupController extends AuthenticatedController
                 // test whether we have a group name...
                 if (!Request::get('groupname')) {
                     $errors[] = _("Bitte Gruppennamen angeben");
-                    //... if so, test if this is not taken by another group
-                } else {
-                    $query     = "SELECT 1 FROM seminare WHERE name = ? AND Seminar_id != ?";
-                    $statement = DBManager::get()->prepare($query);
-                    $statement->execute([
-                        Request::get('groupname'),
-                        $id,
-                    ]);
-                    if ($statement->fetchColumn()) {
-                        $errors[] = _("Eine Veranstaltung/Studiengruppe mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Namen");
-                    }
                 }
                 if (count($errors)) {
                     $this->flash['errors'] = $errors;
