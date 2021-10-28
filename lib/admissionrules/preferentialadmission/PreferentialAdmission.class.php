@@ -446,7 +446,7 @@ class PreferentialAdmission extends AdmissionRule
             $userlist->setUsers($members);
             $userlist->setFactor($bonus);
             $userlist->store();
-            $bonus = $bonus * ($this->bonus_difference + 1);
+            $bonus = $bonus + ($this->bonus_difference + 1);
             $courseset->addUserList($userlist->getId());
             $this->userlists[] = $userlist->getId();
         }

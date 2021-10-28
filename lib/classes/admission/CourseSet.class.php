@@ -597,14 +597,32 @@ class CourseSet
     public function getUserFactorList()
     {
         $factored_users = [];
+
         foreach ($this->getUserLists() as $ul_id) {
             $user_list = new AdmissionUserList($ul_id);
-            $factored_users = array_merge($factored_users,
-                                 array_combine(array_keys($user_list->getUsers()),
-                                         array_fill(0, count($user_list->getUsers()), $user_list->getFactor())
-                                         )
-                    );
+
+            // Iterate through user list.
+            foreach ($user_list->getUsers() as $user => $assigned) {
+                switch ($user_list->getFactor()) {
+                    // Maximum factor, just set it and stop further processing of user lists.
+                    case PHP_INT_MAX:
+                        $factored_users[$user] = PHP_INT_MAX;
+                        break;
+                    // Backlist, set malus and stop further processing of user lists.
+                    case 0:
+                        $factored_users[$user] = 0;
+                        break;
+                    default:
+                        // Add up current bonus if it isn't already at 0 or PHP_INT_MAX.
+                        if ($factored_users[$user] !== 0 && $factored_users[$user] != PHP_INT_MAX) {
+                            $factored_users[$user] = isset($factored_users[$user]) ?
+                                $factored_users[$user] + $user_list->getFactor() :
+                                $user_list->getFactor();
+                        }
+                }
+            }
         }
+
         return $factored_users;
     }
 
