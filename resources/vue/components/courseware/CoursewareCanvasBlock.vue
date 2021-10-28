@@ -89,6 +89,10 @@
                     @mouseup="mouseUp"
                     @mouseout="mouseUp"
                     @mouseleave="mouseUp"
+
+                    @touchstart="touchStart"
+                    @touchmove="touchMove"
+                    @touchend="touchEnd"
                 />
                 <div class="cw-canvasblock-hints">
                     <div v-show="write" class="messagebox messagebox_info cw-canvasblock-text-info">
@@ -407,6 +411,44 @@ export default {
         mouseUp(e) {
             this.storeDraw();
             this.paint = false;
+        },
+        touchStart(e) {
+            e.preventDefault();
+            if (this.write) {
+                return;
+            }
+            let canvas = this.$refs.canvas;
+            let mousePos = this.getTouchPos(canvas, e);
+            if(this.currentTool == 'pen') {
+                this.paint = true;
+                this.addClick(mousePos.x, mousePos.y, false);
+                this.redraw();
+            }
+            if(this.currentTool == 'text') {
+                this.write = true;
+                this.addClick(mousePos.x, mousePos.y, false);
+            }
+        },
+        touchMove(e) {
+            e.preventDefault();
+
+            let canvas = this.$refs.canvas;
+            let mousePos = this.getTouchPos(canvas, e);
+            if(this.paint){
+                this.addClick(mousePos.x, mousePos.y, true);
+                this.redraw();
+            }
+        },
+        touchEnd(e) {
+            this.storeDraw();
+            this.paint = false;
+        },
+        getTouchPos(canvasDom, touchEvent) {
+            var rect = canvasDom.getBoundingClientRect();
+            return {
+                x: touchEvent.touches[0].clientX - rect.left,
+                y: touchEvent.touches[0].clientY - rect.top
+            };
         },
         addClick(x, y, dragging) {
             this.clickX.push(x);
