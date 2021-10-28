@@ -101,11 +101,21 @@ class Course_PlusController extends AuthenticatedController
         PageLayout::setTitle(_('Reihenfolge der Werkzeuge ändern'));
         if (Request::submitted('order')) {
             CSRFProtection::verifyUnsafeRequest();
-            $plugin_id = Request::get('id');
+            $plugin_id = explode('_', Request::get('id'))[1];
             $newpos = Request::get('index') + 1;
             if ($this->sem->tools->findOneBy('plugin_id', $plugin_id)) {
-                $this->sem->tools->findBy('position', $newpos, '>=')->each(function ($p) {$p->position++;});
-                $this->sem->tools->findOneBy('plugin_id', $plugin_id)->position = $newpos;
+                $oldpos = $this->sem->tools->findOneBy('plugin_id', $plugin_id)->position;
+                if ($oldpos < $newpos) {
+                    $this->sem->tools->findBy('position', $newpos, '>')->each(function ($p) {
+                        $p->position++;
+                    });
+                    $this->sem->tools->findOneBy('plugin_id', $plugin_id)->position = $newpos + 1;
+                } else {
+                    $this->sem->tools->findBy('position', $newpos, '>=')->each(function ($p) {
+                        $p->position++;
+                    });
+                    $this->sem->tools->findOneBy('plugin_id', $plugin_id)->position = $newpos;
+                }
                 $this->sem->tools->orderBy('position asc')->each(function ($p) {static $pos = 0; $p->position = $pos++;});
                 $this->sem->tools->store();
                 $this->render_nothing();

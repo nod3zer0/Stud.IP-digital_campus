@@ -2,7 +2,7 @@
 <? if ($sem->tools): ?>
     <? foreach ($sem->tools as $tool): ?>
     <?php if (!$tool->getStudipModule()) continue; ?>
-        <article class="draggable" id="<?= $tool->plugin_id ?>">
+        <article class="draggable" id="plugin_<?= $tool->plugin_id ?>">
             <header>
                 <span class="sg-sortable-handle"></span>
                 <h1><?= htmlready($tool->getDisplayName()) ?></h1>

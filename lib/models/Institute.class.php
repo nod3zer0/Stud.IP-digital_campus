@@ -197,7 +197,8 @@ class Institute extends SimpleORMap implements Range
         $config['has_many']['tools'] = [
             'class_name'        => 'ToolActivation',
             'assoc_foreign_key' => 'range_id',
-            'on_delete'         => 'delete',
+            'order_by'          => 'ORDER BY position',
+            'on_delete'         => 'delete'
         ];
         $config['additional_fields']['all_status_groups']['get'] = function ($institute) {
             return Statusgruppen::findAllByRangeId($institute->id, true);
