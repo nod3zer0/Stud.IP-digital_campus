@@ -175,9 +175,7 @@ class MvvFile extends ModuleManagementModel
             ['count_zuordnungen', 'mvv_files_filerefs.name', 'file_refs.name']
         );
 
-        $parameters = [
-            ':ranges' => self::getIdsFiltered($filter),
-        ];
+        $parameters = [];
 
         $name_filter_sql = '';
         if ($filter['searchnames']) {
@@ -185,6 +183,8 @@ class MvvFile extends ModuleManagementModel
             $parameters[':needle'] = "%{$filter['searchnames']}%";
         }
         unset($filter['searchnames']);
+
+        $parameters[':ranges'] = self::getIdsFiltered($filter);
 
         $query = "SELECT `mvv_files`.*,
                          COUNT(`mvv_files_ranges`.`range_id`) AS `count_relations`,
