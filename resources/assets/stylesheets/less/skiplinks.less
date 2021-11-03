@@ -26,12 +26,8 @@
 }
 
 body.enable-skiplinks {
-    *:focus,
-    .focus_box,
-    .studip-checkbox:focus + label {
-        &:not(:empty) {
-            outline: 2px dashed @orange;
-        }
+    *:not(:empty):focus {
+        outline: 2px dashed @orange;
     }
 
     #tabs {

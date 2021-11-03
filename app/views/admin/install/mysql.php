@@ -25,8 +25,7 @@
 </div>
 
 <div class="type-checkbox">
-    <input type="checkbox" name="create" id="create" value="1" checked
-           class="studip-checkbox">
+    <input type="checkbox" name="create" id="create" value="1" checked>
     <label for="create">
         <?= _('Versuche Datenbank anzulegen, falls sie noch nicht existiert') ?>
     </label>

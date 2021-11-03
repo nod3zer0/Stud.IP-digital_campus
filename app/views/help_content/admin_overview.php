@@ -27,12 +27,8 @@
                 <? foreach ($help_contents as $help_content_id => $help_content) : ?>
                     <tr>
                         <td><input type="checkbox" name="help_content_status_<?= $help_content_id ?>"
-                                   id="help_content_status_<?= $help_content_id ?>" value="1"
-                                   class="studip-checkbox help_on"
-                                <?= tooltip(_("Status der Hilfe (aktiv oder inaktiv)"), false) ?><?= ($help_content->visible) ? ' checked' : '' ?>>
-                            <label for="help_content_status_<?= $help_content_id ?>">
-                                <? _('Status der Hilfe (aktiv oder inaktiv)') ?>
-                            </label>
+                                   value="1" class="help_on"
+                                <?= tooltip(_("Status der Hilfe (aktiv oder inaktiv)"), false) ?><?= $help_content->visible ? ' checked' : '' ?>>
                         </td>
                         <td><?= htmlReady($help_content->route) ?></td>
                         <td><?= htmlReady($help_content->language) ?></td>

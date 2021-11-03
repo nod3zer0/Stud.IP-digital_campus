@@ -46,22 +46,20 @@
     <?= _('Angezeigter Name') ?>
     <?= I18N::input('display_name', $display_name) ?>
 </label>
-<input type="checkbox" name="searchable" id="searchable" class="studip-checkbox"
-    <?= $searchable ? 'checked="checked"' : '' ?>
-    <?= $property->system ? 'disabled="disabled"' : '' ?>>
-<label for="searchable">
+<label>
+    <input type="checkbox" name="searchable"
+        <?= $searchable ? 'checked="checked"' : '' ?>
+        <?= $property->system ? 'disabled="disabled"' : '' ?>>
     <?= _('Diese Eigenschaft kann zur Suche genutzt werden.') ?>
 </label>
-<input type="checkbox" value="1" name="info_label" id="info_label" class="studip-checkbox"
-    <?= $info_label ? 'checked="checked"' : '' ?>>
-<label for="info_label">
+<label>
+    <input type="checkbox" value="1" name="info_label"
+        <?= $info_label ? 'checked="checked"' : '' ?>>
     <?= _('Diese Eigenschaft soll im Info-Icon zu einem Raum angezeigt werden.') ?>
 </label>
-<input type="checkbox" name="range_search" value="1" class="studip-checkbox" id="range_search"
-    <?= $range_search
-        ? 'checked="checked"'
-        : '' ?>
-    <?= $property->system ? 'disabled="disabled"' : '' ?>>
-<label for="range_search">
+<label>
+    <input type="checkbox" name="range_search" value="1"
+        <?= $range_search ? 'checked="checked"' : '' ?>
+        <?= $property->system ? 'disabled="disabled"' : '' ?>>
     <?= _('Suchkriterium mit Intervall') ?>
 </label>

@@ -31,19 +31,20 @@ if (!$item) {
 <tr class="<?= htmlReady($classes) ?>"
     data-range_id="<?= htmlReady($item['range_id']) ?>">
     <td class="item-name">
-        <input type="checkbox"
-               name="selected_clipboard_items[]"
-               title="<?= _('Diesen Raum auswählen.') ?>"
-               value="<?= htmlReady($item['id']) ?>"
-               <?= $checkbox_id ? sprintf('id="%s"', htmlReady($checkbox_id)) : ''?>
-               <?= in_array($item['id'], $selected_clipboard_items)
-                 ? 'checked="checked"'
-                 : (!$selected_clipboard_items
-                  ? 'checked="checked"'
-                  : ''
-                 ) ?>
-               class="studip-checkbox">
-        <label for="<?= htmlReady($checkbox_id) ?>"></label><?= htmlReady($item['name']) ?>
+        <label>
+            <input type="checkbox"
+                   name="selected_clipboard_items[]"
+                   title="<?= _('Diesen Raum auswählen.') ?>"
+                   value="<?= htmlReady($item['id']) ?>"
+                   <?= in_array($item['id'], $selected_clipboard_items)
+                     ? 'checked="checked"'
+                     : (!$selected_clipboard_items
+                      ? 'checked="checked"'
+                      : ''
+                     ) ?>
+                   >
+            <?= htmlReady($item['name']) ?>
+        </label>
     </td>
     <td class="item-actions">
         <?

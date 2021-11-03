@@ -46,7 +46,6 @@
             <tr class="sortable">
                 <th v-if="show_bulk_actions" data-sort="false">
                     <studip-proxy-checkbox
-                        type="studip"
                         v-model="selectedIds"
                         :total="allIds"
                     ></studip-proxy-checkbox>
@@ -107,7 +106,6 @@
                 <td v-if="show_bulk_actions">
                     <studip-proxied-checkbox
                         name="ids[]"
-                        type="studip"
                         :value="folder.id"
                         v-model="selectedIds"
                     ></studip-proxied-checkbox>
@@ -153,7 +151,6 @@
                 <td v-if="show_bulk_actions">
                     <studip-proxied-checkbox
                         name="ids[]"
-                        type="studip"
                         :value="file.id"
                         v-model="selectedIds"
                     ></studip-proxied-checkbox>

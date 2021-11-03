@@ -13,11 +13,11 @@
             <? if($col['id'] == '0') continue; ?>
             <tr>
                 <td>
-                    <input id="column_view_<?= $col['id'] ?>" name="column_view[]"
-                           class="studip-checkbox" type="checkbox"
+                    <input name="column_view[]"
+                           type="checkbox"
                            value="<?= $col['id'] ?>"
+                           title="<?= htmlReady($col['title']) ?>"
                            <?= $col['visible'] ? 'checked' : '' ?>>
-                    <label for="column_view_<?= $col['id'] ?>"><?= htmlReady($col['title']) ?></label>
                 </td>
                 <td class="actions">
                     <?= ActionMenu::get()->addLink(

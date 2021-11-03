@@ -463,30 +463,6 @@ form.narrow {
     }
 }
 
-.studip-checkbox {
-    display: none;
-    + label {
-        .icon('before', 'checkbox-unchecked', 'clickable', 16, 5px);
-        cursor: pointer;
-    }
-    &:checked + label {
-        .icon('before', 'checkbox-checked', 'clickable', 16, 5px);
-    }
-    &:indeterminate + label {
-        .icon('before', 'checkbox-indeterminate', 'clickable', 16, 5px);
-    }
-
-    &[disabled] {
-        + label {
-            .icon('before', 'checkbox-unchecked', 'inactive', 16, 5px);
-        }
-
-        &:checked + label {
-            .icon('before', 'checkbox-checked', 'inactive', 16, 5px);
-        }
-    }
-}
-
 // give forms some optimized styling for very narrow screen sizes
 .media-breakpoint-tiny-down({
     form.default {

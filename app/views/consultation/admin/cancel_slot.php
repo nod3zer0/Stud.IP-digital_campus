@@ -20,11 +20,9 @@
             <ul class="list-unstyled">
             <? foreach ($slot->bookings as $booking): ?>
                 <li>
-                    <input type="checkbox" name="ids[]" checked
-                           class="studip-checkbox"
-                           id="booking-<?= htmlReady($booking->id) ?>"
-                           value="<?= htmlReady($booking->id) ?>">
-                    <label for="booking-<?= htmlReady($booking->id) ?>" class="undecorated">
+                    <label class="undecorated">
+                        <input type="checkbox" name="ids[]" checked
+                               value="<?= htmlReady($booking->id) ?>">
                         <?= htmlReady($booking->user->getFullName()) ?>
                     </label>
                 </li>

@@ -1,9 +1,9 @@
 <? if ($show_form): ?>
     <form class="default" method="post" action="<?= $form_action_link ?>" data-dialog="reload-on-close">
         <input type="hidden" name="origin_url" value="<?= htmlReady($origin_url) ?>">
-        <input type="checkbox" id="multiday" <?= ($begin_date_str != $end_date_str) ? 'checked' : ''; ?>
-               onClick="$('#end_date_section').toggle();" class="studip-checkbox">
-        <label for="multiday">
+        <label>
+            <input type="checkbox" <?= ($begin_date_str != $end_date_str) ? 'checked' : ''; ?>
+                   onClick="$('#end_date_section').toggle();">
             <?= _('Mehrtägig') ?>
         </label>
         <section>

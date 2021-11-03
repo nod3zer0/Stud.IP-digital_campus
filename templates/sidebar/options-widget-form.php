@@ -7,7 +7,6 @@
         <? if ($element['type'] == 'checkbox'): ?>
             <input type="checkbox" name="<?= htmlReady($element['name']) ?>"
                    value="<?= htmlReady($element['value']) ?>"
-                   class="<?= '' /*studip-checkbox*/ ?>"
                    <?= $element['checked'] ? 'checked="checked"' : '' ?>>
             <label for="<?= htmlReady($element['name']) ?>">
                 <?= htmlReady($element['label']) ?>

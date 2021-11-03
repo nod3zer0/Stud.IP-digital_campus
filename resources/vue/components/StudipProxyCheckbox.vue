@@ -8,7 +8,6 @@ export default {
     },
     props: {
         id: String,
-        type: String,
         total: {
             type: Array,
             required: true
@@ -36,9 +35,6 @@ export default {
     },
     render (createElement) {
         const checkbox = createElement('input', {
-            class: {
-                'studip-checkbox': this.type === 'studip'
-            },
             attrs: {
                 type: 'checkbox',
                 name: this.name,
@@ -53,23 +49,7 @@ export default {
             }
         });
 
-        if (this.type !== 'studip') {
-            return checkbox;
-        }
-
-        return createElement('span', {
-            style: {
-                display: 'contents',
-            },
-        }, [
-            checkbox,
-            createElement('label', {
-                attrs: {
-                    for: this.proxyId
-                }
-            }),
-        ]);
-
+        return checkbox;
     }
 };
 </script>

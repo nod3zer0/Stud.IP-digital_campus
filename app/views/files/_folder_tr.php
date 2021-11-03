@@ -25,11 +25,8 @@ if ($folder->isReadable($GLOBALS['user']->id)) {
     <? if ($is_readable) : ?>
         <input type="checkbox"
                name="ids[]"
-               class="studip-checkbox"
-               id="file_checkbox_<?= $folder->id ?>"
                value="<?= $folder->id ?>"
                <? if (in_array($folder->getId(), (array)$marked_element_ids)) echo 'checked'; ?>>
-        <label for="file_checkbox_<?= $folder->id ?>"></label>
     <? endif?>
     </td>
     <td class="document-icon" data-sort-value="<?=crc32(get_class($folder))?>">

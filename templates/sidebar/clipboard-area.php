@@ -99,18 +99,19 @@
                                                             : '' ?>"
                                     data-range_id="<?= htmlReady($item['range_id']) ?>">
                                     <td class="item-name">
-                                        <input type="checkbox"
-                                               name="selected_clipboard_items[]"
-                                               title="<?= _('Diesen Eintrag auswählen.') ?>"
-                                               value="<?= htmlReady($item['id']) ?>"
-                                               id="<?= htmlReady($checkbox_id) ?>"
-                                               <?= in_array($item['id'], $selected_clipboard_items)
-                                                 ? 'checked="checked"'
-                                                 : (!$selected_clipboard_items
-                                                  ? 'checked="checked"'
-                                                  : '') ?>
-                                               class="studip-checkbox">
-                                        <label for="<?= htmlReady($checkbox_id) ?>"><?= htmlReady($item['name']) ?></label>
+                                        <label>
+                                            <input type="checkbox"
+                                                   name="selected_clipboard_items[]"
+                                                   title="<?= _('Diesen Eintrag auswählen.') ?>"
+                                                   value="<?= htmlReady($item['id']) ?>"
+                                                   <?= in_array($item['id'], $selected_clipboard_items)
+                                                     ? 'checked="checked"'
+                                                     : (!$selected_clipboard_items
+                                                      ? 'checked="checked"'
+                                                      : '') ?>
+                                                   >
+                                            <?= htmlReady($item['name']) ?>
+                                        </label>
                                     </td>
                                     <? if (!$readonly): ?>
                                         <td class="item-actions">
@@ -149,8 +150,7 @@
                                 <input type="checkbox"
                                        name="selected_clipboard_items[]"
                                        value=""
-                                       class="studip-checkbox item-id">
-                                <label></label>
+                                       class="item-id">
                             </td>
                             <? if (!$readonly): ?>
                                 <td class="item-actions">
@@ -192,9 +192,7 @@
                     <td>
                         <input type="checkbox"
                                name="clipboard_selected_items[]"
-                               value=""
-                               class="studip-checkbox">
-                        <label></label>
+                               value="">
                     </td>
                     <td>
                         <?= Icon::create('trash', 'clickable')->asImg(

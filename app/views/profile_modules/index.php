@@ -12,12 +12,12 @@
 
                 <div class="element_header">
                     <input type="hidden" name="modules[<?= htmlReady($id) ?>]" value="0">
-                    <input type="checkbox" value="1" class="studip-checkbox"
-                           id="<?= md5($item['name']) ?>" name="modules[<?= htmlReady($id) ?>]"
-                           onclick="jQuery(this).closest('form').submit()"
-                           <? if ($item['activated']) echo 'checked'; ?>>
+                    <label>
+                        <input type="checkbox" value="1"
+                               name="modules[<?= htmlReady($id) ?>]"
+                               onclick="jQuery(this).closest('form').submit()"
+                               <? if ($item['activated']) echo 'checked'; ?>>
 
-                    <label for="<?= md5($item['name']) ?>">
                         <strong><?= htmlReady($item['name']) ?></strong>
                     </label>
                 </div>

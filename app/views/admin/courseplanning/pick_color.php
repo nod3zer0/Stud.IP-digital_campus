@@ -3,8 +3,8 @@
 
     <div id="event-color-picker"></div>
 
-    <input id="semtype-checkbox" name="event_color_semtype" type="checkbox" class="studip-checkbox" value="1">
-    <label for="semtype-checkbox">
+    <label>
+        <input name="event_color_semtype" type="checkbox" value="1">
         <?= sprintf(_('Farbtyp für alle VA dieses Typs (%s) übernehmen'), htmlReady($semtype)) ?>
     </label>
 

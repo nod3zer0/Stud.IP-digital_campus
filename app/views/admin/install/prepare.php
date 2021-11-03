@@ -11,10 +11,10 @@
     <li>
     <?php if (in_array($file, $required)): ?>
         <input type="hidden" name="files[]" value="<?= htmlReady($file) ?>">
-        <input type="checkbox" checked disabled class="studip-checkbox">
+        <input type="checkbox" checked disabled>
     <?php else: ?>
         <input type="checkbox" name="files[]" value="<?= htmlReady($file) ?>"
-               class="studip-checkbox" id="option-<?= $i ?>">
+               id="option-<?= $i ?>">
     <?php endif; ?>
         <label for="option-<?= $i ?>">
             <strong <?php if (in_array($file, $required)): ?>class="required"<?php endif; ?>>

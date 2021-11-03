@@ -15,12 +15,9 @@ if ($file->isDownloadable($GLOBALS['user']->id)) {
         <td>
             <? if ($file->isDownloadable($GLOBALS['user']->id)) : ?>
                 <input type="checkbox"
-                       class="studip-checkbox"
                        name="ids[]"
-                       id="file_checkbox_<?= htmlReady($table_id) ?>_<?= htmlReady($file->getId()) ?>"
                        value="<?= htmlReady($file->getId()) ?>"
                        <?= in_array($file->getId(), (array) $marked_element_ids) ? 'checked' : '' ?>>
-                <label for="file_checkbox_<?= htmlReady($table_id) ?>_<?= htmlReady($file->getId()) ?>"></label>
             <? endif ?>
         </td>
     <? endif ?>

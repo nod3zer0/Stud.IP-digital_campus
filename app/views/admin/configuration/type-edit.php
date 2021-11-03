@@ -1,9 +1,8 @@
 <? if ($type === 'boolean') : ?>
 
     <input type="hidden" name="value" value="0">
-    <input type="checkbox" name="value" value="1" id="item-value" class="studip-checkbox"
-        <? if ($value) echo 'checked'; ?>>
-    <label for="item-value">
+    <label>
+        <input type="checkbox" name="value" value="1" <? if ($value) echo 'checked'; ?>>
         <?= _('aktiviert') ?>
     </label>
 <? else : ?>

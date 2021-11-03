@@ -17,7 +17,6 @@
             <? if ($show_bulk_checkboxes) : ?>
                 <th data-sort="false">
                     <input type="checkbox"
-                           class="studip-checkbox"
                            <?= $table_id
                              ? 'data-proxyfor="table.documents[data-table_id=\'' . htmlReady($table_id) . '\'] tbody :checkbox"'
                              : 'data-proxyfor="table.documents tbody :checkbox"'
@@ -26,8 +25,7 @@
                              ? 'data-activates="table.documents[data-table_id=\'' . htmlReady($table_id) . '\'] tfoot .multibuttons .button"'
                              : 'data-activates="table.documents tfoot .multibuttons .button"'
                            ?>
-                           id="all_files_checkbox_<?= htmlReady($table_id) ?>">
-                    <label for="all_files_checkbox_<?= htmlReady($table_id) ?>"></label>
+                    >
                 </th>
             <? endif ?>
             <th data-sort="htmldata"><?= _('Typ') ?></th>

@@ -29,7 +29,7 @@
         ) ?>
     <? endif ?>
     <? if ($criteria['switch']): ?>
-        <input type="checkbox" class="special-item-switch studip-checkbox" value="1"
+        <input type="checkbox" class="special-item-switch" value="1"
                title="<?= _('Kriterium ausgewählt'); ?>" id="cb_<?= htmlReady($criteria['name']); ?>"
                name="<?= htmlReady($criteria['name'] . '_enabled')?>"
                <?= $criteria['enabled'] ? 'checked="checked"' : ''?>>
