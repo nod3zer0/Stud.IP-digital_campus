@@ -205,7 +205,6 @@ class Course_DetailsController extends AuthenticatedController
 
             if ($GLOBALS['SessionSeminar'] === $this->course->id) {
                 Navigation::activateItem('/course/main/details');
-                SkipLinks::addIndex(Navigation::getItem('/course/main/details')->getTitle(), 'main_content', 100);
             } else {
                 $sidebarlink = true;
                 $enrolment_info = $this->sem->getEnrolmentInfo($GLOBALS['user']->id);

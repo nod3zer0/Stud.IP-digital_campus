@@ -93,42 +93,36 @@ if ($view === 'listall') {
     //
     // list all pages, default sorting = alphabetically
     //
-    SkipLinks::addIndex(_('Alle Seiten'), 'main_content', 100);
     listPages('all', Request::option('sortby'));
 
 } else if ($view === 'listnew') {
     //
     // list new pages, default sorting = newest first
     //
-    SkipLinks::addIndex(_('Neue Seiten'), 'main_content', 100);
     listPages('new', Request::option('sortby'));
 
 } else if ($view === 'diff') {
     //
     // show one large diff-file containing all changes
     //
-    SkipLinks::addIndex(_('Seite mit Änderungen'), 'main_content', 100);
     showDiffs($keyword, Request::option('versionssince'));
 
 } else if ($view === 'combodiff') {
     //
     // show one large diff-file containing all changes
     //
-    SkipLinks::addIndex(_('Seite mit Änderungen'), 'main_content', 100);
     showComboDiff($keyword);
 
 } else if ($view === 'pageversions') {
     //
     // show versions of a wiki page
     //
-    SkipLinks::addIndex(_('Versionen dieser Seite'), 'main_content', 100);
     listPageVersions($keyword, Request::option('sortby'));
 
 } else if ($view === 'export') {
     //
     // show export dialog
     //
-    SkipLinks::addIndex(_('Seiten exportieren'), 'wiki_export', 100);
     exportWiki();
 
 } else if ($view === 'search') {
@@ -149,8 +143,6 @@ if ($view === 'listall') {
     if ($wikiData && !$wikiData->isEditableBy($GLOBALS['user'])) {
         throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu editieren!'));
     }
-
-    SkipLinks::addIndex(_('Seite bearbeiten'), 'main_content', 100);
 
     // set lock
     setWikiLock(null, $user->id, Context::getId(), $keyword);
@@ -245,7 +237,6 @@ if ($view === 'listall') {
     //
     // Show Page
     //
-    SkipLinks::addIndex(_('Aktuelle Seite'), 'main_content', 100);
 
     $page = WikiPage::findLatestPage(Context::getId(), $keyword);
     if (!$page || $page->isVisibleTo($GLOBALS['user']->id)) {

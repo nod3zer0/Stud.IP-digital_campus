@@ -3,8 +3,6 @@
     <? foreach (PageLayout::getMessages() as $messagebox) : ?>
         <?= $messagebox ?>
     <? endforeach ?>
-<? else : ?>
-    <? SkipLinks::addIndex(_('Kalender teilen'), 'main_content', 100); ?>
 <? endif; ?>
 <form data-dialog="size=auto" action="<?= $controller->url_for('calendar/single/share/' . $calendar->getRangeId()) ?>" method="post" class="default">
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">

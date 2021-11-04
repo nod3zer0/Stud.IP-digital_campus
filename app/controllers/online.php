@@ -28,7 +28,6 @@ class OnlineController extends AuthenticatedController
         PageLayout::setHelpKeyword('Basis.InteraktionWhosOnline');
         PageLayout::setTitle(_('Wer ist online?'));
         Navigation::activateItem('/community/online');
-        SkipLinks::addIndex(_('Wer ist online?'), 'layout_content', 100);
 
         $this->settings = $GLOBALS['user']->cfg->MESSAGING_SETTINGS;
 

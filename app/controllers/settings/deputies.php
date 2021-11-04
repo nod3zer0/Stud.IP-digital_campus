@@ -31,7 +31,6 @@ class Settings_DeputiesController extends Settings_SettingsController
         PageLayout::setHelpKeyword('Basis.MyStudIPDeputies');
         PageLayout::setTitle(_('Standardvertretung'));
         Navigation::activateItem('/profile/settings/deputies');
-        SkipLinks::addIndex(_('Standardvertretung'), 'main_content', 100);
 
         $this->edit_about_enabled = Config::get()->DEPUTIES_EDIT_ABOUT_ENABLE;
     }

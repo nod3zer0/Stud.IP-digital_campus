@@ -1,4 +1,3 @@
-<? SkipLinks::addIndex(_('Personen, deren Standardvertretung ich bin'), 'my_deputy_bosses') ?>
 <table class="default" id="my_deputy_bosses">
     <caption>
         <?= _('Personen, deren Standardvertretung ich bin') ?>

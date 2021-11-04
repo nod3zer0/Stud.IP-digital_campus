@@ -31,7 +31,6 @@ class Settings_AccountController extends Settings_SettingsController
         PageLayout::setHelpKeyword('Basis.HomepagePersönlicheDaten');
         PageLayout::setTitle(_('Persönliche Angaben bearbeiten'));
         Navigation::activateItem('/profile/edit/profile');
-        SkipLinks::addIndex(_('Persönliche Angaben bearbeiten'), 'layout_content');
     }
 
     /**

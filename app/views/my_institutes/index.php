@@ -21,7 +21,6 @@
            auf Ihrer persönlichen Einstellungsseite.'), '<a href="' . URLHelper::getLink('dispatch.php/settings/studies#einrichtungen') . '">', '</a>'))?>
     <? endif ?>
 <? else : ?>
-    <? SkipLinks::addIndex(_('Meine Einrichtungen'), 'my_institutes') ?>
     <table class="default" id="my_institutes">
         <caption><?= _('Meine Einrichtungen') ?></caption>
         <colgroup>

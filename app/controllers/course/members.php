@@ -58,9 +58,6 @@ class Course_MembersController extends AuthenticatedController
         // Layoutsettings
         PageLayout::setTitle(sprintf('%s - %s', Course::findCurrent()->getFullname(), _("Teilnehmende")));
 
-        SkipLinks::addIndex(Navigation::getItem('/course/members')->getTitle(), 'main_content', 100);
-
-
         $this->studip_module = checkObjectModule('participants');
         object_set_visit_module( $this->studip_module->getPluginId());
         $this->last_visitdate = object_get_visit($this->course_id, $this->studip_module->getPluginId());
@@ -125,7 +122,6 @@ class Course_MembersController extends AuthenticatedController
 
         // Check autor-perms
         if (!$this->is_tutor) {
-            SkipLinks::addIndex(_("Sichtbarkeit ändern"), 'change_visibility');
             // filter invisible user
             $this->invisibles = count($filtered_members['autor']->findBy('visible', 'no')) + count($filtered_members['user']->findBy('visible', 'no'));
             $current_user_id = $this->user_id;

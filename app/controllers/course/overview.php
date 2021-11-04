@@ -31,8 +31,6 @@ class Course_OverviewController extends AuthenticatedController
         PageLayout::setHelpKeyword('Basis.InVeranstaltungKurzinfo');
         PageLayout::setTitle(Context::getHeaderLine() . ' - ' . _('Kurzinfo'));
         Navigation::activateItem('/course/main/info');
-        // add skip link
-        SkipLinks::addIndex(Navigation::getItem('/course/main/info')->getTitle(), 'main_content', 100);
 
         $this->sem             = Seminar::getInstance($this->course_id);
         $sem_class             = $this->sem->getSemClass();

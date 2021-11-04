@@ -24,7 +24,6 @@ class Settings_MessagingController extends Settings_SettingsController
         PageLayout::setHelpKeyword('Basis.MyStudIPMessaging');
         PageLayout::setTitle(_('Einstellungen des Nachrichtensystems anpassen'));
         Navigation::activateItem('/profile/settings/messaging');
-        SkipLinks::addIndex(_('Einstellungen des Nachrichtensystems anpassen'), 'layout_content', 100);
 
         $this->settings = $this->config->MESSAGING_SETTINGS;
     }

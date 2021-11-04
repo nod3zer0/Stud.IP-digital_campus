@@ -44,7 +44,6 @@ class Settings_NotificationController extends Settings_SettingsController
         PageLayout::setHelpKeyword('Basis.MyStudIPBenachrichtigung');
         PageLayout::setTitle(_('Benachrichtigung über neue Inhalte anpassen'));
         Navigation::activateItem('/profile/settings/notification');
-        SkipLinks::addIndex(_('Benachrichtigung über neue Inhalte anpassen'), 'layout_content', 100);
     }
 
     /**

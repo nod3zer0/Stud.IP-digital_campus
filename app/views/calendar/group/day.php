@@ -7,8 +7,6 @@ $width1 = floor(90 / $cells);
 $width2 = 10 + (90 - $width1 * $cells);
 $start = $settings['start'] * 3600;
 $end = ($settings['end'] + 1) * 3600;
-// add skip link
-SkipLinks::addIndex(_('Tagesansicht'), 'main_content', 100);
 ?>
 <table id="main_content" style="width:100%; table-layout:fixed;">
     <thead>

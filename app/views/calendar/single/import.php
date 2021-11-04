@@ -1,6 +1,5 @@
 <?
 use Studip\Button, Studip\LinkButton;
-SkipLinks::addIndex(_('Termine importieren'), 'main_content', 100);
 ?>
 <form action="<?= $controller->link_for('calendar/single/import/' . $calendar->getRangeId(), ['atime' => $atime, 'last_view' => $last_view]) ?>" method="post" enctype="multipart/form-data" class="default">
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">

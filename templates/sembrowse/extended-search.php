@@ -1,13 +1,3 @@
-<?php
-SkipLinks::addIndex(_('Suchformular'), 'search_sem_xts', 100);
-// add skip link for simple search here
-SkipLinks::addLink(
-    _('Schnellsuche'),
-    URLHelper::getURL('dispatch.php/search/courses', ['cmd' => 'qs', 'level' => 'f']),
-    120
-);
-?>
-
 <?= $search_obj->getFormStart(URLHelper::getLink('?send=yes'), ['class' => 'default']) ?>
 
 <fieldset>

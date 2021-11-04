@@ -31,7 +31,6 @@ class Settings_CategoriesController extends Settings_SettingsController
         Navigation::activateItem('/profile/categories');
         PageLayout::setHelpKeyword('Basis.HomepageSonstiges');
         PageLayout::setTitle(_('Eigene Kategorien bearbeiten'));
-        SkipLinks::addIndex(_('Eigene Kategorien bearbeiten'), 'layout_content', 100);
     }
 
     /**

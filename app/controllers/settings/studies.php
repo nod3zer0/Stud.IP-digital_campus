@@ -36,8 +36,6 @@ class Settings_StudiesController extends Settings_SettingsController
         PageLayout::setHelpKeyword('Basis.HomepageUniversitäreDaten');
         PageLayout::setTitle(_('Studiengang bearbeiten'));
         Navigation::activateItem('/profile/edit/studies');
-        SkipLinks::addIndex(_('Fächer und Abschlüsse auswählen'), 'select_fach_abschluss');
-        SkipLinks::addIndex(_('Zu Einrichtungen zuordnen'), 'select_institute');
 
         $this->allow_change = [
             'sg' => !StudipAuthAbstract::CheckField('studiengang_id', $this->user->auth_plugin)

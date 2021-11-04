@@ -33,7 +33,6 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         PageLayout::setHelpKeyword('Basis.HomepageUniversitäreDaten');
         PageLayout::setTitle(_('Einrichtungsdaten bearbeiten'));
         Navigation::activateItem('/profile/edit/statusgruppen');
-        SkipLinks::addIndex(_('Einrichtungsdaten bearbeiten'), 'layout_content', 100);
     }
 
     /**

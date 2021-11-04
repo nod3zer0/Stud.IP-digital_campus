@@ -32,8 +32,6 @@ class Settings_PrivacyController extends Settings_SettingsController
         PageLayout::setTitle(_('Privatsphäre'));
 
         Navigation::activateItem('/profile/settings/privacy');
-
-        SkipLinks::addIndex(_('Privatsphäre'), 'layout_content', 100);
     }
 
     /**

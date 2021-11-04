@@ -27,7 +27,6 @@ class ProfileController extends AuthenticatedController
         Navigation::activateItem('/profile/index');
         URLHelper::addLinkParam('username', Request::username('username'));
         PageLayout::setHelpKeyword('Basis.Homepage');
-        SkipLinks::addIndex(_('Benutzerprofil'), 'layout_content', 100);
 
         $this->user         = User::findCurrent(); // current logged in user
         $this->perm         = $GLOBALS['perm']; // perms of current logged in user

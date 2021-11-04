@@ -1,7 +1,3 @@
-<?php
-SkipLinks::addIndex(_('Suchformular'), 'search_sem_qs', 100);
-?>
-
 <?= $search_obj->getFormStart(URLHelper::getLink(), ['class' => 'default']) ?>
 
 <fieldset>

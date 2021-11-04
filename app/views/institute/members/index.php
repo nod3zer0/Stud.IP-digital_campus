@@ -1,7 +1,3 @@
-<?php
-SkipLinks::addIndex(_('Mitarbeiterliste'), 'list_institute_members');    
-?>
-
 <? if ($institute): ?>
     <table class="default" id="list_institute_members">
         <caption><?= _('Mitarbeiterinnen und Mitarbeiter') ?></caption>

@@ -35,7 +35,6 @@ class Settings_DetailsController extends Settings_SettingsController
                              ? _('Lebenslauf, Arbeitsschwerpunkte und Publikationen bearbeiten')
                              : _('Lebenslauf bearbeiten'));
         Navigation::activateItem('/profile/edit/details');
-        SkipLinks::addIndex(_('Private Daten bearbeiten'), 'layout_content');
     }
 
     /**

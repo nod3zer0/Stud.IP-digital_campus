@@ -31,8 +31,6 @@ class Settings_UserdomainsController extends Settings_SettingsController
         PageLayout::setHelpKeyword('Basis.HomepageNutzerdomänen');
         PageLayout::setTitle(_('Nutzerdomänen bearbeiten'));
         Navigation::activateItem('/profile/edit/userdomains');
-        SkipLinks::addIndex(_('Zugeordnete Nutzerdomänen'), 'assigned_userdomains');
-        SkipLinks::addIndex(_('Nutzerdomäne auswählen'), 'select_userdomains');
     }
 
     /**

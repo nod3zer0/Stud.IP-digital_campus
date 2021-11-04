@@ -3,8 +3,6 @@
     <? foreach (PageLayout::getMessages() as $messagebox) : ?>
         <?= $messagebox ?>
     <? endforeach ?>
-<? else : ?>
-    <? SkipLinks::addIndex(_('Termine exportieren'), 'main_content', 100); ?>
 <? endif; ?>
 <form action="<?= $controller->url_for('calendar/single/export_calendar/' . $calendar->getRangeId(), ['atime' => $atime, 'last_view' => $last_view]) ?>" method="post" name="sync_form" id="calendar_sync" class="default">
     <fieldset>

@@ -27,7 +27,6 @@ class AvatarController extends AuthenticatedController
         if ($type == 'user') {
             PageLayout::setHelpKeyword('Basis.HomepageBild');
             PageLayout::setTitle(_('Profilbild ändern'));
-            SkipLinks::addIndex(_('Profilbild ändern'), 'edit_avatar');
 
             $has_perm = $GLOBALS['perm']->have_profile_perm('user', $id);
             $class = 'Avatar';
@@ -70,7 +69,6 @@ class AvatarController extends AuthenticatedController
         $this->avatar = $avatar->getURL($class::NORMAL);
         if ($avatar->is_customized()) {
             $this->customized = true;
-            SkipLinks::addIndex(_('Bild löschen'), 'delete_picture');
         }
 
         $this->type = $type;

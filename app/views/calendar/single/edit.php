@@ -3,8 +3,6 @@
     <? foreach (PageLayout::getMessages() as $messagebox) : ?>
         <?= $messagebox ?>
     <? endforeach ?>
-<? else : ?>
-    <? SkipLinks::addIndex(_('Termine anlegen/bearbeiten'), 'main_content', 100); ?>
 <? endif; ?>
 <form data-dialog="" method="post" action="<?= $controller->url_for($base . 'edit/' . $range_id . '/' . $event->event_id) ?>" class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>

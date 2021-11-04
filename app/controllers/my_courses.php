@@ -77,7 +77,6 @@ class MyCoursesController extends AuthenticatedController
         Navigation::activateItem('/browse/my_courses/list');
         PageLayout::setHelpKeyword('Basis.MeineVeranstaltungen');
         PageLayout::setTitle(_('Meine Veranstaltungen'));
-        SkipLinks::addIndex(_('Meine Veranstaltungen'), 'mycourses');
 
         $this->sem_data = Semester::getAllAsArray();
 
@@ -635,7 +634,6 @@ class MyCoursesController extends AuthenticatedController
         PageLayout::setTitle(_('Meine archivierten Veranstaltungen'));
         PageLayout::setHelpKeyword('Basis.MeinArchiv');
         Navigation::activateItem('/browse/my_courses/archive');
-        SkipLinks::addIndex(_('Hauptinhalt'), 'layout_content', 100);
 
         if (Config::get()->ENABLE_ARCHIVE_SEARCH) {
             $actions = Sidebar::get()->addWidget(new ActionsWidget());

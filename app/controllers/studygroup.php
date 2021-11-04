@@ -25,13 +25,6 @@ class StudygroupController extends AuthenticatedController
         Navigation::activateItem('/community/studygroups/browse');
         PageLayout::setHelpKeyword('Basis.SuchenStudiengruppen');
 
-        // add skip link
-        SkipLinks::addIndex(
-            Navigation::getItem('/community/studygroups/browse')->getTitle(),
-            'layout_content',
-            100
-        );
-
         $this->setupSidebar();
     }
 

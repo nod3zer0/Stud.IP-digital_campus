@@ -372,7 +372,6 @@ class SemBrowse {
     {
         ob_start();
 
-        SkipLinks::addIndex(_('Gefundene Bereiche'), 'sem_search_level', 110);
         echo "\n" . '<table id="sem_search_level" class="course-search" width="100%">' . "\n";
         if ($this->sem_browse_data['level'] == 'vv') {
             echo "\n" . '<caption class="legend">'._('Studienbereiche').'<caption>';
@@ -411,8 +410,6 @@ class SemBrowse {
                         !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)));
             }
             $the_tree = $this->sem_tree->tree;
-
-            SkipLinks::addIndex(_('Suchergebnis'), 'sem_search_result', 90);
 
             list($group_by_data, $sem_data) = $this->get_result();
 

@@ -30,7 +30,6 @@ class Settings_GeneralController extends Settings_SettingsController
 
         PageLayout::setTitle(_('Allgemeine Einstellungen anpassen'));
         Navigation::activateItem('/profile/settings/general');
-        SkipLinks::addIndex(_('Allgemeine Einstellungen anpassen'), 'layout_content', 100);
         $this->show_room_management_autor_config = Config::get()->RESOURCES_ENABLE
                                                 && (
                                                     ResourceManager::userHasGlobalPermission($this->user, 'autor')

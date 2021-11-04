@@ -5,8 +5,6 @@ $cols = ceil(($settings['end'] - $settings['start'] + 1) * 3600 / $settings['ste
 $start = $settings['start'] * 3600;
 $end = ($settings['end'] + 1) * 3600;
 $wlength = count($calendars[0]) - 1;
-// add skip link
-SkipLinks::addIndex(_('Wochenansicht'), 'main_content', 100);
 ?>
 <table style="width: 100%">
     <tr>
