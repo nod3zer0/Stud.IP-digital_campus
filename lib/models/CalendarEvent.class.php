@@ -69,10 +69,10 @@ class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
             'foreign_key'       => 'event_id',
             'assoc_foreign_key' => 'student_event_id',
         ];
-        $config['belongs_to']['consultation_slot'] = [
-            'class_name'        => ConsultationSlot::class,
+        $config['has_many']['consultation_events'] = [
+            'class_name'        => ConsultationEvent::class,
             'foreign_key'       => 'event_id',
-            'assoc_foreign_key' => 'teacher_event_id',
+            'assoc_foreign_key' => 'event_id',
         ];
         $config['additional_fields']['type'] = true;
         $config['additional_fields']['name'] = true;
@@ -88,10 +88,7 @@ class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
                 $event->consultation_booking->student_event_id = null;
                 $event->consultation_booking->store();
             }
-            if ($event->consultation_slot) {
-                $event->consultation_slot->teacher_event_id = null;
-                $event->consultation_slot->store();
-            }
+            $event->consultation_events->delete();
         };
 
         parent::configure($config);
@@ -1018,21 +1015,18 @@ class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
     }
 
     /**
-     *
-     * TODO remove! not used?
-     *
-     * @return type
+     * @return string
      */
     public function getName()
     {
         switch ($this->type) {
             case 'user':
-                return $this->user->getFullname();
+                return (string) $this->user->getFullname();
             case 'sem':
-                return $this->course->name;
+                return (string) $this->course->name;
             case 'inst':
             case 'fak':
-                return $this->institute->name;
+                return (string) $this->institute->name;
             }
     }
 

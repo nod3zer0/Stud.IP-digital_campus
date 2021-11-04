@@ -140,11 +140,11 @@ class Consultation_AdminController extends ConsultationController
 
             $block = new ConsultationBlock();
             $block->range = $this->range;
-            $this->responsible = $block->responsible_persons;
+            $this->responsible = $block->getPossibleResponsibilites();
         } elseif ($this->range instanceof Institute) {
             $block = new ConsultationBlock();
             $block->range = $this->range;
-            $this->responsible = $block->responsible_persons;
+            $this->responsible = $block->getPossibleResponsibilites();
         }
     }
 
@@ -182,10 +182,20 @@ class Consultation_AdminController extends ConsultationController
                 $block->confirmation_text = trim(Request::get('confirmation-text')) ?: null;
                 $block->note              = Request::get('note');
                 $block->size              = Request::int('size', 1);
-                $block->teacher_id        = Request::option('teacher_id') ?: null;
 
                 $block->createSlots(Request::int('duration'));
                 $stored += $block->store();
+
+                // Store block responsibilites
+                foreach (Request::getArray('responsibilities') as $type => $ids) {
+                    foreach ($ids as $id) {
+                        ConsultationResponsibility::create([
+                            'block_id'   => $block->id,
+                            'range_id'   => $id,
+                            'range_type' => $type,
+                        ]);
+                    }
+                }
             }
         } catch (OverlapException $e) {
             $this->keepRequest();
@@ -211,13 +221,9 @@ class Consultation_AdminController extends ConsultationController
         $this->relocate('consultation/admin');
     }
 
-    public function note_action($block_id, $slot_id = null, $page = 0)
+    public function note_action($block_id, $slot_id, $page = 0)
     {
-        if ($slot_id) {
-            PageLayout::setTitle(_('Anmerkung zu diesem Termin bearbeiten'));
-        } else {
-            PageLayout::setTitle(_('Anmerkung zu diesem Block bearbeiten'));
-        }
+        PageLayout::setTitle(_('Anmerkung zu diesem Termin bearbeiten'));
 
         $this->block   = $this->loadBlock($block_id);
         $this->slot_id = $slot_id;
@@ -228,20 +234,10 @@ class Consultation_AdminController extends ConsultationController
 
             $note = trim(Request::get('note'));
 
-            $changed = false;
-            if ($slot_id) {
-                $slot = $this->block->slots->find($slot_id);
-                $slot->note = $note;
-                $changed = $slot->store();
-            } else {
-                $this->block->note = $note;
-                foreach ($this->block->slots as $slot) {
-                    $slot->note = '';
-                }
-                $changed = $this->block->store();
-            }
-            if ($changed) {
-                PageLayout::postSuccess(_('Der Block wurde bearbeitet'));
+            $slot = $this->block->slots->find($slot_id);
+            $slot->note = $note;
+            if ($slot->store()) {
+                PageLayout::postSuccess(_('Die Anmerkung wurde bearbeitet'));
             }
 
             if ($this->block->is_expired) {
@@ -344,20 +340,60 @@ class Consultation_AdminController extends ConsultationController
         }
     }
 
-    public function edit_room_action($block_id, $page = 0)
+    public function edit_action($block_id, $page = 0)
     {
-        PageLayout::setTitle(_('Ort des Blocks bearbeiten'));
+        PageLayout::setTitle(_('Block bearbeiten'));
 
         $this->block = $this->loadBlock($block_id);
         $this->page  = $page;
+
+        $this->responsible = false;
+        if ($this->block->range instanceof Course || $this->block->range instanceof Institute) {
+            $this->responsible = $this->block->getPossibleResponsibilites();
+        }
     }
 
-    public function store_room_action($block_id, $page = 0)
+    public function store_edited_action($block_id, $page = 0)
     {
         CSRFProtection::verifyUnsafeRequest();
 
         $this->block = $this->loadBlock($block_id);
-        $this->block->room = Request::get('room');
+        $this->block->room = trim(Request::get('room'));
+        $this->block->note = trim(Request::get('note'));
+
+        foreach ($this->block->slots as $slot) {
+            $slot->note = '';
+        }
+
+        // Store block responsibilites
+        $responsibilities = array_merge(
+            ['user' => [], 'statusgroup' => [], 'institute' => []],
+            Request::getArray('responsibilities')
+        );
+        foreach ($responsibilities as $type => $ids) {
+            $of_type = $this->block->responsibilities->filter(function ($responsibility) use ($type) {
+                return $responsibility->range_type === $type;
+            });
+
+            // Delete removed responsibilites
+            $of_type->each(function ($responsibility) use ($ids) {
+                if (!in_array($responsibility->range_id, $ids)) {
+                    $responsibility->delete();
+                }
+            });
+            // Add new responsibilities
+            foreach ($ids as $id) {
+                if (!$of_type->findOneBy('range_id', $id)) {
+                    ConsultationResponsibility::create([
+                        'block_id'   => $this->block->id,
+                        'range_id'   => $id,
+                        'range_type' => $type,
+                    ]);
+                }
+            }
+        }
+
+
         $this->block->store();
 
         PageLayout::postSuccess(_('Der Block wurde gespeichert.'));
@@ -577,7 +613,6 @@ class Consultation_AdminController extends ConsultationController
             function ($slot) use (&$deleted) {
                 $index = $slot->is_expired ? 'expired' : 'current';
 
-                $slot->removeEvent();
                 $deleted[$index] += $slot->delete();
             },
             "JOIN consultation_blocks USING (block_id) WHERE range_id = ? AND range_type = ?",

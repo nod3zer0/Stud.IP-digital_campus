@@ -36,7 +36,7 @@ $intervals = [
 
     <fieldset>
         <legend>
-            <?= _('Neue Terminblöcke anlegen') ?>
+            <?= _('Ort und Zeit') ?>
         </legend>
 
         <label>
@@ -119,19 +119,18 @@ $intervals = [
             <input required type="text" name="size" id="size"
                    min="1" max="50" value="<?= Request::int('size', 1) ?>">
         </label>
+    </fieldset>
 
-    <? if ($responsible): ?>
-        <label>
-            <?= _('Durchführende Person') ?>
-            <select name="teacher_id">
-                <option value=""></option>
-            <? foreach ($responsible as $user): ?>
-                <option value="<?= htmlReady($user->id) ?>">
-                    <?= htmlReady($user->getFullName()) ?>
-                </option>
-            <? endforeach; ?>
-            </select>
-    <? endif; ?>
+<? if ($responsible): ?>
+    <fieldset>
+        <legend><?= _('Durchführende Person(en), Gruppe(n) oder Einrichtung(en)') ?></legend>
+
+        <?= $this->render_partial('consultation/admin/block-responsibilities.php', compact('responsible')) ?>
+    </fieldset>
+<? endif; ?>
+
+    <fieldset>
+        <legend><?= _('Weitere Einstellungen') ?></legend>
 
         <label>
             <?= _('Information zu den Terminen in diesem Block') ?>

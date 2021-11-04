@@ -24,7 +24,8 @@
  * @property bool has_bookings computed column
  * @property Range range computed column
  * @property SimpleORMapCollection slots has_many ConsultationSlot
- * @property User teacher belongs_to User
+ * @property ConsultationResponsibility[] responsibilities has_many ConsultationResponsibility
+ * @property User[] responsible_persons
  */
 class ConsultationBlock extends SimpleORMap implements PrivacyObject
 {
@@ -36,15 +37,17 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
     {
         $config['db_table'] = 'consultation_blocks';
 
-        $config['belongs_to']['teacher'] = [
-            'class_name'  => User::class,
-            'foreign_key' => 'teacher_id',
-        ];
         $config['has_many']['slots'] = [
             'class_name'        => ConsultationSlot::class,
             'assoc_foreign_key' => 'block_id',
             'on_store'          => 'store',
             'on_delete'         => 'delete',
+        ];
+        $config['has_many']['responsibilities'] = [
+            'class_name'        => ConsultationResponsibility::class,
+            'assoc_foreign_key' => 'block_id',
+            'on_delete'         => 'delete',
+            'order_by'          => "ORDER BY range_type = 'user' DESC, range_type = 'statusgroup' DESC",
         ];
 
         $config['additional_fields']['range'] = [
@@ -61,31 +64,11 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
                 return $block->range->getFullName() . ' <' . $block->range->email . '>';
             }
             if ($block->range instanceof Course || $block->range instanceof Institute) {
-                $display = $block->range->getFullName();
-                if ($block->teacher) {
-                    $display .= ' (' . $block->teacher->getFullName() . ')';
-                }
-                return $display;
-            }
-
-            throw new Exception('Not implemented yet');
-        };
-        $config['additional_fields']['responsible_persons']['get'] = function ($block) {
-            if ($block->range instanceof User) {
-                return [$block->range];
-            }
-            if ($block->range instanceof Course && $block->teacher) {
-                return [$block->teacher];
-            }
-
-            if ($block->range instanceof Course) {
-                return $block->range->getMembersWithStatus('tutor dozent', true)->pluck('user');
+                return sprintf(_('Veranstaltung: %s'), $block->range->getFullName());
             }
 
             if ($block->range instanceof Institute) {
-                return $block->range->members->filter(function ($member) {
-                    return in_array($member->inst_perms, ['tutor', 'dozent']);
-                })->pluck('user');
+                return sprintf(_('Einrichtung: %s'), $block->range->getFullname());
             }
 
             throw new Exception('Not implemented yet');
@@ -101,6 +84,32 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
             return $block->slots->every(function ($slot) {
                 return $slot->is_expired;
             });
+        };
+
+        $config['additional_fields']['responsible_persons']['get'] = function (ConsultationBlock $block) {
+            if (count($block->responsibilities) !== 0) {
+                $result = [];
+                foreach (array_merge(...$block->responsibilities->getUsers()) as $user) {
+                    $result[$user->id] = $user;
+                }
+                return array_values($result);
+            }
+
+            if ($block->range instanceof User) {
+                return [$block->range];
+            }
+            if ($block->range instanceof Course) {
+                return ConsultationResponsibility::getCourseResponsibilities($block->range);
+            }
+            if ($block->range instanceof Institute) {
+                return ConsultationResponsibility::getInstituteResponsibilites($block->range);
+            }
+
+            throw new Exception('Unknown range type');
+        };
+
+        $config['registered_callbacks']['after_store'][] = function (ConsultationBlock $block) {
+            $block->slots->updateEvents();
         };
 
         parent::configure($config);
@@ -271,6 +280,37 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
     public function isVisibleForUser($user_id = null)
     {
         return $this->range->isAccessibleToUser();
+    }
+
+    /**
+     *
+     */
+    public function getPossibleResponsibilites()
+    {
+        if ($this->range instanceof User) {
+            return [
+                'users' => [$this->range]
+            ];
+        }
+
+        if ($this->range instanceof Course) {
+            return [
+                'users' => $this->range->getMembersWithStatus('tutor dozent', true)->pluck('user'),
+            ];
+        }
+
+        if ($this->range instanceof Institute) {
+            $users = $this->range->members->filter(function ($member) {
+                return in_array($member->inst_perms, ['tutor', 'dozent']);
+            })->pluck('user');
+
+            $groups     = $this->range->status_groups;
+            $institutes = $this->range->sub_institutes;
+
+            return compact('users', 'groups', 'institutes');
+        }
+
+        throw new Exception('Not implemented yet');
     }
 
     /**

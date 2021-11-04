@@ -26,7 +26,7 @@ class FixMissingConsultationEvents extends Migration
                 // has code changes for Stud.IP 5.0 this will fail but we can neglect
                 // that since the event is already updated.
                 try {
-                    $slot->updateEvent();
+                    $slot->updateEvents();
                 } catch (Exception $e) {
                 }
             },
@@ -41,10 +41,11 @@ class LegacyConsultationSlot extends ConsultationSlot
      * Updates the teacher event that belongs to the slot. This will either be
      * set to be unoccupied, occupied by only one user or by a group of user.
      */
-    public function updateEvent()
+    public function updateEvents()
     {
         if (count($this->bookings) === 0 && !$this->block->calendar_events) {
-            return $this->removeEvent();
+            $this->events->delete();
+            return;
         }
 
         $teacher = User::find($this->block->teacher_id);

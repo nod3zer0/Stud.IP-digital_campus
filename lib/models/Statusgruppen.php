@@ -33,6 +33,9 @@
  * @property string children computed column
  * @property SimpleORMapCollection members has_many StatusgruppeUser
  * @property Statusgruppen parent belongs_to Statusgruppen
+ * @property Course course belongs_to course
+ * @property Institute institute belongs_to institute
+ * @property User user belongs_to user
  */
 class Statusgruppen extends SimpleORMap implements PrivacyObject
 {
@@ -42,36 +45,36 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
     {
         $config['db_table'] = 'statusgruppen';
         $config['has_many']['members'] = [
-            'class_name'        => 'StatusgruppeUser',
+            'class_name'        => StatusgruppeUser::class,
             'assoc_foreign_key' => 'statusgruppe_id',
             'on_delete'         => 'delete',
             'order_by'          => 'ORDER BY position ASC',
         ];
         $config['has_and_belongs_to_many']['dates'] = [
-            'class_name' => 'CourseDate',
+            'class_name' => CourseDate::class,
             'thru_table' => 'termin_related_groups',
             'order_by'   => 'ORDER BY date',
             'on_delete'  => 'delete', // TODO: This might cause trouble
             'on_store'   => 'store'
         ];
         $config['belongs_to']['parent'] = [
-            'class_name'  => 'Statusgruppen',
+            'class_name'  => Statusgruppen::class,
             'foreign_key' => 'range_id',
         ];
         $config['belongs_to']['course'] = [
-            'class_name'  => 'Course',
+            'class_name'  => Course::class,
             'foreign_key' => 'range_id',
         ];
         $config['belongs_to']['institute'] = [
-            'class_name'  => 'Institute',
+            'class_name'  => Institute::class,
             'foreign_key' => 'range_id',
         ];
         $config['belongs_to']['user'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'range_id',
         ];
         $config['has_one']['blubberthread'] = [
-            'class_name' => 'BlubberStatusgruppeThread',
+            'class_name' => BlubberStatusgruppeThread::class,
             'on_store' => 'store',
             'on_delete' => 'delete'
         ];

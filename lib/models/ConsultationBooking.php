@@ -40,7 +40,8 @@ class ConsultationBooking extends SimpleORMap implements PrivacyObject
             'on_delete'         => 'delete',
         ];
 
-        $config['registered_callbacks']['before_create'][] = function ($booking) {
+        // Create student event
+        $config['registered_callbacks']['before_create'][] = function (ConsultationBooking $booking) {
             setTempLanguage($booking->user_id);
 
             $event = $booking->slot->createEvent($booking->user);
@@ -57,41 +58,37 @@ class ConsultationBooking extends SimpleORMap implements PrivacyObject
             $booking->student_event_id = $event->id;
         };
 
-        $config['registered_callbacks']['after_create'][] = function ($booking) {
+        $config['registered_callbacks']['after_create'][] = function (ConsultationBooking $booking) {
             ConsultationMailer::sendBookingMessageToUser($booking);
-
-            $responsible_persons = $booking->slot->block->responsible_persons;
-            if (!in_array($GLOBALS['user']->id, $responsible_persons)) {
-                ConsultationMailer::sendBookingMessageToTeacher($booking);
-            }
+            ConsultationMailer::sendBookingMessageToResponsibilities($booking);
         };
 
-        $config['registered_callbacks']['before_store'][] = function ($booking) {
+        $config['registered_callbacks']['before_store'][] = function (ConsultationBooking $booking) {
             if (!$booking->isNew() && $booking->isFieldDirty('reason')) {
                 if ($GLOBALS['user']->id !== $booking->user_id) {
                     ConsultationMailer::sendReasonMessage($booking,$booking->user);
                 }
 
                 $responsible_persons = $booking->slot->block->responsible_persons;
-                if (!in_array($GLOBALS['user']->id, $responsible_persons)) {
-                    foreach ($responsible_persons as $user) {
+                foreach ($responsible_persons as $user) {
+                    if ($GLOBALS['user']->id !== $user->id) {
                         ConsultationMailer::sendReasonMessage($booking, $user);
                     }
                 }
             }
         };
 
-        $config['registered_callbacks']['after_store'][] = function ($booking) {
+        $config['registered_callbacks']['after_store'][] = function (ConsultationBooking $booking) {
             if ($booking->event) {
                 $booking->event->description = $booking->reason;
                 $booking->event->store();
             }
 
-            $booking->slot->updateEvent();
+            $booking->slot->updateEvents();
         };
 
-        $config['registered_callbacks']['after_delete'][] = function ($booking) {
-            $booking->slot->updateEvent();
+        $config['registered_callbacks']['after_delete'][] = function (ConsultationBooking $booking) {
+            $booking->slot->updateEvents();
         };
 
         parent::configure($config);
@@ -103,9 +100,7 @@ class ConsultationBooking extends SimpleORMap implements PrivacyObject
             ConsultationMailer::sendCancelMessageToUser($this, $reason);
         }
 
-        if (!in_array($GLOBALS['user']->id, $this->slot->block->responsible_persons)) {
-            ConsultationMailer::sendCancelMessageToTeacher($this, $reason);
-        }
+        ConsultationMailer::sendCancelMessageToResponsibilities($this, $reason);
 
         return $this->delete() ? 1 : 0;
     }

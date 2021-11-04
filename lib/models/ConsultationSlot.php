@@ -11,10 +11,9 @@
  * @property string start_time database column
  * @property string end_time database column
  * @property string note database column
- * @property string teacher_event_id database column
  * @property SimpleORMapCollection bookings has_many ConsultationBooking
  * @property ConsultationBlock block belongs_to ConsultationBlock
- * @property EventData event has_one EventData
+ * @property SimpleORMapCollection events has_many EventData
  */
 class ConsultationSlot extends SimpleORMap
 {
@@ -30,24 +29,20 @@ class ConsultationSlot extends SimpleORMap
             'class_name'  => ConsultationBlock::class,
             'foreign_key' => 'block_id',
         ];
-        $config['has_one']['event'] = [
-            'class_name'        => EventData::class,
-            'foreign_key'       => 'teacher_event_id',
-            'assoc_foreign_key' => 'event_id',
-            'on_delete'         => 'delete',
-        ];
         $config['has_many']['bookings'] = [
             'class_name'        => ConsultationBooking::class,
             'assoc_foreign_key' => 'slot_id',
             'on_store'          => 'store',
             'on_delete'         => 'delete',
         ];
+        $config['has_many']['events'] = [
+            'class_name'        => ConsultationEvent::class,
+            'assoc_foreign_key' => 'slot_id',
+            'on_delete'         => 'delete',
+        ];
 
-        $config['registered_callbacks']['before_create'][] = function ($slot) {
-            if ($slot->block->calendar_events && $slot->block->range_type === 'user') {
-                $slot->teacher_event_id = $slot->createEvent($slot->block->range)->id;
-                $slot->updateEvent();
-            }
+        $config['registered_callbacks']['before_create'][] = function (ConsultationSlot $slot) {
+            $slot->updateEvents();
         };
         $config['registered_callbacks']['after_delete'][] = function ($slot) {
             $block = $slot->block;
@@ -196,69 +191,81 @@ class ConsultationSlot extends SimpleORMap
      * Updates the teacher event that belongs to the slot. This will either be
      * set to be unoccupied, occupied by only one user or by a group of user.
      */
-    public function updateEvent()
+    public function updateEvents()
     {
-        if ($this->block->range_type !== 'user') {
+        // If no range is associated, remove the event
+        if (!$this->block->range) {
+            $this->events->delete();
             return;
         }
 
-        // If no range is associated, remove the event
-        if (!$this->block->range) {
-            return $this->removeEvent();
-        }
-
         if (count($this->bookings) === 0 && !$this->block->calendar_events) {
-            return $this->removeEvent();
+            $this->events->delete();
+            return;
         }
 
-        $event = $this->event;
-        if (!$event) {
-            $event = $this->createEvent($this->block->range);
+        // Get responsible user ids
+        $responsible_ids = array_map(
+            function (User $user) {
+                return $user->id;
+            },
+            $this->block->responsible_persons
+        );
 
-            $this->teacher_event_id = $event->id;
-            $this->store();
-        }
-
-        setTempLanguage($this->block->range_id);
-
-        if (count($this->bookings) > 0) {
-            $event->category_intern = 1;
-
-            if (count($this->bookings) === 1) {
-                $booking = $this->bookings->first();
-
-                $event->summary = sprintf(
-                    _('Termin mit %s'),
-                    $booking->user->getFullName()
-                );
-                $event->description = $booking->reason;
-            } else {
-                $event->summary = sprintf(
-                    _('Termin mit %u Personen'),
-                    count($this->bookings)
-                );
-                $event->description = implode("\n\n----\n\n", $this->bookings->map(function ($booking) {
-                    return "- {$booking->user->getFullName()}:\n{$booking->reason}";
-                }));
+        // Remove events for no longer responsible users
+        foreach ($this->events as $event) {
+            if (!in_array($event->user_id, $responsible_ids)) {
+                $event->delete();
             }
-        } else {
-            $event->category_intern = 9;
-            $event->summary         = _('Freier Termin');
-            $event->description     = _('Dieser Termin ist noch nicht belegt.');
         }
 
-        restoreLanguage();
+        // Add events for missing responsible users
+        $missing = array_diff($responsible_ids, $this->events->pluck('user_id'));
+        foreach ($missing as $user_id) {
+            $event = $this->createEvent(User::find($user_id));
+            ConsultationEvent::create([
+                'slot_id'  => $this->id,
+                'user_id'  => $user_id,
+                'event_id' => $event->id,
+            ]);
+        }
 
-        $event->store();
-    }
+        // Reset relation in order to account to the above changes
+        $this->resetRelation('events');
 
-    public function removeEvent()
-    {
-        if ($this->event) {
-            $this->event->delete();
+        foreach ($this->events as $event) {
+            setTempLanguage($event->user_id);
 
-            $this->teacher_event_id = null;
-            $this->store();
+            if (count($this->bookings) > 0) {
+                $event->event->category_intern = 1;
+
+                if (count($this->bookings) === 1) {
+                    $booking = $this->bookings->first();
+
+                    $event->event->summary = sprintf(
+                        _('Termin mit %s'),
+                        $booking->user->getFullName()
+                    );
+                    $event->event->description = $booking->reason;
+                } else {
+                    $event->event->summary = sprintf(
+                        _('Termin mit %u Personen'),
+                        count($this->bookings)
+                    );
+                    $event->event->description = implode("\n\n----\n\n", $this->bookings->map(function ($booking) {
+                        return "- {$booking->user->getFullName()}:\n{$booking->reason}";
+                    }));
+                }
+            } else {
+                $event->event->category_intern = 9;
+                $event->event->summary         = _('Freier Termin');
+                $event->event->description     = _('Dieser Termin ist noch nicht belegt.');
+            }
+
+            $event->event->store();
+
+            restoreLanguage();
+
         }
     }
 }

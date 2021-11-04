@@ -449,7 +449,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
      *
      * @param String|Array $status        the status to filter with
      * @param bool         $as_collection return collection instead of array?
-     * @return Array an array of all those members.
+     * @return Array|SimpleCollection an array of all those members.
      */
     public function getMembersWithStatus($status, $as_collection = false)
     {

@@ -77,6 +77,12 @@ abstract class ConsultationController extends AuthenticatedController
         $this->flash['request'] = Request::getInstance()->getIterator()->getArrayCopy();
     }
 
+    /**
+     * @param $block_id
+     *
+     * @return ConsultationBlock|ConsultationBlock[]
+     * @throws AccessDeniedException
+     */
     protected function loadBlock($block_id)
     {
         if (is_array($block_id)) {

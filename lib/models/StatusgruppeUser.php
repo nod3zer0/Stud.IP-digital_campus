@@ -30,11 +30,11 @@ class StatusgruppeUser extends SimpleORMap implements PrivacyObject
     {
         $config['db_table'] = 'statusgruppe_user';
         $config['belongs_to']['group'] = [
-            'class_name' => 'Statusgruppen',
+            'class_name' => Statusgruppen::class,
             'foreign_key' => 'statusgruppe_id',
         ];
         $config['belongs_to']['user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id',
         ];
 

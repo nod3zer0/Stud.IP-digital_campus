@@ -635,10 +635,10 @@ function tooltip2($text, $with_alt = TRUE, $with_popup = FALSE) {
  * @param bool $important render icon in "important" style
  * @param bool $html tooltip text is HTML content
  */
-function tooltipIcon($text, $important = false, $html = false)
+function tooltipIcon($text, $important = false, $html = false): string
 {
     if (!trim($text)) {
-        return;
+        return '';
     }
 
     // render tooltip

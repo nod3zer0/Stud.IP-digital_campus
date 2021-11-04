@@ -41,6 +41,87 @@
 
 class Institute extends SimpleORMap implements Range
 {
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'Institute';
+        $config['additional_fields']['is_fak']['get'] = 'isFaculty';
+
+        $config['has_many']['members'] = [
+            'class_name' => InstituteMember::class,
+            'assoc_func' => 'findByInstitute',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        ];
+        $config['has_many']['home_courses'] = [
+            'class_name' => Course::class,
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        ];
+        $config['has_many']['sub_institutes'] = [
+            'class_name' => Institute::class,
+            'assoc_foreign_key' => 'fakultaets_id',
+            'assoc_func' => 'findByFaculty',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        ];
+        $config['has_many']['datafields'] = [
+            'class_name' => DatafieldEntryModel::class,
+            'assoc_foreign_key' =>
+                function($model,$params) {
+                    $model->setValue('range_id', $params[0]->id);
+                },
+            'assoc_func' => 'findByModel',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+            'foreign_key' =>
+                function($i) {
+                    return [$i];
+                }
+        ];
+        $config['belongs_to']['faculty'] = [
+            'class_name' => Institute::class,
+            'foreign_key' => 'fakultaets_id',
+        ];
+        $config['has_and_belongs_to_many']['courses'] = [
+            'class_name' => Course::class,
+            'thru_table' => 'seminar_inst',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        ];
+        $config['has_many']['scm'] = [
+            'class_name'        => StudipScmEntry::class,
+            'assoc_foreign_key' => 'range_id',
+            'on_delete'         => 'delete',
+            'on_store'          => 'store',
+        ];
+        $config['has_many']['status_groups'] = [
+            'class_name'        => Statusgruppen::class,
+            'assoc_foreign_key' => 'range_id',
+            'on_delete'         => 'delete',
+            'on_store'          => 'store',
+            'order_by'          => 'ORDER BY position ASC',
+        ];
+        $config['has_many']['blubberthreads'] = [
+            'class_name' => BlubberThread::class,
+            'assoc_func' => 'findByInstitut',
+            'on_delete'  => 'delete',
+            'on_store'   => 'store',
+        ];
+        $config['has_many']['tools'] = [
+            'class_name'        => ToolActivation::class,
+            'assoc_foreign_key' => 'range_id',
+            'order_by'          => 'ORDER BY position',
+            'on_delete'         => 'delete',
+        ];
+        $config['additional_fields']['all_status_groups']['get'] = function ($institute) {
+            return Statusgruppen::findAllByRangeId($institute->id, true);
+        };
+
+        $config['i18n_fields']['name'] = true;
+        $config['registered_callbacks']['after_create'][] = 'setDefaultTools';
+
+        parent::configure($config);
+    }
 
     /**
     * Returns the currently active course or false if none is active.
@@ -60,7 +141,7 @@ class Institute extends SimpleORMap implements Range
      * @param string $fakultaets_id
      * @return array
      */
-    static function findByFaculty($fakultaets_id)
+    public static function findByFaculty($fakultaets_id)
     {
         return self::findBySQL("fakultaets_id=? AND fakultaets_id <> institut_id ORDER BY Name ASC", [$fakultaets_id]);
     }
@@ -69,7 +150,7 @@ class Institute extends SimpleORMap implements Range
      * returns an array of all institutes ordered by faculties and name
      * @return array
      */
-    static function getInstitutes()
+    public static function getInstitutes()
     {
         $db = DBManager::get();
         $result = $db->query("SELECT Institute.Institut_id, Institute.Name, IF(Institute.Institut_id=Institute.fakultaets_id,1,0) AS is_fak " .
@@ -82,10 +163,12 @@ class Institute extends SimpleORMap implements Range
     /**
      * returns an array of all institutes to which the given user belongs,
      * ordered by faculties and name. The user role for each institute is included
+     *
      * @param string $user_id if omitted, the current user is used
+     *
      * @return array
      */
-    static function getMyInstitutes($user_id = NULL)
+    public static function getMyInstitutes($user_id = NULL)
     {
         global $perm, $user;
         if (!$user_id) {
@@ -125,94 +208,9 @@ class Institute extends SimpleORMap implements Range
         return $result;
     }
 
-    /**
-     *
-     */
-    protected static function configure($config = [])
+    public function isFaculty()
     {
-        $config['db_table'] = 'Institute';
-        $config['additional_fields']['is_fak']['get'] = 'isFaculty';
-
-        $config['has_many']['members'] = [
-            'class_name' => 'InstituteMember',
-            'assoc_func' => 'findByInstitute',
-            'on_delete' => 'delete',
-            'on_store' => 'store',
-        ];
-        $config['has_many']['home_courses'] = [
-            'class_name' => 'Course',
-            'on_delete' => 'delete',
-            'on_store' => 'store',
-        ];
-        $config['has_many']['sub_institutes'] = [
-            'class_name' => 'Institute',
-            'assoc_foreign_key' => 'fakultaets_id',
-            'assoc_func' => 'findByFaculty',
-            'on_delete' => 'delete',
-            'on_store' => 'store',
-        ];
-        $config['has_many']['datafields'] = [
-            'class_name' => 'DatafieldEntryModel',
-            'assoc_foreign_key' =>
-                function($model,$params) {
-                    $model->setValue('range_id', $params[0]->id);
-                },
-            'assoc_func' => 'findByModel',
-            'on_delete' => 'delete',
-            'on_store' => 'store',
-            'foreign_key' =>
-                function($i) {
-                    return [$i];
-                }
-        ];
-        $config['belongs_to']['faculty'] = [
-            'class_name' => 'Institute',
-            'foreign_key' => 'fakultaets_id',
-        ];
-        $config['has_and_belongs_to_many']['courses'] = [
-            'class_name' => 'Course',
-            'thru_table' => 'seminar_inst',
-            'on_delete' => 'delete',
-            'on_store' => 'store',
-        ];
-        $config['has_many']['scm'] = [
-            'class_name'        => 'StudipScmEntry',
-            'assoc_foreign_key' => 'range_id',
-            'on_delete'         => 'delete',
-            'on_store'          => 'store',
-        ];
-        $config['has_many']['status_groups'] = [
-            'class_name'        => 'Statusgruppen',
-            'assoc_foreign_key' => 'range_id',
-            'on_delete'         => 'delete',
-            'on_store'          => 'store',
-            'order_by'          => 'ORDER BY position ASC',
-        ];
-        $config['has_many']['blubberthreads'] = [
-            'class_name' => 'BlubberThread',
-            'assoc_func' => 'findByInstitut',
-            'on_delete'  => 'delete',
-            'on_store'   => 'store',
-        ];
-        $config['has_many']['tools'] = [
-            'class_name'        => 'ToolActivation',
-            'assoc_foreign_key' => 'range_id',
-            'order_by'          => 'ORDER BY position',
-            'on_delete'         => 'delete'
-        ];
-        $config['additional_fields']['all_status_groups']['get'] = function ($institute) {
-            return Statusgruppen::findAllByRangeId($institute->id, true);
-        };
-
-        $config['i18n_fields']['name'] = true;
-        $config['registered_callbacks']['after_create'][] = 'setDefaultTools';
-
-        parent::configure($config);
-    }
-
-    function isFaculty()
-    {
-        return $this->fakultaets_id == $this->institut_id;
+        return $this->fakultaets_id === $this->institut_id;
     }
 
     /**
@@ -221,7 +219,8 @@ class Institute extends SimpleORMap implements Range
      * @param string formatting template name
      * @return string Fullname
      */
-    public function getFullname($format = 'default') {
+    public function getFullname($format = 'default'): string
+    {
         $template['type-name'] = '%2$s: %1$s';
         if ($format === 'default' || !isset($template[$format])) {
            $format = 'type-name';
@@ -240,7 +239,7 @@ class Institute extends SimpleORMap implements Range
      *
      * @return string
      */
-    public function describeRange()
+    public function describeRange(): string
     {
         return _('Einrichtung');
     }
@@ -250,7 +249,7 @@ class Institute extends SimpleORMap implements Range
      *
      * @return string
      */
-    public function getRangeType()
+    public function getRangeType(): string
     {
         return 'institute';
     }
@@ -280,7 +279,7 @@ class Institute extends SimpleORMap implements Range
      * @return bool
      * @todo Check permissions
      */
-    public function isAccessibleToUser($user_id = null)
+    public function isAccessibleToUser($user_id = null): bool
     {
         return true;
     }
@@ -292,7 +291,7 @@ class Institute extends SimpleORMap implements Range
      * @return bool
      * @todo Check permissions
      */
-    public function isEditableByUser($user_id = null)
+    public function isEditableByUser($user_id = null): bool
     {
         if ($user_id === null) {
             $user_id = $GLOBALS['user']->id;
@@ -332,7 +331,7 @@ class Institute extends SimpleORMap implements Range
      * @param $name string name of tool / plugin
      * @return bool
      */
-    public function isToolActive($name)
+    public function isToolActive($name): bool
     {
         $plugin = PluginEngine::getPlugin($name);
         return $plugin && $this->tools->findOneby('plugin_id', $plugin->getPluginId());

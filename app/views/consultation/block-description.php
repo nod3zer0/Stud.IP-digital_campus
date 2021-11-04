@@ -6,18 +6,24 @@
     date('H:i', $block->end)
 ) ?>
 
-<? if ($block->teacher): ?>
-/
-<a href="<?= URLHelper::getLink('dispatch.php/profile', ['username' => $block->teacher->username]) ?>">
-    <?= htmlReady($block->teacher->getFullName()) ?>
-</a>
-<? endif; ?>
-
 (<?= formatLinks($block->room) ?>)
 
 <? if ($block->show_participants): ?>
     - <?= _('öffentlich sichtbar') ?>
     <?= tooltipIcon(_('Die Namen der buchenden Person sind sichtbar')) ?>
+<? endif; ?>
+
+<? if (count($block->responsibilities) > 0): ?>
+<br>
+<ul class="narrow list-csv">
+<? foreach ($block->responsibilities as $responsibility): ?>
+    <li>
+        <a href="<?= URLHelper::getLink($responsibility->getURL(), [], true) ?>">
+            <?= htmlReady($responsibility->getName()) ?>
+        </a>
+    </li>
+<? endforeach; ?>
+</ul>
 <? endif; ?>
 
 <? if ($block->note): ?>

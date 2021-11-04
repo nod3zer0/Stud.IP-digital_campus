@@ -54,9 +54,13 @@ class ConsultationMailer
      *
      * @param  ConsultationBooking $booking The booking
      */
-    public static function sendBookingMessageToTeacher(ConsultationBooking $booking)
+    public static function sendBookingMessageToResponsibilities(ConsultationBooking $booking)
     {
         foreach ($booking->slot->block->responsible_persons as $user) {
+            if ($user->id === $GLOBALS['user']->id) {
+                continue;
+            }
+
             self::sendMessage(
                 $user,
                 $booking,
@@ -94,7 +98,7 @@ class ConsultationMailer
         self::sendMessage(
             $receiver,
             $booking->slot,
-            sprintf(_('Grund des Termins bei bearbeitet'), $booking->slot->block->range_display),
+            sprintf(_('Grund des Termins bei %s bearbeitet'), $booking->slot->block->range_display),
             $booking->reason
         );
     }
@@ -105,9 +109,13 @@ class ConsultationMailer
      * @param  ConsultationBooking $booking The booking
      * @param  String              $reason  Reason of the cancelation
      */
-    public static function sendCancelMessageToTeacher(ConsultationBooking $booking, $reason = '')
+    public static function sendCancelMessageToResponsibilities(ConsultationBooking $booking, $reason = '')
     {
         foreach ($booking->slot->block->responsible_persons as $user) {
+            if ($user->id === $GLOBALS['user']->id) {
+                continue;
+            }
+
             self::sendMessage(
                 $user,
                 $booking,
