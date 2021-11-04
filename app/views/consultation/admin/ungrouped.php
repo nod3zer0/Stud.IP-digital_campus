@@ -53,12 +53,17 @@
                 ) ?>
             </td>
             <td>
-            <? if ($block->teacher): ?>
-                <a href="<?= URLHelper::getLink('dispatch.php/profile', ['username' => $block->teacher->username]) ?>">
-                    <?= htmlReady($block->teacher->getFullName()) ?>
-                </a>
-            <? else: ?>
-                &ndash;
+            <? if (count($block->responsibilities) > 0): ?>
+                <br>
+                <ul class="narrow list-csv">
+                    <? foreach ($block->responsibilities as $responsibility): ?>
+                        <li>
+                            <a href="<?= URLHelper::getLink($responsibility->getURL(), [], true) ?>">
+                                <?= htmlReady($responsibility->getName()) ?>
+                            </a>
+                        </li>
+                    <? endforeach; ?>
+                </ul>
             <? endif; ?>
             </td>
             <td>
@@ -66,12 +71,7 @@
             </td>
             <td class="actions">
                 <?= ActionMenu::get()->addLink(
-                    $controller->edit_roomURL($block, $page),
-                    _('Raum bearbeiten'),
-                    Icon::create('edit'),
-                    ['data-dialog' => 'size=auto']
-                )->addLink(
-                    $controller->noteURL($block, 0, $page),
+                    $controller->editURL($block, 0, $page),
                     _('Information bearbeiten'),
                     Icon::create('edit'),
                     ['data-dialog' => 'size=auto']
