@@ -1,6 +1,7 @@
 <?php
 class ConsultationNavigation extends Navigation
 {
+    /** @var Range */
     protected $range;
 
     public function __construct(Range $range)

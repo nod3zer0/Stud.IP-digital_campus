@@ -26,6 +26,21 @@ class Consultation_AdminController extends ConsultationController
         $this->range_config = $this->range->getConfiguration();
 
         $this->setupSidebar($action, $this->range_config);
+
+        // Show information about which user is edited when a deputy edits
+        if ($this->range instanceof User && Deputy::isDeputy($GLOBALS['user']->id, $this->range->id, true)) {
+            $message = sprintf(
+                _('Daten von: %1$s (%2$s), Status: %3$s'),
+                htmlReady($this->range->getFullName()),
+                htmlReady($this->range->username),
+                htmlReady($this->range->perms)
+            );
+            PageLayout::postMessage(
+                MessageBox::info($message)
+                , 'settings-user-anncouncement'
+            );
+
+        }
     }
 
     private function groupSlots(array $slots)
@@ -442,7 +457,7 @@ class Consultation_AdminController extends ConsultationController
     {
         if ($what === 'messages') {
             // TODO: Applicable     everywhere?
-            $GLOBALS['user']->cfg->store(
+            $this->getUserConfig()->store(
                 'CONSULTATION_SEND_MESSAGES',
                 (bool) $state
             );
@@ -453,7 +468,7 @@ class Consultation_AdminController extends ConsultationController
                 (bool) $state
             );
         } elseif ($what === 'grouped') {
-            $GLOBALS['user']->cfg->store(
+            $this->getUserConfig()->store(
                 'CONSULTATION_SHOW_GROUPED',
                 (bool) $state
             );
@@ -733,7 +748,7 @@ class Consultation_AdminController extends ConsultationController
         $options = $sidebar->addWidget(new OptionsWidget());
         $options->addCheckbox(
             _('Benachrichtungen über Buchungen'),
-            $GLOBALS['user']->cfg->CONSULTATION_SEND_MESSAGES,
+            $this->getUserConfig()->getValue('CONSULTATION_SEND_MESSAGES'),
             $this->toggleURL('messages/1', $action === 'expired'),
             $this->toggleURL('messages/0', $action === 'expired')
         );
@@ -745,7 +760,7 @@ class Consultation_AdminController extends ConsultationController
         );
         $options->addCheckbox(
             _('Termine gruppiert anzeigen'),
-            $GLOBALS['user']->cfg->CONSULTATION_SHOW_GROUPED,
+            $this->getUserConfig()->getValue('CONSULTATION_SHOW_GROUPED'),
             $this->toggleURL('grouped/1', $action === 'expired'),
             $this->toggleURL('grouped/0', $action === 'expired')
         );
@@ -773,5 +788,12 @@ class Consultation_AdminController extends ConsultationController
             Request::get("{$index}-date"),
             Request::get("{$index}-time")
         ]));
+    }
+
+    private function getUserConfig(): RangeConfig
+    {
+        return $this->range instanceof User
+             ? $this->range->getConfiguration()
+             : $GLOBALS['user']->cfg;
     }
 }
