@@ -153,7 +153,7 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
          * Create document folder if requested (ID is needed here,
          * so we do that after store()).
          */
-        if (!$group->hasFolder() && $makefolder) {
+        if ($makefolder) {
             $group->updateFolder(true);
         }
 
@@ -357,6 +357,12 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
             $folder = $this->getFolder();
             $folder->type = 'StandardFolder';
             unset($folder->data_content['group']);
+            return $folder->store();
+        }
+
+        if ($this->hasFolder() && $set) {
+            $folder = $this->getFolder();
+            $folder->name = _('Dateiordner der Gruppe:') . ' ' . $this->name;
             return $folder->store();
         }
 

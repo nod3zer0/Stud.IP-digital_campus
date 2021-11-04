@@ -518,7 +518,8 @@ class Course_StatusgroupsController extends AuthenticatedController
                 $endtime = 0;
             }
         }
-        $position = Statusgruppen::find($group_id)->position;
+        $statusgruppe = Statusgruppen::find($group_id);
+        $position = $statusgruppe->position;
         $group = Statusgruppen::createOrUpdate(
             $group_id,
             Request::get('name'),
@@ -527,7 +528,7 @@ class Course_StatusgroupsController extends AuthenticatedController
             Request::int('selfassign', 0) + Request::int('exclusive', 0),
             strtotime(Request::get('selfassign_start', 'now')),
             Request::get('selfassign_end') ? strtotime(Request::get('selfassign_end')) : 0,
-            Request::int('makefolder', 0),
+            Request::int('makefolder', 0) || $statusgruppe->hasFolder(),
             Request::getArray('dates')
         );
 
