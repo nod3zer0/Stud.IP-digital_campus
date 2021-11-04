@@ -36,51 +36,59 @@
                 <?= Icon::create('decline-circle', Icon::ROLE_STATUS_RED)->asImg(['class' => 'text-bottom']) ?>
             <? else : ?>
                 <?= Icon::create('exclaim-circle', Icon::ROLE_STATUS_YELLOW)->asImg(['class' => 'text-bottom']) ?>
+                <?= tooltipIcon(sprintf(
+                    _('%u von %u Terminen nicht verfügbar'),
+                    $unavailable_dates[$room->id],
+                    $amount_of_dates[$room->id]
+                )) ?>
             <? endif ?>
         </td>
     <? endif ?>
     <? foreach ($time_intervals as $metadate_id => $data): ?>
         <? if (($data['metadate'] instanceof SeminarCycleDate)) : ?>
             <?
-            $available = $metadate_available[$room->id][$metadate_id];
+            $availability = $metadate_availability_share[$room->id][$metadate_id];
             $range_index = 'SeminarCycleDate' . '_' . $metadate_id;
             $room_radio_name = 'selected_rooms[' . $range_index . ']';
             ?>
             <td>
-                <? if ($available): ?>
-                    <input type="radio" name="<?= htmlReady($room_radio_name) ?>"
-                           class="text-bottom radio-<?= htmlReady($room->id) ?>"
-                           value="<?= htmlReady($room->id) ?>"
-                           <?= $selected_dates[$range_index] == $room->id
-                             ? 'checked="checked"'
-                             : ''?>>
+                <input type="radio" name="<?= htmlReady($room_radio_name) ?>"
+                       class="text-bottom radio-<?= htmlReady($room->id) ?>"
+                       value="<?= htmlReady($room->id) ?>"
+                    <?= $availability <= 0.0 ? 'disabled="disabled"' : '' ?>
+                <?= ($availability > 0 && $selected_dates[$range_index] == $room->id)
+                    ? 'checked="checked"'
+                    : ''?>>
+                <? if ($availability >= 1.0) : ?>
                     <?= Icon::create('check-circle', Icon::ROLE_STATUS_GREEN)->asImg(['class' => 'text-bottom']) ?>
-
-                    <? $stats = 0; array_walk($data['intervals'], function(&$item, $key, $room_id) use (&$stats) {
-                            if ($item['booked_room'] == $room_id) {
-                                $stats++;
-                            }
-                    }, $room->id) ?>
-
-                    <? if ($stats > 0) : ?>
-                        <?= tooltipIcon(sprintf(
-                            _('%s von %s Terminen sind in diesem Raum'),
-                            $stats, sizeof($data['intervals'])
-                        ));
-                        ?>
-                    <? endif ?>
-                <? else: ?>
-                    <input type="radio" name="<?= htmlReady($room_radio_name) ?>"
-                           value="1" disabled="disabled"
-                           class="text-bottom">
+                <? elseif ($availability <= 0.0) : ?>
                     <?= Icon::create('decline-circle', Icon::ROLE_STATUS_RED)->asImg(['class' => 'text-bottom']) ?>
+                <? else : ?>
+                    <?= Icon::create('exclaim-circle', Icon::ROLE_STATUS_YELLOW)->asImg(['class' => 'text-bottom']) ?>
+                    <?= tooltipIcon(sprintf(
+                        _('%u von %u Terminen nicht verfügbar'),
+                        $unavailable_metadate_dates[$room->id][$metadate_id],
+                        $amount_of_metadate_dates[$room->id][$metadate_id]
+                    )) ?>
+                <? endif ?>
+                <? $stats = 0; array_walk($data['intervals'], function(&$item, $key, $room_id) use (&$stats) {
+                    if ($item['booked_room'] == $room_id) {
+                        $stats++;
+                    }
+                }, $room->id) ?>
+                <? if ($stats > 0) : ?>
+                    <?= tooltipIcon(sprintf(
+                        _('%s von %s Terminen sind in diesem Raum'),
+                        $stats, sizeof($data['intervals'])
+                    ));
+                    ?>
                 <? endif ?>
             </td>
         <? else : ?>
             <? $i = 0 ?>
             <? foreach($data['intervals'] as $interval) : ?>
                 <?
-                $available = $availability[$metadate_id][$i];
+                $available = $metadate_availability_share[$room->id][$metadate_id] >= 1.0;
                 $range_index = $interval['range'] . '_' . $interval['range_id'];
                 $room_radio_name = 'selected_rooms[' . $range_index . ']';
                 ?>

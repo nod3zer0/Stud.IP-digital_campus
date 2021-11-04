@@ -1177,6 +1177,65 @@ class Resources_RoomRequestController extends AuthenticatedController
     }
 
 
+    protected function calculateRoomAvailabilityData(Room $room)
+    {
+        //The time intervals are read from $this->request_time_intervals.
+        $this->metadate_availability_share[$room->id] = [];
+        $this->room_availability[$room->id] = [];
+        $this->room_availability_share[$room->id] = 1.0;
+        $this->amount_of_dates[$room->id] = 0;
+        $this->unavailable_dates[$room->id] = 0;
+        $this->unavailable_metadate_dates[$room->id] = [];
+        $this->amount_of_metadate_dates[$room->id] = [];
+
+        foreach ($this->request_time_intervals as $metadate_id => $data) {
+            $this->unavailable_metadate_dates[$room->id][$metadate_id] = 0;
+            $this->amount_of_metadate_dates[$room->id][$metadate_id] = count($data['intervals']);
+            $this->amount_of_dates[$room->id] += $this->amount_of_metadate_dates[$room->id][$metadate_id];
+            if ($data['metadate'] instanceof SeminarCycleDate && !$this->expand_metadates) {
+                $metadate_availability = $this->getRoomAvailability(
+                    $room,
+                    $data['intervals']
+                );
+
+                $metadate_available = true;
+                foreach ($metadate_availability as $available) {
+                    if (!$available) {
+                        $this->unavailable_dates[$room->id]++;
+                        $metadate_available = false;
+                        $this->unavailable_metadate_dates[$room->id][$metadate_id]++;
+                    }
+                }
+                $this->room_availability[$room->id][$metadate_id] = [$metadate_available];
+            } else {
+                $this->visible_dates += $this->amount_of_metadate_dates[$room->id][$metadate_id];
+                $metadate_availability = [];
+                foreach ($data['intervals'] as $interval) {
+                    $interval_available = $this->getRoomAvailability(
+                        $room,
+                        [$interval]
+                    );
+                    if ($interval_available[0]) {
+                        $range_index = $interval['range'] . '_' . $interval['range_id'];
+                        $this->selected_rooms[$range_index] = $room->id;
+                    } else {
+                        $this->unavailable_dates[$room->id]++;
+                        $this->unavailable_metadate_dates[$room->id][$metadate_id]++;
+                    }
+                    $metadate_availability[] = $interval_available[0];
+                }
+                $this->room_availability[$room->id][$metadate_id] = $metadate_availability;
+            }
+
+            $this->metadate_availability_share[$room->id][$metadate_id] =
+                ($this->amount_of_metadate_dates[$room->id][$metadate_id] - $this->unavailable_metadate_dates[$room->id][$metadate_id])
+                / $this->amount_of_metadate_dates[$room->id][$metadate_id];
+        }
+        $this->room_availability_share[$room->id] =
+            ($this->amount_of_dates[$room->id] - $this->unavailable_dates[$room->id]) / $this->amount_of_dates[$room->id];
+    }
+
+
     /**
      * This action displays information about a request
      * that are relevant before resolving it.
@@ -1284,11 +1343,15 @@ class Resources_RoomRequestController extends AuthenticatedController
             $this->request_semester_string = $request_start_semester->name;
         }
 
-        $this->metadate_available = [];
+        $this->metadate_availability_share = [];
         $this->room_availability = [];
         $this->room_underload = [];
         $this->requested_room_fully_available = true;
         $this->room_availability_share = [];
+        $this->amount_of_dates = [];
+        $this->unavailable_dates = [];
+        $this->amount_of_metadate_dates = [];
+        $this->unavailable_metadate_dates = [];
         $this->selected_rooms = [];
 
         //Load all previously selected rooms where at least one date has been
@@ -1298,31 +1361,26 @@ class Resources_RoomRequestController extends AuthenticatedController
             $this->selected_rooms = Request::getArray('selected_rooms');
         }
 
-        $selected_room = $this->request_resource;
         $this->visible_dates = 0;
+        //Calculate the visible dates and check if the expand_metadates button must be shown:
+        foreach ($this->request_time_intervals as $data) {
+            if ($data['metadate'] instanceof SeminarCycleDate && !$this->expand_metadates) {
+                //There is at least one metadate in the grouped set
+                //of time intervals. The expand button must be shown.
+                $this->show_expand_metadates_button = true;
+                $this->visible_dates++;
+            }
+        }
+
+        $selected_room = $this->request_resource;
+
         if ($selected_room instanceof Room) {
-            $this->metadate_available[$selected_room->id] = [];
-            $this->room_availability[$selected_room->id] = [];
-            $this->room_availability_share[$selected_room->id] = 1.0;
+            $this->calculateRoomAvailabilityData($selected_room);
+            if ($this->room_availability_share[$selected_room->id] < 1.0) {
+                $this->requested_room_fully_available = false;
+            }
             foreach ($this->request_time_intervals as $metadate_id => $data) {
                 if ($data['metadate'] instanceof SeminarCycleDate && !$this->expand_metadates) {
-                    //There is at least one metadate in the grouped set
-                    //of time intervals. The expand button must be shown.
-                    $this->show_expand_metadates_button = true;
-                    $this->visible_dates++;
-                    $metadate_availability = $this->getRoomAvailability(
-                        $selected_room,
-                        $data['intervals']
-                    );
-
-                    $metadate_available = true;
-                    foreach ($metadate_availability as $available) {
-                        if (!$available) {
-                            $metadate_available = false;
-                            break;
-                        }
-                    }
-
                     $all_dates_same_room = true;
                     // check, if ALL dates are booked for the same room
                     foreach ($data['intervals'] as $interval) {
@@ -1331,45 +1389,14 @@ class Resources_RoomRequestController extends AuthenticatedController
                             break;
                         }
                     }
-
-                    if ($all_dates_same_room && $metadate_available && !$this->selected_rooms) {
+                    if ($all_dates_same_room && $this->room_availability[$selected_room->id][$metadate_id][0] && !$this->selected_rooms) {
                         $this->selected_rooms['SeminarCycleDate_' . $metadate_id] = $selected_room->id;
                     }
-                    $this->room_availability[$selected_room->id][$metadate_id] = [$metadate_available];
-                } else {
-                    $this->visible_dates += count($data['intervals']);
-                    $metadate_availability = [];
-                    foreach ($data['intervals'] as $interval) {
-                        $interval_available = $this->getRoomAvailability(
-                            $selected_room,
-                            [$interval]
-                        );
-                        if ($interval_available[0]) {
-                            $range_index = $interval['range'] . '_' . $interval['range_id'];
-                            $this->selected_rooms[$range_index] = $selected_room->id;
-                        }
-                        $metadate_availability[] = $interval_available[0];
-                    }
-                    $this->room_availability[$selected_room->id][$metadate_id] = $metadate_availability;
                 }
             }
             if ($this->request->getProperty('seats') > 0) {
                 $this->room_underload[$selected_room->id] =
                     round(((int)$selected_room->seats / (int)$this->request->getProperty('seats')) * 100);
-            }
-            $amount_of_dates = count(reset($this->room_availability));
-            foreach ($this->room_availability[$selected_room->id] as $metadate_id => $metadate_availability) {
-                $this->metadate_available[$selected_room->id][$metadate_id] = true;
-                $unavailable_c = 0;
-                foreach ($metadate_availability as $available) {
-                    if (!$available) {
-                        $this->requested_room_fully_available = false;
-                        $this->metadate_available[$selected_room->id][$metadate_id] = false;
-                        $unavailable_c++;
-                    }
-                }
-                $this->room_availability_share[$selected_room->id] =
-                    ($amount_of_dates - $unavailable_c) / $amount_of_dates;
             }
         } else {
             //If no room is selected, it cannot be declared fully available.
@@ -1549,34 +1576,7 @@ class Resources_RoomRequestController extends AuthenticatedController
         $this->alternative_rooms = $deduplicated;
 
         foreach ($this->alternative_rooms as $room) {
-            $this->metadate_available[$room->id] = [];
-            $this->room_availability[$room->id] = [];
-            foreach ($this->request_time_intervals as $metadate_id => $data) {
-                $this->metadate_available[$room->id][$metadate_id] = true;
-                $this->room_availability[$room->id][$metadate_id] =
-                    $this->getRoomAvailability(
-                        $room,
-                        $data['intervals']
-                    );
-            }
-            $this->room_availability_share[$room->id] = 1.0;
-            $date_c = 0;
-            $unavailable_c = 0;
-            foreach ($this->room_availability[$room->id] as $metadate_id => $metadate_availability) {
-                $date_c++;
-                foreach ($metadate_availability as $available) {
-                    if (!$available) {
-                        $this->room_fully_available[$room->id] = false;
-                        $this->metadate_available[$room->id][$metadate_id] = false;
-                        $unavailable_c++;
-                        break;
-                    }
-                }
-            }
-            if ($date_c > 0) {
-                $this->room_availability_share[$room->id] =
-                    ($date_c - $unavailable_c) / $date_c;
-            }
+            $this->calculateRoomAvailabilityData($room);
 
             if ($this->request->getProperty('seats') > 0) {
                 $this->room_underload[$room->id] =
