@@ -236,3 +236,10 @@ $(document).on('keydown', '.enter-accessible', function(event) {
         $(this).trigger('click');
     }
 });
+
+$(document).on('click', '[data-toggles]', function (event) {
+    const target = event.currentTarget.dataset.toggles;
+    $(target).toggle();
+
+    event.preventDefault();
+});

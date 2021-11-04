@@ -1,5 +1,13 @@
 @helpbar-width: 250px;
 
+.helpbar-toggler {
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+
+    display: inline-block;
+}
+
 .helpbar-container {
     clear: both;
     height: 28px;
@@ -10,10 +18,6 @@
     right: 12px;
 
     float: right;
-
-    #helpbar-sticky {
-        display: none;
-    }
 
     h2, h3 {
         border-bottom: 0;
@@ -32,8 +36,15 @@
         margin-bottom: 2px;
         padding-bottom: 2px;
     }
+
+    > .helpbar-toggler {
+        float: right;
+    }
 }
+
 .helpbar {
+    background-color: @base-color;
+    padding: 8px;
     box-sizing: border-box;
 
     @border-width: 4px;
@@ -45,7 +56,7 @@
     width: @helpbar-width;
     z-index: 1000;
 
-    &:before {
+    &::before {
         border-bottom: 2px solid @base-color-80;
         border-left: @border-width solid transparent;
         border-right: @border-width solid transparent;
@@ -58,25 +69,18 @@
     }
 
     .helpbar-title {
-        .background-icon('question-circle', 'clickable', 24);
-        background-position: right top;
-        background-repeat: no-repeat;
-        margin: 2px 4px -4px;
-        overflow: hidden;
-        padding: 0px 0 2px 0px;
-
-        label {
-            cursor: pointer;
-            display: block;
-            padding: 3px 4px;
-            font-weight: 700;
-            margin: 0em 0 0.3em;
-        }
+        display: flex;
+        justify-content: space-between;
     }
+
+    .helpbar-toggler {
+        margin-top: -7px;
+        margin-right: -6px;
+    }
+
     .helpbar-widgets {
         color: #fff;
         list-style: none;
-        margin: 0px 8px;
         padding: 0;
 
         a {
@@ -121,33 +125,6 @@
         .icon('before', 'link-intern', 'info_alt');
     }
 }
-
-.helpbar {
-    @transition: all 300;
-
-    width: 32px;
-    text-indent: -@helpbar-width;
-    transition: @transition;
-
-    .helpbar-widgets {
-        max-height: 0;
-        transition: @transition;
-        overflow: hidden;
-    }
-
-    #helpbar-sticky:checked + & {
-        text-indent: 0;
-        background-color: #28497c;
-        width: @helpbar-width;
-        .helpbar-title {
-            .background-icon('decline-circle', 'info_alt', 24);
-        }
-        .helpbar-widgets {
-            max-height: 1000px;
-        }
-    }
-}
-
 
 section.big-help-box {
     background-color: #d4dbe5;

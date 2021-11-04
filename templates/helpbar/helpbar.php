@@ -1,10 +1,14 @@
 <div class="helpbar-container">
-    <input type="checkbox" id="helpbar-sticky" <? if ($open) echo 'checked'; ?>>
-    <div class="helpbar">
+    <a href="#" class="helpbar-toggler" data-toggles=".helpbar" title="<?= _('Hilfelasche anzeigen/verstecken') ?>">
+        <?= Icon::create('question-circle')->asImg(24) ?>
+    </a>
+    <div class="helpbar" <? if (!$open) echo 'style="display: none"'; ?>>
+
         <h2 class="helpbar-title">
-            <label for="helpbar-sticky">
-                <?= _('Tipps & Hilfe') ?>
-            </label>
+            <?= _('Tipps & Hilfe') ?>
+            <a href="#" class="helpbar-toggler" data-toggles=".helpbar" aria-hidden="true" title="<?= _('Hilfelasche verstecken') ?>">
+                <?= Icon::create('decline-circle', Icon::ROLE_INFO_ALT)->asImg(24) ?>
+            </a>
         </h2>
         <ul class="helpbar-widgets">
         <? foreach ($widgets as $index => $widget): ?>
