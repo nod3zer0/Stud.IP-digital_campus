@@ -23,6 +23,7 @@ final class ConsultationMultipleResponsibleRanges extends Migration
         $query = "CREATE TABLE IF NOT EXISTS `consultation_events` (
                     `slot_id` INT(11) UNSIGNED NOT NULL,
                     `user_id` CHAR(32) CHARSET latin1 COLLATE latin1_bin NOT NULL,
+                    `event_id` CHAR(32) CHARSET latin1 COLLATE latin1_bin NOT NULL,
                     `mkdate` INT(11) UNSIGNED NOT NULL,
                     PRIMARY KEY (`slot_id`, `user_id`)
                   )";
