@@ -110,7 +110,9 @@
                 <? if (count($slot->bookings) > 0): ?>
                     <ul>
                     <? foreach ($slot->bookings as $booking): ?>
-                        <li><?= htmlReady($booking->user->getFullName()) ?></li>
+                        <? if ($booking->user): ?>
+                            <li><?= htmlReady($booking->user->getFullName()) ?></li>
+                        <? endif; ?>
                     <? endforeach; ?>
                     </ul>
                 <? else: ?>
