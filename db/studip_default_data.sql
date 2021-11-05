@@ -127,7 +127,6 @@ INSERT INTO `colour_values` (`colour_id`, `description`, `value`, `mkdate`, `chd
 -- Dumping data for table `config`
 --
 
-INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('ACCESSKEY_ENABLE', '', 'boolean', 'user', '', 0, 0, 'Schaltet die Nutzung von Shortcuts für einen User ein oder aus, Systemdefault');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('ADMIN_COURSES_SHOW_COMPLETE', '1', 'boolean', 'global', 'global', 1462287310, 1462287310, 'Definiert, ob auf der Admin-Veranstaltunggseite der Komplett-Status für Veranstaltungen aufgeführt sein soll');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('ADMIN_COURSES_SIDEBAR_ACTIVE_ELEMENTS', '', 'string', 'user', '', 0, 0, 'Diese Einstellung legt fest, welche Elemente in der Seitenleiste der Veranstaltungsübersicht für Admins sichtbar sind.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('ADMISSION_PRELIM_COMMENT_ENABLE', '1', 'boolean', 'global', '', 1153814966, 1153814966, 'Schaltet ein oder aus, ob ein Nutzer im Modus \"Vorläufiger Eintrag\" eine Bemerkung hinterlegen kann');

@@ -153,7 +153,7 @@ if (isset($_COOKIE['navigation-length'])) {
     <? foreach ($header_nav['visible'] as $path => $nav): ?>
         <?= $this->render_partial(
             'header-navigation-item.php',
-            compact('path', 'nav', 'accesskey_enabled')
+            compact('path', 'nav')
         ) ?>
     <? endforeach; ?>
         <li class="overflow">
@@ -175,7 +175,7 @@ if (isset($_COOKIE['navigation-length'])) {
             <? foreach ($header_nav['hidden'] as $path => $nav) : ?>
                 <?= $this->render_partial(
                     'header-navigation-item.php',
-                    compact('path', 'nav', 'accesskey_enabled')
+                    compact('path', 'nav')
                 ) ?>
             <? endforeach; ?>
             </ul>

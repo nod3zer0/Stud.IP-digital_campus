@@ -46,9 +46,6 @@ if (PageLayout::isHeaderEnabled()) //Einige Seiten benötigen keinen Header, spr
                 $header_template->public_hint = _('öffentliche Veranstaltung');
             }
         }
-        if ($GLOBALS['user']->cfg->ACCESSKEY_ENABLE) {
-            $header_template->accesskey_enabled = true;
-        }
 
         if (!$GLOBALS['user']->needsToAcceptTerms()) {
             $header_template->show_quicksearch = true;

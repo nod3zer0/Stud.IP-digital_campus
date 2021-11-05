@@ -58,19 +58,6 @@ $start_pages = [
         </label>
 
         <label>
-            <input type="checkbox" name="accesskey_enable"
-                   aria-describedby="accesskey_enable_description" value="1"
-                <? if ($config->ACCESSKEY_ENABLE) echo 'checked'; ?>>
-            <?= _('Tastenkombinationen für Hauptfunktionen') ?>
-            <?= tooltipHtmlIcon(_('Mit dieser Einstellung können Sie für die meisten in der Kopfzeile '
-                .'erreichbaren Hauptfunktionen eine Bedienung über Tastenkombinationen '
-                .'aktivieren. <br>Die Tastenkombination wird im Tooltip des jeweiligen '
-                .'Icons angezeigt.')." "._('Diese kann für jeden Browser und jedes Betriebssystem unterschiedlich '
-                    .'sein (siehe <a href="http://en.wikipedia.org/wiki/Accesskey" '
-                    .'target="_blank" rel="noopener noreferrer">Wikipedia</a>).')) ?>
-        </label>
-
-        <label>
             <input type="checkbox"
                    name="showsem_enable"
                    value="1"
