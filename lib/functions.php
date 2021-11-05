@@ -197,60 +197,44 @@ function get_object_type($id, $check_only = [])
 
     // Initialize cache array
     if ($cache === null) {
-        $cache = new StudipCachedArray('/StudipObjectTypes');
+        $cache = new StudipCachedArray('/Studip/ObjectTypes');
     }
 
-    // Read from cache if available
-    if (isset($cache[$id]) && is_string($cache[$id])) {
-        return $cache[$id];
-    }
+    // No cached entry available? Go ahead and determine type
+    if (!isset($cache[$id])) {
+        // Tests for specific types
+        $tests = [
+            "SELECT 'sem' FROM `seminare` WHERE `Seminar_id` = ?" => ['sem'],
+            "SELECT IF(`Institut_id` = `fakultaets_id`, 'fak', 'inst') FROM `Institute` WHERE `Institut_id` = ?" => ['inst', 'fak'],
+            "SELECT 'date' FROM `termine` WHERE `termin_id` = ?" => ['date'],
+            "SELECT 'user' FROM `auth_user_md5` WHERE `user_id` = ?" => ['user'],
+            "SELECT 'group' FROM `statusgruppen` WHERE `statusgruppe_id` = ?" => ['group'],
+            "SELECT 'dokument' FROM `file_refs` WHERE `id` = ?" => ['dokument'],
+            "SELECT 'range_tree' FROM `range_tree` WHERE `item_id` = ?" => ['range_tree'],
+        ];
 
-    // Tests for specific types
-    $tests = [
-        'sem'        => "SELECT 1 FROM seminare WHERE Seminar_id = ?",
-        'date'       => "SELECT 1 FROM termine WHERE termin_id = ?",
-        'user'       => "SELECT 1 FROM auth_user_md5 WHERE user_id = ?",
-        'group'      => "SELECT 1 FROM statusgruppen WHERE statusgruppe_id = ?",
-        'dokument'   => "SELECT 1 FROM file_refs WHERE id = ?",
-        'range_tree' => "SELECT 1 FROM range_tree WHERE item_id = ?",
-    ];
+        // If we want to check only for a specific type, order the tests so that
+        // these tests will be executed first
+        if ($check_only) {
+            uasort($tests, function ($a, $b) use ($check_only) {
+                return count(array_intersect($b, $check_only)) - count(array_intersect($a, $check_only));
+            });
+        }
 
-    // Test for every type if no specific types are provided
-    $check_all = !count($check_only);
-
-    // Loop through tests
-    foreach ($tests as $key => $query) {
-        if ($check_all || in_array($key, $check_only)) {
-            if (!$check_all
-                && isset($cache[$id])
-                && is_array($cache[$id])
-                && in_array($key, $cache[$id])
-            ) {
-                return false;
-            }
-
-            $present = DBManager::get()->fetchColumn($query, [$id]);
-            if ($present) {
-                return $cache[$id] = $key;
+        // Actually determine type
+        $type = null;
+        foreach ($tests as $query => $types) {
+            $type = DBManager::get()->fetchColumn($query, [$id]);
+            if ($type !== null) {
+                break;
             }
         }
+
+        // Store type
+        $cache[$id] = $type ?? false;
     }
 
-    // Institute or faculty?
-    if ($check_all || in_array('inst', $check_only) || in_array('fak', $check_only)) {
-        $query = "SELECT Institut_id = fakultaets_id FROM Institute WHERE Institut_id = ?";
-        $is_fak = DBManager::get()->fetchColumn($query, [$id]);
-        if ($is_fak !== false) {
-            return $cache[$id] = $is_fak ? 'fak' : 'inst';
-        }
-    }
-    if ($check_all) {
-        // None of the above
-        return $cache[$id] = false;
-    } else {
-        $cache[$id] = $check_only;
-        return false;
-    }
+    return (!$check_only || in_array($cache[$id], $check_only)) ? $cache[$id] : false;
 }
 
 /**
