@@ -189,6 +189,7 @@ class MyCoursesController extends AuthenticatedController
                 'allow_dozent_visibility'  => Config::get()->ALLOW_DOZENT_VISIBILITY,
                 'open_groups'              => $GLOBALS['user']->cfg->MY_COURSES_OPEN_GROUPS,
                 'sem_number'               => Config::get()->IMPORTANT_SEMNUMBER,
+                'allow_tiled_display'      => Config::get()->MY_COURSES_ALLOW_TILED_DISPLAY,
                 'display_type'             => Config::get()->MY_COURSES_ALLOW_TILED_DISPLAY && $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY ? 'tiles' : 'tables',
                 'responsive_type'          => Config::get()->MY_COURSES_ALLOW_TILED_DISPLAY && $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY_RESPONSIVE ? 'tiles' : 'tables',
                 'navigation_show_only_new' => $GLOBALS['user']->cfg->MY_COURSES_SHOW_NEW_ICONS_ONLY,
@@ -764,28 +765,6 @@ class MyCoursesController extends AuthenticatedController
     }
 
     /**
-     * Changes a config setting for the current use
-     * @param string $config Config setting
-     * @param bool   $state  State of setting
-     */
-    public function config_action($config, $state = null)
-    {
-        if ($config === 'tiled') {
-            if ($state === null) {
-                $state = !$GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY;
-            }
-            $GLOBALS['user']->cfg->store('MY_COURSES_TILED_DISPLAY', (bool) $state);
-        } elseif ($config === 'new') {
-            if ($state === null) {
-                $state = !$GLOBALS['user']->cfg->MY_COURSES_SHOW_NEW_ICONS_ONLY;
-            }
-            $GLOBALS['user']->cfg->store('MY_COURSES_SHOW_NEW_ICONS_ONLY', (bool) $state);
-        }
-
-        $this->redirect('my_courses');
-    }
-
-    /**
      * Get widget for grouping selected courses (e.g. by colors, ...)
      * @param      $action
      * @param bool $selected
@@ -927,21 +906,22 @@ class MyCoursesController extends AuthenticatedController
             $views->id = 'tiled-courses-sidebar-switch';
             $views->addLink(
                 _('Tabellarische Ansicht'),
-                $this->config('tiled', 0)
+                '#'
             )->setActive(!$GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY);
             $views->addLink(
                 _('Kachelansicht'),
-                $this->config('tiled', 1)
+                '#'
             )->setActive($GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY);
 
-            $options = $sidebar->addWidget(new OptionsWidget());
-            $options->id = 'tiled-courses-new-contents-toggle';
-            $options->addCheckbox(
-                _('Nur neue Inhalte anzeigen'),
-                $GLOBALS['user']->cfg->MY_COURSES_SHOW_NEW_ICONS_ONLY,
-                $this->config('new')
-            );
         }
+
+        $options = $sidebar->addWidget(new OptionsWidget());
+        $options->id = 'tiled-courses-new-contents-toggle';
+        $options->addCheckbox(
+            _('Nur neue Inhalte anzeigen'),
+            $GLOBALS['user']->cfg->MY_COURSES_SHOW_NEW_ICONS_ONLY,
+            '#'
+        );
 
         $export_widget = $sidebar->addWidget(new ExportWidget());
         $export_widget->addLink(

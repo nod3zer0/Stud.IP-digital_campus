@@ -166,9 +166,7 @@ export default {
     created () {
         this.responsiveDisplay = Responsive.media_query.matches;
         Responsive.media_query.addListener(() => {
-            console.log('changing responsive display', Responsive.media_query.matches);
             this.responsiveDisplay = Responsive.media_query.matches;
-            console.log('changed responsive display', this.responsiveDisplay);
         })
     }
 }
