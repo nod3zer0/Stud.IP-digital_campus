@@ -225,7 +225,7 @@ function get_object_type($id, $check_only = [])
         $type = null;
         foreach ($tests as $query => $types) {
             $type = DBManager::get()->fetchColumn($query, [$id]);
-            if ($type !== null) {
+            if ($type) {
                 break;
             }
         }
