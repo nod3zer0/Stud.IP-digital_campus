@@ -190,7 +190,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $class = get_called_class();
 
         if (empty($config['db_table'])) {
-            $config['db_table'] = mb_strtolower($class);
+            $config['db_table'] = strtolower($class);
         }
 
         if (!isset($config['db_fields'])) {
@@ -280,7 +280,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
         foreach ($auto_notification_map as $cb => $notification) {
             if (isset($config['notification_map'][$cb])) {
-                if (mb_strpos($config['notification_map'][$cb], $notification) !== false) {
+                if (strpos($config['notification_map'][$cb], $notification) !== false) {
                     $config['notification_map'][$cb] .= ' ' . $notification;
                 }
             } else {
@@ -312,10 +312,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             array_keys($config['relations'] ?: [])
         );
 
-        foreach (array_map('mb_strtolower', get_class_methods($class)) as $method) {
-            if (in_array(mb_substr($method, 0, 3), ['get', 'set'])) {
-                $verb = mb_substr($method, 0, 3);
-                $name = mb_substr($method, 3);
+        foreach (array_map('strtolower', get_class_methods($class)) as $method) {
+            if (in_array(substr($method, 0, 3), ['get', 'set'])) {
+                $verb = substr($method, 0, 3);
+                $name = substr($method, 3);
                 if (in_array($name, $config['known_slots']) && !in_array($name, static::$reserved_slots) && !isset($config['additional_fields'][$name][$verb])) {
                     $config['getter_setter_map'][$name][$verb] = $method;
                 }
@@ -354,15 +354,15 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if (!isset(self::$schemes[$db_table])) {
             $db = DBManager::get()->query("SHOW COLUMNS FROM $db_table");
             while($rs = $db->fetch(PDO::FETCH_ASSOC)){
-                $db_fields[mb_strtolower($rs['Field'])] = [
-                                                            'name' => $rs['Field'],
-                                                            'null' => $rs['Null'],
-                                                            'default' => $rs['Default'],
-                                                            'type' => $rs['Type'],
-                                                            'extra' => $rs['Extra']
-                                                            ];
+                $db_fields[strtolower($rs['Field'])] = [
+                    'name' => $rs['Field'],
+                    'null' => $rs['Null'],
+                    'default' => $rs['Default'],
+                    'type' => $rs['Type'],
+                    'extra' => $rs['Extra']
+                ];
                 if ($rs['Key'] == 'PRI'){
-                    $pk[] = mb_strtolower($rs['Field']);
+                    $pk[] = strtolower($rs['Field']);
                 }
             }
             self::$schemes[$db_table]['db_fields'] = $db_fields;
@@ -434,7 +434,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     {
         $db_table = static::config('db_table');
         $db = DBManager::get();
-        $has_join = mb_stripos($sql, 'JOIN ');
+        $has_join = stripos($sql, 'JOIN ');
         if ($has_join === false || $has_join > 10) {
             $sql = 'WHERE ' . $sql;
         }
@@ -558,7 +558,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $class = get_called_class();
         $record = new $class();
         $db = DBManager::get();
-        $has_join = mb_stripos($sql, 'JOIN ');
+        $has_join = stripos($sql, 'JOIN ');
         if ($has_join === false || $has_join > 10) {
             $sql = 'WHERE ' . $sql;
         }
@@ -587,7 +587,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public static function findOneBySQL($where, $params = [])
     {
-        if (mb_stripos($where, 'LIMIT') === false) {
+        if (stripos($where, 'LIMIT') === false) {
             $where .= " LIMIT 1";
         }
         $found = static::findBySQL($where, $params);
@@ -641,7 +641,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public static function findEachBySQL($callable, $sql, $params = [])
     {
-        $has_join = mb_stripos($sql, 'JOIN ');
+        $has_join = stripos($sql, 'JOIN ');
         if ($has_join === false || $has_join > 10) {
             $sql = "WHERE {$sql}";
         }
@@ -816,13 +816,13 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $db_table = static::config('db_table');
         $alias_fields = static::config('alias_fields');
         $db_fields = static::config('db_fields');
-        $name = mb_strtolower($name);
+        $name = strtolower($name);
         $class = get_called_class();
         $param_arr = [];
         $where = '';
         $where_param = is_array($arguments[0]) ? $arguments[0] : [$arguments[0]];
-        $prefix = mb_strstr($name, 'by', true);
-        $field = mb_substr($name, mb_strlen($prefix)+2);
+        $prefix = strstr($name, 'by', true);
+        $field = substr($name, strlen($prefix) + 2);
         switch ($prefix) {
             case 'findone':
                 $order = $arguments[1];
@@ -1224,7 +1224,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $fields = array_diff($this->known_slots, array_keys($this->relations));
         if (is_array($only_these_fields)) {
             $only_these_fields = array_filter(array_map(function($s) {
-                return is_string($s) ? mb_strtolower($s) : null;
+                return is_string($s) ? strtolower($s) : null;
             }, $only_these_fields));
             $fields = array_intersect($only_these_fields, $fields);
         }
@@ -1254,8 +1254,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         $fields = array_keys($this->db_fields);
         if (is_array($only_these_fields)) {
-            $only_these_fields = array_filter(array_map(function($s) {
-                return is_string($s) ? mb_strtolower($s) : null;
+            $only_these_fields = array_filter(array_map(function ($s) {
+                return is_string($s) ? strtolower($s) : null;
             }, $only_these_fields));
             $fields = array_intersect($only_these_fields, $fields);
         }
@@ -1304,11 +1304,12 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if (is_array($only_these_fields)) {
             foreach ($only_these_fields as $key => $value) {
                 if (!is_array($value) &&
-                        array_key_exists(mb_strtolower($value), $this->relations)) {
-                    $relations[mb_strtolower($value)] = 0; //not null|array|string to stop recursion
+                    array_key_exists(strtolower($value), $this->relations)
+                ) {
+                    $relations[strtolower($value)] = 0; //not null|array|string to stop recursion
                 }
-                if (array_key_exists(mb_strtolower($key), $this->relations)) {
-                    $relations[mb_strtolower($key)] = $value;
+                if (array_key_exists(strtolower($key), $this->relations)) {
+                    $relations[strtolower($key)] = $value;
                 }
             }
         }
@@ -1343,7 +1344,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function getValue($field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
 
         // No value defined, throw exception
         if (!in_array($field, $this->known_slots)) {
@@ -1393,7 +1394,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function getRelationValue($relation, $field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
         $options = $this->getRelationOptions($relation);
         if ($options['type'] === 'has_one' || $options['type'] === 'belongs_to') {
             return $this->{$relation}->{$field};
@@ -1417,10 +1418,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                  if (isset($meta['default'])) {
                      $default_value = $meta['default'];
                  } elseif ($meta['null'] == 'NO') {
-                     if (mb_strpos($meta['type'], 'text') !== false || mb_strpos($meta['type'], 'char') !== false) {
+                     if (strpos($meta['type'], 'text') !== false || strpos($meta['type'], 'char') !== false) {
                          $default_value = '';
                      }
-                     if (mb_strpos($meta['type'], 'int') !== false) {
+                     if (strpos($meta['type'], 'int') !== false) {
                          $default_value = '0';
                      }
                  }
@@ -1442,7 +1443,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
      function setValue($field, $value)
      {
-         $field = mb_strtolower($field);
+         $field = strtolower($field);
          $ret = false;
          if (in_array($field, $this->known_slots)) {
              if (isset($this->getter_setter_map[$field]['set'])) {
@@ -1538,7 +1539,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function __isset($field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
         if (in_array($field, $this->known_slots)) {
             $value = $this->getValue($field);
             return $value instanceOf SimpleORMapCollection ? (bool)count($value) : !is_null($value);
@@ -1598,7 +1599,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function isField($field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
         return isset($this->db_fields[$field]);
     }
 
@@ -1609,7 +1610,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function isAdditionalField($field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
         return isset($this->additional_fields[$field]);
     }
 
@@ -1620,7 +1621,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function isAliasField($field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
         return isset($this->alias_fields[$field]);
     }
 
@@ -1631,7 +1632,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function isI18nField($field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
         return isset($this->i18n_fields[$field]);
     }
 
@@ -1656,10 +1657,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         if (is_array($data) || $data instanceof Traversable) {
             foreach($data as $key => $value) {
-                $key = mb_strtolower($key);
+                $key = strtolower($key);
                 if (isset($this->db_fields[$key])
-                || isset($this->alias_fields[$key])
-                || isset($this->additional_fields[$key]['set'])) {
+                    || isset($this->alias_fields[$key])
+                    || isset($this->additional_fields[$key]['set'])
+                ) {
                     $this->setValue($key, $value);
                     ++$count;
                 }
@@ -1841,8 +1843,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         $relations = array_keys($this->relations);
         if (is_array($only_these)) {
-            $only_these = array_filter(array_map(function($s) {
-                    return is_string($s) ? mb_strtolower($s) : null;
+            $only_these = array_filter(array_map(function ($s) {
+                return is_string($s) ? strtolower($s) : null;
             }, $only_these));
             $relations = array_intersect($only_these, $relations);
         }
@@ -2024,7 +2026,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function isFieldDirty($field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
         if ($this->content[$field] === null || $this->content_db[$field] === null) {
             return $this->content[$field] !== $this->content_db[$field];
         } else if ($this->content[$field] instanceof I18NString || $this->content_db[$field] instanceof I18NString) {
@@ -2042,7 +2044,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function revertValue($field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
         return ($this->content[$field] = $this->content_db[$field]);
     }
 
@@ -2055,7 +2057,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function getPristineValue($field)
     {
-        $field = mb_strtolower($field);
+        $field = strtolower($field);
         if (array_key_exists($field, $this->content_db)) {
             return $this->content_db[$field];
         } else {
