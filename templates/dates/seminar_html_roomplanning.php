@@ -1,7 +1,7 @@
 <?
 if (!isset($show_room)) :
     // show rooms only if there is more than one
-    if (empty($dates['rooms']) || sizeof($dates['rooms']) === 1) :
+    if (empty($dates['rooms']) || count($dates['rooms']) === 1) :
         $show_room = false;
     else :
         $show_room = true;
@@ -50,12 +50,12 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
         endif;
     endforeach;
     unset($irregular_rooms['']);
-    echo sizeof($output) ? ", <br>" : '';
+    echo count($output) ? ", <br>" : '';
 
-    $rooms = array_merge(getPlainRooms($irregular_rooms, false), array_keys($freetext_rooms));
+    $rooms = array_merge(getPlainRooms($irregular_rooms), array_keys($freetext_rooms));
 
-    if (is_array($irregular) && sizeof($irregular)) :
-        if (isset($shrink) && !$shrink && sizeof($irregular < 20)) :
+    if (is_array($irregular) && count($irregular)) :
+        if (isset($shrink) && !$shrink && count($irregular) < 20) :
             foreach ($irregular as $date) :
                 echo $date['tostring'];
 
@@ -69,9 +69,9 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
             endforeach;
         else :
             echo _("Termine am") . implode(', ', shrink_dates($irregular));
-            if (is_array($rooms) && sizeof($rooms) > 0) :
-                if (sizeof($rooms) > 3) :
-                    $rooms = array_slice($rooms, sizeof($rooms) - 3, sizeof($rooms));
+            if (is_array($rooms) && count($rooms) > 0) :
+                if (count($rooms) > 3) :
+                    $rooms = array_slice($rooms, count($rooms) - 3, count($rooms));
                 endif;
 
                 if ($show_room) :
