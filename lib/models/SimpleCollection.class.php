@@ -688,7 +688,7 @@ class SimpleCollection extends StudipArrayObject
                     $value2 = static::translitLatin1(mb_substr($d2[$field], 0, 100));
                 }
                 $ret = $sort_func($value1, $value2);
-                if (mb_strtolower($dir) == 'desc') $ret = $ret * -1;
+                if (strtolower($dir) == 'desc') $ret = $ret * -1;
             } while ($ret === 0 && next($sorter));
 
             return $ret;
