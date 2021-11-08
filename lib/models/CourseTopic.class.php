@@ -19,13 +19,48 @@
  * @property string priority database column
  * @property string mkdate database column
  * @property string chdate database column
- * @property DocumentFolder folder belongs_to DocumentFolder
+ * @property Folder folder belongs_to DocumentFolder
  * @property Course course belongs_to Course
  * @property User author belongs_to User
  * @property SimpleORMapCollection dates has_and_belongs_to_many CourseDate
  */
 class CourseTopic extends SimpleORMap
 {
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'themen';
+        $config['has_and_belongs_to_many']['dates'] = [
+            'class_name' => CourseDate::class,
+            'thru_table' => 'themen_termine',
+            'order_by'   => 'ORDER BY date',
+            'on_delete'  => 'delete',
+            'on_store'   => 'store'
+        ];
+        $config['has_many']['folders'] = [
+            'class_name'  => Folder::class,
+            'assoc_func' => 'findByTopic_id'
+        ];
+        $config['belongs_to']['course'] = [
+            'class_name'  => Course::class,
+            'foreign_key' => 'seminar_id'
+        ];
+        $config['belongs_to']['author'] = [
+            'class_name'  => User::class,
+            'foreign_key' => 'author_id'
+        ];
+
+        $config['additional_fields']['forum_thread_url']['get'] = 'getForumThreadURL';
+
+        $config['registered_callbacks']['before_create'][] = 'cbDefaultValues';
+        $config['registered_callbacks']['after_store'][] = 'cbUpdateConnectedContentModules';
+        $config['registered_callbacks']['before_delete'][] = 'cbUnlinkConnectedContentModules';
+
+        $config['i18n_fields']['title'] = true;
+        $config['i18n_fields']['description'] = true;
+
+        parent::configure($config);
+    }
+
     public static function findByTermin_id($termin_id)
     {
         return self::findBySQL("INNER JOIN themen_termine USING (issue_id)
@@ -48,38 +83,6 @@ class CourseTopic extends SimpleORMap
     public static function getMaxPriority($seminar_id)
     {
         return DBManager::get()->fetchColumn("SELECT MAX(priority) FROM themen WHERE seminar_id=?", [$seminar_id]);
-    }
-
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'themen';
-        $config['has_and_belongs_to_many']['dates'] = [
-            'class_name' => 'CourseDate',
-            'thru_table' => 'themen_termine',
-            'order_by'   => 'ORDER BY date',
-            'on_delete'  => 'delete',
-            'on_store'   => 'store'
-        ];
-        $config['has_many']['folders'] = [
-            'class_name'  => 'Folder',
-            'assoc_func' => 'findByTopic_id'
-        ];
-        $config['belongs_to']['course'] = [
-            'class_name'  => 'Course',
-            'foreign_key' => 'seminar_id'
-        ];
-        $config['belongs_to']['author'] = [
-            'class_name'  => 'User',
-            'foreign_key' => 'author_id'
-        ];
-
-        $config['additional_fields']['forum_thread_url']['get'] = 'getForumThreadURL';
-
-        $config['registered_callbacks']['before_create'][] = 'cbDefaultValues';
-        $config['registered_callbacks']['after_store'][] = 'cbUpdateConnectedContentModules';
-        $config['registered_callbacks']['before_delete'][] = 'cbUnlinkConnectedContentModules';
-
-        parent::configure($config);
     }
 
     /**
@@ -179,12 +182,75 @@ class CourseTopic extends SimpleORMap
             $folders = array_merge($folders, $date->folders->getArrayCopy());
         }
         foreach ($folders as $folder) {
-            list($files, $typed_folders) = array_values(FileManager::getFolderFilesRecursive($folder->getTypedFolder(), $user_id));
+            [$files, $typed_folders] = array_values(FileManager::getFolderFilesRecursive($folder->getTypedFolder(), $user_id));
             foreach ($files as $file) {
                 $all_files[$file->id] = $file;
             }
             $all_folders = array_merge($all_folders, $typed_folders);
         }
         return ['files' => $all_files, 'folders' => $all_folders];
+    }
+
+    /**
+     * Increases the priority of this topic. Meaning the topic will be sorted further up.
+     * Be aware that this actually decreases the priority property since lower numbers
+     * mean higher priority.
+     *
+     * @return boolean
+     */
+    public function increasePriority()
+    {
+        // Update all the course's topics with a lower priority than this one
+        $query = "UPDATE `themen`
+                  SET `priority` = `priority` + 1
+                  WHERE `seminar_id` = :course_id
+                    AND `priority` < :current_priority
+                  ORDER BY `priority` DESC
+                  LIMIT 1";
+        $changed = DBManager::get()->execute($query, [
+            ':course_id'        => $this->seminar_id,
+            ':current_priority' => $this->priority,
+        ]);
+
+        // If anything has changed, decrease priority. Otherwise the current
+        // topic is already at top.
+        if ($changed) {
+            $this->priority -= 1;
+            $this->store();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Decreases the priority of this topic. Meaning the topic will be sorted further down.
+     * Be aware that this actually increases the priority property since higher numbers
+     * mean lower priority.
+     */
+    public function decreasePriority()
+    {
+        // Update all the course's topics with a higher priority than this one
+        $query = "UPDATE `themen`
+                 SET `priority` = `priority` - 1
+                  WHERE `seminar_id` = :course_id
+                    AND `priority` > :current_priority
+                 ORDER BY `priority` ASC
+                 LIMIT 1";
+        $changed = DBManager::get()->execute($query, [
+            ':course_id'        => $this->seminar_id,
+            ':current_priority' => $this->priority,
+        ]);
+
+        // If anything has changed, increase priority. Otherwise the current
+        // topic is already at bottom.
+        if ($changed) {
+            $this->priority += 1;
+            $this->store();
+            return true;
+        }
+
+        return false;
+
     }
 }

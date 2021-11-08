@@ -83,34 +83,36 @@
                     </table>
                     <div style="text-align: center;">
                         <? if ($GLOBALS['perm']->have_studip_perm("tutor", Context::getId())) : ?>
-                            <?= \Studip\LinkButton::createEdit(_('Bearbeiten'),
-                                $controller->url_for('course/topics/edit/' . $topic->getId()), [
-                                    'data-dialog' => ''
-                                ]) ?>
-
-                            <?= Studip\LinkButton::create(
-                                _('Löschen'),
-                                $controller->url_for('course/topics/delete/' . $topic->getId()),
-                                ['data-confirm' => _('Wirklich löschen?')]
+                            <?= Studip\LinkButton::createEdit(
+                                _('Bearbeiten'),
+                                $controller->editURL($topic),
+                                ['data-dialog' => '']
                             ) ?>
+
+                            <form action="<?= $controller->delete($topic) ?>" method="post" style="display: inline">
+                                <?= Studip\Button::create(
+                                    _('Löschen'),
+                                    'delete',
+                                    ['data-confirm' => _('Wirklich löschen?')]
+                                ) ?>
+                            </form>
 
                             <? if (!$cancelled_dates_locked && $topic->dates->count()) : ?>
                                 <?= \Studip\LinkButton::create(_("Alle Termine ausfallen lassen"), URLHelper::getURL("dispatch.php/course/cancel_dates", ['issue_id' => $topic->getId()]), ['data-dialog' => '']) ?>
                             <? endif ?>
+
+                            <span class="button-group">
                             <? if ($key > 0) : ?>
-                                <form action="<?=$controller->link_for()?>" method="post" style="display: inline;">
-                                    <input type="hidden" name="move_up" value="<?= $topic->getId() ?>">
-                                    <input type="hidden" name="open" value="<?= $topic->getId() ?>">
-                                    <?= \Studip\Button::createMoveUp(_("nach oben verschieben")) ?>
+                                <form action="<?= $controller->move_up($topic) ?>" method="post" style="display: inline;">
+                                    <?= Studip\Button::createMoveUp(_('nach oben verschieben')) ?>
                                 </form>
                             <? endif ?>
                             <? if ($key < count($topics) - 1) : ?>
-                            <form action="<?=$controller->link_for()?>" method="post" style="display: inline;">
-                                <input type="hidden" name="move_down" value="<?= $topic->getId() ?>">
-                                <input type="hidden" name="open" value="<?= $topic->getId() ?>">
-                                <?= \Studip\Button::createMoveDown(_("nach unten verschieben")) ?>
-                            </form>
+                                <form action="<?=$controller->move_down($topic)?>" method="post" style="display: inline;">
+                                    <?= Studip\Button::createMoveDown(_('nach unten verschieben')) ?>
+                                </form>
                             <? endif ?>
+                            </span>
                         <? endif ?>
                     </div>
                 </div>
