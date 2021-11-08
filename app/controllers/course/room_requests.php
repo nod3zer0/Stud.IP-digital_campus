@@ -630,10 +630,7 @@ class Course_RoomRequestsController extends AuthenticatedController
             $request_dates_booked = 0;
             foreach ($request_time_intervals as $interval) {
                 $booked = ResourceBookingInterval::countBySql(
-                    'resource_id = :room_id
-                    AND
-                    (begin BETWEEN :begin AND :end
-                    OR end BETWEEN :begin AND :end)',
+                    'resource_id = :room_id AND begin < :end AND end > :begin',
                     [
                         'room_id' => $room->id,
                         'begin' => $interval['begin'],

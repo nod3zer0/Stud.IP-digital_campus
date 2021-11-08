@@ -1197,11 +1197,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
             ON resource_booking_intervals.booking_id = rb.id
             WHERE rb.internal_comment <> ''
             AND rb.resource_id IN ( :room_ids )
-            AND (
-                resource_booking_intervals.begin BETWEEN :begin AND :end
-                OR
-                resource_booking_intervals.end BETWEEN :begin AND :end
-            )
+            AND resource_booking_intervals.begin < :end AND resource_booking_intervals.end > :begin
             ORDER BY resource_booking_intervals.begin ASC, resource_booking_intervals.end ASC",
             [
                 'room_ids' => $this->room_ids,

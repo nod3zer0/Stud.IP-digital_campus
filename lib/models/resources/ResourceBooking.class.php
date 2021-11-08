@@ -730,8 +730,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                 if ($derived_resource->userHasPermission($this->booking_user, 'tutor', [$current_begin, $current_end])) {
                     //Sufficient permissions to delete bookings
                     //in the time frame.
-                    $delete_sql = 'begin < :end AND end > :begin
-                        AND resource_id = :resource_id ';
+                    $delete_sql = 'begin < :end AND end > :begin AND resource_id = :resource_id ';
                     $sql_params = [
                         'begin' => $current_begin->getTimestamp(),
                         'end' => $current_end->getTimestamp(),
@@ -763,8 +762,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         } else {
             $derived_resource = $this->resource->getDerivedClassInstance();
             if ($derived_resource->userHasPermission($this->booking_user, 'autor', [$real_begin, $end])) {
-                $delete_sql = 'begin < :end AND end > :begin
-                    AND resource_id = :resource_id  ';
+                $delete_sql = 'begin < :end AND end > :begin AND resource_id = :resource_id ';
                 $sql_params = [
                     'begin' => $real_begin->getTimestamp(),
                     'end' => $end->getTimestamp(),
@@ -959,27 +957,11 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
     public function isRepetitionInTimeframe(DateTime $begin, DateTime $end)
     {
         return ResourceBookingInterval::countBySql(
-            "booking_id = :booking_id
-            AND (
-                (begin BETWEEN :begin AND :end)
-                OR
-                (end BETWEEN :begin AND :end)
-                OR
-                (begin < :begin AND end > :end)
-            )
-            AND NOT (
-                (begin BETWEEN :booking_begin AND :booking_end)
-                OR
-                (end BETWEEN :booking_begin AND :booking_end)
-                OR
-                (begin < :booking_begin AND end > :booking_end)
-            )",
+            'booking_id = :booking_id AND begin < :end AND end > :begin',
             [
                 'booking_id' => $this->id,
                 'begin' => $begin->getTimestamp(),
-                'end' => $end->getTimestamp(),
-                'booking_begin' => $this->begin,
-                'booking_end' => $this->end
+                'end' => $end->getTimestamp()
             ]
         ) > 0;
     }
@@ -1313,14 +1295,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         }
 
         return ResourceBookingInterval::findBySql(
-            'booking_id = :booking_id
-            AND
-            (
-                (begin >= :begin AND begin <= :end)
-                OR
-                (end >= :begin AND end <= :end)
-            )
-            ORDER BY begin ASC, end ASC',
+            'booking_id = :booking_id AND begin < :end AND end > :begin ORDER BY begin, end',
             [
                 'booking_id' => $this->id,
                 'begin' => $begin->getTimestamp(),
@@ -1798,7 +1773,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
             if ($end instanceof DateTime) {
                 $end = $end->getTimestamp();
             }
-            $sql .= "AND begin <= :end AND :begin <= end";
+            $sql .= "AND begin < :end AND :begin < end";
             $sql_array['begin'] = $begin;
             $sql_array['end'] = $end;
         }

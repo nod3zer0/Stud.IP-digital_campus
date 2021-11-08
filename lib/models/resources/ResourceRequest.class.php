@@ -247,18 +247,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
 
         //Now we build the SQL snippet for the time intervals.
         //These are repeated four times in the query below.
-        //First we use one template ($time_sql_template) and
-        //replace NUMBER with our counting variable $i.
         //BEGIN and END are replaced below since the columns for
         //BEGIN and END are different in the four cases where we
         //repeat the SQL snippet for the time intervals.
-        $time_sql_template = '(
-            BEGIN BETWEEN :beginNUMBER AND :endNUMBER
-            OR
-            END BETWEEN :beginNUMBER AND :endNUMBER
-            OR
-            BEGIN <= :beginNUMBER AND END >= :endNUMBER
-        ) ';
 
         $time_sql = '';
         if ($time_ranges) {
@@ -269,11 +260,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 if ($i > 1) {
                     $time_sql .= ' OR ';
                 }
-                $time_sql .= str_replace(
-                    'NUMBER',
-                    $i,
-                    $time_sql_template
-                );
+                $time_sql .= sprintf('BEGIN < :end%d AND END > :begin%d ', $i, $i);
 
                 $sql_params[('begin' . $i)] = $time_range['begin'];
                 $sql_params[('end' . $i)]   = $time_range['end'];
@@ -288,6 +275,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         //to a date, a metadate or a course.
         //This is done in the rest of the SQL query:
 
+        // FIXME this subselect looks unnecessarily complex
         $whole_sql = 'resource_requests.id IN (
                 SELECT id FROM resource_requests
                 WHERE
@@ -298,11 +286,8 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 ['(CAST(begin AS SIGNED) - preparation_time)', 'end'],
                 $time_sql
             )
-            . (
-            $closed_status_sql
-                ? $closed_status_sql
-                : ''
-            ) . '
+            . $closed_status_sql
+            . '
                 UNION
                 SELECT id FROM resource_requests
                 INNER JOIN termine USING (termin_id)
@@ -317,11 +302,8 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 ],
                 $time_sql
             )
-            . (
-            $closed_status_sql
-                ? $closed_status_sql
-                : ''
-            ) . '
+            . $closed_status_sql
+            . '
                 UNION
                 SELECT id FROM resource_requests
                 INNER JOIN termine USING (metadate_id)
@@ -336,11 +318,8 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 ],
                 $time_sql
             )
-            . (
-            $closed_status_sql
-                ? $closed_status_sql
-                : ''
-            ) . '
+            . $closed_status_sql
+            . '
             UNION
             SELECT id FROM resource_requests
             INNER JOIN termine
@@ -356,11 +335,8 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 ],
                 $time_sql
             )
-            . (
-            $closed_status_sql
-                ? $closed_status_sql
-                : ''
-            ) . '
+            . $closed_status_sql
+            . '
             GROUP BY id
         ) '
             . $excluded_request_ids_sql;

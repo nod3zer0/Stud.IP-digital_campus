@@ -55,9 +55,7 @@ class Resources_StatisticsController extends AuthenticatedController
             WHERE
             rb.booking_type IN ( :types )
             AND
-            (rbi.begin BETWEEN :begin AND :end)
-            OR
-            (rbi.end BETWEEN :begin AND :end);"
+            rbi.begin < :end AND rbi.end > :begin"
         );
 
         $sum_stmt->execute(

@@ -408,20 +408,7 @@ class RoomManager
         //Build the SQL query and the SQL parameters:
         $sql = "INNER JOIN resource_bookings
                 ON resource_booking_intervals.booking_id = resource_bookings.id
-                WHERE
-                (
-                    (
-                        resource_booking_intervals.begin >= :begin
-                        AND
-                        resource_booking_intervals.begin <= :end
-                    )
-                    OR
-                    (
-                        resource_booking_intervals.end >= :begin
-                        AND
-                        resource_booking_intervals.end <= :end
-                    )
-                ) ";
+                WHERE resource_booking_intervals.begin < :end AND resource_booking_intervals.end > :begin ";
         $sql_array = [
             'begin' => $begin->getTimestamp(),
             'end' => $end->getTimestamp(),
@@ -746,44 +733,9 @@ class RoomManager
                 INNER JOIN resource_property_definitions rpd
                 ON resource_properties.property_id = rpd.property_id
                 WHERE TRUE"
-            /*
-               INNER JOIN seminare
-               ON resource_bookings.range_id = seminare.seminar_id
-               WHERE
-               TRUE"
-               /*
-               (resource_categories.class_name = 'Room' OR TRUE)
-               AND
-               (
-               (
-               resource_bookings.begin >= :begin
-               AND
-               resource_bookings.repeat_end <= :end
-               )
-               OR
-               (
-               resource_bookings.begin >= :begin
-               AND
-               resource_bookings.end <= :end
-               )
-               OR TRUE
-               )
-               AND
-               (rpd.name = 'seats' OR TRUE)
-               AND
-               (resource_properties.state < (
-               SELECT COUNT(user_id) FROM seminar_user
-               WHERE seminar_user.seminar_id = seminare.seminar_id
-               ) OR TRUE) ORDER BY name ASC",
-               [
-               'begin' => $begin->getTimestamp(),
-               'end' => $end->getTimestamp()
-               ]
-             */
         );
 
         return $found_bookings;
-        //SimpleORMapCollection::createFromArray($found_bookings);
     }
 
 
@@ -1011,8 +963,8 @@ class RoomManager
             if ($i > 1) {
                 $sql .= 'AND ';
             }
-            $sql .= "(rbi.`begin` NOT BETWEEN :begin$i AND :end$i
-                     AND rbi.`end` NOT BETWEEN :begin$i AND :end$i)";
+            // FIXME this checks looks bogus to me
+            $sql .= "(rbi.begin >= :end$i OR rbi.end <= :begin$i)";
             $sql_params["begin$i"] = $begin;
             $sql_params["end$i"] = $end;
 
