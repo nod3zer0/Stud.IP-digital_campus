@@ -3,8 +3,8 @@
 class Step00349 extends Migration
 {
     private $registered_modules = [
-        'overview'            => ['id' => 20, 'const' => '', 'sem' => true, 'inst' => false],
-        'admin'               => ['id' => 17, 'const' => '', 'sem' => true, 'inst' => false],
+        'overview'            => ['id' => 20, 'const' => '', 'sem' => true, 'inst' => true],
+        'admin'               => ['id' => 17, 'const' => '', 'sem' => true, 'inst' => true],
         'forum'               => ['id' => 0, 'const' => '', 'sem' => true, 'inst' => true],
         'documents'           => ['id' => 1, 'const' => '', 'sem' => true, 'inst' => true],
         'schedule'            => ['id' => 2, 'const' => '', 'sem' => true, 'inst' => false],
@@ -263,11 +263,13 @@ class Step00349 extends Migration
         $modules_list = [];
         $pos = 0;
         foreach ($this->registered_modules as $key => $val) {
-            $module = $sem_class->getSlotModule($key);
-            if ($sem_class->isModuleAllowed($module)) {
-                if (($modules & pow(2, $val['id'])) || $sem_class->isSlotMandatory($key)) {
-                    $modules_list[$pos] = $module;
-                    $pos++;
+            if ($val[$range_type === 'sem' ? 'sem' : 'inst']) {
+                $module = $sem_class->getSlotModule($key);
+                if ($sem_class->isModuleAllowed($module)) {
+                    if (($modules & pow(2, $val['id'])) || $sem_class->isSlotMandatory($key)) {
+                        $modules_list[$pos] = $module;
+                        $pos++;
+                    }
                 }
             }
         }
@@ -294,7 +296,8 @@ class OldSemClass implements ArrayAccess
         "scm",
         "wiki",
         "calendar",
-        "elearning_interface"
+        "elearning_interface",
+        "personal"
     ];
     protected static $core_modules = [
         "CoreOverview",
@@ -352,6 +355,8 @@ class OldSemClass implements ArrayAccess
             'admin'    => 'CoreAdmin'     // always available
         ];
         $slots = [
+            'overview'            => 'CoreOverview',
+            'admin'               => 'CoreAdmin',
             'forum'               => 'Blubber',
             'documents'           => 'CoreDocuments',
             'scm'                 => 'CoreScm',
@@ -360,15 +365,15 @@ class OldSemClass implements ArrayAccess
             'elearning_interface' => 'CoreElearningInterface',
             'personal'            => 'CorePersonal'
         ];
-        $modules = [
-            'CoreOverview' => ['activated' => 1, 'sticky' => 1],
-            'CoreAdmin'    => ['activated' => 1, 'sticky' => 1]
-        ];
-
+        $modules = [];
         foreach ($slots as $slot => $module) {
             $data[$slot] = $module;
             $modules[$module] = ['activated' => (int)$INST_MODULES[$type][$slot], 'sticky' => 0];
         }
+        $modules = array_merge($modules, [
+            'CoreOverview' => ['activated' => 1, 'sticky' => 1],
+            'CoreAdmin'    => ['activated' => 1, 'sticky' => 1]
+        ]);
         $data['modules'] = json_encode($modules);
 
         return new self($data);
