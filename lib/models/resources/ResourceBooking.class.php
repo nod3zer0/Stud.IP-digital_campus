@@ -730,12 +730,8 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                 if ($derived_resource->userHasPermission($this->booking_user, 'tutor', [$current_begin, $current_end])) {
                     //Sufficient permissions to delete bookings
                     //in the time frame.
-                    $delete_sql = '(begin BETWEEN :begin AND :end
-                        OR
-                        end BETWEEN :begin AND :end)
-                        AND NOT ((begin = :end) OR (end = :begin))
-                        AND
-                        resource_id = :resource_id ';
+                    $delete_sql = 'begin < :end AND end > :begin
+                        AND resource_id = :resource_id ';
                     $sql_params = [
                         'begin' => $current_begin->getTimestamp(),
                         'end' => $current_end->getTimestamp(),
@@ -767,12 +763,8 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         } else {
             $derived_resource = $this->resource->getDerivedClassInstance();
             if ($derived_resource->userHasPermission($this->booking_user, 'autor', [$real_begin, $end])) {
-                $delete_sql = '(begin BETWEEN :begin AND :end
-                    OR
-                    end BETWEEN :begin AND :end)
-                    AND NOT ((begin = :end) OR (end = :begin))
-                    AND
-                    resource_id = :resource_id ';
+                $delete_sql = 'begin < :end AND end > :begin
+                    AND resource_id = :resource_id  ';
                 $sql_params = [
                     'begin' => $real_begin->getTimestamp(),
                     'end' => $end->getTimestamp(),
