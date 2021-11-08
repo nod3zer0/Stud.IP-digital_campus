@@ -860,17 +860,10 @@ class Course_StudygroupController extends AuthenticatedController
 
         // get institutes
         $institutes   = StudygroupModel::getInstitutes();
-        $default_inst = Config::Get()->STUDYGROUP_DEFAULT_INST;
+        $default_inst = $this->flash['institute'] ?? Config::Get()->STUDYGROUP_DEFAULT_INST;
 
         // Nutzungsbedingungen
-        $terms = Config::Get()->STUDYGROUP_TERMS;
-
-        if ($this->flash['institute']) {
-            $default_inst = $this->flash['institute'];
-        }
-        if ($this->flash['terms']) {
-            $terms = $this->flash['terms'];
-        }
+        $terms = $this->flash['terms'] ?? Config::Get()->STUDYGROUP_TERMS;
 
         PageLayout::setTitle(_('Verwaltung studentischer Arbeitsgruppen'));
         Navigation::activateItem('/admin/config/studygroup');
@@ -910,7 +903,7 @@ class Course_StudygroupController extends AuthenticatedController
         if ($errors) {
             $this->flash['messages']  = ['error' => ['title' => 'Die Studiengruppen konnten nicht aktiviert werden!', 'details' => $errors]];
             $this->flash['institute'] = Request::get('institute');
-            $this->flash['terms']     = Request::get('terms');
+            $this->flash['terms']     = Request::i18n('terms');
         }
 
         if (!$errors) {
@@ -922,7 +915,7 @@ class Course_StudygroupController extends AuthenticatedController
 
             if (Request::get('institute')) {
                 $cfg->store('STUDYGROUP_DEFAULT_INST', Request::get('institute'));
-                $cfg->store('STUDYGROUP_TERMS', Request::get('terms'));
+                $cfg->store('STUDYGROUP_TERMS', Request::i18n('terms'));
                 PageLayout::postSuccess(_('Die Einstellungen wurden gespeichert!'));
             } else {
                 PageLayout::postError(_('Fehler beim Speichern der Einstellung!'));
