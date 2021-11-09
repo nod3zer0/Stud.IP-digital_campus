@@ -141,8 +141,8 @@
                     <label v-show="currentSource === 'studip_folder'">
                         <translate>Audio Aufnahmen zulassen</translate>
                         <select v-model="currentRecorderEnabled">
-                            <option value="true"><translate>Ja</translate></option>
-                            <option value="false"><translate>Nein</translate></option>
+                            <option :value="true"><translate>Ja</translate></option>
+                            <option :value="false"><translate>Nein</translate></option>
                         </select>
                     </label>
                 </form>
@@ -231,6 +231,7 @@ export default {
                             { type: 0, file_id: id, file_name: attributes.name },
                             true
                         ),
+                        mime_type: attributes['mime-type']
                     };
                 });
         },
@@ -259,7 +260,7 @@ export default {
             return this.block?.attributes?.payload?.recorder_enabled;
         },
         showRecorder() {
-            return this.currentRecorderEnabled === 'true';
+            return this.currentRecorderEnabled;
         },
         hasPlaylist() {
             return this.files.length > 0 && this.currentSource === 'studip_folder';
@@ -324,6 +325,7 @@ export default {
             updateBlock: 'updateBlockInContainer',
             companionWarning: 'companionWarning',
             companionSuccess: 'companionSuccess',
+            companionError: 'companionError',
             createFile: 'createFile',
         }),
         initCurrentData() {
@@ -383,8 +385,25 @@ export default {
             this.durationSeconds = this.$refs.audio.duration;
         },
         playAudio() {
-            this.$refs.audio.play();
-            this.playing = true;
+            const audio = this.$refs.audio;
+            let isSupported = 'unknown';
+            if (this.currentSource === 'studip_file') {
+                isSupported = audio.canPlayType(this.currentFile.mime_type);
+            }
+            if (this.currentSource === 'studip_folder') {
+                isSupported = audio.canPlayType(this.files[this.currentPlaylistItem].mime_type);
+            }
+            if (isSupported !== '') {
+                audio.play();
+                this.playing = true;
+            } else {
+                this.companionError({
+                    info: this.$gettext('Ihr Browser unterstützt dieses Audioformat leider nicht.')
+                });
+                if(this.hasPlaylist) {
+                    this.nextAudio();
+                }
+            }
         },
         pauseAudio() {
             this.$refs.audio.pause();
@@ -474,6 +493,7 @@ export default {
                         { type: 0, file_id: fileRef.id, file_name: fileRef.attributes.name },
                         true
                     ),
+                    mime_type: fileRef.attributes['mime-type']
                 });
             }
         },
@@ -481,13 +501,13 @@ export default {
             let view = this;
             navigator.mediaDevices.getUserMedia({audio: true}).then(_stream => {
                 let stream = _stream;
-                view.recorder = new MediaRecorder(stream);
+                view.recorder = new MediaRecorder(stream, {mimeType: 'audio/ogg; codecs=opus'});
                 view.userRecorderEnabled = true;
 
                 view.recorder.ondataavailable = e => {
                     view.chunks.push(e.data);
                     if(view.recorder.state == 'inactive') {
-                        this.blob = new Blob(view.chunks, {type: 'audio/mpeg' });
+                        this.blob = new Blob(view.chunks, {type: 'audio/ogg; codecs=opus' });
                     }
                 };
                 view.recorder.start();
@@ -527,7 +547,7 @@ export default {
             let user = this.usersById({id: this.userId});
             let file = {};
             file.attributes = {};
-            file.attributes.name = (user.attributes["formatted-name"]).replace(/\s+/g, '_') + '.mp3';
+            file.attributes.name = (user.attributes["formatted-name"]).replace(/\s+/g, '_') + '.ogg';
             let fileObj = false;
             try {
                  fileObj = await this.createFile({
