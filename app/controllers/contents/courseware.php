@@ -200,18 +200,32 @@ class Contents_CoursewareController extends AuthenticatedController
 
         $sem_courses  = MyRealmModel::getPreparedCourses($sem_key, $params);
 
-        $this->elements = [];
+        $this->semesters = [];
 
-        foreach ((array) $sem_courses as $sem_course) {
-            $course = reset($sem_course);
-            $element = StructuralElement::findOneBySQL('range_id = ? AND range_type = ?', array($course['seminar_id'], 'course'));
-            if($element) {
-                $element['payload'] = json_decode($element['payload'], true);
-                array_push($this->elements, $element);
+        if ($sem_courses) {
+            $i = 0;
+            foreach ($sem_courses as $sem) {
+                $this->semesters[$i]['semester_name'] = array_values($sem)[0]['start_semester'];
+                $this->semesters[$i]['coursewares'] = [];
+                $this->semesters[$i]['empty_courses'] = [];
+
+                foreach ($sem as $cid => $course) {
+                    $element = StructuralElement::getCoursewareCourse($cid);
+                    if($element) {
+                        $element['payload'] = json_decode($element['payload'], true);
+                        array_push($this->semesters[$i]['coursewares'], $element);
+                    } else {
+                        array_push($this->semesters[$i]['empty_courses'], $course);
+                    }
+                }
+                $i++;
             }
+        } else {
+            $semester = Semester::find($sem_key);
+            $this->semesters[0]['semester_name'] = $semester->name;
+            $this->semesters[0]['coursewares'] = [];
+            $this->semesters[0]['empty_courses'] = [];
         }
-
-        $this->empty_courses = empty($sem_courses);
     }
 
 
