@@ -1,6 +1,6 @@
 <div class="cw-content-projects">
     <? foreach($semesters as $semester) :?>
-        <h2><?= $semester['semester_name'] ?></h2>
+        <h2><?= htmlReady($semester['semester_name']) ?></h2>
         <? if (!empty($semester['coursewares'])): ?>
         <ul class="cw-tiles">
             <? foreach($semester['coursewares'] as $element) :?>
