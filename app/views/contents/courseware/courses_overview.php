@@ -1,9 +1,27 @@
 <div class="cw-content-projects">
+    <? if (empty($sem_courses)) : ?>
+        <? if (!$all_semesters) : ?>
+        <h2>
+            <?= htmlReady($semesters[0]->name) ?>
+            <? if ($current_semester->id == $semesters[0]->id) : ?>
+                (<?= _('Aktuelles Semester') ?> )
+            <? endif ?>
+        </h2>
+        <? endif ?>
+
+        <?= MessageBox::info(_('Keine der Veranstaltungen auf die sie Zugriff '
+            . 'haben hat eine Courseware mit Inhalten.')); ?>
+    <? else : ?>
     <? foreach($semesters as $semester) :?>
-        <h2><?= htmlReady($semester['semester_name']) ?></h2>
-        <? if (!empty($semester['coursewares'])): ?>
+        <? if (!empty($sem_courses[$semester->id]['coursewares'])): ?>
+        <h2>
+            <?= htmlReady($semester->name) ?>
+            <? if ($current_semester->id == $semester->id) : ?>
+                (<?= _('Aktuelles Semester') ?> )
+            <? endif ?>
+        </h2>
         <ul class="cw-tiles">
-            <? foreach($semester['coursewares'] as $element) :?>
+            <? foreach($sem_courses[$semester->id]['coursewares'] as $element) :?>
                 <li class="tile <?= htmlReady($element['payload']['color'])?>">
                     <a href="<?= URLHelper::getLink('dispatch.php/course/courseware/?cid='.$element['range_id'].'#/structural_element/'.$element['id']) ?>">
                         <div class="preview-image" style="background-image: url(<?= htmlReady($element->getImageUrl()) ?>)" ></div>
@@ -23,11 +41,6 @@
             <? endforeach; ?>
         </ul>
         <? endif; ?>
-        <? if (empty($semester['coursewares']) && !empty($empty_courses)): ?>
-            <?= MessageBox::info(_('Es wurden noch keine Lernunterlagen angelegt.')); ?>
-        <? endif; ?>
-        <? if (empty($semester['coursewares']) && empty($empty_courses)): ?>
-            <?= MessageBox::info(_('Es wurden keine Veranstaltungen gefunden.')); ?>
-        <? endif; ?> 
     <? endforeach; ?>
+    <? endif; ?>
 </div>

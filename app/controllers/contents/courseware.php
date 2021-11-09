@@ -188,8 +188,10 @@ class Contents_CoursewareController extends AuthenticatedController
         if ($sem_key === '0' || $sem_key === null) {
             $sem_key = 'all';
             $this->all_semesters = true;
+            $this->semesters = Semester::getAll();
         } else {
             $this->all_semesters = false;
+            $this->semesters = [Semester::find($sem_key)];
         }
         $params = [
             'order_by'            => null,
@@ -198,34 +200,107 @@ class Contents_CoursewareController extends AuthenticatedController
             'deputies_enabled'    => Config::get()->DEPUTIES_ENABLE,
         ];
 
-        $sem_courses  = MyRealmModel::getPreparedCourses($sem_key, $params);
+        $this->sem_courses  = $this->getCoursewareCourses($sem_key);
+    }
 
-        $this->semesters = [];
+    /**
+     * Return list of coursewares grouped by semester_id
+     *
+     * @param  string $sem_key  currently selected semester or all (for all semesters)
+     *
+     * @return array
+     */
+    private function getCoursewareCourses($sem_key)
+    {
+        $this->current_semester = Semester::findCurrent();
 
-        if ($sem_courses) {
-            $i = 0;
-            foreach ($sem_courses as $sem) {
-                $this->semesters[$i]['semester_name'] = array_values($sem)[0]['start_semester'];
-                $this->semesters[$i]['coursewares'] = [];
-                $this->semesters[$i]['empty_courses'] = [];
+        $courses = Course::findThru($this->user_id, [
+            'thru_table'        => 'seminar_user',
+            'thru_key'          => 'user_id',
+            'thru_assoc_key'    => 'seminar_id',
+            'assoc_foreign_key' => 'seminar_id'
+        ]);
 
-                foreach ($sem as $cid => $course) {
-                    $element = StructuralElement::getCoursewareCourse($cid);
-                    if($element) {
-                        $element['payload'] = json_decode($element['payload'], true);
-                        array_push($this->semesters[$i]['coursewares'], $element);
+        if (Config::get()->DEPUTIES_ENABLE) {
+            $deputy_courses = Deputy::findDeputyCourses($GLOBALS['user']->id)->pluck('course');
+            if (!empty($deputy_courses)) {
+                $courses = array_merge($courses, $deputy_courses);
+            }
+        }
+
+        $courses = new SimpleCollection($courses);
+
+        if (!Config::get()->MY_COURSES_ENABLE_STUDYGROUPS) {
+            $courses = $courses->filter(function ($a) {
+                return !$a->isStudygroup();
+            });
+        }
+
+        if ($sem_key != 'all') {
+            $semester = Semester::find($sem_key);
+
+            $courses = $courses->filter(function ($a) use ($semester) {
+                if ($a->isInSemester($semester)) {
+                    return true;
+                }
+                return false;
+            });
+
+            $coursewares = [];
+
+            foreach ($courses as $course) {
+                $element = StructuralElement::getCoursewareCourse($course->id);
+                if (!empty($element) && $this->isCoursewareEnabled($course->id)) {
+                    $element['payload'] = json_decode($element['payload'], true);
+                    $coursewares[] = $element;
+                }
+            }
+
+            if (empty($coursewares)) {
+                return [];
+            }
+
+            return [$semester->id => [
+                'semester_name' => $semester->name,
+                'coursewares'   => $coursewares
+            ]];
+        } else {
+            $all_semesters    = Semester::getAll();
+            $sem_courses      = [];
+
+            foreach ($courses as $course) {
+                $element = StructuralElement::getCoursewareCourse($course->id);
+                if (!empty($element) && $this->isCoursewareEnabled($course->id)) {
+                    $element['payload'] = json_decode($element['payload'], true);
+
+                    if ($course->duration_time == -1) {
+                        $sem_courses[$this->current_semester->id]['coursewares'][] = $element;
                     } else {
-                        array_push($this->semesters[$i]['empty_courses'], $course);
+                        $end_semester = $course->getEndSemester();
+                        $sem_courses[$end_semester->id]['coursewares'][] = $element;
                     }
                 }
-                $i++;
             }
-        } else {
-            $semester = Semester::find($sem_key);
-            $this->semesters[0]['semester_name'] = $semester->name;
-            $this->semesters[0]['coursewares'] = [];
-            $this->semesters[0]['empty_courses'] = [];
+
+            return $sem_courses;
         }
+    }
+
+    /**
+     * Returns true if the courseware module is enabled for the passed course
+     *
+     * @param  string  $course_id  the course to check
+     * @return boolean             true if courseware is enabled, false otherwise
+     */
+    private function isCoursewareEnabled($course_id)
+    {
+        $studip_module = PluginManager::getInstance()->getPlugin('CoursewareModule');
+
+        if (!$studip_module || !$studip_module->isActivated($course_id)) {
+            return false;
+        }
+
+        return true;
     }
 
 
