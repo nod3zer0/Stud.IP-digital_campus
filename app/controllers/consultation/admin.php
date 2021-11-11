@@ -28,7 +28,7 @@ class Consultation_AdminController extends ConsultationController
         $this->setupSidebar($action, $this->range_config);
 
         // Show information about which user is edited when a deputy edits
-        if ($this->range instanceof User && Deputy::isDeputy($GLOBALS['user']->id, $this->range->id, true)) {
+        if ($this->range instanceof User && !$this->isOwnProfile()) {
             $message = sprintf(
                 _('Daten von: %1$s (%2$s), Status: %3$s'),
                 htmlReady($this->range->getFullName()),
@@ -735,7 +735,7 @@ class Consultation_AdminController extends ConsultationController
         }
 
         foreach ($slot_ids as $slot_id) {
-            list($block_id, $slot_id) = explode('-', $slot_id);
+            [$block_id, $slot_id] = explode('-', $slot_id);
             try {
                 if ($slot = $this->loadSlot($block_id, $slot_id)) {
                     $slots[$slot->id] = $slot;
@@ -830,5 +830,10 @@ class Consultation_AdminController extends ConsultationController
         return $this->range instanceof User
              ? $this->range->getConfiguration()
              : $GLOBALS['user']->cfg;
+    }
+
+    private function isOwnProfile()
+    {
+        return $this->range->username === $GLOBALS['user']->username;
     }
 }

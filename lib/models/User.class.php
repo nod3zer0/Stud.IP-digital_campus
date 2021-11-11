@@ -1413,6 +1413,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             $user_id = $GLOBALS['user']->id;
         }
         return $user_id === $this->user_id
+            || $GLOBALS['perm']->have_profile_perm('admin', $this->user_id)
             || Deputy::isDeputy($user_id, $this->user_id, true)
             || self::find($user_id)->perms === 'root';
     }
