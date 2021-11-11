@@ -17,14 +17,15 @@
 
 class CourseMemberAdmission extends AdmissionRule
 {
+    const MODE_MUST_BE_IN_COURSES = 0;
+    const MODE_MAY_NOT_BE_IN_COURSES = 1;
     // --- ATTRIBUTES ---
 
     /**
      * End of course admission.
      */
-    public $mandatory_course_id = '';
+    public $courses_to_add = '[]';
     public $modus = '';
-    public $default_message1 = '';
 
     // --- OPERATIONS ---
 
@@ -33,11 +34,10 @@ class CourseMemberAdmission extends AdmissionRule
      *
      * @param  String ruleId
      */
-    public function __construct($ruleId='', $courseSetId = '')
+    public function __construct($ruleId = '', $courseSetId = '')
     {
         parent::__construct($ruleId, $courseSetId);
-        $this->default_message = _('Sie sind nicht in der Veranstaltung "%s" eingetragen.');
-        $this->default_message1 = _('Sie dürfen nicht in der Veranstaltung "%s" eingetragen sein.');
+
         if ($ruleId) {
             $this->load();
         } else {
@@ -48,26 +48,31 @@ class CourseMemberAdmission extends AdmissionRule
     /**
      * Deletes the admission rule and all associated data.
      */
-    public function delete() {
+    public function delete()
+    {
         parent::delete();
+
         // Delete rule data.
-        $stmt = DBManager::get()->prepare("DELETE FROM `coursememberadmissions`
-            WHERE `rule_id`=?");
-        $stmt->execute([$this->id]);
+        DBManager::get()->execute(
+            "DELETE FROM `coursememberadmissions` WHERE `rule_id` = ?",
+            [$this->id]
+        );
     }
 
     /**
      * Gets some text that describes what this AdmissionRule (or respective
      * subclass) does.
      */
-    public static function getDescription() {
+    public static function getDescription()
+    {
         return _("Anmelderegeln dieses Typs legen eine Veranstaltung fest, in der die Nutzer bereits eingetragen sein müssen, oder in der sie nicht eingetragen sein dürfen, um sich zu Veranstaltungen des Anmeldesets anmelden zu können.");
     }
 
     /**
      * Return this rule's name.
      */
-    public static function getName() {
+    public static function getName()
+    {
         return _("Veranstaltungsbezogene Anmeldung");
     }
 
@@ -76,24 +81,24 @@ class CourseMemberAdmission extends AdmissionRule
      *
      * @return String
      */
-    public function getTemplate() {
+    public function getTemplate()
+    {
         // Open generic admission rule template.
         $tpl = $GLOBALS['template_factory']->open('admission/rules/configure');
         $tpl->set_attribute('rule', $this);
-        $factory = new Flexi_TemplateFactory(dirname(__FILE__).'/templates/');
-        // Now open specific template for this rule and insert base template.
 
-        $tpl2 = $factory->open('configure');
-        $tpl2->set_attribute('rule', $this);
-        $tpl2->set_attribute('mandatory_course', Course::find($this->mandatory_course_id));
-        $tpl2->set_attribute('tpl', $tpl->render());
-        return $tpl2->render();
+        return $this->getTemplateFactory()->render('configure', [
+            'rule'    => $this,
+            'tpl'     => $tpl->render(),
+            'courses' => $this->getDecodedCourses(),
+        ]);
     }
 
     /**
      * Helper function for loading rule definition from database.
      */
-    public function load() {
+    public function load()
+    {
         // Load data.
         $stmt = DBManager::get()->prepare("SELECT *
             FROM `coursememberadmissions` WHERE `rule_id`=? LIMIT 1");
@@ -102,8 +107,8 @@ class CourseMemberAdmission extends AdmissionRule
             $this->message = $current['message'];
             $this->startTime = $current['start_time'];
             $this->endTime = $current['end_time'];
-            $this->mandatory_course_id = $current['course_id'];
-            $this->modus = $current['modus'];
+            $this->courses_to_add = $current['courses'];
+            $this->modus = (int) $current['modus'];
         }
     }
 
@@ -114,15 +119,27 @@ class CourseMemberAdmission extends AdmissionRule
      * @param  String courseId
      * @return Array
      */
-    public function ruleApplies($userId, $courseId) {
+    public function ruleApplies($userId, $courseId)
+    {
         $errors = [];
         if ($this->checkTimeFrame()) {
-            $user = User::find($userId);
-            $is_member = $user->course_memberships->findOneBy('seminar_id', $this->mandatory_course_id);
-            if ((!$this->modus && !$is_member) || ($this->modus && $is_member)) {
-                $errors[] = $this->getMessage(Course::find($this->mandatory_course_id));
+            $courses = $this->getDecodedCourses();
+            foreach ($courses as $course) {
+                $is_member = CourseMember::exists([$course->id, $userId]);
+
+                if (($this->modus == self::MODE_MUST_BE_IN_COURSES && !$is_member)
+                    || ($this->modus == self::MODE_MAY_NOT_BE_IN_COURSES && $is_member)
+                ) {
+                    $errors[] = $this->getMessage($course);
+                }
+            }
+
+            // mode: "Mitgliedschaft ist in mindestens einer dieser Veranstaltungen notwendig"
+            if ($this->modus == self::MODE_MUST_BE_IN_COURSES && count($errors) < count($courses)) {
+                $errors = [];
             }
         }
+
         return $errors;
     }
 
@@ -134,24 +151,27 @@ class CourseMemberAdmission extends AdmissionRule
      * @param Array $data
      * @return AdmissionRule This object.
      */
-    public function setAllData($data) {
+    public function setAllData($data)
+    {
         parent::setAllData($data);
-        $this->mandatory_course_id = $data['mandatory_course_id'] ?: $data['mandatory_course_id_old'];
-        $this->modus = $data['modus'];
+
+        $this->modus = (int) $data['modus'];
+        $this->courses_to_add = json_encode(array_keys($data['courses_to_add']));
         return $this;
-     }
+    }
 
     /**
      * Store rule definition to database.
      */
-    public function store() {
+    public function store()
+    {
         // Store data.
         $stmt = DBManager::get()->prepare("INSERT INTO `coursememberadmissions`
-            (`rule_id`, `message`, `course_id`, `modus`, `start_time`,
+            (`rule_id`, `message`, `courses`, `modus`, `start_time`,
             `end_time`, `mkdate`, `chdate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE `start_time`=VALUES(`start_time`),
-            `end_time`=VALUES(`end_time`),message=VALUES(message),course_id=VALUES(course_id),modus=VALUES(modus), `chdate`=VALUES(`chdate`)");
-        $stmt->execute([$this->id, $this->message,$this->mandatory_course_id, (int)$this->modus, (int)$this->startTime,
+            `end_time`=VALUES(`end_time`),message=VALUES(message),courses=VALUES(courses),modus=VALUES(modus), `chdate`=VALUES(`chdate`)");
+        $stmt->execute([$this->id, $this->message, $this->courses_to_add, (int)$this->modus, (int)$this->startTime,
             (int)$this->endTime,  time(), time()]);
     }
 
@@ -162,10 +182,11 @@ class CourseMemberAdmission extends AdmissionRule
      */
     public function toString()
     {
-        $factory = new Flexi_TemplateFactory(dirname(__FILE__).'/templates/');
-        $tpl = $factory->open('info');
-        $tpl->set_attribute('rule', $this);
-        return $tpl->render();
+        return $this->getTemplateFactory()->render('info', [
+            'courses' => $this->getDecodedCourses(),
+            'rule'    => $this,
+            'modus'   => $this->modus,
+        ]);
     }
 
     /**
@@ -178,7 +199,7 @@ class CourseMemberAdmission extends AdmissionRule
     public function validate($data)
     {
         $errors = parent::validate($data);
-        if (!($data['mandatory_course_id'] || $data['mandatory_course_id_old'])) {
+        if (!$data['courses_to_add']) {
             $errors[] = _('Bitte wählen Sie eine Veranstaltung aus.');
         }
         return $errors;
@@ -187,6 +208,7 @@ class CourseMemberAdmission extends AdmissionRule
     public function getMessage($course = null)
     {
         $message = parent::getMessage();
+
         if ($course) {
             return sprintf($message, $course->getFullname('number-name'));
         } else {
@@ -194,4 +216,44 @@ class CourseMemberAdmission extends AdmissionRule
         }
     }
 
+    private function getDecodedCourses()
+    {
+        $decoded_courses = json_decode($this->courses_to_add, true);
+        if (!$decoded_courses) {
+            return [];
+        }
+        return Course::findMany($decoded_courses);
+    }
+
+    public function getValidityPeriod(): string
+    {
+        if ($this->getStartTime() && $this->getEndTime()) {
+            return sprintf(
+                _('Diese Regel gilt von %s bis %s.'),
+                strftime('%d.%m.%Y %H:%M', $this->getStartTime()),
+                strftime('%d.%m.%Y %H:%M', $this->getEndTime())
+            );
+        }
+
+        if ($this->getStartTime() && !$this->getEndTime()) {
+            return sprintf(
+                _('Diese Regel gilt ab %s.'),
+                strftime('%d.%m.%Y %H:%M', $this->getStartTime())
+            );
+        }
+
+        if (!$this->getStartTime() && $this->getEndTime()) {
+            return sprintf(
+                _('Diese Regel gilt bis %s.'),
+                strftime('%d.%m.%Y %H:%M', $this->getEndTime())
+            );
+        }
+
+        return '';
+    }
+
+    private function getTemplateFactory(): Flexi_TemplateFactory
+    {
+        return new Flexi_TemplateFactory(__DIR__ . '/templates/');
+    }
 }

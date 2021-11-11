@@ -1,21 +1,23 @@
-<?php
-if ($rule->getStartTime() && $rule->getEndTime()) {
-    echo sprintf(_('Diese Regel gilt von %s bis %s.'), strftime('%d.%m.%Y %H:%M',
-        $rule->getStartTime()), strftime('%d.%m.%Y %H:%M', $rule->getEndTime())).'<br/>';
-} else if ($rule->getStartTime() && !$rule->getEndTime()) {
-    echo sprintf(_('Diese Regel gilt ab %s.'), strftime('%d.%m.%Y %H:%M', $rule->getStartTime())).'<br/>';
-} else if (!$rule->getStartTime() && $rule->getEndTime()) {
-    echo sprintf(_('Diese Regel gilt bis %s.'), strftime('%d.%m.%Y %H:%M', $rule->getEndTime())).'<br/>';
-}
-$course = Course::find($rule->mandatory_course_id);
-if ($course) {
-echo sprintf(!$rule->modus ?
-    _('Die Anmeldung ist nur Teilnehmenden der Veranstaltung: <b>%s</b> %s erlaubt.') :
-    _('Die Anmeldung ist für Teilnehmende der Veranstaltung: <b>%s</b> %s verboten.'),
-    $course->getFullname('number-name-semester'), '<a href="'.URLHelper::getScriptLink('dispatch.php/course/details/index/' . $course->id).'"  data-dialog>'.
-        Icon::create(
-            'info-circle',
-            Icon::ROLE_INACTIVE,
-            ['title' =>_('Veranstaltungsdetails aufrufen')]
-        ).'</a>');
-}
+<? if ($rule->getValidityPeriod()): ?>
+    <?= $rule->getValidityPeriod() ?><br>
+<? endif; ?>
+
+<? if ($modus == CourseMemberAdmission::MODE_MAY_NOT_BE_IN_COURSES): ?>
+    <?= _('Die Anmeldung ist für Teilnehmende einer der folgenden Veranstaltungen nicht erlaubt:') ?>
+<? elseif ($modus == CourseMemberAdmission::MODE_MUST_BE_IN_COURSES): ?>
+    <?= _('Die Anmeldung ist nur für Teilnehmende mindestens einer der folgenden Veranstaltungen erlaubt:') ?>
+<? endif; ?>
+<br>
+
+<ul>
+<? foreach ($courses as $course): ?>
+    <li>
+        <strong><?= htmlReady($course->getFullname('number-name-semester')) ?></strong>
+        <a href="<?= URLHelper::getLink('dispatch.php/course/details/index/' . $course->id) ?>"  data-dialog>
+            <?= Icon::create('info-circle')->asImg([
+                'title' => _('Veranstaltungsdetails aufrufen')
+            ]) ?>
+        </a>
+    </li>
+<? endforeach; ?>
+</ul>
