@@ -1227,12 +1227,20 @@ class Resources_RoomRequestController extends AuthenticatedController
                 $this->room_availability[$room->id][$metadate_id] = $metadate_availability;
             }
 
-            $this->metadate_availability_share[$room->id][$metadate_id] =
-                ($this->amount_of_metadate_dates[$room->id][$metadate_id] - $this->unavailable_metadate_dates[$room->id][$metadate_id])
-                / $this->amount_of_metadate_dates[$room->id][$metadate_id];
+            if ($this->amount_of_metadate_dates[$room->id][$metadate_id] == 0) {
+                $this->metadate_availability_share[$room->id][$metadate_id] = 0.0;
+            } else {
+                $this->metadate_availability_share[$room->id][$metadate_id] =
+                    ($this->amount_of_metadate_dates[$room->id][$metadate_id] - $this->unavailable_metadate_dates[$room->id][$metadate_id])
+                    / $this->amount_of_metadate_dates[$room->id][$metadate_id];
+            }
         }
-        $this->room_availability_share[$room->id] =
-            ($this->amount_of_dates[$room->id] - $this->unavailable_dates[$room->id]) / $this->amount_of_dates[$room->id];
+        if ($this->amount_of_dates[$room->id] == 0) {
+            $this->room_availability_share[$room->id] = 0.0;
+        } else {
+            $this->room_availability_share[$room->id] =
+                ($this->amount_of_dates[$room->id] - $this->unavailable_dates[$room->id]) / $this->amount_of_dates[$room->id];
+        }
     }
 
 
