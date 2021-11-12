@@ -88,7 +88,7 @@
             <? $i = 0 ?>
             <? foreach($data['intervals'] as $interval) : ?>
                 <?
-                $available = $metadate_availability_share[$room->id][$metadate_id] >= 1.0;
+                $available = $room_availability[$room->id][$metadate_id][$i];
                 $range_index = $interval['range'] . '_' . $interval['range_id'];
                 $room_radio_name = 'selected_rooms[' . $range_index . ']';
                 ?>
