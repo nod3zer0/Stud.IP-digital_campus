@@ -1,5 +1,6 @@
 .contents-widget {
     margin: 10px;
+
     .content-items {
         grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
         grid-gap: 5px;
@@ -73,18 +74,21 @@
                 }
             }
 
-            &:hover {
-                background-color: $white;
-                color: unset;
+        }
 
+        &:hover {
+            background-color: $white;
+            color: unset;
+
+            .content-item-link {
                 .content-item-text {
                     .content-item-title {
                         color: $red;
                     }
                 }
-
             }
         }
+
     }
 }
 
