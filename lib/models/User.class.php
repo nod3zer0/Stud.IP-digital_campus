@@ -151,7 +151,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         ];
         $config['has_many']['consultation_blocks'] = [
             'class_name'        => ConsultationBlock::class,
-            'assoc_foreign_key' => 'teacher_id',
+            'assoc_foreign_key' => 'range_id',
             'on_delete'         => 'delete',
         ];
         $config['has_many']['consultation_bookings'] = [
