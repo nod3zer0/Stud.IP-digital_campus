@@ -939,12 +939,7 @@ export const actions = {
             include: 'user',
         };
 
-        return dispatch('loadRelatedPaginated', {
-            type: 'course-block-feedback',
-            parent,
-            relationship,
-            options
-        });
+        return dispatch('courseware-block-feedback/loadRelated', { parent, relationship, options }, { root: true });
     },
 
     async createFeedback({ dispatch }, { blockId, feedback }) {
