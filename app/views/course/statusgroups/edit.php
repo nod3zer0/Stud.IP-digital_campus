@@ -23,7 +23,7 @@
             </label>
         <?php elseif ($group->hasFolder()) : ?>
             <label>
-                <input type="checkbox" checked disabled>
+                <input type="checkbox" name="makefolder" value="1" checked>
                 <?= _('Zu dieser Gruppe gehört ein Dateiordner.')  ?>
             </label>
         <?php endif ?>
