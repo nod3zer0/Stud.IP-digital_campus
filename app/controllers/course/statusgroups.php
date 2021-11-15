@@ -518,7 +518,7 @@ class Course_StatusgroupsController extends AuthenticatedController
                 $endtime = 0;
             }
         }
-        $statusgruppe = Statusgruppen::find($group_id);
+        $statusgruppe = new Statusgruppen($group_id);
         $position = $statusgruppe->position;
         $group = Statusgruppen::createOrUpdate(
             $group_id,
