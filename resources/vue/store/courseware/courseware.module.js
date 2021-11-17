@@ -803,7 +803,7 @@ export const actions = {
         do {
             const optionsWithPages = {
                 ...options,
-                'page[offset]': offset++,
+                'page[offset]': offset,
                 'page[limit]': limit,
             };
             await dispatch(
@@ -816,6 +816,7 @@ export const actions = {
                 },
                 { root: true }
             );
+            offset += limit;
         } while (rootGetters[`${type}/all`].length < rootGetters[`${type}/lastMeta`].page.total);
     },
 
