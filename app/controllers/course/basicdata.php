@@ -621,7 +621,7 @@ class Course_BasicdataController extends AuthenticatedController
                 if ($deputies_enabled) {
                     // Check whether chosen person is set as deputy
                     // -> delete deputy entry.
-                    $deputy = Deputy::find([$dozent, $course_id]);
+                    $deputy = Deputy::find([$course_id, $dozent]);
                     if ($deputy) {
                         $deputy->delete();
                     }
@@ -702,12 +702,12 @@ class Course_BasicdataController extends AuthenticatedController
             PageLayout::postError(_('Sie dürfen sich nicht selbst aus der Veranstaltung austragen.'));
         } else {
             $sem = Seminar::getInstance($course_id);
-            $deputy = Deputy::find([$deputy_id, $course_id]);
+            $deputy = Deputy::find([$course_id, $deputy_id]);
             if ($deputy && $deputy->delete()) {
                 // Remove user from subcourses as well.
-                if($sem->children) {
+                if (count($sem->children)) {
                     $children_ids = $sem->children->pluck('seminar_id');
-                    Deputy::deleteBySQL('user_id = ? AND range_id IN (?)', [$children_ids]);
+                    Deputy::deleteBySQL('user_id = ? AND range_id IN (?)', [$deputy_id, $children_ids]);
                 }
 
                 PageLayout::postSuccess(sprintf(
@@ -850,8 +850,8 @@ class Course_BasicdataController extends AuthenticatedController
                 $dozent->status = 'dozent';
                 $dozent->comment = '';
                 if ($dozent->store()) {
-                    $deputy = Deputy::find([$GLOBALS['user']->id, $course_id]);
-                    if($deputy) {
+                    $deputy = Deputy::find([$course_id, $GLOBALS['user']->id]);
+                    if ($deputy) {
                         $deputy->delete();
                     }
                     PageLayout::postSuccess(sprintf(_('Sie wurden als %s eingetragen.'),
