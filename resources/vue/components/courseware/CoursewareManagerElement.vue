@@ -21,9 +21,8 @@
                 </header>
             </div>
             <courseware-collapsible-box
-                v-if="canRead"
-                :open="true" 
-                :title="$gettext('Abschnitt')" 
+                :open="true"
+                :title="$gettext('Abschnitt')"
                 class="cw-manager-element-containers"
             >
                 <div v-if="canSortContainers">
@@ -161,8 +160,9 @@ export default {
     },
     computed: {
         ...mapGetters({
-            structuralElementById: 'courseware-structural-elements/byId',
+            childrenById: 'courseware-structure/children',
             containerById: 'courseware-containers/byId',
+            structuralElementById: 'courseware-structural-elements/byId',
         }),
         isCurrent() {
             return this.type === 'current';
@@ -189,27 +189,33 @@ export default {
                 return false;
             }
         },
-        canRead() {
-            if (this.currentElement.attributes) {
-                return this.currentElement.attributes['can-read'];
-            } else {
-                return false;
-            }
-        },
         breadcrumb() {
-            if(this.currentElement.relationships) {
-                let view = this;
-                let ancestors = this.currentElement.relationships.ancestors.data;
-                let ancestorElements = [];
-                if(ancestors) {
-                    ancestors.forEach((element) => {
-                        ancestorElements.push(view.structuralElementById({ id: element.id }));
-                    });
-                }
-                return ancestorElements;
-            } else {
+            if (!this.currentElement) {
                 return [];
             }
+
+            const finder = (parent) => {
+                const parentId = parent.relationships?.parent?.data?.id;
+                if (!parentId) {
+                    return null;
+                }
+                const element = this.structuralElementById({id: parentId});
+                if (!element) {
+                    console.error("CoursewareManagerElement#breadcrumb: Could not find parent by ID.");
+                }
+
+                return element;
+            };
+
+            const visitAncestors = function* (node) {
+                const parent = finder(node);
+                if (parent) {
+                    yield parent;
+                    yield *visitAncestors(parent);
+                }
+            };
+
+            return [...visitAncestors(this.currentElement)].reverse()
         },
         elementTitle() {
             if (this.currentElement.attributes) {
@@ -265,19 +271,9 @@ export default {
                 return [];
             }
 
-            if(this.currentElement.relationships) {
-                let view = this;
-                let children = this.currentElement.relationships.children.data;
-                let childElements = [];
-                children.forEach((element) => {
-                    childElements.push(view.structuralElementById({ id: element.id }));
-                });
-
-                return childElements;
-            } else {
-                return [];
-            }
-
+            return this.childrenById(this.currentElement.id)
+                .map((id) => this.structuralElementById({ id }))
+                .filter(Boolean);
         },
         filingData() {
             return this.$store.getters.filingData;
@@ -313,7 +309,7 @@ export default {
                 let element = data.element;
                 if (source === 'self') {
                     element.relationships.parent.data.id = this.filingData.parentItem.id;
-                    element.attributes.position = this.filingData.parentItem.relationships.children.data.length;
+                    element.attributes.position = this.childrenById(this.filingData.parentItem.id).length;
                     await this.lockObject({ id: element.id, type: 'courseware-structural-elements' });
                     await this.updateStructuralElement({
                         element: element,

@@ -1,18 +1,45 @@
 <template>
     <div class="cw-tree">
         <ul class="cw-tree-root-list">
-            <courseware-tree-item class="cw-tree-item" :item="treeData"></courseware-tree-item>
+            <courseware-tree-item
+                class="cw-tree-item"
+                :element="rootElement"
+                :currentElement="currentElement"
+            ></courseware-tree-item>
         </ul>
     </div>
 </template>
 
 <script>
 import CoursewareTreeItem from './CoursewareTreeItem.vue';
+import { mapGetters } from 'vuex';
+
 export default {
     components: { CoursewareTreeItem },
     name: 'courseware-tree',
-    props: {
-        treeData: Object,
+    computed: {
+        ...mapGetters({
+            courseware: 'courseware',
+            relatedStructuralElement: 'courseware-structural-elements/related',
+            structuralElementById: 'courseware-structural-elements/byId',
+        }),
+        currentElement() {
+            const id = this.$route?.params?.id;
+            if (!id) {
+                return null;
+            }
+
+            return this.structuralElementById({ id }) ?? null;
+        },
+
+        rootElement() {
+            const root = this.relatedStructuralElement({
+                parent: { id: this.courseware.id, type: this.courseware.type },
+                relationship: 'root',
+            });
+
+            return root;
+        },
     },
 };
 </script>

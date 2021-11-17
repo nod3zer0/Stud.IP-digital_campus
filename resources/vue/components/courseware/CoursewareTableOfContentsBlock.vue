@@ -45,9 +45,9 @@
                                     <p>{{ child.attributes.payload.description }}</p>
                                 </div>
                                 <footer>
-                                    {{ child.relationships.children.data.length }}
-                                    <translate 
-                                        :translate-n="child.relationships.children.data.length" 
+                                    {{ countChildren }}
+                                    <translate
+                                        :translate-n="countChildren"
                                         translate-plural="Seiten"
                                     >
                                        Seite
@@ -101,23 +101,17 @@ export default {
     },
     computed: {
         ...mapGetters({
+            childrenById: 'courseware-structure/children',
             structuralElementById: 'courseware-structural-elements/byId',
         }),
         structuralElement() {
             return this.structuralElementById({ id: this.$route.params.id });
         },
         childElements() {
-            let view = this;
-            let children = this.structuralElement.relationships.children.data;
-            let childElements = [];
-            children.forEach((element) => {
-                let childElement = view.structuralElementById({ id: element.id });
-                if (childElement.attributes['can-read']) {
-                    childElements.push(childElement);
-                }
-            });
-
-            return childElements;
+            return this.childrenById(this.structuralElement.id).map((id) => this.structuralElementById({ id }));
+        },
+        countChildren() {
+            return this.childrenById(this.structuralElement.id).length;
         },
         title() {
             return this.block?.attributes?.payload?.title;

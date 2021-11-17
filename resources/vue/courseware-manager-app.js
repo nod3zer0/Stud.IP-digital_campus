@@ -1,4 +1,5 @@
 import CoursewareModule from './store/courseware/courseware.module';
+import CoursewareStructureModule from './store/courseware/structure.module';
 import ManagerApp from './components/courseware/ManagerApp.vue';
 import Vuex from 'vuex';
 import axios from 'axios';
@@ -19,6 +20,7 @@ const mountApp = (STUDIP, createApp, element) => {
     const store = new Vuex.Store({
         modules: {
             courseware: CoursewareModule,
+            'courseware-structure': CoursewareStructureModule,
             ...mapResourceModules({
                 names: [
                     'courses',

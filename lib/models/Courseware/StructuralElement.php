@@ -174,18 +174,21 @@ class StructuralElement extends \SimpleORMap
      *
      * @return bool true if the user may edit this instance
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function canEdit($user): bool
     {
+        if ($GLOBALS['perm']->have_perm('root', $user->id)) {
+            return true;
+        }
+
         switch ($this->range_type) {
             case 'user':
-                return $this->range_id == $user->id;
+                return $this->range_id === $user->id;
 
             case 'course':
                 $haveStudipPerm = $GLOBALS['perm']->have_studip_perm(
-                    $this->course->config->COURSEWARE_EDITING_PERMISSION,
+                    \CourseConfig::get($this->range_id)->COURSEWARE_EDITING_PERMISSION,
                     $this->range_id,
                     $user->id
                 );
@@ -193,32 +196,7 @@ class StructuralElement extends \SimpleORMap
                     return true;
                 }
 
-                if (!count($this->write_approval)) {
-                    return false;
-                }
-
-                if ($this->write_approval['all']) {
-                    return true;
-                }
-                $users = $this->write_approval['users'];
-                $groups = $this->write_approval['groups'];
-
-                // find user in users
-                foreach ($users as $approvedUserId) {
-                    if ($approvedUserId == $user->id) {
-                        return true;
-                    }
-                }
-                // find user in groups
-                foreach ($groups as $groupId) {
-                    /** @var ?\Statusgruppen $group */
-                    $group = \Statusgruppen::find($groupId);
-                    if ($group && $group->isMember($user->id)) {
-                        return true;
-                    }
-                }
-
-                return false;
+                return $this->hasWriteApproval($user);
 
             default:
                 throw new \InvalidArgumentException('Unknown range type.');
@@ -234,36 +212,119 @@ class StructuralElement extends \SimpleORMap
      */
     public function canRead($user): bool
     {
-        if ($this->canEdit($user)) {
+        // root darf immer
+        if ($GLOBALS['perm']->have_perm('root', $user->id)) {
             return true;
         }
 
-        if (!$this->releasedForReaders($this)) {
-            return false;
+        switch ($this->range_type) {
+            case 'user':
+                // Kontext "user": Nutzende können nur ihre eigenen Strukturknoten sehen.
+                return $this->range_id === $user->id;
+
+            case 'course':
+                if (!$GLOBALS['perm']->have_studip_perm('user', $this->range_id, $user->id)) {
+                    return false;
+                }
+
+                if ($this->canEdit($user)) {
+                    return true;
+                }
+
+                if (!$this->releasedForReaders($this)) {
+                    return false;
+                }
+
+                return $this->hasReadApproval($user);
+
+            default:
+                throw new \InvalidArgumentException('Unknown range type.');
+        }
+    }
+
+    public function canVisit($user): bool
+    {
+        // root darf immer
+        if ($GLOBALS['perm']->have_perm('root', $user->id)) {
+            return true;
         }
 
+        switch ($this->range_type) {
+            case 'user':
+                // Kontext "user": Nutzende können nur ihre eigenen Strukturknoten sehen.
+                return $this->range_id === $user->id;
+
+            case 'course':
+                if (!$GLOBALS['perm']->have_studip_perm('user', $this->range_id, $user->id)) {
+                    return false;
+                }
+
+                if ($this->canEdit($user)) {
+                    return true;
+                }
+
+                if (!$this->releasedForReaders($this)) {
+                    return false;
+                }
+
+                return $this->hasReadApproval($user) && $this->canReadSequential($user);
+
+            default:
+                throw new \InvalidArgumentException('Unknown range type.');
+        }
+    }
+
+    private function hasReadApproval($user): bool
+    {
         if (!count($this->read_approval)) {
-            return $this->canReadSequential($user);
+            return true;
         }
 
         if ($this->read_approval['all']) {
-            return $this->canReadSequential($user);
+            return true;
         }
-        $users = $this->read_approval['users'];
-        $groups = $this->read_approval['groups'];
 
         // find user in users
-        foreach ($users as $user) {
-            if ($user == $user->id) {
-                return $this->canReadSequential($user);
+        $users = $this->read_approval['users'];
+        foreach ($users as $approvedUserId) {
+            if ($approvedUserId == $user->id) {
+                return true;
             }
         }
+
         // find user in groups
+        $groups = $this->read_approval['groups'];
         foreach ($groups as $groupId) {
             /** @var ?\Statusgruppen $group */
             $group = \Statusgruppen::find($groupId);
             if ($group && $group->isMember($user->id)) {
-                return $this->canReadSequential($user);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function hasWriteApproval($user): bool
+    {
+        if (!count($this->write_approval)) {
+            return false;
+        }
+
+        if ($this->write_approval['all']) {
+            return true;
+        }
+
+        // find user in users
+        $users = $this->write_approval['users']->getArrayCopy();
+        if (in_array($user->id, $users)) {
+            return true;
+        }
+
+        // find user in groups
+        foreach (\Statusgruppen::findMany($this->write_approval['groups']->getArrayCopy()) as $group) {
+            if ($group->isMember($user->id)) {
+                return true;
             }
         }
 
@@ -279,7 +340,7 @@ class StructuralElement extends \SimpleORMap
      */
     private function canReadSequential($user): bool
     {
-        if (!$this->course->config->COURSEWARE_SEQUENTIAL_PROGRESSION) {
+        if (!\CourseConfig::get($this->range_id)->COURSEWARE_SEQUENTIAL_PROGRESSION) {
             return true;
         }
 
@@ -319,28 +380,48 @@ class StructuralElement extends \SimpleORMap
      */
     private function previousProgressAchieved($user): bool
     {
-        $achieved = true;
-        $root = $this->getCourseware($this->range_id, $this->range_type);
-        $courseware = array_merge([$root], $root->findDescendants());
-        foreach ($courseware as $element) {
+        $elements = $this->findCoursewareElements($user);
+
+        foreach ($elements as $element) {
+            // found me in depth-first order
+            // so everything before me was fine and we're done
             if ($element->id == $this->id) {
                 break;
             }
-            foreach ($element->containers as $container) {
-                foreach ($container->blocks as $block) {
-                    /** @var ?UserProgress $progress */
-                    $progress = UserProgress::findOneBySQL('user_id = ? and block_id = ?', [
-                        $user->id,
-                        $block->id,
-                    ]);
-                    if (1 != $progress->grade) {
-                        $achieved = false;
-                    }
+
+            if (!$element->hasBeenAchieved($user)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function findCoursewareElements($user): array
+    {
+        $root = $this->getCourseware($this->range_id, $this->range_type);
+        $elements = array_merge([$root], $root->findDescendants($user));
+
+        return $elements;
+    }
+
+    private function hasBeenAchieved($user): bool
+    {
+        foreach ($this->containers as $container) {
+            foreach ($container->blocks as $block) {
+                /** @var ?UserProgress $progress */
+                $progress = UserProgress::findOneBySQL('user_id = ? and block_id = ?', [
+                    $user->id,
+                    $block->id,
+                ]);
+
+                if (!$progress || $progress->grade != 1) {
+                    return false;
                 }
             }
         }
 
-        return $achieved;
+        return true;
     }
 
     /**
@@ -389,16 +470,20 @@ class StructuralElement extends \SimpleORMap
     }
 
     /**
-     * Returns the list of all descendants of this instance.
+     * Returns the list of all descendants of this instance in depth-first search order.
      *
-     * @return array a list of all descendants
+     * @param ?User  $user  the user whose bookmarked structural elements will be returned
+     *
+     * @return StructuralElement[] a list of all descendants
      */
-    public function findDescendants(): array
+    public function findDescendants(User $user = null)
     {
         $descendants = [];
         foreach ($this->children as $child) {
-            $descendants[] = $child;
-            $descendants = array_merge($descendants, $child->findDescendants());
+            if ($user === null || $child->canRead($user)) {
+                $descendants[] = $child;
+                $descendants = array_merge($descendants, $child->findDescendants($user));
+            }
         }
 
         return $descendants;

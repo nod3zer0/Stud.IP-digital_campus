@@ -34,25 +34,9 @@ class Authority
      */
     public static function canShowBlock(User $user, Block $resource)
     {
-        if ($GLOBALS['perm']->have_perm('root')) {
-            return true;
-        }
-
         $struct = $resource->container->structural_element;
 
-        if ('user' == $struct->range_type) {
-            if ($user->id == $struct->range_id) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($struct->range_type == 'course') {
-            return $GLOBALS['perm']->have_studip_perm('user', $struct->course->id, $user->id) ||
-                self::canUpdateStructuralElement($user, $struct) ||
-                $struct->canRead($user);
-        } else {
-            return false; // should we throw an exeption here?
-        }
+        return $struct->canRead($user);
     }
 
     public static function canIndexBlocks(User $user, Container $resource)
@@ -69,9 +53,9 @@ class Authority
     {
         if ($resource->isBlocked()) {
             return $resource->getBlockerUserId() == $user->id;
-        } else {
-            return self::canUpdateContainer($user, $resource->container);
         }
+
+        return self::canUpdateContainer($user, $resource->container);
     }
 
     public static function canDeleteBlock(User $user, Block $resource)
@@ -119,54 +103,14 @@ class Authority
         return self::canUpdateStructuralElement($user, $resource);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
     public static function canShowStructuralElement(User $user, StructuralElement $resource)
     {
-        if ($GLOBALS['perm']->have_perm('root')) {
-            return true;
-        }
-        if ($resource->range_type == 'user') {
-            if ($user->id == $resource->range_id) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($resource->range_type == 'course') {
-            return $GLOBALS['perm']->have_studip_perm('user', $resource->course->id, $user->id) ||
-                self::canUpdateStructuralElement($user, $resource) ||
-                $resource->canRead($user);
-        } else {
-            return false; // should we throw an exeption here?
-        }
+        return $resource->canRead($user);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
     public static function canUpdateStructuralElement(User $user, StructuralElement $resource)
     {
-        if ($GLOBALS['perm']->have_perm('root')) {
-            return true;
-        }
-
-        $perm = false;
-
-        if ($resource->user) {
-            // check if user is owner of the courseware for this element
-            $perm = $resource->user->id == $user->id;
-
-            return $perm || $resource->canEdit($user);
-        } elseif ($resource->course) {
-            $perm = $GLOBALS['perm']->have_studip_perm(
-                $resource->course->config->COURSEWARE_EDITING_PERMISSION,
-                $resource->course->id,
-                $user->id
-            );
-
-            return $perm || $resource->canEdit($user);
-        }
+        return $resource->canEdit($user);
     }
 
     public static function canCreateStructuralElement(User $user, StructuralElement $resource)
@@ -204,7 +148,7 @@ class Authority
 
     public static function canShowUserDataField(User $user, UserDataField $resource)
     {
-        return  $user->id == $resource->user_id;;
+        return $user->id === $resource->user_id;
     }
 
     public static function canUpdateUserDataField(User $user, UserDataField $resource)
@@ -260,7 +204,7 @@ class Authority
 
     public static function canShowBlockFeedback(User $user, BlockFeedback $resource)
     {
-        return $resource->user_id === $user->id || self::canUpdateBlock($resource->block);
+        return $resource->user_id === $user->id || self::canUpdateBlock($user, $resource->block);
     }
 
     public static function canUploadStructuralElementsImage(User $user, StructuralElement $resource)

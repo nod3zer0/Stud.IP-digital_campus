@@ -170,7 +170,7 @@ class Course_CoursewareController extends AuthenticatedController
 
     private function getProgress(Course $course, StructuralElement $element, bool $course_progress = false, array $cw_user_progresses, array $course_member_ids): array
     {
-        $descendants = $element->findDescendants();
+        $descendants = $element->findDescendants(\User::findCurrent());
         $count = count($descendants);
         $progress = 0;
         $own_progress = 0;

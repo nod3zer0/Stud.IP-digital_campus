@@ -25,7 +25,7 @@
             </div>
             <div v-if="consumeMode" class="cw-ribbon-consume-bottom"></div>
             <courseware-ribbon-toolbar
-                v-show="showTools"
+                v-if="showTools"
                 :toolsActive="unfold"
                 :class="{ 'cw-ribbon-tools-sticky': stickyRibbon }"
                 :canEdit="canEdit"

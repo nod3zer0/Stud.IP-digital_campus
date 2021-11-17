@@ -169,18 +169,6 @@ const getters = {
 export const state = { ...initialState };
 
 export const actions = {
-    async loadCoursewareStructure({ commit, dispatch, state, rootGetters }) {
-        const parent = state.context;
-        const relationship = 'courseware';
-        const options = {
-            include: 'bookmarks,root,root.descendants',
-        };
-
-        await dispatch(`courseware-instances/loadRelated`, { parent, relationship, options }, { root: true });
-
-        return commit('coursewareSet', rootGetters['courseware-instances/all'][0]);
-    },
-
     loadContainer({ dispatch }, containerId) {
         const options = {
             include: 'blocks',
@@ -192,7 +180,7 @@ export const actions = {
     loadStructuralElement({ dispatch }, structuralElementId) {
         const options = {
             include:
-                'ancestors,containers,containers.blocks,containers.blocks.editor,containers.blocks.owner,containers.blocks.user-data-field,containers.blocks.user-progress,descendants,editor,owner',
+                'containers,containers.blocks,containers.blocks.editor,containers.blocks.owner,containers.blocks.user-data-field,containers.blocks.user-progress,editor,owner',
             'fields[users]': 'formatted-name',
         };
 

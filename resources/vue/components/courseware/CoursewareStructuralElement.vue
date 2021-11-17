@@ -62,7 +62,7 @@
                 </courseware-ribbon>
 
                 <div
-                    v-if="canRead"
+                    v-if="canVisit"
                     class="cw-container-wrapper"
                     :class="{ 'cw-container-wrapper-consume': consumeMode }"
                 >
@@ -488,7 +488,7 @@ export default {
         IsoDate,
         StudipDialog,
     },
-    props: ['orderedStructuralElements', 'structuralElement'],
+    props: ['canVisit', 'orderedStructuralElements', 'structuralElement'],
 
     mixins: [CoursewareExport],
 
@@ -627,7 +627,28 @@ export default {
                 return [];
             }
 
-            return this.relatedStructuralElements({ parent: this.structuralElement, relationship: 'ancestors' });
+            const finder = (parent) => {
+                const parentId = parent.relationships?.parent?.data?.id;
+                if (!parentId) {
+                    return null;
+                }
+                const element = this.structuralElementById({id: parentId});
+                if (!element) {
+                    console.error(`CoursewareStructuralElement#ancestors: Could not find parent by ID: "${parentId}".`);
+                }
+
+                return element;
+            };
+
+            const visitAncestors = function* (node) {
+                const parent = finder(node);
+                if (parent) {
+                    yield parent;
+                    yield *visitAncestors(parent);
+                }
+            };
+
+            return [...visitAncestors(this.structuralElement)].reverse()
         },
         prevElement() {
             const currentIndex = this.orderedStructuralElements.indexOf(this.structuralElement.id);
@@ -683,12 +704,7 @@ export default {
             }
             return this.structuralElement.attributes['can-edit'];
         },
-        canRead() {
-            if (!this.structuralElement) {
-                return false;
-            }
-            return this.structuralElement.attributes['can-read'];
-        },
+
         isTeacher() {
             return this.userIsTeacher;
         },

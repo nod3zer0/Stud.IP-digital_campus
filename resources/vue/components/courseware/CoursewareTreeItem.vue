@@ -1,19 +1,21 @@
 <template>
     <li>
-        <div :class="{'cw-tree-item-is-root': isRoot, 'cw-tree-item-first-level': isFirstLevel}">
+        <div :class="{ 'cw-tree-item-is-root': isRoot, 'cw-tree-item-first-level': isFirstLevel }">
             <router-link
-                :to="'/structural_element/' + item.element_id"
+                :to="'/structural_element/' + element.id"
                 class="cw-tree-item-link"
-                :class="{'cw-tree-item-link-current': item.current}"
+                :class="{ 'cw-tree-item-link-current': isCurrent }"
             >
-                {{ item.name }}
+                {{ element.attributes.title }}
             </router-link>
         </div>
-        <ul v-if="hasChildren" :class="{'cw-tree-chapter-list': isRoot}">
+        <ul v-if="hasChildren" :class="{ 'cw-tree-chapter-list': isRoot }">
             <courseware-tree-item
-                v-for="(child, index) in item.children"
-                :key="index"
-                :item="child"
+                v-for="child in children"
+                :key="child.id"
+                :element="child"
+                :currentElement="currentElement"
+                :depth="depth + 1"
                 class="cw-tree-item"
             />
         </ul>
@@ -21,20 +23,48 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     name: 'courseware-tree-item',
     props: {
-        item: Object,
+        element: {
+            type: Object,
+            required: true,
+        },
+        currentElement: {
+            type: Object,
+        },
+        depth: {
+            type: Number,
+            default: 0,
+        },
     },
     computed: {
+        ...mapGetters({
+            childrenById: 'courseware-structure/children',
+            structuralElementById: 'courseware-structural-elements/byId',
+        }),
+        children() {
+            if (!this.element) {
+                return [];
+            }
+
+            return this.childrenById(this.element.id)
+                .map((id) => this.structuralElementById({ id }))
+                .filter(Boolean);
+        },
         hasChildren() {
-            return this.item.children && this.item.children.length;
+            return this.childrenById(this.element.id).length;
         },
         isRoot() {
-            return this.item.depth === 0;
+            return this.depth === 0;
         },
         isFirstLevel() {
-            return this.item.depth === 1;
+            return this.depth === 1;
+        },
+        isCurrent() {
+            return this.element.id === this.currentElement?.id;
         },
     },
 };

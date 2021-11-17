@@ -1,6 +1,7 @@
 <template>
-    <div v-if="courseware">
+    <div v-if="structureLoadingState === 'done'">
         <courseware-structural-element
+            :canVisit="canVisit"
             :structural-element="selected"
             :ordered-structural-elements="orderedStructuralElements"
             @select="selectStructuralElement"
@@ -28,37 +29,45 @@ export default {
         CoursewareActionWidget,
     },
     data: () => ({
+        canVisit: null,
         selected: null,
-        orderedStructuralElements: [],
+        structureLoadingState: 'idle',
     }),
     computed: {
         ...mapGetters({
             courseware: 'courseware',
+            orderedStructuralElements: 'courseware-structure/ordered',
             relatedStructuralElement: 'courseware-structural-elements/related',
+            structuralElementLastMeta: 'courseware-structural-elements/lastMeta',
             structuralElements: 'courseware-structural-elements/all',
             structuralElementById: 'courseware-structural-elements/byId',
             userId: 'userId',
         }),
     },
     methods: {
-        ...mapActions([
-            'coursewareBlockAdder',
-            'loadCoursewareStructure',
-            'loadStructuralElement',
-            'loadTeacherStatus',
-        ]),
+        ...mapActions({
+            buildStructure: 'courseware-structure/build',
+            coursewareBlockAdder: 'coursewareBlockAdder',
+            invalidateStructureCache: 'courseware-structure/invalidateCache',
+            loadCoursewareStructure: 'courseware-structure/load',
+            loadStructuralElement: 'loadStructuralElement',
+            loadTeacherStatus: 'loadTeacherStatus',
+        }),
         async selectStructuralElement(id) {
             if (!id) {
                 return;
             }
 
             await this.loadStructuralElement(id);
+            this.canVisit = this.structuralElementLastMeta['can-visit'];
             this.selected = this.structuralElementById({ id });
         },
     },
     async mounted() {
+        this.structureLoadingState = 'loading';
         await this.loadCoursewareStructure();
         await this.loadTeacherStatus(this.userId);
+        this.structureLoadingState = 'done';
         const selectedId = this.$route.params?.id;
         await this.selectStructuralElement(selectedId);
     },
@@ -70,51 +79,13 @@ export default {
             const selectedId = to.params?.id;
             this.selectStructuralElement(selectedId);
         },
-        structuralElements(newElements, oldElements) {
-            const nodes = buildNodes(this.structuralElements, this.relatedStructuralElement.bind(this));
-            this.orderedStructuralElements = [...visitTree(nodes, findRoot(nodes))];
+        async structuralElements(newElements, oldElements) {
+            // compute order of structural elements once more
+            await this.buildStructure();
+
+            // throw away stale cache
+            this.invalidateStructureCache();
         },
     },
 };
-
-function buildNodes(structuralElements, relatedStructuralElement) {
-    return structuralElements.reduce((memo, element) => {
-        if (element.attributes['can-read']) {
-            memo.push({
-                id: element.id,
-                parent:
-                    relatedStructuralElement({
-                        parent: element,
-                        relationship: 'parent',
-                    })?.id ?? null,
-
-                children:
-                    relatedStructuralElement({
-                        parent: element,
-                        relationship: 'children',
-                    })?.map((child) => child.id) ?? [],
-            });
-        }
-
-        return memo;
-    }, []);
-}
-
-function findRoot(nodes) {
-    return nodes.find((node) => node.parent === null);
-}
-
-function findNode(nodes, id) {
-    return nodes.find((node) => node.id === id);
-}
-
-function* visitTree(nodes, current) {
-    if (current) {
-        yield current.id;
-
-        for (let index = 0; index < current.children.length; index++) {
-            yield* visitTree(nodes, findNode(nodes, current.children[index]));
-        }
-    }
-}
 </script>
