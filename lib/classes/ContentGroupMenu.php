@@ -32,6 +32,7 @@ class ContentGroupMenu
     private $rows    = 1;
     private $columns = 1;
     private $image   = null;
+    private $image_link_attributes = [];
     private $label;
     private $aria_label;
 
@@ -223,6 +224,7 @@ class ContentGroupMenu
 
         if ($this->image) {
             $template->image = $this->image;
+            $template->image_link_attributes = $this->image_link_attributes;
         } else {
             $template->image = "<div></div><div></div><div></div>";
         }
@@ -267,10 +269,13 @@ class ContentGroupMenu
      * Sets the icon of the menu.
      *
      * @param String $menu_image image html for the menu
+     *
+     * @param array $image_link_attributes Additional HTML attributes for the link that surrounds the image.
      */
-    public function setIcon($menu_image)
+    public function setIcon($menu_image, array $image_link_attributes = [])
     {
         $this->image = $menu_image;
+        $this->image_link_attributes = $image_link_attributes;
     }
 
     /**

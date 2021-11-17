@@ -1,7 +1,8 @@
 <? // class "action-menu" will be set from API ?>
 <nav <?= arrayToHtmlAttributes($attributes) ?>>
     <a class="action-menu-icon" title="<?= htmlReady($label) ?>"
-       aria-expanded="false" aria-label="<?= htmlReady($aria_label) ?>" href="#">
+       aria-expanded="false" aria-label="<?= htmlReady($aria_label) ?>" href="#"
+        <?= $image_link_attributes ? arrayToHtmlAttributes($image_link_attributes) : '' ?>>
         <?= $image ?>
     </a>
     <div class="action-menu-content">

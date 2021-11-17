@@ -35,24 +35,6 @@ class SearchWidget extends SidebarWidget
     }
 
     /**
-     * Sets the id for the form element.
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * Returns the id for the form element.
-     *
-     * @return mixed String containing the id or null if no id has been set.
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Sets the request method used for the form.
      */
     public function setMethod($method)
@@ -143,7 +125,6 @@ class SearchWidget extends SidebarWidget
         $this->template_variables['url_params'] = $query_params;
 
         $this->template_variables['method'] = $this->method;
-        $this->template_variables['id']     = $this->id;
 
         foreach ($this->needles as $index => $needle) {
             if ($needle['quick_search']) {

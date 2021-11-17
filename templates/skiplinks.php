@@ -3,16 +3,15 @@
 ?>
 <? if ($navigation instanceof Navigation && iterator_count($navigation) > 0) : ?>
     <ul role="navigation" id="skiplink_list">
-    <? $i = 1 ?>
     <? foreach ($navigation as $nav) : ?>
         <li>
         <? if (mb_substr($url = $nav->getURL(), 0, 1) == '#') : ?>
-            <a href="<?= $url ?>" onclick="STUDIP.SkipLinks.setActiveTarget('<?= $url ?>');"  tabindex="<?= $i++ ?>"><?= htmlReady($nav->getTitle()) ?></a>
+            <button class="skiplink" onclick="STUDIP.SkipLinks.setActiveTarget('<?= $url ?>');"><?= htmlReady($nav->getTitle()) ?></button>
         <? else : ?>
             <? if (is_internal_url($url)) : ?>
-                <a href="<?= URLHelper::getLink($url) ?>" tabindex="<?= $i++ ?>"><?= htmlReady($nav->getTitle()) ?></a>
+                <a href="<?= URLHelper::getLink($url) ?>"><?= htmlReady($nav->getTitle()) ?></a>
             <? else : ?>
-                <a href="<?= htmlReady($url) ?>" tabindex="<?= $i++ ?>"><?= htmlReady($nav->getTitle()) ?></a>
+                <a href="<?= htmlReady($url) ?>"><?= htmlReady($nav->getTitle()) ?></a>
             <? endif ?>
         <? endif ?>
         </li>

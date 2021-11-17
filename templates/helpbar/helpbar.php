@@ -1,5 +1,6 @@
 <div class="helpbar-container">
-    <a href="#" class="helpbar-toggler" data-toggles=".helpbar" title="<?= _('Hilfelasche anzeigen/verstecken') ?>">
+    <?= SkipLinks::addIndex(_('Tipps & Hilfe'), 'helpbar_icon', 920) ?>
+    <a id="helpbar_icon" href="#" class="helpbar-toggler" data-toggles=".helpbar" title="<?= _('Hilfelasche anzeigen/verstecken') ?>">
         <?= Icon::create('question-circle')->asImg(24) ?>
     </a>
     <div class="helpbar" <? if (!$open) echo 'style="display: none"'; ?>>

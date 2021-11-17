@@ -56,6 +56,7 @@ if (isset($_COOKIE['navigation-length'])) {
             <? if (PageLayout::hasCustomQuicksearch()): ?>
                 <?= PageLayout::getCustomQuicksearch() ?>
             <? else: ?>
+                <? SkipLinks::addIndex(_('Suche'), 'globalsearch-input', 910) ?>
                 <li id="quicksearch_item">
                     <script>
                         var selectSem = function (seminar_id, name) {
@@ -119,7 +120,10 @@ if (isset($_COOKIE['navigation-length'])) {
                 $action_menu->addAttribute('data-action-menu-reposition', 'false');
                 $action_menu->setLabel(User::findCurrent()->getFullName());
                 $action_menu->setAriaLabel(_("Profilmenü"));
-                $action_menu->setIcon(Avatar::getAvatar(User::findCurrent()->id)->getImageTag(Avatar::MEDIUM));
+                $action_menu->setIcon(
+                    Avatar::getAvatar(User::findCurrent()->id)->getImageTag(Avatar::MEDIUM),
+                    ['id' => 'header_avatar_image_link']
+                );
 
                 foreach (Navigation::getItem('/avatar') as $subnav) {
                     $action_menu->addLink(
@@ -128,7 +132,7 @@ if (isset($_COOKIE['navigation-length'])) {
                         $subnav->getImage()
                     );
                 }
-                SkipLinks::addIndex(_("Profilmenü"), "header_avatar_menu", 2);
+                SkipLinks::addIndex(_("Profilmenü"), "header_avatar_image_link", 1);
                 ?>
                 <?= $action_menu->render(); ?>
                 </div>
@@ -148,7 +152,7 @@ if (isset($_COOKIE['navigation-length'])) {
     </div>
      -->
 
-    <? SkipLinks::addIndex(_('Hauptnavigation'), 'barTopMenu', 1); ?>
+    <? SkipLinks::addIndex(_('Hauptnavigation'), 'barTopMenu', 2); ?>
     <ul id="barTopMenu" role="navigation" <? if (count($header_nav['hidden']) > 0) echo 'class="overflown"'; ?>>
     <? foreach ($header_nav['visible'] as $path => $nav): ?>
         <?= $this->render_partial(

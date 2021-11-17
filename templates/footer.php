@@ -1,4 +1,5 @@
 <!-- Beginn Footer -->
+<?= SkipLinks::addIndex(_('Fußzeile'), 'layout_footer',900) ?>
 <div id="layout_footer">
 <? if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') : ?>
     <div id="footer">

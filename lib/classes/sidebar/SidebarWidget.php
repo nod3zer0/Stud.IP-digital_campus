@@ -9,9 +9,35 @@
  */
 class SidebarWidget extends Widget
 {
+    protected $id = '';
+
+
     public function __construct()
     {
         $this->layout = 'sidebar/widget-layout.php';
+    }
+
+
+    /**
+     * Sets the ID of the HTML element that represents the widget.
+     *
+     * @param $id The element-ID to be used for the widget.
+     *
+     */
+    public function setId(string $id)
+    {
+        $this->id = $id;
+    }
+
+
+    /**
+     * Returns the ID of this widget, if it is set.
+     *
+     * @return string The ID of the widget or an empty string, if it is not set.
+     */
+    public function getId() : string
+    {
+        return $this->id;
     }
 
     /**
@@ -46,7 +72,7 @@ class SidebarWidget extends Widget
     {
         $this->extra = $extra;
     }
-    
+
     public function getExtra()
     {
         return $this->extra;
@@ -65,6 +91,9 @@ class SidebarWidget extends Widget
      */
     public function render($variables = [])
     {
+        if ($this->id) {
+            $this->template_variables['id'] = $this->id;
+        }
         return parent::render($variables);
     }
 }
