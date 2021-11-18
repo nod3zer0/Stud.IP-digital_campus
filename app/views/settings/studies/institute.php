@@ -2,23 +2,23 @@
 
 <h2><?= _('Meine Einrichtungen:') ?></h2>
 
-<form action="<?= $controller->url_for('settings/studies/store_in') ?>" method="post" class="default">
+<form action="<?= $controller->store_in() ?>" method="post" class="default">
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
     <table class="default" id="select_institute">
         <colgroup>
             <col>
-            <col width="100px">
+        <? if ($allow_change['in']): ?>
+            <col style="width: 100px">
+        <? endif; ?>
         </colgroup>
         <thead>
             <tr>
                 <th><?= _('Einrichtung') ?></th>
-                <th>
-                <? if ($allow_change['in']): ?>
-                    <?= _('austragen') ?>
-                <? endif; ?>
-                </th>
+            <? if ($allow_change['in']): ?>
+                <th><?= _('austragen') ?></th>
+            <? endif; ?>
         </thead>
         <tbody>
         <? if (count($institutes) === 0 && $allow_change['in']): ?>
@@ -36,32 +36,30 @@
                 <td>
                     <label for="inst_delete_<?= $inst_member->institute->id ?>"><?= htmlReady($inst_member->institute->name) ?></label>
                 </td>
-                <td style="text-align:center">
-                <? if ($allow_change['in']): ?>
-                    <input type="checkbox" name="inst_delete[]" id="inst_delete_<?= $inst_member->institute->id ?>"
-                           value="<?= $inst_member->institute->id ?>">
-                <? else: ?>
-                    <?= Icon::create('accept', 'inactive')->asImg(['class' => 'text-top']) ?>
-                <? endif; ?>
+            <? if ($allow_change['in']): ?>
+                <td style="text-align: center">
+                    <input type="checkbox" name="inst_delete[]" id="inst_delete_<?= htmlReady($inst_member->institute->id) ?>"
+                           value="<?= htmlReady($inst_member->institute->id) ?>">
                 </td>
+            <? endif; ?>
             </tr>
         <? endforeach; ?>
 
         <? if (count($institutes) !== 0 && $allow_change['in']): ?>
-        <tr>
-            <td colspan="2" style="padding: 0px; text-align: right;">
-                <footer>
-                    <?= Button::create(_('Übernehmen'), 'store_in', ['title' => _('Änderungen übernehmen')]) ?>
-                </footer>
-            </td>
-        </tr>
+            <tr>
+                <td colspan="2" style="padding: 0; text-align: right;">
+                    <footer>
+                        <?= Button::create(_('Übernehmen'), 'store_in', ['title' => _('Änderungen übernehmen')]) ?>
+                    </footer>
+                </td>
+            </tr>
         <? endif ?>
         </tbody>
     </table>
 </form>
 
 <? if ($allow_change['in']): ?>
-<form action="<?= $controller->url_for('settings/studies/store_in') ?>" method="post" class="default">
+<form action="<?= $controller->store_in() ?>" method="post" class="default">
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
@@ -83,11 +81,11 @@
                     ): ?>
                         <option class="<?= $i['is_fak'] ? 'nested-item-header' : 'nested-item' ?>"
                                 value="<?= htmlReady($i['Institut_id']) ?>">
-                            <?= htmlReady(my_substr($i['Name'], 0, 70)) ?>
+                            <?= htmlReady($i['Name']) ?>
                         </option>
                     <? else: ?>
                         <option class="<?= $i['is_fak'] ? 'nested-item-header' : 'nested-item' ?>" disabled>
-                            <?= htmlReady(my_substr($i['Name'], 0, 70)) ?>
+                            <?= htmlReady($i['Name']) ?>
                         </option>
                     <? endif; ?>
                 <? endforeach; ?>
