@@ -803,12 +803,12 @@ class Consultation_AdminController extends ConsultationController
         $export = $sidebar->addWidget(new ExportWidget());
         $export->addLink(
             _('Anmeldungen exportieren'),
-            $this->url_for('consultation/export/bookings'),
+            $this->url_for('consultation/export/bookings', $action === 'expired'),
             Icon::create('file-excel+export')
         );
         $export->addLink(
             _('Alle Termine exportieren'),
-            $this->url_for('consultation/export/all'),
+            $this->url_for('consultation/export/all', $action === 'expired'),
             Icon::create('file-excel+export')
         );
     }

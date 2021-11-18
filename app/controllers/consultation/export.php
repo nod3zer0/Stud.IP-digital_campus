@@ -19,7 +19,7 @@ class Consultation_ExportController extends ConsultationController
         }
     }
 
-    public function bookings_action()
+    public function bookings_action(bool $expired = false)
     {
         $csv = [];
         $csv[] = [
@@ -32,7 +32,7 @@ class Consultation_ExportController extends ConsultationController
             _('Grund'),
         ];
 
-        $blocks = ConsultationBlock::findByRange($this->range, 'ORDER BY start ASC');
+        $blocks = ConsultationBlock::findByRange($this->range, 'ORDER BY start ASC', $expired);
         foreach ($blocks as $block) {
             foreach ($block->slots as $slot) {
                 foreach ($slot->bookings as $booking) {
@@ -52,7 +52,7 @@ class Consultation_ExportController extends ConsultationController
         $this->render_csv($csv, 'Terminvergabe-Anmeldungen-' . date('Ymd') . '.csv');
     }
 
-    public function all_action()
+    public function all_action(bool $expired = false)
     {
         $csv = [];
         $csv[] = [
@@ -65,7 +65,7 @@ class Consultation_ExportController extends ConsultationController
             _('Grund'),
         ];
 
-        $blocks = ConsultationBlock::findByRange($this->range, 'ORDER BY start ASC');
+        $blocks = ConsultationBlock::findByRange($this->range, 'ORDER BY start ASC', $expired);
         foreach ($blocks as $block) {
             foreach ($block->slots as $slot) {
                 $csv[] = [
