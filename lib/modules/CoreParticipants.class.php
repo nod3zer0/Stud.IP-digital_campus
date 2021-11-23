@@ -38,7 +38,7 @@ class CoreParticipants extends CorePlugin implements StudipModule
                 $first_nav = reset($sub_nav);
 
                 $navigation = new Navigation($first_nav->getTitle(), $first_nav->getURL());
-                $navigation->setImage(Icon::create('persons', Icon::ROLE_INACTIVE));
+                $navigation->setImage(Icon::create('persons', Icon::ROLE_CLICKABLE));
                 return $navigation;
 
             }
@@ -55,7 +55,7 @@ class CoreParticipants extends CorePlugin implements StudipModule
         }
 
         $navigation = new Navigation(_('Teilnehmende'), $url);
-        $navigation->setImage(Icon::create('persons', Icon::ROLE_INACTIVE));
+        $navigation->setImage(Icon::create('persons', Icon::ROLE_CLICKABLE));
 
         // Check permission, show no indicator if not at least tutor
         if (!$GLOBALS['perm']->have_studip_perm('tutor', $course_id, $user_id)) {

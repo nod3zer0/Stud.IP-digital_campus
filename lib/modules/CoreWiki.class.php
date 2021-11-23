@@ -73,7 +73,7 @@ class CoreWiki extends CorePlugin implements StudipModule
             $nav->setBadgeNumber($result['neue']);
         } else {
             $nav->setURL('wiki.php');
-            $nav->setImage(Icon::create('wiki', Icon::ROLE_INACTIVE, [
+            $nav->setImage(Icon::create('wiki', Icon::ROLE_CLICKABLE, [
                 'title' => sprintf(
                     ngettext(
                         '%d Wiki-Seite',

@@ -53,7 +53,7 @@ class CoreElearningInterface extends CorePlugin implements StudipModule
                     )
                 ]);
             } elseif ($result['count']) {
-                $nav->setImage(Icon::create('learnmodule', Icon::ROLE_INACTIVE), [
+                $nav->setImage(Icon::create('learnmodule', Icon::ROLE_CLICKABLE), [
                     'title' => sprintf(
                         ngettext(
                             '%d Lernmodul',

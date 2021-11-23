@@ -38,7 +38,7 @@ class CoreDocuments extends CorePlugin implements StudipModule, OERModule
      * Now this module should put a copy of $material in its own area of the given course.
      * @param OERMaterial $material
      * @param Course $course
-     * @return void
+     * @return array|FileType
      */
     static public function oerModuleIntegrateMaterialToCourse(OERMaterial $material, Course $course)
     {
@@ -98,7 +98,7 @@ class CoreDocuments extends CorePlugin implements StudipModule, OERModule
             _('Dateibereich'),
             "dispatch.php/{$range_type}/files"
         );
-        $navigation->setImage(Icon::create('files', Icon::ROLE_INACTIVE));
+        $navigation->setImage(Icon::create('files'));
 
         $condition = "INNER JOIN folders ON (folders.id = file_refs.folder_id)
                       WHERE folders.range_type = :range_type

@@ -61,7 +61,7 @@ class CoreScm extends CorePlugin implements StudipModule
                     );
                 }
             } else {
-                $image = Icon::create('infopage', Icon::ROLE_INACTIVE);
+                $image = Icon::create('infopage', Icon::ROLE_CLICKABLE);
                 if ($result['count'] == 1) {
                     $title = $scm->tab_name;
                 } else {

@@ -9,14 +9,13 @@ class MyInstitutesController extends AuthenticatedController
         if (!$GLOBALS['perm']->have_perm("root")) {
             Navigation::activateItem('/browse/my_institutes');
         }
-        $this->user_id = $GLOBALS['auth']->auth['uid'];
-        PageLayout::setHelpKeyword("Basis.MeineEinrichtungen");
-        PageLayout::setTitle(_("Meine Einrichtungen"));
+        $this->user_id = $GLOBALS['user']->id;
+        PageLayout::setHelpKeyword('Basis.MeineEinrichtungen');
+        PageLayout::setTitle(_('Meine Einrichtungen'));
     }
 
     public function index_action()
     {
-
         $this->institutes = MyRealmModel::getMyInstitutes();
 
         if ($this->check_for_new($this->institutes)) {
@@ -24,6 +23,11 @@ class MyInstitutesController extends AuthenticatedController
         }
 
         $this->nav_elements = MyRealmModel::calc_single_navigation($this->institutes);
+
+        $this->setupSidebar(
+            $this->institutes,
+            $this->check_for_new($this->institutes)
+        );
     }
 
     public function decline_inst_action($inst_id)
@@ -31,22 +35,24 @@ class MyInstitutesController extends AuthenticatedController
         $institut     = Institute::find($inst_id);
         $ticket_check = Seminar_Session::check_ticket(Request::option('studipticket'));
 
-        if (Request::option('cmd') != 'kill' && Request::get('cmd') != 'back') {
+        if (Request::option('cmd') !== 'kill' && Request::get('cmd') !== 'back') {
             $this->flash['decline_inst'] = true;
             $this->flash['inst_id']      = $inst_id;
             $this->flash['name']         = $institut->name;
             $this->flash['studipticket'] = Seminar_Session::get_ticket();
-        } else {
-            if (Request::get('cmd') == 'kill' && $ticket_check && Request::get('cmd') != 'back') {
-                $query     = "DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ? AND inst_perms = 'user'";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute([$GLOBALS['user']->id, $inst_id]);
+        } elseif (Request::get('cmd') === 'kill' && $ticket_check && Request::get('cmd') !== 'back') {
+            $changed = InstituteMember::deleteBySQL(
+                "user_id = ? AND Institut_id = ? AND inst_perms = 'user'",
+                [$this->user_id, $inst_id]
+            );
 
-                if ($statement->rowCount() > 0) {
-                    PageLayout::postMessage(MessageBox::success(sprintf(_("Die Zuordnung zur Einrichtung %s wurde aufgehoben."), "<b>" . htmlReady($institut->name) . "</b>")));
-                } else {
-                    PageLayout::postMessage(MessageBox::error(_('Datenbankfehler')));
-                }
+            if ($changed > 0) {
+                PageLayout::postSuccess(sprintf(
+                    _('Die Zuordnung zur Einrichtung %s wurde aufgehoben.'),
+                    '<strong>' . htmlReady($institut->name) . '</strong>'
+                ));
+            } else {
+                PageLayout::postError(_('Datenbankfehler'));
             }
         }
         $this->redirect('my_institutes/index');
@@ -56,14 +62,14 @@ class MyInstitutesController extends AuthenticatedController
     {
         $institutes = MyRealmModel::getMyInstitutes();
         foreach ($institutes as $index => $institut) {
-            MyRealmModel::setObjectVisits($institutes[$index], $institut['institut_id'], $GLOBALS['user']->id, $timestamp);
+            MyRealmModel::setObjectVisits($institutes[$index], $institut['institut_id'], $this->user_id, $timestamp);
         }
 
-        PageLayout::postMessage(MessageBox::success(_('Alles als gelesen markiert!')));
+        PageLayout::postSuccess(_('Alles als gelesen markiert!'));
         $this->redirect('my_institutes/index');
     }
 
-    function check_for_new($my_obj)
+    protected function check_for_new($my_obj): bool
     {
         if(!empty($my_obj)) {
             foreach ($my_obj as $inst) {
@@ -75,8 +81,7 @@ class MyInstitutesController extends AuthenticatedController
         return false;
     }
 
-
-    function check_institute($institute)
+    protected function check_institute($institute): bool
     {
         if ($institute['visitdate'] || $institute['last_modified']) {
             if ($institute['visitdate'] <= $institute["chdate"] || $institute['last_modified'] > 0) {
@@ -97,5 +102,36 @@ class MyInstitutesController extends AuthenticatedController
         }
 
         return false;
+    }
+
+    private function setupSidebar(array $institutes, bool $reset)
+    {
+        $links = Sidebar::Get()->addWidget(new ActionsWidget());
+        if ($reset) {
+            $links->addLink(
+                _('Alles als gelesen markieren'),
+                $this->tabularasaURL(time()),
+                Icon::create('accept')
+            );
+        }
+        if ($GLOBALS['perm']->have_perm('dozent') && count($institutes) > 0) {
+            $links->addLink(
+                _('Einrichtungsdaten bearbeiten'),
+                URLHelper::getURL('dispatch.php/settings/statusgruppen'),
+                Icon::create('institute+edit')
+            );
+        }
+        if ($GLOBALS['perm']->have_perm('autor')) {
+            $links->addLink(
+                _('Einrichtungen suchen'),
+                URLHelper::getURL('dispatch.php/search/globalsearch#GlobalSearchInstitutes'),
+                Icon::create('institute+add')
+            );
+            $links->addLink(
+                _('Studiendaten bearbeiten'),
+                URLHelper::getURL('dispatch.php/settings/studies'),
+                Icon::create('person')
+            );
+        }
     }
 }

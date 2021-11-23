@@ -82,7 +82,7 @@ class IliasInterfaceModule extends CorePlugin implements StudipModule, SystemPlu
                 )
             ]);
         } elseif ($result['count_modules']) {
-            $nav->setImage(Icon::create('learnmodule', Icon::ROLE_INACTIVE), [
+            $nav->setImage(Icon::create('learnmodule', Icon::ROLE_CLICKABLE), [
                 'title' => sprintf(
                     ngettext(
                         '%d Lernobjekt',
@@ -93,7 +93,7 @@ class IliasInterfaceModule extends CorePlugin implements StudipModule, SystemPlu
                 )
             ]);
         } elseif ($result['count_courses']) {
-            $nav->setImage(Icon::create('learnmodule', Icon::ROLE_INACTIVE), [
+            $nav->setImage(Icon::create('learnmodule', Icon::ROLE_CLICKABLE), [
                 'title' => sprintf(
                     ngettext(
                         '%d ILIAS-Kurs',

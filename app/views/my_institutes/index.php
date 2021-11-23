@@ -1,3 +1,11 @@
+<?php
+$is_important = function (?Navigation $nav): bool {
+    return $nav
+        && $nav->getImage() instanceof Icon
+        && in_array($nav->getImage()->getRole(), [Icon::ROLE_ATTENTION, Icon::ROLE_STATUS_RED]);
+};
+?>
+
 <? if (isset($flash['decline_inst'])) : ?>
     <?= QuestionBox::create(
         sprintf(
@@ -24,18 +32,16 @@
     <table class="default" id="my_institutes">
         <caption><?= _('Meine Einrichtungen') ?></caption>
         <colgroup>
-            <col width="10px">
-            <col width="25px">
+            <col style="width: 25px">
             <col>
-            <col width="<?= $nav_elements * 27 ?>px">
-            <col width="45px">
+            <col style="width: <?= $nav_elements * 32 ?>px">
+            <col style="width: 45px">
         </colgroup>
         <thead>
         <tr>
             <th></th>
-            <th></th>
-            <th><?= _("Name") ?></th>
-            <th style="text-align: center"><?= _("Inhalt") ?></th>
+            <th><?= _('Name') ?></th>
+            <th><?= _('Inhalt') ?></th>
             <th></th>
         </tr>
         </thead>
@@ -44,66 +50,47 @@
             <? $lastVisit = $values['visitdate']; ?>
             <? $instid = $values['institut_id'] ?>
             <tr>
-                <td style="width:1px"></td>
                 <td>
                     <?= InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, ['title' => $values['name']]) ?>
                 </td>
 
                 <td style="text-align: left">
                     <a href="<?= URLHelper::getLink('dispatch.php/institute/overview', ['auswahl' => $instid]) ?>">
-                        <?= htmlReady($GLOBALS['INST_TYPE'][$values["type"]]["name"] . ": " . $values["name"]) ?>
+                        <?= htmlReady($GLOBALS['INST_TYPE'][$values['type']]['name'] . ': ' . $values['name']) ?>
                     </a>
                 </td>
 
                 <td style="text-align: left; white-space: nowrap">
-                    <? if (!empty($values['navigation'])) : ?>
-                        <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
-                            <? if (isset($nav) && $nav->isVisible(true)) : ?>
-                                <a href="<?=
-                                UrlHelper::getLink('dispatch.php/institute/overview',
-                                    ['auswahl'     => $instid,
-                                          'redirect_to' => strtr($nav->getURL(), '?', '&')]) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
-                                    <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
-                                </a>
-                            <? elseif (is_string($key)) : ?>
-                                <?= Assets::img('blank.gif', ['widtd' => 20, 'height' => 20]); ?>
-                            <? endif ?>
-                        <? endforeach ?>
-                    <? endif ?>
+                <? if (!empty($values['navigation'])) : ?>
+                    <ul class="my-courses-navigation">
+                    <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
+                        <li class="my-courses-navigation-item <? if ($is_important($nav)) echo 'my-courses-navigation-important'; ?>">
+                        <? if (isset($nav) && $nav->isVisible(true)) : ?>
+                            <a href="<?=
+                            UrlHelper::getLink('dispatch.php/institute/overview',
+                                ['auswahl'     => $instid,
+                                      'redirect_to' => strtr($nav->getURL(), '?', '&')]) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
+                                <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
+                            </a>
+                        <? else: ?>
+                            <span class="empty-slot" style="width: 20px"></span>
+                        <? endif ?>
+                    <? endforeach ?>
+                    </li>
+                <? endif ?>
                 </td>
 
                 <td style="text-align: left; white-space: nowrap">
-                    <? if (Config::get()->ALLOW_SELFASSIGN_INSTITUTE && $values['perms'] == 'user') : ?>
-                        <a href="<?=$controller->url_for('my_institutes/decline_inst/'.$instid)?>">
-                            <?= Icon::create('door-leave', 'inactive', ['title' => _("aus der Einrichtung austragen")])->asImg(20) ?>
-                        </a>
-                    <? else : ?>
-                        <?= Assets::img('blank.gif', ['size' => '20']) ?>
-                    <? endif ?>
+                <? if (Config::get()->ALLOW_SELFASSIGN_INSTITUTE && $values['perms'] === 'user') : ?>
+                    <a href="<?= $controller->decline_inst($instid) ?>">
+                        <?= Icon::create('door-leave')->asImg(20, ['title' => _("aus der Einrichtung austragen")]) ?>
+                    </a>
+                <? else : ?>
+                    <?= Assets::img('blank.gif', ['size' => '20']) ?>
+                <? endif ?>
                 </td>
             </tr>
         <? endforeach ?>
         </tbody>
     </table>
 <? endif ?>
-
-
-<?php
-$sidebar = Sidebar::Get();
-
-$links = new ActionsWidget();
-if ($reset) {
-    $links->addLink(_('Alles als gelesen markieren'),
-                    $controller->url_for('my_institutes/tabularasa/' . time()), Icon::create('accept', 'clickable'));
-}
-if ($GLOBALS['perm']->have_perm('dozent') && !empty($institutes)) {
-    $links->addLink(_('Einrichtungsdaten bearbeiten'),
-                    URLHelper::getURL('dispatch.php/settings/statusgruppen'), Icon::create('institute+edit', 'clickable') );
-}
-if ($GLOBALS['perm']->have_perm('autor')) {
-    $links->addLink(_('Einrichtungen suchen'),
-                    URLHelper::getURL('dispatch.php/search/globalsearch#GlobalSearchInstitutes'), Icon::create('institute+add', 'clickable') );
-    $links->addLink(_('Studiendaten bearbeiten'),
-                    URLHelper::getURL('dispatch.php/settings/studies'), Icon::create('person', 'clickable'));
-}
-$sidebar->addWidget($links);

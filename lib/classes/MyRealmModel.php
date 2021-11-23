@@ -584,12 +584,12 @@ class MyRealmModel
      * Get all user assigned institutes based on simple or map
      * @return array
      */
-    public static function getMyInstitutes()
+    public static function getMyInstitutes(): array
     {
         $memberShips = InstituteMember::findByUser($GLOBALS['user']->id);
 
         if (empty($memberShips)) {
-            return null;
+            return [];
         }
         $institutes = [];
         $insts = new SimpleCollection($memberShips);

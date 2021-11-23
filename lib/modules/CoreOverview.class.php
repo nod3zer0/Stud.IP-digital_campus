@@ -56,7 +56,7 @@ class CoreOverview extends CorePlugin implements StudipModule
             ]);
             $nav->setBadgeNumber($result['neue']);
         } elseif ($result['count']) {
-            $nav->setImage(Icon::create('news', Icon::ROLE_INACTIVE), [
+            $nav->setImage(Icon::create('news', Icon::ROLE_CLICKABLE), [
                 'title' => sprintf(
                     ngettext(
                         '%d Ankündigung',

@@ -101,7 +101,7 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule,
             }
         }
         $nav = new Navigation(_('Courseware'), 'dispatch.php/course/courseware');
-        $nav->setImage(Icon::create('courseware', Icon::ROLE_INACTIVE), [
+        $nav->setImage(Icon::create('courseware', Icon::ROLE_CLICKABLE), [
             'title' => _('Courseware'),
         ]);
 

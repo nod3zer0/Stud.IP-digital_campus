@@ -60,7 +60,7 @@ class CoreSchedule extends CorePlugin implements StudipModule
             ]);
             $nav->setBadgeNumber($result['neue']);
         } else {
-            $nav->setImage(Icon::create('schedule', Icon::ROLE_INACTIVE), [
+            $nav->setImage(Icon::create('schedule', Icon::ROLE_CLICKABLE), [
                 'title' => sprintf(
                     ngettext(
                         '%d Termin',
