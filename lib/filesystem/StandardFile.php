@@ -297,7 +297,7 @@ class StandardFile implements FileType, ArrayAccess
             $actionMenu->addLink(
                 URLHelper::getURL('dispatch.php/file/share_oer/' . $this->fileref->id),
                 _('Im OER Campus veröffentlichen'),
-                Icon::create('service', Icon::ROLE_CLICKABLE, ['size' => 20]),
+                Icon::create('oer-campus'),
                 ['data-dialog' => '1']
             );
         }

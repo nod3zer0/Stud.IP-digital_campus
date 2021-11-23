@@ -148,11 +148,6 @@ class OERMaterial extends SimpleORMap
             ? $material->host->url."download/".$material['foreign_material_id']
             : URLHelper::getURL("dispatch.php/oer/endpoints/download/".$material->getId());
 
-
-        $right_link = '<div style="text-align: right;">';
-        $right_link .= '<a href="'.URLHelper::getLink("dispatch.php/oer/market/details/".$id).'" title="'._("Zum OER Campus").'">'.Icon::create("service", "clickable")->asImg(16, ['class' => "text-bottom"])." ".htmlReady($material['name']).'</a>';
-
-
         if ($material['player_url'] || $material->isPDF()) {
             if ($material['player_url']) {
                 OERDownloadcounter::addCounter($material->id);
