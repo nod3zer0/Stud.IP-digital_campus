@@ -28,7 +28,6 @@ class StudipComment extends SchemaProvider
     public function getRelationships($comment, ContextInterface $context): iterable
     {
         $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
 
         $relationships = [];
 

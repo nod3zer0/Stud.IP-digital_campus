@@ -44,7 +44,6 @@ class File extends SchemaProvider
     public function getRelationships($resource, ContextInterface $context): iterable
     {
         $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
 
         $relationships = [];
 

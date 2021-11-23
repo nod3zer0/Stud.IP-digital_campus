@@ -34,6 +34,7 @@ class Message extends SchemaProvider
     {
         $relationships = [];
 
+        $isPrimary = $context->getPosition()->getLevel() === 0;
         if ($isPrimary) {
             $relationships = $this->getSenderRelationship($relationships, $message, $this->shouldInclude($context, self::REL_SENDER));
             $relationships = $this->getRecipientsRelationship($relationships, $message, $this->shouldInclude($context, self::REL_RECIPIENTS));

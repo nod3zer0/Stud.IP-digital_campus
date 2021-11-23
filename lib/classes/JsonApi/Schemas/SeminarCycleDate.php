@@ -40,9 +40,6 @@ class SeminarCycleDate extends SchemaProvider
      */
     public function getRelationships($entry, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
         $relationships = [];
 
         if ($course = \Course::find($entry->seminar_id)) {

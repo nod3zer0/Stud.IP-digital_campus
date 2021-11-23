@@ -36,9 +36,6 @@ class ScheduleEntry extends SchemaProvider
      */
     public function getRelationships($entry, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
         $link = $this->createLinkToResource($entry->user);
 
         $relationships = [

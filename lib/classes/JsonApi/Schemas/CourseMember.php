@@ -45,7 +45,6 @@ class CourseMember extends SchemaProvider
     public function getRelationships($membership, ContextInterface $context): iterable
     {
         $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
 
         $relationships = [];
 

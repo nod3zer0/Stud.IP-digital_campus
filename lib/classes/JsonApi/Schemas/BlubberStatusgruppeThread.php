@@ -17,9 +17,6 @@ class BlubberStatusgruppeThread extends BlubberThread
      */
     public function getRelationships($resource, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
-        $includeList = $context->getIncludePaths();
-
         $relationships = parent::getRelationships($resource, $context);
 
         $relationships[self::REL_STATUSGRUPPE] = [

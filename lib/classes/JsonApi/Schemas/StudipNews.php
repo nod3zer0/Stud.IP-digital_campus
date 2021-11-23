@@ -56,7 +56,6 @@ class StudipNews extends SchemaProvider
      */
     public function getRelationships($news, ContextInterface $context): iterable
     {
-        $isPrimary = $context->getPosition()->getLevel() === 0;
         $includeList = $context->getIncludePaths();
 
         $relationships = [];
