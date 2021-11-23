@@ -44,7 +44,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin
             _('Blubber'),
             PluginEngine::getURL($this, [], 'messenger/course')
         );
-        $icon->setImage(Icon::create('blubber', Icon::ROLE_INACTIVE, ['title' => _('Blubber-Messenger')]));
+        $icon->setImage(Icon::create('blubber', Icon::ROLE_CLICKABLE, ['title' => _('Blubber-Messenger')]));
 
         $condition = "INNER JOIN blubber_threads USING (thread_id)
                       WHERE blubber_threads.context_type = 'course'

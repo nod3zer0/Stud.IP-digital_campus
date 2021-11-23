@@ -84,7 +84,7 @@ class CoreForum extends StudipPlugin implements ForumModule
         if ($num_entries > 0) {
             $navigation->setImage(Icon::create('forum+new', Icon::ROLE_ATTENTION, ['title' => $text]));
         } else {
-            $navigation->setImage(Icon::create('forum', Icon::ROLE_INACTIVE, ['title' => $text]));
+            $navigation->setImage(Icon::create('forum', Icon::ROLE_CLICKABLE, ['title' => $text]));
         }
 
         return $navigation;
