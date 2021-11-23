@@ -283,9 +283,11 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
     }
 
     /**
+     * Returns a list of responsible ranges for this block.
      *
+     * @return array<string, array<Range>>
      */
-    public function getPossibleResponsibilites()
+    public function getPossibleResponsibilites(): array
     {
         if ($this->range instanceof User) {
             return [
@@ -310,7 +312,7 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
             return compact('users', 'groups', 'institutes');
         }
 
-        throw new Exception('Not implemented yet');
+        throw new UnexpectedValueException('Not implemented yet');
     }
 
     /**
