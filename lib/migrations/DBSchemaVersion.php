@@ -166,21 +166,22 @@ class DBSchemaVersion implements SchemaVersion
         $result = $db->query("SHOW TABLES LIKE 'schema_versions'");
 
         if ($result && $result->rowCount() > 0) {
-            $backported_migrations = [
-                20200306, 20200713, 20200811, 20200909, 20200910,
-                20201002, 20201103, 202011031, 20210317, 20210422,
-                20210425, 20210503, 20211015, 20211108,
+            $base_version = 269;    // 4.4
+            $schema_mapping = [
+                20200307 => 285,    // 4.5
+                20200522 => 290,    // 4.6
+                20210511 => 327     // 5.0
             ];
 
-            // drop backported migrations
-            $query = "DELETE FROM schema_versions
-                      WHERE domain = 'studip' AND version in (?)";
-            $db->execute($query, [$backported_migrations]);
+            foreach ($schema_mapping as $old_version => $new_version) {
+                $query = "SELECT 1 FROM schema_versions
+                          WHERE domain = 'studip' AND version = ?";
+                $result = $db->fetchOne($query, [$old_version]);
 
-            // drop migrations with irregular numbers
-            $query = "DELETE FROM schema_versions
-                      WHERE domain = 'studip' AND LENGTH(version) > 8";
-            $db->exec($query);
+                if ($result) {
+                    $base_version = $new_version;
+                }
+            }
 
             $query = "CREATE TABLE schema_version (
                         domain VARCHAR(255) COLLATE latin1_bin NOT NULL,
@@ -198,22 +199,9 @@ class DBSchemaVersion implements SchemaVersion
             $query = "DROP TABLE schema_versions";
             $db->exec($query);
 
-            $schema_mapping = [
-                20190917 => 269,
-                20200307 => 285,
-                20200522 => 290,
-                20210511 => 327,
-                20210603 => 327
-            ];
-
-            $query = "UPDATE schema_version SET branch = '1' WHERE domain = 'studip'";
-            $db->exec($query);
-
-            foreach ($schema_mapping as $old_version => $new_version) {
-                $query = "UPDATE schema_version SET version = ?
-                          WHERE domain = 'studip' AND version = ?";
-                $db->execute($query, [$new_version, $old_version]);
-            }
+            $query = "UPDATE schema_version SET branch = ?, version = ?
+                      WHERE domain = 'studip'";
+            $db->execute($query, [1, $base_version]);
         }
     }
 }

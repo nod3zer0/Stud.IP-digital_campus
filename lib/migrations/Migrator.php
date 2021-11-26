@@ -444,7 +444,7 @@ class Migrator
     public function migrationBranchAndVersion($version)
     {
         if (preg_match('/^(.*)\.([0-9]+)$/', $version, $matches)) {
-            $branch = preg_replace('/\b0+/', '', $matches[1]);
+            $branch = preg_replace('/\b0+\B/', '', $matches[1]);
             $version = (int) $matches[2];
         } else {
             $branch = '0';
