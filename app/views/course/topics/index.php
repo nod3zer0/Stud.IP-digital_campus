@@ -6,8 +6,8 @@
     </colgroup>
     <thead>
         <tr>
-            <th><?= _("Thema") ?></th>
-            <th><?= _("Termine") ?></th>
+            <th><?= _('Thema') ?></th>
+            <th><?= _('Termine') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -43,11 +43,11 @@
                     <table class="default nohover">
                         <tbody>
                         <tr>
-                            <td><strong><?= _("Beschreibung") ?></strong></td>
+                            <td><strong><?= _('Beschreibung') ?></strong></td>
                             <td><?= formatReady($topic['description']) ?></td>
                         </tr>
                         <tr>
-                            <td><strong><?= _("Materialien") ?></strong></td>
+                            <td><strong><?= _('Materialien') ?></strong></td>
                             <td>
                                 <? $material = false ?>
                                 <ul class="clean">
@@ -58,7 +58,7 @@
                                                 'dispatch.php/course/files/index/' . $folder->id
                                                 ) ?>">
                                                 <?= $folder->getTypedFolder()->getIcon('clickable')->asImg(['class' => "text-bottom"]) ?>
-                                                <?= _("Dateiordner") ?>
+                                                <?= _('Dateiordner') ?>
                                             </a>
                                         </li>
                                         <? $material = true ?>
@@ -68,14 +68,14 @@
                                         <li>
                                             <a href="<?= URLHelper::getLink($link_to_thread) ?>">
                                                 <?= Icon::create('forum', 'clickable')->asImg(['class' => "text-bottom"]) ?>
-                                                <?= _("Thema im Forum") ?>
+                                                <?= _('Thema im Forum') ?>
                                             </a>
                                         </li>
                                         <? $material = true ?>
                                     <? endif ?>
                                 </ul>
                                 <? if (!$material) : ?>
-                                    <?= _("Keine Materialien zu dem Thema vorhanden") ?>
+                                    <?= _('Keine Materialien zu dem Thema vorhanden') ?>
                                 <? endif ?>
                             </td>
                         </tr>
@@ -93,12 +93,12 @@
                                 <?= Studip\Button::create(
                                     _('Löschen'),
                                     'delete',
-                                    ['data-confirm' => _('Wirklich löschen?')]
+                                    ['data-confirm' => _('Das Thema wirklich löschen?')]
                                 ) ?>
                             </form>
 
                             <? if (!$cancelled_dates_locked && $topic->dates->count()) : ?>
-                                <?= \Studip\LinkButton::create(_("Alle Termine ausfallen lassen"), URLHelper::getURL("dispatch.php/course/cancel_dates", ['issue_id' => $topic->getId()]), ['data-dialog' => '']) ?>
+                                <?= \Studip\LinkButton::create(_('Alle Termine ausfallen lassen'), URLHelper::getURL("dispatch.php/course/cancel_dates", ['issue_id' => $topic->getId()]), ['data-dialog' => '']) ?>
                             <? endif ?>
 
                             <span class="button-group">

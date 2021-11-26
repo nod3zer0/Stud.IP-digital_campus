@@ -39,7 +39,7 @@
         <label>
         <? if ($topic->forum_thread_url) : ?>
             <?= Icon::create('accept', Icon::ROLE_ACCEPT)->asImg(['class' => 'text-bottom']) ?>
-            <?= _('Forenthema vorhanden ') ?>
+            <?= _('Forenthema vorhanden') ?>
         <? else : ?>
             <input type="checkbox" name="forumthread" id="topic_forumthread" value="1">
             <?= _('Forenthema anlegen') ?>
@@ -77,13 +77,13 @@
     </fieldset>
     <footer data-dialog-button>
         <div class="button-group">
-            <?= \Studip\Button::createAccept(_("Speichern")) ?>
+            <?= \Studip\Button::createAccept(_('Speichern')) ?>
 
             <? if (!$topic->isNew()) : ?>
                 <?= \Studip\LinkButton::create(
                     _('Löschen'),
                     $controller->url_for('course/topics/delete/' . $topic->getId()),
-                    ['data-confirm' => _('Wirklich löschen?')]
+                    ['data-confirm' => _('Das Thema wirklich löschen?')]
                 ) ?>
             <? endif ?>
         </div>
