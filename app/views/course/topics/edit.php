@@ -27,7 +27,7 @@
         <? $folder = $topic->folders->first() ?>
         <? if ($folder) : ?>
             <?= Icon::create('accept', Icon::ROLE_ACCEPT)->asImg(['class' => 'text-bottom']) ?>
-            <?= _('Dateiordner vorhanden ') ?>
+            <?= _('Dateiordner vorhanden') ?>
         <? else : ?>
             <input type="checkbox" name="folder" id="topic_folder" value="1">
             <?= _('Dateiordner anlegen') ?>
