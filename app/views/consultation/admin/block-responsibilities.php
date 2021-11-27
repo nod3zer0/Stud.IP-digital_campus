@@ -12,7 +12,7 @@ $selected = function ($type, $id) use ($block) {
 ?>
 <? if (!empty($responsible['users'])): ?>
     <label>
-        <?= _('Durchführende Person(en)') ?>
+        <?= _('Durchführende Personen') ?>
         <select name="responsibilities[user][]" multiple class="nested-select">
             <? foreach ($responsible['users'] as $user): ?>
                 <option value="<?= htmlReady($user->id) ?>" <?= $selected('user', $user->id) ?>>
@@ -25,7 +25,7 @@ $selected = function ($type, $id) use ($block) {
 
 <? if (!empty($responsible['groups'])): ?>
     <label>
-        <?= _('Durchführende Gruppe(n)') ?>
+        <?= _('Durchführende Gruppen') ?>
         <select name="responsibilities[statusgroup][]" multiple class="nested-select">
             <? foreach ($responsible['groups'] as $group): ?>
                 <option value="<?= htmlReady($group->id) ?>" <?= $selected('statusgroup', $group->id) ?>>
@@ -38,7 +38,7 @@ $selected = function ($type, $id) use ($block) {
 
 <? if (!empty($responsible['institutes'])): ?>
     <label>
-        <?= _('Durchführende Einrichtung(en)') ?>
+        <?= _('Durchführende Einrichtungen') ?>
         <select name="responsibilities[institute][]" multiple class="nested-select">
             <? foreach ($responsible['institutes'] as $institute): ?>
                 <option value="<?= htmlReady($institute->id) ?>" <?= $selected('institute', $institute->id) ?>>

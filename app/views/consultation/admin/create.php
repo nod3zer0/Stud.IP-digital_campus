@@ -123,7 +123,7 @@ $intervals = [
 
 <? if ($responsible): ?>
     <fieldset>
-        <legend><?= _('Durchführende Person(en), Gruppe(n) oder Einrichtung(en)') ?></legend>
+        <legend><?= _('Durchführende Personen, Gruppen oder Einrichtungen') ?></legend>
 
         <?= $this->render_partial('consultation/admin/block-responsibilities.php', compact('responsible')) ?>
     </fieldset>
