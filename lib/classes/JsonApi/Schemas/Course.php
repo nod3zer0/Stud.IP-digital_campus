@@ -89,11 +89,15 @@ class Course extends SchemaProvider
      */
     private function getInstitute(\Course $course, $shouldInclude)
     {
-        return [
-            self::RELATIONSHIP_LINKS => [
-                Link::RELATED => $this->createLinkToResource($course->home_institut),
-            ],
-            self::RELATIONSHIP_DATA => $course->home_institut,
+        return $course->institut_id
+            ?  [
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($course->home_institut),
+                ],
+                self::RELATIONSHIP_DATA => $course->home_institut,
+            ]
+        : [
+            self::RELATIONSHIP_DATA => null,
         ];
     }
 
