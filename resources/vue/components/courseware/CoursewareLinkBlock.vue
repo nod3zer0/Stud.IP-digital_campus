@@ -17,7 +17,7 @@
                     </a>
                 </div>
                 <div v-if="currentType === 'internal'">
-                    <router-link :to="'/structural_element/' + currentTarget">
+                    <router-link :to="{ name: 'CoursewareStructuralElement', params: { id: currentTarget } }">
                         <div class="cw-link internal">
                             <span class="cw-link-title">
                                 {{ currentTitle }}
