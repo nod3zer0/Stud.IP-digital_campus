@@ -604,6 +604,7 @@ class Module_ModuleController extends MVVController
                 return;
             }
             $this->modulteil = new Modulteil();
+            $this->modulteil->setNewId();
             $this->modulteil->modul_id = $this->modul->id;
         } else {
             $this->modul = $this->modulteil->modul;
