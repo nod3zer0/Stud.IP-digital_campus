@@ -48,7 +48,7 @@ class Resources_MessagesController extends AuthenticatedController
 
         $this->clipboards = Clipboard::getClipboardsForUser(
             $GLOBALS['user']->id,
-            'Room'
+            ['Room']
         );
 
         //STUB
