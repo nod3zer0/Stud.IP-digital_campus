@@ -1307,9 +1307,16 @@ class Resources_RoomRequestController extends AuthenticatedController
         $this->show_info = true;
 
         if ($this->request->closed > 0) {
-            PageLayout::postInfo(
-                _('Die Anfrage wurde bereits aufgelöst!')
-            );
+            if ($this->request->closed == '3') {
+                PageLayout::setTitle(_('Abgelehnte Anfrage'));
+                PageLayout::postInfo(
+                    _('Die Anfrage wurde abgelehnt!')
+                );
+            } else {
+                PageLayout::postInfo(
+                    _('Die Anfrage wurde bereits aufgelöst!')
+                );
+            }
             $this->show_form = false;
             return;
         }
