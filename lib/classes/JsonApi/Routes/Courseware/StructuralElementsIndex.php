@@ -17,6 +17,7 @@ class StructuralElementsIndex extends JsonApiController
 
     protected $allowedIncludePaths = [
         'ancestors',
+        'children',
         'containers',
         'containers.blocks',
         'containers.blocks.edit-blocker',

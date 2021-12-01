@@ -158,8 +158,7 @@ class StructuralElement extends SchemaProvider
 
         if ($includeData) {
             $user = $this->currentUser;
-            $relation[self::RELATIONSHIP_DATA] = array_filter(
-                $resource->children,
+            $relation[self::RELATIONSHIP_DATA] = $resource->children->filter(
                 function ($child) use ($user) {
                     return $child->canRead($user);
                 }
