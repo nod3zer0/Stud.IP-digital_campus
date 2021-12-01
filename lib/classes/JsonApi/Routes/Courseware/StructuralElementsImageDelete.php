@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class StructuralElementsImageDelete extends NonJsonApiController
 {
-    public function invoke(Request $request, Response $response, array $args)
+    public function invoke(Request $request, Response $response, array $args): Response
     {
         if (!($structuralElement = StructuralElement::find($args['id']))) {
             throw new RecordNotFoundException();
