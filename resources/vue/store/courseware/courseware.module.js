@@ -317,17 +317,14 @@ export const actions = {
             // console.log(resp);
         });
     },
-    copyStructuralElement({ getters }, { parentId, element }) {
-        const copy = {
-            data: {
-                element: element,
-                parent_id: parentId,
-            },
-        };
+    copyStructuralElement({ dispatch, getters }, { parentId, element }) {
+        const copy = { data: { parent_id: parentId, }, };
 
-        return state.httpClient.post(`courseware-structural-elements/${element.id}/copy`, copy).then((resp) => {
-            // console.log(resp);
-        });
+        return state.httpClient.post(`courseware-structural-elements/${element.id}/copy`, copy)
+            .then(({ data }) => {
+                const id = data.data.id;
+                dispatch('loadStructuralElement', id);
+            });
     },
 
     lockObject({ dispatch, getters }, { id, type }) {

@@ -88,7 +88,7 @@
             </courseware-tab>
 
             <courseware-tab :name="$gettext('Kopieren')">
-                <courseware-manager-copy-selector @loadSelf="reloadElements"/>
+                <courseware-manager-copy-selector @loadSelf="reloadElements" @reloadElement="reloadElements" />
             </courseware-tab>
 
             <courseware-tab :name="$gettext('Importieren')">
@@ -233,6 +233,7 @@ export default {
         async reloadElements() {
             await this.setCurrentId(this.currentId);
             await this.setSelfId(this.selfId);
+            this.$emit("reload");
         },
         async setCurrentId(target) {
             this.currentId = target;

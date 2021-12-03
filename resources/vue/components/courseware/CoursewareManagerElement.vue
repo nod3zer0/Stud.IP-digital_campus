@@ -309,7 +309,7 @@ export default {
                 let element = data.element;
                 if (source === 'self') {
                     element.relationships.parent.data.id = this.filingData.parentItem.id;
-                    element.attributes.position = this.childrenById(this.filingData.parentItem.id).length;
+                    element.attributes.position = this.childrenById(this.filingData.parentItem.id).length + 1;
                     await this.lockObject({ id: element.id, type: 'courseware-structural-elements' });
                     await this.updateStructuralElement({
                         element: element,
@@ -343,7 +343,7 @@ export default {
                 let container = data.container;
                 if (source === 'self') {
                     container.relationships['structural-element'].data.id = this.filingData.parentItem.id;
-                    container.attributes.position = this.filingData.parentItem.relationships.containers.data.length;
+                    container.attributes.position = this.filingData.parentItem.relationships.containers.data.length + 1;
                     await this.lockObject({id: container.id, type: 'courseware-containers'});
                     await this.updateContainer({
                         container: container,
@@ -399,7 +399,7 @@ export default {
                     await this.unlockObject({id: destinationContainer.id, type: 'courseware-containers'});
 
                     block.relationships.container.data.id = this.filingData.parentItem.id;
-                    block.attributes.position = this.filingData.parentItem.relationships.blocks.data.length;
+                    block.attributes.position = this.filingData.parentItem.relationships.blocks.data.length + 1;
                     await this.lockObject({id: block.id, type: 'courseware-blocks'});
                     await this.updateBlock({
                         block: block,

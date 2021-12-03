@@ -26,24 +26,36 @@ class StructuralElementsCopy extends NonJsonApiController
     {
         $data = $request->getParsedBody()['data'];
 
-        $remote_element = \Courseware\StructuralElement::find($data['element']['id']);
-        $parent_element = \Courseware\StructuralElement::find($data['parent_id']);
-        if (!Authority::canCreateContainer($user = $this->getUser($request), $parent_element)) {
+        $sourceElement = StructuralElement::find($args['id']);
+        $newParent = StructuralElement::find($data['parent_id']);
+        if (!Authority::canCreateContainer($user = $this->getUser($request), $newParent)) {
             throw new AuthorizationFailedException();
         }
 
-        $new_element = $this->copyElement($user, $remote_element, $parent_element);
+        $newElement = $this->copyElement($user, $sourceElement, $newParent);
 
-        $response = $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write((string) json_encode($new_element));
-
-        return $response;
+        return $this->redirectToStructuralElement($response, $newElement);
     }
 
-    private function copyElement(\User $user, \Courseware\StructuralElement $remote_element, \Courseware\StructuralElement $parent_element)
+    private function copyElement(\User $user, StructuralElement $sourceElement, StructuralElement $newParent)
     {
-        $new_element = $remote_element->copy($user, $parent_element);
+        $new_element = $sourceElement->copy($user, $newParent);
 
         return $new_element;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    private function redirectToStructuralElement(Response $response, StructuralElement $resource): Response
+    {
+        $pathinfo = $this->getSchema($resource)
+            ->getSelfLink($resource)
+            ->getStringRepresentation($this->container->get('json-api-integration-urlPrefix'));
+        $old = \URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+        $url = \URLHelper::getURL($pathinfo, [], true);
+        \URLHelper::setBaseURL($old);
+
+        return $response->withHeader('Location', $url)->withStatus(303);
     }
 }

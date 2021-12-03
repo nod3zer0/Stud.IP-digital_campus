@@ -32,6 +32,7 @@
                     :currentElement="remoteElement"
                     @selectElement="setRemoteId"
                     @loadSelf="loadSelf"
+                    @reloadElement="reloadElement"
                 />
                 <courseware-companion-box
                     v-if="remoteId === '' && hasRemoteCid"
@@ -106,9 +107,9 @@ export default {
     },
     methods: {
         ...mapActions({
+            loadAnotherCourseware: 'courseware-structure/loadAnotherCourseware',
             loadUsersCourses: 'loadUsersCourses',
             loadStructuralElement: 'loadStructuralElement',
-            loadRemoteCoursewareStructure: 'loadRemoteCoursewareStructure',
             loadSemester: 'semesters/loadById',
         }),
         selectSource(source) {
@@ -116,16 +117,15 @@ export default {
         },
         async loadRemoteCourseware(cid) {
             this.remoteCid = cid;
-            this.remoteCoursewareInstance = await this.loadRemoteCoursewareStructure({rangeId: this.remoteCid, rangeType: 'courses'});
+            this.remoteCoursewareInstance = await this.loadAnotherCourseware({ id: this.remoteCid, type: 'courses'});
             if (this.remoteCoursewareInstance !== null) {
                 this.setRemoteId(this.remoteCoursewareInstance.relationships.root.data.id);
             } else {
                 this.remoteId = '';
             }
-            
         },
         async loadOwnCourseware() {
-            this.ownCoursewareInstance = await this.loadRemoteCoursewareStructure({rangeId: this.userId, rangeType: 'users'});
+            this.ownCoursewareInstance = await this.loadAnotherCourseware({ id: this.userId, type: 'users' });
             if (this.ownCoursewareInstance !== null) {
                 this.setOwnId(this.ownCoursewareInstance.relationships.root.data.id);
             } else {
@@ -188,6 +188,9 @@ export default {
             }
 
             return 'seminar';
+        },
+        reloadElement() {
+            this.$emit("reloadElement");
         }
     },
     async mounted() {

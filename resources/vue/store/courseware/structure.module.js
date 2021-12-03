@@ -31,14 +31,21 @@ export const mutations = {
 
 const actions = {
     build({ commit, rootGetters }) {
-        const structuralElements = rootGetters['courseware-structural-elements/all'];
-        const root = findRoot(structuralElements);
+        const instance = rootGetters['courseware'];
+        if (!instance) {
+            throw new Error('Could not find current courseware');
+        }
+        const root = rootGetters['courseware-structural-elements/related']({
+            parent: { id: instance.id, type: instance.type },
+            relationship: 'root',
+        });
         if (!root) {
             commit('reset');
 
             return;
         }
 
+        const structuralElements = rootGetters['courseware-structural-elements/all'];
         const children = structuralElements.reduce((memo, element) => {
             const parent = element.relationships.parent?.data?.id ?? null;
             if (parent) {
@@ -81,43 +88,70 @@ const actions = {
         }
     },
 
+    // load the structure of the current courseware
     async load({ commit, dispatch, rootGetters }) {
-        const parent = rootGetters['context'];
+        const context = rootGetters['context'];
+        const instance = await dispatch('loadInstance', context);
+        commit('coursewareSet', instance, { root: true });
+
+        const root = rootGetters['courseware-structural-elements/related']({
+            parent: { id: instance.id, type: instance.type },
+            relationship: 'root',
+        });
+        if (!root) {
+            throw new Error(`Could not find root of courseware { id: ${instance.id}, type: ${instance.type}`);
+        }
+
+        dispatch('fetchDescendantsWithCaching', { root });
+
+        return instance;
+    },
+
+    // load the structure of a specified courseware
+    async loadAnotherCourseware({ commit, dispatch, rootGetters }, context) {
+        const instance = await dispatch('loadInstance', context);
+
+        const root = rootGetters['courseware-structural-elements/related']({
+            parent: { id: instance.id, type: instance.type },
+            relationship: 'root',
+        });
+        if (!root) {
+            throw new Error(`Could not find root of courseware { id: ${instance.id}, type: ${instance.type}`);
+        }
+
+        await dispatch('loadDescendants', { root });
+
+        return instance;
+    },
+
+    loadInstance({ commit, dispatch, rootGetters }, context) {
+        const parent = context;
         const relationship = 'courseware';
         const options = {
             include: 'bookmarks,root',
         };
 
-        // get courseware instance
-        await dispatch(`courseware-instances/loadRelated`, { parent, relationship, options }, { root: true });
-        const courseware = rootGetters['courseware-instances/all'][0];
-        commit('coursewareSet', courseware, { root: true });
-
-        // load descendants
-        dispatch('fetchDescendants');
+        return dispatch(
+            `courseware-instances/loadRelated`,
+            {
+                parent,
+                relationship,
+                options,
+            },
+            { root: true }
+        ).then(() => {
+            return rootGetters['courseware-instances/related']({ parent, relationship });
+        });
     },
 
-    async fetchDescendants({ dispatch, rootGetters, commit }) {
-        // get root of that instance
-        const courseware = rootGetters['courseware'];
-        if (!courseware) {
-            return;
-        }
-        const rootElement = rootGetters['courseware-structural-elements/related']({
-            parent: { id: courseware.id, type: courseware.type },
-            relationship: 'root',
-        });
-        if (!rootElement) {
-            return;
-        }
-
+    async fetchDescendantsWithCaching({ dispatch, rootGetters, commit }, { root }) {
         const cache = window.STUDIP.Cache.getInstance('courseware');
-        const cacheKey = `descendants/${rootElement.id}/${rootGetters['userId']}`;
+        const cacheKey = `descendants/${root.id}/${rootGetters['userId']}`;
 
-        await unpickleDescendants();
-        revalidateDescendants();
+        await unpickleStaleDescendants();
+        return revalidateDescendants();
 
-        function unpickleDescendants() {
+        function unpickleStaleDescendants() {
             try {
                 const descendants = cache.get(cacheKey);
                 const cacheHit = descendants !== undefined;
@@ -130,22 +164,7 @@ const actions = {
         }
 
         function revalidateDescendants() {
-            return loadDescendants().then(removeStaleElements).then(pickleDescendants);
-        }
-
-        function loadDescendants() {
-            const parent = { id: rootElement.id, type: rootElement.type };
-            const relationship = 'descendants';
-            const options = {
-                'page[offset]': 0,
-                'page[limit]': 10000,
-            };
-
-            return dispatch(
-                'courseware-structural-elements/loadRelated',
-                { parent, relationship, options },
-                { root: true }
-            );
+            return dispatch('loadDescendants', { root }).then(removeStaleElements).then(pickleDescendants);
         }
 
         function pickleDescendants() {
@@ -156,9 +175,9 @@ const actions = {
 
         function removeStaleElements() {
             const idsToKeep = [
-                rootElement.id,
+                root.id,
                 ...rootGetters['courseware-structural-elements/related']({
-                    parent: rootElement,
+                    parent: root,
                     relationship: 'descendants',
                 }).map(({ id }) => id),
             ];
@@ -168,11 +187,22 @@ const actions = {
                 .forEach((id) => commit('courseware-structural-elements/REMOVE_RECORD', { id }, { root: true }));
         }
     },
-};
 
-function findRoot(nodes) {
-    return nodes.find((node) => !node.relationships.parent?.data);
-}
+    loadDescendants({ dispatch }, { root }) {
+        const parent = { id: root.id, type: root.type };
+        const relationship = 'descendants';
+        const options = {
+            'page[offset]': 0,
+            'page[limit]': 10000,
+        };
+
+        return dispatch(
+            'courseware-structural-elements/loadRelated',
+            { parent, relationship, options },
+            { root: true }
+        );
+    },
+};
 
 function* visitTree(tree, current) {
     if (current) {
