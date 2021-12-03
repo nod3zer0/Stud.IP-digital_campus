@@ -120,8 +120,16 @@ class Step00349 extends Migration
 
         $all_plugins = $db->fetchPairs("SELECT pluginclassname, pluginid FROM plugins");
 
-        foreach ($db->query("SELECT seminar_id, status, modules FROM seminare") as $row) {
+        foreach ($db->query("SELECT seminar_id, status, modules, class  FROM seminare LEFT JOIN sem_types ON sem_types.id = seminare.status") as $row) {
             $activated_plugins = $db->fetchPairs("SELECT plugins_activated.pluginid, state FROM `plugins_activated` INNER JOIN `plugins` USING(pluginid) WHERE range_id=? AND range_type='sem' ORDER BY navigationpos", [$row['seminar_id']]);
+            $sem_class = OldSemClass::getClasses()[$row['class']] ?: OldSemClass::getDefaultSemClass();
+            foreach ($sem_class->getModules() as $sem_class_module => $sem_class_module_meta) {
+                if (!isset($studip_modules[$sem_class_module]) && isset($all_plugins[$sem_class_module])) {
+                    if ($sem_class_module_meta['sticky']) {
+                        $activated_plugins[$all_plugins[$sem_class_module]] = $sem_class_module_meta['activated'] ? '1' : '0';
+                    }
+                }
+            }
             $modules = $this->getLocalModules('sem', $row['modules'], $row['status']);
             $pos = 0;
             foreach ($modules as $pos => $module) {
