@@ -12,30 +12,23 @@ use JsonApi\Routes\Users\Authority as UsersAuth;
  */
 class Authority
 {
-    public static function canShowFileArea(User $user, \SimpleOrMap $resource)
+    public static function canShowFileArea(User $user, \SimpleORMap $resource): bool
     {
-        try {
-            if (($resource instanceof \Course) &&
-                !CoursesAuth::canShowCourse($user, $resource, CoursesAuth::SCOPE_EXTENDED)) {
-                return false;
-            }
-
-            // checkObjectModule relies on Context; so we replace it
-            $oldContextId = \Context::getId();
-            \Context::set($resource->id);
-
-            checkObjectModule('documents');
-
-            // restore Context
-            \Context::set($oldContextId);
-        } catch (\Exception $e) {
+        if (
+            $resource instanceof \Course &&
+            !CoursesAuth::canShowCourse($user, $resource, CoursesAuth::SCOPE_EXTENDED)
+        ) {
             return false;
         }
 
-        return
-            ($folder = \Folder::findTopFolder($resource->id))
-            && ($rootFolder = $folder->getTypedFolder())
-            && $rootFolder->isVisible($user->id);
+        $info = \PluginManager::getInstance()->getPluginInfo('CodeDocuments');
+        if (!\PluginManager::getInstance()->isPluginActivated($info['id'], $resource->getId())) {
+            return false;
+        }
+
+        return ($folder = \Folder::findTopFolder($resource->getId())) &&
+            ($rootFolder = $folder->getTypedFolder()) &&
+            $rootFolder->isVisible($user->getId());
     }
 
     public static function canShowFolder(User $user, \FolderType $folder)
@@ -75,31 +68,25 @@ class Authority
 
     public static function canShowFile(User $user, \File $file)
     {
-        return
-            $file['user_id'] === $user->id
-            ||
-            0 < count(
-            $file->refs->filter(
-                function (\FileRef $ref) use ($user) {
-                    $folder = $ref->foldertype;
+        return $file['user_id'] === $user->id ||
+            0 <
+                count(
+                    $file->refs->filter(function (\FileRef $ref) use ($user) {
+                        $folder = $ref->foldertype;
 
-                    return $folder && $folder->isVisible($user->id) && $folder->isReadable($user->id);
-                },
-                1
-            )
-        );
+                        return $folder && $folder->isVisible($user->id) && $folder->isReadable($user->id);
+                    }, 1)
+                );
     }
 
     public static function canUpdateFile(User $user, \File $file)
     {
-        return 0 < count(
-            $file->refs->filter(
-                function (\FileRef $ref) use ($user) {
+        return 0 <
+            count(
+                $file->refs->filter(function (\FileRef $ref) use ($user) {
                     return $ref->getFileType()->isWritable($user->id);
-                },
-                1
-            )
-        );
+                }, 1)
+            );
     }
 
     public static function canIndexCourse(User $user, \Course $course)
@@ -148,7 +135,6 @@ class Authority
 
     public static function canCopyFolder(User $user, \FolderType $sourceFolder, \FolderType $destinationFolder)
     {
-        return self::canCreateFileRefsInFolder($user, $destinationFolder)
-            && self::canShowFolder($user, $sourceFolder);
+        return self::canCreateFileRefsInFolder($user, $destinationFolder) && self::canShowFolder($user, $sourceFolder);
     }
 }
