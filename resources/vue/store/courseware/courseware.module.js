@@ -317,14 +317,16 @@ export const actions = {
             // console.log(resp);
         });
     },
-    copyStructuralElement({ dispatch, getters }, { parentId, element }) {
+    async copyStructuralElement({ dispatch, getters, rootGetters }, { parentId, element }) {
         const copy = { data: { parent_id: parentId, }, };
 
-        return state.httpClient.post(`courseware-structural-elements/${element.id}/copy`, copy)
-            .then(({ data }) => {
-                const id = data.data.id;
-                dispatch('loadStructuralElement', id);
-            });
+        const result = await state.httpClient.post(`courseware-structural-elements/${element.id}/copy`, copy);
+        const id = result.data.data.id;
+        await dispatch('loadStructuralElement', id);
+
+        const newElement = rootGetters['courseware-structural-elements/byId']({ id });
+
+        return dispatch('courseware-structure/loadDescendants', { root: newElement });
     },
 
     lockObject({ dispatch, getters }, { id, type }) {

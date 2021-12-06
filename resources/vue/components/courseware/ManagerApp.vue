@@ -23,7 +23,6 @@ export default {
         async rebuildStructure() {
             // compute order of structural elements once more
             await this.buildStructure();
-            console.debug("built structure")
 
             // throw away stale cache
             this.invalidateStructureCache();
