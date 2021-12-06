@@ -460,9 +460,9 @@ class ExternModule {
         }
         $query_parts = [];
         if (is_array($params)) {
-            $param_key = 'ext_' . mb_strtolower($this->name);
+            $param_key = 'ext_' . strtolower($this->name);
             foreach ($params as $name => $value) {
-                $query_parts[] = "{$param_key}[{$name}]=" . $value;
+                $query_parts[] = "{$param_key}[{$name}]=" . urlencode($value);
             }
         }
 
@@ -501,7 +501,6 @@ class ExternModule {
             }
             if (is_array($config_meta_data)) {
                 $module = $config_meta_data['module_name'];
-            //  var_dump($this->config);
             } else {
                 return '';
             }
@@ -511,7 +510,7 @@ class ExternModule {
         if (is_array($query_parts) && count($query_parts)) {
             $url .= '&' . implode('&', $query_parts);
         }
-        return $url;
+        return self::ExtHtmlReady($url);
     }
 
     function getLinkToSelf ($params = null, $with_module_params = false, $linked_element_name = null) {
@@ -519,28 +518,15 @@ class ExternModule {
     }
 
     function getModuleParams ($params = null) {
-        $param_key = 'ext_' . mb_strtolower($this->name);
+        $param_key = 'ext_' . strtolower($this->name);
         if (is_array($_REQUEST[$param_key])) {
             $ret = [];
             if (is_null($params)) {
-                if (is_array($_GET[$param_key])) {
-                    foreach ($_GET[$param_key] as $key => $value) {
-                        $ret[$key] = urldecode($value);
-                    }
-                }
-                if (is_array($_POST[$param_key])) {
-                    foreach ($_POST[$param_key] as $key => $value) {
-                        $ret[$key] = $value;
-                    }
-                }
-                return $ret;
+                return $_REQUEST[$param_key];
             }
             foreach ($params as $param) {
-                if (isset($_GET[$param_key][$param])) {
-                    $ret[$param] = urldecode($_GET[$param_key][$param]);
-                }
-                if (isset($_POST[$param_key][$param])) {
-                    $ret[$param] = $_POST[$param_key][$param];
+                if (isset($_REQUEST[$param_key][$param])) {
+                    $ret[$param] = $_REQUEST[$param_key][$param];
                 }
             }
             return $ret;
