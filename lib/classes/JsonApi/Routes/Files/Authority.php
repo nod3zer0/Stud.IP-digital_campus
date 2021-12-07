@@ -21,14 +21,16 @@ class Authority
             return false;
         }
 
-        $info = \PluginManager::getInstance()->getPluginInfo('CodeDocuments');
-        if (!\PluginManager::getInstance()->isPluginActivated($info['id'], $resource->getId())) {
-            return false;
+        if ($resource instanceof \Course || $resource instanceof \Institute) {
+            $info = \PluginManager::getInstance()->getPluginInfo('CoreDocuments');
+            if (!\PluginManager::getInstance()->isPluginActivated($info['id'], $resource->id)) {
+                return false;
+            }
         }
 
-        return ($folder = \Folder::findTopFolder($resource->getId())) &&
+        return ($folder = \Folder::findTopFolder($resource->id)) &&
             ($rootFolder = $folder->getTypedFolder()) &&
-            $rootFolder->isVisible($user->getId());
+            $rootFolder->isVisible($user->id);
     }
 
     public static function canShowFolder(User $user, \FolderType $folder)
