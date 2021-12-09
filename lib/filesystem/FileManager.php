@@ -111,7 +111,7 @@ class FileManager
             return 'file-generic';
         }
 
-        list($category, $type) = explode('/', $mime_type, 2);
+        [$category, $type] = explode('/', $mime_type, 2);
 
         switch($category) {
             case 'image':
@@ -1618,7 +1618,7 @@ class FileManager
             $header_parts = explode(';', $disposition_header);
             foreach ($header_parts as $part) {
                 $part = trim($part);
-                list($key, $value) = explode('=', $part, 2);
+                [$key, $value] = explode('=', $part, 2);
                 if (mb_strtolower($key) === 'filename') {
                     $header['filename'] = trim($value, '"');
                 }
@@ -1725,10 +1725,10 @@ class FileManager
     }
 
     /**
-     * returns config array for upload types and sizes
+     * returns config array for upload types and sizes for a given range id
      *
-     * @param $range_id string id of Course Institute User
-     * @param null $user_id string
+     * @param string      $range_id id of Course Institute User
+     * @param string|null $user_id  Optional user id
      * @return array
      */
     public static function getUploadTypeConfig($range_id, $user_id = null)
@@ -1753,15 +1753,28 @@ class FileManager
             $active_upload_type = 'attachments';
         }
 
-        if (!isset($GLOBALS['UPLOAD_TYPES'][$active_upload_type])) {
-            $active_upload_type = 'default';
+        return self::loadUploadTypeConfig($active_upload_type, $status);
+    }
+
+    /**
+     * Loads the upload type configuration for a specific type and status.
+     *
+     * @param string $type
+     * @param string $status
+     *
+     * @return array{type: string, file_types: array, file_size: int}
+     */
+    public static function loadUploadTypeConfig(string $type, string $status): array
+    {
+        if (!isset($GLOBALS['UPLOAD_TYPES'][$type])) {
+            $type = 'default';
         }
 
-        $upload_type = $GLOBALS['UPLOAD_TYPES'][$active_upload_type];
+        $upload_type = $GLOBALS['UPLOAD_TYPES'][$type];
         return [
-            'type' => $upload_type['type'],
+            'type'       => $upload_type['type'],
             'file_types' => $upload_type['file_types'],
-            'file_size' => $upload_type['file_sizes'][$status]
+            'file_size'  => $upload_type['file_sizes'][$status],
         ];
     }
 

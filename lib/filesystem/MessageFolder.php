@@ -239,6 +239,25 @@ class MessageFolder extends StandardFolder implements FolderType
     }
 
     /**
+     * This method handles file upload validation.
+     *
+     * @param array $uploaded_file The uploaded file that shall be validated.
+     * @param string $user_id The user who wishes to upload a file
+     *     in this MessageFolder.
+     *
+     * @return string|null An error message on failure, null on success.
+     */
+    public function validateUpload(FileType $newfile, $user_id)
+    {
+        $status = $GLOBALS['perm']->get_perm($user_id);
+        return $this->getValidationMessages(
+            FileManager::loadUploadTypeConfig('attachments', $status),
+            $newfile
+        );
+    }
+
+
+    /**
      * Handles the deletion of a file inside this folder.
      *
      * @param string $file_ref_id The ID of the FileRef whose file
