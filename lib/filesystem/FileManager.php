@@ -1736,17 +1736,21 @@ class FileManager
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;
         }
+
+        $status = $GLOBALS['perm']->get_perm($user_id);
+        $active_upload_type = 'default';
+
         $range_object = get_object_by_range_id($range_id);
-        $active_upload_type = null;
         if ($range_object instanceof Course) {
             $status = $GLOBALS['perm']->get_studip_perm($range_id, $user_id);
             $active_upload_type = $range_object->status;
         } elseif ($range_object instanceof Institute) {
             $status = $GLOBALS['perm']->get_studip_perm($range_id, $user_id);
             $active_upload_type = 'institute';
-        } else {
-            $status = $GLOBALS['perm']->get_perm($user_id);
-            $active_upload_type = "personalfiles";
+        } elseif ($range_object instanceof User) {
+            $active_upload_type = 'personalfiles';
+        } elseif (Message::exists($range_id)) {
+            $active_upload_type = 'attachments';
         }
 
         if (!isset($GLOBALS['UPLOAD_TYPES'][$active_upload_type])) {

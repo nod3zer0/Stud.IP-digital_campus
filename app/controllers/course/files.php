@@ -35,13 +35,11 @@ class Course_FilesController extends AuthenticatedController
         Navigation::activateItem('/course/files');
 
         if (is_object($GLOBALS['user']) && $GLOBALS['user']->id !== 'nobody') {
+            $constraints = FileManager::getUploadTypeConfig($this->course->id);
+
             PageLayout::addHeadElement('script', ['type' => 'text/javascript'], sprintf(
                 'STUDIP.Files.setUploadConstraints(%s);',
-                json_encode([
-                    'filesize'   => $GLOBALS['UPLOAD_TYPES']['default']['file_sizes'][$GLOBALS['user']->perms],
-                    'type'       => $GLOBALS['UPLOAD_TYPES']['default']['type'],
-                    'file_types' => $GLOBALS['UPLOAD_TYPES']['default']['file_types'],
-                ])
+                json_encode($constraints)
             ));
         }
     }

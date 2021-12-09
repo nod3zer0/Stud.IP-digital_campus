@@ -75,7 +75,7 @@ const Files = {
         if (!Files.uploadConstraints) {
             return true;
         }
-        if (file.size > Files.uploadConstraints.filesize) {
+        if (file.size > Files.uploadConstraints.file_size) {
             return false;
         }
         var ending = file.name.lastIndexOf('.') !== -1 ? file.name.substr(file.name.lastIndexOf('.') + 1) : '';

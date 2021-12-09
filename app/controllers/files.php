@@ -46,13 +46,11 @@ class FilesController extends AuthenticatedController
             throw new AccessDeniedException();
         }
 
+        $constraints = FileManager::getUploadTypeConfig($this->user->id);
+
         PageLayout::addHeadElement('script', ['type' => 'text/javascript'], sprintf(
             'STUDIP.Files.setUploadConstraints(%s);',
-            json_encode([
-                'filesize'   => $GLOBALS['UPLOAD_TYPES']['personalfiles']['file_sizes'][$this->user->perms],
-                'type'       => $GLOBALS['UPLOAD_TYPES']['personalfiles']['type'],
-                'file_types' => $GLOBALS['UPLOAD_TYPES']['personalfiles']['file_types'],
-            ])
+            json_encode($constraints)
         ));
     }
 

@@ -168,21 +168,6 @@ class PublicFolder extends StandardFolder
     /**
      * {@inheritdoc}
      */
-    public function validateUpload(FileType $newfile, $userId)
-    {
-        $status = $GLOBALS['perm']->get_perm($userId);
-        $uploadType = [
-            'type' => $GLOBALS['UPLOAD_TYPES']['default']['type'],
-            'file_types' => $GLOBALS['UPLOAD_TYPES']['default']['file_types'],
-            'file_size' => $GLOBALS['UPLOAD_TYPES']['default']['file_sizes'][$status],
-        ];
-
-        return $this->getValidationMessages($uploadType, $newfile);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function deleteFile($fileRefId)
     {
         $fileRefs = $this->folder->file_refs;
