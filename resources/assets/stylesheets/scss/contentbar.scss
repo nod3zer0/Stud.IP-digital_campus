@@ -56,10 +56,6 @@
         .contentbar-icons {
             display: flex;
 
-            label, .consuming_mode_trigger, nav {
-                align-self: center;
-            }
-
             .consuming_mode_trigger {
                 @media (max-width: 767px) {
                     display: none !important;
