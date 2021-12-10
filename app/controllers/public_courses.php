@@ -207,12 +207,10 @@ class PublicCoursesController extends AuthenticatedController
         foreach ($seminars as $id => $seminar) {
             foreach ($seminar['tools'] as $tool) {
                 $module = $tool->getStudipModule();
-                if (!$module || get_class($module)  === 'CoreAdmin' || get_class($module)  === 'CoreStudygroupAdmin') {
+                if (!$module || in_array(get_class($module), ['CoreAdmin', 'CoreStudygroupAdmin', 'CoreWiki', 'CoreSchedule', 'CoreScm', 'CoreOverview', 'CoreDocuments'])) {
                     continue;
                 }
-                if (array_key_exists(get_class($module), $seminar['navigations'])) {
-                    continue;
-                }
+
                 if ($tool->getVisibilityPermission() === 'nobody') {
                     $seminar['navigations'][get_class($module)] = $module->getIconNavigation($id, time(), 'nobody');
                 } else {
