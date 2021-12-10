@@ -66,7 +66,8 @@ $dialog_url = $show_raumzeit
                                         _('Termin ausfallen lassen'), Icon::create('trash'), [
                                         'data-dialog' => 'size=auto',
                                         'data-confirm' => _('Wollen Sie diesen Termin wirklich ausfallen lassen?')
-                                                          . '<br>' . implode('<br>', array_map('htmlReady', $date->getDeletionWarnings())),
+                                            ."\n"
+                                            . implode("\n", $date->getDeletionWarnings()),
                                         ]) ?>
             <? endif ?>
         <? endif ?>
