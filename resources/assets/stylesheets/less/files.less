@@ -369,8 +369,11 @@ form.default fieldset.select_terms_of_use {
     margin-right: 0px;
 
     > input[type=radio] {
-        height: 0px;
-        width: 0px;
+        opacity: 0;
+        position: absolute;
+        &:focus + label {
+            outline: auto;
+        }
     }
     > label {
         cursor: pointer;
