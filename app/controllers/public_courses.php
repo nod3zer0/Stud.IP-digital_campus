@@ -59,26 +59,7 @@ class PublicCoursesController extends AuthenticatedController
         $seminars = $statement->fetchGrouped(PDO::FETCH_ASSOC);
 
         $seminars = $this->get_seminar_navigations($seminars);
-        $seminars = $this->get_plugin_navigations($seminars);
-
         $this->seminars = $seminars;
-    }
-
-    /**
-     * Loads all possible standard plugins for the given seminars and adds
-     * a navigation entry for each one.
-     *
-     * @param array $seminars List of seminars
-     * @return array Extended list of seminars
-     */
-    protected function get_plugin_navigations($seminars)
-    {
-        foreach ($seminars as $id => $seminar) {
-            foreach (PluginEngine::getPlugins('StandardPlugin', $id) as $plugin) {
-                $seminars[$id]['navigations'][] = $plugin->getIconNavigation($id, time(), $GLOBALS['user']->id);
-            }
-        }
-        return $seminars;
     }
 
     /**
@@ -95,11 +76,29 @@ class PublicCoursesController extends AuthenticatedController
 
         foreach ($seminars as $id => $seminar) {
             $seminar['navigations'] = [];
+            $seminar['tools'] = new SimpleCollection(ToolActivation::findByrange_id($id));
+            foreach (MyRealmModel::getDefaultModules() as $plugin_id => $plugin) {
 
-            foreach (words('forum files news scm schedule wiki vote') as $key) {
-                $seminar['navigations'][$key] = false;
+                // Go to next module if current module is not available and not voting-module
+                if ($plugin !== 'vote' && !$seminar['tools']->findOneBy('plugin_id', $plugin_id)) {
+                    $seminar['navigations'][get_class($plugin)] = null;
+                    continue;
+                }
+
+                if (!Config::get()->VOTE_ENABLE && $plugin_id === 'vote') {
+                    continue;
+                }
+
+                if ($plugin === 'vote') {
+                    $seminar['navigations'][$plugin] = false;
+                } else if ($tool = $seminar['tools']->findOneBy('plugin_id', $plugin_id)) {
+                    if ($tool->getVisibilityPermission() === 'nobody') {
+                        $seminar['navigations'][get_class($plugin)] = false;
+                    } else {
+                        $seminar['navigations'][get_class($plugin)] = null;
+                    }
+                }
             }
-
             $seminars[$id] = $seminar;
         }
 
@@ -115,9 +114,11 @@ class PublicCoursesController extends AuthenticatedController
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$seminar_ids]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $nav = new Navigation('files', 'dispatch.php/course/files/index');
-            $nav->setImage(Icon::create('files', 'inactive', ["title" => sprintf(_('%s Dokumente'),$row['count'])]));
-            $seminars[$row['range_id']]['navigations']['files'] = $nav;
+            if (isset($seminars[$row['range_id']]['navigations']['CoreDocuments'])) {
+                $nav = new Navigation('files', 'dispatch.php/course/files/index');
+                $nav->setImage(Icon::create('files', Icon::ROLE_CLICKABLE, ["title" => sprintf(_('%s Dokumente'), $row['count'])]));
+                $seminars[$row['range_id']]['navigations']['CoreDocuments'] = $nav;
+            }
         }
 
         // News
@@ -130,9 +131,11 @@ class PublicCoursesController extends AuthenticatedController
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$seminar_ids]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $nav = new Navigation('news', '');
-            $nav->setImage(Icon::create('news', 'inactive', ["title" => sprintf(_('%s Ankündigungen'),$row['count'])]));
-            $seminars[$row['range_id']]['navigations']['news'] = $nav;
+            if (isset($seminars[$row['range_id']]['navigations']['CoreOverview'])) {
+                $nav = new Navigation('news', '');
+                $nav->setImage(Icon::create('news', Icon::ROLE_CLICKABLE, ["title" => sprintf(_('%s Ankündigungen'),$row['count'])]));
+                $seminars[$row['range_id']]['navigations']['CoreOverview'] = $nav;
+            }
         }
 
         // Information
@@ -143,9 +146,11 @@ class PublicCoursesController extends AuthenticatedController
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$seminar_ids]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $nav = new Navigation('scm', 'dispatch.php/course/scm');
-            $nav->setImage(Icon::create('infopage', 'inactive', ["title" => sprintf(_('%s Einträge'),$row['count'])]));
-            $seminars[$row['range_id']]['navigations']['scm'] = $nav;
+            if (isset($seminars[$row['range_id']]['navigations']['CoreScm'])) {
+                $nav = new Navigation('scm', 'dispatch.php/course/scm');
+                $nav->setImage(Icon::create('infopage', Icon::ROLE_CLICKABLE, ["title" => sprintf(_('%s Einträge'), $row['count'])]));
+                $seminars[$row['range_id']]['navigations']['CoreScm'] = $nav;
+            }
         }
 
         // Appointments
@@ -156,9 +161,11 @@ class PublicCoursesController extends AuthenticatedController
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$seminar_ids]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $nav = new Navigation('schedule', 'dispatch.php/course/dates');
-            $nav->setImage(Icon::create('schedule', 'inactive', ["title" => sprintf(_('%s Termine'),$row['count'])]));
-            $seminars[$row['range_id']]['navigations']['schedule'] = $nav;
+            if (isset($seminars[$row['range_id']]['navigations']['CoreSchedule'])) {
+                $nav = new Navigation('schedule', 'dispatch.php/course/dates');
+                $nav->setImage(Icon::create('schedule', Icon::ROLE_CLICKABLE, ["title" => sprintf(_('%s Termine'), $row['count'])]));
+                $seminars[$row['range_id']]['navigations']['CoreSchedule'] = $nav;
+            }
         }
 
         // Wiki
@@ -170,9 +177,11 @@ class PublicCoursesController extends AuthenticatedController
             $statement = DBManager::get()->prepare($query);
             $statement->execute([$seminar_ids]);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                $nav = new Navigation('wiki', 'wiki.php');
-                $nav->setImage(Icon::create('wiki', 'inactive', ["title" => sprintf(_('%s WikiSeiten'),$row['count'])]));
-                $seminars[$row['range_id']]['navigations']['wiki'] = $nav;
+                if (isset($seminars[$row['range_id']]['navigations']['CoreWiki'])) {
+                    $nav = new Navigation('wiki', 'wiki.php');
+                    $nav->setImage(Icon::create('wiki', Icon::ROLE_CLICKABLE, ["title" => sprintf(_('%s WikiSeiten'), $row['count'])]));
+                    $seminars[$row['range_id']]['navigations']['CoreWiki'] = $nav;
+                }
             }
         }
 
@@ -187,12 +196,31 @@ class PublicCoursesController extends AuthenticatedController
             $statement = DBManager::get()->prepare($query);
             $statement->execute([$seminar_ids]);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                $nav = new Navigation('vote', '#vote');
-                $nav->setImage(Icon::create('vote', 'inactive', ["title" => sprintf(_('%s Umfrage(n)'),$row['count'])]));
-                $seminars[$row['range_id']]['navigations']['vote'] = $nav;
+                if (isset($seminars[$row['range_id']]['navigations']['vote'])) {
+                    $nav = new Navigation('vote', '#vote');
+                    $nav->setImage(Icon::create('vote', Icon::ROLE_CLICKABLE, ["title" => sprintf(_('%s Umfrage(n)'), $row['count'])]));
+                    $seminars[$row['range_id']]['navigations']['vote'] = $nav;
+                }
             }
         }
 
+        foreach ($seminars as $id => $seminar) {
+            foreach ($seminar['tools'] as $tool) {
+                $module = $tool->getStudipModule();
+                if (!$module || get_class($module)  === 'CoreAdmin' || get_class($module)  === 'CoreStudygroupAdmin') {
+                    continue;
+                }
+                if (array_key_exists(get_class($module), $seminar['navigations'])) {
+                    continue;
+                }
+                if ($tool->getVisibilityPermission() === 'nobody') {
+                    $seminar['navigations'][get_class($module)] = $module->getIconNavigation($id, time(), 'nobody');
+                } else {
+                    $seminar['navigations'][get_class($module)] = null;
+                }
+            }
+            $seminars[$id] = $seminar;
+        }
         return $seminars;
     }
 }

@@ -463,14 +463,14 @@ class MyRealmModel
             }
 
             if ($plugin === 'vote') {
-                $nav = self::checkVote($my_obj_values, $user_id, $object_id);
+                $navigation[$plugin_id] = self::checkVote($my_obj_values, $user_id, $object_id);
             } else if ($tool = $my_obj_values['tools']->findOneBy('plugin_id', $plugin_id)) {
-                $nav = $plugin->getIconNavigation($object_id, $visit_data[$plugin_id]['visitdate'], $user_id) ?: false;
+                if (Seminar_Perm::get()->have_studip_perm($tool->getVisibilityPermission(), $object_id, $user_id)) {
+                    $navigation[$plugin_id] = $plugin->getIconNavigation($object_id, $visit_data[$plugin_id]['visitdate'], $user_id);
+                } else {
+                    $navigation[$plugin_id] = null;
+                }
             }
-
-            // add the main navigation item to resultset
-            $navigation[$plugin_id] = $nav ?: null;
-            unset($nav);
         }
         foreach ($my_obj_values['tools'] as $tool) {
             if (array_key_exists($tool->plugin_id, $navigation)) {
@@ -480,7 +480,11 @@ class MyRealmModel
             if (!$module || get_class($module)  === 'CoreAdmin' || get_class($module)  === 'CoreStudygroupAdmin') {
                 continue;
             }
-            $navigation[$tool->plugin_id] = $module->getIconNavigation($object_id, $visit_data[$tool->plugin_id]['visitdate'], $user_id);
+            if (Seminar_Perm::get()->have_studip_perm($tool->getVisibilityPermission(), $object_id, $user_id)) {
+                $navigation[$tool->plugin_id] = $module->getIconNavigation($object_id, $visit_data[$tool->plugin_id]['visitdate'], $user_id);
+            } else {
+                $navigation[$tool->plugin_id] = null;
+            }
         }
         return $navigation;
     }
