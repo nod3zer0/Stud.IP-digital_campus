@@ -219,7 +219,7 @@ class Resources_AdminController extends AuthenticatedController
             if (!$this->users) {
                 //No user found.
                 PageLayout::postInfo(
-                    _('Es gibt keine Personen, zu denen Berechtigungen in der Raumverwaltung eingetragen sind!')
+                    _('Es gibt keine Personen mit Berechtigungen in der Raumverwaltung!')
                 );
             }
         }
