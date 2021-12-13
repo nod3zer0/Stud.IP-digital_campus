@@ -238,6 +238,15 @@
                        value="<?= htmlReady($template['module_id']) ?>">
             <? endif ?>
 
+            <? if (Config::get()->OERCAMPUS_ENABLE_TWILLO && TwilloConnector::getTwilloUserID()) : ?>
+                <input type="hidden" name="publish_on_twillo" value="0">
+                <label style="margin-top: 20px;">
+                    <input type="checkbox"
+                           name="publish_on_twillo"
+                           value="1"<?= $material['published_id_on_twillo'] ? " checked" : "" ?>>
+                    <?= _('Auf twillo.de veröffentlichen') ?>
+                </label>
+            <? endif ?>
         </fieldset>
 
         <? if (!Config::get()->OER_DISABLE_LICENSE) : ?>

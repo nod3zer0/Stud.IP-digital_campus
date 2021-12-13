@@ -100,3 +100,21 @@ StudipAutoloader::addClassLookup(
     ['xmlrpc_server'],
     'composer/phpxmlrpc/phpxmlrpc/lib/xmlrpcs.inc'
 );
+
+//Edu-Sharing helper classes for twillo connector
+StudipAutoloader::addClassLookup(
+    'EduSharingHelper',
+    'vendor/edu-sharing-plugin/edu-sharing-helper.php'
+);
+StudipAutoloader::addClassLookup(
+    'EduSharingHelperBase',
+    'vendor/edu-sharing-plugin/edu-sharing-helper-base.php'
+);
+StudipAutoloader::addClassLookup(
+    'EduSharingAuthHelper',
+    'vendor/edu-sharing-plugin/edu-sharing-auth-helper.php'
+);
+StudipAutoloader::addClassLookup(
+    'EduSharingNodeHelper',
+    'vendor/edu-sharing-plugin/edu-sharing-node-helper.php'
+);

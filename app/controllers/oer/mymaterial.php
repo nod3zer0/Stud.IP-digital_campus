@@ -8,7 +8,6 @@ class Oer_MymaterialController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
         PageLayout::setTitle(_('Lernmaterialien'));
-
     }
 
     public function index_action()
@@ -36,6 +35,7 @@ class Oer_MymaterialController extends AuthenticatedController
             return;
         } elseif (Request::isPost()) {
             $was_new = $material->isNew();
+            $was_on_twillo = (bool) $material['published_id_on_twillo'];
             $material->setData(Request::getArray('data'));
             $material['host_id'] = null;
             $material['license_identifier'] = Request::get('license', 'CC-BY-SA-4.0');
@@ -130,6 +130,19 @@ class Oer_MymaterialController extends AuthenticatedController
             $material->setTopics($tags);
 
             $material->pushDataToIndexServers();
+
+            if (Config::get()->OERCAMPUS_ENABLE_TWILLO && TwilloConnector::getTwilloUserID()) {
+                if (Request::bool('publish_on_twillo') || $_SESSION['NEW_OER']['publish_on_twillo']) {
+                    //upload it to twillo.de
+                    $succes_or_error = $material->uploadToTwillo($material);
+                    if (is_string($succes_or_error)) {
+                        PageLayout::postWarning(_('Konnte Material nicht zu twillo.de hochladen.'), [$succes_or_error]);
+                    }
+                } elseif ($was_on_twillo) {
+                    //remove it from twillo.de if able
+                    $material->deleteFromTwillo();
+                }
+            }
 
             unset($_SESSION['NEW_OER']);
 

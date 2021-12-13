@@ -131,6 +131,7 @@ class Oer_EndpointsController extends StudipController
             ];
             $data['data'] = $material->toArray();
             unset($data['data']['material_id']);
+            unset($data['data']['uri_hash']);
             $data['users'] = [];
             foreach ($material->users as $userdata) {
                 $user = $userdata['external_contact']
@@ -242,7 +243,8 @@ class Oer_EndpointsController extends StudipController
                     'player_url' => $material['player_url'],
                     'tool' => $material['tool'],
                     'structure' => ($material['structure'] ? $material['structure']->getArrayCopy() : null),
-                    'license' => $material['license']
+                    'license' => $material['license'],
+                    'uri' => $material['uri']
                 ],
                 'users' => $users,
                 'topics' => $topics,

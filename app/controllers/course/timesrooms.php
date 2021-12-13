@@ -1057,7 +1057,7 @@ class Course_TimesroomsController extends AuthenticatedController
             $end_semester = $this->course->semesters;
         }
 
-        $this->start_weeks = $this->course->start_semester->getStartWeeks($this->course->duration_time);
+        $this->start_weeks = $end_semester[count($end_semester) - 1]->getStartWeeks();
 
         if (!empty($end_semester)) {
             $this->end_semester_weeks = [];

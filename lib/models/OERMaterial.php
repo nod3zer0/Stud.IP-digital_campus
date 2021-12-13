@@ -23,6 +23,7 @@ class OERMaterial extends SimpleORMap
             'foreign_key' => 'license_identifier'
         ];
         $config['serialized_fields']['structure'] = 'JSONArrayObject';
+        $config['registered_callbacks']['before_store'][] = "cbHashURI";
         $config['registered_callbacks']['before_delete'][] = "cbDeleteFile";
         parent::configure($config);
     }
@@ -181,6 +182,11 @@ class OERMaterial extends SimpleORMap
         @unlink($this->getFilePath());
     }
 
+    public function cbHashURI()
+    {
+        $this['uri_hash'] = md5($this['uri']);
+    }
+
     public function getTopics()
     {
         $statement = DBManager::get()->prepare("
@@ -235,7 +241,7 @@ class OERMaterial extends SimpleORMap
         $base = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
         $url = $this['host_id']
             ? $this->host->url."download/".$this['foreign_material_id']
-            : URLHelper::getURL("dispatch.php/oer/market/download/".$this->getId());
+            : URLHelper::getURL("dispatch.php/oer/endpoints/download/".$this->getId());
         URLHelper::setBaseURL($base);
         return $url;
     }
@@ -371,6 +377,25 @@ class OERMaterial extends SimpleORMap
                 $index_server->pushDataToEndpoint("push_data", $data);
             }
         }
+    }
+
+    /**
+     * Uploads this material to twillo.de. This is not actually an upload but rather a link with metadata.
+     * @return bool|string : true on success, on failure a text-string as error-message
+     */
+    public function uploadToTwillo()
+    {
+        return TwilloConnector::uploadMaterial($this);
+    }
+
+    /**
+     * Removes this material from twillo.de if able.
+     */
+    public function deleteFromTwillo()
+    {
+        TwilloConnector::deleteFromTwillo($this['published_id_on_twillo']);
+        $this['published_id_on_twillo'] = null;
+        $this->store();
     }
 
     public function fetchData()
