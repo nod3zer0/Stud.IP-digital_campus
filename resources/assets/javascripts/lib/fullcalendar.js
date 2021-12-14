@@ -547,16 +547,19 @@ class Fullcalendar
 
                 if ($('.booking-plan-header').length) {
                     end.setDate(end.getDate());
-                    var sem_start = $('.booking-plan-header').data('semester-begin');
-                    var sem_end = $('.booking-plan-header').data('semester-end');
+                    let semester = $('.booking-plan-header').data('semester');
+                    let sem_start = null;
+                    let sem_end = null;
+                    if (semester) {
+                        sem_start = semester.seminars_begin;
+                        sem_end = semester.seminars_end;
+                    }
 
                     if (sem_start && (start.getTime() / 1000 < sem_start || start.getTime() / 1000 > sem_end)) {
                         sem_start = null;
                         sem_end = null;
-                    } else if(sem_start) {
-                        var sem_week = Math.floor((end.getTime() / 1000 - 10800 - sem_start) / (7 * 24 * 60 * 60)) + 1;
-                        $("#booking-plan-header-semweek-part").text("Vorlesungswoche".toLocaleString());
-                        $('#booking-plan-header-semweek').text(sem_week);
+                    } else if (sem_start) {
+                        STUDIP.Resources.updateBookingPlanDateInfos(activeRange.start, activeRange.end, semester);
                     }
                     $('#booking-plan-header-calweek').text(start.getWeekNumber());
                     $('#booking-plan-header-calbegin').text(start.toLocaleDateString('de-DE', {weekday: 'short'}) + ' ' + start.toLocaleDateString('de-DE'));

@@ -8,8 +8,7 @@
     } ?>
 
     <section id="booking_plan_header"
-             class="studip-fullcalendar-header booking-plan-header"
-             data-semester-begin="" data-semester-end="">
+             class="studip-fullcalendar-header booking-plan-header">
             <span id="booking-plan-header-resource-name-line">
                 <? if ($resource instanceof Room) : ?>
                     <?= htmlReady($resource->name) ?>
@@ -23,6 +22,7 @@
                     <strong>
                         <span id="booking-plan-header-semname"></span>
                         <span id="booking-plan-header-semweek-part">
+                            <?= _('Vorlesungswoche') ?>
                             <span id="booking-plan-header-semweek"></span>
                         </span>
                     </strong>

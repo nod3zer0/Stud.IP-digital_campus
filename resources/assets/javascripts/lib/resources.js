@@ -709,47 +709,53 @@ class Resources
 
 
     static updateBookingPlanSemesterByView(activeRange, api_url = 'api.php/semesters') {
-        var semester = null;
+        let semester = null;
         jQuery.ajax(
             STUDIP.URLHelper.getURL(api_url),
             {
                 method: 'get',
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     if (data) {
-                        var start = activeRange.start;
-                        var end = activeRange.end;
                         Object.values(data.collection).forEach(item => {
-                            if (start.getTime()/1000 >= item.seminars_begin && start.getTime()/1000 < item.seminars_end) {
+                            if (activeRange.start.getTime() / 1000 >= item.begin && activeRange.start.getTime() / 1000 < item.end) {
                                 semester = item;
                             }
                         });
-                        if (semester) {
-                            $(".booking-plan-header")
-                                .data('semester-begin', semester.seminars_begin)
-                                .data('semester-end', semester.seminars_end);
-                            $("#booking-plan-header-semrow").show();
-                            $("#booking-plan-header-semname").text(semester.title);
-                            var sem_week = Math.floor((end.getTime()/1000 - 10800 - semester.seminars_begin) / 604800)+1;
-                            $("#booking-plan-header-semweek-part").text("Vorlesungswoche".toLocaleString());
-                            $("#booking-plan-header-semweek").text(sem_week);
-                        } else {
+                        if (!semester) {
                             if (data.pagination && data.pagination.links && data.pagination.links.next != api_url) {
                                 semester = STUDIP.Resources.updateBookingPlanSemesterByView(activeRange, data.pagination.links.next);
-                            } else {
-                                $(".booking-plan-header")
-                                    .data('semester-begin', '')
-                                    .data('semester-end', '');
                             }
                         }
-
-                        $('#booking-plan-header-calweek').text(start.getWeekNumber());
-                        $('#booking-plan-header-calbegin').text(start.toLocaleDateString('de-DE', {weekday: 'short'}) + ' ' + start.toLocaleDateString('de-DE'));
-                        $('#booking-plan-header-calend').text(end.toLocaleDateString('de-DE', {weekday: 'short'}) + ' ' + end.toLocaleDateString('de-DE'));
                     }
+                    STUDIP.Resources.updateBookingPlanDateInfos(activeRange.start, activeRange.end, semester);
                 }
             }
         );
+    }
+
+    static updateBookingPlanDateInfos(plan_begin, plan_end, semester = null)
+    {
+        if (semester) {
+            let show_lecture_week = plan_begin.getTime()/1000 >= semester.seminars_begin && plan_begin.getTime()/1000 < semester.seminars_end;
+            $(".booking-plan-header").data('semester', semester);
+            $("#booking-plan-header-semname").text(semester.title);
+            if (show_lecture_week) {
+                let sem_week = Math.floor((plan_end.getTime() / 1000 - 10800 - semester.seminars_begin) / 604800) + 1;
+                $("#booking-plan-header-semweek").text(sem_week);
+                $("#booking-plan-header-semweek-part").show();
+            } else {
+                $("#booking-plan-header-semweek-part").hide();
+            }
+            $("#booking-plan-header-semrow").show();
+        } else {
+            $(".booking-plan-header").data('semester', null);
+            $('#booking-plan-header-semrow').hide();
+        }
+
+        $('#booking-plan-header-calweek').text(plan_begin.getWeekNumber());
+        $('#booking-plan-header-calbegin').text(plan_begin.toLocaleDateString('de-DE', {weekday: 'short'}) + ' ' + plan_begin.toLocaleDateString('de-DE'));
+        $('#booking-plan-header-calend').text(plan_end.toLocaleDateString('de-DE', {weekday: 'short'}) + ' ' + plan_end.toLocaleDateString('de-DE'));
     }
 
 

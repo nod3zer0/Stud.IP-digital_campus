@@ -14,22 +14,22 @@
         $min_time = Config::get()->RESOURCES_BOOKING_PLAN_START_HOUR . ':00';
         $max_time = Config::get()->RESOURCES_BOOKING_PLAN_END_HOUR . ':00';
     } ?>
-    <section class="studip-fullcalendar-header booking-plan-header"
-             data-semester-begin="" data-semester-end="">
+    <section class="studip-fullcalendar-header booking-plan-header">
         <div>
             <?= _('Raumgruppe') ?>
             <span id="booking-plan-header-roomgroup"><?= htmlReady($clipboard->name) ?></span>
-            <span id="booking-plan-header-semrow">
-                <strong>
-                    <?= _('KW') ?>
-                    <span id="booking-plan-header-calweek"></span>
-                    (<span id="booking-plan-header-calbegin"></span>)
+            <strong>
+                <?= _('KW') ?>
+                <span id="booking-plan-header-calweek"></span>
+                (<span id="booking-plan-header-calbegin"></span>)
+                <span id="booking-plan-header-semrow">
                     <span id="booking-plan-header-semname"></span>
                     <span id="booking-plan-header-semweek-part">
+                        <?= _('Vorlesungswoche') ?>
                         <span id="booking-plan-header-semweek"></span>
                     </span>
-                </strong>
-            </span>
+                </span>
+            </strong>
         </div>
     </section>
 
