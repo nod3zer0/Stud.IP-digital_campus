@@ -389,4 +389,14 @@ class StudipPDO extends PDO
         $st->execute($input_parameters);
         return $st->fetchColumn($column);
     }
+
+    /**
+     * Determine if the connected database is a MariaDB database.
+     *
+     * @return bool
+     */
+    public function isMariaDB(): bool
+    {
+        return stripos($this->getAttribute(\PDO::ATTR_SERVER_VERSION), 'MariaDB') !== false;
+    }
 }

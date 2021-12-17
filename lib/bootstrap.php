@@ -97,7 +97,7 @@ if (Studip\ENV === 'development' && !in_array('ASSETS_URL', $added) && function_
     }
 }
 
-if (!file_exists($GLOBALS['STUDIP_BASE_PATH'] . '/config/config_local.inc.php')) {
+if (!file_exists($GLOBALS['STUDIP_BASE_PATH'] . '/config/config_local.inc.php') && php_sapi_name() !== 'cli') {
     require_once __DIR__ . '/classes/URLHelper.php';
 
     URLHelper::setBaseUrl($GLOBALS['ABSOLUTE_URI_STUDIP']);

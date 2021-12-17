@@ -1,0 +1,62 @@
+#!/usr/bin/env php
+<?php
+
+namespace Studip\Cli;
+
+use Symfony\Component\Console\Application;
+
+require __DIR__.'/studip_cli_env.inc.php';
+require __DIR__.'/../composer/autoload.php';
+
+\StudipAutoloader::addAutoloadPath('cli', 'Studip\\Cli');
+
+$application = new Application();
+$commands = [
+    Commands\Base\Dump::class,
+    Commands\Checks\Compatibility::class,
+    Commands\Checks\GlobalizedConfig::class,
+    Commands\Checks\HelpTours::class,
+    Commands\Checks\HelpTours::class,
+    Commands\CleanupAdmissionRules::class,
+    Commands\Cronjobs\CronjobExecute::class,
+    Commands\Cronjobs\CronjobExecute::class,
+    Commands\Cronjobs\CronjobList::class,
+    Commands\Cronjobs\CronjobList::class,
+    Commands\Cronjobs\CronjobWorker::class,
+    Commands\Cronjobs\CronjobWorker::class,
+    Commands\DB\Dump::class,
+    Commands\DB\MigrateEngine::class,
+    Commands\DB\MigrateFileFormat::class,
+    Commands\Files\Dump::class,
+    Commands\Fix\Biest7789::class,
+    Commands\Fix\Biest7866::class,
+    Commands\Fix\Biest8136::class,
+    Commands\Fix\EndTimeWeeklyRecurredEvents::class,
+    Commands\Fix\IconDimensions::class,
+    Commands\HelpContent\Migrate::class,
+    Commands\Migrate\MigrateList::class,
+    Commands\Migrate\MigrateStatus::class,
+    Commands\Migrate\Migrate::class,
+    Commands\Plugins\PluginDeactivate::class,
+    Commands\Plugins\PluginInfo::class,
+    Commands\Plugins\PluginInstall::class,
+    Commands\Plugins\PluginListMigrations::class,
+    Commands\Plugins\PluginStatusMigrations::class,
+    Commands\Plugins\PluginMigrate::class,
+    Commands\Plugins\PluginRegister::class,
+    Commands\Plugins\PluginScan::class,
+    Commands\Plugins\PluginUnregister::class,
+    Commands\Plugins\I18N\I18NDetect::class,
+    Commands\Plugins\I18N\I18NExtract::class,
+    Commands\Plugins\I18N\I18NCompile::class,
+    Commands\Resources\UpdateBookingIntervals::class,
+    Commands\SORM\DescribeModels::class,
+    Commands\Translations\VueGettextSplitTranslations::class,
+    Commands\Users\UserDelete::class,
+    Commands\Users\UserDelete::class,
+];
+$creator = function ($command) {
+    return new $command();
+};
+$application->addCommands(array_map($creator, $commands));
+$application->run();
