@@ -141,6 +141,13 @@ export default {
                     }
                 });
 
+                // If there are more that one section and only one block,
+                // we make sotring of that block possible, by just assuming that there are 2 blocks.
+                // By doing this, we only provide the sorting feature when there are more than one section (section).
+                if (this.sectionsWithBlocksCurrentState.length > 1 && blocks == 1) {
+                    blocks++;
+                }
+
                 return blocks;
             }
          }
