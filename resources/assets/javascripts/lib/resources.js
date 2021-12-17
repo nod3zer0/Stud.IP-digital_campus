@@ -737,11 +737,25 @@ class Resources
     static updateBookingPlanDateInfos(plan_begin, plan_end, semester = null)
     {
         if (semester) {
-            let show_lecture_week = plan_end.getTime()/1000 >= semester.seminars_begin && plan_end.getTime()/1000 < semester.seminars_end;
+            let show_lecture_week = false;
+            let fake_plan_end = new Date(plan_end.getTime() - 1000);
+            if (plan_begin.getUTCDay() == fake_plan_end.getUTCDay()) {
+                show_lecture_week = (plan_begin.getTime() / 1000 + 43200) >= semester.seminars_begin && (plan_begin.getTime() / 1000) < semester.seminars_end;
+            } else {
+                show_lecture_week = (plan_end.getTime() / 1000 + 43200) >= semester.seminars_begin && (plan_end.getTime() / 1000) < semester.seminars_end;
+            }
             $(".booking-plan-header").data('semester', semester);
             $("#booking-plan-header-semname").text(semester.title);
             if (show_lecture_week) {
-                let sem_week = Math.floor((plan_end.getTime() / 1000 - 10800 - semester.seminars_begin) / 604800) + 1;
+                let lecture_week_start = new Date((semester.seminars_begin  + 43200) * 1000);
+                let lecture_week_start_day = lecture_week_start.getDay();
+                if (lecture_week_start_day == 0) {
+                    //Sunday is 7, not 0!
+                    lecture_week_start_day = 7;
+                }
+                lecture_week_start_day--;
+                let normal_sem_week_begin = semester.seminars_begin - (lecture_week_start_day * 86400);
+                let sem_week = Math.floor((plan_end.getTime() / 1000 - 10800 - normal_sem_week_begin) / 604800) + 1;
                 if (sem_week > 0) {
                     $("#booking-plan-header-semweek").text(sem_week);
                     $("#booking-plan-header-semweek-part").show();
