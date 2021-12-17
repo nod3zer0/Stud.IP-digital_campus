@@ -737,13 +737,17 @@ class Resources
     static updateBookingPlanDateInfos(plan_begin, plan_end, semester = null)
     {
         if (semester) {
-            let show_lecture_week = plan_begin.getTime()/1000 >= semester.seminars_begin && plan_begin.getTime()/1000 < semester.seminars_end;
+            let show_lecture_week = plan_end.getTime()/1000 >= semester.seminars_begin && plan_end.getTime()/1000 < semester.seminars_end;
             $(".booking-plan-header").data('semester', semester);
             $("#booking-plan-header-semname").text(semester.title);
             if (show_lecture_week) {
                 let sem_week = Math.floor((plan_end.getTime() / 1000 - 10800 - semester.seminars_begin) / 604800) + 1;
-                $("#booking-plan-header-semweek").text(sem_week);
-                $("#booking-plan-header-semweek-part").show();
+                if (sem_week > 0) {
+                    $("#booking-plan-header-semweek").text(sem_week);
+                    $("#booking-plan-header-semweek-part").show();
+                } else {
+                    $("#booking-plan-header-semweek-part").hide();
+                }
             } else {
                 $("#booking-plan-header-semweek-part").hide();
             }
