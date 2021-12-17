@@ -98,6 +98,7 @@
         </thead>
         <tbody>
         <? foreach($ilias_list as $ilias_index => $ilias) : ?>
+        <? if ($ilias->user->getUserName()) : ?>
             <tr id="ilias-account-<?= htmlReady($ilias_index)?>">
                 <td><?=Icon::create('person', Icon::ROLE_INFO, [
                                 'title'        => $ilias->user->getUserName()
@@ -143,6 +144,17 @@
                     <?= $actionMenu->render() ?>
                 </td>
             </tr>
+        <? else : ?>
+        <tr>
+            <td colspan="4">
+                 <?= sprintf(
+                     _("Sie haben im System %s noch keinen Account. Loggen Sie sich zuerst in %s ein, um ILIAS-Lernobjekte in Stud.IP nutzen zu können."),
+                     htmlReady($ilias->getName()),
+                     "<a href=\"".$ilias->getAbsolutePath()."\">".htmlReady($ilias->getName())."</a>"
+                 )?>
+            </td>
+        </tr>
+        <? endif ?>
         <? endforeach ?>
         </tbody>
     </table>

@@ -55,17 +55,21 @@
             <? endif ?>
         </label>
         <label>
-            <span><?= _('LDAP-Einstellung') ?></span>
+            <span><?= _('Externe Authentifizierung') ?></span>
             <? if ($ldap_options) : ?>
                 <select name="ilias_ldap_enable">
                 <?=$ldap_options;?>
                 </select><br>
-                <?=_("Authentifizierungsplugin (nur LDAP) beim Anlegen von externen Accounts übernehmen.");?>
-                <?=Icon::create('info-circle', 'inactive', ['title' => _("Wählen Sie hier ein Authentifizierungsplugin, damit neu angelegte ILIAS-Accounts den Authentifizierungsmodus LDAP erhalten, wenn dieser Modus auch für den vorhandenen Stud.IP-Account gilt. Andernfalls erhalten alle ILIAS-Accounts den default-Modus")])->asImg(16);?>
+                <?=_("Authentifizierungsplugin (nur LDAP/Shibboleth) beim Anlegen von externen Accounts übernehmen.");?>
+                <?=Icon::create('info-circle', 'inactive', ['title' => _("Wählen Sie hier ein Authentifizierungsplugin, damit neu angelegte ILIAS-Accounts den entsprechenden Authentifizierungsmodus erhalten, wenn dieser Modus auch für den vorhandenen Stud.IP-Account gilt. Andernfalls erhalten alle ILIAS-Accounts den default-Modus")])->asImg(16);?>
             <? else : ?>
-                <br><?=_("(Um diese Einstellung zu nutzen muss zumindest ein LDAP Authentifizierungsplugin aktiviert sein.)");?>
+                <br><?=_("(Um diese Einstellung zu nutzen muss zumindest ein Authentifizierungsplugin aktiviert sein.)");?>
                 <input type="hidden" name="ilias_ldap_enable" value="">
             <? endif ?>
+        </label>
+        <label>
+            <input type="checkbox" name="ilias_no_account_updates" value="1" <?= $ilias_config['no_account_updates'] ? 'checked' : '' ?>>
+            <span><?= _('Keine Accounts aus Stud.IP in ILIAS anlegen oder aktualisieren') ?></span>
         </label>
         <label>
             <span class="required">  <?= _('Admin-Account') ?></span>

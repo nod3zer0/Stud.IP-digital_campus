@@ -28,7 +28,7 @@
         <span><?= _('Beim Löschen von Stud.IP-Accounts ILIAS-Accounts ebenfalls löschen (alle zugehörigen Objekte werden gelöscht!)') ?></span>
     </label>
     <label>
-        <span class="required"><?= _('Prefix für automatisch angelegte Usernamen') ?></span>
+        <span><?= _('Prefix für automatisch angelegte Usernamen') ?></span>
         <? if ($ilias_config['is_active']) : ?>
             <div><?=$ilias_config['user_prefix'] ? htmlReady($ilias_config['user_prefix']) : _('Kein Präfix')?></div>
         <? else : ?>

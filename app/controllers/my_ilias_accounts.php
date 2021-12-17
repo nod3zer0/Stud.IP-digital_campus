@@ -85,7 +85,7 @@ class MyIliasAccountsController extends AuthenticatedController
             PageLayout::setTitle($this->module->getTitle());
             $this->ilias_index = $index;
         } else {
-            PageLayout::postError(_("Diese ILIAS-Installation ist nicht aktiv."));
+            PageLayout::postError(_('Diese ILIAS-Installation ist nicht aktiv.'));
         }
     }
 
@@ -100,7 +100,7 @@ class MyIliasAccountsController extends AuthenticatedController
             $this->ilias_ref_id = $this->ilias->user->getCategory();
             $this->ilias_index = $index;
         } else {
-            PageLayout::postError(_("Diese ILIAS-Installation ist nicht aktiv."));
+            PageLayout::postError(_('Diese ILIAS-Installation ist nicht aktiv.'));
         }
     }
 
@@ -131,7 +131,7 @@ class MyIliasAccountsController extends AuthenticatedController
                 case 'update' :
                     // update user account
                     if ($this->ilias->updateUser($GLOBALS['user'])) {
-                        PageLayout::postSuccess(_("ILIAS-Account aktualisiert."));
+                        PageLayout::postSuccess(_('ILIAS-Account aktualisiert.'));
                     }
                     break;
                 case 'add' :
@@ -144,17 +144,17 @@ class MyIliasAccountsController extends AuthenticatedController
                             $this->ilias->user->setPassword('');
                             $this->ilias->user->setId($user_id);
                             $this->ilias->user->setConnection(IliasUser::USER_TYPE_ORIGINAL);
-                            PageLayout::postSuccess(_("ILIAS-Account zugeordnet."));
+                            PageLayout::postSuccess(_('ILIAS-Account zugeordnet.'));
                             $this->ilias->soap_client->clearCache();
                         }
                     } else {
                         // wrong login
-                        PageLayout::postError(_("Login fehlgeschlagen. Die Zuordnung konnte nicht geändert werden."));
+                        PageLayout::postError(_('Login fehlgeschlagen. Die Zuordnung konnte nicht geändert werden.'));
                     }
                     break;
                 case 'remove' :
                     $this->ilias->user->unsetConnection();
-                    PageLayout::postSuccess(_("Account-Zuordnung entfernt."));
+                    PageLayout::postSuccess(_('Account-Zuordnung entfernt.'));
                     break;
             }
         }
@@ -177,16 +177,22 @@ class MyIliasAccountsController extends AuthenticatedController
                 $module_id = $this->ilias->user->category;
             }
             // display error message if session is invalid
-            if (!$session_id) {
-                PageLayout::postError(sprintf(_("Automatischer Login für %s-Installation (Nutzername %s) fehlgeschlagen."),
+            if (! $this->ilias->user->isConnected() && $this->ilias->ilias_config['no_account_updates']) {
+                PageLayout::postError(sprintf(
+                    _('Sie haben im System %s noch keinen Account. Loggen Sie sich zuerst in %s ein, um ILIAS-Lernobjekte in Stud.IP nutzen zu können.'),
+                    htmlReady($this->ilias->getName()),
+                    '<a href="'.$this->ilias->getAbsolutePath().'">'.htmlReady($this->ilias->getName()).'</a>'
+                ));
+            } elseif (!$session_id) {
+                PageLayout::postError(sprintf(_('Automatischer Login für %s-Installation (Nutzername %s) fehlgeschlagen.'),
                         htmlReady($this->ilias->getName()),
                         htmlReady($this->ilias->user->getUsername())));
             } elseif (($target == 'new') AND ! $module_id) {
-                PageLayout::postError(sprintf(_("Keine Kategorie zum Anlegen neuer Lernobjekte in der %s-Installation vorhanden."),
+                PageLayout::postError(sprintf(_('Keine Kategorie zum Anlegen neuer Lernobjekte in der %s-Installation vorhanden.'),
                         htmlReady($this->ilias->getName())));
             } else {
                 // remove client id from session id
-                $session_array = explode("::", $session_id);
+                $session_array = explode('::', $session_id);
                 $session_id = $session_array[0];
 
                 if (Request::get('ilias_module_type')) $module_type = Request::get('ilias_module_type');
@@ -194,19 +200,19 @@ class MyIliasAccountsController extends AuthenticatedController
                 // build target link
                 $parameters = '?sess_id='.$session_id;
                 if (!empty($this->ilias->getClientId())) {
-                    $parameters .= "&client_id=".$this->ilias->getClientId();
+                    $parameters .= '&client_id='.$this->ilias->getClientId();
                     if ($target) {
-                        $parameters .= "&target=".$target;
+                        $parameters .= '&target='.$target;
                     }
                     if ($module_id) {
-                        $parameters .= "&ref_id=".$module_id;
+                        $parameters .= '&ref_id='.$module_id;
                     }
                     if ($module_type) {
-                        $parameters .= "&type=".$module_type;
+                        $parameters .= '&type='.$module_type;
                     }
 
                     // refer to ILIAS target file
-                    header("Location: ". $this->ilias->getTargetFile() . $parameters);
+                    header('Location: '. $this->ilias->getTargetFile() . $parameters);
                     $this->render_nothing();
                 }
             }

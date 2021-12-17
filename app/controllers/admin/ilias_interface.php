@@ -134,6 +134,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
                             'url' => _('https://<URL zur ILIAS-Installation>'),
                             'client' => '',
                             'ldap_enable' => '',
+                            'no_account_updates' => false,
                             'admin' => 'ilias_soap_admin',
                             'admin_pw' => '',
 
@@ -211,7 +212,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
             $this->ilias_config = $this->ilias_configs[$index];
             $ldap_options = [];
             foreach (StudipAuthAbstract::GetInstance() as $plugin) {
-                if ($plugin instanceof StudipAuthLdap) {
+                if (!($plugin instanceof StudipAuthStandard)) {
                     $ldap_options[] = '<option '.($plugin->plugin_name == $this->ilias_config['ldap_enable'] ? 'selected' : '').'>' . $plugin->plugin_name . '</option>';
                 }
             }
@@ -291,6 +292,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
                 if (Request::getInstance()->offsetExists('ilias_ldap_enable')) {
                     $this->ilias_configs[$index]['ldap_enable'] = Request::get('ilias_ldap_enable');
                 }
+                $this->ilias_configs[$index]['no_account_updates'] = Request::get('ilias_no_account_updates');
                 $this->ilias_configs[$index]['admin'] = Request::get('ilias_admin');
                 $this->ilias_configs[$index]['admin_pw'] = Request::get('ilias_admin_pw');
 

@@ -324,6 +324,7 @@ class ConnectedIlias
         }
         $user_data = $this->user->getUserArray();
         $user_data["login"] = $this->ilias_config['user_prefix'].$user_data["login"];
+        $user_data['auth_mode'] = 'default';
 
         $user_exists = $this->soap_client->lookupUser($user_data["login"]);
         //automatische Zuordnung von bestehenden Ilias Accounts
@@ -339,6 +340,14 @@ class ConnectedIlias
         } elseif ($user_exists) {
             $this->error[] = sprintf(_('Externer Account konnte nicht angelegt werden. Es existiert bereits ein User mit dem Login %s in %s'), $user_data["login"], $this->ilias_config['name']);
             return false;
+        } elseif ($this->ilias_config['no_account_updates']) {
+            $this->error[] = sprintf(_('Sie haben noch keinen ILIAS-Account. Loggen Sie sich zuerst in %s ein, um ILIAS-Lernobjekte in Stud.IP nutzen zu können.'), "<a href=\"".$this->ilias_config['url']."\">".$this->ilias_config['name']."</a>");
+            return false;
+        } elseif (! $this->ilias_config['user_prefix'] &&
+            $this->ilias_config['ldap_enable'] &&
+            ($this->user->auth_plugin != 'standard') &&
+            ($this->user->auth_plugin == $this->ilias_config['ldap_enable'])) {
+            $user_data['external_account'] = $this->user->studip_login;
         }
 
         // set role according to Stud.IP perm
@@ -376,6 +385,15 @@ class ConnectedIlias
             return false;
         }
         $update_user = new IliasUser($this->index, $this->ilias_config['version'], $user->id);
+      // don't update ldap user
+        if (! $this->ilias_config['user_prefix'] &&
+            $this->ilias_config['ldap_enable'] &&
+            ($update_user->auth_plugin != 'standard') &&
+            ($update_user->auth_plugin == $this->ilias_config['ldap_enable'])) {
+            return true;
+        } elseif ($this->ilias_config['no_account_updates']) {
+            return true;
+        }
         // if user is manually connected don't update user data
         if ($update_user->getUserType() == IliasUser::USER_TYPE_ORIGINAL) {
             return true;
@@ -385,6 +403,7 @@ class ConnectedIlias
         if ($update_user->isConnected() && $update_user->id && $this->soap_client->lookupUser($update_user->login)) {
             $user_data = $update_user->getUserArray();
             $user_data["login"] = $this->ilias_config['user_prefix'].$user_data["login"];
+            $user_data['auth_mode'] = 'default';
 
             // set role according to Stud.IP perm
             if ($user->perms == "root") {
