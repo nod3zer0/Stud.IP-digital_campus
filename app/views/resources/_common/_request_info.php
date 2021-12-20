@@ -1,6 +1,6 @@
 <dl>
     <dt><?= _('Termine') ?>:</dt>
-    <dd><?= htmlReady($request->getDateString()) ?></dd>
+    <dd><?= $request->getDateString() ?></dd>
     <dt><?= _('Rüstzeit')?>:</dt>
     <dd>
         <? $preparation_time_minutes = intval($request->preparation_time / 60) ?>
