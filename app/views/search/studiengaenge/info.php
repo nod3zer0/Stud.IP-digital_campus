@@ -200,14 +200,14 @@
             <? foreach ($all_aufbaustgs as $typ => $aufbaustgs) : ?>
                 <strong><?= htmlReady($GLOBALS['MVV_AUFBAUSTUDIENGANG']['TYP']['values'][$typ]['name']) ?></strong>
                 <? if (count($aufbaustgs) > 4) : ?>
-                    <input type="checkbox" class="mvv-cb-more-items" id="cb_more_aufbaustgs" checked>
+                    <input type="checkbox" class="mvv-cb-more-items" id="cb_more_aufbaustgs_<?= $typ ?>" checked>
                 <? endif ?>
                 <ul>
                     <? foreach ($aufbaustgs as $i => $aufbaustg) : ?>
                     <li>
                         <?= htmlReady($aufbaustg->getDisplayName()) ?>
                         <? if ($i == 3) : ?>
-                            <label class="cb-more-items" for="cb_more_aufbaustgs"><?= _('mehr...') ?></label>
+                            <label class="cb-more-items" for="cb_more_aufbaustgs_<?= $typ ?>"><?= _('mehr...') ?></label>
                         <? endif ?>
                     </li>
                     <? endforeach ?>
