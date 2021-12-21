@@ -27,16 +27,12 @@ class LoginNavigation extends Navigation
         $navigation->setDescription(_('für registrierte NutzerInnen'));
         $this->addSubNavigation('login', $navigation);
 
-        if (in_array('CAS', $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
-            $navigation = new Navigation(_('Login'), 'index.php?again=yes&sso=cas');
-            $navigation->setDescription(_('für Single Sign On mit CAS'));
-            $this->addSubNavigation('login_cas', $navigation);
-        }
-
-        if (in_array('Shib', $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
-            $navigation = new Navigation(_('Shibboleth Login'), 'index.php?again=yes&sso=shib');
-            $navigation->setDescription(_('für Single Sign On mit Shibboleth'));
-            $this->addSubNavigation('login_shib', $navigation);
+        foreach (StudipAuthAbstract::getInstance() as $auth_plugin) {
+            if ($auth_plugin instanceof StudipAuthSSO && isset($auth_plugin->login_description)) {
+                $navigation = new Navigation($auth_plugin->plugin_fullname . ' ' . _('Login'), 'index.php?again=yes&sso=' . $auth_plugin->plugin_name);
+                $navigation->setDescription($auth_plugin->login_description);
+                $this->addSubNavigation('login_' . $auth_plugin->plugin_name, $navigation);
+            }
         }
 
         if (Config::get()->ENABLE_SELF_REGISTRATION) {

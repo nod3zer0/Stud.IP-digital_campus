@@ -14,28 +14,39 @@
 
 class StudipAuthShib extends StudipAuthSSO
 {
-    var $env_remote_user = 'HTTP_REMOTE_USER';
-    var $local_domain;
-    var $session_initiator;
-    var $validate_url;
-    var $userdata;
+    public $env_remote_user = 'HTTP_REMOTE_USER';
+    public $local_domain;
+    public $session_initiator;
+    public $validate_url;
+    public $userdata;
+    public $username_attribute = 'username';
 
     /**
      * Constructor: read auth information from remote SP.
      */
-    function __construct()
+    public function __construct($config = [])
     {
-        parent::__construct();
+        parent::__construct($config);
 
-        if (Request::option('sso') && isset($this->validate_url) && isset($_REQUEST['token'])) {
+        if (!isset($this->plugin_fullname)) {
+            $this->plugin_fullname = _('Shibboleth');
+        }
+        if (!isset($this->login_description)) {
+            $this->login_description = _('für Single Sign On mit Shibboleth');
+        }
+
+        if (Request::get('sso') === $this->plugin_name && isset($this->validate_url) && isset($_REQUEST['token'])) {
             $context = get_default_http_stream_context($this->validate_url);
-            $auth = file_get_contents($this->validate_url.'/'.$_REQUEST['token'], false, $context);
+            $auth = file_get_contents($this->validate_url . '/' . $_REQUEST['token'], false, $context);
 
             $this->userdata = json_decode($auth, true);
 
+            if ($this->username_attribute !== 'username') {
+                $this->userdata['username'] = $this->userdata[$this->username_attribute];
+            }
             if (isset($this->local_domain)) {
                 $this->userdata['username'] =
-                    str_replace('@'.$this->local_domain, '', $this->userdata['username']);
+                    str_replace('@' . $this->local_domain, '', $this->userdata['username']);
             }
         }
     }
@@ -43,7 +54,7 @@ class StudipAuthShib extends StudipAuthSSO
     /**
      * Return the current username.
      */
-    function getUser ()
+    function getUser()
     {
         return $this->userdata['username'];
     }
@@ -51,7 +62,7 @@ class StudipAuthShib extends StudipAuthSSO
     /**
      * Return the current URL (including parameters).
      */
-    function getURL ()
+    function getURL()
     {
         $url = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
         $url .= '://';
@@ -64,7 +75,7 @@ class StudipAuthShib extends StudipAuthSSO
 
         if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
             $_SERVER['HTTPS'] != 'on' && $_SERVER['SERVER_PORT'] != 80) {
-            $url .= ':'.$_SERVER['SERVER_PORT'];
+            $url .= ':' . $_SERVER['SERVER_PORT'];
         }
 
         $url .= $_SERVER['REQUEST_URI'];
@@ -75,7 +86,7 @@ class StudipAuthShib extends StudipAuthSSO
      * Validate the username passed to the auth plugin.
      * Note: This triggers authentication if needed.
      */
-    function verifyUsername ($username)
+    function verifyUsername($username)
     {
         if (isset($this->userdata)) {
             // use cached user information
@@ -89,15 +100,15 @@ class StudipAuthShib extends StudipAuthSSO
         }
 
         if (empty($remote_user) || isset($this->validate_url)) {
-            if ($_REQUEST['sso'] == 'shib') {
+            if (Request::get('sso') === $this->plugin_name) {
                 // force Shibboleth authentication (lazy session)
                 $shib_url = $this->session_initiator;
-                $shib_url .= mb_strpos($shib_url, '?') === false ? '?' : '&';
-                $shib_url .= 'target='.urlencode($this->getURL());
+                $shib_url .= strpos($shib_url, '?') === false ? '?' : '&';
+                $shib_url .= 'target=' . urlencode($this->getURL());
 
                 // break redirection loop in case of misconfiguration
-                if (mb_strstr($_SERVER['HTTP_REFERER'], 'target=') == false) {
-                    header('Location: '.$shib_url);
+                if (strstr($_SERVER['HTTP_REFERER'], 'target=') === false) {
+                    header('Location: ' . $shib_url);
                     echo '<html></html>';
                     exit();
                 }
@@ -105,10 +116,6 @@ class StudipAuthShib extends StudipAuthSSO
 
             // not authenticated
             return NULL;
-        }
-
-        if (isset($this->local_domain)) {
-            $remote_user = str_replace('@'.$this->local_domain, '', $remote_user);
         }
 
         // import authentication information
@@ -121,13 +128,20 @@ class StudipAuthShib extends StudipAuthSSO
             }
         }
 
+        if ($this->username_attribute !== 'username') {
+            $this->userdata['username'] = $this->userdata[$this->username_attribute];
+        }
+        if (isset($this->local_domain)) {
+            $this->userdata['username'] =
+                str_replace('@' . $this->local_domain, '', $this->userdata['username']);
+        }
         return $this->getUser();
     }
 
     /**
      * Get the user domains to assign to the current user.
      */
-    function getUserDomains ()
+    function getUserDomains()
     {
         $user = $this->getUser();
         $pos = mb_strpos($user, '@');
@@ -142,7 +156,7 @@ class StudipAuthShib extends StudipAuthSSO
     /**
      * Callback that can be used in user_data_mapping array.
      */
-    function getUserData ($key)
+    function getUserData($key)
     {
         $data = explode(';', $this->userdata[$key]);
 

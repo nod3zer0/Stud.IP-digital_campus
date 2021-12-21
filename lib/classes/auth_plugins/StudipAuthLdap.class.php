@@ -1,7 +1,4 @@
 <?php
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipAuthLdap.class.php
@@ -25,39 +22,27 @@
 // +---------------------------------------------------------------------------+
 
 /**
-* Stud.IP authentication against LDAP Server
-*
-* Stud.IP authentication against LDAP Server
-*
-* @access   public
-* @author   André Noack <noack@data-quest.de>
-* @package
-*/
-class StudipAuthLdap extends StudipAuthAbstract {
+ * Stud.IP authentication against LDAP Server
+ *
+ * Stud.IP authentication against LDAP Server
+ *
+ * @access   public
+ * @author   André Noack <noack@data-quest.de>
+ * @package
+ */
+class StudipAuthLdap extends StudipAuthAbstract
+{
 
-    var $anonymous_bind = true;
+    public $anonymous_bind = true;
 
-    var $host;
-    var $base_dn;
-    var $username_attribute = 'uid';
-    var $ldap_filter;
-    var $bad_char_regex =  '/[^0-9_a-zA-Z]/';
+    public $host;
+    public $base_dn;
+    public $username_attribute = 'uid';
+    public $ldap_filter;
+    public $bad_char_regex = '/[^0-9_a-zA-Z]/';
 
-    var $conn = null;
-    var $user_data = null;
-
-    /**
-    * Constructor
-    *
-    *
-    * @access public
-    *
-    */
-    function __construct()
-    {
-        //calling the baseclass constructor
-        parent::__construct();
-    }
+    public $conn = null;
+    public $user_data = null;
 
 
     function getLdapFilter($username)
@@ -76,16 +61,16 @@ class StudipAuthLdap extends StudipAuthAbstract {
     function doLdapConnect()
     {
         if (!($this->conn = ldap_connect($this->host))) {
-            $this->error_msg = _("Keine Verbindung zum LDAP Server möglich.");
+            $this->error_msg = _('Keine Verbindung zum LDAP Server möglich.');
             return false;
         }
-        if (!($r = ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3))){
-            $this->error_msg = _("Setzen der LDAP Protokolversion fehlgeschlagen.");
+        if (!($r = ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3))) {
+            $this->error_msg = _('Setzen der LDAP Protokolversion fehlgeschlagen.');
             return false;
         }
         if ($this->start_tls) {
             if (!ldap_start_tls($this->conn)) {
-                $this->error_msg = _("\"Start TLS\" fehlgeschlagen.");
+                $this->error_msg = _('"Start TLS" fehlgeschlagen.');
                 return false;
             }
         }
@@ -94,60 +79,60 @@ class StudipAuthLdap extends StudipAuthAbstract {
 
     function getUserDn($username)
     {
-        $user_dn = "";
+        $user_dn = '';
 
-        if ($this->anonymous_bind){
-            if (!($r = @ldap_bind($this->conn))){
-                $this->error_msg =_("Anonymer Bind fehlgeschlagen.") . $this->getLdapError();
+        if ($this->anonymous_bind) {
+            if (!($r = @ldap_bind($this->conn))) {
+                $this->error_msg = _('Anonymer Bind fehlgeschlagen.') . $this->getLdapError();
                 return false;
             }
-            if (!($result = @ldap_search($this->conn, $this->base_dn, $this->getLdapFilter($username), ['dn']))){
-                $this->error_msg = _("Anonymes Durchsuchen des LDAP Baumes fehlgeschlagen.") .$this->getLdapError();
+            if (!($result = @ldap_search($this->conn, $this->base_dn, $this->getLdapFilter($username), ['dn']))) {
+                $this->error_msg = _('Anonymes Durchsuchen des LDAP Baumes fehlgeschlagen.') . $this->getLdapError();
                 return false;
             }
-            if (!ldap_count_entries($this->conn, $result)){
-                $this->error_msg = sprintf(_("%s wurde nicht unterhalb von %s gefunden."), $username, $this->base_dn);
+            if (!ldap_count_entries($this->conn, $result)) {
+                $this->error_msg = sprintf(_('%s wurde nicht unterhalb von %s gefunden.'), $username, $this->base_dn);
                 return false;
             }
-            if (!($entry = @ldap_first_entry($this->conn, $result))){
+            if (!($entry = @ldap_first_entry($this->conn, $result))) {
                 $this->error_msg = $this->getLdapError();
                 return false;
             }
-            if (!($user_dn = @ldap_get_dn($this->conn, $entry))){
+            if (!($user_dn = @ldap_get_dn($this->conn, $entry))) {
                 $this->error_msg = $this->getLdapError();
                 return false;
             }
         } else {
-            $user_dn = $this->username_attribute . "=" . $username . "," . $this->base_dn;
+            $user_dn = $this->username_attribute . '=' . $username . ',' . $this->base_dn;
         }
         return $user_dn;
     }
 
     function doLdapBind($username, $password)
     {
-        if (!$this->doLdapConnect()){
+        if (!$this->doLdapConnect()) {
             return false;
         }
-        if (!($user_dn = $this->getUserDn($username))){
+        if (!($user_dn = $this->getUserDn($username))) {
             return false;
         }
-        if (!$password){
-            $this->error_msg = _("Kein Passwort eingegeben."); //some ldap servers seem to allow binding with a user dn and  without a password, if anonymous bind is enabled
+        if (!$password) {
+            $this->error_msg = _('Kein Passwort eingegeben.'); //some ldap servers seem to allow binding with a user dn and  without a password, if anonymous bind is enabled
             return false;
         }
-        if (!($r = @ldap_bind($this->conn, $user_dn, $password))){
-            if(ldap_errno($this->conn) == 49) {
-                $this->error_msg = _("Bitte überprüfen Sie ihre Zugangsdaten.");
+        if (!($r = @ldap_bind($this->conn, $user_dn, $password))) {
+            if (ldap_errno($this->conn) == 49) {
+                $this->error_msg = _('Bitte überprüfen Sie ihre Zugangsdaten.');
             }
-            $this->error_msg = _("Anmeldung fehlgeschlagen.") . $this->getLdapError();
+            $this->error_msg = _('Anmeldung fehlgeschlagen.') . $this->getLdapError();
             return false;
         }
-        if (!($result = @ldap_search($this->conn, $user_dn, "objectclass=*"))){
-            $this->error_msg = _("Abholen der Benutzer Attribute fehlgeschlagen.") .$this->getLdapError();
+        if (!($result = @ldap_search($this->conn, $user_dn, 'objectclass=*'))) {
+            $this->error_msg = _('Abholen der Benutzer Attribute fehlgeschlagen.') . $this->getLdapError();
             return false;
         }
-        if (@ldap_count_entries($this->conn, $result)){
-            if (!($info = @ldap_get_entries($this->conn, $result))){
+        if (@ldap_count_entries($this->conn, $result)) {
+            if (!($info = @ldap_get_entries($this->conn, $result))) {
                 $this->error_msg = $this->getLdapError();
                 return false;
             }
@@ -157,15 +142,15 @@ class StudipAuthLdap extends StudipAuthAbstract {
     }
 
     /**
-    *
-    *
-    *
-    * @access private
-    *
-    */
+     *
+     *
+     *
+     * @access private
+     *
+     */
     function isAuthenticated($username, $password)
     {
-        if (!$this->doLdapBind($username,$password)){
+        if (!$this->doLdapBind($username, $password)) {
             ldap_unbind($this->conn);
             return false;
         }
@@ -174,12 +159,11 @@ class StudipAuthLdap extends StudipAuthAbstract {
     }
 
 
-
     function doLdapMap($map_params)
     {
         if (isset($this->user_data[$map_params][0])) {
             $ret = $this->user_data[$map_params][0];
-            if ($ret[0] == ':') {
+            if ($ret[0] === ':') {
                 $ret = base64_decode($ret);
             }
         }
@@ -202,23 +186,23 @@ class StudipAuthLdap extends StudipAuthAbstract {
 
     function isUsedUsername($username)
     {
-        if (!$this->anonymous_bind){
-            $this->error = _("Kann den Benutzernamen nicht überprüfen, anonymous_bind ist ausgeschaltet!");
+        if (!$this->anonymous_bind) {
+            $this->error = _('Kann den Benutzernamen nicht überprüfen, anonymous_bind ist ausgeschaltet!');
             return false;
         }
-        if (!$this->doLdapConnect()){
+        if (!$this->doLdapConnect()) {
             return false;
         }
-        if (!($r = @ldap_bind($this->conn))){
-            $this->error = _("Anonymer Bind fehlgeschlagen.") . $this->getLdapError();
+        if (!($r = @ldap_bind($this->conn))) {
+            $this->error = _('Anonymer Bind fehlgeschlagen.') . $this->getLdapError();
             return false;
         }
-        if (!($result = @ldap_search($this->conn, $this->base_dn, $this->getLdapFilter($username), ['dn']))){
-            $this->error =  _("Anonymes Durchsuchen des LDAP Baumes fehlgeschlagen.") .$this->getLdapError();
+        if (!($result = @ldap_search($this->conn, $this->base_dn, $this->getLdapFilter($username), ['dn']))) {
+            $this->error = _('Anonymes Durchsuchen des LDAP Baumes fehlgeschlagen.') . $this->getLdapError();
             return false;
         }
-        if (!ldap_count_entries($this->conn, $result)){
-            $this->error_msg = _("Der Benutzername wurde nicht gefunden.");
+        if (!ldap_count_entries($this->conn, $result)) {
+            $this->error_msg = _('Der Benutzername wurde nicht gefunden.');
             return false;
         }
         return true;
@@ -226,6 +210,6 @@ class StudipAuthLdap extends StudipAuthAbstract {
 
     function getLdapError()
     {
-            return _("<br>LDAP Fehler: ") . ldap_error($this->conn) ." (#" . ldap_errno($this->conn) . ")";
+        return _('<br>LDAP Fehler: ') . ldap_error($this->conn) . ' (#' . ldap_errno($this->conn) . ')';
     }
 }

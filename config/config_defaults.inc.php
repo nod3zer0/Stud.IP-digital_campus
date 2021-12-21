@@ -326,6 +326,26 @@ $STUDIP_AUTH_CONFIG_CAS = array("host" => "cas.studip.de",
                                                         "auth_user_md5.Email" => array("callback" => "getUserData", "map_args" => "email"),
                                                         "auth_user_md5.perms" => array("callback" => "getUserData", "map_args" => "status")));
 
+//example of OpenID Connect
+$STUDIP_AUTH_CONFIG_GOOGLE = [
+        'provider_url' => 'https://accounts.google.com',
+        'client_id'    => '',
+        'client_secret'     => '',
+        'plugin_class'      => 'StudipAuthOIDC',
+        'plugin_name'       => 'google',
+        'domain'            => 'google',
+        'plugin_fullname'   => 'Google',
+        'login_description' => 'Login with Google',
+        'ssl_options'       => ['certPath' => null, 'verifyPeer' => true, 'verifyHost' => true],
+        'user_data_mapping' =>
+            ['auth_user_md5.username' => ['callback' => 'dummy', 'map_args' => ''],
+             'auth_user_md5.password' => ['callback' => 'dummy', 'map_args' => ''],
+             'auth_user_md5.Email'    => ['callback' => 'getUserData', 'map_args' => 'email'],
+             'auth_user_md5.Nachname' => ['callback' => 'getUserData', 'map_args' => 'family_name'],
+             'auth_user_md5.Vorname'  => ['callback' => 'getUserData', 'map_args' => 'given_name']
+            ]
+    ];
+
 $STUDIP_AUTH_CONFIG_LTI = [
     'consumer_keys' => [
         // 'domain' is optional, default is value of consumer_key

@@ -3,37 +3,43 @@
 # Lifter003: TODO
 # Lifter010: TODO
 /**
-* Stud.IP authentication against CAS Server
-*
-* @access   public
-* @author   Dennis Reil <dennis.reil@offis.de>
-* @package
-*/
+ * Stud.IP authentication against CAS Server
+ *
+ * @access   public
+ * @author   Dennis Reil <dennis.reil@offis.de>
+ * @package
+ */
 
 require_once 'composer/jasig/phpcas/CAS.php';
 require_once 'lib/classes/cas/CAS_PGTStorage_Cache.php';
 
-class StudipAuthCAS extends StudipAuthSSO {
+class StudipAuthCAS extends StudipAuthSSO
+{
 
-    var $host;
-    var $port;
-    var $uri;
-    var $cacert;
+    public $host;
+    public $port;
+    public $uri;
+    public $cacert;
 
-    var $cas;
-    var $userdata;
+    public $cas;
+    public $userdata;
 
     /**
-    * Constructor
-    *
-    *
-    * @access public
-    *
-    */
-    function __construct() {
-        parent::__construct();
-
-        if (Request::option('sso')) {
+     * Constructor
+     *
+     *
+     *
+     */
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+        if (!isset($this->plugin_fullname)) {
+            $this->plugin_fullname = _('CAS');
+        }
+        if (!isset($this->login_description)) {
+            $this->login_description = _('für Single Sign On mit CAS');
+        }
+        if (Request::get('sso') === $this->plugin_name) {
             $this->cas = new CAS_Client(CAS_VERSION_2_0, $this->proxy, $this->host, $this->port, $this->uri, false);
 
             if ($this->proxy) {
@@ -68,22 +74,22 @@ class StudipAuthCAS extends StudipAuthSSO {
         return $this->getUser();
     }
 
-    function getUserData($key){
-        $userdataclassname = $GLOBALS["STUDIP_AUTH_CONFIG_CAS"]["user_data_mapping_class"];
-        if (empty($userdataclassname)){
-            echo ("ERROR: no userdataclassname specified.");
+    function getUserData($key)
+    {
+        $userdataclassname = $this->user_data_mapping_class;
+        if (!class_exists($userdataclassname)) {
+            Log::ERROR($this->plugin_name . ': no userdataclassname specified or found.');
             return;
         }
-        require_once($userdataclassname . ".class.php");
         // get the userdata
-        if (empty($this->userdata)){
+        if (empty($this->userdata)) {
             $this->userdata = new $userdataclassname();
         }
-        $result = $this->userdata->getUserData($key, $this->cas->getUser());
-        return $result;
+        return $this->userdata->getUserData($key, $this->cas->getUser());
     }
 
-    function logout(){
+    function logout()
+    {
         // do a global cas logout
         $this->cas = new CAS_Client(CAS_VERSION_2_0, false, $this->host, $this->port, $this->uri, false);
         $this->cas->logout();

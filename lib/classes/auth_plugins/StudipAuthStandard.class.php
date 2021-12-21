@@ -39,18 +39,6 @@ class StudipAuthStandard extends StudipAuthAbstract
     var $bad_char_regex =  false;
 
     /**
-     * Constructor
-     *
-     *
-     * @access public
-     *        
-     */
-    function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
     *
     *
     *
@@ -61,19 +49,19 @@ class StudipAuthStandard extends StudipAuthAbstract
     {
         $user = User::findByUsername($username);
         if (!$user || !$password || mb_strlen($password) > 72) {
-            $this->error_msg= _("Ungültige Benutzername/Passwort-Kombination!") ;
+            $this->error_msg= _('Ungültige Benutzername/Passwort-Kombination!') ;
             return false;
-        } elseif ($user->username != $username) {
-            $this->error_msg = _("Bitte achten Sie auf korrekte Gro&szlig;-Kleinschreibung beim Username!");
+        } elseif ($user->username !== $username) {
+            $this->error_msg = _('Bitte achten Sie auf korrekte Groß-Kleinschreibung beim Username!');
             return false;
-        } elseif (!is_null($user->auth_plugin) && $user->auth_plugin != "standard") {
-            $this->error_msg = sprintf(_("Dieser Benutzername wird bereits über %s authentifiziert!"),$user->auth_plugin) ;
+        } elseif (!is_null($user->auth_plugin) && $user->auth_plugin !== 'standard') {
+            $this->error_msg = sprintf(_('Dieser Benutzername wird bereits über %s authentifiziert!'),$user->auth_plugin) ;
             return false;
         } else {
             $pass = $user->password;   // Password is stored as a md5 hash
         }
         $hasher = UserManagement::getPwdHasher();
-        $old_style_check = (mb_strlen($pass) == 32 && md5($password) == $pass);
+        $old_style_check = (strlen($pass) === 32 && md5($password) === $pass);
         $migrated_check = $hasher->CheckPassword(md5($password), $pass);
         $check = $hasher->CheckPassword($password, $pass);
         $old_encoding_check = $hasher->CheckPassword(legacy_studip_utf8decode($password), $pass);
@@ -85,7 +73,7 @@ class StudipAuthStandard extends StudipAuthAbstract
         }
 
         if (!($check || $migrated_check || $old_style_check || $old_encoding_check)) {
-            $this->error_msg= _("Das Passwort ist falsch!");
+            $this->error_msg= _('Das Passwort ist falsch!');
             return false;
         } else {
             return true;

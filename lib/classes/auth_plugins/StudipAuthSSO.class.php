@@ -18,6 +18,16 @@
 abstract class StudipAuthSSO extends StudipAuthAbstract
 {
     /**
+     * @var string the descriptive name of the authentication plugin
+     */
+    public $plugin_fullname;
+
+    /**
+     * @var string a short description, when present it is shown on the login page
+     */
+    public $login_description;
+
+    /**
      * Return the current username.
      */
     abstract function getUser ();
