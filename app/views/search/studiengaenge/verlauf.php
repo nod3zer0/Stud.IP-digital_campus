@@ -10,7 +10,9 @@
         <h3>
             <?= sprintf(_('%s im Studiengang %s'), htmlReady($stgTeilBez->getDisplayName()), htmlReady($studiengang->getDisplayName(ModuleManagementModel::DISPLAY_ABSCHLUSS))) ?>
             <? if (Config::get()->ENABLE_STUDYCOURSE_INFO_PAGE) : ?>
-                <a href="<?= $controller->link_for('search/studiengaenge/info', $studiengang->id)?>" data-dialog><?= Icon::create('infopage2', Icon::ROLE_CLICKABLE)->asImg() ?>
+                <a href="<?= $controller->link_for('search/studiengaenge/info', $studiengang->id)?>" data-dialog>
+                    <?= Icon::create('infopage2', Icon::ROLE_CLICKABLE, ['title' => _('Informationen zum Studiengang')]) ?>
+                </a>
             <? endif ?>
         </h3>
     <? endif ?>
@@ -59,7 +61,7 @@
                                     <?= htmlReady($abschnitt['name']) ?><br/><?= $abschnitt['creditPoints'] ? $abschnitt['creditPoints'] . ' ' . _('CP') : '' ?>
                                     <? if (trim($abschnitt['kommentar'])) : ?>
                                         <a data-dialog title="<?= sprintf(_('%s (Kommentar)'), htmlReady($abschnitt['name'])) ?>" href="<?= $controller->link_for('search/studiengaenge/kommentar', $abschnitt_id) ?>">
-                                            <?= Icon::create('item')->asImg(['title' => _('Zusatzinformationen zum Studiengangsabschnitt')]) ?>
+                                            <?= Icon::create('item', Icon::ROLE_CLICKABLE, ['title' => _('Zusatzinformationen zum Studiengangabschnitt')]) ?>
                                         </a>
                                     <? endif ?>
                                 </td>
@@ -70,7 +72,7 @@
                                    <? // Anzeige der alternativen Bezeichnung aus mvv_stgteilabschnitt_modul ?>
                                     <? $abschnitt_modul = StgteilabschnittModul::findOneBySQL('`abschnitt_id` = ? AND `modul_id` = ?', [$abschnitt_id, $modul_id]) ?>
                                     <a data-dialog title="<?= htmlReady($modul['name']) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= $controller->link_for('shared/modul/description/' . $modul_id, ['display_language' => ModuleManagementModel::getLanguage()]) ?>">
-                                        <?= Icon::create('log')->asImg(['title' => _('Vollständige Modulbeschreibung')]) ?>
+                                        <?= Icon::create('log', Icon::ROLE_CLICKABLE, ['title' => _('Vollständige Modulbeschreibung')]) ?>
                                     </a>
                                     <? if($modul['veranstaltungen']):?>
                                     <a data-dialog href="<?= $controller->link_for('shared/modul/overview', $modul_id, $active_sem->getId(), ['display_language' => ModuleManagementModel::getLanguage()])  ?>">
@@ -101,14 +103,14 @@
                                 <?= htmlReady($abschnitt['name']) ?><br/><?= $abschnitt['creditPoints'] ? $abschnitt['creditPoints'] . ' ' . _('CP') : '' ?>
                                 <? if (trim($abschnitt['kommentar'])) : ?>
                                     <a data-dialog title="<?= sprintf(_('%s (Kommentar)'), htmlReady($abschnitt['name'])) ?>" href="<?= $controller->link_for('search/studiengaenge/kommentar', $abschnitt_id) ?>">
-                                        <?= Icon::create('item')->asImg(['title' => _('Zusatzinformationen zum Studiengangsabschnitt')]) ?>
+                                        <?= Icon::create('item', Icon::ROLE_CLICKABLE, ['title' => _('Zusatzinformationen zum Studiengangabschnitt')]) ?>
                                     </a>
                                 <? endif ?>
                             </td>
                         <? endif ?>
                             <td>
                                 <a data-dialog title="<?= htmlReady($modul['name']) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= $controller->link_for('shared/modul/description/' . $modul_id, ['display_language' => ModuleManagementModel::getLanguage()]) ?>">
-                                    <?= Icon::create('log')->asImg(['title' => _('Vollständige Modulbeschreibung')]) ?>
+                                    <?= Icon::create('log', Icon::ROLE_CLICKABLE, ['title' => _('Vollständige Modulbeschreibung')]) ?>
                                 </a>
                             <? if ($modul['veranstaltungen']): ?>
                                 <a data-dialog href="<?= $controller->link_for('shared/modul/overview', $modul_id, $active_sem->getId(), ['display_language' => ModuleManagementModel::getLanguage()])  ?>">
