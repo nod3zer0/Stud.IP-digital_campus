@@ -134,6 +134,8 @@ class Studiengang extends ModuleManagementModelTreeItem
         $config['i18n_fields']['name_kurz']    = true;
         $config['i18n_fields']['beschreibung'] = true;
 
+        $config['default_values']['enroll'] = $GLOBALS['MVV_STUDIENGANG']['ENROLL']['default'];
+
         parent::configure($config);
     }
 

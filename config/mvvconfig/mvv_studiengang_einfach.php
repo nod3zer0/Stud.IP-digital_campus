@@ -332,6 +332,20 @@ $privileges = [
                 'MVVFreigabe'   => 3
             ]
         ],
+        'enroll' => [
+            'planung' => [
+                'MVVEntwickler' => 3,
+                'MVVRedakteur'  => 3,
+                'MVVTranslator' => 1,
+                'MVVFreigabe'   => 3
+            ],
+            'genehmigt' => [
+                'MVVEntwickler' => 3,
+                'MVVRedakteur'  => 3,
+                'MVVTranslator' => 1,
+                'MVVFreigabe'   => 3
+            ]
+        ],
         // verknüpfte Objekte
         'studiengangteile' => [
             'planung' => [

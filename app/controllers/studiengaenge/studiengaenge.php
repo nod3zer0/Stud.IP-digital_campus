@@ -724,7 +724,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
                 $data['name'] = $fach->name;
                 $data['name_kurz'] = $fach->name_kurz;
             }
-            
+
             $this->render_json($data);
         } else {
             $this->set_status(404, 'Not Found');

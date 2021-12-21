@@ -32,7 +32,7 @@
         <a data-dialog="title='<?= htmlReady($studiengang->getDisplayName()) ?>'" href="<?= $controller->url_for('/info/' . $studiengang->id . '/', ['language' => $locale]) ?>">
             <img src="<?= Assets::image_path('languages/' . $language['picture']) ?>" alt="<?= $language['name'] ?>" title="<?= $language['name'] ?>">
         </a>
-    <? endforeach; ?>
+    <? endforeach ?>
 </div>
 <article class="studip toggle open" id="tablefix">
     <header>
@@ -78,14 +78,27 @@
                     </td>
                 </tr>
             <? endif ?>
-            <tr>
-                <td>
-                    <strong><?= _('Art der Zulassung') ?>:</strong>
-                </td>
-                <td>
-                    <?= htmlReady($GLOBALS['MVV_STUDIENGANG']['ZULASSUNG']['values'][$studiengang->enroll]['name']) ?>
-                </td>
-            </tr>
+            <? $enroll_selected = explode(',', $studiengang->enroll) ?>
+            <? if ($enroll_selected) : ?>
+                <tr>
+                    <td>
+                        <strong><?= _('Art der Zulassung') ?>:</strong>
+                    </td>
+                    <td>
+                        <? if (count($enroll_selected) > 1) : ?>
+                            <ul>
+                                <? foreach ($enroll_selected as $enroll_key) : ?>
+                                    <li>
+                                        <?= htmlReady($GLOBALS['MVV_STUDIENGANG']['ENROLL']['values'][$enroll_key]['name']) ?>
+                                    </li>
+                                <? endforeach ?>
+                            </ul>
+                        <? else : ?>
+                            <?= htmlReady($GLOBALS['MVV_STUDIENGANG']['ENROLL']['values'][reset($enroll_selected)]['name']) ?>
+                        <? endif ?>
+                    </td>
+                </tr>
+            <? endif ?>
             <? foreach ($studiengang->datafields as $df) : ?>
                 <? if (mb_strpos($df->datafield->object_class, 'settings') !== false
                         && !$df->isNew()) : ?>
@@ -118,7 +131,7 @@
 <? foreach ($studiengang->datafields as $df) : ?>
     <? if (mb_strpos($df->datafield->object_class, 'info') !== false
                         && !$df->isNew()) : ?>
-        <? $tdf = $df->getTypedDatafield(); ?>
+        <? $tdf = $df->getTypedDatafield() ?>
         <? if ($tdf->isVisible() && trim($tdf->getValue())) : ?>
             <article class="studip toggle open">
                 <header>
@@ -128,9 +141,9 @@
                     <?= $tdf->getDisplayValue() ?>
                 </section>
             </article>
-        <? endif; ?>
-    <? endif; ?>
-<? endforeach; ?>
+        <? endif ?>
+    <? endif ?>
+<? endforeach ?>
 <? if (is_array($all_contacts) && count($all_contacts)) : ?>
     <article class="studip toggle open">
         <header>
@@ -145,10 +158,10 @@
                         <li>
                             <?= htmlReady($contact['name']) ?>
                         </li>
-                        <? endforeach; ?>
+                        <? endforeach ?>
                     </ul>
-                <? endif; ?>
-            <? endforeach; ?>
+                <? endif ?>
+            <? endforeach ?>
         </section>
     </article>
 <? endif ?>
@@ -171,10 +184,10 @@
                             <a href="<?= $file['url'] ?>"><?= htmlReady($file['extension']) ?></a>
                             <? endif ?>
                         </li>
-                        <? endforeach; ?>
+                        <? endforeach ?>
                     </ul>
-                <? endif; ?>
-            <? endforeach; ?>
+                <? endif ?>
+            <? endforeach ?>
         </section>
     </article>
 <? endif ?>
@@ -188,18 +201,18 @@
                 <strong><?= htmlReady($GLOBALS['MVV_AUFBAUSTUDIENGANG']['TYP']['values'][$typ]['name']) ?></strong>
                 <? if (count($aufbaustgs) > 4) : ?>
                     <input type="checkbox" class="mvv-cb-more-items" id="cb_more_aufbaustgs" checked>
-                <? endif; ?>
+                <? endif ?>
                 <ul>
                     <? foreach ($aufbaustgs as $i => $aufbaustg) : ?>
                     <li>
                         <?= htmlReady($aufbaustg->getDisplayName()) ?>
                         <? if ($i == 3) : ?>
                             <label class="cb-more-items" for="cb_more_aufbaustgs"><?= _('mehr...') ?></label>
-                        <? endif; ?>
+                        <? endif ?>
                     </li>
                     <? endforeach ?>
                 </ul>
             <? endforeach ?>
         </section>
     </article>
-<? endif; ?>
+<? endif ?>

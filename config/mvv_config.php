@@ -282,6 +282,20 @@ $GLOBALS['MVV_STUDIENGANG']['PERSONEN_GRUPPEN'] = [
     'default' => ''
 ];
 
+$GLOBALS['MVV_STUDIENGANG']['ENROLL'] = [
+    'values' => [
+        'wise' => [
+            'visible' => 1,
+            'name' => _('Bewerbung/Einschreibung im Wintersemester möglich')
+        ],
+        'sose'     => [
+            'visible' => 1,
+            'name' => _('Bewerbung/Einschreibung im Sommersemester möglich')
+        ]
+    ],
+    'default' => ''
+];
+
 $GLOBALS['MVV_AUFBAUSTUDIENGANG']['TYP'] = [
     'values' => [
         'masterfach' => [
