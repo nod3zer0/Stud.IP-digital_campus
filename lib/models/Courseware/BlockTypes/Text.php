@@ -35,6 +35,22 @@ class Text extends BlockType
         return ['text' => ''];
     }
 
+    public function getPayload()
+    {
+        $payload = parent::getPayload();
+
+        $payload['text'] = \Studip\Markup::purifyHtml(\Studip\Markup::markAsHtml($payload['text']));
+
+        return $payload;
+    }
+
+    public function setPayload($payload): void
+    {
+        $payload['text'] = \Studip\Markup::purifyHtml(\Studip\Markup::markAsHtml($payload['text']));
+
+        parent::setPayload($payload);
+    }
+
     public static function getJsonSchema(): Schema
     {
         $schemaFile = __DIR__.'/Text.json';
@@ -42,7 +58,7 @@ class Text extends BlockType
         return Schema::fromJsonString(file_get_contents($schemaFile));
     }
 
-        /**
+    /**
      * get all files related to this block.
      *
      * @return \FileRef[] list of file references realted to this block
