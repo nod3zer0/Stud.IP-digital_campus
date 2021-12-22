@@ -3,10 +3,10 @@
         class="cw-ribbon-tools"
         :class="{ unfold: toolsActive, 'cw-ribbon-tools-consume': consumeMode }"
     >
-        <div class="cw-ribbon-tool-content" ref="ribbonContent">
+        <div class="cw-ribbon-tool-content">
             <div class="cw-ribbon-tool-content-nav">
                 <ul>
-                    <li 
+                    <li
                         tabindex="0"
                         ref="focusPoint"
                         :class="{ active: showContents }"
@@ -22,9 +22,9 @@
                     >
                         <translate>Elemente hinzufügen</translate>
                     </li>
-                    <li 
-                        v-if="!consumeMode && displaySettings" 
-                        tabindex="0" 
+                    <li
+                        v-if="!consumeMode && displaySettings"
+                        tabindex="0"
                         :class="{ active: showAdmin }"
                         @click="displayTool('admin')"
                     >
@@ -33,9 +33,9 @@
                 </ul>
                 <button :title="textClose" class="cw-tools-hide-button" @click="$emit('deactivate')"></button>
             </div>
-            <div class="cw-ribbon-tool">
+            <div class="cw-ribbon-tool" ref="ribbonContent" @scroll="handleScroll">
                 <courseware-tools-contents v-if="showContents" />
-                <courseware-tools-blockadder v-if="showBlockAdder" @scrollTop="scrollTop"/>
+                <courseware-tools-blockadder v-if="showBlockAdder" @scrollTop="scrollTop('blockadder')"/>
                 <courseware-tools-admin v-if="showAdmin" />
             </div>
         </div>
@@ -63,7 +63,12 @@ export default {
             showContents: true,
             showAdmin: false,
             showBlockAdder: false,
-            textClose: this.$gettext('schließen')
+            textClose: this.$gettext('schließen'),
+            scrollPos: {
+                contents: 0,
+                admin: 0,
+                blockadder: 0
+            }
         };
     },
     computed: {
@@ -107,15 +112,65 @@ export default {
                     this.showBlockAdder = true;
                     break;
             }
+            this.updateScrollPos();
         },
         disableContainerAdder() {
             if (this.containerAdder !== false) {
                 this.$store.dispatch('coursewareContainerAdder', false);
             }
         },
-        scrollTop() {
-            this.$refs.ribbonContent.scrollTop = 0;
+        scrollTop(tool) {
+            switch (tool) {
+                case 'contents':
+                    this.$set(this.scrollPos, 'contents', 0);
+                    break;
+                case 'admin':
+                    this.$set(this.scrollPos, 'admin', 0);
+                    break;
+                case 'blockadder':
+                    this.$set(this.scrollPos, 'blockadder', 0);
+                    break;
+            }
+            this.updateScrollPos();
+        },
+        handleScroll: function() {
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+            }
+
+            this.timeout = setTimeout(() => {
+                var currentScrollPos = this.$refs.ribbonContent.scrollTop;
+                if (this.showContents) {
+                    this.$set(this.scrollPos, 'contents', currentScrollPos);
+                }
+                if (this.showAdmin) {
+                    this.$set(this.scrollPos, 'admin', currentScrollPos);
+                }
+                if (this.showBlockAdder) {
+                    this.$set(this.scrollPos, 'blockadder', currentScrollPos);
+                }
+            }, 100);
+        },
+        updateScrollPos() {
+            var scrollPos = 0;
+            if (this.showContents) {
+                scrollPos = this.scrollPos.contents;
+            }
+            if (this.showAdmin) {
+                scrollPos = this.scrollPos.admin;
+            }
+            if (this.showBlockAdder) {
+                scrollPos = this.scrollPos.blockadder;
+            }
+            this.$nextTick(function() {
+                 $(this.$refs.ribbonContent).stop().animate({
+                    scrollTop: scrollPos
+                }, 100);
+            });
         }
+    },
+    mounted () {
+        this.updateScrollPos();
     },
     watch: {
         adderStorage(newValue) {
