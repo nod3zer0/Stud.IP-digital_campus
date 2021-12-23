@@ -137,6 +137,7 @@ CKEDITOR.plugins.add('studip-upload', {
                 .css('display', 'none')
                 .appendTo($container)
                 .fileupload({
+                    dropZone: $container,
                     url: editor.config.studipUpload_url,
                     singleFileUploads: false,
                     dataType: 'json',
