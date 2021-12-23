@@ -18,7 +18,7 @@
 <? if (!empty($cycle_dates)) : ?>
     <? foreach ($cycle_dates as $metadate_id => $cycle) : ?>
 
-        <form class="default collapsable" action="<?= $controller->url_for('course/timesrooms/stack/' . $metadate_id, $linkAttributes) ?>"
+        <form class="collapsable" action="<?= $controller->url_for('course/timesrooms/stack/' . $metadate_id, $linkAttributes) ?>"
               method="post" <?= Request::isXhr() ? 'data-dialog="size=big"' : ''?>>
             <?= CSRFProtection::tokenTag() ?>
 
@@ -97,7 +97,7 @@
                                     'clickable',
                                     [
                                         'title' => _('Raumanfrage erstellen'),
-                                        'class' => 'text-align'
+                                        'style' => 'vertical-align: middle;'
                                     ]
                                 ),
                                 ['data-dialog' => 'size=big']
@@ -114,7 +114,7 @@
                     <? endif ?>
                 </header>
                 <section>
-                    <table class="default nohover">
+                    <table class="default">
                         <colgroup>
                             <? if (!$locked) : ?>
                                 <col width="30px">

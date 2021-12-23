@@ -722,7 +722,7 @@ class SeminarCycleDate extends SimpleORMap
     {
         $date = new DateTime();
         $date->setTimestamp($base);
-        $date->modify(sprintf('%s days', $days));
+        $date->modify(sprintf('this week monday +%s days', $days));
         return $date->getTimestamp();
     }
 

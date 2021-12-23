@@ -33,7 +33,7 @@ $room_request_filter = function ($date) {
     <? endif ?>
     </header>
 <? if (!empty($single_dates)): ?>
-    <form class="default collapsable" action="<?= $controller->url_for('course/timesrooms/stack', $linkAttributes) ?>"
+    <form class="collapsable" action="<?= $controller->url_for('course/timesrooms/stack', $linkAttributes) ?>"
     <?= Request::isXhr() ? 'data-dialog="size=big"' : ''?> method="post">
         <?= CSRFProtection::tokenTag() ?>
     <? foreach ($single_dates as $semester_id => $termine) : ?>
@@ -70,7 +70,7 @@ $room_request_filter = function ($date) {
                 </section>
             </header>
             <section>
-                <table class="default nohover">
+                <table class="default">
                     <colgroup>
                     <? if (!$locked) :?>
                         <col width="30px">
