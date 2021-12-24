@@ -4,15 +4,14 @@ The Stud.IP CoreGroup
 
 Marco Bohnsack      <bohnsack@data-quest.de>
 Rasmus Fuhse        <fuhse@data-quest.de>
-Till Glöggler       <tgloeggl@uos.de>
+Till GlÃ¶ggler       <tgloeggl@uos.de>
 Thomas Hackl        <thomas.hackl@uni-passau.de>
 Cornelis Kater      <kater@elsa.uni-hannover.de>
 Elmar Ludwig        <elmar.ludwig@uos.de>
 Marcus Lunzenauer   <marcus.lunzenauer@elanag.com>
-Nico Müller         <nico.mueller@uni-oldenburg.de>
-André Noack         <noack@data-quest.de>
+Nico MÃ¼ller         <nico.mueller@uni-oldenburg.de>
+AndrÃ© Noack         <noack@data-quest.de>
 Cornelia Roser      <roser@hawk-hhg.de>
-Sabine Scheele      <sabine.scheele@hrz.uni-giessen.de>
 David Siegfried     <david.siegfried@uni-vechta.de>
 Martin Stratmann    <martin@herrstratmann.de>
 Stefan Suchi        <suchi@data-quest.de>
@@ -24,7 +23,7 @@ Credits and Comments
 ----------------------------------------------------------------------------
 
 Boris Erdmann       <be@shonline.de>
-Kristian Köhntopp   <kk@shonline.de>
+Kristian KÃ¶hntopp   <kk@shonline.de>
 PHPLib Development, all classes
 
 Manuel Lemos        <mlemos@acm.org>
@@ -58,7 +57,7 @@ vCard-export, record of study
 Florian Hansen      <florian_h@gmx.net>
 WAP pages for Stud.IP
 
-Tobias Möller       <tmoelle1@gwdg.de>
+Tobias MÃ¶ller       <tmoelle1@gwdg.de>
 Stud.IP-Logo
 
 Rosemary Wilson     <rwilson@uni-goettingen.de>
@@ -68,7 +67,7 @@ Englisch translation
 Oliver Brakel       <obrakel@studip.de>
 One of the initiators of Stud.IP
 
-Arne Schröder       <schroeder@data-quest.de>
+Arne SchrÃ¶der       <schroeder@data-quest.de>
 Ilias2-Interface, E-Learning-Modules-Interface, Export
 
 Dennis Reil         <Dennis.Reil@offis.de>
@@ -86,7 +85,7 @@ Administration of times and room information
 Jens Schmelzer      <jens.schmelzer@fh-jena.de>
 Smiley administration, calendar pop-up, lots of security related bugfixes
 
-Jörg Röpke          <roepke@uni-trier.de>
+JÃ¶rg RÃ¶pke          <roepke@uni-trier.de>
 
 Tobias Thelen       <tobias.thelen@uos.de>
 Stud.IP help, event logging, wiki enhancements
@@ -106,7 +105,9 @@ GUI & Usability
 
 Arne Koesling       <koesling@elsa.uni-hannover.de>
 
-André Klaßen        <aklassen@uos.de>
+AndrÃ© KlaÃŸen        <aklassen@uos.de>
+
+Sabine Scheele      <sabine.scheele@hrz.uni-giessen.de>
 
 ----------------------------------------------------------------------------
 CreativeCommons sources
