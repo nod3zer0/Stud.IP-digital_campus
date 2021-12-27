@@ -11,7 +11,7 @@ return [
             'gd'        => true,
             'mbstring'  => true,
             'json'      => true,
-            'ftp'       => true,
+            'ftp'       => 'ftp proxy Dateibereich',
             'zip'       => true,
             'xsl'       => 'Export',
             'xml'       => 'Export',

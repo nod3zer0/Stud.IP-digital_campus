@@ -326,7 +326,7 @@ class Admin_InstallController extends Trails_Controller
             }
         }
 
-        // COPY config.inc.php / config_local.inc.php / library_config.inc.php
+        // COPY config.inc.php / config_local.inc.php
         if ($this->basic || $what === 'config') {
             $local_inc = $this->installer->createConfigLocalInc(
                 $_SESSION['STUDIP_INSTALLATION']['database']['host'],
@@ -341,7 +341,6 @@ class Admin_InstallController extends Trails_Controller
                 $_SESSION['STUDIP_INSTALLATION']['system']['UNI_URL'],
                 $_SESSION['STUDIP_INSTALLATION']['system']['UNI_CONTACT']
             );
-            $this->installer->createLibraryConfigInc();
 
             // Update config entries
             $this->installer->updateConfigInDatabase(
