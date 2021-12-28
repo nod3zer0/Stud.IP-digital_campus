@@ -158,7 +158,7 @@ class Course_TopicsController extends AuthenticatedController
         }
         if ($GLOBALS['perm']->have_perm("root")) {
             $this->courseSearch = new SQLSearch("
-                SELECT seminare.Seminar_id, CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.name, '(', IF(seminare.semester_id IS NULL, GROUP_CONCAT(', ', semester_data.name), 'unbegrenzt'), ') (', COUNT(issue_id), ')')
+                SELECT seminare.Seminar_id, CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.name, '(', IF(semester_courses.semester_id IS NULL, GROUP_CONCAT(', ', semester_data.name), 'unbegrenzt'), ') (', COUNT(issue_id), ')')
                 FROM seminare
                 LEFT JOIN semester_courses ON (seminare.Seminar_id = semester_courses.course_id)
                 LEFT JOIN semester_data ON (semester_data.semester_id = semester_courses.semester_id)
@@ -172,7 +172,7 @@ class Course_TopicsController extends AuthenticatedController
             );
         } elseif ($GLOBALS['perm']->have_perm("admin")) {
             $this->courseSearch = new SQLSearch("
-                SELECT seminare.Seminar_id, CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.name, '(', CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.name, '(', IF(seminare.semester_id IS NULL, GROUP_CONCAT(', ', semester_data.name), 'unbegrenzt'), ') (', COUNT(issue_id), ')')
+                SELECT seminare.Seminar_id, CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.name, '(', CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.name, '(', IF(semester_courses.semester_id IS NULL, GROUP_CONCAT(', ', semester_data.name), 'unbegrenzt'), ') (', COUNT(issue_id), ')')
                 FROM seminare
                     INNER JOIN seminar_inst ON (seminare.Seminar_id = seminar_inst.seminar_id)
                     INNER JOIN user_inst ON (user_inst.Institut_id = seminar_inst.institut_id)
@@ -191,7 +191,7 @@ class Course_TopicsController extends AuthenticatedController
             );
         } else {
             $this->courseSearch = new SQLSearch("
-                SELECT seminare.Seminar_id, CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.name, '(', IF(seminare.semester_id IS NULL, GROUP_CONCAT(', ', semester_data.name), 'unbegrenzt'), ') (', COUNT(issue_id), ')')
+                SELECT seminare.Seminar_id, CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.name, '(', IF(semester_courses.semester_id IS NULL, GROUP_CONCAT(', ', semester_data.name), 'unbegrenzt'), ') (', COUNT(issue_id), ')')
                 FROM seminare
                     INNER JOIN seminar_user ON (seminare.Seminar_id = seminar_user.Seminar_id)
                     LEFT JOIN semester_courses ON (seminare.Seminar_id = semester_courses.course_id)
