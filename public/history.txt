@@ -1,3 +1,21 @@
+__15.01.2022 V 5.0__
+- Courseware komplett neu entwickelt und im Kernsystem integriert
+- OER-Campus neu entwickelt und im Kern integriert
+- Kacheldarstellung "Meine Veranstaltungen"
+- Vollbildmodus z.B. im Wiki
+- GUI- und Usabilityverbesserungen
+- Neue Startseitenbilder
+- Modulhandbücher als PDF-Download
+- Neue und verbesserte Integration der Werkzeuge
+- Umbenennung von Funktionen
+- Sichtbarkeit von Werkzeugen
+- Inhaltsverzeichnis im Wiki
+- Öffentliche Dateiordner können nun weltöffentlich sein
+- Sammelaktionen auf der Teilnehmendenliste
+- Verbesserte ILIAS-Integration
+- MathJax-Update
+- Cacheverwaltung über die Oberfläche
+
 __15.01.2021 V 4.6__
 - Grafisches Tool zum Auflösen von Raumanfragen
 - Entfernung von Literaturlisten, Ersatz: Literaturobjekte im Dateibereich
