@@ -9,7 +9,7 @@ INSERT IGNORE INTO `user_info` (`user_id`, `hobby`, `lebenslauf`, `publi`, `schw
 #
 
 INSERT IGNORE INTO `news` (`news_id`, `topic`, `body`, `author`, `date`, `user_id`, `expire`, `allow_comments`, `chdate`, `chdate_uid`, `mkdate`) VALUES ('29f2932ce32be989022c6f43b866e744', 'Herzlich Willkommen!', '<!--HTML-->
-Das Stud.IP-Team heisst sie herzlich willkommen.<br />
+Das Stud.IP-Team heißt Sie herzlich willkommen.<br />
 Bitte schauen Sie sich ruhig um!<br /><br />
 Wenn Sie das System selbst installiert haben und diese News sehen, haben Sie die Demonstrationsdaten in die Datenbank eingefügt. Wenn Sie produktiv mit dem System arbeiten wollen, sollten Sie diese Daten später wieder löschen, <strong>da die Passwörter der Accounts öffentlich bekannt sind</strong>.<br />
  
@@ -20,6 +20,6 @@ Wenn Sie das System selbst installiert haben und diese News sehen, haben Sie die
 # Daten für Tabelle `news_range`
 #
 
-INSERT IGNORE INTO news_range VALUES ('29f2932ce32be989022c6f43b866e744', '76ed43ef286fb55cf9e41beadb484a9f');
-INSERT IGNORE INTO news_range VALUES ('29f2932ce32be989022c6f43b866e744', 'studip');
+INSERT IGNORE INTO news_range VALUES ('29f2932ce32be989022c6f43b866e744', '76ed43ef286fb55cf9e41beadb484a9f', UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
+INSERT IGNORE INTO news_range VALUES ('29f2932ce32be989022c6f43b866e744', 'studip', UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
 
