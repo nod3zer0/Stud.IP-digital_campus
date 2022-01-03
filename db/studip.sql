@@ -4114,7 +4114,7 @@ DROP TABLE IF EXISTS `plugins_activated`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugins_activated` (
   `pluginid` int(10) unsigned NOT NULL DEFAULT '0',
-  `range_type` enum('sem','inst','user') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'sem',
+  `range_type` enum('user') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'user',
   `range_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `state` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`pluginid`,`range_type`,`range_id`),

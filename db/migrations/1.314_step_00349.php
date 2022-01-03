@@ -245,6 +245,9 @@ class Step00349 extends Migration
                       DROP `resources`,
                       DROP `calendar`,
                       DROP `elearning_interface`");
+        $db->exec("DELETE FROM `plugins_activated` WHERE `range_type`  IN('sem','inst')");
+        $db->exec("ALTER TABLE `plugins_activated` CHANGE `range_type` `range_type` ENUM('user') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'user'");
+        
 
     }
 
