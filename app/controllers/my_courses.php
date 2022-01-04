@@ -1003,7 +1003,7 @@ class MyCoursesController extends AuthenticatedController
                     'url'       => $n->getURL(),
                     'icon'      => $this->convertIcon($n->getImage()),
                     'attr'      => $attr,
-                    'important' => in_array($n->getImage()->getRole(), [Icon::ROLE_ATTENTION, Icon::ROLE_STATUS_RED, Icon::ROLE_NEW])
+                    'important' => $n->getImage()->signalsAttention(),
                 ];
             }
             $result[$key] = $item;

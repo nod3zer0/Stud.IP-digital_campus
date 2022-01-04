@@ -1,11 +1,3 @@
-<?php
-$is_important = function (?Navigation $nav): bool {
-    return $nav
-        && $nav->getImage() instanceof Icon
-        && in_array($nav->getImage()->getRole(), [Icon::ROLE_ATTENTION, Icon::ROLE_STATUS_RED]);
-};
-?>
-
 <? if (isset($flash['decline_inst'])) : ?>
     <?= QuestionBox::create(
         sprintf(
@@ -64,19 +56,22 @@ $is_important = function (?Navigation $nav): bool {
                 <? if (!empty($values['navigation'])) : ?>
                     <ul class="my-courses-navigation">
                     <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
-                        <li class="my-courses-navigation-item <? if ($is_important($nav)) echo 'my-courses-navigation-important'; ?>">
                         <? if (isset($nav) && $nav->isVisible(true)) : ?>
-                            <a href="<?=
-                            UrlHelper::getLink('dispatch.php/institute/overview',
-                                ['auswahl'     => $instid,
-                                      'redirect_to' => strtr($nav->getURL(), '?', '&')]) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
-                                <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
-                            </a>
+                            <li class="my-courses-navigation-item <? if ($nav->getImage()->signalsAttention()) echo 'my-courses-navigation-important'; ?>">
+                                <a href="<?=
+                                URLHelper::getLink('dispatch.php/institute/overview',
+                                    ['auswahl'     => $instid,
+                                          'redirect_to' => $nav->getURL()]) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
+                                    <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
+                                </a>
+                            </li>
                         <? else: ?>
-                            <span class="empty-slot" style="width: 20px"></span>
+                            <li class="my-courses-navigation-item">
+                                <span class="empty-slot" style="width: 20px"></span>
+                            </li>
                         <? endif ?>
                     <? endforeach ?>
-                    </li>
+                    </ul>
                 <? endif ?>
                 </td>
 

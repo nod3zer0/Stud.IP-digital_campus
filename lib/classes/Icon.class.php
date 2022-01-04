@@ -171,6 +171,21 @@ class Icon
     }
 
     /**
+     * Returns whether this icon intends to signal attention.
+     *
+     * @todo This is currently just a heuristic based on the associated icon
+     *       role. Although this is sufficient for the current requirements,
+     *       it could probably in a better, more suitable way.
+     *
+     * @return bool
+     * @since Stud.IP 5.0
+     */
+    public function signalsAttention()
+    {
+        return $this->roleToColor($this->role) === 'red';
+    }
+
+    /**
      * Function to be called whenever the object is converted to
      * string. Internally the same as calling Icon::asImg
      *

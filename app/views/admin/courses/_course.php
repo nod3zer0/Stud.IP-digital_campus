@@ -125,23 +125,26 @@ if (!$values['parent_course'] || !in_array($values['parent_course'], array_keys(
         <? endif ?>
         <? if (in_array('contents', $view_filter)) : ?>
             <td style="text-align: left; white-space: nowrap;">
-                <? if (!empty($values['navigation'])) : ?>
-                    <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
-                        <? if ($nav instanceof Navigation && $nav->isVisible(true)) : ?>
+            <? if (!empty($values['navigation'])) : ?>
+                <ul class="my-courses-navigation" style="flex-wrap: nowrap">
+                <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
+                    <? if ($nav instanceof Navigation && $nav->isVisible(true)) : ?>
+                        <li class="my-courses-navigation-item <? if ($nav->getImage()->signalsAttention()) echo 'my-courses-navigation-important'; ?>">
                             <a href="<?=
-                            UrlHelper::getLink('seminar_main.php',
+                            URLHelper::getLink('seminar_main.php',
                                 ['auswahl'     => $semid,
-                                    'redirect_to' => strtr($nav->getURL(), '?', '&')]) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
+                                    'redirect_to' => $nav->getURL()]) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
                                 <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
                             </a>
-                        <? elseif (is_string($key)) : ?>
-                            <?=
-                            Assets::img('blank.gif', ['width'  => 20,
-                                'height' => 20]); ?>
-                        <? endif ?>
-                        <? echo ' ' ?>
-                    <? endforeach ?>
-                <? endif ?>
+                        </li>
+                    <? elseif (is_string($key)) : ?>
+                        <li class="my-courses-navigation-item">
+                            <span class="empty-slot" style="width: 20px"></span>
+                        </li>
+                    <? endif ?>
+                <? endforeach ?>
+                </ul>
+            <? endif ?>
             </td>
         <? endif ?>
         <? if (in_array('last_activity', $view_filter)) : ?>
