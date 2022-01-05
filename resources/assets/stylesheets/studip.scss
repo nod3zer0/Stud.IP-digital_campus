@@ -29,3 +29,17 @@
 @import "scss/wiki";
 
 @import "scss/grid";
+
+// Class for DOM elements that should only be visible to Screen readers
+.sr-only {
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}

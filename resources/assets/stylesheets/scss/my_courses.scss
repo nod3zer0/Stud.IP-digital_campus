@@ -8,3 +8,37 @@
     margin: 5px 0;
     background: $white;
 }
+
+.mycourses-group-selector {
+    position: relative;
+
+    background-clip: padding-box;
+    border: 1px solid fade-out($brand-color-lighter, 0.8);
+
+    input[type="radio"] {
+        @extend .sr-only;
+
+        &:checked + label {
+            @include background-icon(accept, info);
+        }
+    }
+
+    &:hover label {
+        @include background-icon(accept, info);
+    }
+
+    label {
+        @include hide-text();
+
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        background-position: center;
+        background-repeat: no-repeat;
+
+        cursor: pointer;
+    }
+}
