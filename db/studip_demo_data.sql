@@ -152,6 +152,12 @@ REPLACE INTO `range_tree` (`item_id`, `parent_id`, `level`, `priority`, `name`, 
 REPLACE INTO `scm` (`scm_id`, `range_id`, `user_id`, `tab_name`, `content`, `mkdate`, `chdate`, `position`) VALUES('a07df31918cc8e5ca0597e959a4a5297', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', 'Informationen', '', 1343924407, 1343924407, 0);
 
 --
+-- Dumping data for table `semester_courses`
+--
+
+REPLACE INTO `semester_courses` (`semester_id`, `course_id`, `mkdate`, `chdate`) VALUES('322f640f3f4643ebe514df65f1163eb1', 'a07535cf2f8a72df33c12ddfa4b53dde', 1641490271, 1641490271);
+
+--
 -- Dumping data for table `seminare`
 --
 
@@ -222,6 +228,19 @@ REPLACE INTO `statusgruppe_user` (`statusgruppe_id`, `user_id`, `position`, `vis
 --
 -- Dumping data for table `termine`
 --
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('125fcb53ed5e3dd1fd98af76cc8a4014', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1653289200, 1653296400, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('1c48ef9d30c22182a055398224f38f7d', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1655103600, 1655110800, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('1c8e311900f9f2ec198abc272e5812f2', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1652079600, 1652086800, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('23214ba4ea7944dce6ce932f3b3a0786', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1655708400, 1655715600, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('6fdc180d40b07e44830dfd0365be5720', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1657522800, 1657530000, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('7a8154c0220830e73683005dd4ccb4af', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1653894000, 1653901200, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('9ff59e18112a686c553412761a5df85c', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1658909700, 1658916000, 1641490611, 1641490611, 3, NULL, '', NULL);
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('a136f4bc1c111ac338514e96e7161c23', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1652684400, 1652691600, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('b1a47bbc35c53b20677d754c1e4ef1f6', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1658127600, 1658134800, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('c1137a756a8cdf383e9ff7f3d7d373a8', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1656918000, 1656925200, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('dfc138efafa4c26801da682cad2f24ff', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1651474800, 1651482000, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('e289012514003e4200a6f50aaa304ef4', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1656313200, 1656320400, 1641490272, 1641490272, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
+REPLACE INTO `termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`) VALUES('ebed08238996f86df2f0ad6121d06bbd', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1650870000, 1650877200, 1641490271, 1641490271, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1');
 
 
 REPLACE INTO `ex_termine` (`termin_id`, `range_id`, `autor_id`, `content`, `description`, `date`, `end_time`, `mkdate`, `chdate`, `date_typ`, `topic_id`, `raum`, `metadate_id`, `resource_id`) VALUES('aa9e07af935c01f47123c12559d19e52', 'a07535cf2f8a72df33c12ddfa4b53dde', '76ed43ef286fb55cf9e41beadb484a9f', '', NULL, 1621839600, 1621846800, 1641229951, 1641229951, 1, NULL, NULL, 'fc3c44f257e448e3cd36a88406a8a9c1', '');
