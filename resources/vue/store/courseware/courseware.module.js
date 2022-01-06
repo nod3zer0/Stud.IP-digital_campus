@@ -819,7 +819,7 @@ export const actions = {
         } while (rootGetters[`${type}/all`].length < rootGetters[`${type}/lastMeta`].page.total);
     },
 
-    async loadUsersCourses({ dispatch, rootGetters, state }, userId) {
+    async loadUsersCourses({ dispatch, rootGetters, state }, { userId, withCourseware }) {
         const parent = {
             type: 'users',
             id: userId,
@@ -841,19 +841,29 @@ export const actions = {
         });
 
         let courses = [];
-        memberships.forEach((membership) => {
+        for (let membership of memberships) {
             if (
                 membership.attributes.permission === 'dozent' &&
                     state.context.id !== membership.relationships.course.data.id
             ) {
-                courses.push(rootGetters['courses/related']({ parent: membership, relationship: 'course' }));
+                const course = rootGetters['courses/related']({ parent: membership, relationship: 'course' });
+                if (!withCourseware) {
+                    courses.push(course);
+                    continue;
+                }
+                const coursewareInstance = await dispatch('loadRemoteCoursewareStructure', {
+                    rangeId: course.id,
+                    rangeType: course.type
+                });
+                if (coursewareInstance?.relationships?.root) {
+                    courses.push(course);
+                }
             }
-        });
-
+        }
         return courses;
     },
 
-    loadRemoteCoursewareStructure({ dispatch, rootGetters }, { rangeId, rangeType }) {
+    async loadRemoteCoursewareStructure({ dispatch, rootGetters }, { rangeId, rangeType }) {
         const parent = {
             id: rangeId,
             type: rangeType,

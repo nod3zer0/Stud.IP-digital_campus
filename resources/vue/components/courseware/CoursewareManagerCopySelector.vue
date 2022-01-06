@@ -194,7 +194,7 @@ export default {
         }
     },
     async mounted() {
-        this.courses = await this.loadUsersCourses(this.userId);
+        this.courses = await this.loadUsersCourses({ userId: this.userId, withCourseware: true });
         this.loadSemesterMap();
     }
 
