@@ -27,7 +27,6 @@ class MessagesController extends AuthenticatedController {
         if (in_array($action, ['overview', 'sent'])) {
             $this->tags = Message::getUserTags();
         }
-
         $this->setupSidebar($action);
     }
 
@@ -933,12 +932,14 @@ class MessagesController extends AuthenticatedController {
                 Icon::create('accept', 'clickable')
             );
         }
+
         $actions->addLink(
             _('Ausgewählte Nachrichten löschen'),
             '#',
             Icon::create('trash'),
             [
-                'onclick' => "if (window.confirm('Wirklich %s Nachrichten löschen?'.toLocaleString().replace('%s', jQuery('#bulk tbody :checked').length))) { jQuery('#bulk').submit(); } return false;"
+                'onclick' => "return STUDIP.Dialog.confirm('Wirklich %s Nachricht(en) löschen?'.toLocaleString().replace('%s',
+        jQuery('#bulk tbody :checked').length), function() { jQuery('#bulk').submit(); }) "
             ]
         );
 
