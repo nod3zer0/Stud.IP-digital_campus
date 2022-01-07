@@ -157,6 +157,13 @@ class Step00349 extends Migration
 
         foreach ($db->query("SELECT institut_id, type, modules FROM Institute") as $row) {
             $activated_plugins = $db->fetchPairs("SELECT plugins_activated.pluginid, state FROM `plugins_activated` INNER JOIN `plugins` USING(pluginid) WHERE range_id=? AND range_type='inst' ORDER BY navigationpos", [$row['institut_id']]);
+            //activate blubber if thread exists, biest-363
+            if (!isset($activated_plugins[$all_plugins['Blubber']])) {
+                $blubb_exists = $db->fetchColumn("SELECT 1 FROM blubber_threads WHERE context_id = ?", [$row['institut_id']]);
+                if ($blubb_exists) {
+                    $activated_plugins[$all_plugins['Blubber']] = '1';
+                }
+            }
             $modules = $this->getLocalModules('inst', $row['modules'], $row['type']);
             $pos = 0;
             foreach ($modules as $pos => $module) {
@@ -368,7 +375,7 @@ class OldSemClass implements ArrayAccess
         $slots = [
             'overview'            => 'CoreOverview',
             'admin'               => 'CoreAdmin',
-            'forum'               => 'Blubber',
+            'forum'               => 'CoreForum',
             'documents'           => 'CoreDocuments',
             'scm'                 => 'CoreScm',
             'wiki'                => 'CoreWiki',

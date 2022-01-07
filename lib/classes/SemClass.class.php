@@ -86,7 +86,7 @@ class SemClass implements ArrayAccess
             'admin'               => 'CoreAdmin'     // always available
         ];
         $slots = [
-            'forum'               => 'Blubber',
+            'forum'               => 'CoreForum',
             'documents'           => 'CoreDocuments',
             'scm'                 => 'CoreScm',
             'wiki'                => 'CoreWiki',
