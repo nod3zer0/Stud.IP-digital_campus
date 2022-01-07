@@ -4,77 +4,13 @@
 
 const admin_sem_class = {
     make_sortable: function() {
-        var after_update = function(event, ui) {
-            if (
-                jQuery(ui.item).is('.core') &&
-                jQuery(this).is('#activated_plugins .droparea, #nonactivated_plugins .droparea')
-            ) {
-                jQuery('#deactivated_modules .droparea').append(
-                    jQuery(ui.item)
-                        .clone()
-                        .fadeIn(1500)
-                );
-                jQuery(ui.item).remove();
-            }
-            if (jQuery(ui.item).is('.plugin:not(.core)') && jQuery(this).is('#deactivated_modules .droparea')) {
-                jQuery('#nonactivated_plugins .droparea').append(
-                    jQuery(ui.item)
-                        .clone()
-                        .fadeIn(1500)
-                );
-                jQuery(ui.item).remove();
-            }
-
-            jQuery('.droparea.limited').each(function(index, droparea) {
-                if (jQuery(this).children().length === 0) {
-                    jQuery(this).removeClass('full');
-                } else {
-                    jQuery(this).addClass('full');
-                }
-            });
-            admin_sem_class.make_sortable();
-        };
-        jQuery('.droparea').sortable({
-            connectWith: '.droparea:not(.full)',
-            revert: 200,
-            update: after_update
-        });
         jQuery('#plugins .droparea').sortable({
-            connectWith: '.droparea:not(.full, #deactivated_modules .droparea)',
-            revert: 200,
-            update: after_update
+            revert: true,
         });
-        jQuery('#deactivated_modules .droparea').sortable({
-            connectWith: '.droparea:not(.full, #plugins .droparea)',
-            revert: 200,
-            update: after_update
-        });
+
     },
     saveData: function() {
-        var core_module_slots = {};
-        jQuery.each(
-            [
-                'overview',
-                'forum',
-                'admin',
-                'documents',
-                'participants',
-                'schedule',
-                'literature',
-                'scm',
-                'wiki',
-                'calendar',
-                'elearning_interface',
-                'resources'
-            ],
-            function(index, element) {
-                var module = jQuery('div[container=' + element + '] .droparea > div.plugin').attr('id');
-                if (module) {
-                    module = module.substr(module.indexOf('_') + 1);
-                }
-                core_module_slots[element] = module ? module : '0';
-            }
-        );
+
         var modules = {};
         jQuery('div.plugin').each(function() {
             var activated = jQuery(this)
@@ -83,7 +19,7 @@ const admin_sem_class = {
             var sticky =
                 !jQuery(this)
                     .find('input[name=nonsticky]')
-                    .is(':checked') || jQuery(this).is('#deactivated_modules div.plugin');
+                    .is(':checked');
             var module_name = jQuery(this).attr('id');
             if (module_name) {
                 module_name = module_name.substr(module_name.indexOf('_') + 1);
@@ -112,7 +48,6 @@ const admin_sem_class = {
                 title_autor_plural: !jQuery('#title_autor_isnull').is(':checked')
                     ? jQuery('#title_autor_plural').val()
                     : '',
-                core_module_slots: core_module_slots,
                 modules: modules,
                 workgroup_mode: jQuery('#workgroup_mode').is(':checked') ? 1 : 0,
                 studygroup_mode: jQuery('#studygroup_mode').is(':checked') ? 1 : 0,

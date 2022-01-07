@@ -68,17 +68,18 @@ class Admin_SemClassesController extends AuthenticatedController
         $plugins = PluginManager::getInstance()->getPlugins("StudipModule");
         $this->sem_class = SemClass::getClasses()[Request::get("id")];
         $modules = [];
-        foreach ($this->sem_class->getActivatedModuleObjects() as $plugin) {
+        foreach ($this->sem_class->getModuleObjects() as $plugin) {
             $modules[get_class($plugin)] = [
                 'name' => $plugin->getPluginName(),
                 'id' => $plugin->getPluginId(),
                 'enabled' => $plugin->isEnabled(),
-                'activated' => true
+                'activated' => $this->sem_class->isModuleActivated($plugin->getPluginName())
             ];
         }
         foreach ($plugins as $plugin) {
             if (!$plugin->isActivatableForContext(new Course)) continue;
             if (isset($modules[get_class($plugin)])) continue;
+            if ($this->sem_class->isModuleForbidden(get_class($plugin))) continue;
             $modules[get_class($plugin)] = [
                 'name' => $plugin->getPluginName(),
                 'id' => $plugin->getPluginId(),
@@ -97,9 +98,8 @@ class Admin_SemClassesController extends AuthenticatedController
             throw new Exception("Kein Zugriff über GET");
         }
         $sem_class = $GLOBALS['SEM_CLASS'][Request::int("sem_class_id")];
-        foreach (Request::getArray("core_module_slots") as $slot => $module) {
-            $sem_class->setSlotModule($slot, $module);
-        }
+        $old_data_sem_class = clone $sem_class;
+
         $sem_class->setModules(Request::getArray("modules"));
         $sem_class->set('name', Request::get("sem_class_name"));
         $sem_class->set('description', Request::get("sem_class_description"));
@@ -126,6 +126,14 @@ class Admin_SemClassesController extends AuthenticatedController
         $sem_class->set('show_raumzeit', Request::int("show_raumzeit"));
         $sem_class->set('is_group', Request::int("is_group"));
         $sem_class->store();
+        foreach (array_keys($sem_class->getModules()) as $module_name) {
+            if ($sem_class->isModuleMandatory($module_name) && !$old_data_sem_class->isModuleMandatory($module_name)) {
+                $sem_class->activateModuleInCourses($module_name);
+            }
+            if (!$sem_class->isModuleAllowed($module_name) && $old_data_sem_class->isModuleAllowed($module_name)) {
+                $sem_class->deActivateModuleInCourses($module_name);
+            }
+        }
         if (!count($sem_class->getSemTypes())) {
             $notice = "<br>"._("Beachten Sie, dass es noch keine Veranstaltungstypen gibt!");
         }

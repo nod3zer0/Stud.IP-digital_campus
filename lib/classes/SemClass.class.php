@@ -41,20 +41,12 @@ class SemClass implements ArrayAccess
 {
     protected $data = [];
 
-    static protected $core_modules = [
-        "CoreOverview",
-        "CoreAdmin",
-        "CoreStudygroupAdmin",
-        "CoreStudygroupOverview",
-        "CoreDocuments",
-        "CoreParticipants",
-        "CoreStudygroupParticipants",
-        "CoreSchedule",
-        "CoreScm",
-        "CoreWiki",
-        "CoreCalendar",
-        "CoreElearningInterface"
+    static protected $studygroup_forbidden_modules = [
+        'CoreAdmin',
+        'CoreParticipants',
+        'CoreSchedule'
     ];
+
     static protected $sem_classes = null;
 
     static public function getDefaultSemClass() {
@@ -128,6 +120,61 @@ class SemClass implements ArrayAccess
         } else {
             $this->data['modules'] = [];
         }
+        foreach (array_keys($this->data['modules']) as $modulename) {
+            if ($this->isModuleForbidden($modulename)) {
+                unset($this->data['modules'][$modulename]);
+            }
+        }
+    }
+
+
+    /**
+     * @param string $module
+     * @return false|int
+     */
+    public function activateModuleInCourses($module)
+    {
+        $plugin = PluginManager::getInstance()->getPlugin($module);
+        if ($plugin) {
+            return Course::findEachBySQL(function ($course) use ($plugin) {
+                if (!$course->tools->findOneby('plugin_id', $plugin->getPluginId())) {
+                    return ToolActivation::create([
+                        'plugin_id' => $plugin->getPluginId(),
+                        'range_type'  => 'course',
+                        'range_id' => $course->id
+                    ]);
+                } else {
+                    return 0;
+                }
+        },
+                "seminare.status IN (?)",
+                [array_keys($this->getSemTypes())]);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param string $module
+     * @return false|int
+     */
+    public function deActivateModuleInCourses($module)
+    {
+        $plugin = PluginManager::getInstance()->getPlugin($module);
+        if ($plugin) {
+            return Course::findEachBySQL(function ($course) use ($plugin) {
+                if ($tool = $course->tools->findOneby('plugin_id', $plugin->getPluginId())) {
+                    return $tool->delete();
+                } else {
+                    return 0;
+                }
+            },
+                "seminare.status IN (?)",
+                [array_keys($this->getSemTypes())]);
+        } else {
+            return false;
+        }
+
     }
 
     /**
@@ -146,6 +193,19 @@ class SemClass implements ArrayAccess
         return $sum;
     }
 
+
+    /**
+     * @param string $modulename
+     * @return bool
+     */
+    public function isModuleForbidden($modulename)
+    {
+        if ($this->data['studygroup_mode']) {
+            return in_array($modulename, self::$studygroup_forbidden_modules);
+        } else {
+            return strpos($modulename, 'Studygroup') !== false;
+        }
+    }
 
     /**
      * Returns the metadata of a module regarding this sem_class object.
@@ -175,6 +235,24 @@ class SemClass implements ArrayAccess
         return $this->data['modules'];
     }
 
+    /**
+     * @return StudipModule[]
+     */
+    public function getModuleObjects()
+    {
+        $result = [];
+        foreach (array_keys($this->getModules()) as $module) {
+            $plugin = PluginManager::getInstance()->getPlugin($module);
+            if ($plugin) {
+                $result[$plugin->getPluginId()] = $plugin;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @return string[]
+     */
     public function getActivatedModules()
     {
         return array_keys(array_filter($this->data['modules'], function ($meta) {
@@ -182,6 +260,9 @@ class SemClass implements ArrayAccess
         }));
     }
 
+    /**
+     * @return StudipModule[]
+     */
     public function getActivatedModuleObjects()
     {
         $result = [];
@@ -194,6 +275,9 @@ class SemClass implements ArrayAccess
         return $result;
     }
 
+    /**
+     * @return mixed|object
+     */
     public function getAdminModuleObject()
     {
         if ($this->data['studygroup_mode']) {
@@ -436,8 +520,8 @@ class SemClass implements ArrayAccess
 
     /**
      * ArrayAccess method to check if an attribute exists.
-     * @param type $offset
-     * @return type
+     * @param int $offset
+     * @return bool
      */
     public function offsetExists($offset)
     {

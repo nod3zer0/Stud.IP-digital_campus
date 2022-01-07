@@ -202,17 +202,15 @@
         </label>
     </fieldset>
 
-    <fieldset class="collapsed attribute_table">
+    <fieldset class="attribute_table">
         <legend>
             <?= _("Inhaltselemente") ?>
         </legend>
 
-
-        <div container="plugins" id="plugins" class="core_module_slot">
-            <h2 title="<?= _("Diese Inhaltselemente sind standardmäßig bei den Veranstaltungen dieser Klasse aktiviert.") ?>"><?= _("Aktivierte Inhaltselemente") ?></h2>
+        <div container="plugins" id="plugins">
+            <h2 title="<?= _("Diese Inhaltselemente sind standardmäßig bei den Veranstaltungen dieser Klasse aktiviert.") ?>"><?= _("Verfügbare Inhaltselemente") ?></h2>
             <div class="droparea">
                 <? foreach ($modules as $module_name => $module_info) : ?>
-                <? if ($module_info['activated']) : ?>
                     <?= $this->render_partial("admin/sem_classes/content_plugin.php",
                         [
                             'plugin' => $module_info,
@@ -222,29 +220,10 @@
                             'sticky' => $sem_class['modules'][$module_name]['sticky']
                         ]
                     )?>
-                <? endif ?>
                 <? endforeach ?>
             </div>
         </div>
-        <hr>
-        <div container="deactivated" id="deactivated_modules">
-            <h2 title="<?= _("Diese Module sind standardmäßig nicht aktiviert.") ?>"><?= _("Nichtaktivierte Inhaltselemente") ?></h2>
-            <div class="droparea">
-                <? foreach ($modules as $module_name => $module_info) {
-                    if (!$module_info['activated']) {
-                        echo $this->render_partial("admin/sem_classes/content_plugin.php",
-                            [
-                                'plugin' => $module_info,
-                                'sem_class' => $sem_class,
-                                'plugin_id' => $module_name,
-                                'activated' => $sem_class['modules'][$module_id]['activated'],
-                                'sticky' => $sem_class['modules'][$module_id]['sticky']
-                            ]
-                        );
-                    }
-                } ?>
-            </div>
-        </div>
+
     </fieldset>
 
     <footer>
