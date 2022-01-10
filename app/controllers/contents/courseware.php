@@ -34,6 +34,12 @@ class Contents_CoursewareController extends AuthenticatedController
     {
         Navigation::activateItem('/contents/courseware/projects');
         $this->setProjectsSidebar($action);
+        $this->courseware_root = StructuralElement::getCoursewareUser($this->user->id);
+        if (!$this->courseware_root) {
+            // create initial courseware dataset
+            $new = StructuralElement::createEmptyCourseware($this->user->id, 'user');
+            $this->courseware_root = $new->getRoot();
+        }
 
         $this->elements = $this->getProjects('all');
     }
