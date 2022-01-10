@@ -47,7 +47,7 @@
                         :isCurrent="isCurrent"
                         :sortContainers="sortContainersActive"
                         :inserter="containerInserterActive && moveSelfChildPossible"
-                        :elementType="type" 
+                        :elementType="type"
                         :blockInserter="blockInserterActive"
                         :canMoveUp="index !== 0"
                         :canMoveDown="index+1 !== sortArrayContainers.length"
@@ -302,11 +302,33 @@ export default {
         selectChapter(target) {
             this.$emit('selectElement', target);
         },
+
+         validateSource(source) {
+            return (source === 'self' || source === 'remote' || source === 'own');
+        },
+
+        afterInsertCompletion() {
+            this.$nextTick(() => {
+                // will run after $emit is done
+                this.$store.dispatch('cwManagerFilingData', {});
+                setTimeout(() => {
+                    this.insertingInProgress = false;
+                }, 250);
+            });
+        },
+
         async insertElement(data) {
+            let source = data.source;
+            let element = data.element;
+
+            if (!this.validateSource(source)) {
+                console.log('unreliable source:');
+                console.log(source);
+                console.log(element);
+                return;
+            }
             if(!this.insertingInProgress) {
                 this.insertingInProgress = true;
-                let source = data.source;
-                let element = data.element;
                 if (source === 'self') {
                     element.relationships.parent.data.id = this.filingData.parentItem.id;
                     element.attributes.position = this.childrenById(this.filingData.parentItem.id).length + 1;
@@ -318,7 +340,6 @@ export default {
                     await this.unlockObject({ id: element.id, type: 'courseware-structural-elements' });
                     this.loadStructuralElement(this.currentElement.id);
                     this.$emit('reloadElement');
-                    this.$store.dispatch('cwManagerFilingData', {});
                 } else if(source === 'remote' || source === 'own') {
                     //create Element
                     let parentId = this.filingData.parentItem.id;
@@ -327,20 +348,22 @@ export default {
                         element: element,
                     });
                     this.$emit('loadSelf', parentId);
-                    this.$store.dispatch('cwManagerFilingData', {});
-                } else {
-                    console.log('unreliable source:');
-                    console.log(source);
-                    console.log(element);
                 }
-                this.insertingInProgress = false;
+                this.afterInsertCompletion();
             }
         },
         async insertContainer(data) {
+            let source = data.source;
+            let container = data.container;
+
+            if (!this.validateSource(source)) {
+                console.log('unreliable source:');
+                console.log(source);
+                console.log(container);
+                return;
+            }
             if(!this.insertingInProgress) {
                 this.insertingInProgress = true;
-                let source = data.source;
-                let container = data.container;
                 if (source === 'self') {
                     container.relationships['structural-element'].data.id = this.filingData.parentItem.id;
                     container.attributes.position = this.filingData.parentItem.relationships.containers.data.length + 1;
@@ -351,7 +374,6 @@ export default {
                     });
                     await this.unlockObject({id: container.id, type: 'courseware-containers'});
                     this.$emit('reloadElement');
-                    this.$store.dispatch('cwManagerFilingData', {});
                 } else if (source === 'remote' || source === 'own') {
                     let parentId = this.filingData.parentItem.id;
                     await this.copyContainer({
@@ -359,21 +381,22 @@ export default {
                         container: container,
                     });
                     this.$emit('loadSelf', parentId);
-                    this.$store.dispatch('cwManagerFilingData', {});
-                } else {
-                    console.log('unreliable source:');
-                    console.log(source);
-                    console.log(container);
                 }
-                this.insertingInProgress = false;
+                this.afterInsertCompletion();
             }
 
         },
         async insertBlock(data) {
+            let source = data.source;
+            let block = data.block;
+
+            if (!this.validateSource(source)) {
+                console.debug('unreliable source:', source, block);
+                return;
+            }
+
             if(!this.insertingInProgress) {
                 this.insertingInProgress = true;
-                let source = data.source;
-                let block = data.block;
                 if (source === 'self') {
                     let sourceContainer = await this.containerById({id: block.relationships.container.data.id});
                     sourceContainer.attributes.payload.sections.forEach(section => {
@@ -409,7 +432,6 @@ export default {
                     await this.loadContainer(sourceContainer.id);
                     await this.loadContainer(destinationContainer.id);
                     this.$emit('reloadElement');
-                    this.$store.dispatch('cwManagerFilingData', {});
                 } else if (source === 'remote' || source === 'own') {
                     let parentId = this.filingData.parentItem.id;
                     await this.copyBlock({
@@ -418,11 +440,8 @@ export default {
                     });
                     await this.loadContainer(parentId);
                     this.$emit('loadSelf',this.filingData.parentItem.relationships['structural-element'].data.id);
-                    this.$store.dispatch('cwManagerFilingData', {});
-                } else {
-                    console.debug('unreliable source:', source, block);
                 }
-                this.insertingInProgress = false;
+                this.afterInsertCompletion();
             }
         },
 
