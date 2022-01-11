@@ -97,6 +97,7 @@
 import { FocusTrap } from 'focus-trap-vue';
 import VueResizeable from 'vrp-vue-resizable';
 let uuid = 0;
+const dialogPadding = 3;
 
 export default {
     name: 'studip-dialog',
@@ -191,10 +192,10 @@ export default {
             }
         },
         dialogWidth() {
-            return this.currentWidth ? this.currentWidth + 'px' : 'unset';
+            return this.currentWidth ? (this.currentWidth - dialogPadding * 4) + 'px' : 'unset';
         },
         dialogHeight() {
-            return this.currentHeight ? this.currentHeight + 'px' : 'unset';
+            return this.currentHeight ? (this.currentHeight - dialogPadding * 4) + 'px' : 'unset';
         },
         contentHeight() {
             return this.currentHeight ? this.currentHeight - this.footerHeight + 'px' : 'unset';
