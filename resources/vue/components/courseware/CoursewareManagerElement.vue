@@ -2,6 +2,7 @@
     <div class="cw-manager-element">
         <div v-if="currentElement">
             <courseware-companion-box v-if="insertingInProgress" :msgCompanion="text.inProgress" mood="pointing" />
+            <courseware-companion-box v-if="copyingFailed && !insertingInProgress" :msgCompanion="copyProcessFailedMessage" mood="sad" />
             <div class="cw-manager-element-title">
                 <div class="cw-manager-element-breadcrumb">
                     <span
@@ -153,8 +154,10 @@ export default {
             sortArrayContainers: [],
             discardStateArrayContainers: [],
             insertingInProgress: false,
+            copyingFailed: false,
             text: {
-                inProgress: this.$gettext('Vorgang läuft. Bitte warten Sie einen Moment.')
+                inProgress: this.$gettext('Vorgang läuft. Bitte warten Sie einen Moment.'),
+                copyProcessFailed: [],
             },
         };
     },
@@ -277,6 +280,13 @@ export default {
         },
         filingData() {
             return this.$store.getters.filingData;
+        },
+        copyProcessFailedMessage() {
+            let message = this.$gettext('Der Kopiervorgang ist fehlgeschlagen.');
+            if (this.text.copyProcessFailed.length) {
+                message = this.text.copyProcessFailed.join('<br>');
+            }
+            return message;
         }
     },
     methods: {
@@ -317,6 +327,11 @@ export default {
             });
         },
 
+        showFailedCopyProcessCompanion() {
+            this.copyingFailed = true;
+            this.insertingInProgress = false;
+        },
+
         async insertElement(data) {
             let source = data.source;
             let element = data.element;
@@ -346,6 +361,10 @@ export default {
                     await this.copyStructuralElement({
                         parentId: parentId,
                         element: element,
+                    }).catch((error) => {
+                        let message = `${element.attributes.title} ` + this.$gettext('konnte nicht kopiert werden.');
+                        this.text.copyProcessFailed.push(message);
+                        this.showFailedCopyProcessCompanion();
                     });
                     this.$emit('loadSelf', parentId);
                 }
@@ -379,6 +398,10 @@ export default {
                     await this.copyContainer({
                         parentId: parentId,
                         container: container,
+                    }).catch((error) => {
+                        let message = this.$gettext('Abschnitt konnte nicht kopiert werden') + ` - ${container.attributes.title}`;
+                        this.text.copyProcessFailed.push(message);
+                        this.showFailedCopyProcessCompanion();
                     });
                     this.$emit('loadSelf', parentId);
                 }
@@ -437,6 +460,10 @@ export default {
                     await this.copyBlock({
                         parentId: parentId,
                         block: block,
+                    }).catch((error) => {
+                        let message = this.$gettext('Block konnte nicht kopiert werden') + ` - ${block.attributes.title}`;
+                        this.text.copyProcessFailed.push(message);
+                        this.showFailedCopyProcessCompanion();
                     });
                     await this.loadContainer(parentId);
                     this.$emit('loadSelf',this.filingData.parentItem.relationships['structural-element'].data.id);
@@ -528,6 +555,8 @@ export default {
                         this.blockInserterActive = true;
                         break;
                 }
+                this.copyingFailed = false;
+                this.text.copyProcessFailed = [];
             } else {
                 this.elementInserterActive = false;
                 this.containerInserterActive = false;
