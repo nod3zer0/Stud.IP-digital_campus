@@ -296,6 +296,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
         if (I18N::isEnabled()) {
             if (isset($config['i18n_fields']) && count($config['i18n_fields']) > 0) {
+                if (count($config['pk']) > 1) {
+                    throw new Exception('Can not define i18n fields on a composite primary key');
+                }
+
                 $config['registered_callbacks']['before_store'][] = 'cbI18N';
                 $config['registered_callbacks']['after_delete'][] = 'cbI18N';
             }
