@@ -24,7 +24,7 @@ class SubfilerefsIndex extends JsonApiController
             throw new RecordNotFoundException();
         }
 
-        if (!Authority::canShowFolder($this->getUser($request), $folder)) {
+        if (!Authority::canShowFolderFileRefs($this->getUser($request), $folder)) {
             throw new AuthorizationFailedException();
         }
 

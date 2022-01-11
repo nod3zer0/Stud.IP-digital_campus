@@ -38,6 +38,11 @@ class Authority
         return $folder->isReadable($user->id);
     }
 
+    public static function canShowFolderFileRefs(User $user, \FolderType $folder)
+    {
+        return self::canShowFolder($user, $folder) || $folder->download_allowed;
+    }
+
     public static function canUpdateFolder(User $user, \FolderType $folder)
     {
         return $folder->isEditable($user->id);
