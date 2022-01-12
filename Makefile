@@ -85,15 +85,6 @@ optimize-icons: npm
 	find public/assets/images/icons -type f | xargs -P0 $(NPM_BIN)/svgo -q --config=config/svgo.config.js
 
 # default rules for gettext handling
-%.pot: $(PHP_SOURCES)
-	xgettext -o $@ --from-code=UTF-8 $(PHP_SOURCES)
-
-%.po: %.pot
-	msgmerge -qU $@ $<
-
-%.mo: %.po
-	msgfmt -o $@ $<
-
 js-%.pot: $(VUE_SOURCES)
 	$(NPM_BIN)/gettext-extract --attribute v-translate --output $@ $(VUE_SOURCES)
 
@@ -103,6 +94,15 @@ js-%.po: js-%.pot
 js-%.json: js-%.po
 	$(NPM_BIN)/gettext-compile --output $@ $<
 	sed -i 's/^{[^{]*//;s/}$$//' $@
+
+%.pot: $(PHP_SOURCES)
+	xgettext -o $@ --from-code=UTF-8 $(PHP_SOURCES)
+
+%.po: %.pot
+	msgmerge -qU $@ $<
+
+%.mo: %.po
+	msgfmt -o $@ $<
 
 # dummy target to force update of "doc" target
 force_update:
