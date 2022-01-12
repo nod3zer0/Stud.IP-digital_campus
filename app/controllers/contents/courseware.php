@@ -199,12 +199,12 @@ class Contents_CoursewareController extends AuthenticatedController
             $this->all_semesters = false;
             $this->semesters = [Semester::find($sem_key)];
         }
-        $params = [
-            'order_by'            => null,
-            'order'               => 'asc',
-            'studygroups_enabled' => Config::get()->MY_COURSES_ENABLE_STUDYGROUPS,
-            'deputies_enabled'    => Config::get()->DEPUTIES_ENABLE,
-        ];
+        usort($this->semesters, function ($a, $b) {
+            if ($a->beginn === $b->beginn) {
+                return 0;
+            }
+            return ($a->beginn > $b->beginn) ? -1 : 1;
+        });
 
         $this->sem_courses  = $this->getCoursewareCourses($sem_key);
     }
