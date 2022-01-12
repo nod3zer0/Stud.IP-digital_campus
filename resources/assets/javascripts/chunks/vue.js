@@ -35,6 +35,7 @@ Vue.use(Router);
 Vue.use(PortalVue);
 
 function createApp(options, ...args) {
+    Vue.config.language = getLocale();
     return new Vue({ store, ...options }, ...args);
 }
 

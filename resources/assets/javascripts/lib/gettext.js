@@ -1,5 +1,5 @@
 import { translate } from 'vue-gettext';
-import defaultTranslations from '../../../locales/de_DE.json';
+import defaultTranslations from '../../../../locale/de/LC_MESSAGES/js-resources.json';
 import eventBus from './event-bus.js';
 
 const DEFAULT_LANG = 'de_DE';
@@ -80,7 +80,8 @@ function getInstalledLanguages() {
 
 async function getTranslations(locale) {
     try {
-        const translation = await import(`../../../locales/${locale}.json`);
+        const language = locale.split(/[_-]/)[0];
+        const translation = await import(`../../../../locale/${language}/LC_MESSAGES/js-resources.json`);
 
         return translation;
     } catch (exception) {

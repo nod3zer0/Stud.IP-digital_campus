@@ -51,7 +51,6 @@ $commands = [
     Commands\Plugins\I18N\I18NCompile::class,
     Commands\Resources\UpdateBookingIntervals::class,
     Commands\SORM\DescribeModels::class,
-    Commands\Translations\VueGettextSplitTranslations::class,
     Commands\Users\UserDelete::class,
     Commands\Users\UserDelete::class,
 ];

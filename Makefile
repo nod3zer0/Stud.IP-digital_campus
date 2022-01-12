@@ -1,6 +1,10 @@
 CODECEPT  = composer/bin/codecept
-SVGO = node_modules/svgo/bin/svgo
+CATALOGS  = locale/en/LC_MESSAGES/studip.mo locale/en/LC_MESSAGES/js-resources.json
+NPM_BIN   = $(shell npm bin)
 RESOURCES = $(shell find resources -type f)
+
+PHP_SOURCES = $(shell find app config lib public templates -name '*.php' \( ! -path 'public/plugins_packages/*' -o -path 'public/plugins_packages/core/*' \))
+VUE_SOURCES = $(shell find resources -name '*.js' -o -name '*.vue')
 
 # build all needed files
 build: composer webpack-prod
@@ -75,14 +79,30 @@ test-jsonapi: $(CODECEPT)
 test-unit: $(CODECEPT)
 	$(CODECEPT) run unit
 
+catalogs: npm $(CATALOGS)
+
 optimize-icons: npm
-	$(SVGO) --config=config/svgo.config.js -f public/assets/images/icons/black -r
-	$(SVGO) --config=config/svgo.config.js -f public/assets/images/icons/blue -r
-	$(SVGO) --config=config/svgo.config.js -f public/assets/images/icons/green -r
-	$(SVGO) --config=config/svgo.config.js -f public/assets/images/icons/grey -r
-	$(SVGO) --config=config/svgo.config.js -f public/assets/images/icons/red -r
-	$(SVGO) --config=config/svgo.config.js -f public/assets/images/icons/white -r
-	$(SVGO) --config=config/svgo.config.js -f public/assets/images/icons/yellow -r
+	find public/assets/images/icons -type f | xargs -P0 $(NPM_BIN)/svgo -q --config=config/svgo.config.js
+
+# default rules for gettext handling
+%.pot: $(PHP_SOURCES)
+	xgettext -o $@ --from-code=UTF-8 $(PHP_SOURCES)
+
+%.po: %.pot
+	msgmerge -qU $@ $<
+
+%.mo: %.po
+	msgfmt -o $@ $<
+
+js-%.pot: $(VUE_SOURCES)
+	$(NPM_BIN)/gettext-extract --attribute v-translate --output $@ $(VUE_SOURCES)
+
+js-%.po: js-%.pot
+	msgmerge -qU -C $(dir $@)studip.po $@ $<
+
+js-%.json: js-%.po
+	$(NPM_BIN)/gettext-compile --output $@ $<
+	sed -i 's/^{[^{]*//;s/}$$//' $@
 
 # dummy target to force update of "doc" target
 force_update:
