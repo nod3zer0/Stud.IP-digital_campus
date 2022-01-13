@@ -159,7 +159,7 @@ export default {
                 attributes.payload.file_id = '';
                 attributes.payload.web_url = this.currentWebUrl;
             } else {
-                cmpInfo = this.$gettext('Bitte wählen Sie ein Video aus');
+                cmpInfo = this.$gettext('Bitte wählen Sie ein Video aus.');
             }
             attributes.payload.aspect = this.currentAspect;
             attributes.payload.context_menu = this.currentContextMenu;

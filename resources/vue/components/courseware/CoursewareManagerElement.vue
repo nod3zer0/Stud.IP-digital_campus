@@ -362,7 +362,7 @@ export default {
                         parentId: parentId,
                         element: element,
                     }).catch((error) => {
-                        let message = `${element.attributes.title} ` + this.$gettext('konnte nicht kopiert werden.');
+                        let message = this.$gettextInterpolate('%{ pageTitle } konnte nicht kopiert werden.', {pageTitle: element.attributes.title});
                         this.text.copyProcessFailed.push(message);
                         this.showFailedCopyProcessCompanion();
                     });
@@ -399,7 +399,7 @@ export default {
                         parentId: parentId,
                         container: container,
                     }).catch((error) => {
-                        let message = this.$gettext('Abschnitt konnte nicht kopiert werden') + ` - ${container.attributes.title}`;
+                        let message = this.$gettextInterpolate('Abschnitt "%{ containerTitle }" konnte nicht kopiert werden', {containerTitle: container.attributes.title});
                         this.text.copyProcessFailed.push(message);
                         this.showFailedCopyProcessCompanion();
                     });
@@ -461,7 +461,7 @@ export default {
                         parentId: parentId,
                         block: block,
                     }).catch((error) => {
-                        let message = this.$gettext('Block konnte nicht kopiert werden') + ` - ${block.attributes.title}`;
+                        let message = this.$gettextInterpolate('Block "%{ blockTitle }" konnte nicht kopiert werden', {blockTitle: block.attributes.title});
                         this.text.copyProcessFailed.push(message);
                         this.showFailedCopyProcessCompanion();
                     });

@@ -33,7 +33,7 @@ export default {
             return classes;
         },
         getTitle (i, index) {
-            let title = this.$gettext('Gruppe') + ' ' + i;
+            let title = this.$gettextInterpolate('Gruppe %{ group }', {group: i});
             if (this.course.group === index) {
                 title += ' ('  + this.$gettext('ausgewählt') + ')';
             }

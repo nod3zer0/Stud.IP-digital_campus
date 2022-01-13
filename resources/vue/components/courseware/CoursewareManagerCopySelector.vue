@@ -1,7 +1,7 @@
 <template>
     <div class="cw-manager-copy-selector">
         <div v-if="sourceEmpty" class="cw-manager-copy-selector-source">
-            <button class="button" @click="selectSource('own'); loadOwnCourseware()"><translate>Aus meine Inhalte kopieren</translate></button>
+            <button class="button" @click="selectSource('own'); loadOwnCourseware()"><translate>Aus persönlichen Lernmaterialien kopieren</translate></button>
             <button class="button" @click="selectSource('remote')"><translate>Aus Veranstaltung kopieren</translate></button>
         </div>
         <div v-else>

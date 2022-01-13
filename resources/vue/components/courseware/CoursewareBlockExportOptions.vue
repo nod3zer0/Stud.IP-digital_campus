@@ -1,6 +1,6 @@
 <template>
     <section class="cw-block-export-options">
-        <header><translate>Export Options</translate></header>
+        <header><translate>Export Optionen</translate></header>
         <div class="cw-block-features-content">
             <button class="button" @click="$emit('close')"><translate>Schließen</translate></button>
         </div>

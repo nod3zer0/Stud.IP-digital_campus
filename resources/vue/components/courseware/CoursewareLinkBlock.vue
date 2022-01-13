@@ -132,7 +132,7 @@ export default {
             attributes.payload.title = this.currentTitle;
             if (this.currentType === 'internal' && this.currentTarget === '') {
                 this.companionWarning({
-                    info: this.$gettext('Bitte wählen Sie eine Seite als Ziel aus')
+                    info: this.$gettext('Bitte wählen Sie eine Seite als Ziel aus.')
                 });
                 return false;
             } else {

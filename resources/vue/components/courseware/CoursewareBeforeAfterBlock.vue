@@ -171,8 +171,8 @@ export default {
         },
         storeBlock() {
             let cmpInfo = false;
-            let cmpInfoBefore = this.$gettext('Bitte wählen Sie ein Vorherbilder aus.');
-            let cmpInfoAfter = this.$gettext('Bitte wählen Sie ein Nachherbilder aus.');
+            let cmpInfoBefore = this.$gettext('Bitte wählen Sie ein Vorherbild aus.');
+            let cmpInfoAfter = this.$gettext('Bitte wählen Sie ein Nachherbild aus.');
             let attributes = {};
             attributes.payload = {};
             attributes.payload.before_source = this.currentBeforeSource;

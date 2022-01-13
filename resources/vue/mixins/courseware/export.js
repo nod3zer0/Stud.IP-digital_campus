@@ -10,6 +10,7 @@ export default {
             containerById: 'courseware-containers/byId',
             folderById: 'folders/byId',
             filesById: 'files/byId',
+            oerTitle: 'oerTitle',
             structuralElementById: 'courseware-structural-elements/byId',
         }),
     },
@@ -186,7 +187,7 @@ export default {
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data"}
             }).then( () => {
-                this.companionInfo({ info: this.$gettext('Seite wurde an OER Campus gesendet.') });
+                this.companionInfo({ info: this.$gettextInterpolate('Seite wurde an %{ oerTitle } gesendet.', {oerTitle: this.oerTitle}) });
             });
         },
 

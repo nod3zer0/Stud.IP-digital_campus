@@ -113,7 +113,7 @@ export default {
         },
         createBookmark() {
             this.addBookmark(this.structuralElement);
-            this.companionInfo({ info: this.$gettext('Das Lesezeichen wurde gesetzt') });
+            this.companionInfo({ info: this.$gettext('Das Lesezeichen wurde gesetzt.') });
         },
         oerElement() {
             this.showElementOerDialog(true);

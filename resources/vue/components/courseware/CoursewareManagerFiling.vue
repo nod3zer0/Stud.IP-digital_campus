@@ -4,10 +4,9 @@
         :class="{ 'cw-manager-filing-active': active, 'cw-manager-filing-disabled': disabled }"
         @click="toggleFiling"
     >
-        <span v-if="itemType === 'element'"><translate>Seite</translate> </span>
-        <span v-if="itemType === 'container'"><translate>Abschnitt</translate> </span>
-        <span v-if="itemType === 'block'"><translate>Block</translate> </span>
-        <translate>an dieser Stelle einfügen</translate>
+        <span v-if="itemType === 'element'"><translate>Seite an dieser Stelle einfügen</translate> </span>
+        <span v-if="itemType === 'container'"><translate>Abschnitt an dieser Stelle einfügen</translate> </span>
+        <span v-if="itemType === 'block'"><translate>Block an dieser Stelle einfügen</translate> </span>
     </div>
 </template>
 

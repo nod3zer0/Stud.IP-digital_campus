@@ -239,7 +239,7 @@ export default {
         storeBlock() {
             if (this.currentFile === undefined) {
                 this.companionWarning({
-                    info: this.$gettext('Bitte wählen Sie eine Datei aus')
+                    info: this.$gettext('Bitte wählen Sie eine Datei aus.')
                 });
                 return false;
             } else {

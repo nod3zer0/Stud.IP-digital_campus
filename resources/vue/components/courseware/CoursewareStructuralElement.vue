@@ -343,11 +343,7 @@
             >
                 <template v-slot:dialogContent>
                     <div v-show="!exportRunning">
-                        <translate
-                            >Hiermit exportieren Sie die Seite "{{ currentElement.attributes.title }}" als
-                            ZIP-Datei.</translate
-                        >
-
+                        <translate> Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als ZIP-Datei.</translate>
                         <div class="cw-element-export">
                             <label>
                                 <input type="checkbox" v-model="exportChildren" />
@@ -564,7 +560,7 @@ export default {
 
         textOer() {
             return {
-                title: this.$gettext('Seite auf') + ' ' + this.oerTitle + ' ' + this.$gettext('veröffentlichen'),
+                title: this.$gettextInterpolate('Seite auf %{ oerTitle } veröffentlichen', {oerTitle: this.oerTitle}),
                 confirm: this.$gettext('Veröffentlichen'),
                 close: this.$gettext('Schließen'),
             };
@@ -580,11 +576,7 @@ export default {
             textDelete.alert = this.$gettext('Möchten Sie die Seite wirklich löschen?');
             if (this.structuralElementLoaded) {
                 textDelete.alert =
-                    this.$gettext('Möchten Sie die Seite') +
-                    ' "' +
-                    this.structuralElement.attributes.title +
-                    '" ' +
-                    this.$gettext('wirklich löschen?');
+                    this.$gettextInterpolate('Möchten Sie die Seite %{ pageTitle } wirklich löschen?', {pageTitle: this.structuralElement.attributes.title});
             }
 
             return textDelete;
@@ -1114,11 +1106,7 @@ export default {
             let newElement = this.$store.getters['courseware-structural-elements/lastCreated'];
             this.companionSuccess({
                 info:
-                    this.$gettext('Seite') +
-                    ' "' +
-                    newElement.attributes.title +
-                    '" ' +
-                    this.$gettext('wurde erfolgreich angelegt.'),
+                    this.$gettextInterpolate('Seite %{ pageTitle } wurde erfolgreich angelegt.', {pageTitle: newElement.attributes.title})
             });
         },
         containerComponent(container) {
@@ -1126,7 +1114,7 @@ export default {
         },
         setBookmark() {
             this.addBookmark(this.structuralElement);
-            this.companionInfo({ info: this.$gettext('Das Lesezeichen wurde gesetzt') });
+            this.companionInfo({ info: this.$gettext('Das Lesezeichen wurde gesetzt.') });
         },
         updateReadApproval(approval) {
             this.currentElement.attributes['read-approval'] = approval;

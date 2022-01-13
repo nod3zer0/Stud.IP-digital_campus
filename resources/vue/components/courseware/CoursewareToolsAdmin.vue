@@ -4,7 +4,7 @@
             <fieldset>
                 <legend><translate>Allgemeine Einstellungen</translate></legend>
                 <label>
-                    <span><translate>Art der Kapitelabfolge</translate></span>
+                    <span><translate>Art der Inhaltsabfolge</translate></span>
                     <select class="size-s" v-model="currentProgression">
                         <option value="0"><translate>Frei</translate></option>
                         <option value="1"><translate>Sequentiell</translate></option>
@@ -51,7 +51,7 @@ export default {
         },
         store() {
             this.companionSuccess({
-                info: this.$gettext('Einstellungen wurden übernommen'),
+                info: this.$gettext('Einstellungen wurden übernommen.'),
             })
             this.storeCoursewareSettings({
                 permission: this.currentPermissionLevel,
