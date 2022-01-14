@@ -76,7 +76,7 @@
                     </label>
                 </form>
             </template>
-            <template #info><translate>Informationen zum Date-Block</translate></template>
+            <template #info><translate>Informationen zum Termin-Block</translate></template>
         </courseware-default-block>
     </div>
 </template>
@@ -175,9 +175,9 @@ export default {
         storeBlock() {
             let cmpInfo = false;
             if (this.currentDate === '') {
-                cmpInfo = this.$gettext('Bitte geben Sie ein Datum an');
+                cmpInfo = this.$gettext('Bitte geben Sie ein Datum an.');
             } else if (this.currentTime === '') {
-                cmpInfo = this.$gettext('Bitte geben Sie eine Uhrzeit an');
+                cmpInfo = this.$gettext('Bitte geben Sie eine Uhrzeit an.');
             }
             if (cmpInfo) {
                 this.companionWarning({

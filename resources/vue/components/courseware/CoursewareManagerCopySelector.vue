@@ -36,7 +36,7 @@
                 />
                 <courseware-companion-box
                     v-if="remoteId === '' && hasRemoteCid"
-                    :msgCompanion="$gettext('In dieser Veranstaltung wurden noch keine Inhalte angelegt')"
+                    :msgCompanion="$gettext('In dieser Veranstaltung wurden noch keine Inhalte angelegt.')"
                     mood="sad"
                 />
             </div>
@@ -50,7 +50,7 @@
                 />
                 <courseware-companion-box
                     v-else
-                    :msgCompanion="$gettext('Sie haben noch keine eigenen Inhalte angelegt')"
+                    :msgCompanion="$gettext('Sie haben noch keine eigenen Inhalte angelegt.')"
                     mood="sad"
                 />
             </div>

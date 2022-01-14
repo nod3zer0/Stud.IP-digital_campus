@@ -187,7 +187,7 @@ export default {
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data"}
             }).then( () => {
-                this.companionInfo({ info: this.$gettextInterpolate('Seite wurde an %{ oerTitle } gesendet.', {oerTitle: this.oerTitle}) });
+                this.companionInfo({ info: this.$gettextInterpolate('Die Seite wurde an %{ oerTitle } gesendet.', {oerTitle: this.oerTitle}) });
             });
         },
 

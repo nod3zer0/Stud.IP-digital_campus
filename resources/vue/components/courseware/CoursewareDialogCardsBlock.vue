@@ -102,7 +102,7 @@
                 </courseware-tabs>
             </template>
             <template #info>
-                <p><translate>Informationen zum DialogCards-Block</translate></p>
+                <p><translate>Informationen zum Lernkarten-Block</translate></p>
             </template>
         </courseware-default-block>
     </div>

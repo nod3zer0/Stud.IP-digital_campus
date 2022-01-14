@@ -92,7 +92,7 @@
                     <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
                         <courseware-companion-box
                             mood="sad"
-                            :msgCompanion="$gettext('Diese Seite steht Ihnen leider nicht zur Verfügung')"
+                            :msgCompanion="$gettext('Diese Seite steht Ihnen leider nicht zur Verfügung.')"
                         />
                     </div>
                 </div>
@@ -1106,7 +1106,7 @@ export default {
             let newElement = this.$store.getters['courseware-structural-elements/lastCreated'];
             this.companionSuccess({
                 info:
-                    this.$gettextInterpolate('Seite %{ pageTitle } wurde erfolgreich angelegt.', {pageTitle: newElement.attributes.title})
+                    this.$gettextInterpolate('Die Seite %{ pageTitle } wurde erfolgreich angelegt.', {pageTitle: newElement.attributes.title})
             });
         },
         containerComponent(container) {

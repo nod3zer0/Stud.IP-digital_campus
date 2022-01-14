@@ -29,7 +29,7 @@ export default {
         return {
             currentValue: Object,
             textOptGroupCourse: this.$gettext('Dateibereich dieser Veranstaltung'),
-            textOptGroupUser: this.$gettext('Eigener Dateibereich'),
+            textOptGroupUser: this.$gettext('Persönlicher Dateibereich'),
         };
     },
     computed: {

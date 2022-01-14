@@ -61,7 +61,7 @@ export default {
                 // unlock container
                 await this.unlockObject({ id: this.blockAdder.container.id, type: 'courseware-containers' });
                 this.companionSuccess({
-                    info: this.$gettext('Block wurde erfolgreich eingefügt.'),
+                    info: this.$gettext('Der Block wurde erfolgreich eingefügt.'),
                 });
                 this.$emit('blockAdded');
             } else {

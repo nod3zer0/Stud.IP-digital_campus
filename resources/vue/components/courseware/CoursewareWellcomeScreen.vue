@@ -65,7 +65,7 @@ export default {
             this.$store.dispatch('coursewareViewMode', 'edit');
             this.$store.dispatch('coursewareConsumeMode', false);
             this.companionSuccess({
-                info: this.$gettext('Elemente für Ihren ersten Inhalt wurden angelegt.'),
+                info: this.$gettext('Das Elemente für Ihren ersten Inhalt wurden angelegt.'),
             });
             const newBlock = this.$store.getters['courseware-blocks/lastCreated'];
             newContainer.attributes.payload.sections[0].blocks.push(newBlock.id);

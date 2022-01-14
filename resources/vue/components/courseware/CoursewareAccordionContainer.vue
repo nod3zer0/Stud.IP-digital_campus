@@ -44,7 +44,7 @@
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                             </template>
                             <template #no-options="{ search, searching, loading }">
-                                Es steht keine Auswahl zur Verfügung.
+                                <translate>Es steht keine Auswahl zur Verfügung.</translate>
                             </template>
                             <template #selected-option="option">
                                 <studip-icon :shape="option.label"/> <span class="vs__option-with-icon">{{option.label}}</span>

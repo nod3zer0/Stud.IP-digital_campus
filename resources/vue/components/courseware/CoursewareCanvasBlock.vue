@@ -590,7 +590,7 @@ export default {
             }
             if(img && img.type === 'file-refs') {
                 this.companionSuccess({
-                    info: this.$gettext('Bild wurde erfolgreich im Dateibereich abgelegt.')
+                    info: this.$gettext('Das Bild wurde erfolgreich im Dateibereich abgelegt.')
                 });
             }
         },

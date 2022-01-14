@@ -34,11 +34,11 @@
                         />
                         <span class="cw-audio-time">{{ currentTime }} / {{ durationTime }}</span>
 
-                        <button v-if="hasPlaylist" class="cw-audio-button cw-audio-prevbutton" @click="prevAudio" />
-                        <button v-if="!playing" class="cw-audio-button cw-audio-playbutton" @click="playAudio" />
-                        <button v-if="playing" class="cw-audio-button cw-audio-pausebutton" @click="pauseAudio" />
-                        <button v-if="hasPlaylist" class="cw-audio-button cw-audio-nextbutton" @click="nextAudio" />
-                        <button class="cw-audio-button cw-audio-stopbutton" @click="stopAudio" />
+                        <button v-if="hasPlaylist" class="cw-audio-button cw-audio-prevbutton" :title="$gettext('Zurück')" @click="prevAudio" />
+                        <button v-if="!playing" class="cw-audio-button cw-audio-playbutton" :title="$gettext('Abspielen')" @click="playAudio" />
+                        <button v-if="playing" class="cw-audio-button cw-audio-pausebutton" :title="$gettext('Pause')" @click="pauseAudio" />
+                        <button v-if="hasPlaylist" class="cw-audio-button cw-audio-nextbutton" :title="$gettext('Weiter')" @click="nextAudio" />
+                        <button class="cw-audio-button cw-audio-stopbutton" :title="$gettext('Anhalten')" @click="stopAudio" />
                     </div>
                 </div>
                 <div class="cw-audio-playlist-wrapper">
@@ -564,7 +564,7 @@ export default {
             }
             if(fileObj && fileObj.type === 'file-refs') {
                 this.companionSuccess({
-                    info: this.$gettext('Aufnahme wurde erfolgreich im Dateibereich abgelegt.')
+                    info: this.$gettext('Die Aufnahme wurde erfolgreich im Dateibereich abgelegt.')
                 });
             }
             this.newRecording = false;

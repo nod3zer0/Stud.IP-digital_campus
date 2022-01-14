@@ -22,7 +22,7 @@
             </button>
 
             <button v-if="currentQuestionId !== 'a'" class="button cw-block-helper-reset" @click="resetQuestions">
-                zurücksetzen
+                <translate>Zurücksetzen</translate>
             </button>
         </div>
     </div>

@@ -15,7 +15,7 @@
                     <a :href="currentUrl" class="cw-pdf-download" download></a>
                     <span>
                         <translate :translate-params="{pageNum, pageCount}">
-                            (Seite %{pageNum} von %{pageCount})
+                            (Seite %{ pageNum } von %{ pageCount })
                         </translate>
                     </span>
                     <button class="cw-pdf-button-next" :class="{ inactive: pageNum === pageCount }" @click="nextPage" />
@@ -60,7 +60,7 @@
                 </form>
             </template>
             <template #info>
-                <p><translate>Informationen zum Document-Block</translate></p>
+                <p><translate>Informationen zum Dokument-Block</translate></p>
             </template>
         </courseware-default-block>
     </div>

@@ -51,7 +51,7 @@ export default {
         },
         store() {
             this.companionSuccess({
-                info: this.$gettext('Einstellungen wurden übernommen.'),
+                info: this.$gettext('Die Einstellungen wurden übernommen.'),
             })
             this.storeCoursewareSettings({
                 permission: this.currentPermissionLevel,

@@ -50,7 +50,7 @@ export default {
             loadedUserFiles: [],
             userFiles: [],
             textOptGroupCourse: this.$gettext('Dateibereich der Veranstaltung'),
-            textOptGroupUser: this.$gettext('eigener Dateibereich'),
+            textOptGroupUser: this.$gettext('Persönlicher Dateibereich'),
         };
     },
     computed: {

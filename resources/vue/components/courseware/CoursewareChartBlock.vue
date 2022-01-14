@@ -77,7 +77,7 @@
                 <button class="button add" @click="addItem"><translate>Datensatz hinzufügen</translate></button>
             </template>
             <template #info>
-                <p><translate>Informationen zum Chart-Block</translate></p>
+                <p><translate>Informationen zum Diagramm-Block</translate></p>
             </template>
         </courseware-default-block>
     </div>
