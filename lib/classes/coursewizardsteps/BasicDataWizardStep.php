@@ -491,11 +491,12 @@ class BasicDataWizardStep implements CourseWizardStep
             'coursetype' => $course->status,
             'start_time' => $course->start_time,
             'name' => $course->name,
-            'name_i18n' => $course->name->toArray(),
+            'name_i18n' => is_object($course->name) ? $course->name->toArray() : $course->name,
             'number' => $course->veranstaltungsnummer,
             'institute' => $course->institut_id,
             'description' => $course->beschreibung,
-            'description_i18n' => $course->beschreibung->toArray()
+            'description_i18n' => is_object($course->beschreibung) ?
+                $course->beschreibung->toArray() : $course->beschreibung
         ];
         $lecturers = $course->members->findBy('status', 'dozent')->pluck('user_id');
         $data['lecturers'] = array_flip($lecturers);
@@ -584,26 +585,31 @@ class BasicDataWizardStep implements CourseWizardStep
      */
     protected function makeI18N($values, $indices)
     {
-        /**
-         * Create array for configured content languages
-         */
-        $translations = array_combine(
-            array_keys($GLOBALS['CONTENT_LANGUAGES']),
-            array_fill(0, count($GLOBALS['CONTENT_LANGUAGES']), '')
-        );
+        // We only need to do something if there are several content languages.
+        if (count($GLOBALS['CONTENT_LANGUAGES']) > 1) {
 
-        foreach ($indices as $index) {
-            // There are values given => create an I18NString
-            if ($values[$index]) {
+            /**
+             * Create array for configured content languages
+             */
+            $translations = array_combine(
+                array_keys($GLOBALS['CONTENT_LANGUAGES']),
+                array_fill(0, count($GLOBALS['CONTENT_LANGUAGES']), '')
+            );
 
-                $values[$index] = new I18NString($values[$index], $values[$index . '_i18n']);
+            foreach ($indices as $index) {
+                // There are values given => create an I18NString
+                if ($values[$index]) {
 
-            // Current index is not set (yet), create an empty I18NString
-            } else {
+                    $values[$index] = new I18NString($values[$index], $values[$index . '_i18n']);
 
-                $values[$index] = new I18NString('', $translations);
+                // Current index is not set (yet), create an empty I18NString
+                } else {
 
+                    $values[$index] = new I18NString('', $translations);
+
+                }
             }
+
         }
 
         return $values;

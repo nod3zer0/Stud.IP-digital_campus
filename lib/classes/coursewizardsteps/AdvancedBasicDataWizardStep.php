@@ -132,9 +132,9 @@ class AdvancedBasicDataWizardStep extends BasicDataWizardStep
 
         $values[__CLASS__] = array_merge($values[__CLASS__], [
             'subtitle' => $course->untertitel,
-            'subtitle_i18n' => $course->untertitel->toArray(),
+            'subtitle_i18n' => is_object($course->untertitel) ? $course->untertitel->toArray() : $course->untertitel,
             'kind' => $course->art,
-            'kind_i18n' => $course->art->toArray(),
+            'kind_i18n' => is_object($course->art) ? $course->art->toArray() : $course->art,
             'ects' => $course->ects,
             'maxmembers' => $course->admission_turnout,
         ]);
