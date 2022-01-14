@@ -24,7 +24,7 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsImg()
     {
         $this->assertEquals(
-            '<img width="16" height="16" src="images/icons/blue/vote.svg" alt="vote" class="icon-role-clickable icon-shape-vote">',
+            '<img width="16" height="16" src="images/icons/blue/vote.svg" alt="" class="icon-role-clickable icon-shape-vote">',
             Icon::create('vote', 'clickable')->asImg()
         );
     }
@@ -32,7 +32,7 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsImgWithAddition()
     {
         $this->assertEquals(
-            '<img width="16" height="16" src="images/icons/blue/add/vote.svg" alt="vote+add" class="icon-role-clickable icon-shape-vote+add">',
+            '<img width="16" height="16" src="images/icons/blue/add/vote.svg" alt="" class="icon-role-clickable icon-shape-vote+add">',
             Icon::create('vote+add', 'clickable')->asImg()
         );
     }
@@ -40,7 +40,7 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsImgWithSize()
     {
         $this->assertEquals(
-            '<img width="20" height="20" src="images/icons/blue/add/vote.svg" alt="vote+add" class="icon-role-clickable icon-shape-vote+add">',
+            '<img width="20" height="20" src="images/icons/blue/add/vote.svg" alt="" class="icon-role-clickable icon-shape-vote+add">',
             Icon::create('vote+add', 'clickable')->asImg(20)
         );
     }
@@ -56,7 +56,7 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsImgWithHspace()
     {
         $this->assertEquals(
-            '<img hspace="3" width="16" height="16" src="images/icons/blue/arr_2left.svg" alt="arr_2left" class="icon-role-clickable icon-shape-arr_2left">',
+            '<img hspace="3" width="16" height="16" src="images/icons/blue/arr_2left.svg" alt="" class="icon-role-clickable icon-shape-arr_2left">',
             Icon::create('arr_2left', 'clickable')->asImg(['hspace' => 3])
         );
     }
@@ -64,7 +64,7 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsImgWithClass()
     {
         $this->assertEquals(
-            '<img class="text-bottom icon-role-info icon-shape-staple" width="20" height="20" src="images/icons/black/staple.svg" alt="staple">',
+            '<img class="text-bottom icon-role-info icon-shape-staple" width="20" height="20" src="images/icons/black/staple.svg" alt="">',
             Icon::create('staple', 'info')->asImg(20, ['class' => 'text-bottom'])
         );
     }
@@ -81,7 +81,7 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsInput()
     {
         $this->assertEquals(
-            '<input type="image" class="text-bottom icon-role-clickable icon-shape-upload" width="20" height="20" src="images/icons/blue/upload.svg" alt="upload">',
+            '<input type="image" class="text-bottom icon-role-clickable icon-shape-upload" width="20" height="20" src="images/icons/blue/upload.svg" alt="">',
             Icon::create('upload', 'clickable')->asInput(20, ['class' => 'text-bottom'])
         );
     }
@@ -149,7 +149,7 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsImgWithoutSize()
     {
         $this->assertEquals(
-            '<img src="images/icons/blue/vote.svg" alt="vote" class="icon-role-clickable icon-shape-vote">',
+            '<img src="images/icons/blue/vote.svg" alt="" class="icon-role-clickable icon-shape-vote">',
             Icon::create('vote', 'clickable')->asImg(false)
         );
     }
@@ -157,7 +157,7 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsInputWithoutSize()
     {
         $this->assertEquals(
-            '<input type="image" src="images/icons/blue/upload.svg" alt="upload" class="icon-role-clickable icon-shape-upload">',
+            '<input type="image" src="images/icons/blue/upload.svg" alt="" class="icon-role-clickable icon-shape-upload">',
             Icon::create('upload', 'clickable')->asInput(false)
         );
     }
