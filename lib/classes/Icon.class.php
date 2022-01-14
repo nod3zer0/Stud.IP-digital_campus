@@ -330,7 +330,9 @@ class Icon
         ]);
 
         if (!isset($result['alt']) && !isset($result['title'])) {
-            $result['alt'] = basename($this->shape);
+            //Add an empty alt attribute to prevent screen readers from
+            //reading the URL of the icon:
+            $result['alt'] = '';
         }
 
         $classNames = 'icon-role-' . $this->role;
