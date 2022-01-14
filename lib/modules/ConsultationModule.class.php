@@ -94,15 +94,19 @@ class ConsultationModule extends CorePlugin implements StudipModule, SystemPlugi
             'keywords'    => _('Terminvergabe, Sprechstunden'),
             'displayname' => _('Terminvergabe'),
             'icon'        => Icon::create('consultation', Icon::ROLE_INFO),
-            // 'screenshots' => [
-            //     'path'     => '../../assets/images/plus/screenshots/Consultations',
-            //     'pictures' => [
-            //         [
-            //             'source' => 'Lti_tool_demo.jpg',
-            //             'title'  => 'Beispiel für Wordpress-Einbindung'
-            //         ],
-            //     ]
-            // ]
+             'screenshots' => [
+                 'path'     => 'assets/images/plus/screenshots/Terminvergabe',
+                 'pictures' => [
+                     [
+                         'source' => 'uebersicht.png',
+                         'title'  => _('Übersicht der erstellen Termine'),
+                     ],
+                     [
+                         'source' => 'anlegen.png',
+                         'title'  => _('Erstellen neuer Termine'),
+                     ],
+                 ]
+             ]
         ];
     }
 
