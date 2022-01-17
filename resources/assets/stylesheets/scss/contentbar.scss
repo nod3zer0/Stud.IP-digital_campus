@@ -1,6 +1,6 @@
 .contentbar {
     background-color: $dark-gray-color-5;
-    border: 1px solid $content-color-40;
+    border: 1px solid $dark-gray-color-30;
     gap: 10px;
     margin-bottom: 15px;
     min-height: 58px;
@@ -14,6 +14,7 @@
         display: flex;
         font-size: 1.3em;
         max-width: 60%;
+        padding-left: 0.5em;
 
         ul.breadcrumb {
             list-style: none;
@@ -56,14 +57,22 @@
         .contentbar-icons {
             display: flex;
 
+            label {
+                margin-left: 0.5em;
+                margin-right: 0.5em;
+            }
+
             .consuming_mode_trigger {
+                margin-left: 0.5em;
+                margin-right: 0.5em;
+                margin-top: -2px;
+
                 @media (max-width: 767px) {
                     display: none !important;
                 }
 
                 @-moz-document url-prefix() {
-                    position: relative;
-                    top: -3px;
+                    margin-top: -4px;
                 }
             }
 
@@ -72,12 +81,11 @@
                 width: 24px;
                 height: 24px;
                 @include icon(before, fullscreen-on, clickable, 24px, 0px);
-                margin-left: 5px;
             }
 
             nav {
-                position: relative;
-                top: 2px;
+                margin-left: 2px;
+                margin-top: 2px;
             }
         }
     }
