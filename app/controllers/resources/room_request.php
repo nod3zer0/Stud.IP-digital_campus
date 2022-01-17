@@ -1208,7 +1208,6 @@ class Resources_RoomRequestController extends AuthenticatedController
                 }
                 $this->room_availability[$room->id][$metadate_id] = [$metadate_available];
             } else {
-                $this->visible_dates += $this->amount_of_metadate_dates[$room->id][$metadate_id];
                 $metadate_availability = [];
                 foreach ($data['intervals'] as $interval) {
                     $interval_available = $this->getRoomAvailability(
@@ -1384,6 +1383,8 @@ class Resources_RoomRequestController extends AuthenticatedController
                 //of time intervals. The expand button must be shown.
                 $this->show_expand_metadates_button = true;
                 $this->visible_dates++;
+            } else {
+                $this->visible_dates += count($data['intervals']);
             }
         }
 
@@ -1417,15 +1418,6 @@ class Resources_RoomRequestController extends AuthenticatedController
             //If no room is selected, it cannot be declared fully available.
             $this->requested_room_fully_available = false;
             $this->room_availability_share[$selected_room->id] = 0.0;
-            foreach ($this->request_time_intervals as $data) {
-                if ($data['metadate'] instanceof SeminarCycleDate && !$this->expand_metadates) {
-                    $this->show_expand_metadates_button = true;
-                    $this->visible_dates++;
-                    break;
-                } else {
-                    $this->visible_dates += count($data['intervals']);
-                }
-            }
         }
 
         //Load the room groups of the current user:
