@@ -1637,6 +1637,12 @@ v i e w  w i d g e t
     }
 }
 .cw-action-widget {
+    .cw-action-widget-show-toc {
+        @include background-icon(table-of-contents, clickable);
+    }
+    .cw-action-widget-show-consume-mode {
+        @include background-icon(fullscreen-on, clickable);
+    }
     .cw-action-widget-edit{
         @include background-icon(edit, clickable);
     }

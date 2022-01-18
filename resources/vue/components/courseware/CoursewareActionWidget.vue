@@ -1,5 +1,11 @@
 <template>
     <ul class="widget-list widget-links cw-action-widget" v-if="structuralElement">
+        <li class="cw-action-widget-show-toc" @click="toggleTOC">
+            {{ tocText }}
+        </li>
+        <li class="cw-action-widget-show-consume-mode" @click="showConsumeMode">
+            <translate>Vollbild einschalten</translate>
+        </li>
         <li v-show="canEdit" class="cw-action-widget-edit" @click="editElement">
             <translate>Seite bearbeiten</translate>
         </li>
@@ -37,6 +43,8 @@ export default {
             oerEnabled: 'oerEnabled',
             oerTitle: 'oerTitle',
             userId: 'userId',
+            consumeMode: 'consumeMode',
+            showToolbar: 'showToolbar'
         }),
         isRoot() {
             if (!this.structuralElement) {
@@ -66,6 +74,9 @@ export default {
         blockedByAnotherUser() {
             return this.blocked && this.userId !== this.blockerId;
         },
+        tocText() {
+            return this.showToolbar ? this.$gettext('Inhaltsverzeichnis ausblenden') : this.$gettext('Inhaltsverzeichnis anzeigen');
+        }
     },
     methods: {
         ...mapActions({
@@ -78,6 +89,9 @@ export default {
             companionInfo: 'companionInfo',
             addBookmark: 'addBookmark',
             lockObject: 'lockObject',
+            setConsumeMode: 'coursewareConsumeMode',
+            setViewMode: 'coursewareViewMode',
+            setShowToolbar: 'coursewareShowToolbar'
         }),
         async editElement() {
             if (this.blockedByAnotherUser) {
@@ -117,6 +131,13 @@ export default {
         },
         oerElement() {
             this.showElementOerDialog(true);
+        },
+        toggleTOC() {
+            this.setShowToolbar(!this.showToolbar);
+        },
+        showConsumeMode() {
+            this.setViewMode('read');
+            this.setConsumeMode(true);
         },
     },
 };
