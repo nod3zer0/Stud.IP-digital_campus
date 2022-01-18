@@ -52,8 +52,7 @@ class I18NString
     {
         $this->base = $base;
         $this->lang = $lang;
-
-        $this->setMetadata($metadata);
+        $this->metadata = $metadata;
     }
 
     /**
@@ -152,10 +151,6 @@ class I18NString
      */
     public function setMetadata($metadata)
     {
-        if (isset($metadata['object_id']) && (is_array($metadata['object_id']) || is_object($metadata['object_id']))) {
-            throw new Exception('Can not use array or object as object id');
-        }
-
         $this->metadata = $metadata;
     }
 
