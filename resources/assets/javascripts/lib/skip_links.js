@@ -80,7 +80,6 @@ const SkipLinks = {
             jQuery('.focus_box').removeClass('focus_box');
             jQuery(fragment).addClass('focus_box');
             jQuery(fragment)
-                .attr('tabindex', '-1')
                 .click()
                 .focus();
             SkipLinks.activeElement = fragment;
