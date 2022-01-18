@@ -4113,8 +4113,11 @@ cw tiles
         width: 100%;
         background-size: auto 180px;
         background-repeat: no-repeat;
-        background-color: $black;
+        background-color: $content-color-20;
         background-position: center;
+        &.default-image {
+                @include background-icon(courseware, clickable, 128);
+        }
     }
     .description {
         height: 220px;

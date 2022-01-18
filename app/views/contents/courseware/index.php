@@ -1,11 +1,14 @@
-
 <div class="cw-content-projects">
-    <? if(!empty($elements)): ?>
+    <? if (!empty($elements)): ?>
         <ul class="cw-tiles">
-            <? foreach($elements as $element) :?>
+            <? foreach ($elements as $element) :?>
                 <li class="tile <?= htmlReady($element['payload']['color'])?>">
                     <a href="<?= URLHelper::getLink('dispatch.php/contents/courseware/courseware#/structural_element/'.$element['id']) ?>">
-                        <div class="preview-image" style="background-image: url(<?= htmlReady($element->getImageUrl()) ?>)" ></div>
+                        <? if ($element->getImageUrl() === null) : ?>
+                            <div class="preview-image default-image"></div>
+                        <? else : ?>
+                            <div class="preview-image" style="background-image: url(<?= htmlReady($element->getImageUrl()) ?>)" ></div>
+                        <? endif; ?>
                         <div class="description">
                             <header><?= htmlReady($element['title']) ?></header>
                             <div class="description-text-wrapper">
@@ -21,7 +24,7 @@
                 </li>
             <? endforeach; ?>
         </ul>
-    <? else: ?>
+    <? else : ?>
         <div class="cw-contents-overview-teaser">
             <div class="cw-contents-overview-teaser-content">
                 <header><?= _('Ihre persönlichen Lernmaterialien')?></header>

@@ -4,7 +4,12 @@
         <? foreach($bookmarks as $bookmark) :?>
             <li class="tile <?= htmlReady($bookmark['element']['payload']['color'])?>">
                 <a href="<?= htmlReady($bookmark['url'])?>">
-                    <div class="preview-image" style="background-image: url(<?= htmlReady($bookmark['element']->getImageUrl()) ?>)" ></div>
+                    <? if ($element->getImageUrl() === null) : ?>
+                        <div class="preview-image default-image"></div>
+                    <? else : ?>
+                        <div class="preview-image" style="background-image: url(<?= htmlReady($element->getImageUrl()) ?>)" ></div>
+                    <? endif; ?>
+
                     <div class="description">
                         <header><?= htmlReady($bookmark['element']['title']) ?></header>
                         <div class="description-text-wrapper">
