@@ -12,17 +12,25 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ *
+ * @extends SimpleCollection<SimpleORMap>
+ */
 class SimpleORMapCollection extends SimpleCollection
 {
-
+    /**
+     * @var int Exception error code denoting a wrong type of objects.
+     */
     const WRONG_OBJECT_TYPE = 1;
+
+    /**
+     * @var int Exception error code denoting that an object of this `id` already exists.
+     */
     const OBJECT_EXISTS = 2;
 
     /**
      * the record object this collection belongs to
      *
-     * @var SimpleORMap
+     * @var ?SimpleORMap
      */
     protected $related_record;
 
@@ -37,11 +45,11 @@ class SimpleORMapCollection extends SimpleCollection
      * all objects should be of the same type
      *
      * @throws InvalidArgumentException if first entry is not SimpleOrMap
-     * @param array $data array with SimpleORMap objects
+     * @param array<?SimpleORMap> $data array with SimpleORMap objects
      * @param bool $strict check every element for correct type and unique pk
      * @return SimpleORMapCollection
      */
-    public static function createFromArray(Array $data, $strict = true)
+    public static function createFromArray(array $data, $strict = true)
     {
         $ret = new SimpleORMapCollection();
         if (count($data)) {
@@ -65,11 +73,11 @@ class SimpleORMapCollection extends SimpleCollection
     /**
      * Constructor
      *
-     * @param Closure $finder callable to fill collection
-     * @param array $options relationship options
-     * @param SimpleORMap $record related record
+     * @param ?Closure $finder callable to fill collection
+     * @param ?array $options relationship options
+     * @param ?SimpleORMap $record related record
      */
-    public function __construct(Closure $finder = null, Array $options = null, SimpleORMap $record = null)
+    public function __construct(Closure $finder = null, array $options = null, SimpleORMap $record = null)
     {
         $this->relation_options = $options;
         $this->related_record = $record;
@@ -101,12 +109,13 @@ class SimpleORMapCollection extends SimpleCollection
                 throw new InvalidArgumentException('Element could not be appended, element with id: ' . $exists->id . ' is in the way', self::OBJECT_EXISTS);
             }
         }
-        return parent::offsetSet($index, $newval);
+        parent::offsetSet($index, $newval);
     }
 
     /**
      * sets the allowed class name
-     * @param string $class_name
+     * @param class-string $class_name
+     * @return void
      */
     public function setClassName($class_name)
     {
@@ -118,6 +127,7 @@ class SimpleORMapCollection extends SimpleCollection
      * sets the related record
      *
      * @param SimpleORMap $record
+     * @return void
      */
     public function setRelatedRecord(SimpleORMap $record)
     {
@@ -160,7 +170,7 @@ class SimpleORMapCollection extends SimpleCollection
      * returns element with given primary key value
      *
      * @param string $value primary key value to search for
-     * @return SimpleORMap
+     * @return ?SimpleORMap
      */
     public function find($value)
     {
@@ -177,10 +187,10 @@ class SimpleORMapCollection extends SimpleCollection
      *
      * @param string $group_by the column to group by, pk if ommitted
      * @param mixed $only_these_fields limit returned fields
-     * @param Closure $group_func closure to aggregate grouped entries
+     * @param ?callable $group_func closure to aggregate grouped entries
      * @return array assoc array
      */
-    public function toGroupedArray($group_by = 'id', $only_these_fields = null, Closure $group_func = null)
+    public function toGroupedArray($group_by = 'id', $only_these_fields = null, callable $group_func = null)
     {
         $result = [];
         foreach ($this as $record) {
@@ -202,7 +212,7 @@ class SimpleORMapCollection extends SimpleCollection
      * internal deleted collection
      *
      * @param string $id primary key of element
-     * @return  number of unsetted elements
+     * @return number of unsetted elements
      */
     public function unsetByPk($id)
     {
@@ -216,12 +226,17 @@ class SimpleORMapCollection extends SimpleCollection
      *
      * @param SimpleORMapCollection $a_collection
      * @param string $mode 'replace' or 'ignore'
+     * @return void
      */
-    public function merge(SimpleCollection $a_collection)
+    public function merge(SimpleCollection $a_collection, string $mode = 'ignore')
     {
         $mode = func_get_arg(1);
         foreach ($a_collection as $element) {
             try {
+                /**
+                 * @throws InvalidArgumentException
+                 * @see SimpleORMapCollection::offsetSet()
+                 */
                 $this[] = $element;
             } catch (InvalidArgumentException $e) {
                 if ($e->getCode() === self::OBJECT_EXISTS) {

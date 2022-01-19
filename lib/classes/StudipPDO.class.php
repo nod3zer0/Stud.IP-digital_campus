@@ -121,11 +121,11 @@ class StudipPDO extends PDO
      * Quotes the given value in a form appropriate for the type.
      * If no explicit type is given, the value's PHP type is used.
      *
-     * @param mixed     PHP value to quote
-     * @param int       parameter type (e.g. PDO::PARAM_STR)
-     * @return string   quoted SQL string
+     * @param mixed $value PHP value to quote
+     * @param ?int $type parameter type (e.g. PDO::PARAM_STR)
+     * @return string quoted SQL string
      */
-    public function quote($value, $type = NULL)
+    public function quote($value, $type = null)
     {
         if (!isset($type)) {
             if (is_null($value)) {

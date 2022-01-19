@@ -19,13 +19,15 @@ if (!defined('SORT_FLAG_CASE')) {
  * @copyright   2013 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ *
+ * @template T
  */
 class SimpleCollection extends StudipArrayObject
 {
     /**
      * callable to initialize collection
      *
-     * @var Closure
+     * @var ?callable(): array<T>
      */
     protected $finder;
 
@@ -38,7 +40,7 @@ class SimpleCollection extends StudipArrayObject
 
     /**
      * collection with deleted records
-     * @var SimpleCollection
+     * @var static
      */
     protected $deleted;
 
@@ -46,10 +48,10 @@ class SimpleCollection extends StudipArrayObject
      * creates a collection from an array of arrays
      * all arrays should contain same keys, but is not enforced
      *
-     * @param array $data array containing assoc arrays
-     * @return SimpleCollection
+     * @param array<T> $data array containing assoc arrays
+     * @return SimpleCollection<T>
      */
-    public static function createFromArray(Array $data)
+    public static function createFromArray(array $data)
     {
         return new self($data);
     }
@@ -59,7 +61,7 @@ class SimpleCollection extends StudipArrayObject
      * if ArrayAccess interface is not available
      *
      * @param mixed $a
-     * @return ArrayAccess
+     * @return StudipArrayObject|ArrayAccess
      */
     public static function arrayToArrayObject($a)
     {
@@ -83,14 +85,14 @@ class SimpleCollection extends StudipArrayObject
      * returns closure to compare a value against given arguments
      * using given operator
      *
-     * @param string $operator
-     * @param mixed $args
+     * @param string|callable(mixed, mixed|array): bool  $operator
+     * @param mixed|array $args
      * @throws InvalidArgumentException
-     * @return Closure comparison function
+     * @return callable(mixed): bool comparison function
      */
     public static function getCompFunc($operator, $args)
     {
-        if ($operator instanceOf Closure) {
+        if (is_callable($operator)) {
             $comp_func = function ($a) use ($args, $operator) {
                 return $operator($a, $args);
             };
@@ -234,14 +236,14 @@ class SimpleCollection extends StudipArrayObject
     /**
      * Constructor
      *
-     * @param mixed $data array or closure to fill collection
+     * @param array<T>|callable(): array<T> $data array or closure to fill collection
      */
     public function __construct($data = [])
     {
         parent::__construct();
-        $this->finder = $data instanceof Closure ? $data : null;
+        $this->finder = is_callable($data) ? $data : null;
         $this->deleted = clone $this;
-        if ($data instanceof Closure) {
+        if (is_callable($data)) {
             $this->refresh();
         } else {
             $this->exchangeArray($data);
@@ -283,7 +285,7 @@ class SimpleCollection extends StudipArrayObject
      */
     public function append($newval)
     {
-        return parent::append(static::arrayToArrayObject($newval));
+        parent::append(static::arrayToArrayObject($newval));
     }
 
     /**
@@ -291,13 +293,14 @@ class SimpleCollection extends StudipArrayObject
      * ensures the value has ArrayAccess
      *
      * @see ArrayObject::offsetSet()
+     * @return void
      */
     public function offsetSet($index, $newval)
     {
         if (is_numeric($index)) {
             $index = (int) $index;
         }
-        return parent::offsetSet($index, static::arrayToArrayObject($newval));
+        parent::offsetSet($index, static::arrayToArrayObject($newval));
     }
 
     /**
@@ -312,22 +315,23 @@ class SimpleCollection extends StudipArrayObject
         if ($this->offsetExists($index)) {
             $this->deleted[] = $this->offsetGet($index);
         }
-        return parent::offsetUnset($index);
+        parent::offsetUnset($index);
     }
 
     /**
      * sets the finder function
      *
-     * @param Closure $finder
+     * @param callable(): array<T> $finder
+     * @return void
      */
-    public function setFinder(Closure $finder)
+    public function setFinder(callable $finder)
     {
         $this->finder = $finder;
     }
 
     /**
      * get deleted records collection
-     * @return SimpleCollection
+     * @return SimpleCollection<T>
      */
     public function getDeleted()
     {
@@ -338,7 +342,7 @@ class SimpleCollection extends StudipArrayObject
      * reloads the elements of the collection
      * by calling the finder function
      *
-     * @return number of records after refresh
+     * @return ?int of records after refresh
      */
     public function refresh()
     {
@@ -370,9 +374,9 @@ class SimpleCollection extends StudipArrayObject
      * ~= regex
      *
      * @param string $key the column name
-     * @param mixed $value value to search for
-     * @param mixed $op operator to find
-     * @return SimpleCollection with found records
+     * @param mixed $values value to search for
+     * @param string|callable $op operator to find
+     * @return SimpleCollection<T> with found records
      */
     public function findBy($key, $values, $op = '==')
     {
@@ -388,9 +392,9 @@ class SimpleCollection extends StudipArrayObject
      * pass array for multiple values
      *
      * @param string $key the column name
-     * @param mixed $value value to search for,
-     * @param mixed $op operator to find
-     * @return SimpleORMap found record
+     * @param mixed $values value to search for,
+     * @param string|callable $op operator to find
+     * @return ?T found record
      */
     public function findOneBy($key, $values, $op = '==')
     {
@@ -404,10 +408,10 @@ class SimpleCollection extends StudipArrayObject
      * apply given callback to all elements of
      * collection
      *
-     * @param Closure $func the function to call
-     * @return int addition of return values
+     * @param callable(T): int $func the function to call
+     * @return int|false addition of return values
      */
-    public function each(Closure $func)
+    public function each(callable $func)
     {
         $result = false;
         foreach ($this->storage as $record) {
@@ -420,10 +424,10 @@ class SimpleCollection extends StudipArrayObject
      * apply given callback to all elements of
      * collection and give back array of return values
      *
-     * @param Closure $func the function to call
-     * @return array
+     * @param callable(T, mixed): mixed $func the function to call
+     * @return array<mixed>
      */
-    public function map(Closure $func)
+    public function map(callable $func)
     {
         $results = [];
         foreach ($this->storage as $key => $value) {
@@ -436,11 +440,11 @@ class SimpleCollection extends StudipArrayObject
      * filter elements
      * if given callback returns true
      *
-     * @param Closure $func the function to call
-     * @param integer $limit limit number of found records
-     * @return SimpleCollection containing filtered elements
+     * @param ?callable(T, mixed): bool $func the function to call
+     * @param ?integer $limit limit number of found records
+     * @return SimpleCollection<T> containing filtered elements
      */
-    public function filter(Closure $func = null, $limit = null)
+    public function filter(callable $func = null, $limit = null)
     {
         $results = [];
         $found = 0;
@@ -459,10 +463,10 @@ class SimpleCollection extends StudipArrayObject
      * Returns whether any element of the collection returns true for the
      * given callback.
      *
-     * @param  Closure $func the function to call
+     * @param  callable(T, mixed): bool $func the function to call
      * @return bool
      */
-    public function any(Closure $func)
+    public function any(callable $func)
     {
         foreach ($this->storage as $key => $value) {
             if (call_user_func($func, $value, $key)) {
@@ -476,10 +480,10 @@ class SimpleCollection extends StudipArrayObject
      * Returns whether every element of the collection returns true for the
      * given callback.
      *
-     * @param  Closure $func the function to call
+     * @param  callable(T, mixed): bool $func the function to call
      * @return bool
      */
-    public function every(Closure $func)
+    public function every(callable $func)
     {
         foreach ($this->storage as $key => $value) {
             if (!call_user_func($func, $value, $key)) {
@@ -521,11 +525,11 @@ class SimpleCollection extends StudipArrayObject
      * entry is returned, suitable for grouping by unique column
      *
      * @param string $group_by the column to group by, pk if ommitted
-     * @param mixed $only_these_fields limit returned fields
-     * @param Closure $group_func closure to aggregate grouped entries
+     * @param string|array|null $only_these_fields limit returned fields
+     * @param ?callable $group_func closure to aggregate grouped entries
      * @return array assoc array
      */
-    public function toGroupedArray($group_by = 'id', $only_these_fields = null, Closure $group_func = null)
+    public function toGroupedArray($group_by = 'id', $only_these_fields = null, callable $group_func = null)
     {
         $result = [];
         if (is_string($only_these_fields)) {
@@ -549,7 +553,7 @@ class SimpleCollection extends StudipArrayObject
     /**
      * get the first element
      *
-     * @return Array first element or null
+     * @return ?T first element or null
      */
     public function first()
     {
@@ -561,7 +565,7 @@ class SimpleCollection extends StudipArrayObject
     /**
      * get the last element
      *
-     * @return Array last element or null
+     * @return ?T last element or null
      */
     public function last()
     {
@@ -573,6 +577,7 @@ class SimpleCollection extends StudipArrayObject
      /**
      * get the the value from given key from first element
      *
+     * @param string $key
      * @return mixed
      */
     public function val($key)
@@ -604,8 +609,8 @@ class SimpleCollection extends StudipArrayObject
      *
      * @param string $key
      * @param mixed $values
-     * @param mixed $op operator to find elements
-     * @return number of unsetted elements
+     * @param string|callable(mixed, mixed|array): bool $op operator to find elements
+     * @return int|false number of unsetted elements
      */
     public function unsetBy($key, $values, $op = '==')
     {
@@ -642,7 +647,7 @@ class SimpleCollection extends StudipArrayObject
      *
      * @param string $order columns to order by
      * @param integer $sort_flags
-     * @return SimpleCollection the sorted collection
+     * @return $this the sorted collection
      */
     public function orderBy($order, $sort_flags = SORT_LOCALE_STRING)
     {
@@ -707,8 +712,8 @@ class SimpleCollection extends StudipArrayObject
      * number of elements
      *
      * @param integer $arg1
-     * @param integer $arg2
-     * @return SimpleCollection
+     * @param ?integer $arg2
+     * @return SimpleCollection<T>
      */
     public function limit($arg1, $arg2 = null)
     {
@@ -730,7 +735,7 @@ class SimpleCollection extends StudipArrayObject
      /**
      * calls the given method on all elements
      * of the collection
-     * @param string $method methodname to call
+     * @param literal-string $method methodname to call
      * @param array $params parameters for methodcall
      * @return array of all return values
      */
@@ -747,7 +752,7 @@ class SimpleCollection extends StudipArrayObject
      * calls undefineds methods on all elements of the collection
      * But beware of the dark side...
      *
-     * @param string $method methodname to call
+     * @param literal-string $method methodname to call
      * @param array $params parameters for methodcall
      * @return array of all return values
      */
@@ -759,7 +764,8 @@ class SimpleCollection extends StudipArrayObject
     /**
      * merge in another collection, elements are appended
      *
-     * @param SimpleCollection $a_collection
+     * @param SimpleCollection<T> $a_collection
+     * @return void
      */
     public function merge(SimpleCollection $a_collection)
     {
