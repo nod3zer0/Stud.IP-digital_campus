@@ -107,7 +107,7 @@ export default {
             } else {
                 this.unfold = false;
                 setTimeout(() => {
-                    if(!view.activeToolbar) {
+                    if(!view.toolsActive) {
                         view.showTools = false;
                     }
                 }, 800);
