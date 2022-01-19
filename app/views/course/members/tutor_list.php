@@ -82,7 +82,7 @@
             <tr>
             <? if ($is_dozent && !$tutor_is_locked): ?>
                 <td>
-                    <input aria-label="<?= sprintf(_('%s auswählen'), htmlReady($status_groups['tutor'])) ?>"
+                    <input aria-label="<?= sprintf(_('%s auswählen'), htmlReady($fullname)) ?>"
                            type="checkbox" name="tutor[<?= $tutor['user_id'] ?>]" value="1"
                            <? if (isset($flash['checked']) && in_array($tutor['user_id'], $flash['checked'])) echo 'checked'; ?>>
                 </td>

@@ -76,7 +76,7 @@
             <tr>
             <? if (!$is_locked) : ?>
                 <td>
-                    <input aria-label="<?= sprintf(_('%s auswählen'), _('Vorläufig akzeptierte/n NutzerIn')) ?>"
+                    <input aria-label="<?= sprintf(_('%s auswählen'), htmlReady($fullname)) ?>"
                            type="checkbox" name="accepted[<?= $accept['user_id'] ?>]" value="1"
                            <? if (isset($flash['checked']) && in_array($accept['user_id'], $flash['checked'])) echo 'checked'; ?>>
                 </td>

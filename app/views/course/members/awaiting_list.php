@@ -74,7 +74,7 @@
             <tr>
             <? if (!$is_locked) : ?>
                 <td>
-                    <input aria-label="<?= _('NutzerIn auswählen') ?>" type="checkbox"
+                    <input aria-label="<?= sprintf(_('%s auswählen'), htmlReady($fullname)) ?>" type="checkbox"
                            name="awaiting[<?= htmlReady($waiting['user_id']) ?>]" value="1"
                            <? if (isset($flash['checked']) && in_array($waiting['user_id'], $flash['checked'])) echo 'checked'; ?>>
                         </td>
