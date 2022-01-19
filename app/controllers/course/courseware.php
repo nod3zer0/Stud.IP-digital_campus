@@ -60,9 +60,9 @@ class Course_CoursewareController extends AuthenticatedController
 
         Navigation::activateItem('course/courseware/content');
         $this->setIndexSidebar();
-        $this->licenses = array();
-        $sorm_licenses = License::findBySQL("1 ORDER BY name ASC");
-        foreach($sorm_licenses as $license) {
+        $this->licenses = [];
+        $sorm_licenses = License::findBySQL('1 ORDER BY name ASC');
+        foreach ($sorm_licenses as $license) {
             array_push($this->licenses, $license->toArray());
         }
         $this->licenses = json_encode($this->licenses);
@@ -87,7 +87,6 @@ class Course_CoursewareController extends AuthenticatedController
         } else {
             Navigation::activateItem('course/courseware/manager');
         }
-
     }
 
     private function setIndexSidebar(): void
@@ -106,151 +105,145 @@ class Course_CoursewareController extends AuthenticatedController
         $sidebar->addWidget($views)->addLayoutCSSClass('courseware-view-widget');
     }
 
-    private function getProgressData(bool $course_progress = false): array
+    private function getProgressData(bool $showProgressForAllParticipants = false): iterable
     {
-        $data = [];
-
-        $cid = Context::getId();
-        $course = Course::find($cid);
-        $course_members = $course->getMembersWithStatus('autor');
-        $course_member_ids = array_column($course_members, 'user_id');
-
-        $elements = StructuralElement::findBySQL('range_id = ?', [$cid]);
-
-        if ($course_progress) {
-            $cw_user_progresses = UserProgress::findBySQL('user_id IN (?)', [$course_member_ids]);
-        } else {
-            $cw_user_progresses = UserProgress::findBySQL('user_id = ?', [
-                $GLOBALS['user']->id,
-            ]);
+        /** @var ?\Course $course */
+        $course = Context::get();
+        if (!$course || !$course->courseware) {
+            return [];
         }
 
-        foreach ($elements as $element) {
-            $el = [
-                'id' => $element->id,
-                'name' => $element->title,
-                'parent_id' => $element->parent->id,
-                'parent_name' => $element->parent->title,
-                'children' => $this->getChildren($element->children),
-            ];
-            $el['progress'] = $this->getProgress($course, $element, $course_progress, $cw_user_progresses, $course_member_ids);
+        $instance = new Instance($course->courseware);
+        $user = \User::findCurrent();
 
-            array_push($data, $el);
-        }
+        $elements = $this->findElements($instance, $user);
+        $progress = $this->computeSelfProgresses($instance, $user, $elements, $showProgressForAllParticipants);
+        $progress = $this->computeCumulativeProgresses($instance, $elements, $progress);
 
-        //update children progress
-        foreach ($data as &$element) {
-            if (count($element['children'])) {
-                foreach ($element['children'] as &$child) {
-                    foreach ($data as $el) {
-                        if ($el['id'] == $child['id']) {
-                            $child['progress'] = $el['progress'];
-                        }
-                    }
+        return $this->prepareProgressData($elements, $progress);
+    }
+
+    private function findElements(Instance $instance, User $user): iterable
+    {
+        $elements = $instance->getRoot()->findDescendants($user);
+        $elements[] = $instance->getRoot();
+
+        return array_combine(array_column($elements, 'id'), $elements);
+    }
+
+    private function computeChildrenOf(iterable $elements): iterable
+    {
+        $childrenOf = [];
+        foreach ($elements as $elementId => $element) {
+            if ($element['parent_id']) {
+                if (!isset($childrenOf[$element['parent_id']])) {
+                    $childrenOf[$element['parent_id']] = [];
                 }
+                $childrenOf[$element['parent_id']][] = $elementId;
             }
+        }
+
+        return $childrenOf;
+    }
+
+    private function computeSelfProgresses(
+        Instance $instance,
+        User $user,
+        iterable $elements,
+        bool $showProgressForAllParticipants
+    ): iterable {
+        $progress = [];
+        /** @var \Course $course */
+        $course = $instance->getRange();
+        $allBlocks = $instance->findAllBlocksGroupedByStructuralElementId();
+        $courseMemberIds = $showProgressForAllParticipants
+            ? array_column($course->getMembersWithStatus('autor'), 'user_id')
+            : [$user->getId()];
+        $userProgresses = UserProgress::findBySQL('user_id IN (?)', [$courseMemberIds]);
+        foreach ($elements as $elementId => $element) {
+            $selfProgress = $this->getSelfProgresses($allBlocks, $elementId, $userProgresses, $courseMemberIds);
+            $progress[$elementId] = [
+                'self' => $selfProgress['counter'] ? $selfProgress['progress'] / $selfProgress['counter'] : 1,
+            ];
+        }
+
+        return $progress;
+    }
+
+    private function getSelfProgresses(
+        array $allBlocks,
+        string $elementId,
+        array $userProgresses,
+        array $courseMemberIds
+    ): array {
+        $blks = $allBlocks[$elementId] ?: [];
+
+        $data = [
+            'counter' => count($blks),
+            'progress' => 0,
+        ];
+        $usersCounter = count($courseMemberIds);
+        foreach ($blks as $blk) {
+            $progresses = array_filter($userProgresses, function ($progress) use ($blk, $courseMemberIds) {
+                return $progress->block_id === $blk->getId() && in_array($progress->user_id, $courseMemberIds);
+            });
+            $usersProgress = count($progresses) ? array_sum(array_column($progresses, 'grade')) : 0;
+
+            $data['progress'] += $usersProgress / $usersCounter;
         }
 
         return $data;
     }
 
-    private function getChildren($children): array
+    private function computeCumulativeProgresses(Instance $instance, iterable $elements, iterable $progress): iterable
+    {
+        $childrenOf = $this->computeChildrenOf($elements);
+
+        // compute `cumulative` of each element
+        $visitor = function (&$progress, $element) use (&$childrenOf, &$elements, &$visitor) {
+            $elementId = $element->getId();
+            $numberOfNodes = 0;
+            $cumulative = 0;
+
+            // visit children first
+            if (isset($childrenOf[$elementId])) {
+                foreach ($childrenOf[$elementId] as $childId) {
+                    $visitor($progress, $elements[$childId]);
+                    $numberOfNodes += $progress[$childId]['numberOfNodes'];
+                    $cumulative += $progress[$childId]['cumulative'];
+                }
+            }
+
+            $progress[$elementId]['cumulative'] = $cumulative + $progress[$elementId]['self'];
+            $progress[$elementId]['numberOfNodes'] = $numberOfNodes + 1;
+
+            return $progress;
+        };
+
+        $visitor($progress, $instance->getRoot());
+
+        return $progress;
+    }
+
+    private function prepareProgressData(iterable $elements, iterable $progress): iterable
     {
         $data = [];
-        foreach ($children as $child) {
-            $el = [
-                'id' => $child->id,
-                'name' => $child->title,
+        foreach ($elements as $elementId => $element) {
+            $elementProgress = $progress[$elementId];
+            $cumulative = $elementProgress['cumulative'] / $elementProgress['numberOfNodes'];
+
+            $data[$elementId] = [
+                'id' => (int) $elementId,
+                'parent_id' => (int) $element['parent_id'],
+                'name' => $element['title'],
+                'progress' => [
+                    'cumulative' => round($cumulative, 2) * 100,
+                    'self' => round($elementProgress['self'], 2) * 100,
+                ],
             ];
-            array_push($data, $el);
         }
 
         return $data;
-    }
-
-    private function getProgress(Course $course, StructuralElement $element, bool $course_progress = false, array $cw_user_progresses, array $course_member_ids): array
-    {
-        $descendants = $element->findDescendants(\User::findCurrent());
-        $count = count($descendants);
-        $progress = 0;
-        $own_progress = 0;
-
-        foreach ($descendants as $el) {
-            $block = $this->getBlocks($el->id, $course_progress, $cw_user_progresses, $course, $course_member_ids);
-            if ($block['counter'] > 0) {
-                $progress += $block['progress'] / $block['counter'];
-            } else {
-                $progress += 1;
-            }
-        }
-
-        $own_blocks = $this->getBlocks($element->id, $course_progress, $cw_user_progresses, $course, $course_member_ids);
-
-        if ($own_blocks['counter'] > 0) {
-            $own_progress = $own_blocks['progress'] / $own_blocks['counter'];
-        } else {
-            $own_progress = 1;
-        }
-
-        $count = count($descendants);
-        if ($count > 0) {
-            $progress = ($progress + $own_progress) / ($count + 1);
-        } else {
-            $progress = $own_progress;
-        }
-
-        return ['total' => round($progress, 2) * 100, 'current' => round($own_progress, 2) * 100];
-    }
-
-    private function getBlocks(string $element_id, bool $course_progress = false, array $cw_user_progresses, Course $course, array $course_member_ids): array
-    {
-        $containers = Courseware\Container::findBySQL('structural_element_id = ?', [intval($element_id)]);
-        $blocks = [];
-        $blocks['counter'] = 0;
-        $blocks['progress'] = 0;
-        $users_counter = count($course->getMembersWithStatus('autor'));
-
-        foreach ($containers as $container) {
-            $counter = $container->countBlocks();
-
-            $blocks['counter'] += $counter;
-            if ($counter > 0) {
-                $blks = Courseware\Block::findBySQL('container_id = ?', [$container->id]);
-                foreach ($blks as $item) {
-                    if ($course_progress) {
-                        if ($users_counter > 0) {
-                            $progresses = array_filter($cw_user_progresses, function($progress) use ($item) {
-                                if ($progress->block_id === $item->id) {
-                                    return true;
-                                }
-                            });
-
-                            $users_progress = 0;
-                            foreach ($progresses as $prog) {
-                                if (in_array($prog->user_id, $course_member_ids)) {
-                                    $users_progress += $prog->grade;
-                                }
-                            }
-
-                            $blocks['progress'] += $users_progress / $users_counter;
-                        }
-                    } else {
-                        $uid = $GLOBALS['user']->id;
-                        $progresses = array_filter($cw_user_progresses, function($progress) use ($item, $uid) {
-                            if ($progress->block_id === $item->id && $progress->user_id === $uid) {
-                                return true;
-                            }
-                        });
-                        $progress = reset($progresses);
-                        if ($progress !== null) {
-                            $blocks['progress'] += intval($progress->grade);
-                        }
-                    }
-                }
-            }
-        }
-
-        return $blocks;
     }
 
     private function getChapterCounter(array $chapters): array
@@ -261,13 +254,13 @@ class Course_CoursewareController extends AuthenticatedController
 
         foreach ($chapters as $chapter) {
             if ($chapter['parent_id'] != null) {
-                if ($chapter['progress']['current'] == 0) {
+                if ($chapter['progress']['self'] == 0) {
                     $ahead += 1;
                 }
-                if ($chapter['progress']['current'] > 0 && $chapter['progress']['current'] < 100) {
+                if ($chapter['progress']['self'] > 0 && $chapter['progress']['self'] < 100) {
                     $started += 1;
                 }
-                if ($chapter['progress']['current'] == 100) {
+                if ($chapter['progress']['self'] == 100) {
                     $finished += 1;
                 }
             }

@@ -20,7 +20,7 @@ export default {
     props: {
         name: String,
         value: Number,
-        chapterId: String,
+        chapterId: Number,
     },
 };
 </script>

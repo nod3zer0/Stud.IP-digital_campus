@@ -235,4 +235,64 @@ class Instance
     {
         return StructuralElement::findUsersBookmarksByRange($user, $this->getRange());
     }
+
+    public function findAllStructuralElements(): iterable
+    {
+        $sql = 'SELECT se.*
+                FROM cw_structural_elements se
+                WHERE se.range_id = ? AND se.range_type = ?';
+        $statement = \DBManager::get()->prepare($sql);
+        $statement->execute([$this->root['range_id'], $this->root['range_type']]);
+
+        $data = [];
+        foreach ($statement as $key => $row) {
+            $data[] = \Courseware\StructuralElement::build($row, false);
+        }
+
+        return $data;
+    }
+
+    public function findAllBlocks(): iterable
+    {
+        $sql = 'SELECT b.*
+                FROM cw_structural_elements se
+                JOIN cw_containers c ON se.id = c.structural_element_id
+                JOIN cw_blocks b ON c.id = b.container_id
+                WHERE se.range_id = ? AND se.range_type = ?';
+        $statement = \DBManager::get()->prepare($sql);
+        $statement->execute([$this->root['range_id'], $this->root['range_type']]);
+
+        $data = [];
+        foreach ($statement as $key => $row) {
+            $data[] = \Courseware\Block::build($row, false);
+        }
+
+        return $data;
+    }
+
+    public function findAllBlocksGroupedByStructuralElementId(): iterable
+    {
+        $sql = 'SELECT se.id AS structural_element_id, b.*
+                FROM cw_structural_elements se
+                JOIN cw_containers c ON se.id = c.structural_element_id
+                JOIN cw_blocks b ON c.id = b.container_id
+                WHERE se.range_id = ? AND se.range_type = ?';
+
+        $statement = \DBManager::get()->prepare($sql);
+        $statement->execute([$this->root['range_id'], $this->root['range_type']]);
+
+        $data = [];
+        foreach ($statement as $row) {
+            $structuralElementId = $row['structural_element_id'];
+            unset($row['structural_element_id']);
+
+            $block = \Courseware\Block::build($row, false);
+            if (!isset($data[$structuralElementId])) {
+                $data[$structuralElementId] = [];
+            }
+            $data[$structuralElementId][] = $block;
+        }
+
+        return $data;
+    }
 }

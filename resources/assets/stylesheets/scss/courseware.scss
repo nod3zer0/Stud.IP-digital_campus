@@ -104,12 +104,12 @@ c o n t e n t s
         background-position-x: 50%;
         padding: 24px;
         margin-bottom: 10px;
-    
+
         .cw-contents-overview-teaser-content {
             padding-top: 28%;
             padding-left: 0;
             text-align: justify;
-    
+
             header{
                 font-size: 1.5em;
                 margin: 1em 0 0.5em 0;
@@ -434,10 +434,10 @@ $consum_ribbon_width: calc(100% - 58px);
 }
 
 .responsive-display {
-    .cw-ribbon-sticky-top, 
+    .cw-ribbon-sticky-top,
     .cw-ribbon-sticky-bottom,
     .cw-ribbon-wrapper-consume,
-    .cw-ribbon-consume-bottom { 
+    .cw-ribbon-consume-bottom {
         width: 100%;
     }
     .cw-ribbon {
@@ -1994,6 +1994,9 @@ d a s h b o a r d
         width: 404px;
         color: $base-color;
         padding-left: 14px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 }
 
@@ -2587,12 +2590,12 @@ a u d i o  b l o c k
             padding-left: 0;
             list-style: none;
             cursor: pointer;
-    
+
             .cw-playlist-item {
                 @include background-icon(file-audio2, clickable, 24);
                 background-repeat: no-repeat;
                 background-position: 1em center;
-    
+
                 margin: 1em;
                 padding: 1em;
                 padding-left: 4em;
@@ -3637,7 +3640,7 @@ dialog cards block
             right: 0;
         }
 
-        &.cw-dialogcards-prev-disabled, 
+        &.cw-dialogcards-prev-disabled,
         &.cw-dialogcards-next-disabled {
             background-color: $light-gray-color-40;
         }
@@ -3849,7 +3852,7 @@ headline block
     .cw-block-headline {
         .cw-block-headline-content {
             min-height: 300px;
-    
+
             &.half {
                 min-height: 150px;
             }
@@ -3865,7 +3868,7 @@ headline block
                 .icon-layer {
                     background-position: center calc(50% - 4em);
                     min-height: 300px;
-    
+
                     &.half {
                         min-height: 150px;
                     }
@@ -3890,14 +3893,14 @@ headline block
                             @include background-icon($icon, status-green, 98);
                         }
                     };
-    
+
                     &.half {
                         background-size: 72px;
                         background-position: center calc(50% - 2em);
                     }
                 }
-    
-    
+
+
                 .cw-block-headline-textbox {
                     .cw-block-headline-title {
                         h1 {
@@ -3905,7 +3908,7 @@ headline block
                             font-size: 2em;
                         }
                     }
-    
+
                     .cw-block-headline-subtitle {
                         h2 {
                             font-size: 12px;
@@ -3942,7 +3945,7 @@ headline block
                         }
                     };
                 }
-    
+
                 .cw-block-headline-textbox {
                     .cw-block-headline-title {
                         h1 {
@@ -3952,7 +3955,7 @@ headline block
 
                 }
             }
-    
+
             &.ribbon {
                 .icon-layer {
                     min-height: 300px;
@@ -3960,14 +3963,14 @@ headline block
                     &.half {
                         min-height: 150px;
                     }
-    
+
                     .cw-block-headline-textbox {
                         .cw-block-headline-title {
                                 h1 {
                                 font-size: 2.5em;
                             }
                         }
-    
+
                         .cw-block-headline-subtitle {
                             h2 {
                                 font-size: 12px;

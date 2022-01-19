@@ -69,6 +69,7 @@
  * @property Course parent belongs_to Course
  * @property SimpleORMapCollection children has_many Course
  * @property CourseConfig config additional field
+ * @property ?\Courseware\StructuralElement $courseware has_one
  */
 
 class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, FeedbackRange
