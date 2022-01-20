@@ -1,17 +1,17 @@
 <? // class "action-menu" will be set from API ?>
-<nav <?= arrayToHtmlAttributes($attributes) ?>>
+<nav <?= arrayToHtmlAttributes($attributes) ?> aria-role="presentation">
     <a class="action-menu-icon" title="<?= htmlReady($label) ?>"
-       aria-expanded="false" aria-label="<?= htmlReady($aria_label) ?>" href="#"
+       aria-expanded="false" aria-label="<?= htmlReady($aria_label) ?>" aria-role="button" href="#"
         <?= $image_link_attributes ? arrayToHtmlAttributes($image_link_attributes) : '' ?>>
         <?= $image ?>
     </a>
     <div class="action-menu-content">
     	<? if (!empty($label)): ?>
-        <div class="action-menu-title">
+        <div class="action-menu-title" aria-hidden="true">
             <?= htmlReady(_($label)) ?>
         </div>
         <? endif; ?>
-        <ul class="action-menu-list">
+        <ul class="action-menu-list" aria-label="<?= _('Inhalt') ?>">
         <? foreach ($actions as $action): ?>
             <li class="action-menu-item">
             <? if ($action['type'] === 'link'): ?>
