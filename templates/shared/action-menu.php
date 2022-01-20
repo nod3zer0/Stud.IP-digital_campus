@@ -1,15 +1,15 @@
 <? // class "action-menu" will be set from API ?>
-<nav <?= arrayToHtmlAttributes($attributes) ?>>
-    <a class="action-menu-icon" title="<?= _('Aktionen') ?>" aria-expanded="false" aria-label="<?= _("Aktionsmenü") ?>" href="#">
+<nav <?= arrayToHtmlAttributes($attributes) ?> aria-role="presentation">
+    <a class="action-menu-icon" aria-expanded="false" title="<?= _('Aktionsmenü') ?>" href="#">
         <div></div>
         <div></div>
         <div></div>
     </a>
     <div class="action-menu-content">
-        <div class="action-menu-title">
+        <div class="action-menu-title" aria-hidden="true">
             <?= _('Aktionen') ?>
         </div>
-        <ul class="action-menu-list">
+        <ul class="action-menu-list" aria-label="<?= _('Aktionen') ?>">
         <? foreach ($actions as $action): ?>
             <li class="action-menu-item <? if (isset($action['attributes']['disabled'])) echo 'action-menu-item-disabled'; ?>">
             <? if ($action['type'] === 'link'): ?>

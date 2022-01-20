@@ -197,7 +197,7 @@ class ActionMenu {
 
         this.menu.toggleClass('is-open', this.is_open);
         this.menu.toggleClass('is-reversed', this.is_reversed);
-        this.menu.attr('aria-expanded', this.is_open ? 'true' : 'false');
+        this.menu.find('.action-menu-icon').attr('aria-expanded', this.is_open ? 'true' : 'false');
     }
 
     /**
