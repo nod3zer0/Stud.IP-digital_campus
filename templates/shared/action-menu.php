@@ -1,6 +1,6 @@
 <? // class "action-menu" will be set from API ?>
 <nav <?= arrayToHtmlAttributes($attributes) ?> aria-role="presentation">
-    <a class="action-menu-icon" aria-expanded="false" title="<?= _('Aktionsmenü') ?>" href="#">
+    <a class="action-menu-icon" aria-role="button" aria-expanded="false" title="<?= _('Aktionsmenü') ?>" href="#">
         <div></div>
         <div></div>
         <div></div>
