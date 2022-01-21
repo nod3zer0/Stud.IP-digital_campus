@@ -2287,8 +2287,7 @@ class Resource extends SimpleORMap implements StudipItem
      */
     public function getUserPermission(User $user, $time_range = [], $permanent_only = false)
     {
-        if ($user->perms == 'root') {
-            //root users are automatically resource admins:
+        if (ResourceManager::getGlobalResourcePermission($user) === 'admin') {
             return 'admin';
         }
 
@@ -2357,23 +2356,30 @@ class Resource extends SimpleORMap implements StudipItem
             }
         }
 
+        if (!$perm_string) {
+            //A user which doesn't have special permissions for this resource
+            //can have global resource permissions:
+            $global_perm = ResourceManager::getGlobalResourcePermission($user);
+            if ($global_perm) {
+                //Set the permission cache:
+                if (!is_array(self::$permission_cache[$this->id])) {
+                    self::$permission_cache[$this->id] = [];
+                }
+                self::$permission_cache[$this->id][$user->id] = $global_perm;
+            }
+            $perm_string = $global_perm;
+        }
         //Now we must check for global resource locks:
 
         if (GlobalResourceLock::currentlyLocked()) {
             //The resource management system is currently locked.
-            //We must either return 'admin' for users with that
-            //permission level or 'user' for all other permission
+            //permission level 'user' for all other permission
             //levels.
-            if ($perm_string == 'admin') {
-                return 'admin';
-            } elseif ($perm_string) {
+            if ($perm_string) {
                 //A permission level exists for the user.
                 //The user gets "user" permissions in case
                 //a global lock is active.
-                return 'user';
-            } else {
-                //No permission level exists for the user.
-                return '';
+                $perm_string = 'user';
             }
         }
 
@@ -2383,17 +2389,7 @@ class Resource extends SimpleORMap implements StudipItem
             return $perm_string;
         }
 
-        //A user which doesn't have special permissions for this resource
-        //can have global resource permissions:
-        $global_perm = ResourceManager::getGlobalResourcePermission($user);
-        if ($global_perm) {
-            //Set the permission cache:
-            if (!is_array(self::$permission_cache[$this->id])) {
-                self::$permission_cache[$this->id] = [];
-            }
-            self::$permission_cache[$this->id][$user->id] = $global_perm;
-        }
-        return $global_perm;
+
     }
 
     /**
@@ -2417,8 +2413,8 @@ class Resource extends SimpleORMap implements StudipItem
             return false;
         }
 
-        if ($user->perms == 'root') {
-            //root users have all permissions for the resource.
+
+        if (ResourceManager::getGlobalResourcePermission($user) === 'admin') {
             return true;
         }
 
@@ -2435,7 +2431,7 @@ class Resource extends SimpleORMap implements StudipItem
                 return false;
             }
         } elseif ($permission === 'autor') {
-            if ($perm_level != 'admin' && GlobalResourceLock::currentlyLocked()) {
+            if (GlobalResourceLock::currentlyLocked()) {
                 //A global resource lock means no writing actions are permitted.
                 return false;
             }
@@ -2445,7 +2441,7 @@ class Resource extends SimpleORMap implements StudipItem
                 return false;
             }
         } elseif ($permission === 'tutor') {
-            if ($perm_level != 'admin' && GlobalResourceLock::currentlyLocked()) {
+            if (GlobalResourceLock::currentlyLocked()) {
                 //A global resource lock means no writing actions are permitted.
                 return false;
             }

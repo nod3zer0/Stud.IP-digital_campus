@@ -94,7 +94,7 @@
                         </td>
                         <td>
                             <?= htmlReady($permission->perms) ?>
-                            <? if ($current_global_lock and ($permission->perms != 'admin')): ?>
+                            <? if ($current_global_lock) : ?>
                                 <?= Icon::create('exclaim', 'attention')->asImg(
                                     '20px',
                                     [
