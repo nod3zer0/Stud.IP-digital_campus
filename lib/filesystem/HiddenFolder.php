@@ -135,10 +135,8 @@ class HiddenFolder extends PermissionEnabledFolder
         $fileref = FileRef::toObject($fileref_or_id);
 
         if (is_object($fileref)) {
-            if (($this->download_allowed || Seminar_Perm::get()->have_studip_perm('tutor', $this->range_id, $user_id))
-                && $this->getParent()->isVisible($user_id)
-                && $this->getParent()->isReadable($user_id)) {
-                return $fileref->terms_of_use->IsDownloadable($this->range_id, $this->range_type, true, $user_id);
+            if ($this->download_allowed || Seminar_Perm::get()->have_studip_perm('tutor', $this->range_id, $user_id)) {
+                return $fileref->terms_of_use->isDownloadable($this->range_id, $this->range_type, true, $user_id);
             }
         }
         return false;
