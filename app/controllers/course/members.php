@@ -1364,6 +1364,10 @@ class Course_MembersController extends AuthenticatedController
             } else {
                 PageLayout::postWarning(_('Keine Veränderungen vorgenommen.'));
             }
+        } else if ($course->aux_lock_rule_forced) {
+            if (empty(array_column($this->datafields, 'content'))) {
+                PageLayout::postWarning(_('Um die Anmeldung zur Veranstaltung abzuschließen, müssen Sie zusätzliche Angaben auf dieser Seite machen.'));
+            }
         }
     }
 
