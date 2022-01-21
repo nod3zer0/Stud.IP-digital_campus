@@ -150,7 +150,7 @@ class AutoInsert
 
     private function addUser($user_id, $seminar)
     {
-        $query = "INSERT IGNORE INTO seminar_user (Seminar_id, user_id, status, gruppe, mkdate) 
+        $query = "INSERT IGNORE INTO seminar_user (Seminar_id, user_id, status, gruppe, mkdate)
             VALUES (?, ?, 'autor', ?, UNIX_TIMESTAMP())";
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$seminar['Seminar_id'], $user_id, select_group($seminar['start_time'])]);
@@ -353,12 +353,11 @@ class AutoInsert
 
     /**
      * Returns the cache for seminars.
-     * @return StudipCachedArray
      */
-    protected static function getSeminarCache()
+    protected static function getSeminarCache(): StudipCachedArray
     {
         if (self::$seminar_cache === null) {
-            self::$seminar_cache = new StudipCachedArray('/AutoInsertSeminars');
+            self::$seminar_cache = new StudipCachedArray('AutoInsertSeminars');
         }
         return self::$seminar_cache;
     }

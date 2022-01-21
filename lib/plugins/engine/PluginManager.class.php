@@ -29,11 +29,6 @@ class PluginManager
     private $plugins_activated_cache;
 
     /**
-     * cache of plugin default activations
-     */
-    private $plugins_default_activations_cache;
-
-    /**
      * Returns the PluginManager singleton instance.
      */
     public static function getInstance ()
@@ -56,7 +51,6 @@ class PluginManager
         $this->plugin_cache = [];
 
         $this->plugins_activated_cache = new StudipCachedArray('/PluginActivations');
-        $this->plugins_default_activations_cache = new StudipCachedArray('/PluginDefaultActivations');
     }
 
     /**
@@ -324,8 +318,8 @@ class PluginManager
      * Set the list of institutes for which a specific plugin should
      * be enabled by default.
      *
-     * @param $id          id of the plugin
-     * @param $institutes  array of institute ids
+     * @param int   $id          id of the plugin
+     * @param array $institutes  array of institute ids
      */
     public function setDefaultActivations ($id, $institutes)
     {
@@ -339,8 +333,6 @@ class PluginManager
         foreach ($institutes as $instid) {
             $stmt->execute([$id, $instid]);
         }
-
-        $this->plugins_default_activations_cache->clear();
     }
 
     /**
@@ -493,7 +485,7 @@ class PluginManager
     /**
      * Remove registration for the given plugin from the data base.
      *
-     * @param $id        id of the plugin
+     * @param int $id id of the plugin
      */
     public function unregisterPlugin ($id)
     {
@@ -509,8 +501,7 @@ class PluginManager
 
             unset($this->plugins[$id]);
 
-            $this->plugins_default_activations_cache->clear();
-            $this->plugins_activated_cache->clear();
+            unset($this->plugins_activated_cache[$id]);
         }
     }
 

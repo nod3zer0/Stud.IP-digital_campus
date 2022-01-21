@@ -3,60 +3,43 @@
  * This class represents an array in cache and removes the neccessity to
  * encode/decode and store the data after every change.
  *
- * Caching is handled by splitting the data into partitions based on the key.
- *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL2 or any later version
  * @since   Stud.IP 5.0
- *
- * @todo Automagic partition size?
  */
-class StudipCachedArray implements ArrayAccess, Countable
+class StudipCachedArray implements ArrayAccess
 {
-    const ENCODE_JSON = 0;
-    const ENCODE_SERIALIZE = 1;
-
     protected $key;
     protected $cache;
-    protected $partitions;
-    protected $partition_by;
-    protected $encoding;
+    protected $duration;
 
     protected $data = [];
 
     /**
      * Constructs the cached array
      *
-     * @param string $key          Cache key where the array is/should be stored
-     * @param mixed  $partition_by Defines the partitioning, this may either be
-     *                             an int which will be length of the substring
-     *                             of the given chache offset or a callable which
-     *                             will return the partition key.
+     * @param string $key    Cache key where the array is/should be stored
+     *                       an int which will be length of the substring
+     *                       of the given chache offset or a callable which
+     *                       will return the partition key.
+     * @param int $duration  Duration in seconds for which the item shall be
+     *                       stored
      */
-    public function __construct($key, $partition_by = 1, $encoding = self::ENCODE_JSON, StudipCache $cache = null)
+    public function __construct(string $key, int $duration = StudipCache::DEFAULT_EXPIRATION)
     {
-        if (!is_callable($partition_by) && !is_int($partition_by)) {
-            throw new Exception('Parameter $partition_by may only be a number or a callable if set');
-        }
-        if (ctype_digit($partition_by) && $partition_by <= 1) {
-            throw new Exception('Parameter $partition_by must be positive and not zero');
-        }
+        $this->key      = self::class . "/{$key}";
+        $this->cache    = StudipCacheFactory::getCache();
+        $this->duration = $duration;
 
-        $this->key          = $key;
-        $this->partition_by = $partition_by;
-        $this->encoding     = $encoding;
-        $this->setCache($cache ?? StudipCacheFactory::getCache());
+        $this->reset();
     }
 
     /**
-     * Sets the cache for this array and resets internal states.
-     *
-     * @param StudipCache $cache
+     * Clears cached values from memory, but does not remove them from the cache.
      */
-    public function setCache(StudipCache $cache)
+    public function reset(): void
     {
-        $this->cache = $cache;
-        $this->reset();
+        $this->data = [];
     }
 
     /**
@@ -65,12 +48,10 @@ class StudipCachedArray implements ArrayAccess, Countable
      * @param string $offset Offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
-        return array_key_exists(
-            $offset,
-            $this->loadData($offset)
-        );
+        $this->loadData($offset);
+        return isset($this->data[$offset]);
     }
 
     /**
@@ -81,7 +62,8 @@ class StudipCachedArray implements ArrayAccess, Countable
      */
     public function offsetGet($offset)
     {
-        return $this->loadData($offset)[$offset] ?? null;
+        $this->loadData($offset);
+        return $this->data[$offset];
     }
 
     /**
@@ -90,11 +72,17 @@ class StudipCachedArray implements ArrayAccess, Countable
      * @param string $offset Offset
      * @param mixed  $value  Value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
-        $this->loadData($offset)[$offset] = $value;
+        if ($offset === null) {
+            throw new Exception('Cannot push to cached array, use StudipCachedArray instead');
+        }
 
-        $this->storeData($offset);
+        if (!isset($this->data[$offset]) || $this->data[$offset] !== $value) {
+            $this->data[$offset] = $value;
+
+            $this->storeData($offset);
+        }
     }
 
     /**
@@ -102,180 +90,72 @@ class StudipCachedArray implements ArrayAccess, Countable
      *
      * @param string $offset Offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
-        $data = &$this->loadData($offset);
-
-        if (array_key_exists($offset, $data)) {
-            unset($data[$offset]);
-            $this->storeData($offset);
-        }
-    }
-
-    /**
-     * Counts all values in chache.
-     * @return int
-     */
-    public function count()
-    {
-        return array_sum($this->partitions);
-    }
-
-    /**
-     * Clears all data.
-     */
-    public function clear()
-    {
-        foreach (array_keys($this->partitions) as $partition) {
-            $this->cache->expire($this->getPartitionKey($partition));
-        }
-
-        $this->partitions = [];
-        $this->data = [];
-
-        $this->storeData();
-    }
-
-    /**
-     * Returns all items in cache as an array.
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        $result = [];
-        foreach (array_keys($this->partitions) as $partition) {
-            foreach ($this->loadData($partition) as $key => $value) {
-                $result[$key] = $value;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Loads all partitions of this cache and resets the data array
-     * @return array
-     */
-    public function reset()
-    {
-        $this->data = [];
-        $this->partitions = [];
-
-        $cached = $this->cache->read($this->key);
-        if ($cached) {
-            $this->partitions = $this->decode($cached);
-        }
+        $this->cache->expire($this->getCacheKey($offset));
+        unset($this->data[$offset]);
     }
 
     /**
      * Loads the data from cache.
+     *
+     * @param string $offset Offset to load
      */
-    protected function &loadData($offset)
+    protected function loadData(string $offset)
     {
-        $partition = $this->getPartition($offset);
-        if (!isset($this->data[$partition])) {
-            $cached = $this->cache->read($this->getPartitionKey($offset));
-            if ($cached) {
-                $this->data[$partition] = $this->decode($cached);
-            } else {
-                $this->data[$partition] = [];
-            }
+        if (!array_key_exists($offset, $this->data)) {
+            $cached = $this->cache->read($this->getCacheKey($offset));
+            $this->data[$offset] = $this->swapNullAndFalse($cached);
         }
 
-        return $this->data[$partition];
+        return $this->data[$offset];
     }
 
     /**
      * Stores the data back to the cache.
+     * Data needs to be wrapped in another array so that we can correctly read
+     * back a value of "false".
+     *
+     * @param string $offset Offset to store
      */
-    protected function storeData($offset = null)
+    protected function storeData(string $offset): void
     {
-        $partition = false;
-
-        if ($offset !== null) {
-            $partition = $this->getPartition($offset);
-            if (!array_key_exists($partition, $this->partitions) || count($this->data[$partition]) > 0) {
-                $this->partitions[$partition] = count($this->data[$partition]);
-            } elseif (array_key_exists($partition, $this->partitions) && count($this->data[$partition]) === 0) {
-                unset($this->partitions[$partition]);
-            }
-        }
-
-        foreach ($this->data as $p => $data) {
-            if ($partition === false || $p == $partition) {
-                $key = $this->getPartitionKey($p);
-
-                if (count($data) === 0) {
-                    $this->cache->expire($key);
-                } else {
-                    $this->cache->write($key, $this->encode($data));
-                }
-            }
-        }
-
-        if (count($this->partitions) === 0) {
-            $this->cache->expire($this->key);
-        } else {
-            $this->cache->write($this->key, $this->encode($this->partitions));
-        }
+        $this->cache->write(
+            $this->getCacheKey($offset),
+            $this->swapNullAndFalse($this->data[$offset]),
+            $this->duration
+        );
     }
 
     /**
-     * Encodes the given data based on the set encoding mechanism.
-     * @param  mixed $data
+     * Returns the cache key for a specific offset.
+     *
+     * @param string $offset Offset of the cached item
      * @return string
      */
-    protected function encode($data)
+    private function getCacheKey(string $offset): string
     {
-        if ($this->encoding === self::ENCODE_JSON) {
-            return json_encode($data);
-        }
-
-        if ($this->encoding === self::ENCODE_SERIALIZE) {
-            return serialize($data);
-        }
-
-        throw new Exception('Unknown encoding type');
+        return rtrim($this->key, '/') . "/{$offset}";
     }
 
     /**
-     * Decodes the given data based on the set encoding mechanism.
-     * @param  string $data
+     * Swaps null and false for a value because the Stud.IP cache will return
+     * false if a cached item is not found instead of null.
+     *
+     * @param mixed $value Value to swap if appropriate
+     *
      * @return mixed
      */
-    protected function decode($data)
+    private function swapNullAndFalse($value)
     {
-        if ($this->encoding === self::ENCODE_JSON) {
-            return json_decode($data, true);
+        if ($value === null) {
+            return false;
         }
 
-        if ($this->encoding === self::ENCODE_SERIALIZE) {
-            return unserialize($data);
+        if ($value === false) {
+            return null;
         }
 
-        throw new Exception('Unknown decoding type');
-    }
-
-    /**
-     * Extracts the partition from the key.
-     * @param  string $offset
-     * @return string partition
-     */
-    protected function getPartition($offset)
-    {
-        if (is_callable($this->partition_by)) {
-            return call_user_func($this->partition_by, $offset);
-        }
-        return mb_substr($offset, 0, $this->partition_by);
-    }
-
-    /**
-     * Returns the partition key for storage.
-     *
-     * @param  string $offset
-     * @return string
-     */
-    protected function getPartitionKey($offset)
-    {
-        return rtrim($this->key, '/') . '/' . $this->getPartition($offset);
+        return $value;
     }
 }

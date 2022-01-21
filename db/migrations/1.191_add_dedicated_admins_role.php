@@ -14,7 +14,7 @@ class AddDedicatedAdminsRole extends Migration
             INSERT INTO `roles` (`rolename`, `system`)
             VALUES ('DedicatedAdmin', 'n');
         ");
-        RolePersistence::expireCaches();
+        RolePersistence::expireRolesCache();
     }
 
     public function down()
@@ -22,7 +22,7 @@ class AddDedicatedAdminsRole extends Migration
         DBManager::get()->execute("
             DELETE FROM `roles` WHERE `rolename` = 'DedicatedAdmin' AND `system` = 'n'
         ");
-        RolePersistence::expireCaches();
+        RolePersistence::expireRolesCache();
     }
 
 }

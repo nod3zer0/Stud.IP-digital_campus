@@ -80,32 +80,8 @@ if (isset($config['modules']['config']['Db'])) {
     //DBManager::getInstance()->setConnection('studip', 'sqlite://'. $GLOBALS ,'', '');
 }
 
-// create "fake" cache class
-if (!class_exists('StudipArrayCache')) {
-    class StudipArrayCache implements StudipCache {
-        public $data = [];
-
-        function expire($key)
-        {
-            unset($this->data);
-        }
-
-        function flush()
-        {
-            $this->data = [];
-        }
-
-        function read($key)
-        {
-            return $this->data[$key];
-        }
-
-        function write($name, $content, $expire = 43200)
-        {
-            return ($this->data[$name] = $content);
-        }
-    }
-}
+// Disable caching to fallback to memory cache
+$GLOBALS['CACHING_ENABLE'] = false;
 
 // SimpleORMapFake
 if (!class_exists('StudipTestHelper')) {
@@ -114,12 +90,6 @@ if (!class_exists('StudipTestHelper')) {
         static function set_up_tables($tables)
         {
             // first step, set fake cache
-            $testconfig = new Config(['SYSTEMCACHE' => ['type' => 'StudipArrayCache']]);
-            Config::set($testconfig);
-            StudipCacheFactory::setConfig($testconfig);
-
-            $GLOBALS['CACHING_ENABLE'] = true;
-
             $cache = StudipCacheFactory::getCache(false);
 
             // second step, expire table scheme
@@ -152,10 +122,6 @@ if (!class_exists('StudipTestHelper')) {
         static function tear_down_tables()
         {
             SimpleORMap::expireTableScheme();
-            Config::set(null);
-
-            StudipCacheFactory::setConfig(null);
-            $GLOBALS['CACHING_ENABLE'] = false;
         }
     }
 }

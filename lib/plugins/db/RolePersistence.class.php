@@ -13,32 +13,36 @@
  */
 class RolePersistence
 {
+    const ROLES_CACHE_KEY = 'plugins/rolepersistence/roles';
+
     /**
      * Returns all available roles.
      *
      * @return array Roles
      */
-    public static function getAllRoles()
+    public static function getAllRoles(): array
     {
         // read cache
-        $cache = self::getRolesCache();
+        $cache = StudipCacheFactory::getCache();
 
         // cache miss, retrieve from database
-        if (count($cache) === 0) {
+        $roles = $cache->read(self::ROLES_CACHE_KEY);
+        if (!$roles) {
             $query = "SELECT `roleid`, `rolename`, `system` = 'y' AS `is_system`
                       FROM `roles`
                       ORDER BY `rolename`";
             $statement = DBManager::get()->query($query);
             $statement->setFetchMode(PDO::FETCH_ASSOC);
 
+            $roles = [];
             foreach ($statement as $row) {
-                extract($row);
-
-                $cache[$roleid] = new Role($roleid, $rolename, $is_system);
+                $roles[$row['roleid']] = new Role($row['roleid'], $row['rolename'], $row['is_system']);
             }
+
+            $cache->write(self::ROLES_CACHE_KEY, $roles);
         }
 
-        return $cache->getArrayCopy();
+        return $roles;
     }
 
     public static function getRoleIdByName($name)
@@ -55,7 +59,7 @@ class RolePersistence
      * Inserts the role into the database or does an update, if it's already there
      *
      * @param Role $role
-     * @return the role id
+     * @return int the role id
      */
     public static function saveRole($role)
     {
@@ -469,28 +473,13 @@ class RolePersistence
     }
 
     // Cache operations
-    private static $roles_cache = null;
     private static $user_roles_cache = null;
     private static $plugin_roles_cache = null;
-
-    private static function getRolesCache()
-    {
-        if (self::$roles_cache === null) {
-            self::$roles_cache = new StudipCachedArray(
-                '/Roles',
-                function () {
-                    return 'All';
-                },
-                StudipCachedArray::ENCODE_SERIALIZE
-            );
-        }
-        return self::$roles_cache;
-    }
 
     private static function getUserRolesCache()
     {
         if (self::$user_roles_cache === null) {
-            self::$user_roles_cache = new StudipCachedArray('/UserRoles');
+            self::$user_roles_cache = new StudipCachedArray('UserRoles');
         }
         return self::$user_roles_cache;
     }
@@ -498,16 +487,14 @@ class RolePersistence
     private static function getPluginRolesCache()
     {
         if (self::$plugin_roles_cache === null) {
-            self::$plugin_roles_cache = new StudipCachedArray('/PluginRoles');
+            self::$plugin_roles_cache = new StudipCachedArray('PluginRoles');
         }
         return self::$plugin_roles_cache;
     }
 
-    public static function expireCaches()
+    public static function expireRolesCache()
     {
-        self::getRolesCache()->clear();
-        self::getUserRolesCache()->clear();
-        self::getPluginRolesCache()->clear();
+        StudipCacheFactory::getCache()->expire(self::ROLES_CACHE_KEY);
     }
 
     public static function expireUserCache($user_id)

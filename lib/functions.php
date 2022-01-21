@@ -197,7 +197,7 @@ function get_object_type($id, $check_only = [])
 
     // Initialize cache array
     if ($cache === null) {
-        $cache = new StudipCachedArray('/Studip/ObjectTypes');
+        $cache = new StudipCachedArray('Studip/ObjectTypes');
     }
 
     // No cached entry available? Go ahead and determine type
