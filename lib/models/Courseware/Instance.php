@@ -37,12 +37,19 @@ class Instance
         $range->getConfiguration()->delete('COURSEWARE_SEQUENTIAL_PROGRESSION');
         $range->getConfiguration()->delete('COURSEWARE_EDITING_PERMISSION');
 
-        $last_element_configs = \ConfigValue::findBySQL('field = ? AND value LIKE ?', ['COURSEWARE_LAST_ELEMENT', '%'.$range->getRangeId().'%']);
+        $last_element_configs = \ConfigValue::findBySQL('field = ? AND value LIKE ?', [
+            'COURSEWARE_LAST_ELEMENT',
+            '%' . $range->getRangeId() . '%',
+        ]);
         foreach ($last_element_configs as $config) {
             $arr = json_decode($config->value, true);
-            $arr = array_filter($arr, function ($key) use ($range) {
-                return $key !== $range->id;
-            }, ARRAY_FILTER_USE_KEY);
+            $arr = array_filter(
+                $arr,
+                function ($key) use ($range) {
+                    return $key !== $range->id;
+                },
+                ARRAY_FILTER_USE_KEY
+            );
             \UserConfig::get($config->range_id)->unsetValue('COURSEWARE_LAST_ELEMENT');
             \UserConfig::get($config->range_id)->store('COURSEWARE_LAST_ELEMENT', $arr);
         }
@@ -270,8 +277,23 @@ class Instance
         return $data;
     }
 
-    public function findAllBlocksGroupedByStructuralElementId(): iterable
+    /**
+     * Find all blocks of this instance and group them by their structural element's ID.
+     * You may specify your own `$formatter` instead of the default one which stores the blocks as instances of \Courseware\Block.
+     *
+     * @param ?callable(array $row): mixed $formatter Provide your own callable if you need something else instead of
+     *                                                full-blown instances of \Courseware\Block.
+     * @return iterable all the (optionally formatted) blocks grouped by the IDs of the structural element containing
+     *                  that block.
+     */
+    public function findAllBlocksGroupedByStructuralElementId(callable $formatter = null): iterable
     {
+        if (!$formatter) {
+            $formatter = function ($row) {
+                return \Courseware\Block::build($row, false);
+            };
+        }
+
         $sql = 'SELECT se.id AS structural_element_id, b.*
                 FROM cw_structural_elements se
                 JOIN cw_containers c ON se.id = c.structural_element_id
@@ -286,11 +308,10 @@ class Instance
             $structuralElementId = $row['structural_element_id'];
             unset($row['structural_element_id']);
 
-            $block = \Courseware\Block::build($row, false);
             if (!isset($data[$structuralElementId])) {
                 $data[$structuralElementId] = [];
             }
-            $data[$structuralElementId][] = $block;
+            $data[$structuralElementId][] = $formatter($row);
         }
 
         return $data;

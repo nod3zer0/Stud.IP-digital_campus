@@ -131,7 +131,7 @@ class Course_CoursewareController extends AuthenticatedController
         return array_combine(array_column($elements, 'id'), $elements);
     }
 
-    private function computeChildrenOf(iterable $elements): iterable
+    private function computeChildrenOf(iterable &$elements): iterable
     {
         $childrenOf = [];
         foreach ($elements as $elementId => $element) {
@@ -149,19 +149,28 @@ class Course_CoursewareController extends AuthenticatedController
     private function computeSelfProgresses(
         Instance $instance,
         User $user,
-        iterable $elements,
+        iterable &$elements,
         bool $showProgressForAllParticipants
     ): iterable {
         $progress = [];
         /** @var \Course $course */
         $course = $instance->getRange();
-        $allBlocks = $instance->findAllBlocksGroupedByStructuralElementId();
+        $allBlockIds = $instance->findAllBlocksGroupedByStructuralElementId(function ($row) {
+            return $row['id'];
+        });
         $courseMemberIds = $showProgressForAllParticipants
             ? array_column($course->getMembersWithStatus('autor'), 'user_id')
             : [$user->getId()];
-        $userProgresses = UserProgress::findBySQL('user_id IN (?)', [$courseMemberIds]);
+
+        $sql =
+            'SELECT block_id, COUNT(grade) as count, SUM(grade) as grade ' .
+            'FROM cw_user_progresses ' .
+            'WHERE block_id IN (?) AND user_id IN (?) ' .
+            'GROUP BY block_id';
+        $userProgresses = \DBManager::get()->fetchGrouped($sql, [$allBlockIds, $courseMemberIds]);
+
         foreach ($elements as $elementId => $element) {
-            $selfProgress = $this->getSelfProgresses($allBlocks, $elementId, $userProgresses, $courseMemberIds);
+            $selfProgress = $this->getSelfProgresses($allBlockIds, $elementId, $userProgresses, $courseMemberIds);
             $progress[$elementId] = [
                 'self' => $selfProgress['counter'] ? $selfProgress['progress'] / $selfProgress['counter'] : 1,
             ];
@@ -171,31 +180,35 @@ class Course_CoursewareController extends AuthenticatedController
     }
 
     private function getSelfProgresses(
-        array $allBlocks,
+        array &$allBlockIds,
         string $elementId,
-        array $userProgresses,
-        array $courseMemberIds
+        array &$userProgresses,
+        array &$courseMemberIds
     ): array {
-        $blks = $allBlocks[$elementId] ?: [];
+        $blks = $allBlockIds[$elementId] ?: [];
+        if (!count($blks)) {
+            return [
+                'counter' => 0,
+                'progress' => 1,
+            ];
+        }
 
         $data = [
             'counter' => count($blks),
             'progress' => 0,
         ];
+
         $usersCounter = count($courseMemberIds);
         foreach ($blks as $blk) {
-            $progresses = array_filter($userProgresses, function ($progress) use ($blk, $courseMemberIds) {
-                return $progress->block_id === $blk->getId() && in_array($progress->user_id, $courseMemberIds);
-            });
-            $usersProgress = count($progresses) ? array_sum(array_column($progresses, 'grade')) : 0;
-
+            $progresses = $userProgresses[$blk];
+            $usersProgress = $progresses['count'] ? (float) $progresses['sum'] : 0;
             $data['progress'] += $usersProgress / $usersCounter;
         }
 
         return $data;
     }
 
-    private function computeCumulativeProgresses(Instance $instance, iterable $elements, iterable $progress): iterable
+    private function computeCumulativeProgresses(Instance $instance, iterable &$elements, iterable &$progress): iterable
     {
         $childrenOf = $this->computeChildrenOf($elements);
 
@@ -225,7 +238,7 @@ class Course_CoursewareController extends AuthenticatedController
         return $progress;
     }
 
-    private function prepareProgressData(iterable $elements, iterable $progress): iterable
+    private function prepareProgressData(iterable &$elements, iterable &$progress): iterable
     {
         $data = [];
         foreach ($elements as $elementId => $element) {
@@ -246,7 +259,7 @@ class Course_CoursewareController extends AuthenticatedController
         return $data;
     }
 
-    private function getChapterCounter(array $chapters): array
+    private function getChapterCounter(array &$chapters): array
     {
         $finished = 0;
         $started = 0;
