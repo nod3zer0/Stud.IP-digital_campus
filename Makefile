@@ -93,7 +93,7 @@ js-%.po: js-%.pot
 
 js-%.json: js-%.po
 	$(NPM_BIN)/gettext-compile --output $@ $<
-	sed -i 's/^{[^{]*//;s/}$$//' $@
+	sed -i~ 's/^{[^{]*//;s/}$$//' $@
 
 %.pot: $(PHP_SOURCES)
 	xgettext -o $@ --from-code=UTF-8 $(PHP_SOURCES)
