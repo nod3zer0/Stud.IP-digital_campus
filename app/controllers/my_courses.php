@@ -561,6 +561,9 @@ class MyCoursesController extends AuthenticatedController
                     // enable others to do something after the user has been deleted
                     NotificationCenter::postNotification('UserDidLeaveCourse', $course_id, $GLOBALS['user']->id);
 
+                    // Delete course related datafield entries
+                    DatafieldEntryModel::deleteBySQL('range_id = ? AND sec_range_id = ?', [$GLOBALS['user']->id, $course_id]);
+
                     // Delete from statusgroups
                     foreach (Statusgruppen::findBySeminar_id($course_id) as $group) {
                         $group->removeUser($GLOBALS['user']->id, true);

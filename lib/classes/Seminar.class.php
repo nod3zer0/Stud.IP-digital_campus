@@ -2048,6 +2048,9 @@ class Seminar
                 }
             }
 
+            // Delete course related datafield entries
+            DatafieldEntryModel::deleteBySQL('range_id = ? AND sec_range_id = ?', [$user_id, $this->id]);
+
             // Remove from associated status groups
             foreach (Statusgruppen::findBySeminar_id($this->id) as $group) {
                 $group->removeUser($user_id, true);
