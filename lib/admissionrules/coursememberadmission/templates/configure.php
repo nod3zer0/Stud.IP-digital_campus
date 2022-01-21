@@ -38,32 +38,36 @@
     <?= _('Veranstaltung suchen') ?>:
 </label>
 
-<div style="display:inline-block">
+<div style="display:flex; align-items: flex-start; column-gap: 1em; flex-wrap: wrap">
 
     <?=
     QuickSearch::get("mandatory_course_id", new SeminarSearch('number-name-lecturer'))
         ->fireJSFunctionOnSelect('addcourse')
+        ->setInputStyle('flex: 0 0 40%')
         ->render();
     ?>
-    <?= Semester::getSemesterSelector(
-        ['name' => 'search_sem_sem'],
-        Semester::getIndexById($_SESSION['_default_sem'], false, !$GLOBALS['perm']->have_perm('admin')),
-        'key',
-        false
-    )?>
-    <br><br>
+
+    <div style="flex: 0 0 40%">
+        <?= Semester::getSemesterSelector(
+            ['name' => 'search_sem_sem'],
+            Semester::getIndexById($_SESSION['_default_sem'], false, !$GLOBALS['perm']->have_perm('admin')),
+            'key',
+            false
+        )?>
+    </div>
+    <br/><br/>
     <ul>
-    <? foreach ($courses as $course) : ?>
-        <li>
-            <input type="hidden" id="<?= htmlReady($course->id) ?>"
-                   name="courses_to_add[<?= htmlReady($course->id) ?>]"
-                   value="<?= htmlReady($course->name) ?>">
-            <span><?= htmlReady($course->name) ?></span>
-            <a href="#" onclick="return removecourse('<?= htmlReady($course->id) ?>')">
-                <?= Icon::create('trash') ?>
-            </a>
-        </li>
-    <? endforeach ?>
+        <? foreach ($courses as $course) : ?>
+            <li>
+                <input type="hidden" id="<?= htmlReady($course->id) ?>"
+                       name="courses_to_add[<?= htmlReady($course->id) ?>]"
+                       value="<?= htmlReady($course->name) ?>">
+                <span><?= htmlReady($course->name) ?></span>
+                <a href="#" onclick="return removecourse('<?= htmlReady($course->id) ?>')">
+                    <?= Icon::create('trash') ?>
+                </a>
+            </li>
+        <? endforeach ?>
     </ul>
 </div>
 
