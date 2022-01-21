@@ -8,6 +8,7 @@
 
 <form action="?" method="post" id="bulk">
     <?= CSRFProtection::tokenTag() ?>
+    <input type="hidden" name="mbox" value="<?= $received ? 'rec' : 'snd' ?>">
     <table class="default" id="messages">
         <caption>
             <?= $received ? _("Eingang") : _("Gesendet") ?>
