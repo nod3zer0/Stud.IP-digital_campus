@@ -16,4 +16,4 @@ können.
 Also reinsehen und ausprobieren... Viel Spass damit!
 You get in an try out. Have a lot of fun!
 
-- The StudIP Core Group <info@studip.de> 2021
+The StudIP Core Group <[info@studip.de](mailto:info@studip.de)> 2022
