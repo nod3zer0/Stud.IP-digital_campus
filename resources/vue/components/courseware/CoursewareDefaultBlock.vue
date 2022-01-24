@@ -67,7 +67,7 @@
             :title="textDeleteTitle"
             :question="textDeleteAlert"
             height="180"
-            width="350"
+            width="360"
             @confirm="executeDelete"
             @close="showDeleteDialog = false"
         ></studip-dialog>
