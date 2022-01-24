@@ -81,7 +81,7 @@ export default {
         }),
         initCurrentData() {
             this.currentText = this.text;
-            if (this.userData.attributes.payload.confirm) {
+            if (this.userData?.attributes?.payload?.confirm) {
                 this.confirm = this.userData.attributes.payload.confirm;
             }
         },
