@@ -79,9 +79,14 @@ const SkipLinks = {
             SkipLinks.moveSkipLinkNavigationOut();
             jQuery('.focus_box').removeClass('focus_box');
             jQuery(fragment).addClass('focus_box');
-            jQuery(fragment)
-                .click()
-                .focus();
+            if (jQuery(fragment).is(':focusable')) {
+                jQuery(fragment)
+                    .click()
+                    .focus();
+            } else {
+                //Set the focus on the first focusable element:
+                jQuery(fragment).find(':focusable').eq(0).focus();
+            }
             SkipLinks.activeElement = fragment;
             return true;
         } else {
