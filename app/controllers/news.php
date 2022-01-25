@@ -53,6 +53,23 @@ class NewsController extends StudipController
                 'icon'  => 'person',
             ],
         ];
+
+        $this->priorities = [
+            0 => '0 (' . _('normal') . ')',
+            1 => '1 (' . _('sehr niedrig') . ')',
+            2 => '2',
+            3 => '3',
+            4 => '4',
+            5 => '5',
+            6 => '6',
+            7 => '7',
+            8 => '8',
+            9 => '9',
+           10 => '10 (' . _('sehr hoch') . ')',
+       ];
+
+       $this->roles = NewsRoles::getAvailableRoles();
+       $this->rolesStats = RolePersistence::getStatistics();
     }
 
     /**
@@ -166,6 +183,7 @@ class NewsController extends StudipController
             'news_basic' => true,
             'news_comments' => false,
             'news_areas' => false,
+            'news_visibility' => false,
         ];
 
         if ($context_range) {
@@ -197,6 +215,15 @@ class NewsController extends StudipController
         if (!$news->havePermission('edit') && !$news->isNew()) {
             throw new AccessDeniedException();
         }
+
+        if(!$news->isNew()){
+            $this->assigned = NewsRoles::getRoles($id);
+            if ($this->assigned){
+                $this->news_isvisible['news_visibility'] = true;
+            }
+            $this->roles = NewsRoles::getAvailableRoles($id);
+        }
+
         // if form sent, get news data by post vars
         if (Request::get('news_isvisible')) {
             // visible categories, selected areas, topic, and body are utf8 encoded when sent via ajax
@@ -216,6 +243,13 @@ class NewsController extends StudipController
                                   ? $this->getTimeStamp(Request::get('news_enddate'), 'end') - $news->date
                                   : '';
             $news->allow_comments = Request::bool('news_allow_comments', false);
+            $news->prio = Request::int('news_prio', 0);
+            $assignedroles = Request::intArray('assignedroles',false);
+
+            $this->assigned = NewsRoles::load($assignedroles);
+            if ($this->assigned){
+                $this->news_isvisible['news_visibility'] = true;
+            }
         } elseif ($id) {
             // if news id given check for valid id and load ranges
             if ($news->isNew()) {
@@ -438,6 +472,10 @@ class NewsController extends StudipController
                 }
 
                 $news->store();
+
+                if ($GLOBALS['perm']->have_perm('admin')) {
+                    NewsRoles::update($news->id, $assignedroles);
+                }
 
                 PageLayout::postSuccess(_('Die Ankündigung wurde gespeichert.'));
                 if (!Request::isXhr() && !$id) {

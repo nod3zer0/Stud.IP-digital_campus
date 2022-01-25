@@ -36,6 +36,7 @@ require_once 'lib/object.inc.php';
  * @property string user_id database column
  * @property string expire database column
  * @property string allow_comments database column
+ * @property int prio database column
  * @property string chdate database column
  * @property string chdate_uid database column
  * @property string mkdate database column
@@ -63,6 +64,11 @@ class StudipNews extends SimpleORMap implements PrivacyObject
         $config['belongs_to']['owner'] = [
             'class_name'  => 'User',
             'foreign_key' => 'user_id',
+        ];
+        $config['has_many']['news_roles'] = [
+            'class_name'        => NewsRoles::class,
+            'assoc_foreign_key' => 'news_id',
+            'on_delete'         => 'delete'
         ];
 
         $config['i18n_fields']['topic'] = true;
@@ -96,25 +102,33 @@ class StudipNews extends SimpleORMap implements PrivacyObject
                   INNER JOIN news USING (news_id)
                   WHERE range_id = ? {$clause} ";
         if (Config::get()->SORT_NEWS_BY_CHDATE) {
-            $query .= "ORDER BY chdate DESC, date DESC, topic ASC";
+            $query .= "ORDER BY prio DESC, chdate DESC, date DESC, topic ASC";
         } else {
-            $query .= "ORDER BY date DESC, chdate DESC, topic ASC";
+            $query .= "ORDER BY prio DESC, date DESC, chdate DESC, topic ASC";
         }
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$range_id]);
         $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+        if (!(isset($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('root'))) {
+            if (!(User::find($range_id) && $GLOBALS['user']->id == $range_id)) {
+                foreach ($ret as $news_id => $news) {
+                    if (!NewsRoles::checkUserAccess($news_id)) {
+                        unset($ret[$news_id]);
+                    }
+                }
+            }
+        }
 
         return $as_objects ? static::GetNewsObjects($ret) : $ret;
     }
 
     public static function CountUnread($range_id = 'studip', $user_id = false)
     {
-        $query = "SELECT SUM(nw.chdate > IFNULL(b.visitdate, :threshold) AND nw.user_id != :user_id)
+        $query = "SELECT nw.news_id as idx, nw.chdate > IFNULL(b.visitdate, :threshold) AS active
                   FROM news_range a
                   LEFT JOIN news nw ON (a.news_id = nw.news_id AND UNIX_TIMESTAMP() BETWEEN date AND date + expire)
                   LEFT JOIN object_user_visits b ON (b.object_id = nw.news_id AND b.user_id = :user_id AND b.plugin_id = :plugin_id)
-                  WHERE a.range_id = :range_id
-                  GROUP BY a.range_id";
+                  WHERE a.range_id = :range_id AND nw.user_id != :user_id";
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':threshold', object_get_visit_threshold());
         $statement->bindValue(':user_id', $user_id ?: $GLOBALS['user']->id);
@@ -122,7 +136,13 @@ class StudipNews extends SimpleORMap implements PrivacyObject
         $plugin_id = object_type_to_id('news');
         $statement->bindValue(':plugin_id', $plugin_id);
         $statement->execute();
-        return (int) $statement->fetchColumn();
+        $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+        foreach ($ret as $news_id => $news) {
+            if (!NewsRoles::checkUserAccess($news_id, $user_id) && !$GLOBALS['perm']->have_perm('root') || !$news['active']) {
+                unset($ret[$news_id]);
+            }
+        }
+        return (int) count($ret);
     }
 
     public static function GetNewsByAuthor($user_id, $as_objects = false)
@@ -131,13 +151,22 @@ class StudipNews extends SimpleORMap implements PrivacyObject
                   FROM news
                   WHERE user_id = ? ";
         if (Config::get()->SORT_NEWS_BY_CHDATE) {
-            $query .= "ORDER BY chdate DESC, date DESC";
+            $query .= "ORDER BY prio DESC, chdate DESC, date DESC";
         } else {
-            $query .= "ORDER BY date DESC, chdate DESC";
+            $query .= "ORDER BY prio DESC, date DESC, chdate DESC";
         }
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$user_id]);
         $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+        if (!(isset($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('root'))) {
+            if ($GLOBALS['user']->id != $user_id) {
+                foreach ($ret as $news_id => $news) {
+                    if (!NewsRoles::checkUserAccess($news_id)) {
+                        unset($ret[$news_id]);
+                    }
+                }
+            }
+        }
 
         return $as_objects ? static::GetNewsObjects($ret) : $ret;
     }

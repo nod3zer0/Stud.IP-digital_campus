@@ -23,6 +23,7 @@
     <input type="hidden" name="news_basic_js" value="">
     <input type="hidden" name="news_comments_js" value="">
     <input type="hidden" name="news_areas_js" value="">
+    <input type="hidden" name="news_visibility_js" value="">
     <input type="hidden" name="news_isvisible" value="<?=htmlReady(json_encode($news_isvisible))?>">
     <input type="hidden" name="news_selectable_areas" value="<?=htmlReady(json_encode($area_options_selectable))?>">
     <input type="hidden" name="news_selected_areas" value="<?=htmlReady(json_encode($area_options_selected))?>">
@@ -256,6 +257,50 @@
         </div>
     </fieldset>
 
+    <fieldset <?= $news_isvisible['news_visibility'] ? '' : 'class="collapsed"' ?>>
+        <legend class="news_visibility_header" id="news_visibility">
+            <?= _('Sichtbarkeitseinstellungen') ?>
+        </legend>
+
+        <? if ($anker == 'news_visibility') : ?>
+            <a name='anker'></a>
+        <? endif ?>
+
+        <label>
+            <?= _('Priorität') ?>
+
+            <select name="news_prio">
+                <? foreach ($priorities as $key => $label) : ?>
+                    <option value ="<?= $key ?>"<?= $news->prio == $key ? ' selected' : '' ?>><?= $label ?></option>
+                <? endforeach ?>
+            </select>
+        </label>
+        <? if ($GLOBALS['perm']->have_perm('admin')) : ?>
+            <label>
+                <?= _('Sichtbarkeit') ?>
+
+                <select id="assignedroles" name="assignedroles[]" multiple>
+                    <? if ($assigned) : ?>
+                        <? foreach ($assigned as $assignedrole) : ?>
+                            <option value="<?= $assignedrole->getRoleid() ?>" selected>
+                                <?= htmlReady($assignedrole->getRolename()) ?>
+                                <? if ($assignedrole->getSystemtype()) : ?>[<?= _('Systemrolle') ?>]<? endif ?>
+                                (<?= $rolesStats[$assignedrole->getRoleid()]['explicit'] + $rolesStats[$assignedrole->getRoleid()]['implicit'] ?>)
+                            </option>
+                        <? endforeach ?>
+                    <? endif ?>
+                    <? foreach ($roles as $role) : ?>
+                        <option value="<?= $role->getRoleid() ?>">
+                            <?= htmlReady($role->getRolename()) ?>
+                            <? if ($role->getSystemtype()) : ?>[<?= _('Systemrolle') ?>]<? endif ?>
+                            (<?= $rolesStats[$role->getRoleid()]['explicit'] + $rolesStats[$role->getRoleid()]['implicit'] ?>)
+                        </option>
+                    <? endforeach ?>
+                </select>
+            </label>
+        <? endif ?>
+    </fieldset>
+
     <footer data-dialog-button>
         <? if ($news->isNew()) : ?>
             <?= Button::createAccept(_('Ankündigung erstellen'), 'save_news') ?>
@@ -280,4 +325,9 @@
             event.preventDefault();
         }
     });
+    <? if ($GLOBALS['perm']->have_perm('admin')) : ?>
+        $("#assignedroles").select2({
+            width: '100%'
+        });
+    <? endif ?>
 </script>
