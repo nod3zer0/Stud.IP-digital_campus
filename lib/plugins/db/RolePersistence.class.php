@@ -198,6 +198,10 @@ class RolePersistence
      */
     public static function isAssignedRole($userid, $assignedrole, $institut_id = '')
     {
+        if (!$userid) {
+            return false;
+        }
+
         $faculty_id = $institut_id
                     ? Institute::find($institut_id)->fakultaets_id
                     : null;
