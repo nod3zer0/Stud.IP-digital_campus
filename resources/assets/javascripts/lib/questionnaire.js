@@ -1,6 +1,8 @@
 import { $gettext } from '../lib/gettext.js';
 
 const Questionnaire = {
+    delayedQueue: [],
+    delayedInterval: null,
     lastUpdate: null,
     initialize() {
         STUDIP.JSUpdater.register(
@@ -198,7 +200,42 @@ const Questionnaire = {
         downer.hide().fadeIn();
         thisquestion.hide().fadeIn();
     },
+    addDelayedInit(el, data, isAjax, isMultiple) {
+        this.delayedQueue.push({
+            el,
+            data,
+            isAjax,
+            isMultiple,
+            $el: $(el), // jQueried element (for performance reasons
+            visible: false
+        });
+
+        if (this.delayedInterval === null) {
+            this.delayedInterval = setInterval(() => {
+                this.delayedQueue.forEach(item => {
+                    if (item.$el.is(':visible')) {
+                        this.initVoteEvaluation(item.el, item.data, item.isAjax, item.isMultiple);
+                        item.visible = true;
+                    }
+                });
+
+                this.delayedQueue = this.delayedQueue.filter(item => !item.visible);
+                if (this.delayedQueue.length === 0) {
+                    clearInterval(this.delayedInterval);
+                }
+            }, 100);
+        }
+    },
     initVoteEvaluation: async function (el, data, isAjax, isMultiple) {
+        if ($(el).is(':not(:visible)')) {
+            if (!$(el).data('vote-evaluation-delayed')) {
+                this.addDelayedInit(el, data, isAjax, isMultiple);
+
+                $(el).data('vote-evaluation-delayed', true);
+            }
+
+            return;
+        }
 
         const Chartist = await STUDIP.loadChunk('chartist');
 
