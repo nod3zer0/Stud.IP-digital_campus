@@ -59,6 +59,9 @@ class Admin_BannerController extends AuthenticatedController
             10 => '10 (' . _('sehr hoch') . ')',
         ];
 
+        $this->roles = BannerRoles::getAvailableRoles();
+        $this->rolesStats = RolePersistence::getStatistics();
+
         //Infobox
         $this->setSidebar();
     }
@@ -76,6 +79,8 @@ class Admin_BannerController extends AuthenticatedController
         if ($banner->isNew()) {
             throw new Exception(sprintf(_('Es existiert kein Banner mit der Id "%s"'), $banner->id));
         }
+
+        $this->assigned = BannerRoles::getRoles($banner->id);
     }
 
     /**
@@ -83,11 +88,16 @@ class Admin_BannerController extends AuthenticatedController
      *
      * @param Banner $banner Banner object
      */
-    public function edit_action(Banner $banner)
+    public function edit_action(Banner $banner = null)
     {
         if ($banner->isNew()) {
-            throw new Exception(sprintf(_('Es existiert kein Banner mit der Id "%s"'), $banner->id));
+            PageLayout::setTitle(_('Neues Banner anlegen'));
+        } else {
+            PageLayout::setTitle(_('Banner bearbeiten'));
         }
+
+        $this->assigned = BannerRoles::getRoles($banner->id);
+        $this->roles = BannerRoles::getAvailableRoles($banner->id);
 
         // edit banner input
         if (Request::submitted('speichern')) {
@@ -118,142 +128,12 @@ class Admin_BannerController extends AuthenticatedController
                 $banner_path = $this->bannerupload($upload['tmp_name'], $upload['size'], $upload['name'], $errors);
             }
 
-            if (!$target && $target_type != 'none') {
-                $errors[] = _('Es wurde kein Verweisziel angegeben.');
-            }
-
-            $startDate = explode('.',Request::get('start_date'));
-            if (($x = $this->valid_date(Request::int('start_hour'), Request::int('start_minute'), $startDate[0],$startDate[1], $startDate[2])) == -1) {
-                $errors[] = _('Bitte geben Sie einen gültiges Startdatum ein.');
-            } else {
-                $startdate = $x;
-            }
-
-            $endDate = explode('.',Request::get('end_date'));
-            if (($x = $this->valid_date(Request::int('end_hour'), Request::int('end_minute'), $endDate[0], $endDate[1], $endDate[2])) == -1) {
-                           $errors[] = _('Bitte geben Sie einen gültiges Enddatum ein.');
-            } else {
-                $enddate = $x;
-            }
-
-            switch ($target_type) {
-                case 'url':
-                    if (!preg_match('~^(https?|ftp)://~i', $target)) {
-                        $errors[] = _('Das Verweisziel muss eine gültige URL sein (incl. http://).');
-                    }
-                break;
-                case 'inst':
-                    if (Institute::find($target) === null) {
-                        $errors[] =  _('Die angegebene Einrichtung existiert nicht. '
-                                      .'Bitte geben Sie eine gültige Einrichtungs-ID ein.');
-                    }
-                break;
-                case 'user':
-                    if (User::findByUsername($target) === null) {
-                        $errors[] = _('Der angegebene Username existiert nicht.');
-                    }
-                break;
-                case 'seminar':
-                    try {
-                        Seminar::getInstance($target);
-                    } catch (Exception $e) {
-                        $errors[] =  _('Die angegebene Veranstaltung existiert nicht. '
-                                      .'Bitte geben Sie eine gültige Veranstaltungs-ID ein.');
-                    }
-                break;
-                case 'none':
-                    $target = '';
-                break;
-            }
-
-            if (count($errors) > 0) {
-                PageLayout::postError(_('Es sind folgende Fehler aufgetreten:'), $errors);
-            } else {
-                $banner->banner_path = $banner_path;
-                $banner->description = $description;
-                $banner->alttext     = $alttext;
-                $banner->target_type = $target_type;
-                $banner->target      = $target;
-                $banner->startdate   = $startdate;
-                $banner->enddate     = $enddate;
-                $banner->priority    = $priority;
-                $banner->store();
-
-                PageLayout::postSuccess(_('Der Banner wurde erfolgreich gespeichert.'));
-                $this->redirect('admin/banner');
-            }
-        }
-
-        if ($banner['target_type'] == 'seminar') {
-            $seminar_name = get_object_name($banner['target'], 'sem');
-            $this->seminar = QuickSearch::get('seminar', new StandardSearch('Seminar_id'))
-                        ->setInputStyle('width: 240px')
-                        ->defaultValue($banner['target'],$seminar_name['name'])
-                        ->render();
-        }
-
-        if ($banner['target_type'] == 'user') {
-            $this->user = QuickSearch::get('user', new StandardSearch('username'))
-                        ->setInputStyle('width: 240px')
-                        ->defaultValue($banner['target'], $banner['target'])
-                        ->render();
-        }
-
-        if ($banner['target_type'] == 'inst') {
-            $institut_name = get_object_name($banner['target'], 'inst');
-            $this->institut = QuickSearch::get('institut', new StandardSearch('Institut_id'))
-                        ->setInputStyle('width: 240px')
-                        ->defaultValue($banner['target'], $institut_name['name'])
-                        ->render();
-        }
-    }
-
-    /**
-     * Create a new banner
-     */
-    public function new_action()
-    {
-        // add new banner input
-        if (Request::submitted('anlegen')) {
-            $description = Request::get('description');
-            $alttext     = Request::get('alttext');
-            $target_type = Request::option('target_type');
-
-            //add the right target
-            if ($target_type == 'url') {
-                $target = Request::get('target');
-            } else if ($target_type == 'inst') {
-                $target = Request::option('institut');
-            } else if ($target_type == 'user') {
-                $target = Request::username('user');
-            } else if ($target_type == 'seminar') {
-                $target = Request::option('seminar');
-            } else {
-                $target = Request::get('target');
-            }
-
-            $priority = Request::int('priority');
-
-            $errors = [];
-
-            $upload = $_FILES['imgfile'];
-            if (!$upload['name']) {
+            if(!$banner_path){
                 $errors[] = _('Es wurde kein Bild ausgewählt.');
-            } else {
-               $banner_path = $this->bannerupload($upload['tmp_name'], $upload['size'], $upload['name'], $errors);
             }
-            $startDate = explode('.',Request::get('start_date'));
-            if (($x = $this->valid_date(Request::int('start_hour'), Request::int('start_minute'), $startDate[0],$startDate[1], $startDate[2])) == -1) {
-                $errors[] = _('Bitte geben Sie einen gültiges Startdatum ein.');
-            } else {
-                $startdate = $x;
-            }
-            $endDate = explode('.',Request::get('end_date'));
-            if (($x = $this->valid_date(Request::int('end_hour'), Request::int('end_minute'), $endDate[0], $endDate[1], $endDate[2])) == -1) {
-                $errors[] = _('Bitte geben Sie einen gültiges Enddatum ein.');
-            } else {
-                $enddate = $x;
-            }
+
+            $startdate = strtotime(Request::get('start_date', 0));
+            $enddate = strtotime(Request::get('end_date', 0));
 
             if (!$target && $target_type != 'none') {
                 $errors[] = _('Es wurde kein Verweisziel angegeben.');
@@ -267,7 +147,7 @@ class Admin_BannerController extends AuthenticatedController
                     case 'inst':
                         if (Institute::find($target) === null) {
                             $errors[] =  _('Die angegebene Einrichtung existiert nicht. '
-                                          .'Bitte geben Sie eine gültige Einrichtungs-ID ein.');
+                                        .'Bitte geben Sie eine gültige Einrichtungs-ID ein.');
                         }
                     break;
                     case 'user':
@@ -280,7 +160,7 @@ class Admin_BannerController extends AuthenticatedController
                             Seminar::getInstance($target);
                         } catch (Exception $e) {
                             $errors[] =  _('Die angegebene Veranstaltung existiert nicht. '
-                                          .'Bitte geben Sie eine gültige Veranstaltungs-ID ein.');
+                                        .'Bitte geben Sie eine gültige Veranstaltungs-ID ein.');
                         }
                     break;
                     case 'none':
@@ -291,8 +171,8 @@ class Admin_BannerController extends AuthenticatedController
 
             if (count($errors) > 0) {
                 PageLayout::postError(_('Es sind folgende Fehler aufgetreten:'), $errors);
+                $this->redirect('admin/banner');
             } else {
-                $banner = new Banner();
                 $banner->banner_path = $banner_path;
                 $banner->description = $description;
                 $banner->alttext     = $alttext;
@@ -303,8 +183,36 @@ class Admin_BannerController extends AuthenticatedController
                 $banner->priority    = $priority;
                 $banner->store();
 
+                $assignedroles = Request::intArray('assignedroles');
+                BannerRoles::update($banner->ad_id,$assignedroles);
+
                 PageLayout::postSuccess(_('Der Banner wurde erfolgreich gespeichert.'));
                 $this->redirect('admin/banner');
+            }
+        }
+
+        if (!$banner->isNew()) {
+            if ($banner->target_type == 'seminar') {
+                $seminar_name = get_object_name($banner->target, 'sem');
+                $this->seminar = QuickSearch::get('seminar', new StandardSearch('Seminar_id'))
+                            ->setInputStyle('width: 240px')
+                            ->defaultValue($banner->target,$seminar_name['name'])
+                            ->render();
+            }
+    
+            if ($banner->target_type == 'user') {
+                $this->user = QuickSearch::get('user', new StandardSearch('username'))
+                            ->setInputStyle('width: 240px')
+                            ->defaultValue($banner->target, $banner->target)
+                            ->render();
+            }
+    
+            if ($banner->target_type == 'inst') {
+                $institut_name = get_object_name($banner->target, 'inst');
+                $this->institut = QuickSearch::get('institut', new StandardSearch('Institut_id'))
+                            ->setInputStyle('width: 240px')
+                            ->defaultValue($banner->target, $institut_name['name'])
+                            ->render();
             }
         }
     }
@@ -385,27 +293,6 @@ class Admin_BannerController extends AuthenticatedController
     }
 
     /**
-     * Validate the date
-     *
-     * @param Int $h hour
-     * @param Int $m minute
-     * @param Int $d day
-     * @param Int $mo month
-     * @param Int $y year
-     *
-     */
-    protected function valid_date($h, $m, $d, $mo, $y)
-    {
-        if ((int)$h + (int)$m + (int)$d + (int)$mo + (int)$y === 0) {
-            return 0; // 0= forever
-        }
-
-        // mktime returns -1 if date is invalid (and does some strange
-        // conversion which might be considered as a bug...)
-        return mktime($h ,$m, 0, $mo, $d, $y);
-    }
-
-    /**
      * Extends this controller with neccessary sidebar
      *
      * @param String $view Currently viewed group
@@ -417,7 +304,7 @@ class Admin_BannerController extends AuthenticatedController
         $actions = new ActionsWidget();
         $actions->addLink(
             _('Neues Banner anlegen'),
-            $this->url_for('admin/banner/new'),
+            $this->url_for('admin/banner/edit'),
             Icon::create('add')
         )->asDialog('size=auto');
 

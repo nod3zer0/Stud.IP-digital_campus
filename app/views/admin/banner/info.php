@@ -41,26 +41,22 @@
             <td><?= _('Verweis-Ziel:') ?></td>
             <td>
                 <input type="text" readonly
-                       value="<?= htmlReady($this->edit['target']) ?>"
-                       size="40" maxlen="254">
+                       value="<?= htmlReady($banner['target']) ?>"
+                       size="40" maxlen="254" disabled>
             </td>
         </tr>
         <tr>
             <td><?= _('Anzeigen ab:')?></td>
             <td>
-                <?= $this->render_partial('admin/banner/datetime-picker', [
-                        'prefix'    => 'start_',
-                        'timestamp' => $banner['startdate'],
-                        'disabled'  => true]) ?>
+                <input type="text" size="40" name="start_date" id="start_date" value="<?= $banner['startdate'] ?
+                    date('d.m.Y H:i', $banner['startdate']) : '' ?>" data-datetime-picker disabled>
             </td>
         </tr>
         <tr>
             <td><?= _('Anzeigen bis:') ?></td>
             <td>
-                <?= $this->render_partial('admin/banner/datetime-picker', [
-                        'prefix'    => 'end_',
-                        'timestamp' => $banner['enddate'],
-                        'disabled'  => true]) ?>
+                <input type="text" size="40" name="end_date" id="end_date" value="<?= $banner['enddate'] ?
+                    date('d.m.Y H:i', $banner['enddate']) : '' ?>" data-datetime-picker disabled>
             </td>
         </tr>
         <tr>
@@ -72,6 +68,19 @@
                         <?= $label ?>
                     </option>
                 <? endforeach; ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><?= _('Sichtbarkeit:')?></td>
+            <td>
+                <select multiple name="assignedroles[]" size="10" style="width: 100%" disabled>
+                <? foreach ($assigned as $assignedrole): ?>
+                    <option value="<?= $assignedrole->getRoleid() ?>">
+                        <?= htmlReady($assignedrole->getRolename()) ?>
+                        <? if ($assignedrole->getSystemtype()): ?>[<?= _('Systemrolle') ?>]<? endif ?>
+                    </option>
+                <? endforeach ?>
                 </select>
             </td>
         </tr>

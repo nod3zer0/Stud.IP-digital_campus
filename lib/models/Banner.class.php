@@ -35,6 +35,13 @@ class Banner extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'banner_ads';
+
+        $config['has_many']['banner_roles'] = [
+            'class_name' => BannerRoles::class,
+            'assoc_foreign_key' => 'ad_id',
+            'on_delete' => 'delete'
+        ];
+
         parent::configure($config);
     }
 
@@ -60,11 +67,13 @@ class Banner extends SimpleORMap
         $sum = 0;
         // collect banners to consider, build banners array
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $sum += pow(2, $row['priority']);
-            $banners[] = [
-                'ad_id'  => $row['ad_id'],
-                'offset' => $sum
-            ];
+            if (BannerRoles::checkUserAccess($row['ad_id'])) {
+                $sum += pow(2, $row['priority']);
+                $banners[] = [
+                    'ad_id'  => $row['ad_id'],
+                    'offset' => $sum
+                ];
+            }
         }
 
         // draw random number and select banner
