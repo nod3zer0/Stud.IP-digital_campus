@@ -87,8 +87,7 @@
                         <?= Avatar::getAvatar($accept['user_id'], $accept['username'])->getImageTag(
                             Avatar::SMALL,
                             [
-                                'style' => 'margin-right: 5px',
-                                'title' => $fullname,
+                                'style' => 'margin-right: 5px'
                             ]
                         ) ?>
                         <?= htmlReady($fullname) ?>

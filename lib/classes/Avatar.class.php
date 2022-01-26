@@ -244,9 +244,7 @@ class Avatar {
             $opt['class'] = $this->getCssClass($size);
         }
 
-        if (!isset($opt['title'])) {
-            $opt['title'] = $this->getDefaultTitle();
-        } elseif (is_string($opt['title']) && $opt['title'] !== html_entity_decode($opt['title'])) {
+        if (is_string($opt['title']) && $opt['title'] !== html_entity_decode($opt['title'])) {
             // Decode already htmlready encoded titles (which were used until
             // all attributes were encoded inside this method)
             $opt['title'] = html_entity_decode($opt['title']);
@@ -263,8 +261,10 @@ class Avatar {
             }
         }
 
-        if (!isset($opt['alt'])) {
-            $opt['alt'] = $opt['title'];
+        if (!isset($opt['alt']) && !isset($opt['title'])) {
+            //Add an empty alt attribute to prevent screen readers from
+            //reading the URL of the icon:
+            $opt['alt'] = '';
         }
 
         return '<img ' . arrayToHtmlAttributes($opt) . '>';
