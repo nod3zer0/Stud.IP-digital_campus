@@ -111,6 +111,10 @@ class ArrayFileStream
         }
     }
 
+    public function stream_set_option(int $option, int $arg1, int $arg2)
+    {
+    }
+
     public function stream_stat() {
         return array('size' => is_array($this->open_file)
                      ? sizeof($this->open_file)
