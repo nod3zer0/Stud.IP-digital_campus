@@ -96,7 +96,11 @@ export default {
             // load whole courseware nonetheless, only export relevant elements
             let elements = await this.$store.getters['courseware-structural-elements/all'];
             this.exportElementCounter = 0;
-            this.elementCounter = await this.countElements([root_element]);
+            if (withChildren) {
+                this.elementCounter = this.countElements(elements);
+            } else {
+                this.elementCounter = root_element.relationships.containers.length;
+            }
 
             root_element.containers = [];
             if (root_element.relationships.containers?.data?.length) {
@@ -135,23 +139,11 @@ export default {
             };
         },
 
-        countElements(element) {
+        countElements(elements) {
             let counter = 0;
-            if (element.length) {
-                for (var i = 0; i < element.length; i++) {
-                    counter++;
-                    if (element[i].relationships.children?.data?.length > 0) {
-                        let children = [];
-                        element[i].relationships.children?.data.forEach(child => {
-                            children.push(this.structuralElementById({id: child.id}));
-                        });
-                        counter += this.countElements(children);
-                    }
-
-                    if (element[i].relationships.containers?.data?.length > 0) {
-                        counter += element[i].relationships.containers.data.length
-                    }
-                }
+            for (var i = 0; i < elements.length; i++) {
+                counter++;
+                counter += elements[i].relationships.containers.data.length;
             }
 
             return counter;
