@@ -94,7 +94,7 @@ function detectChanges(context) {
 
         var data = $(this).data().secure;
         var config = normalizeConfig(data);
-        var items = $(this).is('form') ? $(this).find(':input') : $(this);
+        var items = $(this).is('form') ? $(this).find(':input:not([data-secure])') : $(this);
 
         if (config.always === true) {
             changed = true;
