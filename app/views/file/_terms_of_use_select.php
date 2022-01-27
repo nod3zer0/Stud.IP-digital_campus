@@ -19,7 +19,7 @@ if (!$selected_terms_of_use_id) {
                value="<?= htmlReady($content_terms_of_use_entry->id) ?>"
                id="content_terms_of_use-<?= htmlReady($content_terms_of_use_entry->id) ?>"
                <? if ($content_terms_of_use_entry->id == $selected_terms_of_use_id) echo 'checked'; ?>
-               aria-description="<?= htmlReady($content_terms_of_use_entry->description) ?>">
+               aria-description="<?= htmlReady(kill_format($content_terms_of_use_entry->description)) ?>">
 
         <label for="content_terms_of_use-<?= htmlReady($content_terms_of_use_entry->id) ?>">
             <div class="icon">
