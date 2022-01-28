@@ -59,20 +59,20 @@ class ConsultationBooking extends SimpleORMap implements PrivacyObject
         };
 
         $config['registered_callbacks']['after_create'][] = function (ConsultationBooking $booking) {
-            ConsultationMailer::sendBookingMessageToUser($booking);
-            ConsultationMailer::sendBookingMessageToResponsibilities($booking);
+            ConsultationMailer::sendBookingMessageToUser($GLOBALS['user']->getAuthenticatedUser(), $booking);
+            ConsultationMailer::sendBookingMessageToResponsibilities($GLOBALS['user']->getAuthenticatedUser(), $booking);
         };
 
         $config['registered_callbacks']['before_store'][] = function (ConsultationBooking $booking) {
             if (!$booking->isNew() && $booking->isFieldDirty('reason')) {
                 if ($GLOBALS['user']->id !== $booking->user_id) {
-                    ConsultationMailer::sendReasonMessage($booking,$booking->user);
+                    ConsultationMailer::sendReasonMessage($GLOBALS['user']->getAuthenticatedUser(), $booking, $booking->user);
                 }
 
                 $responsible_persons = $booking->slot->block->responsible_persons;
                 foreach ($responsible_persons as $user) {
                     if ($GLOBALS['user']->id !== $user->id) {
-                        ConsultationMailer::sendReasonMessage($booking, $user);
+                        ConsultationMailer::sendReasonMessage($GLOBALS['user']->getAuthenticatedUser(), $booking, $user);
                     }
                 }
             }
@@ -97,10 +97,10 @@ class ConsultationBooking extends SimpleORMap implements PrivacyObject
     public function cancel($reason = '')
     {
         if ($GLOBALS['user']->id !== $this->user_id) {
-            ConsultationMailer::sendCancelMessageToUser($this, $reason);
+            ConsultationMailer::sendCancelMessageToUser($GLOBALS['user']->getAuthenticatedUser(), $this, $reason);
         }
 
-        ConsultationMailer::sendCancelMessageToResponsibilities($this, $reason);
+        ConsultationMailer::sendCancelMessageToResponsibilities($GLOBALS['user']->getAuthenticatedUser(), $this, $reason);
 
         return $this->delete() ? 1 : 0;
     }
