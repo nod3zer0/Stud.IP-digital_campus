@@ -6,21 +6,21 @@
 </p>
 
 <h3><?= _('SQL-Daten einspielen') ?></h3>
-<ul class="list-unstyled">
+<ul>
 <?php $i = 0; foreach ($files as $file => $description): ?>
     <li>
-    <?php if (in_array($file, $required)): ?>
-        <input type="hidden" name="files[]" value="<?= htmlReady($file) ?>">
-        <input type="checkbox" checked disabled>
-    <?php else: ?>
-        <input type="checkbox" name="files[]" value="<?= htmlReady($file) ?>"
-               id="option-<?= $i ?>">
-    <?php endif; ?>
-        <label for="option-<?= $i ?>">
+        <label for="option-<?= $i ?>" class="plain">
+        <?php if (in_array($file, $required)): ?>
+            <input type="hidden" name="files[]" value="<?= htmlReady($file) ?>">
+            <input type="checkbox" checked disabled>
+        <?php else: ?>
+            <input type="checkbox" name="files[]" value="<?= htmlReady($file) ?>"
+                   id="option-<?= $i ?>">
+        <?php endif; ?>
             <strong <?php if (in_array($file, $required)): ?>class="required"<?php endif; ?>>
                 <?= htmlReady($description) ?>
-            </strong>
-            (<?= htmlReady($file) ?>)
+            </strong><br>
+            <?= htmlReady($file) ?>
         </label>
     </li>
 <?php $i += 1; endforeach; ?>
