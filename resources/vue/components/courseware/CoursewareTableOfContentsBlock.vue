@@ -26,13 +26,12 @@
                 <ul
                     v-if="currentStyle === 'tiles'" 
                     class="cw-block-table-of-contents-tiles cw-tiles"
-                    :class="[childElements.length > 3 ? 'cw-tiles-space-between' : '']"
                 >
                     <li
                         v-for="child in childElements"
                         :key="child.id"
                         class="tile"
-                        :class="[child.attributes.payload.color, childElements.length > 3 ? '':  'cw-tile-margin']"
+                        :class="[child.attributes.payload.color]"
                     >
                         <router-link :to="'/structural_element/' + child.id" :title="child.attributes.title">
                             <div

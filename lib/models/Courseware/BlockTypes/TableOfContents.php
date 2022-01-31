@@ -32,7 +32,7 @@ class TableOfContents extends BlockType
     public function initialPayload(): array
     {
         return [
-            'style' => '',
+            'style' => 'list',
             'title' => '',
         ];
     }

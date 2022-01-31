@@ -4059,22 +4059,15 @@ toc block
 }
 
 .cw-block-table-of-contents-tiles.cw-tiles  {
-    &.cw-tiles-space-between {
-        justify-content: space-between;
-    }
     .tile {
-        margin: 0 0 5px 0;
-        &.cw-tile-margin {
-            margin: 0 5px 5px 0;
-        }
+        margin: 0 3px 5px 0;
+
     }
 }
 
 .cw-container-colspan-half {
     .cw-block-table-of-contents-tiles.cw-tiles  {
-        justify-content: space-between;
         .tile {
-            margin: 0 0 5px 0;
             width: 267px;
         }
     }
