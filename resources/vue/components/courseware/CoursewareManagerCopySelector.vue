@@ -9,7 +9,7 @@
             <button v-show="!sourceOwn && hasRemoteCid" class="button" @click="selectNewCourse"><translate>Veranstaltung auswählen</translate></button>
             <div v-if="sourceRemote">
                 <h2 v-if="!hasRemoteCid"><translate>Veranstaltungen</translate></h2>
-                <ul v-if="!hasRemoteCid">
+                <ul v-if="!hasRemoteCid && semesterMap.length > 0">
                     <li v-for="semester in semesterMap" :key="semester.id">
                     <h3>{{semester.attributes.title}}</h3>
                         <ul>
@@ -26,6 +26,11 @@
                     </li>
 
                 </ul>
+                <courseware-companion-box 
+                    v-if="!hasRemoteCid && semesterMap.length === 0"
+                    :msgCompanion="$gettext('Es wurden keine Veranstaltung mit Courseware-Inhalten gefunden.')"
+                    mood="sad"
+                />
                 <courseware-manager-element
                     v-if="remoteId !== '' && hasRemoteCid"
                     type="remote"
