@@ -32,7 +32,7 @@
                             :max="Math.round(durationSeconds)"
                             @input="rangeAction"
                         />
-                        <span class="cw-audio-time">{{ currentTime }} / {{ durationTime }}</span>
+                        <span class="cw-audio-time">{{ currentTime }} {{ durationTime ? '/ ' + durationTime : '' }}</span>
 
                         <button v-if="hasPlaylist" class="cw-audio-button cw-audio-prevbutton" :title="$gettext('Zurück')" @click="prevAudio" />
                         <button v-if="!playing" class="cw-audio-button cw-audio-playbutton" :title="$gettext('Abspielen')" @click="playAudio" />
@@ -189,7 +189,6 @@ export default {
             userRecorderEnabled: false,
             recorder: null,
             chunks: [],
-            blob: null,
             timer: 0,
             isRecording: false,
             newRecording: false,
@@ -239,7 +238,10 @@ export default {
             return this.seconds2time(this.currentSeconds);
         },
         durationTime() {
-            return this.seconds2time(this.durationSeconds);
+            if (this.durationSeconds > 0) {
+                return this.seconds2time(this.durationSeconds);
+            }
+            return false;
         },
         title() {
             return this.block?.attributes?.payload?.title;
@@ -360,10 +362,22 @@ export default {
             attributes.payload.folder_id = '';
             attributes.payload.recorder_enabled = false;
             if (this.currentSource === 'studip_file') {
+                if (this.currentFileId === '') {
+                    this.companionWarning({
+                        info: this.$gettext('Bitte wählen Sie eine Datei aus.')
+                    });
+                    return false;
+                }
                 attributes.payload.file_id = this.currentFileId;
             } else if (this.currentSource === 'web') {
                 attributes.payload.web_url = this.currentWebUrl;
             } else if (this.currentSource === 'studip_folder') {
+                if (this.currentFolderId === '') {
+                    this.companionWarning({
+                        info: this.$gettext('Bitte wählen Sie einen Ordner aus.')
+                    });
+                    return false;
+                }
                 attributes.payload.folder_id = this.currentFolderId;
                 attributes.payload.recorder_enabled = this.currentRecorderEnabled;
             } else {
@@ -382,7 +396,12 @@ export default {
             }
         },
         setDuration() {
-            this.durationSeconds = this.$refs.audio.duration;
+            let duration = this.$refs.audio.duration
+            if (!isNaN(duration) && isFinite(duration)) {
+                this.durationSeconds = duration;
+            } else {
+                this.durationSeconds = 0;
+            }
         },
         playAudio() {
             const audio = this.$refs.audio;
@@ -415,6 +434,9 @@ export default {
         },
         onTimeUpdateListener() {
             this.currentSeconds = this.$refs.audio.currentTime;
+            if (this.durationSeconds === 0) {
+                this.setDuration();
+            }
         },
         onEndedListener() {
             this.stopAudio();
@@ -471,12 +493,10 @@ export default {
             this.stopAudio();
             if (this.currentPlaylistItem < this.files.length - 1) {
                 this.currentPlaylistItem = this.currentPlaylistItem + 1;
-            } else {
-                this.currentPlaylistItem = 0;
+                this.$nextTick(()=> {
+                    this.playAudio();
+                });
             }
-            this.$nextTick(()=> {
-                this.playAudio();
-            });
         },
 
         async loadFile() {
@@ -499,28 +519,19 @@ export default {
         },
         enableRecorder() {
             let view = this;
-            navigator.mediaDevices.getUserMedia({audio: true}).then(_stream => {
-                let stream = _stream;
-                view.recorder = new MediaRecorder(stream, {mimeType: 'audio/ogg; codecs=opus'});
-                view.userRecorderEnabled = true;
-
-                view.recorder.ondataavailable = e => {
-                    view.chunks.push(e.data);
-                    if(view.recorder.state == 'inactive') {
-                        this.blob = new Blob(view.chunks, {type: 'audio/ogg; codecs=opus' });
-                    }
-                };
-                view.recorder.start();
-                view.recorder.stop();
-                view.chunks = [];
-                view.blob = null;
-
-            }).catch(error => {
-                view.companionWarning({
-                    info: view.$gettext('Sie müssen ein Mikrofon freigeben, um eine Aufnahme starten zu können.')
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(function(stream) {
+                    view.recorder = new MediaRecorder(stream, {type: 'audio/webm; codecs:vp9' });
+                    view.userRecorderEnabled = true;
+                    view.recorder.ondataavailable = e => {
+                        view.chunks.push(e.data);
+                    };
+                })
+                .catch(() => {
+                    view.companionWarning({
+                        info: view.$gettext('Sie müssen ein Mikrofon freigeben, um eine Aufnahme starten zu können.')
+                    });
                 });
-                console.debug(error);
-            });
         },
         startRecording() {
             let view = this;
@@ -546,19 +557,20 @@ export default {
             let view = this;
             let user = this.usersById({id: this.userId});
             let file = {};
+            let blob = new Blob(view.chunks, {type: 'audio/webm; codecs:vp9' });
             file.attributes = {};
-            file.attributes.name = (user.attributes["formatted-name"]).replace(/\s+/g, '_') + '.ogg';
+            file.attributes.name = (user.attributes["formatted-name"]).replace(/\s+/g, '_') + '.webm';
             let fileObj = false;
             try {
                  fileObj = await this.createFile({
                     file: file,
-                    filedata: view.blob,
+                    filedata: blob,
                     folder: {id: this.currentFolderId}
                 });
             }
             catch(e) {
                 this.companionError({
-                    info: this.$gettext('Es ist ein Fehler aufgetretten! Die Aufnahme konnte nicht gespeichert werden.')
+                    info: this.$gettext('Es ist ein Fehler aufgetreten! Die Aufnahme konnte nicht gespeichert werden.')
                 });
                 console.debug(e);
             }
