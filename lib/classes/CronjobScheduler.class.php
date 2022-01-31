@@ -312,7 +312,7 @@ class CronjobScheduler
             try {
                 // Skip schedules with missing task classes
                 if (!$schedule->task->valid) {
-                    throw new Exception(_('Die Klase für den Cronjob-Task konnte nicht gefunden werden'));
+                    throw new Exception(_('Die Klasse für den Cronjob-Task konnte nicht gefunden werden'));
                 }
 
                 $log = new CronjobLog();

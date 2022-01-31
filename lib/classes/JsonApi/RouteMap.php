@@ -14,7 +14,7 @@ use Slim\Routing\RouteCollectorProxy;
  * registriert werden und die Middleware hinzugefügt wird, die
  * JSON-API spezifische Fehlerbehandlung usw. übernimmt.
  *
- * Routen der Kernklasen sind hier explizit vermerkt.
+ * Routen der Kernklassen sind hier explizit vermerkt.
  *
  * Routen aus Plugins werden über die PluginEngine abgefragt. Plugins
  * können genau dann eigene Routen registrieren, wenn sie das

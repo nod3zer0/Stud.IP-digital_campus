@@ -14499,7 +14499,7 @@ msgstr ""
 "seconds has been exceeded."
 
 #: ../lib/classes/CronjobScheduler.class.php:315
-msgid "Die Klase für den Cronjob-Task konnte nicht gefunden werden"
+msgid "Die Klasse für den Cronjob-Task konnte nicht gefunden werden"
 msgstr "The class for the cronjob task could not be found"
 
 #: ../lib/classes/CronjobScheduler.class.php:357
