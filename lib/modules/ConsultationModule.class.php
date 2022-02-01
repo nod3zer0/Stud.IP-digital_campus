@@ -12,7 +12,6 @@ class ConsultationModule extends CorePlugin implements StudipModule, SystemPlugi
         NotificationCenter::on('UserDidDelete', function ($event, $user) {
             // Delete consultation bookings and slots
             ConsultationBooking::deleteByUser_id($user->id);
-            ConsultationBlock::deleteByTeacher_id($user->id);
             ConsultationBlock::deleteBySQL("range_id = ? AND range_type = 'user'", [$user->id]);
         });
         NotificationCenter::on('CourseDidDelete', function ($event, $course) {
