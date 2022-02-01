@@ -1787,13 +1787,13 @@ INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 202106231);
 --
 
 INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`, `visible`, `external_id`, `mkdate`, `chdate`) VALUES('322f640f3f4643ebe514df65f1163eb1', 'SS 2022', '', '', 1648764000, 1664575199, 1650319200, 1658527199, 1, '', NULL, NULL);
-INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`, `visible`, `external_id`, `mkdate`, `chdate`) VALUES('4967f0a483e36554b77e3dc47aa58941', 'WS 2020/2021', '', '', 1601503200, 1617227999, 1603666800, 1613170799, 1, '', NULL, NULL);
+INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`, `visible`, `external_id`, `mkdate`, `chdate`) VALUES('4967f0a483e36554b77e3dc47aa58941', 'WS 2021/2022', '', '', 1633039200, 1648763999, 1635112800, 1644620399, 1, '', NULL, NULL);
 
 --
 -- Daten für Tabelle `semester_holiday`
 --
 
-INSERT INTO `semester_holiday` (`holiday_id`, `semester_id`, `name`, `description`, `beginn`, `ende`, `mkdate`, `chdate`) VALUES('704038f0cb3ea0a285ba0a453788ebed', '', 'Unterbrechung', '', 1608764400, 1610146799, NULL, NULL);
+INSERT INTO `semester_holiday` (`holiday_id`, `semester_id`, `name`, `description`, `beginn`, `ende`, `mkdate`, `chdate`) VALUES('704038f0cb3ea0a285ba0a453788ebed', '', 'Unterbrechung', '', 1640300400, 1641769199, NULL, NULL);
 
 --
 -- Daten für Tabelle `sem_classes`
