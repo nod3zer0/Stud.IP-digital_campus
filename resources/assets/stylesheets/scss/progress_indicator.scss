@@ -1,0 +1,29 @@
+.progress-indicator-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .progress-indicator {
+        width: 100%;
+        background-image: url("#{$image-path}/ajax-indicator-black.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    .progress-indicator-description,
+    .progress-indicator-description-default {
+        color: $dark-gray-color-45;
+        text-align: center;
+        margin-top: 10px;
+    }
+    .progress-indicator-description-default {
+        display: none;
+    }
+    @media (prefers-reduced-motion) {
+        .progress-indicator {
+            @include background-icon(refresh, info, 32);
+        }
+        .progress-indicator-description-default {
+            display: block;
+        }
+    }
+}

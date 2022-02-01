@@ -13,13 +13,18 @@
             <courseware-view-widget></courseware-view-widget>
         </MountingPortal>
     </div>
-    <div v-else><translate>Inhalte werden geladen</translate>...</div>
+    <studip-progress-indicator
+        v-else
+        class="cw-loading-indicator-content"
+        :description="$gettext('Lade Lernmaterial...')"
+    />
 </template>
 
 <script>
 import CoursewareStructuralElement from './CoursewareStructuralElement.vue';
 import CoursewareViewWidget from './CoursewareViewWidget.vue';
 import CoursewareActionWidget from './CoursewareActionWidget.vue';
+import StudipProgressIndicator from '../StudipProgressIndicator.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -27,6 +32,7 @@ export default {
         CoursewareStructuralElement,
         CoursewareViewWidget,
         CoursewareActionWidget,
+        StudipProgressIndicator,
     },
     data: () => ({
         canVisit: null,
