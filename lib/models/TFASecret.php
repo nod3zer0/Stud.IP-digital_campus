@@ -16,8 +16,8 @@ class TFASecret extends SimpleORMap
 
     const TYPES = [
         'email' => [
-            'window' => 30,
-            'period' => 1,
+            'window' => 60,
+            'period' => 5,
         ],
         'app' => [
             'window' => 1,
