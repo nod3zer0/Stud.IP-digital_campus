@@ -69,6 +69,9 @@ class EduSharingNodeHelper extends EduSharingHelperAbstract  {
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER => $headers
         ]);
+        if ($this->base->http_proxy) {
+            curl_setopt($curl, CURLOPT_PROXY, $this->base->http_proxy);
+        }
         $data = json_decode(curl_exec($curl), true);
         $err     = curl_errno( $curl );
         $info = curl_getinfo($curl);
@@ -127,6 +130,9 @@ class EduSharingNodeHelper extends EduSharingHelperAbstract  {
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER => $headers
         ]);
+        if ($this->base->http_proxy) {
+            curl_setopt($curl, CURLOPT_PROXY, $this->base->http_proxy);
+        }
         $data = json_decode(curl_exec($curl), true);
         $err     = curl_errno( $curl );
         $info = curl_getinfo($curl);
@@ -160,6 +166,9 @@ class EduSharingNodeHelper extends EduSharingHelperAbstract  {
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER => $headers
         ]);
+        if ($this->base->http_proxy) {
+            curl_setopt($curl, CURLOPT_PROXY, $this->base->http_proxy);
+        }
         $data = json_decode(curl_exec($curl), true);
         $err     = curl_errno( $curl );
         $info = curl_getinfo($curl);

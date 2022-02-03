@@ -5,6 +5,7 @@ class EduSharingHelperBase {
     public $privateKey;
     public $appId;
     public $language = 'de';
+    public $http_proxy = '';
 
     /**
      * @param string $baseUrl
@@ -17,7 +18,8 @@ class EduSharingHelperBase {
     public function __construct(
         string $baseUrl,
         string $privateKey,
-        string $appId
+        string $appId,
+        string $http_proxy = ''
     ) {
         if(!preg_match('/^([a-z]|[A-Z]|[0-9]|[-_])+$/', $appId)) {
             throw new Exception('The given app id contains invalid characters or symbols');
@@ -25,6 +27,7 @@ class EduSharingHelperBase {
         $this->baseUrl=$baseUrl;
         $this->privateKey=$privateKey;
         $this->appId=$appId;
+        $this->http_proxy = $http_proxy;
     }
 
     public function setLanguage(string $language) {

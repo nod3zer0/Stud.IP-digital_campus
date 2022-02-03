@@ -11,6 +11,13 @@ class TwilloConnector
      */
     static protected $ticket = null;
 
+    static public $twillo_base_url = 'https://www.twillo.de/edu-sharing';
+
+    public static function getHttpProxy()
+    {
+        $stream_context_options = stream_context_get_options(get_default_http_stream_context(self::$twillo_base_url));
+        return isset($stream_context_options['http']['proxy']) ? Config::get()->HTTP_PROXY : '';
+    }
     /**
      * Returns the DFN-AAI-ID for the given user. This ID must be the content of a datafield with the
      * datafield_id in the global config OERCAMPUS_TWILLO_DFNAAIID_DATAFIELD. If either this config or
@@ -44,9 +51,11 @@ class TwilloConnector
     {
         $user_id || $user_id = User::findCurrent()->id;
         $base = new EduSharingHelperBase(
-            'https://www.twillo.de/edu-sharing',
+            self::$twillo_base_url,
             file_get_contents($GLOBALS['STUDIP_BASE_PATH']."/config/twillo-private.key"),
-            Config::get()->OERCAMPUS_TWILLO_APPID // 'data-quest-Test'
+            Config::get()->OERCAMPUS_TWILLO_APPID,
+            self::getHttpProxy()
+        // 'data-quest-Test'
         );
         $authHelper = new EduSharingAuthHelper($base);
         if (!static::$ticket) {
@@ -63,11 +72,12 @@ class TwilloConnector
             $header[] = "Accept: application/json";
 
             $cr = curl_init();
-            curl_setopt($cr, CURLOPT_URL, 'https://www.twillo.de/edu-sharing/rest/node/v1/nodes/-home-/-userhome-/children');
+            curl_setopt($cr, CURLOPT_URL, self::$twillo_base_url . '/rest/node/v1/nodes/-home-/-userhome-/children');
             curl_setopt($cr, CURLOPT_HTTPHEADER, $header);
             curl_setopt($cr, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($cr, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($cr, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($cr, CURLOPT_PROXY, self::getHttpProxy());
             $body = curl_exec($cr);
             $error = curl_error($cr);
             if ($error) {
@@ -95,11 +105,13 @@ class TwilloConnector
 
                 $cr = curl_init();
                 curl_setopt($cr, CURLOPT_POST, 1);
-                curl_setopt($cr, CURLOPT_URL, 'https://www.twillo.de/edu-sharing/rest/node/v1/nodes/-home-/-userhome-/children?type=cm%3Afolder&renameIfExists=false&assocType=&versionComment=');
+                curl_setopt($cr, CURLOPT_URL, self::$twillo_base_url . '/rest/node/v1/nodes/-home-/-userhome-/children?type=cm%3Afolder&renameIfExists=false&assocType=&versionComment=');
                 curl_setopt($cr, CURLOPT_HTTPHEADER, $header);
                 curl_setopt($cr, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($cr, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($cr, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($cr, CURLOPT_PROXY, self::getHttpProxy());
+
                 $postbody = json_encode([
                     'cm:edu_forcemetadataset' => ['true'],
                     'cm:edu_metadataset' => ['mds'],
@@ -121,11 +133,12 @@ class TwilloConnector
 
             $cr = curl_init();
             curl_setopt($cr, CURLOPT_POST, 1);
-            curl_setopt($cr, CURLOPT_URL, 'https://www.twillo.de/edu-sharing/rest/node/v1/nodes/-home-/'.$subfolder_id.'/children?type=ccm%3Aio&renameIfExists=true');
+            curl_setopt($cr, CURLOPT_URL, self::$twillo_base_url . '/rest/node/v1/nodes/-home-/'.$subfolder_id.'/children?type=ccm%3Aio&renameIfExists=true');
             curl_setopt($cr, CURLOPT_HTTPHEADER, $header);
             curl_setopt($cr, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($cr, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($cr, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($cr, CURLOPT_PROXY, self::getHttpProxy());
             $postbody = json_encode([
                 'ccm:wwwurl' => [$material->getDownloadUrl()],
                 'ccm:linktype' => ["USER_GENERATED"],
@@ -148,11 +161,12 @@ class TwilloConnector
 
         $cr = curl_init();
         curl_setopt($cr, CURLOPT_POST, 1);
-        curl_setopt($cr, CURLOPT_URL, 'https://www.twillo.de/edu-sharing/rest/node/v1/nodes/-home-/'.$material['published_id_on_twillo'].'/metadata?versionComment=METADATA_UPDATE');
+        curl_setopt($cr, CURLOPT_URL, self::$twillo_base_url . '/rest/node/v1/nodes/-home-/'.$material['published_id_on_twillo'].'/metadata?versionComment=METADATA_UPDATE');
         curl_setopt($cr, CURLOPT_HTTPHEADER, $header);
         curl_setopt($cr, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($cr, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($cr, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($cr, CURLOPT_PROXY, self::getHttpProxy());
         $old_base = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
         $permalink = URLHelper::getLink("dispatch.php/oer/market/details/".$material->getId());
         URLHelper::setBaseURL($old_base);
@@ -248,9 +262,10 @@ class TwilloConnector
         $user_id || $user_id = User::findCurrent()->id;
 
         $base = new EduSharingHelperBase(
-            'https://www.twillo.de/edu-sharing',
+            self::$twillo_base_url,
             file_get_contents($GLOBALS['STUDIP_BASE_PATH']."/config/twillo-private.key"),
-            Config::get()->OERCAMPUS_TWILLO_APPID // 'data-quest-Test'
+            Config::get()->OERCAMPUS_TWILLO_APPID,
+            self::getHttpProxy()// 'data-quest-Test'
         );
         $authHelper = new EduSharingAuthHelper($base);
         if (!static::$ticket) {
@@ -264,10 +279,11 @@ class TwilloConnector
 
         $cr = curl_init();
         curl_setopt($cr, CURLOPT_CUSTOMREQUEST, "DELETE");
-        curl_setopt($cr, CURLOPT_URL, 'https://www.twillo.de/edu-sharing/rest/node/v1/nodes/-home-/'.$oer_id);
+        curl_setopt($cr, CURLOPT_URL, self::$twillo_base_url . '/rest/node/v1/nodes/-home-/'.$oer_id);
         curl_setopt($cr, CURLOPT_HTTPHEADER, $header);
         curl_setopt($cr, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($cr, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($cr, CURLOPT_PROXY, self::getHttpProxy());
         curl_exec($cr);
         curl_close($cr);
     }

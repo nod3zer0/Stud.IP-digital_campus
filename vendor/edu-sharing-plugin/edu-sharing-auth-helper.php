@@ -25,6 +25,9 @@ class EduSharingAuthHelper extends EduSharingHelperAbstract  {
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_TIMEOUT => 5
         ]);
+        if ($this->base->http_proxy) {
+            curl_setopt($curl, CURLOPT_PROXY, $this->base->http_proxy);
+        }
         $data = json_decode(curl_exec($curl), true);
         curl_close($curl);
         if ( is_null( $data ) ) {
@@ -79,6 +82,9 @@ class EduSharingAuthHelper extends EduSharingHelperAbstract  {
             CURLOPT_POSTFIELDS,
             is_array($bodyparams) ? json_encode($bodyparams) : (string) $bodyparams
         );
+        if ($this->base->http_proxy) {
+            curl_setopt($curl, CURLOPT_PROXY, $this->base->http_proxy);
+        }
 
         $output = curl_exec($curl);
         $data = json_decode($output, true);
