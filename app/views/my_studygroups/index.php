@@ -23,7 +23,7 @@
                 <th></th>
             </tr>
         </thead>
-        <?= $this->render_partial('my_studygroups/_course', compact('courses')) ?>
+        <?= $this->render_partial('my_studygroups/_course', compact('studygroups')) ?>
     </table>
 <? else : ?>
     <?= MessageBox::info(_('Sie haben bisher noch keine Studiengruppe gegründet oder sich in eine eingetragen.')) ?>
