@@ -143,7 +143,7 @@ class Calendar_ContentboxController extends StudipController {
             }
 
             if ($termin->getTitle()) {
-                $tmp_titel = htmlReady(mila($termin->getTitle())); //Beschneiden des Titels
+                $tmp_titel = mila($termin->getTitle()); //Beschneiden des Titels
                 $title .= ', ' . $tmp_titel;
             }
 
