@@ -51,7 +51,7 @@ export default {
                 this.adderActive = false;
                 this.$emit('updateContainerContent', oldValue);
             } else {
-                if (newValue.container.id === this.container.id && newValue.section === this.section) {
+                if (newValue.container && newValue.container.id === this.container.id && newValue.section === this.section) {
                     this.adderActive = true;
                 } else {
                     this.adderActive = false;
