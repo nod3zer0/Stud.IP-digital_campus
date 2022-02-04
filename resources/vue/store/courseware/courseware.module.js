@@ -886,48 +886,28 @@ export const actions = {
         );
     },
 
-    async loadTeacherStatus({ dispatch, rootGetters, state, commit, getters }, userId) {
-        const parent = {
-            type: 'users',
-            id: userId,
-        };
-        const relationship = 'course-memberships';
-        const options = {
-            include: 'course',
-        };
-        await dispatch('loadRelatedPaginated', {
-            type: 'course-memberships',
-            parent,
-            relationship,
-            options
-        });
+    loadTeacherStatus({ dispatch, rootGetters, state, commit, getters }, userId) {
+        const membershipId = `${state.context.id}_${userId}`;
 
-        const memberships = rootGetters['course-memberships/related']({
-            parent,
-            relationship,
-        });
-        let isTeacher = false;
-        memberships.forEach((membership) => {
-            if (getters.courseware.attributes['editing-permission-level'] === 'dozent') {
-                if (
-                    membership.attributes.permission === 'dozent' &&
-                        state.context.id === membership.relationships.course.data.id
-                ) {
-                    isTeacher = true;
-                }
-            }
-            if (getters.courseware.attributes['editing-permission-level'] === 'tutor') {
-                if (
-                    (membership.attributes.permission === 'dozent' ||
-                     membership.attributes.permission === 'tutor') &&
-                        state.context.id === membership.relationships.course.data.id
-                ) {
-                    isTeacher = true;
-                }
-            }
-        });
+        return dispatch('course-memberships/loadById', { id: membershipId })
+            .then(() => {
+                const membership = rootGetters['course-memberships/byId']({ id: membershipId });
+                const editingLevel = getters.courseware.attributes['editing-permission-level'];
+                const membershipPermission = membership.attributes.permission;
 
-        return commit('setUserIsTeacher', isTeacher);
+                let isTeacher = false;
+                if (editingLevel === 'dozent') {
+                    isTeacher = membershipPermission === 'dozent';
+                } else if (editingLevel === 'tutor') {
+                    isTeacher = membershipPermission === 'dozent' || membershipPermission === 'tutor';
+                }
+
+                commit('setUserIsTeacher', isTeacher);
+            })
+            .catch((error) => {
+                console.error(`Could not find course membership for ${membershipId}.`);
+                commit('setUserIsTeacher', false);
+            });
     },
 
     loadFeedback({ dispatch }, blockId) {

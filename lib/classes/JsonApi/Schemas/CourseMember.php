@@ -30,7 +30,6 @@ class CourseMember extends SchemaProvider
 
         if ($this->currentUser) {
             if (MembershipAuthority::canIndexMembershipsOfUser($this->currentUser, $membership->user)) {
-                # TODO: $attributes['notification'] = (int) $membership->notification;
                 $attributes['visible'] = $membership->visible;
             }
             if (CourseAuthority::canEditCourse($this->currentUser, $membership->course)) {
@@ -49,16 +48,18 @@ class CourseMember extends SchemaProvider
         $relationships = [];
 
         if ($isPrimary) {
+            $course = \Course::build(['id' => $membership['seminar_id']], false);
             $relationships[self::REL_COURSE] = [
                 self::RELATIONSHIP_LINKS => [
-                    Link::RELATED => $this->createLinkToResource($membership->course)
+                    Link::RELATED => $this->createLinkToResource($course)
                 ],
                 self::RELATIONSHIP_DATA => $membership->course,
             ];
 
+            $user = \User::build(['id' => $membership['user_id']], false);
             $relationships[self::REL_USER] = [
                 self::RELATIONSHIP_LINKS => [
-                    Link::RELATED => $this->createLinkToResource($membership->user)
+                    Link::RELATED => $this->createLinkToResource($user)
                 ],
                 self::RELATIONSHIP_DATA => $membership->user,
             ];
