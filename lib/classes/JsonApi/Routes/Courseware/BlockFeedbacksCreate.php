@@ -2,6 +2,7 @@
 
 namespace JsonApi\Routes\Courseware;
 
+use Courseware\Container;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\JsonApiController;
 use JsonApi\Routes\ValidationTrait;
@@ -9,6 +10,8 @@ use JsonApi\Schemas\Courseware\Block as BlockSchema;
 use JsonApi\Schemas\Courseware\BlockFeedback as BlockFeedbackSchema;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Studip\Activity\Activity;
+use Studip\Activity\CoursewareProvider;
 
 /**
  * Create feedback on a block.

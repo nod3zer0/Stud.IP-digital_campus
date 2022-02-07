@@ -6,6 +6,7 @@
         :isTeacher="isTeacher"
         @storeContainer="storeContainer"
         @closeEdit="initCurrentData"
+        @sortBlocks="enableSort"
     >
         <template v-slot:containerContent>
             <courseware-collapsible-box
@@ -15,7 +16,7 @@
                 :icon="section.icon"
                 :open="index === 0"
             >
-                <ul class="cw-container-accordion-block-list">
+                <ul v-if="!sortMode" class="cw-container-accordion-block-list">
                     <li v-for="block in section.blocks" :key="block.id" class="cw-block-item">
                         <component
                             :is="component(block)"
@@ -24,11 +25,33 @@
                             :isTeacher="isTeacher"
                         />
                     </li>
-                    <li v-if="showEditMode">
+                    <li v-if="showEditMode && canAddElements">
                         <courseware-block-adder-area :container="container" :section="index" @updateContainerContent="updateContent"/>
                     </li>
                 </ul>
+                <draggable
+                    v-if="sortMode && canEdit"
+                    class="cw-container-list-block-list cw-container-list-sort-mode"
+                    :class="[section.blocks.length === 0 ? 'cw-container-list-sort-mode-empty' : '']"
+                    tag="ul"
+                    v-model="section.blocks"
+                    v-bind="dragOptions"
+                    handle=".cw-sortable-handle"
+                    @start="isDragging = true"
+                    @end="isDragging = false"
+                >
+                    <transition-group type="transition" name="flip-blocks" tag="div">
+                        <li v-for="block in section.blocks" :key="block.id" class="cw-block-item cw-block-item-sortable">
+                            <component :is="component(block)" :block="block" :canEdit="canEdit" :isTeacher="isTeacher" />
+                        </li>
+                    </transition-group>
+                
+                </draggable>
             </courseware-collapsible-box>
+            <div v-if="sortMode && canEdit">
+                <button class="button accept" @click="storeSort"><translate>Sortierung speichern</translate></button>
+                <button class="button cancel"  @click="resetSort"><translate>Sortieren abbrechen</translate></button>
+            </div>
         </template>
         <template v-slot:containerEditDialog>
             <form class="default cw-container-dialog-edit-form" @submit.prevent="">
@@ -87,11 +110,20 @@ export default {
         container: Object,
         canEdit: Boolean,
         isTeacher: Boolean,
+        canAddElements: Boolean,
     },
     data() {
         return {
             currentContainer: {},
             currentSections: [],
+            sortMode: false,
+            isDragging: false,
+            dragOptions: {
+                animation: 0,
+                group: "description",
+                disabled: false,
+                ghostClass: "block-ghost"
+            },
         };
     },
     computed: {
@@ -118,6 +150,7 @@ export default {
     methods: {
         ...mapActions({
             updateContainer: 'updateContainer',
+            lockObject: 'lockObject',
             unlockObject: 'unlockObject',
         }),
         initCurrentData() {
@@ -163,7 +196,19 @@ export default {
                 container: this.currentContainer,
                 structuralElementId: this.currentContainer.relationships['structural-element'].data.id,
             });
-            await this.unlockObject({ id: this.container.id, type: 'courseware-containers' });
+            await this.unlockObject({ id: this.currentContainer.id, type: 'courseware-containers' });
+            this.initCurrentData();
+        },
+        enableSort() {
+            this.sortMode = true;
+        },
+        async storeSort() {
+            this.sortMode = false;
+            this.storeContainer();
+        },
+        async resetSort() {
+            await this.unlockObject({ id: this.currentContainer.id, type: 'courseware-containers' });
+            this.sortMode = false;
             this.initCurrentData();
         },
         component(block) {

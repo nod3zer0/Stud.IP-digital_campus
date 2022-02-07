@@ -8,6 +8,10 @@ use Courseware\BlockFeedback;
 use Courseware\Container;
 use Courseware\Instance;
 use Courseware\StructuralElement;
+use Courseware\Task;
+use Courseware\TaskFeedback;
+use Courseware\TaskGroup;
+use Courseware\Template;
 use Courseware\UserDataField;
 use Courseware\UserProgress;
 use User;
@@ -133,6 +137,21 @@ class Authority
         return self::canShowCoursewareInstance($user, $resource);
     }
 
+    public static function canAddBookmarkToAUser(User $actor, User $user)
+    {
+        return $actor->id === $user->id;
+    }
+
+    public static function canModifyBookmarksOfAUser(User $actor, User $user)
+    {
+        return $actor->id === $user->id;
+    }
+
+    public static function canIndexBookmarksOfAUser(User $actor, User $user)
+    {
+        return $actor->id === $user->id;
+    }
+
     /**
      * @SuppressWarnings(PHPMD.Superglobals)
      */
@@ -183,8 +202,12 @@ class Authority
 
     public static function canUpdateBlockComment(User $user, BlockComment $resource)
     {
-        return $user->id == $resource->user_id;
-        // should dozent be able to update?
+        $perm = $GLOBALS['perm']->have_studip_perm(
+            $resource->block->container->structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
+            $resource->block->container->structural_element->course->id,
+            $user->id
+        );
+        return $user->id === $resource->user_id || $perm;
     }
 
     public static function canDeleteBlockComment(User $user, BlockComment $resource)
@@ -216,4 +239,155 @@ class Authority
     {
         return self::canUploadStructuralElementsImage($user, $resource);
     }
+
+    public static function canShowTaskGroup(User $user, TaskGroup $resource): bool
+    {
+        return $resource['lecturer_id'] === $user->id;
+    }
+
+    public static function canShowTask(User $user, Task $resource): bool
+    {
+        return self::canUpdateTask($user, $resource);
+    }
+
+    public static function canIndexTasks(User $user): bool
+    {
+        // TODO: filtered index permissions are handled in the route
+        return $GLOBALS['perm']->have_perm('root', $user->id);
+    }
+
+    public static function canCreateTasks(User $user, StructuralElement $resource): bool
+    {
+        return $resource->hasEditingPermission($user);
+    }
+
+    public static function canUpdateTask(User $user, Task $resource): bool
+    {
+        return $resource->canUpdate($user);
+    }
+
+    public static function canDeleteTask(User $user, Task $resource): bool
+    {
+        return self::canCreateTasks($user, $resource['structural_element']);
+    }
+
+    public static function canCreateTaskFeedback(User $user, Task $resource): bool
+    {
+        return self::canCreateTasks($user, $resource['structural_element']);
+    }
+
+    public static function canShowTaskFeedback(User $user, Task $resource): bool
+    {
+        return self::canShowTask($user, $resource);
+    }
+
+    public static function canUpdateTaskFeedback(User $user, Task $resource): bool
+    {
+        return self::canCreateTaskFeedback($user, $resource);
+    }
+
+    public static function canDeleteTaskFeedback(User $user, Task $resource): bool
+    {
+        return self::canCreateTaskFeedback($user, $resource);
+    }
+
+
+    public static function canIndexStructuralElementComments(User $user, StructuralElement $resource)
+    {
+        return self::canShowStructuralElement($user, $resource);
+    }
+
+    public static function canShowStructuralElementComment(User $user, StructuralElementComment $resource)
+    {
+        return self::canShowStructuralElement($user, $resource);
+    }
+
+    public static function canCreateStructuralElementComment(User $user, StructuralElement $resource)
+    {
+        return self::canShowStructuralElement($user, $resource);
+    }
+
+    public static function canUpdateStructuralElementComment(User $user, StructuralElementComment $resource)
+    {
+        if ($GLOBALS['perm']->have_perm('root')) {
+            return true;
+        }
+
+        $perm = $GLOBALS['perm']->have_studip_perm(
+            $resource->structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
+            $resource->structural_element->course->id,
+            $user->id
+        );
+
+        return $user->id == $resource->user_id || $perm;
+    }
+
+    public static function canDeleteStructuralElementComment(User $user, StructuralElementComment $resource)
+    {
+        return self::canUpdateStructuralElementComment($user, $resource);
+    }
+
+    public static function canIndexStructuralElementFeedback(User $user, StructuralElement $resource)
+    {
+        return self::canUpdateStructuralElement($user, $resource);
+    }
+
+    public static function canCreateStructuralElementFeedback(User $user, StructuralElement $resource)
+    {
+        if ($GLOBALS['perm']->have_perm('root')) {
+            return true;
+        }
+
+        $perm = $GLOBALS['perm']->have_studip_perm(
+            $resource->course->config->COURSEWARE_EDITING_PERMISSION,
+            $resource->course->id,
+            $user->id
+        );
+
+        return $perm;
+    }
+
+    public static function canUpdateStructuralElementFeedback(User $user, StructuralElementComment $resource)
+    {
+        return self::canCreateStructuralElementFeedback($user, $resource->structural_element);
+    }
+
+    public static function canShowStructuralElementFeedback(User $user, StructuralElementFeedback $resource)
+    {
+        return $resource->user_id === $user->id || self::canUpdateStructuralElement($resource->structural_element);
+    }
+
+    public static function canDeleteStructuralElementFeedback(User $user, StructuralElementComment $resource)
+    {
+        return self::canUpdateStructuralElementFeedback($user, $resource);
+    }
+
+
+    public static function canShowTemplate(User $user, Template $resource)
+    {
+        // templates are for everybody, aren't they?
+        return true;
+    }
+
+    public static function canIndexTemplates(User $user)
+    {
+        // templates are for everybody, aren't they?
+        return true;
+    }
+
+    public static function canCreateTemplate(User $user)
+    {
+        return $GLOBALS['perm']->have_perm('admin');
+    }
+
+    public static function canUpdateTemplate(User $user, Template $resource)
+    {
+        return self::canCreateTemplate($user);
+    }
+
+    public static function canDeleteTemplate(User $user, Template $resource)
+    {
+        return self::canCreateTemplate($user);
+    }
+
 }

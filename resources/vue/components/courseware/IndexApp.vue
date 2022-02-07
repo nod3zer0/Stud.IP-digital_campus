@@ -7,10 +7,10 @@
             @select="selectStructuralElement"
         ></courseware-structural-element>
         <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions">
-            <courseware-action-widget :structural-element="selected"></courseware-action-widget>
+            <courseware-action-widget :structural-element="selected" :canVisit="canVisit"></courseware-action-widget>
         </MountingPortal>
         <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
-            <courseware-view-widget></courseware-view-widget>
+            <courseware-view-widget :structural-element="selected" :canVisit="canVisit"></courseware-view-widget>
         </MountingPortal>
     </div>
     <studip-progress-indicator

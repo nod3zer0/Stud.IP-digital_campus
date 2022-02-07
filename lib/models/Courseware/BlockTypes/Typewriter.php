@@ -60,4 +60,12 @@ class Typewriter extends BlockType
     {
         return [];
     }
+
+    public function pdfExport()
+    {
+        $html = '<h5>' . sprintf(_('Block-Typ: %s'), $this->getTitle()) . '</h5>';
+        $html .= '<p>' . htmlspecialchars($this->getPayload()['text']) . '</p>';
+
+        return $html;
+    }
 }

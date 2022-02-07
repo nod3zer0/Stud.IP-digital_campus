@@ -23,8 +23,10 @@ const getDefaultState = () => {
         urlHelper: null,
         userId: null,
         viewMode: 'read',
+        dashboardViewMode: 'default',
         filingData: {},
         userIsTeacher: false,
+        teacherStatusLoaded: false,
 
         showStructuralElementEditDialog: false,
         showStructuralElementAddDialog: false,
@@ -32,6 +34,8 @@ const getDefaultState = () => {
         showStructuralElementInfoDialog: false,
         showStructuralElementDeleteDialog: false,
         showStructuralElementOerDialog: false,
+
+        structuralElementSortMode: false,
 
         importFilesState: '',
         importFilesProgress: 0,
@@ -41,6 +45,11 @@ const getDefaultState = () => {
 
         exportState: '',
         exportProgress: 0,
+
+        purposeFilter: 'all',
+        showOverviewElementAddDialog: false,
+
+        bookmarkFilter: 'all',
     };
 };
 
@@ -86,6 +95,9 @@ const getters = {
     viewMode(state) {
         return state.viewMode;
     },
+    dashboardViewMode(state) {
+        return state.dashboardViewMode;
+    },
     showToolbar(state) {
         return state.showToolbar;
     },
@@ -119,6 +131,9 @@ const getters = {
     userIsTeacher(state) {
         return state.userIsTeacher;
     },
+    teacherStatusLoaded(state) {
+        return state.teacherStatusLoaded;
+    },
     pluginManager(state) {
         return state.pluginManager;
     },
@@ -143,6 +158,12 @@ const getters = {
     showStructuralElementDeleteDialog(state) {
         return state.showStructuralElementDeleteDialog;
     },
+    showOverviewElementAddDialog(state) {
+        return state.showOverviewElementAddDialog;
+    },
+    structuralElementSortMode(state) {
+        return state.structuralElementSortMode;
+    },
     importFilesState(state) {
         return state.importFilesState;
     },
@@ -163,6 +184,12 @@ const getters = {
     },
     exportProgress(state) {
         return state.exportProgress;
+    },
+    purposeFilter(state) {
+        return state.purposeFilter;
+    },
+    bookmarkFilter(state) {
+        return state.bookmarkFilter;
     },
 };
 
@@ -198,11 +225,42 @@ export const actions = {
         };
         const relationship = 'file-refs';
 
-        return dispatch('file-refs/loadRelated', { parent, relationship }, { root: true })
-            .then(() => rootGetters['file-refs/related']({
+        return dispatch('file-refs/loadRelated', { parent, relationship }, { root: true }).then(() =>
+            rootGetters['file-refs/related']({
                 parent,
                 relationship,
-            }));
+            })
+        );
+    },
+
+    async loadCoursewareActivities({ dispatch, rootGetters }, { userId, courseId }) {
+        const parent = {
+            type: 'users',
+            id: userId,
+        };
+        const relationship = 'activitystream';
+
+        const options = {
+            'filter[context_type]': 'course',
+            'filter[context_id]': courseId,
+            'filter[object_type]': 'courseware',
+            include: 'actor, context, object',
+        };
+
+        await dispatch('users/loadRelated', { parent, relationship, options }, { root: true });
+
+        const activities = rootGetters['users/all'];
+
+        for (const activity of activities) {
+            //load parents for breadcrumb
+            if (activity.type == 'activities') {
+                await this.dispatch('courseware-structural-elements/loadById', {
+                    id: activity.relationships.object.meta['object-id'],
+                });
+            }
+        }
+
+        return activities;
     },
 
     async createFile(context, { file, filedata, folder }) {
@@ -317,8 +375,8 @@ export const actions = {
             // console.log(resp);
         });
     },
-    async copyStructuralElement({ dispatch, getters, rootGetters }, { parentId, element }) {
-        const copy = { data: { parent_id: parentId, }, };
+    async copyStructuralElement({ dispatch, getters, rootGetters }, { parentId, element, removePurpose }) {
+        const copy = { data: { parent_id: parentId, remove_purpose: removePurpose } };
 
         const result = await state.httpClient.post(`courseware-structural-elements/${element.id}/copy`, copy);
         const id = result.data.data.id;
@@ -454,6 +512,28 @@ export const actions = {
         await dispatch('courseware-structural-elements/create', data, { root: true });
 
         return dispatch('loadStructuralElement', currentId);
+    },
+
+    async createStructuralElementWithTemplate({ dispatch }, { attributes, parentId, currentId, templateId }) {
+        const data = {
+            attributes,
+            relationships: {
+                parent: {
+                    data: {
+                        type: 'courseware-structural-elements',
+                        id: parentId,
+                    },
+                },
+            },
+            templateId: templateId,
+        };
+        await dispatch('courseware-structural-elements/create', data, { root: true });
+
+        const options = {
+            include: 'children',
+        };
+
+        return dispatch('courseware-structural-elements/loadById', { id: currentId, options }, { root: true });
     },
 
     async deleteStructuralElement({ dispatch }, { id, parentId }) {
@@ -631,6 +711,10 @@ export const actions = {
         context.commit('coursewareViewModeSet', view);
     },
 
+    setDashboardViewMode(context, view) {
+        context.commit('setDashboardViewMode', view);
+    },
+
     coursewareShowToolbar(context, toolbar) {
         context.commit('coursewareShowToolbarSet', toolbar);
     },
@@ -672,50 +756,58 @@ export const actions = {
     },
 
     showElementEditDialog(context, bool) {
-        context.commit('setShowStructuralElementEditDialog', bool)
+        context.commit('setShowStructuralElementEditDialog', bool);
     },
 
     showElementAddDialog(context, bool) {
-        context.commit('setShowStructuralElementAddDialog', bool)
+        context.commit('setShowStructuralElementAddDialog', bool);
     },
 
     showElementExportDialog(context, bool) {
-        context.commit('setShowStructuralElementExportDialog', bool)
+        context.commit('setShowStructuralElementExportDialog', bool);
     },
 
     showElementInfoDialog(context, bool) {
-        context.commit('setShowStructuralElementInfoDialog', bool)
+        context.commit('setShowStructuralElementInfoDialog', bool);
     },
 
     showElementOerDialog(context, bool) {
-        context.commit('setShowStructuralElementOerDialog', bool)
+        context.commit('setShowStructuralElementOerDialog', bool);
     },
 
     showElementDeleteDialog(context, bool) {
-        context.commit('setShowStructuralElementDeleteDialog', bool)
+        context.commit('setShowStructuralElementDeleteDialog', bool);
     },
 
-    setImportFilesState({commit}, state ) {
-        commit('setImportFilesState', state)
+    setShowOverviewElementAddDialog(context, bool) {
+        context.commit('setShowOverviewElementAddDialog', bool);
     },
-    setImportFilesProgress({commit}, percent ) {
-        commit('setImportFilesProgress', percent)
+
+    setStructuralElementSortMode({ commit }, bool) {
+        commit('setStructuralElementSortMode', bool);
     },
-    setImportStructuresState({commit}, state ) {
-        commit('setImportStructuresState', state)
+
+    setImportFilesState({ commit }, state) {
+        commit('setImportFilesState', state);
     },
-    setImportStructuresProgress({commit}, percent ) {
-        commit('setImportStructuresProgress', percent)
+    setImportFilesProgress({ commit }, percent) {
+        commit('setImportFilesProgress', percent);
     },
-    setImportErrors({commit}, errors) {
+    setImportStructuresState({ commit }, state) {
+        commit('setImportStructuresState', state);
+    },
+    setImportStructuresProgress({ commit }, percent) {
+        commit('setImportStructuresProgress', percent);
+    },
+    setImportErrors({ commit }, errors) {
         commit('setImportErrors', errors);
     },
 
-    setExportState({commit}, state) {
-        commit('setExportState', state)
+    setExportState({ commit }, state) {
+        commit('setExportState', state);
     },
-    setExportProgress({commit}, percent) {
-        commit('setExportProgress', percent)
+    setExportProgress({ commit }, percent) {
+        commit('setExportProgress', percent);
     },
 
     addBookmark({ dispatch, rootGetters }, structuralElement) {
@@ -811,12 +903,30 @@ export const actions = {
                     parent,
                     relationship,
                     options: optionsWithPages,
-                    resetRelated: false
+                    resetRelated: false,
                 },
                 { root: true }
             );
             offset += limit;
         } while (rootGetters[`${type}/all`].length < rootGetters[`${type}/lastMeta`].page.total);
+    },
+
+    loadUsersBookmarks({ dispatch, rootGetters, state }, userId) {
+        const parent = {
+            type: 'users',
+            id: userId,
+        };
+        const relationship = 'courseware-bookmarks';
+        const options = {
+            include: 'course',
+        };
+
+        return dispatch('loadRelatedPaginated', {
+            type: 'courseware-structural-elements',
+            parent,
+            relationship,
+            options,
+        });
     },
 
     async loadUsersCourses({ dispatch, rootGetters, state }, { userId, withCourseware }) {
@@ -826,13 +936,13 @@ export const actions = {
         };
         const relationship = 'course-memberships';
         const options = {
-            include: 'course'
+            include: 'course',
         };
         await dispatch('loadRelatedPaginated', {
             type: 'course-memberships',
             parent,
             relationship,
-            options
+            options,
         });
 
         const memberships = rootGetters['course-memberships/related']({
@@ -844,7 +954,7 @@ export const actions = {
         for (let membership of memberships) {
             if (
                 membership.attributes.permission === 'dozent' &&
-                    state.context.id !== membership.relationships.course.data.id
+                state.context.id !== membership.relationships.course.data.id
             ) {
                 const course = rootGetters['courses/related']({ parent: membership, relationship: 'course' });
                 if (!withCourseware) {
@@ -938,6 +1048,77 @@ export const actions = {
 
         return dispatch('loadFeedback', blockId);
     },
+
+    async createTaskGroup({ dispatch, rootGetters }, { taskGroup }) {
+        await dispatch('courseware-task-groups/create', taskGroup, { root: true });
+
+        const id = taskGroup.relationships.target.data.id;
+        const target = rootGetters['courseware-structural-elements/byId']({ id });
+
+        return dispatch('courseware-structure/loadDescendants', { root: target });
+    },
+
+    async loadTask({ dispatch }, { taskId }) {
+        return dispatch(
+            'courseware-tasks/loadById',
+            {
+                id: taskId,
+                options: {
+                    include: 'solver,task-group,task-group.lecturer',
+                },
+            },
+            { root: true }
+        );
+    },
+
+    async updateTask({ dispatch }, { attributes, taskId }) {
+        const task = {
+            type: 'courseware-tasks',
+            attributes: attributes,
+            id: taskId,
+        };
+        await dispatch('courseware-tasks/update', task, { root: true });
+
+        return dispatch('loadTask', { taskId: task.id });
+    },
+
+    async deleteTask({ dispatch }, { task }) {
+        const data = {
+            id: task.id,
+        };
+        await dispatch('courseware-tasks/delete', data, { root: true });
+    },
+
+    async createTaskFeedback({ dispatch }, { taskFeedback }) {
+        await dispatch('courseware-task-feedback/create', taskFeedback, { root: true });
+
+        return dispatch('loadTask', { taskId: taskFeedback.relationships.task.data.id });
+    },
+
+    async updateTaskFeedback({ dispatch }, { attributes, taskFeedbackId }) {
+        const taskFeedback = {
+            type: 'courseware-task-feedback',
+            attributes: attributes,
+            id: taskFeedbackId,
+        };
+        await dispatch('courseware-task-feedback/update', taskFeedback, { root: true });
+
+        return dispatch('courseware-task-feedback/loadById', { id: taskFeedback.id }, { root: true });
+    },
+
+    async deleteTaskFeedback({ dispatch }, { taskFeedbackId }) {
+        const data = {
+            id: taskFeedbackId,
+        };
+        await dispatch('courseware-task-feedback/delete', data, { root: true });
+    },
+
+    setPurposeFilter({ commit }, purpose) {
+        commit('setPurposeFilter', purpose);
+    },
+    setBookmarkFilter({ commit }, course) {
+        commit('setBookmarkFilter', course);
+    },
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -969,6 +1150,10 @@ export const mutations = {
 
     coursewareViewModeSet(state, data) {
         state.viewMode = data;
+    },
+
+    setDashboardViewMode(state, data) {
+        state.dashboardViewMode = data;
     },
 
     coursewareShowToolbarSet(state, data) {
@@ -1012,6 +1197,7 @@ export const mutations = {
     },
 
     setUserIsTeacher(state, isTeacher) {
+        state.teacherStatusLoaded = true;
         state.userIsTeacher = isTeacher;
     },
 
@@ -1047,6 +1233,14 @@ export const mutations = {
         state.showStructuralElementDeleteDialog = showDelete;
     },
 
+    setShowOverviewElementAddDialog(state, showAdd) {
+        state.showOverviewElementAddDialog = showAdd;
+    },
+
+    setStructuralElementSortMode(state, mode) {
+        state.structuralElementSortMode = mode;
+    },
+
     setImportFilesState(state, importFilesState) {
         state.importFilesState = importFilesState;
     },
@@ -1071,8 +1265,13 @@ export const mutations = {
     },
     setExportProgress(state, exportProgress) {
         state.exportProgress = exportProgress;
-    }
-
+    },
+    setPurposeFilter(state, purpose) {
+        state.purposeFilter = purpose;
+    },
+    setBookmarkFilter(state, course) {
+        state.bookmarkFilter = course;
+    },
 };
 
 export default {

@@ -34,5 +34,10 @@ export default {
         };
     },
     methods: {},
+    watch: {
+        open(state) {
+            this.isOpen = state;
+        }
+    }
 };
 </script>

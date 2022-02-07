@@ -73,6 +73,8 @@ class ContainersUpdate extends JsonApiController
                 );
             }
 
+            $resource->position = $json['data']['attributes']['position'];
+
             $resource->editor_id = $user->id;
             $resource->store();
 

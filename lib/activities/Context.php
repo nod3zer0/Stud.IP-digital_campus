@@ -10,6 +10,24 @@ namespace Studip\Activity;
 
 abstract class Context
 {
+    public static $objectTypes = [
+        'documents',
+        'message',
+        'news',
+        'participants',
+        'schedule',
+        'wiki',
+        'courseware', 
+        'forum'
+    ];
+
+    public static $contexTypes = [
+        'system',
+        'course',
+        'institute',
+        'user'
+    ];
+
     protected
         $provider,
         $observer;
@@ -63,6 +81,24 @@ abstract class Context
     public function getActivities(Filter $filter)
     {
         $providers = $this->filterProvider($this->getProvider(), $filter);
+
+        $query = 'context = ? AND context_id = ? AND mkdate >= ? AND mkdate <= ? ORDER BY mkdate DESC';
+        $params = [$this->getContextType(), $this->getRangeId(), $filter->getStartDate(), $filter->getEndDate()];
+
+        if ($filter->getContext() !== null && $filter->getContextId() !== null) {
+            $params = [$filter->getContext(), $filter->getContextId(), $filter->getStartDate(), $filter->getEndDate()];
+        }
+
+        if(\in_array($filter->getObjectType(), $this::$objectTypes)) {
+            $query = 'object_type = ? AND ' . $query;
+            \array_unshift($params, $filter->getObjectType());
+
+            //Object ID Filter only available when object type is set
+            if($filter->getObjectId() !== null && \strlen($filter->getObjectId()) > 0) {
+                $query = 'object_id = ? AND ' . $query;
+                \array_unshift($params, $filter->getObjectId());
+            }
+        }
         $activities = Activity::findAndMapBySQL(
             function ($activity) use ($providers) {
                 if (isset($providers[$activity->provider])) {                        // provider is available
@@ -72,9 +108,9 @@ abstract class Context
                     }
                 }
             },
-            'context = ? AND context_id = ?  AND mkdate >= ? AND mkdate <= ? ORDER BY mkdate DESC'
-            ,
-            [$this->getContextType(), $this->getRangeId(), $filter->getStartDate(), $filter->getEndDate()]);
+            $query,
+            $params
+        );
         return array_filter($activities);
     }
 

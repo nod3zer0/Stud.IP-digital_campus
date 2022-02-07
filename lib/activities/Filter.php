@@ -13,7 +13,11 @@ class Filter
         $start_date,
         $end_date,
         $type,
-        $verb;
+        $verb,
+        $objectType,
+        $objectId,
+        $context,
+        $contextId;
 
     /**
      *
@@ -85,5 +89,77 @@ class Filter
     public function setVerb($verb)
     {
         $this->verb = $verb;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getObjectType()
+    {
+        return $this->objectType;
+    }
+
+    /**
+     *
+     * @param string $objectType
+     */
+    public function setObjectType($objectType)
+    {
+        $this->objectType = $objectType;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getObjectId()
+    {
+        return $this->objectId;
+    }
+
+    /**
+     *
+     * @param string $objectId
+     */
+    public function setObjectId($objectId)
+    {
+        $this->objectId = $objectId;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
+     *
+     * @param string $context
+     */
+    public function setContext($context)
+    {
+        $this->context = $context;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getContextId()
+    {
+        return $this->contextId;
+    }
+
+    /**
+     *
+     * @param string $contextId
+     */
+    public function setContextId($contextId)
+    {
+        $this->contextId = $contextId;
     }
 }

@@ -1,8 +1,7 @@
 <template>
-    <section class="cw-block-comments">
-        <header><translate>Kommentare</translate></header>
+    <section class="cw-block-comments" :class="[emptyComments ? 'cw-block-comments-empty' : '']">
         <div class="cw-block-features-content">
-            <div class="cw-block-comments-items" ref="comments">
+            <div class="cw-block-comments-items" v-show="!emptyComments" ref="commentsRef">
                 <courseware-talk-bubble
                     v-for="comment in comments"
                     :key="comment.id"
@@ -12,7 +11,6 @@
             <div class="cw-block-comment-create">
                 <textarea v-model="createComment" :placeholder="placeHolder" spellcheck="true"></textarea>
                 <button class="button" @click="postComment"><translate>Senden</translate></button>
-                <button class="button" @click="$emit('close')"><translate>Schließen</translate></button>
             </div>
         </div>
     </section>
@@ -29,7 +27,6 @@ export default {
     },
     props: {
         block: Object,
-        comments: Array,
     },
     data() {
         return {
@@ -41,21 +38,55 @@ export default {
         ...mapGetters({
             relatedUser: 'users/related',
             userId: 'userId',
+            getComments: 'courseware-block-comments/related',
         }),
+        comments() {
+            const parent = {
+                type: this.block.type,
+                id: this.block.id,
+            };
+
+            return this.getComments({ parent, relationship: 'comments' });
+        },
+        emptyComments() {
+            if (this.comments === null || this.comments.length === 0) {
+                return true;
+            }
+
+            return false;
+        }
     },
     methods: {
+        async loadComments() {
+            const parent = {
+                type: this.block.type,
+                id: this.block.id,
+            };
+            await this.$store.dispatch('courseware-block-comments/loadRelated', {
+                parent,
+                relationship: 'comments',
+                options: {
+                    include: 'user',
+                },
+            });
+        },
         async postComment() {
-            let data = {};
-            data.attributes = {};
-            data.attributes.comment = this.createComment;
-            data.relationships = {};
-            data.relationships.block = {};
-            data.relationships.block.data = {};
-            data.relationships.block.data.id = this.block.id;
-            data.relationships.block.data.type = this.block.type;
+            const data = {
+                attributes: {
+                    comment: this.createComment
+                },
+                relationships: {
+                    block: {
+                        data: {
+                            id: this.block.id,
+                            type: this.block.type
+                        }
+                    }
+                }
+            };
 
             await this.$store.dispatch('courseware-block-comments/create', data);
-            this.$emit('postComment');
+            this.loadComments();
             this.createComment = '';
         },
         buildPayload(comment) {
@@ -78,8 +109,19 @@ export default {
             return payload;
         },
     },
-    updated() {
-        this.$refs.comments.scrollTop = this.$refs.comments.scrollHeight;
+    mounted() {
+        this.loadComments();
     },
+    updated() {
+        let ref = this.$refs["commentsRef"];
+        ref.scrollTop = ref.scrollHeight;
+    },
+    watch: {
+        comments() {
+            if (this.comments && this.comments.length > 0) {
+                this.$emit('hasComments');
+            }
+        }
+    }
 };
 </script>

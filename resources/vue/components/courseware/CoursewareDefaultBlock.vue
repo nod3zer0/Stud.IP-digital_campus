@@ -2,6 +2,7 @@
     <div v-if="block.attributes.visible || canEdit" class="cw-default-block">
         <div class="cw-content-wrapper" :class="[showEditMode ? 'cw-content-wrapper-active' : '']">
             <header v-if="showEditMode" class="cw-block-header">
+                <span class="cw-sortable-handle"></span>
                 <span v-if="!block.attributes.visible" class="cw-default-block-invisible-info">
                     <studip-icon shape="visibility-invisible" />
                 </span>
@@ -14,8 +15,6 @@
                     :canEdit="canEdit"
                     :deleteOnly="deleteOnly"
                     @editBlock="displayFeature('Edit')"
-                    @showFeedback="displayFeature('Feedback')"
-                    @showComments="displayFeature('Comments')"
                     @showInfo="displayFeature('Info')"
                     @showExportOptions="displayFeature('ExportOptions')"
                     @deleteBlock="displayDeleteDialog()"
@@ -25,21 +24,6 @@
                 <slot name="content" />
             </div>
             <div v-if="showFeatures" class="cw-block-features cw-block-features-default">
-                <courseware-block-feedback
-                    v-if="canEdit && showFeedback"
-                    :block="block"
-                    :canEdit="canEdit"
-                    :isTeacher="isTeacher"
-                    @close="displayFeature(false)"
-                />
-                <courseware-block-comments
-                    v-if="showComments"
-                    :block="block"
-                    :comments="currentComments"
-                    @postComment="updateComments"
-                    @close="displayFeature(false)"
-                    ref="comments"
-                />
                 <courseware-block-export-options
                     v-if="canEdit && showExportOptions"
                     :block="block"
@@ -62,6 +46,12 @@
                 </courseware-block-info>
             </div>
         </div>
+        <div v-if="discussView" class="cw-discuss-wrapper">
+            <courseware-block-discussion
+                :block="block"
+                :canEdit="canEdit"
+            />
+        </div>
         <studip-dialog
             v-if="showDeleteDialog"
             :title="textDeleteTitle"
@@ -81,10 +71,13 @@ import CoursewareBlockExportOptions from './CoursewareBlockExportOptions.vue';
 import CoursewareBlockFeedback from './CoursewareBlockFeedback.vue';
 import CoursewareBlockInfo from './CoursewareBlockInfo.vue';
 import CoursewareBlockActions from './CoursewareBlockActions.vue';
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
 import StudipDialog from '../StudipDialog.vue';
 import StudipIcon from '../StudipIcon.vue';
 import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
+import CoursewareBlockDiscussion from './CoursewareBlockDiscussion.vue';
 
 export default {
     name: 'courseware-default-block',
@@ -96,8 +89,11 @@ export default {
         CoursewareBlockFeedback,
         CoursewareBlockActions,
         CoursewareBlockInfo,
+        CoursewareTabs,
+        CoursewareTab,
         StudipDialog,
         StudipIcon,
+        CoursewareBlockDiscussion,
     },
     props: {
         block: Object,
@@ -111,13 +107,11 @@ export default {
         defaultGrade: {
             type: Boolean,
             default: true,
-        },
+        }
     },
     data() {
         return {
             showFeatures: false,
-            showFeedback: false,
-            showComments: false,
             showExportOptions: false,
             showEdit: false,
             showInfo: false,
@@ -134,7 +128,6 @@ export default {
             blockTypes: 'blockTypes',
             userId: 'userId',
             viewMode: 'viewMode',
-            getComments: 'courseware-block-comments/related',
             containerById: 'courseware-containers/byId',
         }),
         showEditMode() {
@@ -143,6 +136,9 @@ export default {
                 this.displayFeature(false);
             }
             return show;
+        },
+        discussView() {
+            return this.viewMode === 'discuss';
         },
         blocked() {
             return this.block?.relationships['edit-blocker'].data !== null;
@@ -178,7 +174,6 @@ export default {
             deleteBlock: 'deleteBlockInContainer',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
-            loadComments: 'courseware-block-comments/loadRelated',
             loadContainer: 'loadContainer',
             updateContainer: 'updateContainer',
         }),
@@ -187,8 +182,6 @@ export default {
                 return false;
             }
             this.showFeatures = false;
-            this.showFeedback = false;
-            this.showComments = false;
             this.showExportOptions = false;
             this.showEdit = false;
             this.showInfo = false;
@@ -208,7 +201,6 @@ export default {
 
                             return false;
                         }
-
                         if (!this.preview) {
                             this.showContent = false;
                         }
@@ -228,10 +220,6 @@ export default {
                 } else {
                     this['show' + element] = true;
                     this.showFeatures = true;
-                }
-
-                if (element === 'Comments') {
-                    this.loadComments();
                 }
             }
         },
@@ -284,26 +272,6 @@ export default {
                 blockId: this.block.id,
                 containerId: containerId,
             });
-        },
-
-        async loadComments() {
-            const parent = {
-                type: this.block.type,
-                id: this.block.id,
-            };
-            await this.$store.dispatch('courseware-block-comments/loadRelated', {
-                parent,
-                relationship: 'comments',
-                options: {
-                    include: 'user',
-                },
-            });
-
-            this.currentComments = await this.getComments({ parent, relationship: 'comments' });
-        },
-        async updateComments() {
-            await this.loadComments();
-            this.$refs.comments.$refs.comments.scrollTo(0, this.$refs.comments.$refs.comments.scrollHeight);
         },
     },
 };

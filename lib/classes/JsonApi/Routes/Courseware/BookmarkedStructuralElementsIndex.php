@@ -46,6 +46,6 @@ class BookmarkedStructuralElementsIndex extends JsonApiController
         $total = count($resources);
         list($offset, $limit) = $this->getOffsetAndLimit();
 
-        return $this->getPaginatedResponse(array_slice($resources, $offset, $limit), $total);
+        return $this->getPaginatedContentResponse(array_slice($resources, $offset, $limit), $total);
     }
 }

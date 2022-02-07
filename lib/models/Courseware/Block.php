@@ -207,4 +207,19 @@ class Block extends \SimpleORMap
             return 'error';
         }
     }
+
+    public function getStructuralElement(): ?StructuralElement
+    {
+        $sql = 'SELECT se.*
+                FROM cw_blocks b
+                JOIN cw_containers c ON c.id = b.container_id
+                JOIN cw_structural_elements se ON se.id = c.structural_element_id
+                WHERE  b.id = ?';
+        $structuralElement = \DBManager::get()->fetchOne($sql, [$this->getId()]);
+        if (!count($structuralElement)) {
+            return null;
+        }
+
+        return StructuralElement::build($structuralElement, false);
+    }
 }

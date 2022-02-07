@@ -1,143 +1,149 @@
 <template>
-    <div class="cw-course-manager">
-        <courseware-tabs class="cw-course-manager-tabs">
-            <courseware-tab :name="$gettext('Diese Courseware')" :selected="true">
-                <courseware-manager-element
-                    type="current"
-                    :currentElement="currentElement"
-                    @selectElement="setCurrentId"
+    <div class="cw-course-manager-wrapper">
+        <div class="cw-course-manager">
+            <courseware-tabs class="cw-course-manager-tabs">
+                <courseware-tab :name="$gettext('Diese Courseware')" :selected="true">
+                    <courseware-manager-element
+                        type="current"
+                        :currentElement="currentElement"
+                        @selectElement="setCurrentId"
+                        @reloadElement="reloadElements"
+                    />
+                </courseware-tab>
+                <courseware-tab :name="$gettext('Export')">
+                    <button
+                        class="button"
+                        @click.prevent="doExportCourseware"
+                        :class="{
+                            disabled: exportRunning,
+                        }"
+                    >
+                        <translate>Alles exportieren</translate>
+                    </button>
+                    <courseware-companion-box v-show="exportRunning" :msgCompanion="$gettext('Export läuft, bitte haben sie einen Moment Geduld...')" mood="pointing"/>
+                    <div v-if="exportRunning" class="cw-import-zip">
+                        <header>{{exportState}}:</header>
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar" role="progressbar" :style="{width: exportProgress + '%'}" :aria-valuenow="exportProgress" aria-valuemin="0" aria-valuemax="100">{{ exportProgress }}%</div>
+                        </div>
+                    </div>
+                </courseware-tab>
+            </courseware-tabs>
+
+            <courseware-tabs class="cw-course-manager-tabs">
+                <courseware-tab :name="$gettext('FAQ')">
+                    <courseware-collapsible-box :open="true" :title="$gettext('Wie finde ich die gewünschte Stelle?')">
+                        <p><translate>
+                            Wählen Sie auf der linken Seite "Diese Courseware" aus.
+                            Beim laden der Seite ist dies immer gewählt. Die Überschrift
+                            gibt an, welche Seite Sie gerade ausgewählt haben. Darunter befinden
+                            sich die Abschnitte der Seite und innerhalb dieser deren Blöcke.
+                            Möchten Sie eine Seite, die unterhalb der gewählten liegt bearbeiten,
+                            können Sie diese über die Schaltflächen im Bereich "Seiten" wählen.
+                            Über der Überschrift wird eine Navigation eingeblendet, mit der Sie beliebig 
+                            weit hoch in der Hierarchie springen können.
+                        </translate></p>
+                    </courseware-collapsible-box>
+                    <courseware-collapsible-box :title="$gettext('Wie sortiere ich Objekte?')">
+                        <p><translate>
+                            Seiten, Abschnitte und Blöcke lassen sich in ihrer Reihenfolge sortieren.
+                            Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche "Seiten sortieren",
+                            "Abschnitte sortieren" oder "Blöcke sortieren".
+                            An den Objekten werden Pfeile angezeigt, mit diesen können die Objekte an die gewünschte
+                            Position gebracht werden. Um die neue Sortierung zu speichern, wählen Sie "Sortieren beenden".
+                            Sie können die Änderungen auch rückgängig machen, indem Sie "Sortieren abbrechen" wählen.
+                        </translate></p>
+                    </courseware-collapsible-box>
+                    <courseware-collapsible-box :title="$gettext('Wie verschiebe ich Objekte?')">
+                        <p><translate>
+                            Seiten, Abschnitte und Blöcke lassen sich verschieben.
+                            Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche
+                            "Seite an diese Stelle einfügen", "Abschnitt an diese Stelle einfügen" oder
+                            "Block an diese Stelle einfügen". Wählen Sie dann auf der rechten Seite unter
+                            "Verschieben" das Objekt aus, das Sie verschieben möchten. Verschiebbare Objekte
+                            erkennen Sie an den zwei nach links zeigenden gelben Pfeilen.
+                        </translate></p>
+                    </courseware-collapsible-box>
+                    <courseware-collapsible-box :title="$gettext('Wie kopiere ich Objekte?')">
+                        <p><translate>
+                            Seiten, Abschnitte und Blöcke lassen sich aus einer anderen Veranstaltung und Ihren
+                            eigenen Inhalten kopieren.
+                            Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche
+                            "Seite an diese Stelle einfügen", "Abschnitt an diese Stelle einfügen" oder
+                            "Block an diese Stelle einfügen". Wählen Sie dann auf der rechten Seite unter
+                            "Kopieren" erst die Veranstaltung aus der Sie kopieren möchten oder Ihre eigenen
+                            Inhalte. Wählen sie dann das Objekt aus, das Sie kopieren möchten. Kopierbare Objekte
+                            erkennen Sie an den zwei nach links zeigenden gelben Pfeilen.
+                        </translate></p>
+                    </courseware-collapsible-box>
+                </courseware-tab>
+                <courseware-tab name="Verschieben" :selected="true">
+                    <courseware-manager-element
+                    type="self"
+                    :currentElement="selfElement"
+                    :moveSelfPossible="moveSelfPossible"
+                    :moveSelfChildPossible="moveSelfChildPossible"
+                    @selectElement="setSelfId"
                     @reloadElement="reloadElements"
-                />
-            </courseware-tab>
-            <courseware-tab :name="$gettext('Export')">
-                <button
-                    class="button"
-                    @click.prevent="doExportCourseware"
-                    :class="{
-                        disabled: exportRunning,
-                    }"
-                >
-                    <translate>Alles exportieren</translate>
-                </button>
-                <courseware-companion-box v-show="exportRunning" :msgCompanion="$gettext('Export läuft, bitte haben sie einen Moment Geduld...')" mood="pointing"/>
-                <div v-if="exportRunning" class="cw-import-zip">
-                    <header>{{exportState}}:</header>
-                    <div class="progress-bar-wrapper">
-                        <div class="progress-bar" role="progressbar" :style="{width: exportProgress + '%'}" :aria-valuenow="exportProgress" aria-valuemin="0" aria-valuemax="100">{{ exportProgress }}%</div>
+                    />
+                </courseware-tab>
+
+                <courseware-tab :name="$gettext('Kopieren')">
+                    <courseware-manager-copy-selector @loadSelf="reloadElements" @reloadElement="reloadElements" />
+                </courseware-tab>
+
+                <courseware-tab :name="$gettext('Importieren')">
+                    <courseware-companion-box v-show="!importRunning && importDone" :msgCompanion="$gettext('Import erfolgreich!')" mood="special"/>
+                    <courseware-companion-box v-show="importRunning" :msgCompanion="$gettext('Import läuft. Bitte verlassen Sie die Seite nicht bis der Import abgeschlossen wurde.')" mood="pointing"/>
+                    <button
+                        v-show="!importRunning"
+                        class="button"
+                        @click.prevent="chooseFile"
+                    >
+                        <translate>Importdatei auswählen</translate>
+                    </button>
+
+                    <div v-if="importZip" class="cw-import-zip">
+                        <header>{{ importZip.name }}</header>
+                        <p><translate>Größe</translate>: {{ getFileSizeText(importZip.size) }}</p>
                     </div>
-                </div>
-            </courseware-tab>
-        </courseware-tabs>
 
-        <courseware-tabs class="cw-course-manager-tabs">
-            <courseware-tab :name="$gettext('FAQ')">
-                <courseware-collapsible-box :open="true" :title="$gettext('Wie finde ich die gewünschte Stelle?')">
-                    <p><translate>
-                        Wählen Sie auf der linken Seite "Diese Courseware" aus.
-                        Beim laden der Seite ist dies immer gewählt. Die Überschrift
-                        gibt an welche Seite Sie grade ausgewählt haben. Darunter befinden
-                        sich die Abschnitte der Seite und innerhalb dieser dessen Blöcke.
-                        Möchten Sie eine Seite die unterhalb der gewählten liegt bearbeiten,
-                        können Sie diese über die Schaltflächen im Bereich "Seiten" wählen.
-                        Über der Überschrift wird eine Navigation eingeblendet, mit dieser können
-                        Sie beliebig weit hoch in der Hierarchie springen.
-                    </translate></p>
-                </courseware-collapsible-box>
-                <courseware-collapsible-box :title="$gettext('Wie sortiere ich Objekte?')">
-                    <p><translate>
-                        Seiten, Abschnitte und Blöcke lassen sich in ihrer Reihenfolge sortieren.
-                        Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche "Seiten sortieren",
-                        "Abschnitte sortieren" oder "Blöcke sortieren".
-                        An den Objekten werden Pfeile angezeigt, mit diesen können die Objekte an die gewünschte
-                        Position gebracht werden. Um die neue Sortierung zu speichern wählen Sie "Sortieren beenden".
-                        Sie können die Änderungen auch rückgängig machen indem Sie "Sortieren abbrechen" wählen.
-                    </translate></p>
-                </courseware-collapsible-box>
-                <courseware-collapsible-box :title="$gettext('Wie verschiebe ich Objekte?')">
-                    <p><translate>
-                        Seiten, Abschnitte und Blöcke lassen sich verschieben.
-                        Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche
-                        "Seite an diese Stelle einfügen", "Abschnitt an diese Stelle einfügen" oder
-                        "Block an diese Stelle einfügen". Wählen Sie dann auf der rechten Seite unter
-                        "Verschieben" das Objekt aus das Sie verschieben möchten. Verschiebbare Objekte
-                        erkennen Sie an den zwei nach links zeigenden gelben Pfeilen.
-                    </translate></p>
-                </courseware-collapsible-box>
-                <courseware-collapsible-box :title="$gettext('Wie kopiere ich Objekte?')">
-                    <p><translate>
-                        Seiten, Abschnitte und Blöcke lassen sich aus einer anderen Veranstaltung und Ihren
-                        eigenen Inhalten kopieren.
-                        Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche
-                        "Seite an diese Stelle einfügen", "Abschnitt an diese Stelle einfügen" oder
-                        "Block an diese Stelle einfügen". Wählen Sie dann auf der rechten Seite unter
-                        "Kopieren" erst die Veranstaltung aus der Sie kopieren möchten oder Ihre eigenen
-                        Inhalte. Wählen sie dann das Objekt aus das Sie kopieren möchten. Kopierbare Objekte
-                        erkennen Sie an den zwei nach links zeigenden gelben Pfeilen.
-                    </translate></p>
-                </courseware-collapsible-box>
-            </courseware-tab>
-            <courseware-tab :name="$gettext('Verschieben')" :selected="true">
-                <courseware-manager-element
-                type="self"
-                :currentElement="selfElement"
-                :moveSelfPossible="moveSelfPossible"
-                :moveSelfChildPossible="moveSelfChildPossible"
-                @selectElement="setSelfId"
-                @reloadElement="reloadElements"
-                />
-            </courseware-tab>
-
-            <courseware-tab :name="$gettext('Kopieren')">
-                <courseware-manager-copy-selector @loadSelf="reloadElements" @reloadElement="reloadElements" />
-            </courseware-tab>
-
-            <courseware-tab :name="$gettext('Importieren')">
-                <courseware-companion-box v-show="!importRunning && importDone" :msgCompanion="$gettext('Import erfolgreich!')" mood="special"/>
-                <courseware-companion-box v-show="importRunning" :msgCompanion="$gettext('Import läuft. Bitte verlassen Sie die Seite nicht bis der Import abgeschlossen wurde.')" mood="pointing"/>
-                <button
-                    v-show="!importRunning"
-                    class="button"
-                    @click.prevent="chooseFile"
-                >
-                    <translate>Importdatei auswählen</translate>
-                </button>
-
-                <div v-if="importZip" class="cw-import-zip">
-                    <header>{{ importZip.name }}</header>
-                    <p><translate>Größe</translate>: {{ getFileSizeText(importZip.size) }}</p>
-                </div>
-
-                <div v-if="importRunning" class="cw-import-zip">
-                    <header><translate>Importiere Dateien</translate>:</header>
-                    <div class="progress-bar-wrapper">
-                        <div class="progress-bar" role="progressbar" :style="{width: importFilesProgress + '%'}" :aria-valuenow="importFilesProgress" aria-valuemin="0" aria-valuemax="100">{{ importFilesProgress }}%</div>
+                    <div v-if="importRunning" class="cw-import-zip">
+                        <header><translate>Importiere Dateien</translate>:</header>
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar" role="progressbar" :style="{width: importFilesProgress + '%'}" :aria-valuenow="importFilesProgress" aria-valuemin="0" aria-valuemax="100">{{ importFilesProgress }}%</div>
+                        </div>
+                        {{ importFilesState }}
                     </div>
-                    {{ importFilesState }}
-                </div>
 
-                <div v-if="fileImportDone && importRunning" class="cw-import-zip">
-                    <header><translate>Importiere Elemente</translate>:</header>
-                    <div class="progress-bar-wrapper">
-                        <div class="progress-bar" role="progressbar" :style="{width: importStructuresProgress + '%'}" :aria-valuenow="importStructuresProgress" aria-valuemin="0" aria-valuemax="100">{{ importStructuresProgress }}%</div>
+                    <div v-if="fileImportDone && importRunning" class="cw-import-zip">
+                        <header><translate>Importiere Elemente</translate>:</header>
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar" role="progressbar" :style="{width: importStructuresProgress + '%'}" :aria-valuenow="importStructuresProgress" aria-valuemin="0" aria-valuemax="100">{{ importStructuresProgress }}%</div>
+                        </div>
+                        {{ importStructuresState }}
                     </div>
-                    {{ importStructuresState }}
-                </div>
 
-                <button
-                    v-show="importZip && !importRunning"
-                    class="button"
-                    @click.prevent="doImportCourseware"
-                >
-                    <translate>Alles importieren</translate>
-                </button>
+                    <button
+                        v-show="importZip && !importRunning"
+                        class="button"
+                        @click.prevent="doImportCourseware"
+                    >
+                        <translate>Alles importieren</translate>
+                    </button>
 
-                <ul v-if="importErrors.length > 0">
-                    <li v-for="error in importErrors"> {{error}} </li>
-                </ul>
+                    <ul v-if="importErrors.length > 0">
+                        <li v-for="(index, error) in importErrors" :key="index"> {{error}} </li>
+                    </ul>
 
-                <input ref="importFile" type="file" accept=".zip" @change="setImport" style="visibility: hidden" />
-            </courseware-tab>
-        </courseware-tabs>
+                    <input ref="importFile" type="file" accept=".zip" @change="setImport" style="visibility: hidden" />
+                </courseware-tab>
+                <courseware-tab v-if="context.type === 'courses'" :name="$gettext('Aufgabe verteilen')">
+                    <courseware-manager-task-distributor />
+                </courseware-tab>
+            </courseware-tabs>
+        </div>
+        <courseware-companion-overlay />
     </div>
 </template>
 <script>
@@ -146,6 +152,8 @@ import CoursewareTab from './CoursewareTab.vue';
 import CoursewareCollapsibleBox from './CoursewareCollapsibleBox.vue';
 import CoursewareManagerElement from './CoursewareManagerElement.vue';
 import CoursewareManagerCopySelector from './CoursewareManagerCopySelector.vue';
+import CoursewareManagerTaskDistributor from './CoursewareManagerTaskDistributor.vue';
+import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareImport from '@/vue/mixins/courseware/import.js';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
@@ -162,7 +170,9 @@ export default {
         CoursewareCollapsibleBox,
         CoursewareManagerElement,
         CoursewareManagerCopySelector,
+        CoursewareCompanionOverlay,
         CoursewareCompanionBox,
+        CoursewareManagerTaskDistributor
     },
 
     mixins: [CoursewareImport, CoursewareExport],
@@ -183,6 +193,7 @@ export default {
     computed: {
         ...mapGetters({
             courseware: 'courseware',
+            context: 'context',
             structuralElementById: 'courseware-structural-elements/byId',
             importFilesState: 'importFilesState',
             importFilesProgress: 'importFilesProgress',

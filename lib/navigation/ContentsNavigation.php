@@ -48,7 +48,7 @@ class ContentsNavigation extends Navigation
         $courseware->setImage(Icon::create('courseware'));
 
         $courseware->addSubNavigation(
-            'projects',
+            'overview',
             new Navigation(_('Übersicht'), 'dispatch.php/contents/courseware/index')
         );
         $courseware->addSubNavigation(

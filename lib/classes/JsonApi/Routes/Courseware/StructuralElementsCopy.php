@@ -33,6 +33,9 @@ class StructuralElementsCopy extends NonJsonApiController
         }
 
         $newElement = $this->copyElement($user, $sourceElement, $newParent);
+        if ($data['remove_purpose']) {
+            $newElement->purpose = '';
+        }
 
         return $this->redirectToStructuralElement($response, $newElement);
     }

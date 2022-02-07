@@ -31,6 +31,8 @@ const mountApp = (STUDIP, createApp, element) => {
                     'courseware-containers',
                     'courseware-instances',
                     'courseware-structural-elements',
+                    'courseware-task-groups',
+                    'courseware-tasks',
                     'courseware-user-data-fields',
                     'courseware-user-progresses',
                     'files',

@@ -11,6 +11,7 @@
                     :container="container"
                     @editContainer="displayEditDialog"
                     @deleteContainer="displayDeleteDialog"
+                    @sortBlocks="sortBlocks"
                 />
             </header>
             <div class="cw-block-wrapper" :class="{ 'cw-block-wrapper-active': showEditMode }">
@@ -103,6 +104,7 @@ export default {
             deleteContainer: 'deleteContainer',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
+            companionInfo: 'companionInfo',
         }),
         async displayEditDialog() {
             if (this.blockedByAnotherUser) {
@@ -152,6 +154,25 @@ export default {
             }
             this.showDeleteDialog = false;
         },
+        async sortBlocks() {
+            if (this.blockedByAnotherUser) {
+                this.companionInfo({ info: this.$gettext('Dieser Abschnitt wird bereits bearbeitet.') });
+
+                return false;
+            }
+            try {
+                await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
+            } catch(error) {
+                if (error.status === 409) {
+                    this.companionInfo({ info: this.$gettext('Dieser Abschnitt wird bereits bearbeitet.') });
+                } else {
+                    console.log(error);
+                }
+
+                return false;
+            }
+            this.$emit('sortBlocks');
+        }
     },
 };
 </script>

@@ -27,8 +27,11 @@
                 :chapterId="chapter.id"
                 @selectChapter="selectChapter"
             />
-            <div v-if="!children.length">
-                <translate>Dieses Seite enthält keine darunter liegenden Seiten</translate>
+            <div v-if="!children.length" class="cw-dashboard-empty-info">
+                <courseware-companion-box 
+                    mood="sad"
+                    :msgCompanion="$gettext('Diese Seite enthält keine darunter liegenden Seiten.')"
+                />
             </div>
         </div>
     </div>
@@ -36,12 +39,14 @@
 
 <script>
 import StudipIcon from '../StudipIcon.vue';
+import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareDashboardProgressItem from './CoursewareDashboardProgressItem.vue';
 import CoursewareProgressCircle from './CoursewareProgressCircle.vue';
 
 export default {
     name: 'courseware-dashboard-progress',
     components: {
+        CoursewareCompanionBox,
         CoursewareDashboardProgressItem,
         CoursewareProgressCircle,
         StudipIcon,

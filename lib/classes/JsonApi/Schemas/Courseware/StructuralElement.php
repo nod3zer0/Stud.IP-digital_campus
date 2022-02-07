@@ -22,6 +22,7 @@ class StructuralElement extends SchemaProvider
     const REL_OWNER = 'owner';
     const REL_PARENT = 'parent';
     const REL_USER = 'user';
+    const REL_TASK = 'task';
 
     /**
      * {@inheritdoc}
@@ -79,11 +80,7 @@ class StructuralElement extends SchemaProvider
             $this->shouldInclude($context, self::REL_CONTAINERS)
         );
 
-        $relationships = $this->addRangeRelationship(
-            $relationships,
-            $resource,
-            $context
-        );
+        $relationships = $this->addRangeRelationship($relationships, $resource, $context);
 
         $relationships = $this->addOwnerRelationship(
             $relationships,
@@ -127,6 +124,12 @@ class StructuralElement extends SchemaProvider
             $this->shouldInclude($context, self::REL_IMAGE)
         );
 
+        $relationships = $this->addTaskRelationship(
+            $relationships,
+            $resource,
+            $this->shouldInclude($context, self::REL_TASK)
+        );
+
         return $relationships;
     }
 
@@ -158,11 +161,9 @@ class StructuralElement extends SchemaProvider
 
         if ($includeData) {
             $user = $this->currentUser;
-            $relation[self::RELATIONSHIP_DATA] = $resource->children->filter(
-                function ($child) use ($user) {
-                    return $child->canRead($user);
-                }
-            );
+            $relation[self::RELATIONSHIP_DATA] = $resource->children->filter(function ($child) use ($user) {
+                return $child->canRead($user);
+            });
         }
 
         $relationships[self::REL_CHILDREN] = $relation;
@@ -241,7 +242,9 @@ class StructuralElement extends SchemaProvider
             $relation[self::RELATIONSHIP_LINKS] = [
                 Link::RELATED => $this->createLinkToUser($resource['edit_blocker_id']),
             ];
-            $relation[self::RELATIONSHIP_DATA] = $includeData ? $resource->edit_blocker : new Identifier($resource['edit_blocker_id'], \JsonApi\Schemas\User::TYPE);
+            $relation[self::RELATIONSHIP_DATA] = $includeData
+                ? $resource->edit_blocker
+                : new Identifier($resource['edit_blocker_id'], \JsonApi\Schemas\User::TYPE);
         } else {
             $relation[self::RELATIONSHIP_DATA] = null;
         }
@@ -257,7 +260,9 @@ class StructuralElement extends SchemaProvider
             $relation[self::RELATIONSHIP_LINKS] = [
                 Link::RELATED => $this->createLinkToUser($resource['editor_id']),
             ];
-            $relation[self::RELATIONSHIP_DATA] = $includeData ? $resource->editor : new Identifier($resource['editor_id'], \JsonApi\Schemas\User::TYPE);
+            $relation[self::RELATIONSHIP_DATA] = $includeData
+                ? $resource->editor
+                : new Identifier($resource['editor_id'], \JsonApi\Schemas\User::TYPE);
         } else {
             $relation[self::RELATIONSHIP_DATA] = null;
         }
@@ -273,7 +278,9 @@ class StructuralElement extends SchemaProvider
             $relation[self::RELATIONSHIP_LINKS] = [
                 Link::RELATED => $this->createLinkToUser($resource['owner_id']),
             ];
-            $relation[self::RELATIONSHIP_DATA] = $includeData ? $resource->owner : new Identifier($resource['owner_id'], \JsonApi\Schemas\User::TYPE);
+            $relation[self::RELATIONSHIP_DATA] = $includeData
+                ? $resource->owner
+                : new Identifier($resource['owner_id'], \JsonApi\Schemas\User::TYPE);
         } else {
             $relation[self::RELATIONSHIP_DATA] = null;
         }
@@ -290,7 +297,9 @@ class StructuralElement extends SchemaProvider
             $relation[self::RELATIONSHIP_LINKS] = [
                 Link::RELATED => $this->createLinkToStructuralElement($resource['parent_id']),
             ];
-            $relation[self::RELATIONSHIP_DATA] = $includeData ? $resource->parent : new Identifier($resource['parent_id'], self::TYPE);
+            $relation[self::RELATIONSHIP_DATA] = $includeData
+                ? $resource->parent
+                : new Identifier($resource['parent_id'], self::TYPE);
         } else {
             $relation[self::RELATIONSHIP_DATA] = null;
         }
@@ -307,7 +316,9 @@ class StructuralElement extends SchemaProvider
                 self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $this->createLinkToCourse($resource['range_id']),
                 ],
-                self::RELATIONSHIP_DATA => $includeData ? $resource->course : new Identifier($resource['range_id'], \JsonApi\Schemas\Course::TYPE),
+                self::RELATIONSHIP_DATA => $includeData
+                    ? $resource->course
+                    : new Identifier($resource['range_id'], \JsonApi\Schemas\Course::TYPE),
             ];
         } elseif ($resource['range_type'] === 'user') {
             $includeData = $this->shouldInclude($context, self::REL_USER);
@@ -315,9 +326,30 @@ class StructuralElement extends SchemaProvider
                 self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $this->createLinkToUser($resource['range_id']),
                 ],
-                self::RELATIONSHIP_DATA => $includeData ? $resource->user : new Identifier($resource['range_id'], \JsonApi\Schemas\User::TYPE),
+                self::RELATIONSHIP_DATA => $includeData
+                    ? $resource->user
+                    : new Identifier($resource['range_id'], \JsonApi\Schemas\User::TYPE),
             ];
         }
+
+        return $relationships;
+    }
+
+    private function addTaskRelationship(
+        array $relationships,
+        $resource,
+        bool $shouldInclude
+    ): array {
+        $relationships[self::REL_TASK] = $resource->task
+            ? [
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($resource->task),
+                ],
+                self::RELATIONSHIP_DATA => $resource->task,
+            ]
+            : [
+                self::RELATIONSHIP_DATA => null,
+            ];
 
         return $relationships;
     }

@@ -244,4 +244,15 @@ abstract class ContainerType
             return _('unbekannter Courseware-Container');
         }
     }
+
+    public function pdfExport()
+    {
+        $html = '<h3>' . sprintf(_('Container-Typ: %s'), $this->getTitle()) . '</h3>';
+
+        foreach ($this->container->blocks as $block) {
+            $html .= $block->type->PdfExport();
+        }
+
+        return $html;
+    }
 }

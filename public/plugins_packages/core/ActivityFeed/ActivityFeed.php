@@ -115,7 +115,8 @@ class ActivityFeed extends StudIPPlugin implements PortalPlugin
             'wiki'         => _('Wiki'),
             'schedule'     => _('Ablaufplan'),
             'news'         => _('Ankündigungen'),
-            'blubber'      => _('Blubber')
+            'blubber'      => _('Blubber'),
+            'courseware'   => _('Courseware')
         ];
 
         $modules[\Context::INSTITUTE] = $modules[\Context::COURSE];

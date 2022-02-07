@@ -41,4 +41,20 @@ class BlockComment extends \SimpleORMap
 
         parent::configure($config);
     }
+
+    public function getStructuralElement(): ?StructuralElement
+    {
+        $sql = 'SELECT se.*
+                FROM cw_block_comments bc
+                JOIN cw_blocks b ON b.id = bc.block_id
+                JOIN cw_containers c ON c.id = b.container_id
+                JOIN cw_structural_elements se ON se.id = c.structural_element_id
+                WHERE  bc.id = ?';
+        $structuralElement = \DBManager::get()->fetchOne($sql, [$this->getId()]);
+        if (!count($structuralElement)) {
+            return null;
+        }
+
+        return StructuralElement::build($structuralElement, false);
+    }
 }

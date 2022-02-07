@@ -7,6 +7,7 @@ use Courseware\UserProgress;
 /**
  * @property ?string $entry_element_id
  * @property int $last_visitdate
+ * @property mixed $course_id
  * @property mixed $courseware_progress_data
  * @property mixed $courseware_chapter_counter
  */
@@ -71,10 +72,11 @@ class Course_CoursewareController extends AuthenticatedController
     public function dashboard_action(): void
     {
         global $perm, $user;
-        $course_progress = $perm->have_studip_perm('dozent', Context::getId(), $user->id);
-        $this->courseware_progress_data = $this->getProgressData($course_progress);
+        $this->is_teacher = $perm->have_studip_perm('tutor', Context::getId(), $user->id);
+        $this->courseware_progress_data = $this->getProgressData($this->is_teacher);
         $this->courseware_chapter_counter = $this->getChapterCounter($this->courseware_progress_data);
         Navigation::activateItem('course/courseware/dashboard');
+        $this->setDashboardSidebar();
     }
 
     public function manager_action(): void
@@ -87,6 +89,13 @@ class Course_CoursewareController extends AuthenticatedController
         } else {
             Navigation::activateItem('course/courseware/manager');
         }
+    }
+
+    public function pdf_export_action($element_id)
+    {
+        $element = \Courseware\StructuralElement::findOneById($element_id);
+
+        $this->render_pdf($element->pdfExport($this->user), trim($element->title).'.pdf');
     }
 
     private function setIndexSidebar(): void
@@ -103,6 +112,17 @@ class Course_CoursewareController extends AuthenticatedController
             $this->get_template_factory()->open('course/courseware/view_widget')
         );
         $sidebar->addWidget($views)->addLayoutCSSClass('courseware-view-widget');
+    }
+
+
+    private function setDashboardSidebar(): void
+    {
+        $sidebar = Sidebar::Get();
+        $views = new TemplateWidget(
+            _('Ansichten'),
+            $this->get_template_factory()->open('course/courseware/dashboard_view_widget')
+        );
+        $sidebar->addWidget($views)->addLayoutCSSClass('courseware-dashboard-view-widget');
     }
 
     private function getProgressData(bool $showProgressForAllParticipants = false): iterable

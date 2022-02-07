@@ -58,4 +58,12 @@ class Date extends BlockType
     {
         return [];
     }
+
+    public function pdfExport()
+    {
+        $html = '<h5>' . sprintf(_('Block-Typ: %s'), $this->getTitle()) . '</h5>';
+        $html .= '<p>' . date('d.m.Y h:i', (int) $this->getPayload()['timestamp'] / 1000) . '</p>';
+
+        return $html;
+    }
 }

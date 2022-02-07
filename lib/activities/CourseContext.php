@@ -52,6 +52,9 @@ class CourseContext extends Context
             }
             //news
             $this->addProvider('Studip\Activity\NewsProvider');
+
+            //courseware
+            $this->addProvider('Studip\Activity\CoursewareProvider');
         }
 
         return $this->provider;

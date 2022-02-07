@@ -165,4 +165,12 @@ class Text extends BlockType
             return array();
         });
     }
+
+    public function pdfExport()
+    {
+        $html = '<h5>' . sprintf(_('Block-Typ: %s'), $this->getTitle()) . '</h5>';
+        $html .= $this->getPayload()['text'];
+
+        return $html;
+    }
 }

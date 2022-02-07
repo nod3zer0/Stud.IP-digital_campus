@@ -4,7 +4,7 @@
             <slot name="oblongValue"></slot>
         </div>
         <div class="cw-oblong-description">
-            <studip-icon v-if="icon" :shape="icon" :size="24"></studip-icon>{{ name }}
+            <studip-icon v-if="icon" :shape="icon" role="info" :size="iconSize"></studip-icon>{{ name }}
         </div>
     </div>
 </template>
@@ -27,6 +27,16 @@ export default {
                     return 'small';
                 default:
                     return 'small';
+            }
+        },
+        iconSize() {
+            switch (this.size) {
+                case 'large':
+                    return 48;
+                case 'small':
+                    return 24;
+                default:
+                    return 24;
             }
         },
     },

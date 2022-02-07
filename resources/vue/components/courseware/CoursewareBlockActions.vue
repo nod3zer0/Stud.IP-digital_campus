@@ -4,8 +4,6 @@
             :items="menuItems"
             @editBlock="editBlock"
             @setVisibility="setVisibility"
-            @showComments="showComments"
-            @showFeedback="showFeedback"
             @showInfo="showInfo"
             @deleteBlock="deleteBlock"
         />
@@ -31,9 +29,7 @@ export default {
     },
     data() {
         return {
-            menuItems: [
-                { id: 6, label: this.$gettext('Kommentare anzeigen'), icon: 'comment2', emit: 'showComments' },
-            ],
+            menuItems: [],
         };
     },
     computed: {
@@ -48,9 +44,6 @@ export default {
         },
     },
     mounted() {
-        if (this.deleteOnly) {
-            this.menuItems = [];
-        }
         if (this.canEdit) {
             if (!this.deleteOnly) {
                 this.menuItems.push({ id: 1, label: this.$gettext('Block bearbeiten'), icon: 'edit', emit: 'editBlock' });
@@ -61,12 +54,6 @@ export default {
                         : this.$gettext('sichtbar setzen'),
                     icon: this.block.attributes.visible ? 'visibility-visible' : 'visibility-invisible', // do we change the icons ?
                     emit: 'setVisibility',
-                });
-                this.menuItems.push({
-                    id: 5,
-                    label: this.$gettext('Feedback anzeigen'),
-                    icon: 'comment',
-                    emit: 'showFeedback',
                 });
                 this.menuItems.push({
                     id: 7,
@@ -98,12 +85,6 @@ export default {
         },
         editBlock() {
             this.$emit('editBlock');
-        },
-        showFeedback() {
-            this.$emit('showFeedback');
-        },
-        showComments() {
-            this.$emit('showComments');
         },
         showInfo() {
             this.$emit('showInfo');

@@ -8,6 +8,7 @@ use JsonApi\Routes\ValidationTrait;
 use JsonApi\Schemas\Courseware\StructuralElement as StructuralElementSchema;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Studip\Activity\Activity;
 
 /**
  * Create a block in a container.
@@ -78,11 +79,49 @@ class StructuralElementsCreate extends JsonApiController
             'editor_id' => $user->id,
             'edit_blocker_id' => '',
             'title' => self::arrayGet($json, 'data.attributes.title', ''),
-            'purpose' => 'CONTENT',
+            'purpose' => self::arrayGet($json, 'data.attributes.purpose', 'content'),
+            'payload' => self::arrayGet($json, 'data.attributes.payload', ''),
             'position' => $parent->countChildren()
         ]);
 
         $struct->store();
+        $template = \Courseware\Template::find(self::arrayGet($json, 'data.templateId'));
+
+        if ($template) {
+            $structure = json_decode($template->structure, true);
+
+            foreach($structure['containers'] as $container) {
+
+                $new_container = \Courseware\Container::build([
+                    'structural_element_id' => $struct->id,
+                    'owner_id' => $user->id,
+                    'editor_id' => $user->id,
+                    'edit_blocker_id' => '',
+                    'position' => $struct->countContainers(),
+                    'container_type' => $container['attributes']['container-type'],
+                    'payload' => json_encode($container['attributes']['payload']),
+                ]);
+
+                $new_container->store();
+                $blockMap = [];
+                foreach($container['blocks'] as $block) {
+                    $new_block = \Courseware\Block::build([
+                        'container_id'    => $new_container->id,
+                        'owner_id'        => $user->id,
+                        'editor_id'       => $user->id,
+                        'position'        => $new_container->countBlocks(),
+                        'block_type'      => $block['attributes']['block-type'],
+                        'payload'         => json_encode($block['attributes']['payload']),
+                        'visible'         => 1,
+                    ]);
+
+                    $new_block->store();
+                    $blockMap[$block['id']] = $new_block->id;
+                }
+                $new_container['payload'] = $new_container->type->copyPayload($blockMap);
+                $new_container->store();
+            }
+        }
 
         return $struct;
     }

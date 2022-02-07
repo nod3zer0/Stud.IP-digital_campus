@@ -44,6 +44,9 @@ use User;
  * @property \User                          $editor             belongs_to User
  * @property ?\User                         $edit_blocker       belongs_to User
  * @property ?\FileRef                      $image              has_one FileRef
+ * @property ?\Courseware\Task              $task               has_one Courseware\Task
+ * @property \SimpleORMapCollection         $comments           has_many Courseware\StructuralElementComment
+ * @property \SimpleORMapCollection         $feedback           has_many Courseware\StructuralElementFeedback
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
@@ -76,6 +79,12 @@ class StructuralElement extends \SimpleORMap
             'order_by' => 'ORDER BY position',
         ];
 
+        $config['has_one']['task'] = [
+            'class_name' => Task::class,
+            'assoc_foreign_key' => 'structural_element_id',
+            'on_delete' => 'delete',
+        ];
+
         $config['belongs_to']['parent'] = [
             'class_name' => StructuralElement::class,
             'foreign_key' => 'parent_id',
@@ -97,19 +106,38 @@ class StructuralElement extends \SimpleORMap
             'class_name' => User::class,
             'foreign_key' => 'owner_id',
         ];
+
         $config['belongs_to']['editor'] = [
             'class_name' => User::class,
             'foreign_key' => 'editor_id',
         ];
+
         $config['belongs_to']['edit_blocker'] = [
             'class_name' => User::class,
             'foreign_key' => 'edit_blocker_id',
         ];
+
         $config['has_one']['image'] = [
             'class_name' => \FileRef::class,
             'foreign_key' => 'image_id',
             'on_delete' => 'delete',
             'on_store' => 'store',
+        ];
+
+        $config['has_many']['comments'] = [
+            'class_name' => StructuralElementComment::class,
+            'assoc_foreign_key' => 'structural_element_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+            'order_by' => 'ORDER BY chdate',
+        ];
+
+        $config['has_many']['feedback'] = [
+            'class_name' => StructuralElementFeedback::class,
+            'assoc_foreign_key' => 'structural_element_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+            'order_by' => 'ORDER BY chdate',
         ];
 
         parent::configure($config);
@@ -170,6 +198,14 @@ class StructuralElement extends \SimpleORMap
     }
 
     /**
+     * @return bool true, if this object purpose is task, false otherwise
+     */
+    public function isTask(): bool
+    {
+        return $this->purpose === 'task';
+    }
+
+    /**
      * @param User $user the user to validate
      *
      * @return bool true if the user may edit this instance
@@ -187,12 +223,25 @@ class StructuralElement extends \SimpleORMap
                 return $this->range_id === $user->id;
 
             case 'course':
-                $haveStudipPerm = $GLOBALS['perm']->have_studip_perm(
-                    \CourseConfig::get($this->range_id)->COURSEWARE_EDITING_PERMISSION,
-                    $this->range_id,
-                    $user->id
-                );
-                if ($haveStudipPerm) {
+                $hasEditingPermission = $this->hasEditingPermission($user);
+                if ($this->isTask()) {
+                    // TODO: Was tun wir, wenn dieses Strukturelement purpose=task aber keinen Task hat?
+                    if (!$this->task) {
+                        return false;
+                    }
+
+                    if ($hasEditingPermission) {
+                        return false;
+                    }
+
+                    if ($this->task->isSubmitted()) {
+                        return false;
+                    }
+
+                    return $this->task->userIsASolver($user);
+                }
+
+                if ($hasEditingPermission) {
                     return true;
                 }
 
@@ -259,6 +308,19 @@ class StructuralElement extends \SimpleORMap
                     return false;
                 }
 
+                if ($this->isTask()) {
+                    // TODO: Was tun wir, wenn dieses Strukturelement purpose=task aber keinen Task hat?
+                    if (!$this->task) {
+                        return false;
+                    }
+
+                    if ($this->task->isSubmitted() && $this->hasEditingPermission($user)) {
+                        return true;
+                    }
+
+                    return $this->task->userIsASolver($user);
+                }
+
                 if ($this->canEdit($user)) {
                     return true;
                 }
@@ -272,6 +334,19 @@ class StructuralElement extends \SimpleORMap
             default:
                 throw new \InvalidArgumentException('Unknown range type.');
         }
+    }
+
+    /**
+     * @param \User|\Seminar_User $user
+     */
+    public function hasEditingPermission($user): bool
+    {
+        return $GLOBALS['perm']->have_perm('root', $user->id) ||
+            $GLOBALS['perm']->have_studip_perm(
+                \CourseConfig::get($this->range_id)->COURSEWARE_EDITING_PERMISSION,
+                $this->range_id,
+                $user->id
+            );
     }
 
     private function hasReadApproval($user): bool
@@ -410,10 +485,7 @@ class StructuralElement extends \SimpleORMap
         foreach ($this->containers as $container) {
             foreach ($container->blocks as $block) {
                 /** @var ?UserProgress $progress */
-                $progress = UserProgress::findOneBySQL('user_id = ? and block_id = ?', [
-                    $user->id,
-                    $block->id,
-                ]);
+                $progress = UserProgress::findOneBySQL('user_id = ? and block_id = ?', [$user->id, $block->id]);
 
                 if (!$progress || $progress->grade != 1) {
                     return false;
@@ -438,7 +510,11 @@ class StructuralElement extends \SimpleORMap
         if ('all' == $purpose) {
             return self::findBySQL('range_id = ? AND parent_id = ? ORDER BY position ASC', [$userId, $root->id]);
         } else {
-            return self::findBySQL('range_id = ? AND parent_id = ? AND purpose = ? ORDER BY position ASC', [$userId,  $root->id, $purpose]);
+            return self::findBySQL('range_id = ? AND parent_id = ? AND purpose = ? ORDER BY position ASC', [
+                $userId,
+                $root->id,
+                $purpose,
+            ]);
         }
     }
 
@@ -563,7 +639,7 @@ class StructuralElement extends \SimpleORMap
 SQL;
         $params = [$range->getRangeId(), $range->getRangeType(), $user->id];
 
-        return \DBManager::get()->fetchAll($sql, $params, StructuralElement::class.'::buildExisting');
+        return \DBManager::get()->fetchAll($sql, $params, StructuralElement::class . '::buildExisting');
     }
 
     /**
@@ -637,5 +713,65 @@ SQL;
         foreach ($children as $child) {
             $child->copy($user, $newElement);
         }
+    }
+
+    public function pdfExport($user)
+    {
+        $doc = new \ExportPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+        $doc->setHeaderTitle(_('Courseware'));
+        if ($this->course) {
+            $doc->setHeaderTitle(sprintf(_('Courseware aus %s'), $this->course->name));
+        }
+        if ($this->user) {
+            $doc->setHeaderTitle(sprintf(_('Courseware von %s'), $this->user->getFullname()));
+        }
+
+        $doc->addPage();
+
+        if (!self::canRead($user)) {
+            $doc->addContent(_('Diese Seite steht Ihnen nicht zur Verfügung!'));
+
+            return $doc;
+        }
+
+        $doc->writeHTML($this->getElementPdfExport());
+
+        return $doc;
+    }
+
+    private function getElementPdfExport(string $parent_name = '', bool $with_children = false)
+    {
+        if ($parent_name !== '') {
+            $parent_name .= ' / ';
+        }
+        $html = '<h1>' . $parent_name . $this->title . '</h1>';
+        $html .= $this->getContainerPdfExport();
+        if ($with_children) {
+            $html .= $this->getChildrenPdfExport($parent_name);
+        }
+
+        return $html;
+    }
+
+    private function getChildrenPdfExport(string $parent_name)
+    {
+        $children = self::findBySQL('parent_id = ?', [$this->id]);
+        $html = '';
+        foreach ($children as $child) {
+            $html .= $child->getElementPdfExport($parent_name . $this->title);
+        }
+
+        return $html;
+    }
+
+    private function getContainerPdfExport()
+    {
+        $containers = \Courseware\Container::findBySQL('structural_element_id = ?', [$this->id]);
+
+        foreach ($containers as $container) {
+            $html .= $container->type->pdfExport();
+        }
+
+        return $html;
     }
 }

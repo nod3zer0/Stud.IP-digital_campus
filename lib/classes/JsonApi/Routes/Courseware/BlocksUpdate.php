@@ -3,6 +3,7 @@
 namespace JsonApi\Routes\Courseware;
 
 use Courseware\Block;
+use Courseware\Container;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\Errors\UnprocessableEntityException;
@@ -11,6 +12,8 @@ use JsonApi\Routes\ValidationTrait;
 use JsonApi\Schemas\Courseware\Block as BlockSchema;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Studip\Activity\Activity;
+use Studip\Activity\CoursewareProvider;
 
 /**
  * Update one Block.

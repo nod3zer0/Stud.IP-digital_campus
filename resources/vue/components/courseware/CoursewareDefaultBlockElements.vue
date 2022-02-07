@@ -4,8 +4,6 @@
             :block="block"
             :canEdit="canEdit"
             @editBlock="editBlock"
-            @showFeedback="showFeedback"
-            @showComments="showComments"
             @showExportOptions="showExportOptions"
         />
         <courseware-block-feedback v-if="canEdit" :block="block" :canEdit="canEdit" :isTeacher="isTeacher" />
@@ -43,8 +41,6 @@ export default {
         editBlock() {
             this.$emit('editBlock');
         },
-        showFeedback() {},
-        showComments() {},
         showExportOptions() {},
     },
 };

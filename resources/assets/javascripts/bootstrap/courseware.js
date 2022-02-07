@@ -31,4 +31,37 @@ STUDIP.domReady(() => {
             });
         });
     }
+
+    if (document.getElementById('courseware-content-overview-app')) {
+        STUDIP.Vue.load().then(({ createApp }) => {
+            import(
+                /* webpackChunkName: "courseware-content-overview-app" */
+                '@/vue/courseware-content-overview-app.js'
+            ).then(({ default: mountApp }) => {
+                return mountApp(STUDIP, createApp, '#courseware-content-overview-app');
+            });
+        });
+    }
+
+    if (document.getElementById('courseware-content-bookmark-app')) {
+        STUDIP.Vue.load().then(({ createApp }) => {
+            import(
+                /* webpackChunkName: "courseware-content-bookmark-app" */
+                '@/vue/courseware-content-bookmark-app.js'
+            ).then(({ default: mountApp }) => {
+                return mountApp(STUDIP, createApp, '#courseware-content-bookmark-app');
+            });
+        });
+    }
+
+    if (document.getElementById('courseware-admin-app')) {
+        STUDIP.Vue.load().then(({ createApp }) => {
+            import(
+                /* webpackChunkName: "courseware-content-bookmark-app" */
+                '@/vue/courseware-admin-app.js'
+            ).then(({ default: mountApp }) => {
+                return mountApp(STUDIP, createApp, '#courseware-admin-app');
+            });
+        });
+    }
 });

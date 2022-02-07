@@ -30,18 +30,34 @@ class Contents_CoursewareController extends AuthenticatedController
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function index_action($action = false, $widgetId = null)
+    public function index_action()
     {
-        Navigation::activateItem('/contents/courseware/projects');
-        $this->setProjectsSidebar($action);
-        $this->courseware_root = StructuralElement::getCoursewareUser($this->user->id);
+        Navigation::activateItem('/contents/courseware/overview');
+        $this->user_id = $GLOBALS['user']->id;
+        $this->setOverviewSidebar();
+        $this->courseware_root = \Courseware\StructuralElement::getCoursewareUser($this->user_id);
         if (!$this->courseware_root) {
             // create initial courseware dataset
-            $new = StructuralElement::createEmptyCourseware($this->user->id, 'user');
+            $new = \Courseware\StructuralElement::createEmptyCourseware($this->user_id, 'user');
             $this->courseware_root = $new->getRoot();
         }
+        $this->licenses = $this->getLicences();
+    }
 
-        $this->elements = $this->getProjects('all');
+    private function setOverviewSidebar()
+    {
+        $sidebar = Sidebar::Get();
+        $views = new TemplateWidget(
+            _('Aktionen'),
+            $this->get_template_factory()->open('contents/courseware/overview_action_widget')
+        );
+        $sidebar->addWidget($views)->addLayoutCSSClass('courseware-overview-filter-widget');
+
+        $views = new TemplateWidget(
+            _('Filter'),
+            $this->get_template_factory()->open('contents/courseware/overview_filter_widget')
+        );
+        $sidebar->addWidget($views)->addLayoutCSSClass('courseware-overview-filter-widget');
     }
 
     /**
@@ -87,12 +103,7 @@ class Contents_CoursewareController extends AuthenticatedController
         $last[$this->user_id] = $this->entry_element_id;
         UserConfig::get($this->user_id)->store('COURSEWARE_LAST_ELEMENT', $last);
 
-        $this->licenses = array();
-        $sorm_licenses = License::findBySQL("1 ORDER BY name ASC");
-        foreach($sorm_licenses as $license) {
-            array_push($this->licenses, $license->toArray());
-        }
-        $this->licenses = json_encode($this->licenses);
+        $this->licenses = $this->getLicences();
 
         $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS);
     }
@@ -111,8 +122,16 @@ class Contents_CoursewareController extends AuthenticatedController
             $this->get_template_factory()->open('course/courseware/view_widget')
         );
         $sidebar->addWidget($views)->addLayoutCSSClass('courseware-view-widget');
+    }
 
-
+    private function getLicences()
+    {
+        $licenses = array();
+        $sorm_licenses = License::findBySQL("1 ORDER BY name ASC");
+        foreach($sorm_licenses as $license) {
+            array_push($licenses, $license->toArray());
+        }
+        return json_encode($licenses);
     }
 
     /**
@@ -141,31 +160,21 @@ class Contents_CoursewareController extends AuthenticatedController
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
 
-    public function bookmarks_action($action = false, $widgetId = null)
+    public function bookmarks_action()
     {
         Navigation::activateItem('/contents/courseware/bookmarks');
-        $this->bookmarks = array();
-        $cw_bookmarks =  Courseware\Bookmark::findUsersBookmarks($this->user->id);
-        foreach($cw_bookmarks as $bookmark) {
-            $bm = array();
-            $bm['bookmark'] = $bookmark;
-            $element = Courseware\StructuralElement::find($bookmark->element_id);
-            if(empty($element)) {
-                continue;
-            }
-            $element['payload'] = json_decode($element['payload'], true);
-            $bm['element'] = $element;
-            if ($element->range_type === 'course') {
-                $bm['url'] = URLHelper::getURL('dispatch.php/course/courseware/?cid='.$element['range_id'].'#/structural_element/'.$element['id']);
-                $bm['course'] = Course::find($element['range_id']);
-            }
-            if ($element->range_type === 'user' && $element->range_id === $this->user->id) {
-                $bm['url'] = URLHelper::getURL('dispatch.php/contents/courseware/courseware#/structural_element/'.$element['id']);
-                $bm['user'] = $this->user;
-            }
+        $this->user_id = $GLOBALS['user']->id;
+        $this->setBookmarkSidebar();
+    }
 
-            array_push($this->bookmarks, $bm);
-        }
+    private function setBookmarkSidebar()
+    {
+        $sidebar = Sidebar::Get();
+        $views = new TemplateWidget(
+            _('Filter'),
+            $this->get_template_factory()->open('contents/courseware/bookmark_filter_widget')
+        );
+        $sidebar->addWidget($views)->addLayoutCSSClass('courseware-bookmark-filter-widget');
     }
 
     /**
@@ -418,5 +427,12 @@ class Contents_CoursewareController extends AuthenticatedController
         $actions = new ActionsWidget();
         $actions->addLink(_('Neues Lernmaterial anlegen'), $this->url_for('contents/courseware/create_project'), Icon::create('add', 'clickable'))->asDialog('size=700');
         $sidebar->addWidget($actions);
+    }
+
+    public function pdf_export_action($element_id)
+    {
+        $element = \Courseware\StructuralElement::findOneById($element_id);
+
+        $this->render_pdf($element->pdfExport($this->user), trim($element->title).'.pdf');
     }
 }

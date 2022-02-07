@@ -1,0 +1,1 @@
+<div id="courseware-admin-app"></div>

@@ -6,21 +6,29 @@
         <li class="cw-action-widget-show-consume-mode" @click="showConsumeMode">
             <translate>Vollbild einschalten</translate>
         </li>
-        <li v-show="canEdit" class="cw-action-widget-edit" @click="editElement">
+        <li v-if="canEdit" class="cw-action-widget-edit" @click="editElement">
             <translate>Seite bearbeiten</translate>
         </li>
-        <li v-show="canEdit" class="cw-action-widget-add" @click="addElement">
+        <li v-if="canEdit" class="cw-action-widget-sort" @click="sortContainers">
+            <translate>Abschnitte sortieren</translate>
+        </li>
+        <li v-if="canEdit" class="cw-action-widget-add" @click="addElement">
             <translate>Seite hinzufügen</translate>
         </li>
         <li class="cw-action-widget-info" @click="showElementInfo"><translate>Informationen anzeigen</translate></li>
         <li class="cw-action-widget-star" @click="createBookmark"><translate>Lesezeichen setzen</translate></li>
-        <li v-show="canEdit" @click="exportElement" class="cw-action-widget-export">
+        <li v-if="canExport" @click="exportElement" class="cw-action-widget-export">
             <translate>Seite exportieren</translate>
         </li>
-        <li v-show="canEdit && oerEnabled" @click="oerElement" class="cw-action-widget-oer">
+        <li v-if="(canEdit || userIsTeacher) && canVisit" class="cw-action-widget-export-pdf">
+            <a :href="pdfExportURL">
+                <translate>Seite als pdf-Dokument exportieren</translate>
+            </a>
+        </li>
+        <li v-if="canEdit && oerEnabled && userIsTeacher" @click="oerElement" class="cw-action-widget-oer">
             <translate>Seite auf %{oerTitle} veröffentlichen</translate>
         </li>
-        <li v-show="!isRoot && canEdit" class="cw-action-widget-trash" @click="deleteElement">
+        <li v-if="!isRoot && canEdit && !isTask" class="cw-action-widget-trash" @click="deleteElement">
             <translate>Seite löschen</translate>
         </li>
     </ul>
@@ -33,18 +41,23 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-action-widget',
-    props: ['structuralElement'],
+    props: ['structuralElement', 'canVisit'],
     components: {
         StudipIcon,
     },
     mixins: [CoursewareExport],
     computed: {
         ...mapGetters({
+            context: 'context',
             oerEnabled: 'oerEnabled',
             oerTitle: 'oerTitle',
             userId: 'userId',
             consumeMode: 'consumeMode',
-            showToolbar: 'showToolbar'
+            showToolbar: 'showToolbar',
+            userIsTeacher: 'userIsTeacher',
+            consumeMode: 'consumeMode',
+            showToolbar: 'showToolbar',
+            userIsTeacher: 'userIsTeacher',
         }),
         isRoot() {
             if (!this.structuralElement) {
@@ -76,6 +89,49 @@ export default {
         },
         tocText() {
             return this.showToolbar ? this.$gettext('Inhaltsverzeichnis ausblenden') : this.$gettext('Inhaltsverzeichnis anzeigen');
+        },
+        pdfExportURL() {
+            if (this.context.type === 'users') {
+                return STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/pdf_export/' + this.structuralElement.id);
+            }
+            if (this.context.type === 'courses') {
+                return STUDIP.URLHelper.getURL('dispatch.php/course/courseware/pdf_export/' + this.structuralElement.id);
+            }
+
+            return '';
+        },
+        isTask() {
+            return this.structuralElement?.relationships.task.data !== null;
+        },
+        canExport() {
+            if (this.context.type === 'users') {
+                return true;
+            }
+
+            return this.canEdit && this.userIsTeacher;
+        },
+        tocText() {
+            return this.showToolbar ? this.$gettext('Inhaltsverzeichnis ausblenden') : this.$gettext('Inhaltsverzeichnis anzeigen');
+        },
+        pdfExportURL() {
+            if (this.context.type === 'users') {
+                return STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/pdf_export/' + this.structuralElement.id);
+            }
+            if (this.context.type === 'courses') {
+                return STUDIP.URLHelper.getURL('dispatch.php/course/courseware/pdf_export/' + this.structuralElement.id);
+            }
+
+            return '';
+        },
+        isTask() {
+            return this.structuralElement?.relationships.task.data !== null;
+        },
+        canExport() {
+            if (this.context.type === 'users') {
+                return true;
+            }
+
+            return this.canEdit && this.userIsTeacher;
         }
     },
     methods: {
@@ -86,6 +142,7 @@ export default {
             showElementInfoDialog: 'showElementInfoDialog',
             showElementExportDialog: 'showElementExportDialog',
             showElementOerDialog: 'showElementOerDialog',
+            setStructuralElementSortMode: 'setStructuralElementSortMode',
             companionInfo: 'companionInfo',
             addBookmark: 'addBookmark',
             lockObject: 'lockObject',
@@ -111,6 +168,9 @@ export default {
                 return false;
             }
             this.showElementEditDialog(true);
+        },
+        sortContainers() {
+            this.setStructuralElementSortMode(true);
         },
         async deleteElement() {
             await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });

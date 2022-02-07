@@ -1,4 +1,4 @@
-<div class="cw-content-projects">
+<div class="cw-content-courses">
     <? if (empty($sem_courses)) : ?>
         <? if (!$all_semesters) : ?>
         <h2>

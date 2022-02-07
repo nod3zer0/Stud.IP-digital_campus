@@ -310,7 +310,7 @@ abstract class BlockType
                 $user
             );
 
-            return isset($copiedFile) ? $copiedFile->id : '';
+            return isset($copiedFile->id) ? $copiedFile->id : '';
         }
 
         return '';
@@ -372,5 +372,18 @@ abstract class BlockType
         }
 
         return $destinationFolder;
+    }
+
+    public function pdfExport()
+    {
+        $html = '<h5>' . sprintf(_('Block-Typ: %s'), $this->getTitle()) . '</h5>';
+        $html .= '<h6>' . _('Block-Daten') . ': ' . '</h6>';
+        foreach($this->getPayload() as $key => $value) {
+            if ($value !== '') {
+                $html .= '<h6>' . $key . ' => ' . $value . '</h6>';
+            }
+        }
+
+        return $html;
     }
 }

@@ -39,5 +39,39 @@ class ActivityObserver
 
         //Notifications for ScheduleProvider (Course)
         \NotificationCenter::addObserver('\Studip\Activity\ScheduleProvider', 'postActivity','CourseDidChangeSchedule');
+
+
+        // Notifications for CoursewareProvider
+        foreach (
+            [
+                \Courseware\Block::class,
+                \Courseware\BlockComment::class,
+                \Courseware\BlockFeedback::class,
+                \Courseware\StructuralElementComment::class,
+                \Courseware\StructuralElement::class,
+                \Courseware\StructuralElementFeedback::class,
+                \Courseware\Task::class,
+                \Courseware\TaskFeedback::class,
+            ] as $class
+        ) {
+            \NotificationCenter::addObserver(
+                \Studip\Activity\CoursewareProvider::class,
+                'postActivity',
+                $class . 'DidCreate'
+            );
+        }
+
+        foreach (
+            [
+                \Courseware\Block::class,
+                \Courseware\TaskFeedback::class
+            ] as $class
+        ) {
+            \NotificationCenter::addObserver(
+                \Studip\Activity\CoursewareProvider::class,
+                'postActivity',
+                $class . 'DidUpdate'
+            );
+        }
     }
 }

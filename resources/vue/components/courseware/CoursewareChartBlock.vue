@@ -62,7 +62,7 @@
                                     <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                                 </template>
                                 <template #no-options="{ search, searching, loading }">
-                                    <translate>Es steht keine Auswahl zur Verfügung</translate>.
+                                    <translate>Es steht keine Auswahl zur Verfügung.</translate>
                                 </template>
                                 <template #selected-option="{name, rgb}">
                                     <span class="vs__option-color" :style="{'background-color': 'rgb(' + rgb + ')'}"></span><span>{{name}}</span>

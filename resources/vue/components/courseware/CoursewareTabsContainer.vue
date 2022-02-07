@@ -6,9 +6,10 @@
         :isTeacher="isTeacher"
         @storeContainer="storeContainer"
         @closeEdit="initCurrentData"
+        @sortBlocks="enableSort"
     >
         <template v-slot:containerContent>
-            <courseware-tabs>
+            <courseware-tabs v-if="!sortMode">
                 <courseware-tab
                     v-for="(section, index) in currentSections"
                     :key="index"
@@ -26,12 +27,42 @@
                                 :isTeacher="isTeacher"
                             />
                         </li>
-                        <li v-if="showEditMode">
+                        <li v-if="showEditMode && canAddElements">
                             <courseware-block-adder-area :container="container" :section="index" @updateContainerContent="updateContent"/>
                         </li>
                     </ul>
                 </courseware-tab>
             </courseware-tabs>
+            <div v-if="sortMode && canEdit" class="cw-container-tabs-sort">
+                <courseware-collapsible-box
+                    v-for="(section, index) in currentSections"
+                    :key="index"
+                    :title="section.name"
+                    :icon="section.icon"
+                    :open="index === 0"
+                >
+                    <draggable
+                        class="cw-container-list-block-list cw-container-list-sort-mode"
+                        :class="[section.blocks.length === 0 ? 'cw-container-list-sort-mode-empty' : '']"
+                        tag="ul"
+                        v-model="section.blocks"
+                        v-bind="dragOptions"
+                        handle=".cw-sortable-handle"
+                        @start="isDragging = true"
+                        @end="isDragging = false"
+                    >
+                        <transition-group type="transition" name="flip-blocks" tag="div">
+                            <li v-for="block in section.blocks" :key="block.id" class="cw-block-item cw-block-item-sortable">
+                                <component :is="component(block)" :block="block" :canEdit="canEdit" :isTeacher="isTeacher" />
+                            </li>
+                        </transition-group>
+                    </draggable>
+                </courseware-collapsible-box>
+                <div>
+                    <button class="button accept" @click="storeSort"><translate>Sortierung speichern</translate></button>
+                    <button class="button cancel"  @click="resetSort"><translate>Sortieren abbrechen</translate></button>
+                </div>
+            </div>
         </template>
         <template v-slot:containerEditDialog>
             <form class="default cw-container-dialog-edit-form" @submit.prevent="">
@@ -47,7 +78,7 @@
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                             </template>
                             <template #no-options="{ search, searching, loading }">
-                                <translate>Es steht keine Auswahl zur Verfügung</translate>.
+                                <translate>Es steht keine Auswahl zur Verfügung.</translate>
                             </template>
                             <template #selected-option="option">
                                 <studip-icon :shape="option.label"/> <span class="vs__option-with-icon">{{option.label}}</span>
@@ -76,6 +107,7 @@ import containerMixin from '../../mixins/courseware/container.js';
 import contentIcons from './content-icons.js';
 import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
+import CoursewareCollapsibleBox from './CoursewareCollapsibleBox.vue';
 import StudipIcon from './../StudipIcon.vue';
 
 import { mapGetters, mapActions } from 'vuex';
@@ -86,19 +118,29 @@ export default {
     components: Object.assign(ContainerComponents, {
         CoursewareTabs,
         CoursewareTab,
+        CoursewareCollapsibleBox,
         StudipIcon,
     }),
     props: {
         container: Object,
         canEdit: Boolean,
         isTeacher: Boolean,
+        canAddElements: Boolean,
     },
     data() {
         return {
             currentContainer: null,
             currentSections: [],
             textDeleteSection: this.$gettext('Sektion entfernen'),
-            selectAttributes: {'ref': 'openIndicator', 'role': 'presentation', 'class': 'vs__open-indicator'}
+            selectAttributes: {'ref': 'openIndicator', 'role': 'presentation', 'class': 'vs__open-indicator'},
+            sortMode: false,
+            isDragging: false,
+            dragOptions: {
+                animation: 0,
+                group: "description",
+                disabled: false,
+                ghostClass: "block-ghost"
+            },
         };
     },
     computed: {
@@ -125,6 +167,7 @@ export default {
     methods: {
         ...mapActions({
             updateContainer: 'updateContainer',
+            lockObject: 'lockObject',
             unlockObject: 'unlockObject',
         }),
         initCurrentData() {
@@ -173,6 +216,17 @@ export default {
             });
             await this.unlockObject({ id: this.container.id, type: 'courseware-containers' });
             this.initCurrentData();
+        },
+        enableSort() {
+            this.sortMode = true;
+        },
+        async storeSort() {
+            this.sortMode = false;
+            this.storeContainer();
+        },
+        async resetSort() {
+            await this.unlockObject({ id: this.currentContainer.id, type: 'courseware-containers' });
+            this.sortMode = false;
         },
         component(block) {
             if (block.attributes) {

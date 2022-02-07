@@ -45,9 +45,9 @@
                                     <p>{{ child.attributes.payload.description }}</p>
                                 </div>
                                 <footer>
-                                    {{ countChildren }}
+                                    {{ countChildChildren(child) }}
                                     <translate
-                                        :translate-n="countChildren"
+                                        :translate-n="countChildChildren(child)"
                                         translate-plural="Seiten"
                                     >
                                        Seite
@@ -118,22 +118,6 @@ export default {
         },
         style() {
             return this.block?.attributes?.payload?.style;
-        },
-        childSets() {
-            let childSets = [];
-            let childElements = this.childElements;
-            while (childElements.length > 0) {
-                let set = [];
-                for (let i = 0; i < 4; i++) {
-                    let elem = childElements.shift();
-                    if (elem !== undefined) {
-                        set.push(elem);
-                    }
-                }
-                childSets.push(set);
-            }
-
-            return childSets;
         }
     },
     mounted() {
@@ -170,6 +154,9 @@ export default {
             } else {
                 return {};
             }
+        },
+        countChildChildren(child) {
+            return this.childrenById(child.id).length;
         },
         hasImage(child) {
             return child.relationships?.image?.data !== null;

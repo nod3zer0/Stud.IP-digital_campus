@@ -4,6 +4,7 @@
             :items="menuItems" 
             @editContainer="editContainer"
             @deleteContainer="deleteContainer"
+            @sortBlocks="sortBlocks"
         />
     </div>
 </template>
@@ -18,11 +19,15 @@ export default {
     computed: {
         menuItems() {
             if (this.container.attributes["container-type"] === 'list') {
-                return [{ id: 1, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' }];
+                return [
+                    { id: 1, label: this.$gettext('Blöcke sortieren'), icon: 'arr_1sort', emit: 'sortBlocks' },
+                    { id: 2, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' }
+                ];
             } else {
                 return [
                     { id: 1, label: this.$gettext('Abschnitt bearbeiten'), icon: 'edit', emit: 'editContainer' },
-                    { id: 2, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' },
+                    { id: 2, label: this.$gettext('Blöcke sortieren'), icon: 'arr_1sort', emit: 'sortBlocks' },
+                    { id: 3, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' },
                 ];
             }
         },
@@ -37,6 +42,9 @@ export default {
         deleteContainer() {
             this.$emit('deleteContainer');
         },
+        sortBlocks() {
+            this.$emit('sortBlocks');
+        }
     },
 };
 </script>

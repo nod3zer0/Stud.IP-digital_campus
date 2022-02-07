@@ -6,7 +6,7 @@
             v-if="validContext"
         >
             <div class="cw-structural-element-content" v-if="structuralElement">
-                <courseware-ribbon :canEdit="canEdit">
+                <courseware-ribbon :canEdit="canEdit && canAddElements">
                     <template #buttons>
                         <router-link v-if="prevElement" :to="'/structural_element/' + prevElement.id">
                             <button class="cw-ribbon-button cw-ribbon-button-prev" :title="textRibbon.perv" />
@@ -26,7 +26,7 @@
                         >
                             <span>
                                 <router-link :to="'/structural_element/' + ancestor.id">
-                                    {{ ancestor.attributes.title }}
+                                    {{ ancestor.attributes.title || "–" }}
                                 </router-link>
                             </span>
                         </li>
@@ -34,7 +34,7 @@
                             class="cw-ribbon-breadcrumb-item cw-ribbon-breadcrumb-item-current"
                             :title="structuralElement.attributes.title"
                         >
-                            <span>{{ structuralElement.attributes.title }}</span>
+                            <span>{{ structuralElement.attributes.title || "–" }}</span>
                         </li>
                     </template>
                     <template #breadcrumbFallback>
@@ -57,38 +57,79 @@
                             @showExportOptions="menuAction('showExportOptions')"
                             @oerCurrentElement="menuAction('oerCurrentElement')"
                             @setBookmark="menuAction('setBookmark')"
+                            @sortContainers="menuAction('sortContainers')"
+                            @pdfExport="menuAction('pdfExport')"
                         />
                     </template>
                 </courseware-ribbon>
 
                 <div
-                    v-if="canVisit"
+                    v-if="canVisit && !sortMode"
                     class="cw-container-wrapper"
-                    :class="{ 'cw-container-wrapper-consume': consumeMode }"
+                    :class="{
+                        'cw-container-wrapper-consume': consumeMode,
+                        'cw-container-wrapper-discuss': discussView,
+                    }"
                 >
                     <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
                         <courseware-empty-element-box
-                            v-if="
-                                (empty && !isRoot && canEdit) ||
-                                (empty && !canEdit) ||
-                                (!noContainers && empty && isRoot && canEdit)
-                            "
+                            v-if="showEmptyElementBox"
                             :canEdit="canEdit"
                             :noContainers="noContainers"
                         />
                         <courseware-wellcome-screen v-if="noContainers && isRoot && canEdit" />
                     </div>
+                    <courseware-structural-element-discussion
+                        v-if="!noContainers && discussView"
+                        :structuralElement="structuralElement"
+                        :canEdit="canEdit"
+                    />
                     <component
                         v-for="container in containers"
                         :key="container.id"
                         :is="containerComponent(container)"
                         :container="container"
                         :canEdit="canEdit"
-                        :isTeacher="isTeacher"
+                        :canAddElements="canAddElements"
+                        :isTeacher="userIsTeacher"
                         class="cw-container-item"
                     />
                 </div>
-                <div v-else class="cw-container-wrapper" :class="{ 'cw-container-wrapper-consume': consumeMode }">
+                <div v-if="canVisit && canEdit && sortMode" class="cw-container-wrapper-sort-mode">
+                    <draggable
+                        class="cw-structural-element-list-sort-mode"
+                        tag="ul"
+                        v-model="containerList"
+                        v-bind="dragOptions"
+                        handle=".cw-sortable-handle"
+                        @start="isDragging = true"
+                        @end="isDragging = false"
+                    >
+                        <transition-group type="transition" name="flip-containers">
+                            <li
+                                v-for="container in containerList"
+                                :key="container.id"
+                                class="cw-container-item-sortable"
+                            >
+                                <span class="cw-sortable-handle"></span>
+                                <span>{{ container.attributes.title }} ({{ container.attributes.width }})</span>
+                            </li>
+                        </transition-group>
+                    </draggable>
+                    <div class="cw-container-sort-buttons">
+                        <button class="button accept" @click="storeSort">
+                            <translate>Sortierung speichern</translate>
+                        </button>
+                        <button class="button cancel" @click="resetSort">
+                            <translate>Sortieren abbrechen</translate>
+                        </button>
+                    </div>
+                </div>
+                <div
+                    v-if="!canVisit"
+                    class="cw-container-wrapper"
+                    :class="{ 'cw-container-wrapper-consume': consumeMode }"
+                >
                     <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
                         <courseware-companion-box
                             mood="sad"
@@ -147,7 +188,7 @@
                                             /></span>
                                         </template>
                                         <template #no-options="{ search, searching, loading }">
-                                            <translate>Es steht keine Auswahl zur Verfügung</translate>.
+                                            <translate>Es steht keine Auswahl zur Verfügung.</translate>
                                         </template>
                                         <template #selected-option="{ name, hex }">
                                             <span class="vs__option-color" :style="{ 'background-color': hex }"></span
@@ -163,7 +204,7 @@
                                     <translate>Zweck</translate>
                                     <select v-model="currentElement.attributes.purpose">
                                         <option value="content"><translate>Inhalt</translate></option>
-                                        <option value="template"><translate>Vorlage</translate></option>
+                                        <option value="template"><translate>Aufgabenvorlage</translate></option>
                                         <option value="oer"><translate>OER-Material</translate></option>
                                         <option value="portfolio"><translate>ePortfolio</translate></option>
                                         <option value="draft"><translate>Entwurf</translate></option>
@@ -287,7 +328,10 @@
                         </label>
                         <label>
                             <translate>Name der neuen Seite</translate><br />
-                            <input v-model="newChapterName" type="text" />
+                            <input v-model="newChapterName" type="text" required />
+                            <div class="invalid_message" :style="{ display: errorEmptyChapterName ? 'block' : 'none' }">
+                                <translate>Der Name der neuen Seite darf nicht leer sein.</translate>
+                            </div>
                         </label>
                     </form>
                 </template>
@@ -415,7 +459,7 @@
                                 <p>{{ currentLicenseName }}</p>
                             </label>
                             <label>
-                                <translate>Sie können diese Daten unter "Seite bearbeiten" verändern</translate>.
+                                <translate>Sie können diese Daten unter "Seite bearbeiten" verändern.</translate>
                             </label>
                         </fieldset>
                         <fieldset>
@@ -452,6 +496,7 @@
 import ContainerComponents from './container-components.js';
 import CoursewarePluginComponents from './plugin-components.js';
 import CoursewareStructuralElementPermissions from './CoursewareStructuralElementPermissions.vue';
+import CoursewareStructuralElementDiscussion from './CoursewareStructuralElementDiscussion.vue';
 import CoursewareAccordionContainer from './CoursewareAccordionContainer.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareWellcomeScreen from './CoursewareWellcomeScreen.vue';
@@ -465,11 +510,13 @@ import CoursewareTab from './CoursewareTab.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import IsoDate from './IsoDate.vue';
 import StudipDialog from '../StudipDialog.vue';
+import draggable from 'vuedraggable';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-structural-element',
     components: {
+        CoursewareStructuralElementDiscussion,
         CoursewareStructuralElementPermissions,
         CoursewareRibbon,
         CoursewareListContainer,
@@ -483,6 +530,7 @@ export default {
         CoursewareTab,
         IsoDate,
         StudipDialog,
+        draggable,
     },
     props: ['canVisit', 'orderedStructuralElements', 'structuralElement'],
 
@@ -526,16 +574,27 @@ export default {
             exportRunning: false,
             exportChildren: false,
             oerChildren: true,
+            containerList: [],
+            isDragging: false,
+            dragOptions: {
+                animation: 0,
+                group: 'description',
+                disabled: false,
+                ghostClass: 'container-ghost',
+            },
+            errorEmptyChapterName: false,
         };
     },
 
     computed: {
         ...mapGetters({
             courseware: 'courseware',
+            context: 'context',
             consumeMode: 'consumeMode',
             containerById: 'courseware-containers/byId',
             relatedContainers: 'courseware-containers/related',
             relatedStructuralElements: 'courseware-structural-elements/related',
+            relatedTaskGroups: 'courseware-task-groups/related',
             relatedUsers: 'users/related',
             structuralElementById: 'courseware-structural-elements/byId',
             userIsTeacher: 'userIsTeacher',
@@ -552,6 +611,9 @@ export default {
             exportState: 'exportState',
             exportProgress: 'exportProgress',
             userId: 'userId',
+            sortMode: 'structuralElementSortMode',
+            viewMode: 'viewMode',
+            taskById: 'courseware-tasks/byId',
         }),
 
         currentId() {
@@ -624,7 +686,7 @@ export default {
                 if (!parentId) {
                     return null;
                 }
-                const element = this.structuralElementById({id: parentId});
+                const element = this.structuralElementById({ id: parentId });
                 if (!element) {
                     console.error(`CoursewareStructuralElement#ancestors: Could not find parent by ID: "${parentId}".`);
                 }
@@ -636,11 +698,11 @@ export default {
                 const parent = finder(node);
                 if (parent) {
                     yield parent;
-                    yield *visitAncestors(parent);
+                    yield* visitAncestors(parent);
                 }
             };
 
-            return [...visitAncestors(this.structuralElement)].reverse()
+            return [...visitAncestors(this.structuralElement)].reverse();
         },
         prevElement() {
             const currentIndex = this.orderedStructuralElements.indexOf(this.structuralElement.id);
@@ -697,10 +759,6 @@ export default {
             return this.structuralElement.attributes['can-edit'];
         },
 
-        isTeacher() {
-            return this.userIsTeacher;
-        },
-
         isRoot() {
             return this.structuralElement.relationships.parent.data === null;
         },
@@ -724,8 +782,8 @@ export default {
         },
         menuItems() {
             let menu = [
-                { id: 3, label: this.$gettext('Informationen anzeigen'), icon: 'info', emit: 'showInfo' },
-                { id: 4, label: this.$gettext('Lesezeichen setzen'), icon: 'star', emit: 'setBookmark' },
+                { id: 4, label: this.$gettext('Informationen anzeigen'), icon: 'info', emit: 'showInfo' },
+                { id: 5, label: this.$gettext('Lesezeichen setzen'), icon: 'star', emit: 'setBookmark' },
             ];
             if (this.canEdit) {
                 menu.push({
@@ -734,20 +792,38 @@ export default {
                     icon: 'edit',
                     emit: 'editCurrentElement',
                 });
-                menu.push({ id: 2, label: this.$gettext('Seite hinzufügen'), icon: 'add', emit: 'addElement' });
                 menu.push({
-                    id: 5,
+                    id: 2,
+                    label: this.$gettext('Abschnitte sortieren'),
+                    icon: 'arr_1sort',
+                    emit: 'sortContainers',
+                });
+
+                menu.push({ id: 3, label: this.$gettext('Seite hinzufügen'), icon: 'add', emit: 'addElement' });
+            }
+            if ((this.userIsTeacher && this.canEdit) || this.context.type === 'users') {
+                menu.push({
+                    id: 6,
                     label: this.$gettext('Seite exportieren'),
                     icon: 'export',
                     emit: 'showExportOptions',
                 });
             }
-            if (this.canEdit && this.oerEnabled) {
-                menu.push({ id: 6, label: this.textOer.title, icon: 'oer-campus', emit: 'oerCurrentElement' });
-            }
-            if (!this.isRoot && this.canEdit) {
+            if ((this.userIsTeacher || this.canEdit) && this.canVisit) {
                 menu.push({
                     id: 7,
+                    type: 'link',
+                    label: this.$gettext('Seite als pdf-Dokument exportieren'),
+                    icon: 'file-pdf',
+                    url: this.pdfExportURL,
+                });
+            }
+            if (this.canEdit && this.oerEnabled && this.userIsTeacher) {
+                menu.push({ id: 8, label: this.textOer.title, icon: 'oer-campus', emit: 'oerCurrentElement' });
+            }
+            if (!this.isRoot && this.canEdit && !this.isTask) {
+                menu.push({
+                    id: 9,
                     label: this.$gettext('Seite löschen'),
                     icon: 'trash',
                     emit: 'deleteCurrentElement',
@@ -928,6 +1004,56 @@ export default {
         blockedByAnotherUser() {
             return this.blocked && this.userId !== this.blockerId;
         },
+        discussView() {
+            return this.viewMode === 'discuss';
+        },
+        pdfExportURL() {
+            if (this.context.type === 'users') {
+                return STUDIP.URLHelper.getURL(
+                    'dispatch.php/contents/courseware/pdf_export/' + this.structuralElement.id
+                );
+            }
+            if (this.context.type === 'courses') {
+                return STUDIP.URLHelper.getURL(
+                    'dispatch.php/course/courseware/pdf_export/' + this.structuralElement.id
+                );
+            }
+
+            return '';
+        },
+        isTask() {
+            return this.structuralElement?.relationships.task.data !== null;
+        },
+        task() {
+            if (!this.isTask) {
+                return null;
+            }
+
+            return this.taskById({ id: this.structuralElement.relationships.task.data.id });
+        },
+        canAddElements() {
+            if (!this.isTask) {
+                return true;
+            }
+
+            // still loading
+            if (!this.task) {
+                return false;
+            }
+
+            const taskGroup = this.relatedTaskGroups({ parent: this.task, relationship: 'task-group' });
+
+            return taskGroup?.attributes['solver-may-add-blocks'];
+        },
+        showEmptyElementBox() {
+            if (!this.empty) {
+                return false;
+            }
+
+            return (
+                (!this.isRoot && this.canEdit) || !this.canEdit || (!this.noContainers && this.isRoot && this.canEdit)
+            );
+        },
     },
 
     methods: {
@@ -948,6 +1074,10 @@ export default {
             showElementInfoDialog: 'showElementInfoDialog',
             showElementDeleteDialog: 'showElementDeleteDialog',
             showElementOerDialog: 'showElementOerDialog',
+            updateContainer: 'updateContainer',
+            setStructuralElementSortMode: 'setStructuralElementSortMode',
+            sortContainersInStructualElements: 'sortContainersInStructualElements',
+            loadTask: 'loadTask',
         }),
 
         initCurrent() {
@@ -964,7 +1094,7 @@ export default {
                     }
                     try {
                         await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
-                    } catch(error) {
+                    } catch (error) {
                         if (error.status === 409) {
                             this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
                         } else {
@@ -978,6 +1108,7 @@ export default {
                 case 'addElement':
                     this.newChapterName = '';
                     this.newChapterParent = 'descendant';
+                    this.errorEmptyChapterName = false;
                     this.showElementAddDialog(true);
                     break;
                 case 'deleteCurrentElement':
@@ -996,6 +1127,24 @@ export default {
                 case 'setBookmark':
                     this.setBookmark();
                     break;
+                case 'sortContainers':
+                    if (this.blockedByAnotherUser) {
+                        this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+
+                        return false;
+                    }
+                    try {
+                        await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                    } catch (error) {
+                        if (error.status === 409) {
+                            this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+                        } else {
+                            console.log(error);
+                        }
+
+                        return false;
+                    }
+                    this.enableSortContainers();
             }
         },
         async closeEditDialog() {
@@ -1057,6 +1206,25 @@ export default {
             this.initCurrent();
         },
 
+        enableSortContainers() {
+            this.setStructuralElementSortMode(true);
+        },
+
+        storeSort() {
+            this.setStructuralElementSortMode(false);
+
+            this.sortContainersInStructualElements({
+                structuralElement: this.structuralElement,
+                containers: this.containerList,
+            });
+            this.$emit('select', this.currentId);
+        },
+
+        resetSort() {
+            this.setStructuralElementSortMode(false);
+            this.containerList = this.containers;
+        },
+
         async exportCurrentElement(data) {
             if (this.exportRunning) {
                 return;
@@ -1088,10 +1256,14 @@ export default {
                 parentId: this.structuralElement.relationships.parent.data.id,
             });
             this.$router.push(parent_id);
+            this.companionInfo({ info: this.$gettext('Die Seite wurde gelöscht.') });
         },
         async createElement() {
             let title = this.newChapterName; // this is the title of the new element
             let parent_id = this.currentId; // new page is descandant as default
+            if (this.errorEmptyChapterName = title.trim() === '') {
+                return;
+            }
             if (this.newChapterParent === 'sibling') {
                 parent_id = this.structuralElement.relationships.parent.data.id;
             }
@@ -1108,6 +1280,7 @@ export default {
                 info:
                     this.$gettextInterpolate('Die Seite %{ pageTitle } wurde erfolgreich angelegt.', {pageTitle: newElement.attributes.title})
             });
+            this.newChapterName = '';
         },
         containerComponent(container) {
             return 'courseware-' + container.attributes['container-type'] + '-container';
@@ -1130,6 +1303,14 @@ export default {
     watch: {
         structuralElement() {
             this.initCurrent();
+            if (this.isTask) {
+                this.loadTask({
+                    taskId: this.structuralElement.relationships.task.data.id,
+                });
+            }
+        },
+        containers() {
+            this.containerList = this.containers;
         },
     },
 

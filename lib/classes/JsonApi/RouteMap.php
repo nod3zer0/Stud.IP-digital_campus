@@ -307,6 +307,13 @@ class RouteMap
         );
         $group->get('/courseware-instances/{id}/bookmarks', Routes\Courseware\BookmarkedStructuralElementsIndex::class);
 
+        $group->get('/users/{id}/courseware-bookmarks', Routes\Courseware\UsersBookmarkedStructuralElementsIndex::class);
+        $this->addRelationship(
+            $group,
+            '/users/{id}/relationships/courseware-bookmarks',
+            Routes\Courseware\Rel\UsersBookmarkedStructuralElements::class
+        );
+
         $group->get('/courseware-blocks/{id}', Routes\Courseware\BlocksShow::class);
         $group->post('/courseware-blocks', Routes\Courseware\BlocksCreate::class);
         $group->patch('/courseware-blocks/{id}', Routes\Courseware\BlocksUpdate::class);
@@ -390,6 +397,18 @@ class RouteMap
         // not a JSON route
         $group->post('/courseware-structural-elements/{id}/copy', Routes\Courseware\StructuralElementsCopy::class);
 
+        $group->get('/courseware-structural-elements/{id}/comments', Routes\Courseware\StructuralElementCommentsOfStructuralElementsIndex::class);
+        $group->post('/courseware-structural-element-comments', Routes\Courseware\StructuralElementCommentsCreate::class);
+        $group->get('/courseware-structural-element-comments/{id}', Routes\Courseware\StructuralElementCommentsShow::class);
+        $group->patch('/courseware-structural-element-comments/{id}', Routes\Courseware\StructuralElementCommentsUpdate::class);
+        $group->delete('/courseware-structural-element-comments/{id}', Routes\Courseware\StructuralElementCommentsDelete::class);
+
+        $group->get('/courseware-structural-elements/{id}/feedback', Routes\Courseware\StructuralElementFeedbackOfStructuralElementsIndex::class);
+        $group->post('/courseware-structural-element-feedback', Routes\Courseware\StructuralElementFeedbackCreate::class);
+        $group->get('/courseware-structural-element-feedback/{id}', Routes\Courseware\StructuralElementFeedbackShow::class);
+        $group->patch('/courseware-structural-element-feedback/{id}', Routes\Courseware\StructuralElementFeedbackUpdate::class);
+        $group->delete('/courseware-structural-element-feedback/{id}', Routes\Courseware\StructuralElementFeedbackDelete::class);
+
         $group->get('/courseware-blocks/{id}/user-data-field', Routes\Courseware\UserDataFieldOfBlocksShow::class);
         $group->get('/courseware-user-data-fields/{id}', Routes\Courseware\UserDataFieldsShow::class);
         $group->patch('/courseware-user-data-fields/{id}', Routes\Courseware\UserDataFieldsUpdate::class);
@@ -407,6 +426,27 @@ class RouteMap
         $group->get('/courseware-blocks/{id}/feedback', Routes\Courseware\BlockFeedbacksOfBlocksIndex::class);
         $group->post('/courseware-block-feedback', Routes\Courseware\BlockFeedbacksCreate::class);
         $group->get('/courseware-block-feedback/{id}', Routes\Courseware\BlockFeedbacksShow::class);
+        $group->patch('/courseware-block-feedback/{id}', Routes\Courseware\BlockFeedbacksUpdate::class);
+        $group->delete('/courseware-block-feedback/{id}', Routes\Courseware\BlockFeedbacksDelete::class);
+
+        $group->get('/courseware-tasks/{id}', Routes\Courseware\TasksShow::class);
+        $group->get('/courseware-tasks', Routes\Courseware\TasksIndex::class);
+        $group->patch('/courseware-tasks/{id}', Routes\Courseware\TasksUpdate::class);
+        $group->delete('/courseware-tasks/{id}', Routes\Courseware\TasksDelete::class);
+
+        $group->get('/courseware-task-groups/{id}', Routes\Courseware\TaskGroupsShow::class);
+        $group->post('/courseware-task-groups', Routes\Courseware\TaskGroupsCreate::class);
+
+        $group->get('/courseware-task-feedback/{id}', Routes\Courseware\TaskFeedbackShow::class);
+        $group->post('/courseware-task-feedback', Routes\Courseware\TaskFeedbackCreate::class);
+        $group->patch('/courseware-task-feedback/{id}', Routes\Courseware\TaskFeedbackUpdate::class);
+        $group->delete('/courseware-task-feedback/{id}', Routes\Courseware\TaskFeedbackDelete::class);
+
+        $group->get('/courseware-templates/{id}', Routes\Courseware\TemplatesShow::class);
+        $group->get('/courseware-templates', Routes\Courseware\TemplatesIndex::class);
+        $group->post('/courseware-templates', Routes\Courseware\TemplatesCreate::class);
+        $group->patch('/courseware-templates/{id}', Routes\Courseware\TemplatesUpdate::class);
+        $group->delete('/courseware-templates/{id}', Routes\Courseware\TemplatesDelete::class);
     }
 
     private function addAuthenticatedFilesRoutes(RouteCollectorProxy $group): void

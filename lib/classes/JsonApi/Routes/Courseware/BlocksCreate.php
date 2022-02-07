@@ -11,6 +11,8 @@ use JsonApi\Schemas\Courseware\Block as BlockSchema;
 use JsonApi\Schemas\Courseware\Container as ContainerSchema;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Studip\Activity\Activity;
+use Studip\Activity\CoursewareProvider;
 
 /**
  * Create a block in a container.

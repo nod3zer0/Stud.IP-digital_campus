@@ -1,0 +1,1 @@
+<aside id="courseware-dashboard-view-widget" class="widget-sidebar"></aside>

@@ -56,4 +56,24 @@ class ListContainer extends ContainerType
 
         return Schema::fromJsonString(file_get_contents($schemaFile));
     }
+
+    public function pdfExport()
+    {
+        $html = '<h3>' . sprintf(_('Container-Typ: %s'), $this->getTitle()) . '</h3>';
+
+        $payload = $this->getPayload();
+        $block_ids = $payload['sections'][0]['blocks'];
+
+        foreach ($block_ids as $block_id) {
+            $block = $this->container->blocks->find($block_id);
+            if ($block) {
+                $html .= $block->type->PdfExport();
+            }
+            else {
+                $html .= '<p>' . _('Block konnte nicht gefunden werden') . '</p>';
+            }
+        }
+
+        return $html;
+    }
 }

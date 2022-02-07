@@ -169,6 +169,10 @@ class BookmarkedStructuralElements extends RelationshipsController
     private function addBookmarks(\User $user, array $newIds): void
     {
         foreach ($newIds as $structuralElementId) {
+            if (Bookmark::countBySQL('user_id = ? AND element_id = ?', [$user->id, $structuralElementId])) {
+                continue;
+            }
+
             Bookmark::create(['user_id' => $user->id, 'element_id' => $structuralElementId]);
         }
     }

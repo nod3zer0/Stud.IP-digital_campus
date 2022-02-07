@@ -70,6 +70,17 @@ class Activity extends \RESTAPI\RouteMap
         $scrollfrom = \Request::int('scrollfrom', false);
         $filtertype = \Request::get('filtertype', '');
 
+        $objectType = \Request::get('object_type', '');
+        $filter->setObjectType($objectType);
+        
+        $objectId = \Request::get('object_id', '');
+        $filter->setObjectId($objectId);
+
+        $context = \Request::get('context_type', '');
+        $filter->setContext($context);
+
+        $contextId = \Request::get('context_id', '');
+        $filter->setContextId($contextId);
 
         if (!empty($filtertype)) {
             $filter->setType(json_decode($filtertype));

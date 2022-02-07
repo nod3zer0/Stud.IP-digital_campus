@@ -143,6 +143,7 @@ class Activity extends \SimpleORMap
             'passed'      => _('bestand %s'),
             'shared'      => _('teilte %s'),
             'sent'        => _('sendete %s'),
+            'set'         => _('stellte %s'),
             'voided'      => _('löschte %s')
         ];
 

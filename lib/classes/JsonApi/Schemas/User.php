@@ -16,6 +16,7 @@ class User extends SchemaProvider
     const REL_CONTACTS = 'contacts';
     const REL_COURSES = 'courses';
     const REL_COURSE_MEMBERSHIPS = 'course-memberships';
+    const REL_COURSEWARE_BOOKMARKS = 'courseware-bookmarks';
     const REL_EVENTS = 'events';
     const REL_FILES = 'file-refs';
     const REL_FOLDERS = 'folders';
@@ -165,6 +166,7 @@ class User extends SchemaProvider
             $relationships = $this->getNewsRelationship($relationships, $user, $this->shouldInclude($context, self::REL_NEWS));
             $relationships = $this->getOutboxRelationship($relationships, $user, $this->shouldInclude($context, self::REL_OUTBOX));
             $relationships = $this->getScheduleRelationship($relationships, $user, $this->shouldInclude($context, self::REL_SCHEDULE));
+            $relationships = $this->getCoursewareBookmarksRelationship($relationships, $user, $this->shouldInclude($context, self::REL_COURSEWARE_BOOKMARKS));
         }
 
         return $relationships;
@@ -250,6 +252,22 @@ class User extends SchemaProvider
         $relationships[self::REL_COURSE_MEMBERSHIPS] = [
             self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_COURSE_MEMBERSHIPS),
+            ],
+            self::RELATIONSHIP_DATA => $resource->course_memberships,
+        ];
+
+        return $relationships;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    private function getCoursewareBookmarksRelationship(array $relationships, \User $user, $includeData)
+    {
+        $relationships[self::REL_COURSEWARE_BOOKMARKS] = [
+            self::RELATIONSHIP_LINKS_SELF => true,
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_COURSEWARE_BOOKMARKS),
             ],
         ];
 

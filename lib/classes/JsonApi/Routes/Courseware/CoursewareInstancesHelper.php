@@ -11,7 +11,10 @@ trait CoursewareInstancesHelper
 {
     private function findInstance(string $instanceId): Instance
     {
-        list($rangeType, $rangeId) = explode('_', $instanceId);
+        [$rangeType, $rangeId] = explode('_', $instanceId);
+        if (!is_string($rangeType) || !is_string($rangeId)) {
+            throw new BadRequestException('Invalid instance id: "' . $instanceId . '".');
+        }
 
         return $this->findInstanceWithRange($rangeType, $rangeId);
     }
