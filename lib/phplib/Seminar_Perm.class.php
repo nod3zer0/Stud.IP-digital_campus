@@ -144,7 +144,7 @@ class Seminar_Perm
             }
         }
         if ($user_perm == "root") {
-            return "root";
+            $status = "root";
         } elseif ($user_perm == "admin") {
             if (Config::get()->ALLOW_ADMIN_RELATED_INST) {
                 $sem_inst = 'seminar_inst';
@@ -180,25 +180,23 @@ class Seminar_Perm
             }
         }
 
+        if (isset($_SESSION['seminar_change_view_' . $range_id])) {
+            $status = $_SESSION['seminar_change_view_' . $range_id];
+        }
+
         if ($status) {
             return $status;
         }
 
         if (Config::get()->DEPUTIES_ENABLE && Deputy::isDeputy($user_id, $range_id)) {
-            if ($_SESSION['seminar_change_view_' . $range_id]) {
-                $status = $_SESSION['seminar_change_view_' . $range_id];
-            } else {
-                $status = 'dozent';
-            }
+            $status = 'dozent';
         } else {
             $st = $db->prepare("SELECT status FROM seminar_user
                           WHERE user_id = ? AND Seminar_id = ?");
             $st->execute([$user_id, $range_id]);
-            if ($status = $st->fetchColumn()) {
-                if (in_array($status, words('dozent tutor')) && isset($_SESSION['seminar_change_view_' . $range_id])) {
-                    $status = $_SESSION['seminar_change_view_' . $range_id];
-                }
-            } else {
+            $status = $st->fetchColumn();
+
+            if (!$status) {
                 $st = $db->prepare("SELECT inst_perms FROM user_inst
                               WHERE user_id = ? AND Institut_id = ?");
                 $st->execute([$user_id, $range_id]);

@@ -25,7 +25,7 @@ class Course_ManagementController extends AuthenticatedController
         parent::before_filter($action, $args);
 
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $GLOBALS['SessionSeminar'])) {
-            throw new Trails_Exception(400);
+            throw new AccessDeniedException();
         }
         if (Context::isCourse()) {
             $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][Context::get()->status]['class']] ?: SemClass::getDefaultSemClass();
@@ -97,13 +97,12 @@ class Course_ManagementController extends AuthenticatedController
                     )->asDialog('size=auto');
                 }
             }
-            if (in_array($GLOBALS['perm']->get_studip_perm($course->id), words('tutor dozent'))) {
-                $actions->addLink(
-                    _('Studierendenansicht simulieren'),
-                    URLHelper::getURL('dispatch.php/course/change_view/set_changed_view'),
-                    Icon::create('visibility-invisible')
-                );
-            }
+
+            $actions->addLink(
+                _('Studierendenansicht simulieren'),
+                URLHelper::getURL('dispatch.php/course/change_view/set_changed_view'),
+                Icon::create('visibility-invisible')
+            );
 
             $sidebar->addWidget($actions);
 

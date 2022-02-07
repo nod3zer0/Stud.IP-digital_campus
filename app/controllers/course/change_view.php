@@ -33,7 +33,7 @@ class Course_ChangeViewController extends AuthenticatedController
     public function set_changed_view_action()
     {
         if (!$GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)) {
-            throw new Trails_Exception(400);
+            throw new AccessDeniedException();
         }
         $_SESSION["seminar_change_view_{$this->course_id}"] = 'autor';
         $this->relocate('course/overview');
@@ -47,13 +47,6 @@ class Course_ChangeViewController extends AuthenticatedController
      */
     public function reset_changed_view_action()
     {
-        /*
-         * We need to check the real database entry here because $perm would
-         * only return the simulated rights.
-         */
-        if (!CourseMember::findByCourseAndStatus($this->course_id, ['tutor', 'dozent'])) {
-            throw new Trails_Exception(400);
-        }
         unset($_SESSION["seminar_change_view_{$this->course_id}"]);
         $this->relocate('course/management');
     }
