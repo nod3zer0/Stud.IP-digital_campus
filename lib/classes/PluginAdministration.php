@@ -119,6 +119,10 @@ class PluginAdministration
 
         rename($tmpplugindir, $plugindir);
 
+        // wait until opcache.revalidate_freq expires
+        $revalidate_freq = min(ini_get('opcache.revalidate_freq'), 10);
+        sleep($revalidate_freq);
+
         // create database schema if needed
         $this->createDBSchema($plugindir, $manifest, $pluginregistered);
 
