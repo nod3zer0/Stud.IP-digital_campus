@@ -74,6 +74,15 @@ class InstituteMember extends SimpleORMap implements PrivacyObject
 
         $config['additional_fields']['institute_name'] = [];
 
+        $config['registered_callbacks']['after_delete'][] = function ($member) {
+            $institute = $member->institute;
+            $user_id   = $member->user_id;
+
+            if ($institute) {
+                $institute->status_groups->removeUser($user_id, true);
+            }
+        };
+
         parent::configure($config);
     }
 
@@ -168,24 +177,6 @@ class InstituteMember extends SimpleORMap implements PrivacyObject
         $institute->store();
 
         return true;
-    }
-
-    /**
-     * Removes a user from an institute. Removes the user from all
-     * statusgroups as well.
-     *
-     * @return int number of deleted institute member records
-     */
-    public function delete()
-    {
-        $institute = $this->institute;
-        $user_id   = $this->user_id;
-
-        if ($result = parent::delete()) {
-            $institute->status_groups->removeUser($user_id, true);
-        }
-
-        return $result;
     }
 
     /**
