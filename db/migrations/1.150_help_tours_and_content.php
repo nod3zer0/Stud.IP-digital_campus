@@ -25,7 +25,7 @@ class HelpToursAndContent extends Migration
                 'type' => 'string',
                 'range' => 'global',
                 'section' => 'global',
-                'description' => _('Aktuelle Version der Helpbar-Einträge in Stud.IP')
+                'description' => 'Aktuelle Version der Helpbar-Einträge in Stud.IP'
                 ]);
         } else {
             Config::get()->store('HELP_CONTENT_CURRENT_VERSION', $version);

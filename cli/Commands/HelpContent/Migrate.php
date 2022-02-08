@@ -94,20 +94,6 @@ class Migrate extends Command
             }
         }
 
-        if (count($count)) {
-            if (!\Config::get()->getValue('HELP_CONTENT_CURRENT_VERSION')) {
-                \Config::get()->create('HELP_CONTENT_CURRENT_VERSION', [
-                    'value' => $version,
-                    'is_default' => 0,
-                    'type' => 'string',
-                    'range' => 'global',
-                    'section' => 'global',
-                    'description' => _('Aktuelle Version der Helpbar-Einträge in Stud.IP'),
-                ]);
-            } else {
-                \Config::get()->store('HELP_CONTENT_CURRENT_VERSION', $version);
-            }
-        }
         $io->success('help content added for ' . count($count) . ' routes.');
         return Command::SUCCESS;
     }

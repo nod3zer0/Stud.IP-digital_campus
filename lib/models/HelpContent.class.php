@@ -59,9 +59,6 @@ class HelpContent extends SimpleORMap {
         if (!$language) {
             $language = mb_substr(Config::get()->DEFAULT_LANGUAGE, 0, 2);
         }
-        $version = Config::get()->getValue('HELP_CONTENT_CURRENT_VERSION');
-        if (!$version)
-            return [];
         $route = get_route($route);
         $query = "SELECT *
                   FROM help_content
