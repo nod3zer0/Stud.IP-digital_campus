@@ -1816,12 +1816,8 @@ function get_default_http_stream_context($url = '')
         }
         $host = $purl['host'];
         $whitelist = array_filter(array_map('trim', explode(',', Config::get()->HTTP_PROXY_IGNORE)));
-
-        foreach ($whitelist as $whitehost) {
-            if (fnmatch($whitehost, $host)) {
-                $proxy = '';
-                break;
-            }
+        if (in_array($host, $whitelist)) {
+            $proxy = '';
         }
     }
     if ($proxy) {
