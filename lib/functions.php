@@ -1005,29 +1005,18 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
  */
 function format_help_url($keyword)
 {
-    $helppage = $keyword;
-
-    // $loc is only set if special help view for installation is known
-    $loc = "";
-
-    $locationid = Config::get()->EXTERNAL_HELP_LOCATIONID;
-    if ($locationid && $locationid !== 'default') {
-        $loc = $locationid . '/';
-    }
-
     // all help urls need short language tag (de, en)
     $lang = 'de';
     if ($_SESSION['_language']) {
         [$lang] = explode('_', $_SESSION['_language']);
     }
 
-    // determine Stud.IP version as of MAJOR.MINOR
-    // from SOFTWARE_VERSION. That variable MUST match pattern MAJOR.MINOR.*
-    preg_match('/^(\d+\.\d+)/', $GLOBALS['SOFTWARE_VERSION'], $v);
+    // determine major Stud.IP version from SOFTWARE_VERSION.
+    preg_match('/^\d+/', $GLOBALS['SOFTWARE_VERSION'], $v);
     $version = $v[0];
 
-    $help_query = sprintf('https://hilfe.studip.de/help/%s/%s/%s%s',
-                          $version, $lang, $loc, $helppage);
+    $help_query = sprintf('https://hilfe.studip.de/help/%s.0/%s/%s',
+                          $version, $lang, $keyword);
     return $help_query;
 }
 
