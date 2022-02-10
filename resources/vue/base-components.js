@@ -10,6 +10,7 @@ import StudipMessageBox from './components/StudipMessageBox.vue';
 import StudipProxyCheckbox from './components/StudipProxyCheckbox.vue';
 import StudipProxiedCheckbox from './components/StudipProxiedCheckbox.vue';
 import StudipTooltipIcon from './components/StudipTooltipIcon.vue';
+import StudipSelect from './components/StudipSelect.vue';
 
 const BaseComponents = {
     Quicksearch,
@@ -24,6 +25,7 @@ const BaseComponents = {
     StudipProxyCheckbox,
     StudipProxiedCheckbox,
     StudipTooltipIcon,
+    StudipSelect,
 };
 
 export default BaseComponents;

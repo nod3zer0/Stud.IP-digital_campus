@@ -8,10 +8,6 @@ import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import axios from 'axios';
 import { mapResourceModules } from '@elan-ev/reststate-vuex';
-import vSelect from 'vue-select';
-import 'vue-select/dist/vue-select.css'
-
-Vue.component('v-select', vSelect);
 
 const mountApp = (STUDIP, createApp, element) => {
     const getHttpClient = () =>

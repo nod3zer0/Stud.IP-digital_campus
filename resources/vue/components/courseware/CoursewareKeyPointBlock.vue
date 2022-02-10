@@ -29,13 +29,12 @@
 
                     <label for="cw-keypoint-color">
                         <translate>Farbe</translate>
-                        <v-select
+                        <studip-select
                             :options="colors"
                             label="icon"
                             :clearable="false"
                             :reduce="option => option.icon"
                             v-model="currentColor"
-                            class="cw-vs-select"
                         >
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
@@ -49,12 +48,12 @@
                             <template #option="{name, hex}">
                                 <span class="vs__option-color" :style="{'background-color': hex}"></span><span>{{name}}</span>
                             </template>
-                        </v-select>
+                        </studip-select>
                     </label>
 
                     <label for="cw-keypoint-icons">
                         <translate>Icon</translate>
-                        <v-select :options="icons" :clearable="false" v-model="currentIcon" class="cw-vs-select">
+                        <studip-select :options="icons" :clearable="false" v-model="currentIcon">
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                             </template>
@@ -67,7 +66,7 @@
                             <template #option="option">
                                 <studip-icon :shape="option.label"/> <span class="vs__option-with-icon">{{option.label}}</span>
                             </template>
-                        </v-select>
+                        </studip-select>
                     </label>
                 </form>
             </template>

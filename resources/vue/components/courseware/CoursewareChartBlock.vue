@@ -49,13 +49,12 @@
                         </label>
                         <label>
                             <translate>Farbe</translate>
-                            <v-select
+                            <studip-select
                                 :options="colors"
                                 :reduce="colors => colors.value"
                                 label="rgb"
                                 :clearable="false"
                                 v-model="item.color"
-                                class="cw-vs-select"
                                 @option:selected="buildChart"
                             >
                                 <template #open-indicator="selectAttributes">
@@ -70,7 +69,7 @@
                                 <template #option="{name, rgb}">
                                     <span class="vs__option-color" :style="{'background-color': 'rgb(' + rgb + ')'}"></span><span>{{name}}</span>
                                 </template>
-                            </v-select>
+                            </studip-select>
                         </label>
                     </fieldset>
                 </form>

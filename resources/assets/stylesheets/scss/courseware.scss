@@ -169,14 +169,14 @@ c o n t e n t s
     .loading-indicator span.load-3 {
         animation: loading-animation-3 1s linear 20;
     }
-    
+
     @keyframes loading-animation-1 {
       0%   { transform: scale(1); }
       16%  { transform: scale(1.3); }
       33%  { transform: scale(1); }
       100% { transform: scale(1); }
     }
-    
+
     @keyframes loading-animation-2 {
       0%   { transform: scale(1); }
       33%  { transform: scale(1); }
@@ -184,7 +184,7 @@ c o n t e n t s
       65%  { transform: scale(1); }
       100% { transform: scale(1); }
     }
-    
+
     @keyframes loading-animation-3 {
       0%   { transform: scale(1); }
       66%  { transform: scale(1); }
@@ -2288,7 +2288,7 @@ d a s h b o a r d
 .responsive-display {
     .cw-dashboard {
         .cw-dashboard-box {
-    
+
             &.cw-dashboard-box-full {
                 width: 100%
             }
@@ -4606,31 +4606,6 @@ cw tiles
 
 /*
 cw tiles end
-*/
-
-/*
-vSelect
-*/
-.cw-vs-select {
-    max-width: 48em;
-
-    .vs__dropdown-toggle {
-        border: solid thin $content-color-40;
-        border-radius: 0;
-    }
-    .vs__option-with-icon{
-        padding-left: 8px;
-    }
-    .vs__option-color {
-        border: solid thin $content-color-40;
-        padding-left: 20px;
-        height: 20px;
-        margin-right: 4px;
-    }
-}
-
-/*
-vSelect end
 */
 
 /* cw manager copy */

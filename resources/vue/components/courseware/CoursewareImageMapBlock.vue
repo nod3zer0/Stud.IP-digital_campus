@@ -60,13 +60,12 @@
                         >
                             <label>
                                 <translate>Farbe</translate>
-                                <v-select
+                                <studip-select
                                     :options="colors"
                                     label="name"
                                     :reduce="color => color.class"
                                     :clearable="false"
                                     v-model="shape.data.color"
-                                    class="cw-vs-select"
                                 >
                                     <template #open-indicator="selectAttributes">
                                         <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
@@ -80,7 +79,7 @@
                                     <template #option="{name, rgba}">
                                         <span class="vs__option-color" :style="{'background-color': rgba}"></span><span>{{name}}</span>
                                     </template>
-                                </v-select>
+                                </studip-select>
                             </label>
                             <label v-if="shape.type === 'arc'" class="cw-block-image-map-dimensions">
                                 X: <input type="number" v-model="shape.data.centerX" @change="drawScreen" /> Y:
@@ -376,7 +375,7 @@ export default {
             shapeWidth = shapeWidth || 0;
 
             let newText = [];
-            
+
             if (shapeWidth <= 0) {
                 return [text];
             }

@@ -183,7 +183,6 @@
                                 :options="colors"
                                 :reduce="(color) => color.class"
                                 label="class"
-                                class="cw-vs-select"
                             >
                                 <template #open-indicator="selectAttributes">
                                     <span v-bind="selectAttributes"

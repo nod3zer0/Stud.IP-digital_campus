@@ -57,13 +57,12 @@
                     </label>
                     <label>
                         <translate>Textfarbe</translate>
-                        <v-select
+                        <studip-select
                             :options="colors"
                             label="hex"
                             :reduce="color => color.hex"
                             :clearable="false"
                             v-model="currentTextColor"
-                            class="cw-vs-select"
                         >
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
@@ -77,11 +76,11 @@
                             <template #option="{name, hex}">
                                 <span class="vs__option-color" :style="{'background-color': hex}"></span><span>{{name}}</span>
                             </template>
-                        </v-select>
+                        </studip-select>
                     </label>
                     <label>
                         <translate>Icon</translate>
-                        <v-select :clearable="false" :options="icons" v-model="currentIcon" class="cw-vs-select">
+                        <studip-select :clearable="false" :options="icons" v-model="currentIcon">
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                             </template>
@@ -94,17 +93,16 @@
                             <template #option="option">
                                 <studip-icon :shape="option.label"/> <span class="vs__option-with-icon">{{option.label}}</span>
                             </template>
-                        </v-select>
+                        </studip-select>
                     </label>
                     <label>
                         <translate>Icon-Farbe</translate>
-                        <v-select
+                        <studip-select
                             :options="iconColors"
                             label="name"
                             :reduce="iconColor => iconColor.class"
                             :clearable="false"
                             v-model="currentIconColor"
-                            class="cw-vs-select"
                         >
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
@@ -118,7 +116,7 @@
                             <template #option="{name, hex}">
                                 <span class="vs__option-color" :style="{'background-color': hex}"></span><span>{{name}}</span>
                             </template>
-                        </v-select>
+                        </studip-select>
                     </label>
                     <label>
                         <translate>Hintergrundtyp</translate>
@@ -129,13 +127,12 @@
                     </label>
                     <label  v-if="currentBackgroundType === 'color'">
                         <translate>Hintergrundfarbe</translate>
-                        <v-select
+                        <studip-select
                             :options="colors"
                             label="hex"
                             :reduce="color => color.hex"
                             v-model="currentBackgroundColor"
                             :clearable="false"
-                            class="cw-vs-select"
                         >
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
@@ -149,7 +146,7 @@
                             <template #option="{name, hex}">
                                 <span class="vs__option-color" :style="{'background-color': hex}"></span><span>{{name}}</span>
                             </template>
-                        </v-select>
+                        </studip-select>
                     </label>
                     <label v-if="currentBackgroundType === 'image'">
                         <translate>Hintergrundbild</translate>

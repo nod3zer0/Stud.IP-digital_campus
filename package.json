@@ -32,6 +32,7 @@
         "@fullcalendar/resource-timegrid": "^4.3.0",
         "@fullcalendar/resource-timeline": "^4.3.0",
         "@fullcalendar/timegrid": "^4.3.0",
+        "@popperjs/core": "^2.11.2",
         "autoprefixer": "^10.2.5",
         "axios": "^0.21.0",
         "babel-loader": "^8.2.1",
