@@ -990,7 +990,7 @@ class Module_ModuleController extends MVVController
                     } else {
                         PageLayout::postInfo(_('Es wurden keine Änderungen vorgenommen.'));
                     }
-                    $this->relocate('/details/' . $this->modulteil->modul_id . '/' . $this->modulteil->id);
+                    $this->relocate($this->url_for('/details/' . $this->modulteil->modul_id . '/' . $this->modulteil->id));
                     return;
                 }
             }
@@ -1079,7 +1079,7 @@ class Module_ModuleController extends MVVController
             $this->variante = $this->modul->modul_variante;
         } else {
             PageLayout::postError(_('Unbekanntes Modul'));
-            $this->relocate('/index');
+            $this->relocate($this->url_for('/index'));
         }
     }
 

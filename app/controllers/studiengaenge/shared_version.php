@@ -147,7 +147,7 @@ class SharedVersionController extends MVVController
                     ->setInputStyle('width: 240px');
         } else {
             PageLayout::postError(_('Unbekannte Version'));
-            $this->relocate('/versionen');
+            $this->relocate($this->url_for('/versionen'));
         }
         PageLayout::setTitle(_('Versionenvergleich'));
     }
@@ -587,7 +587,7 @@ class SharedVersionController extends MVVController
                             _('Es wurden keine Änderungen an der Zuordnung der Fachsemester vorgenommen.')
                         );
                     }
-                    $this->relocate('/details_abschnitt/' . $this->abschnitt_modul->abschnitt_id . '/' . $this->abschnitt_modul->modul_id);
+                    $this->relocate($this->url_for('/details_abschnitt/' . $this->abschnitt_modul->abschnitt_id . '/' . $this->abschnitt_modul->modul_id));
                     return;
                 }
                 $this->render_template('studiengaenge/versionen/modulteil_semester', $this->layout);

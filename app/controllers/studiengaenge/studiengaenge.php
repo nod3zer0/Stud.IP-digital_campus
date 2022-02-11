@@ -1143,7 +1143,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
 
         if (!$this->studiengang) {
             PageLayout::postError(_('Unbekannter Studiengang'));
-            $this->relocate('/index');
+            $this->relocate($this->url_for('/index'));
             return;
         }
 
@@ -1160,7 +1160,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
                     _('Studiengang "%s" genehmigt!'),
                     htmlReady($studiengang->getDisplayName())
                 ));
-                $this->relocate('/index');
+                $this->relocate($this->url_for('/index'));
                 return;
             }
         }
@@ -1177,7 +1177,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
             $this->redirect($this->url_for('/index'));
         } else {
             if (Request::isXhr()) {
-                $this->relocate('/export/' . $studiengang->id);
+                $this->relocate($this->url_for('/export/' . $studiengang->id));
             }
 
             $all_contacts = $studiengang->contact_assignments->orderBy('position')

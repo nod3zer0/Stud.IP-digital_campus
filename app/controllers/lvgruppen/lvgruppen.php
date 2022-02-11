@@ -204,7 +204,7 @@ class Lvgruppen_LvgruppenController extends MVVController
                     $success_message,
                     htmlReady($this->lvgruppe->getDisplayName())
                 ));
-                $this->relocate('/index');
+                $this->relocate($this->url_for('/index'));
                 return;
             }
         }
