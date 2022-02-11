@@ -1,29 +1,37 @@
 <template>
-    <div v-if="structureLoadingState === 'done'">
-        <courseware-structural-element
-            :canVisit="canVisit"
-            :structural-element="selected"
-            :ordered-structural-elements="orderedStructuralElements"
-            @select="selectStructuralElement"
-        ></courseware-structural-element>
-        <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions">
-            <courseware-action-widget :structural-element="selected" :canVisit="canVisit"></courseware-action-widget>
-        </MountingPortal>
-        <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
-            <courseware-view-widget :structural-element="selected" :canVisit="canVisit"></courseware-view-widget>
-        </MountingPortal>
+    <div>
+        <div v-if="structureLoadingState === 'done'">
+            <courseware-structural-element
+                :canVisit="canVisit"
+                :structural-element="selected"
+                :ordered-structural-elements="orderedStructuralElements"
+                @select="selectStructuralElement"
+            ></courseware-structural-element>
+            <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions">
+                <courseware-action-widget :structural-element="selected" :canVisit="canVisit"></courseware-action-widget>
+            </MountingPortal>
+            <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
+                <courseware-view-widget :structural-element="selected" :canVisit="canVisit"></courseware-view-widget>
+            </MountingPortal>
+        </div>
+        <studip-progress-indicator
+            v-if="structureLoadingState === 'loading'"
+            class="cw-loading-indicator-content"
+            :description="$gettext('Lade Lernmaterial...')"
+        />
+        <courseware-companion-box
+            v-if="structureLoadingState === 'error'"
+            mood="sad"
+            :msgCompanion="loadingErrorMessage"
+        />
     </div>
-    <studip-progress-indicator
-        v-else
-        class="cw-loading-indicator-content"
-        :description="$gettext('Lade Lernmaterial...')"
-    />
 </template>
 
 <script>
 import CoursewareStructuralElement from './CoursewareStructuralElement.vue';
 import CoursewareViewWidget from './CoursewareViewWidget.vue';
 import CoursewareActionWidget from './CoursewareActionWidget.vue';
+import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import StudipProgressIndicator from '../StudipProgressIndicator.vue';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -32,12 +40,14 @@ export default {
         CoursewareStructuralElement,
         CoursewareViewWidget,
         CoursewareActionWidget,
+        CoursewareCompanionBox,
         StudipProgressIndicator,
     },
     data: () => ({
         canVisit: null,
         selected: null,
         structureLoadingState: 'idle',
+        loadingErrorStatus: null
     }),
     computed: {
         ...mapGetters({
@@ -49,6 +59,16 @@ export default {
             structuralElementById: 'courseware-structural-elements/byId',
             userId: 'userId',
         }),
+        loadingErrorMessage() {
+            switch (this.loadingErrorStatus) {
+                case 404:
+                    return this.$gettext('Die Seite konnte nicht gefunden werden.');
+                case 403:
+                    return this.$gettext('Diese Seite steht Ihnen leider nicht zur Verfügung.');
+                default:
+                    return this.$gettext('Beim Laden der Seite ist ein Fehler aufgetreten.');
+            }
+        }
     },
     methods: {
         ...mapActions({
@@ -71,7 +91,14 @@ export default {
     },
     async mounted() {
         this.structureLoadingState = 'loading';
-        await this.loadCoursewareStructure();
+        try {
+            await this.loadCoursewareStructure();
+        }
+        catch (error) {
+            this.loadingErrorStatus = error.status;
+            this.structureLoadingState = 'error';
+            return;
+        }
         await this.loadTeacherStatus(this.userId);
         this.structureLoadingState = 'done';
         const selectedId = this.$route.params?.id;
