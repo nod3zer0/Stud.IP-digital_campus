@@ -302,11 +302,12 @@ abstract class BlockType
      */
     protected function copyFileById(string $fileId, string $rangeId): string
     {
+        static $file_map = [];
+
         if ($this->block->container->structural_element->range_id === $rangeId) {
             return $fileId;
         }
 
-        static $file_map = [];
         if (isset($file_map[$fileId])) {
             return $file_map[$fileId];
         }
@@ -319,7 +320,7 @@ abstract class BlockType
                 $user
             );
 
-            if (isset($copiedFile)) {
+            if (is_object($copiedFile)) {
                 return $file_map[$fileId] = $copiedFile->id;
             }
         }
@@ -337,11 +338,12 @@ abstract class BlockType
      */
     protected function copyFolderById(string $folderId, string $rangeId): string
     {
+        static $folder_map = [];
+
         if ($this->block->container->structural_element->range_id === $rangeId) {
             return $folderId;
         }
 
-        static $folder_map = [];
         if (isset($folder_map[$folderId])) {
             return $folder_map[$folderId];
         }
@@ -355,7 +357,9 @@ abstract class BlockType
                 $user
             );
 
-            return $folder_map[$folderId] = $copiedFolder->id;
+            if (is_object($copiedFolder)) {
+                return $folder_map[$folderId] = $copiedFolder->id;
+            }
         }
 
         return '';
