@@ -1,6 +1,11 @@
 <?php
 final class MissingIndicesV50 extends Migration
 {
+    public function description()
+    {
+        return 'Add missing indices on some tables';
+    }
+
     public function up()
     {
         $query = "CREATE INDEX `range_id` ON `mvv_files_ranges` (`range_id`)";
