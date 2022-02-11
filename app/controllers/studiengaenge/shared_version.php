@@ -522,7 +522,7 @@ class SharedVersionController extends MVVController
             $this->redirect($this->url_for('/details_abschnitt/' . $abschnitt->id));
         } else {
             PageLayout::postError(_('Unbekannter Studiengangteilabschnitt'));
-            $this->redirect('/index');
+            $this->redirect($this->url_for('/index'));
         }
     }
 
