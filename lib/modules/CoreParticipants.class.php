@@ -122,7 +122,6 @@ class CoreParticipants extends CorePlugin implements StudipModule
      */
     public function getTabNavigation($course_id)
     {
-        #$navigation = new AutoNavigation(_('Teilnehmende'));
         $navigation = new Navigation(_('Teilnehmende'));
         $navigation->setImage(Icon::create('persons', Icon::ROLE_INFO_ALT));
         $navigation->setActiveImage(Icon::create('persons', Icon::ROLE_INFO));
@@ -133,15 +132,12 @@ class CoreParticipants extends CorePlugin implements StudipModule
         if (!$course->getSemClass()->isGroup()) {
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) || !$course->config->COURSE_MEMBERS_HIDE) {
                 $navigation->addSubNavigation('view', new Navigation(_('Teilnehmende'), 'dispatch.php/course/members'));
-            }
-            if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) || !$course->config->COURSE_MEMBERGROUPS_HIDE) {
                 $navigation->addSubNavigation('statusgroups', new Navigation(_('Gruppen'), 'dispatch.php/course/statusgroups'));
             }
         } else {
-            if (!$GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
-                return null;
+            if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
+                $navigation->addSubNavigation('children', new Navigation(_('Teilnehmende in Unterveranstaltungen'), 'dispatch.php/course/grouping/members'));
             }
-            $navigation->addSubNavigation('children', new Navigation(_('Teilnehmende in Unterveranstaltungen'), 'dispatch.php/course/grouping/members'));
         }
 
         if ($course->aux_lock_rule) {
