@@ -1064,6 +1064,7 @@ export default {
             unlockObject: 'unlockObject',
             addBookmark: 'addBookmark',
             companionInfo: 'companionInfo',
+            companionError: 'companionError',
             uploadImageForStructuralElement: 'uploadImageForStructuralElement',
             deleteImageForStructuralElement: 'deleteImageForStructuralElement',
             companionSuccess: 'companionSuccess',
@@ -1247,15 +1248,22 @@ export default {
             await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
             this.showElementDeleteDialog(false);
         },
-        async deleteCurrentElement() {
+        deleteCurrentElement() {
             let parent_id = this.structuralElement.relationships.parent.data.id;
             this.showElementDeleteDialog(false);
-            await this.deleteStructuralElement({
+            this.companionInfo({ info: this.$gettext('Lösche Seite und alle darunter liegenden Elemente.') });
+            this.deleteStructuralElement({
                 id: this.currentId,
                 parentId: this.structuralElement.relationships.parent.data.id,
+            })
+            .then(response => {
+                this.$router.push(parent_id);
+                this.companionInfo({ info: this.$gettext('Die Seite wurde gelöscht.') });
+            })
+            .catch(error => {
+                this.companionError({ info: this.$gettext('Die Seite konnte nicht gelöscht werden.') });
+                console.debug(error);
             });
-            this.$router.push(parent_id);
-            this.companionInfo({ info: this.$gettext('Die Seite wurde gelöscht.') });
         },
         async createElement() {
             let title = this.newChapterName; // this is the title of the new element
