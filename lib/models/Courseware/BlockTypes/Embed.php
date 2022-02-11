@@ -121,4 +121,16 @@ class Embed extends BlockType
     {
         return [];
     }
+
+    public function pdfExport()
+    {
+        $payload = $this->getPayload();
+        $html = '<h5>' . sprintf(_('Block-Typ: %s'), $this->getTitle()) . '</h5>';
+        $html .= '<h6>' . _('Block-Daten') . ': ' . '</h6>';
+        $html .= '<h6>' . _('Titel') . ' => ' . $payload['title'] . '</h6>';
+        $html .= '<h6>' . _('Quelle') . ' => ' . $payload['source'] . '</h6>';
+        $html .= '<h6>' . _('URL') . ' => ' . $payload['url'] . '</h6>';
+
+        return $html;
+    }
 }
