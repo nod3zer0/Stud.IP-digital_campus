@@ -126,6 +126,9 @@ class Oer_AddfileController extends AuthenticatedController
             //The folder is not a top folder. We can use its name directly.
             $this->to_folder_name = $this->to_folder_type->name;
         }
+        if (Request::isAjax()) {
+            $this->response->add_header('X-Dialog-Execute', 'STUDIP.OER.initSearch');
+        }
     }
 
     /**

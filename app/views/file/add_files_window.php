@@ -58,7 +58,7 @@ if ($folder_id) {
             <? endif ?>
             <? if (Config::get()->OERCAMPUS_ENABLED && $GLOBALS['perm']->have_perm(Config::get()->OERCAMPUS_PUBLIC_STATUS)) : ?>
                 <a href="<?= $controller->link_for('oer/addfile/choose_file', array_merge($options, ['from_plugin' => ""])) ?>"
-                   data-dialog="height=800">
+                   data-dialog="size=800x800">
                     <?= Icon::create('oer-campus')->asImg(50) ?>
                     <?= htmlReady(Config::get()->OER_TITLE) ?>
                 </a>
