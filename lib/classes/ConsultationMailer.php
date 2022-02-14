@@ -30,7 +30,7 @@ class ConsultationMailer
      * @param string           $reason  Reason for a booking or cancelation
      * @param User             $sender  Sender of the message
      */
-    public static function sendMessage(?User $sender, User $user, ConsultationBooking $booking, string $subject, string $reason = '')
+    public static function sendMessage(?User $sender, User $user, ConsultationBooking $booking, string $subject, ?string $reason = '')
     {
         // Don't send message if user doesn't want it
         if (!UserConfig::get($user->id)->CONSULTATION_SEND_MESSAGES) {
