@@ -1,21 +1,18 @@
 /*jslint esversion: 6*/
-import { $gettext } from '../lib/gettext.js';
-import BlubberGlobalstream from '../../../vue/components/BlubberGlobalstream.vue';
-import BlubberPublicComposer from '../../../vue/components/BlubberPublicComposer.vue';
-import BlubberThread from '../../../vue/components/BlubberThread.vue';
-import BlubberThreadWidget from '../../../vue/components/BlubberThreadWidget.vue';
+import { $gettext } from './gettext';
 
-const components = {
-    BlubberGlobalstream,
-    BlubberPublicComposer,
-    BlubberThread,
-    BlubberThreadWidget,
-};
 
 const Blubber = {
     App: null, //This app is not always available. The app is blubber with a widget and the threads next to it.
     threads: [],
+    components: {
+        BlubberGlobalstream: () => import('../../../vue/components/BlubberGlobalstream.vue'),
+        BlubberPublicComposer: () => import('../../../vue/components/BlubberPublicComposer.vue'),
+        BlubberThread: () => import('../../../vue/components/BlubberThread.vue'),
+        BlubberThreadWidget: () => import('../../../vue/components/BlubberThreadWidget.vue'),
+    },
     init () {
+        let components = STUDIP.Blubber.components;
         if ($('#blubber-index, #messenger-course, .blubber_panel.vueinstance').length) {
             STUDIP.JSUpdater.register('blubber', Blubber.updateState, Blubber.getParamsForPolling);
 
@@ -187,6 +184,7 @@ const Blubber = {
         vue: null,
         async init () {
             STUDIP.Blubber.Composer.vue = await STUDIP.Vue.load().then(({createApp}) => {
+                let components = STUDIP.Blubber.components;
                 return createApp({
                     el: '#blubber_contact_ids',
                     data: {
