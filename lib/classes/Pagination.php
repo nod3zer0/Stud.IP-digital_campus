@@ -43,13 +43,13 @@ class Pagination
         $this->current_page = $current_page;
         $this->per_page     = $per_page;
 
+        $this->current_page = min(
+            $this->current_page,
+            $this->getPageCount() - 1
+        );
+
         if ($this->current_page < 0) {
             $this->current_page = 0;
-        } else {
-            $this->current_page = min(
-                $this->current_page,
-                $this->getPageCount() - 1
-            );
         }
     }
 
@@ -206,11 +206,7 @@ class Pagination
             throw new RuntimeException('No valid SORM class given');
         }
 
-        $sql = sprintf(
-            "{$condition} LIMIT %u, %u",
-            $this->getOffset(),
-            $this->getPerPage()
-        );
+        $sql = "{$condition} LIMIT {$this->getOffset()}, {$this->getPerPage()}";
 
         return SimpleORMapCollection::createFromArray(
             $sorm_class::findBySQL($sql, $parameters)
