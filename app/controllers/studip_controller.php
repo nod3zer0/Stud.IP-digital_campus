@@ -252,6 +252,21 @@ abstract class StudipController extends Trails_Controller
     {
         $args = func_get_args();
 
+        // Create url for a specific action
+        // TODO: This seems odd. You kinda specify an absolute path
+        //       to receive a relative url. Meh...
+        //
+        // @deprecated Do not use this, please!
+        if ($to[0] === '/') {
+            $args[0] = substr($to, 1);
+            return $this->action_url(...$args);
+        }
+
+        // Check for absolute URL
+        if ($this->isURL($to)) {
+            throw new InvalidArgumentException(__METHOD__ . ' cannot be used with absolute URLs');
+        }
+
         // Extract parameters (if any)
         $params = [];
         if (is_array(end($args))) {
@@ -280,16 +295,8 @@ abstract class StudipController extends Trails_Controller
                  : $this->current_action;
         }
 
-        // Create url for a specific action
-        // TODO: This seems odd. You kinda specify an absolute path
-        //       to receive a relative url. Meh...
-        if ($to[0] === '/') {
-            $to = $this->controller_path() . $to;
-        }
+        $url = parent::url_for($to);
 
-        $url = preg_match('#^(/|\w+://)#', $to)
-             ? $to
-             : parent::url_for($to);
         if ($fragment) {
             $url .= '#' . $fragment;
         }
@@ -321,10 +328,9 @@ abstract class StudipController extends Trails_Controller
      */
     public function redirect($to)
     {
-        if (func_num_args() > 1) {
-            $to = $this->url_for(...func_get_args());
-        }
-        return parent::redirect($to);
+        $to = $this->adjustToArguments(...func_get_args());
+
+        parent::redirect($to);
     }
 
     /**
@@ -340,18 +346,45 @@ abstract class StudipController extends Trails_Controller
      */
     public function relocate($to)
     {
-        $from_dialog = Request::isDialog();
+        $to = $this->adjustToArguments(...func_get_args());
 
-        if (func_num_args() > 1 || $from_dialog) {
-            $to = $this->url_for(...func_get_args());
-        }
-
-        if ($from_dialog) {
+        if (Request::isDialog()) {
             $this->response->add_header('X-Location', rawurlencode($to));
             $this->render_nothing();
         } else {
             parent::redirect($to);
         }
+    }
+
+    /**
+     * Returns a URL to a specified route to your Trails application, unless
+     * the parameter is already a valid URL (which is returned unchanged).
+     *
+     * If no absolute url or more than one argument is given, url_for() is
+     * used.
+     */
+    private function adjustToArguments(...$args): string
+    {
+        if ($this->isURL($args[0]) && count($args) > 1) {
+            throw new InvalidArgumentException('Method may not be used with a URL and multiple parameters');
+        }
+
+        if (count($args) > 1 || !$this->isURL($args[0])) {
+            return $this->url_for(...$args);
+        }
+
+        return $args[0];
+    }
+
+    /**
+     * Returns whether the given parameter is a valid url.
+     *
+     * @param string $to
+     * @return bool
+     */
+    private function isURL(string $to): bool
+    {
+        return preg_match('#^(/|\w+://)#', $to);
     }
 
     /**
