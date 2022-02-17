@@ -1827,3 +1827,37 @@ function get_default_http_stream_context($url = '')
     }
     return stream_context_get_default($opts);
 }
+
+/**
+ * Encodes an uri just like encodeURI() in Javascript would do.
+ *
+ * encodeURI() escapes all characters except:
+ *
+ *     A-Z a-z 0-9 ; , / ? : @ & = + $ - _ . ! ~ * ' ( ) #
+ *
+ * @param string $uri
+ * @return string
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
+ */
+function encodeURI(string $uri): string
+{
+    $replacements = [
+        '%21' => '!',
+        '%23' => '#',
+        '%24' => '$',
+        '%26' => '&',
+        '%27' => "'",
+        '%28' => '(',
+        '%29' => ')',
+        '%2A' => '*',
+        '%2B' => '+',
+        '%2C' => ',',
+        '%3B' => ';',
+        '%2F' => '/',
+        '%3A' => ':',
+        '%3D' => '=',
+        '%3F' => '?',
+        '%40' => '@',
+    ];
+    return strtr(rawurlencode($uri), $replacements);
+}

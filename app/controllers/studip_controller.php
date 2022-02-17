@@ -349,7 +349,7 @@ abstract class StudipController extends Trails_Controller
         $to = $this->adjustToArguments(...func_get_args());
 
         if (Request::isDialog()) {
-            $this->response->add_header('X-Location', rawurlencode($to));
+            $this->response->add_header('X-Location', encodeURI($to));
             $this->render_nothing();
         } else {
             parent::redirect($to);
