@@ -1,5 +1,5 @@
 <? if (empty($feedback_elements)): ?>
-    <?= MessageBox::info(_('Es wurden noch Feedback-Elemente angelegt.')) ?>
+    <?= MessageBox::info(_('Es wurden noch keine Feedback-Elemente angelegt.')) ?>
 <? else: ?>
 <table class="default feedback sortable-table" data-sortlist="[[6, 1]]">
     <caption>
@@ -50,7 +50,7 @@
         <?php $range = $feedback->getRange(); ?>
             <tr>
                 <td data-sort-value="<?= crc32($feedback->range_type) ?>" class="responsive-hidden">
-                    <a href="<?= $controller->link_for($range->getRangeUrl()) ?>" 
+                    <a href="<?= $controller->link_for($range->getRangeUrl()) ?>"
                         title="<?= $range->getRangeName() ?>">
                         <?= $range->getRangeIcon('clickable') ?>
                     </a>
@@ -86,7 +86,7 @@
                 <td data-sort-value="<?= $feedback->user->getFullName('no_title_rev') ?>" class="responsive-hidden">
                     <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $feedback->user->username) ?>">
                         <?= $feedback->user->getFullName('no_title_rev') ?>
-                    </a>        
+                    </a>
                 </td>
                 <td title="<?= strftime('%x %X', $feedback->chdate) ?>" data-sort-value="<?= $feedback->chdate ?>">
                     <?= $feedback->chdate ? reltime($feedback->chdate) : "" ?>
