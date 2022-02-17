@@ -1,4 +1,4 @@
-<form action="<?= $controller->url_for() ?>" method="post"
+<form action="<?= $controller->url_for('course/timesrooms/editSemester') ?>" method="post"
       class="default" data-dialog>
     <?=CSRFProtection::tokenTag()?>
     <fieldset>
