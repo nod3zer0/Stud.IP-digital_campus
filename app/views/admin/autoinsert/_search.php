@@ -7,7 +7,8 @@
         <?= Semester::getSemesterSelector(
             ['name' => 'sem_select', 'id' => 'sem_select', 'class' => 'user_form'],
             $sem_select, 'semester_id',
-            true
+            true,
+            false
         )?>
     </label>
     <label>
