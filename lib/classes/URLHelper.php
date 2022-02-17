@@ -2,7 +2,7 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-/*
+/**
  * URLHelper.php - utility functions for URL parameter handling
  *
  * Copyright (c) 2008  Elmar Ludwig

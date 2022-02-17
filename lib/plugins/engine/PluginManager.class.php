@@ -104,7 +104,7 @@ class PluginManager
      * method will be called accordingly. If the method returns false or
      * throws and exception, the plugin's activation state is not updated.
      *
-     * @param string $id        id of the plugin
+     * @param int $id        id of the plugin
      * @param bool   $enabled   plugin status (true or false)
      * @param bool   $force     force (de)activation regardless of the result
      *                           of on(en|dis)able
@@ -115,10 +115,11 @@ class PluginManager
     public function setPluginEnabled ($id, $enabled, $force = false)
     {
         $info = $this->getPluginInfoById($id);
+        $plugin_class = '';
 
         // Plugin is not present or no changes
         if (!$info || $info['enabled'] == $enabled) {
-            return;
+            return null;
         }
 
         if ($info['core'] || !$this->isPluginsDisabled()) {
@@ -154,8 +155,8 @@ class PluginManager
     /**
      * Set the navigation position of the given plugin.
      *
-     * @param $id        id of the plugin
-     * @param $position  plugin navigation position
+     * @param int $id id of the plugin
+     * @param string $position plugin navigation position
      * @return bool indicating whether any change occured
      */
     public function setPluginPosition ($id, $position)
@@ -180,8 +181,8 @@ class PluginManager
      * Get the activation status of a plugin in the given context.
      * This also checks the plugin default activations and sem_class-settings.
      *
-     * @param $id        int of the plugin
-     * @param $context   string range id
+     * @param int $id  id of the plugin
+     * @param string $context range id
      * @returns bool
      */
     public function isPluginActivated ($id, $context)
@@ -204,8 +205,8 @@ class PluginManager
      * Get the activation status of a plugin for the given user.
      * This also checks the plugin default activations and sem_class-settings.
      *
-     * @param $pluginId  id of the plugin
-     * @param $userId    id of the user
+     * @param int $pluginId id of the plugin
+     * @param string $userId id of the user
      */
     public function isPluginActivatedForUser($pluginId, $userId)
     {
@@ -234,9 +235,9 @@ class PluginManager
     /**
      * Sets the activation status of a plugin in the given context.
      *
-     * @param $id        string id of the plugin
-     * @param $rangeId   string context range id
-     * @param $active    bool plugin status (true or false)
+     * @param int $id id of the plugin
+     * @param string $rangeId context range id
+     * @param bool $active plugin status (true or false)
      */
     public function setPluginActivated ($id, $rangeId, $active)
     {
@@ -262,9 +263,9 @@ class PluginManager
     /**
      * Sets the activation status of a plugin in the given context.
      *
-     * @param $pluginid string of the plugin
-     * @param $user_id string user id
-     * @param $active  bool  plugin status (true or false)
+     * @param int $pluginid id of the plugin
+     * @param string $user_id user id
+     * @param bool $active plugin status (true or false)
      */
     public function setPluginActivatedForUser($pluginid, $user_id, $active)
     {
@@ -302,7 +303,7 @@ class PluginManager
      * Returns the list of institutes for which a specific plugin is
      * enabled by default.
      *
-     * @param $id        id of the plugin
+     * @param int $id id of the plugin
      */
     public function getDefaultActivations ($id)
     {
@@ -338,7 +339,7 @@ class PluginManager
     /**
      * Disable loading of all non-core plugins for the current session.
      *
-     * @param $status      true: disable non-core plugins
+     * @param bool $status true: disable non-core plugins
      */
     public function setPluginsDisabled($status)
     {
@@ -357,8 +358,8 @@ class PluginManager
      * Load a plugin class from the given file system path and
      * return the ReflectionClass instance for the plugin.
      *
-     * @param $class     plugin class name
-     * @param $path      plugin relative path
+     * @param string $class plugin class name
+     * @param string $path plugin relative path
      */
     private function loadPlugin ($class, $path)
     {
@@ -375,7 +376,7 @@ class PluginManager
             $pluginfile = $basepath.'/'.$path.'/'.$class.'.php';
 
             if (!file_exists($pluginfile)) {
-                return NULL;
+                return null;
             }
         }
 
@@ -387,8 +388,8 @@ class PluginManager
     /**
      * Determine the type of a plugin to be installed.
      *
-     * @param $class     plugin class name
-     * @param $path      plugin relative path
+     * @param string $class plugin class name
+     * @param string $path plugin relative path
      */
     private function getPluginType ($class, $path)
     {
@@ -415,14 +416,13 @@ class PluginManager
      * Register a new plugin or update an existing plugin entry in the
      * data base. Returns the id of the new or updated plugin.
      *
-     * @param $name      plugin name
-     * @param $class     plugin class name
-     * @param $path      plugin relative path
-     * @param $depends   id of plugin this plugin depends on
+     * @param string $name      plugin name
+     * @param string $class     plugin class name
+     * @param string $path      plugin relative path
+     * @param string $depends   id of plugin this plugin depends on
      */
-    public function registerPlugin ($name, $class, $path, $depends = NULL)
+    public function registerPlugin ($name, $class, $path, $depends = null)
     {
-
         $db = DBManager::get();
         $info = $this->getPluginInfo($class);
         $type = $this->getPluginType($class, $path);
@@ -508,7 +508,7 @@ class PluginManager
     /**
      * Get meta data for the plugin specified by plugin class name.
      *
-     * @param $class   class name of plugin
+     * @param class-string $class class name of plugin
      */
     public function getPluginInfo ($class)
     {
@@ -518,13 +518,13 @@ class PluginManager
             }
         }
 
-        return NULL;
+        return null;
     }
 
     /**
      * Get meta data for the plugin specified by plugin id.
      *
-     * @param $id   id of the plugin
+     * @param int $id id of the plugin
      */
     public function getPluginInfoById ($id)
     {
@@ -532,21 +532,21 @@ class PluginManager
             return $this->plugins[$id];
         }
 
-        return NULL;
+        return null;
     }
 
     /**
-     * Get meta data for all plugins of the specified type. A type of NULL
+     * Get meta data for all plugins of the specified type. A type of null
      * returns meta data for all installed plugins.
      *
-     * @param $type      plugin type or NULL (all types)
+     * @param string $type plugin type or null (all types)
      */
-    public function getPluginInfos ($type = NULL)
+    public function getPluginInfos ($type = null)
     {
         $result = [];
 
         foreach ($this->plugins as $id => $plugin) {
-            if ($type === NULL || in_array($type, $plugin['type'])) {
+            if ($type === null || in_array($type, $plugin['type'])) {
                 $result[$id] = $plugin;
             }
         }
@@ -557,17 +557,18 @@ class PluginManager
     /**
      * Check user access permission for the given plugin.
      *
-     * @param $plugin   plugin meta data
-     * @param $user     user id of user
+     * @param array $plugin plugin meta data
+     * @param string $user_id id of user
+     * @return bool
      */
-    protected function checkUserAccess ($plugin, $user)
+    protected function checkUserAccess ($plugin, $user_id)
     {
         if (!$plugin['enabled']) {
             return false;
         }
 
         $plugin_roles = RolePersistence::getAssignedPluginRoles($plugin['id']);
-        $user_roles = RolePersistence::getAssignedRoles($user, true);
+        $user_roles = RolePersistence::getAssignedRoles($user_id, true);
 
         foreach ($plugin_roles as $plugin_role) {
             foreach ($user_roles as $user_role) {
@@ -583,12 +584,15 @@ class PluginManager
     /**
      * Get instance of the plugin specified by plugin meta data.
      *
-     * @param $plugin_info   plugin meta data
+     * @param array $plugin_info plugin meta data
+     * @return object
      */
     protected function getCachedPlugin ($plugin_info)
     {
         $class = $plugin_info['class'];
         $path  = $plugin_info['path'];
+        $plugin_class = '';
+        $plugin = null;
 
         if (isset($this->plugin_cache[$class])) {
             return $this->plugin_cache[$class];
@@ -608,12 +612,14 @@ class PluginManager
     /**
      * Get instance of the plugin specified by plugin class name.
      *
-     * @param $class   class name of plugin
+     * @param class-string $class class name of plugin
+     * @return object
      */
     public function getPlugin ($class)
     {
         $user = $GLOBALS['user']->id;
         $plugin_info = $this->getPluginInfo($class);
+        $plugin = null;
 
         if (isset($plugin_info) && $this->checkUserAccess($plugin_info, $user)) {
             $plugin = $this->getCachedPlugin($plugin_info);
@@ -625,12 +631,14 @@ class PluginManager
     /**
      * Get instance of the plugin specified by plugin id.
      *
-     * @param $id   id of the plugin
+     * @param int $id id of the plugin
+     * @return object $plugin
      */
     public function getPluginById ($id)
     {
         $user = $GLOBALS['user']->id;
         $plugin_info = $this->getPluginInfoById($id);
+        $plugin = null;
 
         if (isset($plugin_info) && $this->checkUserAccess($plugin_info, $user)) {
             $plugin = $this->getCachedPlugin($plugin_info);
@@ -640,14 +648,14 @@ class PluginManager
     }
 
     /**
-     * Get instances of all plugins of the specified type. A type of NULL
+     * Get instances of all plugins of the specified type. A type of null
      * returns all enabled plugins. The optional context parameter can be
      * used to get only plugins that are activated in the given context.
      *
-     * @param $type      plugin type or NULL (all types)
-     * @param $context   context range id (optional)
+     * @param string $type plugin type or null (all types)
+     * @param string $context context range id (optional)
      */
-    public function getPlugins ($type, $context = NULL)
+    public function getPlugins ($type, $context = null)
     {
         $user = $GLOBALS['user']->id ?: 'nobody';
         $plugin_info = $this->getPluginInfos($type);
@@ -656,13 +664,13 @@ class PluginManager
         usort($plugin_info, ['self', 'positionCompare']);
 
         foreach ($plugin_info as $info) {
-            $activated = $context == NULL
+            $activated = $context == null
                 || $this->isPluginActivated($info['id'], $context);
 
             if ($this->checkUserAccess($info, $user) && $activated) {
                 $plugin = $this->getCachedPlugin($info);
 
-                if ($plugin !== NULL) {
+                if ($plugin !== null) {
                     $plugins[] = $plugin;
                 }
             }
@@ -673,7 +681,7 @@ class PluginManager
 
     /**
      * Read the manifest of the plugin in the given directory.
-     * Returns NULL if the manifest cannot be found.
+     * Returns null if the manifest cannot be found.
      *
      * @return array    containing the manifest information
      */
@@ -683,7 +691,7 @@ class PluginManager
         $result = [];
 
         if ($manifest === false) {
-            return NULL;
+            return null;
         }
 
         foreach ($manifest as $line) {

@@ -1,6 +1,5 @@
 <?php
-# Lifter007: TODO
-# Lifter010: TODO
+
 /**
  * Factory Class for the plugin engine
  * @author Dennis Reil, <dennis.reil@offis.de>
@@ -13,7 +12,7 @@ class PluginEngine
     /**
      * This function maps an incoming request to a tuple
      * (pluginclassname, unconsumed rest).
-     *
+     * @param string $dispatch_to
      * @return array the above mentioned tuple
      */
     public static function routeRequest($dispatch_to)
@@ -23,7 +22,7 @@ class PluginEngine
             throw new PluginNotFoundException(_('Es wurde kein Plugin gewählt.'));
         }
         $pos = mb_strpos($dispatch_to, '/');
-        return $pos === FALSE
+        return $pos === false
             ? [$dispatch_to, '']
             : [mb_substr($dispatch_to, 0, $pos), mb_substr($dispatch_to, $pos + 1)];
     }
@@ -59,7 +58,7 @@ class PluginEngine
     /**
      * Get instance of the plugin specified by plugin class name.
      *
-     * @param $class   class name of plugin
+     * @param class-string $class class name of plugin
      */
     public static function getPlugin ($class)
     {
@@ -71,10 +70,11 @@ class PluginEngine
      * returns all enabled plugins. The optional context parameter can be
      * used to get only plugins that are activated in the given context.
      *
-     * @param $type      plugin type or NULL (all types)
-     * @param $context   context range id (optional)
+     * @param string $type plugin type or null (all types)
+     * @param string $context context range id (optional)
+     * @return array all plugins of the specified type
      */
-    public static function getPlugins ($type, $context = NULL)
+    public static function getPlugins ($type, $context = null)
     {
         return PluginManager::getInstance()->getPlugins($type, $context);
     }
@@ -83,16 +83,16 @@ class PluginEngine
      * Sends a message to all activated plugins of a type and returns an array of
      * the return values.
      *
-     * @param  type       plugin type or NULL (all types)
-     * @param  string     the method name that should be send to all plugins
-     * @param  mixed      a variable number of arguments
+     * @param  string $type plugin type or null (all types)
+     * @param  mixed $method the method name that should be send to all plugins
+     * @param  mixed  a variable number of arguments
      *
-     * @return array      an array containing the return values
+     * @return array an array containing the return values
      */
     public static function sendMessage($type, $method /* ... */)
     {
         $args = func_get_args();
-        array_splice($args, 1, 0, [NULL]);
+        array_splice($args, 1, 0, [null]);
         return call_user_func_array([__CLASS__, 'sendMessageWithContext'], $args);
     }
 
@@ -100,10 +100,10 @@ class PluginEngine
      * Sends a message to all activated plugins of a type enabled in a context and
      * returns an array of the return values.
      *
-     * @param  type       plugin type or NULL (all types)
-     * @param  context    context range id (may be NULL)
-     * @param  string     the method name that should be send to all plugins
-     * @param  mixed      a variable number of arguments
+     * @param  string $type plugin type or null (all types)
+     * @param  string $context context range id (may be null)
+     * @param  string $method the method name that should be send to all plugins
+     * @param  mixed  a variable number of arguments
      *
      * @return array      an array containing the return values
      */
@@ -120,11 +120,11 @@ class PluginEngine
 
     /**
     * Generates a URL which can be shown in user interfaces
-    * @param $plugin - the plugin to which should be linked
-    * @param $params - an array with name value pairs
-    * @param $cmd - command to execute by clicking the link
+    * @param StudIPPlugin|string $plugin - the plugin to which should be linked
+    * @param array $params - an array with name value pairs
+    * @param string $cmd - command to execute by clicking the link
     * @param bool $ignore_registered_params do not add registered params
-    * @return a link to the current plugin with the additional $params
+    * @return string a link to the current plugin with the additional $params
     */
     public static function getURL($plugin, $params = [], $cmd = 'show', $ignore_registered_params = false)
     {
@@ -141,11 +141,11 @@ class PluginEngine
 
     /**
     * Generates a link (entity encoded URL) which can be shown in user interfaces
-    * @param $plugin - the plugin to which should be linked
-    * @param $params - an array with name value pairs
-    * @param $cmd - command to execute by clicking the link
+    * @param StudIPPlugin|string $plugin - the plugin to which should be linked
+    * @param array $params - an array with name value pairs
+    * @param string $cmd - command to execute by clicking the link
     * @param bool $ignore_registered_params do not add registeredparams
-    * @return a link to the current plugin with the additional $params
+    * @return string a link to the current plugin with the additional $params
     */
     public static function getLink($plugin, $params = [], $cmd = 'show', $ignore_registered_params = false)
     {

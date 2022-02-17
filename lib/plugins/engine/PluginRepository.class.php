@@ -1,6 +1,6 @@
 <?php
-# Lifter010: TODO
-/*
+
+/**
  * PluginRepository.class.php - query plugin meta data
  *
  * Copyright (c) 2008  Elmar Ludwig
@@ -23,9 +23,9 @@ class PluginRepository
 
     /**
      * Initialize a new PluginRepository and read meta data from
-     * the given URL or the default list of URLs (if $url is NULL).
+     * the given URL or the default list of URLs (if $url is null).
      */
-    public function __construct($url = NULL)
+    public function __construct($url = null)
     {
         if (isset($url)) {
             $this->readMetadata($url);
@@ -40,6 +40,8 @@ class PluginRepository
      * Read plugin meta data from the given URL (using XML format).
      * The structure of the XML is:
      *
+     * @param string $url given url for plugin
+     *
      * <plugins>
      *   <plugin name="DummyPlugin"
      *     <release
@@ -53,8 +55,6 @@ class PluginRepository
      */
     public function readMetadata($url)
     {
-        global $SOFTWARE_VERSION;
-
         $cache = StudipCacheFactory::getCache();
         $cache_key = 'plugin_metadata/'.$url;
         $metadata = $cache->read($cache_key);
@@ -111,8 +111,8 @@ class PluginRepository
     /**
      * Register a new plugin in this repository.
      *
-     * @param $name       string plugin name
-     * @param $meta_data  array of plugin meta data
+     * @param string $name plugin name
+     * @param array $meta_data plugin meta data
      */
     protected function registerPlugin($name, $meta_data)
     {
@@ -127,8 +127,8 @@ class PluginRepository
     /**
      * Get meta data for the plugin with the given name (if available).
      * Always chooses the newest compatible version of the plugin.
-     *
-     * @return array meta data for plugin (or NULL)
+     * @param string $name name of the plgin
+     * @return array meta data for plugin (or null)
      */
     public function getPlugin($name)
     {
@@ -140,15 +140,15 @@ class PluginRepository
      * string. You may omit the search string to get a list of all
      * available plugins. Returns the newest compatible version of
      * each plugin.
-     *
+     * @param string $search search string
      * @return array array of meta data for matching plugins
      */
-    public function getPlugins($search = NULL)
+    public function getPlugins($search = null)
     {
         $result = [];
 
         foreach ($this->plugins as $name => $data) {
-            if ($search === NULL || $search === '' ||
+            if ($search === null || $search === '' ||
                 is_int(mb_stripos($name, $search)) ||
                 is_int(mb_stripos($data['description'], $search))) {
                 $result[$name] = $data;
