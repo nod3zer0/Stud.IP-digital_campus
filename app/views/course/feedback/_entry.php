@@ -3,7 +3,7 @@
         <h1>
             <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $entry->user->username) ?>">
                 <?= Avatar::getAvatar($entry->user_id)->getImageTag(Avatar::SMALL) ?>
-                <?= $entry->user->getFullName(); ?>
+                <?= htmlReady($entry->user->getFullName()) ?>
             </a>
         </h1>
         <nav>
