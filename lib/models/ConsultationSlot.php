@@ -222,7 +222,12 @@ class ConsultationSlot extends SimpleORMap
         // Add events for missing responsible users
         $missing = array_diff($responsible_ids, $this->events->pluck('user_id'));
         foreach ($missing as $user_id) {
-            $event = $this->createEvent(User::find($user_id));
+            $user = User::find($user_id);
+            if (!$user) {
+                continue;
+            }
+
+            $event = $this->createEvent($user);
             ConsultationEvent::create([
                 'slot_id'  => $this->id,
                 'user_id'  => $user_id,
