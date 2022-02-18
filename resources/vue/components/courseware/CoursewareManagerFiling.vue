@@ -1,13 +1,14 @@
 <template>
-    <div
+    <button
         class="cw-manager-filing"
         :class="{ 'cw-manager-filing-active': active, 'cw-manager-filing-disabled': disabled }"
+        :aria-pressed="active"
         @click="toggleFiling"
     >
         <span v-if="itemType === 'element'"><translate>Seite an dieser Stelle einfügen</translate> </span>
         <span v-if="itemType === 'container'"><translate>Abschnitt an dieser Stelle einfügen</translate> </span>
         <span v-if="itemType === 'block'"><translate>Block an dieser Stelle einfügen</translate> </span>
-    </div>
+    </button>
 </template>
 
 <script>

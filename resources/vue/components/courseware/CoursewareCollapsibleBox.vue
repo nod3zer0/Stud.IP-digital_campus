@@ -1,8 +1,10 @@
 <template>
     <div class="cw-collapsible" :class="{ 'cw-collapsible-open': isOpen }">
-        <header :class="{ 'cw-collapsible-open': isOpen }" class="cw-collapsible-title" @click="isOpen = !isOpen">
-            <studip-icon v-if="icon" :shape="icon" /> {{ title }}
-        </header>
+        <a href="#" :aria-expanded="isOpen" @click="isOpen = !isOpen">
+            <header :class="{ 'cw-collapsible-open': isOpen }" class="cw-collapsible-title">
+                <studip-icon v-if="icon" :shape="icon" /> {{ title }}
+            </header>
+        </a>
         <div class="cw-collapsible-content" :class="{ 'cw-collapsible-content-open': isOpen }">
             <slot></slot>
         </div>

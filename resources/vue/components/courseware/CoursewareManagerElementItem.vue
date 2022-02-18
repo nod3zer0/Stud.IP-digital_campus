@@ -1,16 +1,27 @@
 <template>
-    <div
-        class="cw-manager-element-item"
-        :class="{ 'cw-manager-element-item-sorting': sortChapters }"
-        @click="clickItem"
-    >
-        <span v-if="inserter" @click="clickItem">
-            <studip-icon shape="arr_2left" size="16" role="sort" />
-        </span>
-        {{ element.attributes.title }}
-        <div v-if="sortChapters" class="cw-manager-element-item-buttons">
-            <studip-icon :class="{'cw-manager-icon-disabled' : !canMoveUp}" shape="arr_2up" size="16" role="sort" @click="moveUp" />
-            <studip-icon :class="{'cw-manager-icon-disabled' : !canMoveDown}" shape="arr_2down" size="16" role="sort" @click="moveDown" />
+    <div class="cw-manager-element-item-wrapper">
+        <a
+            v-if="!sortChapters"
+            href="#"
+            class="cw-manager-element-item"
+            :class="[inserter ? 'cw-manager-element-item-inserter' : '']"
+            :title="inserter ? $gettextInterpolate('%{ elementTitle } verschieben', {elementTitle: element.attributes.title}) : element.attributes.title"
+            @click="clickItem">
+                {{ element.attributes.title }}
+        </a>
+        <div 
+            v-else
+            class="cw-manager-element-item cw-manager-element-item-sorting"
+        >
+            {{ element.attributes.title }}
+            <div v-if="sortChapters" class="cw-manager-element-item-buttons">
+                <a v-if="canMoveUp" href="#" @click="moveUp" :title="$gettext('Element nach oben verschieben')">
+                    <studip-icon :class="{'cw-manager-icon-disabled' : !canMoveUp}" shape="arr_2up" size="16" role="clickable" />
+                </a>
+                <a v-if="canMoveDown" href="#" @click="moveDown" :title="$gettext('Element nach unten verschieben')">
+                    <studip-icon :class="{'cw-manager-icon-disabled' : !canMoveDown}" shape="arr_2down" size="16" role="clickable" />
+                </a>
+            </div>
         </div>
     </div>
 </template>

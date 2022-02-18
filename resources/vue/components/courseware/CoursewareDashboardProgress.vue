@@ -1,13 +1,27 @@
 <template>
     <div class="cw-dashboard-progress">
-        <div class="cw-dashboard-progress-breadcrumb">
-            <span v-if="parent" @click="visitRoot"><studip-icon shape="home" /></span>
-            <span v-if="parent" @click="selectChapter(parent.id)"> / {{ parent.name }}</span>
-        </div>
-        <div class="cw-dashboard-progress-chapter" v-if="selected">
-            <h1>
-                <a :href="chapterUrl">{{ selected.name }}</a>
-            </h1>
+        <nav aria-label="Breadcrumb" class="cw-dashboard-progress-breadcrumb">
+            <a
+                v-if="parent"
+                href="#"
+                :title="$gettext('Hauptseite')"
+                @click="visitRoot"
+            >
+                <studip-icon shape="home" />
+            </a>
+            <a
+                v-if="parent"
+                href="#"
+                :title="parent.name"
+                @click="selectChapter(parent.id)"
+            >
+                / {{ parent.name }}
+            </a>
+        </nav>
+        <div v-if="selected" class="cw-dashboard-progress-chapter">
+            <a :href="chapterUrl" :title="$gettextInterpolate('%{ pageTitle } öffnen', {pageTitle: selected.name})">
+                <h1>{{ selected.name }}</h1>
+            </a>
             <courseware-progress-circle
                 :title="$gettext('diese Seite inkl. darunter liegende Seiten')"
                 :value="parseInt(selected.progress.cumulative)"

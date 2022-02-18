@@ -1,24 +1,22 @@
 <template>
     <ul class="widget-list widget-links sidebar-views cw-view-widget">
-        <li
-            :class="{ active: readView }"
-            @click="setReadView"
-        >
-            <translate>Lesen</translate>
+        <li :class="{ active: readView }">
+            <a href="#" @click="setReadView">
+                <translate>Lesen</translate>
+            </a>
         </li>
-        <li
-            v-if="canEdit"
-            :class="{ active: editView }"
-            @click="setEditView"
-        >
-            <translate>Bearbeiten</translate>
+        <li :class="{ active: editView }">
+            <a href="#" @click="setEditView">
+                <translate>Bearbeiten</translate>
+            </a>
         </li>
         <li 
             v-if="context.type === 'courses' && canVisit"
             :class="{ active: discussView }"
-            @click="setDiscussView"
         >
-            <translate>Diskutieren</translate>
+            <a href="#" @click="setDiscussView">
+                <translate>Diskutieren</translate>
+            </a>
         </li>
     </ul>
 </template>
@@ -42,24 +40,21 @@ export default {
         },
         discussView() {
             return this.viewMode === 'discuss';
-        },
-        canEdit() {
-            if (!this.structuralElement) {
-                return false;
-            }
-            return this.structuralElement.attributes['can-edit'];
-        },
+        }
     },
     methods: {
-        ...mapActions(
-            ['coursewareBlockAdder']
-        ),
+        ...mapActions({
+            coursewareViewMode: 'coursewareViewMode',
+            coursewareBlockAdder: 'coursewareBlockAdder',
+            setToolbarItem: 'coursewareSelectedToolbarItem',
+        }),
         setReadView() {
-            this.$store.dispatch('coursewareViewMode', 'read');
+            this.coursewareViewMode('read');
+            this.setToolbarItem('contents');
             this.coursewareBlockAdder({});
         },
         setEditView() {
-            this.$store.dispatch('coursewareViewMode', 'edit');
+            this.coursewareViewMode('edit');
         },
         setDiscussView() {
             this.$store.dispatch('coursewareViewMode', 'discuss');

@@ -1,14 +1,15 @@
 <template>
-    <div
+    <button
         class="cw-block-adder-area"
         :class="{ 'cw-block-adder-active': adderActive }"
+        :aria-pressed="adderActive"
         @click="selectBlockAdder"
     >
         <studip-icon v-show="!adderActive" shape="add" />
         <studip-icon v-show="adderActive" shape="add" role="info_alt"/>
         <span v-show="!adderActive"><translate>Block zu diesem Abschnitt hinzufügen</translate></span>
         <span v-show="adderActive"><translate>Abschnitt aktiv - Blöcke werden hier eingefügt</translate></span>
-    </div>
+    </button>
 </template>
 
 <script>
@@ -41,6 +42,7 @@ export default {
             } else {
                 this.adderActive = true;
                 this.$store.dispatch('coursewareBlockAdder', { container: this.container, section: this.section });
+                this.$store.dispatch('coursewareSelectedToolbarItem', 'blockadder');
                 this.$store.dispatch('coursewareShowToolbar', true);
             }
         },

@@ -58,11 +58,12 @@
                 <button class="button add" @click="addCard"><translate>Karte hinzufügen</translate></button>
                 <courseware-tabs
                     v-if="currentCards.length > 0"
-                    @selectTab="activateCard(parseInt($event.replace($gettext('Karte') +  ' ', '')) - 1)"
+                    @selectTab="activateCard(parseInt($event.name.replace($gettext('Karte') +  ' ', '')) - 1)"
                 >
                     <courseware-tab
                         v-for="(card, index) in currentCards"
                         :key="index"
+                        :index="index"
                         :name="$gettext('Karte') +  ' ' + (index + 1).toString()"
                         :selected="index === 0"
                         canBeEmpty

@@ -1,45 +1,54 @@
 <template>
     <div class="cw-tools-element-adder">
-        <ul class="cw-tools-element-adder-tabs">
-            <li
-                :class="{ 'active': showBlockadder }"
-                class="cw-tools-element-adder-tab"
-                @click="displayBlockAdder"
-            >
-                <translate>Blöcke</translate>
-            </li>
-            <li
-                :class="{ 'active': showContaineradder }"
-                class="cw-tools-element-adder-tab"
-                @click="displayContainerAdder"
-            >
-                <translate>Abschnitte</translate>
-            </li>
-        </ul>
-
-        <div v-show="showBlockadder" class="cw-tools cw-tools-blockadder">
-            <courseware-collapsible-box :title="textBlockHelper">
-                <courseware-block-helper :blockTypes="blockTypes" />
-            </courseware-collapsible-box>
-
-            <courseware-collapsible-box :title="textAdderFavs" :open="favoriteBlockTypes.length > 0">
-                <div class="cw-element-adder-wrapper" v-if="!showEditFavs">
-                    <courseware-companion-box 
-                        v-if="favoriteBlockTypes.length === 0"
-                        mood="sad"
-                        :msgCompanion="textFavsEmpty"
-                    />
-                    <courseware-blockadder-item
-                        v-for="(block, index) in favoriteBlockTypes"
-                        :key="index"
-                        :title="block.title"
-                        :icon="block.icon"
-                        :type="block.type"
-                        :description="block.description"
-                    />
-                </div>
-
-                <div class="cw-element-adder-favs-wrapper" v-if="showEditFavs">
+        <courseware-tabs class="cw-tools-element-adder-tabs">
+            <courseware-tab :name="$gettext('Blöcke')" :selected="showBlockadder" :index="0">
+                <courseware-collapsible-box :title="textBlockHelper">
+                    <courseware-block-helper :blockTypes="blockTypes" />
+                </courseware-collapsible-box>
+                <courseware-collapsible-box :title="textAdderFavs" :open="favoriteBlockTypes.length > 0">
+                    <div class="cw-element-adder-wrapper" v-if="!showEditFavs">
+                        <courseware-companion-box 
+                            v-if="favoriteBlockTypes.length === 0"
+                            mood="sad"
+                            :msgCompanion="textFavsEmpty"
+                        />
+                        <courseware-blockadder-item
+                            v-for="(block, index) in favoriteBlockTypes"
+                            :key="index"
+                            :title="block.title"
+                            :icon="block.icon"
+                            :type="block.type"
+                            :description="block.description"
+                        />
+                    </div>
+                    <div class="cw-element-adder-favs-wrapper" v-if="showEditFavs">
+                        <div class="cw-element-adder-all-blocks" :class="{ 'fav-edit-active': showEditFavs }">
+                            <courseware-blockadder-item
+                                v-for="(block, index) in blockTypes"
+                                :key="index"
+                                :title="block.title"
+                                :type="block.type"
+                                :description="block.description"
+                            />
+                        </div>
+                        <div class="cw-element-adder-favs">
+                            <div
+                                v-for="(block, index) in blockTypes"
+                                :key="'fav-item-' + index"
+                                class="cw-block-fav-item"
+                                :class="[isBlockFav(block) ? 'cw-block-fav-item-active' : '']"
+                                @click="toggleFavItem(block)"
+                            ></div>
+                        </div>
+                    </div>
+                    <button v-show="!showEditFavs" class="button" @click="showEditFavs = true">
+                        <translate>Favoriten bearbeiten</translate>
+                    </button>
+                    <button v-show="showEditFavs" class="button" @click="endEditFavs">
+                        <translate>Favoriten bearbeiten schließen</translate>
+                    </button>
+                </courseware-collapsible-box>
+                <courseware-collapsible-box :title="textAdderAll">
                     <div class="cw-element-adder-all-blocks" :class="{ 'fav-edit-active': showEditFavs }">
                         <courseware-blockadder-item
                             v-for="(block, index) in blockTypes"
@@ -49,78 +58,50 @@
                             :description="block.description"
                         />
                     </div>
-                    <div class="cw-element-adder-favs">
-                        <div
-                            v-for="(block, index) in blockTypes"
-                            :key="'fav-item-' + index"
-                            class="cw-block-fav-item"
-                            :class="[isBlockFav(block) ? 'cw-block-fav-item-active' : '']"
-                            @click="toggleFavItem(block)"
-                        ></div>
-                    </div>
-                </div>
-
-                <button v-show="!showEditFavs" class="button" @click="showEditFavs = true">
-                    <translate>Favoriten bearbeiten</translate>
-                </button>
-                <button v-show="showEditFavs" class="button" @click="endEditFavs">
-                    <translate>Favoriten bearbeiten schließen</translate>
-                </button>
-            </courseware-collapsible-box>
-
-            <courseware-collapsible-box :title="textAdderAll">
-                <div class="cw-element-adder-all-blocks" :class="{ 'fav-edit-active': showEditFavs }">
-                    <courseware-blockadder-item
-                        v-for="(block, index) in blockTypes"
-                        :key="index"
-                        :title="block.title"
-                        :type="block.type"
-                        :description="block.description"
-                    />
-                </div>
-            </courseware-collapsible-box>
-
-            <courseware-collapsible-box
-                v-for="(category, index) in blockCategories"
-                :key="index"
-                :title="category.title"
-                :open="category.type === 'basis' && favoriteBlockTypes.length === 0"
-            >
-                <div v-for="(block, index) in blockTypes" :key="index">
-                    <courseware-blockadder-item
-                        v-if="block.categories.includes(category.type)"
-                        :title="block.title"
-                        :icon="block.icon"
-                        :type="block.type"
-                        :description="block.description"
-                    />
-                </div>
-            </courseware-collapsible-box>
-        </div>
-
-        <div v-show="showContaineradder" class="cw-tools cw-tools-containeradder">
-            <courseware-collapsible-box
-                v-for="(style, index) in containerStyles"
-                :key="index"
-                :title="style.title"
-                :open="index === 0"
-            >
-                <courseware-container-adder-item
-                    v-for="(container, index) in containerTypes"
+                </courseware-collapsible-box>
+                <courseware-collapsible-box
+                    v-for="(category, index) in blockCategories"
                     :key="index"
-                    :title="container.title"
-                    :type="container.type"
-                    :colspan="style.colspan"
-                    :description="container.description"
-                    :firstSection="$gettext('erstes Element')"
-                    :secondSection="$gettext('zweites Element')"
-                ></courseware-container-adder-item>
-            </courseware-collapsible-box>
-        </div>
+                    :title="category.title"
+                    :open="category.type === 'basis' && favoriteBlockTypes.length === 0"
+                >
+                    <div v-for="(block, index) in blockTypes" :key="index">
+                        <courseware-blockadder-item
+                            v-if="block.categories.includes(category.type)"
+                            :title="block.title"
+                            :icon="block.icon"
+                            :type="block.type"
+                            :description="block.description"
+                        />
+                    </div>
+                </courseware-collapsible-box>
+            </courseware-tab>
+            <courseware-tab :name="$gettext('Abschnitte')" :selected="showContaineradder" :index="1">
+                <courseware-collapsible-box
+                    v-for="(style, index) in containerStyles"
+                    :key="index"
+                    :title="style.title"
+                    :open="index === 0"
+                >
+                    <courseware-container-adder-item
+                        v-for="(container, index) in containerTypes"
+                        :key="index"
+                        :title="container.title"
+                        :type="container.type"
+                        :colspan="style.colspan"
+                        :description="container.description"
+                        :firstSection="$gettext('erstes Element')"
+                        :secondSection="$gettext('zweites Element')"
+                    ></courseware-container-adder-item>
+                </courseware-collapsible-box>
+            </courseware-tab>
+        </courseware-tabs>
     </div>
 </template>
 
 <script>
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
 import CoursewareCollapsibleBox from './CoursewareCollapsibleBox.vue';
 import CoursewareBlockadderItem from './CoursewareBlockadderItem.vue';
 import CoursewareContainerAdderItem from './CoursewareContainerAdderItem.vue';
@@ -131,6 +112,8 @@ import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 export default {
     name: 'cw-tools-blockadder',
     components: {
+        CoursewareTabs,
+        CoursewareTab,
         CoursewareCollapsibleBox,
         CoursewareBlockadderItem,
         CoursewareContainerAdderItem,
@@ -216,7 +199,7 @@ export default {
         endEditFavs() {
             this.showEditFavs = false;
             this.$emit('scrollTop');
-        }
+        },
     },
     mounted() {
         if (this.containerAdder === true) {

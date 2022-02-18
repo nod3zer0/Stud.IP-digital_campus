@@ -30,7 +30,7 @@
                                 :class="{ 'studip-dialog-warning': question, 'studip-dialog-alert': alert }"
                                 class="studip-dialog-body"
                                 role="dialog"
-                                :aria-modal="'true'"
+                                aria-modal="true"
                                 :aria-labelledby="dialogTitleId"
                                 :aria-describedby="dialogDescId"
                                 ref="dialog"

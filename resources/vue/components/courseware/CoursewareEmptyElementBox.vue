@@ -38,6 +38,7 @@ export default {
             this.$store.dispatch('coursewareViewMode', 'edit');
             this.$store.dispatch('coursewareConsumeMode', false);
             this.$store.dispatch('coursewareContainerAdder', true);
+            this.$store.dispatch('coursewareSelectedToolbarItem', 'blockadder');
             this.$store.dispatch('coursewareShowToolbar', true);
         },
         switchToEditView() {

@@ -1,12 +1,14 @@
 <template>
-    <div class="cw-blockadder-item" :class="['cw-blockadder-item-' + type]" @click="addBlock">
-        <header class="cw-blockadder-item-title">
-            {{ title }}
-        </header>
-        <p class="cw-blockadder-item-description">
-            {{ description }}
-        </p>
-    </div>
+    <a href="#" @click="addBlock">
+        <div class="cw-blockadder-item" :class="['cw-blockadder-item-' + type]">
+            <header class="cw-blockadder-item-title">
+                {{ title }}
+            </header>
+            <p class="cw-blockadder-item-description">
+                {{ description }}
+            </p>
+        </div>
+    </a>
 </template>
 
 <script>

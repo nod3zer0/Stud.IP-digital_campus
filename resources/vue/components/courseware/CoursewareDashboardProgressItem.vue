@@ -1,12 +1,17 @@
 <template>
-    <div class="cw-dashboard-progress-item" @click="$emit('selectChapter', chapterId)">
+    <a 
+        href="#"
+        class="cw-dashboard-progress-item"
+        :title="name"
+        @click="$emit('selectChapter', chapterId)"
+    >
         <div class="cw-dashboard-progress-item-value">
             <courseware-progress-circle :value="parseInt(value)" />
         </div>
         <div class="cw-dashboard-progress-item-description">
             {{ name }}
         </div>
-    </div>
+    </a>
 </template>
 
 <script>

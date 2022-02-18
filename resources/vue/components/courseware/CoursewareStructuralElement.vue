@@ -1,494 +1,481 @@
 <template>
-    <div>
-        <div
-            :class="{ 'cw-structural-element-consumemode': consumeMode }"
-            class="cw-structural-element"
-            v-if="validContext"
-        >
-            <div class="cw-structural-element-content" v-if="structuralElement">
-                <courseware-ribbon :canEdit="canEdit && canAddElements">
-                    <template #buttons>
-                        <router-link v-if="prevElement" :to="'/structural_element/' + prevElement.id">
-                            <button class="cw-ribbon-button cw-ribbon-button-prev" :title="textRibbon.perv" />
-                        </router-link>
-                        <button v-else class="cw-ribbon-button cw-ribbon-button-prev-disabled" />
-                        <router-link v-if="nextElement" :to="'/structural_element/' + nextElement.id">
-                            <button class="cw-ribbon-button cw-ribbon-button-next" :title="textRibbon.next" />
-                        </router-link>
-                        <button v-else class="cw-ribbon-button cw-ribbon-button-next-disabled" />
-                    </template>
-                    <template #breadcrumbList>
-                        <li
-                            v-for="ancestor in ancestors"
-                            :key="ancestor.id"
-                            :title="ancestor.attributes.title"
-                            class="cw-ribbon-breadcrumb-item"
-                        >
-                            <span>
-                                <router-link :to="'/structural_element/' + ancestor.id">
-                                    {{ ancestor.attributes.title || "–" }}
-                                </router-link>
-                            </span>
-                        </li>
-                        <li
-                            class="cw-ribbon-breadcrumb-item cw-ribbon-breadcrumb-item-current"
-                            :title="structuralElement.attributes.title"
-                        >
-                            <span>{{ structuralElement.attributes.title || "–" }}</span>
-                        </li>
-                    </template>
-                    <template #breadcrumbFallback>
-                        <li
-                            class="cw-ribbon-breadcrumb-item cw-ribbon-breadcrumb-item-current"
-                            :title="structuralElement.attributes.title"
-                        >
-                            <span>{{ structuralElement.attributes.title }}</span>
-                        </li>
-                    </template>
-                    <template #menu>
-                        <studip-action-menu
-                            v-if="!consumeMode"
-                            :items="menuItems"
-                            class="cw-ribbon-action-menu"
-                            @editCurrentElement="menuAction('editCurrentElement')"
-                            @addElement="menuAction('addElement')"
-                            @deleteCurrentElement="menuAction('deleteCurrentElement')"
-                            @showInfo="menuAction('showInfo')"
-                            @showExportOptions="menuAction('showExportOptions')"
-                            @oerCurrentElement="menuAction('oerCurrentElement')"
-                            @setBookmark="menuAction('setBookmark')"
-                            @sortContainers="menuAction('sortContainers')"
-                            @pdfExport="menuAction('pdfExport')"
-                        />
-                    </template>
-                </courseware-ribbon>
-
-                <div
-                    v-if="canVisit && !sortMode"
-                    class="cw-container-wrapper"
-                    :class="{
-                        'cw-container-wrapper-consume': consumeMode,
-                        'cw-container-wrapper-discuss': discussView,
-                    }"
-                >
-                    <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
-                        <courseware-empty-element-box
-                            v-if="showEmptyElementBox"
-                            :canEdit="canEdit"
-                            :noContainers="noContainers"
-                        />
-                        <courseware-wellcome-screen v-if="noContainers && isRoot && canEdit" />
-                    </div>
-                    <courseware-structural-element-discussion
-                        v-if="!noContainers && discussView"
-                        :structuralElement="structuralElement"
-                        :canEdit="canEdit"
-                    />
-                    <component
-                        v-for="container in containers"
-                        :key="container.id"
-                        :is="containerComponent(container)"
-                        :container="container"
-                        :canEdit="canEdit"
-                        :canAddElements="canAddElements"
-                        :isTeacher="userIsTeacher"
-                        class="cw-container-item"
-                    />
-                </div>
-                <div v-if="canVisit && canEdit && sortMode" class="cw-container-wrapper-sort-mode">
-                    <draggable
-                        class="cw-structural-element-list-sort-mode"
-                        tag="ul"
-                        v-model="containerList"
-                        v-bind="dragOptions"
-                        handle=".cw-sortable-handle"
-                        @start="isDragging = true"
-                        @end="isDragging = false"
-                    >
-                        <transition-group type="transition" name="flip-containers">
-                            <li
-                                v-for="container in containerList"
-                                :key="container.id"
-                                class="cw-container-item-sortable"
-                            >
-                                <span class="cw-sortable-handle"></span>
-                                <span>{{ container.attributes.title }} ({{ container.attributes.width }})</span>
-                            </li>
-                        </transition-group>
-                    </draggable>
-                    <div class="cw-container-sort-buttons">
-                        <button class="button accept" @click="storeSort">
-                            <translate>Sortierung speichern</translate>
-                        </button>
-                        <button class="button cancel" @click="resetSort">
-                            <translate>Sortieren abbrechen</translate>
-                        </button>
-                    </div>
-                </div>
-                <div
-                    v-if="!canVisit"
-                    class="cw-container-wrapper"
-                    :class="{ 'cw-container-wrapper-consume': consumeMode }"
-                >
-                    <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
-                        <courseware-companion-box
-                            mood="sad"
-                            :msgCompanion="$gettext('Diese Seite steht Ihnen leider nicht zur Verfügung.')"
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <courseware-companion-overlay />
-
-            <studip-dialog
-                v-if="showEditDialog"
-                :title="textEdit.title"
-                :confirmText="textEdit.confirm"
-                :confirmClass="'accept'"
-                :closeText="textEdit.close"
-                :closeClass="'cancel'"
-                height="500"
-                width="500"
-                class="studip-dialog-with-tab"
-                @close="closeEditDialog"
-                @confirm="storeCurrentElement"
+    <focus-trap v-model="consumModeTrap">
+        <div>
+            <div
+                :class="{ 'cw-structural-element-consumemode': consumeMode }"
+                class="cw-structural-element"
+                v-if="validContext"
             >
-                <template v-slot:dialogContent>
-                    <courseware-tabs class="cw-tab-in-dialog">
-                        <courseware-tab :name="textEdit.basic" :selected="true">
-                            <form class="default" @submit.prevent="">
+                <div class="cw-structural-element-content" v-if="structuralElement">
+                    <courseware-ribbon :canEdit="canEdit && canAddElements">
+                        <template #buttons>
+                            <router-link v-if="prevElement" :to="'/structural_element/' + prevElement.id">
+                                <div class="cw-ribbon-button cw-ribbon-button-prev" :title="textRibbon.perv" />
+                            </router-link>
+                            <div v-else class="cw-ribbon-button cw-ribbon-button-prev-disabled" :title="$gettext('keine vorherige Seite')"/>
+                            <router-link v-if="nextElement" :to="'/structural_element/' + nextElement.id">
+                                <div class="cw-ribbon-button cw-ribbon-button-next" :title="textRibbon.next" />
+                            </router-link>
+                            <div v-else class="cw-ribbon-button cw-ribbon-button-next-disabled" :title="$gettext('keine nächste Seite')"/>
+                        </template>
+                        <template #breadcrumbList>
+                            <li
+                                v-for="ancestor in ancestors"
+                                :key="ancestor.id"
+                                :title="ancestor.attributes.title"
+                                class="cw-ribbon-breadcrumb-item"
+                            >
+                                <span>
+                                    <router-link :to="'/structural_element/' + ancestor.id">
+                                        {{ ancestor.attributes.title || "–" }}
+                                    </router-link>
+                                </span>
+                            </li>
+                            <li
+                                class="cw-ribbon-breadcrumb-item cw-ribbon-breadcrumb-item-current"
+                                :title="structuralElement.attributes.title"
+                            >
+                                <span>{{ structuralElement.attributes.title || "–" }}</span>
+                            </li>
+                        </template>
+                        <template #breadcrumbFallback>
+                            <li
+                                class="cw-ribbon-breadcrumb-item cw-ribbon-breadcrumb-item-current"
+                                :title="structuralElement.attributes.title"
+                            >
+                                <span>{{ structuralElement.attributes.title }}</span>
+                            </li>
+                        </template>
+                        <template #menu>
+                            <studip-action-menu
+                                v-if="!consumeMode"
+                                :items="menuItems"
+                                class="cw-ribbon-action-menu"
+                                @editCurrentElement="menuAction('editCurrentElement')"
+                                @addElement="menuAction('addElement')"
+                                @deleteCurrentElement="menuAction('deleteCurrentElement')"
+                                @showInfo="menuAction('showInfo')"
+                                @showExportOptions="menuAction('showExportOptions')"
+                                @oerCurrentElement="menuAction('oerCurrentElement')"
+                                @setBookmark="menuAction('setBookmark')"
+                                @sortContainers="menuAction('sortContainers')"
+                                @pdfExport="menuAction('pdfExport')"
+                            />
+                        </template>
+                    </courseware-ribbon>
+
+                    <div
+                        v-if="canVisit && !sortMode"
+                        class="cw-container-wrapper"
+                        :class="{
+                            'cw-container-wrapper-consume': consumeMode,
+                            'cw-container-wrapper-discuss': discussView,
+                        }"
+                    >
+                        <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
+                            <courseware-empty-element-box
+                                v-if="showEmptyElementBox"
+                                :canEdit="canEdit"
+                                :noContainers="noContainers"
+                            />
+                            <courseware-wellcome-screen v-if="noContainers && isRoot && canEdit" />
+                        </div>
+                        <courseware-structural-element-discussion
+                            v-if="!noContainers && discussView"
+                            :structuralElement="structuralElement"
+                            :canEdit="canEdit"
+                        />
+                        <component
+                            v-for="container in containers"
+                            :key="container.id"
+                            :is="containerComponent(container)"
+                            :container="container"
+                            :canEdit="canEdit"
+                            :canAddElements="canAddElements"
+                            :isTeacher="userIsTeacher"
+                            class="cw-container-item"
+                        />
+                    </div>
+                    <div v-if="canVisit && canEdit && sortMode" class="cw-container-wrapper-sort-mode">
+                        <draggable
+                            class="cw-structural-element-list-sort-mode"
+                            tag="ul"
+                            v-model="containerList"
+                            v-bind="dragOptions"
+                            handle=".cw-sortable-handle"
+                            @start="isDragging = true"
+                            @end="isDragging = false"
+                        >
+                            <transition-group type="transition" name="flip-containers">
+                                <li
+                                    v-for="container in containerList"
+                                    :key="container.id"
+                                    class="cw-container-item-sortable"
+                                >
+                                    <span class="cw-sortable-handle"></span>
+                                    <span>{{ container.attributes.title }} ({{ container.attributes.width }})</span>
+                                </li>
+                            </transition-group>
+                        </draggable>
+                        <div class="cw-container-sort-buttons">
+                            <button class="button accept" @click="storeSort">
+                                <translate>Sortierung speichern</translate>
+                            </button>
+                            <button class="button cancel" @click="resetSort">
+                                <translate>Sortieren abbrechen</translate>
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        v-if="!canVisit"
+                        class="cw-container-wrapper"
+                        :class="{ 'cw-container-wrapper-consume': consumeMode }"
+                    >
+                        <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
+                            <courseware-companion-box
+                                mood="sad"
+                                :msgCompanion="$gettext('Diese Seite steht Ihnen leider nicht zur Verfügung.')"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <courseware-companion-overlay />
+
+                <studip-dialog
+                    v-if="showEditDialog"
+                    :title="textEdit.title"
+                    :confirmText="textEdit.confirm"
+                    confirmClass="accept"
+                    :closeText="textEdit.close"
+                    closeClass="cancel"
+                    height="500"
+                    width="500"
+                    class="studip-dialog-with-tab"
+                    @close="closeEditDialog"
+                    @confirm="storeCurrentElement"
+                >
+                    <template v-slot:dialogContent>
+                        <courseware-tabs class="cw-tab-in-dialog">
+                            <courseware-tab :name="textEdit.basic" :selected="true" :index="0">
+                                <form class="default" @submit.prevent="">
+                                    <label>
+                                        <translate>Titel</translate>
+                                        <input type="text" v-model="currentElement.attributes.title" />
+                                    </label>
+                                    <label>
+                                        <translate>Beschreibung</translate>
+                                        <textarea
+                                            v-model="currentElement.attributes.payload.description"
+                                            class="cw-structural-element-description"
+                                        />
+                                    </label>
+                                </form>
+                            </courseware-tab>
+                            <courseware-tab :name="textEdit.meta" :index="1">
+                                <form class="default" @submit.prevent="">
+                                    <label>
+                                        <translate>Farbe</translate>
+                                        <v-select
+                                            v-model="currentElement.attributes.payload.color"
+                                            :options="colors"
+                                            :reduce="(color) => color.class"
+                                            label="class"
+                                            class="cw-vs-select"
+                                        >
+                                            <template #open-indicator="selectAttributes">
+                                                <span v-bind="selectAttributes"
+                                                    ><studip-icon shape="arr_1down" size="10"
+                                                /></span>
+                                            </template>
+                                            <template #no-options="{ search, searching, loading }">
+                                                <translate>Es steht keine Auswahl zur Verfügung</translate>.
+                                            </template>
+                                            <template #selected-option="{ name, hex }">
+                                                <span class="vs__option-color" :style="{ 'background-color': hex }"></span
+                                                ><span>{{ name }}</span>
+                                            </template>
+                                            <template #option="{ name, hex }">
+                                                <span class="vs__option-color" :style="{ 'background-color': hex }"></span
+                                                ><span>{{ name }}</span>
+                                            </template>
+                                        </v-select>
+                                    </label>
+                                    <label>
+                                        <translate>Zweck</translate>
+                                        <select v-model="currentElement.attributes.purpose">
+                                            <option value="content"><translate>Inhalt</translate></option>
+                                            <option value="template"><translate>Vorlage</translate></option>
+                                            <option value="oer"><translate>OER-Material</translate></option>
+                                            <option value="portfolio"><translate>ePortfolio</translate></option>
+                                            <option value="draft"><translate>Entwurf</translate></option>
+                                            <option value="other"><translate>Sonstiges</translate></option>
+                                        </select>
+                                    </label>
+                                    <label>
+                                        <translate>Lizenztyp</translate>
+                                        <select v-model="currentElement.attributes.payload.license_type">
+                                            <option v-for="license in licenses" :key="license.id" :value="license.id">
+                                                {{ license.name }}
+                                            </option>
+                                        </select>
+                                    </label>
+                                    <label>
+                                        <translate>Geschätzter zeitlicher Aufwand</translate>
+                                        <input type="text" v-model="currentElement.attributes.payload.required_time" />
+                                    </label>
+                                    <label>
+                                        <translate>Niveau</translate><br />
+                                        <translate>von</translate>
+                                        <select v-model="currentElement.attributes.payload.difficulty_start">
+                                            <option
+                                                v-for="difficulty_start in 12"
+                                                :key="difficulty_start"
+                                                :value="difficulty_start"
+                                            >
+                                                {{ difficulty_start }}
+                                            </option>
+                                        </select>
+                                        <translate>bis</translate>
+                                        <select v-model="currentElement.attributes.payload.difficulty_end">
+                                            <option
+                                                v-for="difficulty_end in 12"
+                                                :key="difficulty_end"
+                                                :value="difficulty_end"
+                                            >
+                                                {{ difficulty_end }}
+                                            </option>
+                                        </select>
+                                    </label>
+                                </form>
+                            </courseware-tab>
+                            <courseware-tab :name="textEdit.image" :index="2">
+                                <form class="default" @submit.prevent="">
+                                    <img
+                                        v-if="image"
+                                        :src="image"
+                                        class="cw-structural-element-image-preview"
+                                        :alt="$gettext('Vorschaubild')"
+                                    />
+                                    <label v-if="image">
+                                        <button class="button" @click="deleteImage" v-translate>Bild löschen</button>
+                                    </label>
+                                    <div v-if="uploadFileError" class="messagebox messagebox_error">
+                                        {{ uploadFileError }}
+                                    </div>
+                                    <label v-if="!image">
+                                        <translate>Bild hochladen</translate>
+                                        <input ref="upload_image" type="file" accept="image/*" @change="checkUploadFile" />
+                                    </label>
+                                </form>
+                            </courseware-tab>
+                            <courseware-tab :name="textEdit.approval" :index="3">
+                                <courseware-structural-element-permissions
+                                    v-if="inCourse"
+                                    :element="currentElement"
+                                    @updateReadApproval="updateReadApproval"
+                                    @updateWriteApproval="updateWriteApproval"
+                                />
+                            </courseware-tab>
+                            <courseware-tab v-if="inCourse" :name="textEdit.visible" :index="4">
+                                <form class="default" @submit.prevent="">
+                                    <label>
+                                        <translate>Sichtbar ab</translate>
+                                        <input type="date" v-model="currentElement.attributes['release-date']" />
+                                    </label>
+                                    <label>
+                                        <translate>Unsichtbar ab</translate>
+                                        <input type="date" v-model="currentElement.attributes['withdraw-date']" />
+                                    </label>
+                                </form>
+                            </courseware-tab>
+                        </courseware-tabs>
+                    </template>
+                </studip-dialog>
+
+                <studip-dialog
+                    v-if="showAddDialog"
+                    :title="$gettext('Seite hinzufügen')"
+                    :confirmText="$gettext('Erstellen')"
+                    confirmClass="accept"
+                    :closeText="$gettext('Schließen')"
+                    closeClass="cancel"
+                    class="cw-structural-element-dialog"
+                    @close="closeAddDialog"
+                    @confirm="createElement"
+                >
+                    <template v-slot:dialogContent>
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                <translate>Position der neuen Seite</translate>
+                                <select v-model="newChapterParent">
+                                    <option v-if="!isRoot" value="sibling">
+                                        <translate>Neben der aktuellen Seite</translate>
+                                    </option>
+                                    <option value="descendant"><translate>Unterhalb der aktuellen Seite</translate></option>
+                                </select>
+                            </label>
+                            <label>
+                                <translate>Name der neuen Seite</translate><br />
+                                <input v-model="newChapterName" type="text" />
+                            </label>
+                        </form>
+                    </template>
+                </studip-dialog>
+
+                <studip-dialog
+                    v-if="showInfoDialog"
+                    :title="textInfo.title"
+                    :closeText="textInfo.close"
+                    closeClass="cancel"
+                    @close="showElementInfoDialog(false)"
+                >
+                    <template v-slot:dialogContent>
+                        <table class="cw-structural-element-info">
+                            <tr>
+                                <td><translate>Titel</translate>:</td>
+                                <td>{{ structuralElement.attributes.title }}</td>
+                            </tr>
+                            <tr>
+                                <td><translate>Beschreibung</translate>:</td>
+                                <td>{{ structuralElement.attributes.payload.description }}</td>
+                            </tr>
+                            <tr>
+                                <td><translate>Seite wurde erstellt von</translate>:</td>
+                                <td>{{ owner }}</td>
+                            </tr>
+                            <tr>
+                                <td><translate>Seite wurde erstellt am</translate>:</td>
+                                <td><iso-date :date="structuralElement.attributes.mkdate" /></td>
+                            </tr>
+                            <tr>
+                                <td><translate>Zuletzt bearbeitet von</translate>:</td>
+                                <td>{{ editor }}</td>
+                            </tr>
+                            <tr>
+                                <td><translate>Zuletzt bearbeitet am</translate>:</td>
+                                <td><iso-date :date="structuralElement.attributes.chdate" /></td>
+                            </tr>
+                        </table>
+                    </template>
+                </studip-dialog>
+
+                <studip-dialog
+                    v-if="showExportDialog"
+                    :title="textExport.title"
+                    :confirmText="textExport.confirm"
+                    confirmClass="accept"
+                    :closeText="textExport.close"
+                    closeClass="cancel"
+                    height="350"
+                    @close="showElementExportDialog(false)"
+                    @confirm="exportCurrentElement"
+                >
+                    <template v-slot:dialogContent>
+                        <div v-show="!exportRunning">
+                            <translate> Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als ZIP-Datei.</translate>
+                            <div class="cw-element-export">
                                 <label>
-                                    <translate>Titel</translate>
-                                    <input type="text" v-model="currentElement.attributes.title" />
+                                    <input type="checkbox" v-model="exportChildren" />
+                                    <translate>Unterseiten exportieren</translate>
                                 </label>
+                            </div>
+                        </div>
+
+                        <courseware-companion-box
+                            v-show="exportRunning"
+                            :msgCompanion="$gettext('Export läuft, bitte haben sie einen Moment Geduld...')"
+                            mood="pointing"
+                        />
+                        <div v-show="exportRunning" class="cw-import-zip">
+                            <header>{{ exportState }}:</header>
+                            <div class="progress-bar-wrapper">
+                                <div
+                                    class="progress-bar"
+                                    role="progressbar"
+                                    :style="{ width: exportProgress + '%' }"
+                                    :aria-valuenow="exportProgress"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                >
+                                    {{ exportProgress }}%
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </studip-dialog>
+
+                <studip-dialog
+                    v-if="showOerDialog"
+                    height="600"
+                    width="600"
+                    :title="textOer.title"
+                    :confirmText="textOer.confirm"
+                    confirmClass="accept"
+                    :closeText="textOer.close"
+                    closeClass="cancel"
+                    @close="showElementOerDialog(false)"
+                    @confirm="publishCurrentElement"
+                >
+                    <template v-slot:dialogContent>
+                        <form class="default" @submit.prevent="">
+                            <fieldset>
+                                <legend><translate>Grunddaten</translate></legend>
                                 <label>
-                                    <translate>Beschreibung</translate>
-                                    <textarea
-                                        v-model="currentElement.attributes.payload.description"
-                                        class="cw-structural-element-description"
+                                    <p><translate>Vorschaubild</translate>:</p>
+                                    <img
+                                        v-if="currentElement.relationships.image.data"
+                                        :src="currentElement.relationships.image.meta['download-url']"
+                                        width="400"
                                     />
                                 </label>
-                            </form>
-                        </courseware-tab>
-                        <courseware-tab :name="textEdit.meta">
-                            <form class="default" @submit.prevent="">
                                 <label>
-                                    <translate>Farbe</translate>
-                                    <studip-select
-                                        v-model="currentElement.attributes.payload.color"
-                                        :options="colors"
-                                        :reduce="(color) => color.class"
-                                        label="class"
-                                    >
-                                        <template #open-indicator="selectAttributes">
-                                            <span v-bind="selectAttributes"
-                                                ><studip-icon shape="arr_1down" size="10"
-                                            /></span>
-                                        </template>
-                                        <template #no-options="{ search, searching, loading }">
-                                            <translate>Es steht keine Auswahl zur Verfügung.</translate>
-                                        </template>
-                                        <template #selected-option="{ name, hex }">
-                                            <span class="vs__option-color" :style="{ 'background-color': hex }"></span
-                                            ><span>{{ name }}</span>
-                                        </template>
-                                        <template #option="{ name, hex }">
-                                            <span class="vs__option-color" :style="{ 'background-color': hex }"></span
-                                            ><span>{{ name }}</span>
-                                        </template>
-                                    </studip-select>
+                                    <p><translate>Beschreibung</translate>:</p>
+                                    <p>{{ currentElement.attributes.payload.description }}</p>
                                 </label>
                                 <label>
-                                    <translate>Zweck</translate>
-                                    <select v-model="currentElement.attributes.purpose">
-                                        <option value="content"><translate>Inhalt</translate></option>
-                                        <option value="template"><translate>Aufgabenvorlage</translate></option>
-                                        <option value="oer"><translate>OER-Material</translate></option>
-                                        <option value="portfolio"><translate>ePortfolio</translate></option>
-                                        <option value="draft"><translate>Entwurf</translate></option>
-                                        <option value="other"><translate>Sonstiges</translate></option>
-                                    </select>
+                                    <translate>Niveau</translate>:
+                                    <p>
+                                        {{ currentElement.attributes.payload.difficulty_start }} -
+                                        {{ currentElement.attributes.payload.difficulty_end }}
+                                    </p>
                                 </label>
                                 <label>
-                                    <translate>Lizenztyp</translate>
-                                    <select v-model="currentElement.attributes.payload.license_type">
-                                        <option v-for="license in licenses" :key="license.id" :value="license.id">
-                                            {{ license.name }}
-                                        </option>
-                                    </select>
+                                    <translate>Lizenztyp</translate>:
+                                    <p>{{ currentLicenseName }}</p>
                                 </label>
                                 <label>
-                                    <translate>Geschätzter zeitlicher Aufwand</translate>
-                                    <input type="text" v-model="currentElement.attributes.payload.required_time" />
+                                    <translate>Sie können diese Daten unter "Seite bearbeiten" verändern.</translate>
                                 </label>
+                            </fieldset>
+                            <fieldset>
+                                <legend><translate>Einstellungen</translate></legend>
                                 <label>
-                                    <translate>Niveau</translate><br />
-                                    <translate>von</translate>
-                                    <select v-model="currentElement.attributes.payload.difficulty_start">
-                                        <option
-                                            v-for="difficulty_start in 12"
-                                            :key="difficulty_start"
-                                            :value="difficulty_start"
-                                        >
-                                            {{ difficulty_start }}
-                                        </option>
-                                    </select>
-                                    <translate>bis</translate>
-                                    <select v-model="currentElement.attributes.payload.difficulty_end">
-                                        <option
-                                            v-for="difficulty_end in 12"
-                                            :key="difficulty_end"
-                                            :value="difficulty_end"
-                                        >
-                                            {{ difficulty_end }}
-                                        </option>
-                                    </select>
+                                    <translate>Unterseiten veröffentlichen</translate>
+                                    <input type="checkbox" v-model="oerChildren" />
                                 </label>
-                            </form>
-                        </courseware-tab>
-                        <courseware-tab :name="textEdit.image">
-                            <form class="default" @submit.prevent="">
-                                <img
-                                    v-if="image"
-                                    :src="image"
-                                    class="cw-structural-element-image-preview"
-                                    :alt="$gettext('Vorschaubild')"
-                                />
-                                <label v-if="image">
-                                    <button class="button" @click="deleteImage" v-translate>Bild löschen</button>
-                                </label>
-                                <div v-if="uploadFileError" class="messagebox messagebox_error">
-                                    {{ uploadFileError }}
-                                </div>
-                                <label v-if="!image">
-                                    <translate>Bild hochladen</translate>
-                                    <input ref="upload_image" type="file" accept="image/*" @change="checkUploadFile" />
-                                </label>
-                            </form>
-                        </courseware-tab>
-                        <courseware-tab :name="textEdit.approval">
-                            <courseware-structural-element-permissions
-                                v-if="inCourse"
-                                :element="currentElement"
-                                @updateReadApproval="updateReadApproval"
-                                @updateWriteApproval="updateWriteApproval"
-                            />
-                            <!-- <h1>
-                            <translate>Lehrende in Stud.IP</translate>
-                        </h1>
-                        <label>
-                            <input
-                                type="checkbox"
-                                class="default"
-                                value="copy_approval"
-                                v-model="currentElement.attributes['copy-approval']"
-                            />
-                            <translate>Seite zum kopieren für Lehrende freigeben</translate>
-                        </label> -->
-                        </courseware-tab>
-                        <courseware-tab v-if="inCourse" :name="textEdit.visible">
-                            <form class="default" @submit.prevent="">
-                                <label>
-                                    <translate>Sichtbar ab</translate>
-                                    <input type="date" v-model="currentElement.attributes['release-date']" />
-                                </label>
-                                <label>
-                                    <translate>Unsichtbar ab</translate>
-                                    <input type="date" v-model="currentElement.attributes['withdraw-date']" />
-                                </label>
-                            </form>
-                        </courseware-tab>
-                    </courseware-tabs>
-                </template>
-            </studip-dialog>
-
-            <studip-dialog
-                v-if="showAddDialog"
-                :title="$gettext('Seite hinzufügen')"
-                :confirmText="'Erstellen'"
-                :confirmClass="'accept'"
-                :closeText="$gettext('Schließen')"
-                :closeClass="'cancel'"
-                class="cw-structural-element-dialog"
-                @close="closeAddDialog"
-                @confirm="createElement"
-            >
-                <template v-slot:dialogContent>
-                    <form class="default" @submit.prevent="">
-                        <label>
-                            <translate>Position der neuen Seite</translate>
-                            <select v-model="newChapterParent">
-                                <option v-if="!isRoot" value="sibling">
-                                    <translate>Neben der aktuellen Seite</translate>
-                                </option>
-                                <option value="descendant"><translate>Unterhalb der aktuellen Seite</translate></option>
-                            </select>
-                        </label>
-                        <label>
-                            <translate>Name der neuen Seite</translate><br />
-                            <input v-model="newChapterName" type="text" required />
-                            <div class="invalid_message" :style="{ display: errorEmptyChapterName ? 'block' : 'none' }">
-                                <translate>Der Name der neuen Seite darf nicht leer sein.</translate>
-                            </div>
-                        </label>
-                    </form>
-                </template>
-            </studip-dialog>
-
-            <studip-dialog
-                v-if="showInfoDialog"
-                :title="textInfo.title"
-                :closeText="textInfo.close"
-                :closeClass="'cancel'"
-                @close="showElementInfoDialog(false)"
-            >
-                <template v-slot:dialogContent>
-                    <table class="cw-structural-element-info">
-                        <tr>
-                            <td><translate>Titel</translate>:</td>
-                            <td>{{ structuralElement.attributes.title }}</td>
-                        </tr>
-                        <tr>
-                            <td><translate>Beschreibung</translate>:</td>
-                            <td>{{ structuralElement.attributes.payload.description }}</td>
-                        </tr>
-                        <tr>
-                            <td><translate>Seite wurde erstellt von</translate>:</td>
-                            <td>{{ owner }}</td>
-                        </tr>
-                        <tr>
-                            <td><translate>Seite wurde erstellt am</translate>:</td>
-                            <td><iso-date :date="structuralElement.attributes.mkdate" /></td>
-                        </tr>
-                        <tr>
-                            <td><translate>Zuletzt bearbeitet von</translate>:</td>
-                            <td>{{ editor }}</td>
-                        </tr>
-                        <tr>
-                            <td><translate>Zuletzt bearbeitet am</translate>:</td>
-                            <td><iso-date :date="structuralElement.attributes.chdate" /></td>
-                        </tr>
-                    </table>
-                </template>
-            </studip-dialog>
-
-            <studip-dialog
-                v-if="showExportDialog"
-                :title="textExport.title"
-                :confirmText="textExport.confirm"
-                :confirmClass="'accept'"
-                :closeText="textExport.close"
-                :closeClass="'cancel'"
-                height="350"
-                @close="showElementExportDialog(false)"
-                @confirm="exportCurrentElement"
-            >
-                <template v-slot:dialogContent>
-                    <div v-show="!exportRunning">
-                        <translate> Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als ZIP-Datei.</translate>
-                        <div class="cw-element-export">
-                            <label>
-                                <input type="checkbox" v-model="exportChildren" />
-                                <translate>Unterseiten exportieren</translate>
-                            </label>
-                        </div>
-                    </div>
-
-                    <courseware-companion-box
-                        v-show="exportRunning"
-                        :msgCompanion="$gettext('Export läuft, bitte haben sie einen Moment Geduld...')"
-                        mood="pointing"
-                    />
-                    <div v-show="exportRunning" class="cw-import-zip">
-                        <header>{{ exportState }}:</header>
-                        <div class="progress-bar-wrapper">
-                            <div
-                                class="progress-bar"
-                                role="progressbar"
-                                :style="{ width: exportProgress + '%' }"
-                                :aria-valuenow="exportProgress"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                            >
-                                {{ exportProgress }}%
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </studip-dialog>
-
-            <studip-dialog
-                v-if="showOerDialog"
-                height="600"
-                width="600"
-                :title="textOer.title"
-                :confirmText="textOer.confirm"
-                :confirmClass="'accept'"
-                :closeText="textOer.close"
-                :closeClass="'cancel'"
-                @close="showElementOerDialog(false)"
-                @confirm="publishCurrentElement"
-            >
-                <template v-slot:dialogContent>
-                    <form class="default" @submit.prevent="">
-                        <fieldset>
-                            <legend><translate>Grunddaten</translate></legend>
-                            <label>
-                                <p><translate>Vorschaubild</translate>:</p>
-                                <img
-                                    v-if="currentElement.relationships.image.data"
-                                    :src="currentElement.relationships.image.meta['download-url']"
-                                    width="400"
-                                />
-                            </label>
-                            <label>
-                                <p><translate>Beschreibung</translate>:</p>
-                                <p>{{ currentElement.attributes.payload.description }}</p>
-                            </label>
-                            <label>
-                                <translate>Niveau</translate>:
-                                <p>
-                                    {{ currentElement.attributes.payload.difficulty_start }} -
-                                    {{ currentElement.attributes.payload.difficulty_end }}
-                                </p>
-                            </label>
-                            <label>
-                                <translate>Lizenztyp</translate>:
-                                <p>{{ currentLicenseName }}</p>
-                            </label>
-                            <label>
-                                <translate>Sie können diese Daten unter "Seite bearbeiten" verändern.</translate>
-                            </label>
-                        </fieldset>
-                        <fieldset>
-                            <legend><translate>Einstellungen</translate></legend>
-                            <label>
-                                <translate>Unterseiten veröffentlichen</translate>
-                                <input type="checkbox" v-model="oerChildren" />
-                            </label>
-                        </fieldset>
-                    </form>
-                </template>
-            </studip-dialog>
-
-            <studip-dialog
-                v-if="showDeleteDialog"
-                :title="textDelete.title"
-                :question="textDelete.alert"
-                height="180"
-                @confirm="deleteCurrentElement"
-                @close="closeDeleteDialog"
-            ></studip-dialog>
+                            </fieldset>
+                        </form>
+                    </template>
+                </studip-dialog>
+                <studip-dialog
+                    v-if="showDeleteDialog"
+                    :title="textDelete.title"
+                    :question="textDelete.alert"
+                    height="180"
+                    @confirm="deleteCurrentElement"
+                    @close="closeDeleteDialog"
+                ></studip-dialog>
+            </div>
+            <div v-else>
+                <courseware-companion-box
+                    v-if="currentElement !== ''"
+                    :msgCompanion="textCompanionWrongContext"
+                    mood="sad"
+                />
+            </div>
         </div>
-        <div v-else>
-            <courseware-companion-box
-                v-if="currentElement !== ''"
-                :msgCompanion="textCompanionWrongContext"
-                mood="sad"
-            />
-        </div>
-    </div>
+    </focus-trap>
 </template>
 
 <script>
@@ -507,6 +494,7 @@ import CoursewareRibbon from './CoursewareRibbon.vue';
 import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
+import { FocusTrap } from 'focus-trap-vue';
 import IsoDate from './IsoDate.vue';
 import StudipDialog from '../StudipDialog.vue';
 import draggable from 'vuedraggable';
@@ -527,6 +515,7 @@ export default {
         CoursewareEmptyElementBox,
         CoursewareTabs,
         CoursewareTab,
+        FocusTrap,
         IsoDate,
         StudipDialog,
         draggable,
@@ -582,6 +571,7 @@ export default {
                 ghostClass: 'container-ghost',
             },
             errorEmptyChapterName: false,
+            consumModeTrap: false,
         };
     },
 
@@ -1318,6 +1308,9 @@ export default {
         },
         containers() {
             this.containerList = this.containers;
+        },
+        consumeMode(newState) {
+            this.consumModeTrap = newState;
         },
     },
 

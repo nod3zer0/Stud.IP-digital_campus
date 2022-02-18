@@ -1,7 +1,7 @@
 <template>
     <courseware-default-container
         :container="container"
-        :containerClass="'cw-container-list'"
+        containerClass="cw-container-list"
         :canEdit="canEdit"
         :isTeacher="isTeacher"
         @storeContainer="storeContainer"

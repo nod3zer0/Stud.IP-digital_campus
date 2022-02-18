@@ -278,6 +278,7 @@ $consum_ribbon_width: calc(100% - 58px);
         max-width: calc(100% - 106px);
 
         .cw-ribbon-nav {
+            display: flex;
             min-width: 75px;
         }
 
@@ -329,14 +330,13 @@ $consum_ribbon_width: calc(100% - 58px);
     .cw-ribbon-button {
         height: 24px;
         width: 24px;
-        margin: 0 0.5em;
+        margin: 0 7px;
+        padding: 1px 2px;
         border: none;
         background-color: transparent;
         background-repeat: no-repeat;
         background-position: center;
         background-size: 24px;
-        cursor: pointer;
-        outline: none;
 
         &.cw-ribbon-button-menu {
             @include background-icon(table-of-contents, clickable, 24);
@@ -423,69 +423,64 @@ $consum_ribbon_width: calc(100% - 58px);
             top: 0;
             background-color: $white;
             margin: 0;
-            padding: 10px 0 0 0;
+            padding: 0;
             color: $base-color;
             display: flex;
-            border-bottom: solid thin $content-color-40;
             z-index: 43;
 
             .cw-tools-hide-button {
+                position: absolute;
                 border: none;
                 height: 36px;
                 width: 24px;
                 min-width: 24px;
                 margin-right: 1em;
                 padding: 0 4px;
-                float: right;
+                right: 0;
+                top: 12px;
 
                 @include background-icon(decline, clickable, 24);
                 background-repeat: no-repeat;
                 background-size: 24px;
                 background-position: center right;
                 background-color: #fff;
-                outline: none;
-                cursor: pointer;
             }
 
-            ul {
-                list-style-type: none;
+            >.cw-ribbon-tool-content-tablist {
                 width: 100%;
-                display: flex;
-                flex-wrap: wrap;
-                margin: 0;
-                padding: 0;
-            }
-            li {
-                padding: 0 8px;
-                margin-top: 8px;
-                text-align: center;
-                flex-grow: 0.5;
-                cursor: pointer;
+                >.cw-tabs-nav {
+                    border: none;
+                    width: calc(100% - 48px);
 
-                &:after {
-                    display: block;
-                    content: '';
-                    border-bottom: solid 3px $dark-gray-color-75;
-                    transform: scaleX(0);
-                    transition: transform 300ms ease-in-out;
-                    margin: 17px 0 0 0;
-                }
-
-                &.active,
-                &:hover {
-                    color: $black;
-                    &:after {
-                        transform: scaleX(1);
+                    >button {
+                        padding: 18px 8px 4px 8px;
+                        margin-top: 2px;
+                        max-width: unset;
+                        flex-grow: 0.5;
+                        &::after {
+                            margin-top: 16px;
+                        }
                     }
-                }
-            }
 
-            &:hover li {
-                &.active::after {
-                    transform: scaleX(0);
                 }
-                &:hover::after {
-                    transform: scaleX(1);
+                >.cw-tabs-content {
+                    border: none;
+                    border-top: solid thin $content-color-40;
+                    padding: 0;
+
+                    >.cw-tab {
+                        max-height: 700px;
+                        padding: 14px 8px 8px 8px;
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        scrollbar-width: thin;
+                        scrollbar-color: $base-color $white;
+
+                        &.cw-ribbon-tool-blockadder-tab {
+                            overflow: hidden;
+                            padding: 0;
+                        }
+                    }
                 }
             }
         }
@@ -1496,8 +1491,9 @@ $icons: (
     border: solid thin $content-color-40;
     border-bottom: none;
 
-    li {
+    button {
         background-color: $white;
+        border: none;
         padding: 1em 0 4px 0;
         margin: 0 7px 0 21px;
         color: $base-color;
@@ -1603,7 +1599,7 @@ $icons: (
             .cw-tabs-content {
                 border: none;
                 min-width: 500px;
-                min-height:  400px;
+                min-height: 400px;
                 overflow-y: auto;
                 scrollbar-width: thin;
                 scrollbar-color: $base-color #f5f5f5;
@@ -1642,54 +1638,35 @@ b l o c k a d d e r
 * * * * * * * * * */
 
 .cw-tools-element-adder-tabs {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border: solid thin $content-color-40;
-    border-bottom: none;
+    .cw-tabs-nav {
+        margin-top: 4px;
+        border: none;
+        border-bottom: solid thin $content-color-40;
 
-    .cw-tools-element-adder-tab {
-        background-color: $white;
-        padding: 1em 1.5em 0 1.5em;
-        margin: 0 1em;
-        color: $base-color;
-        cursor: pointer;
-        text-align: center;
-        flex-grow: 1;
-
-        &:after {
-            display: block;
-            margin-top: 4px;
-            content: '';
-            border-bottom: solid 3px $dark-gray-color-75;
-            transform: scaleX(0);
-            transition: transform 300ms ease-in-out;
+        button {
+            max-width: unset;
+            padding: 1em 1.5em 4px 1.5em;
+            margin: 0px 2em;
         }
+    }
+    .cw-tabs-content {
+        border: none;
+        max-height: 640px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: $base-color #f5f5f5;
+    }
 
-        &.active,
-        &:hover {
-            color: $black;
-            &:after {
-                transform: scaleX(1);
+    .cw-collapsible {
+        .cw-collapsible-content {
+            visibility: unset;
+            display: none;
+            &.cw-collapsible-content-open {
+                display: block;
             }
         }
-
-    }
-
-    &:hover .cw-tools-element-adder-tab{
-        &.active::after {
-            transform: scaleX(0);
-        }
-        &:hover::after {
-            transform: scaleX(1);
-        }
-    }
-
-}
-
-.cw-tools-element-adder {
-    padding-bottom: 4em;
+    } 
 }
 
 .cw-blockadder-item {
@@ -1717,6 +1694,7 @@ b l o c k a d d e r
 }
 
 .cw-block-adder-area {
+    background-color: $white;
     border: solid thin $content-color-40;
     padding: 1em 0;
     color: $base-color;
@@ -1724,6 +1702,10 @@ b l o c k a d d e r
     width: 100%;
     font-weight: 600;
     cursor: pointer;
+
+    &:hover {
+        border-color: $base-color;
+    }
 
     &.cw-block-adder-active {
         border: solid thin $base-color;
@@ -2300,10 +2282,9 @@ d a s h b o a r d
 }
 
 .cw-dashboard-progress-item {
+    display: block;
     border-bottom: solid thin $content-color-40;
-    width: 100%;
-    cursor: pointer;
-    padding: 8px 0 8px 0;
+    padding: 10px 0;
 
     &:hover{
         background-color: hsla(217,6%,45%,.2);
@@ -2330,7 +2311,6 @@ d a s h b o a r d
         }
     }
     .cw-dashboard-progress-item-description {
-        width: calc(100% - 90px);
         color: $base-color;
         padding-left: 14px;
         text-overflow: ellipsis;
@@ -2712,22 +2692,27 @@ m a n a g e r
 
     }
 
+    .cw-manager-element-item-wrapper {
+        margin-bottom: 4px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
     .cw-manager-element-item {
+        display: flex;
         border: solid thin $content-color-40;
         padding: 1em;
-        margin-bottom: 4px;
-        text-align: center;
+        justify-content: space-between;
         vertical-align: middle;
         background-color: $white;
         color: $base-color;
-        cursor: pointer;
 
         img {
             vertical-align: middle;
         }
-        &:last-child {
-            margin-bottom: 0;
-        }
+
         &:hover {
             color: $white;
             background-color: $base-color;
@@ -2736,6 +2721,21 @@ m a n a g e r
         &.cw-manager-element-item-sorting:hover{
             background-color: $white;
             color: $base-color;
+        }
+
+        &.cw-manager-element-item-inserter {
+            padding-left: 2em;
+            justify-content: start;
+            @include background-icon(arr_2left, clickable, 16);
+            background-position: 6px center;
+            background-repeat: no-repeat;
+            &:hover {
+                @include background-icon(arr_2left, info-alt, 16);
+            }
+
+            img {
+                margin-right: 1em;
+            }
         }
     }
 
@@ -2753,6 +2753,10 @@ m a n a g e r
         font-weight: 600;
         cursor: pointer;
 
+        &:hover {
+            border-color: $base-color;
+        }
+
         &.cw-manager-filing-active {
             @include background-icon(arr_eol-down, info-alt, 24);
             background-color: $base-color;
@@ -2769,8 +2773,14 @@ m a n a g e r
     .cw-manager-block-buttons,
     .cw-manager-container-buttons,
     .cw-manager-element-item-buttons {
-        display: inline;
-        float: right;
+        display: flex;
+        justify-content: end;
+        min-width: 38px;
+
+        a {
+            flex: unset;
+        }
+
         img {
             cursor: pointer;
             transition: opacity 0.4s ease-in-out;
@@ -4617,8 +4627,8 @@ cw tiles end
         list-style: none;
     }
     .cw-manager-copy-selector-course {
+        display: block;
         color: $base-color;
-        cursor: pointer;
         line-height: 2em;
 
         &:hover {

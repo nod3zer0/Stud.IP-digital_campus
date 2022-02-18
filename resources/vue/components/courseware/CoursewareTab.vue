@@ -1,5 +1,11 @@
 <template>
-    <div class="cw-tab" :class="{ 'cw-tab-active': isActive }">
+    <div
+        role="tabpanel"
+        class="cw-tab"
+        :id="id"
+        :class="{ 'cw-tab-active': isActive }"
+        :aria-labelledby="selectorId"
+    >
         <slot></slot>
     </div>
 </template>
@@ -9,8 +15,9 @@ export default {
     name: 'courseware-tab',
     props: {
         name: {type: String, required: true },
+        alias: {type: String, default: ''},
         selected: { type: Boolean, default: false },
-        index: {type: Number, default: 0 },
+        index: {type: Number, required: true },
         icon: {type: String, default: ''},
     },
     data() {
@@ -19,12 +26,20 @@ export default {
         };
     },
     computed: {
-        href() {
-            return '#' +this.index + '-' +this.name.toLowerCase().replace(/ /g, '-');
+        selectorId() {
+            return '#' +this.index + '-' + this.name.toLowerCase().replace(/ /g, '-');
+        },
+        id() {
+            return this.index + '-' + this.name.toLowerCase().replace(/ /g, '-') + '-tabpanel';
         },
     },
     mounted() {
         this.isActive = this.selected;
     },
+    watch: {
+        selected(newValue) {
+            this.isActive = newValue;
+        }
+    }
 };
 </script>

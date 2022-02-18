@@ -2,7 +2,7 @@
     <div class="cw-course-manager-wrapper">
         <div class="cw-course-manager">
             <courseware-tabs class="cw-course-manager-tabs">
-                <courseware-tab :name="$gettext('Diese Courseware')" :selected="true">
+                <courseware-tab :name="$gettext('Diese Courseware')" :selected="true" :index="0">
                     <courseware-manager-element
                         type="current"
                         :currentElement="currentElement"
@@ -10,7 +10,7 @@
                         @reloadElement="reloadElements"
                     />
                 </courseware-tab>
-                <courseware-tab :name="$gettext('Export')">
+                <courseware-tab :name="$gettext('Export')" :index="1">
                     <button
                         class="button"
                         @click.prevent="doExportCourseware"
@@ -31,7 +31,7 @@
             </courseware-tabs>
 
             <courseware-tabs class="cw-course-manager-tabs">
-                <courseware-tab :name="$gettext('FAQ')">
+                <courseware-tab :name="$gettext('FAQ')" :index="0">
                     <courseware-collapsible-box :open="true" :title="$gettext('Wie finde ich die gewünschte Stelle?')">
                         <p><translate>
                             Wählen Sie auf der linken Seite "Diese Courseware" aus.
@@ -77,7 +77,7 @@
                         </translate></p>
                     </courseware-collapsible-box>
                 </courseware-tab>
-                <courseware-tab name="Verschieben" :selected="true">
+                <courseware-tab name="Verschieben" :selected="true" :index="1">
                     <courseware-manager-element
                     type="self"
                     :currentElement="selfElement"
@@ -88,11 +88,11 @@
                     />
                 </courseware-tab>
 
-                <courseware-tab :name="$gettext('Kopieren')">
+                <courseware-tab :name="$gettext('Kopieren')"  :index="2">
                     <courseware-manager-copy-selector @loadSelf="reloadElements" @reloadElement="reloadElements" />
                 </courseware-tab>
 
-                <courseware-tab :name="$gettext('Importieren')">
+                <courseware-tab :name="$gettext('Importieren')"  :index="3">
                     <courseware-companion-box v-show="!importRunning && importDone" :msgCompanion="$gettext('Import erfolgreich!')" mood="special"/>
                     <courseware-companion-box v-show="importRunning" :msgCompanion="$gettext('Import läuft. Bitte verlassen Sie die Seite nicht bis der Import abgeschlossen wurde.')" mood="pointing"/>
                     <button
@@ -138,7 +138,7 @@
 
                     <input ref="importFile" type="file" accept=".zip" @change="setImport" style="visibility: hidden" />
                 </courseware-tab>
-                <courseware-tab v-if="context.type === 'courses'" :name="$gettext('Aufgabe verteilen')">
+                <courseware-tab v-if="context.type === 'courses'" :name="$gettext('Aufgabe verteilen')"  :index="4">
                     <courseware-manager-task-distributor />
                 </courseware-tab>
             </courseware-tabs>

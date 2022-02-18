@@ -5,8 +5,8 @@
             <translate>Willkommen bei Courseware</translate>
         </header>
         <div class="cw-wellcome-screen-actions">
-            <a href="https://hilfe.studip.de/help/5.0/de/Basis.Courseware" target="_blank">
-                <button class="button"><translate>Mehr über Courseware erfahren</translate></button>
+            <a href="https://hilfe.studip.de/help/5.0/de/Basis.Courseware" target="_blank" class="button">
+                <translate>Mehr über Courseware erfahren</translate>
             </a>
             <button class="button" :title="$gettext('Fügt einen Standard-Abschnitt mit einem Text-Block hinzu')" @click="addDefault"><translate>Ersten Inhalt erstellen</translate></button>
             <button class="button" @click="addContainer"><translate>Einen Abschnitt auswählen</translate></button>

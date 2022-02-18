@@ -124,9 +124,9 @@
             v-if="showRenewalDialog"
             :title="text.renewalDialog.title"
             :confirmText="text.renewalDialog.confirm"
-            :confirmClass="'accept'"
+            confirmClass="accept"
             :closeText="text.renewalDialog.close"
-            :closeClass="'cancel'"
+            closeClass="cancel"
             height="350"
             @close="
                 showRenewalDialog = false;
@@ -158,9 +158,9 @@
             v-if="showEditFeedbackDialog"
             :title="text.editFeedbackDialog.title"
             :confirmText="text.editFeedbackDialog.confirm"
-            :confirmClass="'accept'"
+            confirmClass="accept"
             :closeText="text.editFeedbackDialog.close"
-            :closeClass="'cancel'"
+            closeClass="cancel"
             height="420"
             @close="
                 showEditFeedbackDialog = false;
@@ -188,9 +188,9 @@
             v-if="showAddFeedbackDialog"
             :title="text.addFeedbackDialog.title"
             :confirmText="text.addFeedbackDialog.confirm"
-            :confirmClass="'accept'"
+            confirmClass="accept"
             :closeText="text.addFeedbackDialog.close"
-            :closeClass="'cancel'"
+            closeClass="cancel"
             @close="
                 showAddFeedbackDialog = false;
                 currentDialogFeedback = {};

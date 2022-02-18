@@ -14,13 +14,21 @@
                 </nav>
             </div>
             <div class="cw-ribbon-wrapper-right">
-                <button class="cw-ribbon-button cw-ribbon-button-menu" @click="activeToolbar" :title="textRibbon.toolbar"></button>
-                <button 
-                    class="cw-ribbon-button" 
+                <a
+                    href="#"
+                    class="cw-ribbon-button cw-ribbon-button-menu"
+                    :title="textRibbon.toolbar"
+                    @click="activeToolbar"
+                >
+                </a>
+                <a
+                    href="#"
+                    ref="consumeModeSwitch"
+                    class="cw-ribbon-button"
                     :class="[consumeMode ? 'cw-ribbon-button-zoom-out' : 'cw-ribbon-button-zoom']"
                     :title="consumeMode ? textRibbon.fullscreen_off : textRibbon.fullscreen_on"
                      @click="toggleConsumeMode"
-                ></button>
+                ></a>
                 <slot name="menu" />
             </div>
             <div v-if="consumeMode" class="cw-ribbon-consume-bottom"></div>
@@ -76,6 +84,7 @@ export default {
         toggleConsumeMode() {
             if (!this.consumeMode) {
                 this.$store.dispatch('coursewareConsumeMode', true);
+                this.$store.dispatch('coursewareSelectedToolbarItem', 'contents');
                 this.$store.dispatch('coursewareViewMode', 'read');
             } else {
                 this.$store.dispatch('coursewareConsumeMode', false);
@@ -112,6 +121,9 @@ export default {
                     }
                 }, 800);
             }
+        },
+        consumeMode(newState) {
+            this.$refs.consumeModeSwitch.focus();
         }
     }
 };

@@ -4,20 +4,27 @@
             <courseware-companion-box v-if="insertingInProgress" :msgCompanion="text.inProgress" mood="pointing" />
             <courseware-companion-box v-if="copyingFailed && !insertingInProgress" :msgCompanion="copyProcessFailedMessage" mood="sad" />
             <div class="cw-manager-element-title">
-                <div class="cw-manager-element-breadcrumb">
-                    <span
+                <nav aria-label="Breadcrumb" class="cw-manager-element-breadcrumb">
+                    <a
                         v-for="element in breadcrumb"
                         :key="element.id"
+                        :title="element.attributes.title"
+                        href="#"
                         class="cw-manager-element-breadcrumb-item"
                         @click="selectChapter(element.id)"
                     >
                         {{ element.attributes.title }}
-                    </span>
-                </div>
+                    </a>
+                </nav>
                 <header>
-                    <span v-if="elementInserterActive && moveSelfPossible && canEdit" @click="insertElement({element: currentElement, source: type})">
-                        <studip-icon shape="arr_2left" size="24" role="sort" />
-                    </span>
+                    <a
+                        v-if="elementInserterActive && moveSelfPossible && canEdit"
+                        href="#"
+                        :title="$gettextInterpolate('%{ elementTitle } verschieben', {elementTitle: elementTitle})"
+                        @click="insertElement({element: currentElement, source: type})"
+                    >
+                        <studip-icon shape="arr_2left" size="24" role="clickable" />
+                    </a>
                     {{ elementTitle }}
                 </header>
             </div>

@@ -80,7 +80,7 @@ export default {
                 }
                 return {
                     label: item.label,
-                    url: item.url || false,
+                    url: item.url || '#',
                     emit: item.emit || false,
                     emitArguments: item.emitArguments || [],
                     icon: item.icon ? {

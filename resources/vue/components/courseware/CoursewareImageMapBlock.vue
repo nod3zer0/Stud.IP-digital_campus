@@ -54,6 +54,7 @@
                         <courseware-tab
                             v-for="(shape, index) in currentShapes"
                             :key="index"
+                            :index="index"
                             :name="shape.title"
                             :icon="shape.title === '' ? 'link-extern' : ''"
                             :selected="index === 0"

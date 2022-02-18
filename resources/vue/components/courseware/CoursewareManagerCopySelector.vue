@@ -13,18 +13,18 @@
                     <li v-for="semester in semesterMap" :key="semester.id">
                     <h3>{{semester.attributes.title}}</h3>
                         <ul>
-                            <li
-                                v-for="course in coursesBySemester(semester)"
-                                :key="course.id"
-                                class="cw-manager-copy-selector-course"
-                                @click="loadRemoteCourseware(course.id)"
-                            >
-                            <studip-icon :shape="getCourseIcon(course)" />
-                                {{course.attributes.title}}
+                            <li v-for="course in coursesBySemester(semester)" :key="course.id">
+                                <a
+                                    href="#"
+                                    class="cw-manager-copy-selector-course"
+                                    @click="loadRemoteCourseware(course.id)"
+                                >
+                                    <studip-icon :shape="getCourseIcon(course)" />
+                                    {{course.attributes.title}}
+                                </a>
                             </li>
                         </ul>
                     </li>
-
                 </ul>
                 <courseware-companion-box 
                     v-if="!hasRemoteCid && semesterMap.length === 0"

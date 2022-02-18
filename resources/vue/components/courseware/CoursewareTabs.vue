@@ -1,23 +1,25 @@
 <template>
     <div class="cw-tabs">
-        <ul class="cw-tabs-nav">
-            <li
-                v-for="(tab, index) in tabs"
+        <div role="tablist" class="cw-tabs-nav">
+            <button
+                v-for="(tab, index) in sortedTabs"
                 :key="index"
                 :class="[
                     tab.isActive ? 'is-active' : '',
                     tab.icon !== '' && tab.name !== '' ? 'cw-tabs-nav-icon-text-' + tab.icon : '',
                     tab.icon !== '' && tab.name === '' ? 'cw-tabs-nav-icon-solo-' + tab.icon : '',
                 ]"
-                :href="tab.href"
-                tabindex="0"
-                @click="selectTab(tab)"
-                @keydown.enter="selectTab(tab)"
-                @keydown.space="selectTab(tab)"
+                :aria-selected="tab.isActive"
+                :aria-controls="tab.id"
+                :id="tab.selectorId"
+                :tabindex="tab.isActive ? 0 : -1"
+                @click="selectTab(tab.selectorId)"
+                @keydown="handleKeyEvent($event)"
+                :ref="tab.selectorId"
             >
                 {{ tab.name }}
-            </li>
-        </ul>
+            </button>
+        </div>
         <div class="cw-tabs-content">
             <slot></slot>
         </div>
@@ -28,18 +30,90 @@
 export default {
     name: 'courseware-tabs',
     data() {
-        return { tabs: [] };
+        return {
+            tabs: [],
+        };
+    },
+    computed: {
+        sortedTabs() {
+            return this.tabs.sort((a, b) => {
+                return a.index > b.index ? 1 : a.index < b.index ? -1 : 0;
+            });
+        }
     },
     created() {
         this.tabs = this.$children;
     },
     methods: {
-        selectTab(selectedTab) {
+        selectTab(selectorId) {
+            let view = this;
             this.tabs.forEach((tab) => {
-                tab.isActive = tab.index + '-' + tab.name === selectedTab.index + '-' + selectedTab.name;
+                tab.isActive = false;
+                if (tab.selectorId === selectorId) {
+                    tab.isActive = true;
+                    view.$refs[selectorId][0].focus();
+                    view.$emit('selectTab', tab);
+                }
             });
-            this.$emit('selectTab', selectedTab.name);
         },
-    },
+        handleKeyEvent(e) {
+            let tablist = e.target.parentElement;
+            switch (e.keyCode) {
+                case 37: // left
+                case 38: // up
+                    if (tablist.firstChild.id !== e.target.id) {
+                        this.selectTab(e.target.previousElementSibling.id);
+                    } else {
+                        this.selectTab(tablist.lastChild.id);
+                    }
+                    break;
+                case 39: // right
+                case 40: // down
+                if (tablist.lastChild.id !== e.target.id) {
+                    this.selectTab(e.target.nextElementSibling.id);
+                } else {
+                    this.selectTab(tablist.firstChild.id);
+                }
+                    break;
+                case 36: //pos1
+                    this.selectTab(tablist.firstChild.id);
+                    break;
+                case 35: //end
+                    this.selectTab(tablist.lastChild.id);
+                    break;
+            }
+        },
+        getButtonById(id) {
+            return this.$refs[id][0];
+        },
+        getFirstTabButton() {
+            let selectorId = this.sortedTabs[0].selectorId;
+            return this.$refs[selectorId][0];
+        },
+        getTabButtonByName(name) {
+            let selectorId = null;
+            this.tabs.forEach((tab) => { 
+                if (tab.name === name) {
+                    selectorId = tab.selectorId;
+                }
+            });
+            if (selectorId) {
+                return this.$refs[selectorId][0];
+            }
+            return null;
+        },
+        getTabButtonByAlias(alias) {
+            let selectorId = null;
+            this.tabs.forEach((tab) => { 
+                if (tab.alias === alias) {
+                    selectorId = tab.selectorId;
+                }
+            });
+            if (selectorId) {
+                return this.$refs[selectorId][0];
+            }
+            return null;
+        }
+    }
 };
 </script>

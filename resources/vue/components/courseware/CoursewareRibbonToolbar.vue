@@ -1,58 +1,82 @@
 <template>
-    <div
-        class="cw-ribbon-tools"
-        :class="{ unfold: toolsActive, 'cw-ribbon-tools-consume': consumeMode }"
-    >
-        <div class="cw-ribbon-tool-content">
-            <div class="cw-ribbon-tool-content-nav">
-                <ul>
-                    <li
-                        tabindex="0"
-                        ref="focusPoint"
-                        :class="{ active: showContents }"
-                        @click="displayTool('contents')"
+    <focus-trap v-model="trap" :initial-focus="() => initialFocusElement">
+        <div
+            class="cw-ribbon-tools"
+            :class="{ unfold: toolsActive, 'cw-ribbon-tools-consume': consumeMode }"
+            @keydown.esc="$emit('deactivate')"
+        >
+            <div class="cw-ribbon-tool-content">
+                <div class="cw-ribbon-tool-content-nav">
+                    <courseware-tabs
+                        class="cw-ribbon-tool-content-tablist"
+                        ref="tabs"
+                        @selectTab="selectTool($event.alias)"
                     >
-                        <translate>Inhaltsverzeichnis</translate>
-                    </li>
-                    <li
-                        v-if="!consumeMode && showEditMode && canEdit"
-                        tabindex="0"
-                        :class="{ active: showBlockAdder }"
-                        @click="displayTool('blockadder')"
-                    >
-                        <translate>Elemente hinzufügen</translate>
-                    </li>
-                    <li
-                        v-if="!consumeMode && displaySettings"
-                        tabindex="0"
-                        :class="{ active: showAdmin }"
-                        @click="displayTool('admin')"
-                    >
-                        <translate>Einstellungen</translate>
-                    </li>
-                </ul>
-                <button :title="textClose" class="cw-tools-hide-button" @click="$emit('deactivate')"></button>
-            </div>
-            <div class="cw-ribbon-tool" ref="ribbonContent" @scroll="handleScroll">
-                <courseware-tools-contents v-if="showContents" />
-                <courseware-tools-blockadder v-if="showBlockAdder" @scrollTop="scrollTop('blockadder')"/>
-                <courseware-tools-admin v-if="showAdmin" />
+                        <courseware-tab
+                            :name="$gettext('Inhaltsverzeichnis')"
+                            :selected="showContents"
+                            alias="contents"
+                            ref="contents"
+                            :index="0"
+                        >
+                            <courseware-tools-contents
+                                id="cw-ribbon-tool-contents"
+                            />
+                        </courseware-tab>
+                        <courseware-tab
+                            v-if="!consumeMode && showEditMode && canEdit"
+                            :name="$gettext('Elemente hinzufügen')"
+                            :selected="showBlockAdder"
+                            alias="blockadder"
+                            class="cw-ribbon-tool-blockadder-tab"
+                            :index="1"
+                        >
+                            <courseware-tools-blockadder
+                                id="cw-ribbon-tool-blockadder"
+                            />
+                        </courseware-tab>
+                        <courseware-tab
+                            v-if="!consumeMode && displaySettings"
+                            :name="$gettext('Einstellungen')"
+                            :selected="showAdmin"
+                            alias="admin"
+                            :index="2"
+                        >
+                            <courseware-tools-admin
+                                id="cw-ribbon-tool-admin"
+                            />
+                        </courseware-tab>
+                    </courseware-tabs>
+                    <a 
+                        href="#"
+                        :title="$gettext('schließen')"
+                        class="cw-tools-hide-button"
+                        ref="closeTools"
+                        @click="$emit('deactivate')">
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
+    </focus-trap>
 </template>
 <script>
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
 import CoursewareToolsAdmin from './CoursewareToolsAdmin.vue';
 import CoursewareToolsBlockadder from './CoursewareToolsBlockadder.vue';
 import CoursewareToolsContents from './CoursewareToolsContents.vue';
-import { mapGetters } from 'vuex';
+import { FocusTrap } from 'focus-trap-vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-ribbon-toolbar',
     components: {
+        CoursewareTabs,
+        CoursewareTab,
         CoursewareToolsAdmin,
         CoursewareToolsBlockadder,
         CoursewareToolsContents,
+        FocusTrap,
     },
     props: {
         toolsActive: Boolean,
@@ -63,12 +87,8 @@ export default {
             showContents: true,
             showAdmin: false,
             showBlockAdder: false,
-            textClose: this.$gettext('schließen'),
-            scrollPos: {
-                contents: 0,
-                admin: 0,
-                blockadder: 0
-            }
+            trap: false,
+            initialFocusElement: null
         };
     },
     computed: {
@@ -81,6 +101,7 @@ export default {
             context: 'context',
             userById: 'users/byId',
             userId: 'userId',
+            selectedToolbarItem: 'selectedToolbarItem',
         }),
         showEditMode() {
             return this.viewMode === 'edit';
@@ -94,15 +115,19 @@ export default {
         },
     },
     methods: {
-        displayTool(tool) {
+        ...mapActions({
+            setToolbarItem: 'coursewareSelectedToolbarItem'
+        }),
+        selectTool(alias) {
             this.showContents = false;
             this.showAdmin = false;
             this.showBlockAdder = false;
 
-            switch (tool) {
+            switch (alias) {
                 case 'contents':
                     this.showContents = true;
                     this.disableContainerAdder();
+                    this.scrollToCurrent();
                     break;
                 case 'admin':
                     this.showAdmin = true;
@@ -112,87 +137,56 @@ export default {
                     this.showBlockAdder = true;
                     break;
             }
-            this.updateScrollPos();
+
+            if (this.selectedToolbarItem !== alias) {
+                this.setToolbarItem(alias);
+            }
         },
         disableContainerAdder() {
             if (this.containerAdder !== false) {
                 this.$store.dispatch('coursewareContainerAdder', false);
             }
         },
-        scrollTop(tool) {
-            switch (tool) {
-                case 'contents':
-                    this.$set(this.scrollPos, 'contents', 0);
-                    break;
-                case 'admin':
-                    this.$set(this.scrollPos, 'admin', 0);
-                    break;
-                case 'blockadder':
-                    this.$set(this.scrollPos, 'blockadder', 0);
-                    break;
-            }
-            this.updateScrollPos();
+        scrollToCurrent() {
+            setTimeout(() => {
+                let contents = this.$refs.contents.$el; 
+                let current = contents.querySelector('.cw-tree-item-link-current');
+                contents.scroll({ top: current.offsetTop, behavior: 'smooth' });
+            }, 360);
         },
-        handleScroll: function() {
-            if (this.timeout) {
-                clearTimeout(this.timeout);
-            }
-
-            this.timeout = setTimeout(() => {
-                var currentScrollPos = this.$refs.ribbonContent.scrollTop;
-                if (this.showContents) {
-                    this.$set(this.scrollPos, 'contents', currentScrollPos);
-                }
-                if (this.showAdmin) {
-                    this.$set(this.scrollPos, 'admin', currentScrollPos);
-                }
-                if (this.showBlockAdder) {
-                    this.$set(this.scrollPos, 'blockadder', currentScrollPos);
-                }
-            }, 100);
-        },
-        updateScrollPos() {
-            var scrollPos = 0;
-            if (this.showContents) {
-                scrollPos = this.scrollPos.contents;
-            }
-            if (this.showAdmin) {
-                scrollPos = this.scrollPos.admin;
-            }
-            if (this.showBlockAdder) {
-                scrollPos = this.scrollPos.blockadder;
-            }
-            this.$nextTick(function() {
-                 $(this.$refs.ribbonContent).stop().animate({
-                    scrollTop: scrollPos
-                }, 100);
-            });
-        }
     },
     mounted () {
-        this.updateScrollPos();
+        this.selectTool(this.selectedToolbarItem);
     },
     watch: {
         adderStorage(newValue) {
             if (Object.keys(newValue).length !== 0) {
-                this.displayTool('blockadder');
+                this.selectTool('blockadder');
             }
         },
         consumeMode(newValue) {
             if (newValue) {
-                this.displayTool('contents');
+                this.selectTool('contents');
             }
         },
         containerAdder(newValue) {
             if (newValue === true) {
-                this.displayTool('blockadder');
+                this.selectTool('blockadder');
             }
         },
         showEditMode(newValue) {
             if (!newValue) {
-                this.displayTool('contents');
+                this.selectTool('contents');
             }
-        }
+        },
+        toolsActive(newValue) {
+            if (newValue) {
+                setTimeout(() => {
+                    this.initialFocusElement = this.$refs.tabs.getTabButtonByAlias(this.selectedToolbarItem);
+                    this.trap = true;
+                }, 300);
+            }
+        },
     },
 };
 </script>
