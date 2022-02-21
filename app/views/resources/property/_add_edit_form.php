@@ -25,7 +25,7 @@
     <?= _('Minimale Rechtestufe für Änderungen') ?>
     <select name="write_permission_level" class="size-l"
         <?= $property->system ? 'disabled="disabled"' : '' ?>>
-        <? foreach(['user', 'autor', 'tutur', 'admin'] as $level) : ?>
+        <? foreach(['user', 'autor', 'tutor', 'admin'] as $level) : ?>
             <option value="<?= $level?>"
                 <?= $write_permission_level === $level ? 'selected="selected"' : '' ?>>
                 <?= $level?>
