@@ -1,3 +1,14 @@
+// Taken from https://stackoverflow.com/a/42149818
+const isSelectorValid = (dummyElement =>
+    selector => {
+        try {
+            dummyElement.querySelector(selector);
+        } catch {
+            return false;
+        }
+        return true;
+})(document.createDocumentFragment());
+
 const SkipLinks = {
     activeElement: null,
     navigationStatus: 0,
@@ -10,7 +21,6 @@ const SkipLinks = {
         if (event.keyCode === 9) {
             //tab-key
             SkipLinks.moveSkipLinkNavigationIn();
-            jQuery('.focus_box').removeClass('focus_box');
         }
     },
 
@@ -40,14 +50,6 @@ const SkipLinks = {
         SkipLinks.navigationStatus = 2;
     },
 
-    getFragment: function() {
-        var fragmentStart = document.location.hash.indexOf('#');
-        if (fragmentStart < 0) {
-            return '';
-        }
-        return document.location.hash.substring(fragmentStart);
-    },
-
     /**
      * Inserts the list with skip links
      */
@@ -64,21 +66,20 @@ const SkipLinks = {
      * sets the area (of the id) as the current area for tab-navigation
      * and highlights it
      */
-    setActiveTarget: function(id) {
+    setActiveTarget (id) {
         var fragment = null;
         // set active area only if skip links are activated
-        if (!jQuery('*').is('#skip_link_navigation')) {
+        if (!document.getElementById('skip_link_navigation')) {
             return false;
         }
         if (id) {
             fragment = id;
         } else {
-            fragment = SkipLinks.getFragment();
+            fragment = document.location.hash;
         }
-        if (jQuery('*').is(fragment) && fragment.length > 0 && fragment !== SkipLinks.activeElement) {
+
+        if (fragment.length > 0 && isSelectorValid(fragment) && fragment !== SkipLinks.activeElement && document.querySelector(fragment)) {
             SkipLinks.moveSkipLinkNavigationOut();
-            jQuery('.focus_box').removeClass('focus_box');
-            jQuery(fragment).addClass('focus_box');
             if (jQuery(fragment).is(':focusable')) {
                 jQuery(fragment)
                     .click()
