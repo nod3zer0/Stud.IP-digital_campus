@@ -63,10 +63,6 @@ class RolePersistence
      */
     public static function saveRole($role)
     {
-        // sweep roles cache, see #getAllRoles
-        self::expireRolesCache();
-
-        // role is not in database
         $query = "INSERT INTO `roles` (`roleid`, `rolename`, `system`)
                   VALUES (?, ?, 'n')
                   ON DUPLICATE KEY UPDATE `rolename` = VALUES(`rolename`)";
@@ -81,6 +77,9 @@ class RolePersistence
         } else {
             $event = 'RoleDidUpdate';
         }
+
+        // sweep roles cache, see #getAllRoles
+        self::expireRolesCache();
 
         NotificationCenter::postNotification(
             $event,
@@ -101,17 +100,10 @@ class RolePersistence
         $id = $role->getRoleid();
         $name = $role->getRolename();
 
-        // sweep roles cache
-        self::expireRolesCache();
-
         $query = "SELECT `pluginid` FROM `roles_plugins` WHERE `roleid` = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$id]);
         $statement->setFetchMode(PDO::FETCH_COLUMN, 0);
-
-        foreach ($statement as $plugin_id) {
-            unset(self::getPluginRolesCache()[$plugin_id]);
-        }
 
         DBManager::get()->execute(
             "DELETE `roles`, `roles_user`, `roles_plugins`, `roles_studipperms`
@@ -122,6 +114,13 @@ class RolePersistence
              WHERE `roleid` = ? AND `system` = 'n'",
             [$id]
         );
+
+        // sweep roles cache
+        self::expireRolesCache();
+
+        foreach ($statement as $plugin_id) {
+            unset(self::getPluginRolesCache()[$plugin_id]);
+        }
 
         NotificationCenter::postNotification('RoleDidDelete', $id, $name);
     }
@@ -322,8 +321,6 @@ class RolePersistence
     {
         $plugin_id = (int) $plugin_id;
 
-        unset(self::getPluginRolesCache()[$plugin_id]);
-
         $query = "REPLACE INTO `roles_plugins` (`roleid`, `pluginid`)
                   VALUES (:role_id, :plugin_id)";
         $statement = DBManager::get()->prepare($query);
@@ -332,13 +329,16 @@ class RolePersistence
         foreach ($role_ids as $role_id) {
             $statement->bindValue(':role_id', $role_id);
             $statement->execute();
+        }
 
+        unset(self::getPluginRolesCache()[$plugin_id]);
+
+        foreach ($role_ids as $role_id) {
             NotificationCenter::postNotification(
                 'PluginRoleAssignmentDidCreate',
                 $role_id,
                 $plugin_id
             );
-
         }
     }
 
@@ -352,8 +352,6 @@ class RolePersistence
     {
         $plugin_id = (int) $plugin_id;
 
-        unset(self::getPluginRolesCache()[$plugin_id]);
-
         $query = "DELETE FROM `roles_plugins`
                   WHERE `pluginid` = :plugin_id
                     AND `roleid` = :role_id";
@@ -363,13 +361,16 @@ class RolePersistence
         foreach ($role_ids as $role_id) {
             $statement->bindValue(':role_id', $role_id);
             $statement->execute();
+        }
 
+        unset(self::getPluginRolesCache()[$plugin_id]);
+
+        foreach ($role_ids as $role_id) {
             NotificationCenter::postNotification(
                 'PluginRoleAssignmentDidDelete',
                 $role_id,
                 $plugin_id
             );
-
         }
     }
 
