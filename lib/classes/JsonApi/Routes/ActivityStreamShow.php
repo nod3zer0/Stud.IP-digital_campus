@@ -27,7 +27,7 @@ class ActivityStreamShow extends JsonApiController
 {
     protected $allowedIncludePaths = ['actor', 'context', 'object'];
 
-    protected $allowedFilteringParameters = ['start', 'end', 'activity-type'];
+    protected $allowedFilteringParameters = ['start', 'end', 'activity-type', 'context-type', 'context-id', 'object-type', 'object-id'];
 
     protected $allowedPagingParameters = ['offset', 'limit'];
 
@@ -69,23 +69,27 @@ class ActivityStreamShow extends JsonApiController
             'start' => strtotime('-6 months'),
             'end' => time(),
             'activity-type' => null,
+            'context-type' => null,
+            'context-id' => null,
+            'object-type' => null,
+            'object-id' => null
         ];
 
         $filter = array_reduce(
-            words('start end'),
+            words('start end activity-type context-type context-id object-type object-id'),
             function ($filter, $key) use ($filtering) {
                 if (isset($filtering[$key])) {
-                    $filter[$key] = (int) $filtering[$key];
+                    if ($key === 'start' || $key === 'end') {
+                        $filter[$key] = (int) $filtering[$key];
+                    } else {
+                        $filter[$key] = $filtering[$key];
+                    }
                 }
 
                 return $filter;
             },
             $filter
         );
-
-        if (isset($filtering['activity-type'])) {
-            $filter['activity-type'] = $filtering['activity-type'];
-        }
 
         return $filter;
     }
@@ -133,7 +137,8 @@ class ActivityStreamShow extends JsonApiController
                             'news',
                             'participants',
                             'schedule',
-                            'wiki'
+                            'wiki',
+                            'courseware'
                         ]
                     );
                 }
@@ -146,6 +151,10 @@ class ActivityStreamShow extends JsonApiController
 
         $filter->setStartDate($urlFilter['start']);
         $filter->setEndDate($urlFilter['end']);
+        $filter->setContext($urlFilter['context-type']);
+        $filter->setContextId($urlFilter['context-id']);
+        $filter->setObjectType($urlFilter['object-type']);
+        $filter->setObjectId($urlFilter['object-id']);
 
         return $filter;
     }

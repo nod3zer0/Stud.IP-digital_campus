@@ -245,9 +245,9 @@ export const actions = {
         const relationship = 'activitystream';
 
         const options = {
-            'filter[context_type]': 'course',
-            'filter[context_id]': courseId,
-            'filter[object_type]': 'courseware',
+            'filter[context-type]': 'course',
+            'filter[context-id]': courseId,
+            'filter[object-type]': 'courseware',
             include: 'actor, context, object',
         };
 
