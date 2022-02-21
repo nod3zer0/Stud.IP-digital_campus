@@ -60,6 +60,19 @@ StudipAutoloader::addAutoloadPath('lib/plugins/engine');
 StudipAutoloader::addAutoloadPath('lib/plugins/core');
 StudipAutoloader::addAutoloadPath('lib/plugins/db');
 
+StudipAutoloader::addClassLookup('StudipController', 'app/controllers/studip_controller.php');
+$trails_classes = [
+    'Trails_Dispatcher', 'Trails_Response', 'Trails_Controller',
+    'Trails_Inflector', 'Trails_Flash',
+    'Trails_Exception', 'Trails_DoubleRenderError', 'Trails_MissingFile',
+    'Trails_RoutingError', 'Trails_UnknownAction', 'Trails_UnknownController',
+    'Trails_SessionRequiredException',
+];
+StudipAutoloader::addClassLookup(
+    $trails_classes,
+    'vendor/trails/trails.php'
+);
+
 // load config-variables
 StudipFileloader::load(
     'config_defaults.inc.php config_local.inc.php',

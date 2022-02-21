@@ -12,14 +12,6 @@ final class StudipControllerTest extends Codeception\Test\Unit
 {
     private $old_uri;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        require_once 'vendor/trails/trails-abridged.php';
-        require_once 'app/controllers/studip_controller.php';
-    }
-
     public function setUp(): void
     {
         parent::setUp();
@@ -47,9 +39,7 @@ final class StudipControllerTest extends Codeception\Test\Unit
     private function getController(): StudipController
     {
         $dispatcher = $this->getDispatcher();
-        return new class($dispatcher) extends StudipController {
-
-        };
+        return new StudipControllerTestController($dispatcher);
     }
 
     /**
@@ -76,7 +66,7 @@ final class StudipControllerTest extends Codeception\Test\Unit
     }
 
     /**
-     * @dataProvider UrlForProvider
+     * @dataProvider RedirectProvider
      * @covers StudipController::redirect
      */
     public function testRedirect(string $expected, ...$args): void
@@ -106,7 +96,7 @@ final class StudipControllerTest extends Codeception\Test\Unit
     }
 
     /**
-     * @dataProvider UrlForProvider
+     * @dataProvider RedirectProvider
      * @covers StudipController::relocate
      */
     public function testRelocate(string $expected, ...$args): void
@@ -136,7 +126,7 @@ final class StudipControllerTest extends Codeception\Test\Unit
     }
 
     /**
-     * @dataProvider UrlForProvider
+     * @dataProvider RedirectProvider
      * @covers StudipController::relocate
      * @backupGlobals enabled
      */
@@ -187,6 +177,7 @@ final class StudipControllerTest extends Codeception\Test\Unit
     public function UrlForProvider(): array
     {
         return [
+            '0-action'                 => ['dispatch.php/studip_controller_test/foo'],
             '1-action'                 => ['dispatch.php/foo', 'foo'],
             '1-action-and-parameter'   => ['dispatch.php/foo?bar=42', 'foo', ['bar' => 42]],
             '1-action-and-parameters'  => ['dispatch.php/foo?bar=42&baz=23', 'foo', ['bar' => 42, 'baz' => 23]],
@@ -195,6 +186,13 @@ final class StudipControllerTest extends Codeception\Test\Unit
             '2-actions-and-parameter'  => ['dispatch.php/foo/bar?bar=42', 'foo', 'bar', ['bar' => 42]],
             '2-actions-and-parameters' => ['dispatch.php/foo/bar?bar=42&baz=23', 'foo', 'bar', ['bar' => 42, 'baz' => 23]],
         ];
+    }
+
+    public function RedirectProvider(): array
+    {
+        $result = $this->UrlForProvider();
+        unset($result['0-action']);
+        return $result;
     }
 
     public function absoluteUrlForProvider(): array
@@ -214,3 +212,12 @@ final class StudipControllerTest extends Codeception\Test\Unit
     }
 }
 
+class StudipControllerTestController extends StudipController
+{
+    public function __construct($dispatcher)
+    {
+        parent::__construct($dispatcher);
+
+        $this->current_action = 'foo';
+    }
+}

@@ -65,10 +65,6 @@ class Search_ModuleController extends MVVController
         return MVV::isVisibleSearch();
     }
 
-    public function after_filter($action, $args) {
-        parent::after_filter($action, $args);
-    }
-
     public function index_action()
     {
         $template = $this->get_template_factory()
@@ -134,8 +130,11 @@ class Search_ModuleController extends MVVController
 
         $sidebar = Sidebar::get();
 
-        $widget = new SelectWidget(_('Semesterauswahl'),
-            $this->url_for('',['sterm' => $this->sterm]), 'sem_select');
+        $widget = new SelectWidget(
+            _('Semesterauswahl'),
+            $this->indexURL(['sterm' => $this->sterm]),
+            'sem_select'
+        );
         $options = [];
         $semester = Semester::findAllVisible();
         unset($semester[0]);
@@ -160,8 +159,11 @@ class Search_ModuleController extends MVVController
                 || count($drill_down['studiengaenge']['objects'])
                 || count($drill_down['faecher']['objects'])) {
 
-            $widget = new SelectWidget(_('Studiengänge'),
-                $this->url_for('',['sterm' => $this->sterm, 'type' => 'Studiengang']), 'id');
+            $widget = new SelectWidget(
+                _('Studiengänge'),
+                $this->indexURL(['sterm' => $this->sterm, 'type' => 'Studiengang']),
+                'id'
+            );
             $options = [0 => 'Alle'];
             if(!empty($drill_down['studiengaenge']['objects'])){
                 foreach ($drill_down['studiengaenge']['objects'] as $studiengang) {
@@ -173,8 +175,11 @@ class Search_ModuleController extends MVVController
             $sidebar->addWidget($widget, 'studiengaenge_filter');
 
 
-            $widget = new SelectWidget(_('Fächer'),
-                $this->url_for('',['sterm' => $this->sterm, 'type' => 'Fach']), 'id');
+            $widget = new SelectWidget(
+                _('Fächer'),
+                $this->indexURL(['sterm' => $this->sterm, 'type' => 'Fach']),
+                'id'
+            );
             $options = [0 => 'Alle'];
             if(!empty($drill_down['faecher']['objects'])){
                 foreach ($drill_down['faecher']['objects'] as $fach) {
@@ -186,8 +191,11 @@ class Search_ModuleController extends MVVController
             $sidebar->addWidget($widget, 'faecher_filter');
 
 
-            $widget = new SelectWidget(_('Verantwortliche Einrichtungen'),
-                $this->url_for('',['sterm' => $this->sterm, 'type' => 'Fachbereich']), 'id');
+            $widget = new SelectWidget(
+                _('Verantwortliche Einrichtungen'),
+                $this->indexURL(['sterm' => $this->sterm, 'type' => 'Fachbereich']),
+                'id'
+            );
             $widget->class = 'institute-list';
             $options = [0 => 'Alle'];
             $widget->addElement(new SelectElement(0, _('Alle')), 'select-all');

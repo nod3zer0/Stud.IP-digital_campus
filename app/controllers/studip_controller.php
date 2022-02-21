@@ -252,6 +252,14 @@ abstract class StudipController extends Trails_Controller
     {
         $args = func_get_args();
 
+        // Try to create route if none given
+        if ($to === '') {
+            $to = $this->parent_controller
+                ? $this->parent_controller->current_action
+                : $this->current_action;
+            return $this->action_url($to);
+        }
+
         // Create url for a specific action
         // TODO: This seems odd. You kinda specify an absolute path
         //       to receive a relative url. Meh...
@@ -286,14 +294,6 @@ abstract class StudipController extends Trails_Controller
 
         //preserve fragment
         [$to, $fragment] = explode('#', $to);
-
-        // Try to create route if none given
-        if (!$to) {
-            $to  = '/';
-            $to .= $this->parent_controller
-                 ? $this->parent_controller->current_action
-                 : $this->current_action;
-        }
 
         $url = parent::url_for($to);
 
@@ -365,15 +365,15 @@ abstract class StudipController extends Trails_Controller
      */
     private function adjustToArguments(...$args): string
     {
-        if ($this->isURL($args[0]) && count($args) > 1) {
+        if (count($args) > 1 && $this->isURL($args[0])) {
             throw new InvalidArgumentException('Method may not be used with a URL and multiple parameters');
         }
 
-        if (count($args) > 1 || !$this->isURL($args[0])) {
-            return $this->url_for(...$args);
+        if (count($args) === 1 && $this->isURL($args[0])) {
+            return $args[0];
         }
 
-        return $args[0];
+        return $this->url_for(...$args);
     }
 
     /**
