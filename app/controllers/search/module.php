@@ -164,7 +164,7 @@ class Search_ModuleController extends MVVController
                 $this->indexURL(['sterm' => $this->sterm, 'type' => 'Studiengang']),
                 'id'
             );
-            $options = [0 => 'Alle'];
+            $options = [0 => _('Alle')];
             if(!empty($drill_down['studiengaenge']['objects'])){
                 foreach ($drill_down['studiengaenge']['objects'] as $studiengang) {
                     $options[$studiengang->studiengang_id] = $studiengang->name;
@@ -180,7 +180,7 @@ class Search_ModuleController extends MVVController
                 $this->indexURL(['sterm' => $this->sterm, 'type' => 'Fach']),
                 'id'
             );
-            $options = [0 => 'Alle'];
+            $options = [0 => _('Alle')];
             if(!empty($drill_down['faecher']['objects'])){
                 foreach ($drill_down['faecher']['objects'] as $fach) {
                     $options[$fach->fach_id] = $fach->name;
@@ -197,7 +197,6 @@ class Search_ModuleController extends MVVController
                 'id'
             );
             $widget->class = 'institute-list';
-            $options = [0 => 'Alle'];
             $widget->addElement(new SelectElement(0, _('Alle')), 'select-all');
             if(!empty($drill_down['institutes']['objects'])){
                 foreach ($drill_down['institutes']['objects'] as $institut) {
