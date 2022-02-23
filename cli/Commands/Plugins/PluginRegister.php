@@ -45,8 +45,6 @@ class PluginRegister extends AbstractPluginCommand
         }
 
         // determine the plugin path
-        $basepath = \Config::get()->PLUGINS_PATH;
-        $pluginpath = $origin . '/' . $pluginclass;
         $pluginregistered = $pluginManager->getPluginInfo($pluginclass);
 
         // create database schema if needed
@@ -66,6 +64,8 @@ class PluginRegister extends AbstractPluginCommand
             $migrator = new \Migrator($pluginpath . '/migrations', $schemaVersion);
             $migrator->migrateTo(null);
         }
+
+        $pluginpath = $origin . '/' . $pluginclass;
 
         // now register the plugin in the database
         $pluginid = $pluginManager->registerPlugin($manifest['pluginname'], $pluginclass, $pluginpath);
