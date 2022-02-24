@@ -145,34 +145,6 @@ class Course_OverviewController extends AuthenticatedController
             Sidebar::get()->addWidget($actions);
         }
 
-        if (Config::get()->CONSULTATION_ENABLED) {
-            $links = $sidebar->addWidget(new LinksWidget());
-            $links->setTitle(_('Sprechstunden der Lehrenden'));
-
-            foreach ($this->course->getMembersWithStatus('dozent', true)->pluck('user') as $teacher) {
-                $consultations = ConsultationBlock::countByRange($teacher);
-                if ($consultations === 0) {
-                    continue;
-                }
-
-                $link = ($teacher->id === $GLOBALS['user']->id  || $GLOBALS['user']->perms === 'root')
-                      ? 'admin'
-                      : 'overview';
-                $disabled = $GLOBALS['user']->id !== $teacher->id
-                          && $GLOBALS['user']->perms === 'dozent'
-                          && !Config::get()->CONSULTATION_ALLOW_DOCENTS_RESERVING;
-                $links->addLink(
-                    $teacher->getFullName(),
-                    URLHelper::getURL("dispatch.php/consultation/{$link}", [
-                        'username'  => $teacher->username,
-                        'cid'       => null,
-                    ]),
-                    Icon::create(Avatar::getAvatar($teacher->id)->getURL(Avatar::SMALL)),
-                    compact('disabled')
-                );
-            }
-        }
-
         $share = new ShareWidget();
         if ($this->studygroup_mode) {
             $share->addCopyableLink(
