@@ -71,12 +71,10 @@ class Contents_CoursewareController extends AuthenticatedController
      */
     public function courseware_action($action = false, $widgetId = null)
     {
-        global $perm;
+        global $perm, $user;
 
         Navigation::activateItem('/contents/courseware/courseware');
-        $this->user_id = $GLOBALS['user']->id;
-
-        $this->setCoursewareSidebar();
+        $this->user_id = $user->id;
 
         $last = UserConfig::get($this->user_id)->getValue('COURSEWARE_LAST_ELEMENT');
 
@@ -89,12 +87,11 @@ class Contents_CoursewareController extends AuthenticatedController
         }
 
         // load courseware for current user
-        if (!$this->entry_element_id || !$struct || !$struct->canRead($GLOBALS['user'])) {
-            $user =  User::find($this->user_id);
+        if (!$this->entry_element_id || !$struct || !$struct->canRead($user)) {
 
             if (!$user->courseware) {
                 // create initial courseware dataset
-                StructuralElement::createEmptyCourseware($this->user_id, 'user');
+                $struct = StructuralElement::createEmptyCourseware($this->user_id, 'user');
             }
 
             $this->entry_element_id = $user->courseware->id;
@@ -106,9 +103,19 @@ class Contents_CoursewareController extends AuthenticatedController
         $this->licenses = $this->getLicences();
 
         $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS);
+
+        // Make sure struct has value., to evaluate the export (edit) capability.
+        if (!isset($struct)) {
+            $struct = \Courseware\StructuralElement::findOneBySQL(
+                "id = ? AND range_id = ? AND range_type = 'user'",
+                [$this->entry_element_id, $this->user_id]
+            );
+        }
+        $canExport = !empty($struct) ? $struct->canEdit($user) : false;
+        $this->setCoursewareSidebar($canExport);
     }
 
-    private function setCoursewareSidebar()
+    private function setCoursewareSidebar(bool $canExport)
     {
         $sidebar = \Sidebar::Get();
         $actions = new TemplateWidget(
@@ -122,6 +129,14 @@ class Contents_CoursewareController extends AuthenticatedController
             $this->get_template_factory()->open('course/courseware/view_widget')
         );
         $sidebar->addWidget($views)->addLayoutCSSClass('courseware-view-widget');
+
+        if ($canExport) {
+            $exports = new TemplateWidget(
+                _('Export '),
+                $this->get_template_factory()->open('course/courseware/export_widget')
+            );
+            $sidebar->addWidget($exports)->addLayoutCSSClass('courseware-export-widget');
+        }
     }
 
     private function getLicences()

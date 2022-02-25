@@ -35,21 +35,6 @@
                 <translate>Lesezeichen setzen</translate>
             </a>
         </li>
-        <li v-if="canEdit" class="cw-action-widget-export">
-            <a href="#" @click="exportElement">
-                <translate>Seite exportieren</translate>
-            </a>
-        </li>
-        <li v-if="(canEdit || userIsTeacher) && canVisit" class="cw-action-widget-export-pdf">
-            <a :href="pdfExportURL">
-                <translate>Seite als pdf-Dokument exportieren</translate>
-            </a>
-        </li>
-        <li v-if="canEdit && oerEnabled" class="cw-action-widget-oer">
-            <a href="#" @click="oerElement">
-                <translate>Seite auf %{oerTitle} veröffentlichen</translate>
-            </a>
-        </li>
         <li v-if="!isRoot && canEdit" class="cw-action-widget-trash">
             <a href="#" @click="deleteElement">
                 <translate>Seite löschen</translate>
@@ -72,13 +57,9 @@ export default {
     mixins: [CoursewareExport],
     computed: {
         ...mapGetters({
-            context: 'context',
-            oerEnabled: 'oerEnabled',
-            oerTitle: 'oerTitle',
             userId: 'userId',
             consumeMode: 'consumeMode',
             showToolbar: 'showToolbar',
-            userIsTeacher: 'userIsTeacher',
         }),
         isRoot() {
             if (!this.structuralElement) {
@@ -111,48 +92,8 @@ export default {
         tocText() {
             return this.showToolbar ? this.$gettext('Inhaltsverzeichnis ausblenden') : this.$gettext('Inhaltsverzeichnis anzeigen');
         },
-        pdfExportURL() {
-            if (this.context.type === 'users') {
-                return STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/pdf_export/' + this.structuralElement.id);
-            }
-            if (this.context.type === 'courses') {
-                return STUDIP.URLHelper.getURL('dispatch.php/course/courseware/pdf_export/' + this.structuralElement.id);
-            }
-
-            return '';
-        },
         isTask() {
             return this.structuralElement?.relationships.task.data !== null;
-        },
-        canExport() {
-            if (this.context.type === 'users') {
-                return true;
-            }
-
-            return this.canEdit && this.userIsTeacher;
-        },
-        tocText() {
-            return this.showToolbar ? this.$gettext('Inhaltsverzeichnis ausblenden') : this.$gettext('Inhaltsverzeichnis anzeigen');
-        },
-        pdfExportURL() {
-            if (this.context.type === 'users') {
-                return STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/pdf_export/' + this.structuralElement.id);
-            }
-            if (this.context.type === 'courses') {
-                return STUDIP.URLHelper.getURL('dispatch.php/course/courseware/pdf_export/' + this.structuralElement.id);
-            }
-
-            return '';
-        },
-        isTask() {
-            return this.structuralElement?.relationships.task.data !== null;
-        },
-        canExport() {
-            if (this.context.type === 'users') {
-                return true;
-            }
-
-            return this.canEdit && this.userIsTeacher;
         }
     },
     methods: {
@@ -161,8 +102,6 @@ export default {
             showElementAddDialog: 'showElementAddDialog',
             showElementDeleteDialog: 'showElementDeleteDialog',
             showElementInfoDialog: 'showElementInfoDialog',
-            showElementExportDialog: 'showElementExportDialog',
-            showElementOerDialog: 'showElementOerDialog',
             setStructuralElementSortMode: 'setStructuralElementSortMode',
             companionInfo: 'companionInfo',
             addBookmark: 'addBookmark',
@@ -201,18 +140,12 @@ export default {
         addElement() {
             this.showElementAddDialog(true);
         },
-        exportElement() {
-            this.showElementExportDialog(true);
-        },
         showElementInfo() {
             this.showElementInfoDialog(true);
         },
         createBookmark() {
             this.addBookmark(this.structuralElement);
             this.companionInfo({ info: this.$gettext('Das Lesezeichen wurde gesetzt.') });
-        },
-        oerElement() {
-            this.showElementOerDialog(true);
         },
         toggleTOC() {
             this.setShowToolbar(!this.showToolbar);

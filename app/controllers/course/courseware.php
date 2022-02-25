@@ -50,7 +50,7 @@ class Course_CoursewareController extends AuthenticatedController
 
             if (!$course->courseware) {
                 // create initial courseware dataset
-                StructuralElement::createEmptyCourseware(Context::getId(), 'course');
+                $struct = StructuralElement::createEmptyCourseware(Context::getId(), 'course');
             }
 
             $this->entry_element_id = $course->courseware->id;
@@ -60,13 +60,22 @@ class Course_CoursewareController extends AuthenticatedController
         UserConfig::get($GLOBALS['user']->id)->store('COURSEWARE_LAST_ELEMENT', $last);
 
         Navigation::activateItem('course/courseware/content');
-        $this->setIndexSidebar();
         $this->licenses = [];
         $sorm_licenses = License::findBySQL('1 ORDER BY name ASC');
         foreach ($sorm_licenses as $license) {
             array_push($this->licenses, $license->toArray());
         }
         $this->licenses = json_encode($this->licenses);
+
+        // Make sure struct has value., to evaluate the export (edit) capability.
+        if (!isset($struct)) {
+            $struct = StructuralElement::findOneBySQL("id = ? AND range_id = ? AND range_type = 'course'", [
+                $this->entry_element_id,
+                Context::getId(),
+            ]);
+        }
+        $canExport = !empty($struct) ? $struct->canEdit($GLOBALS['user']) : false;
+        $this->setIndexSidebar($canExport);
     }
 
     public function dashboard_action(): void
@@ -98,7 +107,7 @@ class Course_CoursewareController extends AuthenticatedController
         $this->render_pdf($element->pdfExport($this->user), trim($element->title).'.pdf');
     }
 
-    private function setIndexSidebar(): void
+    private function setIndexSidebar(bool $canExport): void
     {
         $sidebar = Sidebar::Get();
         $actions = new TemplateWidget(
@@ -112,6 +121,14 @@ class Course_CoursewareController extends AuthenticatedController
             $this->get_template_factory()->open('course/courseware/view_widget')
         );
         $sidebar->addWidget($views)->addLayoutCSSClass('courseware-view-widget');
+
+        if ($canExport) {
+            $exports = new TemplateWidget(
+                _('Export '),
+                $this->get_template_factory()->open('course/courseware/export_widget')
+            );
+            $sidebar->addWidget($exports)->addLayoutCSSClass('courseware-export-widget');
+        }
     }
 
 

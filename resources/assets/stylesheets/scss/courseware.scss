@@ -1666,7 +1666,7 @@ b l o c k a d d e r
                 display: block;
             }
         }
-    } 
+    }
 }
 
 .cw-blockadder-item {
@@ -1913,13 +1913,15 @@ v i e w  w i d g e t
     .cw-action-widget-trash{
         @include background-icon(trash, clickable);
     }
-    .cw-action-widget-export{
+}
+.cw-export-widget {
+    .cw-export-widget-export{
         @include background-icon(export, clickable);
     }
-    .cw-action-widget-export-pdf{
+    .cw-export-widget-export-pdf{
         @include background-icon(file-pdf, clickable);
     }
-    .cw-action-widget-oer{
+    .cw-export-widget-oer{
         @include background-icon(oer-campus, clickable);
     }
 }

@@ -10,6 +10,9 @@
             <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions">
                 <courseware-action-widget :structural-element="selected" :canVisit="canVisit"></courseware-action-widget>
             </MountingPortal>
+            <MountingPortal mountTo="#courseware-export-widget" name="sidebar-actions" v-if="canExport">
+                <courseware-export-widget :structural-element="selected" :canVisit="canVisit"></courseware-export-widget>
+            </MountingPortal>
             <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
                 <courseware-view-widget :structural-element="selected" :canVisit="canVisit"></courseware-view-widget>
             </MountingPortal>
@@ -31,6 +34,7 @@
 import CoursewareStructuralElement from './CoursewareStructuralElement.vue';
 import CoursewareViewWidget from './CoursewareViewWidget.vue';
 import CoursewareActionWidget from './CoursewareActionWidget.vue';
+import CoursewareExportWidget from './CoursewareExportWidget.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import StudipProgressIndicator from '../StudipProgressIndicator.vue';
 import { mapActions, mapGetters } from 'vuex';
@@ -42,6 +46,7 @@ export default {
         CoursewareActionWidget,
         CoursewareCompanionBox,
         StudipProgressIndicator,
+        CoursewareExportWidget
     },
     data: () => ({
         canVisit: null,
@@ -51,6 +56,7 @@ export default {
     }),
     computed: {
         ...mapGetters({
+            context: 'context',
             courseware: 'courseware',
             orderedStructuralElements: 'courseware-structure/ordered',
             relatedStructuralElement: 'courseware-structural-elements/related',
@@ -58,6 +64,7 @@ export default {
             structuralElements: 'courseware-structural-elements/all',
             structuralElementById: 'courseware-structural-elements/byId',
             userId: 'userId',
+            userIsTeacher: 'userIsTeacher'
         }),
         loadingErrorMessage() {
             switch (this.loadingErrorStatus) {
@@ -68,7 +75,18 @@ export default {
                 default:
                     return this.$gettext('Beim Laden der Seite ist ein Fehler aufgetreten.');
             }
-        }
+        },
+        canExport() {
+            if (!this.selected) {
+                return false;
+            }
+
+            if (this.context.type === 'users') {
+                return true;
+            }
+
+            return this.selected.attributes['can-edit'] && this.userIsTeacher;
+        },
     },
     methods: {
         ...mapActions({

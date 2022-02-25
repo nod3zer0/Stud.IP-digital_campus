@@ -790,26 +790,6 @@ export default {
 
                 menu.push({ id: 3, label: this.$gettext('Seite hinzufügen'), icon: 'add', emit: 'addElement' });
             }
-            if ((this.userIsTeacher && this.canEdit) || this.context.type === 'users') {
-                menu.push({
-                    id: 6,
-                    label: this.$gettext('Seite exportieren'),
-                    icon: 'export',
-                    emit: 'showExportOptions',
-                });
-            }
-            if ((this.userIsTeacher || this.canEdit) && this.canVisit) {
-                menu.push({
-                    id: 7,
-                    type: 'link',
-                    label: this.$gettext('Seite als pdf-Dokument exportieren'),
-                    icon: 'file-pdf',
-                    url: this.pdfExportURL,
-                });
-            }
-            if (this.canEdit && this.oerEnabled && this.userIsTeacher) {
-                menu.push({ id: 8, label: this.textOer.title, icon: 'oer-campus', emit: 'oerCurrentElement' });
-            }
             if (!this.isRoot && this.canEdit && !this.isTask) {
                 menu.push({
                     id: 9,
