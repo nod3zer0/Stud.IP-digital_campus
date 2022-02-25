@@ -26,7 +26,7 @@ class TableOfContents extends BlockType
 
     public static function getDescription(): string
     {
-        return _('Stellt auf verschiedene Arten die Unterkapitel dieses Kapitels dar.');
+        return _('Stellt auf verschiedene Arten die Unterseiten dieser Seite dar.');
     }
 
     public function initialPayload(): array
