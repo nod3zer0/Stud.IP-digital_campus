@@ -58,12 +58,4 @@ class Code extends BlockType
     {
         return [];
     }
-
-    public function pdfExport()
-    {
-        $html = '<h5>' . sprintf(_('Block-Typ: %s'), $this->getTitle()) . '</h5>';
-        $html .= '<pre>' . htmlspecialchars($this->getPayload()['content']) . '</pre>';
-
-        return $html;
-    }
 }

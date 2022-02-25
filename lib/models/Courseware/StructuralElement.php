@@ -768,8 +768,10 @@ SQL;
     {
         $containers = \Courseware\Container::findBySQL('structural_element_id = ?', [$this->id]);
 
+        $html = '';
         foreach ($containers as $container) {
-            $html .= $container->type->pdfExport();
+            $container_html_template = $container->type->getPdfHtmlTemplate();
+            $html .= $container_html_template ? $container_html_template->render() : '';
         }
 
         return $html;

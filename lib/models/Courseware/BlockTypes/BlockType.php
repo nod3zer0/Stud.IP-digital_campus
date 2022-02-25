@@ -398,16 +398,32 @@ abstract class BlockType
         return $destinationFolder;
     }
 
-    public function pdfExport()
+    /**
+     * Gets the related block's html template if exists otherwise a default one, to be exported as pdf if exists.
+     *
+     * It turns the classname into snakecase in order to find the
+     * template file in templates/courseware/block_types.
+     *
+     * @return mixed the \Flexi_Template instance if exists, otherwise null.
+     */
+    public function getPdfHtmlTemplate(): ?\Flexi_Template
     {
-        $html = '<h5>' . sprintf(_('Block-Typ: %s'), $this->getTitle()) . '</h5>';
-        $html .= '<h6>' . _('Block-Daten') . ': ' . '</h6>';
-        foreach($this->getPayload() as $key => $value) {
-            if ($value !== '') {
-                $html .= '<h6>' . $key . ' => ' . $value . '</h6>';
+        $template = null;
+        try {
+            $template_name = strtosnakecase((new \ReflectionClass($this))->getShortName());
+            $template_path = $GLOBALS['template_factory']->get_path() . "courseware/block_types/{$template_name}.php";
+            if (file_exists($template_path)) {
+                $template = $GLOBALS['template_factory']->open("courseware/block_types/{$template_name}");
+            } else {
+                $template = $GLOBALS['template_factory']->open("courseware/block_types/default");
             }
+            $template->set_attributes([
+                'title' => $this->getTitle(),
+                'payload' => $this->getPayload()
+            ]);
+        } catch (\Exception $e) {
+            // it catches the exception mostly because the template file could not be found.
         }
-
-        return $html;
+        return $template;
     }
 }

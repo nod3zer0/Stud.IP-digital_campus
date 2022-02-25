@@ -106,13 +106,4 @@ class Headline extends BlockType
     {
         return [];
     }
-
-    public function pdfExport()
-    {
-        $html = '<h5>' . sprintf(_('Block-Typ: %s'), $this->getTitle()) . '</h5>';
-        $html .= '<h5>' . htmlspecialchars($this->getPayload()['title']) . '</h5>';
-        $html .= '<h6>' . htmlspecialchars($this->getPayload()['subtitle']) . '</h6>';
-
-        return $html;
-    }
 }

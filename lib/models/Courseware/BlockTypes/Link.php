@@ -60,13 +60,4 @@ class Link extends BlockType
     {
         return [];
     }
-
-    public function pdfExport()
-    {
-        $html = '<h5>' . sprintf(_('Block-Typ: %s'), $this->getTitle()) . '</h5>';
-        $html .= '<p>' . htmlspecialchars($this->getPayload()['title']) . '</p>';
-        $html .= '<p>' . htmlspecialchars($this->getPayload()['url']) . '</p>';
-
-        return $html;
-    }
 }
