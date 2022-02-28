@@ -134,12 +134,9 @@ class StandardFolder implements FolderType
         }
 
         if ($this->range_type === 'course') {
-            if (($user_id === null || $user_id === 'nobody')  && Config::get()->ENABLE_FREE_ACCESS) {
-                $range = $this->getRangeObject();
-                $visible = isset($range) && $range->lesezugriff == 0;
-            } else {
-                $visible = Seminar_Perm::get()->have_studip_perm('user', $this->range_id, $user_id);
-            }
+            $range = $this->getRangeObject();
+            $visible = Config::get()->ENABLE_FREE_ACCESS && isset($range) && $range->lesezugriff == 0
+                    || Seminar_Perm::get()->have_studip_perm('user', $this->range_id, $user_id);
         }
         return $visible;
     }
