@@ -146,14 +146,14 @@ class ForumEntry  implements PrivacyObject
         if (Studip\Markup::isHtml($description)) {
             // remove all blockquote tags
             $dom = new DOMDocument();
-            $dom->loadHtml($description);
+            $dom->loadHtml($description, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
             $nodes = iterator_to_array($dom->getElementsByTagName('blockquote'));
 
             foreach ($nodes as $node) {
                 $node->parentNode->removeChild($node);
             }
 
-            return str_replace(array('<html><body>','</body></html>') , '' , $dom->saveHTML());
+            return $dom->saveHTML();
         } else {
             $description = preg_replace('/\[quote(=.*)\].*\[\/quote\]/isU', '', $description);
             $description = str_replace('[/quote]', '', $description);
