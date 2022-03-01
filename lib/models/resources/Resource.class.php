@@ -2371,7 +2371,7 @@ class Resource extends SimpleORMap implements StudipItem
         }
         //Now we must check for global resource locks:
 
-        if (GlobalResourceLock::currentlyLocked()) {
+        if ($this->lockable && GlobalResourceLock::currentlyLocked()) {
             //The resource management system is currently locked.
             //permission level 'user' for all other permission
             //levels.
@@ -2431,7 +2431,7 @@ class Resource extends SimpleORMap implements StudipItem
                 return false;
             }
         } elseif ($permission === 'autor') {
-            if (GlobalResourceLock::currentlyLocked()) {
+            if ($this->lockable && GlobalResourceLock::currentlyLocked()) {
                 //A global resource lock means no writing actions are permitted.
                 return false;
             }
@@ -2441,7 +2441,7 @@ class Resource extends SimpleORMap implements StudipItem
                 return false;
             }
         } elseif ($permission === 'tutor') {
-            if (GlobalResourceLock::currentlyLocked()) {
+            if ($this->lockable && GlobalResourceLock::currentlyLocked()) {
                 //A global resource lock means no writing actions are permitted.
                 return false;
             }

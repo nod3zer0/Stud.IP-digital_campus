@@ -289,6 +289,7 @@ class Resources_RoomController extends AuthenticatedController
                 $this->name                   = Request::get('name');
                 $this->description            = Request::get('description');
                 $this->requestable            = Request::int('requestable');
+                $this->lockable               = Request::int('lockable', 0);
                 $this->room_type              = Request::get('room_type');
                 $this->seats                  = Request::int('seats');
                 $this->booking_plan_is_public = Request::get('booking_plan_is_public');
@@ -363,6 +364,7 @@ class Resources_RoomController extends AuthenticatedController
                 $this->room->name        = $this->name;
                 $this->room->description = $this->description;
                 $this->room->requestable = strval($this->requestable);
+                $this->room->lockable    = $this->lockable;
                 if ($GLOBALS['perm']->have_perm('root')) {
                     $this->room->sort_position = $this->sort_position;
                 }
@@ -458,6 +460,7 @@ class Resources_RoomController extends AuthenticatedController
                 $this->name                   = $this->room->name;
                 $this->description            = $this->room->description;
                 $this->requestable            = '1';
+                $this->lockable               = 1;
                 $this->room_type              = $this->room->room_type;
                 $this->seats                  = $this->room->seats;
                 $this->booking_plan_is_public = (bool)$this->room->booking_plan_is_public;

@@ -29,8 +29,13 @@
             </label>
             <label>
                 <input type="checkbox" name="requestable" value="1"
-                       <?= $room->requestable ? 'checked="checked"' : '' ?>>
+                       <?= $room->requestable ? 'checked' : '' ?>>
                 <?= _('Raum ist wünschbar') ?>
+            </label>
+            <label>
+                <input type="checkbox" name="lockable" value="1"
+                       <?= $room->lockable ? 'checked' : '' ?>>
+                <?= _('Globale Buchungssperren gelten für diesen Raum') ?>
             </label>
             <label>
                 <?= _('Raumtyp') ?>
@@ -42,7 +47,7 @@
             </label>
             <label>
                 <input type="checkbox" name="booking_plan_is_public" value="1"
-                       <?= $booking_plan_is_public ? 'checked="checked"' : '' ?>>
+                       <?= $booking_plan_is_public ? 'checked' : '' ?>>
                 <?= _('Raumplan ist öffentlich zugänglich') ?>
             </label>
             <? if ($GLOBALS['perm']->have_perm('root')): ?>
