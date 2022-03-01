@@ -157,6 +157,9 @@ export default {
 
         window.addEventListener('resize', this.calcContentHeight);
     },
+    destroyed() {
+        window.removeEventListener('resize', this.calcContentHeight);
+    },
     methods: {
         ...mapActions({
             updateBlock: 'updateBlockInContainer',
