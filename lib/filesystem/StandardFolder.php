@@ -447,6 +447,9 @@ class StandardFolder implements FolderType
      */
     public function isFileEditable($fileref_or_id, $user_id)
     {
+        if ($this->range_type === 'user') {
+            return $user_id === $this->range_id;
+        }
         $fileref = FileRef::toObject($fileref_or_id);
         return $fileref->user_id === $user_id
             || $GLOBALS['perm']->have_studip_perm('tutor', $this->range_id, $user_id);
@@ -466,6 +469,9 @@ class StandardFolder implements FolderType
      */
     public function isFileWritable($fileref_or_id, $user_id)
     {
+        if ($this->range_type === 'user') {
+            return $user_id === $this->range_id;
+        }
         $fileref = FileRef::toObject($fileref_or_id);
         return $fileref->user_id == $user_id
             || $GLOBALS['perm']->have_studip_perm('tutor', $this->range_id, $user_id);
