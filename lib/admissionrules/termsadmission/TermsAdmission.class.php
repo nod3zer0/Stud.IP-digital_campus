@@ -108,7 +108,10 @@ class TermsAdmission extends AdmissionRule
         $errors = [];
 
         // check if the user has accepted the terms
-        if (!Request::int('terms_accepted')) {
+        if (Request::int('terms_accepted')) {
+            $_SESSION['terms_accepted_' . $this->getId()] = true;
+        }
+        if (!$_SESSION['terms_accepted_' . $this->getId()]) {
             $errors[] = _('Um sich anzumelden, müssen Sie die Teilnahmebedingungen akzeptieren.');
         }
 
