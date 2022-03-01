@@ -15,7 +15,7 @@
             :class="{ active: discussView }"
         >
             <a href="#" @click="setDiscussView">
-                <translate>Diskutieren</translate>
+                <translate>Kommentieren</translate>
             </a>
         </li>
     </ul>
