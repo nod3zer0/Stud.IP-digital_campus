@@ -511,6 +511,11 @@ class MyRealmModel
                     SELECT eval_id, :user_id, '-2', :timestamp, 0
                     FROM eval_range
                     WHERE range_id = :id
+                  ) UNION (
+                    SELECT `news_id`, :user_id, `pluginid`, :timestamp, 0
+                    FROM `news_range`
+                    JOIN `plugins` ON (`pluginclassname` = 'CoreOverview')
+                    WHERE `range_id` = :id
                   )
                   ON DUPLICATE KEY UPDATE last_visitdate = IFNULL(visitdate, 0), visitdate = :timestamp";
         $statement = DBManager::get()->prepare($query);
