@@ -622,7 +622,7 @@ class QuestionnaireController extends AuthenticatedController
             if ($one->isStopped() && $one->resultsVisible()) {
                 $stopped_visible++;
             }
-            if ($one->isStopped() && (!$one->resultsVisible() || !Request::get("questionnaire_showall"))) {
+            if (($one->isStopped() || !$one->isViewable()) && (!$one->resultsVisible() || !Request::get("questionnaire_showall"))) {
                 unset($this->questionnaire_data[$i]);
                 continue;
             }

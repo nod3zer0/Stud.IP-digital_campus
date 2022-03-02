@@ -85,6 +85,9 @@ class Questionnaire extends SimpleORMap implements PrivacyObject
         if ($this->isEditable()) {
             return true;
         }
+        if (!$this->isStarted()) {
+            return false;
+        }
         foreach ($this->assignments as $assignment) {
             if ($assignment['range_id'] === "public") {
                 return true;
