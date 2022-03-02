@@ -155,7 +155,11 @@
 
 </div>
 
-<ul class="results oer_material_overview">
+<div v-if="results !== false && results.length === 0" class="oer_no_results">
+    <?= MessageBox::info(_('Keine Ergebnisse gefunden.'))?>
+</div>
+
+<ul class="results oer_material_overview" v-if="results && results.length > 0">
     <li v-for="result in results" :key="result.material_id">
         <article class="contentbox" :title="result.name">
             <a :href="getMaterialURL(result.material_id)">
