@@ -110,9 +110,6 @@ export default {
         childElements() {
             return this.childrenById(this.structuralElement.id).map((id) => this.structuralElementById({ id }));
         },
-        countChildren() {
-            return this.childrenById(this.structuralElement.id).length;
-        },
         title() {
             return this.block?.attributes?.payload?.title;
         },
