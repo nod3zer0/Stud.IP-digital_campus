@@ -549,6 +549,39 @@ class SingleCalendar
                 '____%system%____', '', '', '', '', $subject);
     }
 
+
+    /**
+     * Deletes a calendar event with regard of the consultation component.
+     * Depending whether a CalenderEvent instance is related to a consultation booking
+     * or not, the deletion has to be done differently.
+     *
+     * @param CalendarEvent $event
+     * @return bool True on success, false on failure.
+     */
+    protected function deleteEventWithConsultation(CalendarEvent $event) : bool
+    {
+        // If the event belongs to a consultation booking, cancel the booking,
+        // so that it is available for others.
+        $booking = ConsultationBooking::findOneByStudent_event_id($event->event_id);
+        if ($booking) {
+            // Delete the event indirectly by cancelling the consultation booking:
+            $booking->cancel();
+            return true;
+        }
+
+        //Delete the consultation event from the consultation block.
+        $consultation_event = ConsultationEvent::findOneByEvent_id($event->event_id);
+        // Check if the slot is empty and delete it, if so.
+        if ($consultation_event && $consultation_event->slot) {
+            $consultation_event->slot->bookings->cancel();
+            $consultation_event->slot->delete();
+            return true;
+        }
+
+        // Delete the event
+        return $event->delete();
+    }
+
     /**
      * Deletes an event from this calendar.
      *
@@ -582,7 +615,7 @@ class SingleCalendar
             if ($this->getRange() == Calendar::RANGE_USER) {
                 $event_message = clone $calendar_event;
                 $author_id = $calendar_event->getAuthorId();
-                $deleted = $calendar_event->delete();
+                $deleted = $this->deleteEventWithConsultation($calendar_event);
                 if ($deleted && !$this->havePermission(Calendar::PERMISSION_OWN)) {
                     $this->sendDeleteMessage($event_message);
                 }
@@ -594,7 +627,7 @@ class SingleCalendar
                 }
                 return $deleted;
             } else if ($this->getRange() == Calendar::RANGE_SEM) {
-                $deleted = $calendar_event->delete();
+                $deleted = $this->deleteEventWithConsultation($calendar_event);
                 return $deleted;
             }
         }
