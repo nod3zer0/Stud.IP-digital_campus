@@ -10,10 +10,11 @@
             <legend><?= _('Grunddaten') ?></legend>
 
             <label>
-                <?= _('Name') ?>
+                <span class="required"><?= _('Name') ?></span>
                 <input type="text"
                        name="data[name]"
                        class="oername"
+                       required
                        value="<?= htmlReady($material['name'] ?: $template['name']) ?>"
                        @keyup="editName"
                        maxlength="64">
