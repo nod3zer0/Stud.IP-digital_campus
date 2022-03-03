@@ -173,7 +173,7 @@ class CoreWiki extends CorePlugin implements StudipModule
      */
     public static function getTOC($startPage): TOCItem
     {
-        $root = new TOCItem($startPage->keyword);
+        $root = new TOCItem($startPage->keyword === 'WikiWikiWeb' ? _('Wiki-Startseite') : $startPage->keyword);
         $root->setURL(URLHelper::getURL('wiki.php', ['keyword' => $startPage->keyword]))
             ->setActive($startPage->keyword == Request::get('keyword') ||
                 $startPage->keyword == 'WikiWikiWeb' && !Request::get('keyword'));

@@ -995,6 +995,13 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL, $ancestor=NULL)
             $page->version, $editor);
         $page_string .= '<br>';
         $page_string .= strftime(_('am %x, %X'), $page->chdate);
+        if ($page->keyword === 'WikiWikiWeb' || $page->isDescendantOf('WikiWikiWeb')) {
+            $toc = CoreWiki::getTOC(WikiPage::getStartPage(Context::getId()));
+        } else {
+            $toc = new TOCItem($page->keyword);
+        }
+    } else {
+        $toc = new TOCItem($keyword === 'WikiWikiWeb' ? _('Wiki-Startseite') : $keyword);
     }
 
     // Action menu for content bar.
@@ -1027,7 +1034,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL, $ancestor=NULL)
     }
 
     // Create content bar.
-    $contentBar = new ContentBar(CoreWiki::getTOC(WikiPage::getStartPage(Context::getId())),
+    $contentBar = new ContentBar($toc,
         $page_string, Icon::create('wiki'), $actionMenu);
 
     $template = $GLOBALS['template_factory']->open('wiki/edit.php');
@@ -1540,6 +1547,13 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
             $page->version, $editor);
         $page_string .= '<br>';
         $page_string .= strftime(_('am %x, %X'), $page->chdate);
+        if ($page->keyword === 'WikiWikiWeb' || $page->isDescendantOf('WikiWikiWeb')) {
+            $toc = CoreWiki::getTOC(WikiPage::getStartPage(Context::getId()));
+        } else {
+            $toc = new TOCItem($page->keyword);
+        }
+    } else {
+        $toc = new TOCItem($keyword === 'WikiWikiWeb' ? _('Wiki-Startseite') : $keyword);
     }
 
     // Action menu for content bar.
@@ -1577,7 +1591,7 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
     }
 
     // Create content bar.
-    $contentBar = new ContentBar(CoreWiki::getTOC(WikiPage::getStartPage(Context::getId())),
+    $contentBar = new ContentBar($toc,
         $page_string, Icon::create('wiki'), $actionMenu);
 
     if ($hilight) {

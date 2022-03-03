@@ -289,4 +289,23 @@ class WikiPage extends SimpleORMap implements PrivacyObject
         return $descendants;
     }
 
+    /**
+     * @param string $other_keyword
+     * @return bool
+     */
+    public function isDescendantOf(string $other_keyword): bool
+    {
+        if ($other_keyword === $this->keyword) {
+            return false;
+        }
+        $other_page = WikiPage::findLatestPage($this->range_id, $other_keyword);
+        if ($other_page) {
+            foreach ($other_page->getDescendants() as $descendant) {
+                if ($descendant->keyword === $this->keyword) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
