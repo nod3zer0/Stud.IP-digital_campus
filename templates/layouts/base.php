@@ -6,7 +6,7 @@ if ($navigation) {
     $subnavigation = $navigation->activeSubNavigation();
     if ($subnavigation !== null) {
         $nav_links = new NavigationWidget();
-        $nav_links->id = 'sidebar-navigation';
+        $nav_links->setId('sidebar-navigation');
         if (!$navigation->getImage()) {
             $nav_links->addLayoutCSSClass('show');
         }

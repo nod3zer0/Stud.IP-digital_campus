@@ -20,15 +20,6 @@
         </div>
 
     <? foreach ($widgets as $index => $widget): ?>
-        <?
-        if ($widget instanceof NavigationWidget) {
-            $widget->setId('nav_layer_3');
-            SkipLinks::addIndex(_('Dritte Navigationsebene'), 'nav_layer_3', 20, false);
-        } elseif ($widget instanceof ActionsWidget) {
-            $widget->setId('sidebar_actions');
-            SkipLinks::addIndex(_('Aktionen'), 'sidebar_actions', 21, false);
-        }
-        ?>
         <?= $widget->render(['base_class' => 'sidebar']) ?>
     <? endforeach; ?>
     </section>

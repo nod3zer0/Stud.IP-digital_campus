@@ -9,6 +9,13 @@
 class Sidebar extends WidgetContainer
 {
     /**
+     * Contains an optional image for the container.
+     */
+    protected $image = false;
+    protected $title = false;
+    protected $context_avatar = null;
+
+    /**
      * Constructor, tries to automagically set the sidebar's title.
      */
     public function __construct()
@@ -17,13 +24,6 @@ class Sidebar extends WidgetContainer
 
         $this->setTitle();
     }
-
-    /**
-     * Contains an optional image for the container.
-     */
-    protected $image = false;
-    protected $title = false;
-    protected $context_avatar = null;
 
     /**
      * Set an image for the sidebar.
@@ -162,6 +162,7 @@ class Sidebar extends WidgetContainer
 
         if ($this->hasWidgets()) {
             $template->widgets = $this->widgets;
+            array_walk($template->widgets, [$this, 'setupSkipLinks']);
         } else {
             $template->widgets = [];
         }
@@ -208,5 +209,40 @@ class Sidebar extends WidgetContainer
             }
         }
         return $breadcrumbs;
+    }
+
+    /**
+     * Inspects a widget and will set appropriate skiplinks.
+     *
+     * @param Widget $widget
+     */
+    protected function setupSkipLinks(Widget $widget): void
+    {
+        static $navigation_widget_added = false;
+        static $actions_widget_added = false;
+
+
+        if ($widget instanceof NavigationWidget && !$navigation_widget_added) {
+            SkipLinks::addIndex(
+                _('Dritte Navigationsebene'),
+                $widget->getId(),
+                20
+            );
+
+            $navigation_widget_added = true;
+        }
+
+        if ($widget instanceof ActionsWidget && !$actions_widget_added) {
+            if (!$widget->getId()) {
+                $widget->setId('sidebar-actions');
+            }
+            SkipLinks::addIndex(
+                _('Aktionen'),
+                $widget->getId(),
+                21
+            );
+
+            $actions_widget_added = true;
+        }
     }
 }
