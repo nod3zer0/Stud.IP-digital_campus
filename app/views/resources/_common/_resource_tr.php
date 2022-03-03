@@ -254,7 +254,7 @@
                 }
             } else {
                 if ($resource->propertyExists('booking_plan_is_public')) {
-                    if ($resource->booking_plan_is_public) {
+                    if ($resource->getProperty('booking_plan_is_public')) {
                         $actions['0020'] = [
                             $resource->getActionLink('booking_plan'),
                             _('Belegungsplan anzeigen'),
