@@ -880,16 +880,16 @@ class MyRealmModel
      */
     public static function array_rtrim($array)
     {
-        $temp  = array_reverse($array);
+        $temp  = array_reverse($array, true);
         $empty = true;
 
         while ($empty && !empty($temp)) {
             $item = reset($temp);
             if ($empty = ($item === null)) {
-                $temp = array_slice($temp, 1);
+                $temp = array_slice($temp, 1, null, true);
             }
         }
-        return array_reverse($temp);
+        return array_reverse($temp, true);
     }
 
     /**

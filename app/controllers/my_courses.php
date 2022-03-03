@@ -194,7 +194,6 @@ class MyCoursesController extends AuthenticatedController
                 'responsive_type'          => Config::get()->MY_COURSES_ALLOW_TILED_DISPLAY && $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY_RESPONSIVE ? 'tiles' : 'tables',
                 'navigation_show_only_new' => $GLOBALS['user']->cfg->MY_COURSES_SHOW_NEW_ICONS_ONLY,
                 'group_by'                 => $this->getGroupField(),
-
             ],
         ];
 
@@ -1055,6 +1054,7 @@ class MyCoursesController extends AuthenticatedController
                 uksort($course['navigation'], function ($a, $b) use ($positions) {
                     return array_search($a, $positions) - array_search($b, $positions);
                 });
+                $course['navigation'] = array_values($course['navigation']);
                 return $course;
             },
             $courses
