@@ -11,6 +11,7 @@
  * Refer to the according function definitions for further info.
  * ------------------------------------------------------------------------ */
 import { $gettext } from './gettext.js';
+import Dialog from './dialog.js';
 
 let active = false;
 let lastAjaxDuration = 200; //ms of the duration of an ajax-call
@@ -174,16 +175,16 @@ function poll(forced) {
                     $(this).dialog('close');
                 };
 
-                $('<div>')
-                    .html(message)
-                    .css({
-                        textAlign: 'center',
-                        padding: '2em 0'
-                    })
-                    .dialog({
-                        width: '50%',
-                        modal: true,
+                Dialog.show(
+                    $('<div>')
+                        .html(message)
+                        .css({
+                            textAlign: 'center',
+                            padding: '2em 0'
+                        }),
+                    {
                         buttons: buttons,
+                        size: 'auto',
                         title: $gettext('Sie sind nicht mehr im System angemeldet.')
                     });
             } else {
