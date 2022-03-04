@@ -121,7 +121,7 @@ class ConsultationModule extends CorePlugin implements StudipModule, SystemPlugi
                 function ($block) {
                     return $block->toRawArray();
                 },
-                "teacher_id = :user_id OR (range_id = :user_id AND range_type = 'user')",
+                "range_id = :user_id AND range_type = 'user'",
                 [':user_id' => $storage->user_id]
             )
         );
@@ -132,8 +132,19 @@ class ConsultationModule extends CorePlugin implements StudipModule, SystemPlugi
                 function ($booking) {
                     return $booking->toRawArray();
                 },
-                'user_id = ?',
-                [$storage->user_id]
+                'user_id = :user_id',
+                [':user_id' => $storage->user_id]
+            )
+        );
+        $storage->addTabularData(
+            _('Terminverantwortlichkeiten'),
+            'consultation_responsibilities',
+            ConsultationResponsibility::findAndMapBySQL(
+                function ($responsibility) {
+                    return $responsibility->toRawArray();
+                },
+                "range_id = :user_id AND range_type = 'user'",
+                [':user_id' => $storage->user_id]
             )
         );
     }
