@@ -447,14 +447,28 @@ const Tour = {
                             jQuery('.tour_focus_box').removeClass('tour_focus_box');
                         }
                         jQuery('body').prepend(html);
+                        jQuery('.modaloverlay').find('.ui-dialog-titlebar-close, .cancel.button').click(event => {
+                            event.preventDefault();
+                            event.stopPropagation();
+
+                            if (Tour.started) {
+                                jQuery('#tour_controls').show();
+                                jQuery('#tour_tip').show();
+                                jQuery('#tour_tip_interactive').show();
+                                jQuery('#tour_selector_overlay').show();
+                            }
+
+                            $('.modaloverlay').remove();
+                        });
                         jQuery('.modaloverlay form').on('click', function(event) {
                             jQuery(this).data('clicked', jQuery(event.target));
                         });
                         jQuery('.modaloverlay form').on('submit', function(event) {
                             event.preventDefault();
+
                             Tour.deleteStep(
-                                jQuery('.modaloverlay form input[name=tour_id]').val(),
-                                jQuery('.modaloverlay form input[name=step_nr]').val(),
+                                tour_id,
+                                step_nr,
                                 jQuery(this)
                                     .data('clicked')
                                     .attr('name')
@@ -463,9 +477,7 @@ const Tour = {
                         });
                     } else if (xhr.getResponseHeader('X-Action') === 'complete') {
                         if (Tour.started) {
-                            Tour.showControlButtons();
-                            Tour.setTooltip(Tour.options.data[Tour.step]);
-                            Tour.started = false;
+                            Tour.destroy();
                             if (step_nr > 1 && step_nr - Tour.options.route_step_nr >= Tour.steps - 1) {
                                 Tour.init(tour_id, step_nr - 1);
                             } else {

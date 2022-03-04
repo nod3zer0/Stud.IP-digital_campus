@@ -402,8 +402,8 @@ class TourController extends AuthenticatedController
             $this->response->add_header('X-Action', 'question');
             return (string) QuestionBox::create(
                 sprintf(_('Wollen Sie Schritt %s wirklich löschen?'), $step_nr),
-                $this->url_for('tour/admin_overview',  ['confirm_delete_tour_step' => $step_nr, 'tour_id' => $tour_id, 'step_nr' => $step_nr]),
-                $this->url_for('tour/admin_overview')
+                $this->url_for("tour/admin_details/{$tour_id}",  ['confirm_delete_tour_step' => $step_nr]),
+                $this->url_for("tour/admin_details/{$tour_id}")
             );
         }
         return '';
