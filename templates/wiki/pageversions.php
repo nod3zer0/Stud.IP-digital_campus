@@ -52,7 +52,7 @@
             </tr>
         <? endforeach ?>
     </tbody>
-
+    <? if ($GLOBALS['perm']->have_studip_perm('tutor', Context::getId()) && keywordExists($keyword)) :?>
     <tfoot>
         <tr>
             <td colspan="3">
@@ -64,4 +64,5 @@
             </td>
         </tr>
     </tfoot>
+    <? endif ?>
 </table>
