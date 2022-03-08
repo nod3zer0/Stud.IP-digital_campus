@@ -44,12 +44,16 @@
                 <?= $displayNote($slot->note, 29, 'below') ?>
             </td>
             <td>
-            <? if ($block->teacher): ?>
-                <a href="<?= URLHelper::getLink('dispatch.php/profile', ['username' => $block->teacher->username]) ?>">
-                    <?= htmlReady($block->teacher->getFullName()) ?>
-                </a>
-            <? else: ?>
-                &ndash;
+            <? if (count($block->responsibilities) > 0): ?>
+                <ul class="default">
+                <? foreach ($block->responsibilities as $responsibility): ?>
+                    <li>
+                        <a href="<?= URLHelper::getLink($responsibility->getURL(), [], true) ?>">
+                            <?= htmlReady($responsibility->getName()) ?>
+                        </a>
+                    </li>
+                <? endforeach; ?>
+                </ul>
             <? endif; ?>
             </td>
             <td>
