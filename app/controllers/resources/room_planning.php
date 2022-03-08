@@ -450,8 +450,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
             throw new AccessDeniedException();
         }
         $this->rooms = RoomManager::getUserRooms($current_user);
-
-        //For the semester selector:
+        $sidebar = Sidebar::get();
         if (Request::get('semester_id')) {
             $this->semester = Semester::find(Request::get('semester_id'));
             if (!$this->semester) {
@@ -568,10 +567,6 @@ class Resources_RoomPlanningController extends AuthenticatedController
                 'resources/booking/add/' . $this->resource->id
             );
         }
-        //Build sidebar:
-        $sidebar = Sidebar::get();
-
-
         $this->fullcalendar_studip_urls = [];
         if ($this->user_has_booking_permissions) {
             $this->fullcalendar_studip_urls['add'] = $this->url_for(
@@ -593,94 +588,90 @@ class Resources_RoomPlanningController extends AuthenticatedController
                 $room_select->setOptions($options, $this->resource->id);
                 $sidebar->addWidget($room_select);
             }
-            if ($this->resource->userHasPermission($current_user)) {
-                $views = new ViewsWidget();
-                $views->setTitle(_('Zeitfenster'));
-                $views->addLink(
-                    _('Standard Zeitfenster'),
-                    URLHelper::getURL(
-                        'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
-                        [
-                            'allday' => null,
-                            'semester_id' => $this->semester->id
-                        ]
-                    ),
-                    null,
-                    ['class' => 'booking-plan-std_view']
-                )->setActive(!Request::get('allday'));
-
-                $views->addLink(
-                    _('Ganztägiges Zeitfenster'),
-                    URLHelper::getURL(
-                        'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
-                        [
-                            'allday' => true,
-                            'semester_id' => $this->semester->id
-                        ]
-                    ),
-                    null,
-                    ['class' => 'booking-plan-allday_view']
-                )->setActive(Request::get('allday'));
-                $sidebar->addWidget($views);
-
-                $views2 = new ViewsWidget();
-                $views2->setTitle(_('Semesterzeitraum'));
-                $views2->addLink(
-                    _('Vorlesungszeit'),
-                    URLHelper::getURL(
-                        'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
-                        [
-                            'allday'             => Request::get('allday'),
-                            'defaultDate'        => Request::get('defaultDate', date('Y-m-d')),
-                            'semester_id'        => $this->semester->id,
-                            'semester_timerange' => 'vorles'
-                        ]
-                    ),
-                    null,
-                    ['class' => 'booking-plan-vorles_view']
-                )->setActive(Request::get('semester_timerange') != 'fullsem');
-                $views2->addLink(
-                    _('gesamtes Semester'),
-                    URLHelper::getURL(
-                        'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
-                        [
-                            'allday'             => Request::get('allday'),
-                            'defaultDate'        => Request::get('defaultDate', date('Y-m-d')),
-                            'semester_id'        => $this->semester->id,
-                            'semester_timerange' => 'fullsem'
-                        ]
-                    ),
-                    null,
-                    ['class' => 'booking-plan-fullsem_view']
-                )->setActive(Request::get('semester_timerange') == 'fullsem');
-
-                $sidebar->addWidget($views2);
-            }
-        }
-        if ($this->user_has_booking_permissions) {
-            $options = new OptionsWidget();
-            $options->addCheckbox(
-                _('zukünftige Einzeltermine einblenden'),
-                $this->display_single_bookings ? 'checked' : '',
-                $this->url_for(
-                    'resources/room_planning/semester_plan/' . $this->resource->id,
+            $views = new ViewsWidget();
+            $views->setTitle(_('Zeitfenster'));
+            $views->addLink(
+                _('Standard Zeitfenster'),
+                URLHelper::getURL(
+                    'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
                     [
-                        'display_single_bookings' => '1',
-                        'semester_id' => $this->semester->id
-
-                    ]
-                ),
-                $this->url_for(
-                    'resources/room_planning/semester_plan/' . $this->resource->id,
-                    [
-                        'display_single_bookings' => null,
+                        'allday' => null,
                         'semester_id' => $this->semester->id
                     ]
                 ),
-                []
-            );
-            $sidebar->addWidget($options);
+                null,
+                ['class' => 'booking-plan-std_view']
+            )->setActive(!Request::get('allday'));
+
+            $views->addLink(
+                _('Ganztägiges Zeitfenster'),
+                URLHelper::getURL(
+                    'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
+                    [
+                        'allday' => true,
+                        'semester_id' => $this->semester->id
+                    ]
+                ),
+                null,
+                ['class' => 'booking-plan-allday_view']
+            )->setActive(Request::get('allday'));
+            $sidebar->addWidget($views);
+
+            $views2 = new ViewsWidget();
+            $views2->setTitle(_('Semesterzeitraum'));
+            $views2->addLink(
+                _('Vorlesungszeit'),
+                URLHelper::getURL(
+                    'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
+                    [
+                        'allday'             => Request::get('allday'),
+                        'defaultDate'        => Request::get('defaultDate', date('Y-m-d')),
+                        'semester_id'        => $this->semester->id,
+                        'semester_timerange' => 'vorles'
+                    ]
+                ),
+                null,
+                ['class' => 'booking-plan-vorles_view']
+            )->setActive(Request::get('semester_timerange') != 'fullsem');
+            $views2->addLink(
+                _('gesamtes Semester'),
+                URLHelper::getURL(
+                    'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
+                    [
+                        'allday'             => Request::get('allday'),
+                        'defaultDate'        => Request::get('defaultDate', date('Y-m-d')),
+                        'semester_id'        => $this->semester->id,
+                        'semester_timerange' => 'fullsem'
+                    ]
+                ),
+                null,
+                ['class' => 'booking-plan-fullsem_view']
+            )->setActive(Request::get('semester_timerange') == 'fullsem');
+            $sidebar->addWidget($views2);
         }
+
+        $options = new OptionsWidget();
+        $options->addCheckbox(
+            _('zukünftige Einzeltermine einblenden'),
+            $this->display_single_bookings ? 'checked' : '',
+            $this->url_for(
+                'resources/room_planning/semester_plan/' . $this->resource->id,
+                [
+                    'display_single_bookings' => '1',
+                    'semester_id' => $this->semester->id
+
+                ]
+            ),
+            $this->url_for(
+                'resources/room_planning/semester_plan/' . $this->resource->id,
+                [
+                    'display_single_bookings' => null,
+                    'semester_id' => $this->semester->id
+                ]
+            ),
+            []
+        );
+        $sidebar->addWidget($options);
 
         $semester_selector = new SemesterSelectorWidget(
             URLHelper::getURL(
@@ -692,8 +683,6 @@ class Resources_RoomPlanningController extends AuthenticatedController
             )
         );
         $sidebar->addWidget($semester_selector);
-
-        $sidebar = Sidebar::get();
 
         $actions = new ActionsWidget();
         $actions->addLink(
@@ -720,7 +709,8 @@ class Resources_RoomPlanningController extends AuthenticatedController
         $preparation_colour                    = ColourValue::find('Resources.BookingPlan.PreparationTime.Bg');
         $reservation_colour                    = ColourValue::find('Resources.BookingPlan.Reservation.Bg');
         $request_colour                        = ColourValue::find('Resources.BookingPlan.Request.Bg');
-        $this->table_keys                      = [
+
+        $this->table_keys = [
             [
                 'colour' => (string)$booking_colour,
                 'text'   => _('Manuelle Buchung')
