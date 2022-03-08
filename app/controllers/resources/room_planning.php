@@ -451,6 +451,22 @@ class Resources_RoomPlanningController extends AuthenticatedController
         }
         $this->rooms = RoomManager::getUserRooms($current_user);
 
+        //For the semester selector:
+        if (Request::get('semester_id')) {
+            $this->semester = Semester::find(Request::get('semester_id'));
+            if (!$this->semester) {
+                PageLayout::postError(
+                    _('Das ausgewählte Semester wurde nicht in der Datenbank gefunden!')
+                );
+                return;
+            }
+        } else {
+            $this->semester = Semester::findCurrent();
+        }
+
+        $this->current_semester_id = $this->semester->id;
+        URLHelper::addLinkParam('semester_id', $this->semester->id);
+
         if (Navigation::hasItem('/resources/planning/semester_plan')) {
             Navigation::activateItem('/resources/planning/semester_plan');
         }
@@ -458,7 +474,8 @@ class Resources_RoomPlanningController extends AuthenticatedController
         $new_resource_id = Request::get('new_resource_id');
         if ($new_resource_id) {
             $this->redirect(
-                'resources/room_planning/semester_plan/' . $new_resource_id
+                'resources/room_planning/semester_plan/' . $new_resource_id,
+                ['semester_id' => $this->semester->id]
             );
         }
 
@@ -490,18 +507,14 @@ class Resources_RoomPlanningController extends AuthenticatedController
                 $this->resource->getFullName()
             )
         );
-        $this->current_semester_id = Request::get('semester_id');
-        if ($this->current_semester_id) {
-            URLHelper::addLinkParam('semester_id', $this->semester_id);
-        } else {
-            $this->current_semester_id = Semester::findCurrent()->id;
-        }
+
         if (Request::isDialog()) {
             $this->dialog_semesters = array_reverse(Semester::getAll());
             $this->plan_link        = URLHelper::getLink(
                 'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
                 [
-                    'allday' => Request::get('allday', false)
+                    'allday' => Request::get('allday', false),
+                    'semester_id' => $this->semester->id
                 ]
             );
         }
@@ -558,17 +571,6 @@ class Resources_RoomPlanningController extends AuthenticatedController
         //Build sidebar:
         $sidebar = Sidebar::get();
 
-        $this->semester = Semester::findCurrent();
-        //For the semester selector:
-        if (Request::submitted('semester_id')) {
-            $this->semester = Semester::find(Request::get('semester_id'));
-            if (!$this->semester) {
-                PageLayout::postError(
-                    _('Das ausgewählte Semester wurde nicht in der Datenbank gefunden!')
-                );
-                return;
-            }
-        }
 
         $this->fullcalendar_studip_urls = [];
         if ($this->user_has_booking_permissions) {
@@ -581,7 +583,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
             if ($this->rooms) {
                 $room_select = new SelectWidget(
                     _('Anderen Raum wählen'),
-                    '',
+                    URLHelper::getURL('', ['semester_id' => $this->semester->id]),
                     'new_resource_id'
                 );
                 $options     = [];
@@ -591,7 +593,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
                 $room_select->setOptions($options, $this->resource->id);
                 $sidebar->addWidget($room_select);
             }
-            if ($this->resource->userHasPermission($current_user, 'user')) {
+            if ($this->resource->userHasPermission($current_user)) {
                 $views = new ViewsWidget();
                 $views->setTitle(_('Zeitfenster'));
                 $views->addLink(
@@ -599,7 +601,8 @@ class Resources_RoomPlanningController extends AuthenticatedController
                     URLHelper::getURL(
                         'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
                         [
-                            'allday' => null
+                            'allday' => null,
+                            'semester_id' => $this->semester->id
                         ]
                     ),
                     null,
@@ -612,6 +615,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
                         'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
                         [
                             'allday' => true,
+                            'semester_id' => $this->semester->id
                         ]
                     ),
                     null,
@@ -662,6 +666,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
                     'resources/room_planning/semester_plan/' . $this->resource->id,
                     [
                         'display_single_bookings' => '1',
+                        'semester_id' => $this->semester->id
 
                     ]
                 ),
@@ -669,6 +674,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
                     'resources/room_planning/semester_plan/' . $this->resource->id,
                     [
                         'display_single_bookings' => null,
+                        'semester_id' => $this->semester->id
                     ]
                 ),
                 []
@@ -680,7 +686,8 @@ class Resources_RoomPlanningController extends AuthenticatedController
             URLHelper::getURL(
                 'dispatch.php/resources/room_planning/semester_plan/' . $this->resource->id,
                 [
-                    'allday' => Request::get('allday', false)
+                    'allday' => Request::get('allday', false),
+                    'semester_id' => $this->semester->id
                 ]
             )
         );
@@ -700,7 +707,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
             _('Anderen Raum wählen'),
             URLHelper::getURL(
                 'dispatch.php/resources/room_planning/semester_plan',
-                [],
+                ['semester_id' => $this->semester->id],
                 true
             ),
             Icon::create('refresh')

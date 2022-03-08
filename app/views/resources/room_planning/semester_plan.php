@@ -24,7 +24,7 @@
                                 <? foreach ($dialog_semesters as $sem) : ?>
                                     <option value="<?= htmlReady($sem->id) ?>"
                                             title="<?= htmlReady($sem->name) ?>"
-                                            <?= ($current_semester_id == $sem->id)
+                                            <?= ($semester->id == $sem->id)
                                               ? 'selected="selected"' : '' ?>>
                                         <?= htmlReady($sem->name) ?>
                                     </option>
@@ -96,10 +96,10 @@
                 'right' => ''
             ],
             'defaultView' =>
-                in_array(Request::get("defaultView"), ['dayGridMonth','timeGridWeek','timeGridDay'])
-                ? Request::get("defaultView")
+                in_array(Request::get('defaultView'), ['dayGridMonth','timeGridWeek','timeGridDay'])
+                ? Request::get('defaultView')
                 : 'timeGridWeek',
-            'defaultDate' => ((Request::get("semester_timerange") == 'fullsem') ? date('Y-m-d',$semester->beginn) : date('Y-m-d',$semester->vorles_beginn)),
+            'defaultDate' => ((Request::get('semester_timerange') === 'fullsem') ? date('Y-m-d', $semester->beginn) : date('Y-m-d', $semester->vorles_beginn)),
             'eventSources' => [
                 [
                     'url' => URLHelper::getURL(
@@ -112,7 +112,7 @@
                     'extraParams' => [
                         'booking_types' => [0,1,2],
                         'semester_id' => $semester->id,
-                        'semester_timerange' => Request::get("semester_timerange", 'vorles'),
+                        'semester_timerange' => Request::get('semester_timerange', 'vorles'),
                         'display_requests' => 1,
                         'display_all_requests' => $display_all_requests ? 1 : 0
                     ]
