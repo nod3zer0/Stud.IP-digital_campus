@@ -58,7 +58,7 @@ class PluginEngine
     /**
      * Get instance of the plugin specified by plugin class name.
      *
-     * @param class-string $class class name of plugin
+     * @param string $class class name of plugin
      */
     public static function getPlugin ($class)
     {
@@ -84,7 +84,7 @@ class PluginEngine
      * the return values.
      *
      * @param  string $type plugin type or null (all types)
-     * @param  mixed $method the method name that should be send to all plugins
+     * @param  string $method the method name that should be send to all plugins
      * @param  mixed  a variable number of arguments
      *
      * @return array an array containing the return values

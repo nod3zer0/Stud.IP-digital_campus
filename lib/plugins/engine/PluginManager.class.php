@@ -115,7 +115,7 @@ class PluginManager
     public function setPluginEnabled ($id, $enabled, $force = false)
     {
         $info = $this->getPluginInfoById($id);
-        $plugin_class = '';
+        $plugin_class = null;
 
         // Plugin is not present or no changes
         if (!$info || $info['enabled'] == $enabled) {
@@ -156,7 +156,7 @@ class PluginManager
      * Set the navigation position of the given plugin.
      *
      * @param int $id id of the plugin
-     * @param string $position plugin navigation position
+     * @param int $position plugin navigation position
      * @return bool indicating whether any change occured
      */
     public function setPluginPosition ($id, $position)
@@ -419,7 +419,7 @@ class PluginManager
      * @param string $name      plugin name
      * @param string $class     plugin class name
      * @param string $path      plugin relative path
-     * @param string $depends   id of plugin this plugin depends on
+     * @param int $depends   id of plugin this plugin depends on
      */
     public function registerPlugin ($name, $class, $path, $depends = null)
     {
@@ -508,7 +508,7 @@ class PluginManager
     /**
      * Get meta data for the plugin specified by plugin class name.
      *
-     * @param class-string $class class name of plugin
+     * @param string $class class name of plugin
      */
     public function getPluginInfo ($class)
     {
@@ -612,7 +612,7 @@ class PluginManager
     /**
      * Get instance of the plugin specified by plugin class name.
      *
-     * @param class-string $class class name of plugin
+     * @param string $class class name of plugin
      * @return object
      */
     public function getPlugin ($class)

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * PluginRepository.class.php - query plugin meta data
  *
  * Copyright (c) 2008  Elmar Ludwig
@@ -40,7 +40,6 @@ class PluginRepository
      * Read plugin meta data from the given URL (using XML format).
      * The structure of the XML is:
      *
-     * @param string $url given url for plugin
      *
      * <plugins>
      *   <plugin name="DummyPlugin"
@@ -52,6 +51,7 @@ class PluginRepository
      *   </plugin>
      *   [...]
      * </plugins>
+     * @param string $url given url for plugin
      */
     public function readMetadata($url)
     {
