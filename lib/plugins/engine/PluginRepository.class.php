@@ -40,7 +40,6 @@ class PluginRepository
      * Read plugin meta data from the given URL (using XML format).
      * The structure of the XML is:
      *
-     *
      * <plugins>
      *   <plugin name="DummyPlugin"
      *     <release
@@ -51,6 +50,7 @@ class PluginRepository
      *   </plugin>
      *   [...]
      * </plugins>
+     *
      * @param string $url given url for plugin
      */
     public function readMetadata($url)
