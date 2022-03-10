@@ -13,21 +13,21 @@
                     <?= _('Gruppe') ?> <?= htmlReady($group) ?>
                 </option>
                 <? foreach ($actions as $id => $description): ?>
-                    <option value="<?= htmlReady($id) ?>" <? if ($id === $action_id) echo 'selected'; ?> class="nested-item">
+                    <option value="<?= htmlReady($id) ?>" <? if ($id === $action_id) echo 'selected' ?> class="nested-item">
                         <?= htmlReady($description) ?>
                     </option>
-                <? endforeach; ?>
-            <? endforeach; ?>
+                <? endforeach ?>
+            <? endforeach ?>
             </select>
         </label>
 
         <label class="col-2">
             <?= _('Darstellung') ?>
             <select name="format">
-                <option value="compact" <? if ($format === 'compact') echo 'selected'; ?>>
+                <option value="compact" <? if ($format === 'compact') echo 'selected' ?>>
                     <?= _('Kompakt') ?>
                 </option>
-                <option value="detail" <? if ($format === 'detail') echo 'selected'; ?>>
+                <option value="detail" <? if ($format === 'detail') echo 'selected' ?>>
                     <?= _('Details') ?>
                 </option>
             </select>
@@ -35,9 +35,9 @@
 
         <label class="col-2">
             <?= _('Art der Einträge') ?><br>
-            <select name="type" <? if (isset($objects)) echo 'disabled'; ?>>
+            <select name="type" <? if (isset($objects)) echo 'disabled' ?>>
             <? foreach ($types as $name => $title): ?>
-                <option value="<?= htmlReady($name) ?>" <? if ($type === $name) echo 'selected'; ?>>
+                <option value="<?= htmlReady($name) ?>" <? if ($type === $name) echo 'selected' ?>>
                     <?= htmlReady($title) ?>
                 </option>
             <? endforeach ?>
@@ -53,7 +53,7 @@
             <div class="hgroup">
                 <select name="object_id">
                 <? foreach ($objects as $object): ?>
-                    <option value="<?= htmlReady($object[0]) ?>" <? if ($object[0] === $object_id) echo 'selected'; ?>>
+                    <option value="<?= htmlReady($object[0]) ?>" <? if ($object[0] === $object_id) echo 'selected' ?>>
                         <?= htmlReady($object[1]) ?>
                     </option>
                 <? endforeach ?>
@@ -81,10 +81,6 @@
   <? if (isset($log_events)): ?>
     <br>
     <table class="default">
-        <colgroup>
-            <col style="width: 20ex">
-            <col>
-        </colgroup>
         <thead>
             <tr>
                 <th><?= _('Zeit') ?></th>
@@ -98,7 +94,7 @@
                     <?= _('keine Einträge gefunden') ?>
                 </td>
             </tr>
-        <? endif; ?>
+        <? endif ?>
         <? foreach ($log_events as $log_event): ?>
             <tr>
                 <td>
@@ -128,7 +124,7 @@
                 </td>
             </tr>
         </tfoot>
-    <? endif; ?>
+    <? endif ?>
     </table>
   <? endif ?>
 
