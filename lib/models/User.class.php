@@ -752,7 +752,6 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         $activeEvals = $evalDB->getEvaluationIDs($this->id, EVAL_STATE_ACTIVE);
         // Free datafields
         $data_fields = DataFieldEntry::getDataFieldEntries($this->id, 'user');
-        $homepageplugins = [];
 
         // Now join all available elements with visibility settings.
         $homepage_elements = [];
@@ -902,15 +901,6 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             ];
         }
 
-        if ($homepageplugins) {
-            foreach ($homepageplugins as $plugin) {
-                $homepage_elements['plugin_' . $plugin->getPluginId()] = [
-                    'name'       => $plugin->getPluginName(),
-                    'visibility' => $homepage_visibility['plugin_'.$plugin->getPluginId()] ?: get_default_homepage_visibility($this->id),
-                    'identifier' => 'plugins'
-                ];
-            }
-        }
         return $homepage_elements;
     }
 
