@@ -174,11 +174,6 @@ function poll(forced) {
                     $(this).dialog('close');
                 };
 
-                var dialogwidth = '50%';
-                if ($('html').is('.responsive-display')) {
-                    dialogwidth = '85%';
-                }
-
                 $('<div>')
                     .html(message)
                     .css({
@@ -186,13 +181,11 @@ function poll(forced) {
                         padding: '2em 0'
                     })
                     .dialog({
-                        width: dialogwidth,
+                        width: '50%',
                         modal: true,
                         buttons: buttons,
                         title: $gettext('Sie sind nicht mehr im System angemeldet.')
                     });
-
-                $('.ui-dialog-title').css('white-space', 'unset');
             } else {
                 registerNextPoll();
             }
