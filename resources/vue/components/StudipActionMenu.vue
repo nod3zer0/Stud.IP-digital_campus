@@ -106,9 +106,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss">
-.action-menu .action-menu-item a {
-    cursor: pointer;
-}
-</style>
