@@ -115,9 +115,9 @@
 class Migrator
 {
     /**
-     * Direction of migration, either "up" or "down"
+     * Direction of migration, either "up" or "down" for each branch
      *
-     * @var string
+     * @var array
      */
     private $direction;
 
@@ -205,14 +205,14 @@ class Migrator
         $this->log(
             'Currently at version %d. Now migrating %s to %d.',
             $this->schema_version->get($target_branch),
-            $this->direction,
+            $this->direction[$target_branch],
             max($this->target_versions)
         );
 
         foreach ($migrations as $number => $migration) {
             list($branch, $version) = $this->migrationBranchAndVersion($number);
 
-            $action = $this->isUp() ? 'Migrating' : 'Reverting';
+            $action = $this->isUp($branch) ? 'Migrating' : 'Reverting';
             $migration->announce("{$action} %s", $number);
 
             if ($migration->description()) {
@@ -221,16 +221,16 @@ class Migrator
             }
 
             $time_start = microtime(true);
-            $migration->migrate($this->direction);
+            $migration->migrate($this->direction[$branch]);
 
-            $action = $this->isUp() ? 'Migrated' : 'Reverted';
+            $action = $this->isUp($branch) ? 'Migrated' : 'Reverted';
             $this->log('');
             $migration->announce("{$action} in %ss", round(microtime(true) - $time_start, 3));
             $this->log('');
 
-            $this->schema_version->set($this->isDown() ? $version - 1 : $version, $branch);
+            $this->schema_version->set($this->isDown($branch) ? $version - 1 : $version, $branch);
 
-            $action = $this->isUp() ? 'MIGRATE_UP' : 'MIGRATE_DOWN';
+            $action = $this->isUp($branch) ? 'MIGRATE_UP' : 'MIGRATE_DOWN';
             StudipLog::log($action, $number, $this->schema_version->getDomain());
         }
     }
@@ -293,19 +293,17 @@ class Migrator
 
         // Determine migration direction
         foreach ($this->target_versions as $branch => $version) {
-            if ($this->schema_version->get($branch) < $version) {
-                $this->direction = 'up';
-                break;
-            } else if ($version < $this->schema_version->get($branch)) {
-                $this->direction = 'down';
-                break;
+            if ($this->schema_version->get($branch) <= $version) {
+                $this->direction[$branch] = 'up';
+            } else {
+                $this->direction[$branch] = 'down';
             }
         }
 
         // Sort migrations in correct order
         uksort($migrations, 'version_compare');
 
-        if (!$this->isUp()) {
+        if (!$this->isUp($branch)) {
             $migrations = array_reverse($migrations, true);
         }
 
@@ -347,10 +345,10 @@ class Migrator
 
         if (!isset($this->target_versions[$branch])) {
             return false;
-        } else if ($this->isUp()) {
+        } else if ($this->isUp($branch)) {
             return $current_version < $version
                 && $version <= $this->target_versions[$branch];
-        } else if ($this->isDown()) {
+        } else if ($this->isDown($branch)) {
             return $current_version >= $version
                 && $version > $this->target_versions[$branch];
         }
@@ -361,21 +359,23 @@ class Migrator
     /**
      * Am I migrating up?
      *
+     * @param string schema branch
      * @return bool  TRUE if migrating up, FALSE otherwise
      */
-    private function isUp()
+    private function isUp($branch)
     {
-        return $this->direction === 'up';
+        return $this->direction[$branch] === 'up';
     }
 
     /**
      * Am I migrating down?
      *
+     * @param string schema branch
      * @return bool  TRUE if migrating down, FALSE otherwise
      */
-    private function isDown()
+    private function isDown($branch)
     {
-        return $this->direction === 'down';
+        return $this->direction[$branch] === 'down';
     }
 
     /**
