@@ -52,6 +52,7 @@ class Room extends Resource
 
         $config['additional_fields']['building']['get']   = 'findBuilding';
         $config['registered_callbacks']['before_store'][] = 'cbValidate';
+        $config['registered_callbacks']['after_delete'][] = 'cbDeleteClipboardItems';
 
         parent::configure($config);
     }
@@ -155,7 +156,7 @@ class Room extends Resource
      * @param int $limit A limit for the result set.
      * @param Room[] $searchable_rooms An (optional) array of rooms
      *     which will limit the search to the rooms in the array.
-     * @param Array $properties An array providing request properties
+     * @param array $properties An array providing request properties
      *     and their values in case the request doesn't have (the desired)
      *     properties set.
      *
@@ -324,7 +325,7 @@ class Room extends Resource
 
 
     /**
-     * Checks wheter rooms with public booking plans exist.
+     * Checks whether rooms with public booking plans exist.
      *
      * @return bool True, if at least one room has a public booking plan,
      *     false otherwise.
@@ -506,6 +507,11 @@ class Room extends Resource
         return true;
     }
 
+    public function cbDeleteClipboardItems()
+    {
+        ClipboardItem::deleteBySQL('range_id = ?', [$this->id]);
+    }
+
 
     public function getRequiredPropertyNames()
     {
@@ -554,7 +560,7 @@ class Room extends Resource
      *
      * @param Resource $resource The resource which shall be added as child.
      *
-     * @return True, if the resource could be added as child, false otherwise.
+     * @return bool True, if the resource could be added as child, false otherwise.
      * @throws InvalidResourceException If the specified resource belongs to
      *     the resource classes Room, Building or Location.
      *

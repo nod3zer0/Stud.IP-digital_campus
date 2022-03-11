@@ -60,7 +60,7 @@ class Clipboard extends \RESTAPI\RouteMap
         if ($clipboard->user_id != $GLOBALS['user']->id) {
             //Thou shalt not delete clipboards
             //which don't belong to you!
-            throw new AccessDeniedException();
+            throw new \AccessDeniedException();
         }
 
         $name = $this->data['name'];
@@ -69,8 +69,6 @@ class Clipboard extends \RESTAPI\RouteMap
         }
 
         $clipboard->name = $name;
-
-        $success = false;
 
         if ($clipboard->isDirty()) {
             $success = $clipboard->store();
@@ -107,10 +105,10 @@ class Clipboard extends \RESTAPI\RouteMap
             $this->notFound(_('Ungültige Merkzettel-ID!'));
         }
 
-        if ($clipboard->user_id != $GLOBALS['user']->id) {
+        if ($clipboard->user_id !== $GLOBALS['user']->id) {
             //Thou shalt not delete items of clipboards
             //which don't belong to you!
-            throw new AccessDeniedException();
+            throw new \AccessDeniedException();
         }
 
         if (!$clipboard->delete()) {
@@ -136,7 +134,7 @@ class Clipboard extends \RESTAPI\RouteMap
         if ($clipboard->user_id != $GLOBALS['user']->id) {
             //Thou shalt not add items to clipboards
             //which don't belong to you!
-            throw new AccessDeniedException();
+            throw new \AccessDeniedException();
         }
 
         $range_id = \Request::get('range_id');
@@ -162,7 +160,7 @@ class Clipboard extends \RESTAPI\RouteMap
                 $result['widget_id'] = $widget_id;
             }
             return $result;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->halt(500, $e->getMessage());
         }
     }
@@ -183,7 +181,7 @@ class Clipboard extends \RESTAPI\RouteMap
         if ($clipboard->user_id != $GLOBALS['user']->id) {
             //Thou shalt not delete items of clipboards
             //which don't belong to you!
-            throw new AccessDeniedException();
+            throw new \AccessDeniedException();
         }
 
         if ($clipboard->removeItem($range_id)) {

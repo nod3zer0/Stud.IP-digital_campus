@@ -1,3 +1,5 @@
+import {$gettext} from './gettext';
+
 const Clipboard = {
 
     current_delete_icon: null,
@@ -19,7 +21,7 @@ const Clipboard = {
             var current_clipboard_id = jQuery(clipboard).attr('data-id');
 
             if (current_clipboard_id) {
-                if (current_clipboard_id == selected_clipboard_id) {
+                if (current_clipboard_id === selected_clipboard_id) {
                     jQuery(clipboard).removeClass('invisible');
                     if (jQuery(clipboard).find(".empty-clipboard-message").hasClass("invisible")) {
                         jQuery("#clipboard-group-container").find('.widget-links').removeClass('invisible');
@@ -213,7 +215,7 @@ const Clipboard = {
             //don't belong on the displayed page. That's all.
 
             allowed_classes = allowed_classes.replace(' ', '').split(',');
-            if (allowed_classes.indexOf(range_type) == -1) {
+            if (allowed_classes.indexOf(range_type) === -1) {
                 //The dropped item does not belong to the right class.
                 //Set the "not allowed" CSS class
                 //for the "not allowed" animation.
@@ -432,7 +434,7 @@ const Clipboard = {
     confirmRemoveClick: function(event) {
         STUDIP.Clipboard.current_delete_icon = event.target;
         STUDIP.Dialog.confirm(
-            'Sind Sie sicher?',
+            $gettext('Sind Sie sicher?'),
             STUDIP.Clipboard.handleRemoveClick
         );
     },
@@ -475,7 +477,7 @@ const Clipboard = {
     confirmRemoveItemClick: function(event) {
         STUDIP.Clipboard.current_delete_icon = event.target;
         STUDIP.Dialog.confirm(
-            'Sind Sie sicher?',
+            $gettext('Sind Sie sicher?'),
             STUDIP.Clipboard.removeItem
         );
     },
