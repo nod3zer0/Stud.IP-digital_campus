@@ -49,7 +49,7 @@ class CoreScm extends CorePlugin implements StudipModule
 
         if ($result['count']) {
             if ($result['neue']) {
-                $image = Icon::create('infopage+new', Icon::ROLE_NEW);
+                $image = Icon::create('infopage', Icon::ROLE_NEW);
                 $nav->setBadgeNumber($result['neue']);
                 if ($result['count'] == 1) {
                     $title = $scm->tab_name . _(' (geändert)');

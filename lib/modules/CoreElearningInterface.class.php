@@ -41,7 +41,7 @@ class CoreElearningInterface extends CorePlugin implements StudipModule
         if (!empty($result)) {
             $nav = new Navigation(_('Lernmodule'), 'dispatch.php/course/elearning/show');
             if ($result['neue']) {
-                $nav->setImage(Icon::create('learnmodule+new', Icon::ROLE_ATTENTION), [
+                $nav->setImage(Icon::create('learnmodule', Icon::ROLE_ATTENTION), [
                     'title' => sprintf(
                         ngettext(
                             '%1$d Lernmodul, %2$d neues',

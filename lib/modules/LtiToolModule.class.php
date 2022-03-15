@@ -41,7 +41,7 @@ class LtiToolModule extends CorePlugin implements StudipModule, SystemPlugin, Pr
         $changed = LtiData::countBySQL('course_id = ? AND chdate > ?', [$course_id, $last_visit]);
 
         $icon = $changed
-              ? Icon::create('link-extern+new', Icon::ROLE_NEW)
+              ? Icon::create('link-extern', Icon::ROLE_NEW)
               : Icon::create('link-extern', Icon::ROLE_CLICKABLE);
 
         $navigation = new Navigation($title, 'dispatch.php/course/lti');

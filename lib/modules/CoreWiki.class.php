@@ -59,7 +59,7 @@ class CoreWiki extends CorePlugin implements StudipModule
         $nav = new Navigation(_('Wiki'));
         if ($result['neue']) {
             $nav->setURL('wiki.php', ['view' => 'listnew']);
-            $nav->setImage(Icon::create('wiki+new', Icon::ROLE_ATTENTION, [
+            $nav->setImage(Icon::create('wiki', Icon::ROLE_ATTENTION, [
                 'title' => sprintf(
                     ngettext(
                         '%1$d Wiki-Seite, %2$d Änderung(en)',

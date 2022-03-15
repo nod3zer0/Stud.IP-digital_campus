@@ -43,7 +43,7 @@ class CoreOverview extends CorePlugin implements StudipModule
         $nav = new Navigation(_('Ankündigungen'), '');
         if ($result['neue']) {
             $nav->setURL('?new_news=true');
-            $nav->setImage(Icon::create('news+new', Icon::ROLE_ATTENTION), [
+            $nav->setImage(Icon::create('news', Icon::ROLE_ATTENTION), [
                 'title' => sprintf(
                     ngettext(
                         '%1$d Ankündigung, %2$d neue',

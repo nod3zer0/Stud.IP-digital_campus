@@ -125,7 +125,7 @@ class MyRealmModel
         if ($neue || $count > 0) {
             $nav = new Navigation('vote', '#vote');
             if ($neue) {
-                $nav->setImage(Icon::create('vote+new', Icon::ROLE_ATTENTION, [
+                $nav->setImage(Icon::create('vote', Icon::ROLE_ATTENTION, [
                     'title' => sprintf(
                         ngettext(
                             '%1$u Fragebogen, %2$u neuer',
@@ -138,7 +138,7 @@ class MyRealmModel
                 ]));
                 $nav->setBadgeNumber($neue);
             } else if ($count) {
-                $nav->setImage(Icon::create('vote', Icon::ROLE_INACTIVE, [
+                $nav->setImage(Icon::create('vote', Icon::ROLE_CLICKABLE, [
                     'title' => sprintf(
                         ngettext(
                             '%u Fragebogen',

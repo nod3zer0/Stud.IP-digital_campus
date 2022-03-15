@@ -89,7 +89,7 @@ class CoreParticipants extends CorePlugin implements StudipModule
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
         if ($result['neue']) {
-            $navigation->setImage(Icon::create('persons+new', Icon::ROLE_ATTENTION), [
+            $navigation->setImage(Icon::create('persons', Icon::ROLE_ATTENTION), [
                 'title' => sprintf(
                     ngettext(
                         '%1$d Teilnehmende/r, %2$d neue/r',

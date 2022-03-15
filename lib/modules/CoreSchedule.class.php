@@ -47,7 +47,7 @@ class CoreSchedule extends CorePlugin implements StudipModule
 
         $nav = new Navigation(_('Ablaufplan'), 'dispatch.php/course/dates');
         if ($result['neue']) {
-            $nav->setImage(Icon::create('schedule+new', Icon::ROLE_ATTENTION), [
+            $nav->setImage(Icon::create('schedule', Icon::ROLE_ATTENTION), [
                 'title' => sprintf(
                     ngettext(
                         '%1$d Termin, %2$d neuer',

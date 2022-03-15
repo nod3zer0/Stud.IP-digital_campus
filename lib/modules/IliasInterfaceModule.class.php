@@ -70,7 +70,7 @@ class IliasInterfaceModule extends CorePlugin implements StudipModule, SystemPlu
         $title = CourseConfig::get($course_id)->getValue('ILIAS_INTERFACE_MODULETITLE');
         $nav = new Navigation($title, 'dispatch.php/course/ilias_interface/index');
         if ($result['neue']) {
-            $nav->setImage(Icon::create('learnmodule+new', Icon::ROLE_ATTENTION), [
+            $nav->setImage(Icon::create('learnmodule', Icon::ROLE_ATTENTION), [
                 'title' => sprintf(
                     ngettext(
                         '%1$d Lernobjekt, %2$d neues',
