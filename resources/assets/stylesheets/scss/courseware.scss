@@ -1875,19 +1875,6 @@ c o m p a n i o n  s m a l l  e n d
 /* * * * * * * * * *
 v i e w  w i d g e t
 * * * * * * * * * * */
-.cw-action-widget,
-.cw-view-widget {
-    li {
-        color: $base-color;
-        &:hover {
-            color: $active-color;
-            cursor: pointer;
-        }
-        &.active {
-            padding-left: 10px !important;
-        }
-    }
-}
 .cw-action-widget {
     .cw-action-widget-show-toc {
         @include background-icon(table-of-contents, clickable);
