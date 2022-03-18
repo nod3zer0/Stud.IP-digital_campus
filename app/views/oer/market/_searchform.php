@@ -155,7 +155,7 @@
 
 </div>
 
-<div v-if="results !== false && results.length === 0" class="oer_no_results">
+<div v-if="results && results.length === 0" class="oer_no_results">
     <?= MessageBox::info(_('Keine Ergebnisse gefunden.'))?>
 </div>
 
