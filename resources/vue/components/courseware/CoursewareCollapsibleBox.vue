@@ -1,6 +1,6 @@
 <template>
     <div class="cw-collapsible" :class="{ 'cw-collapsible-open': isOpen }">
-        <a href="#" :aria-expanded="isOpen" @click="isOpen = !isOpen">
+        <a href="#" :aria-expanded="isOpen" @click.prevent="isOpen = !isOpen">
             <header :class="{ 'cw-collapsible-open': isOpen }" class="cw-collapsible-title">
                 <studip-icon v-if="icon" :shape="icon" /> {{ title }}
             </header>
