@@ -100,7 +100,9 @@ class Text extends BlockType
                 $file = $this->extractFile($element->getAttribute('src'));
                 if ($file !== null) {
                     $file_copy_id = $this->copyFileById($file->id, $rangeId);
-                    $element->setAttribute('src', \FileRef::find($file_copy_id)->getDownloadURL());
+                    if ($file_copy_id) {
+                        $element->setAttribute('src', \FileRef::find($file_copy_id)->getDownloadURL());
+                    }
                 }
             }
             $payload['text'] = $document->saveHTML();
