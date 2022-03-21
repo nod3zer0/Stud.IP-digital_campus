@@ -95,9 +95,6 @@ class Oer_EndpointsController extends StudipController
             if ($host_data) {
                 $host = OERHost::findOneByUrl($url);
                 if (!$host) {
-                    $host = OERHost::findOneByPublic_key($host_data['public_key']);
-                }
-                if (!$host) {
                     $host = new OERHost();
                 }
                 $host['name'] = $host_data['name'];
