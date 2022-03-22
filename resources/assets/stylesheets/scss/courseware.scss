@@ -4469,13 +4469,6 @@ toc block
     }
 }
 
-.cw-block-table-of-contents-tiles.cw-tiles  {
-    .tile {
-        margin: 0 3px 5px 0;
-
-    }
-}
-
 .cw-container-colspan-half {
     .cw-block-table-of-contents-tiles.cw-tiles  {
         .tile {
@@ -4518,11 +4511,13 @@ cw tiles
     display: flex;
     flex-wrap: wrap;
     padding-left: 0;
+    row-gap: 5px;
+    column-gap: 5px;
 
     .tile {
         height: 420px;
         width: 270px;
-        margin: 0 5px 5px 0;
+        margin: 0;
         background-color: $base-color;
         cursor: pointer;
         &:last-child {
