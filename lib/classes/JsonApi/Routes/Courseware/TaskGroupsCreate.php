@@ -189,6 +189,7 @@ class TaskGroupsCreate extends JsonApiController
 
             // copy task template
             $taskElement = $taskTemplate->copy($lecturer, $target);
+            $taskElement->title = $title;
             $taskElement->purpose = 'task';
             $taskElement->store();
 
