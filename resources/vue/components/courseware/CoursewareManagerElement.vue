@@ -72,10 +72,10 @@
                     itemType="container"
                 />
             </courseware-collapsible-box>
-            <courseware-collapsible-box :open="true" :title="$gettext('Seiten')" class="cw-manager-element-subchapters">
+            <courseware-collapsible-box :open="true" :title="$gettext('Unterseiten')" class="cw-manager-element-subchapters">
                 <div v-if="canSortChildren">
                     <button v-show="!sortChildrenActive && isCurrent" class="button sort" @click="sortChildren">
-                        <translate>Seiten sortieren</translate>
+                        <translate>Unterseiten sortieren</translate>
                     </button>
                     <button v-show="sortChildrenActive && isCurrent" class="button accept" @click="storeChildrenSort">
                         <translate>Sortieren beenden</translate>
@@ -85,7 +85,7 @@
                     </button>
                 </div>
                 <p v-if="!hasChildren">
-                    <translate>Dieses Element enthält keine Seiten.</translate>
+                    <translate>Dieses Element enthält keine Unterseiten.</translate>
                 </p>
                 <transition-group name="cw-sort-ease" tag="div">
                     <courseware-manager-element-item

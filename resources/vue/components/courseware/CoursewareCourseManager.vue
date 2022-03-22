@@ -39,7 +39,7 @@
                             gibt an, welche Seite Sie gerade ausgewählt haben. Darunter befinden
                             sich die Abschnitte der Seite und innerhalb dieser deren Blöcke.
                             Möchten Sie eine Seite, die unterhalb der gewählten liegt bearbeiten,
-                            können Sie diese über die Schaltflächen im Bereich "Seiten" wählen.
+                            können Sie diese über die Schaltflächen im Bereich "Unterseiten" wählen.
                             Über der Überschrift wird eine Navigation eingeblendet, mit der Sie beliebig 
                             weit hoch in der Hierarchie springen können.
                         </translate></p>
@@ -47,7 +47,7 @@
                     <courseware-collapsible-box :title="$gettext('Wie sortiere ich Objekte?')">
                         <p><translate>
                             Seiten, Abschnitte und Blöcke lassen sich in ihrer Reihenfolge sortieren.
-                            Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche "Seiten sortieren",
+                            Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche "Unterseiten sortieren",
                             "Abschnitte sortieren" oder "Blöcke sortieren".
                             An den Objekten werden Pfeile angezeigt, mit diesen können die Objekte an die gewünschte
                             Position gebracht werden. Um die neue Sortierung zu speichern, wählen Sie "Sortieren beenden".
