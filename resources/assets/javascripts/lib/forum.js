@@ -1,10 +1,4 @@
-/*global window, $, jQuery, document, _ */
-/* ------------------------------------------------------------------------
- * the global STUDIP namespace
- * ------------------------------------------------------------------------ */
-var STUDIP = STUDIP || {};
-
-STUDIP.Forum = {
+const Forum = {
     confirmDialog: null,
     current_area_id: null,
     current_category_id: null,
@@ -890,3 +884,5 @@ jQuery.fn.serializeObject = function() {
     });
     return o;
 };
+
+export default Forum;

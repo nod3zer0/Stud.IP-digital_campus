@@ -15,6 +15,14 @@
 class Blubber extends StudIPPlugin implements StandardPlugin
 {
     /**
+     * Plugin URL for CorePlugins is ABSOLUTE_URI_STUDIP.
+     */
+    public function getPluginURL()
+    {
+        return $GLOBALS['ABSOLUTE_URI_STUDIP'];
+    }
+
+    /**
      * Returns a navigation for the tab displayed in the course.
      * @param string $course_id of the course
      * @return \Navigation

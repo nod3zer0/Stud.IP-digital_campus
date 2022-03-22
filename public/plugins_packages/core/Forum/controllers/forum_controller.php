@@ -46,13 +46,6 @@ class ForumController extends StudipController {
         PageLayout::setHelpKeyword('Basis.Forum');
         PageLayout::setTitle(Context::getHeaderLine() .' - '. _('Forum'));
 
-        $this->AVAILABLE_DESIGNS = ['web20', 'studip'];
-        if ($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] && $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] != '/') {
-            $this->picturepath = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] .'/'. $this->dispatcher->trails_root . '/img';
-        } else {
-            $this->picturepath = '/'. $this->dispatcher->trails_root . '/img';
-        }
-
         // the default for displaying timestamps
         $this->time_format_string = "%a %d. %B %Y, %H:%M";
         $this->time_format_string_short = "%d.%m.%Y, %H:%M";

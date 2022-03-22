@@ -195,12 +195,12 @@
 
                     <!-- Online-Status -->
                     <? $status = ForumHelpers::getOnlineStatus($post['user_id']) ?>
-                    <? if ($status == 'available') : ?>
-                        <img src="<?= $picturepath ?>/community.png" title="<?= _('Online') ?>">
-                    <? elseif ($status == 'away') : ?>
-                        <?= Icon::create('community', 'inactive', ['title' => _('Abwesend')])->asImg() ?>
-                    <? elseif ($status == 'offline') : ?>
-                        <?= Icon::create('community', 'info', ['title' => _('Offline')])->asImg() ?>
+                    <? if ($status === 'available') : ?>
+                        <?= Icon::create('community', Icon::ROLE_STATUS_GREEN, ['title' => _('Online')]) ?>
+                    <? elseif ($status === 'away') : ?>
+                        <?= Icon::create('community', Icon::ROLE_INACTIVE, ['title' => _('Abwesend')]) ?>
+                    <? elseif ($status === 'offline') : ?>
+                        <?= Icon::create('community', Icon::ROLE_INFO, ['title' => _('Offline')]) ?>
                     <? endif ?>
 
                     <a href="<?= URLHelper::getLink('dispatch.php/profile', ['username' => get_username($post['user_id'])])?>">

@@ -31,17 +31,11 @@ NotificationCenter::addObserver('ForumActivity', 'deleteEntry', 'ForumBeforeDele
 class CoreForum extends StudipPlugin implements ForumModule
 {
     /**
-     * This method dispatches all actions.
-     *
-     * @param string $unconsumed_path  part of the dispatch path that was not consumed
+     * Plugin URL for CorePlugins is ABSOLUTE_URI_STUDIP.
      */
-    public function perform($unconsumed_path)
+    public function getPluginURL()
     {
-        // Add JS and StyleSheet to header
-        $this->addScript('javascript/forum.js');
-        $this->addStylesheet('stylesheets/forum.scss');
-
-        parent::perform($unconsumed_path);
+        return $GLOBALS['ABSOLUTE_URI_STUDIP'];
     }
 
     /* interface method */

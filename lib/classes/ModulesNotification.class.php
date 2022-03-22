@@ -55,7 +55,8 @@ class ModulesNotification
                 $this->registered_notification_modules[$id]['icon'] = Icon::create('news');
             }
             if (!is_object($this->registered_notification_modules[$id]['icon'])) {
-                $this->registered_notification_modules[$id]['icon'] = Icon::create($this->registered_notification_modules[$id]['icon']);
+                $icon = $module->getPluginURL() . '/' . $this->registered_notification_modules[$id]['icon'];
+                $this->registered_notification_modules[$id]['icon'] = Icon::create($icon);
             }
         }
         $this->registered_notification_modules[-1] =

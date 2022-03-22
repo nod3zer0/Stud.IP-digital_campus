@@ -1,7 +1,7 @@
 <tr data-area-id="<?= $entry['topic_id'] ?>" <?= (ForumPerm::has('sort_area', $seminar_id)) ? 'class="movable"' : '' ?>>
     <td class="icon">
     <? if (ForumPerm::has('sort_area', $seminar_id)) : ?>
-        <img src="<?= $picturepath ?>/anfasser_48.png" class="handle js">
+        <?= Assets::img('anfasser_48.png', ['class' => 'handle js']) ?>
     <? endif ?>
 
         <a href="<?= $controller->link_for("index/index/{$entry['topic_id']}#{$entry['topic_id']}") ?>">
