@@ -52,10 +52,40 @@ class Biest402 extends Migration
     public function updateTour($tour_id, $tour, $settings, $steps) {
         $tour_changed = $this->isTourChanged($tour_id);
         if ($tour_changed) {
-            $tour_id = md5(uniqid('tours', 1));
+            $old_tour_id = md5(uniqid('tours', 1));
+            $query = "UPDATE `help_tours` SET `tour_id` = :old_tour_id, `name` = CONCAT(`name`, ' (outdated)') WHERE `tour_id` = :tour_id";
+            DBManager::get()->execute($query, [
+                'old_tour_id' => $old_tour_id,
+                'tour_id'     => $tour_id,
+            ]);
+
+            $query = "UPDATE `help_tour_steps` SET `tour_id` = :old_tour_id WHERE `tour_id` = :tour_id";
+            DBManager::get()->execute($query, [
+                'old_tour_id' => $old_tour_id,
+                'tour_id'     => $tour_id,
+            ]);
+
+            $query = "UPDATE `help_tour_audiences` SET `tour_id` = :old_tour_id WHERE `tour_id` = :tour_id";
+            DBManager::get()->execute($query, [
+                'old_tour_id' => $old_tour_id,
+                'tour_id'     => $tour_id,
+            ]);
+
+            $query = "UPDATE `help_tour_settings` SET `tour_id` = :old_tour_id, `active` = 0 WHERE `tour_id` = :tour_id";
+            DBManager::get()->execute($query, [
+                'old_tour_id' => $old_tour_id,
+                'tour_id'     => $tour_id,
+            ]);
+
+            $query = "UPDATE `help_tour_user` SET `tour_id` = :old_tour_id WHERE `tour_id` = :tour_id";
+            DBManager::get()->execute($query, [
+                'old_tour_id' => $old_tour_id,
+                'tour_id'     => $tour_id,
+            ]);
         } else {
             $this->removeTour($tour_id, false);
         };
+
         $query = "INSERT INTO `help_tours` (`global_tour_id`, `tour_id`, `name`, `description`, `type`, `roles`, `version`, `language`, `studip_version`, `installation_id`, `author_email`, `mkdate`, `chdate`) VALUES " . $tour;
         $statement = DBManager::get()->prepare($query);
         $statement->execute(['tour_id' => $tour_id]);
@@ -67,15 +97,6 @@ class Biest402 extends Migration
         $query = "INSERT INTO `help_tour_steps` (`tour_id`, `step`, `title`, `tip`, `orientation`, `interactive`, `css_selector`, `route`, `action_prev`, `action_next`, `author_email`, `mkdate`, `chdate`) VALUES " . $steps;
         $statement = DBManager::get()->prepare($query);
         $statement->execute(['tour_id' => $tour_id]);
-
-        if ($tour_changed) {
-            $query = "UPDATE `help_tour_settings` SET `active` = 0 WHERE `tour_id` = :tour_id";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(['tour_id' => $tour_id]);
-            $query = "UPDATE `help_tours` SET `name` = CONCAT(`name`, ' (5.0)') WHERE `tour_id` = :tour_id";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(['tour_id' => $tour_id]);
-        }
     }
 
     public function up()
@@ -132,7 +153,7 @@ class Biest402 extends Migration
             ('a848744bde4dac47ec2e8b383155381d', 6, '', 'Über die Terminvergabe können Sie freie Termine auf ihrer Profilseite veröffentlichen, die dann von anderen gebucht werden können, z.B. als Sprechstunde. Falls unterstützt, können Sie zu jedem Termin Videofunktionen einschalten.', 'B', 0, '', 'dispatch.php/profilemodules', '', '', 'dozent@studip.de', 1630577268, 1630577268),
             ('a848744bde4dac47ec2e8b383155381d', 7, '', 'Das waren nur die wichtigsten Änderungen. Stud.IP 5 enthält noch zahlreiche weitere Verbesserungen, die Ihnen die Arbeit hoffentlich etwas erleichtern. Schreiben Sie Feedback gerne an die Entwicklungscommunity unter feedback@studip.de', 'B', 0, '', 'dispatch.php/start', '', '', 'root@localhost', 1630577268, 1630577268)
         ");
-/* */
+
         $tour_id = '21f487fa74e3bfc7789886f40fe4131a';
         $tour = "(:tour_id, :tour_id, 'Forum nutzen', 'Die Inhalte dieser Tour stammen aus der alten Tour des Forums (Sidebar > Aktionen > Tour starten).', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '5.0', '', '', 1405415746, 0)";
         $settings = "(:tour_id, 1, 'standard', NULL, NULL)";
