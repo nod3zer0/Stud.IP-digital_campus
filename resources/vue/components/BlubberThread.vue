@@ -1,5 +1,5 @@
 <template>
-    <div class="blubber_thread"
+    <div class="blubber_thread" :class="{dragover: dragging}"
          :id="'blubberthread_' + thread_data.thread_posting.thread_id"
          @dragover.prevent="dragover" @dragleave.prevent="dragleave"
          @drop.prevent="upload">
@@ -92,7 +92,8 @@
         data: function () {
             return {
                 already_loading_up: 0,
-                already_loading_down: 0
+                already_loading_down: 0,
+                dragging: false
             };
         },
         props: ['thread_data'],
@@ -211,7 +212,13 @@
                 });
             },
             upload (event) {
-                let files = typeof event.dataTransfer !== 'undefined'
+                const viaDragAndDrop = event.dataTransfer !== undefined;
+
+                if (viaDragAndDrop && !event.dataTransfer.types.includes('Files')) {
+                    return;
+                }
+
+                let files = viaDragAndDrop
                     ? event.dataTransfer.files // file drop
                     : event.target.files; // upload button
                 let thread = this;
@@ -245,11 +252,11 @@
 
                 this.dragleave();
             },
-            dragover () {
-                $(this.$el).addClass('dragover');
+            dragover (event) {
+                this.dragging = event.dataTransfer.types.includes('Files');
             },
-            dragleave () {
-                $(this.$el).removeClass('dragover');
+            dragleave (event) {
+                this.dragging = false;
             },
             getUserProfileURL (user_id, username) {
                 if (username) {
