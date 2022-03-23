@@ -53,19 +53,19 @@ class Embed extends BlockType
 
         $oembedRequest = $this->buildOembedRequest($payload['source'], $payload['url']);
         $payload['oembed_request'] = $oembedRequest;
-        $request = $this->curlGet($oembedRequest);
         $payload['oembed-unauthorized'] = false;
         $payload['oembed-not-found'] = false;
-
-        if ('Unauthorized' == $request) {
+        $payload['oembed'] = '';
+        $payload['request'] = '';
+        $request = \FileManager::fetchURLMetadata($oembedRequest);
+        if ($request['response_code'] === 200) {
+            $payload['request'] = file_get_contents($oembedRequest, false, get_default_http_stream_context($oembedRequest));
+            $payload['oembed'] = json_decode($payload['request']);
+        } elseif ($request['response_code'] === 401) {
             $payload['oembed_unauthorized'] = true;
-        }
-        if ('Not Found' == $request) {
+        } else {
             $payload['oembed_not_found'] = true;
         }
-        $payload['oembed'] = json_decode($request);
-        $payload['request'] = $request;
-
         return $payload;
     }
 
@@ -93,18 +93,6 @@ class Embed extends BlockType
         ];
 
         return $endPoints[$source].'?url='.rawurlencode($url).'&format=json';
-    }
-
-    private function curlGet($url)
-    {
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-        $return = curl_exec($curl);
-        curl_close($curl);
-
-        return $return;
     }
 
     public static function getCategories(): array
