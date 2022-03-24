@@ -89,14 +89,14 @@ class Oer_EndpointsController extends StudipController
 
     protected function refreshHost($url)
     {
+        $host = OERHost::findOneByUrl($url);
+        if (!$host) {
+            return;
+        }
         $host_data = file_get_contents($url."fetch_public_host_key");
         if ($host_data) {
             $host_data = json_decode($host_data, true);
             if ($host_data) {
-                $host = OERHost::findOneByUrl($url);
-                if (!$host) {
-                    $host = new OERHost();
-                }
                 $host['name'] = $host_data['name'];
                 $host['url'] = Request::get("from");
                 $host['public_key'] = $host_data['public_key'];
