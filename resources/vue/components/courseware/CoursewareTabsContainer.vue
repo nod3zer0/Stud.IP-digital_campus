@@ -227,6 +227,7 @@ export default {
         async resetSort() {
             await this.unlockObject({ id: this.currentContainer.id, type: 'courseware-containers' });
             this.sortMode = false;
+            this.initCurrentData();
         },
         component(block) {
             if (block.attributes) {
