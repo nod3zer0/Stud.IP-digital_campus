@@ -5,7 +5,10 @@
                 <translate>Lesen</translate>
             </a>
         </li>
-        <li :class="{ active: editView }">
+        <li
+            v-if="canEdit"
+            :class="{ active: editView }"
+        >
             <a href="#" @click="setEditView">
                 <translate>Bearbeiten</translate>
             </a>
@@ -40,7 +43,13 @@ export default {
         },
         discussView() {
             return this.viewMode === 'discuss';
-        }
+        },
+        canEdit() {
+            if (!this.structuralElement) {
+                return false;
+            }
+            return this.structuralElement.attributes['can-edit'];
+        },
     },
     methods: {
         ...mapActions({
