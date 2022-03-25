@@ -137,7 +137,7 @@ export default {
             isDragging: false,
             dragOptions: {
                 animation: 0,
-                group: "description",
+                group: this.container.id,
                 disabled: false,
                 ghostClass: "block-ghost"
             },
