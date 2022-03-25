@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            :defaultGrade="false"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -18,7 +19,7 @@
                         {{ currentSuccess }}
                     </div>
                     <div class="cw-block-download-file-item">
-                        <a target="_blank" :download="currentFile.name" :href="currentFile.download_url">
+                        <a target="_blank" :download="currentFile.name" :href="currentFile.download_url" @click="handleDownload">
                             <span class="cw-block-file-info" :class="['cw-block-file-icon-' + currentFile.icon]">
                                 {{ currentFile.name }}
                             </span>
@@ -93,7 +94,6 @@ export default {
             currentGrade: '',
             currentFileId: '',
             currentFile: null,
-            userHasDownloaded: false, // Todo set and get user_data
         };
     },
     computed: {
@@ -101,6 +101,7 @@ export default {
             fileRefById: 'file-refs/byId',
             urlHelper: 'urlHelper',
             relatedTermOfUse: 'terms-of-use/related',
+            getUserDataById: 'courseware-user-data-fields/byId',
         }),
         title() {
             return this.block?.attributes?.payload?.title;
@@ -117,9 +118,24 @@ export default {
         fileId() {
             return this.block?.attributes?.payload?.file_id;
         },
+        userData() {
+            return this.getUserDataById({ id: this.block.relationships['user-data-field'].data.id });
+        },
+        userHasDownloaded() {
+            let downloaded = this.userData?.attributes?.payload?.downloaded;
+
+            if (downloaded === undefined) {
+                return false;
+            }
+
+            return downloaded;
+        }
     },
     mounted() {
         this.initCurrentData();
+        if (this.userProgress && this.userProgress.attributes.grade === 0 && !this.grade) {
+            this.userProgress = 1;
+        }
     },
     methods: {
         ...mapActions({
@@ -219,6 +235,27 @@ export default {
                 blockId: this.block.id,
                 containerId: this.block.relationships.container.data.id,
             });
+        },
+        handleDownload() {
+            let data = {
+                id: this.userData.id,
+                type: 'courseware-user-data-fields',
+                relationships: {
+                    block: {
+                        data: {
+                            id: this.block.id,
+                            type: this.block.type
+                        }
+                    }
+                },
+                attributes: {
+                    payload: {
+                        downloaded: true
+                    }
+                }
+            };
+            this.$store.dispatch('courseware-user-data-fields/update', data);
+            this.userProgress = 1;
         },
     },
 };
