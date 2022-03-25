@@ -129,6 +129,7 @@ export default {
 
             const selectedId = to.params?.id;
             this.selectStructuralElement(selectedId);
+            window.scrollTo({ top: 0 });
         },
         async structuralElements(newElements, oldElements) {
             // compute order of structural elements once more
