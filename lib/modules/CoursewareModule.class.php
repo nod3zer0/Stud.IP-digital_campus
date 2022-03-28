@@ -127,19 +127,27 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule,
     public function getMetadata()
     {
         return [
-            'summary' => _('Interaktive, multimediale Lernmodule erstellen und bereitstellen.'),
-            'description' => _('Mit der Courseware können Sie interaktive, multimediale Lernmodule erstellen und nutzen.
-                Die Module sind in Kapitel, Unterkapitel und Abschnitte unterteilt und können aus Textblöcken, Videosequenzen,
-                Aufgaben (benötigt das Vips-Plugin) und Kommunkationselementen bestehen. Fertige Module können exportiert und
-                in andere Kurse oder andere Installationen importiert werden.'),
+            'summary' => _('Lerninhalte erstellen, verteilen und erleben'),
+            'description' => _('Mit Courseware können Sie interaktive multimediale Lerninhalte erstellen und nutzen. Die
+                Lerninhalte lassen sich hierarchisch unterteilen und können aus Texten, Videosequenzen, Aufgaben,
+                Kommunikationselementen und einer Vielzahl weiterer Elementen bestehen. Fertige Lerninhalte können exportiert
+                und in andere Kurse oder andere Installationen importiert werden. Courseware ist nicht nur für digitale Formate
+                geeignet, sondern kann auch genutzt werden, um klassische Präsenzveranstaltungen mit Online-Anteilen zu ergänzen.
+                Formate wie integriertes Lernen (Blended Learning) lassen sich mit Courseware ideal umsetzen. Kollaboratives Lernen
+                kann dank Schreibrechtevergabe und dem Einsatz von Courseware in Studiengruppen realisiert werden.'
+            ),
             'displayname' => _('Courseware'),
             'category' => _('Lehr- und Lernorganisation'),
             // 'keywords' => '',
-            'descriptionshort' => _('Interaktive, multimediale Lernmodule erstellen und bereitstellen.'),
-            'descriptionlong' => _('Mit der Courseware können Sie interaktive, multimediale Lernmodule erstellen und nutzen.
-                Die Module sind in Kapitel, Unterkapitel und Abschnitte unterteilt und können aus Textblöcken, Videosequenzen,
-                Aufgaben (benötigt das Vips-Plugin) und Kommunkationselementen bestehen. Fertige Module können exportiert und
-                in andere Kurse oder andere Installationen importiert werden.'),
+            'descriptionshort' => _('Lerninhalte erstellen, verteilen und erleben'),
+            'descriptionlong' => _('Mit Courseware können Sie interaktive multimediale Lerninhalte erstellen und nutzen. Die
+                Lerninhalte lassen sich hierarchisch unterteilen und können aus Texten, Videosequenzen, Aufgaben, Kommunikationselementen
+                und einer Vielzahl weiterer Elementen bestehen. Fertige Lerninhalte können exportiert und in andere Kurse oder andere
+                Installationen importiert werden. Courseware ist nicht nur für digitale Formate geeignet, sondern kann auch genutzt werden,
+                um klassische Präsenzveranstaltungen mit Online-Anteilen zu ergänzen. Formate wie integriertes Lernen (Blended Learning)
+                lassen sich mit Courseware ideal umsetzen. Kollaboratives Lernen kann dank Schreibrechtevergabe und dem Einsatz von Courseware
+                in Studiengruppen realisiert werden.'
+            ),
             'icon' => Icon::create('courseware', 'info'),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Courseware',
