@@ -106,7 +106,9 @@ export default {
             this.structureLoadingState = 'error';
             return;
         }
-        await this.loadTeacherStatus(this.userId);
+        if (this.context.type === 'courses') {
+            await this.loadTeacherStatus(this.userId);
+        }
         this.structureLoadingState = 'done';
         const selectedId = this.$route.params?.id;
         await this.selectStructuralElement(selectedId);
