@@ -111,11 +111,10 @@ class Contents_CoursewareController extends AuthenticatedController
                 [$this->entry_element_id, $this->user_id]
             );
         }
-        $canExport = !empty($struct) ? $struct->canEdit($user) : false;
-        $this->setCoursewareSidebar($canExport);
+        $this->setCoursewareSidebar();
     }
 
-    private function setCoursewareSidebar(bool $canExport)
+    private function setCoursewareSidebar()
     {
         $sidebar = \Sidebar::Get();
         $actions = new TemplateWidget(
@@ -130,13 +129,11 @@ class Contents_CoursewareController extends AuthenticatedController
         );
         $sidebar->addWidget($views)->addLayoutCSSClass('courseware-view-widget');
 
-        if ($canExport) {
-            $exports = new TemplateWidget(
-                _('Export '),
-                $this->get_template_factory()->open('course/courseware/export_widget')
-            );
-            $sidebar->addWidget($exports)->addLayoutCSSClass('courseware-export-widget');
-        }
+        $exports = new TemplateWidget(
+            _('Export '),
+            $this->get_template_factory()->open('course/courseware/export_widget')
+        );
+        $sidebar->addWidget($exports)->addLayoutCSSClass('courseware-export-widget');
     }
 
     private function getLicences()

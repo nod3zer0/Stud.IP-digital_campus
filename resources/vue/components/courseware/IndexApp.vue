@@ -10,7 +10,7 @@
             <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions">
                 <courseware-action-widget :structural-element="selected" :canVisit="canVisit"></courseware-action-widget>
             </MountingPortal>
-            <MountingPortal mountTo="#courseware-export-widget" name="sidebar-actions" v-if="canExport">
+            <MountingPortal mountTo="#courseware-export-widget" name="sidebar-actions">
                 <courseware-export-widget :structural-element="selected" :canVisit="canVisit"></courseware-export-widget>
             </MountingPortal>
             <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
@@ -75,18 +75,7 @@ export default {
                 default:
                     return this.$gettext('Beim Laden der Seite ist ein Fehler aufgetreten.');
             }
-        },
-        canExport() {
-            if (!this.selected) {
-                return false;
-            }
-
-            if (this.context.type === 'users') {
-                return true;
-            }
-
-            return this.selected.attributes['can-edit'] && this.userIsTeacher;
-        },
+        }
     },
     methods: {
         ...mapActions({

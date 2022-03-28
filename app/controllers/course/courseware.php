@@ -74,8 +74,7 @@ class Course_CoursewareController extends AuthenticatedController
                 Context::getId(),
             ]);
         }
-        $canExport = !empty($struct) ? $struct->canEdit($GLOBALS['user']) : false;
-        $this->setIndexSidebar($canExport);
+        $this->setIndexSidebar();
     }
 
     public function dashboard_action(): void
@@ -107,7 +106,7 @@ class Course_CoursewareController extends AuthenticatedController
         $this->render_pdf($element->pdfExport($this->user), trim($element->title).'.pdf');
     }
 
-    private function setIndexSidebar(bool $canExport): void
+    private function setIndexSidebar(): void
     {
         $sidebar = Sidebar::Get();
         $actions = new TemplateWidget(
@@ -122,13 +121,11 @@ class Course_CoursewareController extends AuthenticatedController
         );
         $sidebar->addWidget($views)->addLayoutCSSClass('courseware-view-widget');
 
-        if ($canExport) {
-            $exports = new TemplateWidget(
-                _('Export '),
-                $this->get_template_factory()->open('course/courseware/export_widget')
-            );
-            $sidebar->addWidget($exports)->addLayoutCSSClass('courseware-export-widget');
-        }
+        $exports = new TemplateWidget(
+            _('Export '),
+            $this->get_template_factory()->open('course/courseware/export_widget')
+        );
+        $sidebar->addWidget($exports)->addLayoutCSSClass('courseware-export-widget');
     }
 
 

@@ -1,19 +1,22 @@
 <template>
     <ul class="widget-list widget-links cw-export-widget" v-if="structuralElement">
-        <li class="cw-export-widget-export">
+        <li v-if="showExportArchiv" class="cw-export-widget-export">
             <a href="#" @click="exportElement">
                 <translate>Seite exportieren</translate>
             </a>
         </li>
-        <li v-if="canVisit" class="cw-export-widget-export-pdf">
-            <a :href="pdfExportURL">
+        <li v-if="showExportPdf" class="cw-export-widget-export-pdf">
+            <a :href="pdfExportURL" target="_blank">
                 <translate>Seite als pdf-Dokument exportieren</translate>
             </a>
         </li>
-        <li v-if="oerEnabled" class="cw-export-widget-oer">
+        <li v-if="showOer" class="cw-export-widget-oer">
             <a href="#" @click="oerElement">
                 <translate>Seite auf %{oerTitle} veröffentlichen</translate>
             </a>
+        </li>
+        <li v-if="!showExportArchiv && !showExportPdf && !showOer">
+            <translate>Keine Exportoptionen verfügbar</translate>
         </li>
     </ul>
 </template>
@@ -31,6 +34,7 @@ export default {
             context: 'context',
             oerEnabled: 'oerEnabled',
             oerTitle: 'oerTitle',
+            userIsTeacher: 'userIsTeacher',
         }),
         pdfExportURL() {
             if (this.context.type === 'users') {
@@ -42,6 +46,21 @@ export default {
 
             return '';
         },
+        canEdit() {
+            if (!this.structuralElement) {
+                return false;
+            }
+            return this.structuralElement.attributes['can-edit'];
+        },
+        showExportArchiv() {
+            return this.canEdit;
+        },
+        showExportPdf() {
+            return this.canVisit;
+        },
+        showOer() {
+            return this.oerEnabled && this.userIsTeacher && this.canVisit
+        }
     },
     methods: {
         ...mapActions({
