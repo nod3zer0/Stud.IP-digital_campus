@@ -1076,7 +1076,7 @@ export const actions = {
                 },
             },
             { root: true }
-        );
+        ).catch(error => console.debug(error));
     },
 
     async updateTask({ dispatch }, { attributes, taskId }) {

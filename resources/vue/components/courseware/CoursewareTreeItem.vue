@@ -1,5 +1,5 @@
 <template>
-    <li>
+    <li v-if="showItem">
         <div
             :class="[
                 isRoot ? 'cw-tree-item-is-root' : '',
@@ -168,6 +168,16 @@ export default {
 
             return '';
         },
+        isTask() {
+            return this.element.attributes.purpose === 'task';
+        },
+        showItem() {
+            if (this.isTask) {
+                return this.task !== undefined;
+            }
+
+            return true;
+        }
     },
     methods: {
         ...mapActions({
