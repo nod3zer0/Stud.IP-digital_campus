@@ -403,9 +403,9 @@ class BasicDataWizardStep implements CourseWizardStep
         $course->status = $values['coursetype'];
         $course->start_time = $values['start_time'];
         $course->duration_time = 0;
-        $course->name = new I18NString($values['name'], $values['name_i18n']);
+        $course->name = new I18NString($values['name'], $values['name_i18n'] ?? []);
         $course->veranstaltungsnummer = $values['number'];
-        $course->beschreibung = new I18NString($values['description'], $values['description_i18n']);
+        $course->beschreibung = new I18NString($values['description'], $values['description_i18n'] ?? []);
         $course->institut_id = $values['institute'];
 
         $semclass = $seminar->getSemClass();
