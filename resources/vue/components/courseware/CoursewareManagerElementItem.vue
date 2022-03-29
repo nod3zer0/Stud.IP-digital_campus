@@ -8,6 +8,7 @@
             :title="inserter ? $gettextInterpolate('%{ elementTitle } verschieben', {elementTitle: element.attributes.title}) : element.attributes.title"
             @click="clickItem">
                 {{ element.attributes.title }}
+                <span v-if="task" class="cw-manager-element-item-solver-name">| {{ solverName }}</span>
         </a>
         <div 
             v-else
@@ -27,6 +28,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
     name: 'courseware-manager-element-item',
     props: {
@@ -37,7 +40,54 @@ export default {
         canMoveUp: Boolean,
         canMoveDown: Boolean
     },
+    computed: {
+        ...mapGetters({
+            taskById: 'courseware-tasks/byId',
+            userById: 'users/byId',
+            groupById: 'status-groups/byId',
+        }),
+        isTask() {
+            return this.element.attributes.purpose === 'task';
+        },
+        task() {
+            if (this.element.relationships.task.data) {
+                return this.taskById({
+                    id: this.element.relationships.task.data.id,
+                });
+            }
+
+            return null;
+        },
+        solver() {
+            if (this.task) {
+                const solver = this.task.relationships.solver.data;
+                if (solver.type === 'users') {
+                    return this.userById({ id: solver.id });
+                }
+                if (solver.type === 'status-groups') {
+                    return this.groupById({ id: solver.id });
+                }
+            }
+
+            return null;
+        },
+        solverName() {
+            if (this.solver) {
+                if (this.solver.type === 'users') {
+                    return this.solver.attributes['formatted-name'];
+                }
+                if (this.solver.type === 'status-groups') {
+                    return this.solver.attributes.name;
+                }
+            }
+
+            return '';
+        },
+    },
     methods: {
+        ...mapActions({
+            loadTask: 'loadTask',
+        }),
         clickItem() {
             if (this.sortChapters) {
                 return false;
@@ -58,6 +108,16 @@ export default {
                 this.$emit('moveDown', this.element.id);
             }
         },
+        loadElementTask() {
+            if (this.element.relationships.task.data && this.task === undefined) {
+                this.loadTask({
+                    taskId: this.element.relationships.task.data.id,
+                });
+            }
+        }
+    },
+    mounted() {
+        this.loadElementTask();
     },
 };
 </script>

@@ -2703,6 +2703,11 @@ m a n a g e r
             vertical-align: middle;
         }
 
+        .cw-manager-element-item-solver-name {
+            flex: fit-content;
+            padding-left: 0.25em;
+        }
+
         &:hover {
             color: $white;
             background-color: $base-color;
