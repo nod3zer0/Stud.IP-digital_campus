@@ -151,7 +151,7 @@ export default {
             setTimeout(() => {
                 let contents = this.$refs.contents.$el; 
                 let current = contents.querySelector('.cw-tree-item-link-current');
-                contents.scroll({ top: current.offsetTop, behavior: 'smooth' });
+                contents.scroll({ top: current.offsetTop - 4, behavior: 'smooth' });
             }, 360);
         },
     },

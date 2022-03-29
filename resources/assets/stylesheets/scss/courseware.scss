@@ -471,6 +471,7 @@ $consum_ribbon_width: calc(100% - 58px);
                     >.cw-tab {
                         max-height: 700px;
                         padding: 14px 8px 8px 8px;
+                        position: relative;
                         overflow-y: auto;
                         overflow-x: hidden;
                         scrollbar-width: thin;
