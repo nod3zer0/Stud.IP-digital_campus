@@ -1234,7 +1234,6 @@ class Admin_UserController extends AuthenticatedController
         }
         PageLayout::setTitle(sprintf(_('Datei- und Aktivitätsübersicht für %s'), $this->fullname));
 
-
         $this->queries = $this->getActivities($user_id);
 
         $memberships = DBManager::get()->fetchAll("SELECT seminar_user.*, seminare.Name as course_name
@@ -1260,9 +1259,9 @@ class Admin_UserController extends AuthenticatedController
 
                 if ($count) {
                     if (!isset($course_files[$membership->seminar_id])) {
-                        $course_files[$membership->course->start_semester->name][$membership->course->id]['course'] = $membership->course;
+                        $course_files[(string) $membership->course->start_semester->name][$membership->course->id]['course'] = $membership->course;
                     }
-                    $course_files[$membership->course->start_semester->name][$membership->course->id]['files'] = $count;
+                    $course_files[(string) $membership->course->start_semester->name][$membership->course->id]['files'] = $count;
                 }
             }
             if (in_array(Request::get('view'), words('courses closed_courses'))) {
@@ -1273,9 +1272,9 @@ class Admin_UserController extends AuthenticatedController
                   WHERE sc.seminar_id =?', [$membership->seminar_id]);
 
                 if ((int)$closed_course) {
-                    $closed_courses[$membership->course->start_semester->name][$membership->course->id] = $membership;
+                    $closed_courses[(string) $membership->course->start_semester->name][$membership->course->id] = $membership;
                 } else {
-                    $courses[$membership->course->start_semester->name][$membership->course->id] = $membership;
+                    $courses[(string) $membership->course->start_semester->name][$membership->course->id] = $membership;
                 }
             }
         }
