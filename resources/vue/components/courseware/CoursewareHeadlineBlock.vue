@@ -18,13 +18,13 @@
                         class="icon-layer"
                         :class="['icon-' + currentIconColor + '-' + currentIcon, currentHeight === 'half' ? 'half' : 'full']"
                     >
-                        <div class="cw-block-headline-textbox">
-                            <div class="cw-block-headline-title">
-                                <h1 :style="textStyle">{{ currentTitle }}</h1>
-                            </div>
-                            <div class="cw-block-headline-subtitle">
-                                <h2 :style="textStyle">{{ currentSubtitle }}</h2>
-                            </div>
+                    </div>
+                    <div class="cw-block-headline-textbox">
+                        <div class="cw-block-headline-title">
+                            <h1 :style="textStyle">{{ currentTitle }}</h1>
+                        </div>
+                        <div class="cw-block-headline-subtitle">
+                            <h2 :style="textStyle">{{ currentSubtitle }}</h2>
                         </div>
                     </div>
                 </div>

@@ -4114,12 +4114,12 @@ headline block
         }
         &.bigicon_top {
             .icon-layer {
-                display: flex;
-                align-items: center;
                 background-repeat: no-repeat;
-                background-position: center calc(50% - 8em);
+                background-position: center;
+                margin-top: 8em;
+                margin-bottom: 1em;
                 background-size: 196px;
-                min-height: 600px;
+                height: 196px;
 
                 @each $icon in $icons {
                     &.icon-black-#{$icon} {
@@ -4142,19 +4142,21 @@ headline block
                     }
                 };
 
-                &.half {
-                    min-height: 300px;
+               &.half {
+                    height: 144px;
                     background-size: 144px;
-                    background-position: center calc(50% - 4em);
+                    background-position: center;
+                    margin-top: 2em;
+                    margin-bottom: 0;
                 }
             }
 
-
             .cw-block-headline-textbox {
-                width: 100%;
+                width: 80%;
+                padding-bottom: 4em;
+                margin: 0 auto;
                 .cw-block-headline-title {
                     h1 {
-                        margin-top: 2em;
                         border: none;
                         font-size: 5em;
                         text-align: center;
@@ -4171,17 +4173,18 @@ headline block
                 }
             }
         }
-        &.bigicon_before {
-            .icon-layer {
-                display: flex;
-                align-items: center;
-                background-repeat: no-repeat;
-                background-position: 4em center;
-                min-height: 600px;
 
-                &.half {
-                    min-height: 300px;
-                }
+        &.bigicon_before {
+            display: flex;
+            align-items: center;
+            min-height: 600px;
+            .icon-layer {
+                min-height: 196px;
+                min-width: 196px;
+                margin:0 28px 0 28px;
+                background-repeat: no-repeat;
+                background-position: left center;
+
                 @each $icon in $icons {
                     &.icon-black-#{$icon} {
                         @include background-icon($icon, info, 196);
@@ -4205,14 +4208,12 @@ headline block
             }
 
             .cw-block-headline-textbox {
-                width: 100%;
+                margin: 2em 1em 2em 0;
                 .cw-block-headline-title {
-
                     h1 {
                         border: none;
                         font-size: 5em;
                         text-align: left;
-                        margin-left: 4.25em;
                     }
                 }
 
@@ -4220,10 +4221,13 @@ headline block
                     display: none;
                 }
             }
+
+            &.half {
+                min-height: 300px;
+            }
         }
 
         &.ribbon {
-            .icon-layer {
                 display: flex;
                 align-items: center;
                 min-height: 600px;
@@ -4235,6 +4239,7 @@ headline block
                 .cw-block-headline-textbox {
                     width: 100%;
                     padding: 1em 0;
+                    margin: 3em 0;
                     background-color: fade-out($black, 0.5);
                     .cw-block-headline-title {
 
@@ -4254,7 +4259,6 @@ headline block
                         }
                     }
                 }
-            }
         }
     }
 }
@@ -4277,12 +4281,10 @@ headline block
             }
             &.bigicon_top {
                 .icon-layer {
-                    background-position: center calc(50% - 4em);
-                    min-height: 300px;
-
-                    &.half {
-                        min-height: 150px;
-                    }
+                    background-position: center;
+                    height: 98px;
+                    margin-top: 2em;
+                    margin-bottom: 1em;
 
                     @each $icon in $icons {
                         &.icon-black-#{$icon} {
@@ -4307,15 +4309,18 @@ headline block
 
                     &.half {
                         background-size: 72px;
-                        background-position: center calc(50% - 2em);
+                        height: 72px;
+                        background-position: center;
                     }
                 }
 
 
                 .cw-block-headline-textbox {
+                    max-width: 80%;
+                    margin: 0 auto;
+                    padding-bottom: 1em;
                     .cw-block-headline-title {
                         h1 {
-                            margin-top: 2.5em;
                             font-size: 2em;
                         }
                     }
@@ -4328,13 +4333,11 @@ headline block
                 }
             }
             &.bigicon_before {
+                min-height: 300px;
                 .icon-layer {
-                    min-height: 300px;
-
-                    &.half {
-                        min-height: 150px;
-                    }
-                    background-position: 2em center;
+                    min-height: 92px;
+                    min-width: 92px;
+                    background-position: 0 center;
                     @each $icon in $icons {
                         &.icon-black-#{$icon} {
                             @include background-icon($icon, info, 92);
@@ -4363,29 +4366,31 @@ headline block
                             font-size: 2.5em;
                         }
                     }
+                }
 
+                &.half {
+                    min-height: 150px;
                 }
             }
 
             &.ribbon {
-                .icon-layer {
-                    min-height: 300px;
+                min-height: 300px;
 
-                    &.half {
-                        min-height: 150px;
-                    }
+                &.half {
+                    min-height: 150px;
+                }
 
-                    .cw-block-headline-textbox {
-                        .cw-block-headline-title {
-                                h1 {
-                                font-size: 2.5em;
-                            }
+                .cw-block-headline-textbox {
+                    margin: 3em 0;
+
+                    .cw-block-headline-title {
+                        h1 {
+                            font-size: 2.5em;
                         }
-
-                        .cw-block-headline-subtitle {
-                            h2 {
-                                font-size: 12px;
-                            }
+                    }
+                    .cw-block-headline-subtitle {
+                        h2 {
+                            font-size: 12px;
                         }
                     }
                 }
@@ -4404,7 +4409,6 @@ headline block
                 }
                 .cw-block-headline-textbox .cw-block-headline-title h1 {
                     font-size: 4em;
-                    margin-left: 225px;
                 }
             }
         }
