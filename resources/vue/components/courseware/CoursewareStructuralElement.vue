@@ -625,7 +625,7 @@ export default {
             textDelete.alert = this.$gettext('Möchten Sie die Seite wirklich löschen?');
             if (this.structuralElementLoaded) {
                 textDelete.alert =
-                    this.$gettextInterpolate('Möchten Sie die Seite %{ pageTitle } wirklich löschen?', {pageTitle: this.structuralElement.attributes.title});
+                    this.$gettextInterpolate('Möchten Sie die Seite %{ pageTitle } und alle ihre Unterseiten wirklich löschen?', {pageTitle: this.structuralElement.attributes.title});
             }
 
             return textDelete;
