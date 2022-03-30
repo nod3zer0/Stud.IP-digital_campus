@@ -50,7 +50,8 @@ class Course_CoursewareController extends AuthenticatedController
 
             if (!$course->courseware) {
                 // create initial courseware dataset
-                $struct = StructuralElement::createEmptyCourseware(Context::getId(), 'course');
+                $instance = StructuralElement::createEmptyCourseware(Context::getId(), 'course');
+                $struct = $instance->getRoot();
             }
 
             $this->entry_element_id = $course->courseware->id;
