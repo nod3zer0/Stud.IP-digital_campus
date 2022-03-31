@@ -311,12 +311,15 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     {
         $end_semester = $this->semesters->last();
         $start_semester = $this->semesters->first();
+        if ($start_semester->id === $semester->id) {
+            return;
+        }
         if ($end_semester) {
             if (count($this->semesters) > 1 && $end_semester->beginn < $semester->beginn) {
                 throw new InvalidArgumentException('start-semester must start before end-semester');
             }
             foreach ($this->semesters as $key => $one_semester) {
-                if ($one_semester->beginn <= $semester->beginn) {
+                if ($one_semester->beginn < $semester->beginn) {
                     $this->semesters->offsetUnset($key);
                 }
             }
@@ -334,7 +337,11 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
      */
     public function setEndSemester(?Semester $semester)
     {
+        $end_semester = $this->semesters->last();
         $start_semester = $this->semesters->first();
+        if ((is_null($end_semester) && is_null($semester)) || ($end_semester->id === $semester->id)) {
+            return;
+        }
         if ($start_semester) {
             if ($semester && $start_semester->beginn > $semester->beginn) {
                 throw new InvalidArgumentException('end-semester must start after start-semester');
