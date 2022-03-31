@@ -53,7 +53,7 @@ jQuery(function ($) {
                     </button>
                 </td>
                 <td>
-                    <?= htmlReady($course->start_semester->name) ?>
+                    <?= htmlReady($course->getTextualSemester()) ?>
                 </td>
             </tr>
         <? endforeach; ?>

@@ -44,7 +44,7 @@ if (Request::get('range_type')) {
                     </a>
                 </td>
                 <td>
-                    <?= htmlReady($course->start_semester->name) ?>
+                    <?= htmlReady($course->getTextualSemester()) ?>
                 </td>
                 <td class="actions">
                     <a href="<?= $controller->link_for('file/choose_file_from_course/' . $folder_id, array_merge($options, ['course_id' => $course->id])) ?>" data-dialog>

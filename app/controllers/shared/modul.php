@@ -156,13 +156,13 @@ class Shared_ModulController extends AuthenticatedController
             $stm = DBManager::get()->prepare('SELECT DISTINCT auth_user_md5.username FROM auth_user_md5
                 JOIN seminar_user ON (auth_user_md5.user_id = seminar_user.user_id)
                 JOIN seminare ON (seminare.seminar_id = seminar_user.seminar_id)
-                JOIN semester_data ON (seminare.start_time = semester_data.beginn)
+                LEFT JOIN semester_courses ON (seminare.seminar_id = semester_courses.course_id)
                 JOIN mvv_lvgruppe_seminar ON (mvv_lvgruppe_seminar.seminar_id = seminare.seminar_id)
                 JOIN mvv_lvgruppe_modulteil ON (mvv_lvgruppe_modulteil.lvgruppe_id = mvv_lvgruppe_seminar.lvgruppe_id)
                 JOIN mvv_modulteil ON (mvv_modulteil.modulteil_id = mvv_lvgruppe_modulteil.modulteil_id)
                 WHERE mvv_modulteil.modul_id = :modul_id
                 AND seminar_user.status = :status
-                AND semester_data.semester_id = :semester_id');
+                AND (semester_courses.semester_id = :semester_id OR semester_courses.semester_id IS NULL)');
             $stm->execute(['modul_id' => $modul_id, 'status' => 'autor', ':semester_id' => $semester_id]);
             $_SESSION['sms_data']['p_rec'] = $stm->fetchFirst();
 

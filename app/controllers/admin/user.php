@@ -1239,7 +1239,9 @@ class Admin_UserController extends AuthenticatedController
         $memberships = DBManager::get()->fetchAll("SELECT seminar_user.*, seminare.Name as course_name
                              FROM seminar_user
                              LEFT JOIN seminare USING (seminar_id)
-                             WHERE user_id = ? ORDER BY seminare.start_time DESC, seminare.Name",
+                             LEFT JOIN semester_courses ON (seminare.Seminar_id = semester_courses.course_id)
+                             LEFT JOIN semester_data ON (semester_data.semester_id = semester_courses.semester_id)
+                             WHERE user_id = ? GROUP BY seminare.Seminar_id ORDER BY MAX(semester_data.beginn) DESC, seminare.Name",
             [$user_id],
             'CourseMember::buildExisting');
 
@@ -1249,6 +1251,7 @@ class Admin_UserController extends AuthenticatedController
         $this->sections = [];
 
         foreach ($memberships as $membership) {
+            $semester_name = $membership->course->isOpenEnded() ? _('unbegrenzt') : $membership->course->start_semester->name;
             if (!Request::get('view') || Request::get('view') === 'files') {
                 // count files for course
 
@@ -1259,9 +1262,9 @@ class Admin_UserController extends AuthenticatedController
 
                 if ($count) {
                     if (!isset($course_files[$membership->seminar_id])) {
-                        $course_files[(string) $membership->course->start_semester->name][$membership->course->id]['course'] = $membership->course;
+                        $course_files[$semester_name][$membership->course->id]['course'] = $membership->course;
                     }
-                    $course_files[(string) $membership->course->start_semester->name][$membership->course->id]['files'] = $count;
+                    $course_files[$semester_name][$membership->course->id]['files'] = $count;
                 }
             }
             if (in_array(Request::get('view'), words('courses closed_courses'))) {
@@ -1272,9 +1275,9 @@ class Admin_UserController extends AuthenticatedController
                   WHERE sc.seminar_id =?', [$membership->seminar_id]);
 
                 if ((int)$closed_course) {
-                    $closed_courses[(string) $membership->course->start_semester->name][$membership->course->id] = $membership;
+                    $closed_courses[$semester_name][$membership->course->id] = $membership;
                 } else {
-                    $courses[(string) $membership->course->start_semester->name][$membership->course->id] = $membership;
+                    $courses[$semester_name][$membership->course->id] = $membership;
                 }
             }
         }

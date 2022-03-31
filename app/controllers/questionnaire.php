@@ -710,9 +710,9 @@ class QuestionnaireController extends AuthenticatedController
 
                 //Search courses matching the search criteria:
 
-                $sql = 'start_time = :semester_begin ';
+                $sql = 'LEFT JOIN semester_courses ON (semester_courses.course_id = seminare.Seminar_id) WHERE (semester_courses.semester_id = :semester_id OR semester_courses.semester_id IS NULL) ';
                 $sql_array = [
-                    'semester_begin' => $this->semester->beginn
+                    'semester_id' => $this->semester->id
                 ];
 
                 if ($this->institute) {

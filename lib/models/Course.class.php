@@ -236,10 +236,12 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         $config['additional_fields']['end_time'] = true;
 
         $config['additional_fields']['start_semester'] = [
-            'get' => 'getStartSemester'
+            'get' => 'getStartSemester',
+            'set' => '_set_semester'
         ];
         $config['additional_fields']['end_semester'] = [
-            'get' => 'getEndSemester'
+            'get' => 'getEndSemester',
+            'set' => '_set_semester'
         ];
         $config['additional_fields']['semester_text'] = [
             'get' => 'getTextualSemester'
@@ -264,11 +266,8 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         $config['i18n_fields']['leistungsnachweis'] = true;
         $config['i18n_fields']['ort'] = true;
 
-        $config['additional_fields']['config']['get'] = function ($course) {
-            return CourseConfig::get($course->id);
-        };
-
         $config['registered_callbacks']['before_update'][] = 'logStore';
+        $config['registered_callbacks']['before_store'][] = 'cbSetStartAndDurationTime';
         $config['registered_callbacks']['after_create'][] = 'setDefaultTools';
         $config['registered_callbacks']['after_delete'][] = function ($course) {
             CourseAvatar::getAvatar($course->id)->reset();
@@ -285,73 +284,71 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
 
     public function getEnd_Time()
     {
-        if (!$this->semesters) {
-            return -1;
-        }
-
-        return $this->semesters->last()->ende;
+        return $this->duration_time == -1 ? -1 : $this->start_time + $this->duration_time;
     }
 
     public function setEnd_Time($value)
     {
-        throw new Exception("This function is unavailable.");
+        if ($value == -1) {
+            $this->duration_time = -1;
+        } elseif ($this->start_time > 0 && $value > $this->start_time) {
+            $this->duration_time = $value - $this->start_time;
+        } else {
+            $this->duration_time = 0;
+        }
+    }
+
+    public function _set_semester($field, $value)
+    {
+        $method = 'set' . ($field === 'start_semester' ? 'StartSemester' : 'EndSemester');
+        $this->$method($value);
     }
 
     /**
-     * Sets the start semester of the course.
+     * @param Semester $semester
      */
     public function setStartSemester(Semester $semester)
     {
-        $this->start_semester = $semester;
+        $end_semester = $this->semesters->last();
+        $start_semester = $this->semesters->first();
+        if ($end_semester) {
+            if (count($this->semesters) > 1 && $end_semester->beginn < $semester->beginn) {
+                throw new InvalidArgumentException('start-semester must start before end-semester');
+            }
+            foreach ($this->semesters as $key => $one_semester) {
+                if ($one_semester->beginn <= $semester->beginn) {
+                    $this->semesters->offsetUnset($key);
+                }
+            }
+        }
+        $this->semesters[] = $semester;
+        $this->semesters->orderBy('beginn asc');
+        //add possibly missing semesters between start_semester and end_semester
+        if (count($this->semesters) > 1 && $semester->beginn < $start_semester->beginn) {
+            $this->setEndSemester($end_semester);
+        }
     }
 
     /**
-     * Sets the end semester of the course.
+     * @param Semester|null $semester
      */
-    public function setEndSemester(Semester $semester)
+    public function setEndSemester(?Semester $semester)
     {
-        $this->end_semester = $semester;
-    }
-
-    public function setSemesters($semesters)
-    {
-        $semester_ids = array_map(function ($s) {
-            return $s->id;
-        }, $semesters);
-
-        if (count($semester_ids) > 0) {
-            $delete = DBManager::get()->prepare("
-                DELETE FROM semester_courses
-                WHERE semester_id NOT IN (:semester_ids)
-                    AND course_id = :course_id
-            ");
-            $delete->execute([
-                'semester_ids' => $semester_ids,
-                'course_id' => $this->id,
-            ]);
+        $start_semester = $this->semesters->first();
+        if ($start_semester) {
+            if ($semester && $start_semester->beginn > $semester->beginn) {
+                throw new InvalidArgumentException('end-semester must start after start-semester');
+            }
+            $this->semesters = [];
+            if ($semester) {
+                $all_semester = SimpleCollection::createFromArray(Semester::getAll());
+                $this->semesters = $all_semester->findBy('beginn', [$start_semester->beginn, $semester->beginn], '>=<=');
+            }
         } else {
-            $delete = DBManager::get()->prepare("
-                DELETE FROM semester_courses
-                WHERE course_id = :course_id
-            ");
-            $delete->execute([
-                'course_id' => $this->id,
-            ]);
+            if ($semester) {
+                $this->semesters[] = $semester;
+            }
         }
-        $insert = DBManager::get()->prepare("
-            INSERT IGNORE INTO semester_courses
-            SET course_id = :course_id,
-                semester_id = :semester_id,
-                mkdate = UNIX_TIMESTAMP(),
-                chdate = UNIX_TIMESTAMP()
-        ");
-        foreach ($semesters as $semester) {
-            $insert->execute([
-                'course_id' => $this->id,
-                'semester_id' => $semester->id,
-            ]);
-        }
-        $this->resetRelation('semesters');
     }
 
     /**
@@ -365,7 +362,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         if (count($this->semesters) > 0) {
             return $this->semesters->first();
         } else {
-            return Semester::findByTimestamp($this['start_time']);
+            return Semester::findCurrent();
         }
     }
 
@@ -380,7 +377,6 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         if (count($this->semesters) > 0) {
             return $this->semesters->last();
         }
-        return null;
     }
 
     /**
@@ -394,7 +390,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         } elseif (count($this->semesters) === 1) {
             return $this->start_semester->name;
         } else {
-            return $this->start_semester->name .' - ' . _('unbegrenzt');
+            return _('unbegrenzt');
         }
     }
 
@@ -422,14 +418,14 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
             }
             return false;
         } else {
-            return $this->start_time <= $semester->beginn;
+            return true;
         }
     }
 
     public function getFreeSeats()
     {
         $free_seats = $this->admission_turnout - $this->getNumParticipants();
-        return max($free_seats, 0);;
+        return max($free_seats, 0);
     }
 
     public function isWaitlistAvailable()
@@ -551,10 +547,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         $data[0] = $this->name;
         $data[1] = $sem_type['name'];
         $data[2] = $this->veranstaltungsnummer;
-        $data[3] = $this->start_semester->name;
-        if ($this->start_semester !== $this->end_semester && !$this->isStudygroup()) {
-            $data[3] .= ' - ' .  ($this->end_semester ? $this->end_semester->name : _('unbegrenzt'));
-        }
+        $data[3] = $this->getTextualSemester();
         return trim(vsprintf($template[$format], array_map('trim', $data)));
     }
 
@@ -564,9 +557,9 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
      * The dates can be filtered by an optional time range. By default,
      * all dates are retrieved.
      *
-     * @param $range_begin The begin timestamp of the time range.
+     * @param int $range_begin The begin timestamp of the time range.
      *
-     * @param $range_end The end timestamp of the time range.
+     * @param int $range_end The end timestamp of the time range.
      *
      * @returns SimpleCollection A collection of all retrieved dates and
      *     cancelled dates.
@@ -595,7 +588,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     /**
      * Sets this courses study areas to the given values.
      *
-     * @param $ids the new study areas
+     * @param array $ids the new study areas
      * @return bool Changes successfully saved?
      */
     public function setStudyAreas($ids)
@@ -751,9 +744,13 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
      */
     protected function logStore()
     {
-        if ($this->isFieldDirty('start_semester')) {
+        if ($this->isFieldDirty('start_time')) {
             //Log change of start semester:
-            StudipLog::log('SEM_SET_STARTSEMESTER', $this->id, $this->start_semester->beginn);
+            StudipLog::log('SEM_SET_STARTSEMESTER', $this->id, isset($this->start_semester) ? $this->start_semester->name : _('unbegrenzt'));
+            NotificationCenter::postNotification('CourseDidChangeSchedule', $this);
+        }
+        if ($this->isFieldDirty('duration_time')) {
+            StudipLog::log('SEM_SET_ENDSEMESTER', $this->id, $this->getTextualSemester());
             NotificationCenter::postNotification('CourseDidChangeSchedule', $this);
         }
 
@@ -802,6 +799,27 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
 
         if ($this->isFieldDirty('visible')) {
             StudipLog::log($this->visible ? 'SEM_VISIBLE' : 'SEM_INVISIBLE', $this->id);
+        }
+    }
+
+    /**
+     * Called directly before storing the object to edit the columns start_time and duration_time
+     * which are both deprecated but are still in use for older plugins.
+     */
+    public function cbSetStartAndDurationTime()
+    {
+        if ($this->isFieldDirty('start_time')) {
+            $this->setStartSemester(Semester::findByTimestamp($this->start_time));
+        }
+        if ($this->isFieldDirty('duration_time')) {
+            $this->setEndSemester($this->duration_time == -1 ? null : Semester::findByTimestamp($this->start_time + $this->duration_time));
+        }
+        if ($this->isOpenEnded()) {
+            $this->start_time = $this->start_time ?: Semester::findCurrent()->beginn;
+            $this->duration_time = -1;
+        } else {
+            $this->start_time = $this->getStartSemester()->beginn;
+            $this->duration_time = $this->getEndSemester()->beginn - $this->start_time;
         }
     }
 

@@ -136,12 +136,8 @@ class Course extends \RESTAPI\RouteMap
         if ($semester) {
 
             $memberships = $memberships->filter(function ($m) use ($semester) {
-                    $course = $m->course;
-                    return
-                        $course->start_time == $semester->beginn
-                        || ($course->start_time <= $semester->beginn
-                            && ($course->isOpenEnded() || $semester->beginn <= $course->end_time));
-                });
+                return $m->course->isInSemester($semester);
+            });
         }
 
         return $memberships;

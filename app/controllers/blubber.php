@@ -406,7 +406,6 @@ class BlubberController extends AuthenticatedController
             $course = new Course();
             $course['name'] = Request::get('name');
             $course['status'] = array_shift($studgroup_sem_types);
-            $course['start_time'] = Semester::findCurrent()->beginn;
             $course->store();
 
             if ($_FILES['avatar'] && $_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE) {

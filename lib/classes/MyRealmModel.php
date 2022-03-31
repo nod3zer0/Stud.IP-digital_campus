@@ -347,8 +347,8 @@ class MyRealmModel
             $_course['temp_name']      = $course->name;
             $_course['number']         = $course->veranstaltungsnummer;
             $_course['is_deputy']      = $is_deputy;
-            if ($show_semester_name && count($course->semesters) !== 0 && !$course->getSemClass()['studygroup_mode']) {
-                $_course['name'] .= ' (' . $course->getFullname('sem-duration-name') . ')';
+            if ($show_semester_name && count($course->semesters) !== 1 && !$course->getSemClass()['studygroup_mode']) {
+                $_course['name'] .= ' (' . $course->getTextualSemester() . ')';
             }
             if ($course->parent_course) {
                 $_course['parent_course'] = $course->parent_course;

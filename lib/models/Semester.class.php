@@ -349,23 +349,15 @@ class Semester extends SimpleORMap
 
     /**
      * Returns the start week dates for this semester (and other
-     * semesters if duration is > 0).
+     * semesters if $end_semester is given).
      *
-     * @param mixed $duration Duration time (false to restrict to current
-     *                        semester, -1 for indefinite duration, otherwise
-     *                        the int value for the duration so that
-     *                        semester start + duration = end)
+     * @param Semester $end_semester end semester, default is $this
      * @return array containing the start weeks
      */
-    public function getStartWeeks($duration = false)
+    public function getStartWeeks(?Semester $end_semester = null)
     {
-        if ($duration === false) {
+        if (!$end_semester) {
             $end_semester = $this;
-        } elseif ($duration == -1) {
-            $semesters = self::getAll();
-            $end_semester = end($semesters);
-        } else {
-            $end_semester = self::findByTimestamp((int)$this->beginn + (int)$duration);
         }
 
         $timestamp = $this->getCorrectedLectureBegin();

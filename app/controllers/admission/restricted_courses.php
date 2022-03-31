@@ -56,7 +56,6 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
         }
         $semester = Semester::find($this->current_semester_id);
         $sem_condition .= "
-            AND seminare.start_time <=" . (int)$semester["beginn"]."
             AND (semester_courses.semester_id IS NULL OR semester_courses.semester_id = " . DBManager::get()->quote($semester->getId()) . ")
         ";
         if ($this->sem_name_prefix) {
