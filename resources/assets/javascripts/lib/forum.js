@@ -673,7 +673,7 @@ const Forum = {
                 // jQuery('li[data-id=' + topic_id + '] a.tooltip2').hideAjaxNotification();
 
                 // remove all pasted entries, they are now elsewhere
-                for (id in STUDIP.Forum.clipboard) {
+                for (var id in STUDIP.Forum.clipboard) {
                     jQuery('li[data-id=' + id + ']').remove();
                 }
 
