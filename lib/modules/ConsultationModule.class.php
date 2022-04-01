@@ -98,7 +98,7 @@ class ConsultationModule extends CorePlugin implements StudipModule, SystemPlugi
                  'pictures' => [
                      [
                          'source' => 'uebersicht.png',
-                         'title'  => _('Übersicht der erstellen Termine'),
+                         'title'  => _('Übersicht der erstellten Termine'),
                      ],
                      [
                          'source' => 'anlegen.png',
