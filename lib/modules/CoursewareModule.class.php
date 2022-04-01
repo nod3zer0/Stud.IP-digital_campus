@@ -128,26 +128,18 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule,
     {
         return [
             'summary' => _('Lerninhalte erstellen, verteilen und erleben'),
-            'description' => _('Mit Courseware können Sie interaktive multimediale Lerninhalte erstellen und nutzen. Die
-                Lerninhalte lassen sich hierarchisch unterteilen und können aus Texten, Videosequenzen, Aufgaben,
-                Kommunikationselementen und einer Vielzahl weiterer Elementen bestehen. Fertige Lerninhalte können exportiert
-                und in andere Kurse oder andere Installationen importiert werden. Courseware ist nicht nur für digitale Formate
-                geeignet, sondern kann auch genutzt werden, um klassische Präsenzveranstaltungen mit Online-Anteilen zu ergänzen.
-                Formate wie integriertes Lernen (Blended Learning) lassen sich mit Courseware ideal umsetzen. Kollaboratives Lernen
-                kann dank Schreibrechtevergabe und dem Einsatz von Courseware in Studiengruppen realisiert werden.'
-            ),
+            'description' => _('Mit Courseware können Sie interaktive multimediale Lerninhalte erstellen und nutzen. '
+                             . 'Die Lerninhalte lassen sich hierarchisch unterteilen und können aus Texten, '
+                             . 'Videosequenzen, Aufgaben, Kommunikationselementen und einer Vielzahl weiterer '
+                             . 'Elementen bestehen. Fertige Lerninhalte können exportiert und in andere Kurse oder '
+                             . 'andere Installationen importiert werden. Courseware ist nicht nur für digitale '
+                             . 'Formate geeignet, sondern kann auch genutzt werden, um klassische '
+                             . 'Präsenzveranstaltungen mit Online-Anteilen zu ergänzen. Formate wie integriertes '
+                             . 'Lernen (Blended Learning) lassen sich mit Courseware ideal umsetzen. Kollaboratives '
+                             . 'Lernen kann dank Schreibrechtevergabe und dem Einsatz von Courseware in '
+                             . 'Studiengruppen realisiert werden.'),
             'displayname' => _('Courseware'),
             'category' => _('Lehr- und Lernorganisation'),
-            // 'keywords' => '',
-            'descriptionshort' => _('Lerninhalte erstellen, verteilen und erleben'),
-            'descriptionlong' => _('Mit Courseware können Sie interaktive multimediale Lerninhalte erstellen und nutzen. Die
-                Lerninhalte lassen sich hierarchisch unterteilen und können aus Texten, Videosequenzen, Aufgaben, Kommunikationselementen
-                und einer Vielzahl weiterer Elementen bestehen. Fertige Lerninhalte können exportiert und in andere Kurse oder andere
-                Installationen importiert werden. Courseware ist nicht nur für digitale Formate geeignet, sondern kann auch genutzt werden,
-                um klassische Präsenzveranstaltungen mit Online-Anteilen zu ergänzen. Formate wie integriertes Lernen (Blended Learning)
-                lassen sich mit Courseware ideal umsetzen. Kollaboratives Lernen kann dank Schreibrechtevergabe und dem Einsatz von Courseware
-                in Studiengruppen realisiert werden.'
-            ),
             'icon' => Icon::create('courseware', 'info'),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Courseware',
