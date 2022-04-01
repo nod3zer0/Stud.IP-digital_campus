@@ -285,8 +285,11 @@ $consum_ribbon_width: calc(100% - 58px);
         .cw-ribbon-breadcrumb {
             font-size: 1.25em;
             line-height: 1.5em;
+            margin-right: 1em;
+            min-width: 0;
 
             ul {
+                display: flex;
                 list-style: none;
                 padding-left: 0;
 
@@ -298,14 +301,12 @@ $consum_ribbon_width: calc(100% - 58px);
                 }
 
                 .cw-ribbon-breadcrumb-item {
-                    display: inline-flex;
-
-                    span {
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        max-width: 12em;
-                    }
+                    display: inline;
+                    flex-shrink: 100000;
+                    min-width: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
 
                     a {
                         color: $base-color;
@@ -316,7 +317,7 @@ $consum_ribbon_width: calc(100% - 58px);
                     }
 
                     &.cw-ribbon-breadcrumb-item-current {
-                        cursor: default;
+                        flex-shrink: 1;
                     }
                 }
             }

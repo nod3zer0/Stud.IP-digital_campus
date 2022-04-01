@@ -26,9 +26,7 @@
                                 class="cw-ribbon-breadcrumb-item"
                             >
                                 <span>
-                                    <router-link :to="'/structural_element/' + ancestor.id">
-                                        {{ ancestor.attributes.title || "–" }}
-                                    </router-link>
+                                    <router-link :to="'/structural_element/' + ancestor.id">{{ ancestor.attributes.title || "–" }}</router-link>
                                 </span>
                             </li>
                             <li
