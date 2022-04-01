@@ -27,7 +27,7 @@
                 closeClass="cancel"
                 @close="closeEdit"
                 @confirm="storeContainer"
-                height="400"
+                height="430"
                 width="680"
             >
                 <template v-slot:dialogContent>

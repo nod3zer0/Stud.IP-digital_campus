@@ -804,10 +804,10 @@ ribbon end
 form.cw-container-dialog-edit-form {
     display: flex;
     flex-wrap: wrap;
-    width: 640px;
+    gap: 8px;
 
     fieldset {
-        margin-right: 4px;
+        max-width: 200px;
     }
 }
 
