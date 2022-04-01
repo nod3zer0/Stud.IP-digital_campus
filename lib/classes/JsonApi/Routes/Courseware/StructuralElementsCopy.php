@@ -28,7 +28,8 @@ class StructuralElementsCopy extends NonJsonApiController
 
         $sourceElement = StructuralElement::find($args['id']);
         $newParent = StructuralElement::find($data['parent_id']);
-        if (!Authority::canCreateContainer($user = $this->getUser($request), $newParent)) {
+        $user = $this->getUser($request);
+        if (!Authority::canCreateStructuralElement($user, $newParent) || !Authority::canUpdateStructuralElement($user, $sourceElement)) {
             throw new AuthorizationFailedException();
         }
 

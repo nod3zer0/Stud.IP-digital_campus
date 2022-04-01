@@ -30,7 +30,8 @@ class ContainersCopy extends NonJsonApiController
 
         $container = \Courseware\Container::find($data['container']['id']);
         $element = \Courseware\StructuralElement::find($data['parent_id']);
-        if (!Authority::canCreateContainer($user = $this->getUser($request), $element)) {
+        $user = $this->getUser($request);
+        if (!Authority::canCreateContainer($user, $element) || !Authority::canUpdateContainer($user, $container)) {
             throw new AuthorizationFailedException();
         }
 

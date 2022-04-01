@@ -30,8 +30,9 @@ class BlocksCopy extends NonJsonApiController
 
         $block = \Courseware\Block::find($data['block']['id']);
         $container = \Courseware\Container::find($data['parent_id']);
+        $user = $this->getUser($request);
 
-        if (!Authority::canCreateBlocks($user = $this->getUser($request), $container)) {
+        if (!Authority::canCreateBlocks($user, $container) || !Authority::canUpdateBlock($user, $block)) {
             throw new AuthorizationFailedException();
         }
 
