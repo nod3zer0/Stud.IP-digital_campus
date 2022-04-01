@@ -165,11 +165,16 @@ export default {
             return this.block?.attributes?.payload?.cc_base;
         },
         activeUrl() {
-            if (this.currentSubmitUserId) {
-                return this.currentUrl + '?' + this.currentSubmitParam + '=' + md5(this.userId + this.currentSalt);
-            } else {
-                return this.currentUrl;
+            if (this.currentUrl) {
+                let url = new URL(this.currentUrl);
+                if (this.currentSubmitUserId === 'true') {
+                    url.searchParams.append(this.currentSubmitParam, md5(this.userId + this.currentSalt));
+                }
+
+                return url.href;
             }
+
+            return '';
         },
     },
     mounted() {
