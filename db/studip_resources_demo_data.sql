@@ -67,17 +67,6 @@ REPLACE INTO `resource_booking_intervals` (`interval_id`, `resource_id`, `bookin
 REPLACE INTO `resource_booking_intervals` (`interval_id`, `resource_id`, `booking_id`, `begin`, `end`, `mkdate`, `chdate`, `takes_place`) VALUES('f7cbc12497a2d29ede9755fcf7bf0bc3', '728f1578de643fb08b32b4b8afb2db77', '742b08bb636ef331da5841d0901b2ea3', 1607328000, 1607335200, 1607705853, 1607705853, 1);
 
 --
--- Dumping data for table `resource_permissions`
---
-
-REPLACE INTO `resource_permissions` (`user_id`, `resource_id`, `perms`, `mkdate`, `chdate`) VALUES('76ed43ef286fb55cf9e41beadb484a9f', '2f98bf64830043fd98a39fbbe2068678', 'admin', 1084640542, 1084640555);
-REPLACE INTO `resource_permissions` (`user_id`, `resource_id`, `perms`, `mkdate`, `chdate`) VALUES('76ed43ef286fb55cf9e41beadb484a9f', '51ad4b7100d3a8a1db61c7b099f052a6', 'admin', 1084640567, 1084640578);
-REPLACE INTO `resource_permissions` (`user_id`, `resource_id`, `perms`, `mkdate`, `chdate`) VALUES('76ed43ef286fb55cf9e41beadb484a9f', '5ead77812be3b601e2f08ed5da4c5630', 'admin', 1084640611, 1084723704);
-REPLACE INTO `resource_permissions` (`user_id`, `resource_id`, `perms`, `mkdate`, `chdate`) VALUES('76ed43ef286fb55cf9e41beadb484a9f', '728f1578de643fb08b32b4b8afb2db77', 'admin', 1084640456, 1084640468);
-REPLACE INTO `resource_permissions` (`user_id`, `resource_id`, `perms`, `mkdate`, `chdate`) VALUES('76ed43ef286fb55cf9e41beadb484a9f', 'a8c03520e8ad9dc90fb2d161ffca7d7b', 'admin', 1084640590, 1084640599);
-REPLACE INTO `resource_permissions` (`user_id`, `resource_id`, `perms`, `mkdate`, `chdate`) VALUES('76ed43ef286fb55cf9e41beadb484a9f', 'b17c4ea6e053f2fffba8a5517fc277b3', 'admin', 1084640520, 1084640528);
-
---
 -- Dumping data for table `resource_properties`
 --
 
