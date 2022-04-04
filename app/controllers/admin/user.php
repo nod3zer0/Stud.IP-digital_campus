@@ -649,15 +649,15 @@ class Admin_UserController extends AuthenticatedController
 
         //get formdata
         $this->user = [
-            'username'    => Request::get('username'),
+            'username'    => trim(Request::get('username')),
             'perm'        => Request::option('perm'),
             'visible'     => Request::get('visible'),
-            'Vorname'     => Request::get('Vorname'),
-            'Nachname'    => Request::get('Nachname'),
+            'Vorname'     => trim(Request::get('Vorname')),
+            'Nachname'    => trim(Request::get('Nachname')),
             'geschlecht'  => Request::int('geschlecht'),
-            'title_front' => Request::get('title_front'),
-            'title_rear'  => Request::get('title_rear'),
-            'Email'       => Request::get('Email'),
+            'title_front' => trim(Request::get('title_front')),
+            'title_rear'  => trim(Request::get('title_rear')),
+            'Email'       => trim(Request::get('Email')),
             'auth_plugin' => Request::get('auth_plugin'),
             'institute'   => Request::option('institute'),
             'preferred_language' => Request::get('preferred_language')
