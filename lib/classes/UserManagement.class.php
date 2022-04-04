@@ -256,12 +256,12 @@ class UserManagement
         }
 
         if (!$perm->is_fak_admin() && $newuser['auth_user_md5.perms'] === 'admin') {
-            $this->msg .= 'error§' . _('Sie haben keine Berechtigung <em>>Admin-Accounts</em> anzulegen.') . '§';
+            $this->msg .= 'error§' . _('Sie haben keine Berechtigung, <em>Admin-Accounts</em> anzulegen.') . '§';
             return false;
         }
 
         if (!$perm->have_perm('root') && $newuser['auth_user_md5.perms'] === 'root') {
-            $this->msg .= 'error§' . _('Sie haben keine Berechtigung <em>Root-Accounts</em> anzulegen.') . '§';
+            $this->msg .= 'error§' . _('Sie haben keine Berechtigung, <em>Root-Accounts</em> anzulegen.') . '§';
             return false;
         }
 
@@ -705,9 +705,8 @@ class UserManagement
             );
         } else
 
-        // admin and root cannot reset their password via mail
         // only users with auth-type standard cann reset their password
-        if ($user->perms == 'root' || $user->perms == 'admin' || $user->auth_plugin !== 'standard') {
+        if ($user->auth_plugin !== 'standard') {
 
             // inform user, that their password cannot be reset via mail
             $subject = sprintf(
@@ -725,7 +724,6 @@ class UserManagement
                     . "Wenden sie sich bitte stattdessen an\n%s"
                 ),
                 Config::get()->UNI_NAME_CLEAN,
-                $user->username,
                 $GLOBALS['UNI_CONTACT']
             );
 
