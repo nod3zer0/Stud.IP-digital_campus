@@ -338,6 +338,7 @@ $consum_ribbon_width: calc(100% - 58px);
         background-repeat: no-repeat;
         background-position: center;
         background-size: 24px;
+        cursor: pointer;
 
         &.cw-ribbon-button-menu {
             @include background-icon(table-of-contents, clickable, 24);
@@ -439,6 +440,7 @@ $consum_ribbon_width: calc(100% - 58px);
                 padding: 0 4px;
                 right: 0;
                 top: 12px;
+                cursor: pointer;
 
                 @include background-icon(decline, clickable, 24);
                 background-repeat: no-repeat;

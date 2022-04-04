@@ -14,21 +14,20 @@
                 </nav>
             </div>
             <div class="cw-ribbon-wrapper-right">
-                <a
-                    href="#"
+                <button
                     class="cw-ribbon-button cw-ribbon-button-menu"
                     :title="textRibbon.toolbar"
                     @click="activeToolbar"
                 >
-                </a>
-                <a
-                    href="#"
+                </button>
+                <button
                     ref="consumeModeSwitch"
                     class="cw-ribbon-button"
                     :class="[consumeMode ? 'cw-ribbon-button-zoom-out' : 'cw-ribbon-button-zoom']"
                     :title="consumeMode ? textRibbon.fullscreen_off : textRibbon.fullscreen_on"
                      @click="toggleConsumeMode"
-                ></a>
+                >
+                </button>
                 <slot name="menu" />
             </div>
             <div v-if="consumeMode" class="cw-ribbon-consume-bottom"></div>

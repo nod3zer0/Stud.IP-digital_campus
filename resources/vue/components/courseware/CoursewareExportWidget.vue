@@ -1,9 +1,9 @@
 <template>
     <ul class="widget-list widget-links cw-export-widget" v-if="structuralElement">
         <li v-if="showExportArchiv" class="cw-export-widget-export">
-            <a href="#" @click="exportElement">
+            <button @click="exportElement">
                 <translate>Seite exportieren</translate>
-            </a>
+            </button>
         </li>
         <li v-if="showExportPdf" class="cw-export-widget-export-pdf">
             <a :href="pdfExportURL" target="_blank">
@@ -11,9 +11,9 @@
             </a>
         </li>
         <li v-if="showOer" class="cw-export-widget-oer">
-            <a href="#" @click="oerElement">
+            <button @click="oerElement">
                 <translate>Seite auf %{oerTitle} veröffentlichen</translate>
-            </a>
+            </button>
         </li>
         <li v-if="!showExportArchiv && !showExportPdf && !showOer">
             <translate>Keine Exportoptionen verfügbar</translate>

@@ -47,13 +47,12 @@
                             />
                         </courseware-tab>
                     </courseware-tabs>
-                    <a 
-                        href="#"
+                    <button
                         :title="$gettext('schließen')"
                         class="cw-tools-hide-button"
                         ref="closeTools"
                         @click="$emit('deactivate')">
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>

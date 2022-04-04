@@ -1,44 +1,44 @@
 <template>
     <ul class="widget-list widget-links cw-action-widget" v-if="structuralElement">
         <li class="cw-action-widget-show-toc">
-            <a href="#" @click="toggleTOC">
+            <button @click="toggleTOC">
                 {{ tocText }}
-            </a>
+            </button>
         </li>
         <li class="cw-action-widget-show-consume-mode">
-            <a href="#" @click="showConsumeMode">
+            <button @click="showConsumeMode">
                 <translate>Vollbild einschalten</translate>
-            </a>
+            </button>
         </li>
         <li v-if="canEdit" class="cw-action-widget-edit">
-            <a href="#" @click="editElement">
+            <button @click="editElement">
                 <translate>Seite bearbeiten</translate>
-            </a>
+            </button>
         </li>
         <li v-if="canEdit" class="cw-action-widget-sort">
-            <a href="#" @click="sortContainers">
+            <button @click="sortContainers">
                 <translate>Abschnitte sortieren</translate>
-            </a>
+            </button>
         </li>
         <li v-if="canEdit" class="cw-action-widget-add">
-            <a href="#" @click="addElement">
+            <button @click="addElement">
                 <translate>Seite hinzufügen</translate>
-            </a>
+            </button>
         </li>
         <li class="cw-action-widget-info">
-            <a href="#" @click="showElementInfo">
+            <button @click="showElementInfo">
                 <translate>Informationen anzeigen</translate>
-            </a>
+            </button>
         </li>
         <li class="cw-action-widget-star">
-            <a href="#" @click="createBookmark">
+            <button @click="createBookmark">
                 <translate>Lesezeichen setzen</translate>
-            </a>
+            </button>
         </li>
         <li v-if="!isRoot && canEdit" class="cw-action-widget-trash">
-            <a href="#" @click="deleteElement">
+            <button @click="deleteElement">
                 <translate>Seite löschen</translate>
-            </a>
+            </button>
         </li>
     </ul>
 </template>
