@@ -961,7 +961,7 @@ export const actions = {
         let courses = [];
         for (let membership of memberships) {
             if (
-                membership.attributes.permission === 'tutor' &&
+                (membership.attributes.permission === 'dozent' || membership.attributes.permission === 'tutor') &&
                 state.context.id !== membership.relationships.course.data.id
             ) {
                 const course = rootGetters['courses/related']({ parent: membership, relationship: 'course' });
