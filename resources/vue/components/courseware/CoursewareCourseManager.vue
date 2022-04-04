@@ -35,12 +35,12 @@
                     <courseware-collapsible-box :open="true" :title="$gettext('Wie finde ich die gewünschte Stelle?')">
                         <p><translate>
                             Wählen Sie auf der linken Seite "Diese Courseware" aus.
-                            Beim laden der Seite ist dies immer gewählt. Die Überschrift
+                            Beim Laden der Seite ist dies immer gewählt. Die Überschrift
                             gibt an, welche Seite Sie gerade ausgewählt haben. Darunter befinden
                             sich die Abschnitte der Seite und innerhalb dieser deren Blöcke.
-                            Möchten Sie eine Seite, die unterhalb der gewählten liegt bearbeiten,
+                            Möchten Sie eine Seite, die unterhalb der gewählten liegt, bearbeiten,
                             können Sie diese über die Schaltflächen im Bereich "Unterseiten" wählen.
-                            Über der Überschrift wird eine Navigation eingeblendet, mit der Sie beliebig 
+                            Über der Überschrift wird eine Navigation eingeblendet, mit der Sie beliebig
                             weit hoch in der Hierarchie springen können.
                         </translate></p>
                     </courseware-collapsible-box>
@@ -58,8 +58,8 @@
                         <p><translate>
                             Seiten, Abschnitte und Blöcke lassen sich verschieben.
                             Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche
-                            "Seite an diese Stelle einfügen", "Abschnitt an diese Stelle einfügen" oder
-                            "Block an diese Stelle einfügen". Wählen Sie dann auf der rechten Seite unter
+                            "Seite an dieser Stelle einfügen", "Abschnitt an dieser Stelle einfügen" oder
+                            "Block an dieser Stelle einfügen". Wählen Sie dann auf der rechten Seite unter
                             "Verschieben" das Objekt aus, das Sie verschieben möchten. Verschiebbare Objekte
                             erkennen Sie an den zwei nach links zeigenden gelben Pfeilen.
                         </translate></p>
@@ -69,8 +69,8 @@
                             Seiten, Abschnitte und Blöcke lassen sich aus einer anderen Veranstaltung und Ihren
                             eigenen Inhalten kopieren.
                             Hierzu wählen Sie auf der linken Seite unter "Diese Courseware" die Schaltfläche
-                            "Seite an diese Stelle einfügen", "Abschnitt an diese Stelle einfügen" oder
-                            "Block an diese Stelle einfügen". Wählen Sie dann auf der rechten Seite unter
+                            "Seite an dieser Stelle einfügen", "Abschnitt an dieser Stelle einfügen" oder
+                            "Block an dieser Stelle einfügen". Wählen Sie dann auf der rechten Seite unter
                             "Kopieren" erst die Veranstaltung aus der Sie kopieren möchten oder Ihre eigenen
                             Inhalte. Wählen sie dann das Objekt aus, das Sie kopieren möchten. Kopierbare Objekte
                             erkennen Sie an den zwei nach links zeigenden gelben Pfeilen.
