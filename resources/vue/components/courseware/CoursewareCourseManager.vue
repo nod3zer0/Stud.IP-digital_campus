@@ -77,7 +77,7 @@
                         </translate></p>
                     </courseware-collapsible-box>
                 </courseware-tab>
-                <courseware-tab name="Verschieben" :selected="true" :index="1">
+                <courseware-tab name="$gettext('Verschieben')" :selected="true" :index="1">
                     <courseware-manager-element
                     type="self"
                     :currentElement="selfElement"
