@@ -212,23 +212,23 @@ class Resources
             return;
         }
 
-        var selected_option = jQuery(select_node).find(":selected")[0];
+        let selected_option = jQuery(select_node).find(":selected")[0];
         if (!selected_option) {
             return;
         }
 
-        var option_value = jQuery(selected_option).val();
+        let option_value = jQuery(selected_option).val();
         if (!option_value) {
             //The first option which is left blank intentionally
             //has been selected.
             return;
         }
-        var option_title = jQuery(selected_option).attr('data-title');
-        var option_type = jQuery(selected_option).attr('data-type');
-        var option_select_options = jQuery(selected_option).attr('data-select_options').split(';;');
-        var option_range_search = jQuery(selected_option).attr('data-range-search');
+        let option_title = jQuery(selected_option).data('title');
+        let option_type = jQuery(selected_option).data('type');
+        let option_select_options = jQuery(selected_option).data('select_options').split(';;');
+        let option_range_search = jQuery(selected_option).data('range-search');
+        let template = undefined;
 
-        var template = undefined;
         if (option_type === 'bool') {
             template = jQuery(select_node).parent().parent().find(
                 '.criteria-list .template[data-template-type="'
@@ -269,43 +269,41 @@ class Resources
             return;
         }
 
-        var criteria_list = jQuery(template).parent();
-
-        var new_criteria = jQuery(template).clone();
+        let criteria_list = jQuery(template).parent();
+        let new_criteria = jQuery(template).clone();
         jQuery(new_criteria).attr('class', 'item');
         jQuery(new_criteria).attr('data-criteria', option_value);
 
-        var new_criteria_text_field = jQuery(new_criteria).find('span')[0];
+        let new_criteria_text_field = jQuery(new_criteria).find('span')[0];
         jQuery(new_criteria_text_field).text(option_title);
 
         if (option_type === 'bool') {
-            var new_criteria_input = jQuery(new_criteria).find('input');
+            let new_criteria_input = jQuery(new_criteria).find('input');
             jQuery(new_criteria_input).attr('name', option_value);
         } else if (option_type === 'select') {
-            var new_criteria_select = jQuery(new_criteria).find('select')[0];
+            let new_criteria_select = jQuery(new_criteria).find('select')[0];
             jQuery(new_criteria_select).attr('name', option_value);
             //Build the option elements from the data-options field:
             if (!option_select_options) {
                 //Something is wrong.
                 return;
             }
-            var options_html = '';
-            for (option of option_select_options) {
-                var splitted_option = option.split('~~');
+            let options_html = '';
+            for (let option of option_select_options) {
+                let splitted_option = option.split('~~');
                 options_html += '<option value="' + splitted_option[0] + '">'
                     + splitted_option[1]
                     + '</option>';
             }
-            jQuery(new_criteria_select).html(options_html);
         } else if (option_type === 'date') {
-            var time_inputs = jQuery(new_criteria).find('input[data-time="yes"]');
-            var date_inputs = jQuery(new_criteria).find('input[type="date"]');
+            let time_inputs = jQuery(new_criteria).find('input[data-time="yes"]');
+            let date_inputs = jQuery(new_criteria).find('input[type="date"]');
 
             if (time_inputs.length < 2) {
                 //Something is wrong with the HTML.
                 return;
             }
-            var now = new Date();
+            let now = new Date();
 
             jQuery(time_inputs[0]).attr('name', option_value + '_begin_time');
             jQuery(time_inputs[1]).attr('name', option_value + '_end_time');
@@ -351,10 +349,10 @@ class Resources
 
         } else {
             if (option_type === 'num' && option_range_search) {
-                var new_criteria_inputs = jQuery(new_criteria).find('input');
+                let new_criteria_inputs = jQuery(new_criteria).find('input');
                 jQuery(new_criteria_inputs[0]).attr('name', option_value);
-                var min_input = new_criteria_inputs[1];
-                var max_input = new_criteria_inputs[2];
+                let min_input = new_criteria_inputs[1];
+                let max_input = new_criteria_inputs[2];
                 jQuery(min_input).attr('name', option_value + '_min');
                 jQuery(min_input).attr('type', 'number');
                 jQuery(max_input).attr('name', option_value + '_max');
@@ -362,7 +360,7 @@ class Resources
                 jQuery(min_input).val(Math.round(parseInt(min_input) * 1.25));
                 jQuery(max_input).val(Math.round(parseInt(max_input) * 0.75));
             } else {
-                var new_criteria_input = jQuery(new_criteria).find('input')[0];
+                let new_criteria_input = jQuery(new_criteria).find('input')[0];
                 jQuery(new_criteria_input).attr('name', option_value);
                 if (option_type === 'num') {
                     jQuery(new_criteria_input).attr('type', 'number');

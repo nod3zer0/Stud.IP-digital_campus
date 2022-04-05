@@ -11,7 +11,6 @@ class RoomSearchWidget extends SidebarWidget
     protected $selected_criteria;
     protected $defined_properties;
 
-
     protected function setupSearchParameters()
     {
         $this->defined_properties = RoomManager::getAllRoomPropertyDefinitions(
@@ -45,32 +44,6 @@ class RoomSearchWidget extends SidebarWidget
             $room_types = [
                 '' => _('Alle Raumtypen')
             ];
-        }
-
-        $locations = Location::findAll();
-        $location_options = [
-            [
-                'id' => '',
-                'name' => _('Alle Standorte und Gebäude'),
-                'sub_options' => []
-            ]
-        ];
-        if ($locations) {
-            foreach ($locations as $location) {
-                $buildings = Building::findByLocation($location->id);
-                $sub_options = [];
-                foreach ($buildings as $building) {
-                    $sub_options[] = [
-                        'id' => 'building_' . $building->id,
-                        'name' => $building->name
-                    ];
-                }
-                $location_options[] = [
-                    'id' => 'location_' . $location->id,
-                    'name' => $location->name,
-                    'sub_options' => $sub_options
-                ];
-            }
         }
 
         $this->criteria = [];
@@ -126,7 +99,6 @@ class RoomSearchWidget extends SidebarWidget
             'title' => _('Standort / Gebäude'),
             'type' => 'hidden',
             'range_search' => false,
-            //'options' => $location_options,
             'switch' => false,
             'value' => '',
             'optional' => false
@@ -141,7 +113,6 @@ class RoomSearchWidget extends SidebarWidget
                     'title' => _('Standort / Gebäude'),
                     'type' => 'disabled_text',
                     'range_search' => false,
-                    //'options' => $location_options,
                     'switch' => false,
                     'value' => $selected_res->name,
                     'optional' => false
@@ -302,7 +273,7 @@ class RoomSearchWidget extends SidebarWidget
                                 );
                         }
                     }
-                } elseif (($data['type'] == 'num') and $data['range_search']) {
+                } elseif ($data['type'] === 'num' && $data['range_search']) {
                     if (Request::submitted($name . '_min')
                         || Request::submitted($name . '_max')) {
                         $this->selected_criteria[$name] = $data;
@@ -324,7 +295,6 @@ class RoomSearchWidget extends SidebarWidget
             $this->selected_criteria;
     }
 
-
     protected function restoreSearchFromSession()
     {
         if (is_array($_SESSION['room_search_criteria']['room_search'])) {
@@ -334,7 +304,6 @@ class RoomSearchWidget extends SidebarWidget
             $this->selected_criteria = [];
         }
     }
-
 
     protected function search()
     {
@@ -492,7 +461,7 @@ class RoomSearchWidget extends SidebarWidget
                                 )
                             );
                         }
-                        $begin->setTime(0,0,0);
+                        $begin->setTime(0,0);
                         $end = clone $begin;
                         $end = $end->add(
                             new DateInterval('P1D')
@@ -523,13 +492,11 @@ class RoomSearchWidget extends SidebarWidget
         );
     }
 
-
     public function resetSearch()
     {
         $this->selected_criteria = [];
         $_SESSION['room_search_criteria']['room_search'] = [];
     }
-
 
     public function __construct($action_link = '')
     {
@@ -555,24 +522,20 @@ class RoomSearchWidget extends SidebarWidget
         }
     }
 
-
     public function searchRequested()
     {
         return Request::submitted('room_search');
     }
-
 
     public function searchResetRequested()
     {
         return Request::submitted('room_search_reset');
     }
 
-
     public function getResults()
     {
         return $this->rooms;
     }
-
 
     public function setActionLink($action_link = '')
     {
@@ -595,27 +558,17 @@ class RoomSearchWidget extends SidebarWidget
 
     public function render($variables = [])
     {
-        $variables['title'] = _('Suchkriterien für Räume');
+        $variables = array_merge($variables, [
+            'title'             => _('Suchkriterien für Räume'),
+            'criteria'          => $this->criteria,
+            'selected_criteria' => $this->selected_criteria,
+            'action_link'       => $this->action_link,
+        ]);
 
-        $template = $GLOBALS['template_factory']->open(
-            $this->template
+        return $GLOBALS['template_factory']->render(
+            $this->template,
+            $variables,
+            'widgets/widget-layout'
         );
-
-        $template->set_layout('widgets/widget-layout');
-
-        $template->set_attributes($variables);
-
-        $template->set_attribute(
-            'criteria',
-            $this->criteria
-        );
-        $template->set_attribute(
-            'action_link',
-            $this->action_link
-        );
-
-        $template->set_attribute('selected_criteria', $this->selected_criteria);
-
-        return $template->render();
     }
 }
