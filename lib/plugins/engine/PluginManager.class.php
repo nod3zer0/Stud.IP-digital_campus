@@ -300,43 +300,6 @@ class PluginManager
     }
 
     /**
-     * Returns the list of institutes for which a specific plugin is
-     * enabled by default.
-     *
-     * @param int $id id of the plugin
-     */
-    public function getDefaultActivations ($id)
-    {
-        $db = DBManager::get();
-
-        $result = $db->query("SELECT institutid FROM plugins_default_activations
-                              WHERE pluginid = '$id'");
-
-        return $result->fetchAll(PDO::FETCH_COLUMN);
-    }
-
-    /**
-     * Set the list of institutes for which a specific plugin should
-     * be enabled by default.
-     *
-     * @param int   $id          id of the plugin
-     * @param array $institutes  array of institute ids
-     */
-    public function setDefaultActivations ($id, $institutes)
-    {
-        $db = DBManager::get();
-
-        $result = $db->query("DELETE FROM plugins_default_activations
-                              WHERE pluginid = '$id'");
-
-        $stmt = $db->prepare("INSERT INTO plugins_default_activations
-                              (pluginid, institutid) VALUES (?,?)");
-        foreach ($institutes as $instid) {
-            $stmt->execute([$id, $instid]);
-        }
-    }
-
-    /**
      * Disable loading of all non-core plugins for the current session.
      *
      * @param bool $status true: disable non-core plugins
@@ -496,7 +459,6 @@ class PluginManager
 
             $db->execute("DELETE FROM plugins WHERE pluginid = ?", [$id]);
             $db->execute("DELETE FROM plugins_activated WHERE pluginid = ?", [$id]);
-            $db->execute("DELETE FROM plugins_default_activations WHERE pluginid = ?", [$id]);
             $db->execute("DELETE FROM roles_plugins WHERE pluginid = ?", [$id]);
 
             unset($this->plugins[$id]);

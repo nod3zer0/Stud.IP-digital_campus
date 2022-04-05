@@ -90,13 +90,6 @@ use Studip\Button, Studip\LinkButton;
                         </td>
                         <td class="actions">
                             <? $actionMenu = ActionMenu::get() ?>
-                            <? if (in_array('StandardPlugin', $plugin['type'])): ?>
-                                <? $actionMenu->addLink(
-                                    $controller->url_for('admin/plugin/default_activation/' . $pluginid),
-                                    _('In Veranstaltungen aktivieren'),
-                                    Icon::create('seminar+add', 'clickable', ['title' => _('In Veranstaltungen aktivieren')])
-                                ) ?>
-                            <? endif ?>
                             <? $actionMenu->addLink(
                                 $controller->url_for('admin/role/assign_plugin_role/' . $pluginid),
                                 _('Zugriffsrechte bearbeiten'),
@@ -114,8 +107,6 @@ use Studip\Button, Studip\LinkButton;
                                     ]),
                                     ['data-dialog' => 'size=auto;reload-on-close']
                                 ) ?>
-                            <? endif ?>
-                            <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version']) && !$plugin['core']): ?>
                                 <? $actionMenu->addLink(
                                     $controller->url_for('admin/plugin/download/' . $pluginid),
                                     _('Herunterladen'),

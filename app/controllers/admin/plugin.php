@@ -491,52 +491,6 @@ class Admin_PluginController extends AuthenticatedController
     }
 
     /**
-     * Display the default activation set for this plugin.
-     */
-    public function default_activation_action($plugin_id)
-    {
-        Helpbar::Get()->addPlainText(_('Einrichtungen'), _('Wählen Sie die Einrichtungen, in deren Veranstaltungen das Plugin automatisch aktiviert sein soll.'), Icon::create('info'));
-        $actions = new ActionsWidget();
-        $actions->addLink(_('Pluginverwaltung'), $this->url_for('admin/plugin'), Icon::create('plugin', 'clickable'));
-        Sidebar::Get()->addWidget($actions);
-        $plugin_manager = PluginManager::getInstance();
-        $plugin = $plugin_manager->getPluginInfoById($plugin_id);
-        $selected_inst = $plugin_manager->getDefaultActivations($plugin_id);
-
-        $this->plugin_name   = $plugin['name'];
-        $this->plugin_id     = $plugin_id;
-        $this->selected_inst = $selected_inst;
-        $this->institutes    = $this->plugin_admin->getInstitutes();
-    }
-
-    /**
-     * Change the default activation for this plugin.
-     */
-    public function save_default_activation_action($plugin_id)
-    {
-        $plugin_manager = PluginManager::getInstance();
-        $selected_inst = Request::optionArray('selected_inst');
-
-        $this->check_ticket();
-
-        // save selected institutes (if any)
-        $plugin_manager->setDefaultActivations($plugin_id, $selected_inst);
-
-        if (count($selected_inst) === 0) {
-            PageLayout::postSuccess(_('Die Default-Aktivierung wurde ausgeschaltet.'));
-        } else {
-            $message = ngettext(
-                'Für die ausgewählte Einrichtung wurde das Plugin standardmäßig aktiviert.',
-                'Für die ausgewählten Einrichtungen wurde das Plugin standardmäßig aktiviert.',
-                count($selected_inst)
-            );
-            PageLayout::postSuccess($message);
-        }
-
-        $this->redirect('admin/plugin/default_activation/' . $plugin_id);
-    }
-
-    /**
      * migrate a plugin to top version
      *
      * @param integer   id of plugin to migrate

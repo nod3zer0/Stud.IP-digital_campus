@@ -292,32 +292,6 @@ class PluginAdministration
     }
 
     /**
-     * Get a list of all available institutes.
-     */
-    public function getInstitutes()
-    {
-        $db = DBManager::get();
-        $institutes = [];
-
-        $sql = 'SELECT Institut_id, Name, fakultaets_id, Institut_id = fakultaets_id AS is_fak
-                FROM Institute ORDER BY is_fak DESC, Name';
-        $result = $db->query($sql)->fetchAll();
-
-        foreach ($result as $row) {
-            $inst_id = $row['Institut_id'];
-            $fak_id = $row['fakultaets_id'];
-
-            if ($inst_id == $fak_id) {
-                $institutes[$inst_id] = ['name' => $row['Name']];
-            } else {
-                $institutes[$fak_id]['children'][$inst_id] = ['name' => $row['Name']];
-            }
-        }
-
-        return $institutes;
-    }
-
-    /**
      * Get a list of the types of all installed plugins.
      *
      * @return array    list of plugin types
