@@ -51,7 +51,7 @@ class PluginRepository
      *   [...]
      * </plugins>
      *
-     * @param string $url given url for plugin
+     * @param string $url plugin repository url
      */
     public function readMetadata($url)
     {
