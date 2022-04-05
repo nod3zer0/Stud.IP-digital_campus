@@ -6,15 +6,10 @@
         $default_date = strftime('%x', time());
     }
 ?>
-<?= \Studip\Button::create(
+<?= \Studip\LinkButton::create(
         _('Heute'),
-        'today',
-        [
-            'id' => 'booking-plan-jmpdate-button',
-            'onClick' => "$('#booking-plan-jmpdate').val('". strftime('%x', time()) ."');$('#booking-plan-jmpdate-submit').trigger('click');"
-        ]
+        URLHelper::getURL('', ['defaultDate' => date('Y-m-d', time())])
     ); ?>
 
 <input id="booking-plan-jmpdate" type="text"
  name="booking-plan-jmpdate" value="<?= $default_date; ?>">
- <?= Icon::create('accept', 'clickable')->asInput(['id'=>'booking-plan-jmpdate-submit', 'class' => 'text-top']) ?>
