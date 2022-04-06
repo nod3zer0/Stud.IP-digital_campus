@@ -1016,7 +1016,6 @@ class Resources_ResourceController extends AuthenticatedController
 
             //Get the list of temporary permissions for the user-IDs in the list:
             $user_permissions = Request::getArray('permissions');
-            //var_dump($user_permissions);die();
 
             $processed_permissions = 0;
             $errors = [];

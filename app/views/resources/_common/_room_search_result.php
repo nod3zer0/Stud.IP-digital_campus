@@ -55,14 +55,17 @@
             );
         }
         if ($room->building) {
-            $actions->addLink(
-                ResourceManager::getMapUrlForResourcePosition(
-                    $room->building->getPropertyObject('geo_coordinates')
-                ),
-                _('Zum Lageplan'),
-                Icon::create('globe'),
-                ['target' => '_blank']
-            );
+            $geo_coordinates_object = $room->building->getPropertyObject('geo_coordinates');
+            if ($geo_coordinates_object instanceof ResourceProperty) {
+                $actions->addLink(
+                    ResourceManager::getMapUrlForResourcePosition(
+                        $room->building->getPropertyObject('geo_coordinates')
+                    ),
+                    _('Zum Lageplan'),
+                    Icon::create('globe'),
+                    ['target' => '_blank']
+                );
+            }
         }
         if ($clipboard_widget_id) {
             $actions->addLink(

@@ -67,10 +67,7 @@ class Resources_RoomController extends AuthenticatedController
             $user,
             'autor'
         );
-        $current_user_is_resource_user        = $this->room->userHasPermission(
-            $user,
-            'user'
-        );
+        $current_user_is_resource_user        = $this->room->userHasPermission($user);
 
         $sidebar           = Sidebar::get();
         $actions           = new ActionsWidget();
@@ -167,6 +164,7 @@ class Resources_RoomController extends AuthenticatedController
         $this->grouped_properties = $this->room->getGroupedProperties(
             $this->room->getRequiredPropertyNames()
         );
+        $this->geo_coordinates_object = $this->room->building->getPropertyObject('geo_coordinates');
     }
 
 

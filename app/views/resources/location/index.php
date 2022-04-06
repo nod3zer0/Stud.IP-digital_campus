@@ -19,13 +19,15 @@
                     ['target' => '_blank']
                 ) ?>
             </div>
-            <?= \Studip\LinkButton::createEdit(
-                _('Bearbeiten'),
-                $location->getActionURL('edit'),
-                [
-                    'data-dialog' => 'size=auto'
-                ]
-            ) ?>
+            <? if($location->userHasPermission(User::findCurrent(), 'admin')) : ?>
+                <?= \Studip\LinkButton::createEdit(
+                    _('Bearbeiten'),
+                    $location->getActionURL('edit'),
+                    [
+                        'data-dialog' => 'size=auto'
+                    ]
+                ) ?>
+            <? endif ?>
         <? endif ?>
     <? endif ?>
     <? $property_groups = $location->getGroupedProperties($other_properties) ?>

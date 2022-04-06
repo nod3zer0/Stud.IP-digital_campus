@@ -88,21 +88,24 @@
             $room->getActionURL('semester_plan'),
             ['data-dialog' => 'size=big']) ?>
     <? endif ?>
-    <? if ($room->building) : ?>
+
+    <? if ($geo_coordinates_object instanceof ResourceProperty): ?>
         <?= \Studip\LinkButton::create(
             _('Zum Lageplan'),
             ResourceManager::getMapUrlForResourcePosition(
-                $room->building->getPropertyObject('geo_coordinates')
+                $geo_coordinates_object
             )
         ) ?>
     <? endif ?>
-    <?= \Studip\LinkButton::createEdit(
-        _('Bearbeiten'),
-        $room->getActionURL('edit'),
-        [
-            'data-dialog' => 'size=auto'
-        ]
-    ) ?>
+    <? if ($room->userHasPermission(User::findCurrent(), 'admin')) : ?>
+        <?= \Studip\LinkButton::createEdit(
+            _('Bearbeiten'),
+            $room->getActionURL('edit'),
+            [
+                'data-dialog' => 'size=auto'
+            ]
+        ) ?>
+    <? endif ?>
     <? if (!$current_user_is_resource_autor && $room->requestable) : ?>
         <?= \Studip\LinkButton::create(
             _('Raum anfragen'),

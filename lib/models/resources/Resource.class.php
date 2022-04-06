@@ -1439,13 +1439,16 @@ class Resource extends SimpleORMap implements StudipItem
                 );
 
                 $property->store();
+
+                if ($name === 'geo_coordinates' && $property->state === '+0.0000000+0.0000000+0.0000000CRSWGS_84/') {
+                    return null;
+                }
                 return $property;
             } else {
                 return null;
             }
         }
-
-        return ResourceProperty::findOneBySql(
+        $property = ResourceProperty::findOneBySql(
             "INNER JOIN resource_property_definitions rpd
                 ON resource_properties.property_id = rpd.property_id
             WHERE resource_properties.resource_id = :resource_id
@@ -1455,6 +1458,11 @@ class Resource extends SimpleORMap implements StudipItem
                 'name'        => $name
             ]
         );
+
+        if ($name === 'geo_coordinates' && $property->state === '+0.0000000+0.0000000+0.0000000CRSWGS_84/') {
+            return null;
+        }
+        return $property;
     }
 
     /**

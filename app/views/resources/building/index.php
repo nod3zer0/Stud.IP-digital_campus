@@ -30,7 +30,6 @@
             </section>
         </section>
     <? endif ?>
-
     <div data-dialog-button>
         <? if (Request::isDialog()) : ?>
             <? if ($geo_coordinates_object instanceof ResourceProperty): ?>
@@ -40,13 +39,15 @@
                     ['target' => '_blank']
                 ) ?>
             <? endif ?>
-            <?= \Studip\LinkButton::createEdit(
-                _('Bearbeiten'),
-                $building->getActionURL('edit'),
-                [
-                    'data-dialog' => 'size=auto'
-                ]
-            ) ?>
+            <? if ($building->userHasPermission($GLOBALS['user']->getAuthenticatedUser(), 'admin')) : ?>
+                <?= \Studip\LinkButton::createEdit(
+                    _('Bearbeiten'),
+                    $building->getActionURL('edit'),
+                    [
+                        'data-dialog' => 'size=auto'
+                    ]
+                ) ?>
+            <? endif ?>
         <? endif ?>
     </div>
     <?
