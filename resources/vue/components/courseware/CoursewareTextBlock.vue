@@ -10,7 +10,7 @@
             @closeEdit="closeEdit"
         >
             <template #content>
-                <section class="cw-block-content" v-html="currentText" ref="content"></section>
+                <section class="cw-block-content formatted-content" v-html="currentText" ref="content"></section>
             </template>
             <template v-if="canEdit" #edit>
                 <studip-wysiwyg v-model="currentText"></studip-wysiwyg>
