@@ -204,7 +204,7 @@ class ActionMenu {
      * Confirms an action in the action menu that calls a JavaScript function
      * instead of linking to another URL.
      */
-    confirmJSAction(element = null) {
+    static confirmJSAction(element = null) {
         //Show visual hint using a deferred. This way we don't need to
         //duplicate the functionality in the done() handler.
         //(code copied from copyable_link.js and modified)
