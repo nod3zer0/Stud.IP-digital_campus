@@ -40,13 +40,15 @@
     </ol>
 <? endif ?>
 
-<? if ($url && $material['filename']) : ?>
+<? if (($url && $material['filename'] || (!$material['host_id'] && ($material->isMine() || $GLOBALS['perm']->have_perm("root"))))) : ?>
     <div class="center bordered" style="margin-top: 20px; margin-bottom: 20px;">
-        <a class="button"
-           href="<?= htmlReady($url) ?>" title="<?= _('Herunterladen') ?>"
-           download="<?= htmlReady($material['filename']) ?>">
-            <div class="filename"><?= _('Herunterladen') ?></div>
-        </a>
+        <? if ($url && $material['filename']) : ?>
+            <a class="button"
+               href="<?= htmlReady($url) ?>" title="<?= _('Herunterladen') ?>"
+               download="<?= htmlReady($material['filename']) ?>">
+                <div class="filename"><?= _('Herunterladen') ?></div>
+            </a>
+        <? endif ?>
 
         <? if ($GLOBALS['perm']->have_perm("autor")) : ?>
             <a class="button"
