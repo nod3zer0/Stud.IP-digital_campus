@@ -88,7 +88,7 @@
             </div>
             </form>
         <? endif ?>
-        <? if (count($existing_courses)) : ?>
+        <? if ($existing_courses) : ?>
             <form method="POST" action="<?=URLHelper::getLink() . "#anker"?>>
             <?=CSRFProtection::tokenTag()?>
             <?=ELearningUtils::getHeader(_("Verknüpfung mit einem bestehenden Kurs"))?>

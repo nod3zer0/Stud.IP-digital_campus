@@ -451,9 +451,11 @@ class ExternModuleTemplatePersondetails extends ExternModule {
 
         $content['PERSONDETAILS']['IMAGE-HREF'] = Avatar::getAvatar($this->user_id)->getURL(Avatar::NORMAL);
 
-        $gruppen = GetRoleNames(GetAllStatusgruppen($this->config->range_id, $row['user_id']));
-        for ($i = 0; $i < sizeof($gruppen); $i++) {
-            $content['PERSONDETAILS']['GROUPS'][$i]['GROUP'] = ExternModule::ExtHtmlReady($gruppen[$i]);
+        $gruppen = GetRoleNames(GetAllStatusgruppen($this->config->range_id, $row['user_id'])) ?? [];
+        if ($gruppen) {
+            for ($i = 0; $i < count($gruppen); $i++) {
+                $content['PERSONDETAILS']['GROUPS'][$i]['GROUP'] = ExternModule::ExtHtmlReady($gruppen[$i]);
+            }
         }
 
         $content['PERSONDETAILS']['INST-NAME'] = ExternModule::ExtHtmlReady($row['Name']);
@@ -653,9 +655,15 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         if (is_null($semclass)) {
             $semclass = [1];
         }
-            if (in_array($type["class"], $semclass)) {
-            }
-        $switch_time = mktime(0, 0, 0, date("m"), date("d") + 7 * $this->config->getValue("PersondetailsLectures", "semswitch"), date("Y"));
+
+        // Is a semester switch defined?
+        $week_offset = $module->config->getValue('PersondetailsLectures', 'semswitch');
+        if (ctype_digit($week_offset)) {
+            $switch_time = strtotime("+{$week_offset} weeks 0:00:00");
+        } else {
+            $switch_time = strtotime('0:00:00');
+        }
+
         // get current semester
         $current_sem = get_sem_num($switch_time) + 1;
 
@@ -678,7 +686,13 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 }
         }
 
-        $last_sem = $current_sem + $this->config->getValue("PersondetailsLectures", "semrange") - 1;
+        $last_sem = $current_sem - 1;
+
+        $sem_offset = $this->config->getValue("PersondetailsLectures", "semrange");
+        if ($sem_offset && ctype_digit($sem_offset)) {
+            $last_sem += $sem_offset;
+        }
+
         if ($last_sem < $current_sem) {
             $last_sem = $current_sem;
         }

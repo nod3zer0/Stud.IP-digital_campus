@@ -361,8 +361,14 @@ function lehre (&$module, $row, $alias_content, $text_div, $text_div_end)
         }
     }
 
-    $switch_time = mktime(0, 0, 0, date('m'),
-            date('d') + 7 * $module->config->getValue('PersondetailsLectures', 'semswitch'), date('Y'));
+    // Is a semester switch defined?
+    $week_offset = $module->config->getValue('PersondetailsLectures', 'semswitch');
+    if (ctype_digit($week_offset)) {
+        $switch_time = strtotime("+{$week_offset} weeks 0:00:00");
+    } else {
+        $switch_time = strtotime('0:00:00');
+    }
+
     // get current semester
     $current_sem = get_sem_num($switch_time) + 1;
 
@@ -385,7 +391,13 @@ function lehre (&$module, $row, $alias_content, $text_div, $text_div_end)
             }
     }
 
-    $last_sem = $current_sem + $module->config->getValue('PersondetailsLectures', 'semrange') - 1;
+    $last_sem = $current_sem - 1;
+
+    $sem_offset = $module->config->getValue('PersondetailsLectures', 'semrange');
+    if ($sem_offset && ctype_digit($sem_offset)) {
+        $last_sem += $sem_offset;
+    }
+
     if ($last_sem < $current_sem) {
         $last_sem = $current_sem;
     }
@@ -663,7 +675,7 @@ function kontakt ($module, $row, $separate = FALSE) {
                 break;
             case 'Home' :
                 if (($separate || !$module->config->getValue('Contact', 'separatelinks')) &&
-                       true || Visibility::verify('homepage', $row['user_id'])) {
+                       Visibility::verify('homepage', $row['user_id'])) {
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fonttitle>";

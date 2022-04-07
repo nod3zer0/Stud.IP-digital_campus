@@ -132,8 +132,7 @@ class ExternSemBrowse extends SemBrowse {
                 $the_tree->buildIndex();
                 $selected_ranges = array_merge([$stid], $the_tree->getKidsKids($stid));
             }
-            if (!$this->config->getValue('SelectSubjectAreas', 'selectallsubjectareas')
-                    && count($selected_ranges)) {
+            if (!$this->config->getValue('SelectSubjectAreas', 'selectallsubjectareas') && $selected_ranges) {
                 if ($this->config->getValue('SelectSubjectAreas', 'reverseselection')) {
                     $sem_range_query =  "AND seminar_sem_tree.sem_tree_id NOT IN ('".implode("','", $selected_ranges)."')";
                 } else {
@@ -149,7 +148,7 @@ class ExternSemBrowse extends SemBrowse {
                 $selected_semtypes = [Request::get('semstatus')];
             }
             $sem_types_array = [];
-            if (count($selected_semtypes)) {
+            if ($selected_semtypes) {
                 foreach ($selected_semtypes as $i => $active) {
                     if ($active == '1') {
                         $sem_types_array[] = $i + 1;

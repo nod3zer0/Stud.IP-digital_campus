@@ -147,7 +147,7 @@ class Course_ElearningController extends AuthenticatedController
             URLHelper::getURL('dispatch.php/elearning/my_accounts'),
             Icon::create('person')
         );
-        if (count($this->course_output['courses']))
+        if ($this->course_output['courses'])
             foreach ($this->course_output['courses'] as $course) {
                 $widget->addLink(
                     sprintf(_('Direkt zum Kurs in %s'), $course['cms_name']),

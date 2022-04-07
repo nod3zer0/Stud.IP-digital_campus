@@ -28,7 +28,7 @@
                 <br>
             <? endforeach ?>
             <br>
-            <? if (count($course_output['courses'])) : ?>
+            <? if ($course_output['courses']) : ?>
                 <?=$course_output['text']?><br>
                 <? foreach ($course_output['courses'] as $course) : ?>
                     <a href="<?= $course['url'] ?>" target="_blank" rel="noopener noreferrer">

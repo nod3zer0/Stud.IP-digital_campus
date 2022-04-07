@@ -216,8 +216,14 @@ class ExternSemBrowseTemplate extends SemBrowse {
             }
         }
 
-        $switch_time = mktime(0, 0, 0, date("m"),
-                date("d") + 7 * $this->module->config->getValue("Main", "semswitch"), date("Y"));
+        // Is a semester switch defined?
+        $week_offset = $this->module->config->getValue("Main", "semswitch");
+        if (ctype_digit($week_offset)) {
+            $switch_time = strtotime("+{$week_offset} weeks 0:00:00");
+        } else {
+            $switch_time = strtotime('0:00:00');
+        }
+
         // get current semester
         $current_sem = get_sem_num($switch_time) + 1;
 

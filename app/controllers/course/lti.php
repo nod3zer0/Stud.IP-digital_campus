@@ -383,7 +383,7 @@ class Course_LtiController extends StudipController
                             'code' => 'studip.de',
                             'vendor_name' => ['default_value' => 'Stud.IP e.V.'],
                             'website' => 'https://www.studip.de/',
-                            'timestamp' => date(c)
+                            'timestamp' => date('c')
                         ]
                     ]
                 ],
@@ -391,7 +391,7 @@ class Course_LtiController extends StudipController
                     'service_owner_name' => ['default_value' => Config::get()->UNI_NAME_CLEAN],
                     'description' => ['default_value' => $GLOBALS['UNI_INFO']],
                     'support' => ['email' => $GLOBALS['UNI_CONTACT']],
-                    'timestamp' => date(c)
+                    'timestamp' => date('c')
                 ]
             ],
             'capability_offered' => [
