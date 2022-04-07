@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            :formattedContent="false"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
