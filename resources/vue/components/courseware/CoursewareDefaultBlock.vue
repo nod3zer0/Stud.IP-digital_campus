@@ -20,7 +20,7 @@
                     @deleteBlock="displayDeleteDialog()"
                 />
             </header>
-            <div v-if="showContent" class="cw-block-content" :class="[formattedContent ? 'formatted-content' : '']">
+            <div v-if="showContent" class="cw-block-content">
                 <slot name="content" />
             </div>
             <div v-if="showFeatures" class="cw-block-features cw-block-features-default">
@@ -105,10 +105,6 @@ export default {
         isTeacher: Boolean,
         preview: Boolean,
         defaultGrade: {
-            type: Boolean,
-            default: true,
-        },
-        formattedContent: {
             type: Boolean,
             default: true,
         }
