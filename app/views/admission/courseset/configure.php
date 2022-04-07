@@ -115,7 +115,7 @@ if ($flash['error']) {
             <div id="instcourses">
             <?= $coursesTpl; ?>
             </div>
-            <? if (count($courseIds) && $courseset->getAdmissionRule('ParticipantRestrictedAdmission')) : ?>
+            <? if (count($courseIds)) : ?>
                 <div>
                         <?= LinkButton::create(_('Ausgewählte Veranstaltungen konfigurieren'),
                             $controller->url_for('admission/courseset/configure_courses/' . $courseset->getId()),

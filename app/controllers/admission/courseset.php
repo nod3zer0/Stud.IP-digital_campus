@@ -380,6 +380,9 @@ class Admission_CoursesetController extends AuthenticatedController
         $this->set_id = $courseset->getId();
         $this->courses = Course::findMany($courseset->getCourses(), "ORDER BY VeranstaltungsNummer, Name");
         $this->applications = AdmissionPriority::getPrioritiesStats($courseset->getId());
+
+        $this->participant_restriction = $courseset->hasAdmissionRule('ParticipantRestrictedAdmission');
+
         $distinct_members = [];
         $multi_members = [];
         foreach($this->courses as $course) {

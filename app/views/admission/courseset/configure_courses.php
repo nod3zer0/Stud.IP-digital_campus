@@ -7,12 +7,16 @@
                 <th><?= _("versteckt")?></th>
                 <th><?= _("vorläufige Anmeldung")?></th>
                 <th><?= _("verbindliche Anmeldung")?></th>
+                <? if ($participant_restriction) : ?>
                 <th><?= _("max. Teilnehmende")?></th>
+                <? endif ?>
                 <th><?= _("Teilnehmende aktuell")?></th>
                 <th><?= _("Anmeldungen")?></th>
+                <? if ($participant_restriction) : ?>
                 <th><?= _("Warteliste")?></th>
                 <th><?= _("Plätze")?></th>
                 <th><?= _("Nachrücken")?></th>
+                <? endif ?>
             </tr>
         </thead>
     <tbody>
@@ -26,9 +30,12 @@
             <td><input <?=$editable?> type="checkbox" name="configure_courses_hidden[<?= $course->id?>]" value="1" <?= $course->visible ? '' : 'checked'?>></td>
             <td><input <?=$editable?> type="checkbox" name="configure_courses_prelim[<?= $course->id?>]" value="1" <?= $course->admission_prelim ? 'checked' : ''?>></td>
             <td><input <?=$editable?> type="checkbox" name="configure_courses_binding[<?= $course->id?>]" value="1" <?= $course->admission_binding ? 'checked' : ''?>></td>
+            <? if ($participant_restriction) : ?>
             <td><input <?=$editable?> type="text" size="2" name="configure_courses_turnout[<?= $course->id?>]" value="<?= (int)$course->admission_turnout ?>"></td>
+            <? endif ?>
             <td><?= $course->getNumParticipants() ?></td>
             <td><?= sprintf("%d / %d", $applications[$course->id]['c'],$applications[$course->id]['h']) ?></td>
+            <? if ($participant_restriction) : ?>
             <td style="white-space:nowrap">
                 <input <?=$editable?> type="checkbox" name="configure_courses_disable_waitlist[<?= $course->id?>]" value="1" <?= $course->admission_disable_waitlist ? '' : 'checked' ?>
                     title="<?= htmlReady(sprintf(_('Warteliste für %s aktivieren'), $course->name)) ?>"
@@ -48,6 +55,7 @@
                     title="<?= htmlReady(sprintf(_('Aktivieren des automatischen Nachrückens aus der Warteliste für %s'), $course->name)) ?>"
                     <? if (!$course->admission_disable_waitlist_move) echo 'checked'; ?>>
             </td>
+            <? endif ?>
         </tr>
     <? endforeach ?>
     </tbody>
