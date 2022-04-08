@@ -53,12 +53,24 @@ export default {
             return this.structuralElement.attributes['can-edit'];
         },
         showExportArchiv() {
+            if (this.context.type === 'users') {
+                return true;
+            }
+
             return this.canEdit;
         },
         showExportPdf() {
+            if (this.context.type === 'users') {
+                return true;
+            }
+
             return this.canVisit;
         },
         showOer() {
+            if (this.context.type === 'users') {
+                return true;
+            }
+
             return this.oerEnabled && this.userIsTeacher && this.canVisit
         }
     },

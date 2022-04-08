@@ -187,7 +187,7 @@ export default {
             let children = [];
 
             for (var i = 0; i < data.length; i++) {
-                if (data[i].relationships.parent.data?.id === parentId) {
+                if (data[i].relationships.parent.data?.id === parentId && data[i].attributes['can-edit']) {
                     let new_childs = await this.exportStructuralElement(data[i].id, data);
                     this.exportElementCounter++;
                     let content = { ...data[i] };
