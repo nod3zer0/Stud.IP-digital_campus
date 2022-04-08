@@ -1,5 +1,5 @@
 <template>
-    <a href="#" @click="addContainer">
+    <a href="#" @click.prevent="addContainer">
         <div class="cw-blockadder-item" :class="['cw-blockadder-item-' + type]">
             <header class="cw-blockadder-item-title">
                 {{ title }}

@@ -60,7 +60,8 @@ export default {
         linkEvents (item) {
             let events = {};
             if (item.emit) {
-                events.click = () => {
+                events.click = (e) => {
+                    e.preventDefault();
                     this.$emit.apply(this, [item.emit].concat(item.emitArguments));
                     this.close();
                 };
