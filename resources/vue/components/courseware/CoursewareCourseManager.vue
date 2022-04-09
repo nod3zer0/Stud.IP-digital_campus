@@ -93,7 +93,9 @@
                 </courseware-tab>
 
                 <courseware-tab :name="$gettext('Importieren')"  :index="3">
-                    <courseware-companion-box v-show="!importRunning && importDone" :msgCompanion="$gettext('Import erfolgreich!')" mood="special"/>
+                    <courseware-companion-box v-show="!importRunning && importDone && importErrors.length === 0" :msgCompanion="$gettext('Import erfolgreich!')" mood="special"/>
+                    <courseware-companion-box v-show="!importRunning && importDone && importErrors.length > 0" :msgCompanion="$gettext('Import abgeschlossen. Es sind Fehler aufgetreten!')" mood="unsure"/>
+                        <courseware-companion-box v-show="!importRunning && !importDone && importErrors.length > 0" :msgCompanion="$gettext('Import fehlgeschlagen. Es sind Fehler aufgetreten!')" mood="sad"/>
                     <courseware-companion-box v-show="importRunning" :msgCompanion="$gettext('Import läuft. Bitte verlassen Sie die Seite nicht bis der Import abgeschlossen wurde.')" mood="pointing"/>
                     <button
                         v-show="!importRunning"
@@ -131,11 +133,12 @@
                     >
                         <translate>Alles importieren</translate>
                     </button>
-
-                    <ul v-if="importErrors.length > 0">
-                        <li v-for="(index, error) in importErrors" :key="index"> {{error}} </li>
-                    </ul>
-
+                    <div v-if="importErrors.length > 0">
+                        <h3><translate>Fehlermeldungen:</translate></h3>
+                        <ul>
+                            <li v-for="(error, index) in importErrors" :key="index"> {{error}} </li>
+                        </ul>
+                    </div>
                     <input ref="importFile" type="file" accept=".zip" @change="setImport" style="visibility: hidden" />
                 </courseware-tab>
                 <courseware-tab v-if="context.type === 'courses'" :name="$gettext('Aufgabe verteilen')"  :index="4">
@@ -240,6 +243,7 @@ export default {
             companionInfo: 'companionInfo',
             setImportFilesProgress: 'setImportFilesProgress',
             setImportStructuresProgress: 'setImportStructuresProgress',
+            setImportErrors: 'setImportErrors',
         }),
         async reloadElements() {
             await this.setCurrentId(this.currentId);
@@ -281,6 +285,7 @@ export default {
 
         setImport(event) {
             this.importZip = event.target.files[0];
+            this.setImportErrors([]);
         },
 
         async doImportCourseware() {
@@ -295,11 +300,47 @@ export default {
             view.zip = new JSZip();
 
             await view.zip.loadAsync(this.importZip).then(async function () {
-                let data = await view.zip.file('courseware.json').async('string');
-                let courseware = JSON.parse(data);
+                let errors = [];
+                let missingFiles = false;
+                if (view.zip.file('courseware.json') === null) {
+                    errors.push(view.$gettext('Das Archiv enthält keine courseware.json Datei.'));
+                    missingFiles = true;
+                }
+                if (view.zip.file('files.json') === null) {
+                    errors.push(view.$gettext('Das Archiv enthält keine files.json Datei.'));
+                    missingFiles = true;
+                }
+                if (view.zip.file('data.xml') !== null) {
+                    errors.push(view.$gettext('Das Archiv enthält eine data.xml Datei. Möglicherweise handelt es sich um einen Export aus dem Courseware-Plugin. Diese Archive sind nicht kompatibel mit dieser Courseware.'));
+                }
+                if (missingFiles) {
+                    view.setImportErrors(errors);
+                    return;
+                }
 
+                let data = await view.zip.file('courseware.json').async('string');
+                let courseware = null;
                 let data_files = await view.zip.file('files.json').async('string');
-                let files = JSON.parse(data_files);
+                let files = null;
+                let jsonErrors = false;
+                try {
+                    courseware = JSON.parse(data);
+                } catch (error) {
+                    jsonErrors = true;
+                    errors.push(view.$gettext('Die Beschreibung der Courseware-Inhalte ist nicht valide.'));
+                    errors.push(error);
+                }
+                try {
+                    files = JSON.parse(data_files);
+                } catch (error) {
+                    jsonErrors = true;
+                    errors.push(view.$gettext('Die Beschreibung der Dateien ist nicht valide.'));
+                    errors.push(error);
+                }
+                if (jsonErrors) {
+                    view.setImportErrors(errors);
+                    return;
+                }
 
                 await view.loadCoursewareStructure();
                 let parent_id = view.courseware.relationships.root.data.id;
@@ -322,7 +363,7 @@ export default {
             } else {
                 return (size / 1048576).toFixed(2) + ' MB';
             }
-        }
+        },
     },
     watch: {
         courseware(newValue, oldValue) {
@@ -331,5 +372,12 @@ export default {
             this.setSelfId(currentId);
         },
     },
+    mounted() {
+        let view = this;
+
+        window.onbeforeunload = function() {
+            return view.importRunning ? true : null
+        }
+    }
 };
 </script>
