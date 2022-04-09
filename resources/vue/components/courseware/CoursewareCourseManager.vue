@@ -95,7 +95,7 @@
                 <courseware-tab :name="$gettext('Importieren')"  :index="3">
                     <courseware-companion-box v-show="!importRunning && importDone && importErrors.length === 0" :msgCompanion="$gettext('Import erfolgreich!')" mood="special"/>
                     <courseware-companion-box v-show="!importRunning && importDone && importErrors.length > 0" :msgCompanion="$gettext('Import abgeschlossen. Es sind Fehler aufgetreten!')" mood="unsure"/>
-                        <courseware-companion-box v-show="!importRunning && !importDone && importErrors.length > 0" :msgCompanion="$gettext('Import fehlgeschlagen. Es sind Fehler aufgetreten!')" mood="sad"/>
+                    <courseware-companion-box v-show="!importRunning && !importDone && importErrors.length > 0" :msgCompanion="$gettext('Import fehlgeschlagen. Es sind Fehler aufgetreten!')" mood="sad"/>
                     <courseware-companion-box v-show="importRunning" :msgCompanion="$gettext('Import läuft. Bitte verlassen Sie die Seite nicht bis der Import abgeschlossen wurde.')" mood="pointing"/>
                     <button
                         v-show="!importRunning"
