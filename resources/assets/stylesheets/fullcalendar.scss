@@ -11,15 +11,28 @@ a.fc-event, td.fc-event {
     }
 }
 
-.fc button.fc-button {
-    @include button();
-    border-radius: 0;
+.fc {
+    .fc-toolbar.fc-header-toolbar {
+        margin-bottom: 0.5em;
+    }
+
+    .fc-button-group {
+        height: 30px;
+
+        .fc-button {
+            @include button();
+            border-radius: 0;
+
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
 }
+
 
 .fc-button-primary:not(:disabled):active,
 .fc-button-primary:not(:disabled).fc-button-active,
 .fc button.fc-button.fc-state-active {
-    -webkit-box-shadow: none;
     box-shadow: none;
 
     background-color: $base-color !important;
@@ -32,7 +45,13 @@ a.fc-event, td.fc-event {
     min-height: 0 !important;
 }*/
 
-.fullcalendar-header {
+.studip-fullcalendar-header {
+    /* This shall look like a table caption. */
+    background-color: transparent;
+    color: $base-gray;
+    font-size: 1.4em;
+    text-align: left;
+
     &.fullcalendar-dialog{
         width: calc(100% - 550px);
         vertical-align: middle;
@@ -199,6 +218,24 @@ a.fc-event, td.fc-event {
             &:nth-last-child(2) {
                 display: none;
             }
+        }
+    }
+}
+
+
+// Responsive
+.responsive-display {
+    .fc-header-toolbar {
+        .fc-button-group {
+            .fc-button {
+                min-width: 0;
+            }
+        }
+    }
+
+    .fc-view-container {
+        .fc-day-header {
+            overflow: hidden;
         }
     }
 }
