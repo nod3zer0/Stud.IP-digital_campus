@@ -27,7 +27,13 @@ export default {
     },
 
     methods: {
+        initData() {
+            this.exportFiles = { json: [], download: [] };
+            this.elementCounter = 0;
+            this.exportElementCounter = 0;
+        },
         async sendExportZip(root_id = null, options) {
+            this.initData();
             let view = this;
             let zip = await this.createExportFile(root_id, options);
             this.setExportState(this.$gettext('Erstelle Zip-Archiv'));
@@ -123,6 +129,7 @@ export default {
                     root_element.children = children;
                 }
             }
+            root_element.imageId = await this.exportStructuralElementImage(root_element);
 
             delete root_element.relationships;
             delete root_element.links;
@@ -211,6 +218,9 @@ export default {
                         }
                     }
 
+                    // export file data (if any)
+                    content.imageId = await this.exportStructuralElementImage(element);
+
                     delete content.relationships;
                     content.children = new_childs;
 
@@ -219,6 +229,28 @@ export default {
             }
 
             return children;
+        },
+
+        async exportStructuralElementImage(element) {
+            let fileId = element.relationships.image?.data?.id;
+            if (fileId) {
+                await this.$store.dispatch('file-refs/loadById', {id: fileId});
+                let fileRef = this.$store.getters['file-refs/byId']({id: fileId});
+                
+                let fileRefData = {};
+                fileRefData.id = fileRef.id;
+                fileRefData.attributes = fileRef.attributes;
+                fileRefData.related_element_id = element.id;
+                fileRefData.folder = null;
+
+                this.exportFiles.json.push(fileRefData);
+                this.exportFiles.download[fileRef.id] = {
+                    folder: null,
+                    url: fileRef.meta['download-url']
+                };
+            }
+
+            return fileId;
         },
 
         async exportContainer(container_ref) {

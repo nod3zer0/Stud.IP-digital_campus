@@ -232,7 +232,7 @@ export default {
 
     methods: {
         ...mapActions({
-            loadCoursewareStructure: 'loadCoursewareStructure',
+            loadCoursewareStructure: 'courseware-structure/load',
             createStructuralElement: 'createStructuralElement',
             updateStructuralElement: 'updateStructuralElement',
             deleteStructuralElement: 'deleteStructuralElement',

@@ -63,7 +63,7 @@ export default {
         async importStructuralElement(element, parent_id, files) {
             if (element.length) {
                 for (var i = 0; i < element.length; i++) {
-                    this.setImportStructuresState('Lege Seite an: ' + element[i].attributes.title);
+                    this.setImportStructuresState(this.$gettext('Lege Seite an:') + ' ' + element[i].attributes.title);
                     await this.createStructuralElement({
                         attributes: element[i].attributes,
                         parentId: parent_id,
@@ -72,6 +72,23 @@ export default {
                     this.importElementCounter++;
 
                     let new_element = this.$store.getters['courseware-structural-elements/lastCreated'];
+
+                    if (element[i].imageId) {
+                        let imageFile = files.find((file) => { return file.id === element[i].imageId});
+                        let zip_filedata = await this.zip.file(imageFile.id).async('blob');
+                        // create new blob with correct type
+                        let filedata = zip_filedata.slice(0, zip_filedata.size, imageFile.attributes['mime-type']);
+                        this.setImportStructuresState(this.$gettext('Lade Vorschaubild hoch'));
+                        this.uploadImageForStructuralElement({
+                            structuralElement: new_element,
+                            file: filedata,
+                        }).catch((error) => {
+                            console.error(error);
+                            this.currentImportErrors.push(this.$gettext('Fehler beim Hochladen des Vorschaubildes.'));
+                        });
+                    }
+
+
                     if (element[i].children?.length > 0) {
                         await this.importStructuralElement(element[i].children, new_element.id, files);
                     }
@@ -80,7 +97,7 @@ export default {
                         for (var j = 0; j < element[i].containers.length; j++) {
                             let container = element[i].containers[j];
                             // TODO: create element on server and fetch new id
-                            this.setImportStructuresState('Lege Abschnitt an: ' + container.attributes.title);
+                            this.setImportStructuresState(this.$gettext('Lege Abschnitt an:') + ' ' + container.attributes.title);
                             await this.createContainer({
                                 attributes: container.attributes,
                                 structuralElementId: new_element.id,
@@ -108,7 +125,7 @@ export default {
         },
 
         async importBlock(block, block_container, files) {
-            this.setImportStructuresState('Lege neuen Block an: ' + block.attributes.title);
+            this.setImportStructuresState(this.$gettext('Lege neuen Block an:') + ' ' + block.attributes.title);
             try {
                 await this.createBlockInContainer({
                     container: {type: block_container.type, id: block_container.id},
@@ -135,7 +152,7 @@ export default {
                     block.attributes.payload = JSON.parse(payload);
                 }
             }
-            this.setImportStructuresState('Aktualisiere neuen Block: ' + block.attributes.title);
+            this.setImportStructuresState(this.$gettext('Aktualisiere neuen Block:') + ' ' + block.attributes.title);
             await this.updateBlockInContainer({
                 attributes: block.attributes,
                 blockId: new_block.id,
@@ -168,7 +185,7 @@ export default {
             this.setImportFilesProgress(0);
             this.setImportFilesState('');
             let now = new Date();
-            this.setImportFilesState('Lege Import Ordner an...');
+            this.setImportFilesState(this.$gettext('Lege Import Ordner an...'));
             let main_folder = await this.createRootFolder({
                 context: this.context,
                 folder: {
@@ -185,6 +202,9 @@ export default {
             if (main_folder) {
                 for (var i = 0; i < files.length; i++) {
                     // if the subfolder with the referenced id does not exist yet, create it
+                    if (!files[i].folder) {
+                        continue;
+                    }
                     if (!folders[files[i].folder.id]) {
                         this.setImportFilesState(this.$gettext('Lege Ordner an') + ': ' + files[i].folder.name);
                         folders[files[i].folder.id] = await this.createFolder({
@@ -249,6 +269,7 @@ export default {
             'setImportStructuresState',
             'setImportStructuresProgress',
             'setImportErrors',
+            'uploadImageForStructuralElement'
         ]),
     },
     watch: {
