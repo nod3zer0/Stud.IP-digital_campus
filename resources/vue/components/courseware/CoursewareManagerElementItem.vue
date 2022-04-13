@@ -16,12 +16,12 @@
         >
             {{ element.attributes.title }}
             <div v-if="sortChapters" class="cw-manager-element-item-buttons">
-                <a v-if="canMoveUp" href="#" @click="moveUp" :title="$gettext('Element nach oben verschieben')">
-                    <studip-icon :class="{'cw-manager-icon-disabled' : !canMoveUp}" shape="arr_2up" size="16" role="clickable" />
-                </a>
-                <a v-if="canMoveDown" href="#" @click="moveDown" :title="$gettext('Element nach unten verschieben')">
-                    <studip-icon :class="{'cw-manager-icon-disabled' : !canMoveDown}" shape="arr_2down" size="16" role="clickable" />
-                </a>
+                <button :disabled="!canMoveUp" @click="moveUp" :title="$gettext('Element nach oben verschieben')">
+                    <studip-icon shape="arr_2up" role="sort" />
+                </button>
+                <button :disabled="!canMoveDown" @click="moveDown" :title="$gettext('Element nach unten verschieben')">
+                    <studip-icon shape="arr_2down" role="sort" />
+                </button>
             </div>
         </div>
     </div>

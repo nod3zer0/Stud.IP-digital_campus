@@ -498,7 +498,14 @@ export const actions = {
                 data: childrenResourceIdentifiers,
             },
             { root: true }
-        );
+        ).then(() => dispatch(
+            `${parent.type}/loadRelated`,
+            {
+                parent: { type: parent.type, id: parent.id },
+                relationship: 'children',
+            },
+            { root: true }
+        )).then(() => dispatch('courseware-structure/build', null, { root: true }));
     },
 
     async createStructuralElement({ dispatch }, { attributes, parentId, currentId }) {
