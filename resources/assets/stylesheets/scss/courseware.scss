@@ -2645,12 +2645,16 @@ m a n a g e r
 
         .cw-manager-container-title {
             font-weight: 700;
+            display: flex;
+            gap: 5px;
+            justify-content: space-between;
             padding: 4px 4px 4px 8px;
             color: $base-color;
             background-color: $content-color-20;
 
             &.cw-manager-container-clickable-title {
                 cursor: pointer;
+                justify-content: start;
             }
 
             img {
@@ -2662,12 +2666,17 @@ m a n a g e r
         }
         .cw-manager-block {
             border: solid thin $content-color-40;
+            display: flex;
+            gap: 5px;
+            justify-content: space-between;
             padding: 1em;
             margin-bottom: 4px;
             background-color: $white;
 
             &.cw-manager-block-clickable {
                 cursor: pointer;
+                justify-content: start;
+
                 &:hover {
                     background-color: $base-color;
                     color: $white;
@@ -2771,21 +2780,14 @@ m a n a g e r
     .cw-manager-block-buttons,
     .cw-manager-container-buttons,
     .cw-manager-element-item-buttons {
-        display: flex;
-        justify-content: end;
-        min-width: 38px;
-
-        a {
-            flex: unset;
-        }
-
-        img {
+        button {
+            background: transparent;
+            border: none;
             cursor: pointer;
-            transition: opacity 0.4s ease-in-out;
+            padding: 0;
 
-            &.cw-manager-icon-disabled {
-                opacity: 0;
-                cursor: unset;
+            &[disabled] {
+                visibility: hidden;
             }
         }
     }

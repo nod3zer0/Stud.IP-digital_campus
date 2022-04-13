@@ -6,12 +6,16 @@
             @click="clickItem"
         >
             <span v-if="inserter">
-                <studip-icon shape="arr_2left" size="16" role="sort" />
+                <studip-icon shape="arr_2left" role="sort" />
             </span>
             {{ container.attributes.title }} ({{container.attributes.width}})
             <div v-if="sortContainers" class="cw-manager-container-buttons">
-                <studip-icon :class="{'cw-manager-icon-disabled' : !canMoveUp}" shape="arr_2up" role="sort" @click="moveUp" />
-                <studip-icon :class="{'cw-manager-icon-disabled' : !canMoveDown}" shape="arr_2down" role="sort" @click="moveDown" />
+                <button :disabled="!canMoveUp" @click="moveUp" :title="$gettext('Element nach oben verschieben')">
+                    <studip-icon shape="arr_2up" role="sort" />
+                </button>
+                <button :disabled="!canMoveDown" @click="moveDown" :title="$gettext('Element nach unten verschieben')">
+                    <studip-icon shape="arr_2down" role="sort" />
+                </button>
             </div>
         </div>
         <courseware-collapsible-box :open="false" :title="$gettext('Blöcke')" class="cw-manager-container-blocks">
