@@ -63,7 +63,7 @@
   @color: 'black';
 }
 
-.role2color(@role) when (@role = 'clickable'), (@role = 'link') {
+.role2color(@role) when (@role = 'clickable'), (@role = 'link'), (@role = 'sort') {
   @color: 'blue';
 }
 
@@ -87,7 +87,7 @@
   @color: 'white';
 }
 
-.role2color(@role) when (@role = 'sort'), (@role = 'status-yellow') {
+.role2color(@role) when (@role = 'status-yellow') {
   @color: 'yellow';
 }
 

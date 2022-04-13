@@ -52,7 +52,7 @@ class Icon
         self::ROLE_ATTENTION     => 'red',
         self::ROLE_STATUS_RED    => 'red',
         self::ROLE_INFO_ALT      => 'white',
-        self::ROLE_SORT          => 'yellow',
+        self::ROLE_SORT          => 'blue',
         self::ROLE_STATUS_YELLOW => 'yellow'
     ];
 

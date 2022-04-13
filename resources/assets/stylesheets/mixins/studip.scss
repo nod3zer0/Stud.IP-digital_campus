@@ -55,13 +55,11 @@
         $color: 'green';
     } @else if $role == inactive {
         $color: 'grey';
-    } @else if $role == navigation {
-        $color: 'blue';
     } @else if $role == new or $role == attention or $role == status-red {
         $color: 'red';
     } @else if $role == info_alt or $role == info-alt {
         $color: 'white';
-    } @else if $role == sort or $role == status-yellow {
+    } @else if $role == status-yellow {
         $color: 'yellow';
     }
 

@@ -50,13 +50,13 @@
                     case 'info_alt':
                         return 'white';
 
-                    case 'sort':
                     case 'status-yellow':
                         return 'yellow';
 
                     case 'lightblue':
                         return 'lightblue';
 
+                    case 'sort':
                     case 'clickable':
                     case 'navigation':
                     default:
