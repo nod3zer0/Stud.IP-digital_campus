@@ -1,8 +1,5 @@
 <?php
-
-
 require_once __DIR__ . '/../../_bootstrap.php';
-
 
 class ResourceManagerTest extends \Codeception\Test\Unit
 {
@@ -74,39 +71,6 @@ class ResourceManagerTest extends \Codeception\Test\Unit
         // Workaround old-style Stud.IP-API using $GLOBALS['user']
         $GLOBALS['user'] = $this->oldUser;
      }
-
-
-    /*
-    //TODO: make this test working with the standard perm object!
-    public function testGetGlobalResourcePermissions()
-    {
-
-        $u = new User();
-
-        $this->assertEquals(
-            'admin',
-            ResourceManager::getGlobalResourcePermission($u)
-        );
-
-        RolePersistence::assignRole('ResourceAdmin');
-        $this->assertEquals(
-            'admin',
-            ResourceManager::getGlobalResourcePermission($u)
-        );
-
-        RolePersistence::assignRole('ResourceUser');
-        $this->assertEquals(
-            'dozent',
-            ResourceManager::getGlobalResourcePermission($u)
-        );
-
-        RolePersistence::assignRole('ResourceUserSecretary');
-        $this->assertEquals(
-            'tutor',
-            ResourceManager::getGlobalResourcePermission($u)
-        );
-    }
-    */
 
     public function testCreateCategory()
     {
@@ -266,22 +230,6 @@ class ResourceManagerTest extends \Codeception\Test\Unit
         );
     }
 
-    /*
-    public function testRequestResource()
-    {
-        $request = ResourceManager::requestResource(
-            $this->perm_resource,
-            $this->perm_user,
-            new DateTime('2017-10-01 8:00:00 +0000'),
-            new DateTime('2017-10-01 10:00:00 +0000'),
-            'testRequestResource',
-            [
-                'test_is_test'
-            ]
-        );
-    }
-    */
-
     public function testCopyResource()
     {
         $copy = ResourceManager::copyResource(
@@ -351,198 +299,139 @@ class ResourceManagerTest extends \Codeception\Test\Unit
         );
     }
 
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testEmptyPositionState()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->getId();
         $position->property_id = $this->position_def->id;
         $position->state = '';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testBadLatitudePositionState1()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->getId();
         $position->property_id = $this->position_def->id;
         $position->state = '14.29302-31.28323-5.292CRSWGS_84/';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testBadLatitudePositionState2()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->getId();
         $position->property_id = $this->position_def->id;
         $position->state = '+14-31.28323-5.292CRSWGS_84/';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testMissingLatitudePositionState()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->property_id = $this->position_def->id;
         $position->state = '-31.28323-5.292CRSWGS_84/';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testBadLongitudePositionState1()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->property_id = $this->position_def->id;
         $position->state = '-14.29302-31-5.292CRSWGS_84/';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testBadLongitudePositionState2()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->property_id = $this->position_def->id;
         $position->state = '-14.29302-+31.28323-5.292CRSWGS_84/';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testMissingLongitudePositionState()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->property_id = $this->position_def->id;
         $position->state = '-14.29302--5.292CRSWGS_84/';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testBadAltitudePositionState1()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->property_id = $this->position_def->id;
         $position->state = '-14.29302-31.28323-+5.292CRSWGS_84/';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testBadAltitudePositionState2()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->property_id = $this->position_def->id;
         $position->state = '-14.29302-31.28323+5292CRSWGS_84/';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testMissingAltitudePositionState()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->property_id = $this->position_def->id;
         $position->state = '-14.29302-31.28323CRSWGS_84/';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testBadSuffixPositionState()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->property_id = $this->position_def->id;
         $position->state = '-14.29302-31.28323-5.292CRSWGS_84';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
-
-    /**
-     * @expectedException ResourcePropertyStateException
-     */
     public function testMissingSuffixPositionState()
     {
+        $this->expectException(ResourcePropertyStateException::class);
+
         $position = new ResourceProperty();
         $position->property_id = $this->position_def->id;
         $position->state = '-14.29302-31.28323-5.292';
 
-        $position_array = ResourceManager::getPositionArray($position);
+        ResourceManager::getPositionArray($position);
     }
 
 }
-
-
-//Mock classes:
-
-
-/*
-class RolePersistence
-{
-    private static $assigned_role;
-
-    public static function assignRole($assigned_role = 'ResourceUserSecretary')
-    {
-        self::$assigned_role = $assigned_role;
-    }
-    public static function isAssignedRole($user_id, $role_name)
-    {
-        return $role_name == self::$assigned_role;
-    }
-}
-*/
-/*
-class Perm
-{
-    private $assigned_perm;
-
-    public function __construct($assigned_perm = 'user')
-    {
-        $this->assigned_perm = $assigned_perm;
-    }
-
-    public function get_perm($user_id)
-    {
-        return $this->assigned_perm;
-    }
-}
-*/

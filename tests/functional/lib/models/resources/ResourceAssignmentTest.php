@@ -160,9 +160,14 @@ class ResourceAssignmentTest extends \Codeception\Test\Unit
     {
         $found_overlaps = $this->booking->getOverlappingBookings();
 
+        $count = 0;
+        if(!empty($found_overlaps)) {
+            $count = count($found_overlaps[0]);
+        }
+
         $this->assertEquals(
             0,
-            count($found_overlaps[0])
+            $count
         );
     }
 
