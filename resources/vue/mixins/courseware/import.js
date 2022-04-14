@@ -110,7 +110,7 @@ export default {
                             if (container.blocks?.length) {
                                 let new_block = null;
                                 for (var k = 0; k < container.blocks.length; k++) {
-                                    new_block = await this.importBlock(container.blocks[k], new_container, files);
+                                    new_block = await this.importBlock(container.blocks[k], new_container, files, new_element);
                                     if (new_block !== null) {
                                         this.importElementCounter++;
                                         await this.updateContainerPayload(new_container, new_element.id, container.blocks[k].id, new_block.id);
@@ -124,15 +124,18 @@ export default {
             }
         },
 
-        async importBlock(block, block_container, files) {
-            this.setImportStructuresState(this.$gettext('Lege neuen Block an:') + ' ' + block.attributes.title);
+        async importBlock(block, block_container, files, element) {
+            this.setImportStructuresState('Lege neuen Block an: ' + block.attributes.title);
             try {
                 await this.createBlockInContainer({
                     container: {type: block_container.type, id: block_container.id},
                     blockType: block.attributes['block-type'],
                 });
             } catch(error) {
-                this.currentImportErrors.push(this.$gettext('Block konnte nicht erstellt werden') + ': ' + block.attributes.title);
+                this.currentImportErrors.push(this.$gettext('Block konnte nicht erstellt werden') + ': ' 
+                    + element.attributes.title + '→'
+                    + block_container.attributes.title + '→'
+                    + block.attributes.title);
 
                 return null;
             }
@@ -152,12 +155,22 @@ export default {
                     block.attributes.payload = JSON.parse(payload);
                 }
             }
-            this.setImportStructuresState(this.$gettext('Aktualisiere neuen Block:') + ' ' + block.attributes.title);
-            await this.updateBlockInContainer({
-                attributes: block.attributes,
-                blockId: new_block.id,
-                containerId: block_container.id,
-            });
+            this.setImportStructuresState('Aktualisiere neuen Block: ' + block.attributes.title);
+            try {
+                await this.updateBlockInContainer({
+                    attributes: block.attributes,
+                    blockId: new_block.id,
+                    containerId: block_container.id,
+                });
+            } catch(error) {
+                
+                this.currentImportErrors.push(this.$gettext('Blockdaten sind beschädigt. Es werden die Standardwerte eingesetzt.') + ': ' 
+                    + element.attributes.title + '→'
+                    + block_container.attributes.title + '→'
+                    + block.attributes.title);
+                this.unlockObject({ id: new_block.id, type: 'courseware-blocks' });
+            }
+
 
             return new_block;
         },
