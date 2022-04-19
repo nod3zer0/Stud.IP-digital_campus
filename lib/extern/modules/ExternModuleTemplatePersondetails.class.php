@@ -657,7 +657,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         }
 
         // Is a semester switch defined?
-        $week_offset = $module->config->getValue('PersondetailsLectures', 'semswitch');
+        $week_offset = $this->config->getValue('PersondetailsLectures', 'semswitch');
         if (ctype_digit($week_offset)) {
             $switch_time = strtotime("+{$week_offset} weeks 0:00:00");
         } else {
