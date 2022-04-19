@@ -172,18 +172,17 @@ class StudipPDO extends PDO
     /**
      * Executes an SQL statement, returning a result set as a statement object.
      *
-     * @param string    SQL statement
-     * @param int       fetch mode (optional)
-     * @param mixed     fetch mode parameter (see PDOStatement::setFetchMode)
-     * @param mixed     fetch mode parameter (see PDOStatement::setFetchMode)
+     * @param string    $statement  SQL statement
+     * @param int       $fetch_mode fetch mode (optional)
+     * @param mixed  ...$fetch_args fetch mode parameters (see PDOStatement::setFetchMode)
      * @return object   PDOStatement object
      */
-    public function query($statement, $mode = NULL, $arg1 = NULL, $arg2 = NULL)
+    public function query($statement, $fetch_mode = NULL, ...$fetch_args)
     {
         $this->verify($statement);
 
-        if (isset($mode)) {
-            $stmt = parent::query($statement, $mode, $arg1, $arg2);
+        if (isset($fetch_mode)) {
+            $stmt = parent::query($statement, $fetch_mode, ...$fetch_args);
         } else {
             $stmt = parent::query($statement);
         }
