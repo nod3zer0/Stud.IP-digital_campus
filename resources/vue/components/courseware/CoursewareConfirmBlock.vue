@@ -6,8 +6,9 @@
             :isTeacher="isTeacher"
             :preview="true"
             :defaultGrade="false"
-            @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
+            @showEdit="setShowEdit"
+            @storeEdit="storeBlock"
         >
             <template #content>
                 <div class="cw-block-title">
@@ -56,6 +57,7 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             currentText: '',
             confirm: false,
         };
@@ -84,6 +86,9 @@ export default {
             if (this.userData?.attributes?.payload?.confirm) {
                 this.confirm = this.userData.attributes.payload.confirm;
             }
+        },
+        setShowEdit(state) {
+            this.showEdit = state;
         },
         async setConfirm() {
             let data = {};
@@ -114,5 +119,12 @@ export default {
             });
         },
     },
+    watch: {
+        text() {
+            if (!this.showEdit) {
+                this.currentText = this.text;
+            }
+        }
+    }
 };
 </script>

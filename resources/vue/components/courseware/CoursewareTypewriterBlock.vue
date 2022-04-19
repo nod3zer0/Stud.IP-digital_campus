@@ -5,11 +5,12 @@
         :canEdit="canEdit"
         :isTeacher="isTeacher"
         :preview="true"
-        @storeEdit="storeText"
-        @closeEdit="closeEdit"
+        @closeEdit="initCurrentData"
+        @showEdit="setShowEdit"
+        @storeEdit="storeBlock"
         >
             <template #content>
-                <div class="cw-typewriter-content">
+                <div v-if="currentText !== ''" class="cw-typewriter-content">
                     <vue-typer
                         :text="currentText"
                         initial-action="typing"
@@ -83,8 +84,8 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             speeds: [200, 100, 50, 25],
-            typing: false,
             speedClasses: [
                 'cw-typewriter-letter-fadein-slow',
                 'cw-typewriter-letter-fadein-normal',
@@ -127,6 +128,9 @@ export default {
             this.currentFont = this.font;
             this.currentSize = this.size;
         },
+        setShowEdit(state) {
+            this.showEdit = state;
+        },
         restartTyping() {
             let text = this.currentText;
             this.currentText = ' ';
@@ -134,10 +138,7 @@ export default {
                 this.currentText = text;
             });
         },
-        closeEdit() {
-            this.initCurrentData();
-        },
-        storeText() {
+        storeBlock() {
             let attributes = {};
             attributes.payload = {};
             attributes.payload.text = this.currentText;
@@ -152,5 +153,28 @@ export default {
             });
         }
     },
+    watch: {
+        text() {
+            if (!this.showEdit) {
+                this.currentText = this.text;
+            }
+        },
+        speed() {
+            if (!this.showEdit) {
+                this.currentSpeed = this.speed;
+                this.restartTyping();
+            }
+        },
+        font() {
+            if (!this.showEdit) {
+                this.currentFont = this.font;
+            }
+        },
+        size() {
+            if (!this.showEdit) {
+                this.currentSize = this.size;
+            }
+        },
+    }
 };
 </script>

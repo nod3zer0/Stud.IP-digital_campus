@@ -56,7 +56,13 @@ class Authority
     public static function canUpdateBlock(User $user, Block $resource)
     {
         if ($resource->isBlocked()) {
-            return $resource->getBlockerUserId() == $user->id;
+            $perm = $GLOBALS['perm']->have_studip_perm(
+                $resource->container->structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
+                $resource->container->structural_element->course->id,
+                $user->id
+            );
+
+            return $resource->getBlockerUserId() == $user->id || $perm;
         }
 
         return self::canUpdateContainer($user, $resource->container);
@@ -68,8 +74,29 @@ class Authority
     }
 
     public static function canUpdateEditBlocker(User $user, $resource)
-    {
-        return $resource->edit_blocker_id == '' || $resource->edit_blocker_id === $user->id;
+    { 
+        $structural_element = null;
+        if ($resource instanceof Block) {
+            $structural_element = $resource->container->structural_element;
+        }
+        if ($resource instanceof Container) {
+            $structural_element = $resource->structural_element;
+        }
+        if ($resource instanceof StructuralElement) {
+            $structural_element = $resource;
+        }
+
+        if ($structural_element === null) {
+            return false;
+        }
+
+        $perm = $GLOBALS['perm']->have_studip_perm(
+            $structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
+            $structural_element->course->id,
+            $user->id
+        );
+
+        return $resource->edit_blocker_id == '' || $resource->edit_blocker_id === $user->id || $perm;
     }
 
     public static function canShowContainer(User $user, Container $resource)

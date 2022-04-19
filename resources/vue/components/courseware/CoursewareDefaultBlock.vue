@@ -3,12 +3,14 @@
         <div class="cw-content-wrapper" :class="[showEditMode ? 'cw-content-wrapper-active' : '']">
             <header v-if="showEditMode" class="cw-block-header">
                 <span class="cw-sortable-handle"></span>
-                <span v-if="!block.attributes.visible" class="cw-default-block-invisible-info">
-                    <studip-icon shape="visibility-invisible" />
-                </span>
+                <studip-icon v-if="!block.attributes.visible" shape="visibility-invisible" />
+                <studip-icon v-if="blockedByAnotherUser" shape="lock-locked" />
                 <span>{{ blockTitle }}</span>
+                <span v-if="blockedByAnotherUser" class="cw-default-block-blocker-warning">
+                    | {{ $gettextInterpolate('wird im Moment von %{ userName } bearbeitet', { userName: this.blockingUserName }) }}
+                </span>
                 <span v-if="!block.attributes.visible" class="cw-default-block-invisible-info">
-                    (<translate>unsichtbar für Nutzende ohne Schreibrecht</translate>)
+                    | {{ $gettext('unsichtbar für Nutzende ohne Schreibrecht') }}
                 </span>
                 <courseware-block-actions
                     :block="block"
@@ -18,6 +20,7 @@
                     @showInfo="displayFeature('Info')"
                     @showExportOptions="displayFeature('ExportOptions')"
                     @deleteBlock="displayDeleteDialog()"
+                    @removeLock="displayRemoveLockDialog()"
                 />
             </header>
             <div v-if="showContent" class="cw-block-content">
@@ -60,6 +63,15 @@
             width="360"
             @confirm="executeDelete"
             @close="showDeleteDialog = false"
+        ></studip-dialog>
+        <studip-dialog
+            v-if="showRemoveLockDialog"
+            :title="textRemoveLockTitle"
+            :question="textRemoveLockAlert"
+            height="200"
+            width="450"
+            @confirm="executeRemoveLock"
+            @close="showRemoveLockDialog = false"
         ></studip-dialog>
     </div>
 </template>
@@ -118,15 +130,19 @@ export default {
             showContent: true,
             showEditModeShortcut: false,
             showDeleteDialog: false,
+            showRemoveLockDialog: false,
             currentComments: [],
             textDeleteTitle: this.$gettext('Block unwiderruflich löschen'),
             textDeleteAlert: this.$gettext('Möchten Sie diesen Block wirklich löschen?'),
+            textRemoveLockTitle: this.$gettext('Sperre aufheben'),
+            textRemoveLockAlert: this.$gettext('Möchten Sie die Sperre dieses Block wirklich aufheben? Der Bearbeitungsstand geht dabei unwiderruflich verloren.'),
         };
     },
     computed: {
         ...mapGetters({
             blockTypes: 'blockTypes',
             userId: 'userId',
+            userById: 'users/byId',
             viewMode: 'viewMode',
             containerById: 'courseware-containers/byId',
         }),
@@ -141,16 +157,30 @@ export default {
             return this.viewMode === 'discuss';
         },
         blocked() {
-            return this.block?.relationships['edit-blocker'].data !== null;
+            return this.block?.relationships?.['edit-blocker']?.data !== null;
         },
         blockerId() {
-            return this.blocked ? this.block?.relationships['edit-blocker'].data?.id : null;
+            return this.blocked ? this.block?.relationships?.['edit-blocker']?.data?.id : null;
         },
         blockedByThisUser() {
             return this.blocked && this.userId === this.blockerId;
         },
         blockedByAnotherUser() {
             return this.blocked && this.userId !== this.blockerId;
+        },
+        blockingUser() {
+            if (this.blockedByAnotherUser) {
+                const user = this.$store.getters["users/related"]({
+                    parent: { type: this.block.type, id: this.block.id },
+                    relationship: "edit-blocker"
+                });
+                return user ? user : null;
+            }
+
+            return null;
+        },
+        blockingUserName() {
+            return this.blockingUser ? this.blockingUser.attributes['formatted-name'] : '';
         },
         blockTitle() {
             const type = this.block.attributes['block-type'];
@@ -162,6 +192,9 @@ export default {
         if (this.blocked) {
             if (this.blockedByThisUser) {
                 this.displayFeature('Edit');
+            }
+            if (this.blockedByAnotherUser) {
+                this.loadUserById({ id: this.blockerId });
             }
         }
         if (this.userProgress && this.userProgress.attributes.grade === 0 && this.defaultGrade) {
@@ -176,6 +209,7 @@ export default {
             unlockObject: 'unlockObject',
             loadContainer: 'loadContainer',
             updateContainer: 'updateContainer',
+            loadUserById: 'users/loadById'
         }),
         async displayFeature(element) {
             if (this.showEdit && element === 'Edit') {
@@ -273,6 +307,18 @@ export default {
                 containerId: containerId,
             });
         },
+        displayRemoveLockDialog() {
+            this.showRemoveLockDialog = true;
+        },
+        executeRemoveLock() {
+            this.unlockObject({ id: this.block.id , type: 'courseware-blocks' });
+            this.showRemoveLockDialog = false;
+        }
     },
+    watch: {
+        showEdit(state) {
+            this.$emit('showEdit', state);
+        }
+    }
 };
 </script>

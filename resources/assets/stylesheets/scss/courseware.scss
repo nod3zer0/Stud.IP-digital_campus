@@ -746,6 +746,14 @@ ribbon end
             font-weight: 700;
             line-height: 2em;
             font-size: 1.1em;
+
+            &.cw-default-container-blocker-warning {
+                font-weight: 400;
+            }
+        }
+
+        img {
+            vertical-align: text-bottom;
         }
 
         .cw-container-actions {
@@ -842,12 +850,6 @@ form.cw-container-dialog-edit-form {
 .cw-default-block {
     display: flex;
     flex-flow: row;
-    .cw-default-block-invisible-info {
-        img {
-            vertical-align: text-bottom;
-        }
-    }
-
 }
 .cw-content-wrapper {
     display: flex;
@@ -882,10 +884,19 @@ form.cw-container-dialog-edit-form {
     padding: 4px 10px;
 
     span {
+        font-size: 1.1em;
         color: $base-color;
         font-weight: 700;
         line-height: 2em;
-        font-size: 1.1em;
+
+        &.cw-default-block-invisible-info,
+        &.cw-default-block-blocker-warning {
+            font-weight: 400;
+        }
+    }
+
+    img {
+        vertical-align: text-bottom;
     }
 
     .cw-block-actions {
@@ -896,6 +907,12 @@ form.cw-container-dialog-edit-form {
             z-index: 30;
         }
     }
+}
+
+.cw-block-edit-warning {
+    font-style: italic;
+    color: $dark-gray-color;
+    margin: 1em 0 0.5em 0;
 }
 
 .cw-discuss-wrapper,
@@ -3046,22 +3063,30 @@ a u d i o  b l o c k
             padding-top: 106px;
         }
     }
-    .cw-audio-empty {
-        @include background-icon(file, info, 96);
-        border: solid thin $content-color-40;
-        background-position: center 1em;
-        background-repeat: no-repeat;
-        min-height: 140px;
-        padding: 1em;
-        p {
-            text-align: center;
-            padding-top: 106px;
-        }
-    }
 }
 /* * * * * * * * * * * * * *
 a u d i o  b l o c k  e n d
 * * * * * * * * * * * * * */
+
+/* * * * * * * * * * * * * * * * * * * *
+f o r  m u l t i m e d i a  b l o c k s
+* * * * * * * * * * * * * * * * * * * */
+.cw-file-empty {
+    @include background-icon(file, info, 96);
+    border: solid thin $content-color-40;
+    background-position: center 1em;
+    background-repeat: no-repeat;
+    min-height: 140px;
+    padding: 1em;
+    p {
+        text-align: center;
+        padding-top: 106px;
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * 
+f o r  m u l t i m e d i a  b l o c k s  e n d
+* * * * * * * * * * * * * * * * * * * * * * * */
 
 /* * * * * * * * * *
 v i d e o  b l o c k

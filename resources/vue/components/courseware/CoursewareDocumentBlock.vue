@@ -5,8 +5,9 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="false"
-            @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
+            @showEdit="setShowEdit"
+            @storeEdit="storeBlock"
         >
             <template #content>
                 <div v-if="hasFile" class="cw-pdf-header cw-block-title">
@@ -87,6 +88,7 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             currentTitle: '',
             currentFileId: '',
             currentFile: {},
@@ -123,28 +125,15 @@ export default {
         currentUrl() {
             if (this.currentFile?.meta) {
                 return this.currentFile.meta['download-url'];
-            } else {
-                return '';
             }
+            if (this.currentFile?.['download_url']) {
+                return this.currentFile['download_url'];
+            }
+            return '';
         },
         hasFile() {
             return this.currentFileId !== '';
         }
-    },
-    watch: {
-        browseDirection: function (val) {
-            if (val.length > 6) {
-                this.evaluateBrowseAction();
-            }
-        },
-    },
-    mounted() {
-        this.loadFileRefs(this.block.id).then((response) => {
-            this.file = response[0];
-            this.currentFile = this.file;
-            this.loadPdfViewer();
-        });
-        this.initCurrentData();
     },
     methods: {
         ...mapActions({
@@ -157,6 +146,9 @@ export default {
             this.currentDownloadable = this.downloadable;
             this.currentFileId = this.fileId;
             this.currentDocType = this.docType;
+        },
+        setShowEdit(state) {
+            this.showEdit = state;
         },
         updateCurrentFile(file) {
             this.currentFile = file;
@@ -256,7 +248,44 @@ export default {
                     containerId: this.block.relationships.container.data.id,
                 });
             }
-
+        },
+        loadDocument() {
+            this.loadFileRefs(this.block.id).then((response) => {
+                this.file = response[0];
+                this.currentFile = this.file;
+                this.loadPdfViewer();
+            });
+        }
+    },
+    mounted() {
+        this.loadDocument();
+        this.initCurrentData();
+    },
+    watch: {
+        browseDirection: function (val) {
+            if (val.length > 6) {
+                this.evaluateBrowseAction();
+            }
+        },
+        title() {
+            if (!this.showEdit) {
+                this.currentTitle = this.title;
+            }
+        },
+        downloadable() {
+            if (!this.showEdit) {
+                this.currentDownloadable = this.downloadable;
+            }
+        },
+        fileId() {
+            if (!this.showEdit) {
+                this.currentFileId = this.fileId;
+            }
+        },
+        title() {
+            if (!this.showEdit) {
+                this.currentDocType = this.docType;
+            }
         },
     },
 };

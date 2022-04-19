@@ -5,8 +5,9 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
+            @showEdit="setShowEdit"
+            @storeEdit="storeBlock"
         >
             <template #content>
                 <div v-if="currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
@@ -56,7 +57,7 @@
                             {{ file.name }}
                         </li>
                     </ul>
-                    <div v-if="emptyAudio" class="cw-audio-empty">
+                    <div v-if="emptyAudio" class="cw-file-empty">
                         <p><translate>Es ist keine Audio-Datei verfügbar</translate></p>
                     </div>
                     <div v-if="showRecorder && canGetMediaDevices" class="cw-audio-playlist-recorder">
@@ -175,6 +176,7 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             currentTitle: '',
             currentSource: '',
             currentFileId: '',
@@ -340,6 +342,9 @@ export default {
             }
             this.currentFolderId = this.folderId;
             this.currentRecorderEnabled = this.recorderEnabled;
+        },
+        setShowEdit(state) {
+            this.showEdit = state;
         },
         updateCurrentFile(file) {
             this.currentFile = file;
@@ -592,6 +597,39 @@ export default {
     watch: {
         currentFolderId() {
             this.getFolderFiles();
+        },
+        title() {
+            if (!this.showEdit) {
+                this.currentTitle = this.title;
+            }
+        },
+        source() {
+            if (!this.showEdit) {
+                this.currentSource = this.source;
+            }
+        },
+        fileId() {
+            if (!this.showEdit) {
+                this.currentFileId = this.fileId;
+                if (this.currentFileId !== '') {
+                    this.loadFile();
+                }
+            }
+        },
+        webUrl() {
+            if (!this.showEdit) {
+                this.currentWebUrl = this.webUrl;
+            }
+        },
+        folderId() {
+            if (!this.showEdit) {
+                this.currentFolderId = this.folderId;
+            }
+        },
+        recorderEnabled() {
+            if (!this.showEdit) {
+                this.currentRecorderEnabled = this.recorderEnabled;
+            }
         },
     },
 };

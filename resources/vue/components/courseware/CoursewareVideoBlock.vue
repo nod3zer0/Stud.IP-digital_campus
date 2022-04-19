@@ -5,11 +5,13 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
+            @showEdit="setShowEdit"
+            @storeEdit="storeBlock"
         >
             <template #content>
                 <div v-if="currentTitle !== '' && currentURL" class="cw-block-title">{{ currentTitle }}</div>
+                <div v-if="!currentURL" class="cw-block-title">{{ currentTitle ? currentTitle : $gettext('Video') }}</div>
                 <video
                     v-show="currentURL"
                     :src="currentURL"
@@ -18,6 +20,9 @@
                     :autoplay="currentAutoplay === 'enabled'"
                     @contextmenu="contextHandler"
                 />
+                <div v-if="!currentURL" class="cw-file-empty">
+                    <p><translate>Es ist keine Video-Datei verfügbar</translate></p>
+                </div>
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
@@ -77,6 +82,7 @@ import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
 import { mapActions, mapGetters } from 'vuex';
 
+
 export default {
     name: 'courseware-video-block',
     components: {
@@ -90,6 +96,7 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             currentSource: '',
             currentTitle: '',
             currentFile: {},
@@ -176,7 +183,7 @@ export default {
                 containerId: this.block.relationships.container.data.id,
             });
         },
-        async initCurrentData() {
+        initCurrentData() {
             this.currentSource = this.source;
             this.currentTitle = this.title;
             this.currentWebUrl = this.webUrl;
@@ -185,8 +192,11 @@ export default {
             this.currentContextMenu = this.contextMenu;
             this.currentAutoplay = this.autoplay;
             if (this.fileId !== '') {
-                await this.loadFile();
+                this.loadFile();
             }
+        },
+        setShowEdit(state) {
+            this.showEdit = state;
         },
         async loadFile() {
             const id = this.currentFileId;
@@ -215,5 +225,45 @@ export default {
             }
         },
     },
+    watch: {
+        source() {
+            if (!this.showEdit) {
+                this.currentSource = this.source;
+            }
+        },
+        title() {
+            if (!this.showEdit) {
+                this.currentTitle = this.title;
+            }
+        },
+        webUrl() {
+            if (!this.showEdit) {
+                this.currentWebUrl = this.webUrl;
+            }
+        },
+        fileId() {
+            if (!this.showEdit) {
+                this.currentFileId = this.fileId;
+                if (this.fileId !== '') {
+                    this.loadFile();
+                }
+            }
+        },
+        aspect() {
+            if (!this.showEdit) {
+                this.currentAspect = this.aspect;
+            }
+        },
+        contextMenu() {
+            if (!this.showEdit) {
+                this.currentContextMenu = this.contextMenu;
+            }
+        },
+        autoplay() {
+            if (!this.showEdit) {
+                this.currentAutoplay = this.autoplay;
+            }
+        },
+    }
 };
 </script>

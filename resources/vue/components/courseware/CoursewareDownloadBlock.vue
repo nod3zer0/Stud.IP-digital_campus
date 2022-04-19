@@ -6,8 +6,9 @@
             :isTeacher="isTeacher"
             :preview="true"
             :defaultGrade="false"
-            @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
+            @showEdit="setShowEdit"
+            @storeEdit="storeBlock"
         >
             <template #content>
                 <div v-if="currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
@@ -88,6 +89,7 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             currentTitle: '',
             currentInfo: '',
             currentSuccess: '',
@@ -151,6 +153,9 @@ export default {
             if (this.currentFileId !== '') {
                 this.loadFile();
             }
+        },
+        setShowEdit(state) {
+            this.showEdit = state;
         },
         async loadFile() {
             const id = `${this.currentFileId}`;
@@ -258,5 +263,35 @@ export default {
             this.userProgress = 1;
         },
     },
+    watch: {
+        title() {
+            if (!this.showEdit) {
+                this.currentTitle = this.title;
+            }
+        },
+        info() {
+            if (!this.showEdit) {
+                this.currentInfo = this.info;
+            }
+        },
+        fileId() {
+            if (!this.showEdit) {
+                this.currentFileId = this.fileId;
+                if (this.currentFileId !== '') {
+                    this.loadFile();
+                }
+            }
+        },
+        success() {
+            if (!this.showEdit) {
+                this.currentSuccess = this.success;
+            }
+        },
+        grade() {
+            if (!this.showEdit) {
+                this.currentGrade = this.grade;
+            }
+        },
+    }
 };
 </script>

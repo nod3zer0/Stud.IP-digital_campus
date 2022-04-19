@@ -202,7 +202,7 @@ export const state = { ...initialState };
 export const actions = {
     loadContainer({ dispatch }, containerId) {
         const options = {
-            include: 'blocks',
+            include: 'blocks,blocks.edit-blocker',
         };
 
         return dispatch('courseware-containers/loadById', { id: containerId, options }, { root: true });

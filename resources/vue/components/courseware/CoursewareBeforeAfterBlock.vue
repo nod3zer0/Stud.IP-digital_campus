@@ -5,11 +5,12 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
+            @showEdit="setShowEdit"
+            @storeEdit="storeBlock"
         >
             <template #content>
-                <TwentyTwenty :before="currentBeforeUrl" :after="currentAfterUrl" />
+                <TwentyTwenty v-if="!isEmpty" :before="currentBeforeUrl" :after="currentAfterUrl" />
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
@@ -79,6 +80,7 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             currentBeforeSource: '',
             currentBeforeFileId: '',
             currentBeforeFile: {},
@@ -111,40 +113,42 @@ export default {
             return this.block?.attributes?.payload?.after_web_url;
         },
         currentBeforeUrl() {
-            if (this.currentBeforeSource === 'studip'&& this.currentBeforeFile?.meta) {
-                return this.currentBeforeFile.meta['download-url'];
-            } else if (this.currentBeforeSource === 'web') {
-                return this.currentBeforeWebUrl;
-            } else {
-                return '';
+            if (this.currentBeforeSource === 'studip' ) {
+                if (this.currentBeforeFile?.meta) {
+                    return this.currentBeforeFile.meta['download-url'];
+                }
+                if (this.currentBeforeFile?.['download_url']) {
+                    return this.currentBeforeFile['download_url']
+                }
             }
+
+            if (this.currentBeforeSource === 'web') {
+                return this.currentBeforeWebUrl;
+            }
+
+            return '';
         },
         currentAfterUrl() {
-            if (this.currentAfterSource === 'studip'&& this.currentAfterFile?.meta) {
-                return this.currentAfterFile.meta['download-url'];
-            } else if (this.currentAfterSource === 'web') {
+            if (this.currentAfterSource === 'studip') {
+                if (this.currentAfterFile?.meta) {
+                    return this.currentAfterFile.meta['download-url'];
+                }
+                if (this.currentAfterFile?.['download_url']) {
+                    return this.currentAfterFile['download_url']
+                }
+            } 
+            if (this.currentAfterSource === 'web') {
                 return this.currentAfterWebUrl;
-            } else {
-                return '';
             }
+
+            return '';
         },
+        isEmpty() {
+            return !this.currentAfterUrl || !this.currentBeforeUrl;
+        }
     },
     mounted() {
-        this.loadFileRefs(this.block.id).then((response) => {
-            for (let i = 0; i < response.length; i++) {
-                if (response[i].id === this.beforeFileId) {
-                    this.beforeFile = response[i];
-                }
-
-                if (response[i].id === this.afterFileId) {
-                    this.afterFile = response[i];
-                }
-            }
-
-            this.currentBeforeFile = this.beforeFile;
-            this.currentAfterFile  = this.afterFile;
-        });
-
+        this.loadImages();
         this.initCurrentData();
     },
     methods: {
@@ -153,6 +157,22 @@ export default {
             loadFileRefs: 'loadFileRefs',
             companionWarning: 'companionWarning',
         }),
+        loadImages() {
+            this.loadFileRefs(this.block.id).then((response) => {
+                for (let i = 0; i < response.length; i++) {
+                    if (response[i].id === this.beforeFileId) {
+                        this.beforeFile = response[i];
+                    }
+
+                    if (response[i].id === this.afterFileId) {
+                        this.afterFile = response[i];
+                    }
+                }
+
+                this.currentBeforeFile = this.beforeFile;
+                this.currentAfterFile  = this.afterFile;
+            });
+        },
         initCurrentData() {
             this.currentBeforeSource = this.beforeSource;
             this.currentBeforeFileId = this.beforeFileId;
@@ -160,6 +180,9 @@ export default {
             this.currentAfterSource = this.afterSource;
             this.currentAfterFileId = this.afterFileId;
             this.currentAfterWebUrl = this.afterWebUrl;
+        },
+        setShowEdit(state) {
+            this.showEdit = state;
         },
         updateCurrentBeforeFile(file) {
             this.currentBeforeFile = file;
@@ -227,5 +250,39 @@ export default {
             }
         },
     },
+    watch: {
+        beforeSource() {
+            if (!this.showEdit) {
+                this.currentBeforeSource = this.beforeSource;
+            }
+        },
+        beforeFileId() {
+            if (!this.showEdit) {
+                this.currentBeforeFileId = this.beforeFileId;
+                this.loadImages();
+            }
+        },
+        beforeWebUrl() {
+            if (!this.showEdit) {
+                this.currentBeforeWebUrl = this.beforeWebUrl;
+            }
+        },
+        afterSource() {
+            if (!this.showEdit) {
+                this.currentAfterSource = this.afterSource;
+            }
+        },
+        afterFileId() {
+            if (!this.showEdit) {
+                this.currentAfterFileId = this.afterFileId;
+                this.loadImages();
+            }
+        },
+        afterWebUrl() {
+            if (!this.showEdit) {
+                this.currentAfterWebUrl = this.afterWebUrl;
+            }
+        },
+    }
 };
 </script>

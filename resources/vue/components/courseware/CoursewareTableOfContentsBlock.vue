@@ -5,8 +5,9 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @storeEdit="storeText"
-            @closeEdit="closeEdit"
+            @closeEdit="initCurrentData"
+            @showEdit="setShowEdit"
+            @storeEdit="storeBlock"
         >
             <template #content>
                 <div v-if="currentStyle !== 'tiles' && currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
@@ -95,6 +96,7 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             currentTitle: '',
             currentStyle: '',
         };
@@ -128,10 +130,10 @@ export default {
             this.currentTitle = this.title;
             this.currentStyle = this.style;
         },
-        closeEdit() {
-            this.initCurrentData();
+        setShowEdit(state) {
+            this.showEdit = state;
         },
-        storeText() {
+        storeBlock() {
             let attributes = {};
             attributes.payload = {};
             attributes.payload.title = this.currentTitle;
@@ -159,5 +161,17 @@ export default {
             return child.relationships?.image?.data !== null;
         },
     },
+    watch: {
+        title() {
+            if (!this.showEdit) {
+                this.currentTitle = this.title;
+            }
+        },
+        style() {
+            if (!this.showEdit) {
+                this.currentStyle = this.style;
+            }
+        },
+    }
 };
 </script>

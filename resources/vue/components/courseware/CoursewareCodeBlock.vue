@@ -5,8 +5,9 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
+            @showEdit="setShowEdit"
+            @storeEdit="storeBlock"
         >
             <template #content>
                 <pre v-show="currentContent !== ''"  v-highlightjs="currentContent"><code ref="code" :class="[currentLang]"></code></pre>
@@ -51,6 +52,7 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             currentLang: '',
             currentContent: '',
         };
@@ -97,6 +99,9 @@ export default {
             this.currentLang = this.lang;
             this.currentContent = this.content;
         },
+        setShowEdit(state) {
+            this.showEdit = state;
+        },
         storeBlock() {
             let attributes = {};
             attributes.payload = {};
@@ -110,5 +115,17 @@ export default {
             });
         },
     },
+    watch: {
+        lang() {
+            if (!this.showEdit) {
+                this.currentLang = this.lang;
+            }
+        },
+        content() {
+            if (!this.showEdit) {
+                this.currentContent = this.content;
+            }
+        }
+    }
 };
 </script>
