@@ -197,7 +197,7 @@ class FilesIndexManager
     private static function relevance($base, $modifier)
     {
         // 31556926 is the number of seconds in one year
-        return "POW( $base , ((UNIX_TIMESTAMP() - $modifier ) / 31556926)) AS relevance";
+        return "POW( $base , ((UNIX_TIMESTAMP() - CAST($modifier AS SIGNED)) / 31556926)) AS relevance";
     }
 
     /**

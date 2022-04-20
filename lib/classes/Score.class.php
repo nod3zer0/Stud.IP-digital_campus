@@ -25,7 +25,7 @@ class Score
         $query = "SELECT nr.range_id as user_id, COUNT(*) AS newscount
                   FROM news_range AS nr
                   INNER JOIN news AS n ON (nr.news_id = n.news_id)
-                  WHERE nr.range_id IN (?) AND (UNIX_TIMESTAMP() - n.date) <= n.expire
+                  WHERE nr.range_id IN (?) AND UNIX_TIMESTAMP() <= n.date + n.expire
                   GROUP BY nr.range_id
                   ORDER BY NULL";
         $statement = DBManager::get()->prepare($query);
