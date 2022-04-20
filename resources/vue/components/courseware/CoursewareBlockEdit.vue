@@ -28,6 +28,7 @@ export default {
     },
     methods: {
         deactivateToolbar() {
+            this.$store.dispatch('coursewareBlockAdder', {});
             this.$store.dispatch('coursewareShowToolbar', false);
         },
     },

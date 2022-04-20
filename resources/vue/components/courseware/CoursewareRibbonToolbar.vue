@@ -1,5 +1,5 @@
 <template>
-    <focus-trap v-model="trap" :initial-focus="() => initialFocusElement">
+    <focus-trap v-model="trap" :initial-focus="() => initialFocusElement" :clickOutsideDeactivates="true">
         <div
             class="cw-ribbon-tools"
             :class="{ unfold: toolsActive, 'cw-ribbon-tools-consume': consumeMode }"
