@@ -14,6 +14,10 @@ class Consultation_OverviewController extends ConsultationController
     {
         parent::before_filter($action, $args);
 
+        if ($this->range->isEditableByUser()) {
+            $this->redirect('consultation/admin');
+        }
+
         PageLayout::setTitle(sprintf(
             '%s: %s',
             $this->getConsultationTitle(),
