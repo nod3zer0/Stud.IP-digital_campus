@@ -46,7 +46,7 @@ class ConsultationSlot extends SimpleORMap
         };
         $config['registered_callbacks']['after_delete'][] = function ($slot) {
             $block = $slot->block;
-            if (count($block->slots) === 0) {
+            if ($block && count($block->slots) === 0) {
                 $block->delete();
             }
         };
