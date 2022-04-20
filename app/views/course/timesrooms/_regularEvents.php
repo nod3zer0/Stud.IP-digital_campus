@@ -107,8 +107,12 @@
                             'delete_cycle',
                             _('Diesen Zeitraum löschen'),
                             Icon::create('trash', 'clickable', ['title' => _('Diesen Zeitraum löschen')]),
-                            ['formaction'   => $controller->url_for('course/timesrooms/deleteCycle/' . $metadate_id, $linkAttributes),
-                             'data-confirm' => _('Soll dieser Zeitraum wirklich gelöscht werden?')]) ?>
+                            [
+                                'formaction'   => $controller->url_for('course/timesrooms/deleteCycle/' . $metadate_id, $linkAttributes),
+                                'data-confirm' => _('Soll dieser Zeitraum wirklich gelöscht werden?')
+                                                  . "\n"
+                                                  . _('Ein Löschen des Zeitraums führt auch zum Verlust einer vorhandenen Raumbuchung.')
+                            ]) ?>
                         <?= $actionMenu->render() ?>
                     </nav>
                     <? endif ?>
