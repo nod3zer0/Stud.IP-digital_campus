@@ -1192,7 +1192,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         } else {
             $id = [];
             foreach ($this->pk as $key) {
-                if ($this->content[$key] !== null) {
+                if (array_key_exists($key, $this->content)) {
                     $id[] = $this->content[$key];
                 }
             }
@@ -1782,11 +1782,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     function restore()
     {
         $where_query = $this->getWhereQuery();
+        $id = $this->getId();
         if ($where_query) {
             if ($this->applyCallbacks('before_initialize') === false) {
                 return false;
             }
-            $id = $this->getId();
             $this->initializeContent();
             $query = "SELECT * FROM `{$this->db_table}` WHERE "
                     . join(" AND ", $where_query);
