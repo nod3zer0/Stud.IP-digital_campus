@@ -644,5 +644,67 @@ class Visibility
         $stmt->execute();
         return $stmt->rowCount();
     }
+
+    /**
+     * Returns whether the user should be allowed to configure the extended
+     * settings.
+     *
+     * @param User|null $user User object (defaults to current user)
+     *
+     * @return bool
+     */
+    public static function allowExtendedSettings(\User $user = null): bool
+    {
+        $user = $user ?? User::findCurrent();
+
+        if (!$user) {
+            return false;
+        }
+
+        // Check if all fields for the extended settings are not hideable. If
+        // so, we mustn't show the extended settings.
+        if (
+            !self::isFieldHideableForUser('online', $user)
+            && !self::isFieldHideableForUser('search', $user)
+            && !self::isFieldHideableForUser('email', $user)
+        ) {
+            return false;
+        }
+
+        // User chose to be visible and may configure the extended settings.
+        if (in_array($user->visible, ['yes', 'global'])) {
+            return true;
+        }
+
+        // User did not specify a visibility but the global config defines
+        // visibility, so the user may configure the extended settings.
+        if ($user->visible === 'unknown' && Config::get()->USER_VISIBILITY_UNKNOWN) {
+            return true;
+        }
+
+        // Teachers are always visible by configuration? So they may see the
+        // extended settings
+        if ($user->perms === 'dozent' && Config::get()->DOZENT_ALWAYS_VISIBLE) {
+            return true;
+        }
+
+        // In all other cases, don't show the extended settings.
+        return false;
+    }
+
+    /**
+     * Returns whether the given field is hideable by configuration for the
+     * given user permission.
+     *
+     * @param string    $field Field that should be hidden
+     * @param User|null $user  User object (defaults to current user)
+     *
+     * @return bool
+     */
+    public static function isFieldHideableForUser(string $field, User $user = null): bool
+    {
+        $user = $user ?? User::findCurrent();
+
+        return empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$user->perms][$field]);
+    }
 }
-?>

@@ -49,37 +49,31 @@ use Studip\Button, Studip\LinkButton;
             </div>
         </label>
 
-        <? if ((in_array($global_visibility, ['yes', 'global']) ||
-                ($global_visibility === 'unknown' && Config::get()->USER_VISIBILITY_UNKNOWN) ||
-                ($user_perm === 'dozent' && Config::get()->DOZENT_ALWAYS_VISIBLE)) &&
-               (!$NOT_HIDEABLE_FIELDS[$user_perm]['online'] ||
-                !$NOT_HIDEABLE_FIELDS[$user_perm]['search'] ||
-                !$NOT_HIDEABLE_FIELDS[$user_perm]['email'])
-        ) : ?>
+        <? if (Visibility::allowExtendedSettings($user)): ?>
             <div>
                 <?= _('Erweiterte Einstellungen') ?>
                 <?= tooltipIcon(
                         _('Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen.')
-                        . (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']
+                        . (Visibility::isFieldHideableForUser('email', $user)
                                 ? _('Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mail-Adresse Ihrer (Standard-)Einrichtung angezeigt.')
                                 : '')
                 ) ?>
 
-            <? if (!$NOT_HIDEABLE_FIELDS[$user_perm]['online']): ?>
+            <? if (Visibility::isFieldHideableForUser('online', $user)): ?>
                 <label>
                     <input type="checkbox" name="online" value="1"
                             <? if ($online_visibility) echo 'checked'; ?>>
                     <?= _('sichtbar in "Wer ist online"') ?>
                 </label>
             <? endif; ?>
-            <? if (!$NOT_HIDEABLE_FIELDS[$user_perm]['search']): ?>
+            <? if (Visibility::isFieldHideableForUser('search', $user)): ?>
                 <label>
                     <input type="checkbox" name="search" value="1"
                             <? if ($search_visibility) echo 'checked'; ?>>
                     <?= _('auffindbar über die Personensuche') ?>
                 </label>
             <? endif; ?>
-            <? if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']): ?>
+            <? if (Visibility::isFieldHideableForUser('email', $user)): ?>
                 <label>
                     <input type="checkbox" name="email" value="1"
                             <? if ($email_visibility) echo 'checked'; ?>>

@@ -274,15 +274,23 @@ function first_decision($userid) {
 function get_local_visibility_by_id($user_id, $context, $return_user_perm=false) {
     global $NOT_HIDEABLE_FIELDS;
 
-    $query = "SELECT a.perms, u.`{$context}`
-              FROM auth_user_md5 AS a
-              LEFT JOIN user_visibility AS u USING (user_id)
-              WHERE user_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute([$user_id]);
-    $data = $statement->fetch(PDO::FETCH_ASSOC);
+    $user = User::find($user_id);
+
+    if (Visibility::allowExtendedSettings($user)) {
+        $query = "SELECT u.`{$context}`
+                  FROM auth_user_md5 AS a
+                  LEFT JOIN user_visibility AS u USING (user_id)
+                  WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute([$user_id]);
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $data = [];
+    }
 
     if ($context === 'homepage') {
+        $homepage_settings = [];
+
         $settings = User_Visibility_Settings::findByUser_id($user_id);
         foreach ($settings as $setting) {
             if ($setting['category'] == 1) {
@@ -296,30 +304,26 @@ function get_local_visibility_by_id($user_id, $context, $return_user_perm=false)
     }
 
     if ($data[$context] === null) {
-        $user_perm = $data['perm'];
-        $data['perms'] = $user_perm;
-
         $data[$context] = Config::get()->getValue(mb_strtoupper($context) . '_VISIBILITY_DEFAULT');
     }
-    // Valid context given.
-    if (isset($data[$context])) {
-        // Context may not be hidden per global config setting.
-        if ($NOT_HIDEABLE_FIELDS[$data['perms']][$context]) {
-            $result = true;
-        } else {
-            // Give also user's permission level.
-            if ($return_user_perm) {
-                $result = [
-                    'perms' => $data['perms'],
-                    $context => $data[$context]
-                ];
-            } else {
-                $result = $data[$context];
-            }
-        }
-    } else {
+
+    if (!isset($data[$context])) {
+        // No valid context given.
         $result = false;
+    } elseif (!Visibility::isFieldHideableForUser($context, $user)) {
+        // Context may not be hidden per global config setting.
+        $result = true;
+    } elseif ($return_user_perm) {
+        // Give also user's permission level.
+        $result = [
+            'perms' => $user->perms,
+            $context => $data[$context]
+        ];
+    } else {
+        // Valid context given.
+        $result = $data[$context];
     }
+
     return $result;
 }
 

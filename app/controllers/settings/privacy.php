@@ -48,16 +48,14 @@ class Settings_PrivacyController extends Settings_SettingsController
         // Get default visibility for homepage elements.
         $this->default_homepage_visibility = Visibility::get_default_homepage_visibility($this->user->user_id);
 
-        $this->NOT_HIDEABLE_FIELDS = $GLOBALS['NOT_HIDEABLE_FIELDS'];
-        $this->user_perm           = $GLOBALS['perm']->get_perm($this->user->user_id);
-        $this->user_domains        = UserDomain::getUserDomains();
+        $this->user_perm    = $GLOBALS['perm']->get_perm($this->user->user_id);
+        $this->user_domains = UserDomain::getUserDomains();
 
         // Calculate colWidth and colCount for different visibilities
         $this->colCount          = Visibility::getColCount();
         $this->colWidth          = 67 / $this->colCount;
         $this->visibilities      = Visibility::getVisibilities();
         $this->homepage_elements = Visibility::getHTMLArgs($this->user->user_id);
-
     }
 
     /**
