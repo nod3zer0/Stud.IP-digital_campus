@@ -243,7 +243,7 @@ class SemBrowse {
             $query .= ' AND visible = 1';
         }
 
-        $sem_ids = DBManager::get()->fetchAll(PDO::FETCH_COLUMN);
+        $sem_ids = DBManager::get()->fetchFirst($query);
         if (is_array($sem_ids)) {
             $this->sem_browse_data['search_result'] = array_flip($sem_ids);
         }
@@ -332,7 +332,7 @@ class SemBrowse {
     {
         $quicksearch = QuickSearch::get(
             $this->search_obj->form_name . '_quick_search',
-            new SeminarSearch('number-name-lecturer')
+            new SeminarSearch()
         );
 
         $quicksearch->setAttributes([
@@ -372,16 +372,16 @@ class SemBrowse {
     {
         ob_start();
 
-        echo "\n" . '<table id="sem_search_level" class="course-search" width="100%">' . "\n";
+        echo "\n" . '<table id="sem_search_level" class="course-search" style="width: 100%">' . "\n";
         if ($this->sem_browse_data['level'] == 'vv') {
             echo "\n" . '<caption class="legend">'._('Studienbereiche').'<caption>';
-            echo "\n" . '<tr><td align="center">';
+            echo "\n" . '<tr><td style="text-align: center">';
             $this->sem_tree->show_entries = $this->sem_browse_data['show_entries'];
             $this->sem_tree->showSemTree($start_id);
         }
         if ($this->sem_browse_data['level'] == 'ev') {
             echo "\n" . '<caption class="legend">'._('Einrichtungen').'<caption>';
-            echo "\n" . '<tr><td align="center">';
+            echo "\n" . '<tr><td style="text-align: center">';
             $this->range_tree->show_entries = $this->sem_browse_data['show_entries'];
             $this->range_tree->showSemRangeTree($start_id);
         }
@@ -454,9 +454,6 @@ class SemBrowse {
                 ob_end_flush();
                 ob_start();
                 if (is_array($sem_ids['Seminar_id'])) {
-                    // Get sem classes that can be used for grouping.
-                    $grouping = SemType::getGroupingSemTypes();
-
                     foreach(array_keys($sem_ids['Seminar_id']) as $seminar_id){
                         echo $this->printCourseRow($seminar_id, $sem_data);
                     }
@@ -490,6 +487,7 @@ class SemBrowse {
         if (!$headline) {
             $headline = _('Stud.IP Veranstaltungen') . ' - ' . Config::get()->UNI_NAME_CLEAN;
         }
+        $tmpfile = null;
         if (is_array($this->sem_browse_data['search_result'])
                 && count($this->sem_browse_data['search_result'])) {
             if (!is_object($this->sem_tree)) {
@@ -667,6 +665,7 @@ class SemBrowse {
             } else {
                 $the_tree = $this->sem_tree->tree;
             }
+            $sem_tree_query = '';
             if ($this->sem_browse_data['start_item_id'] != 'root'
                     && ($this->sem_browse_data['level'] == 'vv'
                     || $this->sem_browse_data['level'] == 'sbb')) {
@@ -736,6 +735,7 @@ class SemBrowse {
             }else{
                 $group_by_duration = $snap->getGroupedResult('sem_number_end', ['sem_number', 'Seminar_id']);
             }
+            $tmp_group_by_data = [];
             foreach ($group_by_duration as $sem_number_end => $detail) {
                 if ($sem_number_end != -1
                         && ($detail['sem_number'][$sem_number_end]
@@ -781,18 +781,20 @@ class SemBrowse {
         unset($snap);
         unset($tmp_group_by_data);
 
-        foreach ($group_by_data as $group_field => $sem_ids) {
-            foreach ($sem_ids['Seminar_id'] as $seminar_id => $foo) {
-                $name = mb_strtolower(key($sem_data[$seminar_id]['Name']));
-                $name = str_replace(['ä', 'ö', 'ü'], ['ae', 'oe', 'ue'], $name);
-                if (Config::get()->IMPORTANT_SEMNUMBER && key($sem_data[$seminar_id]['VeranstaltungsNummer'])) {
-                    $name = key($sem_data[$seminar_id]['VeranstaltungsNummer']) . ' ' . $name;
+        if (!empty($group_by_data)) {
+            foreach ($group_by_data as $group_field => $sem_ids) {
+                foreach ($sem_ids['Seminar_id'] as $seminar_id => $foo) {
+                    $name = mb_strtolower(key($sem_data[$seminar_id]['Name']));
+                    $name = str_replace(['ä', 'ö', 'ü'], ['ae', 'oe', 'ue'], $name);
+                    if (Config::get()->IMPORTANT_SEMNUMBER && key($sem_data[$seminar_id]['VeranstaltungsNummer'])) {
+                        $name = key($sem_data[$seminar_id]['VeranstaltungsNummer']) . ' ' . $name;
+                    }
+                    $group_by_data[$group_field]['Seminar_id'][$seminar_id] = $name;
                 }
-                $group_by_data[$group_field]['Seminar_id'][$seminar_id] = $name;
+                uasort($group_by_data[$group_field]['Seminar_id'], 'strnatcmp');
             }
-            uasort($group_by_data[$group_field]['Seminar_id'], 'strnatcmp');
-        }
 
+        }
         switch ($this->sem_browse_data['group_by']) {
             case 0:
                 krsort($group_by_data, SORT_NUMERIC);
@@ -868,9 +870,6 @@ class SemBrowse {
                 $sem_name .= ' (' . _('Studiengruppe');
                 if ($seminar_obj->admission_prelim) $sem_name .= ', ' . _('Zutritt auf Anfrage');
                 $sem_name .= ')';
-                $row .= '<td width="1%" class="hidden-tiny-down">';
-                $row .= StudygroupAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, ['title' => $seminar_obj->getName()]);
-                $row .= '</td>';
             } else {
                 $sem_number_start = key($sem_data[$seminar_id]['sem_number']);
                 $sem_number_end = key($sem_data[$seminar_id]['sem_number_end']);
@@ -882,11 +881,10 @@ class SemBrowse {
                 } elseif ($this->sem_browse_data['group_by']) {
                     $sem_name .= " (" . $this->search_obj->sem_dates[$sem_number_start]['name'] . ')';
                 }
-                $row .= '<td width="1%" class="hidden-tiny-down">';
-                $row .= CourseAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, ['title' => $seminar_obj->getName()]);
-                $row .= '</td>';
-
             }
+            $row .= '<td style="width: 1%" class="hidden-tiny-down">';
+            $row .= StudygroupAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, ['title' => $seminar_obj->getName()]);
+            $row .= '</td>';
             $send_from_search = URLHelper::getUrl(basename($_SERVER['PHP_SELF']), ['keep_result_set' => 1, 'cid' => null]);
             $send_from_search_link = UrlHelper::getLink($this->target_url,
                     [
@@ -895,7 +893,7 @@ class SemBrowse {
                         'send_from_search' => 1,
                         'send_from_search_page' => $send_from_search
                     ]);
-            $row .= '<td width="66%" colspan="2">';
+            $row .= '<td style="width: 66%" colspan="2">';
 
             // Show the "more" icon only if there are visible children.
             if (count($seminar_obj->children) > 0) {
@@ -912,13 +910,13 @@ class SemBrowse {
                             'id' => 'show-subcourses-' . $seminar_id,
                             'title' => sprintf(_('%u Unterveranstaltungen anzeigen'), count($visibleChildren)),
                             'onclick' => "jQuery('tr.subcourses-" . $seminar_id . "').removeClass('hidden-js');jQuery(this).closest('tr').addClass('has-subcourses');jQuery(this).hide();jQuery('#hide-subcourses-" . $seminar_id . "').show();"
-                        ])->asImg(12) . ' ';
+                        ]) . ' ';
                     $row .= Icon::create('remove', Icon::ROLE_CLICKABLE ,[
                             'id' => 'hide-subcourses-' . $seminar_id,
                             'style' => 'display:none',
                             'title' => sprintf(_('%u Unterveranstaltungen ausblenden'), count($visibleChildren)),
                             'onclick' => "jQuery('tr.subcourses-" . $seminar_id . "').addClass('hidden-js'); jQuery(this).closest('tr').removeClass('has-subcourses');jQuery(this).hide();jQuery('#show-subcourses-" . $seminar_id . "').show();"
-                        ])->asImg(12) . ' ';
+                        ]) . ' ';
                 }
             }
 
@@ -957,7 +955,7 @@ class SemBrowse {
                 }
             }
             $row .= '</td>';
-            $row .= '<td align="right">(';
+            $row .= '<td style="text-align: right">(';
             $doz_name = [];
             $c = 0;
             reset($sem_data[$seminar_id]['fullname']);
@@ -1295,7 +1293,7 @@ class SemBrowse {
         // set default values
         if (!$_SESSION['sem_browse_data']['default_sem']) {
             $_SESSION['sem_browse_data']['default_sem'] =
-                    Semester::getIndexById(self::getDefaultSemester(), false, true)
+                Semester::getIndexById(self::getDefaultSemester(), true, true)
                         ?: 'all';
         }
         $_SESSION['sem_browse_data']['show_class'] =
