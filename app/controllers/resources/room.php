@@ -164,7 +164,12 @@ class Resources_RoomController extends AuthenticatedController
         $this->grouped_properties = $this->room->getGroupedProperties(
             $this->room->getRequiredPropertyNames()
         );
-        $this->geo_coordinates_object = $this->room->building->getPropertyObject('geo_coordinates');
+
+        if ($this->room->building) {
+            $this->geo_coordinates_object = $this->room->building->getPropertyObject('geo_coordinates');
+        } else {
+            $this->geo_coordinates_object = null;
+        }
     }
 
 
