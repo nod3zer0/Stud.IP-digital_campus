@@ -1,7 +1,9 @@
 <?php
 namespace RESTAPI\Routes;
 
-use DbCalendarEventList;
+use Config;
+use Resource;
+use Room;
 use SingleCalendar;
 use SingleDate;
 use Seminar;
@@ -151,7 +153,7 @@ class Events extends \RESTAPI\RouteMap
     private static function getRoomForSingleDate($val) {
 
         /* css-Klasse auswählen, sowie Template-Feld für den Raum mit Text füllen */
-        if (\Config::get()->RESOURCES_ENABLE) {
+        if (Config::get()->RESOURCES_ENABLE) {
 
             if ($val->getResourceID()) {
                 $resObj = Resource::find($val->getResourceID());
@@ -163,7 +165,7 @@ class Events extends \RESTAPI\RouteMap
                     }
                 }
             } else {
-                if (\Config::get()->RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT) {
+                if (Config::get()->RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT) {
                     $room = '('._("kein gebuchter Raum").')';
                 } else {
                     $room = _("keine Raumangabe");
