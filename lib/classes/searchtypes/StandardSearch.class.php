@@ -114,7 +114,7 @@ class StandardSearch extends SQLSearch
                 return "SELECT seminare.Seminar_id, CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.Name,  ".$semester.") " .
                     "FROM seminare " .
                     "LEFT JOIN semester_courses ON (semester_courses.course_id = seminare.Seminar_id) " .
-                    "LEFT JOIN `semester_data` sem1 ON  ON (semester_courses.semester_id = sem1.semester_id) " .
+                    "LEFT JOIN `semester_data` sem1 ON (semester_courses.semester_id = sem1.semester_id) " .
                     "LEFT JOIN seminar_user ON (seminar_user.Seminar_id = seminare.Seminar_id AND seminar_user.status = 'dozent') " .
                     "LEFT JOIN auth_user_md5 ON (auth_user_md5.user_id = seminar_user.user_id) " .
                     "WHERE (seminare.Name LIKE :input " .
