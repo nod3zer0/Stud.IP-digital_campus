@@ -334,6 +334,8 @@ class ConnectedIlias
                 $this->ilias_config['ldap_enable'] &&
                 ($this->user->auth_plugin != 'standard') &&
                 ($this->user->auth_plugin == $this->ilias_config['ldap_enable'])) {
+            $this->user->id = $user_exists;
+            $this->user->login = $user_data["login"];
             $this->user->setConnection($this->user->getUserType(), true);
             PageLayout::postSuccess(sprintf(_("Verbindung mit Nutzer ID %s wiederhergestellt."), $this->user->id));
             return true;
