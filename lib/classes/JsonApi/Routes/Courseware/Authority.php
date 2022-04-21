@@ -90,6 +90,10 @@ class Authority
             return false;
         }
 
+        if ($structural_element->range_type === 'user') {
+            return $structural_element->range_id === $user->id;
+        }
+
         $perm = $GLOBALS['perm']->have_studip_perm(
             $structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
             $structural_element->course->id,
