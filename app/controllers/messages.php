@@ -275,81 +275,74 @@ class MessagesController extends AuthenticatedController {
         }
 
         //check if the message shall be sent to all (or some) members of a course:
-        if (Request::get('filter') && Request::option("course_id")) {
+        $filter = Request::get('filter');
+        if ($filter && Request::option("course_id")) {
+            $additional = '';
             $course = new Course(Request::option('course_id'));
+            $allow_tutor_filters = false;
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course->id) || $course->getSemClass()['studygroup_mode'] || CourseConfig::get($course->id)->COURSE_STUDENT_MAILING) {
-                $this->default_message->receivers = [];
-                if (Request::get('filter') === 'claiming') {
-                    $cs = CourseSet::getSetForCourse($course->id);
-                    if (is_object($cs) && !$cs->hasAlgorithmRun()) {
-                        foreach (AdmissionPriority::getPrioritiesByCourse($cs->getId(), $course->id) as $user_id => $p) {
-                            $this->default_message->receivers[] = MessageUser::build(['user_id' => $user_id, 'snd_rec' => 'rec']);
-                        }
-                    }
-                } else {
-                    // Exclude hidden course members from mail if not at least tutor
-                    $additional = '';
-                    if (!$GLOBALS['perm']->have_studip_perm('tutor', $course->id)) {
-                        $additonal = " AND seminar_user.visible != 'no'";
-                    }
+                $allow_tutor_filters = true;
+                $additonal = " AND seminar_user.visible != 'no'";
+            }
+            $this->default_message->receivers = [];
+            $query = '';
+            $params = [$course->id, Request::option('who')];
 
-                    $params = [$course->id, Request::option('who')];
-                    switch (Request::get('filter')) {
-                        case 'send_sms_to_all':
-                            $query = "SELECT user_id, 'rec' AS snd_rec
+            if ($filter === 'send_sms_to_all' && $allow_tutor_filters) {
+                $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM seminar_user
                                       JOIN auth_user_md5 USING (user_id)
-                                      WHERE Seminar_id = ? AND status = ? {$additonal}
+                                      WHERE Seminar_id = ? AND status = ? {$additional}
                                       ORDER BY Nachname, Vorname";
-                            break;
-                        case 'all':
-                            $query = "SELECT user_id, 'rec' AS snd_rec
+            } elseif ($filter === 'all') {
+                $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM seminar_user
                                       JOIN auth_user_md5 USING (user_id)
-                                      WHERE Seminar_id = ? {$additonal}
+                                      WHERE Seminar_id = ? {$additional}
                                       ORDER BY Nachname, Vorname";
-                            break;
-                        case 'prelim':
-                            $query = "SELECT user_id, 'rec' AS snd_rec
+            } elseif ($filter === 'prelim' && $allow_tutor_filters) {
+                $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM admission_seminar_user
                                       JOIN auth_user_md5 USING (user_id)
                                       WHERE seminar_id = ? AND status = 'accepted'
-                                        {$additonal}
+                                      {$additional}
                                       ORDER BY Nachname, Vorname";
-                            break;
-                        case 'awaiting':
-                            $query = "SELECT user_id, 'rec' AS snd_rec
+            } elseif ($filter === 'awaiting' && $allow_tutor_filters) {
+                $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM admission_seminar_user
                                       JOIN auth_user_md5 USING (user_id)
                                       WHERE seminar_id = ? AND status = 'awaiting'
-                                        {$additonal}
+                                      {$additional}
                                       ORDER BY Nachname, Vorname";
-                            break;
-                        case 'inst_status':
-                            $query = "SELECT user_id, 'rec' AS snd_rec
+            } elseif ($filter === 'inst_status') {
+                $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM user_inst
                                       JOIN auth_user_md5 USING (user_id)
                                       WHERE Institut_id = ? AND inst_perms = ?
-                                        {$additonal}
+                                      {$additional}
                                       ORDER BY Nachname, Vorname";
-                            break;
-                        case 'not_grouped':
-                            $query = "SELECT seminar_user.user_id, 'rec' as snd_rec
+            } elseif ($filter === 'not_grouped' && $allow_tutor_filters) {
+                $query = "SELECT seminar_user.user_id, 'rec' as snd_rec
                                       FROM seminar_user
                                       JOIN auth_user_md5 USING (user_id)
                                       LEFT JOIN statusgruppen ON range_id = seminar_id
                                       LEFT JOIN statusgruppe_user ON statusgruppen.statusgruppe_id = statusgruppe_user.statusgruppe_id
-                                        AND seminar_user.user_id = statusgruppe_user.user_id
+                                      AND seminar_user.user_id = statusgruppe_user.user_id
                                       WHERE seminar_id = ?
                                       GROUP BY seminar_user.user_id
                                       HAVING COUNT(statusgruppe_user.statusgruppe_id) = 0
                                       ORDER BY Nachname, Vorname";
-                            break;
+            } elseif ($filter === 'claiming' && $allow_tutor_filters) {
+                $cs = CourseSet::getSetForCourse($course->id);
+                if (is_object($cs) && !$cs->hasAlgorithmRun()) {
+                    foreach (AdmissionPriority::getPrioritiesByCourse($cs->getId(), $course->id) as $user_id => $p) {
+                        $this->default_message->receivers = MessageUser::build(['user_id' => $user_id, 'snd_rec' => 'rec']);
                     }
-                    $this->default_message->receivers = DBManager::get()->fetchAll($query, $params, 'MessageUser::build');
                 }
             }
-
+            if ($query) {
+                $this->default_message->receivers = DBManager::get()->fetchAll($query, $params, 'MessageUser::build');
+            }
         }
 
         if (Request::option('prof_id') && Request::option('deg_id') && $GLOBALS['perm']->have_perm('root')) {
