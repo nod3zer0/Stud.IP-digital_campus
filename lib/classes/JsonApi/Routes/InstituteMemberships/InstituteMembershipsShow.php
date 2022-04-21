@@ -17,7 +17,7 @@ class InstituteMembershipsShow extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        if (!$membership = \InstituteMember::find(explode('_', $args['id'], 2))) {
+        if (!$membership = \InstituteMember::find($args['id'])) {
             throw new RecordNotFoundException();
         }
 

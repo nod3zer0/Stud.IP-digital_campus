@@ -380,7 +380,8 @@ class Admin_StatusgroupsController extends AuthenticatedController
             'inst' => [
                 'name' => _('Institut'),
                 'after_user_add' => function ($user_id) {
-                    $newInstUser = new InstituteMember([$user_id, Context::getId()]);
+                    $newInstUser = InstituteMember::findByUserAndInstitute($user_id, Context::getId()) ?:
+                                   InstituteMember::build(['user_id' => $user_id, 'institut_id' => Context::getId()]);
                     if ($newInstUser->isNew() || $newInstUser->inst_perms == 'user') {
                         $user = new User($user_id);
                         $newInstUser->inst_perms = $user->perms;

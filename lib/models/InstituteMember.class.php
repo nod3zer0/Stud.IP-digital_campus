@@ -134,6 +134,18 @@ class InstituteMember extends SimpleORMap implements PrivacyObject
         );
     }
 
+    /**
+     * Finds an institute membership by user and institute id.
+     *
+     * @param string $user_id
+     * @param string $institute_id
+     * @return InstituteMember|null
+     */
+    public static function findByUserAndInstitute($user_id, $institute_id)
+    {
+        return self::findOneBySQL('user_id = ? AND institut_id = ?', [$user_id, $institute_id]);
+    }
+
     public function getUserFullname($format = 'full')
     {
         return User::build(array_merge(

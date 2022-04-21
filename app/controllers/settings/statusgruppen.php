@@ -208,7 +208,8 @@ class Settings_StatusgruppenController extends Settings_SettingsController
             } elseif (!$group->addUser($this->user->id)) {
                 PageLayout::postError(_('Fehler beim Eintragen in die Gruppe!'));
             } else {
-                $member  = new InstituteMember([$this->user->id, $range_id]);
+                $member  = InstituteMember::findByUserAndInstitute($this->user->id, $range_id) ?:
+                           InstituteMember::build(['user_id' => $this->user->id, 'institut_id' => $range_id]);
                 $member->inst_perms = $this->user->perms;
 
                 $was_new   = $member->isNew();

@@ -297,7 +297,8 @@ class Institute_MembersController extends AuthenticatedController
         $enable_mail_dozent = in_array('dozenten', $additionalCheckboxes);
 
         foreach ($mp->getAddedUsers() as $u_id) {
-            $member = new InstituteMember([$u_id, $this->institute->id]);
+            $member = InstituteMember::findByUserAndInstitute($u_id, $this->institute->id) ?:
+                      InstituteMember::build(['user_id' => $u_id, 'institut_id' => $this->institute->id]);
 
             if (!$member->isNew() && $member->inst_perms !== 'user') {
                 // der Admin hat Tomaten auf den Augen, der Mitarbeiter sitzt schon im Institut
@@ -442,7 +443,7 @@ class Institute_MembersController extends AuthenticatedController
             throw new Exception(_('Sie können sich nicht selbst aus der Einrichtung austragen.'));
         }
 
-        $member = InstituteMember::find([$user->id, $this->institute->id]);
+        $member = InstituteMember::findByUserAndInstitute($user->id, $this->institute->id);
         if ($member && $member->delete()) {
             PageLayout::postInfo(sprintf(
                 _('%s wurde von der Liste des Personals gelöscht.'),
