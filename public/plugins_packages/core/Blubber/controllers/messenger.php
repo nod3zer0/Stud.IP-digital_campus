@@ -14,7 +14,9 @@ class MessengerController extends PluginController
     {
         PageLayout::setTitle(_("Blubber"));
 
-        Navigation::activateItem("/course/blubber");
+        if (Navigation::hasItem('/course/blubber')) {
+            Navigation::activateItem("/course/blubber");
+        }
 
         $this->threads = BlubberThread::findByContext(Context::get()->id, true, Context::getType());
 
