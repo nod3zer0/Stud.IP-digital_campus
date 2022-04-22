@@ -1,7 +1,9 @@
 <template>
     <ul class="widget-list widget-links cw-action-widget">
-        <li v-if="templatesView" class="cw-action-widget-add" @click="addTemplate">
-            <translate>Vorlage hinzufügen</translate>
+        <li v-if="templatesView" class="cw-action-widget-add">
+            <a href="#"  @click.prevent="addTemplate">
+                <translate>Vorlage hinzufügen</translate>
+            </a>
         </li>
     </ul>
 </template>

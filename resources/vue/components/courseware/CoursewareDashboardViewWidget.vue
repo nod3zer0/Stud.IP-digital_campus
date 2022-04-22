@@ -1,22 +1,19 @@
 <template>
     <ul class="widget-list widget-links sidebar-views cw-view-widget">
-        <li
-            :class="{ active: defaultView }"
-            @click="setDefaultView"
-        >
-            <translate>Standard</translate>
+        <li :class="{ active: defaultView }">
+            <a href="#" @click.prevent="setDefaultView">
+                <translate>Standard</translate>
+            </a>
         </li>
-        <li
-            :class="{ active: taskView }"
-            @click="setTaskView"
-        >
-            <translate>Aufgaben</translate>
+        <li :class="{ active: taskView }">
+            <a href="#" @click.prevent="setTaskView">
+                <translate>Aufgaben</translate>
+            </a>
         </li>
-        <li 
-            :class="{ active: activityView }"
-            @click="setActivityView"
-        >
-            <translate>Aktivitäten</translate>
+        <li :class="{ active: activityView }">
+            <a href="#" @click.prevent="setActivityView">
+                <translate>Aktivitäten</translate>
+            </a>
         </li>
     </ul>
 </template>

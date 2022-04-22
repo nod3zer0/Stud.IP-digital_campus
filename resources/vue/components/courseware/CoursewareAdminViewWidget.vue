@@ -1,10 +1,9 @@
 <template>
   <ul class="widget-list widget-links sidebar-views cw-view-widget">
-        <li
-            :class="{ active: templatesView }"
-            @click="setTemplatesView"
-        >
-            <translate>Vorlagen</translate>
+        <li :class="{ active: templatesView }">
+            <a href="#" @click.prevent="setTemplatesView">
+                <translate>Vorlagen</translate>
+            </a>
         </li>
   </ul>
 </template>

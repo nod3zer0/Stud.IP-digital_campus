@@ -1,7 +1,9 @@
 <template>
     <ul class="widget-list widget-links cw-action-widget">
-        <li class="cw-action-widget-add" @click="addElement">
-            <translate>Neues Lernmaterial anlegen</translate>
+        <li class="cw-action-widget-add" >
+            <a href="#" @click.prevent="addElement">
+                <translate>Neues Lernmaterial anlegen</translate>
+            </a>
         </li>
     </ul>
 </template>
