@@ -282,7 +282,7 @@ class MessagesController extends AuthenticatedController {
             $allow_tutor_filters = false;
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course->id) || $course->getSemClass()['studygroup_mode'] || CourseConfig::get($course->id)->COURSE_STUDENT_MAILING) {
                 $allow_tutor_filters = true;
-                $additonal = " AND seminar_user.visible != 'no'";
+                $additional = " AND seminar_user.visible != 'no'";
             }
             $this->default_message->receivers = [];
             $query = '';
