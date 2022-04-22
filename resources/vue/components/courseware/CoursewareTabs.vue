@@ -29,6 +29,9 @@
 <script>
 export default {
     name: 'courseware-tabs',
+    props: {
+        setSelected: { type: Number, required: false, default: 0 }
+    },
     data() {
         return {
             tabs: [],
@@ -52,6 +55,17 @@ export default {
                 if (tab.selectorId === selectorId) {
                     tab.isActive = true;
                     view.$refs[selectorId][0].focus();
+                    view.$emit('selectTab', tab);
+                }
+            });
+        },
+        selectTabByIndex(selectedIndex) {
+            let view = this;
+            this.tabs.forEach((tab) => {
+                tab.isActive = false;
+                if (tab.index === selectedIndex) {
+                    tab.isActive = true;
+                    view.$refs[tab.selectorId][0].focus();
                     view.$emit('selectTab', tab);
                 }
             });
@@ -113,6 +127,11 @@ export default {
                 return this.$refs[selectorId][0];
             }
             return null;
+        }
+    },
+    watch: {
+        setSelected(tab) {
+            this.selectTabByIndex(tab);
         }
     }
 };

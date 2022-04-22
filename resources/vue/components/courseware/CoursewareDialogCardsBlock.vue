@@ -59,6 +59,7 @@
                 <button class="button add" @click="addCard"><translate>Karte hinzufügen</translate></button>
                 <courseware-tabs
                     v-if="currentCards.length > 0"
+                    :setSelected="setCardTab"
                     @selectTab="activateCard(parseInt($event.name.replace($gettext('Karte') +  ' ', '')) - 1)"
                 >
                     <courseware-tab
@@ -137,6 +138,7 @@ export default {
         return {
             showEdit: false,
             currentCards: [],
+            setCardTab: 0
         };
     },
     computed: {
@@ -172,7 +174,7 @@ export default {
             if (this.cards !== '') {
                 this.currentCards = this.cards;
             }
-            this.activateCard(0);
+            this.setCardTab = 0;
         },
         setShowEdit(state) {
             this.showEdit = state;
@@ -219,7 +221,7 @@ export default {
             this.currentCards = this.currentCards.filter((val, index) => {
                 return !(index === cardIndex);
             });
-            this.activateCard(0);
+            this.$nextTick(() => { this.setCardTab = 0; });
         },
         flipCard(event) {
             event.currentTarget.classList.toggle('is-flipped');
@@ -231,6 +233,7 @@ export default {
                     if (view.currentCards.length > index + 1) {
                         card.active = false;
                         view.currentCards[index + 1].active = true;
+                        view.setCardTab = index + 1;
                     }
                     return false; // end every
                 } else {
@@ -245,6 +248,7 @@ export default {
                     if (index > 0) {
                         card.active = false;
                         view.currentCards[index - 1].active = true;
+                        view.setCardTab = index - 1;
                     }
                     return false; // end every
                 } else {
