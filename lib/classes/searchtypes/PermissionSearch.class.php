@@ -139,7 +139,6 @@ class PermissionSearch extends SQLSearch {
                           AND auth_user_md5.user_id NOT IN (:exclude_user)
                           AND {$visibility_condition}
                         ORDER BY auth_user_md5.Nachname, auth_user_md5.Vorname, auth_user_md5.username";
-            break;
             case 'user_inst':
                 return "SELECT DISTINCT $first_column, CONCAT(Nachname, ', ', Vorname, ' (', username, ')')
                         FROM auth_user_md5
@@ -201,6 +200,9 @@ class PermissionSearch extends SQLSearch {
         }
         if (in_array($this->search, ['user_not_already_in_sem', 'user_inst_not_already_in_sem'])) {
             $data[':sem_perm'] = ['autor', 'tutor', 'dozent'];
+        }
+        if (in_array($this->search, ['user', 'user_inst'])) {
+            $data[':permission'] = ['autor', 'tutor', 'dozent', 'admin'];
         }
         return $data;
     }

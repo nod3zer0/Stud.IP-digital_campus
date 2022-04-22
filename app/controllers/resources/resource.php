@@ -148,7 +148,7 @@ class Resources_ResourceController extends AuthenticatedController
     protected function getPermissionUserSearch()
     {
         return QuickSearch::get(
-            'searched_user_id', new StandardSearch('user_id'));
+            'searched_user_id', new PermissionSearch('user'));
     }
 
 
