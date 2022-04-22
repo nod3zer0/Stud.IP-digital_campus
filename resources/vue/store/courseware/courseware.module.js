@@ -32,6 +32,7 @@ const getDefaultState = () => {
         showStructuralElementEditDialog: false,
         showStructuralElementAddDialog: false,
         showStructuralElementExportDialog: false,
+        showStructuralElementPdfExportDialog: false,
         showStructuralElementInfoDialog: false,
         showStructuralElementDeleteDialog: false,
         showStructuralElementOerDialog: false,
@@ -152,6 +153,9 @@ const getters = {
     },
     showStructuralElementExportDialog(state) {
         return state.showStructuralElementExportDialog;
+    },
+    showStructuralElementPdfExportDialog(state) {
+        return state.showStructuralElementPdfExportDialog;
     },
     showStructuralElementInfoDialog(state) {
         return state.showStructuralElementInfoDialog;
@@ -782,6 +786,10 @@ export const actions = {
         context.commit('setShowStructuralElementExportDialog', bool);
     },
 
+    showElementPdfExportDialog(context, bool) {
+        context.commit('setShowStructuralElementPdfExportDialog', bool);
+    },
+
     showElementInfoDialog(context, bool) {
         context.commit('setShowStructuralElementInfoDialog', bool);
     },
@@ -1248,6 +1256,10 @@ export const mutations = {
 
     setShowStructuralElementExportDialog(state, showExport) {
         state.showStructuralElementExportDialog = showExport;
+    },
+
+    setShowStructuralElementPdfExportDialog(state, showPdfExport) {
+        state.showStructuralElementPdfExportDialog = showPdfExport;
     },
 
     setShowStructuralElementInfoDialog(state, showInfo) {

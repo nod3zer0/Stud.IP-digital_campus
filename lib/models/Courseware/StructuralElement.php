@@ -715,7 +715,7 @@ SQL;
         }
     }
 
-    public function pdfExport($user)
+    public function pdfExport($user, bool $with_children = false)
     {
         $doc = new \ExportPDF('P', 'mm', 'A4', true, 'UTF-8', false);
         $doc->setHeaderTitle(_('Courseware'));
@@ -734,31 +734,34 @@ SQL;
             return $doc;
         }
 
-        $doc->writeHTML($this->getElementPdfExport());
+        $doc->writeHTML($this->getElementPdfExport('', $with_children, $user));
 
         return $doc;
     }
 
-    private function getElementPdfExport(string $parent_name = '', bool $with_children = false)
+    private function getElementPdfExport(string $parent_name = '', bool $with_children, $user)
     {
+        if (!$this->canRead($user)) {
+            return '';
+        }
         if ($parent_name !== '') {
             $parent_name .= ' / ';
         }
         $html = '<h1>' . $parent_name . $this->title . '</h1>';
         $html .= $this->getContainerPdfExport();
         if ($with_children) {
-            $html .= $this->getChildrenPdfExport($parent_name);
+            $html .= $this->getChildrenPdfExport($parent_name, $with_children, $user);
         }
 
         return $html;
     }
 
-    private function getChildrenPdfExport(string $parent_name)
+    private function getChildrenPdfExport(string $parent_name, bool $with_children, $user)
     {
         $children = self::findBySQL('parent_id = ?', [$this->id]);
         $html = '';
         foreach ($children as $child) {
-            $html .= $child->getElementPdfExport($parent_name . $this->title);
+            $html .= $child->getElementPdfExport($parent_name . $this->title, $with_children, $user);
         }
 
         return $html;

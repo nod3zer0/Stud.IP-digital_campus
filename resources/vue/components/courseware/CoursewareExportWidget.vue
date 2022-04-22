@@ -6,9 +6,9 @@
             </button>
         </li>
         <li v-if="showExportPdf" class="cw-export-widget-export-pdf">
-            <a :href="pdfExportURL" target="_blank">
+            <button @click="pdfElement">
                 <translate>Seite als pdf-Dokument exportieren</translate>
-            </a>
+            </button>
         </li>
         <li v-if="showOer" class="cw-export-widget-oer">
             <button @click="oerElement">
@@ -36,16 +36,6 @@ export default {
             oerTitle: 'oerTitle',
             userIsTeacher: 'userIsTeacher',
         }),
-        pdfExportURL() {
-            if (this.context.type === 'users') {
-                return STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/pdf_export/' + this.structuralElement.id);
-            }
-            if (this.context.type === 'courses') {
-                return STUDIP.URLHelper.getURL('dispatch.php/course/courseware/pdf_export/' + this.structuralElement.id);
-            }
-
-            return '';
-        },
         canEdit() {
             if (!this.structuralElement) {
                 return false;
@@ -77,10 +67,14 @@ export default {
     methods: {
         ...mapActions({
             showElementExportDialog: 'showElementExportDialog',
+            showElementPdfExportDialog: 'showElementPdfExportDialog',
             showElementOerDialog: 'showElementOerDialog',
         }),
         exportElement() {
             this.showElementExportDialog(true);
+        },
+        pdfElement() {
+            this.showElementPdfExportDialog(true);
         },
         oerElement() {
             this.showElementOerDialog(true);

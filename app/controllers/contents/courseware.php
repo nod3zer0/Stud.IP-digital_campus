@@ -441,10 +441,10 @@ class Contents_CoursewareController extends AuthenticatedController
         $sidebar->addWidget($actions);
     }
 
-    public function pdf_export_action($element_id)
+    public function pdf_export_action($element_id, $with_children)
     {
         $element = \Courseware\StructuralElement::findOneById($element_id);
 
-        $this->render_pdf($element->pdfExport($this->user), trim($element->title).'.pdf');
+        $this->render_pdf($element->pdfExport($this->user, $with_children), trim($element->title).'.pdf');
     }
 }

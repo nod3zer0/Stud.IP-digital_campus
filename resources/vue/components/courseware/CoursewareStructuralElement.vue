@@ -404,6 +404,28 @@
                 </studip-dialog>
 
                 <studip-dialog
+                    v-if="showPdfExportDialog"
+                    :title="textExport.title"
+                    :confirmText="textExport.confirm"
+                    confirmClass="accept"
+                    :closeText="textExport.close"
+                    closeClass="cancel"
+                    height="350"
+                    @close="showElementPdfExportDialog(false)"
+                    @confirm="pdfExportCurrentElement"
+                >
+                    <template v-slot:dialogContent>
+                        <translate> Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als PDF-Datei.</translate>
+                            <div class="cw-element-export">
+                                <label>
+                                    <input type="checkbox" v-model="pdfExportChildren" />
+                                    <translate>Unterseiten exportieren</translate>
+                                </label>
+                            </div>
+                    </template>
+                </studip-dialog>
+
+                <studip-dialog
                     v-if="showOerDialog"
                     height="600"
                     width="600"
@@ -559,6 +581,7 @@ export default {
             },
             exportRunning: false,
             exportChildren: false,
+            pdfExportChildren: false,
             oerChildren: true,
             containerList: [],
             isDragging: false,
@@ -589,6 +612,7 @@ export default {
             showEditDialog: 'showStructuralElementEditDialog',
             showAddDialog: 'showStructuralElementAddDialog',
             showExportDialog: 'showStructuralElementExportDialog',
+            showPdfExportDialog: 'showStructuralElementPdfExportDialog',
             showInfoDialog: 'showStructuralElementInfoDialog',
             showDeleteDialog: 'showStructuralElementDeleteDialog',
             showOerDialog: 'showStructuralElementOerDialog',
@@ -1040,6 +1064,7 @@ export default {
             showElementEditDialog: 'showElementEditDialog',
             showElementAddDialog: 'showElementAddDialog',
             showElementExportDialog: 'showElementExportDialog',
+            showElementPdfExportDialog: 'showElementPdfExportDialog',
             showElementInfoDialog: 'showElementInfoDialog',
             showElementDeleteDialog: 'showElementDeleteDialog',
             showElementOerDialog: 'showElementOerDialog',
@@ -1207,6 +1232,22 @@ export default {
 
             this.exportRunning = false;
             this.showElementExportDialog(false);
+        },
+
+        pdfExportCurrentElement() {
+            this.showElementPdfExportDialog(false);
+            let url = '';
+            let withChildren = this.pdfExportChildren ? '/1' : '/0';
+            if (this.context.type === 'users') {
+                url = STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/pdf_export/' + this.structuralElement.id + withChildren);
+            }
+            if (this.context.type === 'courses') {
+                url = STUDIP.URLHelper.getURL('dispatch.php/course/courseware/pdf_export/' + this.structuralElement.id + withChildren);
+            }
+
+            if (url) {
+                window.open(url , '_blank').focus();
+            }
         },
 
         async publishCurrentElement() {
