@@ -977,7 +977,6 @@ form.cw-container-dialog-edit-form {
     background-repeat: no-repeat;
     background-color: transparent;
     cursor: pointer;
-    outline: none;
 }
 
 .cw-keypoint-content {
@@ -2122,7 +2121,6 @@ d i a l o g
         margin-right: -10px;
         margin-left: 2em;
         cursor: pointer;
-        outline: none;
     }
     .studip-dialog-content {
         color: $black;
@@ -2164,7 +2162,9 @@ d i a l o g
             background: $activity-color none repeat scroll 0 0;
         }
         .studip-dialog-close-button {
-            @include background-icon(decline, info);
+            @include background-icon(decline, clickable);
+            border: none;
+            background-color: transparent;
         }
         .studip-dialog-content {
             @include background-icon(question-circle-full, status-yellow, 32);
@@ -2916,7 +2916,6 @@ a u d i o  b l o c k
         height: 46px;
         width: 46px;
         display: inline-block;
-        outline: none;
 
         &:hover {
             background-color: $base-color;
@@ -3020,27 +3019,32 @@ a u d i o  b l o c k
             list-style: none;
             cursor: pointer;
 
-            .cw-playlist-item {
-                @include background-icon(file-audio2, clickable, 24);
-                background-repeat: no-repeat;
-                background-position: 1em center;
-
-                margin: 1em;
-                padding: 1em;
-                padding-left: 4em;
-                color: $base-color;
-                &:hover {
-                    color: $active-color;
-                }
-                &.current-item {
-                    @include background-icon(play, clickable, 24);
-                    font-weight: 700;
-                    &.is-playing {
-                        @include background-icon(pause, clickable, 24);
-                    }
-                }
+            li {
+                margin: 0 1em;
                 &:not(:last-child) {
                     border-bottom: solid thin $dark-gray-color-30;
+                }
+
+                .cw-playlist-item {
+                    display: block;
+                    @include background-icon(file-audio2, clickable, 24);
+                    background-repeat: no-repeat;
+                    background-position: 1em center;
+    
+                    margin: 1em 0;
+                    padding: 1em;
+                    padding-left: 4em;
+                    color: $base-color;
+                    &:hover {
+                        color: $active-color;
+                    }
+                    &.current-item {
+                        @include background-icon(play, clickable, 24);
+                        font-weight: 700;
+                        &.is-playing {
+                            @include background-icon(pause, clickable, 24);
+                        }
+                    }
                 }
             }
         }
@@ -3380,10 +3384,6 @@ c a n v a s  b l o c k
         background-repeat: no-repeat;
         background-size: 24px 24px;
 
-        &:focus {
-            outline: none;
-        }
-
         &.cw-canvasblock-color {
             $colors: (
                 white: #ffffff,
@@ -3495,7 +3495,6 @@ d o c u m e n t  b l o c k
             width: 24px;
             margin: 2px 12px;
             cursor: pointer;
-            outline: none;
         }
 
         .cw-pdf-button-prev {
@@ -3961,7 +3960,7 @@ dialog cards block
 .cw-block-dialog-cards-content {
     display: flex;
     .cw-dialogcards {
-        flex: auto;
+        flex-grow: 2;
         .scene {
             margin: 0 auto;
             width: 440px;
@@ -4060,10 +4059,9 @@ dialog cards block
         background-repeat: no-repeat;
         background-color: $base-color;
         border: none;
-        outline: none;
         display: block;
         z-index: 4;
-        margin: auto;
+        margin: auto 2px;
         padding: 0;
         cursor: pointer;
 

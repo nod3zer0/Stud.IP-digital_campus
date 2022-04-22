@@ -42,13 +42,13 @@
                                         {{ dialogTitle }}
                                     </span>
                                     <slot name="dialogHeader"></slot>
-                                    <span
+                                    <button
                                         :aria-label="$gettext('Diesen Dialog schließen')"
-                                        class="studip-dialog-close-button"
                                         :title="$gettext('Schließen')"
+                                        class="studip-dialog-close-button"
                                         @click="closeDialog"
                                     >
-                                    </span>
+                                    </button>
                                 </header>
                                 <section
                                     :id="dialogDescId"

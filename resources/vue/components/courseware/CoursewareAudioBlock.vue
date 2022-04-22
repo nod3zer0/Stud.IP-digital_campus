@@ -44,17 +44,20 @@
                 </div>
                 <div class="cw-audio-playlist-wrapper">
                     <ul v-show="hasPlaylist" class="cw-audio-playlist">
-                        <li
-                            v-for="(file, index) in files"
-                            :key="file.id"
-                            :class="{
-                                'is-playing': index === currentPlaylistItem && playing,
-                                'current-item': index === currentPlaylistItem,
-                            }"
-                            class="cw-playlist-item"
-                            @click="setCurrentPlaylistItem(index)"
-                        >
-                            {{ file.name }}
+                        <li v-for="(file, index) in files" :key="file.id">
+                            <a
+                                :aria-current="(index === currentPlaylistItem) ? 'true' : 'false'"
+                                :class="{
+                                    'is-playing': index === currentPlaylistItem && playing,
+                                    'current-item': index === currentPlaylistItem,
+                                }"
+                                :title="$gettext('Audiodatei:') + ' ' + file.name"
+                                href="#"
+                                class="cw-playlist-item"
+                                @click.prevent="setCurrentPlaylistItem(index)"
+                            >
+                                {{ file.name }}
+                            </a>
                         </li>
                     </ul>
                     <div v-if="emptyAudio" class="cw-file-empty">

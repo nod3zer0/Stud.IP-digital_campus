@@ -21,11 +21,12 @@
                     </div>
                     <div class="cw-canvasblock-buttonset">
                         <button
-                            v-for="(rgba, color) in colors"
-                            :key="color"
+                            v-for="color in colors"
+                            :key="color.name"
                             class="cw-canvasblock-color"
-                            :class="[currentColor === color ? 'selected-color' : '', color]"
-                            @click="setColor(color)"
+                            :class="[currentColor === color.name ? 'selected-color' : '', color.name]"
+                            :title="color.title"
+                            @click="setColor(color.name)"
                         />
                     </div>
                     <div class="cw-canvasblock-buttonset">
@@ -179,18 +180,18 @@ export default {
             clickY: [],
             clickDrag: [],
             clickColor: [],
-            colors: {
-                white: 'rgba(255,255,255,1)',
-                blue: 'rgba(52,152,219,1)',
-                green: 'rgba(46,204,113,1)',
-                purple: 'rgba(155,89,182,1)',
-                red: 'rgba(231,76,60,1)',
-                yellow: 'rgba(254,211,48,1)',
-                orange: 'rgba(243,156,18,1)',
-                grey: 'rgba(149,165,166,1)',
-                darkgrey: 'rgba(52,73,94,1)',
-                black: 'rgba(0,0,0,1)',
-            },
+            colors: [
+                {rgba: 'rgba(255,255,255,1)', title: this.$gettext('weiß'), name: 'white'},
+                {rgba: 'rgba(52,152,219,1)', title: this.$gettext('blau'), name: 'blue'},
+                {rgba: 'rgba(46,204,113,1)', title: this.$gettext('grün'), name: 'green'},
+                {rgba: 'rgba(155,89,182,1)', title: this.$gettext('lila'), name: 'purple'},
+                {rgba: 'rgba(231,76,60,1)', title: this.$gettext('rot'), name: 'red'},
+                {rgba: 'rgba(254,211,48,1)', title: this.$gettext('gelb'), name: 'yellow'},
+                {rgba: 'rgba(243,156,18,1)', title: this.$gettext('orange'), name: 'orange'},
+                {rgba: 'rgba(149,165,166,1)', title: this.$gettext('grau'), name: 'grey'},
+                {rgba: 'rgba(52,73,94,1)', title: this.$gettext('dunkel grau'), name: 'darkgrey'},
+                {rgba: 'rgba(0,0,0,1)', title: this.$gettext('schwarz'), name: 'black'},
+            ],
             currentColor: '',
             currentColorRGBA: '',
             sizes: { small: 2, normal: 5, large: 8, huge: 12 },
@@ -303,7 +304,7 @@ export default {
                 return;
             }
             this.currentColor = color;
-            this.currentColorRGBA = this.colors[color];
+            this.currentColorRGBA = this.colors.find(c => c.name === color).rgba;
         },
         setSize(size) {
             if (this.textInput) {
