@@ -735,7 +735,6 @@ class SemBrowse {
             }else{
                 $group_by_duration = $snap->getGroupedResult('sem_number_end', ['sem_number', 'Seminar_id']);
             }
-            $tmp_group_by_data = [];
             foreach ($group_by_duration as $sem_number_end => $detail) {
                 if ($sem_number_end != -1
                         && ($detail['sem_number'][$sem_number_end]
@@ -781,20 +780,18 @@ class SemBrowse {
         unset($snap);
         unset($tmp_group_by_data);
 
-        if (!empty($group_by_data)) {
-            foreach ($group_by_data as $group_field => $sem_ids) {
-                foreach ($sem_ids['Seminar_id'] as $seminar_id => $foo) {
-                    $name = mb_strtolower(key($sem_data[$seminar_id]['Name']));
-                    $name = str_replace(['ä', 'ö', 'ü'], ['ae', 'oe', 'ue'], $name);
-                    if (Config::get()->IMPORTANT_SEMNUMBER && key($sem_data[$seminar_id]['VeranstaltungsNummer'])) {
-                        $name = key($sem_data[$seminar_id]['VeranstaltungsNummer']) . ' ' . $name;
-                    }
-                    $group_by_data[$group_field]['Seminar_id'][$seminar_id] = $name;
+        foreach ($group_by_data as $group_field => $sem_ids) {
+            foreach ($sem_ids['Seminar_id'] as $seminar_id => $foo) {
+                $name = mb_strtolower(key($sem_data[$seminar_id]['Name']));
+                $name = str_replace(['ä', 'ö', 'ü'], ['ae', 'oe', 'ue'], $name);
+                if (Config::get()->IMPORTANT_SEMNUMBER && key($sem_data[$seminar_id]['VeranstaltungsNummer'])) {
+                    $name = key($sem_data[$seminar_id]['VeranstaltungsNummer']) . ' ' . $name;
                 }
-                uasort($group_by_data[$group_field]['Seminar_id'], 'strnatcmp');
+                $group_by_data[$group_field]['Seminar_id'][$seminar_id] = $name;
             }
-
+            uasort($group_by_data[$group_field]['Seminar_id'], 'strnatcmp');
         }
+
         switch ($this->sem_browse_data['group_by']) {
             case 0:
                 krsort($group_by_data, SORT_NUMERIC);
@@ -870,6 +867,9 @@ class SemBrowse {
                 $sem_name .= ' (' . _('Studiengruppe');
                 if ($seminar_obj->admission_prelim) $sem_name .= ', ' . _('Zutritt auf Anfrage');
                 $sem_name .= ')';
+                $row .= '<td width="1%" class="hidden-tiny-down">';
+                $row .= StudygroupAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, ['title' => $seminar_obj->getName()]);
+                $row .= '</td>';
             } else {
                 $sem_number_start = key($sem_data[$seminar_id]['sem_number']);
                 $sem_number_end = key($sem_data[$seminar_id]['sem_number_end']);
@@ -881,10 +881,11 @@ class SemBrowse {
                 } elseif ($this->sem_browse_data['group_by']) {
                     $sem_name .= " (" . $this->search_obj->sem_dates[$sem_number_start]['name'] . ')';
                 }
+                $row .= '<td width="1%" class="hidden-tiny-down">';
+                $row .= CourseAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, ['title' => $seminar_obj->getName()]);
+                $row .= '</td>';
+
             }
-            $row .= '<td style="width: 1%" class="hidden-tiny-down">';
-            $row .= StudygroupAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, ['title' => $seminar_obj->getName()]);
-            $row .= '</td>';
             $send_from_search = URLHelper::getUrl(basename($_SERVER['PHP_SELF']), ['keep_result_set' => 1, 'cid' => null]);
             $send_from_search_link = UrlHelper::getLink($this->target_url,
                     [
@@ -910,13 +911,13 @@ class SemBrowse {
                             'id' => 'show-subcourses-' . $seminar_id,
                             'title' => sprintf(_('%u Unterveranstaltungen anzeigen'), count($visibleChildren)),
                             'onclick' => "jQuery('tr.subcourses-" . $seminar_id . "').removeClass('hidden-js');jQuery(this).closest('tr').addClass('has-subcourses');jQuery(this).hide();jQuery('#hide-subcourses-" . $seminar_id . "').show();"
-                        ]) . ' ';
+                        ])->asImg(12) . ' ';
                     $row .= Icon::create('remove', Icon::ROLE_CLICKABLE ,[
                             'id' => 'hide-subcourses-' . $seminar_id,
                             'style' => 'display:none',
                             'title' => sprintf(_('%u Unterveranstaltungen ausblenden'), count($visibleChildren)),
                             'onclick' => "jQuery('tr.subcourses-" . $seminar_id . "').addClass('hidden-js'); jQuery(this).closest('tr').removeClass('has-subcourses');jQuery(this).hide();jQuery('#show-subcourses-" . $seminar_id . "').show();"
-                        ]) . ' ';
+                        ])->asImg(12) . ' ';
                 }
             }
 
