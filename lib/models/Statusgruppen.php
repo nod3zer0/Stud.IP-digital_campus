@@ -75,6 +75,7 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
         ];
         $config['has_one']['blubberthread'] = [
             'class_name' => BlubberStatusgruppeThread::class,
+            'assoc_func' => 'findByStatusgruppe_id',
             'on_store' => 'store',
             'on_delete' => 'delete'
         ];

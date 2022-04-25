@@ -30,7 +30,7 @@ class BlubberStatusgruppeThread extends BlubberThread
                 return $thread;
             }
         }
-        return false;
+        return null;
     }
 
     public function isReadable(string $user_id = null)
