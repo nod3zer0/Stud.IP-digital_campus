@@ -33,7 +33,11 @@ class StructuralElementsCopy extends NonJsonApiController
             throw new AuthorizationFailedException();
         }
 
-        $newElement = $this->copyElement($user, $sourceElement, $newParent);
+        if ($data['migrate']) {
+            $newElement = $this->mergeElement($user, $sourceElement, $newParent);
+        } else {
+            $newElement = $this->copyElement($user, $sourceElement, $newParent);
+        }
         if ($data['remove_purpose']) {
             $newElement->purpose = '';
         }
@@ -43,9 +47,16 @@ class StructuralElementsCopy extends NonJsonApiController
 
     private function copyElement(\User $user, StructuralElement $sourceElement, StructuralElement $newParent)
     {
-        $new_element = $sourceElement->copy($user, $newParent);
+        $newElement = $sourceElement->copy($user, $newParent);
 
-        return $new_element;
+        return $newElement;
+    }
+
+    private function mergeElement(\User $user, StructuralElement $sourceElement, StructuralElement $targetElement)
+    {
+        $newElement = $sourceElement->merge($user, $targetElement);
+
+        return $newElement;
     }
 
     /**

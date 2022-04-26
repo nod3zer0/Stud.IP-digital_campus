@@ -5,8 +5,10 @@
             <button class="button" @click="selectSource('remote')"><translate>Aus Veranstaltung kopieren</translate></button>
         </div>
         <div v-else>
+            <courseware-companion-box v-if="copyAllInProgress" :msgCompanion="copyAllInProgressText" mood="pointing" />
             <button class="button" @click="reset"><translate>Quelle auswählen</translate></button>
             <button v-show="!sourceOwn && hasRemoteCid" class="button" @click="selectNewCourse"><translate>Veranstaltung auswählen</translate></button>
+            <button v-show="!sourceOwn && hasRemoteCid" class="button" @click="mergeContent"><translate>Alle Inhalte kopieren</translate></button>
             <div v-if="sourceRemote">
                 <h2 v-if="!hasRemoteCid"><translate>Veranstaltungen</translate></h2>
                 <ul v-if="!hasRemoteCid && semesterMap.length > 0">
@@ -75,24 +77,28 @@ export default {
         CoursewareCompanionBox,
     },
     props: {},
-    data() {return{
-        source: '',
-        courses: [],
-        remoteCid: '',
-        remoteCoursewareInstance: {},
-        remoteId: '',
-        remoteElement: {},
-        ownCoursewareInstance: {},
-        ownId: '',
-        ownElement: {},
-        semesterMap: [],
-
-    }},
+    data() {
+        return {
+            source: '',
+            courses: [],
+            remoteCid: '',
+            remoteCoursewareInstance: {},
+            remoteId: '',
+            remoteElement: {},
+            ownCoursewareInstance: {},
+            ownId: '',
+            ownElement: {},
+            semesterMap: [],
+            copyAllInProgress: false,
+            copyAllInProgressText: ''
+        }
+    },
     computed: {
         ...mapGetters({
-            userId: 'userId',
-            structuralElementById: 'courseware-structural-elements/byId',
+            courseware: 'courseware',
             semesterById: 'semesters/byId',
+            structuralElementById: 'courseware-structural-elements/byId',
+            userId: 'userId',
         }),
         sourceEmpty() {
             return this.source === '';
@@ -116,9 +122,11 @@ export default {
             loadUsersCourses: 'loadUsersCourses',
             loadStructuralElement: 'loadStructuralElement',
             loadSemester: 'semesters/loadById',
+            copyStructuralElement: 'copyStructuralElement',
         }),
         selectSource(source) {
             this.source = source;
+            this.copyAllInProgress = false;
         },
         async loadRemoteCourseware(cid) {
             this.remoteCid = cid;
@@ -140,10 +148,12 @@ export default {
         reset() {
             this.selectSource('');
             this.remoteCid = '';
+            this.copyAllInProgress = false;
         },
         selectNewCourse() {
             this.remoteCid = '';
             this.remoteId = '';
+            this.copyAllInProgress = false;
         },
         async setRemoteId(target) {
             this.remoteId = target;
@@ -196,6 +206,24 @@ export default {
         },
         reloadElement() {
             this.$emit("reloadElement");
+        },
+        async mergeContent() {
+            this.copyAllInProgressText = this.$gettext('Inhalte werden kopiert…');
+            this.copyAllInProgress = true;
+            let parentId = this.courseware.relationships.root.data.id; //current root
+            let elementId = this.remoteCoursewareInstance.relationships.root.data.id; // remote root
+            try {
+                await this.copyStructuralElement({
+                    parentId: parentId,
+                    elementId: elementId,
+                    migrate: true
+                });
+            } catch(error) { 
+                console.debug(error);
+                this.copyAllInProgressText = this.$gettext('Beim Kopiervorgang sind Fehler aufgetreten.');
+            }
+            this.copyAllInProgressText = this.$gettext('Kopiervorgang abgeschlossen.');
+            this.reloadElement();
         }
     },
     async mounted() {

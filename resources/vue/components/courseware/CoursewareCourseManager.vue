@@ -93,53 +93,7 @@
                 </courseware-tab>
 
                 <courseware-tab :name="$gettext('Importieren')"  :index="3">
-                    <courseware-companion-box v-show="!importRunning && importDone && importErrors.length === 0" :msgCompanion="$gettext('Import erfolgreich!')" mood="special"/>
-                    <courseware-companion-box v-show="!importRunning && importDone && importErrors.length > 0" :msgCompanion="$gettext('Import abgeschlossen. Es sind Fehler aufgetreten!')" mood="unsure"/>
-                    <courseware-companion-box v-show="!importRunning && !importDone && importErrors.length > 0" :msgCompanion="$gettext('Import fehlgeschlagen. Es sind Fehler aufgetreten!')" mood="sad"/>
-                    <courseware-companion-box v-show="importRunning" :msgCompanion="$gettext('Import läuft. Bitte verlassen Sie die Seite nicht bis der Import abgeschlossen wurde.')" mood="pointing"/>
-                    <button
-                        v-show="!importRunning"
-                        class="button"
-                        @click.prevent="chooseFile"
-                    >
-                        <translate>Importdatei auswählen</translate>
-                    </button>
-
-                    <div v-if="importZip" class="cw-import-zip">
-                        <header>{{ importZip.name }}</header>
-                        <p><translate>Größe</translate>: {{ getFileSizeText(importZip.size) }}</p>
-                    </div>
-
-                    <div v-if="importRunning" class="cw-import-zip">
-                        <header><translate>Importiere Dateien</translate>:</header>
-                        <div class="progress-bar-wrapper">
-                            <div class="progress-bar" role="progressbar" :style="{width: importFilesProgress + '%'}" :aria-valuenow="importFilesProgress" aria-valuemin="0" aria-valuemax="100">{{ importFilesProgress }}%</div>
-                        </div>
-                        {{ importFilesState }}
-                    </div>
-
-                    <div v-if="fileImportDone && importRunning" class="cw-import-zip">
-                        <header><translate>Importiere Elemente</translate>:</header>
-                        <div class="progress-bar-wrapper">
-                            <div class="progress-bar" role="progressbar" :style="{width: importStructuresProgress + '%'}" :aria-valuenow="importStructuresProgress" aria-valuemin="0" aria-valuemax="100">{{ importStructuresProgress }}%</div>
-                        </div>
-                        {{ importStructuresState }}
-                    </div>
-
-                    <button
-                        v-show="importZip && !importRunning"
-                        class="button"
-                        @click.prevent="doImportCourseware"
-                    >
-                        <translate>Alles importieren</translate>
-                    </button>
-                    <div v-if="importErrors.length > 0">
-                        <h3><translate>Fehlermeldungen:</translate></h3>
-                        <ul>
-                            <li v-for="(error, index) in importErrors" :key="index"> {{error}} </li>
-                        </ul>
-                    </div>
-                    <input ref="importFile" type="file" accept=".zip" @change="setImport" style="visibility: hidden" />
+                    <courseware-manager-import />
                 </courseware-tab>
                 <courseware-tab v-if="context.type === 'courses'" :name="$gettext('Aufgabe verteilen')"  :index="4">
                     <courseware-manager-task-distributor />
@@ -158,12 +112,9 @@ import CoursewareManagerCopySelector from './CoursewareManagerCopySelector.vue';
 import CoursewareManagerTaskDistributor from './CoursewareManagerTaskDistributor.vue';
 import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
-import CoursewareImport from '@/vue/mixins/courseware/import.js';
+import CoursewareManagerImport from './CoursewareManagerImport.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import { mapActions, mapGetters } from 'vuex';
-
-import JSZip from 'jszip';
-import FileSaver from 'file-saver';
 
 export default {
     name: 'courseware-course-manager',
@@ -175,21 +126,19 @@ export default {
         CoursewareManagerCopySelector,
         CoursewareCompanionOverlay,
         CoursewareCompanionBox,
-        CoursewareManagerTaskDistributor
+        CoursewareManagerTaskDistributor,
+        CoursewareManagerImport
     },
 
-    mixins: [CoursewareImport, CoursewareExport],
+    mixins: [CoursewareExport],
 
     data() {
         return {
             exportRunning: false,
-            importRunning: false,
-            importZip: null,
             currentElement: {},
             currentId: null,
             selfElement: {},
             selfId: null,
-            zip: null
         };
     },
 
@@ -198,11 +147,6 @@ export default {
             courseware: 'courseware',
             context: 'context',
             structuralElementById: 'courseware-structural-elements/byId',
-            importFilesState: 'importFilesState',
-            importFilesProgress: 'importFilesProgress',
-            importStructuresState: 'importStructuresState',
-            importStructuresProgress: 'importStructuresProgress',
-            importErrors: 'importErrors',
             exportState: 'exportState',
             exportProgress: 'exportProgress'
         }),
@@ -222,12 +166,6 @@ export default {
         moveSelfChildPossible() {
             return this.currentId !== this.selfId;
         },
-        fileImportDone() {
-            return this.importFilesProgress === 100;
-        },
-        importDone() {
-            return this.importFilesProgress === 100 && this.importStructuresProgress === 100;
-        }
     },
 
     methods: {
@@ -241,9 +179,6 @@ export default {
             unlockObject: 'unlockObject',
             addBookmark: 'addBookmark',
             companionInfo: 'companionInfo',
-            setImportFilesProgress: 'setImportFilesProgress',
-            setImportStructuresProgress: 'setImportStructuresProgress',
-            setImportErrors: 'setImportErrors',
         }),
         async reloadElements() {
             await this.setCurrentId(this.currentId);
@@ -282,88 +217,6 @@ export default {
 
             this.exportRunning = false;
         },
-
-        setImport(event) {
-            this.importZip = event.target.files[0];
-            this.setImportErrors([]);
-        },
-
-        async doImportCourseware() {
-            if (this.importZip === null) {
-                return false;
-            }
-
-            this.importRunning = true;
-
-            let view = this;
-
-            view.zip = new JSZip();
-
-            await view.zip.loadAsync(this.importZip).then(async function () {
-                let errors = [];
-                let missingFiles = false;
-                if (view.zip.file('courseware.json') === null) {
-                    errors.push(view.$gettext('Das Archiv enthält keine courseware.json Datei.'));
-                    missingFiles = true;
-                }
-                if (view.zip.file('files.json') === null) {
-                    errors.push(view.$gettext('Das Archiv enthält keine files.json Datei.'));
-                    missingFiles = true;
-                }
-                if (view.zip.file('data.xml') !== null) {
-                    errors.push(view.$gettext('Das Archiv enthält eine data.xml Datei. Möglicherweise handelt es sich um einen Export aus dem Courseware-Plugin. Diese Archive sind nicht kompatibel mit dieser Courseware.'));
-                }
-                if (missingFiles) {
-                    view.setImportErrors(errors);
-                    return;
-                }
-
-                let data = await view.zip.file('courseware.json').async('string');
-                let courseware = null;
-                let data_files = await view.zip.file('files.json').async('string');
-                let files = null;
-                let jsonErrors = false;
-                try {
-                    courseware = JSON.parse(data);
-                } catch (error) {
-                    jsonErrors = true;
-                    errors.push(view.$gettext('Die Beschreibung der Courseware-Inhalte ist nicht valide.'));
-                    errors.push(error);
-                }
-                try {
-                    files = JSON.parse(data_files);
-                } catch (error) {
-                    jsonErrors = true;
-                    errors.push(view.$gettext('Die Beschreibung der Dateien ist nicht valide.'));
-                    errors.push(error);
-                }
-                if (jsonErrors) {
-                    view.setImportErrors(errors);
-                    return;
-                }
-
-                await view.loadCoursewareStructure();
-                let parent_id = view.courseware.relationships.root.data.id;
-
-                await view.importCourseware(courseware, parent_id, files);
-            });
-
-            this.importZip = null;
-            this.importRunning = false;
-        },
-
-        chooseFile() {
-            this.$refs.importFile.click();
-            this.setImportFilesProgress(0);
-            this.setImportStructuresProgress(0);
-        },
-        getFileSizeText(size) {
-            if (size / 1024 < 1000) {
-                return (size / 1024).toFixed(2) + ' kB';
-            } else {
-                return (size / 1048576).toFixed(2) + ' MB';
-            }
-        },
     },
     watch: {
         courseware(newValue, oldValue) {
@@ -372,12 +225,6 @@ export default {
             this.setSelfId(currentId);
         },
     },
-    mounted() {
-        let view = this;
 
-        window.onbeforeunload = function() {
-            return view.importRunning ? true : null
-        }
-    }
 };
 </script>

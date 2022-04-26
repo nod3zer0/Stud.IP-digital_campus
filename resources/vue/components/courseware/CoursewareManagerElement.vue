@@ -20,12 +20,12 @@
                     <a
                         v-if="elementInserterActive && moveSelfPossible && canEdit"
                         href="#"
-                        :title="$gettextInterpolate('%{ elementTitle } verschieben', {elementTitle: elementTitle})"
+                        :title="elementTitle"
                         @click="insertElement({element: currentElement, source: type})"
                     >
                         <studip-icon shape="arr_2left" size="24" role="clickable" />
                     </a>
-                    {{ elementTitle }}
+                    {{ elementName }}
                 </header>
             </div>
             <courseware-collapsible-box
@@ -227,12 +227,24 @@ export default {
 
             return [...visitAncestors(this.currentElement)].reverse()
         },
-        elementTitle() {
+        elementName() {
             if (this.currentElement.attributes) {
                 return this.currentElement.attributes.title
-            } else {
-                return '';
             }
+
+            return '';
+        },
+        elementTitle() {
+            let title = this.elementName;
+            if (this.elementInserterActive && this.moveSelfPossible && this.canEdit) {
+                if (this.isRemote || this.isOwn) {
+                    title = this.$gettextInterpolate('%{ elementTitle } kopieren', {elementTitle: this.elementName});
+                } else {
+                    title = this.$gettextInterpolate('%{ elementTitle } verschieben', {elementTitle: this.elementName});
+                }
+            }
+
+            return title;
         },
         hasChildren() {
             if (this.children === null) {
@@ -367,7 +379,8 @@ export default {
                     let parentId = this.filingData.parentItem.id;
                     await this.copyStructuralElement({
                         parentId: parentId,
-                        element: element,
+                        elementId: element.id,
+                        migrate: false
                     }).catch((error) => {
                         let message = this.$gettextInterpolate('%{ pageTitle } konnte nicht kopiert werden.', {pageTitle: element.attributes.title});
                         this.text.copyProcessFailed.push(message);

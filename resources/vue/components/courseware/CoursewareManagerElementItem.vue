@@ -5,7 +5,7 @@
             href="#"
             class="cw-manager-element-item"
             :class="[inserter ? 'cw-manager-element-item-inserter' : '']"
-            :title="inserter ? $gettextInterpolate('%{ elementTitle } verschieben', {elementTitle: element.attributes.title}) : element.attributes.title"
+            :title="elementTitle"
             @click="clickItem">
                 {{ element.attributes.title }}
                 <span v-if="task" class="cw-manager-element-item-solver-name">| {{ solverName }}</span>
@@ -83,6 +83,18 @@ export default {
 
             return '';
         },
+        elementTitle() {
+            let title = this.element.attributes.title;
+            if (this.inserter) {
+                if (this.type === 'remote' || this.type === 'own') {
+                    title = this.$gettextInterpolate('%{ elementTitle } kopieren', {elementTitle: this.element.attributes.title});
+                } else {
+                    title = this.$gettextInterpolate('%{ elementTitle } verschieben', {elementTitle: this.element.attributes.title});
+                }
+            }
+
+            return title;
+        }
     },
     methods: {
         ...mapActions({

@@ -241,8 +241,9 @@ export default {
             if (ownCoursewareInstance !== null) {
                 await this.copyStructuralElement({
                     parentId: ownCoursewareInstance.relationships.root.data.id,
-                    element: element,
+                    elementId: element.id,
                     removeType: true,
+                    migrate: false
                 });
                 this.companionSuccess({
                     info: this.$gettext('Die Inhalte wurden zu Ihren persönlichen Lernmaterialien hinzugefügt.'),

@@ -662,17 +662,7 @@ SQL;
      */
     public function copy(User $user, StructuralElement $parent): StructuralElement
     {
-        /** @var ?\FileRef $original_file_ref */
-        $original_file_ref = \FileRef::find($this->image_id);
-        if ($original_file_ref) {
-            $instance = new Instance($this->getCourseware($parent->range_id, $parent->range_type));
-            $folder = \Courseware\Filesystem\PublicFolder::findOrCreateTopFolder($instance);
-            /** @var \FileRef $file_ref */
-            $file_ref = \FileManager::copyFile($original_file_ref->getFileType(), $folder, $user);
-            $file_ref_id = $file_ref->id;
-        } else {
-            $file_ref_id = null;
-        }
+        $file_ref_id = self::copyImage($user, $parent);
 
         $element = self::build([
             'parent_id' => $parent->id,
@@ -695,6 +685,74 @@ SQL;
         self::copyChildren($user, $element);
 
         return $element;
+    }
+
+    private function copyImage(User $user, StructuralElement $parent) : ?String
+    {
+        $file_ref_id = null;
+
+        /** @var ?\FileRef $original_file_ref */
+        $original_file_ref = \FileRef::find($this->image_id);
+        if ($original_file_ref) {
+            $instance = new Instance($this->getCourseware($parent->range_id, $parent->range_type));
+            $folder = \Courseware\Filesystem\PublicFolder::findOrCreateTopFolder($instance);
+            /** @var \FileRef $file_ref */
+            $file_ref = \FileManager::copyFile($original_file_ref->getFileType(), $folder, $user);
+            $file_ref_id = $file_ref->id;
+        }
+
+        return $file_ref_id;
+    }
+
+    public function merge(User $user, StructuralElement $target): StructuralElement
+    {
+        // merge with target
+        if (!$target->image_id) {
+            $target->image_id = self::copyImage($user, $target);
+        }
+
+        if ($target->title === 'neue Seite' || $target->title === 'New page') {
+            $target->title = $this->title;
+        }
+
+        if (!$target->purpose) {
+            $target->purpose = $this->purpose;
+        }
+
+        if (!$target->payload['color']) {
+            $target->payload['color'] = $this->payload['color'];
+        }
+
+        if (!$target->payload['description']) {
+            $target->payload['description'] = $this->payload['description'];
+        }
+
+        if (!$target->payload['license_type']) {
+            $target->payload['license_type'] = $this->payload['license_type'];
+        }
+
+        if (!$target->payload['required_time']) {
+            $target->payload['required_time'] = $this->payload['required_time'];
+        }
+
+        if (!$target->payload['difficulty_start']) {
+            $target->payload['difficulty_start'] = $this->payload['difficulty_start'];
+        }
+
+        if (!$target->payload['difficulty_end']) {
+            $target->payload['difficulty_end'] = $this->payload['difficulty_end'];
+        }
+
+        $target->store();
+
+        // add Containers to target
+        self::copyContainers($user, $target);
+
+        // copy Children
+
+        self::copyChildren($user, $target);
+
+        return $this;
     }
 
     private function copyContainers(User $user, StructuralElement $newElement): void

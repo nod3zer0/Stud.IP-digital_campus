@@ -383,10 +383,10 @@ export const actions = {
             // console.log(resp);
         });
     },
-    async copyStructuralElement({ dispatch, getters, rootGetters }, { parentId, element, removePurpose }) {
-        const copy = { data: { parent_id: parentId, remove_purpose: removePurpose } };
+    async copyStructuralElement({ dispatch, getters, rootGetters }, { parentId, elementId, removePurpose, migrate }) {
+        const copy = { data: { parent_id: parentId, remove_purpose: removePurpose, migrate: migrate } };
 
-        const result = await state.httpClient.post(`courseware-structural-elements/${element.id}/copy`, copy);
+        const result = await state.httpClient.post(`courseware-structural-elements/${elementId}/copy`, copy);
         const id = result.data.data.id;
         await dispatch('loadStructuralElement', id);
 
