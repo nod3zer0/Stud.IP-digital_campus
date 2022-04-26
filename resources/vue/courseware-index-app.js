@@ -67,13 +67,16 @@ const mountApp = (STUDIP, createApp, element) => {
         },
     ];
 
-    const base = new URL(
+    let base = new URL(
         STUDIP.URLHelper.parameters.cid
             ? STUDIP.URLHelper.getURL('dispatch.php/course/courseware', { cid: STUDIP.URLHelper.parameters.cid }, true)
             : STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/courseware')
     );
+    if (entry_type === 'courses') {
+        base.search += '&';
+    }
     const router = new VueRouter({
-        base: `${base.pathname}${base.search}&`,
+        base: `${base.pathname}${base.search}`,
         routes,
     });
 
