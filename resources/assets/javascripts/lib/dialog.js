@@ -1,4 +1,9 @@
 import { $gettext } from '../lib/gettext.js';
+import parseOptions from './parse_options.js';
+import extractCallback from './extract_callback.js';
+import Overlay from './overlay.js';
+import PageLayout from './page_layout.js';
+import Report from './report.js';
 
 /*jslint esversion: 6*/
 
@@ -13,10 +18,6 @@ import { $gettext } from '../lib/gettext.js';
  * @todo        Handle file uploads <http://goo.gl/PnSra8>
  */
 
-import parseOptions from './parse_options.js';
-import extractCallback from './extract_callback.js';
-import Overlay from './overlay.js';
-import PageLayout from './page_layout.js';
 
 var dialog_margin = 0;
 
@@ -309,8 +310,10 @@ Dialog.fromURL = function(url, options) {
                 Dialog.show(response, options);
             }
         })
-        .fail(() => {
+        .fail((jqXHR, textStatus, errorThrown) => {
+            Report.error($gettext('Es ist ein Fehler aufgetreten'), errorThrown);
             Overlay.hide();
+
         });
 
     return true;
