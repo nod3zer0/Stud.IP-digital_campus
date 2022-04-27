@@ -1400,6 +1400,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
 
     public function getAssignedUserName()
     {
+        $name = '';
         if ($this->getAssignedUserType() === 'course') {
             $name = $this->assigned_course_date->course->getFullname();
             $name .= ' (' . implode(',', $this->assigned_course_date->course->getMembersWithStatus('dozent', true)->limit(3)->getValue('nachname')) . ')';
