@@ -90,6 +90,11 @@ class NewsController extends StudipController
             return $this->render_nothing();
         }
 
+        // Store visit if user opened comments
+        if (Request::bool('comments') && Request::submitted('contentbox_open')) {
+            object_set_visit(Request::option('contentbox_open'), 'news');
+        }
+
         // Check if user wrote a comment
         if (Request::submitted('accept') && trim(Request::get('comment_content')) && Request::isPost()) {
             CSRFProtection::verifySecurityToken();

@@ -18,7 +18,7 @@
 <?
 if ($new['allow_comments']) :
     $num = StudipComment::NumCommentsForObject($new['news_id']);
-    $visited = object_get_visit($new['news_id'], 'news', false, false);
+    $visited = object_get_visit($new['news_id'], 'news');
     $isnew = StudipComment::NumCommentsForObjectSinceLastVisit($new['news_id'], $visited, $GLOBALS['user']->id);
     ?>
     <? if ($num): ?>
