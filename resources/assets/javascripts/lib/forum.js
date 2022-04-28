@@ -1,9 +1,11 @@
+import { $gettext } from "./gettext.js";
+
 const Forum = {
     confirmDialog: null,
     current_area_id: null,
     current_category_id: null,
     seminar_id: null,
-    warning_text: 'Wenn Sie die Seite verlassen, gehen ihre Änderungen verloren!'.toLocaleString(),
+    warning_text: $gettext('Wenn Sie die Seite verlassen, gehen ihre Änderungen verloren!'),
     clipboard: {},
 
     getTemplate: _.memoize(function(name) {
@@ -104,8 +106,8 @@ const Forum = {
     },
 
     deleteCategory: function (category_id) {
-        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diese Kategorie entfernen möchten? '.toLocaleString()
-            + 'Alle Bereiche werden dann nach "Allgemein" verschoben!'.toLocaleString(),
+        STUDIP.Forum.showDialog($gettext('Sind sie sicher, dass Sie diese Kategorie entfernen möchten? ')
+            + $gettext('Alle Bereiche werden dann nach "Allgemein" verschoben!'),
             'javascript:STUDIP.Forum.approveDelete()',
             'table[data-category-id=' + category_id +'] td.areaentry');
 
@@ -177,8 +179,8 @@ const Forum = {
     },
 
     deleteArea: function (element, area_id) {
-        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diesen Bereich löschen möchten? '.toLocaleString()
-            + 'Es werden auch alle Beiträge in diesem Bereich gelöscht!'.toLocaleString(),
+        STUDIP.Forum.showDialog($gettext('Sind sie sicher, dass Sie diesen Bereich löschen möchten? ')
+            + $gettext('Es werden auch alle Beiträge in diesem Bereich gelöscht!'),
             'javascript:STUDIP.Forum.approveDelete()',
             'tr[data-area-id=' + area_id +'] td.areaentry');
 
@@ -372,7 +374,7 @@ const Forum = {
 
         if ($('div.forum_new_entry').length) {
             STUDIP.Dialog.confirm(
-                'Sind sie sicher, dass Sie ihren bisherigen Beitrag verwerfen wollen?'.toLocaleString(),
+                $gettext('Sind sie sicher, dass Sie ihren bisherigen Beitrag verwerfen wollen?'),
                 function() {
                     $('div.forum_new_entry').remove();
                     callback();
@@ -422,7 +424,7 @@ const Forum = {
                 var anonymous = jQuery('.anonymous_post[data-profile=' + topic_id + ']').length > 0;
 
                 if (anonymous) {
-                    var name = "Anonym".toLocaleString();
+                    var name = $gettext('Anonym');
                 } else {
                     var name = jQuery('span.username[data-profile=' + topic_id + ']').text().trim();
                 }
@@ -460,7 +462,7 @@ const Forum = {
             // quote with HTML markup
             var author = '';
             if (name) {
-                var writtenBy = '%s hat geschrieben:'.toLocaleString();
+                var writtenBy = $gettext('%s hat geschrieben:');
                 author = '<div class="author">'
                     + writtenBy.replace('%s', name)
                     + '</div>';
@@ -485,9 +487,9 @@ const Forum = {
         var content = jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val().trim();
         var is_html = STUDIP.wysiwyg.isHtml(content);
         var nl      = is_html ? '<br>' : "\n";
-        var text    = 'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '.toLocaleString()
+        var text    = $gettext('Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. ')
                     + nl + nl
-                    + 'Link zum Beitrag: '.toLocaleString()
+                    + $gettext('Link zum Beitrag: ')
                     + nl
                     + STUDIP.URLHelper.getURL('plugins.php/coreforum/index/index/'
                     + topic_id + '?cid=' + STUDIP.Forum.seminar_id + '&again=yes#' + topic_id)
@@ -525,7 +527,7 @@ const Forum = {
             content = jQuery('#dialog_' + topic_id).html();
 
         STUDIP.Dialog.show(content, {
-            title: 'Beitrag verschieben'.toLocaleString(),
+            title: $gettext('Beitrag verschieben'),
             width: 400,
             height: 400,
             origin: element
@@ -714,7 +716,7 @@ const Forum = {
     },
 
     openThreadFromOverview: function(topic_id, parent_topic_id, page) {
-        var buttonText = "Thema schließen".toLocaleString();
+        var buttonText = $gettext('Thema schließen');
         var element = jQuery('#closeButton-' + topic_id);
 
         STUDIP.Forum.wrapActionElementText(element);
@@ -730,7 +732,7 @@ const Forum = {
     },
 
     openThreadFromThread: function(topic_id, page) {
-        var buttonText = "Thema schließen".toLocaleString();
+        var buttonText = $gettext('Thema schließen');
         jQuery('.closeButtons').text(buttonText);
         jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.closeThreadFromThread("' + topic_id + '", ' + page + '); return false;');
         jQuery('.closeButtons').closest("li").css('background-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/blue/lock-locked.svg' + ")");
@@ -754,7 +756,7 @@ const Forum = {
     },
 
     closeThreadFromOverview: function(topic_id, parent_topic_id, page) {
-        var buttonText = "Thema öffnen".toLocaleString();
+        var buttonText = $gettext('Thema öffnen');
         var element = jQuery('#closeButton-' + topic_id);
 
         STUDIP.Forum.wrapActionElementText(element);
@@ -771,7 +773,7 @@ const Forum = {
     },
 
     closeThreadFromThread: function(topic_id, page) {
-        var buttonText = "Thema öffnen".toLocaleString();
+        var buttonText = $gettext('Thema öffnen');
         jQuery('.closeButtons').text(buttonText);
         jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.openThreadFromThread("' + topic_id + '", '+ page +'); return false;');
         jQuery('.closeButtons').closest("li").css('background-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/blue/lock-unlocked.svg' + ")");
@@ -803,7 +805,7 @@ const Forum = {
             url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/make_sticky/' + topic_id + '/' + topic_id + '/0'),
             success: function(data) {
                 jQuery('#message_area').html(data);
-                var linkText = "Hervorhebung aufheben".toLocaleString();
+                var linkText = $gettext('Hervorhebung aufheben');
                 jQuery('#stickyButton').text(linkText);
                 jQuery('#stickyButton').attr('onclick', 'STUDIP.Forum.makeThreadUnstickyFromThread("' + topic_id + '"); return false;');
             }
@@ -818,7 +820,7 @@ const Forum = {
             url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/make_unsticky/' + topic_id + '/' + topic_id + '/0'),
             success: function(data) {
                 jQuery('#message_area').html(data);
-                var linkText = "Thema hervorheben".toLocaleString();
+                var linkText = $gettext('Thema hervorheben');
                 jQuery('#stickyButton').text(linkText);
                 jQuery('#stickyButton').attr('onclick', 'STUDIP.Forum.makeThreadStickyFromThread("' + topic_id + '"); return false;');
             }
