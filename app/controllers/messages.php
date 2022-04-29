@@ -936,8 +936,10 @@ class MessagesController extends AuthenticatedController {
             '#',
             Icon::create('trash'),
             [
-                'onclick' => "return STUDIP.Dialog.confirm('Wirklich %s Nachricht(en) löschen?'.toLocaleString().replace('%s',
-        jQuery('#bulk tbody :checked').length), function() { jQuery('#bulk').submit(); }) "
+                'onclick' => sprintf(
+                    'return STUDIP.Dialog.confirm("%s".replace("%%s", $("#bulk tbody :checked").length), function() { $("#bulk").submit(); })',
+                    _('Wirklich %s Nachricht(en) löschen?')
+                )
             ]
         );
 

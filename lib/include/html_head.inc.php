@@ -57,10 +57,6 @@ $getInstalledLanguages = function () {
             wysiwyg_enabled: <?= json_encode((bool) Config::get()->WYSIWYG) ?>
         }
     </script>
-<? if ($_SESSION['_language'] !== 'de_DE'): ?>
-    <link rel="localization" hreflang="<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>"
-          href="<?= URLHelper::getScriptLink('dispatch.php/localizations/' . $_SESSION['_language']) ?>" type="application/vnd.oftn.l10n+json">
-<? endif ?>
 
     <?= PageLayout::getHeadElements() ?>
 

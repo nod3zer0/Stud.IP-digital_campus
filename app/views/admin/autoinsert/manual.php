@@ -148,12 +148,10 @@
                     function (json) {
                         var result = "";
                         if (!json || json.error) {
-                            result = "Fehler".toLocaleString() + ": ";
-                            result += json.error
-                                ? json.error.toLocaleString()
-                                : "Fehler bei der Übertragung".toLocaleString();
+                            result = '<?= _('Fehler') ?>: ';
+                            result += json.error || '<?= _('Fehler bei der Übertragung') ?>';
                         } else {
-                            result = "Gefundene Nutzer".toLocaleString() + ": ";
+                            result = '<?= _('Gefundene Nutzer') ?>: ';
                             result += "<strong>" + json.users + "</strong>";
                         }
                         $('#autoinsert_count').html(result);
@@ -162,7 +160,7 @@
                 event.preventDefault();
             });
             $('input[name^=remove_filter]').click(function (event) {
-                return confirm("Wollen Sie diesen Filter wirklich entfernen?".toLocaleString());
+                return confirm('<?= _('Wollen Sie diesen Filter wirklich entfernen?') ?>');
             });
         });
     </script>

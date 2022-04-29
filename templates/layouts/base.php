@@ -86,10 +86,6 @@ $getInstalledLanguages = function () {
             server_timestamp: <?= time() ?>
         }
     </script>
-<? if ($_SESSION['_language'] !== 'de_DE'): ?>
-    <link rel="localization" hreflang="<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>"
-          href="<?= URLHelper::getScriptLink('dispatch.php/localizations/' . $_SESSION['_language']) ?>" type="application/vnd.oftn.l10n+json">
-<? endif ?>
 
     <?= PageLayout::getHeadElements() ?>
 
