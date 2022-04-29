@@ -1172,16 +1172,17 @@ function get_title_for_status($type, $count, $sem_type = NULL)
     }
 
     $atype = 'title_'.$type;
+    $index = $count == 1 ? 0 : 1;
 
-    if (is_array($SEM_TYPE[$sem_type][$atype])) {
-        $title = $SEM_TYPE[$sem_type][$atype];
-    } else if (isset($DEFAULT_TITLE_FOR_STATUS[$type])) {
-        $title = $DEFAULT_TITLE_FOR_STATUS[$type];
+    if (isset($SEM_TYPE[$sem_type][$atype][$index])) {
+        $title = $SEM_TYPE[$sem_type][$atype][$index];
+    } else if (isset($DEFAULT_TITLE_FOR_STATUS[$type][$index])) {
+        $title = $DEFAULT_TITLE_FOR_STATUS[$type][$index];
     } else {
-        $title = ['unbekannt', 'unbekannt'];
+        $title = _('unbekannt');
     }
 
-    return ngettext($title[0], $title[1], $count);
+    return $title;
 }
 
 /**
