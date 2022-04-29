@@ -77,6 +77,7 @@ STUDIP.dialogReady(() => {
                             jQuery("#difficulty_end").val(ui.values[1]);
                         }
                     });
+                    jQuery('.oercampus_editmaterial').find(':focusable').first().focus();
                 },
                 methods: {
                     editName: function () {
