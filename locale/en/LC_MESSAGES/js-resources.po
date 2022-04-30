@@ -1,9 +1,16 @@
+# Moritz Strohm <strohm@data-quest.de>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
+"PO-Revision-Date: 2022-04-30 15:26+0000\n"
+"Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
+"stud-ip-5-1-js/en/>\n"
 "Language: en\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.10.1\n"
 "Generated-By: easygettext\n"
 
 #: resources/assets/javascripts/lib/multi_person_search.js:70
@@ -159,9 +166,8 @@ msgstr "Reply"
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:98
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:49
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:446
-#, fuzzy
 msgid "Apfelgrün"
-msgstr "created"
+msgstr "Apple green"
 
 #: resources/assets/javascripts/studip-ui.js:61
 msgid "Apr"
@@ -184,7 +190,7 @@ msgstr ""
 
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:97
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: resources/vue/components/courseware/CoursewareAudioBlock.vue:85
 #: resources/vue/components/courseware/CoursewareAudioBlock.vue:27
@@ -336,9 +342,8 @@ msgstr ""
 
 #: resources/vue/components/courseware/CoursewareConfirmBlock.vue:5
 #: resources/vue/components/courseware/CoursewareConfirmBlock.vue:2
-#, fuzzy
 msgid "Bestätigung"
-msgstr "Confirm"
+msgstr "Confirmation"
 
 #: resources/vue/components/courseware/CoursewareCourseDashboard.vue:16
 msgid "bevorstehende Seiten"
@@ -473,7 +478,7 @@ msgstr ""
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:34
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:333
 msgid "Blau"
-msgstr ""
+msgstr "Blue"
 
 #: resources/assets/javascripts/bootstrap/application.js:175
 #: resources/assets/javascripts/bootstrap/application.js:188
@@ -849,9 +854,8 @@ msgid "Do"
 msgstr "Thu."
 
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:105
-#, fuzzy
 msgid "Dokument"
-msgstr "Documents"
+msgstr "Document"
 
 #: resources/assets/javascripts/lib/files.js:63
 #: resources/assets/javascripts/lib/files.js:68
@@ -937,7 +941,7 @@ msgstr "Draft"
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:97
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:39
 msgid "ePortfolio"
-msgstr ""
+msgstr "ePortfolio"
 
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:45
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:38
@@ -1096,9 +1100,8 @@ msgstr ""
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:8
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:75
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:17
-#, fuzzy
 msgid "Farbe"
-msgstr "Colour selector"
+msgstr "Colour"
 
 #: resources/vue/mixins/MyCoursesMixin.js:74
 msgid "Farbgruppierung ändern"
@@ -1230,7 +1233,7 @@ msgstr ""
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:39
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:373
 msgid "Grau"
-msgstr ""
+msgstr "Gray"
 
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:99
 msgid "groß"
@@ -1371,7 +1374,7 @@ msgstr "Height"
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:41
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:382
 msgid "Holzkohle"
-msgstr ""
+msgstr "Charcoal"
 
 #: resources/vue/components/MemcachedCacheConfig.vue:11
 #: resources/vue/components/RedisCacheConfig.vue:4
@@ -1604,9 +1607,8 @@ msgstr ""
 
 #: resources/vue/components/courseware/CoursewareRibbon.vue:16
 #: resources/vue/components/courseware/CoursewareRibbonToolbar.vue:6
-#, fuzzy
 msgid "Inhaltsverzeichnis"
-msgstr "Course directory"
+msgstr "Table of contents"
 
 #: resources/vue/components/courseware/CoursewareLinkBlock.vue:31
 #: resources/vue/components/courseware/CoursewareLinkBlock.vue:10
@@ -1676,7 +1678,7 @@ msgstr "June"
 
 #: resources/vue/components/MyCoursesSidebarSwitch.vue:9
 msgid "Kachelansicht"
-msgstr ""
+msgstr "Tile view"
 
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:46
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:11
@@ -1815,7 +1817,7 @@ msgstr ""
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:47
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:430
 msgid "Kürbis"
-msgstr ""
+msgstr "Pumpkin"
 
 #: resources/vue/mixins/courseware/export.js:65
 msgid "Lade Dateien"
@@ -1914,7 +1916,7 @@ msgstr ""
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:45
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:20
 msgid "Lizenztyp"
-msgstr ""
+msgstr "License type"
 
 #: resources/assets/javascripts/studip-ui.js:48
 #: resources/assets/javascripts/studip-ui.js:62
@@ -2139,7 +2141,7 @@ msgstr ""
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:57
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:13
 msgid "Niveau"
-msgstr ""
+msgstr "Level"
 
 #: resources/assets/javascripts/lib/questionnaire.js:120
 msgid "Noch nicht komplett ausgefüllt."
@@ -2177,7 +2179,7 @@ msgstr ""
 
 #: resources/vue/components/MyCoursesNewContentToggle.vue:4
 msgid "Nur neue Inhalte anzeigen"
-msgstr ""
+msgstr "Only show new content"
 
 #: resources/vue/components/courseware/CoursewareIframeBlock.vue:31
 #: resources/vue/components/courseware/CoursewareIframeBlock.vue:15
@@ -2190,9 +2192,8 @@ msgstr "or"
 
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:96
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:38
-#, fuzzy
 msgid "OER-Material"
-msgstr "Materials"
+msgstr "OER learning material"
 
 #: resources/vue/components/StudipDialog.vue:67
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:23
@@ -2289,9 +2290,8 @@ msgstr ""
 
 #: resources/vue/components/courseware/CoursewareCodeBlock.vue:16
 #: resources/vue/components/courseware/CoursewareCodeBlock.vue:7
-#, fuzzy
 msgid "Quelltext"
-msgstr "Resource"
+msgstr "Source code"
 
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:48
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:62
@@ -2580,7 +2580,7 @@ msgstr ""
 
 #: resources/vue/components/MemcachedCacheConfig.vue:24
 msgid "Server hinzufügen"
-msgstr ""
+msgstr "Add server"
 
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:164
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:106
@@ -2784,7 +2784,7 @@ msgstr ""
 
 #: resources/vue/components/MyCoursesSidebarSwitch.vue:4
 msgid "Tabellarische Ansicht"
-msgstr ""
+msgstr "Tabular view"
 
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:8
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:5
@@ -3019,7 +3019,7 @@ msgstr "Hidden courses cannot be found via the search feature."
 
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:109
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:36
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:29
