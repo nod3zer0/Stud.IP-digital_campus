@@ -1118,6 +1118,9 @@ class Module_ModuleController extends MVVController
                 $type_old = 2;
             }
 
+            $diff_config = new Caxy\HtmlDiff\HtmlDiffConfig();
+            $diff_config->setPurifierCacheLocation($GLOBALS['TMP_PATH']);
+
             PageLayout::setTitle(_('Vergleichsansicht'));
             PageLayout::addStylesheet('print.css');
             $factory = $this->get_template_factory();
@@ -1128,7 +1131,8 @@ class Module_ModuleController extends MVVController
                 'old_module' => $old_module,
                 'type_new'   => $type_new,
                 'type_old'   => $type_old,
-                'plugin'   => $this->plugin
+                'plugin'   => $this->plugin,
+                'diff_config' => $diff_config,
             ]);
 
             $this->render_text($template->render());

@@ -127,7 +127,7 @@ class Shared_LogEventController extends MVVController
                         LEFT JOIN `log_actions` ON `log_events`.`action_id` =  `log_actions`.`action_id`
                         WHERE `info` = ?
                         " . $search_action . "
-                        ORDER BY `mkdate` DESC");
+                        ORDER BY `log_events`.`mkdate` DESC");
                 $statement->execute([$mvv_field]);
                 $res = $statement->fetchOne();
                 if ($res) {
