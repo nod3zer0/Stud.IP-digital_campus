@@ -1,3 +1,5 @@
+import { $gettextInterpolate } from  '../lib/gettext.js';
+
 STUDIP.domReady(() => {
     $('del.diffdel').each(function() {
         var mvv_field = '';
@@ -40,9 +42,9 @@ STUDIP.domReady(() => {
                     senddata,
                     function(data) {
                         if (data) {
-                            var info = 'Entfernt von ' + data.user + ' am ' + data.time;
+                            var info = $gettextInterpolate('Entfernt von %{user} am %{time}', data);
                             del.attr('title', info);
-                            del.after('<del class="difflog"> [' + info + '] </ins>');
+                            $('<del class="difflog"/>').text(` [${info}] `).insertAfter(del);
                         }
                     },
                     'json'
@@ -131,9 +133,9 @@ STUDIP.domReady(() => {
                     senddata,
                     function(data) {
                         if (data) {
-                            var info = 'Änderung durch ' + data.user + ' am ' + data.time;
+                            var info = $gettextInterpolate('Änderung durch %{user} am %{time}', data);
                             ins.attr('title', info);
-                            ins.after('<ins class="difflog"> [' + info + '] </ins>');
+                            $('<ins class="difflog"/>').text(` [${info}] `).insertAfter(ins);
                         }
                     },
                     'json'
@@ -160,9 +162,12 @@ STUDIP.domReady(() => {
                     { mvv_field: 'mvv_' + mvv_type, mvv_id: mvv_id, log_action: 'new' },
                     function(data) {
                         if (data) {
-                            var info = 'Hinzugefügt von ' + data.user + ' am ' + data.time;
+                            var info = $gettextInterpolate('Hinzugefügt von %{user} am %{time}', data);
                             curtable.attr('title', info);
-                            curtable.append('<tr><td><ins class="difflog"> [' + info + '] </ins><td></tr>');
+                            const log = $('<ins class="difflog"/>').text(` [${info}] `);
+                            const cell = $('<td/>').append(log);
+                            const row = $('<tr/>').append(cell);
+                            curtable.append(row);
                         }
                     },
                     'json'
@@ -188,9 +193,12 @@ STUDIP.domReady(() => {
                     { mvv_field: 'mvv_' + mvv_type, mvv_id: mvv_id, log_action: 'del' },
                     function(data) {
                         if (data) {
-                            var info = 'Entfernt von ' + data.user + ' am ' + data.time;
+                            var info = $gettextInterpolate('Entfernt von %{user} am %{time}', data);
                             curtable.attr('title', info);
-                            curtable.append('<tr><td><del class="difflog"> [' + info + '] </del><td></tr>');
+                            const log = $('<del class="difflog"/>').text(` [${info}] `);
+                            const cell = $('<td/>').append(log);
+                            const row = $('<tr/>').append(cell);
+                            curtable.append(row);
                         }
                     },
                     'json'

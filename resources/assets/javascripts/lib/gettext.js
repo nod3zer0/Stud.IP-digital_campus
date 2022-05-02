@@ -8,8 +8,9 @@ const DEFAULT_LANG_NAME = 'Deutsch';
 const state = getInitialState();
 
 const $gettext = translate.gettext.bind(translate);
+const $gettextInterpolate = translate.gettextInterpolate.bind(translate);
 
-export { $gettext, translate, getLocale, setLocale, getVueConfig };
+export { $gettext, $gettextInterpolate, translate, getLocale, setLocale, getVueConfig };
 
 function getLocale() {
     return state.locale;
