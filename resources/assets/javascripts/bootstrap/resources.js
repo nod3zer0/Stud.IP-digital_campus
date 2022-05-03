@@ -633,25 +633,18 @@ STUDIP.ready(function () {
     }
 
     function updateViewURL(defaultView) {
-        var sURLVariables = window.location.href.split(/[?&]/);
-        var changed = false;
-        for (var i = 0; i < sURLVariables.length; i++) {
-            var sParameterName = sURLVariables[i].split('=');
-            if (sParameterName[0] == "defaultView") {
-                sParameterName[1] = defaultView;
-                sURLVariables[i] = sParameterName.join('=');
-                changed = true;
-            }
-        }
-        if (!changed) {
-            sURLVariables.push('defaultView=' + defaultView);
-        }
+        const url = new URL(window.location.href);
+        url.searchParams.set('defaultView', defaultView);
 
-        let newurl = `${sURLVariables[0]}?${sURLVariables.slice(1).join('&')}`;
-        history.pushState({}, null, newurl);
-        var std_day = newurl.replace(/&?allday=\d+/, '');
-        $('.booking-plan-std_view').attr('href', std_day);
-        $('.booking-plan-allday_view').attr('href', std_day + '&allday=1');
+        // Push current view url to history
+        history.pushState({}, null, url.toString());
+
+        // Set links accordingly
+        url.searchParams.delete('allday');
+        $('.booking-plan-std_view').attr('href', url.toString());
+
+        url.searchParams.set('allday', 1);
+        $('.booking-plan-allday_view').attr('href', url.toString());
     }
 
     function submitDatePicker() {
@@ -705,27 +698,25 @@ STUDIP.ready(function () {
                 jQuery(export_action).attr('href', export_url);
             }
 
-            //Now change the URL of the window.
+            // Now change the URL of the window.
             var changeddate = STUDIP.Fullcalendar.toRFC3339String(changedmoment).split('T')[0];
-            var sURLVariables = window.location.href.split(/[?&]/);
-            var changed = false;
-            for (var i = 0; i < sURLVariables.length; i++) {
-                var sParameterName = sURLVariables[i].split('=');
-                if (sParameterName[0] == "defaultDate") {
-                    sParameterName[1] = changeddate;
-                    sURLVariables[i] = sParameterName.join('=');
-                    changed = true;
-                }
-            }
-            if (!changed) {
-                sURLVariables.push('defaultDate=' + changeddate);
-            }
-            let newurl = `${sURLVariables[0]}?${sURLVariables.slice(1).join('&')}`;
-            history.pushState({}, null, newurl);
-            var std_day = newurl.replace(/&?allday=\d+/, '');
-            $('.booking-plan-std_view').attr('href', std_day);
-            $('.booking-plan-allday_view').attr('href', std_day + '&allday=1');
+
+            const url = new URL(window.location.href);
+            url.searchParams.set('defaultDate', changeddate);
+
+            // Update url in history
+            history.pushState({}, null, url.toString());
+
+            // Adjust links accordingly
+            url.searchParams.delete('allday');
+            $('.booking-plan-std_view').attr('href', url.toString());
+
+            url.searchParams.set('allday', 1);
+            $('.booking-plan-allday_view').attr('href', url.toString());
+
+            // Update sidebar value
             $('#booking-plan-jmpdate').val(changedmoment.toLocaleDateString('de-DE'));
+
             //Store the date in the sessionStorage:
             sessionStorage.setItem('booking_plan_date', changeddate)
         }
