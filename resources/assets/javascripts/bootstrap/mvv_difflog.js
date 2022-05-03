@@ -167,7 +167,7 @@ STUDIP.domReady(() => {
                     onSuccess,
                     'json'
                 );
-                function onSuccess((data) {
+                function onSuccess(data) {
                     if (data) {
                         var info = $gettextInterpolate('Hinzugefügt von %{user} am %{time}', data);
                         curtable.attr('title', info);
