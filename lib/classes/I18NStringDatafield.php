@@ -13,12 +13,24 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.1
- * 
+ *
  */
 
 class I18NStringDatafield extends I18NString
 {
-    
+
+    /**
+     * Sets the metadata (database info object_id) of this i18n datafield.
+     *
+     * @param array $metadata Database info for object_id.
+     */
+    public function setMetadata($metadata)
+    {
+        if (is_null($metadata['table'])) {
+            $this->metadata = $metadata;
+        }
+    }
+
     /**
      * Return an array containg the text in all additional languages.
      *
@@ -32,7 +44,7 @@ class I18NStringDatafield extends I18NString
         }
         return $this->lang;
     }
-    
+
     /**
      * Stores the i18n String manually in the database
      *
@@ -44,10 +56,11 @@ class I18NStringDatafield extends I18NString
             $object_id = $this->metadata['object_id'];
             /* Replace translations */
             $deleted = $db->execute("DELETE FROM `datafields_entries` "
-                    . "WHERE `datafield_id` = ? "
-                    . "AND `range_id` = ? "
-                    . "AND `sec_range_id` = ? "
-                    . "AND `lang` <> ?", $object_id);
+                . "WHERE `datafield_id` = ? "
+                . "AND `range_id` = ? "
+                . "AND `sec_range_id` = ? "
+                . "AND `lang` <> ''",
+                [$object_id[0], $object_id[1], $object_id[2]]);
             $i18nSQL = $db->prepare("INSERT INTO `datafields_entries` "
                     . "(`datafield_id`, `range_id`, `sec_range_id`, `content`, `lang`) "
                     . "VALUES (?,?,?,?,?)");
@@ -59,10 +72,10 @@ class I18NStringDatafield extends I18NString
             }
         }
     }
-    
+
     /**
      * Returns an I18NString object by given object_id, table and field.
-     * 
+     *
      * @param string $object_id The id of the object with i18n fields.
      * @param string $table The name of the table with the original values.
      * @param string $field The name of the i18n field.
@@ -81,16 +94,15 @@ class I18NStringDatafield extends I18NString
                     . "AND `sec_range_id` = ? "
                     . "AND `lang` = ''", $object_id);
         }
-      //  var_dump($object_id, $base); exit;
         $table = null;
         $field = null;
         return new self($base, self::fetchDataForField($object_id, $table, $field),
                 compact('object_id', 'table', 'field'));
     }
-    
+
     /**
      * Retrieves all translations for one field.
-     * 
+     *
      * @param string $object_id The id of the object with i18n fields.
      * @param string $table The name of the table with the original values.
      * @param string $field The name oof the i18n field.
@@ -106,11 +118,11 @@ class I18NStringDatafield extends I18NString
                 . "AND `sec_range_id` = ? "
                 . "AND `lang` <> ''", $object_id);
     }
-    
+
     /**
      * This function is not used in the context of datafields, so it always
      * returns an empty array.
-     * 
+     *
      * @param string $object_id The id of the object with i18n fields.
      * @param string $table The name of the table with the original values.
      * @return array An empty array.
@@ -119,11 +131,11 @@ class I18NStringDatafield extends I18NString
     {
         return [];
     }
-    
+
     /**
      * Removes all translations by given object id and table name. Accepts the
      * language as third parameter to remove only translations to this language.
-     * 
+     *
      * @param string $object_id The id of the sorm object.
      * @param string $table The table name.
      * @param string $lang Optional name of language.
@@ -147,5 +159,5 @@ class I18NStringDatafield extends I18NString
                 . 'AND `table` = ?',
                 $object_id);
     }
-    
+
 }

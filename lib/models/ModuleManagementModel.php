@@ -810,7 +810,7 @@ abstract class ModuleManagementModel extends SimpleORMap
      * @return string The currently selected language.
      */
     public static final function getLanguage()
-    { return 'DE';
+    {
         $language = self::$language ?: $GLOBALS['MVV_LANGUAGES']['default'];
         return $language;
     }
