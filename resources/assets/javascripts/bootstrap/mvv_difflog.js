@@ -176,7 +176,7 @@ STUDIP.domReady(() => {
                         const row = $('<tr/>').append(cell);
                         curtable.append(row);
                     }
-                };
+                }
             });
     });
 
