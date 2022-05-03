@@ -3,6 +3,14 @@ $(document).on('tourstart.studip tourend.studip', function(event) {
     STUDIP.Sidebar.setSticky(event.type === 'tourend.studip');
 });
 
+function heightChangeHandler() {
+    var curr_height = $(document).height();
+    if (doc_height !== curr_height) {
+        doc_height = curr_height;
+        $(document.body).trigger('sticky_kit:recalc');
+    }
+}
+
 // Handle dynamic content
 if (window.MutationObserver !== undefined) {
     // Attach mutation observer to #layout_content and trigger it on
@@ -30,14 +38,6 @@ if (window.MutationObserver !== undefined) {
 } else {
     // Stores document height (we will need this to check for changes)
     var doc_height;
-
-    function heightChangeHandler() {
-        var curr_height = $(document).height();
-        if (doc_height !== curr_height) {
-            doc_height = curr_height;
-            $(document.body).trigger('sticky_kit:recalc');
-        }
-    }
 
     STUDIP.domReady(() => {
         doc_height = $(document).height();

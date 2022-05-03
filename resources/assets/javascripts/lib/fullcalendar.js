@@ -1,5 +1,3 @@
-/*jslint esversion: 6*/
-
 /**
  * This class contains Stud.IP specific code for the fullcalendar package.
  */
@@ -137,7 +135,7 @@ class Fullcalendar
 
         if (Array.isArray(config.eventSources)) {
             config.eventSources = config.eventSources.map((s) => {
-                if (s.hasOwnProperty('url')) {
+                if (s.url !== undefined) {
                     return s;
                 }
             });

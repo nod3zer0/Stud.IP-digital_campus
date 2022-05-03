@@ -4,7 +4,7 @@ $.fn.extend({
         var that = this[0],
             range,
             position;
-        if (!!document.selection) {
+        if (document.selection) {
             that.focus();
             range = document.selection.createRange();
             range.moveStart('character', -that.value.length);
@@ -21,10 +21,10 @@ $.fn.extend({
     // Returns the currently selected text
     getSelection: function() {
         var that = this[0];
-        if (!!document.selection) {
+        if (document.selection) {
             return document.selection.createRange().text;
         }
-        if (!!this[0].setSelectionRange) {
+        if (this[0].setSelectionRange) {
             return this[0].value.substring(this[0].selectionStart, this[0].selectionEnd);
         }
         return false;
@@ -33,15 +33,12 @@ $.fn.extend({
     setSelection: function(start, end) {
         return this.each(function() {
             var range;
-            if (!!this.setSelectionRange) {
+            if (this.setSelectionRange) {
                 this.setSelectionRange(start, end);
-            } else if (!!this.createTextRange) {
+            } else if (this.createTextRange) {
                 this.focus();
                 range = this.createTextRange();
                 range.collapse(true);
-                if (position < 0) {
-                    position = Math.max(0, this.value.length + position);
-                }
                 range.moveStart('character', start);
                 range.moveEnd('character', end);
                 range.select();
@@ -53,13 +50,13 @@ $.fn.extend({
         return $(this).each(function() {
             var selection = false,
                 position;
-            if (!!document.selection) {
+            if (document.selection) {
                 position = $(this).getCaretPosition();
                 selection = {
                     start: position,
                     end: position + $(this).getSelection().length
                 };
-            } else if (!!this.setSelectionRange) {
+            } else if (this.setSelectionRange) {
                 selection = {
                     start: this.selectionStart,
                     end: this.selectionEnd
@@ -86,12 +83,12 @@ $.fn.extend({
             var scroll_top = this.scrollTop,
                 range,
                 selection_start;
-            if (!!document.selection) {
+            if (document.selection) {
                 this.focus();
                 range = document.selection.createRange();
                 range.text = replacement;
                 range.select();
-            } else if (!!this.setSelectionRange) {
+            } else if (this.setSelectionRange) {
                 selection_start = this.selectionStart;
                 this.value =
                     this.value.substring(0, selection_start) + replacement + this.value.substring(this.selectionEnd);

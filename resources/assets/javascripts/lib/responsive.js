@@ -1,5 +1,3 @@
-/*jslint esversion: 6*/
-
 import HeaderMagic from './header_magic.js';
 import Sidebar from './sidebar.js';
 

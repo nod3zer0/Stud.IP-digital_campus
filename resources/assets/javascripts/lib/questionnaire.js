@@ -260,7 +260,7 @@ const Questionnaire = {
                     { labelPosition: 'outside' }
                 );
             }
-        };
+        }
     },
     initTestEvaluation: async function (el, data, isAjax, isMultiple) {
         this.initVoteEvaluation(el, data, isAjax, isMultiple);

@@ -185,8 +185,7 @@ function confirmation_handler(event) {
             // so that the original event can be executed
             element
                 .removeAttr('data-confirm')
-                .get(0)
-                [event.type]();
+                .get(0)[event.type]();
 
             // Reapply the data-confirm attribute
             window.setTimeout(function() {

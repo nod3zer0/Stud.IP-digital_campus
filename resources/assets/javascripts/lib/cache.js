@@ -1,4 +1,3 @@
-/*jslint esversion: 6*/
 import Cookie from './cookie.js';
 
 /**
@@ -106,7 +105,7 @@ class Cache {
     locate(index) {
         index = this.prefix + index;
 
-        if (cache.hasOwnProperty(index)) {
+        if (cache[index] !== undefined) {
             const now = new Date().getTime();
 
             let item = JSON.parse(cache.getItem(index));
@@ -187,7 +186,7 @@ class Cache {
     prune() {
         if (this.prefix) {
             for (let key in cache) {
-                if (cache.hasOwnProperty(key) && key.indexOf(this.prefix) === 0) {
+                if (cache[key] !== undefined && key.indexOf(this.prefix) === 0) {
                     cache.removeItem(key);
                 }
             }
@@ -211,7 +210,7 @@ const CacheFacade = {
             Cookie.set('cache_session', session_id);
 
             for (let key in cache) {
-                if (!cache.hasOwnProperty(key) || key.indexOf('studip.') !== 0) {
+                if (cache[key] === undefined || key.indexOf('studip.') !== 0) {
                     continue;
                 }
 

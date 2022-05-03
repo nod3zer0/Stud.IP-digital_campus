@@ -23,7 +23,8 @@ async function setLocale(locale = getInitialLocale()) {
 
     state.locale = locale;
     if (state.translations[state.locale] === null) {
-        state.translations[state.locale] = await getTranslations(state.locale);
+        const translations = await getTranslations(state.locale);
+        state.translations[state.locale] = translations;
     }
 
     translate.initTranslations(state.translations, {

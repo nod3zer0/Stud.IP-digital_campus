@@ -1,6 +1,3 @@
-/*jslint browser: true */
-/*global jQuery */
-
 /**
  * SVG class handling.
  *

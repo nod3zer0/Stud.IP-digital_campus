@@ -263,19 +263,7 @@ STUDIP.ready(function () {
     // class and attribute changes in order to detect when the select
     // element itself will become visible. Pretty straight forward, huh?
     $('select.nested-select:not(:has(optgroup)):hidden:not(.select2-awaiting)').each(function() {
-        var observer = new window.MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if ($('select.select2-awaiting', mutation.target).length > 0) {
-                    $('select.select2-awaiting', mutation.target)
-                        .removeClass('select2-awaiting')
-                        .each(function() {
-                            createSelect2(this);
-                        });
-                    observer.disconnect();
-                    observer = null;
-                }
-            });
-        });
+        var observer = new window.MutationObserver(onDomChange);
         observer.observe($(this).closest(':visible')[0], {
             attributeOldValue: true,
             attributes: true,
@@ -287,6 +275,19 @@ STUDIP.ready(function () {
 
         $(this).addClass('select2-awaiting');
     });
+
+    function onDomChange(mutations, observer) {
+        mutations.forEach(function(mutation) {
+            if ($('select.select2-awaiting', mutation.target).length > 0) {
+                $('select.select2-awaiting', mutation.target)
+                    .removeClass('select2-awaiting')
+                    .each(function() {
+                        createSelect2(this);
+                    });
+                observer.disconnect();
+            }
+        });
+    }
 
     // Unfortunately, this code needs to be duplicated because jQuery
     // namespacing kind of sucks. If the below change handler is namespaced

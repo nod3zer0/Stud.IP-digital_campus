@@ -86,8 +86,7 @@ STUDIP.ready(function () {
         //Check if the seats checkbox is checked. Only include "its" input
         //fields when it is checked.
         let seats_checked = jQuery(this).find('input[name="special__seats_enabled"]').is(':checked');
-        if (seats_checked) {
-        } else {
+        if (!seats_checked) {
             jQuery(this).find('input[name="special__seats_min"]').attr('disabled', 'disabled');
             jQuery(this).find('input[name="special__seats_max"]').attr('disabled', 'disabled');
         }
@@ -647,19 +646,13 @@ STUDIP.ready(function () {
         if (!changed) {
             sURLVariables.push('defaultView=' + defaultView);
         }
-        if (sURLVariables.length > 2) {
-            var newurl = sURLVariables[0] + '?' + sURLVariables[1] + '&';
-            sURLVariables.shift();
-            sURLVariables.shift();
-            newurl += sURLVariables.join('&');
-        } else {
-            var newurl = sURLVariables.join('?');
-        }
+
+        let newurl = `${sURLVariables[0]}?${sURLVariables.slice(1).join('&')}`;
         history.pushState({}, null, newurl);
         var std_day = newurl.replace(/&?allday=\d+/, '');
         $('.booking-plan-std_view').attr('href', std_day);
         $('.booking-plan-allday_view').attr('href', std_day + '&allday=1');
-    };
+    }
 
     function submitDatePicker() {
         var picked = $('#booking-plan-jmpdate').val();
@@ -727,14 +720,7 @@ STUDIP.ready(function () {
             if (!changed) {
                 sURLVariables.push('defaultDate=' + changeddate);
             }
-            if (sURLVariables.length > 2) {
-                var newurl = sURLVariables[0] + '?' + sURLVariables[1] + '&';
-                sURLVariables.shift();
-                sURLVariables.shift();
-                newurl += sURLVariables.join('&');
-            } else {
-                var newurl = sURLVariables.join('?');
-            }
+            let newurl = `${sURLVariables[0]}?${sURLVariables.slice(1).join('&')}`;
             history.pushState({}, null, newurl);
             var std_day = newurl.replace(/&?allday=\d+/, '');
             $('.booking-plan-std_view').attr('href', std_day);
@@ -743,7 +729,7 @@ STUDIP.ready(function () {
             //Store the date in the sessionStorage:
             sessionStorage.setItem('booking_plan_date', changeddate)
         }
-    };
+    }
 
     jQuery('#booking-plan-jmpdate').datepicker(
         {
@@ -757,8 +743,7 @@ STUDIP.ready(function () {
         }
     );
 
-    var nodes = jQuery('*.resource-plan[data-resources-fullcalendar="1"]');
-    jQuery.each(nodes, function (index, node) {
+    jQuery('*.resource-plan[data-resources-fullcalendar="1"]').each(function () {
         STUDIP.loadChunk('fullcalendar').then(() => {
             //Get the default date from the sessionStorage, if it is set
             //and no date is specified in the url.
@@ -770,10 +755,10 @@ STUDIP.ready(function () {
                     use_session_date = false;
                 }
             }
-            if (node.calendar == undefined) {
-                if (jQuery(node).hasClass('semester-plan')) {
+            if (this.calendar === undefined) {
+                if (jQuery(this).hasClass('semester-plan')) {
                     STUDIP.Fullcalendar.createSemesterCalendarFromNode(
-                        node,
+                        this,
                         {
                             loading: function (isLoading) {
                                 if (!isLoading) {
@@ -810,24 +795,20 @@ STUDIP.ready(function () {
                             config.defaultDate = session_date_string;
                         }
                     }
-                    STUDIP.Fullcalendar.createFromNode(node, config);
+                    STUDIP.Fullcalendar.createFromNode(this, config);
                 }
             }
         });
     });
 
     //Check if an individual booking plan is to be displayed:
-    var nodes = jQuery('.individual-booking-plan[data-resources-fullcalendar="1"]');
-    jQuery.each(nodes, function (index, node) {
+    jQuery('.individual-booking-plan[data-resources-fullcalendar="1"]').each(function () {
         STUDIP.loadChunk('fullcalendar').then(() => {
             STUDIP.Fullcalendar.createFromNode(
-                node,
+                this,
                 {
-                    eventPositioned: function (info, calendar_event, dom_element, view) {
-                        var calendar_event = info.event;
-                        var dom_element = info.el;
-                        var view = info.view;
-                        jQuery(dom_element).droppable({
+                    eventPositioned: function (info) {
+                        jQuery(info.el).droppable({
                             drop: function (event, ui_element) {
                                 event.preventDefault();
 

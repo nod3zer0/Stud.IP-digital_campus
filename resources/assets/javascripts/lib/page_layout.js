@@ -1,4 +1,3 @@
-/*jslint esversion: 6*/
 let options = {
     title: document.title,
     prefix: ''

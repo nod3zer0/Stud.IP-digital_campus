@@ -1,4 +1,3 @@
-/*jslint esversion: 6*/
 STUDIP.ready(function () {
     //Check if fullcalendar instances are to be displayed:
     $('*[data-fullcalendar="1"]').each(function () {
@@ -11,18 +10,19 @@ STUDIP.ready(function () {
                     calendar = STUDIP.Fullcalendar.createFromNode(this);
                 }
 
-                let continuousRefresh = (ttl) => {
-                    setTimeout(() => {
-                        calendar.updateSize();
-                        if (ttl > 0) {
-                            continuousRefresh(ttl - 1);
-                        }
-                    }, 200);
-                };
-                continuousRefresh(10);
+                continuousRefresh(calendar, 10);
             }
         });
     });
+
+    function continuousRefresh(calendar, ttl) {
+        setTimeout(() => {
+            calendar.updateSize();
+            if (ttl > 0) {
+                continuousRefresh(ttl - 1);
+            }
+        }, 200);
+    }
 
     if ($('#event-color-picker > option').length <= 1) {
         var selectedColor = $('#selected-color').val();

@@ -1,5 +1,3 @@
-/*jslint esversion: 6*/
-
 function ready(callback, top = false) {
     if (top) {
         ready.handlers.unshift({

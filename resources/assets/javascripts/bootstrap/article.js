@@ -1,5 +1,3 @@
-/*jslint browser: true */
-/*global jQuery, STUDIP */
 (function ($, STUDIP) {
     'use strict';
 

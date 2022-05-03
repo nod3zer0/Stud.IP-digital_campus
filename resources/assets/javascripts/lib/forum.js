@@ -423,11 +423,9 @@ const Forum = {
                 // watch out for anonymous postings
                 var anonymous = jQuery('.anonymous_post[data-profile=' + topic_id + ']').length > 0;
 
-                if (anonymous) {
-                    var name = $gettext('Anonym');
-                } else {
-                    var name = jQuery('span.username[data-profile=' + topic_id + ']').text().trim();
-                }
+                var name = anonymous
+                    ? $gettext('Anonym')
+                    : jQuery('span.username[data-profile=' + topic_id + ']').text().trim();
 
                 // add content from cited posting in [quote]-tags
                 var originalContent = jQuery(

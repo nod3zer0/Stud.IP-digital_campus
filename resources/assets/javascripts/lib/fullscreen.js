@@ -1,4 +1,3 @@
-/*jslint esversion: 6*/
 const Fullscreen = {
     toggle () {
         if (sessionStorage.getItem('studip-fullscreen') === 'on') {

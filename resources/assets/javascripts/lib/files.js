@@ -1,4 +1,3 @@
-/*jslint esversion: 6*/
 import { $gettext } from './gettext.js';
 import Dialog from './dialog.js';
 import FilesTable from '../../../vue/components/FilesTable.vue';
@@ -205,7 +204,7 @@ const Files = {
         var redirect = false;
         var html = [];
 
-        if (payload.hasOwnProperty('html') && payload.html !== undefined) {
+        if (payload.html !== undefined) {
             redirect = payload.redirect;
             html = payload.html;
         }

@@ -29,7 +29,7 @@ jQuery(function ($) {
     });
 
     $(document).on('click', '.mvv-item-edit-properties', function () {
-    	$(this).parents("li").find(".mvv-item-document-comments").toggle();
+        $(this).parents("li").find(".mvv-item-document-comments").toggle();
         return false;
     });
 
@@ -569,7 +569,7 @@ STUDIP.MVV.Content = {
         if (element.data('hasData')) {
             element.next().slideToggle('fast');
             return false;
-        };
+        }
         if (_.isNull(STUDIP.MVV.Content.deskriptor_data)) {
             jQuery.ajax({
                 url: STUDIP.URLHelper.getURL(STUDIP.MVV.CONTROLLER_URL + 'show_original/'),
@@ -613,11 +613,9 @@ STUDIP.MVV.Content = {
         return false;
     },
     showAllOriginal: function () {
-        elements = jQuery('.mvv-show-original');
-        _.each(elements, function (e) {
-            var element = jQuery(e);
-            if (element.next(':visible').length === 0) {
-                element.click();
+        jQuery('.mvv-show-original').each(function () {
+            if ($(this).next(':visible').length === 0) {
+                $(this).click();
             }
         });
         return false;

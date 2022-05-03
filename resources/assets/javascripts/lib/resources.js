@@ -442,6 +442,7 @@ class Resources
         }
         var tbody = jQuery(table).find('tbody')[0];
         if (!tbody) {
+            return;
         }
 
         var selected_option = jQuery(select).find(':selected')[0];
@@ -647,7 +648,7 @@ class Resources
             }
             $(".time-option-container").show();
         }
-    };
+    }
 
 
     //Fullcalendar specialisations:
@@ -668,7 +669,7 @@ class Resources
                 }
             }
         ).done(function (data) {
-            if (!data || (data.length == 0)) {
+            if (!data || data.length === 0) {
                 return;
             }
             var new_interval_id = data[0].interval_id;
@@ -677,11 +678,11 @@ class Resources
                 var move_url = calendar_event.extendedProps.studip_api_urls['move'];
                 var resize_url = calendar_event.extendedProps.studip_api_urls['resize'];
                 move_url = move_url.replace(
-                    /\&interval_id=([0-9a-f]{32})/,
+                    /&interval_id=([0-9a-f]{32})/,
                     '&interval_id=' + new_interval_id
                 );
                 resize_url = resize_url.replace(
-                    /\&interval_id=([0-9a-f]{32})/,
+                    /&interval_id=([0-9a-f]{32})/,
                     '&interval_id=' + new_interval_id
                 );
                 var studip_api_urls = calendar_event.extendedProps.studip_api_urls;
@@ -825,11 +826,7 @@ class Resources
                             {
                                 method: 'get',
                                 dataType: 'json',
-                                async: false,
-                                success: function(data) {
-                                    if (data) {
-                                    }
-                                }
+                                async: false
                             }
                         );
                     }
@@ -839,7 +836,7 @@ class Resources
         }
     }
 
-};
+}
 
 
 //Class properties:

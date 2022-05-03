@@ -154,8 +154,8 @@ const OER = {
                                     }
                                     resolve();
                                 },
-                                error: function () {
-                                    reject();
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    reject(new Error(errorThrown));
                                 }
                             });
                         });

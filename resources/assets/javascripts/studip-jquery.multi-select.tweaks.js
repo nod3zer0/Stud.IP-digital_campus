@@ -1,7 +1,5 @@
 import { $gettext } from './lib/gettext.js';
 
-/*jslint browser: true */
-/*global jQuery */
 
 /**
  * Neccessary tweaks/adjustments for the jQuery UI multiselect addon.

@@ -1,5 +1,3 @@
-/*jslint esversion: 6*/
-
 STUDIP.domReady(function() {
     if (window.MutationObserver !== undefined) {
         var observer = new window.MutationObserver(function(mutations) {

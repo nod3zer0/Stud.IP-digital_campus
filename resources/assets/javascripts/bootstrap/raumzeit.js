@@ -47,27 +47,23 @@ $(document).on('click', '.bookable_rooms_action', function(event) {
                     .append(me.data('options').clone(true));
             }
 
-            if (
-                $(this)
-                    .parents('form')
-                    .attr('action')
-                    .split('saveDate/').length > 1
-            ) {
-                var singleDate = $(this)
+            let singleDate;
+            if ($(this).parents('form').attr('action').split('saveDate/').length > 1) {
+                singleDate = $(this)
                     .parents('form')
                     .attr('action')
                     .split('saveDate/')[1]
                     .split('?')[0];
-            } else {
-                var singleDate = undefined;
             }
+
+            let checked_dates;
             if ($("input[name='checked_dates']").length > 0) {
-                var checked_dates = $("input[name='checked_dates']")
+                checked_dates = $("input[name='checked_dates']")
                     .val()
                     .split(',');
                 var ndate = [];
             } else {
-                var checked_dates = [singleDate];
+                checked_dates = [singleDate];
                 var startDate = $("input[name='date']").val();
                 var start_time = $("input[name='start_time']")
                     .val()

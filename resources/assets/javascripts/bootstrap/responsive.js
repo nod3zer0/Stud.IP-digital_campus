@@ -1,5 +1,3 @@
-/*jslint esversion: 6*/
-
 // Build responsive menu on domready or resize
 STUDIP.domReady(() => {
     const cache = STUDIP.Cache.getInstance('responsive.');

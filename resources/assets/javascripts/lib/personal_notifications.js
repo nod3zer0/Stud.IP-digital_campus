@@ -61,12 +61,12 @@ function process_notifications({ notifications }) {
             $(`#${notification.html_id}`).on('mouseenter', PersonalNotifications.isVisited);
         }
 
-        changed = changed || !stack.hasOwnProperty(id);
+        changed = changed || stack[id] === undefined;
 
         // Check if notifications should be sent (depends on the
         // Notification itself and session storage)
         if (
-            !window.hasOwnProperty('Notification')
+            window.Notification === undefined
             || Notification.permission !== 'granted'
             || cache.has(notification.id)
         ) {

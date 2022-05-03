@@ -118,7 +118,7 @@ STUDIP.domReady(() => {
         history_timeout = setTimeout(() => {
             if (location.href !== url) {
                 history.pushState({
-                    needle: info.needle || STUDIP.Search.getCache().get('searchterm'),
+                    needle: info.needle || STUDIP.Search.getCache().get('searchterm'),
                     category: info.category
                 }, '', url)
             }

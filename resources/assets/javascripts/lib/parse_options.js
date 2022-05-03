@@ -77,10 +77,10 @@ function parseValue(value) {
     if (value.toLowerCase() === 'false') {
         return false;
     }
-    if (/^[+\-]\d+$/.test(value)) {
+    if (/^[+-]\d+$/.test(value)) {
         return parseInt(value, 10);
     }
-    if (/^[+\-]\d+\.\d+$/.test(value)) {
+    if (/^[+-]\d+\.\d+$/.test(value)) {
         return parseFloat(value, 10);
     }
     return value.replace(/^(["'])(.*)\1$/, '$2');

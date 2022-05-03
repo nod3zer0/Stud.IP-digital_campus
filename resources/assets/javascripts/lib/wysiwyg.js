@@ -308,21 +308,21 @@ const wysiwyg = {
                 ],
                 (function() {
                     var greek = [];
-                    for (var i = 913; i <= 929; i++) {
+                    for (let i = 913; i <= 929; i++) {
                         // 17 uppercase characters
                         greek.push('&#' + String(i));
                     }
-                    for (var i = 945; i <= 962; i++) {
+                    for (let i = 945; i <= 962; i++) {
                         // 17 lowercase characters
                         greek.push('&#' + String(i));
                     }
                     // NOTE character #930 is not assigned!!
-                    for (var i = 931; i <= 937; i++) {
+                    for (let i = 931; i <= 937; i++) {
                         // remaining upercase
                         greek.push('&#' + String(i));
                     }
                     greek.push('');
-                    for (var i = 963; i <= 969; i++) {
+                    for (let i = 963; i <= 969; i++) {
                         // remaining lowercase
                         greek.push('&#' + String(i));
                     }

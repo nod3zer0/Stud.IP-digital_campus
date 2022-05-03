@@ -5,8 +5,6 @@ import Overlay from './overlay.js';
 import PageLayout from './page_layout.js';
 import Report from './report.js';
 
-/*jslint esversion: 6*/
-
 /**
  * Specialized dialog handler
  *
@@ -63,7 +61,7 @@ const Dialog = {
     stack: [],
     hasInstance: function(id) {
         id = id || 'default';
-        return this.instances.hasOwnProperty(id);
+        return this.instances[id] !== undefined;
     },
     getInstance: function(id) {
         id = id || 'default';
@@ -138,12 +136,12 @@ Dialog.handlers.header['X-Dialog-Execute'] = function(value, options, xhr) {
     }
 
     // Check for invalid call
-    if (!value.hasOwnProperty('func')) {
+    if (value.func === undefined) {
         throw 'Dialog: Invalid value for X-Dialog-Execute';
     }
 
     // Populate payload if not set
-    if (!value.hasOwnProperty('payload')) {
+    if (value.payload === undefined) {
         value.payload = xhr.getResponseHeader('Content-Type').match(/json/)
             ? $.parseJSON(xhr.responseText)
             : xhr.responseText;
@@ -278,10 +276,10 @@ Dialog.fromURL = function(url, options) {
         headers: { 'X-Dialog': true },
         cache: false,
         contentType:
-            options.hasOwnProperty('processData') && !options.processData
+            options.processData !== undefined && !options.processData
                 ? false
                 : 'application/x-www-form-urlencoded; charset=UTF-8',
-        processData: options.hasOwnProperty('processData') ? options.processData : true
+        processData: options.processData ?? true
     })
         .done(function(response, status, xhr) {
             var advance = true;
@@ -418,10 +416,10 @@ Dialog.show = function(content, options = {}) {
     });
 
     // Create buttons
-    if (!options.hasOwnProperty('buttons') || (options.buttons && !$.isPlainObject(options.buttons))) {
+    if (options.buttons === undefined || (options.buttons && !$.isPlainObject(options.buttons))) {
         dialog_options.buttons = extractButtons.call(this, instance.element);
         // Create 'close' button
-        if (!dialog_options.buttons.hasOwnProperty('cancel')) {
+        if (dialog_options.buttons.cancel === undefined) {
             dialog_options.buttons.cancel = {
                 text: $gettext('Schließen'),
                 'class': 'cancel'
@@ -452,7 +450,9 @@ Dialog.close = function(options) {
             try {
                 instance.element.dialog('close');
                 instance.open = instance.element.dialog('isOpen');
-            } catch (ignore) {}
+            } catch (ignore) {
+                // No action necessary
+            }
 
             // Apparently the close event has been canceled, so don't force
             // a close
@@ -463,13 +463,15 @@ Dialog.close = function(options) {
             try {
                 instance.element.dialog('destroy');
                 instance.element.remove();
-            } catch (ignore) {}
+            } catch (ignore) {
+                // No action necessary
+            }
         }
 
         Dialog.removeInstance(options.id);
     }
 
-    if (options['reload-on-close'] && !options.hasOwnProperty('is-reloading')) {
+    if (options['reload-on-close'] && options['is-reloading'] === undefined) {
         window.location.reload();
         options['is-reloading'] = true;
     }
@@ -504,7 +506,7 @@ Dialog.calculateDimensions = function (instance, content, options) {
         max_width  = $(window).width() - 6; // Subtract border
         max_height = $(window).height();
 
-        if (!options.hasOwnProperty('width')) {
+        if (options.width === undefined) {
             width  = $(window).width() * 0.95;
             height = $(window).height() * 0.98;
         }
@@ -533,7 +535,7 @@ Dialog.calculateDimensions = function (instance, content, options) {
         // Prevent buttons from wrapping
         $('[data-dialog-button]', helper).css('white-space', 'nowrap');
         // Add cancel button if missing
-        if ((!options.hasOwnProperty('buttons') || options.buttons !== false)) {
+        if ((options.buttons === undefined || options.buttons !== false)) {
             $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"></div>')
                 .append('<div class="ui-dialog-buttonset"><button class="ui-button ui-widget ui-corner-all cancel">Foo</button></div>')
                 .appendTo(helper)
@@ -585,7 +587,7 @@ Dialog.calculateDimensions = function (instance, content, options) {
     height = Math.min(height, max_height);
     if (
         previous &&
-        previous.hasOwnProperty('dimensions') &&
+        previous.dimensions !== undefined &&
         width > previous.dimensions.width &&
         height > previous.dimensions.height
     ) {
@@ -664,7 +666,7 @@ Dialog.registerHeaderHandler = function (header, handler) {
     Dialog.handlers.header[header] = handler;
 };
 Dialog.removeHeaderHandler = function (header) {
-    if (Dialog.handlers.header.hasOwnProperty(header)) {
+    if (Dialog.handlers.header[header] !== undefined) {
         delete Dialog.handlers.header[header];
     }
 };

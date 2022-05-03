@@ -1,6 +1,5 @@
 import { $gettext } from '../lib/gettext.js';
 
-/*jslint esversion: 6*/
 $(document).on('click', 'a.copyable-link', function (event) {
     event.preventDefault();
 

@@ -49,7 +49,7 @@ const QRCode = {
     },
     generate: function (element, text, options = {}) {
         options.text = text;
-        if (!options.hasOwnProperty('correctLevel')) {
+        if (options.correctLevel === undefined) {
             options.correctLevel = 3;
         }
 

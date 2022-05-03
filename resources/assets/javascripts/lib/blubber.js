@@ -1,4 +1,3 @@
-/*jslint esversion: 6*/
 import { $gettext } from './gettext';
 
 
@@ -182,8 +181,8 @@ const Blubber = {
     },
     Composer: {
         vue: null,
-        async init () {
-            STUDIP.Blubber.Composer.vue = await STUDIP.Vue.load().then(({createApp}) => {
+        init () {
+            STUDIP.Vue.load().then(({createApp}) => {
                 let components = STUDIP.Blubber.components;
                 return createApp({
                     el: '#blubber_contact_ids',
@@ -211,6 +210,8 @@ const Blubber = {
                     },
                     components,
                 });
+            }).then((app) => {
+                STUDIP.Blubber.Composer.vue = app;
             });
         }
     }

@@ -298,21 +298,13 @@ const CourseWizard = {
      * @returns {boolean}
      */
     buildPartialTree: function(items, assignable, source_node) {
-        if (assignable) {
-            var classPrefix = 'sem-tree-';
-        } else {
-            var classPrefix = 'sem-tree-assigned-';
-        }
+        var classPrefix = assignable ? 'sem-tree-': 'sem-tree-assigned-';
         for (var i = 0; i < items.length; i++) {
             var parent = $('.' + classPrefix + items[i].parent);
             var node = $('.' + classPrefix + items[i].id);
             if (node.length == 0) {
-                if (!assignable && source_node == items[i].id) {
-                    var selected = true;
-                } else {
-                    var selected = false;
-                }
-                var node = CourseWizard.createTreeNode(items[i], assignable, selected);
+                var selected = !assignable && source_node == items[i].id;
+                node = CourseWizard.createTreeNode(items[i], assignable, selected);
                 parent.children('ul').append(node);
             } else {
                 node.removeClass('css-tree-hidden');
@@ -352,9 +344,11 @@ const CourseWizard = {
      * @returns {*|jQuery}
      */
     createTreeNode: function(values, assignable, selected) {
+        let item = $('<li/>');
+
         // Node in "All study areas" tree.
         if (assignable) {
-            var item = $('<li>').addClass('sem-tree-' + values.id);
+            item.addClass('sem-tree-' + values.id);
             var assign = $('<input>')
                 .attr('type', 'image')
                 .attr('name', 'assign[' + values.id + ']')
@@ -412,7 +406,7 @@ const CourseWizard = {
             }
             // Node in "assigned study areas" tree.
         } else {
-            var item = $('<li>').addClass('sem-tree-assigned-' + values.id);
+            item.addClass('sem-tree-assigned-' + values.id);
             item.html(
                 $('<div/>')
                     .text(values.name)
@@ -429,7 +423,7 @@ const CourseWizard = {
                 item.append(unassign);
             }
             if (values.assignable && selected) {
-                var input = $('<input>')
+                input = $('<input>')
                     .attr('type', 'hidden')
                     .attr('name', 'studyareas[]')
                     .attr('value', values.id);

@@ -63,7 +63,7 @@ class InlineEditing
         jQuery(element).empty();
         jQuery(element).append(display_container);
         jQuery(element).append(edit_container);
-    };
+    }
 
 
     static activate(element) {
@@ -74,7 +74,7 @@ class InlineEditing
 
         jQuery(container).children('.display-container').addClass('invisible');
         jQuery(container).children('.edit-container').removeClass('invisible');
-    };
+    }
 
 
     static save(element) {
@@ -119,7 +119,7 @@ class InlineEditing
                 }
             }
         );
-    };
+    }
 
 
     static abort(element) {
@@ -131,7 +131,7 @@ class InlineEditing
         jQuery(container).children('.edit-container').addClass('invisible');
         jQuery(container).children('.display-container').removeClass('invisible');
 
-    };
+    }
 }
 
 

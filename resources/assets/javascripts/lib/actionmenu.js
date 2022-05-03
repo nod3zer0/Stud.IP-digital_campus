@@ -1,5 +1,3 @@
-/*jslint esversion: 6*/
-
 /**
  * Determine whether the menu should be opened in dialog or regular layout.
  * @type {[type]}

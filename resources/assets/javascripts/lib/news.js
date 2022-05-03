@@ -1,7 +1,5 @@
 import { $gettext } from '../lib/gettext.js';
 
-/*jslint browser: true, unparam: true */
-/*global jQuery, STUDIP */
 const News = {
     /**
      * (Re-)initialise news-page, f.e. to stay in dialog

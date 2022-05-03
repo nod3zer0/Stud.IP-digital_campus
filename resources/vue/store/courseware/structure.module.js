@@ -170,7 +170,9 @@ const actions = {
         function pickleDescendants() {
             try {
                 cache.set(cacheKey, rootGetters['courseware-structural-elements/all']);
-            } catch (e) {}
+            } catch (e) {
+                // No action necessary
+            }
         }
 
         function removeStaleElements() {

@@ -8,7 +8,9 @@ export default function extractCallback(cmd, payload) {
     // Try to decode URI component in case it is encoded
     try {
         command = window.decodeURIComponent(command);
-    } catch (ignore) {}
+    } catch (ignore) {
+        // No action necessary
+    }
 
     // Try to parse value as JSON (value might be {func: 'foo', payload: {}})
     try {
@@ -18,12 +20,12 @@ export default function extractCallback(cmd, payload) {
     }
 
     // Check for invalid call
-    if (!command.hasOwnProperty('func')) {
+    if (command.func === undefined) {
         throw 'Dialog: Invalid value for X-Dialog-Execute';
     }
 
     // Populate payload if not set
-    if (!command.hasOwnProperty('payload')) {
+    if (command.payload === undefined) {
         command.payload = payload;
     }
 
@@ -37,7 +39,7 @@ export default function extractCallback(cmd, payload) {
         }
 
         // Check for not finished/closed chunk
-        if (chunk.match(/\([^\)]*$/)) {
+        if (chunk.match(/\([^)]*$/)) {
             last_chunk = chunk;
             return;
         }

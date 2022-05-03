@@ -1,5 +1,3 @@
-/*jslint esversion: 6*/
-
 // Attach global hover handler for tooltips.
 // Applies to all elements having a "data-tooltip" attribute.
 // Tooltip may be provided in the data-attribute itself or by
@@ -17,7 +15,7 @@ $(document).on('mouseenter mouseleave focusin focusout', '[data-tooltip],.toolti
     const offset = $(this).offset();
     const x = offset.left + $(this).outerWidth(true) / 2;
     const y = offset.top;
-    const delay = data.hasOwnProperty('tooltipDelay') ? data.tooltipDelay : 300;
+    const delay = data.tooltipDelay ?? 300;
 
     let content;
     let tooltip;
@@ -27,9 +25,9 @@ $(document).on('mouseenter mouseleave focusin focusout', '[data-tooltip],.toolti
         // contents and create the actual tooltip object.
         if (!data.tooltip || !$.isPlainObject(data.tooltip)) {
             content = $('<div/>').text(data.tooltip || $(this).attr('title')).html();
-        } else if (data.tooltip.hasOwnProperty('html')) {
+        } else if (data.tooltip.html !== undefined) {
             content = data.tooltip.html;
-        } else if (data.tooltip.hasOwnProperty('text')) {
+        } else if (data.tooltip.text !== undefined) {
             content = data.tooltip.text;
         } else {
             throw "Invalid content for tooltip via data";

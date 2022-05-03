@@ -4,7 +4,7 @@ jQuery(
         jQuery(document).ready(
             function() {
                 var elements = jQuery('[data-inline-editing]');
-                for (element of elements) {
+                for (const element of elements) {
                     STUDIP.InlineEditing.init(element);
                 }
             }
@@ -15,7 +15,7 @@ jQuery(
             null,
             function() {
                 var elements = jQuery('.ui-dialog [data-inline-editing]');
-                for (element of elements) {
+                for (const element of elements) {
                     STUDIP.InlineEditing.init(element);
                 }
             }

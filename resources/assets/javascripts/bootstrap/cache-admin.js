@@ -7,7 +7,6 @@
  * @since     Stud.IP 5.0
  */
 
-/*global jQuery, STUDIP */
 import CacheAdministration from '../../../vue/components/CacheAdministration.vue'
 
 STUDIP.domReady(() => {

@@ -1,4 +1,3 @@
-/*jslint esversion: 6*/
 STUDIP.loadScript = function (script_name) {
     return new Promise(function (resolve, reject) {
         let script = document.createElement('script');
@@ -53,18 +52,16 @@ STUDIP.loadChunk = (function () {
                     ).then(() => {
                         (function (origPrint) {
                             window.print = function () {
-                                MathJax.Hub.Queue(
-                                    ['Delay', MathJax.Callback, 700],
+                                window.MathJax.Hub.Queue(
+                                    ['Delay', window.MathJax.Callback, 700],
                                     origPrint
                                 );
                             };
                         })(window.print);
 
-                        mathjax_loaded = true;
-
-                        return MathJax;
+                        return window.MathJax;
                     }).catch(() => {
-                        mathjax_loaded = false;
+                        console.log('Could not load mathjax')
                     });
                 }
                 promise = mathjax_promise;
@@ -78,7 +75,7 @@ STUDIP.loadChunk = (function () {
                 break;
 
             default:
-                promise = Promise.reject('Unknown chunk');
+                promise = Promise.reject(new Error(`Unknown chunk: ${chunk}`));
         }
 
         return promise.catch((error) => {

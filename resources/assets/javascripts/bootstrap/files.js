@@ -1,4 +1,3 @@
-/*jslint esversion: 6 */
 function searchMoreFiles (button) {
     var table = $(button).closest('table');
     var loading = $('<div class="loading" style="padding: 10px">').html(
@@ -76,7 +75,7 @@ jQuery(document).on('ajaxComplete', (event, xhr) => {
     var payload = false;
 
     function process(key, handler) {
-        if (!changes.hasOwnProperty(key)) {
+        if (changes[key] === undefined) {
             return;
         }
 
@@ -86,10 +85,11 @@ jQuery(document).on('ajaxComplete', (event, xhr) => {
                 if (payload === false) {
                     payload = JSON.parse(xhr.responseText);
                 }
-                if (payload.hasOwnProperty(key)) {
+                if (payload[key] !== undefined) {
                     values = payload[key];
                 }
             } catch (e) {
+                console.log('Error parsing payload', e);
             }
         }
 

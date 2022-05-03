@@ -18,7 +18,7 @@ STUDIP.ready(() => {
         }, $(this).data().vueApp);
 
         let data = {};
-        if (config.id && window.STUDIP.AppData && window.STUDIP.AppData.hasOwnProperty(config.id)) {
+        if (config.id && window.STUDIP.AppData && window.STUDIP.AppData[config.id] !== undefined) {
             data = window.STUDIP.AppData[config.id];
         }
 
@@ -38,10 +38,7 @@ STUDIP.ready(() => {
                 Object.keys(data).forEach(command => {
                     store.commit(`${config.id}/${command}`, data[command]);
                 });
-                vm = createApp({
-                    components,
-                    ...mapGetters()
-                });
+                vm = createApp({components});
             } else {
                 vm = createApp({data, components});
             }

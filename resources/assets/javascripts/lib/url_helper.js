@@ -31,7 +31,7 @@ class URLHelper {
         }
         var base_url = this.base_url;
         if (url.charAt(0) === '/') {
-            var host = this.base_url.match(/^[a-zA-Z][a-zA-Z0-9+-.]*:\/\/[\w:.\-]+/);
+            var host = this.base_url.match(/^[a-zA-Z][a-zA-Z0-9+-.]*:\/\/[\w:.-]+/);
             base_url = host ? host[0] : '';
         }
         return base_url + url;

@@ -14,7 +14,7 @@ const Dates = {
             title: topic_name,
             termin_id: termin_id
         }).done(function(response) {
-            if (response.hasOwnProperty('li')) {
+            if (response.li !== undefined) {
                 $('#new_topic')
                     .closest('[data-termin-id]')
                     .find('.themen-list')

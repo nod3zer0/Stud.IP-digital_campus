@@ -1,3 +1,4 @@
+/* global require */
 import "highlight.js/styles/tomorrow.css"
 
 import hljs from "highlight.js/lib/core.js"

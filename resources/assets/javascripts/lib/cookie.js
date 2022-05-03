@@ -1,4 +1,3 @@
-/*jslint esversion: 6*/
 class Cookie {
     static set(name, value, expiry_days) {
         var chunks = [name + '=' + value, 'SameSite=strict'];
@@ -28,7 +27,7 @@ class Cookie {
             data[chunks[0].trim()] = chunks.slice(1).join('=');
         });
 
-        return data.hasOwnProperty(name) ? data[name] : undefined;
+        return data[name];
     }
 }
 

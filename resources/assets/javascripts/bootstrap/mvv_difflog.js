@@ -14,6 +14,8 @@ STUDIP.domReady(() => {
             });
 
         if (mvv_field != '') {
+            var mvv_id;
+            var senddata;
             $(this)
                 .parentsUntil('div')
                 .each(function() {
@@ -31,9 +33,9 @@ STUDIP.domReady(() => {
                 var obj_elements = fields[i].split('.');
 
                 if (obj_elements.length == 1) {
-                    var senddata = { mvv_field: fields[i], mvv_debug: mvv_debug, log_action: 'del' };
+                    senddata = { mvv_field: fields[i], mvv_debug: mvv_debug, log_action: 'del' };
                 } else {
-                    var senddata = { mvv_field: fields[i], mvv_id: mvv_id, log_action: 'update' };
+                    senddata = { mvv_field: fields[i], mvv_id: mvv_id, log_action: 'update' };
                 }
 
                 var url = STUDIP.URLHelper.getURL('dispatch.php/shared/log_event/get_log_autor');
@@ -57,16 +59,17 @@ STUDIP.domReady(() => {
         var mvv_field = '';
         var mvv_coid = '';
         var mvv_id = '';
+        var mvv_log_action;
 
         switch ($('ins').attr('class')) {
             case 'diffins':
-                var mvv_log_action = 'new';
+                mvv_log_action = 'new';
                 break;
             case 'diffmod':
-                var mvv_log_action = 'update';
+                mvv_log_action = 'update';
                 break;
             default:
-                var mvv_log_action = null;
+                mvv_log_action = null;
                 break;
         }
 
@@ -93,9 +96,10 @@ STUDIP.domReady(() => {
             var ins = $(this);
             var fields = mvv_field.split(' ');
             for (var i = 0; i < fields.length; ++i) {
+                var senddata;
                 var obj_elements = fields[i].split('.');
                 if (obj_elements.length == 1 && mvv_coid) {
-                    var senddata = {
+                    senddata = {
                         mvv_field: fields[i],
                         mvv_id: mvv_id,
                         mvv_coid: mvv_coid,
@@ -113,7 +117,7 @@ STUDIP.domReady(() => {
                                 .attr('data-mvv-index') +
                             ';' +
                             classes[1];
-                        var senddata = {
+                        senddata = {
                             mvv_field: fields[i],
                             mvv_id: mvv_id,
                             mvv_coid: mvv_coid,
@@ -124,7 +128,7 @@ STUDIP.domReady(() => {
                         return true;
                     }
                 } else {
-                    var senddata = { mvv_field: fields[i], mvv_id: mvv_id, log_action: mvv_log_action };
+                    senddata = { mvv_field: fields[i], mvv_id: mvv_id, log_action: mvv_log_action };
                 }
 
                 var url = STUDIP.URLHelper.getURL('dispatch.php/shared/log_event/get_log_autor');
@@ -160,18 +164,19 @@ STUDIP.domReady(() => {
                 $.post(
                     url,
                     { mvv_field: 'mvv_' + mvv_type, mvv_id: mvv_id, log_action: 'new' },
-                    function(data) {
-                        if (data) {
-                            var info = $gettextInterpolate('Hinzugefügt von %{user} am %{time}', data);
-                            curtable.attr('title', info);
-                            const log = $('<ins class="difflog"/>').text(` [${info}] `);
-                            const cell = $('<td/>').append(log);
-                            const row = $('<tr/>').append(cell);
-                            curtable.append(row);
-                        }
-                    },
+                    onSuccess,
                     'json'
                 );
+                function onSuccess((data) {
+                    if (data) {
+                        var info = $gettextInterpolate('Hinzugefügt von %{user} am %{time}', data);
+                        curtable.attr('title', info);
+                        const log = $('<ins class="difflog"/>').text(` [${info}] `);
+                        const cell = $('<td/>').append(log);
+                        const row = $('<tr/>').append(cell);
+                        curtable.append(row);
+                    }
+                };
             });
     });
 
@@ -191,18 +196,19 @@ STUDIP.domReady(() => {
                 $.post(
                     url,
                     { mvv_field: 'mvv_' + mvv_type, mvv_id: mvv_id, log_action: 'del' },
-                    function(data) {
-                        if (data) {
-                            var info = $gettextInterpolate('Entfernt von %{user} am %{time}', data);
-                            curtable.attr('title', info);
-                            const log = $('<del class="difflog"/>').text(` [${info}] `);
-                            const cell = $('<td/>').append(log);
-                            const row = $('<tr/>').append(cell);
-                            curtable.append(row);
-                        }
-                    },
+                    onSuccess,
                     'json'
                 );
+                function onSuccess(data) {
+                    if (data) {
+                        var info = $gettextInterpolate('Entfernt von %{user} am %{time}', data);
+                        curtable.attr('title', info);
+                        const log = $('<del class="difflog"/>').text(` [${info}] `);
+                        const cell = $('<td/>').append(log);
+                        const row = $('<tr/>').append(cell);
+                        curtable.append(row);
+                    }
+                }
             });
     });
 });

@@ -1,7 +1,5 @@
 import { $gettext } from '../lib/gettext.js';
 
-/*jslint browser: true, esversion: 6 */
-/*global window, $, jQuery, _ */
 /* ------------------------------------------------------------------------
  * application.js
  * This file is part of Stud.IP - http://www.studip.de
@@ -331,7 +329,7 @@ STUDIP.domReady(function () {
         } else {
             STUDIP.Scroll.removeHandler('horizontal-scroll');
         }
-    };
+    }
 
     if ($('.no-touch #layout_content').length > 0) {
         window.matchMedia('screen').addListener(function() {
@@ -348,7 +346,7 @@ jQuery(document).on('click', '.course-admin td .course-completion', function () 
     var href    = $(this).attr('href'),
         timeout = window.setTimeout(function () {
             $(this).addClass('ajaxing');
-        }.bind(this), 300);;
+        }.bind(this), 300);
 
     $.getJSON(href).done(function (completion) {
         clearTimeout(timeout);

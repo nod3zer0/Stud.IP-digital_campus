@@ -92,7 +92,7 @@ class AbstractAPI
                 this.queue.shift().resolve();
             }
         }).promise();
-    };
+    }
 }
 
 // Create shortcut methods for easier access by method

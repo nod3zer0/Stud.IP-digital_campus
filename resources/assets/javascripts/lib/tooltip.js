@@ -1,5 +1,3 @@
-/*jslint esversion: 6*/
-
 import CSS from './css.js';
 
 /**

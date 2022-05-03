@@ -5,7 +5,7 @@ $(document).on('keyup', '.tfa-code-input input', function (event) {
         if (this.value.length === 0) {
             $(this).prev('input').val('');
         }
-    } else if (event.keyCode === 46) {
+    } else if (event.keyCode === 46) {
         $(this).nextAll('input:not(:hidden)').each(function () {
             $(this).prev().val(this.value);
             this.value = '';

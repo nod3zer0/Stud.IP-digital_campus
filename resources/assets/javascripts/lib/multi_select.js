@@ -1,4 +1,3 @@
-/*jslint esversion:6*/
 import { $gettext } from './gettext.js';
 
 /**

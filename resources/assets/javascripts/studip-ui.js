@@ -1,8 +1,5 @@
 import { $gettext } from './lib/gettext.js';
 
-/*jslint browser: true */
-/*global jQuery, STUDIP */
-
 /**
  * This file contains extensions/adjustments for jQuery UI.
  */
@@ -129,7 +126,7 @@ import { $gettext } from './lib/gettext.js';
                     options = $(element).data().datePicker;
                 if (options) {
                     $.each(options, function (key, value) {
-                        if (STUDIP.UI.Datepicker.dataHandlers.hasOwnProperty(key)) {
+                        if (STUDIP.UI.Datepicker.dataHandlers[key] !== undefined) {
                             STUDIP.UI.Datepicker.dataHandlers[key].call(element, value);
                         }
                     });
@@ -262,7 +259,7 @@ import { $gettext } from './lib/gettext.js';
                     options = $(element).data().datetimePicker;
                 if (options) {
                     $.each(options, function (key, value) {
-                        if (STUDIP.UI.DateTimepicker.dataHandlers.hasOwnProperty(key)) {
+                        if (STUDIP.UI.DateTimepicker.dataHandlers[key] !== undefined) {
                             STUDIP.UI.DateTimepicker.dataHandlers[key].call(element, value);
                         }
                     });
@@ -389,7 +386,7 @@ import { $gettext } from './lib/gettext.js';
                     options = $(element).data().timePicker;
                 if (options) {
                     $.each(options, function (key, value) {
-                        if (STUDIP.UI.Timepicker.dataHandlers.hasOwnProperty(key)) {
+                        if (STUDIP.UI.Timepicker.dataHandlers[key] !== undefined) {
                             STUDIP.UI.Timepicker.dataHandlers[key].call(element, value);
                         }
                     });

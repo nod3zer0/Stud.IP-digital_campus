@@ -172,11 +172,16 @@ const Search = {
         return category;
     },
 
-    printSingleResult: function(categoryName, data, result, counter, fullsearch, categoryBodyDiv) {
-        var resultsPerType  = data.resultsPerType;
+    printSingleResult: function(
+        categoryName,
+        { resultsPerType, imgAdd, imgRemove },
+        result,
+        counter,
+        fullsearch,
+        categoryBodyDiv
+    ) {
         var hasSubcourses   = (categoryName === 'GlobalSearchMyCourses' || categoryName === 'GlobalSearchCourses') && result.has_children;
-        var addIcon         = data.imgAdd;
-        var removeIcon      = data.imgRemove;
+
         // Create single result entry.
         var single          = $('<section>');
         var data            = $('<div class="search-result-data">');
@@ -209,7 +214,7 @@ const Search = {
                     STUDIP.Search.showSubcourses(result.id);
                     e.preventDefault();
                 })
-                .html(addIcon)
+                .html(imgAdd)
                 .appendTo(data);
             // initially hide the 'remove' icon
             $(`<a href="#" id="hide-subcourses-${result.id}" class="search-has-subcourses">`)
@@ -217,7 +222,7 @@ const Search = {
                     STUDIP.Search.hideSubcourses(result.id);
                     e.preventDefault();
                 })
-                .html(removeIcon)
+                .html(imgRemove)
                 .appendTo(data)
                 .hide();
         }
@@ -345,7 +350,7 @@ const Search = {
     showFilter: function (category) {
         var filters = $('#search-results').data('filters');
         STUDIP.Search.hideAllFilters();
-        if (filters && filters.hasOwnProperty(category) && category != 'show_all_categories') {
+        if (filters && filters.category !== undefined && category != 'show_all_categories') {
             for (let i = 0; i < filters[category].length; i++) {
                 $(`#${filters[category][i]}_filter`).show();
             }

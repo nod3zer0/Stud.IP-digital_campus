@@ -1,5 +1,5 @@
 const load = async function () {
-    return await STUDIP.loadChunk('vue');
+    return STUDIP.loadChunk('vue');
 };
 
 const on = async function (...args) {

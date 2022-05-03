@@ -35,7 +35,7 @@ STUDIP.MVV.CourseWizard = {
                     target.find('.tree-loading').remove();
                     if (items.length > 0) {
                         var list = target.children('ul');
-                        for (i = 0; i < items.length; i++) {
+                        for (let i = 0; i < items.length; i++) {
                             if (items[i].assignable || items[i].has_children) {
                                 list.append(STUDIP.MVV.CourseWizard.createTreeNode(items[i], assignable));
                             }
@@ -98,7 +98,7 @@ STUDIP.MVV.CourseWizard = {
                         $('#lvgsearchresults ul').empty();
                         $('#lvgsearchresults').show();
                         for (var i = 0; i < items.length; i++) {
-                            lvgroup_html = $(items[i].html_string);
+                            const lvgroup_html = $(items[i].html_string);
                             if ($('#lvgroup-tree-assigned-' + items[i].id).length) {
                                 lvgroup_html
                                     .find('input')
