@@ -26,12 +26,6 @@ class SkipLinks
     private static $links = [];
 
     /**
-     * array of positions of skip links
-     * @var array
-     */
-    private static $position = [];
-
-    /**
      * Returns whether skiplinks are enabled.
      *
      * @return boolean
@@ -59,34 +53,28 @@ class SkipLinks
      * @param string $name the displayed name of the links
      * @param string $url the url of the links
      * @param integer $position the position of the link in the list
-     * @param boolean $overwriteable false if position is not overwritable by another link
      */
-    public static function addLink($name, $url, $position = null, $overwriteable = false)
+    public static function addLink(string $name, string $url, $position = null)
     {
         $position = (!$position || $position < 1) ? count(self::$links) + 100 : (int) $position;
-        $new_link = [
-            'name'          => $name,
-            'url'           => decodeHTML($url),
-            'position'      => $position,
-            'overwriteable' => $overwriteable,
+        self::$links[$url] = [
+            'name'     => $name,
+            'url'      => $url,
+            'position' => $position,
         ];
-        if (self::checkOverwrite($new_link)) {
-            self::$links[$new_link['url']] = $new_link;
-        }
     }
 
     /**
      * Adds a link to an anker on the same page to the list of skip links.
      *
-     * @param string $name the displayed name of the links
-     * @param string $id the id of the anker
+     * @param string  $name     the displayed name of the links
+     * @param string  $id       the id of the anker
      * @param integer $position the position of the link in the list
-     * @param boolean $overwriteable false if position is not overwritable by another link
      */
-    public static function addIndex($name, $id, $position = null, $overwriteable = false)
+    public static function addIndex($name, $id, $position = null)
     {
         $url = '#' . $id;
-        self::addLink($name, $url, $position, $overwriteable);
+        self::addLink($name, $url, $position);
     }
 
     /**
@@ -101,11 +89,11 @@ class SkipLinks
         }
 
         usort(self::$links, function ($a, $b) {
-            return $a['position'] > $b['position'];
+            return $a['position'] - $b['position'];
         });
 
         $navigation = new Navigation('');
-        foreach (self::$links as $index => $link) {
+        foreach (array_values(self::$links) as $index => $link) {
             $navigation->addSubNavigation(
                 "/skiplinks/link-{$index}",
                 new Navigation($link['name'], $link['url'])
@@ -113,21 +101,4 @@ class SkipLinks
         }
         return $GLOBALS['template_factory']->render('skiplinks', compact('navigation'));
     }
-
-    /**
-     * Checks if there is another link at the same position and if it is overwritable.
-     *
-     * @return boolean true if the link at the same position is overwritable
-     */
-    private static function checkOverwrite($link)
-    {
-        if (isset(self::$position[$link['position']])) {
-            return false;
-        }
-        if (!$link['overwrite']) {
-            self::$position[$link['position']] = true;
-        }
-        return true;
-    }
-
 }
