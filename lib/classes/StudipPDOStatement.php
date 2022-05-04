@@ -118,6 +118,8 @@ class StudipPDOStatement implements IteratorAggregate
         }
 
         // emulate prepared statement if necessary
+        $emulate_prepare = false;
+
         foreach ($this->params as $key => $param) {
             if ($param['type'] === StudipPDO::PARAM_ARRAY ||
                 $param['type'] === StudipPDO::PARAM_COLUMN ||

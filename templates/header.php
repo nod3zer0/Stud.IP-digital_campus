@@ -85,7 +85,7 @@ if (isset($_COOKIE['navigation-length'])) {
                             $alert = true;
                         }
                     } ?>
-                    <div id="notification_marker"<?= $alert ? ' class="alert"' : "" ?> title="<?= _("Benachrichtigungen") ?>" data-lastvisit="<?= $lastvisit ?>">
+                    <div id="notification_marker"<?= !empty($alert) ? ' class="alert"' : "" ?> title="<?= _("Benachrichtigungen") ?>" data-lastvisit="<?= $lastvisit ?>">
                         <?= count($notifications) ?>
                     </div>
                     <div class="list below" id="notification_list">

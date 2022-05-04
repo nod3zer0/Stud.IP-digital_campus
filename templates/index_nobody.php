@@ -18,7 +18,7 @@ if ($bg_mobile) {
 ?>
 <!-- Startseite (nicht eingeloggt) -->
 <ul id="tabs" role="navigation"></ul>
-<? if ($logout) : ?>
+<? if (!empty($logout)) : ?>
     <?= MessageBox::success(_("Sie sind nun aus dem System abgemeldet."), array_filter([$GLOBALS['UNI_LOGOUT_ADD']])) ?>
 <? endif; ?>
 
@@ -29,7 +29,7 @@ if ($bg_mobile) {
         <h1><?= htmlReady(Config::get()->UNI_NAME_CLEAN) ?></h1>
         <? foreach (Navigation::getItem('/login') as $key => $nav) : ?>
             <? if ($nav->isVisible()) : ?>
-                <? list($name, $title) = explode(' - ', $nav->getTitle()) ?>
+                <? $name_and_title = explode(' - ', $nav->getTitle()) ?>
                 <div class="login_link">
                     <? if (is_internal_url($url = $nav->getURL())) : ?>
                         <? SkipLinks::addLink($name, $url) ?>
@@ -37,9 +37,9 @@ if ($bg_mobile) {
                     <? else : ?>
                         <a href="<?= htmlReady($url) ?>" target="_blank" rel="noopener noreferrer">
                     <? endif ?>
-                            <?= htmlReady($name) ?>
+                            <?= htmlReady($name_and_title[0]) ?>
                             <p>
-                                <?= htmlReady($title ?: $nav->getDescription()) ?>
+                                <?= htmlReady(!empty($name_and_title[1]) ? $name_and_title[1] : $nav->getDescription()) ?>
                             </p>
                         </a>
                 </div>

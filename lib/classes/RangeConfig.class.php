@@ -52,7 +52,7 @@ class RangeConfig extends Config
             $range_id = $range_id->getRangeId();
         }
 
-        if (static::$instances[$range_id] === null) {
+        if (!isset(static::$instances[$range_id])) {
             static::$instances[$range_id] = new static($range_id);
         }
         return static::$instances[$range_id];
@@ -121,7 +121,7 @@ class RangeConfig extends Config
             }
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $this->data[$row['field']] = $this->convertFromDatabase(
-                    $this->metadata[$row['field']]['type'],
+                    $this->metadata[$row['field']]['type'] ?? 'string',
                     $row['value'],
                     $row['field']
                 );

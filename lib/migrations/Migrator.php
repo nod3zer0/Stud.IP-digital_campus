@@ -250,13 +250,13 @@ class Migrator
     {
         $top_versions = $this->topVersion(true);
         $target_branch = $this->schema_version->getBranch();
-  
+
         if (is_array($target_version)) {
             return $target_version;
         }
-  
+
         $max_version = $target_branch ? $target_branch . '.' . $target_version : $target_version;
-  
+
         foreach ($top_versions as $branch => $version) {
             if ($branch == $target_branch) {
                 if (isset($target_version)) {
@@ -268,10 +268,10 @@ class Migrator
                 $top_versions[$branch] = 0;
             }
         }
-  
+
         return $top_versions;
     }
-  
+
     /**
      * Invoking this method will return a list of migrations with an index between
      * the current schema version (provided by the SchemaVersion object) and a
@@ -464,7 +464,7 @@ class Migrator
         $versions = [0];
         foreach (array_keys($this->migrationClasses()) as $version) {
             list($branch, $version) = $this->migrationBranchAndVersion($version);
-            $versions[$branch] = max($versions[$branch], $version);
+            $versions[$branch] = max($versions[$branch] ?? 0, $version);
         }
         return $all_branches ? $versions : $versions[$this->schema_version->getBranch()];
     }

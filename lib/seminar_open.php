@@ -75,7 +75,7 @@ $seminar_open_redirected = false;
 $user_did_login = false;
 
 // session init starts here
-if ($_SESSION['SessionStart'] == 0) {
+if (empty($_SESSION['SessionStart']) || $_SESSION['SessionStart'] == 0) {
     $_SESSION['SessionStart'] = time();
     $_SESSION['object_cache'] = [];
 
@@ -176,10 +176,10 @@ if (!Request::isXhr() && $perm->have_perm('root')) {
     }
 
     if (Request::option('stop-migration-nag')) {
-        $_SESSION['migation-check']['disabled'] = true;
+        $_SESSION['migration-check']['disabled'] = true;
     }
 
-    if (!$_SESSION['migation-check']['disabled']
+    if (!$_SESSION['migration-check']['disabled']
         && $_SESSION['migration-check']['count'] > 0
     ) {
         $info = sprintf(

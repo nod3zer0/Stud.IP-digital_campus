@@ -169,8 +169,14 @@ class URLHelper
     {
         $link_params = $ignore_registered_params ? [] : self::$params;
 
-        list($url, $fragment) = explode('#', $url);
-        list($url, $query)    = explode('?', $url);
+        // Separate the query and the fragment parts (if any) from the main part of the URL
+        if (strpos($url, '#') !== false) {
+            list($url, $fragment) = explode('#', $url);
+        }
+
+        if (strpos($url, '?') !== false) {
+            list($url, $query) = explode('?', $url);
+        }
 
         if ($url !== '') {
             $url = self::resolveURL($url);

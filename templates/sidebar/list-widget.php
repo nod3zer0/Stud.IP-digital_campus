@@ -1,12 +1,14 @@
 <ul class="<?= implode(' ', $css_classes) ?>">
 <? foreach ($elements as $index => $element): ?>
-    <? $icon = $element->icon; ?>
-    <? if ($icon && $element instanceof LinkElement && $element->isDisabled()): ?>
-        <? $icon = $icon->copyWithRole('inactive') ?>
+    <? if ($element instanceof LinkElement): ?>
+        <? $icon = $element->icon ?? null ?>
+        <? if ($icon && $element->isDisabled()): ?>
+            <? $icon = $icon->copyWithRole('inactive') ?>
+        <? endif ?>
     <? endif ?>
     <li id="<?= htmlReady($index) ?>"
-        <?= $icon ? 'style="' . $icon->asCSS() .'"' : '' ?>
-        <?= $element->active ? 'class="active"' : '' ?>>
+        <?= isset($icon) ? 'style="' . $icon->asCSS() .'"' : '' ?>
+        <?= !empty($element->active) ? 'class="active"' : '' ?>>
         <?= $element->render() ?>
     </li>
 <? endforeach; ?>

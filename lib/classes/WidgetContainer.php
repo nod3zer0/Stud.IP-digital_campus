@@ -24,12 +24,12 @@ abstract class WidgetContainer
     public static function Get()
     {
         $class = get_called_class();
-        if (static::$instances[$class] === null) {
+        if (!isset(static::$instances[$class])) {
             static::$instances[$class] = new static;
         }
         return static::$instances[$class];
     }
-    
+
     /**
      * Private constructor to ensure that the singleton Get() method is always
      * used.
@@ -39,12 +39,12 @@ abstract class WidgetContainer
     protected function __construct()
     {
     }
-    
+
     /**
      * Contains the widgets of the container
      */
     protected $widgets = [];
-    
+
     /**
      * Add a widget to the container.
      *
@@ -75,9 +75,9 @@ abstract class WidgetContainer
     public function insertWidget(Widget $widget, $before_index, $index = null)
     {
         $index = $index ?: $this->guessIndex($widget);
-        
+
         $inserted = false;
-        
+
         $widgets = [];
         foreach ($this->widgets as $idx => $wdgt) {
             if ($idx === $before_index) {
@@ -96,7 +96,7 @@ abstract class WidgetContainer
         }
 
         $this->widgets = $widgets;
-        
+
         return $widget;
     }
 
@@ -151,7 +151,7 @@ abstract class WidgetContainer
      *
      * @param String $index Index/name of the widget to remove.
      * @throws Exception if the specified position is invalid
-     */ 
+     */
     public function removeWidget($index)
     {
         if (!isset($this->widgets[$index])) {

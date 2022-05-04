@@ -222,7 +222,7 @@ class PluginManager
             $statement->execute([$userId]);
             $this->plugins_activated_cache[$userId] = $statement->fetchGrouped(PDO::FETCH_COLUMN);
         }
-        $state = $this->plugins_activated_cache[$userId][$pluginId];
+        $state = $this->plugins_activated_cache[$userId][$pluginId] ?? null;
         if ($state === null) {
             $activated = (bool) Config::get()->HOMEPAGEPLUGIN_DEFAULT_ACTIVATION;
         } else {
@@ -314,7 +314,7 @@ class PluginManager
      */
     public function isPluginsDisabled()
     {
-        return $_SESSION['plugins_disabled'];
+        return $_SESSION['plugins_disabled'] ?? false;
     }
 
     /**

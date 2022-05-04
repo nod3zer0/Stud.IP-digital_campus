@@ -463,7 +463,7 @@ class PageLayout
      */
     public static function isHeaderEnabled()
     {
-        return self::$display_header && !$GLOBALS['_NOHEADER'];
+        return self::$display_header && empty($GLOBALS['_NOHEADER']);
     }
 
     /**

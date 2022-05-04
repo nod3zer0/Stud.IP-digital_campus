@@ -24,6 +24,7 @@ class BrowseNavigation extends Navigation
     {
         global $user, $perm;
 
+        $courselink = null;
         // check if logged in
         if (is_object($user) && $user->id != 'nobody') {
             $coursetext = _('Veranstaltungen');

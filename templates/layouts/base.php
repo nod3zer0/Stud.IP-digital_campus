@@ -1,5 +1,5 @@
 <?php
-NotificationCenter::postNotification('PageWillRender', $body_id ? : PageLayout::getBodyElementId());
+NotificationCenter::postNotification('PageWillRender', PageLayout::getBodyElementId());
 $navigation = PageLayout::getTabNavigation();
 $tab_root_path = PageLayout::getTabNavigationPath();
 if ($navigation) {
@@ -94,7 +94,7 @@ $getInstalledLanguages = function () {
     </script>
 </head>
 
-<body id="<?= $body_id ?: PageLayout::getBodyElementId() ?>" <? if (SkipLinks::isEnabled()) echo 'class="enable-skiplinks"'; ?>>
+<body id="<?= PageLayout::getBodyElementId() ?>" <? if (SkipLinks::isEnabled()) echo 'class="enable-skiplinks"'; ?>>
 <div id="layout_wrapper">
     <? SkipLinks::insertContainer() ?>
     <? SkipLinks::addIndex(_('Hauptinhalt'), 'layout_content', 100) ?>
@@ -134,7 +134,7 @@ $getInstalledLanguages = function () {
         <? endif ?>
 
         <? if (PageLayout::isHeaderEnabled() /*&& isset($navigation)*/) : ?>
-            <?= $this->render_partial('tabs', compact('navigation', 'membership')) ?>
+            <?= $this->render_partial('tabs', compact('navigation')) ?>
         <? endif; ?>
         </nav>
     <? endif; ?>
@@ -167,7 +167,7 @@ $getInstalledLanguages = function () {
                 <? else: ?>
                     <?= htmlReady( PageLayout::getTitle()) ?>
                 <? endif ?>
-                <?= $public_hint ? '(' . htmlReady($public_hint) . ')' : '' ?>
+                <?= !empty($public_hint) ? '(' . htmlReady($public_hint) . ')' : '' ?>
             </div>
         </div>
 
@@ -183,7 +183,7 @@ $getInstalledLanguages = function () {
         </div>
     </div> <? // Closes #layout_page opened in included templates/header.php ?>
 
-    <?= $this->render_partial('footer'); ?>
+    <?= $this->render_partial('footer', ['link_params' => $header_template->link_params]); ?>
     <!-- Ende Page -->
     <? /* <div id="layout_push"></div> */ ?>
 </div>
@@ -195,4 +195,4 @@ $getInstalledLanguages = function () {
     </a>
 </body>
 </html>
-<?php NotificationCenter::postNotification('PageDidRender', $body_id ? : PageLayout::getBodyElementId());
+<?php NotificationCenter::postNotification('PageDidRender', PageLayout::getBodyElementId());

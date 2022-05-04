@@ -101,4 +101,20 @@ class SkipLinks
         }
         return $GLOBALS['template_factory']->render('skiplinks', compact('navigation'));
     }
+
+    /**
+     * Checks if there is another link at the same position and if it is overwritable.
+     *
+     * @return boolean true if the link at the same position is overwritable
+     */
+    private static function checkOverwrite($link)
+    {
+        if (isset(self::$position[$link['position']])) {
+            return false;
+        }
+        if (empty($link['overwrite'])) {
+            self::$position[$link['position']] = true;
+        }
+        return true;
+    }
 }

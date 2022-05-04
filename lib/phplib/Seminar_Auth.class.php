@@ -264,8 +264,13 @@ class Seminar_Auth
     {
         $cfg = Config::GetInstance();
         //check if the user got kicked meanwhile, or if user is locked out
-        if ($this->auth['uid'] && !in_array($this->auth['uid'], ['form', 'nobody'])) {
-            $user = $GLOBALS['user']->id == $this->auth['uid'] ? $GLOBALS['user'] : User::find($this->auth['uid']);
+        if (!empty($this->auth['uid']) && !in_array($this->auth['uid'], ['form', 'nobody'])) {
+            $user = null;
+            if (isset($GLOBALS['user']) && $GLOBALS['user']->id == $this->auth['uid']) {
+                $user = $GLOBALS['user'];
+            } else {
+                $user = User::find($this->auth['uid']);
+            }
             $exp_d = $user->username ? UserConfig::get($user->id)->EXPIRATION_DATE : 0;
             if (!$user->username || $user->locked || ($exp_d > 0 && $exp_d < time())) {
                 $this->unauth();
@@ -437,18 +442,18 @@ class Seminar_Auth
     {
         global $_language_path;
 
-        if ($GLOBALS['user']->id !== 'nobody') {
+        if (!isset($GLOBALS['user']) || $GLOBALS['user']->id !== 'nobody') {
             $GLOBALS['user'] = new Seminar_User('nobody');
             $GLOBALS['perm'] = new Seminar_Perm();
             $GLOBALS['auth'] = $this;
         }
 
-        $_SESSION['_language'] = $_SESSION['_language'] ?: get_accepted_languages();
+        if (empty($_SESSION['_language'])) {
+            $_SESSION['_language'] = get_accepted_languages();
+        }
 
         // init of output via I18N
         $_language_path = init_i18n($_SESSION['_language']);
         include 'config.inc.php';
-
-
     }
 }

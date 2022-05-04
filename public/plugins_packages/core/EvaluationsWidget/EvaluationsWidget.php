@@ -33,7 +33,7 @@ class EvaluationsWidget extends StudIPPlugin implements PortalPlugin
     {
         // include and show votes and tests
         if (Config::get()->VOTE_ENABLE) {
-            $controller = new PluginController(new StudipDispatcher());
+            $controller = new AuthenticatedController(new StudipDispatcher());
             $controller->suppress_empty_output = true;
 
             $response = $controller->relay('evaluation/display/studip')->body;

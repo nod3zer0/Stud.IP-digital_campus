@@ -1,7 +1,7 @@
             </div>
         </div>
     </div>
-    <?= $GLOBALS['template_factory']->render('footer') ?>
+    <?= $GLOBALS['template_factory']->render('footer', ['header_template' => $header_template ?? null]) ?>
 <!-- Ende Page -->
 </div>
 

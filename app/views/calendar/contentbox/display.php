@@ -8,7 +8,7 @@
         <nav>
     <? if ($admin): ?>
         <? if ($isProfile): ?>
-        <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/edit/' . $termin->id, ['source_page' => 'dispatch.php/profile']) ?>">
+        <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/edit/', ['source_page' => 'dispatch.php/profile']) ?>">
             <?= Icon::create('add', 'clickable')->asImg(['class' => 'text-bottom']) ?>
         </a>
         <? else: ?>

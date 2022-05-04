@@ -94,7 +94,8 @@ class StudipNews extends SimpleORMap implements PrivacyObject
 
     public static function GetNewsByRange($range_id, $only_visible = false, $as_objects = false)
     {
-        if ($only_visible){
+        $clause = '';
+        if ($only_visible) {
             $clause = " AND date < UNIX_TIMESTAMP() AND (date + expire) > UNIX_TIMESTAMP() ";
         }
         $query = "SELECT news_id AS idx, news.*

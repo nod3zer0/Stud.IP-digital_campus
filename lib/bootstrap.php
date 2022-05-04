@@ -50,11 +50,11 @@ if (isset($_SERVER['SERVER_NAME'])) {
             explode(':', $_SERVER['SERVER_NAME']);
     }
 
-    $ABSOLUTE_URI_STUDIP = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+    $ABSOLUTE_URI_STUDIP = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
     $ABSOLUTE_URI_STUDIP .= '://'.$_SERVER['SERVER_NAME'];
 
-    if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
-        $_SERVER['HTTPS'] != 'on' && $_SERVER['SERVER_PORT'] != 80) {
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' && $_SERVER['SERVER_PORT'] != 443 ||
+        empty($SERVER['HTTPS']) && $_SERVER['SERVER_PORT'] != 80) {
         $ABSOLUTE_URI_STUDIP .= ':'.$_SERVER['SERVER_PORT'];
     }
 

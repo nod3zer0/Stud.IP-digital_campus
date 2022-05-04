@@ -82,6 +82,8 @@ class HelpTour extends SimpleORMap
     public static function GetHelpbarTourData()
     {
         $visible_tours = [];
+        $active_tour_id = null;
+        $active_tour_step_nr = 0;
         $route = get_route();
         $tours = HelpTour::getToursByRoute($route);
         foreach($tours as $index => $tour) {
@@ -99,8 +101,9 @@ class HelpTour extends SimpleORMap
                 }
             }
         }
+
         //if there is an active tour, initialize it
-        if ($_SESSION['active_tour']['tour_id']
+        if (isset($_SESSION['active_tour']['tour_id'])
             && ($_SESSION['active_tour']['last_route'] === $route
                 || $_SESSION['active_tour']['next_route'] === $route))
         {

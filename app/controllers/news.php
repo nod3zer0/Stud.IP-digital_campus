@@ -114,7 +114,7 @@ class NewsController extends StudipController
                     $news->deleteRange($range);
                     $news->store();
                 } else {
-                    $this->question = (string) QuestionBox::create(
+                    PageLayout::postQuestion(
                         _('Ankündigung wirklich aus diesem Bereich entfernen?'),
                         URLHelper::getURL('', ['remove_news' => $news_id, 'news_range' => $range, 'confirm' => true])
                     );
@@ -129,7 +129,7 @@ class NewsController extends StudipController
                 if (Request::get('confirm')) {
                     $news->delete();
                 } else {
-                    $this->question = (string) QuestionBox::create(
+                    PageLayout::postQuestion(
                         _('Ankündigung wirklich löschen?'),
                         URLHelper::getURL('', ['delete_news' => $news_id, 'confirm' => true])
                     );

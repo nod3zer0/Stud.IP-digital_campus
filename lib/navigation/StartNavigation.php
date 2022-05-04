@@ -30,6 +30,9 @@ class StartNavigation extends Navigation
     {
         parent::initItem();
 
+        $news = 0;
+        $vote = 0;
+
         if (mb_stripos($_SERVER['REQUEST_URI'], "web_migrate.php") === false && is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') {
             if (WidgetHelper::hasWidget($GLOBALS['user']->id, 'News')) {
                 $news = StudipNews::CountUnread();
@@ -97,7 +100,6 @@ class StartNavigation extends Navigation
     public function initSubNavigation()
     {
         global $perm, $auth;
-        $username = $auth->auth['uname'];
 
         parent::initSubNavigation();
 

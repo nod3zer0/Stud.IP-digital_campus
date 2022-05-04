@@ -53,7 +53,8 @@ class Seminar_User
     {
         if ($this->id && $this->id != 'nobody') {
             if ($timestamp <= 0) {
-                if ((time() - $_SESSION['USER_LAST_LIFESIGN']) < 180) {
+                $current_user_last_lifesign = $_SESSION['USER_LAST_LIFESIGN'] ?? 0;
+                if (time() - $current_user_last_lifesign < 180) {
                     return 0;
                 }
                 $timestamp = time();

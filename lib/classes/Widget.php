@@ -231,7 +231,7 @@ class Widget
 
     public function __get($offset)
     {
-        return $this->template_variables[$offset];
+        return $this->template_variables[$offset] ?? null;
     }
 
     public function __set($offset, $value)

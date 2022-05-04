@@ -119,9 +119,7 @@ class Log
     public static function set($name = '', $log_handler = null)
     {
         $name = mb_strlen($name) ? $name : 0;
-        if (isset(self::$instances[$name])) {
-            $old = self::$instances[$name];
-        }
+        $old = self::$instances[$name] ?? null;
         self::$instances[$name] = new Log($log_handler);
         return $old;
     }

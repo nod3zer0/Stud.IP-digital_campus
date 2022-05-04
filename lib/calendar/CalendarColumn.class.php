@@ -178,7 +178,7 @@ class CalendarColumn {
      */
     public function getGroupedEntries()
     {
-        if (!$this->sorted_entries) {
+        if (empty($this->sorted_entries)) {
             if ($this->isGrouped()) {
                 $this->sorted_entries = $this->sortAndGroupEntries();
             } else {

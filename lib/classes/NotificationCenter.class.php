@@ -57,6 +57,8 @@ class NotificationCenter
             $event = '';
         }
 
+        $predicate = null;
+
         if ($object) {
             $predicate = is_callable($object)
                 ? $object
@@ -65,9 +67,10 @@ class NotificationCenter
                   };
         }
 
-        self::$observers[$event][] =
-            ['predicate' => $predicate ?: NULL,
-                  'observer'  => [$observer, $method]];
+        self::$observers[$event][] = [
+            'predicate' => $predicate,
+            'observer'  => [$observer, $method]
+        ];
     }
 
     /**

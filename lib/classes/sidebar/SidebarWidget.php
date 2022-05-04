@@ -91,7 +91,7 @@ class SidebarWidget extends Widget
      */
     public function render($variables = [])
     {
-        if ($this->id) {
+        if (!empty($this->id)) {
             $this->template_variables['id'] = $this->id;
         }
         return parent::render($variables);

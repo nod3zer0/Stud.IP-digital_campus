@@ -114,7 +114,7 @@ class Request implements ArrayAccess, IteratorAggregate
     {
         $host = $_SERVER['SERVER_NAME'];
         $port = $_SERVER['SERVER_PORT'];
-        $ssl  = $_SERVER['HTTPS'] == 'on';
+        $ssl  = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
 
         if ($ssl && $port != 443 || !$ssl && $port != 80) {
             $host .= ':' . $port;

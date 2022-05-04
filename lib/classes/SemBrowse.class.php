@@ -1168,7 +1168,7 @@ class SemBrowse {
         if (!$option['visible'] || $option['target'] != $target) {
             return null;
         }
-        if (!$option['url']) {
+        if (empty($option['url'])) {
             switch ($option_name) {
                 case 'courses':
                 case 'semtree':

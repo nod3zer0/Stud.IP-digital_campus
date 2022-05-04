@@ -224,7 +224,7 @@ class Smiley
      */
     public static function getShort()
     {
-        if (class_exists('DBManager') && !$GLOBALS['SMILEY_NO_DB']) {
+        if (class_exists('DBManager') && empty($GLOBALS['SMILEY_NO_DB'])) {
             if (self::$shortnames === null) {
                 $query = "SELECT short_name, smiley_name FROM smiley WHERE short_name != ''";
                 self::$shortnames = DBManager::get()->query($query)->fetchGrouped(PDO::FETCH_COLUMN);

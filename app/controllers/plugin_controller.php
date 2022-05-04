@@ -14,7 +14,11 @@ class PluginController extends StudipController
     {
         parent::__construct($dispatcher);
 
+        if (!isset($dispatcher->current_plugin)) {
+            throw new Exception('Plugin missing for plugin controller!');
+        }
         $this->plugin = $dispatcher->current_plugin;
+
 
         if ($this->plugin && $this->plugin->hasTranslation()) {
             // Localization

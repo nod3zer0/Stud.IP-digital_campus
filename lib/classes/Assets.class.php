@@ -145,7 +145,7 @@ class Assets
 
         $parts = explode('/', $source);
 
-        $size = $opt['size'];
+        $size = $opt['size'] ?? null;
 
         $opt = Assets::parse_attributes($opt);
 

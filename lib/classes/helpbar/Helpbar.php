@@ -31,9 +31,9 @@ class Helpbar extends WidgetContainer
         $route        = get_route();
         $help_content = HelpContent::getContentByRoute();
         foreach ($help_content as $row) {
-            $this->addPlainText($row['label'] ?: '',
+            $this->addPlainText('',
                                 $this->interpolate($row['content'], $this->variables),
-                                $row['icon'] ? Icon::create($row['icon'], 'info_alt') : null,
+                                null,
                                 URLHelper::getURL('dispatch.php/help_content/edit/'.$row['content_id'], ['from' => $route]),
                                 URLHelper::getURL('dispatch.php/help_content/delete/'.$row['content_id'], ['from' => $route]));
         }

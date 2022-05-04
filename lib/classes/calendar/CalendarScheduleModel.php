@@ -789,7 +789,7 @@ class CalendarScheduleModel
 
         $view = new CalendarWeekView($entries, 'schedule');
 
-        $view->setHeight(40 + (20 * $schedule_settings['zoom']));
+        $view->setHeight(40 + (20 * ($schedule_settings['zoom'] ?? 0)));
         $view->setRange($schedule_settings['glb_start_time'], $schedule_settings['glb_end_time']);
         $view->setInsertFunction("function (entry, column, hour, end_hour) {
             STUDIP.Schedule.newEntry(entry, column, hour, end_hour)

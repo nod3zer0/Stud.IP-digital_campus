@@ -117,7 +117,7 @@ class ContentsNavigation extends Navigation
                 $questionnaire->addSubNavigation('assign', $sub_nav);
             }
 
-            $eval = new Navigation(_('Evaluationen'), 'admin_evaluation.php', ['rangeID' => $auth->auth['uname']]);
+            $eval = new Navigation(_('Evaluationen'), 'admin_evaluation.php', ['rangeID' => $GLOBALS['user']->username]);
             $eval->setImage(Icon::create('test'));
             $eval->setDescription(_('Erstellen Sie komplexe Befragungen'));
             $this->addSubNavigation('evaluation', $eval);

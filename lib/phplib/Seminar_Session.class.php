@@ -207,7 +207,7 @@ class Seminar_Session
             $this->that_class = 'CT_Cache';
         }
         $this->cookie_path = $this->cookie_path ?: $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
-        $this->cookie_secure = $_SERVER['HTTPS'] === 'on';
+        $this->cookie_secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
         $this->name(get_class($this));
     }
 

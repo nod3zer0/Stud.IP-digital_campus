@@ -99,11 +99,14 @@ class Seminar_Perm
      */
     public function have_perm($perm, $user_id = false)
     {
-
-        $pageperm = $this->permissions[$perm];
-        $userperm = $this->permissions[$this->get_perm($user_id)];
-
-        return $pageperm <= $userperm;
+        $page_perm_value = $this->permissions[$perm] ?? 0;
+        $user_perm_value = $this->permissions[$this->get_perm($user_id)] ?? 0;
+        if ($user_perm_value) {
+            return $page_perm_value <= $user_perm_value;
+        } else {
+            //The user has no permissions at all.
+            return false;
+        }
     }
 
 
@@ -214,11 +217,14 @@ class Seminar_Perm
      */
     public function have_studip_perm($perm, $range_id, $user_id = false)
     {
-
-        $pageperm = $this->permissions[$perm];
-        $userperm = $this->permissions[$this->get_studip_perm($range_id, $user_id)];
-
-        return $pageperm <= $userperm;
+        $pageperm = $this->permissions[$perm] ?? 0;
+        $userperm = $this->permissions[$this->get_studip_perm($range_id, $user_id)] ?? 0;
+        if ($userperm) {
+            return $pageperm <= $userperm;
+        } else {
+            //The user has no permissions at all.
+            return false;
+        }
     }
 
     /**
@@ -293,10 +299,14 @@ class Seminar_Perm
     public function have_profile_perm($perm, $range_id, $user_id = false)
     {
 
-        $pageperm = $this->permissions[$perm];
-        $userperm = $this->permissions[$this->get_profile_perm($range_id, $user_id)];
-
-        return $pageperm <= $userperm;
+        $pageperm = $this->permissions[$perm] ?? 0;
+        $userperm = $this->permissions[$this->get_profile_perm($range_id, $user_id)] ?? 0;
+        if ($userperm) {
+            return $pageperm <= $userperm;
+        } else {
+            //The user has no permissions at all.
+            return false;
+        }
     }
 
     /**

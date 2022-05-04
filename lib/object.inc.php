@@ -104,7 +104,7 @@ function object_get_visit($object_id, $plugin_id, $mode = "last", $open_object_i
         $cache[$object_id][$plugin_id][$user_id] = null;
     }
 
-    if ($cache[$object_id][$plugin_id][$user_id]) {
+    if (isset($cache[$object_id][$plugin_id][$user_id])) {
         return $mode == 'last'
              ? $cache[$object_id][$plugin_id][$user_id]['last_visitdate']
              : $cache[$object_id][$plugin_id][$user_id]['visitdate'];
