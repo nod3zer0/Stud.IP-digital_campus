@@ -4,11 +4,11 @@
             .'sich im System registriert zu haben.') ?>
     </p>
     <p>
-        <?= sprintf(_('In den %s blau markierten Veranstaltungen dürfen '
+        <?= sprintf(_('In den %s grün markierten Veranstaltungen dürfen '
                      .'Sie nur lesen und Dokumente herunterladen.'),
                     '<span class="gruppe6">&nbsp;&nbsp;</span>') ?>
         <br>
-        <?= sprintf(_('In den %s orange markierten Veranstaltungen '
+        <?= sprintf(_('In den %s rot markierten Veranstaltungen '
                      .'können Sie sich zusätzlich mit eigenen Beiträgen '
                      .'im Forum beteiligen.'),
                     '<span class="gruppe2">&nbsp;&nbsp;</span>') ?>
