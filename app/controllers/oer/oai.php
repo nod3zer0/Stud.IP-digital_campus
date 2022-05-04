@@ -5,7 +5,7 @@
 * Gets initialized due to requests. Validates metadata-prefix and used verb
 * and calls a response-template with specified values.
 */
-class Oer_OaiController extends PluginController
+class Oer_OaiController extends StudipController
 {
 
     public function index_action()
@@ -23,7 +23,7 @@ class Oer_OaiController extends PluginController
             $verb = lcfirst($verb);
             $this->verb = $verb;
         } else {
-            $this->render_template("oai/badVerb");
+            $this->render_template("oer/oai/badVerb");
         }
 
         $metadataPrefix = $request->offsetGet('metadataPrefix');
@@ -31,7 +31,7 @@ class Oer_OaiController extends PluginController
             $this->metadataPrefix = $metadataPrefix;
         } else {
             if (empty($this->response->body)) {
-                $this->render_template("oai/badPrefix");
+                $this->render_template("oer/oai/badPrefix");
             }
         }
 
@@ -77,7 +77,7 @@ class Oer_OaiController extends PluginController
             $this->vcard = vCard::export(User::find($targetMaterial->user_id));
             $this->renderResponse($this->verb);
         } else {
-            $this->render_template("oai/idNotExists");
+            $this->render_template("oer/oai/idNotExists");
         }
     }
 
@@ -89,7 +89,7 @@ class Oer_OaiController extends PluginController
         if (!empty($set)) {
 
             if (empty($target_set = OERTag::findBySQL('name = ?', [$set]))){
-                $this->render_template("oai/noSets");
+                $this->render_template("oer/oai/noSets");
             }
             if ($this->records = OERMaterial::findByTag($set)) {
                 foreach ($this->records as $key=>$value) {
@@ -118,7 +118,7 @@ class Oer_OaiController extends PluginController
                 $this->tag_collection = $tag_collection;
                 $this->renderResponse($this->verb);
             } else {
-                $this->render_template("oai/noRecordsMatch");
+                $this->render_template("oer/oai/noRecordsMatch");
             }
 
         }
@@ -133,7 +133,7 @@ class Oer_OaiController extends PluginController
             $this->identifier = $identifier;
             $this->renderResponse($this->verb);
         } else {
-            $this->render_template("oai/noSets");
+            $this->render_template("oer/oai/noSets");
         }
 
     }
@@ -175,7 +175,7 @@ class Oer_OaiController extends PluginController
                 $this->targetMaterial = $targetMaterial;
                 $this->renderResponse($this->verb);
             } else {
-                $this->render_template("oai/idNotExists");
+                $this->render_template("oer/oai/idNotExists");
             }
         } else {
             $this->renderResponse($this->verb);
@@ -188,13 +188,13 @@ class Oer_OaiController extends PluginController
             $this->tags = $tags;
             $this->renderResponse($this->verb);
         } else {
-            $this->render_template("oai/noSets");
+            $this->render_template("oer/oai/noSets");
         }
     }
     //Render
     public function renderResponse($verb)
     {
-        $this->render_template("oai/".$verb);
+        $this->render_template("oer/oai/".$verb);
     }
     //Helper
     public function getEarliestTime()
