@@ -36,6 +36,12 @@ class Admin_ConfigurationController extends AuthenticatedController
         }
 
         $this->setupSidebar($this->range_type);
+
+        // Preserve section parameter
+        // This *must* be after the sidebar has been defined
+        if (!Request::isPost() && Request::submitted('section')) {
+            URLHelper::addLinkParam('section', Request::option('section'));
+        }
     }
 
     /**
@@ -61,7 +67,7 @@ class Admin_ConfigurationController extends AuthenticatedController
 
         // set variables for view
         $this->only_section = $section;
-        $this->open_section = $open_section ?: $section;
+        $this->open_section = $open_section ?? $section;
         $this->needle = $needle;
         $this->sections = ConfigurationModel::getConfig($section, $needle);
 
@@ -97,7 +103,7 @@ class Admin_ConfigurationController extends AuthenticatedController
                     htmlReady($field)
                 ));
 
-                $this->relocate('admin/configuration/configuration/' . $section);
+                $this->relocate("admin/configuration/configuration/{$section}#field-{$field}");
                 return;
             }
         }

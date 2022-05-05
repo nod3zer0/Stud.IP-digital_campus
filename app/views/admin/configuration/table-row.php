@@ -1,4 +1,4 @@
-<tr>
+<tr id="field-<?= htmlReady($field) ?>">
     <td>
         <a data-dialog href="<?= $controller->link_for($linkchunk, compact('field')) ?>">
             <?= htmlReady($field) ?>
