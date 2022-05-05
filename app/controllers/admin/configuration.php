@@ -39,7 +39,7 @@ class Admin_ConfigurationController extends AuthenticatedController
 
         // Preserve section parameter
         // This *must* be after the sidebar has been defined
-        if (!Request::isPost() && Request::submitted('section')) {
+        if (!Request::isPost() && Request::option('section')) {
             URLHelper::addLinkParam('section', Request::option('section'));
         }
     }
