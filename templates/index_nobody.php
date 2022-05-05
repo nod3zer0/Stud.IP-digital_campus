@@ -32,7 +32,7 @@ if ($bg_mobile) {
                 <? $name_and_title = explode(' - ', $nav->getTitle()) ?>
                 <div class="login_link">
                     <? if (is_internal_url($url = $nav->getURL())) : ?>
-                        <? SkipLinks::addLink($name, $url) ?>
+                        <? SkipLinks::addLink($name_and_title[0], $url) ?>
                         <a href="<?= URLHelper::getLink($url) ?>">
                     <? else : ?>
                         <a href="<?= htmlReady($url) ?>" target="_blank" rel="noopener noreferrer">
