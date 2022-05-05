@@ -1214,10 +1214,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                         $room,
                         [$interval]
                     );
-                    if ($interval_available[0]) {
-                        $range_index = $interval['range'] . '_' . $interval['range_id'];
-                        $this->selected_rooms[$range_index] = $room->id;
-                    } else {
+                    if (!$interval_available[0]) {
                         $this->unavailable_dates[$room->id]++;
                         $this->unavailable_metadate_dates[$room->id][$metadate_id]++;
                     }
@@ -1432,7 +1429,7 @@ class Resources_RoomRequestController extends AuthenticatedController
         }
 
         $this->alternatives_selection = 'room_search';
-        if (Request::submitted('select_alternatives')) {
+        if (Request::get('alternatives_selection')) {
             CSRFProtection::verifyUnsafeRequest();
             $this->selected_rooms = Request::getArray('selected_rooms');
             $this->alternatives_selection = Request::get('alternatives_selection');

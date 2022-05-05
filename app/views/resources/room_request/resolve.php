@@ -301,7 +301,7 @@
                                         <input type="radio" name="<?= htmlReady($room_radio_name) ?>"
                                                class="text-bottom radio-null"
                                                value=""
-                                            <?= $selected_dates[$range_index] == null
+                                            <?= empty($selected_rooms[$range_index])
                                                 ? 'checked="checked"'
                                                 : '' ?>>
                                     </td>
@@ -316,7 +316,7 @@
                                             <input type="radio" name="<?= htmlReady($room_radio_name) ?>"
                                                    class="radio-null text-bottom"
                                                    value=""
-                                                <?= $selected_dates[$range_index] == null
+                                                <?= empty($selected_rooms[$range_index]) && empty($interval['booked_room'])
                                                     ? 'checked="checked"'
                                                     : '' ?>>
                                         </td>
@@ -333,7 +333,7 @@
                                     'time_intervals' => $request_time_intervals,
                                     'availability' => $room_availability[$request_resource->id],
                                     'underload' => $room_underload[$room_request->resource_id],
-                                    'selected_dates' => $selected_rooms
+                                    'selected_rooms' => $selected_rooms
                                 ]
                             ) ?>
                         <? endif ?>
@@ -346,7 +346,7 @@
                                         'time_intervals' => $request_time_intervals,
                                         'availability' => $this->room_availability[$room->id],
                                         'underload' => $room_underload[$room->id],
-                                        'selected_dates' => $selected_rooms
+                                        'selected_rooms' => $selected_rooms
                                     ]
                                 ) ?>
                             <? endforeach ?>

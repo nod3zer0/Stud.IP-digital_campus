@@ -56,7 +56,7 @@
                        class="text-bottom radio-<?= htmlReady($room->id) ?>"
                        value="<?= htmlReady($room->id) ?>"
                     <?= $availability <= 0.0 ? 'disabled="disabled"' : '' ?>
-                <?= ($availability > 0 && $selected_dates[$range_index] == $room->id)
+                <?= ($availability > 0 && $selected_rooms[$range_index] == $room->id)
                     ? 'checked="checked"'
                     : ''?>>
                 <? if ($availability >= 1.0) : ?>
@@ -97,7 +97,7 @@
                         <input type="radio" name="<?= htmlReady($room_radio_name) ?>"
                                class="text-bottom radio-<?= htmlReady($room->id) ?>"
                                value="<?= htmlReady($room->id) ?>"
-                               <?= ($selected_dates[$range_index] == $room->id
+                               <?= ($selected_rooms[$range_index] == $room->id
                                      || $interval['booked_room'] == $room->id)
                                  ? 'checked="checked"'
                                  : ''?>>
