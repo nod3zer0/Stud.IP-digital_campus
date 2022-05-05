@@ -79,7 +79,7 @@
                               ]),
                               ['data-dialog' => 'size=auto']
                           )
-                          ->condition(!($is_participants_locked || $is_locked))
+                          ->condition(!($is_participants_locked || $is_locked) && count($allmembers) < 500)
                           ->addMultiPersonSearch(
                               MultiPersonSearch::get('add_statusgroup_member' . $group->id)
                                   ->setTitle(sprintf(_('Personen zu Gruppe %s hinzufügen'), $group->name))
@@ -95,6 +95,19 @@
                                                 $allmembers ? $allmembers->pluck('user_id') : [])
                                   ->addQuickfilter(_('Teilnehmende ohne Gruppenzuordnung'),
                                       $nogroupmembers)
+                          )
+                          ->condition(!($is_participants_locked || $is_locked) && count($allmembers) >= 500)
+                          ->addMultiPersonSearch(
+                              MultiPersonSearch::get('add_statusgroup_member' . $group->id)
+                                  ->setTitle(sprintf(_('Personen zu Gruppe %s hinzufügen'), $group->name))
+                                  ->setLinkText(_('Personen hinzufügen'))
+                                  ->setSearchObject($memberSearch)
+                                  ->setDefaultSelectedUser($group->members->pluck('user_id'))
+                                  ->setDataDialogStatus(Request::isXhr())
+                                  ->setJSFunctionOnSubmit(Request::isXhr() ?
+                                                'STUDIP.Dialog.close();' : false)
+                                  ->setExecuteURL($controller->url_for('course/statusgroups/add_member/' .
+                                                $group->id))
                           )
                           ->conditionAll(!$is_locked)
                           ->addLink(
