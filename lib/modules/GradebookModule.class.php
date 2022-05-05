@@ -46,7 +46,7 @@ class GradebookModule extends CorePlugin implements SystemPlugin, StudipModule
     public function getIconNavigation($courseId, $lastVisit, $userId)
     {
         $title = _('Gradebook');
-        if ($GLOBALS['perm']->have_studip_perm('dozent', $courseId, $userId)) {
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $courseId, $userId)) {
             $changed = Instance::countBySQL(
                 'INNER JOIN grading_definitions gd ON(gd.id = definition_id) '.
                 'WHERE gd.course_id = ? AND grading_instances.chdate > ?',
@@ -84,7 +84,7 @@ class GradebookModule extends CorePlugin implements SystemPlugin, StudipModule
         $gradebook = new Navigation('Gradebook');
         $gradebook->addSubNavigation('index', new Navigation(_('Erbrachte Leistungen'), 'dispatch.php/course/gradebook/overview'));
 
-        if ($GLOBALS['perm']->have_studip_perm('dozent', $cid)) {
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $cid)) {
             $this->addTabNavigationOfLecturers($gradebook, $cid);
         }
 
