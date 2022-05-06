@@ -40,4 +40,4 @@ Sehr knappe Zusammenfassung des Proposals (Titel/Überschrift)
 
 - [Regeln für StEPs](https://develop.studip.de/studip/dispatch.php/course/scm/9f22a869f704747dd066fbfe7ef55684?cid=1927f2b86d6b185aa6c6697810ad42f1)
 
-/label ~StEP ~StEP::Status::neu
+/label ~StEP ~"StEP::Status::neu"
