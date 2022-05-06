@@ -12,7 +12,6 @@ $topFolder = new StandardFolder();
 $vue_topFolder = [
     'description' => $topFolder->getDescriptionTemplate(),
     'additionalColumns' => $topFolder->getAdditionalColumns(),
-    'buttons' => null
 ];
 if (is_a($vue_topFolder['description'], "Flexi_Template")) {
     $vue_topFolder['description'] = $vue_topFolder['description']->render();
@@ -55,29 +54,20 @@ foreach ($topFolder->getAdditionalActionButtons() as $button) {
                  :files="files"
                  :folders="folders"
                  :topfolder="topfolder"
-                 enable_table_filter="<?= $enable_table_filter ? 'true' : 'false' ?>"
+                 :allow_filter="<?= json_encode(!empty($enable_table_filter)) ?>"
                  table_title="<?= htmlReady($table_title) ?>"
                  pagination="<?= htmlReady($pagination_html) ?>"
                  :initial_sort="{sortedBy:'chdate',sortDirection:'desc'}"
     ></files-table>
 </form>
-
-<? ob_start(); ?>
-<? if ($enable_table_filter) : ?>
-<div align="center">
-<input class="tablesorterfilter" placeholder="<?= _('Name oder Autor/-in') ?>" data-column="2,4" type="search" style="width: 100%; margin-bottom: 5px;"><br>
-</div>
-<? endif ?>
 <?
 if ($show_default_sidebar) {
-    if ($enable_table_filter) {
-        $content = ob_get_clean();
+    if (!empty($enable_table_filter)) {
         $widget = new SidebarWidget();
+        $widget->setId('table-view-filter');
         $widget->setTitle(_('Filter'));
-        $widget->addElement(new WidgetElement($content));
+        $widget->addElement(new WidgetElement('<div></div>'));
         Sidebar::get()->addWidget($widget);
-    } else {
-        ob_get_clean();
     }
 
     $views = new ViewsWidget();
@@ -96,6 +86,4 @@ if ($show_default_sidebar) {
         'flat'
     )->setActive(true);
     Sidebar::get()->addWidget($views);
-} else {
-    ob_get_clean();
 }

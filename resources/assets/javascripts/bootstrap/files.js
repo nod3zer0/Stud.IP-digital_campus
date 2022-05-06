@@ -34,22 +34,6 @@ STUDIP.domReady(() => {
         $('.file_selector input[type=file]').first().click();
     });
 
-    $('table.documents.flat.filter').each(function () {
-        var ignored = [];
-        $('colgroup col', this).each((index, col) => {
-            if ($(col).is('[data-filter-ignore]')) {
-                ignored.push(index);
-            }
-        });
-        $(this).filterTable({
-            highlightClass: 'filter-match',
-            ignoreColumns: ignored,
-            inputSelector: '.sidebar .tablesorterfilter',
-            minChars: 1,
-            minRows: 1
-        });
-    });
-
     $(document).trigger('refresh-handlers');
 
     $(document).on(

@@ -75,7 +75,6 @@ import 'sticky-kit/dist/sticky-kit.js';
 import 'blueimp-file-upload';
 import 'blueimp-file-upload/js/jquery.iframe-transport.js';
 
-import './jquery/jquery.filtertable-1.5.7.js';
 import './jquery/autoresize.jquery.min.js';
 
 import { $gettext } from './lib/gettext.js';

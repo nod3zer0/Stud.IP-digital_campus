@@ -1,227 +1,242 @@
 <template>
-    <table class="default documents"
-           :data-folder_id="topfolder.folder_id"
-           data-shiftcheck>
-        <caption>
-            <div class="caption-container">
-                <div v-if="breadcrumbs && !table_title">
-                    <a v-if="breadcrumbs[0]" :href="breadcrumbs[0].url" :title="$gettext('Zum Hauptordner')">
-                        <studip-icon shape="folder-home-full"
-                                     role="clickable"
-                                     class="text-bottom"
-                                     size="30"></studip-icon>
-                        <span v-if="breadcrumbs.length == 1">
-                            {{ breadcrumbs[0].name }}
-                        </span>
-                    </a>
-                    <span v-for="(breadcrumb, index) in breadcrumbs"
-                              :key="breadcrumb.folder_id"
-                              v-if="index > 0">
-                        /<a :href="breadcrumb.url">
-                            {{breadcrumb.name}}
+    <div>
+        <table class="default documents"
+               :data-folder_id="topfolder.folder_id"
+               data-shiftcheck>
+            <caption>
+                <div class="caption-container">
+                    <div v-if="breadcrumbs && !table_title">
+                        <a v-if="breadcrumbs[0]" :href="breadcrumbs[0].url" :title="$gettext('Zum Hauptordner')">
+                            <studip-icon shape="folder-home-full"
+                                         role="clickable"
+                                         class="text-bottom"
+                                         size="30"></studip-icon>
+                            <span v-if="breadcrumbs.length === 1">
+                                {{ breadcrumbs[0].name }}
+                            </span>
                         </a>
-                    </span>
-                </div>
-                <div v-if="table_title">{{table_title}}</div>
-            </div>
-            <div v-if="topfolder.description" style="font-size: small" v-html="topfolder.description"></div>
-        </caption>
-
-        <colgroup>
-            <col v-if="show_bulk_actions" width="30px" data-filter-ignore>
-            <col width="60px" data-filter-ignore>
-            <col>
-            <col width="100px" class="responsive-hidden" data-filter-ignore>
-            <col v-if="showdownloads" width="100px" class="responsive-hidden" data-filter-ignore>
-            <col width="150px" class="responsive-hidden">
-            <col width="120px" class="responsive-hidden" data-filter-ignore>
-            <col v-if="topfolder.additionalColumns"
-                 v-for="(name, index) in topfolder.additionalColumns"
-                 :key="index"
-                 data-filter-ignore
-                 class="responsive-hidden">
-            <col width="80px" data-filter-ignore>
-        </colgroup>
-        <thead>
-            <tr class="sortable">
-                <th v-if="show_bulk_actions" data-sort="false">
-                    <studip-proxy-checkbox
-                        v-model="selectedIds"
-                        :total="allIds"
-                    ></studip-proxy-checkbox>
-                </th>
-                <th @click="sort('mime_type')" :class="sortClasses('mime_type')">
-                    <a href="#" @click.prevent>
-                        {{ $gettext('Typ') }}
-                    </a>
-                </th>
-                <th @click="sort('name')" :class="sortClasses('name')">
-                    <a href="#" @click.prevent>
-                        {{ $gettext('Name') }}
-                    </a>
-                </th>
-                <th @click="sort('size')" class="responsive-hidden" :class="sortClasses('size')">
-                    <a href="#" @click.prevent>
-                        {{ $gettext('Größe') }}
-                    </a>
-                </th>
-                <th v-if="showdownloads" @click="sort('downloads')" class="responsive-hidden" :class="sortClasses('downloads')">
-                    <a href="#" @click.prevent>
-                        {{ $gettext('Downloads') }}
-                    </a>
-                </th>
-                <th class="responsive-hidden" @click="sort('author_name')" :class="sortClasses('author_name')">
-                    <a href="#" @click.prevent>
-                        {{ $gettext('Autor/-in') }}
-                    </a>
-                </th>
-                <th class="responsive-hidden" @click="sort('chdate')" :class="sortClasses('chdate')">
-                    <a href="#" @click.prevent>
-                        {{ $gettext('Datum') }}
-                    </a>
-                </th>
-                <th v-if="topfolder.additionalColumns"
-                    v-for="(name, index) in topfolder.additionalColumns"
-                    :key="index"
-                    @click="sort(index)"
-                    class="responsive-hidden"
-                    :class="sortClasses(index)">
-                    <a href="#" @click.prevent>
-                        {{name}}
-                    </a>
-
-                </th>
-                <th data-sort="false">{{ $gettext('Aktionen') }}</th>
-            </tr>
-        </thead>
-        <tbody class="subfolders">
-            <tr v-if="files.length + folders.length == 0" class="empty">
-                <td :colspan="numberOfColumns">
-                    {{ $gettext('Dieser Ordner ist leer') }}
-                </td>
-            </tr>
-            <tr v-for="folder in sortedFolders"
-                :id="'row_folder_' + folder.id "
-                :data-permissions="folder.permissions">
-                <td v-if="show_bulk_actions">
-                    <studip-proxied-checkbox
-                        name="ids[]"
-                        :value="folder.id"
-                        v-model="selectedIds"
-                    ></studip-proxied-checkbox>
-                </td>
-                <td class="document-icon">
-                    <a :href="folder.url">
-                        <studip-icon :shape="folder.icon" role="clickable" size="26" class="text-bottom"></studip-icon>
-                    </a>
-                </td>
-                <td>
-                    <a :href="folder.url">{{folder.name}}</a>
-                </td>
-                <td class="responsive-hidden"></td>
-                <td v-if="showdownloads"
-                    class="responsive-hidden">
-                </td>
-                <td v-if="folder.author_url" class="responsive-hidden">
-                    <a :href="folder.author_url">{{folder.author_name}}</a>
-                </td>
-                <td v-else class="responsive-hidden">
-                    {{folder.author_name}}
-                </td>
-                <td class="responsive-hidden" style="white-space: nowrap;">
-                    <studip-date-time :timestamp="folder.chdate" :relative="true"></studip-date-time>
-                </td>
-                <template v-if="topfolder.additionalColumns"
-                          v-for="(name, index)  in topfolder.additionalColumns">
-                    <td v-if="folder.additionalColumns && folder.additionalColumns[index] && folder.additionalColumns[index].html"
-                        class="responsive-hidden"
-                        v-html="folder.additionalColumns[index].html"></td>
-                    <td v-else class="responsive-hidden"></td>
-                </template>
-                <td class="actions" v-html="folder.actions">
-                </td>
-            </tr>
-        </tbody>
-        <tbody class="files">
-            <tr v-for="file in sortedFiles"
-                :class="file.new ? 'new' : ''"
-                :id="'fileref_' + file.id"
-                role="row"
-                :data-permissions="getPermissions(file)">
-                <td v-if="show_bulk_actions">
-                    <studip-proxied-checkbox
-                        name="ids[]"
-                        :value="file.id"
-                        v-model="selectedIds"
-                    ></studip-proxied-checkbox>
-                </td>
-                <td class="document-icon">
-                    <a v-if="file.download_url" :href="file.download_url" target="_blank" rel="noopener noreferrer">
-                        <studip-icon :shape="file.icon" role="clickable" size="24" class="text-bottom"></studip-icon>
-                    </a>
-                    <studip-icon v-else :shape="file.icon" role="clickable" size="24"></studip-icon>
-
-                    <a :href="file.download_url"
-                       v-if="file.download_url && file.mime_type.indexOf('image/') === 0"
-                       class="lightbox-image"
-                       data-lightbox="gallery"></a>
-                </td>
-                <td>
-                    <a :href="file.details_url" data-dialog>{{file.name}}</a>
-
-                    <studip-icon v-if="file.restrictedTermsOfUse"
-                                 shape="lock-locked"
-                                 role="info"
-                                 size="16"
-                                 :title="$gettext('Das Herunterladen dieser Datei ist nur eingeschränkt möglich.')"></studip-icon>
-                </td>
-                <td :data-sort-value="file.size"
-                    class="responsive-hidden">
-                    <studip-file-size v-if="file.size !== null" :size="parseInt(file.size, 10)"></studip-file-size>
-                </td>
-                <td v-if="showdownloads"
-                    class="responsive-hidden">
-                    {{file.downloads}}
-                </td>
-                <td v-if="file.author_url" class="responsive-hidden" >
-                    <a :href="file.author_url">
-                        {{file.author_name}}
-                    </a>
-                </td>
-                <td v-else class="responsive-hidden">
-                        {{file.author_name}}
-                </td>
-                <td data-sort-value="file.chdate" class="responsive-hidden" style="white-space: nowrap;">
-                    <studip-date-time :timestamp="file.chdate" :relative="true"></studip-date-time>
-                </td>
-                <template v-if="topfolder.additionalColumns"
-                          v-for="(name, index)  in topfolder.additionalColumns">
-                    <td v-if="file.additionalColumns && file.additionalColumns[index] && file.additionalColumns[index].html"
-                        class="responsive-hidden"
-                        v-html="file.additionalColumns[index].html"></td>
-                    <td v-else class="responsive-hidden"></td>
-                </template>
-                <td class="actions" v-html="file.actions">
-                </td>
-            </tr>
-        </tbody>
-        <tfoot v-if="(topfolder.buttons && show_bulk_actions) || tfoot_link">
-            <tr>
-                <td :colspan="numberOfColumns - (tfoot_link ? 1 : 0)">
-                    <div class="footer-items">
-                        <span v-if="topfolder.buttons && show_bulk_actions"
-                              v-html="topfolder.buttons" class="bulk-buttons" ref="buttons"></span>
-                        <span v-if="tfoot_link" :colspan="(topfolder.buttons && show_bulk_actions ? 1 : numberOfColumns)">
-                            <a :href="tfoot_link.href">{{tfoot_link.text}}</a>
+                        <span v-for="(breadcrumb, index) in breadcrumbs"
+                                  :key="breadcrumb.folder_id"
+                                  v-if="index > 0">
+                            /<a :href="breadcrumb.url">
+                                {{ breadcrumb.name }}
+                            </a>
                         </span>
-                        <span v-if="pagination" v-html="pagination" class="pagination"></span>
                     </div>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+                    <div v-if="table_title">{{table_title}}</div>
+                </div>
+                <div v-if="topfolder.description" style="font-size: small" v-html="topfolder.description"></div>
+            </caption>
+
+            <colgroup>
+                <col v-if="show_bulk_actions" style="width: 30px">
+                <col style="width: 60px">
+                <col>
+                <col style="width: 100px" class="responsive-hidden">
+                <col v-if="showdownloads" style="width: 100px" class="responsive-hidden">
+                <col style="width: 150px" class="responsive-hidden">
+                <col style="width: 120px" class="responsive-hidden">
+                <col v-if="topfolder.additionalColumns"
+                     v-for="(name, index) in topfolder.additionalColumns"
+                     :key="index"
+                     data-filter-ignore
+                     class="responsive-hidden">
+                <col style="width: 80px">
+            </colgroup>
+            <thead>
+                <tr class="sortable">
+                    <th v-if="show_bulk_actions" data-sort="false">
+                        <studip-proxy-checkbox
+                            v-model="selectedIds"
+                            :total="allIds"
+                        ></studip-proxy-checkbox>
+                    </th>
+                    <th @click="sort('mime_type')" :class="sortClasses('mime_type')">
+                        <a href="#" @click.prevent>
+                            {{ $gettext('Typ') }}
+                        </a>
+                    </th>
+                    <th @click="sort('name')" :class="sortClasses('name')">
+                        <a href="#" @click.prevent>
+                            {{ $gettext('Name') }}
+                        </a>
+                    </th>
+                    <th @click="sort('size')" class="responsive-hidden" :class="sortClasses('size')">
+                        <a href="#" @click.prevent>
+                            {{ $gettext('Größe') }}
+                        </a>
+                    </th>
+                    <th v-if="showdownloads" @click="sort('downloads')" class="responsive-hidden" :class="sortClasses('downloads')">
+                        <a href="#" @click.prevent>
+                            {{ $gettext('Downloads') }}
+                        </a>
+                    </th>
+                    <th class="responsive-hidden" @click="sort('author_name')" :class="sortClasses('author_name')">
+                        <a href="#" @click.prevent>
+                            {{ $gettext('Autor/-in') }}
+                        </a>
+                    </th>
+                    <th class="responsive-hidden" @click="sort('chdate')" :class="sortClasses('chdate')">
+                        <a href="#" @click.prevent>
+                            {{ $gettext('Datum') }}
+                        </a>
+                    </th>
+                    <th v-if="topfolder.additionalColumns"
+                        v-for="(name, index) in topfolder.additionalColumns"
+                        :key="index"
+                        @click="sort(index)"
+                        class="responsive-hidden"
+                        :class="sortClasses(index)">
+                        <a href="#" @click.prevent>
+                            {{name}}
+                        </a>
+
+                    </th>
+                    <th data-sort="false">{{ $gettext('Aktionen') }}</th>
+                </tr>
+            </thead>
+            <tbody class="subfolders">
+                <tr v-if="!hasData" class="empty">
+                    <td :colspan="numberOfColumns">
+                        {{ $gettext('Dieser Ordner ist leer') }}
+                    </td>
+                </tr>
+                <tr v-else-if="displayedFolders.length + displayedFiles.length === 0" class="empty">
+                    <td :colspan="numberOfColumns">
+                        <translate>Keine Ordner oder Dateien entsprechen Ihrem Filter.</translate>
+                    </td>
+                </tr>
+                <tr v-for="folder in displayedFolders"
+                    :id="'row_folder_' + folder.id "
+                    :data-permissions="folder.permissions">
+                    <td v-if="show_bulk_actions">
+                        <studip-proxied-checkbox
+                            name="ids[]"
+                            :value="folder.id"
+                            v-model="selectedIds"
+                        ></studip-proxied-checkbox>
+                    </td>
+                    <td class="document-icon">
+                        <a :href="folder.url">
+                            <studip-icon :shape="folder.icon" role="clickable" size="26" class="text-bottom"></studip-icon>
+                        </a>
+                    </td>
+                    <td :class="{'filter-match': valueMatchesFilter(folder.name)}">
+                        <a :href="folder.url">
+                            <span v-html="highlightString(folder.name)"></span>
+                        </a>
+                    </td>
+                    <td class="responsive-hidden"></td>
+                    <td v-if="showdownloads"
+                        class="responsive-hidden">
+                    </td>
+                    <td class="responsive-hidden" :class="{'filter-match': valueMatchesFilter(folder.author_name)}">
+                        <a v-if="folder.author_url" :href="folder.author_url">
+                            <span v-html="highlightString(folder.author_name)"></span>
+                        </a>
+                        <span v-else v-html="highlightString(folder.author_name)"></span>
+                    </td>
+                    <td class="responsive-hidden" style="white-space: nowrap;">
+                        <studip-date-time :timestamp="folder.chdate" :relative="true"></studip-date-time>
+                    </td>
+                    <template v-if="topfolder.additionalColumns"
+                              v-for="(name, index)  in topfolder.additionalColumns">
+                        <td v-if="folder.additionalColumns && folder.additionalColumns[index] && folder.additionalColumns[index].html"
+                            class="responsive-hidden"
+                            v-html="folder.additionalColumns[index].html"></td>
+                        <td v-else class="responsive-hidden"></td>
+                    </template>
+                    <td class="actions" v-html="folder.actions">
+                    </td>
+                </tr>
+            </tbody>
+            <tbody class="files">
+                <tr v-for="file in displayedFiles"
+                    :class="file.new ? 'new' : ''"
+                    :id="'fileref_' + file.id"
+                    role="row"
+                    :data-permissions="getPermissions(file)">
+                    <td v-if="show_bulk_actions">
+                        <studip-proxied-checkbox
+                            name="ids[]"
+                            :value="file.id"
+                            v-model="selectedIds"
+                        ></studip-proxied-checkbox>
+                    </td>
+                    <td class="document-icon">
+                        <a v-if="file.download_url" :href="file.download_url" target="_blank" rel="noopener noreferrer">
+                            <studip-icon :shape="file.icon" role="clickable" size="24" class="text-bottom"></studip-icon>
+                        </a>
+                        <studip-icon v-else :shape="file.icon" role="clickable" size="24"></studip-icon>
+
+                        <a :href="file.download_url"
+                           v-if="file.download_url && file.mime_type.indexOf('image/') === 0"
+                           class="lightbox-image"
+                           data-lightbox="gallery"></a>
+                    </td>
+                    <td :class="{'filter-match': valueMatchesFilter(file.name)}">
+                        <a :href="file.details_url" data-dialog>
+                            <span v-html="highlightString(file.name)"></span>
+                        </a>
+
+                        <studip-icon v-if="file.restrictedTermsOfUse"
+                                     shape="lock-locked"
+                                     role="info"
+                                     size="16"
+                                     :title="$gettext('Das Herunterladen dieser Datei ist nur eingeschränkt möglich.')"></studip-icon>
+                    </td>
+                    <td :data-sort-value="file.size"
+                        class="responsive-hidden">
+                        <studip-file-size v-if="file.size !== null" :size="parseInt(file.size, 10)"></studip-file-size>
+                    </td>
+                    <td v-if="showdownloads"
+                        class="responsive-hidden">
+                        {{file.downloads}}
+                    </td>
+                    <td class="responsive-hidden" :class="{'filter-match': valueMatchesFilter(file.author_name)}">
+                        <a v-if="file.author_url" :href="file.author_url">
+                            <span v-html="highlightString(file.author_name)"></span>
+                        </a>
+                        <span v-else v-html="highlightString(file.author_name)"></span>
+                    </td>
+                    <td data-sort-value="file.chdate" class="responsive-hidden" style="white-space: nowrap;">
+                        <studip-date-time :timestamp="file.chdate" :relative="true"></studip-date-time>
+                    </td>
+                    <template v-if="topfolder.additionalColumns"
+                              v-for="(name, index)  in topfolder.additionalColumns">
+                        <td v-if="file.additionalColumns && file.additionalColumns[index] && file.additionalColumns[index].html"
+                            class="responsive-hidden"
+                            v-html="file.additionalColumns[index].html"></td>
+                        <td v-else class="responsive-hidden"></td>
+                    </template>
+                    <td class="actions" v-html="file.actions">
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot v-if="(topfolder.buttons && show_bulk_actions) || tfoot_link">
+                <tr>
+                    <td :colspan="numberOfColumns - (tfoot_link ? 1 : 0)">
+                        <div class="footer-items">
+                            <span v-if="topfolder.buttons && show_bulk_actions"
+                                  v-html="topfolder.buttons" class="bulk-buttons" ref="buttons"></span>
+                            <span v-if="tfoot_link" :colspan="(topfolder.buttons && show_bulk_actions ? 1 : numberOfColumns)">
+                                <a :href="tfoot_link.href">{{tfoot_link.text}}</a>
+                            </span>
+                            <span v-if="pagination" v-html="pagination" class="pagination"></span>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <MountingPortal v-if="allow_filter" mount-to="#table-view-filter .sidebar-widget-content div" name="sidebar-content-toggle">
+            <input :placeholder="$gettext('Name oder Autor/in')" type="search" v-model="filter" :disabled="!hasData" />
+        </MountingPortal>
+    </div>
 </template>
 <script>
+import sanitizeHTML from 'sanitize-html';
+
 export default {
     name: 'files-table',
     props: {
@@ -266,13 +281,18 @@ export default {
             type: Object,
             required: false,
             default: () => ({sortedBy: 'name', sortDirection: 'asc'})
+        },
+        allow_filter: {
+            type: Boolean,
+            default: false
         }
     },
     data () {
         return {
             selectedIds: [undefined], // Includes invalid value to trigger watch on mounted
             sortedBy: this.initial_sort.sortedBy,
-            sortDirection: this.initial_sort.sortDirection
+            sortDirection: this.initial_sort.sortDirection,
+            filter: ''
         };
     },
     methods: {
@@ -341,6 +361,22 @@ export default {
                 permissions += 'w';
             }
             return permissions;
+        },
+        valueMatchesFilter(string) {
+            if (this.needleForFilter.length === 0) {
+                return false;
+            }
+            return string.toLowerCase().includes(this.needleForFilter);
+        },
+        highlightString (string) {
+            let highlighted = sanitizeHTML(string);
+            if (this.needleForFilter.length > 0) {
+                // Escape needle for regexp, see https://stackoverflow.com/a/3561711
+                const pattern = this.needleForFilter.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+                const regExp = new RegExp(pattern, 'gi');
+                highlighted = highlighted.replace(regExp, '<span class="filter-match">$&</span>');
+            }
+            return highlighted;
         }
     },
     computed: {
@@ -357,6 +393,32 @@ export default {
         },
         allIds () {
             return [].concat(this.files.map(file => file.id)).concat(this.folders.map(folder => folder.id));
+        },
+        displayedFiles () {
+            let files = [].concat(this.files);
+            if (this.needleForFilter.length > 0) {
+                files = files.filter(file => {
+                    return this.valueMatchesFilter(file.name)
+                        || this.valueMatchesFilter(file.author_name);
+                });
+            }
+            return this.sortArray(files);
+        },
+        displayedFolders () {
+            let folders = [].concat(this.folders);
+            if (this.needleForFilter.length > 0) {
+                folders = folders.filter(folder => {
+                    return this.valueMatchesFilter(folder.name)
+                        || this.valueMatchesFilter(folder.author_name);
+                });
+            }
+            return this.sortArray(folders);
+        },
+        needleForFilter () {
+            return this.filter.trim().toLowerCase();
+        },
+        hasData () {
+            return this.folders.length + this.files.length > 0;
         }
     },
     mounted () {
@@ -385,3 +447,19 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+#table-view-filter {
+    input[type="search"] {
+        width: 100%;
+    }
+}
+table.documents {
+    td.filter-match {
+        background-color: var(--yellow-20);
+    }
+    span.filter-match {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+}
+</style>

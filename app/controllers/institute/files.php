@@ -148,6 +148,7 @@ class Institute_FilesController extends AuthenticatedController
 
         $this->range_type = 'institute';
         $this->show_default_sidebar = true;
+        $this->enable_table_filter = true;
         $this->form_action = $this->url_for('file/bulk/' . $folder->getId());
         $this->render_template('files/flat.php', $this->layout);
     }

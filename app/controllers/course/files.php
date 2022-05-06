@@ -195,6 +195,7 @@ class Course_FilesController extends AuthenticatedController
         $this->range_type = 'course';
         $this->show_default_sidebar = true;
         $this->form_action = $this->url_for('file/bulk/' . $folder->getId());
+        $this->enable_table_filter = true;
         $this->render_template('files/flat.php', $this->layout);
     }
 

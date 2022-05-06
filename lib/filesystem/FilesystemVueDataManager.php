@@ -35,7 +35,7 @@ class FilesystemVueDataManager
             'icon' => $file->getIcon($isDownloadable ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->getShape(),
             'size' => $file->getSize(),
             'author_url' => $file->getUser() && $file->getUserId() !== $GLOBALS['user']->id ? URLHelper::getURL('dispatch.php/profile', ['username' => $file->getUser()->username], true) : "",
-            'author_name' => $file->getUserName(),
+            'author_name' => $file->getUserName() ?: '',
             'author_id' => $file->getUserId(),
             'chdate' => (int) $file->getLastChangeDate(),
             'additionalColumns' => $additionalColumns,
