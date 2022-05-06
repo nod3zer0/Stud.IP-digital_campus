@@ -82,8 +82,6 @@ class InitMailqueue extends Migration
 
     function down()
     {
-        DBManager::get()->query("DROP TABLE IF EXISTS `cronjobs_tasks`, `cronjobs_schedules`, `cronjobs_logs`");
-
-        DBManager::get()->query("DELETE FROM config WHERE field IN ('CRONJOB_ENABLE', 'CRONJOBS_ESCALATION')");
+        throw new RuntimeException('down() is not implemented for this migration');
     }
 }
