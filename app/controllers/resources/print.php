@@ -48,7 +48,7 @@ class Resources_PrintController extends AuthenticatedController
             )
         );
 
-        if (!$this->resource->userHasPermission($current_user, 'user')) {
+        if (!$this->resource->userHasPermission($current_user)) {
             throw new AccessDeniedException();
         }
 
@@ -61,13 +61,13 @@ class Resources_PrintController extends AuthenticatedController
 
         $views = new ViewsWidget();
         if ($GLOBALS['user']->id && ($GLOBALS['user']->id != 'nobody')) {
-            if ($this->resource->userHasPermission($current_user, 'user')) {
+            if ($this->resource->userHasPermission($current_user)) {
                 $views->addLink(
                     _('Standard Zeitfenster'),
-                    URLHelper::getURL(
-                        'dispatch.php/resources/print/individual_booking_plan/' . $this->resource->id,
+                    $this->individual_booking_planURL(
+                        $this->resource->id,
                         [
-                            'defaultDate' => Request::get('defaultDate', date('Y-m-d'))
+                            'defaultDate' => Request::get('defaultDate', date('Y-m-d', $this->timestamp))
                         ]
                     ),
                     null,
@@ -76,11 +76,11 @@ class Resources_PrintController extends AuthenticatedController
 
                 $views->addLink(
                     _('Ganztägiges Zeitfenster'),
-                    URLHelper::getURL(
-                        'dispatch.php/resources/print/individual_booking_plan/' . $this->resource->id,
+                    $this->individual_booking_planURL(
+                        $this->resource->id,
                         [
                             'allday' => true,
-                            'defaultDate' => Request::get('defaultDate', date('Y-m-d'))
+                            'defaultDate' => Request::get('defaultDate', date('Y-m-d', $this->timestamp))
                         ]
                     ),
                     null,

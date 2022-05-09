@@ -297,7 +297,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
                         . $this->resource->id
                     ),
                     Icon::create('add')
-                )->asDialog("size=auto");
+                )->asDialog('size=auto');
             }
             if ($this->resource->userHasPermission($current_user)) {
                 $actions->addLink(
@@ -312,10 +312,14 @@ class Resources_RoomPlanningController extends AuthenticatedController
                             'dispatch.php/resources/print/individual_booking_plan/'
                             . $this->resource->id,
                             [
-                                'timestamp' => $week_timestamp
+                                'timestamp' => $week_timestamp,
+                                'defaultDate' => date('Y-m-d', $week_timestamp)
                             ]
                         ),
-                        Icon::create('print')
+                        Icon::create('print'),
+                        [
+                            'class'  => 'resource-bookings-actions'
+                        ]
                     );
                 }
                 $actions->addLink(
@@ -323,13 +327,14 @@ class Resources_RoomPlanningController extends AuthenticatedController
                     URLHelper::getURL(
                         'dispatch.php/resources/export/resource_bookings/' . $this->resource->id,
                         [
-                            'timestamp' => $week_timestamp
+                            'timestamp' => $week_timestamp,
+                            'defaultDate' => date('Y-m-d', $week_timestamp)
                         ]
                     ),
                     Icon::create('file-excel'),
                     [
                         'data-dialog' => 'size=auto',
-                        'id'          => 'export-resource-bookings-action'
+                        'class'       => 'resource-bookings-actions'
                     ]
                 );
             }

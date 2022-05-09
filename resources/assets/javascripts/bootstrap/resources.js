@@ -670,39 +670,25 @@ STUDIP.ready(function () {
     }
 
     function updateDateURL() {
-        var changedmoment;
-        $('*[data-resources-fullcalendar="1"]').each(function () {
-            changedmoment = $(this)[0].calendar.getDate();
+        let changedMoment;
+        $('[data-resources-fullcalendar="1"]').each(function () {
+            changedMoment = $(this)[0].calendar.getDate();
         });
-        if (changedmoment) {
+        if (changedMoment) {
+            let changedDate = STUDIP.Fullcalendar.toRFC3339String(changedMoment).split('T')[0];
             //Get the timestamp:
-            var timestamp = changedmoment.getTime() / 1000;
+            let timeStamp = changedMoment.getTime() / 1000;
 
-            //Set the URL parameter for the "export bookings" action
-            //in the sidebar:
-            var export_action = jQuery('#export-resource-bookings-action');
-            if (export_action.length > 0) {
-                var export_url = jQuery(export_action).attr('href');
-                if (export_url.search(/[?&]timestamp=/) >= 0) {
-                    export_url = export_url.replace(
-                        /timestamp=[0-9]{0,10}/,
-                        'timestamp=' + timestamp
-                    );
-                } else {
-                    if (export_url.search(/\?/) >= 0) {
-                        export_url += '&timestamp=' + timestamp;
-                    } else {
-                        export_url += '?timestamp=' + timestamp;
-                    }
-                }
-                jQuery(export_action).attr('href', export_url);
-            }
+            $('a.resource-bookings-actions').each(function () {
+                const url = new URL(this.href);
+                url.searchParams.set('timestamp', timeStamp)
+                url.searchParams.set('defaultDate', changedDate)
+                this.href = url.toString();
+            });
 
             // Now change the URL of the window.
-            var changeddate = STUDIP.Fullcalendar.toRFC3339String(changedmoment).split('T')[0];
-
             const url = new URL(window.location.href);
-            url.searchParams.set('defaultDate', changeddate);
+            url.searchParams.set('defaultDate', changedDate);
 
             // Update url in history
             history.pushState({}, null, url.toString());
@@ -715,10 +701,10 @@ STUDIP.ready(function () {
             $('.booking-plan-allday_view').attr('href', url.toString());
 
             // Update sidebar value
-            $('#booking-plan-jmpdate').val(changedmoment.toLocaleDateString('de-DE'));
+            $('#booking-plan-jmpdate').val(changedMoment.toLocaleDateString('de-DE'));
 
             //Store the date in the sessionStorage:
-            sessionStorage.setItem('booking_plan_date', changeddate)
+            sessionStorage.setItem('booking_plan_date', changedDate)
         }
     }
 
