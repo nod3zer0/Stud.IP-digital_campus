@@ -270,7 +270,7 @@ class FilesController extends AuthenticatedController
         )->setActive($current_view == 'all_files');
 
         $views->addLink(
-            _('Persönlicher Dateibereich'),
+            _('Meine hochgeladenen Dateien'),
             $this->url_for('files/overview', ['view' => 'my_uploaded_files']),
             null,
             [],
@@ -506,10 +506,36 @@ class FilesController extends AuthenticatedController
                 $this->files[] = $file_ref->getFileType();
             }
         } elseif ($this->current_view == 'my_uploaded_files') {
+            $this->page_size = 25;
+            $this->page = 1;
+            if (!$course_did_change) {
+                $this->page = Request::get('page') + 1;
+            }
+            if (($this->page < 1) || !$this->page) {
+                $this->page = 1;
+            }
+            $offset = $this->page_size * ($this->page - 1);
+
             $this->addFiltersToOverviewSidebar(['time_range', 'course']);
-            $this->table_title = _('Persönlicher Dateibereich');
-            $file_refs = FileRef::findUploadedFiles($GLOBALS['user']->id, $this->begin, $this->end, $this->course_id);
+            $this->table_title = _('Meine hochgeladenen Dateien');
+            $file_refs = FileRef::findUploadedFiles($GLOBALS['user']->id, $this->begin, $this->end, $this->course_id, $this->page_size, $offset);
             $this->files_c = FileRef::countUploadedFiles($GLOBALS['user']->id, $this->begin, $this->end, $this->course_id);
+            $pagination = Pagination::create(
+                $this->files_c,
+                $this->page - 1,
+                $this->page_size
+            );
+            $this->pagination_html = $pagination->asLinks(
+                function ($page_id) {
+                    return URLHelper::getLink(
+                        'dispatch.php/files/overview',
+                        [
+                            'view' => 'my_uploaded_files',
+                            'page' => $page_id
+                        ]
+                    );
+                }
+            );
             $this->files = [];
             foreach ($file_refs as $file_ref) {
                 $this->files[] = $file_ref->getFileType();
