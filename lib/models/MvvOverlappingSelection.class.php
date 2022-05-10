@@ -276,9 +276,10 @@ class MvvOverlappingSelection extends SimpleORMap
      * @param string $comp_versions The id of the compared version.
      * @param array|string $fachsems An array or a string with comma separated fachsem numbers.
      * @param array|string $semtypes An array or a string with comma separated course types.
+     * @param string|null $user_id User id that created the selection (defaults to current user)
      * @return string The md5 id.
      */
-    public static function createSelectionId($base_version, $comp_versions, $fachsems, $semtypes)
+    public static function createSelectionId($base_version, $comp_versions, $fachsems, $semtypes, string $user_id = null)
     {
         if (is_array($fachsems)) {
             sort($fachsems, SORT_NUMERIC);
@@ -302,7 +303,8 @@ class MvvOverlappingSelection extends SimpleORMap
             $base_version->id,
             $comp_versions,
             trim($fachsems) ? $fachsems : 'x',
-            trim($semtypes) ? $semtypes : 'x'
+            trim($semtypes) ? $semtypes : 'x',
+            $user_id ?? $GLOBALS['user']->id,
         ]));
     }
 
