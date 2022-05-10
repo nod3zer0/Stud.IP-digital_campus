@@ -2,6 +2,12 @@
     <h1><?= sprintf(_('Informationen zu %s'), htmlReady($group->name)) ?></h1>
 </header>
 <section>
+    <? if ($group->description): ?>
+        <p>
+            <?= formatLinks($group->description) ?>
+        </p>
+    <? endif ?>
+
     <p>
         <?= $group->size > 0 ?
             formatReady(sprintf(_('Diese Gruppe ist auf **%u** Mitglieder beschränkt.'), $group->size)) :

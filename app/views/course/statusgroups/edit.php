@@ -6,15 +6,20 @@
             <?= _('Einstellungen') ?>
         </legend>
 
-        <label for="name" class="required">
-            <?= _('Name') ?>
+        <label>
+            <span class="required"><?= _('Name') ?></span>
+            <input type="text" name="name" size="75" maxlength="255" value="<?= htmlReady($group->name) ?>" required>
         </label>
-        <input type="text" name="name" size="75" maxlength="255" value="<?= htmlReady($group->name) ?>" required>
 
-        <label for="size">
-            <?= _('Gruppengröße') ?>
+        <label>
+            <?= _('Beschreibung') ?>
+            <textarea name="description"><?= htmlReady($group->description) ?></textarea>
         </label>
-        <input type="number" name="size" value="<?= intval($group->size) ?>" min="0">
+
+        <label>
+            <?= _('Gruppengröße') ?>
+            <input type="number" name="size" value="<?= intval($group->size) ?>" min="0">
+        </label>
 
         <?php if ($group->isNew() || !$group->hasFolder()) : ?>
             <label>

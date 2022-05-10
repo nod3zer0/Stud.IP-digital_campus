@@ -519,6 +519,9 @@ class Course_StatusgroupsController extends AuthenticatedController
             Request::getArray('dates')
         );
 
+        $group->description = trim(Request::get('description')) ?: null;
+        $group->store();
+
         if (!$group_id) {
             PageLayout::postSuccess(sprintf(
                 _('Die Gruppe "%s" wurde angelegt.'),
