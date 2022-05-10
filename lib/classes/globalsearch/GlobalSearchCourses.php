@@ -62,12 +62,19 @@ class GlobalSearchCourses extends GlobalSearchModule implements GlobalSearchFull
         // generate SQL for the given sidebar filter (semester, institute, seminar_type)
         if ($filter['category'] === self::class || $filter['category'] === 'show_all_categories') {
             if ($filter['semester']) {
-                $semester = Semester::findByTimestamp($filter['semester']);
+                if ($filter['semester'] === 'future') {
+                    $semester = Semester::findCurrent();
+                    $next_semester = Semester::findNext();
+                    $semester_ids = array_filter([$semester->id, $next_semester->id]);
+                } else {
+                    $semester = Semester::findByTimestamp($filter['semester']);
+                    $semester_ids = [$semester->id];
+                }
                 $semester_join = "LEFT JOIN semester_courses ON (courses.Seminar_id = semester_courses.course_id) ";
                 $semester_condition = "
                     AND (
-                        `courses`.start_time <= " . DBManager::get()->quote($filter['semester']) ."
-                        AND (`semester_courses`.semester_id IS NULL OR semester_courses.semester_id = " . DBManager::get()->quote($semester->getId()).")
+                        `courses`.start_time <= " . DBManager::get()->quote($semester->beginn) ."
+                        AND (`semester_courses`.semester_id IS NULL OR semester_courses.semester_id IN (" . join(',', array_map([DBManager::get(), 'quote'], $semester_ids)) . "))
                     ) ";
             }
             if ($filter['institute']) {

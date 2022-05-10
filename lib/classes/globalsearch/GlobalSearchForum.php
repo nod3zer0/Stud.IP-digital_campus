@@ -56,9 +56,16 @@ class GlobalSearchForum extends GlobalSearchModule implements GlobalSearchFullte
         // generate SQL condition for the semester filter in the sidebar
         if ($filter['category'] == self::class || $filter['category'] == "show_all_categories") {
             if ($filter['semester'] != "") {
-                $semester = Semester::findByTimestamp($filter['semester']);
+                if ($filter['semester'] === 'future') {
+                    $semester = Semester::findCurrent();
+                    $next_semester = Semester::findNext();
+                    $semester_end = $next_semester ? $next_semester->ende : $semester->ende;
+                } else {
+                    $semester = Semester::findByTimestamp($filter['semester']);
+                    $semester_end = $semester->ende;
+                }
                 $semester_condition = " AND (`mkdate` >= " . DBManager::get()->quote($semester['beginn']) .
-                            " AND `mkdate` <= " . DBManager::get()->quote($semester['ende']) . ") ";
+                            " AND `mkdate` <= " . DBManager::get()->quote($semester_end) . ") ";
             }
         }
 

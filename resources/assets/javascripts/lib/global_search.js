@@ -36,7 +36,6 @@ const GlobalSearch = {
         var resultsPerType = resultsDiv.data('results-per-type');
         var moreResultsText = resultsDiv.data('more-results');
         var limit = resultsPerType * 3;
-        var currentSemester = resultsDiv.data('current-semester');
         var wrapper = $('#globalsearch-searchbar');
 
         if (searchterm === '') {
@@ -57,7 +56,7 @@ const GlobalSearch = {
         // Call AJAX endpoint and get search results.
         $.getJSON(STUDIP.URLHelper.getURL('dispatch.php/globalsearch/find/' + limit, {}, true), {
             search: searchterm,
-            filters: '{"category":"show_all_categories","semester":"' + currentSemester + '"}'
+            filters: '{"category":"show_all_categories","semester":"future"}'
         }).done(function(json) {
             resultsDiv.empty();
 
