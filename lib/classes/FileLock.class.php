@@ -20,24 +20,7 @@
 
 class FileLock
 {
-    protected static $directory = '';
-
-    /**
-     * Sets a new base path for the locks.
-     *
-     * @param String $directory
-     * @throws RuntimeException if provided directory is either not existant
-     *         or is not a directory or is not writable.
-     */
-    public static function setDirectory($directory)
-    {
-        if (!file_exists($directory) || !is_dir($directory) || !is_writable($directory)) {
-            throw new RuntimeException('Passed directory is not an actual directory or is not writable.');
-        }
-        self::$directory = rtrim($directory, '/') . '/';
-    }
-
-    protected $filename;
+    protected $file;
 
     /**
      * Constructs a new lock object with the provided id.
@@ -46,55 +29,46 @@ class FileLock
      */
     public function __construct($id)
     {
-        $this->filename = self::$directory . '.' . $id . '.json';
-    }
-    
-    /**
-     * Returns the filename of the lock.
-     *
-     * @return String Filename of the lock
-     */
-    public function getFilename()
-    {
-        return $this->filename;
-    }
-    
-    /**
-     * Establish or renew the current lock. Provided lock information will
-     * be stored with the lock.
-     *
-     * @param Array $data Additional information to bestore with the lock
-     */
-    public function lock($data = [])
-    {
-        $data['timestamp'] = time();
-        file_put_contents($this->filename, json_encode($data));
-    }
+        $this->file = fopen("{$GLOBALS['TMP_PATH']}/$id.json", 'c+');
 
+        if (!$this->file) {
+            throw new RuntimeException('failed to create lock file.');
+        }
+    }
+    
     /**
-     * Tests whether the lock is in use. Returns lock information in
-     * $lock_data.
+     * Try to aquire a file lock. The provided lock information will
+     * be stored with the lock. If the lock cannot be aquired, the
+     * lock information in $data is updated from the lock file.
      *
-     * @param mixed $lock_data Information stored in lock
-     * @return bool Indicates whether the lock is active or not
+     * @param array $data additional data to be stored with the lock
+     * @return boolean true on success or false on failure
      */
-    public function isLocked(&$lock_data = null)
+    public function tryLock(&$data = [])
     {
-        if (!file_exists($this->filename)) {
+        rewind($this->file);
+
+        if (flock($this->file, LOCK_EX | LOCK_NB)) {
+            ftruncate($this->file, 0);
+            fwrite($this->file, json_encode($data));
+            fflush($this->file);
+
+            return true;
+        } else {
+            $json = stream_get_contents($this->file);
+            $data = json_decode($json, true);
+
             return false;
         }
-
-        $lock_data = json_decode(file_get_contents($this->filename), true);
-        return true;
     }
 
     /**
      * Releases a previously obtained lock
+     *
+     * @return boolean true on success or false on failure
      */
     public function release()
     {
-        if (file_exists($this->filename)) {
-            unlink($this->filename);
-        }
+        return flock($this->file, LOCK_UN);
     }
 }

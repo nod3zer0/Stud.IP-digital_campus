@@ -46,15 +46,11 @@ class CronjobScheduler
         return self::$instance;
     }
 
-    protected $lock;
-
     /**
      * Private constructor to ensure the singleton pattern is used correctly.
      */
     private function __construct()
     {
-        FileLock::setDirectory($GLOBALS['TMP_PATH']);
-        $this->lock = new FileLock('studip-cronjob');
     }
 
     /**
@@ -254,54 +250,16 @@ class CronjobScheduler
             return;
         }
 
-        $escalation_time = Config::get()->CRONJOBS_ESCALATION;
+        $lock = new FileLock('studip-cronjob');
 
         // Check whether a previous cronjob worker is still running.
-        if ($this->lock->isLocked($data)) {
-            // Running but not yet escalated -> let it run
-            if ($data['timestamp'] + $escalation_time > time()) {
-                return;
-            }
-
-            // Load locked schedule
-            $schedule = CronjobSchedule::find($data['schedule_id']);
-
-            // If we discovered a deadlock release it
-            if ($schedule) {
-                // Deactivate schedule
-                $schedule->deactivate();
-
-                // Adjust log
-                $log = CronjobLog::find($data['log_id']);
-                if ($log) {
-                    $log->duration  = time() - $data['timestamp'];
-                    $log->exception = new Exception('Cronjob has escalated');
-                    $log->store();
-                }
-
-                // Inform roots about the escalated cronjob
-                $subject = sprintf('[Cronjobs] %s: %s',
-                                   _('Eskalierte Ausführung'),
-                                   $schedule->title);
-
-                $message = sprintf(_('Der Cronjob "%s" wurde deaktiviert, da '
-                                    .'seine Ausführungsdauer die maximale '
-                                    .'Ausführungszeit von %u Sekunden '
-                                    .'überschritten hat.') . "\n",
-                                   $schedule->title,
-                                   $escalation_time);
-
-                $this->sendMailToRoots($subject, $message);
-            }
-
-            // Release lock
-            $this->lock->release();
+        if (!$lock->tryLock()) {
+            return;
         }
 
         // Find all schedules that are due to execute and which task is active
         $temp = CronjobSchedule::findBySQL('active = 1 AND next_execution <= UNIX_TIMESTAMP() '
                                           .'ORDER BY priority DESC, next_execution ASC');
-#        $temp = SimpleORMapCollection::createFromArray($temp);
         $schedules = array_filter($temp, function ($schedule) { return $schedule->task->active; });
 
         if (count($schedules) === 0) {
@@ -322,15 +280,6 @@ class CronjobScheduler
                 $log->exception   = null;
                 $log->duration    = -1;
                 $log->store();
-
-                set_time_limit($escalation_time);
-
-                // Activate the file lock and store the current timestamp,
-                // schedule id and according log id in it
-                $this->lock->lock([
-                    'schedule_id' => $schedule->schedule_id,
-                    'log_id'      => $log->log_id,
-                ]);
 
                 // Start capturing output and measuring duration
                 ob_start();
@@ -372,7 +321,7 @@ class CronjobScheduler
         }
 
         // Release lock
-        $this->lock->release();
+        $lock->release();
     }
 
     /**

@@ -26,9 +26,6 @@ class WebMigrateController extends StudipController
             true
         );
 
-        FileLock::setDirectory($GLOBALS['TMP_PATH']);
-        $this->lock = new FileLock('web-migrate');
-
         $this->setupSidebar($action);
 
         PageLayout::setTitle(_('Stud.IP Web-Migrator'));
@@ -41,38 +38,37 @@ class WebMigrateController extends StudipController
 
     public function migrate_action()
     {
-        ob_start();
-        set_time_limit(0);
+        $lock = new FileLock('web-migrate');
+        $lock_data = ['timestamp' => time(), 'user_id' => $GLOBALS['user']->id];
 
-        $this->lock->lock(['timestamp' => time(), 'user_id' => $GLOBALS['user']->id]);
+        if ($lock->tryLock($lock_data)) {
+            ob_start();
+            set_time_limit(0);
 
-        $this->migrator->migrateTo($this->target);
+            $this->migrator->migrateTo($this->target);
 
-        $this->lock->release();
+            $lock->release();
 
-        $announcements = ob_get_clean();
-        PageLayout::postSuccess(
-            _('Die Datenbank wurde erfolgreich migriert.'),
-            array_filter(explode("\n", $announcements))
-        );
+            $announcements = ob_get_clean();
+            PageLayout::postSuccess(
+                _('Die Datenbank wurde erfolgreich migriert.'),
+                array_filter(explode("\n", $announcements))
+            );
 
-        $_SESSION['migration-check'] = [
-            'timestamp' => time(),
-            'count'     => 0,
-        ];
-
-        $this->redirect('index');
-    }
-
-    public function release_action($target)
-    {
-        if ($this->lock->isLocked()) {
-            $this->lock->release();
-
-            PageLayout::postSuccess(_('Die Sperre wurde aufgehoben.'));
+            $_SESSION['migration-check'] = [
+                'timestamp' => time(),
+                'count'     => 0,
+            ];
+        } else {
+            $user = User::find($lock_data['user_id']);
+            PageLayout::postError(sprintf(
+                _('Die Migration wurde %s von %s bereits angestossen und läuft noch.'),
+                reltime($lock_data['timestamp']),
+                htmlReady($user ? $user->getFullName() : _('unbekannt'))
+            ));
         }
 
-        $this->redirect($this->url_for('index', compact('target')));
+        $this->redirect('index');
     }
 
     public function history_action()

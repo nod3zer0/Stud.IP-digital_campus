@@ -54,25 +54,7 @@
         <tfoot>
             <tr>
                 <td colspan="4">
-                <? if ($lock->isLocked($lock_data)):
-                    $user = User::find($lock_data['user_id']);
-                ?>
-                    <?= MessageBox::info(sprintf(
-                        _('Die Migration wurde %s von %s bereits angestossen und läuft noch.'),
-                        reltime($lock_data['timestamp']),
-                        htmlReady($user ? $user->getFullName() : _('unbekannt'))
-                    ), [
-                        sprintf(
-                            _('Sollte während der Migration ein Fehler aufgetreten sein, so können Sie '
-                            . 'diese Sperre durch den unten stehenden Link oder das Löschen der Datei '
-                            . '<em>%s</em> auflösen.'),
-                            $lock->getFilename()
-                        )
-                    ]) ?>
-                    <?= Studip\LinkButton::create(_('Sperre aufheben'), $controller->url_for('release', $target)) ?>
-                <? else: ?>
                     <?= Studip\Button::createAccept(_('Starten'), 'start')?>
-                <? endif; ?>
                 </td>
             </tr>
         </tfoot>
