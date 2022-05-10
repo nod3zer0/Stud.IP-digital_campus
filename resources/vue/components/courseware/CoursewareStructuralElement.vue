@@ -58,6 +58,7 @@
                                 @setBookmark="menuAction('setBookmark')"
                                 @sortContainers="menuAction('sortContainers')"
                                 @pdfExport="menuAction('pdfExport')"
+                                @showSuggest="menuAction('showSuggest')"
                             />
                         </template>
                     </courseware-ribbon>
@@ -479,6 +480,43 @@
                     </template>
                 </studip-dialog>
                 <studip-dialog
+                    v-if="showSuggestOerDialog"
+                    height="600"
+                    width="600"
+                    :title="textSuggestOer.title"
+                    :confirmText="textSuggestOer.confirm"
+                    confirmClass="accept"
+                    :closeText="textSuggestOer.close"
+                    closeClass="cancel"
+                    @close="updateShowSuggestOerDialog(false)"
+                    @confirm="sendOerSuggestion"
+                >
+                    <template v-slot:dialogContent>
+                        <p><translate>Das folgende Courseware-Material wird {{ owner }}
+                            zur Veröffentlichung im OER Campus vorgeschlagen:</translate></p>
+                        <table class="cw-structural-element-info">
+                            <tr>
+                                <td><translate>Titel</translate>:</td>
+                                <td>{{ structuralElement.attributes.title }}</td>
+                            </tr>
+                            <tr>
+                                <td><translate>Beschreibung</translate>:</td>
+                                <td>{{ structuralElement.attributes.payload.description }}</td>
+                            </tr>
+                        </table>
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                <translate>Ihr Vorschlag wird anonym versendet. Falls gewünscht, können Sie
+                                    zusätzlich eine Nachricht verfassen:</translate>
+                                <textarea
+                                    v-model="additionalText"
+                                    class="cw-structural-element-description"
+                                />
+                            </label>
+                        </form>
+                    </template>
+                </studip-dialog>
+                <studip-dialog
                     v-if="showDeleteDialog"
                     :title="textDelete.title"
                     :question="textDelete.alert"
@@ -514,6 +552,7 @@ import CoursewareRibbon from './CoursewareRibbon.vue';
 import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
+import CoursewareOerMessage from '@/vue/mixins/courseware/oermessage.js';
 import { FocusTrap } from 'focus-trap-vue';
 import IsoDate from './IsoDate.vue';
 import StudipDialog from '../StudipDialog.vue';
@@ -542,7 +581,7 @@ export default {
     },
     props: ['canVisit', 'orderedStructuralElements', 'structuralElement'],
 
-    mixins: [CoursewareExport],
+    mixins: [CoursewareExport, CoursewareOerMessage],
 
     data() {
         return {
@@ -593,6 +632,7 @@ export default {
             },
             errorEmptyChapterName: false,
             consumModeTrap: false,
+            additionalText: '',
         };
     },
 
@@ -616,6 +656,7 @@ export default {
             showInfoDialog: 'showStructuralElementInfoDialog',
             showDeleteDialog: 'showStructuralElementDeleteDialog',
             showOerDialog: 'showStructuralElementOerDialog',
+            showSuggestOerDialog: 'showSuggestOerDialog',
             oerEnabled: 'oerEnabled',
             oerTitle: 'oerTitle',
             licenses: 'licenses',
@@ -635,6 +676,14 @@ export default {
             return {
                 title: this.$gettextInterpolate('Seite auf %{ oerTitle } veröffentlichen', {oerTitle: this.oerTitle}),
                 confirm: this.$gettext('Veröffentlichen'),
+                close: this.$gettext('Schließen'),
+            };
+        },
+
+        textSuggestOer() {
+            return {
+                title: this.$gettext('Material für OER Campus vorschlagen'),
+                confirm: this.$gettext('Material vorschlagen'),
                 close: this.$gettext('Schließen'),
             };
         },
@@ -1068,6 +1117,7 @@ export default {
             showElementInfoDialog: 'showElementInfoDialog',
             showElementDeleteDialog: 'showElementDeleteDialog',
             showElementOerDialog: 'showElementOerDialog',
+            updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
             updateContainer: 'updateContainer',
             setStructuralElementSortMode: 'setStructuralElementSortMode',
             sortContainersInStructualElements: 'sortContainersInStructualElements',
@@ -1117,6 +1167,9 @@ export default {
                     break;
                 case 'oerCurrentElement':
                     this.showElementOerDialog(true);
+                    break;
+                case 'showSuggest':
+                    this.updateShowSuggestOerDialog(true);
                     break;
                 case 'setBookmark':
                     this.setBookmark();
@@ -1312,6 +1365,10 @@ export default {
         updateWriteApproval(approval) {
             this.currentElement.attributes['write-approval'] = approval;
         },
+        sendOerSuggestion() {
+            this.suggestViaAction(this.currentElement, this.additionalText);
+            this.updateShowSuggestOerDialog(false);
+        }
     },
     created() {
         this.pluginManager.registerComponentsLocally(this);

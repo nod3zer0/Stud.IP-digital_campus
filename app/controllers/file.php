@@ -492,6 +492,57 @@ class FileController extends AuthenticatedController
         $this->redirect("oer/mymaterial/edit");
     }
 
+    public function suggest_oer_action($file_ref_id)
+    {
+        $this->file_ref_id = $file_ref_id;
+        $file_ref = FileRef::find($file_ref_id);
+        $filetype = $file_ref->getFileType();
+        $this->file = $filetype->convertToStandardFile();
+
+        $this->author = $file_ref->owner->username;
+        $this->author_fullname = $file_ref->owner->getFullName('no_title');
+        $this->link_to_share = URLHelper::getURL("dispatch.php/file/share_oer/" . $file_ref_id);
+        $this->linktext = _('Klicken Sie hier, um das Material im OER Campus zu veröffentlichen');
+        $this->formatted_link = '['. $this->linktext .']' . $this->link_to_share;
+        $additional_text = htmlReady(Request::get('additional_text'));
+
+        $oer_suggestion_message = sprintf(_("Ihre hochgeladene Datei wurde zur Veröffentlichung im
+            OER Campus vorgeschlagen:\n\n"
+            . "Dateiname: %s \n"
+            . "Beschreibung: %s \n\n"
+            . "%s \n\n"
+            . "Zusätzliche Info: \n %s"),
+            $this->file->getFilename(),
+            $this->file->getDescription(),
+            $this->formatted_link,
+            $additional_text
+        );
+
+        if (Request::isPost()) {
+            CSRFProtection::verifyUnsafeRequest();
+
+            // send a private message to the file author
+            $messaging = new messaging();
+
+            $messaging->insert_message(
+                $oer_suggestion_message,
+                $this->author,
+                '____%system%____',
+                '',
+                Request::option('message_id'),
+                '',
+                null,
+                _('Vorschlag zur Veröffentlichung einer Datei im OER Campus')
+            );
+            $this->response->add_header('X-Dialog-Close', '1');
+            $this->render_nothing();
+
+            PageLayout::postSuccess(_('Vorschlag wurde eingereicht.'));
+
+        }
+
+    }
+
     public function edit_urlfile_action($file_ref_id)
     {
         $this->file_ref = FileRef::find($file_ref_id);

@@ -1920,6 +1920,9 @@ v i e w  w i d g e t
     .cw-action-widget-trash{
         @include background-icon(trash, clickable);
     }
+    .cw-action-widget-oer{
+        @include background-icon(oer-campus, clickable);
+    }
 }
 .cw-export-widget {
     .cw-export-widget-export{

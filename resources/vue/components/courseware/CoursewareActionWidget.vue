@@ -35,6 +35,11 @@
                 <translate>Lesezeichen setzen</translate>
             </button>
         </li>
+        <li v-if="!isOwner" class="cw-action-widget-oer">
+            <button @click="suggestOER">
+                <translate>Material für OER Campus vorschlagen</translate>
+            </button>
+        </li>
         <li v-if="!isRoot && canEdit" class="cw-action-widget-trash">
             <button @click="deleteElement">
                 <translate>Seite löschen</translate>
@@ -94,6 +99,9 @@ export default {
         },
         isTask() {
             return this.structuralElement?.relationships.task.data !== null;
+        },
+        isOwner() {
+            return this.structuralElement.relationships.owner.data.id === this.userId;
         }
     },
     methods: {
@@ -102,6 +110,7 @@ export default {
             showElementAddDialog: 'showElementAddDialog',
             showElementDeleteDialog: 'showElementDeleteDialog',
             showElementInfoDialog: 'showElementInfoDialog',
+            updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
             setStructuralElementSortMode: 'setStructuralElementSortMode',
             companionInfo: 'companionInfo',
             addBookmark: 'addBookmark',
@@ -154,6 +163,9 @@ export default {
             this.setViewMode('read');
             this.setSelectedToolbarItem('contents');
             this.setConsumeMode(true);
+        },
+        suggestOER() {
+            this.updateShowSuggestOerDialog(true);
         },
     },
 };

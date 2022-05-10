@@ -51,7 +51,7 @@ STUDIP.domReady(() => {
 
 });
 
-STUDIP.dialogReady(() => {
+STUDIP.ready(() => {
     if ($('.oercampus_editmaterial').length) {
 
         STUDIP.Vue.load().then(({createApp}) => {

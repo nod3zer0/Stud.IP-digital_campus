@@ -909,6 +909,45 @@ class MessagesController extends AuthenticatedController {
         $this->redirect('messages/overview');
     }
 
+    public function sendCwMessage_action($course_id, $element_id, $owner_id)
+    {
+        $body = file_get_contents('php://input');
+        $data = json_decode($body, true);
+        $text = $data['text'];
+
+        $author = User::find($owner_id)->username;
+
+        $this->link_to_share = URLHelper::getURL("dispatch.php/course/courseware/?cid=" . $course_id
+            . "#/structural_element/" . $element_id);
+        $this->linktext = _('Klicken Sie hier, um zum vorgeschlagenen Courseware-Material zu gelangen');
+        $this->formatted_link = '['. $this->linktext .']' . $this->link_to_share;
+
+        $oer_suggestion_message = sprintf(_("Ihr Courseware-Material wurde zur Veröffentlichung im OER Campus vorgeschlagen:\n\n"
+            . "%s \n\n"
+            . "Zusätzliche Info: \n %s"),
+            $this->formatted_link, $text);
+
+        $messaging = new messaging();
+
+        $messaging->insert_message(
+            $oer_suggestion_message,
+            $author,
+            '____%system%____',
+            '',
+            Request::option('message_id'),
+            '',
+            null,
+            _('Vorschlag zur Veröffentlichung von Courseware-Material im OER Campus'),
+            '',
+            'normal',
+            '',
+            0
+        );
+
+        $this->render_nothing();
+
+    }
+
     public function setupSidebar($action)
     {
         $sidebar = Sidebar::get();

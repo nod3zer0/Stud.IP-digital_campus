@@ -37,6 +37,8 @@ const getDefaultState = () => {
         showStructuralElementDeleteDialog: false,
         showStructuralElementOerDialog: false,
 
+        showSuggestOerDialog: false,
+
         structuralElementSortMode: false,
 
         importFilesState: '',
@@ -168,6 +170,9 @@ const getters = {
     },
     showOverviewElementAddDialog(state) {
         return state.showOverviewElementAddDialog;
+    },
+    showSuggestOerDialog(state) {
+        return state.showSuggestOerDialog;
     },
     structuralElementSortMode(state) {
         return state.structuralElementSortMode;
@@ -798,6 +803,10 @@ export const actions = {
         context.commit('setShowStructuralElementOerDialog', bool);
     },
 
+    updateShowSuggestOerDialog(context, bool) {
+        context.commit('setShowSuggestOerDialog', bool);
+    },
+
     showElementDeleteDialog(context, bool) {
         context.commit('setShowStructuralElementDeleteDialog', bool);
     },
@@ -1264,6 +1273,10 @@ export const mutations = {
 
     setShowStructuralElementInfoDialog(state, showInfo) {
         state.showStructuralElementInfoDialog = showInfo;
+    },
+
+    setShowSuggestOerDialog(state, showSuggest) {
+        state.showSuggestOerDialog = showSuggest;
     },
 
     setShowStructuralElementOerDialog(state, showOer) {

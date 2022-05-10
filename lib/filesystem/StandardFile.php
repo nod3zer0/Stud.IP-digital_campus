@@ -301,6 +301,19 @@ class StandardFile implements FileType, ArrayAccess
                 ['data-dialog' => '1']
             );
         }
+
+        if (Config::get()->OER_ENABLE_SUGGESTIONS &&
+            ($this->getTermsOfUse()->id === 'SELFMADE_NONPUB' || $this->getTermsOfUse()->id === 'FREE_LICENSE') &&
+            $this->fileref->getAuthorName() != User::findCurrent()->getFullName('no_title_rev')
+        ) {
+            $actionMenu->addLink(
+                URLHelper::getURL('dispatch.php/file/suggest_oer/' . $this->fileref->id),
+                _('Material für OER Campus vorschlagen'),
+                Icon::create('oer-campus'),
+                ['data-dialog' => 'reload-on-close']
+            );
+        }
+
         if (Context::isCourse() && Feedback::isActivated()) {
             if (Feedback::hasCreatePerm(Context::getId())) {
                 $actionMenu->addLink(
