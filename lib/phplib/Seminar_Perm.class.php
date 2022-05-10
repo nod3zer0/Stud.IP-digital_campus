@@ -101,12 +101,8 @@ class Seminar_Perm
     {
         $page_perm_value = $this->permissions[$perm] ?? 0;
         $user_perm_value = $this->permissions[$this->get_perm($user_id)] ?? 0;
-        if ($user_perm_value) {
-            return $page_perm_value <= $user_perm_value;
-        } else {
-            //The user has no permissions at all.
-            return false;
-        }
+
+        return $page_perm_value <= $user_perm_value;
     }
 
 
@@ -297,12 +293,8 @@ class Seminar_Perm
 
         $pageperm = $this->permissions[$perm] ?? 0;
         $userperm = $this->permissions[$this->get_profile_perm($range_id, $user_id)] ?? 0;
-        if ($userperm) {
-            return $pageperm <= $userperm;
-        } else {
-            //The user has no permissions at all.
-            return false;
-        }
+
+        return $pageperm <= $userperm;
     }
 
     /**
