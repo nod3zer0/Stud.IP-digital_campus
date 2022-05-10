@@ -126,6 +126,9 @@ $getInstalledLanguages = function () {
             <? if (Context::isCourse()) : ?>
                 <?= Icon::create('seminar', Icon::ROLE_INFO)->asImg(20, ['class' => 'context_icon']) ?>
                 <?= htmlReady(Context::get()->getFullname()) ?>
+                <? if ($GLOBALS['user']->config->SHOWSEM_ENABLE && !Context::get()->isStudygroup()): ?>
+                    (<?= htmlReady(Context::get()->getTextualSemester()) ?>)
+                <? endif ?>
             <? elseif (Context::isInstitute()) : ?>
                 <?= Icon::create('institute', Icon::ROLE_INFO)->asImg(20, ['class' => 'context_icon']) ?>
                 <?= htmlReady(Context::get()->name) ?>
