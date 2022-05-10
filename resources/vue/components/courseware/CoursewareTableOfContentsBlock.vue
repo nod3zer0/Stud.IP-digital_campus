@@ -15,10 +15,11 @@
                     v-if="currentStyle === 'list-details' || currentStyle === 'list'"
                     :class="['cw-block-table-of-contents-' + currentStyle]"
                 >
-                    <li v-for="child in childElements" :key="child.id">
+                    <li v-for="child in childElementsWithTasks" :key="child.id">
                         <router-link :to="'/structural_element/' + child.id">
                             <div class="cw-block-table-of-contents-title-box" :class="[child.attributes.payload.color]">
                                 {{ child.attributes.title }}
+                                <span v-if="child.attributes.purpose === 'task'"> | {{ child.solverName }}</span>
                                 <p v-if="currentStyle === 'list-details'">{{ child.attributes.payload.description }}</p>
                             </div>
                         </router-link>
@@ -29,19 +30,25 @@
                     class="cw-block-table-of-contents-tiles cw-tiles"
                 >
                     <li
-                        v-for="child in childElements"
+                        v-for="child in childElementsWithTasks"
                         :key="child.id"
                         class="tile"
                         :class="[child.attributes.payload.color]"
                     >
-                        <router-link :to="'/structural_element/' + child.id" :title="child.attributes.title">
+                        <router-link :to="'/structural_element/' + child.id" :title="child.attributes.purpose === 'task' ? child.attributes.title + ' | ' + child.solverName : child.attributes.title"> 
                             <div
                                 class="preview-image"
                                 :class="[hasImage(child) ? '' : 'default-image']"
                                 :style="getChildStyle(child)"
-                            ></div>
+                            >
+                                <div v-if="child.attributes.purpose === 'task'" class="overlay-text">{{ child.solverName }}</div>
+                            </div>
                             <div class="description">
-                                <header>{{ child.attributes.title }}</header>
+                                <header
+                                    :class="[child.attributes.purpose !== '' ? 'description-icon-' + child.attributes.purpose : '']"
+                                >
+                                    {{ child.attributes.title || "–"}}
+                                </header>
                                 <div class="description-text-wrapper">
                                     <p>{{ child.attributes.payload.description }}</p>
                                 </div>
@@ -105,6 +112,10 @@ export default {
         ...mapGetters({
             childrenById: 'courseware-structure/children',
             structuralElementById: 'courseware-structural-elements/byId',
+            context: 'context',
+            taskById: 'courseware-tasks/byId',
+            userById: 'users/byId',
+            groupById: 'status-groups/byId',
         }),
         structuralElement() {
             return this.structuralElementById({ id: this.$route.params.id });
@@ -117,14 +128,43 @@ export default {
         },
         style() {
             return this.block?.attributes?.payload?.style;
+        },
+        childElementsWithTasks() {
+            let children = [];
+            this.childElements.forEach(element => {
+                if (element.relationships.task.data) {
+                    let solverName = this.getSolverName(element.relationships.task.data.id);
+                    if (solverName) {
+                        element.solverName = solverName;
+                        children.push(element);
+                    }
+                } else {
+                    children.push(element);
+                }
+            });
+
+            return children;
         }
     },
     mounted() {
         this.initCurrentData();
+        this.childElements.forEach(element => {
+            if (element.relationships.task.data) {
+                const taskId = element.relationships.task.data.id;
+                try {
+                    this.loadTask({
+                        taskId: taskId,
+                    });
+                } catch(error) {
+                    console.debug(error);
+                }
+            }
+        });
     },
     methods: {
         ...mapActions({
             updateBlock: 'updateBlockInContainer',
+            loadTask: 'loadTask',
         }),
         initCurrentData() {
             this.currentTitle = this.title;
@@ -155,11 +195,31 @@ export default {
             }
         },
         countChildChildren(child) {
-            return this.childrenById(child.id).length;
+            return this.childrenById(child.id).length + 1;
         },
         hasImage(child) {
             return child.relationships?.image?.data !== null;
         },
+
+        getSolverName(taskId) {
+            const task = this.taskById({ id: taskId});
+            if (task === undefined) {
+                return false;
+            }
+            const solver = task.relationships.solver.data;
+            if (solver.type === 'users') {
+                const user = this.userById({ id: solver.id });
+
+                return user.attributes['formatted-name'];
+            }
+            if (solver.type === 'status-groups') {
+                const group = this.groupById({ id: solver.id });
+
+                return group.attributes.name;
+            }
+
+            return false;
+        }
     },
     watch: {
         title() {
