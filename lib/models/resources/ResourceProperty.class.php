@@ -51,7 +51,7 @@ class ResourceProperty extends SimpleORMap
 
         parent::configure($config);
     }
-    
+
     /**
      * Determines whether this resource property is requestable
      * by checking the requestable flag of the corresponding
@@ -99,7 +99,11 @@ class ResourceProperty extends SimpleORMap
             $string .= $this->state;
         } elseif ($this->type == 'user') {
             $user = User::find($this->state);
-            $string .= $user->getFullName();
+            if ($user) {
+                $string .= $user->getFullName();
+            } else {
+                $string .= _('unbekannt');
+            }
         } else {
             $string .= $this->state;
         }

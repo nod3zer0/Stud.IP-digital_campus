@@ -1005,6 +1005,17 @@ class UserManagement
         }
 
         if ($delete_personal_documents && $delete_personal_content && $delete_names && $delete_memberships) {
+            // Delete the user from resource property entries of type "user":
+            ResourceProperty::deleteBySQL(
+                "`property_id` IN (
+                    SELECT `property_id`
+                    FROM `resource_property_definitions`
+                    WHERE `type` = 'user'
+                )
+                AND `state` = :user_id",
+                ['user_id' => $this->user_data['auth_user_md5.user_id']]
+            );
+
             // delete Stud.IP account
             $query = "DELETE FROM user_info WHERE user_id = ?";
             $statement = DBManager::get()->prepare($query);
