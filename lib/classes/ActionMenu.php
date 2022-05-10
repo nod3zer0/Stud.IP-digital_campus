@@ -8,7 +8,6 @@
  */
 class ActionMenu
 {
-    const THRESHOLD = 1;
     const TEMPLATE_FILE_SINGLE   = 'shared/action-menu-single.php';
     const TEMPLATE_FILE_MULTIPLE = 'shared/action-menu.php';
 
@@ -242,7 +241,7 @@ class ActionMenu
             return '';
         }
 
-        $template_file = count($this->actions) <= self::THRESHOLD
+        $template_file = count($this->actions) <= Config::get()->ACTION_MENU_THRESHOLD
                        ? self::TEMPLATE_FILE_SINGLE
                        : self::TEMPLATE_FILE_MULTIPLE;
 
