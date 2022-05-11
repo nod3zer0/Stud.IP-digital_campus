@@ -264,16 +264,16 @@ export const actions = {
 
         const activities = rootGetters['users/all'];
 
-        for (const activity of activities) {
-            //load parents for breadcrumb
-            if (activity.type == 'activities') {
-                await this.dispatch('courseware-structural-elements/loadById', {
-                    id: activity.relationships.object.meta['object-id'],
-                });
-            }
-        }
+        const parentFetchers = activities
+              .filter(({ type }) => type === 'activities')
+              .map((activity) => this.dispatch(
+                  'courseware-structural-elements/loadById',
+                  {
+                      id: activity.relationships.object.meta['object-id'],
+                  },
+              ));
 
-        return activities;
+        return Promise.all(parentFetchers).then(() => activities);
     },
 
     async createFile(context, { file, filedata, folder }) {
@@ -398,17 +398,6 @@ export const actions = {
         const newElement = rootGetters['courseware-structural-elements/byId']({ id });
 
         return dispatch('courseware-structure/loadDescendants', { root: newElement });
-    },
-
-    lockObject({ dispatch, getters }, { id, type }) {
-        return dispatch(`${type}/setRelated`, {
-            parent: { id, type },
-            relationship: 'edit-blocker',
-            data: {
-                type: 'users',
-                id: getters.userId,
-            },
-        });
     },
 
     async createBlockInContainer({ dispatch }, { container, blockType }) {
@@ -923,24 +912,32 @@ export const actions = {
         const limit = 100;
         let offset = 0;
 
-        do {
-            const optionsWithPages = {
-                ...options,
-                'page[offset]': offset,
-                'page[limit]': limit,
-            };
-            await dispatch(
+        await loadPage(offset, limit);
+        const total = rootGetters[`${type}/lastMeta`].page.total;
+
+        const pages = [];
+        for (let page = 1; page * limit < total; page++) {
+            pages.push(loadPage(page * limit, limit));
+        }
+
+        return Promise.all(pages);
+
+        function loadPage(offset, limit) {
+            return dispatch(
                 `${type}/loadRelated`,
                 {
                     parent,
                     relationship,
-                    options: optionsWithPages,
+                    options: {
+                        ...options,
+                        'page[offset]': offset,
+                        'page[limit]': limit,
+                    },
                     resetRelated: false,
                 },
                 { root: true }
-            );
-            offset += limit;
-        } while (rootGetters[`${type}/all`].length < rootGetters[`${type}/lastMeta`].page.total);
+            )
+        }
     },
 
     loadUsersBookmarks({ dispatch, rootGetters, state }, userId) {
@@ -982,30 +979,36 @@ export const actions = {
             relationship,
         });
 
-        let courses = [];
-        for (let membership of memberships) {
-            if (
-                (membership.attributes.permission === 'dozent' || membership.attributes.permission === 'tutor') &&
-                state.context.id !== membership.relationships.course.data.id
-            ) {
-                const course = rootGetters['courses/related']({ parent: membership, relationship: 'course' });
-                if (!withCourseware) {
-                    courses.push(course);
-                    continue;
-                }
-                const coursewareInstance = await dispatch('loadRemoteCoursewareStructure', {
+        const otherMemberships = memberships.filter(({ attributes, relationships }) => {
+            return ['dozent', 'tutor'].includes(attributes.permission) && state.context.id !== relationships.course.data.id;
+        });
+
+        if (!withCourseware) {
+            return otherMemberships.map((membership) => {
+                return getCourse(membership);
+            });
+        }
+
+        const items = await Promise.all(
+            otherMemberships.map((membership) => {
+                const course = getCourse(membership);
+
+                return dispatch('loadRemoteCoursewareStructure', {
                     rangeId: course.id,
                     rangeType: course.type
-                });
-                if (coursewareInstance?.relationships?.root) {
-                    if (membership.attributes.permission === 'dozent' ||
-                        coursewareInstance.attributes['editing-permission-level'] === 'tutor') {
-                        courses.push(course);
-                    }
-                }
-            }
+                }).then((instance) => ({ instance, membership, course }));
+            })
+        )
+
+        return items
+            .filter(({ instance, membership }) => {
+                return instance?.relationships?.root && (membership.attributes.permission === 'dozent' || instance.attributes['editing-permission-level'] === 'tutor');
+            })
+            .map(({ course }) => course);
+
+        function getCourse(membership) {
+            return rootGetters['courses/related']({ parent: membership, relationship: 'course' });
         }
-        return courses;
     },
 
     async loadRemoteCoursewareStructure({ dispatch, rootGetters }, { rangeId, rangeType }) {

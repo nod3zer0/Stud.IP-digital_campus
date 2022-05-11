@@ -7,7 +7,7 @@ const ActivityFeed = {
     filter: null,
 
     init: function() {
-        STUDIP.ActivityFeed.maxheight = parseInt($('#stream-container').css('max-height').replace(/[^-\d\.]/g, ''));
+        STUDIP.ActivityFeed.maxheight = parseInt($('#stream-container').css('max-height').replace(/[^-\d.]/g, ''));
 
         STUDIP.ActivityFeed.loadFeed(STUDIP.ActivityFeed.filter);
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { mapActions, mapGetters } from 'vuex';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';

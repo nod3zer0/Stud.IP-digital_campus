@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -73,9 +74,7 @@ export default {
             let root = this.structuralElementById({ id: rootId });
             // add containers and blocks
             if (element.containers?.length > 0) {
-                for (let i = 0; i < element.containers.length; i++) {
-                    await this.importContainer(element.containers[i], root, files);
-                }
+                await Promise.all(element.containers.map((container) => this.importContainer(container, root, files)));
             }
             //compare payload
             let changedData = false;
@@ -145,7 +144,7 @@ export default {
                             currentId: parent_id,
                         });
                     } catch(error) {
-                        this.currentImportErrors.push(this.$gettext('Seite konnte nicht erstellt werden') + ': ' 
+                        this.currentImportErrors.push(this.$gettext('Seite konnte nicht erstellt werden') + ': '
                         + element.attributes.title);
 
                         continue;
@@ -196,11 +195,11 @@ export default {
                     attributes: container.attributes,
                     structuralElementId: structuralElement.id,
                 });
-                
+
             } catch(error) {
-                this.currentImportErrors.push(this.$gettext('Abschnitt konnte nicht erstellt werden') + ': ' 
+                this.currentImportErrors.push(this.$gettext('Abschnitt konnte nicht erstellt werden') + ': '
                 + structuralElement.attributes.title + '→'
-                + block_container.attributes.title);
+                + container.attributes.title);
 
                 return null;
             }
@@ -218,9 +217,9 @@ export default {
                         try {
                             await this.updateContainerPayload(new_container, structuralElement.id, container.blocks[k].id, new_block.id);
                         } catch(error) {
-                            this.currentImportErrors.push(this.$gettext('Abschnittdaten sind beschädigt. Möglicherweise werden nicht alle Blöcke dargestellt') + ': ' 
+                            this.currentImportErrors.push(this.$gettext('Abschnittdaten sind beschädigt. Möglicherweise werden nicht alle Blöcke dargestellt') + ': '
                             + structuralElement.attributes.title + '→'
-                            + block_container.attributes.title);
+                            + container.attributes.title);
                         }
                     }
                 }
@@ -235,7 +234,7 @@ export default {
                     blockType: block.attributes['block-type'],
                 });
             } catch(error) {
-                this.currentImportErrors.push(this.$gettext('Block konnte nicht erstellt werden') + ': ' 
+                this.currentImportErrors.push(this.$gettext('Block konnte nicht erstellt werden') + ': '
                     + element.attributes.title + '→'
                     + block_container.attributes.title + '→'
                     + block.attributes.title);
@@ -266,8 +265,8 @@ export default {
                     containerId: block_container.id,
                 });
             } catch(error) {
-                
-                this.currentImportErrors.push(this.$gettext('Blockdaten sind beschädigt. Es werden die Standardwerte eingesetzt') + ': ' 
+
+                this.currentImportErrors.push(this.$gettext('Blockdaten sind beschädigt. Es werden die Standardwerte eingesetzt') + ': '
                     + element.attributes.title + '→'
                     + block_container.attributes.title + '→'
                     + block.attributes.title);
@@ -282,9 +281,9 @@ export default {
 
             container.attributes.payload.sections.forEach((section, index) => {
                 let blockIndex = section.blocks.findIndex(blockID => blockID === oldBlockId);
-                
+
                 if(blockIndex > -1) {
-                    container.attributes.payload.sections[index].blocks[blockIndex] = newBlockId; 
+                    container.attributes.payload.sections[index].blocks[blockIndex] = newBlockId;
                 }
             });
 
