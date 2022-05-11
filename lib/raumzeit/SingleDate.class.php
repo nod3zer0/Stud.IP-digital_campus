@@ -503,7 +503,7 @@ class SingleDate
                         sprintf(
                             '<a href="%1$s">%2$s</a>',
                             $course_link,
-                            $course->name
+                            htmlReady($course->name)
                         )
                     );
                 } else {
@@ -521,7 +521,7 @@ class SingleDate
                         sprintf(
                             '<a href="%1$s">%2$s</a>',
                             $course_link,
-                            $course->name
+                            htmlReady($course->name)
                         )
                     );
                 }
@@ -531,7 +531,7 @@ class SingleDate
                     date("d.m.Y", $booking->begin),
                     date("H:i", $booking->begin),
                     date("H:i", $booking->end),
-                    htmlready($booking->description)
+                    htmlReady($booking->description)
                 );
             }
         }
@@ -587,7 +587,7 @@ class SingleDate
             $error_message = sprintf(
                 _('Für den Termin %1$s konnte der Raum %2$s nicht gebucht werden, da es Überschneidungen mit folgenden Terminen gibt:'),
                 $this->toString(),
-                $room->name
+                htmlReady($room->name)
                 ) . '<br>';
             $overlapping_bookings = array_merge(
                 $room->getResourceBookings($begin, $end),
@@ -692,7 +692,7 @@ class SingleDate
                     $room_text,
                     date('d.m.Y H:i', $changeAssign->begin),
                     date('H:i', $changeAssign->end),
-                    $e->getMessage()
+                    htmlReady($e->getMessage())
                 );
             }
 
