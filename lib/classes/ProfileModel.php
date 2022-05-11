@@ -96,7 +96,19 @@ class ProfileModel
     public function getDozentSeminars()
     {
         $courses = [];
-        $semester = array_reverse(Semester::getAll());
+        $semester = [];
+        $next_semester = Semester::findNext();
+        $current_semester = Semester::findCurrent();
+        $previous_semester = Semester::findPrevious();
+        if ($next_semester) {
+            $semester[$next_semester->id] = $next_semester;
+        }
+        if ($current_semester) {
+            $semester[$current_semester->id] = $current_semester;
+        }
+        if ($previous_semester) {
+            $semester[$previous_semester->id] = $previous_semester;
+        }
         $field = 'name';
         if (Config::get()->IMPORTANT_SEMNUMBER) {
             $field = "veranstaltungsnummer,{$field}";

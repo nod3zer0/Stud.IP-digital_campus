@@ -117,6 +117,27 @@ class Semester extends SimpleORMap
     }
 
     /**
+     * Returns the previous semester for a semester specified by a timestamp.
+     * If no timestamp is specified, the previous semester of the current semester is returned.
+     *
+     * @param integer|null $timestamp The timestamp of the semester whose predecessor
+     *     shall be found. Defaults to null.
+     *
+     * @return null|Semester A previous semester to the specified one or null, if no such semester
+     *     could be found.
+     */
+    public static function findPrevious($timestamp = null)
+    {
+        $timestamp = $timestamp ?: time();
+        $semester = self::findByTimestamp($timestamp);
+        if ($semester) {
+            return self::findByTimestamp((int)$semester->beginn - 1);
+        }
+
+        return null;
+    }
+
+    /**
      * returns current Semester
      */
     public static function findCurrent()
