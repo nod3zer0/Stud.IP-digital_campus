@@ -132,7 +132,7 @@ class Institute_OverviewController extends AuthenticatedController
         }
 
         // Fetch news
-        $response = $this->relay('news/display/' . $this->institute_id);
+        $response = $this->relayWithRedirect('news/display/' . $this->institute_id);
         $this->news = $response->body;
 
         // Fetch  votes

@@ -29,7 +29,7 @@ class NewsWidget extends CorePlugin implements PortalPlugin
     {
         $dispatcher = new StudipDispatcher();
         $controller = new NewsController($dispatcher);
-        $response = $controller->relay('news/display/studip');
+        $response = $controller->relayWithRedirect('news/display/studip');
         $template = $GLOBALS['template_factory']->open('shared/string');
         $template->content = $response->body;
 

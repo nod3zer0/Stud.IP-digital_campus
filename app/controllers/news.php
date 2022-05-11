@@ -76,7 +76,6 @@ class NewsController extends StudipController
      * Widget controller to produce the formally known show_votes()
      *
      * @param String $range_id range id of the news to get displayed
-     * @return array() Array of votes
      */
     public function display_action($range_id)
     {
@@ -98,11 +97,21 @@ class NewsController extends StudipController
         // Check if user wrote a comment
         if (Request::submitted('accept') && trim(Request::get('comment_content')) && Request::isPost()) {
             CSRFProtection::verifySecurityToken();
-            StudipComment::create([
-                'object_id' => Request::get('comsubmit'),
+
+            $news_id = Request::get('comsubmit');
+            $comment = StudipComment::create([
+                'object_id' => $news_id,
                 'user_id' => $GLOBALS['user']->id,
                 'content' => trim(Request::get('comment_content'))
             ]);
+
+            $url = URLHelper::getURL(Request::url() . "#newscomment-{$comment->id}", [
+                'contentbox_open' => $news_id,
+                'comments'        => true,
+            ]);
+
+            $this->redirect($url);
+            return;
         }
 
         // Check if user wants to remove a announcement

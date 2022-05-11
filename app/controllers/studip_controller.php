@@ -585,6 +585,28 @@ abstract class StudipController extends Trails_Controller
     }
 
     /**
+     * Relays current request and performs redirect if neccessary.
+     *
+     * @param string $to_uri a trails route
+     * @return Trails_Response
+     *
+     * @see StudipController::relay()
+     */
+    public function relayWithRedirect(...$args): Trails_Response
+    {
+        $response = $this->relay(...$args);
+
+        // If the relayed action should perform a redirect, do so
+        if (isset($response->headers['Location'])) {
+            header("Location: {$response->headers['Location']}");
+            page_close();
+            die;
+        }
+
+        return $response;
+    }
+
+    /**
      * perform a given action/parameter string from an relayed request
      * before_filter and after_filter methods are not called
      *

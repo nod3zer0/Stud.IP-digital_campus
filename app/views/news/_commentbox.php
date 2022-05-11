@@ -1,9 +1,9 @@
-<article class="comment open">
-    <time><?= reltime($comment[3]) ?></time>
+<article class="comment open" id="newscomment-<?= htmlReady($comment['comment_id']) ?>">
+    <time><?= reltime($comment['mkdate']) ?></time>
     <h1>#<?= $index + 1 ?>
-        <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $comment[2]) ?>">
-             <?= htmlReady($comment[1]) ?>
+        <a href="<?= URLHelper::getLink('dispatch.php/profile', ['username' => $comment['username']]) ?>">
+             <?= htmlReady($comment['fullname']) ?>
         </a>
     </h1>
-    <?= formatReady($comment[0]) ?>
+    <?= formatReady($comment['content']) ?>
 </article>

@@ -55,7 +55,7 @@ class Course_OverviewController extends AuthenticatedController
         }
 
         // Fetch news
-        $response   = $this->relay('news/display/' . $this->course_id);
+        $response   = $this->relayWithRedirect('news/display/' . $this->course_id);
         $this->news = $response->body;
 
         // Fetch  votes
