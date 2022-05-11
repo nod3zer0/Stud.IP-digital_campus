@@ -81,7 +81,13 @@ class ExpressionNode implements Node
      */
     public function render($context)
     {
-        return $this->expr->value($context);
+        $value = $this->expr->value($context);
+
+        if (!($this->expr instanceof RawExpression)) {
+            $value = $context->escape($value);
+        }
+
+        return $value;
     }
 }
 
@@ -121,20 +127,26 @@ class ArrayNode implements Node
 
 /**
  * IteratorNode represents a single iterator tag:
- * "{foreach ARRAY}...{endforeach}".
+ * "{foreach ARRAY [as [KEY =>] VALUE]}...{endforeach}".
  */
 class IteratorNode extends ArrayNode
 {
     protected $expr;
+    protected $key_name;
+    protected $val_name;
 
     /**
      * Initializes a new Node instance with the given expression.
      *
      * @param Expression $expr  expression object
+     * @param string $key_name  name of variable on each iteration
+     * @param string $val_name  name of variable on each iteration
      */
-    public function __construct(Expression $expr)
+    public function __construct(Expression $expr, $key_name, $val_name)
     {
         $this->expr = $expr;
+        $this->key_name = $key_name;
+        $this->val_name = $val_name;
     }
 
     /**
@@ -149,7 +161,7 @@ class IteratorNode extends ArrayNode
         $result = '';
 
         if (is_array($values) && is_int(key($values))) {
-            $bindings = array('index' => &$key, 'this' => &$value);
+            $bindings = array($this->key_name => &$key, $this->val_name => &$value);
             $context = new Context($bindings, $context);
 
             foreach ($values as $key => $value) {

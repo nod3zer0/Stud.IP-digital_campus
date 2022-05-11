@@ -24,6 +24,8 @@ class Template
 {
     private static $tag_start = '{';
     private static $tag_end = '}';
+    private $escape;
+    private $functions;
     private $template;
 
     /**
@@ -47,7 +49,29 @@ class Template
     public function __construct($string)
     {
         $this->template = new ArrayNode();
+        $this->functions = array('count' => 'count', 'strlen' => 'mb_strlen');
         self::parseTemplate($this->template, $string, 0);
+    }
+
+    /**
+     * Enables or disables automatic escaping for template values.
+     * Currently supported strategies: NULL, 'html', 'json', 'xml'
+     *
+     * @param string|callable $escape   escape strategy or callback
+     */
+    public function autoescape($escape)
+    {
+        if ($escape === 'html' || $escape === 'xml') {
+            $this->escape = 'htmlspecialchars';
+        } else if ($escape === 'json') {
+            $this->escape = 'json_encode';
+        } else if (is_callable($escape)) {
+            $this->escape = $escape;
+        } else if ($escape === NULL) {
+            $this->escape = NULL;
+        } else {
+            throw new InvalidArgumentException("invalid escape strategy: $escape");
+        }
     }
 
     /**
@@ -60,7 +84,10 @@ class Template
      */
     public function render(array $bindings)
     {
-        return $this->template->render(new Context($bindings));
+        $context = new Context($bindings + $this->functions);
+        $context->autoescape($this->escape);
+
+        return $this->template->render($context);
     }
 
     /**
@@ -125,7 +152,34 @@ class Template
             switch ($scanner->nextToken()) {
                 case T_FOREACH:
                     $scanner->nextToken();
-                    $child = new IteratorNode(self::parseExpr($scanner));
+                    $expr = self::parseExpr($scanner);
+                    $key_name = 'index';
+                    $val_name = 'this';
+
+                    if ($scanner->tokenType() === T_AS) {
+                        $scanner->nextToken();
+
+                        if ($scanner->tokenType() !== T_STRING) {
+                            throw new TemplateParserException('symbol expected', $scanner);
+                        }
+
+                        $val_name = $scanner->tokenValue();
+                        $scanner->nextToken();
+
+                        if ($scanner->tokenType() === T_DOUBLE_ARROW) {
+                            $scanner->nextToken();
+
+                            if ($scanner->tokenType() !== T_STRING) {
+                                throw new TemplateParserException('symbol expected', $scanner);
+                            }
+
+                            $key_name = $val_name;
+                            $val_name = $scanner->tokenValue();
+                            $scanner->nextToken();
+                        }
+                    }
+
+                    $child = new IteratorNode($expr, $key_name, $val_name);
                     $pos = self::parseTemplate($child, $string, $pos);
                     $node->addChild($child);
                     break;
@@ -193,11 +247,44 @@ class Template
     }
 
     /**
-     * index: value | index '[' expr ']' | index '.' SYMBOL
+     * function: value | function '(' ')' | function '(' expr { ',' expr } ')'
+     */
+    private static function parseFunction(Scanner $scanner)
+    {
+        $result = self::parseValue($scanner);
+        $type = $scanner->tokenType();
+
+        while ($type === '(') {
+            $scanner->nextToken();
+            $arguments = array();
+
+            if ($scanner->tokenType() !== ')') {
+                $arguments[] = self::parseExpr($scanner);
+
+                while ($scanner->tokenType() === ',') {
+                    $scanner->nextToken();
+                    $arguments[] = self::parseExpr($scanner);
+                }
+
+                if ($scanner->tokenType() !== ')') {
+                    throw new TemplateParserException('missing ")"', $scanner);
+                }
+            }
+
+            $scanner->nextToken();
+            $result = new FunctionExpression($result, $arguments);
+            $type = $scanner->tokenType();
+        }
+
+        return $result;
+    }
+
+    /**
+     * index: function | index '[' expr ']' | index '.' SYMBOL
      */
     private static function parseIndex(Scanner $scanner)
     {
-        $result = self::parseValue($scanner);
+        $result = self::parseFunction($scanner);
         $type = $scanner->tokenType();
 
         while ($type === '[' || $type === '.') {
@@ -224,7 +311,57 @@ class Template
     }
 
     /**
-     * sign: '!' sign | '+' sign | '-' sign | index
+     * filter: index | filter '|' SYMBOL | filter '|' SYMBOL '(' expr { ',' expr } ')'
+     */
+    private static function parseFilter(Scanner $scanner)
+    {
+        $result = self::parseIndex($scanner);
+        $type = $scanner->tokenType();
+
+        while ($type === '|') {
+            $scanner->nextToken();
+
+            if ($scanner->tokenType() !== T_STRING) {
+                throw new TemplateParserException('symbol expected', $scanner);
+            }
+
+            $arguments = array($result);
+            $symbol = new SymbolExpression($scanner->tokenValue());
+            $scanner->nextToken();
+
+            if ($scanner->tokenType() === '(') {
+                $scanner->nextToken();
+
+                if ($scanner->tokenType() !== ')') {
+                    $arguments[] = self::parseExpr($scanner);
+
+                    while ($scanner->tokenType() === ',') {
+                        $scanner->nextToken();
+                        $arguments[] = self::parseExpr($scanner);
+                    }
+
+                    if ($scanner->tokenType() !== ')') {
+                        throw new TemplateParserException('missing ")"', $scanner);
+                    }
+                }
+
+                $scanner->nextToken();
+            }
+
+            if ($symbol->name() === 'raw') {
+                $result = new RawExpression($result);
+            } else {
+                $result = new FunctionExpression($symbol, $arguments);
+            }
+
+            $type = $scanner->tokenType();
+        }
+
+        return $result;
+    }
+
+    /**
+     * sign: '!' sign | '+' sign | '-' sign | filter
      */
     private static function parseSign(Scanner $scanner)
     {
@@ -242,7 +379,7 @@ class Template
                 $result = new MinusExpression(self::parseSign($scanner));
                 break;
             default:
-                $result = self::parseIndex($scanner);
+                $result = self::parseFilter($scanner);
         }
 
         return $result;
@@ -353,7 +490,7 @@ class Template
     }
 
     /**
-     * expr: or | or '?' expr ':' expr
+     * expr: or | or '?' expr ':' expr | or '?' ':' expr
      */
     private static function parseExpr(Scanner $scanner)
     {
@@ -361,7 +498,12 @@ class Template
 
         if ($scanner->tokenType() === '?') {
             $scanner->nextToken();
-            $expr = self::parseExpr($scanner);
+
+            if ($scanner->tokenType() !== ':') {
+                $expr = self::parseExpr($scanner);
+            } else {
+                $expr = $result;
+            }
 
             if ($scanner->tokenType() !== ':') {
                 throw new TemplateParserException('missing ":"', $scanner);

@@ -14,7 +14,7 @@ require 'Template.php';
 
 use exTpl\Template;
 
-class TemplateTest extends PHPUnit_Framework_TestCase
+class template_test extends PHPUnit\Framework\TestCase
 {
     public function testSimpleString()
     {
@@ -31,6 +31,16 @@ class TemplateTest extends PHPUnit_Framework_TestCase
         $bindings = array();
         $template = '17 + 4 = {"foo" != "bar" ? 17 + 4 : 42.0}';
         $expected = '17 + 4 = 21';
+        $tmpl_obj = new Template($template);
+
+        $this->assertEquals($expected, $tmpl_obj->render($bindings));
+    }
+
+    public function testConditionExpression()
+    {
+        $bindings = array('a' => 0, 'b' => 42);
+        $template = 'answer is {"" ?: a ?: b}';
+        $expected = 'answer is 42';
         $tmpl_obj = new Template($template);
 
         $this->assertEquals($expected, $tmpl_obj->render($bindings));
@@ -93,7 +103,7 @@ class TemplateTest extends PHPUnit_Framework_TestCase
                         2 => array('user' => 'mike', 'phone' => '230-28382'),
                         3 => array('user' => 'john', 'phone' => '911-19212')
                     ));
-        $template = '<ul>{foreach persons}<li>{index~":"~this.user~":"~phone}</li>{endforeach}</ul>';
+        $template = '<ul>{foreach persons as person}<li>{index~":"~person.user~":"~phone}</li>{endforeach}</ul>';
         $expected = '<ul>' .
                     '<li>1:jane:555-81281</li>' .
                     '<li>2:mike:230-28382</li>' .
@@ -142,6 +152,59 @@ class TemplateTest extends PHPUnit_Framework_TestCase
                     '{endforeach}';
         $expected = '----foo4bar++++';
         $tmpl_obj = new Template($template);
+
+        $this->assertEquals($expected, $tmpl_obj->render($bindings));
+    }
+
+    public function testFunctionCall()
+    {
+        $bindings = array('val' => array(0, 1, 2, 3));
+        $template = '{strlen("foobar") + count(val)}';
+        $expected = '10';
+        $tmpl_obj = new Template($template);
+
+        $this->assertEquals($expected, $tmpl_obj->render($bindings));
+    }
+
+    public function testFilters()
+    {
+        $bindings = array('pi' => 3.14159, 'format_number' => 'number_format', 'upper' => 'strtoupper');
+        $template = '{pi|format_number(3) ~ ":" ~ "foobar"|upper}';
+        $expected = '3.142:FOOBAR';
+        $tmpl_obj = new Template($template);
+
+        $this->assertEquals($expected, $tmpl_obj->render($bindings));
+    }
+
+    public function testRawFilter()
+    {
+        $bindings = array('foo' => '<img>', 'upper' => 'strtoupper');
+        $template = '{foo}:{foo|upper|raw}';
+        $expected = '&lt;img&gt;:<IMG>';
+        $tmpl_obj = new Template($template);
+        $tmpl_obj->autoescape('html');
+
+        $this->assertEquals($expected, $tmpl_obj->render($bindings));
+    }
+
+    public function testHtmlAutoEscape()
+    {
+        $bindings = array('foo' => '<img>', 'pi' => 3.14159);
+        $template = '{foo}:{pi}';
+        $expected = '&lt;img&gt;:3.14159';
+        $tmpl_obj = new Template($template);
+        $tmpl_obj->autoescape('html');
+
+        $this->assertEquals($expected, $tmpl_obj->render($bindings));
+    }
+
+    public function testJsonAutoEscape()
+    {
+        $bindings = array('foo' => '<img>', 'pi' => 3.14159);
+        $template = '{foo}:{pi}';
+        $expected = '"<img>":3.14159';
+        $tmpl_obj = new Template($template);
+        $tmpl_obj->autoescape('json');
 
         $this->assertEquals($expected, $tmpl_obj->render($bindings));
     }

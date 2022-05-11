@@ -72,6 +72,14 @@ class SymbolExpression implements Expression
     }
 
     /**
+     * Returns the name of this symbol.
+     */
+    public function name()
+    {
+        return $this->name;
+    }
+
+    /**
      * Returns the value of this expression.
      *
      * @param Context $context  symbol table
@@ -129,6 +137,22 @@ class NotExpression extends UnaryExpression
     public function value($context)
     {
         return !$this->expr->value($context);
+    }
+}
+
+/**
+ * RawExpression represents the "raw" filter function.
+ */
+class RawExpression extends UnaryExpression
+{
+    /**
+     * Returns the value of this expression.
+     *
+     * @param Context $context  symbol table
+     */
+    public function value($context)
+    {
+        return $this->expr->value($context);
     }
 }
 
@@ -259,5 +283,47 @@ class ConditionExpression implements Expression
     {
         return $this->condition->value($context) ?
                     $this->left->value($context) : $this->right->value($context);
+    }
+}
+
+/**
+ * FunctionExpression represents a function call.
+ */
+class FunctionExpression implements Expression
+{
+    protected $name;
+    protected $arguments;
+
+    /**
+     * Initializes a new Expression instance.
+     *
+     * @param Expression $name  function name
+     * @param array  $arguments function arguments
+     */
+    public function __construct(Expression $name, $arguments)
+    {
+        $this->name = $name;
+        $this->arguments = $arguments;
+    }
+
+    /**
+     * Returns the value of this expression.
+     *
+     * @param Context $context  symbol table
+     */
+    public function value($context)
+    {
+        $callable = $this->name->value($context);
+        $arguments = array();
+
+        foreach ($this->arguments as $expr) {
+            $arguments[] = $expr->value($context);
+        }
+
+        if (is_callable($callable)) {
+            return call_user_func_array($callable, $arguments);
+        }
+
+        return NULL;
     }
 }

@@ -43,7 +43,9 @@ class Scanner
             $token = next($this->tokens);
             $key = key($this->tokens);
 
-            while ($token[0] === T_STRING &&
+            // FIXME this workaround should be dropped
+            while ($token && $token[0] === T_STRING &&
+                   isset($this->tokens[$key + 2]) &&
                    $this->tokens[++$key] === '-' &&
                    $this->tokens[++$key][0] === T_STRING) {
                 $token[1] .= '-' . $this->tokens[$key][1];

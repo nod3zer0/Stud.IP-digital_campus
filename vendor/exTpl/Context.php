@@ -20,6 +20,7 @@ namespace exTpl;
 class Context
 {
     private $bindings;
+    private $escape;
     private $parent;
 
     /**
@@ -49,5 +50,31 @@ class Context
         }
 
         return NULL;
+    }
+
+    /**
+     * Enables or disables automatic escaping for template values.
+     *
+     * @param callable $escape   escape callback or NULL
+     */
+    public function autoescape($escape)
+    {
+        $this->escape = $escape;
+    }
+
+    /**
+     * Escapes the given value using the configured strategy.
+     *
+     * @param mixed $value      expression value
+     */
+    public function escape($value)
+    {
+        if (isset($this->escape)) {
+            $value = call_user_func($this->escape, $value);
+        } else if ($this->parent) {
+            $value = $this->parent->escape($value);
+        }
+
+        return $value;
     }
 }
