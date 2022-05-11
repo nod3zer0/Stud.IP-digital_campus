@@ -1908,7 +1908,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             }
 
             Message::send(
-                '____%system%____',
+                User::findCurrent()->id,
                 $user->username,
                 $mail_title,
                 $mail_text
@@ -1990,7 +1990,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         $mail_text  = $template->render();
 
         Message::send(
-            '____%system%____',
+            User::findCurrent()->id,
             $this->user->username,
             $mail_title,
             $mail_text
@@ -2079,7 +2079,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                     $mail_text  = $template->render();
 
                     Message::send(
-                        '____%system%____',
+                        User::findCurrent()->id,
                         $lecturer->user->username,
                         $mail_title,
                         $mail_text
@@ -2128,7 +2128,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
 
         //Send the mail:
         Message::send(
-            '____%system%____',
+            User::findCurrent()->id,
             $user->username,
             $mail_title,
             $mail_text
