@@ -1,0 +1,29 @@
+{
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": "eslint:recommended",
+    "globals": {
+        "STUDIP": "writable",
+        "CKEDITOR": "writable",
+        "$": "writable",
+        "_": "writable",
+        "jQuery": "writable"
+    },
+    "rules": {
+        "no-unused-vars": "off",
+
+        "no-async-promise-executor": "error",
+        "no-await-in-loop": "error",
+        "no-promise-executor-return": "error",
+        "require-atomic-updates": "error",
+        "max-nested-callbacks": ["error", 3],
+        "no-return-await": "error",
+        "prefer-promise-reject-errors": "error"
+    }
+}

@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const assetsPath = path.resolve(__dirname, "resources/assets/javascripts");
 
@@ -105,6 +106,14 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "stylesheets/[name].css",
             chunkFilename: "stylesheets/[name].css?h=[chunkhash]"
+        }),
+        new ESLintPlugin({
+            exclude: [
+                'node_modules',
+                'public/assets/javascripts/ckeditor/ckeditor.js',
+                'resources/assets/javascripts/vendor',
+                'resources/assets/javascripts/jquery/jstree/jquery.jstree.js',
+            ]
         }),
     ],
     resolve: {
