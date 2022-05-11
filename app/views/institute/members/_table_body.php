@@ -12,7 +12,7 @@
                 $controller->url_for('messages/write?filter=inst_status', [
                     'who'             => $key,
                     'default_subject' => Context::get()->Name,
-                    'course_id'       => Context::getId(),
+                    'inst_id'         => Context::getId(),
                 ]),
                 sprintf(_('Nachricht an alle Mitglieder mit dem Status %s verschicken'), $th_title),
                 Icon::create('mail', 'clickable'),
