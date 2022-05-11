@@ -75,6 +75,8 @@ class CourseMember extends SimpleORMap implements PrivacyObject
 
         $config['additional_fields']['course_name'] = [];
 
+        $config['registered_callbacks']['after_delete'][] = 'cbRemoveNotifications';
+
         parent::configure($config);
     }
 
@@ -146,6 +148,11 @@ class CourseMember extends SimpleORMap implements PrivacyObject
             ['motto' => ''],
             $this->toArray('vorname nachname username title_front title_rear')
         ))->getFullname($format);
+    }
+
+    public function cbRemoveNotifications()
+    {
+        CourseMemberNotification::deleteBySQL('user_id = ?', [$this->user_id]);
     }
 
     /**
