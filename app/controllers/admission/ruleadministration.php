@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Admission_RuleAdministrationController - Global administration
+ * Admission_RuleadministrationController - Global administration
  * of available admission rules
  *
  * This program is free software; you can redistribute it and/or
@@ -15,7 +15,7 @@
  * @since       3.0
  */
 
-class Admission_RuleAdministrationController extends AuthenticatedController
+class Admission_RuleadministrationController extends AuthenticatedController
 {
     /**
      * @see AuthenticatedController::before_filter
@@ -32,12 +32,14 @@ class Admission_RuleAdministrationController extends AuthenticatedController
         $sidebar = Sidebar::Get();
 
         $views = new ViewsWidget();
-        $views->addLink(_('Installierte Anmelderegeln'),
-            $this->url_for('admission/ruleadministration'))
-            ->setActive($action === 'index');
-        $views->addLink(_('Regelkompatibilität'),
-            $this->url_for('admission/ruleadministration/compatibility'))
-            ->setActive($action === 'compatibility');
+        $views->addLink(
+            _('Installierte Anmelderegeln'),
+            $this->url_for('admission/ruleadministration')
+        )->setActive($action === 'index');
+        $views->addLink(
+            _('Regelkompatibilität'),
+            $this->url_for('admission/ruleadministration/compatibility')
+        )->setActive($action === 'compatibility');
         $sidebar->addWidget($views);
     }
 
@@ -49,12 +51,27 @@ class Admission_RuleAdministrationController extends AuthenticatedController
         PageLayout::setTitle(_('Verwaltung von Anmelderegeln'));
 
         $this->ruleTypes = AdmissionRule::getAvailableAdmissionRules(false);
+
         // Available rule classes.
-        $ruleClasses = array_map(function($s) { return mb_strtolower($s); }, array_keys($this->ruleTypes));
+        $ruleClasses = array_map(function($s) {
+            return mb_strtolower($s);
+        }, array_keys($this->ruleTypes));
+
         // Found directories with rule definitions.
-        $ruleDirs = array_map(function($s) { return basename($s); }, glob($GLOBALS['STUDIP_BASE_PATH'].'/lib/admissionrules/*', GLOB_ONLYDIR));
+        $ruleDirs = array_map(function($s) {
+            return basename($s);
+        }, glob($GLOBALS['STUDIP_BASE_PATH'] . '/lib/admissionrules/*', GLOB_ONLYDIR));
+
         // Compare the two.
         $this->newRules = array_diff($ruleDirs, $ruleClasses);
+        if (count($this->newRules) > 0) {
+            PageLayout::postInfo(
+                _('Es wurden Anmelderegeln gefunden, die zwar im'
+                . 'Dateisystem unter lib/admissionrules vorhanden sind, aber noch nicht '
+                . 'installiert wurden:'),
+                $this->newRules
+            );
+        }
     }
 
     public function compatibility_action()
@@ -71,77 +88,13 @@ class Admission_RuleAdministrationController extends AuthenticatedController
      *
      * @param String $ruleType Class name of the rule type to check.
      */
-    public function check_activation_action($ruleType)
+    public function toggle_activation_action($ruleType)
     {
-        PageLayout::setTitle(_('Verfügbarkeit der Anmelderegel'));
-        $this->ruleTypes = AdmissionRule::getAvailableAdmissionRules(false);
-        $this->type = $ruleType;
-        $stmt = DBManager::get()->prepare("SELECT ai.`institute_id`
-            FROM `admissionrule_inst` ai
-            JOIN `admissionrules` r ON (ai.`rule_id`=r.`id`)
-            WHERE r.`ruletype`=?");
-        $stmt->execute([$ruleType]);
-        $this->activated = [];
-        $globally = true;
-        $atInst = false;
-        while ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ($globally) $globally = false;
-            if (!$atInst) $atInst = true;
-            $institute = new Institute($current['institute_id']);
-            $this->activated[$current['institute_id']] = $institute->name;
-        }
-        $this->globally = $globally;
-        $this->atInst = $atInst;
-    }
+        $query = "UPDATE `admissionrules`
+                  SET `active` = !`active`
+                  WHERE `ruletype` = ?";
+        DBManager::get()->execute($query, [$ruleType]);
 
-    /**
-     * (De-)Activates the given rule type for system wide usage.
-     *
-     * @param  String $ruleType the class name of the rule type to activate.
-     */
-    public function activate_action($ruleType)
-    {
-        CSRFProtection::verifyUnsafeRequest();
-        if (Request::submitted('submit')) {
-            $success = false;
-            $stmt = DBManager::get()->prepare("UPDATE `admissionrules` SET `active`=? WHERE `ruletype`=?");
-            $success = $stmt->execute([(bool) Request::get('enabled'), $ruleType]);
-            // Get corresponding rule id.
-            $stmt = DBManager::get()->prepare("SELECT `id` FROM `admissionrules` WHERE `ruletype`=? LIMIT 1");
-            $success = $stmt->execute([$ruleType]);
-            if ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                if (Request::get('enabled')) {
-                    $stmt = DBManager::get()->prepare("DELETE FROM `admissionrule_inst`
-                        WHERE `rule_id` IN (SELECT `id` FROM `admissionrules` WHERE `ruletype`=?);");
-                    $success = $stmt->execute([$ruleType]);
-                    if (Request::get(activated) == 'inst') {
-                        $institutes = Request::getArray('institutes');
-                        $query = "INSERT INTO `admissionrule_inst`
-                            (`rule_id`, `institute_id`, `mkdate`)
-                            VALUES ";
-                        $params = [];
-                        $first = true;
-                        foreach ($institutes as $institute) {
-                            if ($first) {
-                                $first = false;
-                            } else {
-                                $query .= ", ";
-                            }
-                            $query .= "(?, ?, UNIX_TIMESTAMP())";
-                            $params[] = $data['id'];
-                            $params[] = $institute;
-                        }
-                        $stmt = DBManager::get()->prepare($query);
-                        $success = $stmt->execute($params);
-                    }
-                }
-            }
-            if ($success) {
-                PageLayout::postSuccess(_('Ihre Einstellungen wurden gespeichert.'));
-            } else {
-                PageLayout::postError(_('Ihre Einstellungen konnten nicht gespeichert werden.'));
-            }
-        }
         $this->redirect('admission/ruleadministration');
     }
 
@@ -238,7 +191,5 @@ class Admission_RuleAdministrationController extends AuthenticatedController
         if (!check_ticket(Request::option('ticket'))) {
             throw new InvalidArgumentException(_('Das Ticket für diese Aktion ist ungültig.'));
         }
-
     }
-
 }
