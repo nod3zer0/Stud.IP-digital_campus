@@ -152,6 +152,8 @@ class Course_TopicsController extends AuthenticatedController
                 $topic->setId($topic->getNewId());
                 $topic->setNew(true);
                 $topic->store();
+
+                NotificationCenter::postNotification('TopicDidCopy', $topic_id, $topic->id);
             }
             PageLayout::postMessage(MessageBox::success(sprintf(_("%s Themen kopiert."), count(Request::getArray("topic")))));
             $this->redirect("course/topics");
