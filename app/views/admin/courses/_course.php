@@ -89,6 +89,11 @@ if (!$values['parent_course'] || !in_array($values['parent_course'], array_keys(
                 <?= htmlReady($course->semester_text) ?>
             </td>
         <? endif?>
+        <? if (in_array('institute', $view_filter)) : ?>
+            <td>
+                <?= htmlReady($course->home_institut ? $course->home_institut['name'] : $course['institute']) ?>
+            </td>
+        <? endif?>
         <? if (in_array('requests', $view_filter)) : ?>
             <td style="text-align: center;">
                 <a title="<?=_('Raumanfragen')?>" href="<?= URLHelper::getLink('dispatch.php/course/room_requests', ['cid' => $semid])?>">

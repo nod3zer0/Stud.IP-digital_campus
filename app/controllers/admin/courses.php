@@ -544,6 +544,10 @@ class Admin_CoursesController extends AuthenticatedController
                     $row['semester'] = $course->semester_text;
                 }
 
+                if (in_array('institute', $filter_config)) {
+                    $row['institute'] = $course->home_institut ? $course->home_institut['name'] : $course['institute'];
+                }
+
                 foreach (PluginManager::getInstance()->getPlugins('AdminCourseContents') as $plugin) {
                     foreach ($plugin->adminAvailableContents() as $index => $label) {
                         if (in_array($plugin->getPluginId() . "_" . $index, $filter_config)) {
@@ -1097,6 +1101,7 @@ class Admin_CoursesController extends AuthenticatedController
             'type'          => _('Veranstaltungstyp'),
             'room_time'     => _('Raum/Zeit'),
             'semester'      => _('Semester'),
+            'institute'     => _('Einrichtung'),
             'requests'      => _('Raumanfragen'),
             'teachers'      => _('Lehrende'),
             'members'       => _('Teilnehmende'),
@@ -1217,6 +1222,8 @@ class Admin_CoursesController extends AuthenticatedController
         }
         if ($params['sortby'] === "status") {
             $filter->orderBy(sprintf('sem_classes.name %s, sem_types.name %s, VeranstaltungsNummer', $params['sortFlag'], $params['sortFlag'], $params['sortFlag']), $params['sortFlag']);
+        } elseif ($params['sortby'] === 'institute') {
+            $filter->orderBy('Institute.Name', $params['sortFlag']);
         } elseif ($params['sortby']) {
             $filter->orderBy($params['sortby'], $params['sortFlag']);
         }

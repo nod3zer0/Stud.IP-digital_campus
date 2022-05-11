@@ -22,11 +22,15 @@
         <? $colspan++ ?>
         <col width="30%">
     <? endif ?>
-    <? if (in_array('semester', $view_filter)) : ?>
-        <? $colspan++ ?>
-        <col width="10%">
-    <? endif ?>
-    <? if (in_array('requests', $view_filter)) : ?>
+        <? if (in_array('semester', $view_filter)) : ?>
+            <? $colspan++ ?>
+            <col width="10%">
+        <? endif ?>
+        <? if (in_array('institute', $view_filter)) : ?>
+            <? $colspan++ ?>
+            <col width="10%">
+        <? endif ?>
+        <? if (in_array('requests', $view_filter)) : ?>
         <? $colspan++ ?>
         <col width="5%">
     <? endif ?>
@@ -122,6 +126,13 @@
             <th <?= ($sortby == 'start_time') ? sprintf('class="sort%s"', mb_strtolower($sortFlag)) : '' ?>>
                 <a href="<?= URLHelper::getLink('', ['sortby'   => 'start_time', 'sortFlag' => mb_strtolower($sortFlag)]) ?>">
                     <?= _('Semester') ?>
+                </a>
+            </th>
+        <? endif ?>
+        <? if (in_array('institute', $view_filter)) : ?>
+            <th <?= ($sortby == 'institute') ? sprintf('class="sort%s"', mb_strtolower($sortFlag)) : '' ?>>
+                <a href="<?= URLHelper::getLink('', ['sortby'   => 'institute', 'sortFlag' => mb_strtolower($sortFlag)]) ?>">
+                    <?= _('Einrichtung') ?>
                 </a>
             </th>
         <? endif ?>
