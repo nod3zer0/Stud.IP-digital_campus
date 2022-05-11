@@ -90,7 +90,7 @@ function holiday ($tmstamp, $mod = "") {
         case 172: $name = _("Sommeranfang"); $col = 1; break;
         case 266: $name = _("Herbstanfang"); $col = 1; break;
         case 276: $name = _("Tag der deutschen Einheit"); $col = 3; break;
-        case 304: $name = _("Reformationstag"); $col = 2; break;
+        case 304: $name = _("Reformationstag"); $col = $year == 2017 ? 3 : 2; break;
         case 305: $name = _("Allerheiligen"); $col = 1; break;
         case 315: $name = _("Martinstag"); $col = 1; break;
         case 340: $name = _("Nikolaus"); $col = 1; break;
@@ -99,11 +99,6 @@ function holiday ($tmstamp, $mod = "") {
         case 359: $name = _("1. Weihnachtstag"); $col = 3; break;
         case 360: $name = _("2. Weihnachtstag"); $col = 3; break;
         case 365: $name = _("Silvester"); $col = 1; break;
-    }
-
-    // special handling of Reformation Day in 2017
-    if ($doy == 304 && $year == 2017) {
-        $col = 3;
     }
 
     // Die Sonntagsfeiertage
