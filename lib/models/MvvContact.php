@@ -23,7 +23,7 @@ class MvvContact extends ModuleManagementModel
         $config['db_table'] = 'mvv_contacts';
 
         $config['has_many']['ranges'] = [
-            'class_name'  => 'MvvContactRange',
+            'class_name'  => MvvContactRange::class,
             'foreign_key' => 'contact_id',
             'on_delete'   => 'delete'
         ];

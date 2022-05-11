@@ -74,68 +74,52 @@
 
 class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, FeedbackRange
 {
-
-    /**
-     * Returns the currently active course or false if none is active.
-     *
-     * @return Course object of currently active course, null otherwise
-     * @since 3.0
-     */
-    public static function findCurrent()
-    {
-        if (Context::isCourse()) {
-            return Context::get();
-        }
-
-        return null;
-    }
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'seminare';
         $config['has_many']['topics'] = [
-            'class_name' => 'CourseTopic',
+            'class_name' => CourseTopic::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['dates'] = [
-            'class_name'        => 'CourseDate',
+            'class_name'        => CourseDate::class,
             'assoc_foreign_key' => 'range_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',
             'order_by'          => 'ORDER BY date'
         ];
         $config['has_many']['ex_dates'] = [
-            'class_name'        => 'CourseExDate',
+            'class_name'        => CourseExDate::class,
             'assoc_foreign_key' => 'range_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',
         ];
         $config['has_many']['members'] = [
-            'class_name' => 'CourseMember',
+            'class_name' => CourseMember::class,
             'assoc_func' => 'findByCourse',
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['deputies'] = [
-            'class_name' => 'Deputy',
+            'class_name' => Deputy::class,
             'assoc_func' => 'findByRange_id',
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['statusgruppen'] = [
-            'class_name' => 'Statusgruppen',
+            'class_name' => Statusgruppen::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['admission_applicants'] = [
-            'class_name' => 'AdmissionApplication',
+            'class_name' => AdmissionApplication::class,
             'assoc_func' => 'findByCourse',
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['datafields'] = [
-            'class_name' => 'DatafieldEntryModel',
+            'class_name' => DatafieldEntryModel::class,
             'assoc_func' => 'findByModel',
             'assoc_foreign_key' => function ($model, $params) {
                 $model->setValue('range_id', $params[0]->id);
@@ -147,20 +131,20 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
             'on_store'  => 'store',
         ];
         $config['has_many']['cycles'] = [
-            'class_name' => 'SeminarCycleDate',
+            'class_name' => SeminarCycleDate::class,
             'assoc_func' => 'findBySeminar',
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['blubberthreads'] = [
-            'class_name' => 'BlubberThread',
+            'class_name' => BlubberThread::class,
             'assoc_func' => 'findBySeminar',
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
 
         $config['has_and_belongs_to_many']['semesters'] = [
-            'class_name'     => 'Semester',
+            'class_name'     => Semester::class,
             'thru_table'     => 'semester_courses',
             'thru_key'       => 'course_id',
             'thru_assoc_key' => 'semester_id',
@@ -170,29 +154,29 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         ];
 
         $config['belongs_to']['home_institut'] = [
-            'class_name'  => 'Institute',
+            'class_name' => Institute::class,
             'foreign_key' => 'institut_id',
             'assoc_func'  => 'find',
         ];
         $config['belongs_to']['aux'] = [
-            'class_name'  => 'AuxLockRule',
+            'class_name' => AuxLockRule::class,
             'foreign_key' => 'aux_lock_rule',
         ];
         $config['has_and_belongs_to_many']['study_areas'] = [
-            'class_name' => 'StudipStudyArea',
+            'class_name' => StudipStudyArea::class,
             'thru_table' => 'seminar_sem_tree',
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_and_belongs_to_many']['institutes'] = [
-            'class_name' => 'Institute',
+            'class_name' => Institute::class,
             'thru_table' => 'seminar_inst',
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
 
         $config['has_and_belongs_to_many']['domains'] = [
-            'class_name'        => 'UserDomain',
+            'class_name'        => UserDomain::class,
             'thru_table'        => 'seminar_userdomains',
             'on_delete'          => 'delete',
             'on_store'           => 'store',
@@ -200,21 +184,21 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         ];
 
         $config['has_many']['room_requests'] = [
-            'class_name'        => 'RoomRequest',
+            'class_name'        => RoomRequest::class,
             'assoc_foreign_key' => 'course_id',
             'on_delete'         => 'delete',
         ];
         $config['belongs_to']['parent'] = [
-            'class_name'  => 'Course',
+            'class_name' => Course::class,
             'foreign_key' => 'parent_course'
         ];
         $config['has_many']['children'] = [
-            'class_name'        => 'Course',
+            'class_name'        => Course::class,
             'assoc_foreign_key' => 'parent_course',
             'order_by'          => 'GROUP BY seminar_id ORDER BY VeranstaltungsNummer, Name'
         ];
         $config['has_many']['tools'] = [
-            'class_name'        => 'ToolActivation',
+            'class_name'        => ToolActivation::class,
             'assoc_foreign_key' => 'range_id',
             'order_by'          => 'ORDER BY position',
             'on_delete'         => 'delete',
@@ -282,6 +266,21 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         parent::configure($config);
     }
 
+
+    /**
+     * Returns the currently active course or false if none is active.
+     *
+     * @return Course object of currently active course, null otherwise
+     * @since 3.0
+     */
+    public static function findCurrent()
+    {
+        if (Context::isCourse()) {
+            return Context::get();
+        }
+
+        return null;
+    }
     public function getEnd_Time()
     {
         return $this->duration_time == -1 ? -1 : $this->start_time + $this->duration_time;

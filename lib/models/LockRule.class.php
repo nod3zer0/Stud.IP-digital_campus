@@ -35,6 +35,14 @@
 
 class LockRule extends SimpleORMap
 {
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'lock_rules';
+
+        $config['serialized_fields']['attributes'] = 'JSONArrayObject';
+
+        parent::configure($config);
+    }
 
     /**
      * returns the lockrule for a course
@@ -88,14 +96,6 @@ class LockRule extends SimpleORMap
     {
         return self::findByObject_type($type, " ORDER BY name");
     }
-
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'lock_rules';
-        $config['serialized_fields']['attributes'] = 'JSONArrayObject';
-        parent::configure($config);
-    }
-
     /**
      * @see SimpleORMap::delete()
      */

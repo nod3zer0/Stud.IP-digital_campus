@@ -15,18 +15,17 @@
 
 class CalendarUser extends SimpleORMap
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'calendar_user';
 
         $config['has_one']['owner'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'owner_id',
             'assoc_foreign_key' => 'user_id'
         ];
         $config['belongs_to']['user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id'
         ];
 
@@ -38,7 +37,6 @@ class CalendarUser extends SimpleORMap
         };
 
         parent::configure($config);
-
     }
 
     public function setPerm($permission)

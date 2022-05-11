@@ -38,8 +38,6 @@
  */
 class CronjobTask extends SimpleORMap
 {
-    public $valid = false;
-
     /**
      * Configures the model.
      *
@@ -49,7 +47,7 @@ class CronjobTask extends SimpleORMap
     {
         $config['db_table'] = 'cronjobs_tasks';
         $config['has_many']['schedules'] = [
-            'class_name' => 'CronjobSchedule',
+            'class_name' => CronjobSchedule::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store'
         ];
@@ -58,6 +56,8 @@ class CronjobTask extends SimpleORMap
 
         parent::configure($config);
     }
+
+    public $valid = false;
 
     /**
      * Tries to load the underlying php class. This also determines the valid

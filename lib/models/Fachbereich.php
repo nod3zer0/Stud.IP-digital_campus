@@ -16,10 +16,6 @@
 
 class Fachbereich extends ModuleManagementModelTreeItem
 {
-
-    private $count_objects;
-    private $count_module;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'Institute';
@@ -33,6 +29,9 @@ class Fachbereich extends ModuleManagementModelTreeItem
 
         parent::configure($config);
     }
+
+    private $count_objects;
+    private $count_module;
 
     public function __construct($id = null)
     {

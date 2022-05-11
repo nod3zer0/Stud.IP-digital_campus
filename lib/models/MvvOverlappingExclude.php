@@ -17,26 +17,25 @@
 
 class MvvOverlappingExclude extends SimpleORMap
 {
-
     /**
      * Configures the model.
-     * 
+     *
      * @param array  $config Configuration
      */
     protected static function configure($config = array()) {
 
         $config['db_table'] = 'mvv_ovl_excludes';
         $config['belongs_to']['selection'] = [
-            'class_name'  => 'MvvOverlappingSelection',
+            'class_name'  => MvvOverlappingSelection::class,
             'foreign_key' => 'selection_id'
         ];
         $config['belongs_to']['course'] = [
-            'class_name'  => 'Course',
+            'class_name'  => Course::class,
             'foreign_key' => 'course_id'
         ];
-        
+
         parent::configure($config);
     }
-    
+
 }
 

@@ -41,15 +41,15 @@ class InstituteMember extends SimpleORMap implements PrivacyObject
     {
         $config['db_table'] = 'user_inst';
         $config['belongs_to']['user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id',
         ];
         $config['belongs_to']['institute'] = [
-            'class_name' => 'Institute',
+            'class_name' => Institute::class,
             'foreign_key' => 'institut_id',
         ];
         $config['has_many']['datafields'] = [
-            'class_name' => 'DatafieldEntryModel',
+            'class_name' => DatafieldEntryModel::class,
             'assoc_foreign_key' =>
                 function($model, $params) {
                     $model->setValue('range_id', $params[0]->user_id);

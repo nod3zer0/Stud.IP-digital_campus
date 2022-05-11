@@ -2,17 +2,6 @@
 
 class OERReview extends BlubberThread
 {
-    public static function findByMaterial_id($material_id)
-    {
-        return self::findBySQL("
-            context_type = 'public'
-            AND context_id = :material_id
-            AND display_class = 'OERReview'
-        ", [
-            'material_id' => $material_id
-        ]);
-    }
-
     protected static function configure($config = [])
     {
         $config['belongs_to']['material'] = [
@@ -30,6 +19,16 @@ class OERReview extends BlubberThread
         parent::configure($config);
     }
 
+    public static function findByMaterial_id($material_id)
+    {
+        return self::findBySQL("
+            context_type = 'public'
+            AND context_id = :material_id
+            AND display_class = 'OERReview'
+        ", [
+            'material_id' => $material_id
+        ]);
+    }
     public function afterStoreCallback()
     {
         if (!$this->material['host_id'] && !$this->material->isMine() && $this->isDirty()) {

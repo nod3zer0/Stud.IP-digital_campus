@@ -2,29 +2,30 @@
 
 class Questionnaire extends SimpleORMap implements PrivacyObject
 {
-
-    public $answerable;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'questionnaires';
+
         $config['has_many']['questions'] = [
-            'class_name' => 'QuestionnaireQuestion',
+            'class_name' => QuestionnaireQuestion::class,
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_many']['assignments'] = [
-            'class_name' => 'QuestionnaireAssignment',
+            'class_name' => QuestionnaireAssignment::class,
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_many']['anonymousanswers'] = [
-            'class_name' => 'QuestionnaireAnonymousAnswer',
+            'class_name' => QuestionnaireAnonymousAnswer::class,
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
+
         parent::configure($config);
     }
+
+    public $answerable;
 
     public function countAnswers()
     {

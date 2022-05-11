@@ -17,19 +17,19 @@
  */
 class Contact extends SimpleORMap
 {
-
     protected static function configure($config = [])
     {
-
         $config['db_table'] = 'contact';
+
         $config['belongs_to']['owner'] = [
-            'class_name'  => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'owner_id'
         ];
         $config['belongs_to']['friend'] = [
-            'class_name'  => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id'
         ];
+
         $config['has_many']['group_assignments'] = [
             'class_name'        => 'StatusgruppeUser',
             'assoc_func'        => 'findByContact',
@@ -42,7 +42,6 @@ class Contact extends SimpleORMap
             'on_store'          => 'store',
             'on_delete'         => 'delete'
         ];
-
 
         parent::configure($config);
     }

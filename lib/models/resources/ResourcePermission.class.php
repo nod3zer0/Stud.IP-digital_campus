@@ -41,13 +41,13 @@ class ResourcePermission extends SimpleORMap implements PrivacyObject
         $config['db_table'] = 'resource_permissions';
 
         $config['belongs_to']['user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id',
             'assoc_func' => 'find'
         ];
 
         $config['belongs_to']['resource'] = [
-            'class_name' => 'Resource',
+            'class_name' => Resource::class,
             'foreign_key' => 'resource_id',
             'assoc_func' => 'find'
         ];

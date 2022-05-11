@@ -29,17 +29,17 @@ class RoomRequest extends ResourceRequest
     protected static function configure($config = [])
     {
         $config['belongs_to']['room'] = [
-            'class_name'  => 'Room',
+            'class_name'  => Room::class,
             'foreign_key' => 'resource_id',
             'assoc_func'  => 'find'
         ];
-        
+
         $required_properties = [
             'seats',
             'room_type',
             'booking_plan_is_public'
         ];
-        
+
         $config['additional_fields'] = [];
         foreach ($required_properties as $property) {
             $config['additional_fields'][$property] = [
@@ -47,11 +47,11 @@ class RoomRequest extends ResourceRequest
                 'set' => 'setProperty'
             ];
         }
-        
+
         parent::configure($config);
-        
+
     }
-    
+
     public function checkOpen($also_change = false)
     {
         $db              = DBManager::get();
@@ -72,7 +72,7 @@ class RoomRequest extends ResourceRequest
         if ($query) {
             $existing_assign = $db->query($query)->fetchColumn();
         }
-        
+
         if ($existing_assign && $also_change) {
             $this->closed = 1;
             $this->store();

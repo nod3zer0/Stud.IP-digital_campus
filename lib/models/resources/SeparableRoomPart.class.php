@@ -28,27 +28,27 @@ class SeparableRoomPart extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'separable_room_parts';
-        
+
         $config['belongs_to']['separable_room'] = [
-            'class_name'  => 'SeparableRoom',
+            'class_name'  => SeparableRoom::class,
             'foreign_key' => 'separable_room_id',
             'assoc_func'  => 'find'
         ];
         $config['belongs_to']['room']           = [
-            'class_name'  => 'Room',
+            'class_name'  => Room::class,
             'foreign_key' => 'room_id',
             'assoc_func'  => 'find'
         ];
-        
+
         parent::configure($config);
     }
-    
+
     public function getRoomName()
     {
         if ($this->room) {
             return $this->room->name;
         }
-        
+
         return '';
     }
 }

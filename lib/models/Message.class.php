@@ -31,28 +31,30 @@ class Message extends SimpleORMap implements PrivacyObject
     protected static function configure($config = [])
     {
         $config['db_table'] = 'message';
+
         $config['belongs_to']['author'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'autor_id'
         ];
         $config['has_one']['originator'] = [
-            'class_name' => 'MessageUser',
+            'class_name' => MessageUser::class,
             'assoc_func' => 'findSentByMessageId',
             'on_store' => 'store',
             'on_delete' => 'delete'
         ];
         $config['has_many']['receivers'] = [
-            'class_name' => 'MessageUser',
+            'class_name' => MessageUser::class,
             'assoc_func' => 'findReceivedByMessageId',
             'on_store' => 'store',
             'on_delete' => 'delete'
         ];
         $config['has_one']['attachment_folder'] = [
-            'class_name' => 'Folder',
+            'class_name' => Folder::class,
             'assoc_foreign_key' => 'range_id',
             'on_store' => 'store',
             'on_delete' => 'delete'
         ];
+
         parent::configure($config);
     }
 

@@ -33,13 +33,13 @@ class ResourceRequestProperty extends SimpleORMap
         $config['db_table'] = 'resource_request_properties';
 
         $config['belongs_to']['definition'] = [
-            'class_name' => 'ResourcePropertyDefinition',
+            'class_name' => ResourcePropertyDefinition::class,
             'foreign_key' => 'property_id',
             'assoc_func' => 'find'
         ];
 
         $config['belongs_to']['request'] = [
-            'class_name' => 'ResourceRequest',
+            'class_name' => ResourceRequest::class,
             'foreign_key' => 'request_id',
             'assoc_func' => 'find'
         ];
@@ -50,7 +50,7 @@ class ResourceRequestProperty extends SimpleORMap
 
         parent::configure($config);
     }
-    
+
     /**
      * Creates a string containing the appropriate value
      * of this resource property.

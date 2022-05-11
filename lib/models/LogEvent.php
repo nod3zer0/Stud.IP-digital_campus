@@ -29,22 +29,23 @@
 
 class LogEvent extends SimpleORMap implements PrivacyObject
 {
-
-    protected $formatted_text = '';
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'log_events';
+
         $config['belongs_to']['action'] = [
-            'class_name' => 'LogAction',
+            'class_name' => LogAction::class,
             'foreign_key' => 'action_id',
         ];
         $config['belongs_to']['user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id',
         ];
+
         parent::configure($config);
     }
+
+    protected $formatted_text = '';
 
     /**
      * Returns the number of log events counted by actions as an array where

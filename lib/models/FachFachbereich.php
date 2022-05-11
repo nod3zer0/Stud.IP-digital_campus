@@ -17,18 +17,17 @@
 
 class FachFachbereich extends ModuleManagementModel
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_fach_inst';
 
         $config['belongs_to']['fach'] = [
-            'class_name' => 'Fach',
+            'class_name' => Fach::class,
             'foreign_key' => 'fach_id',
             'assoc_func' => 'findCached',
         ];
         $config['belongs_to']['fachbereich'] = [
-            'class_name' => 'Fachbereich',
+            'class_name' => Fachbereich::class,
             'foreign_key' => 'institut_id',
             'assoc_func' => 'findCached',
         ];

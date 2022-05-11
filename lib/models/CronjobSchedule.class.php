@@ -62,11 +62,11 @@ class CronjobSchedule extends SimpleORMap
         $config['db_table'] = 'cronjobs_schedules';
 
         $config['belongs_to']['task'] = [
-            'class_name'  => 'CronjobTask',
+            'class_name'  => CronjobTask::class,
             'foreign_key' => 'task_id',
         ];
         $config['has_many']['logs'] = [
-            'class_name' => 'CronjobLog',
+            'class_name' => CronjobLog::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];

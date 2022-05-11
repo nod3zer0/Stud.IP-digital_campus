@@ -26,6 +26,7 @@ class ToolActivation extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'tools_activated';
+
         $config['belongs_to']['institute'] = [
             'class_name'  => Institute::class,
             'foreign_key' => 'range_id',
@@ -34,6 +35,7 @@ class ToolActivation extends SimpleORMap
             'class_name'  => Course::class,
             'foreign_key' => 'range_id',
         ];
+
         $config['serialized_fields']['metadata'] = 'JSONArrayObject';
         $config['registered_callbacks']['before_create'][] = 'setMaxPosition';
 

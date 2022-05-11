@@ -43,60 +43,53 @@
  */
 class Resource extends SimpleORMap implements StudipItem
 {
-    /**
-     * This is a cache for permissions that users have on resources.
-     * It is meant to reduce the database requests in cases where the
-     * same permission is queried a lot of times.
-     */
-    protected static $permission_cache;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'resources';
 
         $config['belongs_to']['category'] = [
-            'class_name'  => 'ResourceCategory',
+            'class_name'  => ResourceCategory::class,
             'foreign_key' => 'category_id',
             'assoc_func'  => 'find'
         ];
 
         $config['has_many']['properties'] = [
-            'class_name'        => 'ResourceProperty',
+            'class_name'        => ResourceProperty::class,
             'assoc_foreign_key' => 'resource_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store'
         ];
 
         $config['has_many']['permissions'] = [
-            'class_name'        => 'ResourcePermission',
+            'class_name'        => ResourcePermission::class,
             'assoc_foreign_key' => 'resource_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store'
         ];
 
         $config['has_many']['requests'] = [
-            'class_name'        => 'ResourceRequest',
+            'class_name'        => ResourceRequest::class,
             'assoc_foreign_key' => 'resource_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store'
         ];
 
         $config['has_many']['bookings'] = [
-            'class_name'        => 'ResourceBooking',
+            'class_name'        => ResourceBooking::class,
             'assoc_foreign_key' => 'resource_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store'
         ];
 
         $config['has_many']['children'] = [
-            'class_name' => 'Resource',
+            'class_name' => Resource::class,
             'assoc_func' => 'findChildren',
             'on_delete'  => 'delete',
             'on_store'   => 'store'
         ];
 
         $config['belongs_to']['parent'] = [
-            'class_name'  => 'Resource',
+            'class_name'  => Resource::class,
             'foreign_key' => 'parent_id'
         ];
 
@@ -107,6 +100,13 @@ class Resource extends SimpleORMap implements StudipItem
 
         parent::configure($config);
     }
+
+    /**
+     * This is a cache for permissions that users have on resources.
+     * It is meant to reduce the database requests in cases where the
+     * same permission is queried a lot of times.
+     */
+    protected static $permission_cache;
 
     /**
      * Returns the children of a resource.

@@ -76,28 +76,28 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
     protected static function configure($config = [])
     {
         $config['has_many']['course_memberships'] = [
-            'class_name' => 'CourseMember',
+            'class_name' => CourseMember::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['institute_memberships'] = [
-            'class_name' => 'InstituteMember',
+            'class_name' => InstituteMember::class,
             'order_by'   => 'ORDER BY priority ASC',
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['admission_applications'] = [
-            'class_name' => 'AdmissionApplication',
+            'class_name' => AdmissionApplication::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['archived_course_memberships'] = [
-            'class_name' => 'ArchivedCourseMember',
+            'class_name' => ArchivedCourseMember::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['datafields'] = [
-            'class_name'  => 'DatafieldEntryModel',
+            'class_name'  => DatafieldEntryModel::class,
             'foreign_key' => function ($user) {
                 return [$user];
             },
@@ -109,13 +109,13 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             'on_store'   => 'store',
         ];
         $config['has_many']['studycourses'] = [
-            'class_name' => 'UserStudyCourse',
+            'class_name' => UserStudyCourse::class,
             'assoc_func' => 'findByUser',
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_and_belongs_to_many']['contacts'] = [
-            'class_name'     => 'User',
+            'class_name'     => User::class,
             'thru_table'     => 'contact',
             'thru_key'       => 'owner_id',
             'thru_assoc_key' => 'user_id',
@@ -124,28 +124,28 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             'on_store'       => 'store',
         ];
         $config['has_many']['contactgroups'] = [
-            'class_name'        => 'Statusgruppen',
+            'class_name'        => Statusgruppen::class,
             'assoc_foreign_key' => 'range_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',
         ];
         $config['has_one']['info'] = [
-            'class_name' => 'UserInfo',
+            'class_name' => UserInfo::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_one']['online'] = [
-            'class_name' => 'UserOnline',
+            'class_name' => UserOnline::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
         $config['has_many']['resource_permissions'] = [
-            'class_name' => 'ResourcePermission',
+            'class_name' => ResourcePermission::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store'
         ];
         $config['has_many']['resource_temporary_permissions'] = [
-            'class_name' => 'ResourceTemporaryPermission',
+            'class_name' => ResourceTemporaryPermission::class,
             'on_delete'  => 'delete',
             'on_store'   => 'store'
         ];
@@ -166,7 +166,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         ];
 
         $config['has_and_belongs_to_many']['domains'] = [
-            'class_name'        => 'UserDomain',
+            'class_name'        => UserDomain::class,
             'thru_table'        => 'user_userdomains',
             'on_delete'         => 'delete',
             'on_store'          => 'store',

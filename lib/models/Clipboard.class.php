@@ -41,18 +41,18 @@
  */
 class Clipboard extends SimpleORMap
 {
-    public static function configure($config = [])
+    protected static function configure($config = [])
     {
         $config['db_table'] = 'clipboards';
 
         $config['belongs_to']['user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id',
             'assoc_func' => 'find'
         ];
 
         $config['has_many']['items'] = [
-            'class_name' => 'ClipboardItem',
+            'class_name' => ClipboardItem::class,
             'assoc_foreign_key' => 'clipboard_id',
             'on_delete' => 'delete',
             'on_store' => 'store'

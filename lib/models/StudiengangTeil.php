@@ -16,42 +16,36 @@
 
 class StudiengangTeil extends ModuleManagementModelTreeItem
 {
-
-    private $count_versionen;
-    private $fach_name;
-    private $stgteil_name;
-    private $count_contacts;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_stgteil';
 
         $config['has_many']['versionen'] = [
-            'class_name' => 'StgteilVersion',
+            'class_name' => StgteilVersion::class,
             'assoc_foreign_key' => 'stgteil_id',
             'on_delete' => 'delete'
         ];
 
         $config['has_many']['contact_assignments'] = [
-            'class_name'        => 'MvvContactRange',
+            'class_name'        => MvvContactRange::class,
             'assoc_foreign_key' => 'range_id',
             'order_by'          => 'ORDER BY position'
         ];
 
         // The assigned Fach
         $config['belongs_to']['fach'] = [
-            'class_name' => 'Fach',
+            'class_name' => Fach::class,
             'foreign_key' => 'fach_id',
             'assoc_func' => 'findCached',
         ];
         $config['has_and_belongs_to_many']['studiengang'] = [
-            'class_name' => 'Studiengang',
+            'class_name' => Studiengang::class,
             'thru_table' => 'mvv_stg_stgteil',
             'thru_key' => 'stgteil_id',
             'thru_assoc_key' => 'studiengang_id'
         ];
         $config['has_many']['studiengang_assignments'] = [
-            'class_name' => 'StudiengangStgteil',
+            'class_name' => StudiengangStgteil::class,
             'assoc_foreign_key' => 'stgteil_id',
             'on_delete' => 'delete',
             'on_store' => 'store'
@@ -71,6 +65,11 @@ class StudiengangTeil extends ModuleManagementModelTreeItem
 
         parent::configure($config);
     }
+
+    private $count_versionen;
+    private $fach_name;
+    private $stgteil_name;
+    private $count_contacts;
 
     public function __construct($id = null)
     {

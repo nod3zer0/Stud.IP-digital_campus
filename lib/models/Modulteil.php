@@ -16,22 +16,17 @@
 
 class Modulteil extends ModuleManagementModelTreeItem
 {
-
-    private $default_language;
-
-    private $count_lvgruppen;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_modulteil';
 
         $config['belongs_to']['modul'] = [
-            'class_name'  => 'Modul',
+            'class_name'  => Modul::class,
             'foreign_key' => 'modul_id',
             'assoc_func'  => 'findCached',
         ];
         $config['has_and_belongs_to_many']['abschnitte'] = [
-            'class_name'     => 'StgteilAbschnitt',
+            'class_name'     => StgteilAbschnitt::class,
             'thru_table'     => 'mvv_modulteil_stgteilabschnitt',
             'thru_key'       => 'modulteil_id',
             'thru_assoc_key' => 'abschnitt_id',
@@ -39,19 +34,19 @@ class Modulteil extends ModuleManagementModelTreeItem
             'on_store'       => 'store'
         ];
         $config['has_many']['abschnitt_assignments'] = [
-            'class_name' => 'ModulteilStgteilabschnitt',
+            'class_name' => ModulteilStgteilabschnitt::class,
             'order_by'   => 'ORDER BY fachsemester,mkdate',
             'on_delete'  => 'delete',
             'on_store'   => 'store'
         ];
         $config['has_one']['deskriptoren'] = [
-            'class_name'        => 'ModulteilDeskriptor',
+            'class_name'        => ModulteilDeskriptor::class,
             'assoc_foreign_key' => 'modulteil_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store'
         ];
         $config['has_and_belongs_to_many']['lvgruppen'] = [
-            'class_name'     => 'Lvgruppe',
+            'class_name'     => Lvgruppe::class,
             'thru_table'     => 'mvv_lvgruppe_modulteil',
             'thru_key'       => 'modulteil_id',
             'thru_assoc_key' => 'lvgruppe_id',
@@ -60,13 +55,13 @@ class Modulteil extends ModuleManagementModelTreeItem
             'on_store'       => 'store'
         ];
         $config['has_many']['lvgruppen_assignments'] = [
-            'class_name' => 'LvgruppeModulteil',
+            'class_name' => LvgruppeModulteil::class,
             'order_by'   => 'ORDER BY position,mkdate',
             'on_delete'  => 'delete',
             'on_store'   => 'store'
         ];
         $config['has_many']['languages'] = [
-            'class_name'        => 'ModulteilLanguage',
+            'class_name'        => ModulteilLanguage::class,
             'assoc_foreign_key' => 'modulteil_id',
             'order_by'          => 'ORDER BY position,mkdate',
             'on_delete'         => 'delete',
@@ -80,6 +75,9 @@ class Modulteil extends ModuleManagementModelTreeItem
 
         parent::configure($config);
     }
+
+    private $default_language;
+    private $count_lvgruppen;
 
     public function __construct($id = null)
     {

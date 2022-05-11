@@ -39,8 +39,6 @@
  */
 class Statusgruppen extends SimpleORMap implements PrivacyObject
 {
-    public $keep_children = false;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'statusgruppen';
@@ -92,6 +90,8 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
 
         parent::configure($config);
     }
+
+    public $keep_children = false;
 
     public static function findAllByRangeId($range_id, $as_collection = false)
     {

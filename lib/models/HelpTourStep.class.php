@@ -49,8 +49,9 @@ class HelpTourStep extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'help_tour_steps';
+
         $config['belongs_to']['help_tour'] = [
-            'class_name'  => 'HelpTour',
+            'class_name'  => HelpTour::class,
             'foreign_key' => 'tour_id',
         ];
 

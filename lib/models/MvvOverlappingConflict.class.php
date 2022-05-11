@@ -16,59 +16,58 @@
 
 class MvvOverlappingConflict extends SimpleORMap
 {
-    
     /**
      * Configures the model.
-     * 
+     *
      * @param array  $config Configuration
      */
     protected static function configure($config = array()) {
 
         $config['db_table'] = 'mvv_ovl_conflicts';
         $config['belongs_to']['selection'] = [
-            'class_name'  => 'MvvOverlappingSelection',
+            'class_name'  => MvvOverlappingSelection::class,
             'foreign_key' => 'selection_id',
             'assoc_foreign_key' => 'id'
         ];
         $config['belongs_to']['base_abschnitt'] = [
-            'class_name'  => 'StgteilAbschnitt',
+            'class_name'  => StgteilAbschnitt::class,
             'foreign_key' => 'base_abschnitt_id'
         ];
         $config['belongs_to']['base_modulteil'] = [
-            'class_name'  => 'Modulteil',
+            'class_name'  => Modulteil::class,
             'foreign_key' => 'base_modulteil_id'
         ];
         $config['belongs_to']['base_cycle'] = [
-            'class_name'  => 'SeminarCycleDate',
+            'class_name'  => SeminarCycleDate::class,
             'foreign_key' => 'base_metadate_id'
         ];
         $config['belongs_to']['base_course'] = [
-            'class_name'  => 'Course',
+            'class_name'  => Course::class,
             'foreign_key' => 'base_course_id'
         ];
         $config['belongs_to']['comp_abschnitt'] = [
-            'class_name'  => 'StgteilAbschnitt',
+            'class_name'  => StgteilAbschnitt::class,
             'foreign_key' => 'comp_abschnitt_id'
         ];
         $config['belongs_to']['comp_modulteil'] = [
-            'class_name'  => 'Modulteil',
+            'class_name'  => Modulteil::class,
             'foreign_key' => 'comp_modulteil_id'
         ];
         $config['belongs_to']['comp_cycle'] = [
-            'class_name'  => 'SeminarCycleDate',
+            'class_name'  => SeminarCycleDate::class,
             'foreign_key' => 'comp_metadate_id'
         ];
         $config['belongs_to']['comp_course'] = [
-            'class_name'  => 'Course',
+            'class_name'  => Course::class,
             'foreign_key' => 'comp_course_id'
         ];
-        
+
         parent::configure($config);
     }
-    
+
     /**
      * Returns true if this conflict belongs to a excluded (hidden) course.
-     * 
+     *
      * @return boolean True if this conflict is excluded.
      */
     public function isExcluded()
@@ -76,10 +75,10 @@ class MvvOverlappingConflict extends SimpleORMap
         return MvvOverlappingExclude::find([$this->selection->selection_id,
             $this->comp_course_id]) ? true : false;
     }
-    
+
     /**
      * Deletes all conflicts by given selection id.
-     * 
+     *
      * @param string $selection_id
      * @return number
      */

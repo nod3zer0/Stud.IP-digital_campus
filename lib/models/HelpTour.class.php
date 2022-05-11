@@ -46,26 +46,23 @@ require_once 'lib/object.inc.php';
  */
 class HelpTour extends SimpleORMap
 {
-    /**
-     *
-     */
     protected static function configure($config = [])
     {
         $config['db_table'] = 'help_tours';
         $config['has_one']['settings'] = [
-            'class_name'        => 'HelpTourSettings',
+            'class_name'        => HelpTourSettings::class,
             'assoc_foreign_key' => 'tour_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',
         ];
         $config['has_many']['steps'] = [
-            'class_name'        => 'HelpTourStep',
+            'class_name'        => HelpTourStep::class,
             'assoc_foreign_key' => 'tour_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',
         ];
         $config['has_many']['audiences'] = [
-            'class_name'        => 'HelpTourAudience',
+            'class_name'        => HelpTourAudience::class,
             'assoc_foreign_key' => 'tour_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',

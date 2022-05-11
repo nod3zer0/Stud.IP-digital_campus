@@ -34,13 +34,13 @@ class ResourceCategoryProperty extends SimpleORMap
         $config['db_table'] = 'resource_category_properties';
 
         $config['belongs_to']['category'] = [
-            'class_name' => 'ResourceCategory',
+            'class_name' => ResourceCategory::class,
             'foreign_key' => 'category_id',
             'assoc_func' => 'find'
         ];
 
         $config['belongs_to']['definition'] = [
-            'class_name' => 'ResourcePropertyDefinition',
+            'class_name' => ResourcePropertyDefinition::class,
             'foreign_key' => 'property_id',
             'assoc_func' => 'find'
         ];

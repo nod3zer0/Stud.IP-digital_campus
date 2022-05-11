@@ -29,16 +29,16 @@ class Deputy extends SimpleORMap
         $config['db_table'] = 'deputies';
 
         $config['belongs_to']['deputy'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'user_id'
         ];
         $config['belongs_to']['course'] = [
-            'class_name'        => 'Course',
+            'class_name'        => Course::class,
             'foreign_key'       => 'range_id',
             'assoc_foreign_key' => 'seminar_id'
         ];
         $config['belongs_to']['boss'] = [
-            'class_name'        => 'User',
+            'class_name'        => User::class,
             'foreign_key'       => 'range_id',
             'assoc_foreign_key' => 'user_id'
         ];

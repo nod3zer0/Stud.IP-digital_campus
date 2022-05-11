@@ -32,13 +32,13 @@ class ResourceProperty extends SimpleORMap
         $config['db_table'] = 'resource_properties';
 
         $config['belongs_to']['definition'] = [
-            'class_name' => 'ResourcePropertyDefinition',
+            'class_name' => ResourcePropertyDefinition::class,
             'foreign_key' => 'property_id',
             'assoc_func' => 'find'
         ];
 
         $config['belongs_to']['resource'] = [
-            'class_name' => 'Resource',
+            'class_name' => Resource::class,
             'foreign_key' => 'resource_id',
             'assoc_func' => 'find'
         ];

@@ -17,18 +17,17 @@
 
 class ModulInst extends ModuleManagementModel
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_modul_inst';
 
         $config['belongs_to']['institute'] = [
-            'class_name' => 'Fachbereich',
+            'class_name' => Fachbereich::class,
             'foreign_key' => 'institut_id',
             'assoc_func' => 'findCached',
         ];
         $config['belongs_to']['modul'] = [
-            'class_name' => 'Modul',
+            'class_name' => Modul::class,
             'foreign_key' => 'modul_id',
             'assoc_func' => 'findCached',
         ];

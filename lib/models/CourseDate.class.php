@@ -50,21 +50,21 @@ class CourseDate extends SimpleORMap implements PrivacyObject
     {
         $config['db_table'] = 'termine';
         $config['has_and_belongs_to_many']['topics'] = [
-            'class_name' => 'CourseTopic',
+            'class_name' => CourseTopic::class,
             'thru_table' => 'themen_termine',
             'order_by'   => 'ORDER BY priority',
             'on_delete'  => 'delete',
             'on_store'   => 'store'
         ];
         $config['has_and_belongs_to_many']['statusgruppen'] = [
-            'class_name' => 'Statusgruppen',
+            'class_name' => Statusgruppen::class,
             'thru_table' => 'termin_related_groups',
             'order_by'   => 'ORDER BY position',
             'on_delete'  => 'delete',
             'on_store'   => 'store'
         ];
         $config['has_and_belongs_to_many']['dozenten'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'thru_table'  => 'termin_related_persons',
             'foreign_key' => 'termin_id',
             'thru_key'    => 'range_id',
@@ -73,30 +73,30 @@ class CourseDate extends SimpleORMap implements PrivacyObject
             'on_store'    => 'store'
         ];
         $config['has_many']['folders'] = [
-            'class_name' => 'Folder',
+            'class_name' => Folder::class,
             'assoc_func' => 'findByTermin_id'
         ];
         $config['belongs_to']['author'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'autor_id'
         ];
         $config['belongs_to']['course'] = [
-            'class_name'  => 'Course',
+            'class_name'  => Course::class,
             'foreign_key' => 'range_id'
         ];
         $config['belongs_to']['cycle'] = [
-            'class_name'  => 'SeminarCycleDate',
+            'class_name'  => SeminarCycleDate::class,
             'foreign_key' => 'metadate_id'
         ];
         $config['has_one']['room_booking'] = [
-            'class_name'        => 'ResourceBooking',
+            'class_name'        => ResourceBooking::class,
             'foreign_key'       => 'termin_id',
             'assoc_foreign_key' => 'range_id',
             'on_delete'         => 'delete',
             //'on_store'          => 'store'
         ];
         $config['has_many']['room_requests'] = [
-            'class_name'        => 'RoomRequest',
+            'class_name'        => RoomRequest::class,
             'assoc_foreign_key' => 'termin_id',
             'on_delete'         => 'delete',
         ];

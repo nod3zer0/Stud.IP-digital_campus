@@ -17,18 +17,17 @@
 
 class ModulteilStgteilabschnitt extends ModuleManagementModel
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_modulteil_stgteilabschnitt';
 
         $config['belongs_to']['modulteil'] = [
-            'class_name' => 'Modulteil',
+            'class_name' => Modulteil::class,
             'foreign_key' => 'modulteil_id',
             'assoc_func' => 'findCached',
         ];
         $config['belongs_to']['abschnitt'] = [
-            'class_name' => 'StgteilAbschnitt',
+            'class_name' => StgteilAbschnitt::class,
             'foreign_key' => 'abschnitt_id',
             'assoc_func' => 'findCached',
         ];

@@ -55,7 +55,7 @@ class ResourcePropertyDefinition extends SimpleORMap
         $config['db_table'] = 'resource_property_definitions';
 
         $config['belongs_to']['group'] = [
-            'class_name' => 'ResourcePropertyGroup',
+            'class_name' => ResourcePropertyGroup::class,
             'foreign_key' => 'property_group_id'
         ];
         $config['i18n_fields']['display_name'] = true;

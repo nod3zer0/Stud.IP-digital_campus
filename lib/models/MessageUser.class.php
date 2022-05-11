@@ -29,14 +29,16 @@ class MessageUser extends SimpleORMap implements PrivacyObject
     protected static function configure($config = [])
     {
         $config['db_table'] = 'message_user';
+
         $config['belongs_to']['user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id',
         ];
         $config['belongs_to']['message'] = [
-            'class_name' => 'Message',
+            'class_name' => Message::class,
             'foreign_key' => 'message_id',
         ];
+
         $config['registered_callbacks']['after_store'][] = 'cleanUpTags';
         $config['registered_callbacks']['after_delete'][] = 'cleanUpTags';
 

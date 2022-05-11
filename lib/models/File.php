@@ -37,11 +37,11 @@ class File extends SimpleORMap
     {
         $config['db_table'] = 'files';
         $config['belongs_to']['owner'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'user_id',
         ];
         $config['has_many']['refs'] = [
-            'class_name'        => 'FileRef',
+            'class_name'        => FileRef::class,
             'assoc_foreign_key' => 'file_id',
         ];
 

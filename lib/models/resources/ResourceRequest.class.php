@@ -70,47 +70,47 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         $config['db_table'] = 'resource_requests';
 
         $config['belongs_to']['resource'] = [
-            'class_name'  => 'Resource',
+            'class_name'  => Resource::class,
             'foreign_key' => 'resource_id',
             'assoc_func'  => 'find'
         ];
 
         $config['belongs_to']['category'] = [
-            'class_name'  => 'ResourceCategory',
+            'class_name'  => ResourceCategory::class,
             'foreign_key' => 'category_id',
             'assoc_func'  => 'find'
         ];
 
         $config['belongs_to']['user'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'user_id',
             'assoc_func'  => 'find'
         ];
 
         $config['belongs_to']['last_modifier'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'last_modified_by',
             'assoc_func'  => 'find'
         ];
 
         $config['belongs_to']['course'] = [
-            'class_name'  => 'Course',
+            'class_name'  => Course::class,
             'foreign_key' => 'course_id',
             'assoc_func'  => 'find'
         ];
 
         $config['belongs_to']['cycle'] = [
-            'class_name'  => 'SeminarCycleDate',
+            'class_name'  => SeminarCycleDate::class,
             'foreign_key' => 'metadate_id'
         ];
 
         $config['belongs_to']['date'] = [
-            'class_name'  => 'CourseDate',
+            'class_name'  => CourseDate::class,
             'foreign_key' => 'termin_id'
         ];
 
         $config['has_many']['properties'] = [
-            'class_name'        => 'ResourceRequestProperty',
+            'class_name'        => ResourceRequestProperty::class,
             'foreign_key'       => 'id',
             'assoc_foreign_key' => 'request_id',
             'on_store'          => 'store',
@@ -118,7 +118,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         ];
 
         $config['has_many']['appointments'] = [
-            'class_name'        => 'ResourceRequestAppointment',
+            'class_name'        => ResourceRequestAppointment::class,
             'foreign_key'       => 'id',
             'assoc_foreign_key' => 'request_id',
             'on_store'          => 'store',

@@ -40,7 +40,7 @@ class ResourceCategory extends SimpleORMap
         $config['db_table'] = 'resource_categories';
 
         $config['has_and_belongs_to_many']['property_definitions'] = [
-            'class_name'        => 'ResourcePropertyDefinition',
+            'class_name'        => ResourcePropertyDefinition::class,
             'assoc_foreign_key' => 'property_id',
             'thru_table'        => 'resource_category_properties',
             'thru_key'          => 'category_id',
@@ -48,7 +48,7 @@ class ResourceCategory extends SimpleORMap
         ];
 
         $config['has_many']['property_links'] = [
-            'class_name'  => 'ResourceCategoryProperty',
+            'class_name'  => ResourceCategoryProperty::class,
             'assoc_func'  => 'findByCategory_id',
             'foreign_key' => 'id',
             'on_delete'   => 'delete'

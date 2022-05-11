@@ -16,19 +16,18 @@
 
 class ModulteilDeskriptor extends ModuleManagementModel
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_modulteil_deskriptor';
 
         $config['belongs_to']['modulteil'] = [
-            'class_name' => 'Modulteil',
+            'class_name' => Modulteil::class,
             'foreign_key' => 'modulteil_id',
             'assoc_func' => 'findCached',
         ];
 
         $config['has_many']['datafields'] = [
-            'class_name' => 'DatafieldEntryModel',
+            'class_name' => DatafieldEntryModel::class,
             'assoc_foreign_key' =>
                 function($model, $params) {
                     $model->setValue('range_id', $params[0]->deskriptor_id);

@@ -33,6 +33,27 @@
  */
 class AdmissionApplication extends SimpleORMap implements PrivacyObject
 {
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'admission_seminar_user';
+        $config['belongs_to']['user'] = [
+            'class_name' => User::class,
+            'foreign_key' => 'user_id',
+        ];
+        $config['belongs_to']['course'] = [
+            'class_name' => Course::class,
+            'foreign_key' => 'seminar_id',
+        ];
+        $config['additional_fields']['vorname'] = ['user', 'vorname'];
+        $config['additional_fields']['nachname'] = ['user', 'nachname'];
+        $config['additional_fields']['username'] = ['user', 'username'];
+        $config['additional_fields']['email'] = ['user', 'email'];
+        $config['additional_fields']['title_front'] = ['user', 'title_front'];
+        $config['additional_fields']['title_rear'] = ['user', 'title_rear'];
+        $config['additional_fields']['course_name'] = [];
+        parent::configure($config);
+    }
+
     public static function findByCourse($course_id)
     {
         $db = DbManager::get();
@@ -55,27 +76,6 @@ class AdmissionApplication extends SimpleORMap implements PrivacyObject
                              WHERE user_id = ? ORDER BY seminare.Name",
                              [$user_id],
                              __CLASS__ . '::buildExisting');
-    }
-
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'admission_seminar_user';
-        $config['belongs_to']['user'] = [
-            'class_name' => 'User',
-            'foreign_key' => 'user_id',
-        ];
-        $config['belongs_to']['course'] = [
-            'class_name' => 'Course',
-            'foreign_key' => 'seminar_id',
-        ];
-        $config['additional_fields']['vorname'] = ['user', 'vorname'];
-        $config['additional_fields']['nachname'] = ['user', 'nachname'];
-        $config['additional_fields']['username'] = ['user', 'username'];
-        $config['additional_fields']['email'] = ['user', 'email'];
-        $config['additional_fields']['title_front'] = ['user', 'title_front'];
-        $config['additional_fields']['title_rear'] = ['user', 'title_rear'];
-        $config['additional_fields']['course_name'] = [];
-        parent::configure($config);
     }
 
     public function getUserFullname($format = 'full')

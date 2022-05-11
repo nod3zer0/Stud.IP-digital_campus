@@ -13,7 +13,6 @@ class TFASecret extends SimpleORMap
 {
     // Possible authentication types (email may require more tokens in a short
     // period of time with a larger window to accept them).
-
     const TYPES = [
         'email' => [
             'window' => 60,
@@ -24,21 +23,6 @@ class TFASecret extends SimpleORMap
             'period' => 30,
         ],
     ];
-
-    /**
-     * Returns the duration in seconds for which a token is valid.
-     *
-     * @param  string $type Type of token
-     * @return int duration in seconds
-     */
-    public static function getValidationDuration($type)
-    {
-        if (!isset(self::TYPES[$type])) {
-            throw new InvalidArgumentException("Unknown tfa type {$type}");
-        }
-        $t = self::TYPES[$type];
-        return $t['window'] * $t['period'];
-    }
 
     /**
      * Configures the model.
@@ -60,6 +44,20 @@ class TFASecret extends SimpleORMap
         parent::configure($config);
     }
 
+    /**
+     * Returns the duration in seconds for which a token is valid.
+     *
+     * @param  string $type Type of token
+     * @return int duration in seconds
+     */
+    public static function getValidationDuration($type)
+    {
+        if (!isset(self::TYPES[$type])) {
+            throw new InvalidArgumentException("Unknown tfa type {$type}");
+        }
+        $t = self::TYPES[$type];
+        return $t['window'] * $t['period'];
+    }
     /**
      * Overwrites the SORM setNew() method. This will create the secret string.
      *

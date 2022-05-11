@@ -28,7 +28,7 @@ class ResourcePropertyGroup extends SimpleORMap
         $config['db_table'] = 'resource_property_groups';
 
         $config['has_many']['properties'] = [
-            'class_name' => 'ResourcePropertyDefinition',
+            'class_name' => ResourcePropertyDefinition::class,
             'assoc_foreign_key' => 'property_group_id',
             'assoc_func' => 'findByPropertyGroup'
         ];

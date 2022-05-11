@@ -16,80 +16,73 @@
 
 class Studiengang extends ModuleManagementModelTreeItem
 {
-
-    private $count_dokumente;
-    private $count_faecher;
-    private $institut_name;
-    private $kategorie_name;
-    private $count_module;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_studiengang';
 
         $config['belongs_to']['abschluss'] = [
-            'class_name'  => 'Abschluss',
+            'class_name'  => Abschluss::class,
             'foreign_key' => 'abschluss_id',
             'assoc_func'  => 'findCached',
         ];
         $config['has_and_belongs_to_many']['studiengangteile'] = [
-            'class_name'     => 'StudiengangTeil',
+            'class_name'     => StudiengangTeil::class,
             'thru_table'     => 'mvv_stg_stgteil',
             'thru_key'       => 'studiengang_id',
             'thru_assoc_key' => 'stgteil_id'
         ];
         $config['has_many']['stgteil_assignments'] = [
-            'class_name'  => 'StudiengangStgteil',
+            'class_name'  => StudiengangStgteil::class,
             'foreign_key' => 'studiengang_id',
             'order_by'    => 'ORDER BY position',
             'on_delete'   => 'delete',
             'on_store'    => 'store'
         ];
         $config['has_and_belongs_to_many']['stgteil_bezeichnungen'] = [
-            'class_name'     => 'StgteilBezeichnung',
+            'class_name'     => StgteilBezeichnung::class,
             'thru_table'     => 'mvv_stg_stgteil',
             'thru_key'       => 'studiengang_id',
             'thru_assoc_key' => 'stgteil_bez_id',
             'order_by'       => 'GROUP BY stgteil_bez_id ORDER BY position'
         ];
         $config['has_many']['documents'] = [
-            'class_name'             => 'MvvFile',
+            'class_name'             => MvvFile::class,
             'assoc_func'             => 'findbyrange_id',
             'assoc_func_params_func' => function ($stg) { return $stg; }
         ];
         $config['has_many']['document_assignments'] = [
-            'class_name'        => 'MvvFileRange',
+            'class_name'        => MvvFileRange::class,
             'assoc_foreign_key' => 'range_id',
             'order_by'          => 'ORDER BY position',
             'on_delete'         => 'delete',
             'on_store'          => 'store'
         ];
         $config['has_many']['contact_assignments'] = [
-            'class_name'        => 'MvvContactRange',
+            'class_name'        => MvvContactRange::class,
             'assoc_foreign_key' => 'range_id',
             'order_by'          => 'ORDER BY position'
         ];
 
         $config['has_one']['responsible_institute'] = [
-            'class_name'  => 'Fachbereich',
+            'class_name'  => Fachbereich::class,
             'foreign_key' => 'institut_id',
             'assoc_func'  => 'findCached',
         ];
         $config['has_many']['studycourse_types'] = [
-            'class_name'  => 'StudycourseType',
+            'class_name'  => StudycourseType::class,
             'foreign_key' => 'studiengang_id',
             'on_delete'   => 'delete',
             'on_store'    => 'store'
         ];
         $config['has_many']['languages'] = [
-            'class_name'        => 'StudycourseLanguage',
+            'class_name'        => StudycourseLanguage::class,
             'assoc_foreign_key' => 'studiengang_id',
             'order_by'          => 'ORDER BY position,mkdate',
             'on_delete'         => 'delete',
             'on_store'          => 'store'
         ];
         $config['has_many']['datafields'] = [
-            'class_name'        => 'DatafieldEntryModel',
+            'class_name'        => DatafieldEntryModel::class,
             'assoc_foreign_key' =>
                 function($model, $params) {
                     $model->setValue('range_id', $params[0]->id);
@@ -103,14 +96,14 @@ class Studiengang extends ModuleManagementModelTreeItem
                 }
         ];
         $config['has_many']['grundstg_assignments'] = [
-            'class_name'        => 'Aufbaustudiengang',
+            'class_name'        => Aufbaustudiengang::class,
             'assoc_func'        => 'findByaufbau_stg_id',
             'assoc_foreign_key' => 'aufbau_stg_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store'
         ];
         $config['has_many']['aufbaustg_assignments'] = [
-            'class_name'        => 'Aufbaustudiengang',
+            'class_name'        => Aufbaustudiengang::class,
             'assoc_func'        => 'findBygrund_stg_id',
             'assoc_foreign_key' => 'grund_stg_id',
             'on_delete'         => 'delete',
@@ -138,6 +131,12 @@ class Studiengang extends ModuleManagementModelTreeItem
 
         parent::configure($config);
     }
+
+    private $count_dokumente;
+    private $count_faecher;
+    private $institut_name;
+    private $kategorie_name;
+    private $count_module;
 
     public function __construct($id = null)
     {

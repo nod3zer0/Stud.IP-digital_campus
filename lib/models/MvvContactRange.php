@@ -23,7 +23,7 @@ class MvvContactRange extends ModuleManagementModel
         $config['db_table'] = 'mvv_contacts_ranges';
 
         $config['belongs_to']['contact'] = array(
-            'class_name' => 'MvvContact',
+            'class_name' => MvvContact::class,
             'foreign_key' => 'contact_id',
             'assoc_func' => 'findCached',
         );

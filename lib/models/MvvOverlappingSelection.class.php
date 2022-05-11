@@ -16,7 +16,6 @@
 
 class MvvOverlappingSelection extends SimpleORMap
 {
-
     /**
      * Configures the model.
      *
@@ -26,30 +25,30 @@ class MvvOverlappingSelection extends SimpleORMap
     {
         $config['db_table'] = 'mvv_ovl_selections';
         $config['belongs_to']['semester'] = [
-            'class_name'  => 'Semester',
+            'class_name'  => Semester::class,
             'foreign_key' => 'semester_id'
         ];
         $config['belongs_to']['base_version'] = [
-            'class_name'  => 'StgteilVersion',
+            'class_name'  => StgteilVersion::class,
             'foreign_key' => 'base_version_id'
         ];
         $config['belongs_to']['comp_version'] = [
-            'class_name'  => 'StgteilVersion',
+            'class_name'  => StgteilVersion::class,
             'foreign_key' => 'comp_version_id'
         ];
         $config['has_many']['conflicts'] = [
-            'class_name'        => 'MvvOverlappingConflict',
+            'class_name'        => MvvOverlappingConflict::class,
             'foreign_key'       => 'id',
             'assoc_foreign_key' => 'selection_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store'
         ];
         $config['belongs_to']['user'] =  [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'user_id'
         ];
         $config['has_many']['excludes'] = [
-            'class_name'        => 'MvvOverlappingExclude',
+            'class_name'        => MvvOverlappingExclude::class,
             'foreign_key'       => 'selection_id',
             'assoc_foreign_key' => 'selection_id',
             'on_delete'         => 'delete',

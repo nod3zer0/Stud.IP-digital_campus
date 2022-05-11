@@ -23,7 +23,7 @@ class MvvFileRange extends ModuleManagementModel
         $config['db_table'] = 'mvv_files_ranges';
 
         $config['belongs_to']['mvv_file'] = array(
-            'class_name' => 'MvvFile',
+            'class_name' => MvvFile::class,
             'foreign_key' => 'mvvfile_id',
             'assoc_func' => 'findCached',
         );

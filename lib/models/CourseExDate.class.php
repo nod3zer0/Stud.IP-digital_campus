@@ -35,6 +35,38 @@
 
 class CourseExDate extends SimpleORMap implements PrivacyObject
 {
+    /**
+     * Configures this model.
+     *
+     * @param Array $config Configuration array
+     */
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'ex_termine';
+        $config['belongs_to']['author'] = [
+            'class_name'  => User::class,
+            'foreign_key' => 'autor_id'
+        ];
+        $config['belongs_to']['course'] = [
+            'class_name'  => Course::class,
+            'foreign_key' => 'range_id'
+        ];
+        $config['belongs_to']['cycle'] = [
+            'class_name'  => SeminarCycleDate::class,
+            'foreign_key' => 'metadate_id'
+        ];
+
+        $dummy_relation = function () { return new SimpleCollection(); };
+        $dummy_null = function () { return null; };
+        $config['additional_fields']['topics']['get'] = $dummy_relation;
+        $config['additional_fields']['statusgruppen']['get'] = $dummy_relation;
+        $config['additional_fields']['dozenten']['get'] = $dummy_relation;
+        $config['additional_fields']['room_booking']['get'] = $dummy_null;
+        $config['additional_fields']['room_request']['get'] = $dummy_null;
+        $config['default_values']['date_typ'] = 1;
+        parent::configure($config);
+    }
+
     const FORMAT_DEFAULT = 'default';
     const FORMAT_VERBOSE = 'verbose';
 
@@ -60,39 +92,6 @@ class CourseExDate extends SimpleORMap implements PrivacyObject
     {
         return parent::findByRange_id($seminar_id, $order_by);
     }
-
-    /**
-     * Configures this model.
-     *
-     * @param Array $config Configuration array
-     */
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'ex_termine';
-        $config['belongs_to']['author'] = [
-            'class_name'  => 'User',
-            'foreign_key' => 'autor_id'
-        ];
-        $config['belongs_to']['course'] = [
-            'class_name'  => 'Course',
-            'foreign_key' => 'range_id'
-        ];
-        $config['belongs_to']['cycle'] = [
-            'class_name'  => 'SeminarCycleDate',
-            'foreign_key' => 'metadate_id'
-        ];
-
-        $dummy_relation = function () { return new SimpleCollection(); };
-        $dummy_null = function () { return null; };
-        $config['additional_fields']['topics']['get'] = $dummy_relation;
-        $config['additional_fields']['statusgruppen']['get'] = $dummy_relation;
-        $config['additional_fields']['dozenten']['get'] = $dummy_relation;
-        $config['additional_fields']['room_booking']['get'] = $dummy_null;
-        $config['additional_fields']['room_request']['get'] = $dummy_null;
-        $config['default_values']['date_typ'] = 1;
-        parent::configure($config);
-    }
-
     /**
      * Returns the name of the assigned room for this date.
      *

@@ -44,11 +44,23 @@
  * @property string mkdate database column
  * @property string chdate database column
  */
-class HelpContent extends SimpleORMap {
-    
+class HelpContent extends SimpleORMap
+{
+    /**
+     * configure SORM
+     *
+     * @param array $config           configuration
+     */
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'help_content';
+
+        parent::configure($config);
+    }
+
     /**
      * fetches set of content from database for given route
-     * 
+     *
      * @param string $route           route for help content
      * @param string $language        language
      * @return array                  set of help content
@@ -74,7 +86,7 @@ class HelpContent extends SimpleORMap {
 
     /**
      * fetches content for given content_id
-     * 
+     *
      * @param string $id              id of help content
      * @return array                  help content object
      */
@@ -91,7 +103,7 @@ class HelpContent extends SimpleORMap {
 
     /**
      * fetches set of help content from database filtered by parameters
-     * 
+     *
      * @param string $term            search term for content
      * @param boolean $as_objects     include HelpContent objects in result array
      * @return array                  set of help content
@@ -100,7 +112,7 @@ class HelpContent extends SimpleORMap {
     {
         $params = [];
         $condition = '';
-        if (mb_strlen(trim($term)) >= 3) { 
+        if (mb_strlen(trim($term)) >= 3) {
             $condition =  "WHERE content LIKE CONCAT('%', ?, '%')";
             $params[] = $term;
         }
@@ -116,7 +128,7 @@ class HelpContent extends SimpleORMap {
 
     /**
      * fetches help content conflicts
-     * 
+     *
      * @return array                  set of help content
      */
     public static function GetConflicts()
@@ -146,7 +158,7 @@ class HelpContent extends SimpleORMap {
 
     /**
      * builds help content objects for given set of content data
-     * 
+     *
      * @param array $content_result   content set
      * @return array                  set of content objects
      */
@@ -161,17 +173,5 @@ class HelpContent extends SimpleORMap {
             }
         }
         return $objects;
-    }
-
-    /**
-     * configure SORM
-     * 
-     * @param array $config           configuration 
-     */
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'help_content';
-        
-        parent::configure($config);
     }
 }

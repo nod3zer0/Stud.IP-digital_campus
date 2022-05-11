@@ -17,13 +17,12 @@
 
 class ModulLanguage extends ModuleManagementModel
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_modul_language';
 
         $config['belongs_to']['modul'] = [
-            'class_name' => 'Modul',
+            'class_name' => Modul::class,
             'foreign_key' => 'modul_id',
             'assoc_func' => 'findCached',
         ];

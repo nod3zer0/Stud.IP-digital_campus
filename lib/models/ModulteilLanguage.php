@@ -17,13 +17,12 @@
 
 class ModulteilLanguage extends ModuleManagementModel
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_modulteil_language';
 
         $config['belongs_to']['modulteil'] = [
-            'class_name' => 'Modulteil',
+            'class_name' => Modulteil::class,
             'foreign_key' => 'modulteil_id',
             'assoc_func' => 'findCached',
         ];

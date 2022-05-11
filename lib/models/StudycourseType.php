@@ -17,13 +17,12 @@
 
 class StudycourseType extends ModuleManagementModel
 {
-
     protected static function configure($config = array())
     {
         $config['db_table'] = 'mvv_studycourse_type';
 
         $config['belongs_to']['studycourse'] = array(
-            'class_name' => 'Studiengang',
+            'class_name' => Studiengang::class,
             'foreign_key' => 'studiengang_id',
             'assoc_func' => 'findCached',
         );

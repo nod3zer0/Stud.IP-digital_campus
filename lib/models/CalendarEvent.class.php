@@ -33,9 +33,6 @@ class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
     const PARTSTAT_DELEGATED = 4;
     const PARTSTAT_NEEDS_ACTION = 5;
 
-    private $properties = null;
-    private $permission_user_id = null;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'calendar_event';
@@ -93,6 +90,9 @@ class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
 
         parent::configure($config);
     }
+
+    private $properties = null;
+    private $permission_user_id = null;
 
     /**
      * Returns the owner of this event as an object of type User, Course

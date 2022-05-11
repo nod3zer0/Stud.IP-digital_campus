@@ -27,15 +27,15 @@ class NewsRange extends SimpleORMap
     {
         $config['db_table'] = 'news_range';
         $config['belongs_to']['user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'range_id',
         ];
         $config['belongs_to']['course'] = [
-            'class_name' => 'Course',
+            'class_name' => Course::class,
             'foreign_key' => 'range_id',
         ];
         $config['belongs_to']['institute'] = [
-            'class_name' => 'Institute',
+            'class_name' => Institute::class,
             'foreign_key' => 'range_id',
         ];
         $config['additional_fields']['type'] = true;

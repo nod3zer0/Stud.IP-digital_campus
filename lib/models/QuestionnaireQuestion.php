@@ -7,20 +7,23 @@ class QuestionnaireQuestion extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'questionnaire_questions';
+
         $config['belongs_to']['questionnaire'] = [
-            'class_name' => 'Questionnaire',
+            'class_name' => Questionnaire::class,
             'foreign_key' => 'questionnaire_id'
         ];
         $config['has_many']['answers'] = [
-            'class_name' => 'QuestionnaireAnswer',
+            'class_name' => QuestionnaireAnswer::class,
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['belongs_to']['etask'] = [
-            'class_name' => '\\eTask\\Task',
+            'class_name' => \eTask\Task::class,
             'foreign_key' => 'etask_task_id'
         ];
+
         parent::configure($config);
+
     }
 
     public static function findByQuestionnaire_id($questionnaire_id)

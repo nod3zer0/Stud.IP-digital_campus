@@ -16,41 +16,34 @@
 
 class Fach extends ModuleManagementModelTreeItem implements PrivacyObject
 {
-
-    private $count_abschluesse;
-    private $count_user;
-    private $count_sem;
-    private $count_stgteile;
-    private $count_module;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'fach';
 
         $config['has_many']['abschluesse'] = [
-            'class_name' => 'Abschluss',
+            'class_name' => Abschluss::class,
             'assoc_func' => 'findByFach'
         ];
         $config['has_many']['studiengangteile'] = [
-            'class_name' => 'StudiengangTeil',
+            'class_name' => StudiengangTeil::class,
             'assoc_foreign_key' => 'fach_id'
         ];
         $config['has_and_belongs_to_many']['departments'] = [
-            'class_name' => 'Fachbereich',
+            'class_name' => Fachbereich::class,
             'thru_table' => 'mvv_fach_inst',
             'thru_key' => 'fach_id',
             'thru_assoc_key' => 'institut_id',
             'order_by' => 'ORDER BY position'
         ];
         $config['has_and_belongs_to_many']['degrees'] = [
-            'class_name' => 'Abschluss',
+            'class_name' => Abschluss::class,
             'thru_table' => 'user_studiengang',
             'thru_key' => 'fach_id',
             'thru_assoc_key' => 'abschluss_id',
             'order_by' => 'GROUP BY abschluss_id ORDER BY name'
         ];
         $config['has_many']['department_assignments'] = [
-            'class_name' => 'FachFachbereich',
+            'class_name' => FachFachbereich::class,
             'assoc_foreign_key' => 'fach_id',
             'order_by' => 'ORDER BY position',
             'on_store' => 'store',
@@ -78,6 +71,12 @@ class Fach extends ModuleManagementModelTreeItem implements PrivacyObject
 
         parent::configure($config);
     }
+
+    private $count_abschluesse;
+    private $count_user;
+    private $count_sem;
+    private $count_stgteile;
+    private $count_module;
 
     /**
      *

@@ -45,7 +45,7 @@ class CronjobLog extends SimpleORMap
         $config['db_table'] = 'cronjobs_logs';
 
         $config['belongs_to']['schedule'] = [
-            'class_name'  => 'CronjobSchedule',
+            'class_name'  => CronjobSchedule::class,
             'foreign_key' => 'schedule_id',
         ];
 

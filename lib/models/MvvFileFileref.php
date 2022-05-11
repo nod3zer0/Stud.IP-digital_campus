@@ -23,13 +23,13 @@ class MvvFileFileref extends ModuleManagementModel
         $config['db_table'] = 'mvv_files_filerefs';
 
         $config['belongs_to']['mvv_file'] = array(
-            'class_name' => 'MvvFile',
+            'class_name' => MvvFile::class,
             'foreign_key' => 'mvvfile_id',
             'assoc_func' => 'findCached',
         );
 
         $config['belongs_to']['file_ref'] = array(
-            'class_name' => 'FileRef',
+            'class_name' => FileRef::class,
             'foreign_key' => 'fileref_id',
         );
         $config['additional_fields']['filetype']['get'] = 'getFiletype';

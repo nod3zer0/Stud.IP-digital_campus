@@ -50,19 +50,19 @@ class StudipNews extends SimpleORMap implements PrivacyObject
     {
         $config['db_table'] = 'news';
         $config['has_many']['news_ranges'] = [
-            'class_name'        => 'NewsRange',
+            'class_name'        => NewsRange::class,
             'assoc_foreign_key' => 'news_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',
         ];
         $config['has_many']['comments'] = [
-            'class_name'        => 'StudipComment',
+            'class_name'        => StudipComment::class,
             'assoc_foreign_key' => 'object_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',
         ];
         $config['belongs_to']['owner'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'user_id',
         ];
         $config['has_many']['news_roles'] = [

@@ -32,29 +32,25 @@
  */
 class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
 {
-
-    protected $folder_type;
-    protected $download_url;
-    public $path_to_blob;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'file_refs';
+
         $config['belongs_to']['file'] = [
-            'class_name'  => 'File',
+            'class_name'  => File::class,
             'foreign_key' => 'file_id',
         ];
         $config['belongs_to']['folder'] = [
-            'class_name'  => 'Folder',
+            'class_name'  => Folder::class,
             'foreign_key' => 'folder_id',
         ];
         $config['belongs_to']['owner'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'user_id',
         ];
 
         $config['belongs_to']['terms_of_use'] = [
-            'class_name' => 'ContentTermsOfUse',
+            'class_name' => ContentTermsOfUse::class,
             'foreign_key' => 'content_terms_of_use_id',
             'assoc_func' => 'findOrBuild'
         ];
@@ -74,6 +70,10 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
 
         parent::configure($config);
     }
+
+    protected $folder_type;
+    protected $download_url;
+    public $path_to_blob;
 
     /**
      * This callback is called after deleting a FileRef.

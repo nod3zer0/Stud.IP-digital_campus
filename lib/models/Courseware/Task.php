@@ -69,11 +69,6 @@ class Task extends \SimpleORMap
             'foreign_key' => 'seminar_id',
         ];
 
-        $config['belongs_to']['structural_element'] = [
-            'class_name' => StructuralElement::class,
-            'foreign_key' => 'structural_element_id',
-        ];
-
         $config['belongs_to']['task_feedback'] = [
             'class_name' => TaskFeedback::class,
             'foreign_key' => 'feedback_id',

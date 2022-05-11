@@ -35,16 +35,6 @@
  */
 class DataField extends SimpleORMap implements PrivacyObject
 {
-    protected static $permission_masks = [
-        'user'   => 1,
-        'autor'  => 2,
-        'tutor'  => 4,
-        'dozent' => 8,
-        'admin'  => 16,
-        'root'   => 32,
-        'self'   => 64,
-    ];
-
     /**
      * Configures this model.
      *
@@ -54,11 +44,11 @@ class DataField extends SimpleORMap implements PrivacyObject
     {
         $config['db_table'] = 'datafields';
         $config['has_many']['entries'] = [
-            'class_name' => 'DatafieldEntryModel',
+            'class_name' => DatafieldEntryModel::class,
             'on_delete'  => 'delete',
         ];
         $config['has_many']['visibility_settings'] = [
-            'class_name'        => 'User_Visibility_Settings',
+            'class_name'        => User_Visibility_Settings::class,
             'assoc_foreign_key' => 'identifier',
             'on_delete'         => 'delete',
         ];
@@ -78,6 +68,15 @@ class DataField extends SimpleORMap implements PrivacyObject
         parent::configure($config);
     }
 
+    protected static $permission_masks = [
+        'user'   => 1,
+        'autor'  => 2,
+        'tutor'  => 4,
+        'dozent' => 8,
+        'admin'  => 16,
+        'root'   => 32,
+        'self'   => 64,
+    ];
     /**
      * Returns a collection of datafields filtered by objectType,
      * objectClass and/or unassigned objectClasses.

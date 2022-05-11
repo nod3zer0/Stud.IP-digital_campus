@@ -44,6 +44,46 @@ require_once 'lib/dates.inc.php';
 class SeminarCycleDate extends SimpleORMap
 {
     /**
+     * Configures this model.
+     *
+     * @param Array $config Configuration array
+     */
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'seminar_cycle_dates';
+        $config['belongs_to']['course'] = array(
+            'class_name' => Course::class,
+            'foreign_key' => 'seminar_id',
+        );
+        $config['has_many']['room_requests'] = [
+            'class_name' => RoomRequest::class,
+            'on_store'   => 'store',
+            'on_delete'  => 'delete',
+            'assoc_func' => 'findByMetadate_id'
+        ];
+        $config['has_many']['dates'] = [
+            'class_name' => CourseDate::class,
+            'on_delete'  => 'delete',
+            'on_store'   => 'store',
+            'order_by'   => 'ORDER BY date'
+        ];
+
+        $config['has_many']['exdates'] = [
+            'class_name' => CourseExDate::class,
+            'on_delete'  => 'delete',
+            'on_store'   => 'store',
+            'order_by'   => 'ORDER BY date'
+        ];
+
+        $config['additional_fields']['start_hour'] = ['get' => 'getTimeFraction', 'set' => 'setTimeFraction'];
+        $config['additional_fields']['start_minute'] = ['get' => 'getTimeFraction', 'set' => 'setTimeFraction'];
+        $config['additional_fields']['end_hour'] = ['get' => 'getTimeFraction', 'set' => 'setTimeFraction'];
+        $config['additional_fields']['end_minute'] = ['get' => 'getTimeFraction', 'set' => 'setTimeFraction'];
+        $config['additional_fields']['is_visible'] = ['get' => 'getIsVisible'];
+        parent::configure($config);
+    }
+
+    /**
      * returns array of instances of SeminarCycleDates of the given seminar_id
      *
      * @param string seminar_id: selected seminar to search for SeminarCycleDates
@@ -66,47 +106,6 @@ class SeminarCycleDate extends SimpleORMap
         return self::findOneBySql("metadate_id=(SELECT metadate_id FROM termine WHERE termin_id = ? "
                                   . "UNION SELECT metadate_id FROM ex_termine WHERE termin_id = ? )", [$termin_id, $termin_id]);
     }
-
-    /**
-     * Configures this model.
-     *
-     * @param Array $config Configuration array
-     */
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'seminar_cycle_dates';
-        $config['belongs_to']['course'] = array(
-            'class_name' => 'Course',
-            'foreign_key' => 'seminar_id',
-        );
-        $config['has_many']['room_requests'] = [
-            'class_name' => 'RoomRequest',
-            'on_store'   => 'store',
-            'on_delete'  => 'delete',
-            'assoc_func' => 'findByMetadate_id'
-        ];
-        $config['has_many']['dates'] = [
-            'class_name' => 'CourseDate',
-            'on_delete'  => 'delete',
-            'on_store'   => 'store',
-            'order_by'   => 'ORDER BY date'
-        ];
-
-        $config['has_many']['exdates'] = [
-            'class_name' => 'CourseExDate',
-            'on_delete'  => 'delete',
-            'on_store'   => 'store',
-            'order_by'   => 'ORDER BY date'
-        ];
-
-        $config['additional_fields']['start_hour'] = ['get' => 'getTimeFraction', 'set' => 'setTimeFraction'];
-        $config['additional_fields']['start_minute'] = ['get' => 'getTimeFraction', 'set' => 'setTimeFraction'];
-        $config['additional_fields']['end_hour'] = ['get' => 'getTimeFraction', 'set' => 'setTimeFraction'];
-        $config['additional_fields']['end_minute'] = ['get' => 'getTimeFraction', 'set' => 'setTimeFraction'];
-        $config['additional_fields']['is_visible'] = ['get' => 'getIsVisible'];
-        parent::configure($config);
-    }
-
     /**
      * Returns the time fraction for a given field.
      *

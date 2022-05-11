@@ -11,11 +11,11 @@ class Definition extends \SimpleORMap
         $config['db_table'] = 'grading_definitions';
 
         $config['belongs_to']['course'] = [
-            'class_name' => 'Course',
+            'class_name' => \Course::class,
             'foreign_key' => 'course_id',
         ];
         $config['has_many']['instances'] = [
-            'class_name' => '\\Grading\\Instance',
+            'class_name' => Instance::class,
             'assoc_foreign_key' => 'definition_id',
             'on_delete' => 'delete',
             'on_store' => 'store',

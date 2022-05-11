@@ -39,7 +39,7 @@ class StatusgruppeUser extends SimpleORMap implements PrivacyObject
         ];
 
         $config['has_many']['datafields'] = [
-            'class_name' => 'DatafieldEntryModel',
+            'class_name' => DatafieldEntryModel::class,
             'foreign_key' => function($group_member) {
                 return [$group_member];
             },

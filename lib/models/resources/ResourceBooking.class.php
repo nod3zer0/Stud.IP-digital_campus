@@ -59,34 +59,32 @@
  */
 class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calendar\EventSource
 {
-    private $assigned_user_type;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'resource_bookings';
 
         $config['belongs_to']['resource'] = [
-            'class_name' => 'Resource',
+            'class_name' => Resource::class,
             'foreign_key' => 'resource_id',
             'assoc_func' => 'find'
         ];
         $config['belongs_to']['assigned_user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'range_id',
             'assoc_func' => 'find'
         ];
         $config['belongs_to']['assigned_course_date'] = [
-            'class_name' => 'CourseDate',
+            'class_name' => CourseDate::class,
             'foreign_key' => 'range_id',
             'assoc_func' => 'find'
         ];
         $config['has_many']['time_intervals'] = [
-            'class_name' => 'ResourceBookingInterval',
+            'class_name' => ResourceBookingInterval::class,
             'assoc_foreign_key' => 'booking_id',
             'on_delete' => 'delete'
         ];
         $config['belongs_to']['booking_user'] = [
-            'class_name' => 'User',
+            'class_name' => User::class,
             'foreign_key' => 'booking_user_id',
             'assoc_func' => 'find'
         ];
@@ -109,6 +107,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         parent::configure($config);
     }
 
+    private $assigned_user_type;
 
     public function createStoreLogEntry()
     {

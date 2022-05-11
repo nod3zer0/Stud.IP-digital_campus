@@ -17,18 +17,17 @@
 
 class LvgruppeSeminar extends ModuleManagementModel
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_lvgruppe_seminar';
 
         $config['belongs_to']['lvgruppe'] = [
-            'class_name' => 'Lvgruppe',
+            'class_name' => Lvgruppe::class,
             'foreign_key' => 'lvgruppe_id',
             'assoc_func' => 'findCached',
         ];
         $config['belongs_to']['course'] = [
-            'class_name' => 'Course',
+            'class_name' => Course::class,
             'foreign_key' => 'seminar_id'
         ];
 

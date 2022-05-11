@@ -14,9 +14,6 @@
 
 class CourseEvent extends CourseDate implements Event
 {
-    private $properties = null;
-    private $permission_user_id = null;
-
     protected static function configure($config = [])
     {
         $config['alias_fields']['event_id'] = 'termin_id';
@@ -37,7 +34,7 @@ class CourseEvent extends CourseDate implements Event
         };
         $config['additional_fields']['uid']['get'] = function ($date) {
             return 'Stud.IP-SEM-' . $date->getId()
-                    . '@' . $_SERVER['SERVER_NAME'];
+                . '@' . $_SERVER['SERVER_NAME'];
         };
         $config['additional_fields']['summary']['get'] = function ($date) {
             return $date->course->name;
@@ -47,6 +44,9 @@ class CourseEvent extends CourseDate implements Event
         };
         parent::configure($config);
     }
+
+    private $properties = null;
+    private $permission_user_id = null;
 
     public function __construct($id = null)
     {

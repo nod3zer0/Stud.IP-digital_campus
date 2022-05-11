@@ -16,34 +16,31 @@
 
 class StgteilAbschnitt extends ModuleManagementModelTreeItem
 {
-
-    private $count_module;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_stgteilabschnitt';
 
         $config['has_and_belongs_to_many']['module'] = [
-            'class_name' => 'Modul',
+            'class_name' => Modul::class,
             'thru_table' => 'mvv_stgteilabschnitt_modul',
             'thru_key' => 'abschnitt_id',
             'thru_assoc_key' => 'modul_id',
             'order_by' => 'ORDER BY position,mkdate'
         ];
         $config['belongs_to']['version'] = [
-            'class_name' => 'StgteilVersion',
+            'class_name' => StgteilVersion::class,
             'foreign_key' => 'version_id',
             'assoc_func' => 'findCached',
         ];
         $config['has_many']['modul_zuordnungen'] = [
-            'class_name' => 'StgteilabschnittModul',
+            'class_name' => StgteilabschnittModul::class,
             'assoc_foreign_key' => 'abschnitt_id',
             'order_by' => 'ORDER BY position,mkdate',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_many']['modulteil_abschnitte'] = [
-            'class_name' => 'ModulteilStgteilabschnitt',
+            'class_name' => ModulteilStgteilabschnitt::class,
             'assoc_foreign_key' => 'abschnitt_id',
             'order_by' => 'ORDER BY fachsemester',
             'on_delete' => 'delete',
@@ -60,6 +57,8 @@ class StgteilAbschnitt extends ModuleManagementModelTreeItem
 
         parent::configure($config);
     }
+
+    private $count_module;
 
     /**
      * @see ModuleManagementModel::getClassDisplayName

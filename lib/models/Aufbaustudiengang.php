@@ -16,21 +16,20 @@
 
 class Aufbaustudiengang extends ModuleManagementModel
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_aufbaustudiengang';
 
-        $config['belongs_to']['grund_studiengang'] = array(
-            'class_name' => 'Studiengang',
+        $config['belongs_to']['grund_studiengang'] = [
+            'class_name' => Studiengang::class,
             'foreign_key' => 'grund_stg_id',
             'assoc_func' => 'findCached',
-        );
-        $config['has_one']['aufbau_studiengang'] = array(
-            'class_name' => 'Studiengang',
+        ];
+        $config['has_one']['aufbau_studiengang'] = [
+            'class_name' => Studiengang::class,
             'foreign_key' => 'aufbau_stg_id',
             'assoc_func' => 'findCached',
-        );
+        ];
 
         $config['i18n_fields']['kommentar'] = true;
 

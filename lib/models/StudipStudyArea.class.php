@@ -36,35 +36,35 @@ class StudipStudyArea extends SimpleORMap
      */
     const ROOT = 'root';
 
-    /**
-     * This is required, if the nodes are added backwards
-     */
-    public $required_children = [];
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'sem_tree';
         $config['has_many']['_children'] = [
-            'class_name' => 'StudipStudyArea',
+            'class_name' => StudipStudyArea::class,
             'assoc_foreign_key' => 'parent_id',
             'assoc_func' => 'findByParent',
             'on_delete' => 'delete',
             'on_store' => 'store',
         ];
         $config['has_and_belongs_to_many']['courses'] = [
-            'class_name' => 'Course',
+            'class_name' => Course::class,
             'thru_table' => 'seminar_sem_tree',
         ];
         $config['belongs_to']['institute'] = [
-            'class_name' => 'Institute',
+            'class_name' => Institute::class,
             'foreign_key' => 'studip_object_id',
         ];
         $config['belongs_to']['_parent'] = [
-            'class_name' => 'StudipStudyArea',
+            'class_name' => StudipStudyArea::class,
             'foreign_key' => 'parent_id',
         ];
         parent::configure($config);
     }
+
+    /**
+     * This is required, if the nodes are added backwards
+     */
+    public $required_children = [];
 
     /**
      * Returns the children of the study area with the specified ID.

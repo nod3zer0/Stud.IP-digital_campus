@@ -45,13 +45,13 @@ class ResourceBookingInterval extends SimpleORMap
         $config['db_table'] = 'resource_booking_intervals';
 
         $config['belongs_to']['booking'] = [
-            'class_name' => 'ResourceBooking',
+            'class_name' => ResourceBooking::class,
             'foreign_key' => 'booking_id',
             'assoc_func' => 'find'
         ];
 
         $config['belongs_to']['resource'] = [
-            'class_name' => 'Resource',
+            'class_name' => Resource::class,
             'foreign_key' => 'resource_id',
             'assoc_func' => 'find'
         ];
@@ -97,7 +97,7 @@ class ResourceBookingInterval extends SimpleORMap
         }
         return true;
     }
-    
+
     /**
      * Converts this ResourceBookingInterval object to a DateInterval object.
      *

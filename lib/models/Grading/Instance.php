@@ -9,11 +9,11 @@ class Instance extends \SimpleORMap
         $config['db_table'] = 'grading_instances';
 
         $config['belongs_to']['user'] = [
-            'class_name' => 'User',
+            'class_name' => \User::class,
             'foreign_key' => 'user_id',
         ];
         $config['belongs_to']['definition'] = [
-            'class_name' => '\\Grading\\Definition',
+            'class_name' => Definition::class,
             'foreign_key' => 'definition_id',
         ];
 

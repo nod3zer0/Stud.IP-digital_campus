@@ -16,26 +16,12 @@
 
 class Modul extends ModuleManagementModelTreeItem
 {
-    /**
-     * The default language of the deskriptor (defined in config).
-     *
-     * @var string
-     */
-    private $default_language;
-
-    /**
-     * The number of modulteile.
-     *
-     * @var int
-     */
-    private $count_modulteile;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_modul';
 
         $config['has_one']['deskriptoren'] = [
-            'class_name' => 'ModulDeskriptor',
+            'class_name' => ModulDeskriptor::class,
             'assoc_foreign_key' => 'modul_id',
             'on_delete' => 'delete',
             'on_store' => 'store'
@@ -49,7 +35,7 @@ class Modul extends ModuleManagementModelTreeItem
             'foreign_key' => 'end',
         ];
         $config['has_many']['modulteile'] = [
-            'class_name' => 'Modulteil',
+            'class_name' => Modulteil::class,
             'assoc_foreign_key' => 'modul_id',
             'on_delete' => 'delete',
             'on_store' => 'store',
@@ -57,46 +43,46 @@ class Modul extends ModuleManagementModelTreeItem
         ];
         // Ist Novellierung von (quelle)
         $config['has_one']['modul_quelle'] = [
-            'class_name' => 'Modul',
+            'class_name' => Modul::class,
             'foreign_key' => 'quelle',
             'assoc_func' => 'findCached',
         ];
         // Ist Variante von (variante)
         $config['has_one']['modul_variante'] = [
-            'class_name' => 'Modul',
+            'class_name' => Modul::class,
             'foreign_key' => 'variante',
             'assoc_func' => 'findCached',
         ];
         // hauptverantwortliche Einrichtung
         $config['has_one']['responsible_institute'] = [
-            'class_name' => 'ModulInst',
+            'class_name' => ModulInst::class,
             'assoc_func' => 'findPrimarilyResponsibleInstitute',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         // beteiligte Einrichtungen
         $config['has_many']['assigned_institutes'] = [
-            'class_name' => 'ModulInst',
+            'class_name' => ModulInst::class,
             'assoc_func' => 'findOtherResponsibleInstitutes',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_many']['contact_assignments'] = [
-            'class_name' => 'MvvContactRange',
+            'class_name' => MvvContactRange::class,
             'assoc_foreign_key' => 'range_id',
             'order_by' => 'ORDER BY position',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_many']['abschnitte_modul'] = [
-            'class_name' => 'StgteilabschnittModul',
+            'class_name' => StgteilabschnittModul::class,
             'assoc_foreign_key' => 'modul_id',
             'order_by' => 'ORDER BY position,mkdate',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_and_belongs_to_many']['abschnitte'] = [
-            'class_name' => 'StgteilAbschnitt',
+            'class_name' => StgteilAbschnitt::class,
             'thru_table' => 'mvv_stgteilabschnitt_modul',
             'thru_key' => 'modul_id',
             'thru_assoc_key' => 'abschnitt_id',
@@ -104,7 +90,7 @@ class Modul extends ModuleManagementModelTreeItem
         ];
         // Assigned languages of instruction
         $config['has_many']['languages'] = [
-            'class_name' => 'ModulLanguage',
+            'class_name' => ModulLanguage::class,
             'assoc_foreign_key' => 'modul_id',
             'order_by' => 'ORDER BY position,mkdate',
             'on_delete' => 'delete',
@@ -126,6 +112,20 @@ class Modul extends ModuleManagementModelTreeItem
 
         parent::configure($config);
     }
+
+    /**
+     * The default language of the deskriptor (defined in config).
+     *
+     * @var string
+     */
+    private $default_language;
+
+    /**
+     * The number of modulteile.
+     *
+     * @var int
+     */
+    private $count_modulteile;
 
     public function __construct($id = null)
     {

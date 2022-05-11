@@ -43,6 +43,18 @@
 
 class StudipComment extends SimpleORMap implements PrivacyObject
 {
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'comments';
+
+        $config['belongs_to']['news'] = [
+            'class_name' => StudipNews::class,
+            'foreign_key' => 'object_id',
+        ];
+
+        parent::configure($config);
+    }
+
     public static function NumCommentsForObject($object_id)
     {
         return self::countBySql('object_id = ?', [$object_id]);
@@ -57,7 +69,7 @@ class StudipComment extends SimpleORMap implements PrivacyObject
         }
         return self::countBySql($query, [$object_id, $comments_since, $exclude_user_id]);
     }
-    
+
     public static function GetCommentsForObject($object_id)
     {
         global $_fullname_sql;
@@ -72,7 +84,7 @@ class StudipComment extends SimpleORMap implements PrivacyObject
         $statement->execute([$object_id]);
         return $statement->fetchAll(PDO::FETCH_BOTH);
     }
-    
+
     public static function DeleteCommentsByObject($object_ids)
     {
         if (!is_array($object_ids)) {
@@ -81,17 +93,6 @@ class StudipComment extends SimpleORMap implements PrivacyObject
         $where = "object_id IN (?)";
         return self::deleteBySQL($where, [$object_ids]);
     }
-
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'comments';
-        $config['belongs_to']['news'] = [
-            'class_name' => 'StudipNews',
-            'foreign_key' => 'object_id',
-        ];
-        parent::configure($config);
-    }
-
     /**
      * Export available data of a given user into a storage object
      * (an instance of the StoredUserData class) for that user.

@@ -16,33 +16,29 @@
 
 class StgteilVersion extends ModuleManagementModelTreeItem
 {
-
-    private $count_abschnitte;
-    private $count_dokumente;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_stgteilversion';
 
         $config['belongs_to']['studiengangteil'] = [
-            'class_name' => 'StudiengangTeil',
+            'class_name' => StudiengangTeil::class,
             'foreign_key' => 'stgteil_id',
             'assoc_func' => 'findCached',
         ];
         $config['has_many']['abschnitte'] = [
-            'class_name' => 'StgteilAbschnitt',
+            'class_name' => StgteilAbschnitt::class,
             'assoc_foreign_key' => 'version_id',
             'order_by' => 'ORDER BY position,mkdate',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_many']['documents'] = [
-            'class_name'             => 'MvvFile',
+            'class_name'             => MvvFile::class,
             'assoc_func'             => 'findbyrange_id',
             'assoc_func_params_func' => function ($stg) { return $stg; }
         ];
         $config['has_many']['document_assignments'] = [
-            'class_name' => 'MvvFile',
+            'class_name' => MvvFile::class,
             'assoc_foreign_key' => 'range_id',
             'order_by' => 'ORDER BY position',
             'on_delete' => 'delete',
@@ -58,6 +54,9 @@ class StgteilVersion extends ModuleManagementModelTreeItem
 
         parent::configure($config);
     }
+
+    private $count_abschnitte;
+    private $count_dokumente;
 
     public function __construct($id = null)
     {

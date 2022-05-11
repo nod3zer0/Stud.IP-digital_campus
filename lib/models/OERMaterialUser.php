@@ -5,10 +5,12 @@ class OERMaterialUser extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'oer_material_users';
+
         $config['belongs_to']['oeruser'] = [
             'class_name' => ExternalUser::class,
             'foreign_key' => 'user_id'
         ];
+
         parent::configure($config);
     }
 

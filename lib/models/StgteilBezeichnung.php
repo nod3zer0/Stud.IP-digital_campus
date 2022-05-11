@@ -16,10 +16,6 @@
 
 class StgteilBezeichnung extends ModuleManagementModel
 {
-
-    private $count_stgteile;
-    private $count_studiengaenge;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_stgteil_bez';
@@ -36,6 +32,9 @@ class StgteilBezeichnung extends ModuleManagementModel
 
         parent::configure($config);
     }
+
+    private $count_stgteile;
+    private $count_studiengaenge;
 
     public function __construct($id = null)
     {

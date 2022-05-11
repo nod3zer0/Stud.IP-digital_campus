@@ -16,7 +16,7 @@ class UserDomain extends SimpleORMap
         $config['db_table'] = 'userdomains';
 
         $config['has_and_belongs_to_many']['users'] = [
-            'class_name'        => 'User',
+            'class_name'        => User::class,
             'thru_table'        => 'user_userdomains',
             'assoc_foreign_key' => 'user_id',
             'on_delete'          => 'delete',
@@ -24,7 +24,7 @@ class UserDomain extends SimpleORMap
         ];
 
         $config['has_and_belongs_to_many']['courses'] = [
-            'class_name'        => 'Course',
+            'class_name'        => Course::class,
             'thru_table'        => 'seminar_userdomains',
             'on_delete'          => 'delete',
             'on_store'           => 'store',

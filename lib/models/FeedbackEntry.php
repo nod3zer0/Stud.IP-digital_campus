@@ -19,7 +19,7 @@ class FeedbackEntry extends SimpleORMap
         $config['db_table'] = 'feedback_entries';
 
         $config['belongs_to']['feedback'] = [
-            'class_name'    => 'FeedbackElement',
+            'class_name'    => FeedbackElement::class,
             'foreign_key'   => 'feedback_id',
         ];
         $config['belongs_to']['user'] = [
@@ -29,6 +29,7 @@ class FeedbackEntry extends SimpleORMap
 
         parent::configure($config);
     }
+
     public function isEditable()
     {
         $editable = false;
@@ -37,6 +38,7 @@ class FeedbackEntry extends SimpleORMap
         }
         return $editable;
     }
+
     public function isDeletable()
     {
         $deletable = false;
@@ -54,6 +56,7 @@ class FeedbackEntry extends SimpleORMap
         }
         return $deletable;
     }
+
     public function delete()
     {
         if ($this->isDeletable()) {

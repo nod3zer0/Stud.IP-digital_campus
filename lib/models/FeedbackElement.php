@@ -29,8 +29,9 @@ class FeedbackElement extends SimpleORMap
     public static function configure($config = [])
     {
         $config['db_table'] = 'feedback';
+
         $config['has_many']['entries'] = [
-            'class_name'        => 'FeedbackEntry',
+            'class_name'        => FeedbackEntry::class,
             'assoc_foreign_key' => 'feedback_id',
             'order_by'          => 'ORDER BY mkdate DESC',
             'on_delete'         => 'delete'

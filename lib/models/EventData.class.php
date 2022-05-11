@@ -15,7 +15,6 @@
 
 class EventData extends SimpleORMap implements PrivacyObject
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'event_data';

@@ -23,12 +23,12 @@ class AbschlussZuord extends ModuleManagementModel
         $config['db_table'] = 'mvv_abschl_zuord';
 
         $config['belongs_to']['abschluss'] = [
-            'class_name' => 'Abschluss',
+            'class_name' => Abschluss::class,
             'foreign_key' => 'abschluss_id',
             'assoc_func' => 'findCached',
         ];
         $config['belongs_to']['kategorie'] = [
-            'class_name' => 'AbschlussKategorie',
+            'class_name' => AbschlussKategorie::class,
             'foreign_key' => 'kategorie_id',
             'assoc_func' => 'findCached',
         ];

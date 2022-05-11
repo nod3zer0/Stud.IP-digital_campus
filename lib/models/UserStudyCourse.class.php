@@ -26,6 +26,27 @@
  */
 class UserStudyCourse extends SimpleORMap implements PrivacyObject
 {
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'user_studiengang';
+
+        $config['belongs_to']['user'] = [
+            'class_name' => 'User',
+            'foreign_key' => 'user_id',
+        ];
+        $config['belongs_to']['degree'] = [
+            'class_name' => 'Abschluss',
+            'foreign_key' => 'abschluss_id',
+        ];
+        $config['belongs_to']['studycourse'] = [
+            'class_name' => 'Fach',
+            'foreign_key' => 'fach_id',
+        ];
+
+        $config['additional_fields']['degree_name'] = [];
+        $config['additional_fields']['studycourse_name'] = [];
+        parent::configure($config);
+    }
 
     public static function findByUser($user_id)
     {
@@ -48,27 +69,6 @@ class UserStudyCourse extends SimpleORMap implements PrivacyObject
     {
         return self::findBySql("fach_id = ? AND abschluss_id = ?", [$study_course_id, $degree_id]);
     }
-
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'user_studiengang';
-        $config['belongs_to']['user'] = [
-            'class_name' => 'User',
-            'foreign_key' => 'user_id',
-        ];
-        $config['belongs_to']['degree'] = [
-            'class_name' => 'Abschluss',
-            'foreign_key' => 'abschluss_id',
-        ];
-        $config['belongs_to']['studycourse'] = [
-            'class_name' => 'Fach',
-            'foreign_key' => 'fach_id',
-        ];
-        $config['additional_fields']['degree_name'] = [];
-        $config['additional_fields']['studycourse_name'] = [];
-        parent::configure($config);
-    }
-
     /**
      * Export available data of a given user into a storage object
      * (an instance of the StoredUserData class) for that user.

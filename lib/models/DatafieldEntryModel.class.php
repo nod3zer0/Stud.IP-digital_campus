@@ -26,6 +26,17 @@
 
 class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
 {
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'datafields_entries';
+        $config['belongs_to']['datafield'] = [
+            'class_name' => DataField::class,
+            'foreign_key' => 'datafield_id'
+        ];
+        $config['additional_fields']['name'] = ['datafield', 'name'];
+        parent::configure($config);
+    }
+
     /**
      * returns datafields belonging to given model
      * if a datafield entry not exists yet, a new DatafieldEntryModel is returned
@@ -167,18 +178,6 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
         }
         return $ret;
     }
-
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'datafields_entries';
-        $config['belongs_to']['datafield'] = [
-            'class_name' => 'DataField',
-            'foreign_key' => 'datafield_id'
-        ];
-        $config['additional_fields']['name'] = ['datafield', 'name'];
-        parent::configure($config);
-    }
-
     public function setContentLanguage($language)
     {
         if (!Config::get()->CONTENT_LANGUAGES[$language]) {

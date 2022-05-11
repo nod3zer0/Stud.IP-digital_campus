@@ -39,13 +39,6 @@
  */
 class ColourValue extends SimpleORMap
 {
-    /**
-     * $colours is an array with all colour values that is filled
-     * when a colour is requested.
-     */
-    protected static $colours;
-
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'colour_values';
@@ -55,6 +48,11 @@ class ColourValue extends SimpleORMap
         parent::configure($config);
     }
 
+    /**
+     * $colours is an array with all colour values that is filled
+     * when a colour is requested.
+     */
+    protected static $colours;
 
     /**
      * The find method is overloaded here since the table is usually very

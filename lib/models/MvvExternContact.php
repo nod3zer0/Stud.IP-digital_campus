@@ -15,16 +15,15 @@
 
 class MvvExternContact extends ModuleManagementModel
 {
-
-    protected static function configure($config = array())
+    protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_extern_contacts';
 
-        $config['belongs_to']['MvvContact'] = array(
-            'class_name' => 'MvvContact',
+        $config['belongs_to']['MvvContact'] = [
+            'class_name' => MvvContact::class,
             'foreign_key' => 'extern_contact_id',
             'assoc_func' => 'findCached',
-        );
+        ];
 
         $config['i18n_fields']['name']     = true;
         $config['i18n_fields']['homepage'] = true;

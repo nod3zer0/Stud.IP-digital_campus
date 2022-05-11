@@ -25,17 +25,11 @@
  */
 class AuxLockRule extends SimpleORMap
 {
-
-    /**
-     * Cache to avoid loading datafields for a user more than once
-     */
-    private $datafieldCache = [];
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'aux_lock_rules';
         $config['belongs_to']['course'] = [
-            'class_name' => 'Course',
+            'class_name' => Course::class,
             'foreign_key' => 'lock_id',
             'assoc_foreign_key' => 'aux_lock_rule',
         ];
@@ -43,6 +37,11 @@ class AuxLockRule extends SimpleORMap
         $config['additional_fields']['order'] = true;
         parent::configure($config);
     }
+
+    /**
+     * Cache to avoid loading datafields for a user more than once
+     */
+    private $datafieldCache = [];
 
     /**
      * Returns the sorted and filtered datafields of an aux

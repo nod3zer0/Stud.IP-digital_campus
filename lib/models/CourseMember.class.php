@@ -42,15 +42,15 @@ class CourseMember extends SimpleORMap implements PrivacyObject
     {
         $config['db_table'] = 'seminar_user';
         $config['belongs_to']['user'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'user_id',
         ];
         $config['belongs_to']['course'] = [
-            'class_name'  => 'Course',
+            'class_name'  => Course::class,
             'foreign_key' => 'seminar_id',
         ];
         $config['has_many']['datafields'] = [
-            'class_name' => 'DatafieldEntryModel',
+            'class_name' => DatafieldEntryModel::class,
             'assoc_foreign_key' =>
                 function($model, $params) {
                     list($sec_range_id, $range_id) = (array)$params[0]->getId();

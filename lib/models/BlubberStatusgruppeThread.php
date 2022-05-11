@@ -5,7 +5,7 @@ class BlubberStatusgruppeThread extends BlubberThread
     protected static function configure($config = [])
     {
         $config['belongs_to']['statusgruppe'] = [
-            'class_name'  => 'Statusgruppen',
+            'class_name'  => Statusgruppen::class,
             'foreign_key' => function ($thread) {
                 return $thread['metadata']['statusgruppe_id'];
             }

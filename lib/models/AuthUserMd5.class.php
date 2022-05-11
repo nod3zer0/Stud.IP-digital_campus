@@ -31,10 +31,8 @@
 
 class AuthUserMd5 extends SimpleORMap
 {
-
     /**
-     *
-     * @param string $id primary key of table
+     * @param array $config
      */
     protected static function configure($config = [])
     {

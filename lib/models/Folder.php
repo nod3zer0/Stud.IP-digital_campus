@@ -33,42 +33,43 @@ class Folder extends SimpleORMap implements FeedbackRange
     protected static function configure($config = [])
     {
         $config['db_table'] = 'folders';
+
         $config['belongs_to']['owner'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'user_id',
         ];
         $config['has_many']['file_refs'] = [
-            'class_name'        => 'FileRef',
+            'class_name'        => FileRef::class,
             'assoc_foreign_key' => 'folder_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',
             'order_by'          => 'ORDER BY name ASC'
         ];
         $config['has_many']['subfolders'] = [
-            'class_name'        => 'Folder',
+            'class_name'        => Folder::class,
             'assoc_foreign_key' => 'parent_id',
             'on_delete'         => 'delete',
             'on_store'          => 'store',
             'order_by'          => 'ORDER BY name ASC'
         ];
         $config['belongs_to']['parentfolder'] = [
-            'class_name'  => 'Folder',
+            'class_name'  => Folder::class,
             'foreign_key' => 'parent_id',
         ];
         $config['belongs_to']['course'] = [
-            'class_name'  => 'Course',
+            'class_name'  => Course::class,
             'foreign_key' => 'range_id',
         ];
         $config['belongs_to']['institute'] = [
-            'class_name'  => 'Institute',
+            'class_name'  => Institute::class,
             'foreign_key' => 'range_id',
         ];
         $config['belongs_to']['user'] = [
-            'class_name'  => 'User',
+            'class_name'  => User::class,
             'foreign_key' => 'range_id',
         ];
         $config['belongs_to']['message'] = [
-            'class_name'  => 'Message',
+            'class_name'  => Message::class,
             'foreign_key' => 'range_id',
         ];
         $config['serialized_fields']['data_content'] = 'JSONArrayObject';

@@ -16,30 +16,24 @@
 
 class Lvgruppe extends ModuleManagementModelTreeItem
 {
-
-    private $count_seminare;
-    private $count_archiv;
-    private $count_modulteile;
-    private $count_semester;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_lvgruppe';
 
         $config['has_and_belongs_to_many']['modulteile'] = [
-            'class_name' => 'Modulteil',
+            'class_name' => Modulteil::class,
             'thru_table' => 'mvv_lvgruppe_modulteil',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_and_belongs_to_many']['courses'] = [
-            'class_name' => 'Course',
+            'class_name' => Course::class,
             'thru_table' => 'mvv_lvgruppe_seminar',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_and_belongs_to_many']['archived_courses'] = [
-            'class_name' => 'ArchivedCourse',
+            'class_name' => ArchivedCourse::class,
             'thru_table' => 'mvv_lvgruppe_seminar',
             'on_delete' => 'delete',
             'on_store' => 'store'
@@ -62,6 +56,11 @@ class Lvgruppe extends ModuleManagementModelTreeItem
 
         parent::configure($config);
     }
+
+    private $count_seminare;
+    private $count_archiv;
+    private $count_modulteile;
+    private $count_semester;
 
     public function __construct($id = null)
     {

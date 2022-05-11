@@ -30,10 +30,12 @@ class LogAction extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'log_actions';
+
         $config['has_many']['events'] = [
             'class_name' => LogEvent::class,
             'on_delete'  => 'delete',
         ];
+
         parent::configure($config);
     }
 

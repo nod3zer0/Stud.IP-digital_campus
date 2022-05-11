@@ -47,26 +47,26 @@ class AbschlussKategorie extends ModuleManagementModelTreeItem
         $config['db_table'] = 'mvv_abschl_kategorie';
 
         $config['has_many']['documents'] = [
-            'class_name'             => 'MvvFile',
+            'class_name'             => MvvFile::class,
             'assoc_func'             => 'findbyrange_id',
             'assoc_func_params_func' => function ($stg) { return $stg; }
         ];
         $config['has_many']['document_assignments'] = [
-            'class_name' => 'MvvFile',
+            'class_name' => MvvFile::class,
             'assoc_foreign_key' => 'range_id',
             'order_by' => 'ORDER BY position',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
         $config['has_and_belongs_to_many']['abschluesse'] = [
-            'class_name' => 'Abschluss',
+            'class_name' => Abschluss::class,
             'thru_table' => 'mvv_abschl_zuord',
             'thru_key' => 'kategorie_id',
             'thru_assoc_key' => 'abschluss_id',
             'order_by' => 'ORDER BY position'
         ];
         $config['has_many']['abschluss_assignments'] = [
-            'class_name' => 'AbschlussZuord',
+            'class_name' => AbschlussZuord::class,
             'assoc_foreign_key' => 'kategorie_id',
             'on_delete' => 'delete'
         ];

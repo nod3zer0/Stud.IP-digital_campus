@@ -16,6 +16,56 @@
 
 class Abschluss extends ModuleManagementModelTreeItem implements PrivacyObject
 {
+    protected static function configure($config = [])
+    {
+        $config['db_table'] = 'abschluss';
+
+        $config['belongs_to']['category'] = [
+            'class_name' => AbschlussKategorie::class,
+            'assoc_func' => 'findByAbschluss',
+        ];
+
+        $config['has_one']['category_assignment'] = [
+            'class_name' => AbschlussZuord::class,
+            'assoc_foreign_key' => 'abschluss_id',
+            'on_store' => 'store',
+            'on_delete' => 'delete'
+        ];
+        $config['has_many']['faecher'] = [
+            'class_name' => Fach::class,
+            'assoc_func' => 'findByAbschluss'
+        ];
+        $config['has_many']['studiengaenge'] = [
+            'class_name' => Studiengang::class,
+            'assoc_foreign_key' => 'abschluss_id'
+        ];
+        $config['has_and_belongs_to_many']['professions'] = [
+            'class_name' => Fach::class,
+            'thru_table' => 'user_studiengang',
+            'thru_key' => 'abschluss_id',
+            'thru_assoc_key' => 'fach_id',
+            'order_by' => 'GROUP BY fach_id ORDER BY name'
+        ];
+
+        $config['additional_fields']['count_faecher']['get'] =
+            function($abschluss) { return $abschluss->count_faecher; };
+        $config['additional_fields']['kategorie_name']['get'] =
+            function($abschluss) { return $abschluss->kategorie_name; };
+        $config['additional_fields']['kategorie_id']['get'] =
+            function($abschluss) { return $abschluss->category_assignment->kategorie_id; };
+        $config['additional_fields']['count_studiengaenge']['get'] =
+            function($abschluss) { return $abschluss->count_studiengaenge; };
+        $config['additional_fields']['count_objects']['get'] =
+            function($abschluss) { return $abschluss->count_objects; };
+        $config['additional_fields']['count_user']['get'] = 'countUser';
+
+        $config['i18n_fields']['name'] = true;
+        $config['i18n_fields']['name_kurz'] = true;
+        $config['i18n_fields']['beschreibung'] = true;
+
+        parent::configure($config);
+    }
+
     /**
      * Number of assigned Faecher.
      * @var type int
@@ -45,56 +95,6 @@ class Abschluss extends ModuleManagementModelTreeItem implements PrivacyObject
      * @var type
      */
     private $count_objects;
-
-    protected static function configure($config = [])
-    {
-        $config['db_table'] = 'abschluss';
-
-        $config['belongs_to']['category'] = [
-            'class_name' => 'AbschlussKategorie',
-            'assoc_func' => 'findByAbschluss',
-        ];
-
-        $config['has_one']['category_assignment'] = [
-            'class_name' => 'AbschlussZuord',
-            'assoc_foreign_key' => 'abschluss_id',
-            'on_store' => 'store',
-            'on_delete' => 'delete'
-        ];
-        $config['has_many']['faecher'] = [
-            'class_name' => 'Fach',
-            'assoc_func' => 'findByAbschluss'
-        ];
-        $config['has_many']['studiengaenge'] = [
-            'class_name' => 'Studiengang',
-            'assoc_foreign_key' => 'abschluss_id'
-        ];
-        $config['has_and_belongs_to_many']['professions'] = [
-            'class_name' => 'Fach',
-            'thru_table' => 'user_studiengang',
-            'thru_key' => 'abschluss_id',
-            'thru_assoc_key' => 'fach_id',
-            'order_by' => 'GROUP BY fach_id ORDER BY name'
-        ];
-
-        $config['additional_fields']['count_faecher']['get'] =
-                function($abschluss) { return $abschluss->count_faecher; };
-        $config['additional_fields']['kategorie_name']['get'] =
-                function($abschluss) { return $abschluss->kategorie_name; };
-        $config['additional_fields']['kategorie_id']['get'] =
-                function($abschluss) { return $abschluss->category_assignment->kategorie_id; };
-        $config['additional_fields']['count_studiengaenge']['get'] =
-                function($abschluss) { return $abschluss->count_studiengaenge; };
-        $config['additional_fields']['count_objects']['get'] =
-            function($abschluss) { return $abschluss->count_objects; };
-        $config['additional_fields']['count_user']['get'] = 'countUser';
-
-        $config['i18n_fields']['name'] = true;
-        $config['i18n_fields']['name_kurz'] = true;
-        $config['i18n_fields']['beschreibung'] = true;
-
-        parent::configure($config);
-    }
 
     public function __construct($id = null)
     {

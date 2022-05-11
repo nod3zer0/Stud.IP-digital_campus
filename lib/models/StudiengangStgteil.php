@@ -17,27 +17,22 @@
 
 class StudiengangStgteil extends ModuleManagementModel
 {
-
-    private $stgteil_name;
-    private $stgbez_name;
-    private $stgbez_id;
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_stg_stgteil';
 
         $config['belongs_to']['studiengang'] = [
-            'class_name' => 'Studiengang',
+            'class_name' => Studiengang::class,
             'foreign_key' => 'studiengang_id',
             'assoc_func' => 'findCached',
         ];
         $config['has_one']['stgteil_bezeichnung'] = [
-            'class_name' => 'StgteilBezeichnung',
+            'class_name' => StgteilBezeichnung::class,
             'foreign_key' => 'stgteil_bez_id',
             'assoc_func' => 'findCached',
         ];
         $config['belongs_to']['studiengangteil'] = [
-            'class_name' => 'StudiengangTeil',
+            'class_name' => StudiengangTeil::class,
             'foreign_key' => 'stgteil_id',
             'assoc_func' => 'findCached',
         ];
@@ -51,6 +46,10 @@ class StudiengangStgteil extends ModuleManagementModel
 
         parent::configure($config);
     }
+
+    private $stgteil_name;
+    private $stgbez_name;
+    private $stgbez_id;
 
     function __construct($id = null)
     {

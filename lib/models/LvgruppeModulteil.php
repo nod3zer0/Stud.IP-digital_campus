@@ -17,18 +17,17 @@
 
 class LvgruppeModulteil extends ModuleManagementModel
 {
-
     protected static function configure($config = [])
     {
         $config['db_table'] = 'mvv_lvgruppe_modulteil';
 
         $config['belongs_to']['lvgruppe'] = [
-            'class_name' => 'Lvgruppe',
+            'class_name' => Lvgruppe::class,
             'foreign_key' => 'lvgruppe_id',
             'assoc_func' => 'findCached',
         ];
         $config['belongs_to']['modulteil'] = [
-            'class_name' => 'Modulteil',
+            'class_name' => Modulteil::class,
             'foreign_key' => 'modulteil_id',
             'assoc_func' => 'findCached',
         ];
