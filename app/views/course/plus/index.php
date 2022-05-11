@@ -55,8 +55,8 @@ use Studip\Button;
                     <tr id="<?= htmlReady($anchor); ?>"
                         class="<?= $visibility; ?> <?= $pre_check != null ? ' quiet' : '' ?>">
                         <td class="element" colspan=3>
-                            <div class="plus_basic">
 
+                            <div class="plus_basic">
                                 <input type="checkbox"
                                        id="<?= $key ?>"
                                        name="<?= $key ?>"
@@ -111,7 +111,7 @@ use Studip\Button;
                                 </div>
                                 <? if ($plugin_activated) : ?>
                                     <?
-                                    $actionMenu = ActionMenu::get();
+                                    $actionMenu = ActionMenu::get()->setContext($pluginname);
                                     $actionMenu->addLink(
                                         $controller->url_for('/edittool/' . $key),
                                         _('Optionen bearbeiten'),

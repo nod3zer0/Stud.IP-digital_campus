@@ -75,7 +75,7 @@
                     </section>
                     <? if (!$locked) : ?>
                     <nav>
-                        <? $actionMenu = ActionMenu::get()?>
+                        <? $actionMenu = ActionMenu::get()->setContext($cycle['cycle']->toString('long')) ?>
                         <? $actionMenu->addLink(
                             $controller->url_for('course/timesrooms/createCycle/' . $metadate_id, $linkAttributes),
                             _('Diesen Zeitraum bearbeiten'),

@@ -394,4 +394,19 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
             [$range->getRangeId(), $range->getRangeType()]
         );
     }
+
+
+    /**
+     * @return string A string representation of the consultation block instance.
+     */
+    public function __toString() : string
+    {
+        return sprintf(
+            _('Terminblock am %1$s, %2$s von %3$s bis %4$s Uhr'),
+            strftime('%A', $this->start),
+            strftime('%x', $this->start),
+            date('H:i', $this->start),
+            date('H:i', $this->end)
+        );
+    }
 }

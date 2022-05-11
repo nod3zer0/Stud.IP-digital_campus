@@ -224,6 +224,42 @@ class ActionMenu {
             jQuery(element).parent().removeClass('js-action-confirm-animation');
         });
     }
+
+    /**
+     * Handles the rotation through the action menu items when the first
+     * or last element of the menu has been reached.
+     *
+     * @param menu The menu whose items shall be rotated through.
+     *
+     * @param reverse Whether to rotate in reverse (true) or not (false).
+     *     Defaults to false.
+     */
+    static tabThroughItems(menu, reverse = false) {
+        if (reverse) {
+            //Put the focus on the last link in the menu, if the first link has the focus:
+            if (jQuery(menu).find('a:first:focus').length > 0) {
+                //Put the focus on the action menu button:
+                jQuery(menu).find('button.action-menu-icon').focus();
+                return true;
+            } else if (jQuery(menu).find('button.action-menu-icon:focus').length > 0) {
+                //Put the focus on the last action menu item:
+                jQuery(menu).find('a:last').focus();
+                return true;
+            }
+        } else {
+            //Put the focus on the first link in the menu, if the last link has the focus:
+            if (jQuery(menu).find('a:last:focus').length > 0) {
+                //Put the focus on the action menu button:
+                jQuery(menu).find('button.action-menu-icon').focus();
+                return true;
+            }  else if (jQuery(menu).find('button.action-menu-icon:focus').length > 0) {
+                //Put the focus on the first action menu item:
+                jQuery(menu).find('a:first').focus();
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 export default ActionMenu;

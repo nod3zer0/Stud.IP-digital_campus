@@ -15,6 +15,7 @@
                     </td>
                 <td class="actions">
                     <? $action =ActionMenu::get()
+                        ->setContext($deg->name)
                         ->addLink($controller->url_for('/messagehelper',
                             ['fach_id' => $studycourse->fach_id, 'abschluss_id' => $deg->abschluss_id]),
                             _('Nachricht an Studierende schreiben'),

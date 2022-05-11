@@ -67,7 +67,7 @@ if ($folder->isReadable($GLOBALS['user']->id)) {
     <? endforeach ?>
     <td class="actions">
     <?php
-        $actionMenu = ActionMenu::get();
+        $actionMenu = ActionMenu::get()->setContext($folder->name);
         $actionMenu->addLink(
             $controller->url_for('file/details/' . $folder->getId()),
             _('Info'),

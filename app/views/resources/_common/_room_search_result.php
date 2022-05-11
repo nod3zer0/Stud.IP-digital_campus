@@ -10,7 +10,7 @@
             ]
         ) ?><?= htmlReady($room->name) ?></h1>
         <?
-        $actions = ActionMenu::get();
+        $actions = ActionMenu::get()->setContext($room);
         $actions->addLink(
             $room->getActionLink('show'),
             _('Raumdetails anzeigen'),

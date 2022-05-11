@@ -229,7 +229,7 @@ class StandardFile implements FileType, ArrayAccess
 
     public function getActionmenu()
     {
-        $actionMenu = ActionMenu::get();
+        $actionMenu = ActionMenu::get()->setContext($this->fileref->name);
         $actionMenu->addLink(
             URLHelper::getURL("dispatch.php/file/details/{$this->fileref->id}/1"),
             _('Info'),

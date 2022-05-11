@@ -32,7 +32,7 @@
             <td><a href="<?= $controller->url_for($module->getRoute('view_tools'))?>" data-dialog=""><?=$module->getTitle()?></a></td>
             <td><?=$module->getModuleTypeName()?></td>
                 <td class="actions">
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($module->getTitle()) ?>
                     <? $actionMenu->addButton(
                             'view',
                             _('Info'),
@@ -107,7 +107,7 @@
                 <td><?=$ilias->user->getUserName()?></td>
                 <td><?=$ilias->getName()?></td>
                 <td class="actions">
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($ilias->getName()) ?>
                     <? if ($ilias->ilias_config['allow_change_account'] && ($ilias->user->getUserType() === IliasUser::USER_TYPE_CREATED)) $actionMenu->addButton(
                             'new_account',
                             _('Account neu zuordnen'),

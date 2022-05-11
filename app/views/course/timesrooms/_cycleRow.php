@@ -77,7 +77,7 @@ $is_exTermin = $termin instanceof CourseExDate;
     <? endif ?>
     </td>
     <td class="actions">
-        <? $actionMenu = ActionMenu::get() ?>
+        <? $actionMenu = ActionMenu::get()->setContext($termin) ?>
     <? if ($is_exTermin): ?>
         <? $actionMenu->addLink(
             $controller->url_for(

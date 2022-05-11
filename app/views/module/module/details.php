@@ -32,7 +32,7 @@
                     <td class="dont-hide actions" style="white-space: nowrap;">
                         <form method="post">
                             <?= CSRFProtection::tokenTag(); ?>
-                            <? $actionMenu = ActionMenu::get() ?>
+                            <? $actionMenu = ActionMenu::get()->setContext($modulteil->getDisplayName()) ?>
                             <? if (MvvPerm::havePermCreate('Lvgruppe') && $perm->haveFieldPermLvgruppen(MvvPerm::PERM_CREATE)) : ?>
                                 <? $actionMenu->addLink(
                                     $controller->url_for('/lvgruppe/' . $modulteil->id),

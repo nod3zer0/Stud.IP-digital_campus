@@ -44,7 +44,7 @@
                 <?= $this->render_partial('consultation/block-description.php', ['block' => $block['block']]) ?>
             </th>
             <th class="actions">
-                <?= ActionMenu::get()->addLink(
+                <?= ActionMenu::get()->setContext(strval($block['block']))->addLink(
                     $controller->editURL($block['block'], 0, $page),
                     _('Bearbeiten'),
                     Icon::create('edit'),
@@ -119,7 +119,7 @@
             <? endif; ?>
             </td>
             <td class="actions">
-                <?= ActionMenu::get()->addLink(
+                <?= ActionMenu::get()->setContext(strval($slot))->addLink(
                     $controller->noteURL($block['block'], $slot, $page),
                     _('Information bearbeiten'),
                     Icon::create('edit'),

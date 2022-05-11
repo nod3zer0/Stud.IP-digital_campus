@@ -70,7 +70,7 @@
                 <?= formatLinks($block->room) ?>
             </td>
             <td class="actions">
-                <?= ActionMenu::get()->addLink(
+                <?= ActionMenu::get()->setContext(strval($block))->addLink(
                     $controller->editURL($block, 0, $page),
                     _('Information bearbeiten'),
                     Icon::create('edit'),
@@ -206,7 +206,7 @@
             <? endif; ?>
             </td>
             <td class="actions">
-                <?= ActionMenu::get()->addLink(
+                <?= ActionMenu::get()->setContext(strval($slot))->addLink(
                     $controller->noteURL($slot->block, $slot, $page),
                     _('Information bearbeiten'),
                     Icon::create('edit'),

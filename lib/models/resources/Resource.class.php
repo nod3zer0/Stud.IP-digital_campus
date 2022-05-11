@@ -347,6 +347,10 @@ class Resource extends SimpleORMap implements StudipItem
         return true;
     }
 
+
+    /**
+     * @see StudipItem::__toString
+     */
     public function __toString()
     {
         return $this->getFullName();

@@ -66,7 +66,7 @@
             <? endif ?>
             </td>
             <td class="actions">
-                <? $actionMenu = ActionMenu::get() ?>
+                <? $actionMenu = ActionMenu::get()->setContext($fullname) ?>
                 <? if ($is_tutor) : ?>
                     <? $actionMenu->addLink(
                         $controller->url_for('course/members/add_comment/' . $dozent['user_id']),

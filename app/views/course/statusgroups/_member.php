@@ -34,7 +34,7 @@
     </td>
 <? endif ?>
     <td class="memberactions">
-        <? $actions = ActionMenu::get();
+        <? $actions = ActionMenu::get()->setContext($user_fullname);
            if ($is_tutor || $m->user_id !== $GLOBALS['user']->id) {
                $actions->addLink(
             $controller->url_for('messages/write', [

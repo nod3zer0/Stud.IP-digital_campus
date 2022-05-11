@@ -25,7 +25,7 @@ class FilesystemVueDataManager
                 'order' => $file->getAdditionalColumnOrderWeigh($index)
             ];
         }
-        $actionMenu = $file->getActionMenu();
+        $actionMenu = $file->getActionMenu()->setContext($file->getFilename());
         return [
             'id' => $file->getId(),
             'name' => $file->getFilename(),
@@ -57,7 +57,7 @@ class FilesystemVueDataManager
      */
     public static function getFolderVueData(FolderType $folder, FolderType $topFolder)
     {
-        $actionMenu = ActionMenu::get();
+        $actionMenu = ActionMenu::get()->setContext($folder->name);
         $actionMenu->addLink(
             URLHelper::getURL('dispatch.php/file/details/' . $folder->getId()),
             _('Info'),

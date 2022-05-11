@@ -35,7 +35,7 @@
             <? endif ?>
             <td><?=$module->getModuleTypeName()?></td>
                 <td class="actions">
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($module->getTitle()) ?>
                     <? if (! $module->is_offline) $actionMenu->addButton(
                             'view',
                             _('Info'),
@@ -97,7 +97,7 @@
             </td>
             <td><?=_('ILIAS-Kurs')?></td>
                 <td class="actions">
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext(sprintf(_('Kurs in %s'), $ilias->getName())) ?>
                     <? $actionMenu->addButton(
                             'start',
                             _('In ILIAS anzeigen'),

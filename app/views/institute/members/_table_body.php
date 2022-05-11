@@ -89,6 +89,7 @@
     <? if ($structure['actions']): ?>
         <td class="actions">
         <?= ActionMenu::get()
+            ->setContext($member->user)
             ->addLink(
                 $controller->url_for("messages/write?rec_uname={$member->username}"),
                 _('Nachricht an Benutzer verschicken'),

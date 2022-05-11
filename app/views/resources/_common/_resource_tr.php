@@ -157,7 +157,7 @@
             //Build the actions as array. Ordering is done by array indexes.
 
             $actions = [];
-            $action_menu = ActionMenu::get();
+            $action_menu = ActionMenu::get()->setContext($resource);
             if ($show_user_actions) {
                 $actions['0010'] = [
                     $resource->getActionLink('show'),

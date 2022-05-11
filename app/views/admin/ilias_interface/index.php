@@ -35,7 +35,7 @@
                         $text = _('Diese ILIAS-Installation ist inaktiv. Klicken Sie hier, um sie zu aktivieren.');
                         $img  = 'checkbox-unchecked';
                         $cmd  = 'activate';
-                    } 
+                    }
                     ?>
                     <a href="<?= $controller->url_for('admin/ilias_interface/'.$cmd.'/'.$ilias_index) ?>">
                         <?= Icon::create($img, 'clickable', ['title' => $text])->asImg() ?>
@@ -45,7 +45,7 @@
                 <td><?= htmlReady($ilias_index) ?></td>
                 <td><?= htmlReady($ilias_config['version']) ?></td>
                 <td class="actions">
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($ilias_config['name']) ?>
                     <? $actionMenu->addLink(
                         $controller->url_for("admin/ilias_interface/edit_server/$ilias_index"),
                         _('Servereinstellungen bearbeiten'),

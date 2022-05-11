@@ -93,7 +93,7 @@
         </a>
 
         <?
-        $menu = ActionMenu::get();
+        $menu = ActionMenu::get()->setContext($questionnaire['title']);
         if ($questionnaire->isRunning()) {
             $menu->addLink(
                 $controller->url_for('questionnaire/stop/' . $questionnaire->id, in_array($range_type, ['course', 'institute']) ? ['redirect' => 'questionnaire/courseoverview'] : []),

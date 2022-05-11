@@ -143,7 +143,7 @@
                         <td><?= htmlReady($step->tip) ?></td>
                         <td><?= htmlReady($step->route) ?></td>
                         <td class="actions">
-                        <? $actionMenu = ActionMenu::get() ?>
+                        <? $actionMenu = ActionMenu::get()->setContext($step->title) ?>
                         <? $actionMenu->addLink(
                             $controller->url_for('tour/edit_step/' . $tour->tour_id . '/' . $step->step),
                             _('Schritt bearbeiten'),

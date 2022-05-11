@@ -27,7 +27,7 @@
                     <td style="text-align: center;" class="dont-hide"><?= $lvgruppe->count_archiv ?> </td>
                     <td style="text-align: center;" class="dont-hide"><?= $lvgruppe->count_modulteile ?> </td>
                     <td class="dont-hide actions" style="white-space: nowrap;">
-                        <? $actionMenu = ActionMenu::get() ?>
+                        <? $actionMenu = ActionMenu::get()->setContext($lvgruppe->getDisplayName()) ?>
                         <? if (MvvPerm::get($lvgruppe)->havePermWrite()) : ?>
                             <? $actionMenu->addLink(
                                 $controller->url_for('/lvgruppe/' . $lvgruppe->id),
@@ -35,7 +35,7 @@
                                 Icon::create('edit', Icon::ROLE_CLICKABLE, tooltip2(_('Lehrveranstaltungsgruppe bearbeiten'))),
                                 ['data-dialog' => 'size=']
                             ) ?>
-                            
+
                             <? $actionMenu->addLink(
                                 $controller->url_for('shared/log_event/show/Lvgruppe/' . $lvgruppe->id),
                                 _('Log-Einträge dieser Lehrveranstaltungsgruppe'),
@@ -78,7 +78,7 @@
                 </tr>
             </tbody>
         <? endif ?>
-        
+
         <? if ($count > MVVController::$items_per_page) : ?>
         <tfoot>
             <tr>

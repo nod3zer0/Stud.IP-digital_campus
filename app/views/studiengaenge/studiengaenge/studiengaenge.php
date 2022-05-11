@@ -38,7 +38,7 @@
             <td class="actions dont-hide">
                 <form method="post">
                     <?= CSRFProtection::tokenTag(); ?>
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($studiengang->name) ?>
                     <? if ($studiengang->stat === 'planung' && MvvPerm::haveFieldPermStat($studiengang)) : ?>
                         <? $actionMenu->addLink(
                             $controller->url_for('/approve/' . $studiengang->id),

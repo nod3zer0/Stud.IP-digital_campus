@@ -27,6 +27,11 @@ class ActionMenu
     private $condition_all = null;
     private $condition     = true;
 
+    /**
+     * @var string $context The context for the action menu.
+     */
+    protected $context = '';
+
 
     /**
      * Private constructur.
@@ -254,6 +259,7 @@ class ActionMenu
             }
             return $action;
         }, $this->actions);
+        $template->action_menu_title = $this->generateTitle();
         $template->attributes = $this->attributes;
         return $template->render();
     }
@@ -277,5 +283,38 @@ class ActionMenu
             }
         }
         return null;
+    }
+
+
+    /**
+     * Sets the context for the menu.
+     *
+     * @param string $context The context to be set.
+     *
+     * @return ActionMenu The action menu instance (to allow chaining).
+     */
+    public function setContext(string $context)
+    {
+        $this->context = $context;
+
+        return $this;
+    }
+
+
+    /**
+     * Generates the title of the action menu, including its context, if the context has been set.
+     *
+     * @return string The title of the action menu.
+     */
+    public function generateTitle() : string
+    {
+        if ($this->context) {
+            return sprintf(
+                _('Aktionsmenü für %s'),
+                $this->context
+            );
+        } else {
+            return _('Aktionsmenü');
+        }
     }
 }

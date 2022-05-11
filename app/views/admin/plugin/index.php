@@ -89,7 +89,7 @@ use Studip\Button, Studip\LinkButton;
                                    value="<?= $plugin['position'] ?>" <? if (!$plugin['enabled']) echo 'disabled'; ?>>
                         </td>
                         <td class="actions">
-                            <? $actionMenu = ActionMenu::get() ?>
+                            <? $actionMenu = ActionMenu::get()->setContext($plugin['name']) ?>
                             <? $actionMenu->addLink(
                                 $controller->url_for('admin/role/assign_plugin_role/' . $pluginid),
                                 _('Zugriffsrechte bearbeiten'),

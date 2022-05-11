@@ -14,7 +14,7 @@ $room_request_filter = function ($date) {
         </h1>
     <? if(!$locked) : ?>
         <nav>
-            <? $actionMenu = ActionMenu::get()?>
+            <? $actionMenu = ActionMenu::get()->setContext(_('Unregelmäßige Termine / Blocktermine')) ?>
             <? $actionMenu->addLink(
                 $controller->url_for('course/timesrooms/createSingleDate/' . $course->id, $linkAttributes),
                 _('Einzeltermin hinzufügen'),

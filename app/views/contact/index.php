@@ -68,7 +68,7 @@
                                 </a>
                             </td>
                             <td class="actions">
-                                <? $actionMenu = ActionMenu::get() ?>
+                                <? $actionMenu = ActionMenu::get()->setContext($contact) ?>
                                 <? if (Config::get()->BLUBBER_GLOBAL_MESSENGER_ACTIVATE) : ?>
                                     <? $actionMenu->addLink(
                                         URLHelper::getURL('dispatch.php/blubber/write_to/' . $contact->user_id),

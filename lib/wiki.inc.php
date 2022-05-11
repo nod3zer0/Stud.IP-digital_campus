@@ -1006,7 +1006,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL, $ancestor=NULL)
 
     // Action menu for content bar.
     if ($page && $page->isLatestVersion()) {
-        $actionMenu = ActionMenu::get();
+        $actionMenu = ActionMenu::get()->setContext($page->keyword);
         if ($page->isEditableBy($GLOBALS['user'])) {
             if (!$page->isNew()) {
                 $actionMenu->addLink(
@@ -1558,7 +1558,7 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
 
     // Action menu for content bar.
     if ($page && $page->isLatestVersion()) {
-        $actionMenu = ActionMenu::get();
+        $actionMenu = ActionMenu::get()->setContext($page->keyword);
         if ($page->isEditableBy($GLOBALS['user'])) {
             if (!$page->isNew()) {
                 $actionMenu->addLink(

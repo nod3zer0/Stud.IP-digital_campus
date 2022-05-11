@@ -56,7 +56,7 @@
             <td class="dont-hide actions" style="white-space: nowrap;">
                 <form method="post">
                     <?= CSRFProtection::tokenTag(); ?>
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($modul->getDisplayName()) ?>
                     <? if ($modul->stat === 'planung' && $perm->haveFieldPerm('stat')) : ?>
                         <? $actionMenu->addLink(
                             $controller->url_for('/approve/' . $modul->id),

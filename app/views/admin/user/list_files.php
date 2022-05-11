@@ -13,7 +13,7 @@
                         </a>
                     </h1>
                 <? if ($folder->isFileDownloadable($file->id, $user->id)): ?>
-                    <?= ActionMenu::get()->addLink(
+                    <?= ActionMenu::get()->setContext($file->name)->addLink(
                         $file->getDownloadURL(),
                         _('Datei herunterladen'),
                         Icon::create('download', 'clickable')

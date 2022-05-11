@@ -1,10 +1,10 @@
 <template>
     <nav v-if="shouldCollapse" class="action-menu">
-        <a class="action-menu-icon" :title="$gettext('Aktionen')" aria-expanded="false" :aria-label="$gettext('Aktionsmenü')" href="#">
-            <div></div>
-            <div></div>
-            <div></div>
-        </a>
+        <button class="action-menu-icon" :title="$gettext('Aktionsmenü')" aria-expanded="false" :aria-label="$gettext('Aktionsmenü')">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         <div class="action-menu-content">
             <div class="action-menu-title">
                 {{ $gettext('Aktionen') }}

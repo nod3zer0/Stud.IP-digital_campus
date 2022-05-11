@@ -1005,4 +1005,13 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     {
         return array_filter($this->tools->getStudipModule());
     }
+
+
+    /**
+     * @see Range::__toString()
+     */
+    public function __toString() : string
+    {
+        return $this->getFullName();
+    }
 }

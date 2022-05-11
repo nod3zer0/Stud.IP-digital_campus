@@ -51,7 +51,7 @@
                                 <td class="actions">
                                     <? if ($data['files']) : ?>
                                         <?
-                                        $actionMenu = ActionMenu::get();
+                                        $actionMenu = ActionMenu::get()->setContext($data['course']->name);
                                         $actionMenu->addLink($controller->url_for('admin/user/list_files/' . $user['user_id'] . '/' . $data['course']->id, $params),
                                                 _('Dateien auflisten'),
                                                 Icon::create('folder-full', 'clickable'),

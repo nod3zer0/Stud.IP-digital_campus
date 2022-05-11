@@ -93,7 +93,7 @@
                 </td>
                 <td class="actions">
                     <?php
-                        $actionMenu = ActionMenu::get();
+                        $actionMenu = ActionMenu::get()->setContext($feedback->question);
                         $actionMenu->addLink(
                             $controller->link_for('course/feedback/edit_form/' . $feedback->id),
                             _('Feedback-Element bearbeiten'),

@@ -46,7 +46,7 @@
             <td ><?= htmlReady($mvv_contact->count_relations); ?></td>
             <td class="actions">
             <?
-                $actions = ActionMenu::get();
+                $actions = ActionMenu::get()->setContext($mvv_contact->name);
                 if ($perm_contacts >= MvvPerm::PERM_WRITE) {
                     $actions->addLink(
                         $controller->url_for('shared/contacts/edit_ansprechpartner', $mvv_contact->id, 'range'),

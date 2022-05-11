@@ -11,7 +11,7 @@
         <?= htmlReady($group->name) ?>
         <? if ($tutor): ?>
         <span class="actions">
-            <? $menu = ActionMenu::get() ?>
+            <? $menu = ActionMenu::get()->setContext($group->name) ?>
             <? $menu->addLink($controller->url_for("admin/statusgroups/editGroup/{$group->id}"),
                     _('Gruppe bearbeiten'), Icon::create('edit'), ['data-dialog' => 'size=auto']) ?>
             <? $menu->addMultiPersonSearch(

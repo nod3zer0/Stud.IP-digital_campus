@@ -67,7 +67,9 @@
                 </td>
                 <td><?= count($tour->steps) ?></td>
                 <td class="actions">
-                    <?= ActionMenu::get()->addLink(
+                    <?= ActionMenu::get()->setContext(
+                        $tour->name
+                    )->addLink(
                         $controller->url_for('tour/admin_details/' . $tour_id),
                         _('Tour bearbeiten'),
                         Icon::create('edit')

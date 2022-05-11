@@ -48,7 +48,7 @@ if (!$item) {
     </td>
     <td class="item-actions">
         <?
-        $actions = ActionMenu::get();
+        $actions = ActionMenu::get()->setContext($item['name'] ?: '');
         $actions->addLink(
             Room::getLinkForAction(
                 'show',

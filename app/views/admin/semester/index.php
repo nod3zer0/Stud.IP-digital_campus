@@ -79,7 +79,7 @@
             <td class="actions" nowrap>
 
             <?
-                $actionMenu = ActionMenu::get();
+                $actionMenu = ActionMenu::get()->setContext($semester->name);
 
                 $actionMenu->addLink(
                     $controller->url_for("admin/semester/edit/{$semester->id}"),

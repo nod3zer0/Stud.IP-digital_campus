@@ -203,6 +203,9 @@ class Building extends Resource
         return self::$required_properties;
     }
     
+    /**
+     * @see StudipItem::__toString
+     */
     public function __toString()
     {
         return $this->getFullName();

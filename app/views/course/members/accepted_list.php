@@ -111,7 +111,7 @@
                     ]) ?>
                 </td>
                 <td class="actions">
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($fullname) ?>
                     <? $actionMenu->addLink(
                         $controller->url_for('course/members/add_comment/' . $accept['user_id']),
                         _('Bemerkung hinzufügen'),

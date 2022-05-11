@@ -53,7 +53,7 @@
                                     </td>
                                     <td class="actions">
                                     <?
-                                        $actions = ActionMenu::get();
+                                        $actions = ActionMenu::get()->setContext($object_name);
                                         $actions->addLink(
                                             $controller->url_for('shared/contacts/edit_ansprechpartner', $rel['contact_range_id'], $origin),
                                             _('Ansprechpartner bearbeiten'),

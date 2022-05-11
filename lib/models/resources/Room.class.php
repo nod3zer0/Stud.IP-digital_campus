@@ -519,6 +519,9 @@ class Room extends Resource
     }
 
 
+    /**
+     * @see StudipItem::__toString
+     */
     public function __toString()
     {
         return $this->getFullName();

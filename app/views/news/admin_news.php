@@ -120,7 +120,7 @@
                         <td><?= strftime("%d.%m.%y", $news['object']->date + $news['object']->expire) ?></td>
                         <td class="actions">
                             <?
-                            $menu = ActionMenu::get();
+                            $menu = ActionMenu::get()->setContext($news['object']->topic);
                             $menu->addLink(
                                 $controller->url_for('news/edit_news/' . $news['object']->news_id),
                                 _('Ankündigung bearbeiten'),

@@ -57,4 +57,10 @@ interface Range
      * @return bool
      */
     public function isEditableByUser($user_id = null);
+
+
+    /**
+     * @return string A string representation of the Range instance.
+     */
+    public function __toString() : string;
 }

@@ -273,4 +273,19 @@ class ConsultationSlot extends SimpleORMap
 
         }
     }
+
+
+    /**
+     * @return string A string representation of the consultation slot.
+     */
+    public function __toString() : string
+    {
+        return sprintf(
+            _('Termin am %1$s, %2$s von %3$s bis %4$s'),
+            strftime('%A', $this->start_time),
+            strftime('%x', $this->start_time),
+            date('H:i', $this->start_time),
+            date('H:i', $this->end_time)
+        );
+    }
 }

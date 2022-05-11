@@ -12,7 +12,7 @@
                     <td class="actions">
                         <form method="post">
                             <?= CSRFProtection::tokenTag(); ?>
-                            <? $actionMenu = ActionMenu::get() ?>
+                            <? $actionMenu = ActionMenu::get()->setContext($lvgruppe->getDisplayName()) ?>
                             <? if (MvvPerm::haveFieldPermLvgruppen($modulteil, MvvPerm::PERM_WRITE)) : ?>
                                 <? $actionMenu->addLink(
                                     $controller->url_for('/lvgruppe/' . $modulteil->id . '/' . $lvgruppe->id),

@@ -19,7 +19,7 @@
     <td class="actions">
     <? if ($has_access && !$cancelled_dates_locked): ?>
         <form action="<?= $controller->url_for("course/timesrooms/undeleteSingle/{$date->id}/1") ?>" method="post">
-            <? $actionMenu = ActionMenu::get() ?>
+            <? $actionMenu = ActionMenu::get()->setContext($date) ?>
             <? $actionMenu->addButton('restore_date', _('Termin wiederherstellen'), Icon::create('trash+decline'),
                                       ['data-confirm' => _('Diesen Termin wiederherstellen?')]) ?>
             <?= $actionMenu->render() ?>

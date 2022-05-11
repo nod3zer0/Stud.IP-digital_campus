@@ -24,7 +24,7 @@
             <td class="dont-hide" style="white-space: nowrap; text-align: right;">
                 <form method="post">
                     <?= CSRFProtection::tokenTag(); ?>
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($version->getDisplayName()) ?>
                     <? if ($version->stat === 'planung' && MvvPerm::haveFieldPermStat($version)) : ?>
                         <? $actionMenu->addLink(
                             $controller->url_for('/approve/' . $version->id),

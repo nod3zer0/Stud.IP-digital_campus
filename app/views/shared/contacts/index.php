@@ -32,7 +32,7 @@
             <td class="dont-hide"><?= htmlReady($mvv_contact->count_relations); ?></td>
             <td class="dont-hide actions">
             <?
-                $actions = ActionMenu::get();
+                $actions = ActionMenu::get()->setContext($mvv_contact->getContactName());
                 if ($perm->haveFieldPerm('ranges', MvvPerm::PERM_CREATE)) {
                     $actions->addLink(
                         $controller->url_for('shared/contacts/add_ranges_to_contact', $mvv_contact->contact_id),

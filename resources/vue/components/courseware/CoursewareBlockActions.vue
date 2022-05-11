@@ -1,8 +1,9 @@
 <template>
     <div class="cw-block-actions">
-        <studip-action-menu 
+        <studip-action-menu
             :items="menuItems"
             collapseAt="2"
+            :context="block.attributes.title"
             @editBlock="editBlock"
             @setVisibility="setVisibility"
             @showInfo="showInfo"

@@ -95,6 +95,7 @@
     </td>
     <td class="actions">
         <? $action_menu = ActionMenu::get()
+            ->setContext($request->getTypeString())
             ->addLink(
                 $controller->link_for('resources/room_request/resolve/' . $request->id),
                 _('Anfrage auflösen'),

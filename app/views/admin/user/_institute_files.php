@@ -36,7 +36,7 @@
                         <td class="actions">
                             <? if ($institute['files']) : ?>
                                 <?
-                                $actionMenu = ActionMenu::get();
+                                $actionMenu = ActionMenu::get()->setContext($institute['name']);
                                 $actionMenu->addLink($controller->url_for('admin/user/list_files/' . $user['user_id'] . '/' . $institute['Institut_id'] , $params),
                                     _('Dateien auflisten'),
                                     Icon::create('folder-full', 'clickable'),

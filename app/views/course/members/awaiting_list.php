@@ -98,7 +98,7 @@
                     ]) ?>
                 </td>
                 <td class="actions">
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($fullname) ?>
                     <? if ($user_id !== $waiting['user_id']) : ?>
                         <? $actionMenu->addLink(
                             URLHelper::getURL('dispatch.php/messages/write', [

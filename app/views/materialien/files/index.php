@@ -57,7 +57,7 @@
             <td class="dont-hide" style="text-align: center;"><?= htmlReady($mvv_file->count_relations) ?></td>
             <td class="dont-hide actions">
             <?
-                $actions = ActionMenu::get();
+                $actions = ActionMenu::get()->setContext($mvv_file->getFilenames()[0]);
                 $actions->addLink(
                     $controller->url_for('materialien/files/add_dokument', 'index', $mvv_file->getRangeType()?:0, 0, $mvv_file->mvvfile_id),
                     _('Dokument bearbeiten'),

@@ -232,4 +232,19 @@ class CourseExDate extends SimpleORMap implements PrivacyObject
             }
         }
     }
+
+
+    /**
+     * @return string A string representation of the course date.
+     */
+    public function __toString() : string
+    {
+        return sprintf(
+            _('Ausgefallener Termin am %1$s, %2$s von %3$s bis %4$s Uhr'),
+            strftime('%A', $this->date),
+            strftime('%x', $this->date),
+            date('H:i', $this->date),
+            date('H:i', $this->end_time)
+        );
+    }
 }

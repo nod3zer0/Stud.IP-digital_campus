@@ -10,7 +10,7 @@
                         <?= htmlReady($stgteil->getDisplayName()) ?>
                     </td>
                     <td class="actions" style="white-space: nowrap; width: 1%;">
-                        <? $actionMenu = ActionMenu::get() ?>
+                        <? $actionMenu = ActionMenu::get()->setContext($stgteil->fach_name) ?>
                         <? if (MvvPerm::havePermWrite($stgteil)) : ?>
                             <? $actionMenu->addLink(
                                 $controller->url_for('/stgteil/' . $stgteil->id),

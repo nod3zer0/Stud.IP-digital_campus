@@ -51,7 +51,7 @@ echo $flash['message'];
                         <? $dialog['data-dialog'] = 'size=big' ?>
                     <? endif ?>
 
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($rr->getTypeString()) ?>
                     <? $actionMenu->addLink(
                         $controller->url_for('course/room_requests/request_summary/' . $rr->id, ['clear_cache' => 1]),
                         _('Diese Anfrage bearbeiten'),

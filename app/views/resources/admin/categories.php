@@ -33,6 +33,7 @@
                 <td class="actions">
                     <?php
                     $actions = ActionMenu::get()
+                        ->setContext($category->name)
                         ->conditionAll($category->hasResources())
                         ->addLink(
                             $controller->url_for(

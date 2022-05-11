@@ -73,7 +73,7 @@
             <td style="text-align: center;"><?= htmlReady($mvv_file->count_relations); ?></td>
             <td class="actions">
             <?
-                $actions = ActionMenu::get();
+                $actions = ActionMenu::get()->setContext($mvv_file->getDisplayName());
                 $actions->addLink(
                     $controller->url_for('materialien/files/details',$mvv_file->mvvfile_id),
                     _('Details'),

@@ -61,4 +61,12 @@ interface StudipItem
      *     of the StudipItem object.
      */
     public function getLink() : StudipLink;
+
+
+    /**
+     * @return string A string representation of the item.
+     *     For backward compatibility with existing plugins that have classes
+     *     derived of StudipItem, the return type is not specified.
+     */
+    public function __toString();
 }

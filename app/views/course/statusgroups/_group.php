@@ -64,7 +64,7 @@
             <?php endif ?>
             <?php if ($is_tutor) : ?>
                 <?php if ($group->id != 'nogroup') : ?>
-                    <?= ActionMenu::get()
+                    <?= ActionMenu::get()->setContext($group->name)
                           ->addLink(
                               $controller->url_for('messages/write', [
                                   'group_id' => $group->id,

@@ -15,7 +15,7 @@
                     <?= $count ?>
                 </td>
                 <td class="actions">
-                    <? $action =ActionMenu::get()
+                    <? $action =ActionMenu::get()->setContext($course->name)
                         ->addLink($controller->url_for('/messagehelper',
                             ['fach_id' => $course->fach_id, 'abschluss_id' => $degree->abschluss_id]),
                             _('Nachricht an Studierende schreiben'),

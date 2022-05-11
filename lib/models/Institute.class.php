@@ -345,4 +345,13 @@ class Institute extends SimpleORMap implements Range
     {
         return array_filter($this->tools->getStudipModule());
     }
+
+
+    /**
+     * @see Range::__toString()
+     */
+    public function __toString() : string
+    {
+        return $this->getFullName();
+    }
 }

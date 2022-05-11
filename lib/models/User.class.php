@@ -1458,4 +1458,13 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             RolePersistence::expireUserCache($this->user_id);
         }
     }
+
+
+    /**
+     * @see Range::__toString()
+     */
+    public function __toString() : string
+    {
+        return $this->getFullName();
+    }
 }

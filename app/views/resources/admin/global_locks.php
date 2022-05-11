@@ -24,8 +24,15 @@
                     <td><?= date('d.m.Y H:i', $lock->end) ?></td>
                     <td><?= $lock->getTypeString() ?></td>
                     <td class="actions">
-                        <?= ActionMenu::get()
-                            ->addLink(
+                        <?= ActionMenu::get()->setContext(
+                            sprintf(
+                                _('Sperre vom %1$s %2$s Uhr bis %3$s %4$s Uhr'),
+                                strftime('%x', $lock->begin),
+                                date('H:i', $lock->begin),
+                                strftime('%x', $lock->end),
+                                date('H:i', $lock->end)
+                            )
+                        )->addLink(
                                 $controller->url_for('resources/global_locks/edit/' . $lock->id),
                                 _('Sperrung bearbeiten'),
                                 Icon::create('edit'),

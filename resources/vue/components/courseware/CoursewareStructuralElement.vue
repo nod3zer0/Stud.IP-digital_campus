@@ -49,6 +49,7 @@
                                 v-if="!consumeMode"
                                 :items="menuItems"
                                 class="cw-ribbon-action-menu"
+                                :context="structuralElement.attributes.title"
                                 @editCurrentElement="menuAction('editCurrentElement')"
                                 @addElement="menuAction('addElement')"
                                 @deleteCurrentElement="menuAction('deleteCurrentElement')"

@@ -96,7 +96,7 @@
                 </td>
                 <td><?= $module->getModuleTypeName() ?></td>
                 <td class="actions">
-                    <?= ActionMenu::get()->addButton(
+                    <?= ActionMenu::get()->setContext($module->getTitle())->addButton(
                         'view',
                         _('Info'),
                         Icon::create('info-circle'),

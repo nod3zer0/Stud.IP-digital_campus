@@ -42,7 +42,7 @@
                     </a>
                 </td>
                 <td class="actions">
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($step->name) ?>
                     <? $actionMenu->addLink(
                         $controller->url_for("admin/coursewizardsteps/edit/{$step->id}"),
                         _('Schritt bearbeiten'),

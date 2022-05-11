@@ -49,7 +49,7 @@ $dialog_url = $show_raumzeit
         <? endif ?>
     </td>
     <td class="actions">
-        <? $actionMenu = ActionMenu::get() ?>
+        <? $actionMenu = ActionMenu::get()->setContext($date) ?>
         <? $filecount = count($date->getAccessibleFolderFiles($GLOBALS['user']->id)['files']); ?>
         <? if ($has_access): ?>
             <? $actionMenu->addLink($dialog_url, _('Termin bearbeiten'), Icon::create('edit'), ['data-dialog' => '']) ?>

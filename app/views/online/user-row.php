@@ -18,7 +18,7 @@
         <?= ucfirst(reltime(time() - $user['last_action'])) ?>
     </td>
     <td class="actions" nowrap="nowrap">
-        <? $actionMenu = ActionMenu::get() ?>
+        <? $actionMenu = ActionMenu::get()->setContext($user['name']) ?>
         <? if (Config::get()->BLUBBER_GLOBAL_MESSENGER_ACTIVATE) : ?>
             <? $actionMenu->addLink(
                 URLHelper::getURL('dispatch.php/blubber/write_to/'.$user['user_id']),

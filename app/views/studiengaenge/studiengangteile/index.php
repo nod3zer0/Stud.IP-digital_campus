@@ -39,7 +39,7 @@
                         <td class="dont-hide" style="text-align: center;"><?= htmlReady($stgteil->kp) ?> </td>
                         <td class="dont-hide" style="text-align: center;"><?= $stgteil->count_versionen ?> </td>
                         <td class="dont-hide actions" style="white-space: nowrap;">
-                            <? $actionMenu = ActionMenu::get() ?>
+                            <? $actionMenu = ActionMenu::get()->setContext($stgteil->fach_name) ?>
                             <? if (MvvPerm::havePermCreate('StgteilVersion')) : ?>
                                 <? $actionMenu->addLink(
                                     $controller->url_for('/version/' . $stgteil->getId()),

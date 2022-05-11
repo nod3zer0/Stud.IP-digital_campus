@@ -114,7 +114,7 @@
                     <td><?= htmlReady($user['auth_plugin'] === null ? _('vorläufig') : $user->auth_plugin) ?></td>
                     <td class="actions" nowrap>
                     <?
-                        $actionMenu = ActionMenu::get();
+                        $actionMenu = ActionMenu::get()->setContext($user);
                         $actionMenu->addLink(
                             $controller->url_for("admin/user/edit/{$user->id}"),
                             _('Nutzer bearbeiten'),

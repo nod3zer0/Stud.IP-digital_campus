@@ -109,7 +109,7 @@
                 </td>
             <? endif ?>
                 <td style="text-align: right">
-                    <? $actionMenu = ActionMenu::get() ?>
+                    <? $actionMenu = ActionMenu::get()->setContext($fullname) ?>
                     <? if ($user_id !== $leser['user_id']) : ?>
                         <? $actionMenu->addLink(
                             URLHelper::getURL('dispatch.php/messages/write', [

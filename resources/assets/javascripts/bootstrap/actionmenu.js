@@ -35,4 +35,18 @@
         }
     });
 
+    // Close all action menus when the escape key is pressed and rotate through all its items
+    // when TAB or SHIFT + TAB is pressed.
+    $(document).on('keydown', function(event) {
+        if (event.key === 'Escape') {
+            STUDIP.ActionMenu.closeAll();
+        } else if (event.key === 'Tab') {
+            //Check if the focus is inside an action menu:
+            let menu = $(event.target).closest('nav.action-menu');
+            if (menu.hasClass('is-open') && STUDIP.ActionMenu.tabThroughItems(menu, event.shiftKey)) {
+                event.preventDefault();
+            }
+        }
+    });
+
 }(jQuery));
