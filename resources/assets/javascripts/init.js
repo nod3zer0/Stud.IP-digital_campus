@@ -1,6 +1,7 @@
 import Vue from './lib/studip-vue.js';
 
 import ActionMenu from './lib/actionmenu.js';
+import ActivityFeed from './lib/activityfeed.js';
 import admin_sem_class from './lib/admin_sem_class.js';
 import Admission from './lib/admission.js';
 import Arbeitsgruppen from './lib/arbeitsgruppen.js';
@@ -56,6 +57,7 @@ import Plus from './lib/plus.js';
 import QRCode from './lib/qr_code.js';
 import Questionnaire from './lib/questionnaire.js';
 import QuickSearch from './lib/quick_search.js';
+import QuickSelection from './lib/quick_selection.js';
 import Raumzeit from './lib/raumzeit.js';
 import {ready, domReady, dialogReady} from './lib/ready.js';
 import register from './lib/register.js';
@@ -87,6 +89,7 @@ const URLHelper = createURLHelper(configURLHelper);
 
 window.STUDIP = _.assign(window.STUDIP || {}, {
     ActionMenu,
+    ActivityFeed,
     admin_sem_class,
     Admission,
     api,
@@ -143,6 +146,7 @@ window.STUDIP = _.assign(window.STUDIP || {}, {
     QRCode,
     Questionnaire,
     QuickSearch,
+    QuickSelection,
     Raumzeit,
     register,
     Report,

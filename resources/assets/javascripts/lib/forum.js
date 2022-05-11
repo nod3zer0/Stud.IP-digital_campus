@@ -30,7 +30,7 @@ const Forum = {
 
                 jQuery.ajax({
                     type: 'POST',
-                    url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/savecats?cid=' + STUDIP.Forum.seminar_id),
+                    url: STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/savecats?cid=' + STUDIP.Forum.seminar_id),
                     data: categories
                 });
             }
@@ -69,7 +69,7 @@ const Forum = {
             STUDIP.Forum.closeDialog();
 
             // ajax call to make the deletion permanent
-            jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/delete_entry/'
+            jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/delete_entry/'
                 + STUDIP.Forum.current_area_id + '?cid=' + STUDIP.Forum.seminar_id), {
                 method: 'post',
                 data: {'security_token' : STUDIP.CSRF_TOKEN.value},
@@ -92,7 +92,7 @@ const Forum = {
             });
 
             // ajax call to make the deletion permanent
-            jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/remove_category/'
+            jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/remove_category/'
                 + STUDIP.Forum.current_category_id + '?cid=' + STUDIP.Forum.seminar_id), {
                 method: 'post',
                 data: {'security_token' : STUDIP.CSRF_TOKEN.value},
@@ -150,7 +150,7 @@ const Forum = {
         jQuery('table[data-category-id=' + category_id + '] span.edit_category').remove();
         jQuery('table[data-category-id=' + category_id + '] span.category_name').show();
 
-        jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/edit_category/' + category_id + '?cid=' + STUDIP.Forum.seminar_id), {
+        jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/edit_category/' + category_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
             data: name
         });
@@ -173,7 +173,7 @@ const Forum = {
 
         jQuery.ajax({
             type: 'POST',
-            url: STUDIP.URLHelper.getURL('plugins.php/coreforum/area/save_order?cid=' + STUDIP.Forum.seminar_id),
+            url: STUDIP.URLHelper.getURL('dispatch.php/course/forum/area/save_order?cid=' + STUDIP.Forum.seminar_id),
             data: areas
         });
     },
@@ -209,7 +209,7 @@ const Forum = {
         // disable submit and cancel buttons, there is no turning back now
         $('.button', this).prop('disabled', true);
 
-        jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/area/add/' + values.category_id + '?cid=' + STUDIP.Forum.seminar_id), {
+        jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/area/add/' + values.category_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
             data: values,
             success: function(data) {
@@ -269,7 +269,7 @@ const Forum = {
         jQuery('tr[data-area-id=' + area_id + '] div.areacontent').data('content', name.content);
 
         // store the modified area and get formatted content-text from server
-        jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/area/edit/' + area_id + '?cid=' + STUDIP.Forum.seminar_id), {
+        jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/area/edit/' + area_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
             data: name,
             success: function(data)  {
@@ -315,7 +315,7 @@ const Forum = {
         // remember current textarea value
         textarea.data('reset', textarea.val());
 
-        jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/update_entry/' + topic_id + '?cid=' + STUDIP.Forum.seminar_id), {
+        jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/update_entry/' + topic_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
             data: jQuery('form[data-topicid='+ topic_id +']').serializeObject(),
 
@@ -489,7 +489,7 @@ const Forum = {
                     + nl + nl
                     + $gettext('Link zum Beitrag: ')
                     + nl
-                    + STUDIP.URLHelper.getURL('plugins.php/coreforum/index/index/'
+                    + STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/index/'
                     + topic_id + '?cid=' + STUDIP.Forum.seminar_id + '&again=yes#' + topic_id)
                     + nl + nl
                     + content
@@ -543,7 +543,7 @@ const Forum = {
             posting.posting = STUDIP.wysiwyg.markAsHtml(posting.posting);
         }
 
-        jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/preview?cid=' + STUDIP.Forum.seminar_id), {
+        jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/preview?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
             data: posting,
             success: function (html) {
@@ -556,7 +556,7 @@ const Forum = {
     },
 
     loadAction: function(element, action) {
-        jQuery(element).load(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/'
+        jQuery(element).load(STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/'
             + action + '?cid=' + STUDIP.Forum.seminar_id))
     },
 
@@ -578,14 +578,14 @@ const Forum = {
     },
 
     setFavorite: function(topic_id) {
-        jQuery('#favorite_' + topic_id).load(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/set_favorite/'
+        jQuery('#favorite_' + topic_id).load(STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/set_favorite/'
             + topic_id + '?cid=' + STUDIP.Forum.seminar_id));
         jQuery('a.marked[data-topic-id=' + topic_id +']').show();
         return false;
     },
 
     unsetFavorite: function(topic_id) {
-        jQuery('#favorite_' + topic_id).load(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/unset_favorite/'
+        jQuery('#favorite_' + topic_id).load(STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/unset_favorite/'
             + topic_id + '?cid=' + STUDIP.Forum.seminar_id));
         jQuery('a.marked[data-topic-id=' + topic_id +']').hide();
         return false;
@@ -601,7 +601,7 @@ const Forum = {
         // jQuery('li[data-id=' + topic_id + '] > a.tooltip2').showAjaxNotification();
 
         // load children from server and show them
-        jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/admin/childs/' + topic_id), {
+        jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/admin/childs/' + topic_id), {
             dataType: 'html',
             success: function(response) {
                 jQuery('li[data-id=' + topic_id + ']').append(response);
@@ -664,7 +664,7 @@ const Forum = {
     paste: function(topic_id) {
         // jQuery('li[data-id=' + topic_id + '] > a.tooltip2').showAjaxNotification();
 
-        jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/admin/move/' + topic_id), {
+        jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/admin/move/' + topic_id), {
             data : {
                 'topics' : STUDIP.Forum.clipboard
             },
@@ -742,7 +742,7 @@ const Forum = {
     openThread: function(topic_id, redirect, page, showSuccessMessage) {
         jQuery.ajax({
             type: 'GET',
-            url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/open_thread/' + topic_id + '/' + redirect + '/' + page),
+            url: STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/open_thread/' + topic_id + '/' + redirect + '/' + page),
             success: function(data) {
                 if (showSuccessMessage == true) {
                     jQuery('#message_area').html(data);
@@ -786,7 +786,7 @@ const Forum = {
 
         jQuery.ajax({
             type: 'GET',
-            url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/close_thread/' + topic_id + '/' + redirect + '/' + page),
+            url: STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/close_thread/' + topic_id + '/' + redirect + '/' + page),
             success: function(data) {
                 if (showSuccessMessage == true) {
                     jQuery('#message_area').html(data);
@@ -800,7 +800,7 @@ const Forum = {
     makeThreadStickyFromThread: function(topic_id) {
         jQuery.ajax({
             type: 'GET',
-            url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/make_sticky/' + topic_id + '/' + topic_id + '/0'),
+            url: STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/make_sticky/' + topic_id + '/' + topic_id + '/0'),
             success: function(data) {
                 jQuery('#message_area').html(data);
                 var linkText = $gettext('Hervorhebung aufheben');
@@ -815,7 +815,7 @@ const Forum = {
     makeThreadUnstickyFromThread: function(topic_id) {
         jQuery.ajax({
             type: 'GET',
-            url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/make_unsticky/' + topic_id + '/' + topic_id + '/0'),
+            url: STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/make_unsticky/' + topic_id + '/' + topic_id + '/0'),
             success: function(data) {
                 jQuery('#message_area').html(data);
                 var linkText = $gettext('Thema hervorheben');

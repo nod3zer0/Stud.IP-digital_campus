@@ -10,14 +10,6 @@ namespace RESTAPI\Routes;
  */
 class Forum extends \RESTAPI\RouteMap
 {
-
-    public static function before()
-    {
-        require_once 'public/plugins_packages/core/Forum/models/ForumCat.php';
-        require_once 'public/plugins_packages/core/Forum/models/ForumEntry.php';
-        require_once 'public/plugins_packages/core/Forum/models/ForumPerm.php';
-    }
-
     /**
      * List all categories of a forum
      *

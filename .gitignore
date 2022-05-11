@@ -34,7 +34,6 @@ public/pictures/smile/*.jpg
 public/pictures/smile/*.png
 public/pictures/user/[0-9a-f]*.png
 public/plugins_packages/*
-!public/plugins_packages/core
 
 tests/_log
 tests/_helpers/CodeGuy.php

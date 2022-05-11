@@ -593,7 +593,7 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
     public function getURL()
     {
         if (($this['context_type'] === "course") || ($this['context_type'] === "institute")) {
-            return URLHelper::getURL('plugins.php/blubber/messenger/course/' . $this->getId(), ['cid' => $this['context_id']]);
+            return URLHelper::getURL('dispatch.php/course/messenger/course/' . $this->getId(), ['cid' => $this['context_id']]);
         }
         return URLHelper::getURL('dispatch.php/blubber/index/' . $this->getId());
     }

@@ -35,7 +35,7 @@
 
     <td width="3%" align="center">
         <? if (class_exists("Blubber")) : ?>
-        <a href="<?= URLHelper::getLink('plugins.php/blubber/streams/global', ['mention' => $tmp_online_uname]) ?>">
+        <a href="<?= URLHelper::getLink('dispatch.php/course/streams/global', ['mention' => $tmp_online_uname]) ?>">
             <?= Icon::create('blubber', 'clickable', ['title' => _("Blubber diesen Nutzer an"), 'class' => 'text-bottom'])->asImg() ?>
         </a>
         <? endif ?>

@@ -2,8 +2,6 @@
 
 namespace JsonApi\Routes\Forum;
 
-// require_once 'public/plugins_packages/core/Forum/models/ForumCat.php';
-
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use JsonApi\Errors\AuthorizationFailedException;

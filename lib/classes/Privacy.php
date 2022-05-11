@@ -85,8 +85,6 @@ class Privacy
      */
     public static function getUserdataInformation($user_id, $section = null)
     {
-        //workaround make Forum Model available
-        PluginEngine::getPlugin('CoreForum');
         $storage = new StoredUserData($user_id);
 
         if ($section && !isset(self::$privacy_classes[$section])) {

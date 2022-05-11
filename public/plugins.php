@@ -27,8 +27,14 @@ try {
     require_once 'lib/seminar_open.php';
 
     // get plugin class from request
-    $dispatch_to = isset($_SERVER['PATH_INFO']) ?$_SERVER['PATH_INFO'] : '';
+    $dispatch_to = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '';
     list($plugin_class, $unconsumed) = PluginEngine::routeRequest($dispatch_to);
+
+    // handle legacy forum plugin URLs
+    if ($plugin_class === 'coreforum') {
+        header('Location: ' . URLHelper::getURL('dispatch.php/course/forum/' . $unconsumed));
+        die();
+    }
 
     // retrieve corresponding plugin info
     $plugin_manager = PluginManager::getInstance();
@@ -46,8 +52,9 @@ try {
     // set default page title
     PageLayout::setTitle($plugin->getPluginName());
 
+    // deprecated, the plugin should override perform() instead
     if (is_callable([$plugin, 'initialize'])) {
-      $plugin->initialize();
+        $plugin->initialize();
     }
 
     // let the show begin

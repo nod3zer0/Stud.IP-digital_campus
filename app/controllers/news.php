@@ -165,6 +165,20 @@ class NewsController extends StudipController
         $this->render_nothing();
     }
 
+    public function visit_all_action()
+    {
+        $global_news = StudipNews::GetNewsByRange('studip', true);
+
+        if ($GLOBALS['user']->id && $GLOBALS['user']->id !== 'nobody') {
+            foreach ($global_news as $news) {
+                object_add_view($news['news_id']);
+                object_set_visit($news['news_id'], 'news');
+            }
+        }
+
+        $this->render_nothing();
+    }
+
     /**
      * Builds news dialog for editing / adding news
      *

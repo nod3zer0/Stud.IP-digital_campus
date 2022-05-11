@@ -83,7 +83,7 @@ class PluginManager
                 'enabled'                 => $plugin['enabled'] === 'yes',
                 'position'                => $plugin['navigationpos'],
                 'depends'                 => (int) $plugin['dependentonid'],
-                'core'                    => $plugin['pluginpath'] === '' || strpos($plugin['pluginpath'], 'core/') === 0,
+                'core'                    => $plugin['pluginpath'] === '',
                 'automatic_update_url'    => $plugin['automatic_update_url'],
                 'automatic_update_secret' => $plugin['automatic_update_secret']
             ];

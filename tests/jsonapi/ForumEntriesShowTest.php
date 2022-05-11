@@ -1,6 +1,5 @@
 <?php
 
-require_once 'public/plugins_packages/core/Forum/models/ForumEntry.php';
 require_once 'ForumTestHelper.php';
 
 use JsonApi\Models\ForumEntry as ForumEntryModel;

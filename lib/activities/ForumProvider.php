@@ -9,8 +9,6 @@
 
 namespace Studip\Activity;
 
-require_once 'public/plugins_packages/core/Forum/models/ForumEntry.php';
-
 class ForumProvider implements ActivityProvider
 {
     /**
@@ -28,7 +26,7 @@ class ForumProvider implements ActivityProvider
 
         $activity->content = formatReady($post['content']);
 
-        $url = \PluginEngine::getURL('CoreForum', [], 'index/index/' . $post['topic_id']
+        $url = \URLHelper::getURL('dispatch.php/course/forum/index/index/' . $post['topic_id']
                     .'?cid='. $post['seminar_id'] .'&highlight_topic='. $post['topic_id']
                     .'#'. $post['topic_id']);
 

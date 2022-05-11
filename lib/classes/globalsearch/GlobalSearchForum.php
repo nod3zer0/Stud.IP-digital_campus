@@ -144,7 +144,7 @@ class GlobalSearchForum extends GlobalSearchModule implements GlobalSearchFullte
                 'id'          => $data['topic_id'],
                 'name'        => $name,
                 'url'         => URLHelper::getURL(
-                    "plugins.php/coreforum/index/index/{$data['topic_id']}#{$data['topic_id']}",
+                    "dispatch.php/course/forum/index/index/{$data['topic_id']}#{$data['topic_id']}",
                     ['cid' => $data['seminar_id'], 'highlight_topic' => $data['topic_id']],
                     true
                 ),
@@ -152,7 +152,7 @@ class GlobalSearchForum extends GlobalSearchModule implements GlobalSearchFullte
                 'date'        => strftime('%x', $data['chdate']),
                 'description' => self::mark($filtered_content, $search, true),
                 'additional'  => htmlReady($additional),
-                'expand' => URLHelper::getURL('plugins.php/coreforum/index/search', [
+                'expand' => URLHelper::getURL('dispatch.php/course/forum/index/search', [
                     'cid'            => $data['seminar_id'],
                     'backend'        => 'search',
                     'searchfor'      => $search,

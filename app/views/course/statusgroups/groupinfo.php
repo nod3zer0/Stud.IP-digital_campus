@@ -59,7 +59,7 @@
     <?php if ($thread = $group->blubberthread) : ?>
         <p>
             <?= formatReady(sprintf(_('Zu dieser Gruppe gehört ein [Blubberthread]%s .'),
-                URLHelper::getURL('plugins.php/blubber/messenger/course/' . $thread->id, [
+                URLHelper::getURL('dispatch.php/course/messenger/course/' . $thread->id, [
                     'cid' => $course_id,
                 ]))) ?>
         </p>
