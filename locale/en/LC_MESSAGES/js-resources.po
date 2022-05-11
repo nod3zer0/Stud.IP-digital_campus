@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2022-05-04 16:26+0000\n"
+"PO-Revision-Date: 2022-05-11 16:48+0000\n"
 "Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
 "stud-ip-5-1-js/en/>\n"
@@ -20,7 +20,7 @@ msgstr " This selection contains no (new) users."
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:9
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:6
 msgid "(Seite %{pageNum} von %{pageCount})"
-msgstr ""
+msgstr "(Page %{pageNum} of %{pageCount})"
 
 #: resources/vue/components/MyCoursesTables.vue:164
 #: resources/vue/components/MyCoursesTiles.vue:78
@@ -82,7 +82,7 @@ msgstr "Delete section irreversibly"
 
 #: resources/vue/components/courseware/CoursewareContainerAdderItem.vue:33
 msgid "Abschnitt wurde erfolgreich eingefügt."
-msgstr ""
+msgstr "Section successfully inserted."
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:7
 msgid "Abschnitte"
@@ -148,7 +148,7 @@ msgstr "General settings"
 
 #: resources/vue/components/courseware/CoursewareManagerFiling.vue:5
 msgid "an dieser Stelle einfügen"
-msgstr ""
+msgstr "insert here"
 
 #: resources/vue/components/courseware/CoursewareCourseDashboard.vue:17
 msgid "angefangene Seiten"
@@ -422,11 +422,11 @@ msgstr "Please confirm action"
 
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:94
 msgid "Bitte geben Sie ein Datum an"
-msgstr ""
+msgstr "Please enter a date"
 
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:96
 msgid "Bitte geben Sie eine Uhrzeit an"
-msgstr ""
+msgstr "Please enter the time"
 
 #: resources/assets/javascripts/lib/register.js:92
 msgid "Bitte geben Sie Ihren tatsächlichen Nachnamen an."
