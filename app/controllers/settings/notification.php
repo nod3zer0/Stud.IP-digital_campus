@@ -53,28 +53,17 @@ class Settings_NotificationController extends Settings_SettingsController
     {
         $group_field = 'sem_number';
 
-        $add_fields = $add_query = '';
-        if ($group_field == 'sem_tree_id') {
-            $add_fields = ',sem_tree_id';
-            $add_query  = "LEFT JOIN seminar_sem_tree sst ON (sst.seminar_id=seminare.Seminar_id)";
-        } else if ($group_field == 'dozent_id') {
-            $add_fields = ', su1.user_id as dozent_id';
-            $add_query  = "LEFT JOIN seminar_user as su1 ON (su1.seminar_id=seminare.Seminar_id AND su1.status='dozent')";
-        }
-
         $dbv = DbView::getView('sem_tree');
 
         $query = "SELECT seminare.VeranstaltungsNummer AS sem_nr, seminare.Name, seminare.Seminar_id,
                          seminare.status AS sem_status, seminar_user.gruppe, seminare.visible,
                          {$dbv->sem_number_sql} AS sem_number, {$dbv->sem_number_end_sql} AS sem_number_end
-                         {$add_fields}
                   FROM seminar_user
                   LEFT JOIN seminare  USING (Seminar_id)
-                  {$add_query}
                   WHERE seminar_user.user_id = ?";
         if (Config::get()->DEPUTIES_ENABLE) {
             $query .= " UNION " . Deputy::getMySeminarsQuery(
-                'notification', $dbv->sem_number_sql, $dbv->sem_number_end_sql, $add_fields, $add_query
+                'notification', $dbv->sem_number_sql, $dbv->sem_number_end_sql, '', ''
                 );
         }
         $query .= " ORDER BY sem_nr ASC";
@@ -116,11 +105,7 @@ class Settings_NotificationController extends Settings_SettingsController
             }
         }
 
-        if ($group_field == 'sem_number') {
-            correct_group_sem_number($groups, $my_sem);
-        } else {
-            add_sem_name($my_sem);
-        }
+        correct_group_sem_number($groups, $my_sem);
 
 
         sort_groups($group_field, $groups);
@@ -129,7 +114,7 @@ class Settings_NotificationController extends Settings_SettingsController
         $open          = UserConfig::get($this->user->user_id)->MY_COURSES_OPEN_GROUPS;
         $checked       = [];
         foreach ($groups as $group_id => $group_members) {
-            if ($group_id !== 'not_grouped' && !isset($open[$group_id])) {
+            if (!in_array($group_id, $open)) {
                 continue;
             }
             foreach ($group_members as $member) {

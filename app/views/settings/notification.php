@@ -26,12 +26,13 @@
                 <td colspan="2">
                     <?= _('Benachrichtigung für unten aufgeführte Veranstaltungen:') ?>
                 </td>
-                <? for ($i = 0; $i < count($modules); $i += 1): ?>
+                <? $i = 0; ?>
+                <? foreach ($modules as $index => $data): ?>
                     <td>
-                        <input type="checkbox" name="all[columns][]" value="<?= $i ?>"
-                                <? if (!empty($checked) && count(array_filter($checked, function ($item) use ($i) { return $item[$i]; })) == count($checked)) echo 'checked'; ?>>
+                        <input type="checkbox" name="all[columns][]" value="<?= $i++ ?>"
+                                <? if (!empty($checked) && count(array_filter($checked, function ($item) use ($index) { return $item[$index]; })) == count($checked)) echo 'checked'; ?>>
                     </td>
-                <? endfor; ?>
+                <? endforeach; ?>
                 <td>
                     <input type="checkbox" name="all[all]" value="all"
                             <? if (!empty($checked) && count(array_filter($checked, function ($item) { return $item['all']; })) == count($checked)) echo 'checked'; ?>>
@@ -44,7 +45,7 @@
                 <? if ($group_field !== 'not_grouped'): ?>
                     <tr>
                         <th colspan="<?= 3 + count($modules) ?>">
-                            <? if (isset($open[$id])): ?>
+                            <? if (in_array($id, $open)): ?>
                             <a class="tree" style="font-weight:bold" name="<?= $id ?>"
                                href="<?= $controller->url_for('settings/notification/close', $id) ?>#<?= $id ?>"
                                     <?= tooltip(_('Gruppierung schließen'), true) ?>>
@@ -60,7 +61,7 @@
                         </th>
                     </tr>
                 <? endif; ?>
-                <? if ($id === 'not_grouped' || isset($open[$id])): ?>
+                <? if ($id === 'not_grouped' || in_array($id, $open)): ?>
                     <? foreach ($members as $member): ?>
                         <tr>
                             <td class="gruppe<?= $seminars[$member['seminar_id']]['gruppe'] ?>">&nbsp;</td>
