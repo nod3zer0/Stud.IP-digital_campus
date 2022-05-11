@@ -22,7 +22,7 @@
     <? endif ?>
 
         <label>
-            <span class="required"><?= _('Name der Tour:') ?></span>
+            <span class="required"><?= _('Name der Tour') ?>:</span>
             <input type="text" size="60" maxlength="255" name="tour_name"
                    value="<?= $tour ? htmlReady($tour->name) : '' ?>"
                    required="required" aria-required="true"
@@ -30,14 +30,14 @@
         </label>
 
         <label>
-            <span class="required"> <?= _('Beschreibung:') ?></span>
+            <span class="required"> <?= _('Bemerkung') ?>:</span>
             <textarea cols="60" rows="5" name="tour_description"
                       required="required" aria-required="true"
                       placeholder="<?= _('Bitte geben an, welchen Inhalt die Tour hat') ?>"><?= $tour ? htmlReady($tour->description) : '' ?></textarea>
         </label>
 
         <label>
-            <?= _('Art der Tour:') ?>
+            <?= _('Art der Tour') ?>:
             <select name="tour_type">
                 <option value="tour" <? if ($tour->type === 'tour') echo 'selected'; ?>>
                     <?= _('Tour (passiv)') ?>
@@ -49,7 +49,7 @@
         </label>
 
         <label>
-            <?= _('Zugang zur Tour:') ?>
+            <?= _('Zugang zur Tour') ?>:
             <select name="tour_access">
                 <option value="link" <? if ($tour->settings->access === 'link') echo 'selected'; ?>>
                     <?= _('unsichtbar') ?>
@@ -68,7 +68,7 @@
 
     <? if (!count($tour->steps)) : ?>
         <label>
-            <span class="required"><?= _('Startseite der Tour:') ?></span>
+            <span class="required"><?= _('Startseite der Tour') ?>:</span>
             <input type="text" size="60" maxlength="255" name="tour_startpage"
                    value="<?= $tour_startpage ? htmlReady($tour_startpage) : '' ?>"
                    required="required" aria-required="true"
@@ -78,7 +78,7 @@
     <? endif ?>
 
     <section>
-        <?= _('Geltungsbereich (Nutzendenstatus):') ?>
+        <?= _('Geltungsbereich (Nutzendenstatus)') ?>:
         <? foreach (['autor', 'tutor', 'dozent', 'admin', 'root'] as $role) : ?>
         <label>
             <input type="checkbox" name="tour_roles[]" value="<?= $role ?>"
@@ -114,24 +114,19 @@
 <? if (!$tour->isNew()) : ?>
     <form method="post">
         <?= CSRFProtection::tokenTag() ?>
-        <table class="default">
+        <table class="default sortable-table">
             <caption>
                 <div class="step_list_title"><?= _('Schritte') ?></div>
             </caption>
-            <colgroup>
-                <col width="2%">
-                <col width="25%">
-                <col>
-                <col width="15%">
-                <col width="80">
-            </colgroup>
             <thead>
                 <tr>
-                    <th><?= _('Nr.') ?></th>
-                    <th><?= _('Überschrift') ?></th>
+                    <th data-sort="htmldata"><?= _('Nr.') ?></th>
+                    <th data-sort="text"><?= _('Überschrift') ?></th>
                     <th><?= _('Inhalt') ?></th>
-                    <th><?= _('Seite') ?></th>
-                    <th><?= _('Aktion') ?></th>
+                    <th data-sort="text"><?= _('Seite') ?></th>
+                    <th data-sort="htmldata"><?= _('Letzte Änderung') ?></th>
+                    <th data-sort="htmldata"><?= _('Geändert von') ?></th>
+                    <th class="actions"><?= _('Aktionen') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -142,6 +137,8 @@
                         <td><?= htmlReady($step->title) ?></td>
                         <td><?= htmlReady($step->tip) ?></td>
                         <td><?= htmlReady($step->route) ?></td>
+                        <td><?= $tour->chdate ? date('d.m.Y H:i', $tour->chdate) : '' ?></td>
+                        <td><?= htmlReady($step->author ? $step->author->getFullName() : ($step->author_email ?: _('unbekannt'))) ?></td>
                         <td class="actions">
                         <? $actionMenu = ActionMenu::get()->setContext($step->title) ?>
                         <? $actionMenu->addLink(
@@ -167,7 +164,7 @@
                 <? endforeach ?>
             <? else : ?>
                 <tr>
-                    <td colspan="6">
+                    <td colspan="7">
                         <?= _('In dieser Tour sind bisher keine Schritte vorhanden.') ?>
                     </td>
                 </tr>

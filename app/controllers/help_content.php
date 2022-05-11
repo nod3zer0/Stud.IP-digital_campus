@@ -212,6 +212,7 @@ class HelpContentController extends AuthenticatedController
 
         $help_content->content         = Request::get('help_content_content');
         $help_content->route           = Request::get('help_content_route');
+        $help_content->comment         = Request::get('help_content_comment');
         $help_content->author_email    = $GLOBALS['user']->Email;
         $help_content->installation_id = Config::get()->STUDIP_INSTALLATION_ID;
 

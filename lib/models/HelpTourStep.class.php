@@ -30,19 +30,20 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string tour_id database column
- * @property string step database column
- * @property string title database column
- * @property string tip database column
- * @property string orientation database column
- * @property string interactive database column
- * @property string css_selector database column
- * @property string route database column
- * @property string author_email database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string id computed column read/write
- * @property HelpTours help_tour belongs_to HelpTours
+ * @property string $tour_id database column
+ * @property string $step database column
+ * @property string $title database column
+ * @property string $tip database column
+ * @property string $orientation database column
+ * @property string $interactive database column
+ * @property string $css_selector database column
+ * @property string $route database column
+ * @property string $author_email database column
+ * @property string $mkdate database column
+ * @property string $chdate database column
+ * @property string $id computed column read/write
+ * @property HelpTour $help_tour belongs_to HelpTour
+ * @property User|null $author has_one author
  */
 class HelpTourStep extends SimpleORMap
 {
@@ -55,8 +56,31 @@ class HelpTourStep extends SimpleORMap
             'foreign_key' => 'tour_id',
         ];
 
+        $config['has_one']['author'] = [
+            'class_name'  => User::class,
+            'foreign_key' => 'author_email',
+            'assoc_func'  => 'findOneByEmail',
+        ];
+
+        $config['registered_callbacks']['after_store'][] = 'cbUpdateTour';
+
         parent::configure($config);
     }
+
+
+    public function cbUpdateTour()
+    {
+        if (!$this->help_tour) {
+            return;
+        }
+
+        $this->help_tour->author_email = $this->author_email;
+        $this->help_tour->chdate = $this->chdate;
+        if ($this->help_tour->isDirty()) {
+            $this->help_tour->store();
+        }
+    }
+
 
     /**
      * checks, if tour step data is complete

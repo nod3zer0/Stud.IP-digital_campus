@@ -29,26 +29,28 @@ require_once 'lib/object.inc.php';
  * @author   Arne Schröder <schroeder@data-quest>
  * @access   public
  *
- * @property string tour_id database column
- * @property string id alias column for tour_id
- * @property string name database column
- * @property string description database column
- * @property string type database column
- * @property string roles database column
- * @property string version database column
- * @property string language database column
- * @property string studip_version database column
- * @property string installation_id database column
- * @property string mkdate database column
- * @property SimpleORMapCollection steps has_many HelpTourStep
- * @property SimpleORMapCollection audiences has_many HelpTourAudience
- * @property HelpTourSettings settings has_one HelpTourSettings
+ * @property string $tour_id database column
+ * @property string $id alias column for tour_id
+ * @property string $name database column
+ * @property string $description database column
+ * @property string $type database column
+ * @property string $roles database column
+ * @property string $version database column
+ * @property string $language database column
+ * @property string $studip_version database column
+ * @property string $installation_id database column
+ * @property string $mkdate database column
+ * @property SimpleORMapCollection $steps has_many HelpTourStep
+ * @property SimpleORMapCollection $audiences has_many HelpTourAudience
+ * @property HelpTourSettings $settings has_one HelpTourSettings
+ * @property User|null $author has_one author
  */
 class HelpTour extends SimpleORMap
 {
     protected static function configure($config = [])
     {
         $config['db_table'] = 'help_tours';
+
         $config['has_one']['settings'] = [
             'class_name'        => HelpTourSettings::class,
             'assoc_foreign_key' => 'tour_id',
@@ -67,9 +69,23 @@ class HelpTour extends SimpleORMap
             'on_delete'         => 'delete',
             'on_store'          => 'store',
         ];
+        $config['has_one']['author'] = [
+            'class_name'  => User::class,
+            'foreign_key' => 'author_email',
+            'assoc_func'  => 'findOneByEmail',
+        ];
+
+        $config['registered_callbacks']['before_store'][] = 'cbUpdateStudipVersion';
 
         parent::configure($config);
     }
+
+
+    public function cbUpdateStudipVersion()
+    {
+        $this->studip_version = StudipVersion::getStudipVersion();
+    }
+
 
     /**
      * get visible tours for helpbar

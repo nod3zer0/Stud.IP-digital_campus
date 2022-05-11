@@ -23,26 +23,25 @@
 /**
  * HelpContent.class.php - model class for Stud.IP help content
  *
- *
- *
- *
  * @author   Arne Schröder <schroeder@data-quest>
  * @access   public
  *
- * @property string content_id database column
- * @property string language database column
- * @property string label database column
- * @property string icon database column
- * @property string content database column
- * @property string route database column
- * @property string studip_version database column
- * @property string position database column
- * @property string custom database column
- * @property string visible database column
- * @property string author_email database column
- * @property string installation_id database column
- * @property string mkdate database column
- * @property string chdate database column
+ * @property string $content_id database column
+ * @property string $language database column
+ * @property string $label database column
+ * @property string $icon database column
+ * @property string $content database column
+ * @property string $comment database column
+ * @property string $route database column
+ * @property string $studip_version database column
+ * @property string $position database column
+ * @property string $custom database column
+ * @property string $visible database column
+ * @property string $author_email database column
+ * @property string $installation_id database column
+ * @property string $mkdate database column
+ * @property string $chdate database column
+ * @property User|null $author has_one author
  */
 class HelpContent extends SimpleORMap
 {
@@ -54,6 +53,14 @@ class HelpContent extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'help_content';
+
+        $config['has_one']['author'] = [
+            'class_name'  => User::class,
+            'foreign_key' => 'author_email',
+            'assoc_func'  => 'findOneByEmail',
+        ];
+
+        $config['registered_callbacks']['before_store'][] = 'cbUpdateStudipVersion';
 
         parent::configure($config);
     }
@@ -173,5 +180,10 @@ class HelpContent extends SimpleORMap
             }
         }
         return $objects;
+    }
+
+    public function cbUpdateStudipVersion()
+    {
+        $this->studip_version = StudipVersion::getStudipVersion();
     }
 }
