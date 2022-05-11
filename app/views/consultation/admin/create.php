@@ -119,6 +119,25 @@ $intervals = [
             <input required type="text" name="size" id="size"
                    min="1" max="50" value="<?= Request::int('size', 1) ?>">
         </label>
+
+        <label>
+            <input type="checkbox" name="pause" value="1" data-shows=".pause-inputs" data-activates=".pause-inputs input">
+            <?= _('Pausen zwischen den Terminen einfügen?') ?>
+        </label>
+
+        <label class="col-3 pause-inputs">
+            <?= _('Eine Pause nach wie vielen Minuten einfügen?') ?>
+            <input type="number" name="pause_time"
+                   value="<?= htmlReady(Request::int('pause_time', 45)) ?>"
+                   min="1">
+        </label>
+
+        <label class="col-3 pause-inputs">
+            <?= _('Dauer der Pause in Minuten') ?>
+            <input type="number" name="pause_duration"
+                   value="<?= Request::int('pause_duration', 15) ?>"
+                   min="1">
+        </label>
     </fieldset>
 
 <? if ($responsible): ?>

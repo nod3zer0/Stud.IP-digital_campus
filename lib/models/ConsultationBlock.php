@@ -118,15 +118,17 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
     /**
      * Count generated blocks according to the given data.
      *
-     * @param  int $start    Start of the time range as unix timestamp
-     * @param  int $end      End of the time range as unix timestamp
-     * @param  int $week_day Day of the week the blocks should be created
-     *                          (0 = sunday, 1 = monday ...)
-     * @param  int $interval Week interval (skip $interval weeks between
-     *                          blocks)
-     * @param  int $duration Duration of a slot in minutes
+     * @param  int $start              Start of the time range as unix timestamp
+     * @param  int $end                End of the time range as unix timestamp
+     * @param int $week_day            Day of the week the blocks should be
+     *                                 created (0 = sunday, 1 = monday ...)
+     * @param int $interval            Week interval (skip $interval weeks
+     *                                 between blocks)
+     * @param int $duration            Duration of a slot in minutes
+     * @param int|null $pause_time     Create a pause after $pause_time minutes
+     * @param int|null $pause_duration Duration of the pause
      */
-    public static function countBlocks($start, $end, $week_day, $interval, $duration)
+    public static function countBlocks($start, $end, $week_day, $interval, $duration, $pause_time = null, $pause_duration = null)
     {
         $count = 0;
 
@@ -147,9 +149,23 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
                 $block_start = strtotime("today {$start_time}", $current);
                 $block_end   = strtotime("today {$end_time}", $current);
 
-                while ($block_start < $block_end) {
-                    $count += 1;
-                    $block_start = strtotime("+{$duration} minutes", $block_start);
+                $now = $block_start;
+                while ($now < $block_end) {
+                    $is_in_pause = false;
+                    if ($pause_time !== null) {
+                        $is_in_pause = self::checkIfSlotIsInPause(
+                            $now,
+                            strtotime("+{$duration} minutes", $now),
+                            $block_start,
+                            $block_end,
+                            $pause_time,
+                            $pause_duration
+                        );
+                    }
+                    if (!$is_in_pause) {
+                        $count += 1;
+                    }
+                    $now = strtotime("+{$duration} minutes", $now);
                 }
             }
 
@@ -254,20 +270,35 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
      * Creates individual slots according to the defined data and given
      * duration.
      *
-     * @param  int $duration Duration of a slot in minutes
+     * @param int      $duration       Duration of a slot in minutes
+     * @param int|null $pause_time     Create a pause after $pause_time minutes
+     * @param int|null $pause_duration Duration of the pause
      */
-    public function createSlots($duration)
+    public function createSlots($duration, int $pause_time = null, int $pause_duration = null)
     {
-        $start = $this->start;
-        while ($start < $this->end) {
-            $slot = new ConsultationSlot();
-            $slot->block_id   = $this->id;
-            $slot->start_time = $start;
-            $slot->end_time   = strtotime("+{$duration} minutes", $start);
+        $now = $this->start;
+        while ($now < $this->end) {
+            $is_in_pause = false;
+            if ($pause_time !== null) {
+                $is_in_pause = self::checkIfSlotIsInPause(
+                    $now,
+                    strtotime("+{$duration} minutes", $now),
+                    $this->start,
+                    $this->end,
+                    $pause_time,
+                    $pause_duration
+                );
+            }
+            if (!$is_in_pause) {
+                $slot = new ConsultationSlot();
+                $slot->block_id   = $this->id;
+                $slot->start_time = $now;
+                $slot->end_time   = strtotime("+{$duration} minutes", $now);
 
-            $this->slots[] = $slot;
+                $this->slots[] = $slot;
+            }
 
-            $start = $slot->end_time;
+            $now = strtotime("+{$duration} minutes", $now);
         }
     }
 
@@ -395,6 +426,36 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
         );
     }
 
+
+    /**
+     * Checks if a given time span (defined by $begin and $end) is inside a
+     * defined pause of a block.
+     *
+     * @param int $begin
+     * @param int $end
+     * @param int $block_begin
+     * @param int $block_end
+     * @param int $pause_time
+     * @param int $pause_duration
+     *
+     * @return bool
+     */
+    private static function checkIfSlotIsInPause($begin, $end, $block_begin, $block_end, $pause_time, $pause_duration): bool
+    {
+        $now = $block_begin;
+        while ($now < $block_end) {
+            $pause_begin = strtotime("+{$pause_time} minutes", $now);
+            $pause_end   = strtotime("+{$pause_duration} minutes", $pause_begin);
+
+            if ($begin < $pause_end && $end > $pause_begin) {
+                return true;
+            }
+
+            $now = $pause_end;
+        }
+
+        return false;
+    }
 
     /**
      * @return string A string representation of the consultation block instance.

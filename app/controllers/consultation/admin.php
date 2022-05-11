@@ -158,7 +158,9 @@ class Consultation_AdminController extends ConsultationController
                 $this->getDateAndTime('end'),
                 Request::int('day-of-week'),
                 Request::int('interval'),
-                Request::int('duration')
+                Request::int('duration'),
+                Request::bool('pause') ? Request::int('pause_time') : null,
+                Request::bool('pause') ? Request::int('pause_duration') : null
             );
             if ($slot_count >= self::SLOT_COUNT_THRESHOLD && !Request::int('confirmed')) {
                 $this->flash['confirm-many'] = $slot_count;
@@ -183,7 +185,11 @@ class Consultation_AdminController extends ConsultationController
                 $block->note              = Request::get('note');
                 $block->size              = Request::int('size', 1);
 
-                $block->createSlots(Request::int('duration'));
+                $block->createSlots(
+                    Request::int('duration'),
+                    Request::bool('pause') ? Request::int('pause_time') : null,
+                    Request::bool('pause') ? Request::int('pause_duration') : null
+                );
                 $stored += $block->store();
 
                 // Store block responsibilites

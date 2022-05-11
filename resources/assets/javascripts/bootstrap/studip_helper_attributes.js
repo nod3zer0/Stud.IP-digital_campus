@@ -124,6 +124,32 @@ STUDIP.ready((event) => {
     $('select[data-activates]', event.target).trigger('change');
 });
 
+//
+$(document).on('change', '[data-hides],[data-shows]', function () {
+    if (!$(this).is(':checkbox,:radio')) {
+        return;
+    }
+
+    ['hides', 'shows'].forEach((type) => {
+        var selector = $(this).data(type);
+        if (selector === undefined || $(this).prop('disabled')) {
+            return;
+        }
+
+        var state = $(this).prop('checked') || $(this).prop('indeterminate') || false;
+        $(selector).each(function() {
+            var condition = $(this).data(`${type}Condition`),
+                toggle = state && (!condition || $(condition).length > 0);
+            $(this)
+                .toggle(type === 'shows' ? toggle : !toggle)
+                .trigger('update.proxy');
+        });
+    });
+});
+STUDIP.ready(event => {
+    $('[data-hides],[data-shows]', event.target).trigger('change');
+});
+
 // Enable the user to set the checked state on a subset of related
 // checkboxes by clicking the first checkbox of the subset and then
 // clicking the last checkbox of the subset while holding down the shift
