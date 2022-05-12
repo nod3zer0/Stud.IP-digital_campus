@@ -1423,15 +1423,13 @@ class Course_MembersController extends AuthenticatedController
 
         if ($this->is_tutor || $this->config->COURSE_STUDENT_MAILING) {
             $widget->addLink(
-                _('Nachricht an alle eingetragenen Teilnehmenden (Rundmail)'),
-                URLHelper::getURL('dispatch.php/messages/write', [
-                    'course_id'       => $this->course_id,
-                    'default_subject' => $this->subject,
-                    'filter'          => 'all',
-                    'emailrequest'    => 1
+                _('Rundmail schreiben'),
+                URLHelper::getURL('dispatch.php/course/members/circular_mail', [
+                    'course_id' => $this->course_id,
+                    'default_subject' => $this->subject
                 ]),
                 Icon::create('inbox')
-            )->asDialog();
+            )->asDialog('size=auto');
         }
         if ($this->is_tutor) {
             //Calculate the course institutes here since they are needed
@@ -1819,5 +1817,133 @@ class Course_MembersController extends AuthenticatedController
         $this->config->store('COURSE_MEMBERS_HIDE', $state);
 
         $this->redirect('course/members');
+    }
+
+
+    public function circular_mail_action()
+    {
+        if (!$this->is_tutor ||
+            ($this->config->COURSE_STUDENT_MAILING && !$this->is_autor)) {
+            throw new AccessDeniedException();
+        }
+
+        //Calculate the amount of recipients for each group:
+        $this->user_count = CourseMember::countByCourseAndStatus($this->course_id, 'user');
+        $this->autor_count = CourseMember::countByCourseAndStatus($this->course_id, 'autor');
+        $this->tutor_count = CourseMember::countByCourseAndStatus($this->course_id, 'tutor');
+        $this->dozent_count = CourseMember::countByCourseAndStatus($this->course_id, 'dozent');
+
+        //Use the correct names for thte four status groups:
+        $sem = Seminar::GetInstance($this->course_id);
+        $this->user_name = get_title_for_status('user', 0, $sem->status);
+        $this->autor_name = get_title_for_status('autor', 0, $sem->status);
+        $this->tutor_name = get_title_for_status('tutor', 0, $sem->status);
+        $this->dozent_name = get_title_for_status('dozent', 0, $sem->status);
+
+        if ($this->is_tutor) {
+            $this->awaiting_count = AdmissionApplication::countBySql(
+                "seminar_id = :course_id AND status = 'awaiting'",
+                [
+                    'course_id' => $this->course_id
+                ]
+            );
+            $this->accepted_count = AdmissionApplication::countBySql(
+                "seminar_id = :course_id AND status = 'accepted'",
+                [
+                    'course_id' => $this->course_id
+                ]
+            );
+        }
+        $this->default_selected_groups = ['dozent', 'tutor', 'autor', 'user'];
+        $this->all_available_groups = $this->default_selected_groups;
+        if ($this->is_tutor) {
+            //The user has at least tutor permissions:
+            if ($this->accepted_count) {
+                $this->all_available_groups[] = 'accepted';
+            }
+            if ($this->awaiting_count) {
+                $this->all_available_groups[] = 'awaiting';
+            }
+        }
+        if (Request::submitted('write')) {
+            CSRFProtection::verifyUnsafeRequest();
+
+            $this->selected_groups = Request::getArray('selected_groups');
+            //Filter all selected groups by the list of all available groups:
+            $filtered_groups = [];
+            foreach ($this->selected_groups as $group) {
+                if (in_array($group, $this->all_available_groups)) {
+                    $filtered_groups[] = $group;
+                }
+            }
+            if ($filtered_groups == $this->default_selected_groups) {
+                $this->redirect(URLHelper::getURL(
+                    'dispatch.php/messages/write',
+                    [
+                        'course_id' => $this->course_id,
+                        'default_subject' => $this->subject,
+                        'filter' => 'all',
+                        'emailrequest' => 1
+                    ]
+                ));
+            } elseif ($filtered_groups == $this->all_available_groups) {
+                $this->redirect(URLHelper::getURL(
+                    'dispatch.php/messages/write',
+                    [
+                        'course_id' => $this->course_id,
+                        'default_subject' => $this->subject,
+                        'filter' => 'really_all',
+                        'emailrequest' => 1
+                    ]
+                ));
+            } else {
+                //Do custom filtering.
+                $filters = [];
+                $who_param = [];
+
+                foreach ($filtered_groups as $group) {
+                    if ($group === 'awaiting') {
+                        $filters[] = 'awaiting';
+                    } elseif ($group === 'accepted') {
+                        $filters[] = 'prelim';
+                    } elseif ($group === 'user') {
+                        $filters[] = 'all';
+                        $who_param[] = 'user';
+                    } elseif ($group === 'autor') {
+                        $filters[] = 'all';
+                        $who_param[] = 'autor';
+                    } elseif ($group === 'tutor') {
+                        $filters[] = 'all';
+                        $who_param[] = 'tutor';
+                    } elseif ($group === 'dozent') {
+                        $filters[] = 'all';
+                        $who_param[] = 'dozent';
+                    }
+                }
+                $filters = array_unique($filters);
+                if (!$filters) {
+                    PageLayout::postError(
+                        _('Es wurde keine Gruppe ausgewählt!')
+                    );
+                    return;
+                }
+
+                $url_params = [
+                    'course_id' => $this->course_id,
+                    'default_subject' => $this->subject,
+                    'filter' => implode(',', array_unique($filters)),
+                    'emailrequest' => 1
+                ];
+                if ($who_param) {
+                    $url_params['who'] = implode(',', $who_param);
+                }
+                //print_r($url_params);die();
+
+                $this->redirect(URLHelper::getURL(
+                    'dispatch.php/messages/write',
+                    $url_params
+                ));
+            }
+        }
     }
 }

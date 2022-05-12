@@ -287,57 +287,83 @@ class MessagesController extends AuthenticatedController {
         }
 
         //check if the message shall be sent to all (or some) members of a course:
-        $filter = Request::get('filter');
-        $course = Course::find(Request::option('course_id'));
-        if ($filter && $course) {
-            if ($GLOBALS['perm']->have_studip_perm('tutor', $course->id)
-                || ($GLOBALS['perm']->have_studip_perm('autor', $course->id)
-                    && ($course->getSemClass()['studygroup_mode'] || CourseConfig::get($course->id)->COURSE_STUDENT_MAILING))) {
-                $this->default_message->receivers = [];
+        $filters = explode(',', Request::get('filter', ''));
+        if ($filters && Request::option('course_id')) {
+            $additional = '';
+            $course = new Course(Request::option('course_id'));
+            $allow_tutor_filters = false;
+            if ($GLOBALS['perm']->have_studip_perm('tutor', $course->id) || $course->getSemClass()['studygroup_mode'] || CourseConfig::get($course->id)->COURSE_STUDENT_MAILING) {
+                $allow_tutor_filters = true;
+                $additional = " AND seminar_user.visible != 'no'";
+            }
+            $this->default_message->receivers = [];
+            $all_recipients = [];
+            foreach ($filters as $filter) {
                 $query = '';
-                $params = [$course->id, Request::option('who')];
-                if ($GLOBALS['perm']->have_studip_perm('tutor', $course->id)) {
-                    if ($filter === 'send_sms_to_all') {
-                        $query = "SELECT user_id, 'rec' AS snd_rec
+                $params = ['course_id' => $course->id];
+                if (Request::get('who')) {
+                    $params['status'] = explode(',', Request::get('who', ''));
+                }
+
+                if ($filter === 'send_sms_to_all' && $allow_tutor_filters) {
+                    $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM seminar_user
                                       JOIN auth_user_md5 USING (user_id)
-                                      WHERE Seminar_id = ? AND status = ?
+                                      WHERE Seminar_id = :course_id AND status IN ( :status ) {$additional}
                                       ORDER BY Nachname, Vorname";
-                    } elseif ($filter === 'all') {
-                        $query = "SELECT user_id, 'rec' AS snd_rec
+                } elseif ($filter === 'all') {
+                    if ($params['status']) {
+                        $additional .= ' AND seminar_user.status IN ( :status )';
+                    }
+                    $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM seminar_user
                                       JOIN auth_user_md5 USING (user_id)
-                                      WHERE Seminar_id = ?
+                                      WHERE Seminar_id = :course_id {$additional}
                                       ORDER BY Nachname, Vorname";
-                    } elseif ($filter === 'prelim') {
-                        $query = "SELECT user_id, 'rec' AS snd_rec
+                } elseif ($filter === 'really_all' && $allow_tutor_filters) {
+                    $query = "SELECT user_id, 'rec' as snd_rec
+                                      FROM seminar_user
+                                      WHERE seminar_id = :course_id
+                                      UNION SELECT user_id, 'rec' as snd_rec FROM admission_seminar_user WHERE seminar_id = :course_id
+                                      UNION SELECT user_id, 'rec' as snd_rec FROM priorities WHERE seminar_id = :course_id";
+                } elseif ($filter === 'prelim' && $allow_tutor_filters) {
+                    $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM admission_seminar_user
                                       JOIN auth_user_md5 USING (user_id)
-                                      WHERE seminar_id = ? AND status = 'accepted'
+                                      WHERE  Seminar_id = :course_id AND status = 'accepted'
                                       ORDER BY Nachname, Vorname";
-                    } elseif ($filter === 'awaiting') {
-                        $query = "SELECT user_id, 'rec' AS snd_rec
+                } elseif ($filter === 'awaiting' && $allow_tutor_filters) {
+                    $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM admission_seminar_user
                                       JOIN auth_user_md5 USING (user_id)
-                                      WHERE seminar_id = ? AND status = 'awaiting'
+                                      WHERE  Seminar_id = :course_id AND status = 'awaiting'
                                       ORDER BY Nachname, Vorname";
-                    } elseif ($filter === 'not_grouped') {
-                        $query = "SELECT seminar_user.user_id, 'rec' as snd_rec
+                } elseif ($filter === 'inst_status') {
+                    $query = "SELECT user_id, 'rec' AS snd_rec
+                                      FROM user_inst
+                                      JOIN auth_user_md5 USING (user_id)
+                                      WHERE Institut_id = :course_id AND inst_perms IN ( :status )
+                                      {$additional}
+                                      ORDER BY Nachname, Vorname";
+                } elseif ($filter === 'not_grouped' && $allow_tutor_filters) {
+                    $query = "SELECT seminar_user.user_id, 'rec' as snd_rec
                                       FROM seminar_user
                                       JOIN auth_user_md5 USING (user_id)
                                       LEFT JOIN statusgruppen ON range_id = seminar_id
                                       LEFT JOIN statusgruppe_user ON statusgruppen.statusgruppe_id = statusgruppe_user.statusgruppe_id
                                       AND seminar_user.user_id = statusgruppe_user.user_id
-                                      WHERE seminar_id = ?
+                                      WHERE seminar_id = :course_id
                                       GROUP BY seminar_user.user_id
                                       HAVING COUNT(statusgruppe_user.statusgruppe_id) = 0
                                       ORDER BY Nachname, Vorname";
-                    } elseif ($filter === 'claiming') {
-                        $cs = CourseSet::getSetForCourse($course->id);
-                        if (is_object($cs) && !$cs->hasAlgorithmRun()) {
-                            foreach (AdmissionPriority::getPrioritiesByCourse($cs->getId(), $course->id) as $user_id => $p) {
-                                $this->default_message->receivers[] = MessageUser::build(['user_id' => $user_id, 'snd_rec' => 'rec']);
-                            }
+                } elseif ($filter === 'claiming' && $allow_tutor_filters) {
+                    $cs = CourseSet::getSetForCourse($course->id);
+                    if (is_object($cs) && !$cs->hasAlgorithmRun()) {
+                        foreach (AdmissionPriority::getPrioritiesByCourse($cs->getId(), $course->id) as $user_id => $p) {
+                            $all_recipients = array_merge(
+                                $all_recipients,
+                                MessageUser::build(['user_id' => $user_id, 'snd_rec' => 'rec'])
+                            );
                         }
                     }
                 } else {
@@ -348,10 +374,15 @@ class MessagesController extends AuthenticatedController {
                                       ORDER BY Nachname, Vorname";
                 }
                 if ($query) {
-                    $this->default_message->receivers = DBManager::get()->fetchAll($query, $params, 'MessageUser::build');
+                    $all_recipients = array_merge(
+                        $all_recipients,
+                        DBManager::get()->fetchAll($query, $params, 'MessageUser::build')
+                    );
                 }
             }
+            $this->default_message->receivers = $all_recipients;
         }
+
 
         if (Request::option('prof_id') && Request::option('deg_id') && $GLOBALS['perm']->have_perm('root')) {
             $query = "SELECT DISTINCT user_id,'rec' as snd_rec
