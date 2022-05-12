@@ -405,6 +405,7 @@ class Course_AdmissionController extends AuthenticatedController
         $rule_types = AdmissionRule::getAvailableAdmissionRules(true);
         if (isset($rule_types[$type])) {
             $rule = new $type($rule_id);
+            $another_rule = null;
             if (isset($rule_types[$another_type])) {
                 $another_rule = new $another_type($another_rule_id);
             }
@@ -418,11 +419,16 @@ class Course_AdmissionController extends AuthenticatedController
                     return;
                 } else {
                     CSRFProtection::verifyUnsafeRequest();
-                    $rule->setAllData(Request::getInstance());
                     $errors = $rule->validate(Request::getInstance());
+                    if (empty($errors)) {
+                        $rule->setAllData(Request::getInstance());
+                    }
                     if ($another_rule) {
-                        $another_rule->setAllData(Request::getInstance());
-                        $errors = array_merge($errors, $another_rule->validate(Request::getInstance()));
+                        $another_errors = $another_rule->validate(Request::getInstance());
+                        if (empty($another_errors)) {
+                            $another_rule->setAllData(Request::getInstance());
+                        }
+                        $errors = array_merge($errors, $another_errors);
                     }
                     if (!mb_strlen(trim(Request::get('instant_course_set_name')))) {
                         $errors[] = _("Bitte geben Sie einen Namen für die Anmelderegel ein!");

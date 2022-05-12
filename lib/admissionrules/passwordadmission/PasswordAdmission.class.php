@@ -140,7 +140,7 @@ class PasswordAdmission extends AdmissionRule
      *
      * @param  String userId
      * @param  String courseId
-     * @return Boolean
+     * @return array
      */
     public function ruleApplies($userId, $courseId)
     {
@@ -235,7 +235,4 @@ class PasswordAdmission extends AdmissionRule
         }
         return $errors;
     }
-
-} /* end of class PasswordAdmission */
-
-?>
+}
