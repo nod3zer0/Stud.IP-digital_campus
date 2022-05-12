@@ -21,7 +21,7 @@
         </label>
 
         <label for="dateType">
-            <?= _('Art'); ?>
+            <?= _('Art') ?>
             <select id="dateType" name="dateType">
                 <? foreach ($GLOBALS['TERMIN_TYP'] as $key => $val) : ?>
                     <option <?= Request::get('dateType') == $key ? 'selected' : '' ?>
@@ -68,16 +68,16 @@
                         <? foreach ($teachers as $dozent) : ?>
                             <option <?= in_array($dozent['user_id'], Request::getArray('related_teachers')) ? 'selected' : '' ?>
                                 value="<?= $dozent['user_id'] ?>"><?= htmlReady($dozent['fullname']) ?></option>
-                        <? endforeach; ?>
+                        <? endforeach ?>
                     </select>
                 <? else : ?>
                     <p style="margin-left: 15px">
                         <? $dozent = array_pop($teachers) ?>
                         <?= htmlReady($dozent['fullname']) ?>
                     </p>
-                <? endif; ?>
+                <? endif ?>
             </label>
-        <? endif; ?>
+        <? endif ?>
 
 
         <? if (count($groups) > 0) : ?>
@@ -86,16 +86,20 @@
                     <? foreach ($groups as $group) : ?>
                         <option <?= in_array($group->getId(), Request::getArray('related_statusgruppen')) ? 'selected' : '' ?>
                             value="<?= $group->getId() ?>"><?= htmlReady($group['name']) ?></option>
-                    <? endforeach; ?>
+                    <? endforeach ?>
                 </select>
             </label>
-        <? endif; ?>
+        <? endif ?>
     </fieldset>
 
     <footer data-dialog-button>
         <?= Studip\Button::createAccept(_('Speichern'), 'save', ['data-dialog' => 'size=600']) ?>
         <? if (Request::get('fromDialog')) : ?>
-            <?= Studip\LinkButton::create(_('Zurück zur Übersicht'), $controller->url_for('course/timesrooms/index'), ['data-dialog' => 'size=big']) ?>
+            <?= Studip\LinkButton::create(
+                _('Zurück zur Übersicht'),
+                $controller->url_for('course/timesrooms/index'),
+                ['data-dialog' => 'size=big']
+            ) ?>
         <? endif ?>
     </footer>
 </form>

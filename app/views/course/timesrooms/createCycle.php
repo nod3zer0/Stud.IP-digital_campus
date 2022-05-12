@@ -15,7 +15,7 @@
                         value="<?= $d ?>" <?= (Request::int('day') === $d) || (!is_null($cycle->start_time) && $cycle->weekday == $d) || ($d == 1) ? 'selected' : ''?>>
                         <?= getWeekday($d, false) ?>
                     </option>
-                <? endforeach; ?>
+                <? endforeach ?>
             </select>
         </label>
 
@@ -42,7 +42,7 @@
             <select name="course_type" id="course_type" class="size-s">
                 <? foreach ($GLOBALS['TERMIN_TYP'] as $id => $value) : ?>
                     <option value="<?= $id ?>" <? if(Request::get('course_type') && Request::get('course_type') == $id) :?>selected="selected"<? endif?>><?= htmlReady($value['name']) ?></option>
-                <? endforeach; ?>
+                <? endforeach ?>
             </select>
         </label>
 
@@ -76,20 +76,22 @@
                         <option value="<?= $end_sem_week['value'] ?>"
                             <?= (Request::get('startWeek', $cycle->week_offset) == $end_sem_week['value']) ? 'selected' : '' ?>>
                                 <?= htmlReady($end_sem_week['label']) ?></option>
-                    <? endforeach; ?>
-                <? endif; ?>
+                    <? endforeach ?>
+                <? endif ?>
 
                 <!-- write down all weeks for all Semesters -->
-                <? foreach ($clean_weeks as $semester => $weeks) : ?>
-                    <optgroup label="<?= htmlReady($semester) ?>">
-                        <? foreach ($weeks as $value => $label) : ?>
-                            <option value="<?= $value ?>"
-                                <?= (Request::get('startWeek', $cycle->week_offset) == $value) ? 'selected' : '' ?>>
-                                    <?= htmlReady($label) ?>
-                            </option>
-                        <? endforeach; ?>
-                    </optgroup>
-                <? endforeach; ?>
+                <? if (!empty($clean_weeks)) : ?>
+                    <? foreach ($clean_weeks as $semester => $weeks) : ?>
+                        <optgroup label="<?= htmlReady($semester) ?>">
+                            <? foreach ($weeks as $value => $label) : ?>
+                                <option value="<?= $value ?>"
+                                    <?= (Request::get('startWeek', $cycle->week_offset) == $value) ? 'selected' : '' ?>>
+                                        <?= htmlReady($label) ?>
+                                </option>
+                            <? endforeach ?>
+                        </optgroup>
+                    <? endforeach ?>
+                <? endif ?>
             </select>
         </label>
 
@@ -103,19 +105,21 @@
                             <?= (Request::get('endWeek', $selected) == $end_sem_week['value']) ? 'selected' : '' ?>>
                                 <?= htmlReady($end_sem_week['label']) ?>
                         </option>
-                    <? endforeach; ?>
-                <? endif; ?>
+                    <? endforeach ?>
+                <? endif ?>
 
-                <? foreach ($clean_weeks as $semester => $weeks) : ?>
-                    <optgroup label="<?= htmlReady($semester) ?>">
-                        <? foreach ($weeks as $value => $label) : ?>
-                            <option value="<?= $value  ?>"
-                                <?= (Request::get('endWeek', $selected) == $value) ? 'selected' : '' ?>>
-                                    <?= htmlReady($label) ?>
-                            </option>
-                        <? endforeach; ?>
-                    </optgroup>
-                <? endforeach; ?>
+                <? if (!empty($clean_weeks)) : ?>
+                    <? foreach ($clean_weeks as $semester => $weeks) : ?>
+                        <optgroup label="<?= htmlReady($semester) ?>">
+                            <? foreach ($weeks as $value => $label) : ?>
+                                <option value="<?= $value  ?>"
+                                    <?= (Request::get('endWeek', $selected) == $value) ? 'selected' : '' ?>>
+                                        <?= htmlReady($label) ?>
+                                </option>
+                            <? endforeach ?>
+                        </optgroup>
+                    <? endforeach ?>
+                <? endif ?>
             </select>
         </label>
 
@@ -129,7 +133,11 @@
     <footer data-dialog-button>
         <?= Studip\Button::createAccept(_('Speichern'), 'save', ['data-dialog' => 'size=600']) ?>
         <? if (Request::int('fromDialog')): ?>
-            <?= Studip\LinkButton::create(_('Zurück zur Übersicht'), $controller->url_for('course/timesrooms/index'), ['data-dialog' => 'size=big']) ?>
-        <? endif; ?>
+            <?= Studip\LinkButton::create(
+                _('Zurück zur Übersicht'),
+                $controller->url_for('course/timesrooms/index'),
+                ['data-dialog' => 'size=big']
+            ) ?>
+        <? endif ?>
     </footer>
 </form>

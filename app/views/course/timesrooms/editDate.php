@@ -11,7 +11,7 @@
                         <?= $date->date_typ == $id ? 'selected' : '' ?>>
                         <?= htmlReady($value['name']) ?>
                     </option>
-                <? endforeach; ?>
+                <? endforeach ?>
             </select>
         </label>
         <label class="col-2">
@@ -45,7 +45,7 @@
                             ->setAttributes(['onFocus' => "jQuery('input[type=radio][name=room][value=room]').prop('checked', 'checked')"])
                             ->render() ?>
                     <? else: ?>
-                        <? $selected_room_id = $date->room_booking->resource_id; ?>
+                        <? $selected_room_id = $date->room_booking->resource_id ?>
                         <select name="room_id" onFocus="jQuery('input[type=radio][name=room][value=room]').prop('checked', 'checked')">
                             <? foreach ($selectable_rooms as $room): ?>
                                 <option value="<?= htmlReady($room->id) ?>"
@@ -84,7 +84,7 @@
                        value="<?= htmlReady($preparation_time) ?>"
                        min="0" max="<?= htmlReady($max_preparation_time) ?>">
             </label>
-        <? endif; ?>
+        <? endif ?>
         <label class="horizontal">
             <input type="radio" name="room" value="freetext" <?= $date->raum ? 'checked' : '' ?>
                    data-deactivates="input.preparation-time[name='preparation_time']">
@@ -117,8 +117,7 @@
         <legend><?= _('Durchführende Lehrende') ?></legend>
 
         <section class="studip-selection-selected">
-            <h2><?= _('Zugewiesene Lehrende') ?></h2>
-
+            <p><strong><?= _('Zugewiesene Lehrende') ?></strong></p>
             <ul>
             <? foreach ($assigned_teachers as $teacher): ?>
                 <li data-selection-id="<?= htmlReady($teacher->user_id) ?>">
@@ -132,7 +131,7 @@
                         <?= htmlReady($teacher->getFullname()) ?>
                     </span>
                 </li>
-            <? endforeach; ?>
+            <? endforeach ?>
                 <li class="empty-placeholder">
                     <?= _('Kein spezieller Lehrender zugewiesen') ?>
                 </li>
@@ -140,21 +139,20 @@
         </section>
 
         <section class="studip-selection-selectable">
-            <h2><?= _('Lehrende der Veranstaltung') ?></h2>
-
+            <p><strong><?= _('Lehrende der Veranstaltung') ?></strong></p>
             <ul>
-        <? foreach ($teachers as $teacher): ?>
-            <? if (!$assigned_teachers->find($teacher->user_id)): ?>
-                <li data-selection-id="<?= htmlReady($teacher->user_id) ?>" >
-                    <span class="studip-selection-image">
-                        <?= Avatar::getAvatar($teacher->user_id)->getImageTag(Avatar::SMALL) ?>
-                    </span>
-                    <span class="studip-selection-label">
-                        <?= htmlReady($teacher->getUserFullname()) ?>
-                    </span>
-                </li>
-            <? endif; ?>
-        <? endforeach; ?>
+            <? foreach ($teachers as $teacher): ?>
+                <? if (!$assigned_teachers->find($teacher->user_id)): ?>
+                    <li data-selection-id="<?= htmlReady($teacher->user_id) ?>" >
+                        <span class="studip-selection-image">
+                            <?= Avatar::getAvatar($teacher->user_id)->getImageTag(Avatar::SMALL) ?>
+                        </span>
+                        <span class="studip-selection-label">
+                            <?= htmlReady($teacher->getUserFullname()) ?>
+                        </span>
+                    </li>
+                <? endif ?>
+            <? endforeach ?>
                 <li class="empty-placeholder">
                     <?= sprintf(
                             _('Ihre Auswahl entspricht dem Zustand "%s" und wird beim Speichern zurückgesetzt'),
@@ -164,26 +162,24 @@
             </ul>
         </section>
     </fieldset>
-<? endif; ?>
+<? endif ?>
 
 <? if (count($groups) > 0): ?>
     <fieldset class="collapsed studip-selection" data-attribute-name="assigned_groups">
         <legend><?= _('Beteiligte Gruppen') ?></legend>
-
         <section class="studip-selection-selected">
-            <h2><?= _('Zugewiesene Gruppen') ?></h2>
-
+            <p><strong><?= _('Zugewiesene Gruppen') ?></strong></p>
             <ul>
-            <? foreach ($assigned_groups as $group) : ?>
-                <li data-selection-id="<?= htmlReady($group->id) ?>">
-                    <input type="hidden" name="assigned_groups[]"
-                           value="<?= htmlReady($group->id) ?>">
+                <? foreach ($assigned_groups as $group) : ?>
+                    <li data-selection-id="<?= htmlReady($group->id) ?>">
+                        <input type="hidden" name="assigned_groups[]"
+                               value="<?= htmlReady($group->id) ?>">
 
-                    <span class="studip-selection-label">
-                        <?= htmlReady($group->name) ?>
-                    </span>
-                </li>
-            <? endforeach ?>
+                        <span class="studip-selection-label">
+                            <?= htmlReady($group->name) ?>
+                        </span>
+                    </li>
+                <? endforeach ?>
                 <li class="empty-placeholder">
                     <?= _('Keine spezielle Gruppe zugewiesen') ?>
                 </li>
@@ -191,33 +187,35 @@
         </section>
 
         <section class="studip-selection-selectable">
-            <h2><?= _('Gruppen der Veranstaltung') ?></h2>
-
+            <p><strong><?= _('Gruppen der Veranstaltung') ?></strong></p>
             <ul>
-        <? foreach ($groups as $group): ?>
-            <? if (!$assigned_groups->find($group->id)): ?>
-                <li data-selection-id="<?= htmlReady($group->id) ?>" >
-                    <span class="studip-selection-label">
-                        <?= htmlReady($group->name) ?>
-                    </span>
-                </li>
-            <? endif; ?>
-        <? endforeach; ?>
+                <? foreach ($groups as $group): ?>
+                    <? if (!$assigned_groups->find($group->id)): ?>
+                        <li data-selection-id="<?= htmlReady($group->id) ?>" >
+                            <span class="studip-selection-label">
+                                <?= htmlReady($group->name) ?>
+                            </span>
+                        </li>
+                    <? endif ?>
+                <? endforeach ?>
                 <li class="empty-placeholder">
                     <?= _('Alle Gruppen wurden dem Termin zugewiesen') ?>
                 </li>
             </ul>
         </section>
     </fieldset>
-<? endif; ?>
+<? endif ?>
 
     <footer data-dialog-button>
         <?= Studip\Button::createAccept(_('Speichern'), 'save_dates') ?>
         <? if (Request::int('fromDialog')) : ?>
-            <?= Studip\LinkButton::create(_('Zurück zur Übersicht'),
-                                          $controller->url_for('course/timesrooms',
-                                                               ['fromDialog' => 1, 'contentbox_open' => $date->metadate_id]),
-                                          ['data-dialog' => 'size=big']) ?>
+            <?= Studip\LinkButton::create(
+                _('Zurück zur Übersicht'),
+                $controller->url_for(
+                    'course/timesrooms',
+                    ['fromDialog' => 1, 'contentbox_open' => $date->metadate_id]
+                ),
+              ['data-dialog' => 'size=big']) ?>
         <? endif ?>
         <? if (Request::isXhr() && !$locked && Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS): ?>
             <?  ?>

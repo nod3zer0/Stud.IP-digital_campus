@@ -18,14 +18,14 @@ $room_request_filter = function ($date) {
             <? $actionMenu->addLink(
                 $controller->url_for('course/timesrooms/createSingleDate/' . $course->id, $linkAttributes),
                 _('Einzeltermin hinzufügen'),
-                Icon::create('date+add', 'clickable', ['title' => _('Einzeltermin hinzufügen')]),
+                Icon::create('date+add', Icon::ROLE_CLICKABLE, ['title' => _('Einzeltermin hinzufügen')]),
                 ['data-dialog' => 'size=600']
             ) ?>
 
             <? $actionMenu->addLink(
                 $controller->url_for('course/block_appointments/index/' . $course->id, $linkAttributes),
                 _('Blocktermin hinzufügen'),
-                Icon::create('timetable+add', 'clickable', ['title' => _('Blocktermin hinzufügen')]),
+                Icon::create('timetable+add', Icon::ROLE_CLICKABLE, ['title' => _('Blocktermin hinzufügen')]),
                 ['data-dialog' => 'size=600']
             ) ?>
             <?= $actionMenu->render() ?>
@@ -54,53 +54,56 @@ $room_request_filter = function ($date) {
                 </h1>
                 <section>
                     <span>
-                        <?= sprintf(ngettext('%u Termin', '%u Termine', count($termine)),
-                                     count($termine)) ?>
+                        <?= sprintf(ngettext('%u Termin', '%u Termine', count($termine)), count($termine)) ?>
                     </span>
                 <? if (Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS): ?>
-                    <span>
-                        | <strong><?= _('Einzel-Raumanfrage') ?></strong>:
+                    <span>| <strong><?= _('Einzel-Raumanfrage') ?></strong>:
                     <? if ($single_date_room_request_c > 0): ?>
                         <?= sprintf(_('%u noch offen'), $single_date_room_request_c) ?>
                     <? else: ?>
                         <?= _('keine offen') ?>
-                    <? endif; ?>
+                    <? endif ?>
                     </span>
-                <? endif; ?>
+                <? endif ?>
                 </section>
             </header>
             <section>
                 <table class="default">
                     <colgroup>
                     <? if (!$locked) :?>
-                        <col width="30px">
+                        <col style="width: 30px">
                     <? endif ?>
-                        <col width="30%">
+                        <col style="width: 30%">
                         <col>
-                        <col width="20%">
-                        <col width="50px">
+                        <col>
+                        <col style="width: 20%">
+                        <col style="width: 50px">
                     </colgroup>
 
                     <tbody>
                     <? foreach ($termine as $termin): ?>
-                        <?= $this->render_partial('course/timesrooms/_cycleRow.php', [
-                            'termin'    => $termin,
-                            'class_ids' => 'ids-irregular',
-                        ]) ?>
-                    <? endforeach; ?>
+                        <?= $this->render_partial(
+                            'course/timesrooms/_cycleRow.php',
+                            [
+                                'termin'    => $termin,
+                                'class_ids' => 'ids-irregular',
+                            ]
+                        ) ?>
+                    <? endforeach ?>
                     </tbody>
                 </table>
             </section>
         </article>
-    <? endforeach; ?>
+    <? endforeach ?>
     <? if(!$locked) : ?>
         <table class="default nohover">
             <colgroup>
-                <col width="30px">
-                <col width="30%">
+                <col style="width: 30px">
+                <col style="width: 30%">
                 <col>
-                <col width="20%">
-                <col width="50px">
+                <col>
+                <col style="width: 20%">
+                <col style="width: 50px">
             </colgroup>
 
             <tfoot>
@@ -112,14 +115,18 @@ $room_request_filter = function ($date) {
                             <?= _('Alle auswählen') ?>
                         </label>
                     </td>
-                    <td colspan="3" class="actions">
+                    <td colspan="5" class="actions">
                         <select name="method" class="datesBulkActions actionForAllIrregular">
                             <?= $this->render_partial('course/timesrooms/_stack_actions.php') ?>
                         </select>
-                        <?= Studip\Button::create( _('Ausführen'), 'run', [
-                            'class' => 'actionForAllIrregular',
-                            'data-dialog' => 'size=big',
-                        ]) ?>
+                        <?= Studip\Button::create(
+                            _('Ausführen'),
+                            'run',
+                            [
+                                'class' => 'actionForAllIrregular',
+                                'data-dialog' => 'size=big',
+                            ]
+                        ) ?>
                     </td>
                 </tr>
             </tfoot>
@@ -134,5 +141,5 @@ $room_request_filter = function ($date) {
             </strong>
         </p>
     </section>
-<? endif; ?>
+<? endif ?>
 </section>

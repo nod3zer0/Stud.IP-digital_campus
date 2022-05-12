@@ -1,32 +1,34 @@
-<? if ($show['roomRequest']) : ?>
+<? if (!empty($show['roomRequest'])) : ?>
     <!--Raumanfragen-->
     <?= $this->render_partial('course/timesrooms/_roomRequestInfo.php') ?>
-<? endif; ?>
+<? endif ?>
 
 <? if (Request::isXhr()): ?>
     <?= $this->render_partial('course/timesrooms/_select_semester_range.php') ?>
 <? endif ?>
 
-<? if ($show['regular']) : ?>
+<? if (!empty($show['regular'])) : ?>
     <!--Regelmäßige Termine-->
     <?= $this->render_partial('course/timesrooms/_regularEvents.php') ?>
-<? endif; ?>
+<? endif ?>
 
-<? if ($show['irregular']) : ?>
+<? if (!empty($show['irregular'])) : ?>
     <!--Unregelmäßige Termine-->
     <?= $this->render_partial('course/timesrooms/_irregularEvents') ?>
-<? endif; ?>
+<? endif ?>
 
-<? if ($show['roomRequest']) : ?>
+<? if (!empty($show['roomRequest'])) : ?>
     <!--Raumanfrage-->
     <?= $this->render_partial('course/timesrooms/_roomRequest.php') ?>
-<? endif; ?>
+<? endif ?>
 
 <? if (Request::isXhr() && !$locked && Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS): ?>
     <div data-dialog-button>
-    <?= Studip\LinkButton::create(_('Raumanfrage erstellen'),
-            $controller->url_for('course/room_requests/request_start',
-            ['cid' => $course->id, 'range_str' => 'course', 'origin' => 'admin_courses']),
-            ['data-dialog' => 'size=big']) ?>
+    <?= Studip\LinkButton::create(
+        _('Raumanfrage erstellen'),
+        $controller->url_for('course/room_requests/request_start',
+        ['cid' => $course->id, 'range_str' => 'course', 'origin' => 'admin_courses']),
+        ['data-dialog' => 'size=big']
+    ) ?>
     </div>
-<? endif; ?>
+<? endif ?>

@@ -8,11 +8,11 @@
             <?= _('Startsemester') ?>
             <select name="startSemester" id="startSemester">
                 <? foreach ($semester as $sem) : ?>
-                    <option
-                        value="<?= $sem->semester_id ?>" <?= $sem->semester_id == $course->start_semester->semester_id ? 'selected' : '' ?>>
+                    <option value="<?= $sem->semester_id ?>"
+                        <?= $sem->semester_id === $course->start_semester->semester_id ? 'selected' : '' ?>>
                         <?= htmlReady($sem->name) ?>
                     </option>
-                <? endforeach; ?>
+                <? endforeach ?>
             </select>
         </label>
 
@@ -28,11 +28,11 @@
                             <?= (count($course->semesters) > 1) && $course->end_semester->id == $sem->id ? 'selected' : '' ?>>
                             <?= htmlReady($sem->name) ?>
                         </option>
-                    <? endif; ?>
-                <? endforeach; ?>
-                <option value="-1"
-                    <?= $course->isOpenEnded() ? 'selected' : '' ?>>
-                    <?= _('Unbegrenzt') ?></option>
+                    <? endif ?>
+                <? endforeach ?>
+                <option value="-1"<?= $course->isOpenEnded() ? 'selected' : '' ?>>
+                    <?= _('Unbegrenzt') ?>
+                </option>
             </select>
         </label>
     </fieldset>

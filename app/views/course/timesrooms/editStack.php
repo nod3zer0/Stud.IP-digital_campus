@@ -98,11 +98,15 @@
             </select>
         </label>
 
-        <select name="related_persons[]" id="related_persons" multiple>
+        <? if (!empty($teachers)) : ?>
+            <select name="related_persons[]" id="related_persons" multiple>
             <? foreach ($teachers as $teacher) : ?>
-                <option value="<?= htmlReady($teacher['user_id']) ?>"><?= htmlReady($teacher['fullname']) ?></option>
+                <option value="<?= htmlReady($teacher['user_id']) ?>">
+                    <?= htmlReady($teacher['fullname']) ?>
+                </option>
             <? endforeach ?>
-        </select>
+            </select>
+        <? endif ?>
     </fieldset>
 
     <? if (count($gruppen)) : ?>
@@ -128,7 +132,11 @@
     <footer data-dialog-button>
         <?= Studip\Button::createAccept(_('Änderungen speichern'), 'save') ?>
         <? if (Request::int('fromDialog')) : ?>
-            <?= Studip\LinkButton::create(_('Zurück zur Übersicht'), $controller->url_for('course/timesrooms/index'), ['data-dialog' => 'size=big']) ?>
+            <?= Studip\LinkButton::create(
+                _('Zurück zur Übersicht'),
+                $controller->url_for('course/timesrooms/index'),
+                ['data-dialog' => 'size=big']
+            ) ?>
         <? endif ?>
     </footer>
 </form>

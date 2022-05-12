@@ -10,6 +10,6 @@
         <?= Studip\LinkButton::create(_('Zurück zur Übersicht'),
               $controller->url_for('course/timesrooms/index'),
               ['data-dialog' => 'size=big']) ?>
-    <? endif; ?>
+    <? endif ?>
     </footer>
 </form>

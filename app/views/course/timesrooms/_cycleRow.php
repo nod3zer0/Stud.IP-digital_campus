@@ -9,9 +9,9 @@ $is_exTermin = $termin instanceof CourseExDate;
             <input class="<?= $class_ids ?>" type="checkbox" id="<?= htmlReady($termin->termin_id) ?>"
                    value="<?= htmlReady($termin->termin_id) ?>"
                    <? if (is_array($checked_dates)): ?>
-                       <? if (in_array($termin->termin_id, $checked_dates)) echo 'checked'; ?>
+                       <? if (in_array($termin->termin_id, $checked_dates)) echo 'checked' ?>
                    <? else: ?>
-                       <? if (!$is_exTermin && $termin->date > time() && ($termin->date <= $current_semester->ende || $semester_filter !== 'all')) echo 'checked'; ?>
+                       <? if (!$is_exTermin && $termin->date > time() && ($termin->date <= $current_semester->ende || $semester_filter !== 'all')) echo 'checked' ?>
                    <? endif ?>
                    name="single_dates[]">
         </label>
@@ -35,22 +35,34 @@ $is_exTermin = $termin instanceof CourseExDate;
 
     <td>
     <? if (count($termin->dozenten) > 0): ?>
-        <ul class="list-unstyled list-csv <? if ($is_exTermin) echo 'is_ex_termin'; ?>">
+        <ul class="list-unstyled list-csv <? if ($is_exTermin) echo 'is_ex_termin' ?>">
         <? foreach ($termin->dozenten as $dozent) : ?>
             <li><?= $dozent instanceof User ? htmlReady($dozent->getFullname()) : '' ?></li>
         <? endforeach ?>
         </ul>
-    <? endif; ?>
+    <? endif ?>
+    </td>
+    <td>
+        <ul class="list-unstyled list-csv">
+            <? if (count($termin->statusgruppen)) : ?>
+                <? foreach ($termin->statusgruppen as $group) : ?>
+                    <li><?= htmlReady($group->name)?></li>
+                <? endforeach ?>
+            <? endif ?>
+        </ul>
     </td>
     <td>
     <? if ($room_holiday = SemesterHoliday::isHoliday($termin->date, false)): ?>
-        <? $room_holiday = '<span' . ($is_exTermin ? ' class="is_ex_termin"' : '') . '>(' .
-                           htmlReady($room_holiday['name']) . ')</span>' ?>
-    <? endif; ?>
+        <? $room_holiday = sprintf(
+            '<span %s>(%s)</span>',
+            ($is_exTermin ? ' class="is_ex_termin"' : ''),
+            htmlReady($room_holiday['name'])
+        )?>
+    <? endif ?>
 
     <? if ($is_exTermin && ($comment = $termin->content)) : ?>
         <span class="is_ex_termin" style="font-style: italic"><?= _('(fällt aus)') ?></span>
-        <?= tooltipIcon($termin->content, false) ?>
+        <?= tooltipIcon($termin->content) ?>
     <? elseif ($name = SemesterHoliday::isHoliday($termin->date, false) && $is_exTermin): ?>
         <?= $room_holiday ?>
     <? elseif ($room = $termin->getRoom()) : ?>
@@ -86,7 +98,7 @@ $is_exTermin = $termin instanceof CourseExDate;
                 $linkAttributes
             ),
             _('Kommentare bearbeiten'),
-            Icon::create('edit', 'clickable', ['title' => _('Kommentar für diesen Termin bearbeiten')]),
+            Icon::create('edit', Icon::ROLE_CLICKABLE, ['title' => _('Kommentar für diesen Termin bearbeiten')]),
             ['data-dialog' => 'size=50%']
         ) ?>
 
@@ -96,7 +108,7 @@ $is_exTermin = $termin instanceof CourseExDate;
             'name'         => 'delete_single_date',
             'data-confirm' => _('Diesen Termin wiederherstellen?'),
             'formaction'   => $controller->url_for('course/timesrooms/undeleteSingle/' . $termin->id),
-        ]; ?>
+        ] ?>
         <? if (Request::isXhr()) : ?>
             <? $params['data-dialog'] = 'size=auto' ?>
         <? endif ?>
@@ -104,14 +116,14 @@ $is_exTermin = $termin instanceof CourseExDate;
         <? $actionMenu->addButton(
             'delete_part',
             _('Termin wiederherstellen'),
-            Icon::create('trash+decline', 'clickable', $params)
+            Icon::create('trash+decline', Icon::ROLE_CLICKABLE, $params)
         ) ?>
 
     <? elseif (!$locked) : ?>
         <? $actionMenu->addLink(
             $controller->url_for('course/timesrooms/editDate/' . $termin->id, $linkAttributes),
             _('Termin bearbeiten'),
-            Icon::create('edit', 'clickable', ['title' => _('Diesen Termin bearbeiten')]),
+            Icon::create('edit', Icon::ROLE_CLICKABLE, ['title' => _('Diesen Termin bearbeiten')]),
             ['data-dialog' => '']
         ) ?>
 
@@ -125,7 +137,7 @@ $is_exTermin = $termin instanceof CourseExDate;
                 'course/timesrooms/deleteSingle/' . $termin->id,
                 ['cycle_id' => $termin->metadate_id] + $linkAttributes
             ),
-        ]; ?>
+        ] ?>
         <? if (Request::isXhr()) : ?>
             <? $params['data-dialog'] = 'size=big' ?>
         <? endif ?>
@@ -139,10 +151,10 @@ $is_exTermin = $termin instanceof CourseExDate;
                 ]
             ),
             _('Termin löschen'),
-            Icon::create('trash', 'clickable'),
+            Icon::create('trash'),
             ['data-dialog' => '1']
         ) ?>
-    <? endif; ?>
+    <? endif ?>
         <?= $actionMenu->render() ?>
     </td>
 </tr>

@@ -31,7 +31,7 @@
                         <?= tooltipIcon(_('Keine Raumbuchungen vorhanden')) ?>
                     <? else: ?>
                         <?= tooltipIcon(_('Keine offenen Raumbuchungen')) ?>
-                    <? endif; ?>
+                    <? endif ?>
                         <a href="<?= ContentBoxHelper::href($metadate_id) ?>">
                             <?= htmlReady($cycle['cycle']->toString('long')) ?>
                         </a>
@@ -62,7 +62,7 @@
                         </span>
                     <? if (Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) : ?>
                         <? $metadate = SeminarCycleDate::find($metadate_id) ?>
-                        <? $open_requests = $metadate->countOpenRequestsForDates(); ?>
+                        <? $open_requests = $metadate->countOpenRequestsForDates() ?>
                         <span>
                             <strong><?= _('Einzel-Raumanfrage') ?></strong>:
                             <?= htmlReady(
@@ -79,7 +79,11 @@
                         <? $actionMenu->addLink(
                             $controller->url_for('course/timesrooms/createCycle/' . $metadate_id, $linkAttributes),
                             _('Diesen Zeitraum bearbeiten'),
-                            Icon::create('edit', 'clickable', ['title' => _('Diesen Zeitraum bearbeiten'), 'style' => 'vertical-align: middle;']),
+                            Icon::create(
+                                'edit',
+                                Icon::ROLE_CLICKABLE,
+                                ['title' => _('Diesen Zeitraum bearbeiten'), 'style' => 'vertical-align: middle;']
+                            ),
                             ['data-dialog' => 'size=600']
                         ) ?>
                         <? if (Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) : ?>
@@ -94,7 +98,7 @@
                                 _('Raumanfrage erstellen'),
                                 Icon::create(
                                     'room-request',
-                                    'clickable',
+                                    Icon::ROLE_CLICKABLE,
                                     [
                                         'title' => _('Raumanfrage erstellen'),
                                         'style' => 'vertical-align: middle;'
@@ -106,7 +110,7 @@
                         <? $actionMenu->addButton(
                             'delete_cycle',
                             _('Diesen Zeitraum löschen'),
-                            Icon::create('trash', 'clickable', ['title' => _('Diesen Zeitraum löschen')]),
+                            Icon::create('trash', Icon::ROLE_CLICKABLE, ['title' => _('Diesen Zeitraum löschen')]),
                             [
                                 'formaction'   => $controller->url_for('course/timesrooms/deleteCycle/' . $metadate_id, $linkAttributes),
                                 'data-confirm' => _('Soll dieser Zeitraum wirklich gelöscht werden?')
@@ -121,17 +125,18 @@
                     <table class="default">
                         <colgroup>
                             <? if (!$locked) : ?>
-                                <col width="30px">
+                                <col style="width: 30px">
                             <? endif ?>
-                            <col width="30%">
+                            <col style="width: 30%">
                             <col>
-                            <col width="20%">
-                            <col width="50px">
+                            <col>
+                            <col style="width: 20%">
+                            <col style="width: 50px">
                         </colgroup>
                     <? foreach ($cycle['dates'] as $semester_id => $termine) : ?>
                         <thead>
                             <tr>
-                                <th colspan="<?= !$locked ? 5 : 4?>">
+                                <th colspan="<?= !$locked ? 6 : 5?>">
                                     <label>
                                         <? if(!$locked) : ?>
                                             <input type="checkbox" class="date-proxy_<?= $metadate_id ?>"
@@ -144,8 +149,10 @@
                         </thead>
                         <tbody id="<?= $metadate_id ?>-<?= $semester_id ?>">
                         <? foreach ($termine as $termin) : ?>
-                            <?= $this->render_partial('course/timesrooms/_cycleRow.php',
-                                    ['termin' => $termin, 'class_ids' => 'ids-regular']) ?>
+                            <?= $this->render_partial(
+                                'course/timesrooms/_cycleRow.php',
+                                ['termin' => $termin, 'class_ids' => 'ids-regular']
+                            ) ?>
                         <? endforeach ?>
                         </tbody>
                     <? endforeach ?>
@@ -160,14 +167,18 @@
                                             <?= _('Alle auswählen') ?>
                                         </label>
                                     </td>
-                                    <td colspan="3" class="actions">
+                                    <td colspan="4" class="actions">
                                         <select name="method" class="datesBulkActions actionForAllRegular_<?= $metadate_id ?>">
                                             <?= $this->render_partial('course/timesrooms/_stack_actions.php') ?>
                                         </select>
-                                        <?= Studip\Button::create(_('Ausführen'), 'run', [
+                                        <?= Studip\Button::create(
+                                            _('Ausführen'),
+                                            'run',
+                                            [
                                                 'class' => 'actionForAllRegular_' . $metadate_id,
                                                 'data-dialog' => 'size=big'
-                                        ]) ?>
+                                            ]
+                                        ) ?>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -177,7 +188,7 @@
                 </section>
             </article>
         </form>
-    <? endforeach; ?>
+    <? endforeach ?>
 
 <? else: ?>
     <section>
@@ -185,5 +196,5 @@
             <strong><?= _('Keine regelmäßigen Termine vorhanden') ?></strong>
         </p>
     </section>
-<? endif; ?>
+<? endif ?>
 </section>
