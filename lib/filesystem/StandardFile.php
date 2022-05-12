@@ -302,9 +302,9 @@ class StandardFile implements FileType, ArrayAccess
             );
         }
 
-        if (Config::get()->OER_ENABLE_SUGGESTIONS &&
-            ($this->getTermsOfUse()->id === 'SELFMADE_NONPUB' || $this->getTermsOfUse()->id === 'FREE_LICENSE') &&
-            $this->fileref->getAuthorName() != User::findCurrent()->getFullName('no_title_rev')
+        if (Config::get()->OERCAMPUS_ENABLED && Config::get()->OER_ENABLE_SUGGESTIONS &&
+            $GLOBALS['user']->id !== 'nobody' && $this->fileref->user_id !== $GLOBALS['user']->id &&
+            in_array($this->fileref->content_terms_of_use_id, ['SELFMADE_NONPUB', 'FREE_LICENSE'])
         ) {
             $actionMenu->addLink(
                 URLHelper::getURL('dispatch.php/file/suggest_oer/' . $this->fileref->id),
