@@ -54,7 +54,7 @@ if (isset($_SERVER['SERVER_NAME'])) {
     $ABSOLUTE_URI_STUDIP .= '://'.$_SERVER['SERVER_NAME'];
 
     if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' && $_SERVER['SERVER_PORT'] != 443 ||
-        empty($SERVER['HTTPS']) && $_SERVER['SERVER_PORT'] != 80) {
+        empty($_SERVER['HTTPS']) && $_SERVER['SERVER_PORT'] != 80) {
         $ABSOLUTE_URI_STUDIP .= ':'.$_SERVER['SERVER_PORT'];
     }
 
