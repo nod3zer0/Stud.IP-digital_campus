@@ -325,10 +325,12 @@ export default {
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
             sortContainersInStructualElements: 'sortContainersInStructualElements',
-            sortChildrenInStructualElements: 'sortChildrenInStructualElements'
+            sortChildrenInStructualElements: 'sortChildrenInStructualElements',
+            setFilingData: 'cwManagerFilingData',
         }),
 
         selectChapter(target) {
+            this.resetFilingData();
             this.$emit('selectElement', target);
         },
 
@@ -339,11 +341,15 @@ export default {
         afterInsertCompletion() {
             this.$nextTick(() => {
                 // will run after $emit is done
-                this.$store.dispatch('cwManagerFilingData', {});
+                this.resetFilingData();
                 setTimeout(() => {
                     this.insertingInProgress = false;
                 }, 250);
             });
+        },
+
+        resetFilingData() {
+            this.setFilingData({});
         },
 
         showFailedCopyProcessCompanion() {
