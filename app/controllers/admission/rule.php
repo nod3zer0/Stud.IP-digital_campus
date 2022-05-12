@@ -116,12 +116,12 @@ class Admission_RuleController extends AuthenticatedController
      * configure a rule of the given type.
      *
      * @param String $ruleType Class name of the rule to check.
+     * @param String $ruleId   ID of the rule to save, or empty if this is a new rule.
      */
-    public function validate_action($ruleType)
+    public function validate_action($ruleType, $ruleId = '')
     {
         $rules = AdmissionRule::getAvailableAdmissionRules();
-        $rule = new $ruleType();
+        $rule = new $ruleType($ruleId);
         $this->errors = $rule->validate(Request::getInstance());
     }
-
 }

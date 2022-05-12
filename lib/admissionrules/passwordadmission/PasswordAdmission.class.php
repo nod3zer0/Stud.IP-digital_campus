@@ -19,20 +19,20 @@ require_once 'vendor/phpass/PasswordHash.php';
 
 class PasswordAdmission extends AdmissionRule
 {
-
     // --- ATTRIBUTES ---
     /*
      * Password hasher (phpass library)
      */
-    var $hasher = null;
+    public $hasher = null;
 
     /*
      * Crypted password.
      */
-    var $password = '';
+    public $password = '';
 
     // --- OPERATIONS ---
 
+    public $new = false;
     /**
      * Standard constructor.
      *
@@ -48,6 +48,7 @@ class PasswordAdmission extends AdmissionRule
             $this->load();
         } else {
             $this->id = $this->generateId('passwordadmissions');
+            $this->new = true;
         }
     }
 
@@ -173,7 +174,9 @@ class PasswordAdmission extends AdmissionRule
      */
     public function setAllData($data) {
         parent::setAllData($data);
-        $this->setPassword($data['password1']);
+        if ($this->new || $data['password1'] !== '') {
+            $this->setPassword($data['password1']);
+        }
         return $this;
     }
 
@@ -227,10 +230,10 @@ class PasswordAdmission extends AdmissionRule
     public function validate($data)
     {
         $errors = parent::validate($data);
-        if (!$data['password1']) {
+        if ($data['password1'] === '' && $this->new) {
             $errors[] = _('Das Passwort darf nicht leer sein.');
         }
-        if ($data['password1'] != $data['password2']) {
+        if ($data['password1'] !== $data['password2']) {
             $errors[] = _('Das Passwort stimmt nicht mit der Wiederholung überein.');
         }
         return $errors;

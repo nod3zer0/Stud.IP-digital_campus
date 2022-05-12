@@ -5,10 +5,11 @@
 </label>
 <label>
     <?= _('Zugangspasswort') ?>:
-    <input type="password" name="password1" size="25" max="40" value="<?= htmlReady($rule->getPassword()) ?>" required>
+    <input type="password" name="password1" size="25" max="40"
+       value="<?= htmlReady(Request::get('password1')) ?>" <?= $rule->new ? 'required' : ''?>>
 </label>
-<br/>
 <label>
     <?= _('Passwort wiederholen') ?>:
-    <input type="password" name="password2" size="25" max="40" value="<?= htmlReady($rule->getPassword()) ?>" required>
+    <input type="password" name="password2" size="25" max="40"
+           value="<?= htmlReady(Request::get('password2')) ?>" <?= $rule->new ? 'required' : ''?>>
 </label>
