@@ -26,22 +26,22 @@ $entries = (array)DataFieldEntry::getDataFieldEntries([$user->user_id, $inst_id]
     <label>
         <?= _('Raum') ?>
         <?= I18N::input('raum', $institute['raum'],
-            ['id' => 'raum', 'disabled' => $locked ? true : false]) ?>
+            ['id' => 'raum', 'disabled' => $locked]) ?>
     </label>
     <label>
         <?= _('Sprechzeit') ?>
         <?= I18N::input('sprech', $institute['sprechzeiten'],
-            ['id' => 'sprech', 'disabled' => $locked ? true : false]) ?>
+            ['id' => 'sprech', 'disabled' => $locked]) ?>
     </label>
     <label>
         <?= _('Telefon') ?>
         <?= I18N::input('tel', $institute['telefon'],
-            ['id' => 'telefon', 'disabled' => $locked ? true : false]) ?>
+            ['id' => 'telefon', 'disabled' => $locked]) ?>
     </label>
     <label>
         <?= _('Fax') ?>
         <?= I18N::input('fax', $institute['fax'],
-            ['id' => 'fax', 'disabled' => $locked ? true : false]) ?>
+            ['id' => 'fax', 'disabled' => $locked]) ?>
     </label>
 
     <? foreach ($entries as $id => $entry): ?>
