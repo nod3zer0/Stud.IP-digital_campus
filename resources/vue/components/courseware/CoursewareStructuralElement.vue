@@ -440,7 +440,7 @@
                     @confirm="publishCurrentElement"
                 >
                     <template v-slot:dialogContent>
-                        <form class="default" @submit.prevent="">
+                        <form v-show="!oerExportRunning" class="default" @submit.prevent="">
                             <fieldset>
                                 <legend><translate>Grunddaten</translate></legend>
                                 <label>
@@ -478,6 +478,11 @@
                                 </label>
                             </fieldset>
                         </form>
+                        <courseware-companion-box
+                            v-show="oerExportRunning"
+                            :msgCompanion="$gettext('Export läuft, bitte haben sie einen Moment Geduld...')"
+                            mood="pointing"
+                        />
                     </template>
                 </studip-dialog>
                 <studip-dialog
@@ -621,7 +626,7 @@ export default {
             },
             exportRunning: false,
             exportChildren: false,
-            pdfExportChildren: false,
+            oerExportRunning: false,
             oerChildren: true,
             containerList: [],
             isDragging: false,
@@ -1305,7 +1310,13 @@ export default {
         },
 
         async publishCurrentElement() {
-            this.exportToOER(this.currentElement, { withChildren: this.oerChildren });
+            if (this.oerExportRunning) {
+                return;
+            }
+            this.oerExportRunning = true;
+            await this.exportToOER(this.currentElement, { withChildren: this.oerChildren });
+            this.oerExportRunning = false;
+            this.showElementOerDialog(false);
         },
 
         async closeDeleteDialog() {
