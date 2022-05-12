@@ -350,48 +350,26 @@ class Contents_CoursewareController extends AuthenticatedController
         }
 
         CSRFProtection::verifyUnsafeRequest();
-
         $this->user_id = $GLOBALS['user']->id;
 
-        $title = Request::get('title');
-        $projectType = Request::get('project_type');
-        $description = Request::get('description');
-        $color = Request::get('color');
-        $licenseType = Request::get('license_type');
-        $requiredTime = Request::get('required_time');
-        $difficultyStart = Request::get('difficulty_start');
-        $difficultyEnd = Request::get('difficulty_end');
-
-
-        $currentDate = time();
-
         $structural_element = new StructuralElement();
-
-        $structural_element->title = $title;
-        $structural_element->purpose = $projectType;
-
+        $structural_element->title = Request::get('title');
+        $structural_element->purpose = Request::get('project_type');
         $structural_element->owner_id = $this->user_id;
         $structural_element->editor_id = $this->user_id;
-
         $structural_element->release_date = "";
         $structural_element->withdraw_date = "";
-
         $structural_element->range_id = $this->user_id;
         $structural_element->range_type = 'user';
         $structural_element->parent_id = StructuralElement::getCoursewareUser($this->user_id)->id;
-
-        $structural_element->payload = json_encode(array(
-            'description'=> $description,
-            'color' => $color,
-            'required_time' => $requiredTime,
-            'license_type' => $licenseType,
-            'difficulty_start' => $difficulty_start,
-            'difficulty_end' => $difficulty_end
-        ));
-
-        $structural_element->mkdate = $currentDate;
-        $structural_element->chdate = $currentDate;
-
+        $structural_element->payload = json_encode([
+            'description'      => Request::get('description'),
+            'color'            => Request::get('color'),
+            'required_time'    => Request::get('required_time'),
+            'license_type'     => Request::get('license_type'),
+            'difficulty_start' => Request::get('difficulty_start'),
+            'difficulty_end'   => Request::get('difficulty_end'),
+        ]);
         $structural_element->store();
 
         // set image
