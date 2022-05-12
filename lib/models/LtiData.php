@@ -111,7 +111,7 @@ class LtiData extends SimpleORMap
             return $this->tool->oauth_signature_method;
         }
 
-        return $this->options['oauth_signature_method'];
+        return $this->options['oauth_signature_method'] ?? 'sha1';
     }
 
     /**
