@@ -11,14 +11,20 @@
         <? foreach ($ruleTypes as $type => $details): ?>
             <tr id="ruletype_<?= htmlReady($type) ?>">
                 <td>
-                    <a href="<?= $controller->toggle_activation($type) ?>">
+                    <a href="<?= $controller->toggle_activation($type) ?>" role="button">
                     <? if ($details['active']): ?>
                         <?= Icon::create('checkbox-checked')->asImg([
-                            'title' => _('Diese Regel ist aktiv. Klicken Sie hier, um sie zu deaktivieren.')
+                            'title' => sprintf(
+                                _('Die Regel "%s" ist aktiv. Klicken Sie hier, um sie zu deaktivieren.'),
+                                $details['name']
+                            )
                         ]) ?>
                     <? else: ?>
                         <?= Icon::create('checkbox-unchecked')->asImg([
-                            'title' => _('Diese Regel ist inaktiv. Klicken Sie hier, um sie zu aktivieren.')
+                            'title' => sprintf(
+                                _('Die Regel "%s" ist inaktiv. Klicken Sie hier, um sie zu aktivieren.'),
+                                $details['name']
+                            )
                         ]) ?>
                     <? endif; ?>
                     </a>
