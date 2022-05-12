@@ -25,27 +25,23 @@ $entries = (array)DataFieldEntry::getDataFieldEntries([$user->user_id, $inst_id]
     </label>
     <label>
         <?= _('Raum') ?>
-        <input type="text" name="raum" id="raum"
-               value="<?= htmlReady($institute['raum']) ?>"
-                <? if ($locked) echo 'disabled'; ?>>
+        <?= I18N::input('raum', $institute['raum'],
+            ['id' => 'raum', 'disabled' => $locked ? true : false]) ?>
     </label>
     <label>
         <?= _('Sprechzeit') ?>
-        <input type="text" name="sprech" id="sprech"
-               value="<?= htmlReady($institute['sprechzeiten']) ?>"
-                <? if ($locked) echo 'disabled'; ?>>
+        <?= I18N::input('sprech', $institute['sprechzeiten'],
+            ['id' => 'sprech', 'disabled' => $locked ? true : false]) ?>
     </label>
     <label>
         <?= _('Telefon') ?>
-        <input type="tel" name="tel"
-               value="<?= htmlReady($institute['telefon']) ?>"
-                <? if ($locked) echo 'disabled'; ?>>
+        <?= I18N::input('tel', $institute['telefon'],
+            ['id' => 'telefon', 'disabled' => $locked ? true : false]) ?>
     </label>
     <label>
         <?= _('Fax') ?>
-        <input type="tel" name="fax"
-               value="<?= htmlReady($institute['fax']) ?>"
-                <? if ($locked) echo 'disabled'; ?>>
+        <?= I18N::input('fax', $institute['fax'],
+            ['id' => 'fax', 'disabled' => $locked ? true : false]) ?>
     </label>
 
     <? foreach ($entries as $id => $entry): ?>

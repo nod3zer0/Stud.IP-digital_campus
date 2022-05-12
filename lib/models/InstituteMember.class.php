@@ -74,6 +74,11 @@ class InstituteMember extends SimpleORMap implements PrivacyObject
 
         $config['additional_fields']['institute_name'] = [];
 
+        $config['i18n_fields']['raum'] = true;
+        $config['i18n_fields']['sprechzeiten'] = true;
+        $config['i18n_fields']['telefon'] = true;
+        $config['i18n_fields']['fax'] = true;
+
         $config['registered_callbacks']['after_delete'][] = function ($member) {
             $institute = $member->institute;
             $user_id   = $member->user_id;

@@ -339,19 +339,20 @@ class Settings_StatusgruppenController extends Settings_SettingsController
             }
 
             if ($this->shallChange('', 'institute_data')) {
-                $query = "UPDATE user_inst
-                          SET raum = ?, sprechzeiten = ?, Telefon = ?, Fax = ?
-                          WHERE Institut_id = ? AND user_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute([
-                    Request::get('raum'),
-                    Request::get('sprech'),
-                    Request::get('tel'),
-                    Request::get('fax'),
-                    $id,
-                    $this->user->user_id,
-                ]);
-                if ($statement->rowCount() > 0) {
+                $entry = InstituteMember::findByUserAndInstitute($this->user->user_id, $id);
+
+                if (!$entry) {
+                    $entry = new InstituteMember();
+                    $entry->institut_id = $id;
+                    $entry->user_id = $this->user->user_id;
+                }
+
+                $entry->raum = Request::i18n('raum');
+                $entry->sprechzeiten = Request::i18n('sprech');
+                $entry->telefon = Request::i18n('tel');
+                $entry->fax = Request::i18n('fax');
+
+                if ($entry->store() !== false) {
                     $changed   = true;
                     $success[] = sprintf(_('Ihre Daten an der Einrichtung %s wurden geändert.'), htmlReady(Request::get('name')));
 
