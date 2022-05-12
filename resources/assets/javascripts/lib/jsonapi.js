@@ -7,8 +7,12 @@ class JSONAPI extends AbstractAPI
         super(`jsonapi.php/v${version}`);
     }
 
-    encodeData (data) {
+    encodeData (data, method) {
         data = super.encodeData(data);
+
+        if (['DELETE', 'GET', 'HEAD'].includes(method)) {
+            return data;
+        }
 
         if (Object.keys(data).length === 0) {
             return null;
