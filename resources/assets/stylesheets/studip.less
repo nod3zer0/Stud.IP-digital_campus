@@ -621,15 +621,15 @@ a.new-member {
 .recolor() {
     filter:
     hue-rotate(unit((hsvhue(@base-color) - hsvhue(#28497c)), deg))
-    saturate((100 + hsvsaturation(@base-color)-hsvsaturation(#28497c)))
-    brightness((100 + hsvvalue(@base-color)-hsvvalue(#28497c)));
+    saturate((100 + hsvsaturation(@base-color) - hsvsaturation(#28497c)))
+    brightness((100 + hsvvalue(@base-color) - hsvvalue(#28497c)));
 }
 
 .recolor-reset() {
     filter:
-    hue-rotate(unit(hsvhue(#28497c)-hsvhue(@base-color), deg))
-    saturate(100% - hsvsaturation(@base-color)+hsvsaturation(#28497c))
-    brightness(100% - hsvvalue(@base-color)+hsvvalue(#28497c));
+    hue-rotate(unit(hsvhue(#28497c) - hsvhue(@base-color), deg))
+    saturate(100% - hsvsaturation(@base-color) + hsvsaturation(#28497c))
+    brightness(100% - hsvvalue(@base-color) + hsvvalue(#28497c));
 }
 
 #barTopMenu li a img,
