@@ -242,7 +242,7 @@ class Course_LtiController extends StudipController
         ]);
 
         foreach ($custom_parameters as $param) {
-            list($key, $value) = explode('=', $param);
+            list($key, $value) = explode('=', $param, 2);
             if (isset($value)) {
                 $lti_link->addCustomParameter(trim($key), trim($value));
             }
@@ -351,7 +351,7 @@ class Course_LtiController extends StudipController
         ]);
 
         foreach ($custom_parameters as $param) {
-            list($key, $value) = explode('=', $param);
+            list($key, $value) = explode('=', $param, 2);
             if (isset($value)) {
                 $lti_link->addCustomParameter(trim($key), trim($value));
             }

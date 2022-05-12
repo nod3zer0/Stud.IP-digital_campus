@@ -51,6 +51,7 @@ class LtiLink
             'lti_version' => 'LTI-1p0',
             'lti_message_type' => 'basic-lti-launch-request',
             'oauth_consumer_key' => $this->consumer_key,
+            'oauth_callback' => 'about:blank',
             'oauth_version' => '1.0',
             'oauth_nonce' => uniqid('lti', true),
             'oauth_timestamp' => time(),
