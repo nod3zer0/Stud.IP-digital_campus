@@ -12,7 +12,7 @@ class AddCommentToHelpContent extends Migration
     protected function up()
     {
         DBManager::get()->exec(
-            "ALTER IGNORE TABLE `help_content`
+            "ALTER TABLE `help_content`
             ADD COLUMN comment TEXT NULL"
         );
     }
@@ -21,7 +21,7 @@ class AddCommentToHelpContent extends Migration
     protected function down()
     {
         DBManager::get()->exec(
-            "ALTER IGNORE TABLE `help_content`
+            "ALTER TABLE `help_content`
             DROP COLUMN comment"
         );
     }
