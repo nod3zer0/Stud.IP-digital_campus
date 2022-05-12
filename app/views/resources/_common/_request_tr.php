@@ -141,10 +141,10 @@
         }
         if ($range_object instanceof Course) {
             $action_menu->addLink(
-                URLHelper::getLink('dispatch.php/course/details', ['cid' => $range_object->id]),
-                _('Veranstaltungsdetails'),
-                Icon::create('seminar'),
-                ['data-dialog' => 'size=auto']
+                URLHelper::getURL('dispatch.php/course/timesrooms', ['cid' => $range_object->id]),
+                _('Veranstaltungszeiten'),
+                Icon::create('date'),
+                ['target' => '_blank']
             );
         }
 

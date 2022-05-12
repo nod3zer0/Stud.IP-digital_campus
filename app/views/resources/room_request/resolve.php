@@ -64,7 +64,12 @@
                 <dl>
                     <? if ($request->course): ?>
                         <dt><?= _('Veranstaltung') ?></dt>
-                        <dd><?= htmlReady($request->course->getFullName()) ?></dd>
+                        <dd>
+                            <a href="<?= URLHelper::getLink('dispatch.php/course/timesrooms', ['cid' => $request->course->id])?>"
+                               target="_blank" title="<?= _('Zu den Veranstaltungszeiten')?>">
+                                <?= htmlReady($request->course->getFullName()) ?>
+                            </a>
+                        </dd>
                         <? $lecturers = CourseMember::findByCourseAndStatus($request->course->id, 'dozent') ?>
                         <dt><?= _('Lehrende') ?></dt>
                         <dd>
