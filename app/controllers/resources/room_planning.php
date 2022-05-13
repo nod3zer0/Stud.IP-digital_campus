@@ -355,7 +355,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
             $actions->addLink(
                 _('QR-Code anzeigen'),
                 $this->resource->getActionURL('booking_plan'),
-                Icon::create('download'),
+                Icon::create('code-qr'),
                 [
                     'data-qr-code'       => '',
                     'data-qr-code-print' => '1',

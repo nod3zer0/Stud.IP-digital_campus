@@ -61,6 +61,7 @@ import 'jquery-ui-timepicker-addon';
 import 'multiselect';
 
 import 'jquery.scrollto';
+import 'jquery.qrcode';
 
 import 'jquery-ui-touch-punch';
 

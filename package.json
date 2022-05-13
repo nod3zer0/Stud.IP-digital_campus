@@ -60,6 +60,7 @@
         "jquery-ui": "1.13",
         "jquery-ui-timepicker-addon": "1.6.3",
         "jquery-ui-touch-punch": "0.2.3",
+        "jquery.qrcode": "^1.0.3",
         "jquery.scrollto": "2.1.2",
         "jspdf-yworks": "^2.1.1",
         "jszip": "^3.6.0",

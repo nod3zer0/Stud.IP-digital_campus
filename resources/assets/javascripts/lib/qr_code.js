@@ -1,4 +1,3 @@
-import QRCodeGenerator from "../vendor/qrcode-04f46c6.js"
 import { $gettext } from "./gettext.js";
 import Dialog from "./dialog.js";
 
@@ -28,7 +27,7 @@ const QRCode = {
         }
 
         // Actually generate code
-        new QRCodeGenerator(code[0], {
+        code.qrcode({
             text: text,
             width: 1280,
             height: 1280,
@@ -69,6 +68,12 @@ const QRCode = {
                     click () {
                         var openWindow = window.open("", '_blank');
                         openWindow.document.write(`<body style="text-align: center;">${content.html()}</body>`);
+                        // Copy qrcode canvas itself (as it is not included in .html()
+                        openWindow.document.querySelector('canvas').getContext('2d').drawImage(
+                            $('canvas', code)[0],
+                            0,
+                            0
+                        );
                         openWindow.document.close();
                         openWindow.focus();
                         openWindow.print();
@@ -78,20 +83,11 @@ const QRCode = {
             }, buttons);
         }
 
-
         Dialog.show(content, {
             title: options.title ?? $gettext('QR-Code'),
             size: 'big',
             buttons
         });
-    },
-    generate: function (element, text, options = {}) {
-        options.text = text;
-        if (options.correctLevel === undefined) {
-            options.correctLevel = 3;
-        }
-
-        var qrcode = new QRCodeGenerator(element, options);
     }
 };
 

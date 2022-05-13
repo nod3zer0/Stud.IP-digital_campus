@@ -14,8 +14,9 @@
         flex: 0 1 auto;
         max-height: 90%; // TODO This will not scale well if description grows
         width: 100%;
+        text-align: center;
 
-        img {
+        canvas {
             margin: auto;
             max-height: 100%;
             object-fit: contain;
@@ -26,6 +27,7 @@
     .description {
         flex: 0 0 auto;
         margin-top: 1em;
+        text-align: center;
     }
 
     &:fullscreen {
