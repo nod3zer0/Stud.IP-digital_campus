@@ -1,7 +1,8 @@
 <template>
     <div v-if="canEdit" class="cw-container-actions">
-        <studip-action-menu 
+        <studip-action-menu
             :items="menuItems"
+            :context="container.attributes.title"
             @editContainer="editContainer"
             @deleteContainer="deleteContainer"
             @sortBlocks="sortBlocks"

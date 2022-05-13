@@ -1,6 +1,6 @@
 <template>
     <nav v-if="shouldCollapse" class="action-menu">
-        <button class="action-menu-icon" :title="$gettext('Aktionsmenü')" aria-expanded="false" :aria-label="$gettext('Aktionsmenü')">
+        <button class="action-menu-icon" :title="title" aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
@@ -35,6 +35,10 @@ export default {
         items: Array,
         collapseAt: {
             default: true,
+        },
+        context: {
+            type: String,
+            default: ''
         }
     },
     data () {
@@ -103,6 +107,9 @@ export default {
                 return true;
             }
             return Number.parseInt(this.collapseAt) <= this.items.length;
+        },
+        title () {
+            return this.context ? this.$gettextInterpolate(this.$gettext('Aktionsmenü für %{context}'), {context: this.context}) : this.$gettext('Aktionsmenü');
         }
     }
 }

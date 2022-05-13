@@ -7,6 +7,7 @@
     <? if ($structure['actions']): ?>
         <th class="actions">
         <?= ActionMenu::get()
+            ->setContext($th_title)
             ->condition($mail_status)
             ->addLink(
                 $controller->url_for('messages/write?filter=inst_status', [
