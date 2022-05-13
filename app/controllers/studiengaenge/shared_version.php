@@ -5,7 +5,7 @@
  * @since       3.5
  */
 
-class SharedVersionController extends MVVController
+abstract class SharedVersionController extends MVVController
 {
     public function version_action($stgteil_id, $version_id = null)
     {
