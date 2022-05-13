@@ -34,6 +34,12 @@ class CheckAdmissionJob extends CronJob
                 'status'      => 'optional',
                 'description' => _('Sollen interne Nachrichten an alle betroffenen Nutzer gesendet werden)'),
             ],
+            'send_applications_to_owner' => [
+                'type'        => 'boolean',
+                'default'     => false,
+                'status'      => 'optional',
+                'description' => _('Die Liste mit Anmeldungen an die Person senden, der das Anmeldeset gehört.')
+            ]
         ];
     }
 
@@ -99,6 +105,24 @@ class CheckAdmissionJob extends CronJob
                         $applicants_file = $GLOBALS['TMP_PATH'] . '/seat_distribution_logs/applicants_' . $set_id . '.csv';
                         if (array_to_csv($data, $applicants_file, $captions)) {
                             echo 'applicants written to ' . $applicants_file . chr(10);
+                            if ($parameters['send_applications_to_owner']) {
+                                //Send a mail to the owner of the course set:
+                                $owner = User::find($courseset->getUserId());
+                                if ($owner) {
+                                    setTempLanguage($owner->id);
+                                    $mail = new StudipMail();
+                                    $mail->addRecipient($owner->email)
+                                        ->setSubject(
+                                            sprintf(_('Das Stud.IP Anmeldeset %s wird gelost'), $courseset->getName()))
+                                        ->setBodyText(sprintf(
+                                            _('Ihr Anmeldeset %s wird jetzt gelost. Im Anhang finden Sie die Liste der Anmeldungen.'),
+                                            $courseset->getName()
+                                        ))
+                                        ->addFileAttachment($applicants_file)
+                                        ->send();
+                                    restoreLanguage();
+                                }
+                            }
                         }
                     }
                     $courseset->distributeSeats();
