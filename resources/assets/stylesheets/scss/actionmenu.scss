@@ -31,7 +31,7 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
 
         padding: 4px 8px;
 
-        background: white;
+        background: $white;
         border: thin solid $dark-gray-color-45;
         box-shadow: $action-menu-shadow;
         font-weight: normal;
@@ -46,7 +46,7 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
         border: 0;
         position: relative;
         cursor: pointer;
-        display: inline-block;
+        display: block;
         padding: 0;
         width: 20px;
         height: 20px;
