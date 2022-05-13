@@ -1,6 +1,6 @@
 <?php
 
-class ForumController extends StudipController {
+abstract class ForumController extends StudipController {
     protected $with_session = true;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * */

@@ -5,7 +5,7 @@
  * @since       3.5
  */
 
-class MVVController extends AuthenticatedController
+abstract class MVVController extends AuthenticatedController
 {
     /**
      * The maximum number of items listed on a page.

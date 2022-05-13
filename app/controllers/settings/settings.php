@@ -15,7 +15,7 @@
 
 require_once 'lib/messaging.inc.php';
 
-class Settings_SettingsController extends AuthenticatedController
+abstract class Settings_SettingsController extends AuthenticatedController
 {
     // Stores message which shall be send to the user via email
     protected $private_messages = [];
