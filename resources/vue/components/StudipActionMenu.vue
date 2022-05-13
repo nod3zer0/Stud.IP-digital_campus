@@ -34,7 +34,7 @@ export default {
     props: {
         items: Array,
         collapseAt: {
-            default: true,
+            default: null,
         },
         context: {
             type: String,
@@ -100,13 +100,15 @@ export default {
             });
         },
         shouldCollapse () {
-            if (this.collapseAt === false) {
+            const collapseAt = this.collapseAt ?? this.getStudipConfig('ACTIONMENU_THRESHOLD');
+
+            if (collapseAt === false) {
                 return false;
             }
-            if (this.collapseAt === true) {
+            if (collapseAt === true) {
                 return true;
             }
-            return Number.parseInt(this.collapseAt) <= this.items.length;
+            return Number.parseInt(collapseAt) <= this.items.length;
         },
         title () {
             return this.context ? this.$gettextInterpolate(this.$gettext('Aktionsmenü für %{context}'), {context: this.context}) : this.$gettext('Aktionsmenü');

@@ -83,7 +83,12 @@ $getInstalledLanguages = function () {
                              $GLOBALS['perm']->have_perm('autor') &&
                              PersonalNotifications::isActivated()) ?>,
             wysiwyg_enabled: <?= json_encode((bool) Config::get()->WYSIWYG) ?>,
-            server_timestamp: <?= time() ?>
+            server_timestamp: <?= time() ?>,
+            config: <?= json_encode([
+                'ACTIONMENU_THRESHOLD' => Config::get()->ACTION_MENU_THRESHOLD,
+                'ENTRIES_PER_PAGE'     => Config::get()->ENTRIES_PER_PAGE,
+                'OPENGRAPH_ENABLE'     => Config::get()->OPENGRAPH_ENABLE,
+            ]) ?>,
         }
     </script>
 
