@@ -1015,7 +1015,7 @@ function format_help_url($keyword)
     preg_match('/^\d+/', $GLOBALS['SOFTWARE_VERSION'], $v);
     $version = $v[0];
 
-    $help_query = sprintf('https://hilfe.studip.de/help/%s.0/%s/%s',
+    $help_query = sprintf('https://hilfe.studip.de/help/%s/%s/%s',
                           $version, $lang, $keyword);
     return $help_query;
 }
