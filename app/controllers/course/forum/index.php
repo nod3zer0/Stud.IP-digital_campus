@@ -177,6 +177,8 @@ class Course_Forum_IndexController extends ForumController
      */
     function newest_action($page = null)
     {
+        ForumPerm::check('fav_entry', $this->getId());
+
         $nav = Navigation::getItem('course/forum2');
         $nav->setImage(Icon::create('forum', 'info'));
         Navigation::activateItem('course/forum2/newest');
@@ -211,6 +213,8 @@ class Course_Forum_IndexController extends ForumController
      */
     function latest_action($page = null)
     {
+        ForumPerm::check('fav_entry', $this->getId());
+
         $nav = Navigation::getItem('course/forum2');
         $nav->setImage(Icon::create('forum', 'info'));
         Navigation::activateItem('course/forum2/latest');
@@ -245,6 +249,8 @@ class Course_Forum_IndexController extends ForumController
      */
     function favorites_action($page = null)
     {
+        ForumPerm::check('fav_entry', $this->getId());
+
         $nav = Navigation::getItem('course/forum2');
         $nav->setImage(Icon::create('forum', 'info'));
         Navigation::activateItem('course/forum2/favorites');
@@ -831,5 +837,14 @@ class Course_Forum_IndexController extends ForumController
         ForumPerm::check('pdfexport', $this->getId(), $parent_id);
 
         ForumHelpers::createPDF($this->getId(), $parent_id);
+    }
+
+    public function rescue($exception)
+    {
+        if ($exception instanceof AccessDeniedException) {
+            $GLOBALS['auth']->login_if($GLOBALS['user']->id === 'nobody');
+        }
+
+        parent::rescue($exception);
     }
 }
