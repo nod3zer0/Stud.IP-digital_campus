@@ -11,9 +11,6 @@ import "../stylesheets/studip.scss"
 import lodash from "lodash"
 window._ = lodash
 
-import QRCode from "./vendor/qrcode-04f46c6.js"
-window.QRCode = QRCode
-
 import "./jquery-bundle.js"
 
 import "./init.js"
