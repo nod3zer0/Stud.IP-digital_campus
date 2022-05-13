@@ -564,14 +564,11 @@ class ResourceManager
         //- altitude: up to 5 digits, decimal point, 1 to 10 digits for fraction
         //before the decimal point. After the decimal point,
         //In that case it is a coordinate format we can parse:
-
         if(!preg_match(
             ResourcePropertyDefinition::CRSWGS84_REGEX,
             $coordinate_string
         )) {
-            throw new ResourcePropertyStateException(
-                _('Die Positionsangabe kann nicht umgewandelt werden, da sie ungültige Daten enthält!')
-            );
+            PageLayout::postError(_('Die Positionsangabe kann nicht umgewandelt werden, da sie ungültige Daten enthält!'));
         }
 
         //With the first split we separate the numbers in the coordinate string.
@@ -590,7 +587,7 @@ class ResourceManager
         //with decimal separators.
 
         $coordinate_signs = preg_split(
-            '/\.[0-9]{1,10}/',
+            '/\.\d{1,10}/',
             $coordinate_string,
             -1,
             PREG_SPLIT_NO_EMPTY
@@ -690,6 +687,7 @@ class ResourceManager
     )
     {
         $coordinate_parts = [];
+        $string = '';
         try {
             $coordinate_parts = self::getPositionArray($property);
         } catch (ResourcePropertyDefinitionException $e) {

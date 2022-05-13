@@ -132,7 +132,7 @@ class Resources_LocationController extends AuthenticatedController
         if (!ResourceManager::userHasGlobalPermission(User::findCurrent(), 'admin')) {
             throw new AccessDeniedException();
         }
-        
+
         $this->next_action = Request::get('next_action');
         $this->categories = ResourceCategory::findByClass_name('Location');
 
@@ -171,21 +171,25 @@ class Resources_LocationController extends AuthenticatedController
             $this->category_id = Request::get('category_id');
             $this->name = '';
             $this->description = '';
-            $this->latitude = '0.0';
-            $this->longitude = '0.0';
-            $this->altitude = '0.0';
+            $this->latitude = '';
+            $this->longitude = '';
+            $this->altitude = '';
             $this->sort_position = '';
 
             if ($mode == 'edit') {
                 //Set data from the location object:
                 $this->name = $this->location->name;
                 $this->description = $this->location->description;
-                $position_data = ResourceManager::getPositionArray(
-                    $this->location->getPropertyObject('geo_coordinates')
-                );
-                $this->latitude = $position_data[0];
-                $this->longitude = $position_data[1];
-                $this->altitude = $position_data[2];
+                $geo_coordinates = $this->location->getPropertyObject('geo_coordinates');
+
+                if ($geo_coordinates) {
+                    $position_data = ResourceManager::getPositionArray(
+                        $this->location->getPropertyObject('geo_coordinates')
+                    );
+                    $this->latitude = $position_data[0];
+                    $this->longitude = $position_data[1];
+                    $this->altitude = $position_data[2];
+                }
                 $this->sort_position = $this->location->sort_position;
             }
         }
@@ -233,7 +237,6 @@ class Resources_LocationController extends AuthenticatedController
             $this->altitude = Request::float('geo_coordinates_altitude');
             $this->osm_link = Request::get('geo_coordinates_osm_link');
             $this->property_data = Request::getArray('properties');
-
             if ($GLOBALS['perm']->have_perm('root')) {
                 $this->sort_position = Request::get('sort_position');
             }
@@ -262,22 +265,30 @@ class Resources_LocationController extends AuthenticatedController
             }
 
             //data conversion:
-
+            $user = User::findCurrent();
             $position_string = '';
-            if ($this->latitude >= 0.0) {
+            if ($this->latitude > 0.0) {
                 $position_string .= '+';
+                $position_string .= number_format($this->latitude, 7);
             }
-            $position_string .= number_format($this->latitude, 7);
 
-            if ($this->longitude >= 0.0) {
+            if ($this->longitude > 0.0) {
                 $position_string .= '+';
+                $position_string .= number_format($this->longitude, 7);
             }
-            $position_string .= number_format($this->longitude, 7);
 
-            if ($this->altitude >= 0.0) {
+            if ($this->altitude > 0.0) {
                 $position_string .= '+';
+                $position_string .= number_format($this->altitude, 7);
             }
-            $position_string .= number_format($this->altitude, 7) . 'CRSWGS_84/';
+            if ($position_string) {
+                $position_string .= 'CRSWGS_84/';
+                if ($this->location->isPropertyEditable('geo_coordinates', $user)) {
+                    $this->location->geo_coordinates = $position_string;
+                } elseif ($this->location->geo_coordinates !== $position_string) {
+                    $unchanged_properties[] = $this->location->getPropertyObject('geo_coordinates');
+                }
+            }
 
             //store data:
             if ($mode == 'add') {
@@ -290,7 +301,7 @@ class Resources_LocationController extends AuthenticatedController
             if ($GLOBALS['perm']->have_perm('root')) {
                 $this->location->sort_position = $this->sort_position;
             }
-            
+
             if ($this->location->isDirty()) {
                 $successfully_stored = $this->location->store();
             } else {
@@ -301,15 +312,8 @@ class Resources_LocationController extends AuthenticatedController
                 $this->location->sort_position = $this->sort_position;
             }
 
-            $user = User::findCurrent();
-
             $unchanged_properties = [];
-            if ($this->location->isPropertyEditable('geo_coordinates', $user)) {
-                $this->location->geo_coordinates = $position_string;
-            } elseif ($this->location->geo_coordinates != $position_string) {
-                $unchanged_properties[] = $this->location->getPropertyObject('geo_coordinates');
-            }
-            
+
             $failed_properties = $this->location->setPropertiesById(
                 $this->property_data,
                 $user
