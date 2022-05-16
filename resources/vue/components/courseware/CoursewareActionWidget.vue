@@ -37,7 +37,7 @@
         </li>
         <li v-if="!isOwner" class="cw-action-widget-oer">
             <button @click="suggestOER">
-                <translate>Material für OER Campus vorschlagen</translate>
+                <translate>Material für %{oerTitle} vorschlagen</translate>
             </button>
         </li>
         <li v-if="!isRoot && canEdit" class="cw-action-widget-trash">
