@@ -9,7 +9,7 @@
 class email_validation_class
 {
     var $username_regular_expression=null;
-    var $password_regular_expression="/^(.{8,72})\$/";
+    var $password_regular_expression="/^.{8,}\$/";
     var $name_regular_expression='/^[_ a-zA-ZÀ-ÿ\'-]+$/';
     var $telefon_regular_expression="/^([0-9 \(\)\\/+_-]*)\$/";
     var $timeout=10;
@@ -97,7 +97,7 @@ class email_validation_class
 
     Function ValidatePassword($password)
     {
-        return(preg_match($this->password_regular_expression,$password)!=0);
+        return preg_match($this->password_regular_expression, $password) != 0;
     }
 
     Function ValidateName($name)

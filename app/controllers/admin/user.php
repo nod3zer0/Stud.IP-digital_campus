@@ -419,7 +419,8 @@ class Admin_UserController extends AuthenticatedController
             //change password
             if (($GLOBALS['perm']->have_perm('root') && Config::get()->ALLOW_ADMIN_USERACCESS) && (Request::get('pass_1') != '' || Request::get('pass_2') != '')) {
                 if (Request::get('pass_1') == Request::get('pass_2')) {
-                    if (mb_strlen(Request::get('pass_1')) < 4) {
+                    $validator = new email_validation_class();
+                    if (!$validator->ValidatePassword(Request::get('pass_1'))) {
                         $details[] = _('Das Passwort ist zu kurz. Es sollte mindestens 8 Zeichen lang sein.');
                     } else {
                         $um->changePassword(Request::get('pass_1'));

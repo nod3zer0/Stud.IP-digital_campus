@@ -2,7 +2,7 @@
 final class StudipInstaller
 {
     const USERNAME_REGEX = '/^([a-zA-Z0-9_@.-]{4,})$/';
-    const PASSWORD_REGEX = '/^([[:print:]]{8,72})$/';
+    const PASSWORD_REGEX = '/^([[:print:]]{8,})$/';
 
     private $base_path;
 
