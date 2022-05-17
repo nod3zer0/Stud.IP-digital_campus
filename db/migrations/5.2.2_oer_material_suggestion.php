@@ -8,7 +8,7 @@ class OerMaterialSuggestion extends Migration
 
     public function up()
     {
-        $query = "INSERT INTO `config`
+        $query = "INSERT IGNORE INTO `config`
                   SET `field` = :field,
                       `value` = :value,
                       `type` = :type,
