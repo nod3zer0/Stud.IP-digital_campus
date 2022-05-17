@@ -59,8 +59,7 @@ class GlobalSearchMyCourses extends GlobalSearchModule
                 $semester_join = "LEFT JOIN semester_courses ON (courses.Seminar_id = semester_courses.course_id) ";
                 $semester_condition = "
                     AND (
-                        `courses`.start_time <= " . DBManager::get()->quote($semester->beginn) ."
-                        AND (`semester_courses`.semester_id IS NULL OR semester_courses.semester_id IN (" . join(',', array_map([DBManager::get(), 'quote'], $semester_ids)) . "))
+                        semester_courses.semester_id IS NULL OR semester_courses.semester_id IN (" . join(',', array_map([DBManager::get(), 'quote'], $semester_ids)) . ")
                     ) ";
             }
             if ($filter['institute']) {
