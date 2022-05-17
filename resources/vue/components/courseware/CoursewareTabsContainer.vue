@@ -248,7 +248,7 @@ export default {
     },
     watch: {
         blocks() {
-            if (!this.showEdit) {
+            if (!this.showEdit && !this.sortMode) {
                 this.initCurrentData();
             }
         }
