@@ -275,6 +275,11 @@ abstract class StudipController extends Trails_Controller
             throw new InvalidArgumentException(__METHOD__ . ' cannot be used with absolute URLs');
         }
 
+        // Extract fragment (if any)
+        if (strpos($to, '#') !== false) {
+            list($args[0], $fragment) = explode('#', $to);
+        }
+
         // Extract parameters (if any)
         $params = [];
         if (is_array(end($args))) {
@@ -289,17 +294,9 @@ abstract class StudipController extends Trails_Controller
             return $arg;
         }, $args);
 
-        // Combine arguments to new $to string
-        $to = implode('/', $args);
+        $url = parent::url_for(...$args);
 
-        //preserve fragment
-        $to_parts = explode('#', $to);
-        $to = $to_parts[0];
-        $fragment = $to_parts[1] ?? '';
-
-        $url = parent::url_for($to);
-
-        if ($fragment) {
+        if (isset($fragment)) {
             $url .= '#' . $fragment;
         }
         return URLHelper::getURL($url, $params);

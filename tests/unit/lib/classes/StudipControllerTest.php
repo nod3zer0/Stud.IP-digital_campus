@@ -185,6 +185,10 @@ final class StudipControllerTest extends Codeception\Test\Unit
             '2-actions'                => ['dispatch.php/foo/bar', 'foo', 'bar'],
             '2-actions-and-parameter'  => ['dispatch.php/foo/bar?bar=42', 'foo', 'bar', ['bar' => 42]],
             '2-actions-and-parameters' => ['dispatch.php/foo/bar?bar=42&baz=23', 'foo', 'bar', ['bar' => 42, 'baz' => 23]],
+
+            'fragment'                 => ['dispatch.php/foo/bar/42/23#jump', 'foo/bar/42/23#jump'],
+            'fragment-and-parameters'  => ['dispatch.php/foo/bar/42/23#jump', 'foo/bar#jump', 42, 23],
+            'url-encoding-parameters'  => ['dispatch.php/foo/bar/%3Fabc/%2F', 'foo/bar', '?abc', '/'],
         ];
     }
 
