@@ -95,4 +95,4 @@ if (!$item) {
             ) ?>
         <? endif ?>
     </td>
-</li>
+</tr>
