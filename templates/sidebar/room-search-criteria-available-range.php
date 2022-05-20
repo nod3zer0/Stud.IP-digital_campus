@@ -99,7 +99,7 @@
                     <option value=""><?= _('Bitte wählen') ?></option>
                     <? foreach ($criteria['day_of_week']['options'] as $value => $title): ?>
                         <option value="<?= htmlReady($value) ?>"
-                                <?= ($value == $day_of_week['value']
+                                <?= ($value === (int)$criteria['day_of_week']['value']
                                    ? 'selected="selected"'
                                    : '') ?>>
                             <?= htmlReady($title) ?>

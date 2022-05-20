@@ -1,7 +1,6 @@
 <li class="template invisible"
     data-template-type="bool">
-    <?= Icon::create('trash', 'clickable')->asImg(
-        '16px',
+    <?= Icon::create('trash')->asImg(
         [
             'class' => 'text-bottom remove-icon'
         ]
@@ -15,8 +14,7 @@
 </li>
 <li class="template invisible"
     data-template-type="range">
-    <?= Icon::create('trash', 'clickable')->asImg(
-        '16px',
+    <?= Icon::create('trash')->asImg(
         [
             'class' => 'text-bottom remove-icon'
         ]
@@ -26,18 +24,17 @@
         <span></span>
         <div class="range-input-container">
                     <?= _('von') ?>
-            <input type="number"
+            <input type="number" value="10"
                    class="room-search-widget_criteria-list_input">
                     <?= _('bis') ?>
-            <input type="number"
+            <input type="number" value="100"
                    class="room-search-widget_criteria-list_input">
         </div>
     </label>
 </li>
 <li class="template invisible"
     data-template-type="num">
-    <?= Icon::create('trash', 'clickable')->asImg(
-        '16px',
+    <?= Icon::create('trash')->asImg(
         [
             'class' => 'text-bottom remove-icon'
         ]
@@ -50,8 +47,7 @@
 </li>
 <li class="template invisible"
     data-template-type="select">
-    <?= Icon::create('trash', 'clickable')->asImg(
-        '16px',
+    <?= Icon::create('trash')->asImg(
         [
             'class' => 'text-bottom remove-icon'
         ]
@@ -64,8 +60,7 @@
 </li>
 <li class="template invisible"
     data-template-type="date">
-    <?= Icon::create('trash', 'clickable')->asImg(
-        '16px',
+    <?= Icon::create('trash')->asImg(
         [
             'class' => 'text-bottom remove-icon'
         ]
@@ -83,8 +78,7 @@
 </li>
 <li class="template invisible"
     data-template-type="date_range">
-    <?= Icon::create('trash', 'clickable')->asImg(
-        '16px',
+    <?= Icon::create('trash')->asImg(
         [
             'class' => 'text-bottom remove-icon'
         ]
@@ -103,8 +97,7 @@
 </li>
 <li class="template invisible"
     data-template-type="other">
-    <?= Icon::create('trash', 'clickable')->asImg(
-        '16px',
+    <?= Icon::create('trash')->asImg(
         [
             'class' => 'text-bottom remove-icon'
         ]

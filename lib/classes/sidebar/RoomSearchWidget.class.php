@@ -120,15 +120,13 @@ class RoomSearchWidget extends SidebarWidget
             }
         }
 
-
-        $begin = new DateTime();
-        $begin = $begin->add(new DateInterval('P1D'));
-        $begin->setTime(intval(date('H')), 0, 0);
-        $end = clone $begin;
-        $end = $end->add(new DateInterval('PT30M'));
-
         $current_semester = Semester::findCurrent();
         $all_semesters = Semester::getAll();
+        $begin = new DateTime();
+        $begin = $begin->setTimestamp($current_semester->beginn);
+        $begin->setTime(intval(date('H')), 0, 0);
+        $end = clone $begin;
+        $end = $end->setTimestamp($current_semester->ende);
 
         $this->criteria['special__time_range'] = [
             'name' => 'special__time_range',
@@ -164,7 +162,7 @@ class RoomSearchWidget extends SidebarWidget
             'type' => 'num',
             'range_search' => true,
             'switch' => true,
-            'value' => '0',
+            'value' => [10, 100],
             'optional' => false
         ];
     }

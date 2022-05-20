@@ -353,12 +353,8 @@ class Resources
                 jQuery(new_criteria_inputs[0]).attr('name', option_value);
                 let min_input = new_criteria_inputs[1];
                 let max_input = new_criteria_inputs[2];
-                jQuery(min_input).attr('name', option_value + '_min');
-                jQuery(min_input).attr('type', 'number');
-                jQuery(max_input).attr('name', option_value + '_max');
-                jQuery(max_input).attr('type', 'number');
-                jQuery(min_input).val(Math.round(parseInt(min_input) * 1.25));
-                jQuery(max_input).val(Math.round(parseInt(max_input) * 0.75));
+                jQuery(min_input).attr({name: option_value + '_min', type: 'number'});
+                jQuery(max_input).attr({name: option_value + '_max', type: 'number'});
             } else {
                 let new_criteria_input = jQuery(new_criteria).find('input')[0];
                 jQuery(new_criteria_input).attr('name', option_value);
