@@ -41,6 +41,9 @@ class Semester extends SimpleORMap
         $config['additional_fields']['last_sem_week']['get'] = 'getLastSemesterWeek';
         $config['additional_fields']['current']['get'] = 'isCurrent';
         $config['additional_fields']['past']['get'] = 'isPast';
+        $config['additional_fields']['short_name']['get'] = function($semester) {
+            return (string) $semester->semester_token ?: (string) $semester->name;
+        };
 
         $config['additional_fields']['absolute_seminars_count'] = [
             'get' => 'seminarCounter',

@@ -59,7 +59,7 @@
                 <? endif; ?>
             </td>
             <td>
-                <?= htmlReady($semester->semester_token ?: '- ' . _('keins') . ' -') ?>
+                <?= htmlReady((string) $semester->semester_token ?: '- ' . _('keins') . ' -') ?>
             </td>
             <td>
                 <?= strftime('%x', $semester->beginn) ?>

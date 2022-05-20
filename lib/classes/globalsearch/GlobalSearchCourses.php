@@ -203,7 +203,7 @@ class GlobalSearchCourses extends GlobalSearchModule implements GlobalSearchFull
             'number'        => self::mark($course->veranstaltungsnummer, $search),
             'name'          => self::mark($course->getFullname(), $search),
             'url'           => URLHelper::getURL("dispatch.php/course/details/index/{$course->id}", [], true),
-            'date'          => (string) $semester->token ?: (string) $semester->name,
+            'date'          => $semester->short_name,
             'dates'         => $turnus_string,
             'has_children'  => count($course->children) > 0,
             'children'      => $result_children,

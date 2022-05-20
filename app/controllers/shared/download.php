@@ -86,7 +86,7 @@ class Shared_DownloadController extends AuthenticatedController
         $this->exportTcpdf($blocks, self::sanitizeFilename(
             _('Modulhandbuch'),
             trim($this->StgteilVersion->studiengangteil->getDisplayName()),
-            $semester->semester_token ?: $semester->name,
+            $semester->short_name,
             $language
         ));
     }

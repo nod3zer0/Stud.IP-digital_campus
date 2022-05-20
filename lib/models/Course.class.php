@@ -392,9 +392,9 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     public function getTextualSemester()
     {
         if (count($this->semesters) > 1) {
-            return $this->start_semester->name . ' - ' . $this->end_semester->name;
+            return $this->start_semester->short_name . ' - ' . $this->end_semester->short_name;
         } elseif (count($this->semesters) === 1) {
-            return $this->start_semester->name;
+            return $this->start_semester->short_name;
         } else {
             return _('unbegrenzt');
         }
