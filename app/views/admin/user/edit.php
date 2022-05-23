@@ -54,6 +54,9 @@ use Studip\Button, Studip\LinkButton;
                     </option>
                 <? endforeach; ?>
             </select>
+            <? if (StudipAuthAbstract::CheckField('auth_user_md5.perms', $user->auth_plugin)): ?>
+                <input type="hidden" name="perms[]" value="<?= htmlReady($user->perms) ?>">
+            <? endif ?>
         </label>
 
         <label >
