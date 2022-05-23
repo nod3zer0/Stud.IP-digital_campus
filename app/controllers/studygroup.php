@@ -86,7 +86,7 @@ class StudygroupController extends AuthenticatedController
     {
         $sidebar = Sidebar::get();
 
-        if ($GLOBALS['perm']->have_perm('autor')) {
+        if ($GLOBALS['perm']->have_perm('autor') && !$GLOBALS['perm']->have_perm('admin')) {
             $actions = new ActionsWidget();
             $actions->addLink(
                 _('Neue Studiengruppe anlegen'),
