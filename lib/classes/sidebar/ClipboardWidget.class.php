@@ -65,7 +65,7 @@ class ClipboardWidget extends SidebarWidget
 
         $this->allowed_item_classes = $allowed_item_classes;
         $this->template = 'sidebar/clipboard-widget';
-        $this->title = _('Merkzettel');
+        $this->title = _('Eigene Merkzettel');
         $this->readonly = false;
         $this->apply_button_title = _('Hauptbereich aktualisieren');
 
@@ -78,6 +78,10 @@ class ClipboardWidget extends SidebarWidget
         if (!is_array($this->current_selected_items)) {
             $this->current_selected_items = [];
         }
+
+        $this->setId("ClipboardWidget_{$this->clipboard_widget_id}");
+        $this->setAdditionalAttribute('data-widget_id', $this->getId());
+        $this->addLayoutCSSClass('clipboard-widget');
     }
 
 
@@ -158,62 +162,27 @@ class ClipboardWidget extends SidebarWidget
 
     public function render($variables = [])
     {
-        $template = $GLOBALS['template_factory']->open(
-            $this->template
-        );
-
-        $layout = $GLOBALS['template_factory']->open(
-            'widgets/widget-layout'
-        );
-        $template->set_layout('widgets/widget-layout');
-
         $clipboards = Clipboard::getClipboardsForUser(
             $GLOBALS['user']->id
         );
 
-        if (!$this->current_clipboard_id) {
-            if ($clipboards) {
-                $_SESSION['selected_clipboard_id'] = $clipboards[0]->id;
-                $_SESSION['selected_clipboard_items'] = [];
-                $this->current_clipboard_id = $clipboards[0]->id;
-            }
+        if (!$this->current_clipboard_id && $clipboards) {
+            $_SESSION['selected_clipboard_id'] = $clipboards[0]->id;
+            $_SESSION['selected_clipboard_items'] = [];
+            $this->current_clipboard_id = $clipboards[0]->id;
         }
 
-        $template->set_attribute(
-            'selected_clipboard_id',
-            $this->current_clipboard_id
-        );
-        $template->set_attribute(
-            'selected_clipboard_items',
-            $this->current_selected_items
-        );
-        $template->set_attribute('clipboards', $clipboards);
-        $template->set_attribute(
-            'allowed_item_classes',
-            $this->allowed_item_classes
-        );
-        $template->set_attribute(
-            'clipboard_widget_id',
-            $this->clipboard_widget_id
-        );
-        $template->set_attribute(
-            'draggable_items',
-            $this->draggable_items
-        );
-        $template->set_attribute(
-            'readonly',
-            $this->readonly
-        );
-        $template->set_attribute(
-            'apply_button_title',
-            $this->apply_button_title
-        );
-        $template->set_attribute(
-            'elements',
-            $this->elements
-        );
-
-        return $template->render();
+        return parent::render($variables + [
+            'clipboards'               => $clipboards,
+            'allowed_item_classes'     => $this->allowed_item_classes,
+            'clipboard_widget_id'      => $this->clipboard_widget_id,
+            'draggable_items'          => $this->draggable_items,
+            'readonly'                 => $this->readonly,
+            'apply_button_title'       => $this->apply_button_title,
+            'elements'                 => $this->elements,
+            'selected_clipboard_id'    => $this->current_clipboard_id,
+            'selected_clipboard_items' => $this->current_selected_items,
+        ]);
     }
 
     /**

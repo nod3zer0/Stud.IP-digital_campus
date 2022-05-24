@@ -10,6 +10,7 @@
 class SidebarWidget extends Widget
 {
     protected $id = '';
+    protected $additional_attributes = [];
 
 
     public function __construct()
@@ -83,6 +84,24 @@ class SidebarWidget extends Widget
         $this->extra = false;
     }
 
+    public function setAdditionalAttribute(string $key, $value)
+    {
+        $this->additional_attributes[$key] = $value;
+    }
+
+    public function setAdditionalAttributes(array $attributes)
+    {
+        foreach ($attributes as $key => $value) {
+            $this->setAdditionalAttribute($key, $value);
+        }
+    }
+
+    public function removeAdditionalAttribute(string $key)
+    {
+        unset($this->additional_attributes[$key]);
+    }
+
+
     /**
      * Renders the widget.
      * The widget will only be rendered if it contains at least one element.
@@ -91,9 +110,12 @@ class SidebarWidget extends Widget
      */
     public function render($variables = [])
     {
+        $attributes = $this->additional_attributes;
         if (!empty($this->id)) {
-            $this->template_variables['id'] = $this->id;
+            $attributes['id'] = $this->id;
         }
+        $variables['additional_attributes'] = $attributes;
+
         return parent::render($variables);
     }
 }

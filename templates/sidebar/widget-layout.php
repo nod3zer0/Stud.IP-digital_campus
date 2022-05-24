@@ -1,5 +1,5 @@
 <div class="<?= $base_class ?>-widget <?= is_array($layout_css_classes) ? htmlReady(implode(' ', $layout_css_classes)) : '' ?>"
-    <?= !empty($id) ? sprintf('id="%s"', htmlReady($id)) : '' ?>>
+    <?= arrayToHtmlAttributes($additional_attributes) ?>>
 <? if ($title): ?>
     <div class="<?= $base_class ?>-widget-header">
     <? if (isset($extra)): ?>

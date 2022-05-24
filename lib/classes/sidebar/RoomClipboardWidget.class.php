@@ -18,6 +18,9 @@ class RoomClipboardWidget extends ClipboardWidget
 
         parent::__construct(['Room']);
 
+        $this->setTitle(_('Individuelle Raumgruppen'));
+        $this->template = 'sidebar/room-clipboard-widget';
+
         $current_user = User::findCurrent();
 
         $this->addLink(
@@ -49,7 +52,5 @@ class RoomClipboardWidget extends ClipboardWidget
                  'data-show_in_dialog' => '1']
             );
         }
-
-        $this->template = 'sidebar/room-clipboard-widget';
     }
 }
