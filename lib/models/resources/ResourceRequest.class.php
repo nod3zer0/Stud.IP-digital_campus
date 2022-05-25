@@ -1421,11 +1421,18 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
      */
     public function getTypeString($short = false)
     {
-        if (count($this->appointments)) {
+        if (count($this->appointments) > 1) {
             if ($short) {
                 return _('Einzeltermine');
             } else {
                 return sprintf(_('Einzeltermine (%sx)'), count($this->appointments));
+            }
+        } elseif (count($this->appointments) == 1) {
+            if ($short) {
+                return _('Einzeltermin');
+            } else {
+                return sprintf(_('Einzeltermin (%s)'), 
+                    $this->appointments[0]->appointment->getFullname());
             }
         } elseif ($this->date) {
             if ($short) {

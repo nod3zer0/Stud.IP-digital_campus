@@ -1425,6 +1425,7 @@ class Course_TimesroomsController extends AuthenticatedController
     private function deleteDate($termin, $cancel_comment)
     {
         $seminar_id = $termin->range_id;
+        $termin_id = $termin->id;
         $termin_room = $termin->getRoomName();
         $termin_date = $termin->getFullname();
         $has_topics  = $termin->topics->count();
@@ -1440,6 +1441,12 @@ class Course_TimesroomsController extends AuthenticatedController
         } else {
             if ($termin->delete()) {
                 StudipLog::log("SEM_DELETE_SINGLEDATE", $termin->id, $seminar_id, 'appointment cancelled');
+
+                // delete attached resource request appointments if they exist
+                ResourceRequestAppointment::deleteBySQL(
+                    "appointment_id = ?",
+                    [$termin_id]
+                );
             }
         }
 
