@@ -9,7 +9,7 @@
  */
 class TemplateWidget extends SidebarWidget
 {
-    protected $template;
+    protected $forced_rendering = true;
 
     /**
      * Constructor of the widget.
@@ -25,22 +25,5 @@ class TemplateWidget extends SidebarWidget
         $this->title    = $title;
         $this->template = $template;
         $this->template->set_attributes($variables);
-    }
-
-    /**
-     * Renders the template and widget.
-     *
-     * @param array $variables Additional variables for rendering
-     * @return string containing the rendered widget as html
-     */
-    public function render($variables = [])
-    {
-        $this->template->set_attributes($variables);
-        $layout = $GLOBALS['template_factory']->open($this->layout);
-        $layout->layout_css_classes = $this->layout_css_classes;
-        return $this->template->render(
-            $this->template_variables,
-            $layout
-        );
     }
 }
