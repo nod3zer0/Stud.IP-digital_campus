@@ -1819,6 +1819,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if ($this->applyCallbacks('before_store') === false) {
             return false;
         }
+        $ret = 0;
         if (!$this->isDeleted() && ($this->isDirty() || $this->isNew())) {
             if ($this->isNew()) {
                 if ($this->applyCallbacks('before_create') === false) {

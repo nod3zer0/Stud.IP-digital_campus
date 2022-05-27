@@ -175,7 +175,7 @@ class RangeConfig extends Config
 
         // Otherwise convert it to an appropriate format and store it
         $metadata = Config::get()->getMetadata($field);
-        $entry->value = $this->convertForDatabase($metadata['type'], $value, $field);
+        $entry->value = $this->convertForDatabase($metadata['type'] ?? 'string', $value, $field);
 
         $ret = $entry->store();
         if ($ret) {

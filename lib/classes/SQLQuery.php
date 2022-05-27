@@ -22,10 +22,20 @@
  */
 class SQLQuery
 {
-    public $settings = ['joins' => []];
-    public $name = null;
+    public $settings = [
+        'table' => '',
+        'select' => [],
+        'joins' => [],
+        'where' => [],
+        'parameter' => [],
+        'having' => [],
+        'order'  => '',
+        'limit' => []
+    ];
 
-    public static function table($table, $query_name = null)
+    public $name = '';
+
+    public static function table(string $table, string $query_name = '')
     {
         $query = new self($table, $query_name);
         return $query;
@@ -36,7 +46,7 @@ class SQLQuery
      * @param string $table : a database table
      * @param string name :
      */
-    public function __construct($table, $query_name = null)
+    public function __construct(string $table, string $query_name = '')
     {
         $this->settings['table'] = $table;
         $this->name = $query_name;
@@ -95,12 +105,12 @@ class SQLQuery
             unset($this->settings['where'][$name]);
         } elseif ($parameter === null && $condition !== null) {
             $this->settings['where'][$name] = $name;
-            $this->settings['parameter'] = array_merge((array) $this->settings['parameter'], $condition);
+            $this->settings['parameter'] = array_merge($this->settings['parameter'], $condition);
         } elseif ($condition === null)  {
             $this->settings['where'][md5($name)] = $name;
         } else {
             $this->settings['where'][$name] = $condition;
-            $this->settings['parameter'] = array_merge((array) $this->settings['parameter'], $parameter);
+            $this->settings['parameter'] = array_merge($this->settings['parameter'], $parameter);
         }
         return $this;
     }
@@ -111,12 +121,12 @@ class SQLQuery
             unset($this->settings['having'][$name]);
         } elseif ($parameter === null && $condition !== null) {
             $this->settings['having'][$name] = $name;
-            $this->settings['parameter'] = array_merge((array) $this->settings['parameter'], $condition);
+            $this->settings['parameter'] = array_merge($this->settings['parameter'], $condition);
         } elseif ($condition === null)  {
             $this->settings['having'][md5($name)] = $name;
         } else {
             $this->settings['having'][$name] = $condition;
-            $this->settings['parameter'] = array_merge((array) $this->settings['parameter'], $parameter);
+            $this->settings['parameter'] = array_merge($this->settings['parameter'], $parameter);
         }
         return $this;
     }
@@ -129,7 +139,7 @@ class SQLQuery
     public function parameter($param, $value = null)
     {
         if (is_array($param)) {
-            $this->settings['parameter'] = array_merge((array) $this->settings['parameter'], $param);
+            $this->settings['parameter'] = array_merge($this->settings['parameter'], $param);
         } else {
             $this->settings['parameter'][$param] = $value;
         }
@@ -196,7 +206,7 @@ class SQLQuery
                     {$this->getQuery()}
                 ) AS counter_table";
         $statement = DBManager::get()->prepare($sql);
-        $statement->execute((array) $this->settings['parameter']);
+        $statement->execute($this->settings['parameter']);
         NotificationCenter::postNotification('SQLQueryDidExecute', $this);
 
         return (int) $statement->fetchColumn();
@@ -218,7 +228,7 @@ class SQLQuery
             $sql = "SELECT `{$this->settings['table']}`.* ";
         }
 
-        foreach ((array) $this->settings['select'] as $alias => $statement) {
+        foreach ($this->settings['select'] as $alias => $statement) {
             $sql .= $statement ? "{$statement} AS {$alias} " : $alias;
         }
 

@@ -921,7 +921,7 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
             'user_id' => $user_id,
             'html_id' => "blubberthread_".$this->getId()
         ]);
-        $this->last_visit[$user_id] = !$this->last_visit[$user_id]
+        $this->last_visit[$user_id] = empty($this->last_visit[$user_id])
             ? object_get_visit($this->getId(), "blubberthread", "last", "", $user_id)
             : $this->last_visit[$user_id];
         UserConfig::get($user_id)->store("BLUBBERTHREAD_VISITED_".$this->getId(), time());

@@ -18,6 +18,8 @@ class Course_MessengerController extends AuthenticatedController
         }
 
         $this->threads = BlubberThread::findByContext(Context::get()->id, true, Context::getType());
+        $this->thread = null;
+        $this->threads_more_down = 0;
 
         if (!$thread_id) {
             $thread_id = $GLOBALS['user']->cfg->BLUBBER_DEFAULT_THREAD;

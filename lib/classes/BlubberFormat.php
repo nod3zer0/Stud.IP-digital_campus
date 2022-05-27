@@ -7,7 +7,9 @@ class BlubberFormat extends StudipFormat
     private static $blubber_rules = [
         'hashtags' => [
             'start'    => self::REGEXP_HASHTAG,
-            'callback' => 'BlubberFormat::markupHashtags'
+            'end'      => '',
+            'callback' => 'BlubberFormat::markupHashtags',
+            'before'   => null
         ]
     ];
 
