@@ -55,13 +55,13 @@ class PersonalNotifications extends SimpleORMap
 
     protected $unseen = null;
 
-    protected function cbExpireCache($notification)
+    protected function cbExpireCache()
     {
         $query = "SELECT user_id
                   FROM personal_notifications_user
                   WHERE personal_notification_id = :id";
         $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':id', $notification->id);
+        $statement->bindValue(':id', $this->id);
         $statement->execute();
 
         $user_ids = $statement->fetchAll(PDO::FETCH_COLUMN);

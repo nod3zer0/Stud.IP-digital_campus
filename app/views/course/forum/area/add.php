@@ -52,13 +52,18 @@
     </td>
 
     <td class="actions">
-        <?= ActionMenu::get()->addLink(
-            $controller->url_for("course/forum/index/index/{$entry['last_posting']['topic_id']}#{$entry['last_posting']['topic_id']}"),
-            _('Zur letzten Antwort'),
-            Icon::create('forum'),
-            is_array($entry['last_posting']) ? ['class' => 'hidden-small-up'] : ['disabled' => '']
-        )->condition(ForumPerm::has('edit_area', $seminar_id) && $issue_id = ForumIssue::getIssueIdForThread($entry['topic_id']))
-        ->addLink(
+        <?
+        $issue_id = ForumIssue::getIssueIdForThread($entry['topic_id']);
+        $action_menu = ActionMenu::get();
+        if (!empty($entry['last_posting']['topic_id'])) {
+            $action_menu->addLink(
+                $controller->url_for("course/forum/index/index/{$entry['last_posting']['topic_id']}#{$entry['last_posting']['topic_id']}"),
+                _('Zur letzten Antwort'),
+                Icon::create('forum'),
+                is_array($entry['last_posting']) ? ['class' => 'hidden-small-up'] : ['disabled' => '']
+            )->condition(ForumPerm::has('edit_area', $seminar_id) && $issue_id);
+        }
+        $action_menu->addLink(
             URLHelper::getURL("dispatch.php/course/topics/edit/{$issue_id}"),
             _('Zum Ablaufplan'),
             Icon::create('info-circle', Icon::ROLE_STATUS_RED),
@@ -82,6 +87,7 @@
                 'onclick' => "STUDIP.Forum.deleteArea(this, '{$entry['topic_id']}'); return false;",
             ]
         ) ?>
+        <?= $action_menu ?>
     </td>
 
 </tr>

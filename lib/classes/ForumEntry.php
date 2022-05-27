@@ -420,7 +420,7 @@ class ForumEntry  implements PrivacyObject
                 'user_id'        => $data['user_id'],
                 'raw_title'       => $data['name'],
                 'raw_description' => ForumEntry::killEdit($data['content']),
-                'fav'             => ($data['fav'] == 'fav'),
+                'fav'             => (!empty($data['fav']) && ($data['fav'] == 'fav')),
                 'depth'           => $data['depth'],
                 'anonymous'       => $data['anonymous'],
                 'closed'          => $data['closed'],
@@ -550,7 +550,9 @@ class ForumEntry  implements PrivacyObject
      */
     public static function getLastPostings($postings)
     {
-        foreach ($postings as $key => $posting) {
+        foreach ($postings as $key => $posting)
+        {
+            $last_posting = [];
 
             if ($data = ForumEntry::getLatestPosting($posting['topic_id'])) {
                 $last_posting['topic_id']      = $data['topic_id'];
@@ -574,7 +576,7 @@ class ForumEntry  implements PrivacyObject
 
             $postings[$key]['last_posting'] = $last_posting;
             if (!$postings[$key]['last_unread']  = ForumEntry::getLastUnread($posting['topic_id'])) {
-                $postings[$key]['last_unread'] = $last_posting['topic_id'];
+                $postings[$key]['last_unread'] = $last_posting['topic_id'] ?? '';
             }
             $postings[$key]['num_postings'] = ForumEntry::countEntries($posting['topic_id']);
 
@@ -735,7 +737,7 @@ class ForumEntry  implements PrivacyObject
                         'user_id'         => $data['user_id'],
                         'raw_title'       => $data['name'],
                         'raw_description' => ForumEntry::killEdit($data['content']),
-                        'fav'             => ($data['fav'] == 'fav'),
+                        'fav'             => (!empty($data['fav']) && $data['fav'] == 'fav'),
                         'depth'           => $data['depth'],
                         'seminar_id'      => $data['seminar_id']
                     ];
@@ -906,7 +908,7 @@ class ForumEntry  implements PrivacyObject
     {
         static $entries;
 
-        if (!$entries[$user_id]) {
+        if (empty($entries[$user_id])) {
             $stmt = DBManager::get()->prepare("SELECT COUNT(*)
                 FROM forum_entries
                 WHERE user_id = ? AND seminar_id = IFNULL(?, seminar_id)");
@@ -953,7 +955,7 @@ class ForumEntry  implements PrivacyObject
             VALUES (? ,?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$data['topic_id'], $data['seminar_id'], $data['user_id'],
             $data['name'], transformBeforeSave($data['content']), $data['author'], $data['author_host'],
-            $constraint['rgt'], $constraint['rgt'] + 1, $constraint['depth'] + 1, $data['anonymous'] ? : 0]);
+            $constraint['rgt'], $constraint['rgt'] + 1, $constraint['depth'] + 1, $data['anonymous'] ?? 0]);
 
         // update "latest_chdate" for easier sorting of actual threads
         DBManager::get()->exec("UPDATE forum_entries SET latest_chdate = UNIX_TIMESTAMP()

@@ -49,8 +49,8 @@ class SmileyFormat extends TextFormat
     static function short($markup, $matches)
     {
         $smileys = Smiley::getShort();
-        $name    = $smileys[$matches[2]];
-        return isset($name)
+        $name    = $smileys[$matches[2]] ?? '';
+        return $name
             ? $matches[1] . Smiley::getByName($name)->getImageTag() . $matches[3]
             : $matches[0];
     }

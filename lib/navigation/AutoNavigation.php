@@ -32,9 +32,8 @@ class AutoNavigation extends Navigation
 
         // if URL is set, try to guess whether active or not
         if (isset($url)) {
-            list($request_path, $query) = explode('?', Request::path());
-            list($request_url, $query)  = explode('?', Request::url());
-            list($url, $query)          = explode('?', $url);
+            $request_path = explode('?', Request::path())[0];
+            $request_url  = explode('?', Request::url())[0];
 
             if (!preg_match('%^[a-z]+:%', $url) && $url[0] !== '/') {
                 $url = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'].$url;

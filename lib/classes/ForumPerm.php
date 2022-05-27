@@ -58,7 +58,7 @@ class ForumPerm {
         }
 
         // get the status for the user in the passed seminar
-        if (!$permissions[$seminar_id][$user_id]) {
+        if (empty($permissions[$seminar_id][$user_id])) {
             $permissions[$seminar_id][$user_id] = $GLOBALS['perm']->get_studip_perm($seminar_id, $user_id);
         }
 
@@ -155,7 +155,7 @@ class ForumPerm {
     {
         static $perms = [];
 
-        if (!$perms[$topic_id]) {
+        if (empty($perms[$topic_id])) {
             // find out if the posting is the last in the thread
             $constraints = ForumEntry::getConstraints($topic_id);
 

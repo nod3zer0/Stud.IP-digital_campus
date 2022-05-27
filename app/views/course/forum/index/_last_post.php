@@ -1,11 +1,11 @@
-<? if (is_array($entry['last_posting'])) : ?>
+<? if (is_array($entry['last_posting']) && count($entry['last_posting'])) : ?>
     <?= _('von') ?>
-    <? if ($entry['last_posting']['anonymous']): ?>
+    <? if (!empty($entry['last_posting']['anonymous'])): ?>
         <?= _('Anonym') ?>
     <? endif; ?>
-    <? if (!$entry['last_posting']['anonymous'] || $entry['last_posting']['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
-        <a href="<?= URLHelper::getLink('dispatch.php/profile', ['username' => $entry['last_posting']['username']]) ?>">
-            <?= htmlReady(($temp_user = User::find($entry['last_posting']['user_id'])) ? $temp_user->getFullname() : $entry['last_posting']['user_fullname']) ?>
+    <? if (empty($entry['last_posting']['anonymous']) || $entry['last_posting']['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
+        <a href="<?= URLHelper::getLink('dispatch.php/profile', ['username' => $entry['last_posting']['username'] ?? '']) ?>">
+            <?= htmlReady(($temp_user = User::find($entry['last_posting']['user_id'])) ? $temp_user->getFullname() : $entry['last_posting']['user_fullname'] ?? '') ?>
         </a>
     <? endif; ?>
     <br>

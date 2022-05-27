@@ -41,5 +41,11 @@ abstract class ForumController extends StudipController {
         }
 
         $this->seminar_id = $this->getId();
+
+        $this->no_entries = false;
+        $this->highlight = [];
+        $this->highlight_topic = '';
+        $this->edit_posting = '';
+        $this->js = '';
     }
 }

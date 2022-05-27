@@ -1,6 +1,5 @@
-<? if (!is_array($highlight)) $highlight = []; ?>
 <? $is_new =  ((isset($visitdate) && $post['mkdate'] >= $visitdate) || !(isset($visitdate))) ?>
-<? if (!$constraint) $constraint = ForumEntry::getConstraints (ForumEntry::getParentTopicId($post['topic_id'])) ?>
+<? if (empty($constraint)) $constraint = ForumEntry::getConstraints (ForumEntry::getParentTopicId($post['topic_id'])) ?>
 
 <? $can_edit_closed = !ForumEntry::isClosed($constraint['topic_id'])
         || (ForumEntry::isClosed($constraint['topic_id']) && ForumPerm::has('edit_closed', $constraint['seminar_id'])) ?>
@@ -12,7 +11,7 @@
 ] ?>
 
 <!-- Anker, um zu diesem Posting springen zu können -->
-<a name="<?= $post['topic_id'] ?>"></a>
+<a id="<?= $post['topic_id'] ?>"></a>
 
 <form method="post" data-topicid="<?= $post['topic_id'] ?>" action="<?= $controller->link_for('course/forum/index/update_entry/' . $post['topic_id']) ?>">
     <?= CSRFProtection::tokenTag() ?>
@@ -132,7 +131,7 @@
                 ]) ?>
             <? endif ?>
 
-            <span <?= (!$perms['edit_close'] && !$perms['remove_entry']) ? 'class="hideWhenClosed"': '' ?>
+            <span <?= (empty($perms['edit_close']) && empty($perms['remove_entry'])) ? 'class="hideWhenClosed"': '' ?>
                 <?= (!$perms['edit'] && !$perms['remove_entry']) ? 'style="display: none"' : '' ?>>
                 <? $confirmLink = $controller->url_for('course/forum/index/delete_entry/' . $post['topic_id'])  ?>
                 <? $confirmLinkApproved = $controller->url_for('course/forum/index/delete_entry/' .

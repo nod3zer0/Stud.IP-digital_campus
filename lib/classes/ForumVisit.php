@@ -157,6 +157,6 @@ class ForumVisit {
     static function getVisit($seminar_id)
     {
         $visit = self::getVisitDates($seminar_id);
-        return $visit['visitdate'];
+        return $visit['visitdate'] ?? 0;
     }
 }

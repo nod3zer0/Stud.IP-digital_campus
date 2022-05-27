@@ -30,10 +30,10 @@ shuffle($likes);
         }
         $text .= '</span></span>';
     }
-    
+
     $text .= ' <br>';
+    echo $text;
 endif ?>
-<?= $text ?>
 
 <!-- like/dislike links -->
 <? if (!in_array($GLOBALS['user']->id, $likes)) : ?>

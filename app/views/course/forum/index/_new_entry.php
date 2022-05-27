@@ -5,14 +5,14 @@
         <form action="<?= $controller->link_for('course/forum/index/add_entry') ?>" method="post" id="forum_new_entry" onSubmit="$(window).off('beforeunload')" class="default">
             <fieldset>
                 <legend>
-                    <? if ($constraint['depth'] == 1) : ?>
+                    <? if (!empty($constraint['depth']) && ($constraint['depth'] == 1)) : ?>
                         <?= _('Neues Thema erstellen') ?>
                     <? else : ?>
                         <?= _('Antworten') ?>
                     <? endif ?>
                 </legend>
 
-                <? if ($constraint['depth'] == 1) : ?>
+                <? if (!empty($constraint['depth']) && ($constraint['depth'] == 1)) : ?>
                     <? if ($GLOBALS['user']->id == 'nobody') : ?>
                         <label>
                             <?= _('Ihr Name') ?>
@@ -24,7 +24,7 @@
                     <label>
                         <?= _('Titel') ?>
                         <input class="size-l" type="text" name="name" style="width: 99%" value=""
-                            <?= $constraint['depth'] == 1 ? 'required' : '' ?> placeholder="<?= _('Titel') ?>" tabindex="2">
+                            <?= !empty($constraint['depth']) && ($constraint['depth'] == 1) ? 'required' : '' ?> placeholder="<?= _('Titel') ?>" tabindex="2">
                     </label>
                 <? elseif ($GLOBALS['user']->id == 'nobody') : ?>
                     <label>
