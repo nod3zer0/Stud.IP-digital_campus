@@ -112,7 +112,7 @@ $getInstalledLanguages = function () {
         (Navigation::hasItem('/admin/institute') && Navigation::getItem('/admin/institute')->isActive())); ?>
     <div id="layout_page" <? if (!($contextable)) echo 'class="contextless"'; ?>>
 
-    <? if (PageLayout::isHeaderEnabled() && Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive() && $_SESSION['seminar_change_view_'.Context::getId()]) : ?>
+    <? if (PageLayout::isHeaderEnabled() && Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive() && !empty($_SESSION['seminar_change_view_'.Context::getId()])) : ?>
         <?= $this->render_partial('change_view', ['changed_status' => $_SESSION['seminar_change_view_'.Context::getId()]]) ?>
     <? endif ?>
 

@@ -179,7 +179,7 @@ function keywordExists($str, $sem_id = null) {
     $trans_tbl = array_flip(get_html_translation_table(HTML_ENTITIES));
     $nonhtmlstr = strtr($str, $trans_tbl);
 
-    return $keywords[$nonhtmlstr];
+    return $keywords[$nonhtmlstr] ?? false;
 }
 
 
@@ -758,6 +758,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch)
 {
     $range_id = Context::getId();
     $result   = null;
+    $invalid_searchstring = false;
 
     // check for invalid search string
     if (mb_strlen($searchfor) < 3) {
@@ -953,6 +954,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch)
 **/
 function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL, $ancestor=NULL)
 {
+    $parent = null;
     if (!$wikiData || $wikiData->isNew()) {
         $body     = '';
         $version  = 0;
@@ -1005,8 +1007,9 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL, $ancestor=NULL)
     }
 
     // Action menu for content bar.
+    $actionMenu = ActionMenu::get();
     if ($page && $page->isLatestVersion()) {
-        $actionMenu = ActionMenu::get()->setContext($page->keyword);
+        $actionMenu->setContext($page->keyword);
         if ($page->isEditableBy($GLOBALS['user'])) {
             if (!$page->isNew()) {
                 $actionMenu->addLink(
@@ -1103,6 +1106,7 @@ function exportAllWikiPagesPDF($mode, $sortby)
     $versionsortlink = 'version';
     $changesortlink  = 'lastchange';
 
+    $sort = '';
     switch ($sortby) {
         case 'title':
             // sort by keyword, prepare link for descending sorting
@@ -1512,7 +1516,7 @@ function get_toc_content() {
     }
 
     $toccont  = '<div class="wikitoc" id="00toc">';
-    $toccont .= wikiReady($toc['body'], true, false, $show_comments);
+    $toccont .= wikiReady($toc['body'], true);
     $toccont .= '</div>';
     return $toccont;
 }
@@ -1557,8 +1561,9 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
     }
 
     // Action menu for content bar.
+    $actionMenu = ActionMenu::get();
     if ($page && $page->isLatestVersion()) {
-        $actionMenu = ActionMenu::get()->setContext($page->keyword);
+        $actionMenu->setContext($page->keyword);
         if ($page->isEditableBy($GLOBALS['user'])) {
             if (!$page->isNew()) {
                 $actionMenu->addLink(

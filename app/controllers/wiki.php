@@ -297,6 +297,10 @@ class WikiController extends AuthenticatedController
             "function() {jQuery(this).closest('form').submit();}"
         );
 
+        $this->show_wiki_page_form = false;
+        $this->bad_course_search = false;
+        $this->success = false;
+
         //The following steps are identical for the search and the import.
         if (Request::submitted('selected_course_id') || Request::submitted('import')) {
             CSRFProtection::verifyUnsafeRequest();
