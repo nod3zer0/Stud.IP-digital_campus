@@ -1,7 +1,7 @@
 <form action="<?= URLHelper::getLink($url) ?>" method="<?= $method ?>">
     <?= \SelectWidget::arrayToHiddenInput($params) ?>
     <?= (strtolower($method) == 'post') ?  CSRFProtection::tokenTag() : ''; ?>
-    <select class="sidebar-selectlist <?= $class ?> <? if ($__is_nested): ?>nested-select<? endif; ?>" <? if ($size) printf('size="%u"', $size); ?> <?= $attributes ? arrayToHtmlAttributes($attributes) : '' ?>
+    <select class="sidebar-selectlist <?= $class ?> <? if ($__is_nested): ?>nested-select<? endif; ?>" <? !empty($size) ? printf('size="%u"', $size) : '' ?> <?= !empty($attributes) ? arrayToHtmlAttributes($attributes) : '' ?>
         name="<?= sprintf('%s%s', htmlReady($name), $multiple ? '[]' : '') ?>" <? if ($multiple) echo 'multiple'; ?>>
 
     <? foreach ($elements as $element): ?>

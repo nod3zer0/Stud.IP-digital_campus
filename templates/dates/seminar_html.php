@@ -43,9 +43,13 @@ if (!$dates['regular']['turnus_data'] && empty($dates['irregular'])) {
     echo $output ? '<br>' : '';
 
     $freetext_rooms = [];
+    $irregular_rooms = [];
 
     if (is_array($dates['irregular'])) {
         foreach ($dates['irregular'] as $date) {
+            if (!isset($irregular_rooms[$date['resource_id']])) {
+                $irregular_rooms[$date['resource_id']] = 0;
+            }
             $irregular[] = $date;
             $irregular_strings[] = $date['tostring'];
             if ($date['resource_id']) {
@@ -100,7 +104,7 @@ if (!$dates['regular']['turnus_data'] && empty($dates['irregular'])) {
         }
     }
 
-    if ($link_to_dates) {
+    if (!empty($link_to_dates)) {
         echo '<br>';
         printf(
             _('Details zu allen Terminen im %sAblaufplan%s'),

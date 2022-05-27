@@ -122,7 +122,7 @@ class MyCoursesController extends AuthenticatedController
 
                     foreach ($_outer as $course) {
                         $_courses[$course['seminar_id']] = $course;
-                        if ($course['children']) {
+                        if (!empty($course['children']) && is_array($course['children'])) {
                             foreach ($course['children'] as $child) {
                                 $_courses[$child['seminar_id']] = $child;
                             }
@@ -722,12 +722,12 @@ class MyCoursesController extends AuthenticatedController
      */
     public function check_course($seminar_content)
     {
-
-        if ($seminar_content['visitdate'] <= $seminar_content['chdate'] || $seminar_content['last_modified'] > 0) {
+        $last_modified_timestamp = $seminar_content['last_modified'] ?? 0;
+        if ($seminar_content['visitdate'] <= $seminar_content['chdate'] || $last_modified_timestamp > 0) {
             $last_modified = $seminar_content['visitdate'] <= $seminar_content['chdate']
-            && $seminar_content['chdate'] > $seminar_content['last_modified']
+            && $seminar_content['chdate'] > $last_modified_timestamp
                 ? $seminar_content['chdate']
-                : $seminar_content['last_modified'];
+                : $last_modified_timestamp;
             if ($last_modified) {
                 return true;
             }
@@ -994,7 +994,7 @@ class MyCoursesController extends AuthenticatedController
             } else {
                 $attr = $n->getLinkAttributes();
                 if (empty($attr['title']) && $n->getImage()) {
-                    $attr['title'] = (string) $n->getImage()->getAttributes()['title'];
+                    $attr['title'] = (string) ($n->getImage()->getAttributes()['title'] ?? '');
                 }
                 if (empty($attr['title'])) {
                     $attr['title'] = (string) $n->getTitle();

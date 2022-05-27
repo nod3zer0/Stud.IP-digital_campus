@@ -45,10 +45,11 @@ class SeminarCategories {
      * @param String $id
      * @return Array
      */
-    public static function Get($id){
-        if(is_null(self::$seminar_categories[$id])){
+    public static function Get($id)
+    {
+        if (empty(self::$seminar_categories[$id])) {
             $cat = new SeminarCategories($id);
-            if($cat->id !== false) {
+            if ($cat->id !== false) {
                 self::$seminar_categories[$id] = $cat;
             } else {
                 self::$seminar_categories[$id] = false;

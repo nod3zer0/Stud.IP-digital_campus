@@ -344,7 +344,7 @@ class AdminCourseFilter
             $id = md5($where);
         }
         $this->settings['query']['where'][$id] = $where;
-        $this->settings['parameter'] = array_merge((array) $this->settings['parameter'], $parameter);
+        $this->settings['parameter'] = array_merge((array)($this->settings['parameter'] ?? []), $parameter);
         return $this;
     }
 

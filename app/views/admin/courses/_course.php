@@ -204,9 +204,11 @@ if (!$values['parent_course'] || !in_array($values['parent_course'], array_keys(
                     <?=
                     \Studip\LinkButton::create(
                         $actions[$selected_action]['title'],
-                        URLHelper::getURL(sprintf($actions[$selected_action]['url'], $semid),
-                            ($actions[$selected_action]['params'] ? $actions[$selected_action]['params'] : [])),
-                        ($actions[$selected_action]['attributes'] ? $actions[$selected_action]['attributes'] : [])
+                        URLHelper::getURL(
+                            sprintf($actions[$selected_action]['url'], $semid),
+                            $actions[$selected_action]['params'] ?? []
+                        ),
+                        $actions[$selected_action]['attributes'] ?? []
                     ) ?>
                 <? endif ?>
             <? endif ?>

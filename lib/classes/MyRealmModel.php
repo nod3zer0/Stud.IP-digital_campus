@@ -171,7 +171,7 @@ class MyRealmModel
 
         $semester_ids      = [];
         for ($i = $min_sem_key; $i <= $max_sem_key; $i++) {
-            if ($sem_data[$i]['semester_id']) {
+            if (!empty($sem_data[$i]['semester_id'])) {
                 $semester_ids[] = $sem_data[$i]['semester_id'];
             }
         }
@@ -364,7 +364,7 @@ class MyRealmModel
 
             // add the the course to the correct semester
 
-            if (!$_course['parent_course']) {
+            if (empty($_course['parent_course'])) {
                 if ($course->isOpenEnded()) {
                     if ($current_semester_nr >= $min_sem_key && $current_semester_nr <= $max_sem_key) {
                         $sem_courses[$current_semester_nr][$course->id] = $_course;
@@ -395,7 +395,7 @@ class MyRealmModel
             return null;
         }
 
-        if ($params['main_navigation']) {
+        if (!empty($params['main_navigation'])) {
             return $sem_courses;
         }
 
@@ -805,7 +805,7 @@ class MyRealmModel
             $data['tools'] = $studygroup->tools;
             $data['sem_class'] = $studygroup->getSemClass();
             $data['start_semester'] = $studygroup->start_semester->name;
-            $data['end_semester'] = $studygroup->end_semester->name;
+            $data['end_semester'] = $studygroup->end_semester->name ?? '';
             $data['obj_type'] = 'sem';
             $data['user_status'] = $membership->status;
             $data['gruppe'] = $membership->gruppe;

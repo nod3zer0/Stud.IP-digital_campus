@@ -26,6 +26,9 @@ class BrowseNavigation extends Navigation
 
         $courselink = null;
         // check if logged in
+        $coursetext = '';
+        $courseinfo = '';
+        $courselink = null;
         if (is_object($user) && $user->id != 'nobody') {
             $coursetext = _('Veranstaltungen');
             $courseinfo = _('Meine Veranstaltungen & Einrichtungen');

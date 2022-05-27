@@ -19,7 +19,6 @@ class PluginController extends StudipController
         }
         $this->plugin = $dispatcher->current_plugin;
 
-
         if ($this->plugin && $this->plugin->hasTranslation()) {
             // Localization
             $this->_ = function ($string) {

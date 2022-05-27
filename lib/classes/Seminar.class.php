@@ -72,7 +72,7 @@ class Seminar
             if ($refresh_cache) {
                 self::$seminar_object_pool[$id] = null;
             }
-            if (is_object(self::$seminar_object_pool[$id]) && self::$seminar_object_pool[$id]->getId() == $id) {
+            if (!empty(self::$seminar_object_pool[$id]) && is_object(self::$seminar_object_pool[$id]) && self::$seminar_object_pool[$id]->getId() == $id) {
                 return self::$seminar_object_pool[$id];
             } else {
                 self::$seminar_object_pool[$id] = new Seminar($id);
@@ -316,7 +316,7 @@ class Seminar
         $data = unserialize($cache->read($cache_key));
 
         // build cache from scratch
-        if (!$data || !$data[$sub_key]) {
+        if (empty($data) || empty($data[$sub_key])) {
             $cycles = $this->metadate->getCycleData();
             $dates = $this->getSingleDates($filter, $filter);
             $rooms = [];

@@ -32,7 +32,13 @@ class SkipLinks
      */
     public static function isEnabled()
     {
-        return UserConfig::get($GLOBALS['user']->id)->SKIPLINKS_ENABLE;
+        if (isset($GLOBALS['user']->id)) {
+            //Use the user configuration:
+            return UserConfig::get($GLOBALS['user']->id)->SKIPLINKS_ENABLE;
+        } else {
+            //Use the global configuration:
+            return Config::get()->SKIPLINKS_ENABLE;
+        }
     }
 
     /**

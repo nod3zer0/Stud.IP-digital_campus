@@ -1,5 +1,5 @@
 <? $colspan = 2 ?>
-<? if ($actions[$selected_action]['multimode']) : ?>
+<? if (!empty($actions[$selected_action]['multimode'])) : ?>
     <form action="<?= URLHelper::getLink($actions[$selected_action]['url']) ?>" method="post">
 <? endif ?>
 <?= CSRFProtection::tokenTag() ?>
@@ -197,7 +197,7 @@
             <?= _('Aktion') ?>
         </th>
     </tr>
-    <? if ($actions[$selected_action]['multimode']) : ?>
+    <? if (!empty($actions[$selected_action]['multimode'])) : ?>
         <?= $this->render_partial('admin/courses/additional_inputs.php', compact('colspan')) ?>
         <? if (count($courses) > 10): ?>
             <tr>
@@ -219,10 +219,20 @@
     </thead>
     <tbody>
     <? foreach ($courses as $semid => $values) : ?>
-        <?= $this->render_partial('admin/courses/_course', compact('semid', 'values', 'view_filter', 'actions', 'selected_action', 'courses')) ?>
+        <?= $this->render_partial('admin/courses/_course',
+            [
+                'semid' => $semid,
+                'values' => $values,
+                'view_filter' => $view_filter,
+                'actions' => $actions,
+                'selected_action' => $selected_action,
+                'courses' => $courses,
+                'parent' => $parent ?? null
+            ]
+        ) ?>
     <? endforeach ?>
     </tbody>
-<? if ($actions[$selected_action]['multimode']) : ?>
+<? if (!empty($actions[$selected_action]['multimode'])) : ?>
     <tfoot>
         <tr>
             <td colspan="<?= $colspan ?>" style="text-align: right">
@@ -241,6 +251,6 @@
     </tfoot>
     <? endif ?>
 </table>
-<? if ($actions[$selected_action]['multimode']) : ?>
+<? if (!empty($actions[$selected_action]['multimode'])) : ?>
 </form>
 <? endif ?>

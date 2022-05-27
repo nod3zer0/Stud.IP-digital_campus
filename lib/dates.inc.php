@@ -207,7 +207,7 @@ function shrink_dates($dates) {
 
         if (((date ("z", $dates[$i]["start_time"])-1) == date ("z", $dates[$i-1]["start_time"]))
                 || ((date ("z", $dates[$i]["start_time"]) == 0) && (date ("j", $dates[$i-1]["start_time"]) == 0))) {
-            if ($dates[$i]["time_match"]) {
+            if (!empty($dates[$i]["time_match"])) {
                 $dates[$i]["conjuncted"] = true;
             }
         }
@@ -217,23 +217,24 @@ function shrink_dates($dates) {
     $return_string = '';
     // create text-output
     for ($i=0; $i < sizeof($dates); $i++) {
-        if (!$dates[$i]["conjuncted"]) {
+        $conjuncted = true;
+        if (empty($dates[$i]["conjuncted"])) {
             $conjuncted = false;
         }
 
-        if ((!$dates[$i]["conjuncted"]) || (!$dates[$i+1]["conjuncted"])) {
+        if (empty($dates[$i]["conjuncted"]) || empty($dates[$i+1]["conjuncted"])) {
             $return_string .= ' ' . strftime('%A', $dates[$i]['start_time']) .'.';
             $return_string .= date (" d.m.y", $dates[$i]["start_time"]);
         }
 
-        if ((!$conjuncted) && ($dates[$i+1]["conjuncted"])) {
+        if (!$conjuncted && !empty($dates[$i+1]["conjuncted"])) {
             $return_string .= ' -';
             $conjuncted = true;
-        } else if ((!$dates[$i+1]["conjuncted"]) && ($dates[$i+1]["time_match"])) {
+        } else if (empty($dates[$i+1]["conjuncted"]) && !empty($dates[$i+1]["time_match"])) {
             $return_string .= ',';
         }
 
-        if (!$dates[$i+1]["time_match"]) {
+        if (empty($dates[$i+1]["time_match"])) {
             // check if the current date is for a whole day
             if ((($dates[$i]["end_time"] - $dates[$i]["start_time"]) / 60 / 60) > 23) {
                 $return_string .= ' ('. _('ganztägig') . ')';
@@ -245,7 +246,7 @@ function shrink_dates($dates) {
             }
         }
 
-        if ($return_string != '' && !$dates[$i+1]['conjuncted'] && !$dates[$i+1]['time_match']) {
+        if ($return_string != '' && empty($dates[$i+1]['conjuncted']) && empty($dates[$i+1]['time_match'])) {
             $ret[] = $return_string;
             $return_string = '';
         }

@@ -8,6 +8,7 @@ $hide_empty = $hide_empty ?? false;
 $limit      = $limit ?? 3;
 $assigned   = $assigned ?: [];
 $freetext   = $freetext ?: [];
+$plain      = $plain ?? false;
 
 if ($assigned || $freetext) {
     if ($assigned) {

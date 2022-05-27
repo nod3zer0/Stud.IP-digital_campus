@@ -150,6 +150,7 @@ switch ($type) {
 
 
 // check if linked file is obtainable
+$filesize = 0;
 if (isset($file_ref) && $file_ref->file->metadata['access_type'] == 'proxy') {
     $link_data = FileManager::fetchURLMetadata($file_ref->file->metadata['url']);
     if ($link_data['response_code'] != 200) {
@@ -244,7 +245,7 @@ if ($filesize && $file_ref->file->filetype !== 'URLFile') {
 
 header("Expires: Mon, 12 Dec 2001 08:00:00 GMT");
 header("Last-Modified: " . gmdate ("D, d M Y H:i:s") . " GMT");
-if ($_SERVER['HTTPS'] == "on"){
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
     header("Pragma: public");
     header("Cache-Control: private");
 } else {

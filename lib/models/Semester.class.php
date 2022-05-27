@@ -85,7 +85,7 @@ class Semester extends SimpleORMap
     public static function find($id)
     {
         $semester_cache = self::getAll();
-        return $semester_cache[$id] ?: null;
+        return $semester_cache[$id] ?? null;
     }
 
     /**

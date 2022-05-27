@@ -126,6 +126,9 @@ class SelectWidget extends SidebarWidget
 
         //submit-upon-select is not helpful if we have the multiple version
         if (!$this->template_variables['multiple']) {
+            if (!array_key_exists('class', $this->template_variables)) {
+                $this->template_variables['class'] = '';
+            }
             $this->template_variables['class'] .= ' submit-upon-select';
         }
 

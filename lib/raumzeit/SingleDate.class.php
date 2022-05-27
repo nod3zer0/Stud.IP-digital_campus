@@ -391,8 +391,8 @@ class SingleDate
         $this->end_time = $daten['end_time'];
         $this->mkdate = $daten['mkdate'];
         $this->chdate = $daten ['chdate'];
-        $this->ex_termin = $daten['ex_termin'];
-        $this->orig_ex = $daten['ex_termin'];
+        $this->ex_termin = $daten['ex_termin'] ?? false;
+        $this->orig_ex = $daten['ex_termin'] ?? false;
         $this->range_id = $daten['range_id'];
         $this->author_id = $daten['autor_id'];
         $this->resource_id = $daten['resource_id'];

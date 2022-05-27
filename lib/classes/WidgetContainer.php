@@ -24,7 +24,7 @@ abstract class WidgetContainer
     public static function Get()
     {
         $class = get_called_class();
-        if (!isset(static::$instances[$class])) {
+        if (empty(static::$instances[$class])) {
             static::$instances[$class] = new static;
         }
         return static::$instances[$class];

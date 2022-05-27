@@ -753,7 +753,7 @@ abstract class StudipController extends Trails_Controller
      */
     protected function controller_path()
     {
-        $class = get_class($this->parent_controller ?: $this);
+        $class = get_class($this->parent_controller ?? $this);
         $controller = mb_substr($class, 0, -mb_strlen('Controller'));
         $controller = strtosnakecase($controller);
         return preg_replace('/_{2,}/', '/', $controller);

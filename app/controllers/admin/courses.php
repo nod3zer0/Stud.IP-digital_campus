@@ -43,7 +43,7 @@ class Admin_CoursesController extends AuthenticatedController
     {
         //first get the active datafields of the user:
         $userSelectedElements = $this->getActiveElements();
-        $activeDatafields = $userSelectedElements['datafields'];
+        $activeDatafields = $userSelectedElements['datafields'] ?? [];
 
         if (!$activeDatafields) {
             return [];
@@ -189,7 +189,7 @@ class Admin_CoursesController extends AuthenticatedController
         }
 
         //if there are datafields in the list, draw their input fields, too:
-        if ($visibleElements['datafields']) {
+        if (!empty($visibleElements['datafields'])) {
             //The datafields entry contains an array with datafield-IDs.
             //We must fetch them from the database and show an appropriate widget
             //for each datafield.
@@ -1190,7 +1190,7 @@ class Admin_CoursesController extends AuthenticatedController
         $filter->where("sem_classes.studygroup_mode = '0'");
 
         // Get only children of given course
-        if ($params['parent_course']) {
+        if (!empty($params['parent_course'])) {
             $filter->where("parent_course = :parent",
                 [
                     'parent' => $params['parent_course']
@@ -1235,10 +1235,10 @@ class Admin_CoursesController extends AuthenticatedController
             return [];
         }
 
-        $seminars   = array_map('reset', $courses);
-
-        if (!empty($seminars)) {
-            foreach ($seminars as $seminar_id => $seminar) {
+        $seminars = [];
+        if (!empty($courses)) {
+            foreach ($courses as $seminar_id => $seminar) {
+                $seminars[$seminar_id] = $seminar[0];
                 $seminars[$seminar_id]['seminar_id'] = $seminar_id;
                 $seminars[$seminar_id]['obj_type'] = 'sem';
                 $dozenten = $this->getTeacher($seminar_id);
@@ -1253,7 +1253,7 @@ class Admin_CoursesController extends AuthenticatedController
                     $seminars[$seminar_id]['navigation'] = MyRealmModel::getAdditionalNavigations(
                         $seminar_id,
                         $seminars[$seminar_id],
-                        $seminars[$seminar_id]['sem_class'],
+                        $seminars[$seminar_id]['sem_class'] ?? null,
                         $GLOBALS['user']->id,
                         $visit_data[$seminar_id]
                     );
@@ -1264,8 +1264,8 @@ class Admin_CoursesController extends AuthenticatedController
                 }
                 if ((int)$this->selected_action === 17) {
                     $seminars[$seminar_id]['admission_locked'] = false;
-                    if ($seminar['course_set']) {
-                        $set = new CourseSet($seminar['course_set']);
+                    if ($seminar[0]['course_set']) {
+                        $set = new CourseSet($seminar[0]['course_set']);
                         if (!is_null($set) && $set->hasAdmissionRule('LockedAdmission')) {
                             $seminars[$seminar_id]['admission_locked'] = 'locked';
                         } else {

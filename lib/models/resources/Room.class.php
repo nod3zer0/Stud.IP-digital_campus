@@ -40,7 +40,7 @@ class Room extends Resource
 
     protected static function configure($config = [])
     {
-        if (!is_array($config['additional_fields'])) {
+        if (!isset($config['additional_fields'])) {
             $config['additional_fields'] = [];
         }
         foreach (self::$required_properties as $property) {

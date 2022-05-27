@@ -1520,7 +1520,7 @@ function studip_default_exception_handler($exception) {
 
     // ajax requests return JSON instead
     // re-use the http status code determined above
-    if (!strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest')) {
+    if (!strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '', 'xmlhttprequest')) {
         header('Content-Type: application/json; charset=UTF-8');
         $template = 'json_exception';
         $layout = null;

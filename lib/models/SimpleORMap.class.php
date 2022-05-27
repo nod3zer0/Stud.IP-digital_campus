@@ -218,7 +218,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if (isset($config['additional_fields'])) {
             foreach ($config['additional_fields'] as $a_field => $a_config) {
                 if (is_array($a_config) && !(isset($a_config['get']) || isset($a_config['set']))) {
-                    list($relation, $relation_field) = $a_config;
+                    $relation = $a_config[0] ?? '';
+                    $relation_field = $a_config[1] ?? '';
                     if (!$relation) {
                         list($relation, $relation_field) = explode('_', $a_field);
                     }
@@ -620,7 +621,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $record = new $class();
         $sql = "SELECT `$db_table`.* FROM `$thru_table`
         INNER JOIN `$db_table` ON `$thru_table`.`$thru_assoc_key` = `$db_table`.`$assoc_foreign_key`
-        WHERE `$thru_table`.`$thru_key` = ? " . $options['order_by'];
+        WHERE `$thru_table`.`$thru_key` = ? " . ($options['order_by'] ?? '');
         $db = DBManager::get();
         $st = $db->prepare($sql);
         $st->execute([$foreign_key_value]);
@@ -1024,7 +1025,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @throws Exception if options for thru_table could not be determined
      * @return array
      */
-    protected function parseRelationOptions($type, $name, $options) {
+    protected function parseRelationOptions($type, $name, $options)
+    {
         if (empty($options['class_name'])) {
             throw new Exception('Option class_name not set for relation ' . $name);
         }
@@ -1040,14 +1042,14 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             if (!$options['thru_key']) {
                 $options['thru_key'] = $this->pk[0];
             }
-            if (!$options['thru_assoc_key'] || !$options['assoc_foreign_key']) {
+            if (empty($options['thru_assoc_key']) || empty($options['assoc_foreign_key'])) {
                 $class = $options['class_name'];
                 $record = new $class();
                 $meta = $record->getTableMetadata();
                 if (!$options['thru_assoc_key'] ) {
                     $options['thru_assoc_key'] = $meta['pk'][0];
                 }
-                if (!$options['assoc_foreign_key']) {
+                if (empty($options['assoc_foreign_key'])) {
                     $options['assoc_foreign_key']= $meta['pk'][0];
                 }
             }
@@ -2207,6 +2209,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     protected function registerCallback($types, $cb)
     {
         $types = is_array($types) ? $types : words($types);
+        $reg = 0;
         foreach ($types as $type) {
             if (isset($this->registered_callbacks[$type])) {
                 $this->registered_callbacks[$type][] = $cb;

@@ -138,6 +138,8 @@ class SearchWidget extends SidebarWidget
             }
         }
 
+        $this->template_variables['reset_search'] = '';
+
         if ($this->hasData()) {
             // Remove needles from query params for reset link
             $reset_params = $query_params;

@@ -7,7 +7,7 @@
         </td>
         <td style="text-align: left">
             <a href="<?= URLHelper::getLink('seminar_main.php', ['auswahl' => $group['seminar_id']]) ?>"
-                <?= $group['lastvisitdate'] >= $group['chdate'] ? 'style="color: red;"' : '' ?>>
+                <?= $group['last_visitdate'] >= $group['chdate'] ? 'style="color: red;"' : '' ?>>
                 <?= htmlReady($group['name']) ?>
             </a>
             <? if ($group['visible'] == 0) : ?>
