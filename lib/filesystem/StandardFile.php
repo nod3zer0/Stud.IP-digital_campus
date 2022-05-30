@@ -310,7 +310,7 @@ class StandardFile implements FileType, ArrayAccess
                 URLHelper::getURL('dispatch.php/file/suggest_oer/' . $this->fileref->id),
                 _('Material für OER Campus vorschlagen'),
                 Icon::create('oer-campus'),
-                ['data-dialog' => 'reload-on-close']
+                ['data-dialog' => 'reload-on-close;size=auto']
             );
         }
 
