@@ -33,7 +33,8 @@ class Course_MessengerController extends AuthenticatedController
             }
         }
         if (!$this->thread || Request::get("thread") === "new") {
-            $this->thread = array_pop(array_reverse($this->threads));
+            $threads = array_reverse($this->threads);
+            $this->thread = array_pop($threads);
         }
         $this->thread->markAsRead();
 
