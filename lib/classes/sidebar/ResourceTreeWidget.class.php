@@ -116,12 +116,7 @@ class ResourceTreeWidget extends SidebarWidget
         $variables['max_open_depth'] = 0;
         $variables['layout_css_classes'] = $this->layout_css_classes;
 
-        $template = $GLOBALS['template_factory']->open(
-            $this->template
-        );
-        $template->set_attributes($variables);
-        $template->set_layout('sidebar/widget-layout');
-        return $template->render();
+        return parent::render($variables);
     }
 
     public function setCurrentResource(Resource $resource)
