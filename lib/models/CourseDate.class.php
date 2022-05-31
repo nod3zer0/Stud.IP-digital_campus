@@ -100,6 +100,11 @@ class CourseDate extends SimpleORMap implements PrivacyObject
             'assoc_foreign_key' => 'termin_id',
             'on_delete'         => 'delete',
         ];
+        $config['has_many']['resource_request_appointments'] = [
+            'class_name'        => ResourceRequestAppointment::class,
+            'assoc_foreign_key' => 'appointment_id',
+            'on_delete'         => 'delete',
+        ];
         $config['default_values']['date_typ'] = 1;
         parent::configure($config);
     }
