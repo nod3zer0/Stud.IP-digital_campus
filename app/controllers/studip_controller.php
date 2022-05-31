@@ -717,7 +717,7 @@ abstract class StudipController extends Trails_Controller
     public function action_url($action)
     {
         $arguments = func_get_args();
-        array_unshift($arguments, $this->controller_path());
+        $arguments[0] = $this->controller_path() . '/' . $arguments[0];
 
         return $this->url_for(...$arguments);
     }

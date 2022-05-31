@@ -66,6 +66,19 @@ final class StudipControllerTest extends Codeception\Test\Unit
     }
 
     /**
+     * @dataProvider actionUrlProvider
+     * @covers StudipController::action_url
+     */
+    public function testActionUrl(string $expected, ...$args): void
+    {
+        $url = $this->getController()->action_url(...$args);
+        $this->assertEquals(
+            $expected,
+            $this->getRelativeURL($url)
+        );
+    }
+
+    /**
      * @dataProvider RedirectProvider
      * @covers StudipController::redirect
      */
@@ -189,6 +202,19 @@ final class StudipControllerTest extends Codeception\Test\Unit
             'fragment'                 => ['dispatch.php/foo/bar/42/23#jump', 'foo/bar/42/23#jump'],
             'fragment-and-parameters'  => ['dispatch.php/foo/bar/42/23#jump', 'foo/bar#jump', 42, 23],
             'url-encoding-parameters'  => ['dispatch.php/foo/bar/%3Fabc/%2F', 'foo/bar', '?abc', '/'],
+        ];
+    }
+
+    public function actionUrlProvider(): array
+    {
+        return [
+            'action'                   => ['dispatch.php/studip_controller_test/foo', 'foo'],
+            'action-and-parameter'     => ['dispatch.php/studip_controller_test/foo/23', 'foo/23'],
+            'action-and-parameters'    => ['dispatch.php/studip_controller_test/foo/23?bar=42', 'foo/23', ['bar' => 42]],
+
+            'fragment'                 => ['dispatch.php/studip_controller_test/foo/42/23#jump', 'foo/42/23#jump'],
+            'fragment-and-parameters'  => ['dispatch.php/studip_controller_test/foo/42/23#jump', 'foo#jump', 42, 23],
+            'url-encoding-parameters'  => ['dispatch.php/studip_controller_test/foo/%3Fabc/%2F', 'foo', '?abc', '/'],
         ];
     }
 
