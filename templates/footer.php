@@ -1,6 +1,6 @@
 <!-- Beginn Footer -->
 <?= SkipLinks::addIndex(_('Fußzeile'), 'layout_footer',900) ?>
-<div id="layout_footer">
+<footer id="layout_footer" aria-label="<?= _('Fußzeile') ?>">
 <? if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') : ?>
     <div id="footer">
         <? printf(_('Sie sind angemeldet als %s (%s)'),
@@ -52,7 +52,7 @@
     <? endforeach; ?>
     </ul>
 <? endif; ?>
-</div>
+</footer>
 <?= $this->render_partial('debug/db-log.php') ?>
 <?= $this->render_partial('responsive-navigation.php') ?>
 <!-- Ende Footer -->
