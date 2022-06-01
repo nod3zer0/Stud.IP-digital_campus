@@ -23,9 +23,9 @@
                         <p>{{ child.attributes.payload.description }}</p>
                     </div>
                     <footer>
-                        {{ countChildren(child) }}
+                        {{ countChildren(child) + 1 }}
                         <translate
-                            :translate-n="countChildren(child)"
+                            :translate-n="countChildren(child) + 1"
                             translate-plural="Seiten"
                         >
                             Seite
