@@ -309,16 +309,19 @@ class StructuralElement extends \SimpleORMap
                 }
 
                 if ($this->isTask()) {
-                    // TODO: Was tun wir, wenn dieses Strukturelement purpose=task aber keinen Task hat?
-                    if (!$this->task) {
-                        return false;
+                    $task = $this->task;
+                    if (!$task) {
+                        $task = $this->findParentTask();
+                        if (!$task) {
+                            return false;
+                        }
                     }
 
-                    if ($this->task->isSubmitted() && $this->hasEditingPermission($user)) {
+                    if ($task->isSubmitted() && $this->hasEditingPermission($user)) {
                         return true;
                     }
 
-                    return $this->task->userIsASolver($user);
+                    return $task->userIsASolver($user);
                 }
 
                 if ($this->canEdit($user)) {
@@ -660,7 +663,7 @@ SQL;
      *
      * @return StructuralElement the copy of this instance
      */
-    public function copy(User $user, StructuralElement $parent): StructuralElement
+    public function copy(User $user, StructuralElement $parent, string $purpose = ''): StructuralElement
     {
         $file_ref_id = self::copyImage($user, $parent);
 
@@ -672,7 +675,7 @@ SQL;
             'editor_id' => $user->id,
             'edit_blocker_id' => null,
             'title' => $this->title,
-            'purpose' => $this->purpose,
+            'purpose' => empty($purpose) ? $this->purpose : $purpose,
             'position' => $parent->countChildren(),
             'payload' => $this->payload,
             'image_id' => $file_ref_id,
@@ -682,12 +685,12 @@ SQL;
 
         self::copyContainers($user, $element);
 
-        self::copyChildren($user, $element);
+        self::copyChildren($user, $element, $purpose);
 
         return $element;
     }
 
-    private function copyImage(User $user, StructuralElement $parent) : ?String
+    private function copyImage(User $user, StructuralElement $parent) : ?string
     {
         $file_ref_id = null;
 
@@ -764,12 +767,12 @@ SQL;
         }
     }
 
-    private function copyChildren(User $user, StructuralElement $newElement): void
+    private function copyChildren(User $user, StructuralElement $newElement, string $purpose = ''): void
     {
         $children = self::findBySQL('parent_id = ?', [$this->id]);
 
         foreach ($children as $child) {
-            $child->copy($user, $newElement);
+            $child->copy($user, $newElement, $purpose);
         }
     }
 
@@ -836,5 +839,17 @@ SQL;
         }
 
         return $html;
+    }
+
+    private function findParentTask()
+    {
+        if ($this->isRootNode()) {
+            return null;
+        }
+        if ($this->task) {
+            return $this->task;
+        }
+
+        return $this->parent->findParentTask();
     }
 }

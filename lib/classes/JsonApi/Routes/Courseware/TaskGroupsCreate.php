@@ -188,9 +188,9 @@ class TaskGroupsCreate extends JsonApiController
             ]);
 
             // copy task template
-            $taskElement = $taskTemplate->copy($lecturer, $target);
+            $purpose = 'task';
+            $taskElement = $taskTemplate->copy($lecturer, $target, $purpose);
             $taskElement->title = $title;
-            $taskElement->purpose = 'task';
             $taskElement->store();
 
             //update task with element id
