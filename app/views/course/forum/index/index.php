@@ -155,12 +155,10 @@ $pagechooser = null;
 <? endif ?>
 
 <!-- Bereiche / Themen darstellen -->
-<? if (!empty($constraint['depth'])) : ?>
-    <? if ($constraint['depth'] == 0) : ?>
-        <?= $this->render_partial('course/forum/index/_areas') ?>
-    <? elseif ($constraint['depth'] == 1) : ?>
-        <?= $this->render_partial('course/forum/index/_threads') ?>
-    <? endif ?>
+<? if (empty($constraint['depth'])) : ?>
+    <?= $this->render_partial('course/forum/index/_areas') ?>
+<? elseif ($constraint['depth'] == 1) : ?>
+    <?= $this->render_partial('course/forum/index/_threads') ?>
 <? endif ?>
 
 <? if (!empty($postings)) : ?>
@@ -176,74 +174,71 @@ $pagechooser = null;
 <? endif ?>
 
 <!-- Erstellen eines neuen Elements (Kategorie, Thema, Beitrag) -->
-<? if (!empty($constraint['depth'])) : ?>
-    <? if ($constraint['depth'] == 0) : ?>
-        <div style="clear: right; text-align: center">
-            <div class="button-group">
-                <? if (ForumPerm::has('abo', $seminar_id) && $section == 'index') : ?>
-                    <span id="abolink">
-                        <?= $this->render_partial('course/forum/index/_abo_link', compact('constraint')) ?>
-                    </span>
-                <? endif ?>
+<? if (empty($constraint['depth'])) : ?>
+    <div style="clear: right; text-align: center">
+        <div class="button-group">
+            <? if (ForumPerm::has('abo', $seminar_id) && $section == 'index') : ?>
+                <span id="abolink">
+                    <?= $this->render_partial('course/forum/index/_abo_link', compact('constraint')) ?>
+                </span>
+            <? endif ?>
 
-                <? if (ForumPerm::has('pdfexport', $seminar_id) && $section == 'index') : ?>
-                    <?= Studip\LinkButton::create(_('Beiträge als PDF exportieren'), $controller->url_for('course/forum/index/pdfexport'), ['target' => '_blank']) ?>
-                <? endif ?>
-            </div>
+            <? if (ForumPerm::has('pdfexport', $seminar_id) && $section == 'index') : ?>
+                <?= Studip\LinkButton::create(_('Beiträge als PDF exportieren'), $controller->url_for('course/forum/index/pdfexport'), ['target' => '_blank']) ?>
+            <? endif ?>
         </div>
+    </div>
 
-        <? if ($section == 'index' && $constraint['depth'] == 0 && ForumPerm::has('add_category', $seminar_id)) : ?>
-            <?= $this->render_partial('course/forum/index/_new_category') ?>
-        <? endif ?>
-    <? else : ?>
-        <? if (!$flash['edit_entry'] && ForumPerm::has('add_entry', $seminar_id)) : ?>
-            <? $constraint['depth'] == 1 ? $button_face = _('Neues Thema erstellen') : $button_face = _('Antworten') ?>
-            <div id="new_entry_button">
-                <div style="clear: right; text-align: center">
-                    <div class="button-group">
-                        <? if ($constraint['depth'] <= 1 || ($constraint['closed'] == 0)) : ?>
-                            <?= Studip\LinkButton::create($button_face, $controller->url_for('course/forum/index/index/'. $topic_id .'?answer=1'),
-                                ['onClick' => 'STUDIP.Forum.answerEntry(); return false;',
-                                    'class' => 'hideWhenClosed',]) ?>
-                        <? endif ?>
-
-                        <? if ($constraint['depth'] > 1 && ($constraint['closed'] == 1)) : ?>
-                            <?= Studip\LinkButton::create($button_face, $controller->url_for('course/forum/index/index/' . $topic_id. '?answer=1'),
-                                ['onClick' => 'STUDIP.Forum.answerEntry(); return false;',
-                                    'class' => 'hideWhenClosed',
-                                    'style' => 'display:none;'
+    <? if ($section == 'index' && ForumPerm::has('add_category', $seminar_id)) : ?>
+        <?= $this->render_partial('course/forum/index/_new_category') ?>
+    <? endif ?>
+<? else : ?>
+    <? if (!$flash['edit_entry'] && ForumPerm::has('add_entry', $seminar_id)) : ?>
+        <? $constraint['depth'] == 1 ? $button_face = _('Neues Thema erstellen') : $button_face = _('Antworten') ?>
+        <div id="new_entry_button">
+            <div style="clear: right; text-align: center">
+                <div class="button-group">
+                    <? if ($constraint['depth'] <= 1 || ($constraint['closed'] == 0)) : ?>
+                        <?= Studip\LinkButton::create($button_face, $controller->url_for('course/forum/index/index/'. $topic_id .'?answer=1'),
+                            ['onClick' => 'STUDIP.Forum.answerEntry(); return false;',
+                                'class' => 'hideWhenClosed',]) ?>
+                    <? endif ?>
+                    <? if ($constraint['depth'] > 1 && ($constraint['closed'] == 1)) : ?>
+                        <?= Studip\LinkButton::create($button_face, $controller->url_for('course/forum/index/index/' . $topic_id. '?answer=1'),
+                            ['onClick' => 'STUDIP.Forum.answerEntry(); return false;',
+                                'class' => 'hideWhenClosed',
+                                'style' => 'display:none;'
                         ]) ?>
-                        <? endif ?>
+                    <? endif ?>
 
-                        <? if (ForumPerm::has('close_thread', $seminar_id) && $constraint['depth'] > 1) : ?>
-                            <? if ($constraint['closed'] == 0): ?>
-                                <?= Studip\LinkButton::create(_('Thema schließen'),
-                                    $controller->url_for('course/forum/index/close_thread/' . $topic_id .'/'. $topic_id .'/'. ForumHelpers::getPage()), [
-                                        'onClick' => 'STUDIP.Forum.closeThreadFromThread("'. $topic_id .'"); return false;',
-                                        'class' => 'closeButtons']
-                                ) ?>
-                            <? else: ?>
-                                <?= Studip\LinkButton::create(_('Thema öffnen'),
-                                    $controller->url_for('course/forum/index/open_thread/' . $topic_id .'/'. $topic_id .'/'. ForumHelpers::getPage()), [
-                                        'onClick' => 'STUDIP.Forum.openThreadFromThread("'. $topic_id .'"); return false;',
-                                        'class' => 'closeButtons']
-                                ) ?>
-                            <? endif ?>
+                    <? if (ForumPerm::has('close_thread', $seminar_id) && $constraint['depth'] > 1) : ?>
+                        <? if ($constraint['closed'] == 0): ?>
+                            <?= Studip\LinkButton::create(_('Thema schließen'),
+                                $controller->url_for('course/forum/index/close_thread/' . $topic_id .'/'. $topic_id .'/'. ForumHelpers::getPage()), [
+                                    'onClick' => 'STUDIP.Forum.closeThreadFromThread("'. $topic_id .'"); return false;',
+                                    'class' => 'closeButtons']
+                            ) ?>
+                        <? else: ?>
+                            <?= Studip\LinkButton::create(_('Thema öffnen'),
+                                $controller->url_for('course/forum/index/open_thread/' . $topic_id .'/'. $topic_id .'/'. ForumHelpers::getPage()), [
+                                    'onClick' => 'STUDIP.Forum.openThreadFromThread("'. $topic_id .'"); return false;',
+                                    'class' => 'closeButtons']
+                            ) ?>
                         <? endif ?>
+                    <? endif ?>
 
-                        <? if ($constraint['depth'] > 0 && ForumPerm::has('abo', $seminar_id)) : ?>
-                            <span id="abolink">
-                                <?= $this->render_partial('course/forum/index/_abo_link', compact('constraint')) ?>
-                            </span>
-                        <? endif ?>
+                    <? if ($constraint['depth'] > 0 && ForumPerm::has('abo', $seminar_id)) : ?>
+                        <span id="abolink">
+                            <?= $this->render_partial('course/forum/index/_abo_link', compact('constraint')) ?>
+                        </span>
+                    <? endif ?>
 
-                        <? if (ForumPerm::has('pdfexport', $seminar_id)) : ?>
-                            <?= Studip\LinkButton::create(_('Beiträge als PDF exportieren'), $controller->url_for('course/forum/index/pdfexport/' . $topic_id), ['target' => '_blank']) ?>
-                        <? endif ?>
-                    </div>
+                    <? if (ForumPerm::has('pdfexport', $seminar_id)) : ?>
+                        <?= Studip\LinkButton::create(_('Beiträge als PDF exportieren'), $controller->url_for('course/forum/index/pdfexport/' . $topic_id), ['target' => '_blank']) ?>
+                    <? endif ?>
                 </div>
             </div>
-        <? endif ?>
+        </div>
     <? endif ?>
 <? endif ?>
 
