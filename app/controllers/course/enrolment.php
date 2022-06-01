@@ -33,7 +33,7 @@ class Course_EnrolmentController extends AuthenticatedController
         $this->course_id = $args[0];
 
         if (!in_array($action, words('apply claim delete order_down order_up'))) {
-            $this->redirect($this->url_for('/apply/' . $action));
+            $this->redirect($this->applyURL($action));
             return false;
         }
         if (!get_object_type($this->course_id, ['sem'])) {
