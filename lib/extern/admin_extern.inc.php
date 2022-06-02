@@ -263,7 +263,7 @@ if ($choose_module_form != '') {
             echo '</label>';
             echo "</fieldset>\n";
 
-            echo "<footer>" . Button::create(_("Weiter") . " >>") . "</footer>\n";
+            echo "<footer>" . Button::create(_("Weiter") . " >>", 'continue') . "</footer>\n";
             echo "</form><br>\n";
         }
     } else {

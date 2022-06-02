@@ -134,4 +134,4 @@ $export_pagecontent .= "<input type=\"hidden\" name=\"choose\" value=\"" . htmlR
 $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";
 $export_pagecontent .= "</fieldset>";
 
-$export_weiter_button = "<footer>" . Button::create(_('Weiter') . ' >>' ) . "</footer></form>";
+$export_weiter_button = "<footer>" . Button::create(_('Weiter') . ' >>', 'continue') . "</footer></form>";
