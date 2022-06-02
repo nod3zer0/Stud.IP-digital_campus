@@ -2115,9 +2115,11 @@ d i a l o g
         }
     }
     .studip-dialog-close-button {
-        @include background-icon(decline, info-alt, 16);
+        @include background-icon(decline, info-alt);
         background-repeat: no-repeat;
         background-position-y: center;
+        background-color: transparent;
+        border: none;
 
         width: 22px;
         height: 22px;
