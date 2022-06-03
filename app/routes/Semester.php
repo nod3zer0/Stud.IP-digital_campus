@@ -54,9 +54,10 @@ class Semester extends \RESTAPI\RouteMap
             $this->notFound();
         }
 
-        $this->etag(md5(serialize($semester)));
+        $semester_json = $this->semesterToJSON($semester);
+        $this->etag(md5(serialize($semester_json)));
 
-        return $this->semesterToJSON($semester);
+        return $semester_json;
     }
 
     private function semesterToJSON($semester)
