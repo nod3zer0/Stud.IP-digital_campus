@@ -26,7 +26,7 @@
                     <td class="actions">
                         <?= ActionMenu::get()->setContext(
                             sprintf(
-                                _('Sperre vom %1$s %2$s Uhr bis %3$s %4$s Uhr'),
+                                _('Sperre vom %1$s, %2$s Uhr bis %3$s, %4$s Uhr'),
                                 strftime('%x', $lock->begin),
                                 date('H:i', $lock->begin),
                                 strftime('%x', $lock->end),
