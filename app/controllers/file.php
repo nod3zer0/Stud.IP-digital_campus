@@ -502,7 +502,7 @@ class FileController extends AuthenticatedController
         $this->author = $file_ref->owner->username;
         $this->author_fullname = $file_ref->owner->getFullName('no_title');
         $this->link_to_share = URLHelper::getURL("dispatch.php/file/share_oer/" . $file_ref_id);
-        $this->linktext = _('Klicken Sie hier, um das Material im OER Campus zu veröffentlichen');
+        $this->linktext = _('Klicken Sie hier, um das Material im OER Campus zu veröffentlichen.');
         $this->formatted_link = '['. $this->linktext .']' . $this->link_to_share;
         $additional_text = htmlReady(Request::get('additional_text'));
 

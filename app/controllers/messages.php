@@ -958,7 +958,7 @@ class MessagesController extends AuthenticatedController {
 
         $this->link_to_share = URLHelper::getURL("dispatch.php/course/courseware/?cid=" . $course_id
             . "#/structural_element/" . $element_id);
-        $this->linktext = _('Klicken Sie hier, um zum vorgeschlagenen Courseware-Material zu gelangen');
+        $this->linktext = _('Klicken Sie hier, um zum vorgeschlagenen Courseware-Material zu gelangen.');
         $this->formatted_link = '['. $this->linktext .']' . $this->link_to_share;
 
         $oer_suggestion_message = sprintf(_("Ihr Courseware-Material wurde zur Veröffentlichung im OER Campus vorgeschlagen:\n\n"
