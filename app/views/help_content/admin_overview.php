@@ -12,7 +12,7 @@
                     <th><?= _('Aktiv') ?></th>
                     <th data-sort="text"><?= _('Seite') ?></th>
                     <th data-sort="text"><?= _('Sprache') ?></th>
-                    <th data-sort="text"><?= _('Stud.IP Version') ?></th>
+                    <th data-sort="text"><?= _('Stud.IP-Version') ?></th>
                     <th><?= _('Inhalt') ?></th>
                     <th data-sort="htmldata"><?= _('Letzte Änderung') ?></th>
                     <th data-sort="htmldata"><?= _('Geändert von') ?></th>
