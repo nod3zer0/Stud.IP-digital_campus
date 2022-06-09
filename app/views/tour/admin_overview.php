@@ -26,7 +26,7 @@
             <tr>
                 <th><?= _('Aktiv') ?></th>
                 <th data-sort="text"><?= _('Überschrift') ?></th>
-                <th data-sort="htmldata"><?= _('Stud.IP Version') ?></th>
+                <th data-sort="htmldata"><?= _('Stud.IP-Version') ?></th>
                 <th data-sort="text"><?= _('Sprache') ?></th>
                 <th data-sort="text"><?= _('Typ') ?></th>
                 <th data-sort="text"><?= _('Zugang') ?></th>
