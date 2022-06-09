@@ -1,6 +1,6 @@
 <?= $contentbar ?>
 
-<? $url = $material['host_id'] ? $material->host->url."download/".$material['foreign_material_id'] : $controller->link_for("oer/endpoints/download/".$material->getId()) ?>
+<? $url = $material->getDownloadUrl() ?>
 
 <? if ($material['player_url']) : ?>
     <iframe src="<?= htmlReady($material['player_url']) ?>"
@@ -9,7 +9,7 @@
 <? elseif ($material->isVideo()) : ?>
     <video controls
         <?= $material['front_image_content_type'] ? 'poster="'.htmlReady($material->getLogoURL()).'"' : "" ?>
-           crossorigin="anonymous"
+           crossorigin="use-credentials"
            src="<?= htmlReady($url) ?>"
            class="lernmarktplatz_player"></video>
 <? elseif ($material->isAudio()) : ?>
@@ -40,13 +40,21 @@
     </ol>
 <? endif ?>
 
-<? if (($url && $material['filename'] || (!$material['host_id'] && ($material->isMine() || $GLOBALS['perm']->have_perm("root"))))) : ?>
+<? if (($url && $material['filename']) || $material['source_url'] || (!$material['host_id'] && ($material->isMine() || $GLOBALS['perm']->have_perm("root")))) : ?>
     <div class="center bordered" style="margin-top: 20px; margin-bottom: 20px;">
-        <? if ($url && $material['filename']) : ?>
+        <? if ($url) : ?>
             <a class="button"
                href="<?= htmlReady($url) ?>" title="<?= _('Herunterladen') ?>"
                download="<?= htmlReady($material['filename']) ?>">
                 <div class="filename"><?= _('Herunterladen') ?></div>
+            </a>
+        <? endif ?>
+
+        <? if ($material['source_url']) : ?>
+            <a class="button"
+               target="_blank"
+               href="<?= htmlReady($material['source_url']) ?>">
+                <?= _('Webseite') ?>
             </a>
         <? endif ?>
 
@@ -142,168 +150,149 @@
             <?= formatReady($material['description']) ?>
         </div>
 
-        <h2><?= _('Zum Autor') ?></h2>
-        <ul class="author_information clean">
-            <? foreach ($material->users as $materialuser) : ?>
-                <li>
-                    <? if ($materialuser['external_contact']) : ?>
-                        <? $user = $materialuser['oeruser'] ?>
-                        <? $image = $user['avatar_url'] ?>
-                        <? $host = OERHost::find($user['host_id']) ?>
-                        <div class="avatar" style="background-image: url('<?= $image ?>');"></div>
+        <? $authors = $material->getAuthors() ?>
+        <? if (count($authors)) : ?>
+            <h2><?= _('Zum Autor') ?></h2>
+            <ul class="author_information clean">
+                <? foreach ($material->getAuthors() as $authordata) : ?>
+                    <li>
+                        <div class="avatar" style="background-image: url('<?= htmlReady($authordata['avatar'] ?: Avatar::getNobody()->getURL(Avatar::MEDIUM)) ?>');"></div>
                         <div>
                             <div class="author_name">
-                                <a href="<?= $controller->link_for("oer/market/profile/".$user->getId()) ?>">
-                                    <?= htmlReady($user['name']) ?>
+                                <? if ($authordata['link']) : ?>
+                                <a href="<?= htmlReady($authordata['link']) ?>">
+                                <? endif ?>
+                                    <?= htmlReady($authordata['name']) ?>
+                                <? if ($authordata['link']) : ?>
                                 </a>
-                            </div>
-                            <div class="author_host">(<?= htmlReady($host->name) ?>)</div>
-                            <div class="description"><?= formatReady($user['data']['description']) ?></div>
-                        </div>
-                    <? else : ?>
-                        <? $user = User::find($materialuser['user_id']) ?>
-                        <? $image = Avatar::getAvatar($materialuser['user_id'])->getURL(Avatar::MEDIUM) ?>
-                        <div class="avatar" style="background-image: url('<?= $image ?>');"></div>
-                        <div>
-                            <div class="author_name">
-                                <a href="<?= URLHelper::getLink("dispatch.php/profile", ['username' => $user['username']]) ?>">
-                                    <?= htmlReady($user ? $user->getFullName() : _('unbekannt')) ?>
-                                </a>
-                            </div>
-                            <div class="author_host">(<?= htmlReady(Config::get()->UNI_NAME_CLEAN) ?>)</div>
-                            <div class="description">
-                                <? if ($user['oercampus_description']) : ?>
-                                <?= htmlReady($user['oercampus_description']) ?>
-                                <? elseif ($materialuser['user_id'] === $GLOBALS['user']->id) : ?>
-                                    <em>
-                                        <?= sprintf(_('Noch keine Beschreibung für den %s vorhanden.'), Config::get()->OER_TITLE) ?>
-                                        <a href="<?= URLHelper::getLink("dispatch.php/settings/details") ?>">
-                                            <?= _('Jetzt eine eingeben.') ?>
-                                        </a>
-                                    </em>
                                 <? endif ?>
                             </div>
+                            <div class="author_host">(<?= htmlReady($authordata['hostname']) ?>)</div>
+                            <? if ($authordata['description']) : ?>
+                            <div class="description"><?= formatReady($authordata['description']) ?></div>
+                            <? endif ?>
                         </div>
-                    <? endif ?>
-                </li>
-            <? endforeach ?>
-        </ul>
+                    </li>
+                <? endforeach ?>
+            </ul>
+        <? endif ?>
     </div>
 </div>
 
-<? $allowed_to_review = !$material->isMine() && $GLOBALS['perm']->have_perm("autor") ?>
-<? if (!$material->isMine() || count($material->reviews)) : ?>
-    <article class="studip bordered">
-        <div class="center">
-            <? if ($material['rating'] === null) : ?>
-                <? if ($allowed_to_review) : ?>
-                    <a style="opacity: 0.3;"
-                    title="<?= $GLOBALS['perm']->have_perm("autor") ? _('Geben Sie die erste Bewertung ab.') : _('Noch keine Bewertung abgegeben.') ?>"
-                    href="<?= $controller->link_for('oer/market/review/' . $material->getId()) ?>" data-dialog>
+<? if ($material->host && $material->host->isReviewable()) : ?>
+    <? $allowed_to_review = !$material->isMine() && $GLOBALS['perm']->have_perm("autor") ?>
+    <? if (!$material->isMine() || count($material->reviews)) : ?>
+        <article class="studip bordered">
+            <div class="center">
+                <? if ($material['rating'] === null) : ?>
+                    <? if ($allowed_to_review) : ?>
+                        <a style="opacity: 0.3;"
+                        title="<?= $GLOBALS['perm']->have_perm("autor") ? _('Geben Sie die erste Bewertung ab.') : _('Noch keine Bewertung abgegeben.') ?>"
+                        href="<?= $controller->link_for('oer/market/review/' . $material->getId()) ?>" data-dialog>
+                    <? endif ?>
+                    <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
+                    <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
+                    <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
+                    <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
+                    <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
+                    <? if ($allowed_to_review) : ?>
+                        </a>
+                    <? endif ?>
+                <? else : ?>
+                    <? if ($allowed_to_review) : ?>
+                        <a href="<?= $controller->link_for('oer/market/review/' . $material->getId()) ?>" data-dialog title="<?= sprintf(_('%s von 5 Sternen'), round($material['rating'] / 2, 1)) ?>">
+                    <? endif ?>
+                    <? $material['rating'] = round($material['rating'], 1) / 2 ?>
+                    <? $v = $material['rating'] >= 0.75 ? "" : ($material['rating'] >= 0.25 ? "-halffull" : "-empty") ?>
+                    <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
+                    <? $v = $material['rating'] >= 1.75 ? "" : ($material['rating'] >= 1.25 ? "-halffull" : "-empty") ?>
+                    <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
+                    <? $v = $material['rating'] >= 2.75 ? "" : ($material['rating'] >= 2.25 ? "-halffull" : "-empty") ?>
+                    <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
+                    <? $v = $material['rating'] >= 3.75 ? "" : ($material['rating'] >= 3.25 ? "-halffull" : "-empty") ?>
+                    <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
+                    <? $v = $material['rating'] >= 4.75 ? "" : ($material['rating'] >= 4.25 ? "-halffull" : "-empty") ?>
+                    <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
+                    <? if ($allowed_to_review) : ?>
+                        </a>
+                    <? endif ?>
                 <? endif ?>
-                <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
-                <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
-                <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
-                <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
-                <?= Icon::create("star", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INACTIVE)->asImg(50) ?>
-                <? if ($allowed_to_review) : ?>
-                    </a>
-                <? endif ?>
-            <? else : ?>
-                <? if ($allowed_to_review) : ?>
-                    <a href="<?= $controller->link_for('oer/market/review/' . $material->getId()) ?>" data-dialog title="<?= sprintf(_('%s von 5 Sternen'), round($material['rating'] / 2, 1)) ?>">
-                <? endif ?>
-                <? $material['rating'] = round($material['rating'], 1) / 2 ?>
-                <? $v = $material['rating'] >= 0.75 ? "" : ($material['rating'] >= 0.25 ? "-halffull" : "-empty") ?>
-                <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
-                <? $v = $material['rating'] >= 1.75 ? "" : ($material['rating'] >= 1.25 ? "-halffull" : "-empty") ?>
-                <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
-                <? $v = $material['rating'] >= 2.75 ? "" : ($material['rating'] >= 2.25 ? "-halffull" : "-empty") ?>
-                <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
-                <? $v = $material['rating'] >= 3.75 ? "" : ($material['rating'] >= 3.25 ? "-halffull" : "-empty") ?>
-                <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
-                <? $v = $material['rating'] >= 4.75 ? "" : ($material['rating'] >= 4.25 ? "-halffull" : "-empty") ?>
-                <?= Icon::create("star$v", $allowed_to_review ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO)->asImg(50) ?>
-                <? if ($allowed_to_review) : ?>
-                    </a>
-                <? endif ?>
-            <? endif ?>
-        </div>
+            </div>
 
-        <ul class="reviews">
-            <? foreach ($material->reviews as $review) : ?>
-                <li id="review_<?= $review->getId() ?>" class="review">
-                    <div class="avatar">
-                        <img width="50px" height="50px" src="<?= htmlReady($review['metadata']['host_id']
-                            ? ExternalUser::find($review['user_id'])->avatar_url
-                            : Avatar::getAvatar($review['user_id'])->getURL(Avatar::MEDIUM)) ?>">
-                    </div>
-                    <div class="content">
-                        <div class="timestamp">
-                            <?= date("j.n.Y G:i", $review['chdate']) ?>
+            <ul class="reviews">
+                <? foreach ($material->reviews as $review) : ?>
+                    <li id="review_<?= $review->getId() ?>" class="review">
+                        <div class="avatar">
+                            <img width="50px" height="50px" src="<?= htmlReady($review['metadata']['host_id']
+                                ? ExternalUser::find($review['user_id'])->avatar_url
+                                : Avatar::getAvatar($review['user_id'])->getURL(Avatar::MEDIUM)) ?>">
                         </div>
-                        <strong>
-                            <? if ($review['metadata']['host_id']) : ?>
-                                <? $user = ExternalUser::find($review['user_id']) ?>
-                                <a href="<?= $controller->link_for("oer/market/profile/".$user->getId()) ?>">
-                                    <?= htmlReady($user->name) ?>
-                                </a>
-                            <? else : ?>
-                                <? $user = new User($review['user_id']) ?>
-                                <a href="<?= URLHelper::getLink("dispatch.php/profile", ['username' => $user['username']]) ?>">
-                                    <?= htmlReady($user->getFullName()) ?>
-                                </a>
-                            <? endif ?>
-                        </strong>
-                        <span class="origin">(<?= htmlReady($review['metadata']['host_id'] ? $review->host['name'] : Config::get()->UNI_NAME_CLEAN) ?>)</span>
-                        <div class="review_text">
-                            <?= formatReady($review['content']) ?>
-                        </div>
-                        <div class="stars">
-                            <? $rating = round($review['metadata']['rating'], 1) ?>
-                            <? $v = $rating >= 0.75 ? "" : ($rating >= 0.25 ? "-halffull" : "-empty") ?>
-                            <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
-                            <? $v = $rating >= 1.75 ? "" : ($rating >= 1.25 ? "-halffull" : "-empty") ?>
-                            <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
-                            <? $v = $rating >= 2.75 ? "" : ($rating >= 2.25 ? "-halffull" : "-empty") ?>
-                            <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
-                            <? $v = $rating >= 3.75 ? "" : ($rating >= 3.25 ? "-halffull" : "-empty") ?>
-                            <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
-                            <? $v = $rating >= 4.75 ? "" : ($rating >= 4.25 ? "-halffull" : "-empty") ?>
-                            <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
+                        <div class="content">
+                            <div class="timestamp">
+                                <?= date("j.n.Y G:i", $review['chdate']) ?>
+                            </div>
+                            <strong>
+                                <? if ($review['metadata']['host_id']) : ?>
+                                    <? $user = ExternalUser::find($review['user_id']) ?>
+                                    <a href="<?= $controller->link_for("oer/market/profile/".$user->getId()) ?>">
+                                        <?= htmlReady($user->name) ?>
+                                    </a>
+                                <? else : ?>
+                                    <? $user = new User($review['user_id']) ?>
+                                    <a href="<?= URLHelper::getLink("dispatch.php/profile", ['username' => $user['username']]) ?>">
+                                        <?= htmlReady($user->getFullName()) ?>
+                                    </a>
+                                <? endif ?>
+                            </strong>
+                            <span class="origin">(<?= htmlReady($review['metadata']['host_id'] ? $review->host['name'] : Config::get()->UNI_NAME_CLEAN) ?>)</span>
+                            <div class="review_text">
+                                <?= formatReady($review['content']) ?>
+                            </div>
+                            <div class="stars">
+                                <? $rating = round($review['metadata']['rating'], 1) ?>
+                                <? $v = $rating >= 0.75 ? "" : ($rating >= 0.25 ? "-halffull" : "-empty") ?>
+                                <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
+                                <? $v = $rating >= 1.75 ? "" : ($rating >= 1.25 ? "-halffull" : "-empty") ?>
+                                <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
+                                <? $v = $rating >= 2.75 ? "" : ($rating >= 2.25 ? "-halffull" : "-empty") ?>
+                                <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
+                                <? $v = $rating >= 3.75 ? "" : ($rating >= 3.25 ? "-halffull" : "-empty") ?>
+                                <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
+                                <? $v = $rating >= 4.75 ? "" : ($rating >= 4.25 ? "-halffull" : "-empty") ?>
+                                <?= Icon::create("star$v", Icon::ROLE_INFO)->asImg(16) ?>
 
-                            <? if ($GLOBALS['perm']->have_perm("autor") && !count($review->comments)) : ?>
-                                <a href="<?= $controller->link_for("oer/market/discussion/".$review->getId()) ?>" style="font-size: 0.8em;">
-                                    <?= _('Darauf antworten') ?>
-                                </a>
-                            <? endif ?>
+                                <? if ($GLOBALS['perm']->have_perm("autor") && !count($review->comments)) : ?>
+                                    <a href="<?= $controller->link_for("oer/market/discussion/".$review->getId()) ?>" style="font-size: 0.8em;">
+                                        <?= _('Darauf antworten') ?>
+                                    </a>
+                                <? endif ?>
+                            </div>
+                            <div class="comments center">
+                                <? if (count($review->comments)) : ?>
+                                    <a href="<?= $controller->link_for("oer/market/discussion/".$review->getId()) ?>">
+                                        <?= Icon::create("comment", Icon::ROLE_CLICKABLE)->asImg(16, ['class' => "text-bottom"]) ?>
+                                        <?= sprintf(_('%s Kommentare dazu'), count($review->comments)) ?>
+                                    </a>
+                                <? elseif ($material->isMine()) : ?>
+                                    <a href="<?= $controller->link_for("oer/market/discussion/".$review->getId()) ?>">
+                                        <?= Icon::create("comment", Icon::ROLE_CLICKABLE)->asImg(16, ['class' => "text-bottom"]) ?>
+                                        <?= _('Dazu einen Kommentar schreiben') ?>
+                                    </a>
+                                <? endif ?>
+                            </div>
                         </div>
-                        <div class="comments center">
-                            <? if (count($review->comments)) : ?>
-                                <a href="<?= $controller->link_for("oer/market/discussion/".$review->getId()) ?>">
-                                    <?= Icon::create("comment", Icon::ROLE_CLICKABLE)->asImg(16, ['class' => "text-bottom"]) ?>
-                                    <?= sprintf(_('%s Kommentare dazu'), count($review->comments)) ?>
-                                </a>
-                            <? elseif ($material->isMine()) : ?>
-                                <a href="<?= $controller->link_for("oer/market/discussion/".$review->getId()) ?>">
-                                    <?= Icon::create("comment", Icon::ROLE_CLICKABLE)->asImg(16, ['class' => "text-bottom"]) ?>
-                                    <?= _('Dazu einen Kommentar schreiben') ?>
-                                </a>
-                            <? endif ?>
-                        </div>
-                    </div>
-                </li>
-            <? endforeach ?>
-        </ul>
+                    </li>
+                <? endforeach ?>
+            </ul>
 
-        <div class="center">
-            <? if (!$material->isMine() && $GLOBALS['perm']->have_perm("autor")) : ?>
-                <?= \Studip\LinkButton::create(_('Review schreiben'), $controller->url_for('oer/market/review/' . $material->getId()), ['data-dialog' => 1]) ?>
-            <? endif ?>
-        </div>
-    </article>
+            <div class="center">
+                <? if (!$material->isMine() && $GLOBALS['perm']->have_perm("autor")) : ?>
+                    <?= \Studip\LinkButton::create(_('Review schreiben'), $controller->url_for('oer/market/review/' . $material->getId()), ['data-dialog' => 1]) ?>
+                <? endif ?>
+            </div>
+        </article>
+    <? endif ?>
 <? endif ?>
-
 
 
 <?

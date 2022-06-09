@@ -13,7 +13,7 @@ class OERHost extends OERIdentity
      */
     public static function thisOne()
     {
-        $host = self::findOneBySQL("private_key IS NOT NULL LIMIT 1");
+        $host = self::findOneBySQL("`private_key` IS NOT NULL AND `sorm_class` = 'OERHost' LIMIT 1");
         if ($host) {
             $host['url'] = $GLOBALS['oer_PREFERRED_URI'] ?: $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/";
             if ($host->isFieldDirty("url")) {
@@ -37,6 +37,38 @@ class OERHost extends OERIdentity
     public static function findAll()
     {
         return self::findBySQL("1=1 ORDER BY name ASC");
+    }
+
+    public static function URIExists($uri)
+    {
+        return (bool) OERMaterial::findOneBySQL("LEFT JOIN `oer_hosts` USING (`host_id`) WHERE (`oer_hosts`.`sorm_class` = 'OERHost' OR `oer_hosts`.`sorm_class` IS NULL) AND `uri_hash` = ?", [
+            md5($uri)
+        ]);
+    }
+
+    public static function findBySQL($sql, $params = [])
+    {
+        $hosts = parent::findBySQL($sql, $params);
+        foreach ($hosts as $key => $host) {
+            $class = $host['sorm_class'];
+            if ($class && ($class !== 'OERHost') && is_subclass_of($class, 'OERHost')) {
+                $data = $host->toRawArray();
+                $host = $class::buildExisting($data);
+                $hosts[$key] = $host;
+            }
+        }
+        return $hosts;
+    }
+
+    public static function find($id)
+    {
+        $host = parent::find($id);
+        $class = $host['sorm_class'];
+        if ($class && ($class !== 'OERHost') && is_subclass_of($class, 'OERHost')) {
+            $data = $host->toRawArray();
+            $host = $class::buildExisting($data);
+        }
+        return $host;
     }
 
     /**
@@ -111,7 +143,7 @@ class OERHost extends OERIdentity
 
     /**
      * Executes a search request on the host.
-     * @param string|null $text : the serach string
+     * @param string|null $text : the search string
      * @param string|null $tag : a tag to search for
      */
     public function fetchRemoteSearch($text = null, $tag = null)
@@ -203,9 +235,9 @@ class OERHost extends OERIdentity
      * @param string $foreign_material_id : foreign id of that oer-material
      * @return array|null : data of that material or null on error.
      */
-    public function fetchItemData($foreign_material_id)
+    public function fetchItemData(OERMaterial $material)
     {
-        $endpoint_url = $this['url']."get_item_data/".urlencode($foreign_material_id);
+        $endpoint_url = $this['url']."get_item_data/".urlencode($material['foreign_material_id']);
         $output = @file_get_contents($endpoint_url);
         if ($output) {
             $output = json_decode($output, true);
@@ -213,5 +245,56 @@ class OERHost extends OERIdentity
                 return $output;
             }
         }
+    }
+
+    public function getFrontImageURL(OERMaterial $material)
+    {
+        return $this['url']."download_front_image/".$material['foreign_material_id'];
+    }
+
+    public function isReviewable()
+    {
+        return true;
+    }
+
+    public function getAuthorsForMaterial(OERMaterial $material)
+    {
+        $users = [];
+        foreach ($material->users as $materialdata) {
+            if ($materialdata['external_contact']) {
+                $user = $materialdata['oeruser'];
+                $users[] = [
+                    'user_id' => $user['foreign_user_id'],
+                    'name' => $user['name'],
+                    'avatar' => $user['avatar'],
+                    'description' => $user['description'],
+                    'host_url' => $user->host['url'],
+                    'link' => URLHelper::getURL('dispatch.php/oer/market/profile/' . $user->getId()),
+                    'hostname' => $this['name']
+                ];
+            } else {
+                $user = User::find($materialdata['user_id']);
+                $users[] = [
+                    'user_id' => $user['user_id'],
+                    'name' => $user ? $user->getFullName() : _('unbekannt'),
+                    'avatar' => Avatar::getAvatar($user['user_id'])->getURL(Avatar::NORMAL),
+                    'description' => $user ? $user['oercampus_description'] : '',
+                    'host_url' => OERHost::thisOne()->url,
+                    'link' => URLHelper::getURL('dispatch.php/profile', ['username' => $user['username']]),
+                    'hostname' => $this['name']
+                ];
+            }
+        }
+        return $users;
+    }
+
+    public function getDownloadURLForMaterial(OERMaterial $material)
+    {
+        $base = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+        $url = $material['host_id']
+            ? $this->url . 'download/' . $material['foreign_material_id']
+            : URLHelper::getURL('dispatch.php/oer/endpoints/download/' . $material->getId());
+        URLHelper::setBaseURL($base);
+        return $url;
     }
 }

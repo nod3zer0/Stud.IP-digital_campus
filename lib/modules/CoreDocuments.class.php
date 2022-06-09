@@ -50,19 +50,30 @@ class CoreDocuments extends CorePlugin implements StudipModule, OERModule
             'content_terms_of_use_id' => "FREE_LICENSE",
             'description' => $material['description']
         ];
-        if ($material['host_id']) {
-            $tmp_name = $GLOBALS['TMP_PATH']."/oer_".$material->getId();
-            file_put_contents($tmp_name, file_get_contents($material->getDownloadUrl()));
-            $uploaded_file['tmp_name'] = $tmp_name;
-            $uploaded_file['type'] = filesize($tmp_name);
-        } else {
-            $uploaded_file['tmp_name'] = $material->getFilePath();
-            $uploaded_file['size'] = filesize($material->getFilePath());
+        $url = $material->getDownloadUrl();
+        if ($url) {
+            if ($material['host_id']) {
+                $tmp_name = $GLOBALS['TMP_PATH'] . '/oer_' . $material->getId();
+                file_put_contents($tmp_name, file_get_contents($url));
+                $uploaded_file['tmp_name'] = $tmp_name;
+                $uploaded_file['type'] = filesize($tmp_name);
+            } else {
+                $uploaded_file['tmp_name'] = $material->getFilePath();
+                $uploaded_file['size'] = filesize($material->getFilePath());
+            }
+
+            $standardfile = StandardFile::create($uploaded_file);
+        } elseif($material['source_url']) {
+            $standardfile = URLFile::create([
+                'url' => $material['source_url'],
+                'name' => $material['name'],
+                'author_name' => implode(', ', array_map(function ($a) { return $a['name']; }, $material)),
+                'description' => $material['description'],
+                'content_terms_of_use_id' => "FREE_LICENSE"
+            ]);
         }
 
-        $standardfile = StandardFile::create($uploaded_file);
-
-        if ($standardfile->getSize()) {
+        if ($standardfile->getSize() || is_a($standardfile, 'URLFile')) {
             $error = $folder->validateUpload($standardfile, User::findCurrent()->id);
             if ($error && is_string($error)) {
                 if ($tmp_name) {

@@ -186,6 +186,13 @@ const OER = {
                     },
                     getMaterialURL: function (material_id) {
                         return this.material_select_url_template.replace("__material_id__", material_id);
+                    },
+                    shortenName: function (name) {
+                        if (name.length > 55) {
+                            return name.substring(0, 50) + ' ...';
+                        } else {
+                            return name;
+                        }
                     }
                 },
                 mounted: function () {

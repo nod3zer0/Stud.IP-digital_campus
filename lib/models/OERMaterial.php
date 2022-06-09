@@ -23,6 +23,7 @@ class OERMaterial extends SimpleORMap
             'foreign_key' => 'license_identifier'
         ];
         $config['serialized_fields']['structure'] = 'JSONArrayObject';
+        $config['serialized_fields']['data'] = 'JSONArrayObject';
         $config['registered_callbacks']['before_store'][] = "cbHashURI";
         $config['registered_callbacks']['before_delete'][] = "cbDeleteFile";
         parent::configure($config);
@@ -145,9 +146,11 @@ class OERMaterial extends SimpleORMap
         $id = $matches[1];
         $material = OERMaterial::find($id);
 
-        $url = $material['host_id']
-            ? $material->host->url."download/".$material['foreign_material_id']
-            : URLHelper::getURL("dispatch.php/oer/endpoints/download/".$material->getId());
+        if (!$material) {
+            return _('OER Material nicht vorhanden.');
+        }
+
+        $url = $material->getDownloadUrl();
 
         if ($material['player_url'] || $material->isPDF()) {
             if ($material['player_url']) {
@@ -171,6 +174,7 @@ class OERMaterial extends SimpleORMap
             $template = $tf->open("oer/embed/standard");
         }
         $template->url = $url;
+        $template->source_url = $material['source_url'];
         $template->material = $material;
         $template->id = $id;
         return $template->render();
@@ -184,7 +188,16 @@ class OERMaterial extends SimpleORMap
 
     public function cbHashURI()
     {
-        $this['uri_hash'] = md5($this['uri']);
+        $this['uri_hash'] = $this['uri'] ? md5($this['uri']) : '';
+    }
+
+    public function getAuthors()
+    {
+        if ($this->host) {
+            return $this->host->getAuthorsForMaterial($this);
+        } else {
+            return OERHost::thisOne()->getAuthorsForMaterial($this);
+        }
     }
 
     public function getTopics()
@@ -217,7 +230,7 @@ class OERMaterial extends SimpleORMap
             SET tag_hash = MD5(:tag),
                 material_id = :material_id
         ");
-        foreach ($tags as $tag) {
+        foreach ((array) $tags as $tag) {
             $insert_tag->execute([
                 'tag' => $tag
             ]);
@@ -238,11 +251,15 @@ class OERMaterial extends SimpleORMap
 
     public function getDownloadUrl()
     {
-        $base = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
-        $url = $this['host_id']
-            ? $this->host->url."download/".$this['foreign_material_id']
-            : URLHelper::getURL("dispatch.php/oer/endpoints/download/".$this->getId());
-        URLHelper::setBaseURL($base);
+        if (!$this['host_id']) {
+            $base = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+            $url = $this['host_id']
+                ? $this->host->url . 'download/' . $this['foreign_material_id']
+                : URLHelper::getURL('dispatch.php/oer/endpoints/download/' . $this->getId());
+            URLHelper::setBaseURL($base);
+        } else {
+            $url = $this->host->getDownloadURLForMaterial($this);
+        }
         return $url;
     }
 
@@ -261,7 +278,7 @@ class OERMaterial extends SimpleORMap
     {
         if ($this['front_image_content_type']) {
             if ($this['host_id']) {
-                return $this->host['url']."download_front_image/".$this['foreign_material_id'];
+                return $this->host->getFrontImageURL($this);
             } else {
                 return URLHelper::getURL("dispatch.php/oer/endpoints/download_front_image/".$this->getId());
             }
@@ -357,10 +374,7 @@ class OERMaterial extends SimpleORMap
         unset($data['data']['id']);
         unset($data['data']['user_id']);
         unset($data['data']['host_id']);
-        $data['users'] = [];
-        foreach ($this->users as $materialuser) {
-            $data['users'][] = $materialuser->getJSON();
-        }
+        $data['users'] = $myHost->getAuthorsForMaterial($this);
         $data['topics'] = [];
         foreach ($this->getTopics() as $tag) {
             if ($tag['name']) {
@@ -400,93 +414,90 @@ class OERMaterial extends SimpleORMap
 
     public function fetchData()
     {
-        if ($this['host_id']) {
-            $host = new OERHost($this['host_id']);
-            if ($host) {
-                $data = $host->fetchItemData($this['foreign_material_id']);
+        if ($this['host_id'] && $this->host) {
+            $data = $this->host->fetchItemData($this);
 
-                if (!$data) {
-                    return false;
-                }
+            if (!$data) {
+                return false;
+            }
 
-                if ($data['deleted']) {
-                    return "deleted";
-                }
+            if ($data['deleted']) {
+                return "deleted";
+            }
 
-                //material:
-                $material_data = $data['data'];
-                unset($material_data['material_id']);
-                unset($material_data['mkdate']);
-                $this->setData($material_data);
-                $this->store();
+            //material:
+            $material_data = $data['data'];
+            unset($material_data['material_id']);
+            unset($material_data['mkdate']);
+            $this->setData($material_data);
+            $this->store();
 
-                //topics:
-                $this->setTopics($data['topics']);
+            //topics:
+            $this->setTopics($data['topics']);
 
-                //user:
-                $this->setUsers($data['users']);
+            //user:
+            $this->setUsers($data['users']);
 
-                foreach ((array) $data['reviews'] as $review_data) {
-                    $currenthost = OERHost::findOneByUrl(trim($review_data['host']['url']));
-                    if (!$currenthost) {
-                        $currenthost = new OERHost();
-                        $currenthost['url'] = trim($review_data['host']['url']);
-                        $currenthost['last_updated'] = time();
-                        $currenthost->fetchPublicKey();
-                        if ($currenthost['public_key']) {
-                            $currenthost->store();
-                        }
+            foreach ((array) $data['reviews'] as $review_data) {
+                $currenthost = OERHost::findOneByUrl(trim($review_data['host']['url']));
+                if (!$currenthost) {
+                    $currenthost = new OERHost();
+                    $currenthost['url'] = trim($review_data['host']['url']);
+                    $currenthost['last_updated'] = time();
+                    $currenthost->fetchPublicKey();
+                    if ($currenthost['public_key']) {
+                        $currenthost->store();
                     }
-                    if ($currenthost && $currenthost['public_key'] && !$currenthost->isMe()) {
-                        $review = OERReview::findOneBySQL("
-                                context_id = :context_id
-                                AND `metadata` LIKE :foreign_review_id
-                                AND `metadata` LIKE :host_id", [
-                            'context_id' => $this->getId(),
-                            'foreign_review_id' => "%".$review_data['foreign_review_id']."%",
-                            'host_id' => "%".$currenthost->getId()."%"
-                        ]);
-                        if (!$review) {
-                            $review = new OERReview();
-                            $review['context_id'] = $this->getId();
-                            $review['context_type'] = "public";
-                            $review['display_class'] = "OERReview";
-                            $review['visible_in_stream'] = 0;
-                            $review['commentable'] = 1;
-                        }
-                        $review['content'] = $review_data['review'];
-                        $review['metadata'] = [
-                            'host_id' => $currenthost->getId(),
-                            'foreign_review_id' => $review_data['foreign_review_id'],
-                            'rating' => $review_data['rating']
-                        ];
-                        if ($review_data['chdate']) {
-                            $review['chdate'] = $review_data['chdate'];
-                        }
-                        if ($review_data['mkdate']) {
-                            $review['mkdate'] = $review_data['mkdate'];
-                        }
-
-                        $user = ExternalUser::findOneBySQL("foreign_id = :foreign_id AND host_id = :host_id", [
-                            'foreign_id' => $review_data['user']['user_id'],
-                            'host_id' => $currenthost->getId()
-                        ]);
-
-                        if (!$user) {
-                            $user = new ExternalUser();
-                            $user['foreign_id'] = $review_data['user']['user_id'];
-                            $user['host_id'] = $currenthost->getId();
-                        }
-                        $user['contact_type'] = "oercampus";
-                        $user['name'] = $review_data['user']['name'];
-                        $user['avatar_url'] = $review_data['user']['avatar'] ?: null;
-                        $user['data']['description'] = $review_data['user']['description'] ?: null;
-                        $user->store();
-
-                        $review['user_id'] = $user->getId();
-
-                        $review->store();
+                }
+                if ($currenthost && $currenthost['public_key'] && !$currenthost->isMe()) {
+                    $review = OERReview::findOneBySQL("
+                            context_id = :context_id
+                            AND `metadata` LIKE :foreign_review_id
+                            AND `metadata` LIKE :host_id", [
+                        'context_id' => $this->getId(),
+                        'foreign_review_id' => "%".$review_data['foreign_review_id']."%",
+                        'host_id' => "%".$currenthost->getId()."%"
+                    ]);
+                    if (!$review) {
+                        $review = new OERReview();
+                        $review['context_id'] = $this->getId();
+                        $review['context_type'] = "public";
+                        $review['display_class'] = "OERReview";
+                        $review['visible_in_stream'] = 0;
+                        $review['commentable'] = 1;
                     }
+                    $review['content'] = $review_data['review'];
+                    $review['metadata'] = [
+                        'host_id' => $currenthost->getId(),
+                        'foreign_review_id' => $review_data['foreign_review_id'],
+                        'rating' => $review_data['rating']
+                    ];
+                    if ($review_data['chdate']) {
+                        $review['chdate'] = $review_data['chdate'];
+                    }
+                    if ($review_data['mkdate']) {
+                        $review['mkdate'] = $review_data['mkdate'];
+                    }
+
+                    $user = ExternalUser::findOneBySQL("foreign_id = :foreign_id AND host_id = :host_id", [
+                        'foreign_id' => $review_data['user']['user_id'],
+                        'host_id' => $currenthost->getId()
+                    ]);
+
+                    if (!$user) {
+                        $user = new ExternalUser();
+                        $user['foreign_id'] = $review_data['user']['user_id'];
+                        $user['host_id'] = $currenthost->getId();
+                    }
+                    $user['contact_type'] = "oercampus";
+                    $user['name'] = $review_data['user']['name'];
+                    $user['avatar_url'] = $review_data['user']['avatar'] ?: null;
+                    $user['data']['description'] = $review_data['user']['description'] ?: null;
+                    $user->store();
+
+                    $review['user_id'] = $user->getId();
+
+                    $review->store();
                 }
             }
         }

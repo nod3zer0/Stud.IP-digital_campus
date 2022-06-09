@@ -373,10 +373,6 @@ ul.reviews, ol.reviews {
         display: none !important;
     }
 
-    article.contentbox {
-        animation: oer-material-appears 200ms ease-out;
-    }
-
     .browser {
         margin-top: 15px;
         padding: 10px;
@@ -462,18 +458,6 @@ ul.reviews, ol.reviews {
     }
 }
 
-@keyframes oer-material-appears {
-    from {
-        opacity: 0;
-        max-width: 0px;
-        overflow: hidden;
-    }
-    to {
-        overflow: hidden;
-        max-width: 270px;
-        opacity: 1;
-    }
-}
 
 @keyframes oer-tag-appears {
     from {

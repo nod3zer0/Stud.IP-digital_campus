@@ -169,7 +169,7 @@
                                      role="clickable"
                                      size="20"
                                      class="text-bottom"></studip-icon>
-                        {{ result.name }}
+                        {{ shortenName(result.name) }}
                     </h1>
                 </header>
                 <div class="image" :style="'background-image: url(' + result.logo_url + ');' + (!result.front_image_content_type ? ' background-size: 60% auto;': '')"></div>

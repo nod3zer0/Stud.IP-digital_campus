@@ -62,6 +62,12 @@ class Oer_MarketController extends StudipController
             $tags = $this->tag_history = Request::getArray("tags");
             $this->without_tags = [];
             $tag_to_search_for = array_pop($tags);
+
+            OERMaterial::fetchRemoteSearch(
+                null,
+                $tag_to_search_for
+            );
+
             foreach (OERTag::findBest($tag_matrix_entries_number, true) as $related_tag) {
                 if ($related_tag['tag_hash'] !== $this->tag_history[0]) {
                     $this->without_tags[] = $related_tag['tag_hash'];
@@ -203,7 +209,12 @@ class Oer_MarketController extends StudipController
         if (Navigation::hasItem("/oer/market")) {
             Navigation::activateItem("/oer/market");
         }
-        $this->material = new OERMaterial($material_id);
+        $this->material = OERMaterial::find($material_id);
+        if (!$this->material) {
+            PageLayout::postError(_('Lernmaterial existiert nicht mehr.'));
+            $this->redirect('oer/market');
+            return;
+        }
 
         //OpenGraph tags:
         PageLayout::addHeadElement("meta", ['og:title' => $this->material['name']]);
