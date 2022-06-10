@@ -39,7 +39,7 @@ $actions = new ActionsWidget();
 $actions->addLink(
     _('Fragebogen erstellen'),
     $controller->url_for('questionnaire/add_to_context', $range_type ? ['range_type' => $range_type, 'range_id' => Context::getId()]: []),
-    Icon::create('add', 'clickable'),
+    Icon::create('add'),
     ['data-dialog' => 'size=auto']
 );
 Sidebar::Get()->addWidget($actions);

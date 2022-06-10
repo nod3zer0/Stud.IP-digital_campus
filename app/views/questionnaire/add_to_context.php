@@ -8,13 +8,13 @@ $icons = [
 <div class="file_select_possibilities">
     <div>
         <a href="<?= $controller->link_for("questionnaire/edit", ['range_type' => Context::getType(), 'range_id' => Context::get()->id]) ?>"
-           data-dialog>
+           data-dialog="size=big">
             <?= Icon::create($icons[Context::getType()], Icon::ROLE_CLICKABLE)->asImg(50) ?>
             <?= htmlReady(Context::get()->name) ?>
         </a>
         <? foreach ($statusgruppen as $statusgruppe) : ?>
             <a href="<?= $controller->link_for("questionnaire/edit", ['range_type' => "statusgruppe", 'range_id' => $statusgruppe->getId()]) ?>"
-               data-dialog>
+               data-dialog="size=big">
                 <?= Icon::create('group2', Icon::ROLE_CLICKABLE)->asImg(50) ?>
                 <?= htmlReady($statusgruppe->name) ?>
             </a>
