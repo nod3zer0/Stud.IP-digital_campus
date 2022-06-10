@@ -10,9 +10,11 @@ class RoomSearchWidget extends SidebarWidget
     protected $criteria;
     protected $selected_criteria;
     protected $defined_properties;
+    protected $semesters;
 
     protected function setupSearchParameters()
     {
+        $this->semesters = array_reverse(Semester::getAll());
         $this->defined_properties = RoomManager::getAllRoomPropertyDefinitions(
             true,
             [
@@ -121,7 +123,6 @@ class RoomSearchWidget extends SidebarWidget
         }
 
         $current_semester = Semester::findCurrent();
-        $all_semesters = Semester::getAll();
         $begin = new DateTime();
         $begin = $begin->setTimestamp($current_semester->beginn);
         $begin->setTime(intval(date('H')), 0, 0);
@@ -134,7 +135,6 @@ class RoomSearchWidget extends SidebarWidget
             'optional' => false,
             'enabled' => false,
             'semester' => [
-                'objects' => $all_semesters,
                 'value' => $current_semester->id
             ],
             'range' => [
@@ -561,6 +561,7 @@ class RoomSearchWidget extends SidebarWidget
             'criteria'          => $this->criteria,
             'selected_criteria' => $this->selected_criteria,
             'action_link'       => $this->action_link,
+            'semesters'         => $this->semesters
         ]);
 
         return $GLOBALS['template_factory']->render(

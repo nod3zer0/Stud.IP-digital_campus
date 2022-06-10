@@ -48,8 +48,8 @@
             <div><?= _('Semester') ?></div>
             <select name="<?= htmlReady($criteria['name'] . '_semester_id') ?>">
                 <option value=""><?= _('Bitte wählen') ?></option>
-                <? if (is_array($criteria['semester']['objects'])): ?>
-                    <? foreach ($criteria['semester']['objects'] as $semester): ?>
+                <? if (is_array($semesters)) : ?>
+                    <? foreach ($semesters as $semester): ?>
                         <option value="<?= htmlReady($semester->id) ?>"
                                 <?= ($semester->id == $criteria['semester']['value']
                                    ? 'selected="selected"'
