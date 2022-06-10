@@ -400,6 +400,19 @@ export const actions = {
         return dispatch('courseware-structure/loadDescendants', { root: newElement });
     },
 
+    async linkStructuralElement({ dispatch, getters, rootGetters }, { parentId, elementId }) {
+        const link = { data: { parent_id: parentId } };
+
+        const result = await state.httpClient.post(`courseware-structural-elements/${elementId}/link`, link);
+        const id = result.data.data.id;
+        await dispatch('loadStructuralElement', id);
+
+        const newElement = rootGetters['courseware-structural-elements/byId']({ id });
+
+        return dispatch('courseware-structure/loadDescendants', { root: newElement });
+
+    },
+
     async createBlockInContainer({ dispatch }, { container, blockType }) {
         const block = {
             attributes: {

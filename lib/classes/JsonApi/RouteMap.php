@@ -396,6 +396,7 @@ class RouteMap
 
         // not a JSON route
         $group->post('/courseware-structural-elements/{id}/copy', Routes\Courseware\StructuralElementsCopy::class);
+        $group->post('/courseware-structural-elements/{id}/link', Routes\Courseware\StructuralElementsLink::class);
 
         $group->get('/courseware-structural-elements/{id}/comments', Routes\Courseware\StructuralElementCommentsOfStructuralElementsIndex::class);
         $group->post('/courseware-structural-element-comments', Routes\Courseware\StructuralElementCommentsCreate::class);

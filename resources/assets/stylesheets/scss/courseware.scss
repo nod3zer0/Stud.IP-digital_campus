@@ -2591,10 +2591,9 @@ m a n a g e r
 .cw-course-manager {
     display: flex;
     flex-wrap: wrap;
-    max-width: 1120px;
+    max-width: 1600px;
 
     .cw-course-manager-tabs {
-        max-width: 560px;
         width: calc(50% - 10px);
         margin-right: 20px;
 

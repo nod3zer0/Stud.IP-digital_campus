@@ -29,6 +29,7 @@ class StructuralElementsShow extends JsonApiController
         'editor',
         'owner',
         'parent',
+        'target'
     ];
 
     /**

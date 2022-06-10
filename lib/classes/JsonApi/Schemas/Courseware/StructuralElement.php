@@ -51,7 +51,8 @@ class StructuralElement extends SchemaProvider
             'write-approval' => $resource['write_approval']->getIterator(),
             'copy-approval' => $resource['copy_approval']->getIterator(),
             'can-edit' => $resource->canEdit($user),
-
+            'is-link' => (int) $resource['is_link'],
+            'target-id' => (int)  $resource['target_id'],
             'external-relations' => $resource['external_relations']->getIterator(),
             'mkdate' => date('c', $resource['mkdate']),
             'chdate' => date('c', $resource['chdate']),

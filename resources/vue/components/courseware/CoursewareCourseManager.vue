@@ -92,7 +92,11 @@
                     <courseware-manager-copy-selector @loadSelf="reloadElements" @reloadElement="reloadElements" />
                 </courseware-tab>
 
-                <courseware-tab :name="$gettext('Importieren')"  :index="3">
+                <courseware-tab :name="$gettext('Verknüpfen')" :index="3">
+                    <courseware-manager-link-selector @loadSelf="reloadElements" @reloadElement="reloadElements" />
+                </courseware-tab>
+
+                <courseware-tab :name="$gettext('Importieren')" :index="4">
                     <courseware-manager-import />
                 </courseware-tab>
                 <courseware-tab v-if="context.type === 'courses'" :name="$gettext('Aufgabe verteilen')"  :index="4">
@@ -109,6 +113,7 @@ import CoursewareTab from './CoursewareTab.vue';
 import CoursewareCollapsibleBox from './CoursewareCollapsibleBox.vue';
 import CoursewareManagerElement from './CoursewareManagerElement.vue';
 import CoursewareManagerCopySelector from './CoursewareManagerCopySelector.vue';
+import CoursewareManagerLinkSelector from './CoursewareManagerLinkSelector.vue';
 import CoursewareManagerTaskDistributor from './CoursewareManagerTaskDistributor.vue';
 import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
@@ -124,6 +129,7 @@ export default {
         CoursewareCollapsibleBox,
         CoursewareManagerElement,
         CoursewareManagerCopySelector,
+        CoursewareManagerLinkSelector,
         CoursewareCompanionOverlay,
         CoursewareCompanionBox,
         CoursewareManagerTaskDistributor,

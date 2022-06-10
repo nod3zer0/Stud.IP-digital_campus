@@ -29,6 +29,7 @@
                 </header>
             </div>
             <courseware-collapsible-box
+            v-if="!elementsOnly"
                 :open="true"
                 :title="$gettext('Abschnitt')"
                 class="cw-manager-element-containers"
@@ -137,7 +138,7 @@ export default {
     props: {
         type: {
             validator(value) {
-                return ['current', 'self', 'remote', 'own','import'].includes(value);
+                return ['current', 'self', 'remote', 'own', 'import', 'link'].includes(value);
             },
         },
         remoteCoursewareRangeId: String,
@@ -147,6 +148,9 @@ export default {
         },
         moveSelfChildPossible: {
             default: true
+        },
+        elementsOnly: {
+            default: false
         }
     },
     data() {
@@ -162,9 +166,11 @@ export default {
             discardStateArrayContainers: [],
             insertingInProgress: false,
             copyingFailed: false,
+            linkingFailed: false,
             text: {
                 inProgress: this.$gettext('Vorgang läuft. Bitte warten Sie einen Moment.'),
                 copyProcessFailed: [],
+                linkProcessFailed: [],
             },
         };
     },
@@ -314,6 +320,7 @@ export default {
             updateStructuralElement: 'updateStructuralElement',
             deleteStructuralElement: 'deleteStructuralElement',
             copyStructuralElement: 'copyStructuralElement',
+            linkStructuralElement: 'linkStructuralElement',
             loadStructuralElement: 'loadStructuralElement',
             loadContainer: 'loadContainer',
             updateContainer: 'updateContainer',
@@ -335,7 +342,7 @@ export default {
         },
 
          validateSource(source) {
-            return (source === 'self' || source === 'remote' || source === 'own');
+            return ['self', 'remote', 'own', 'link'].includes(source);
         },
 
         afterInsertCompletion() {
@@ -354,6 +361,11 @@ export default {
 
         showFailedCopyProcessCompanion() {
             this.copyingFailed = true;
+            this.insertingInProgress = false;
+        },
+
+        showFailedLinkProcessCompanion() {
+            this.linkingFailed = true;
             this.insertingInProgress = false;
         },
 
@@ -380,7 +392,8 @@ export default {
                     await this.unlockObject({ id: element.id, type: 'courseware-structural-elements' });
                     this.loadStructuralElement(this.currentElement.id);
                     this.$emit('reloadElement');
-                } else if(source === 'remote' || source === 'own') {
+                }
+                if (source === 'remote' || source === 'own') {
                     //create Element
                     let parentId = this.filingData.parentItem.id;
                     await this.copyStructuralElement({
@@ -391,6 +404,18 @@ export default {
                         let message = this.$gettextInterpolate('%{ pageTitle } konnte nicht kopiert werden.', {pageTitle: element.attributes.title});
                         this.text.copyProcessFailed.push(message);
                         this.showFailedCopyProcessCompanion();
+                    });
+                    this.$emit('loadSelf', parentId);
+                }
+                if (source === 'link') {
+                    let parentId = this.filingData.parentItem.id;
+                    await this.linkStructuralElement({
+                        parentId: parentId,
+                        elementId: element.id,
+                    }).catch((error) => {
+                        let message = this.$gettextInterpolate('%{ pageTitle } konnte nicht verknüpft werden.', {pageTitle: element.attributes.title});
+                        this.text.linkProcessFailed.push(message);
+                        this.showFailedLinkProcessCompanion();
                     });
                     this.$emit('loadSelf', parentId);
                 }
@@ -583,6 +608,8 @@ export default {
                 }
                 this.copyingFailed = false;
                 this.text.copyProcessFailed = [];
+                this.linkingFailed = false;
+                this.text.linkProcessFailed = [];
             } else {
                 this.elementInserterActive = false;
                 this.containerInserterActive = false;
@@ -595,7 +622,7 @@ export default {
     },
     watch: {
         filingData(newValue) {
-            if (!['self', 'remote', 'own', 'import'].includes(this.type)) {
+            if (!['self', 'remote', 'own', 'import', 'link'].includes(this.type)) {
                 return false;
             }
             this.updateFilingData(newValue);

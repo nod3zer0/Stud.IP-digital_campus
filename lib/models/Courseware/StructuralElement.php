@@ -16,6 +16,8 @@ use User;
  *
  * @property int                            $id                 database column
  * @property int                            $parent_id          database column
+ * @property int                            $is_link            database column
+ * @property int                            $target_id          database column
  * @property string                         $range_id           database column
  * @property string                         $range_type         database column
  * @property string                         $owner_id           database column
@@ -269,8 +271,16 @@ class StructuralElement extends \SimpleORMap
         switch ($this->range_type) {
             case 'user':
                 // Kontext "user": Nutzende können nur ihre eigenen Strukturknoten sehen.
-                return $this->range_id === $user->id;
+                if  ($this->range_id === $user->id) {
+                    return true;
+                }
 
+                $link = StructuralElement::findOneBySQL('target_id = ?', [$this->id]);
+                if ($link) {
+                    return true;
+                }
+
+                return false;
             case 'course':
                 if (!$GLOBALS['perm']->have_studip_perm('user', $this->range_id, $user->id)) {
                     return false;
@@ -773,6 +783,39 @@ SQL;
 
         foreach ($children as $child) {
             $child->copy($user, $newElement, $purpose);
+        }
+    }
+
+    public function link(User $user, StructuralElement $parent): StructuralElement
+    {
+        $element = self::build([
+            'parent_id' => $parent->id,
+            'is_link' => 1,
+            'target_id' => $this->id,
+            'range_id' => $parent->range_id,
+            'range_type' => $parent->range_type,
+            'owner_id' => $user->id,
+            'editor_id' => $user->id,
+            'edit_blocker_id' => null,
+            'title' => $this->title,
+            'purpose' => $this->purpose,
+            'position' => $parent->countChildren(),
+            'payload' => $this->payload,
+        ]);
+
+        $element->store();
+
+        $this->linkChildren($user, $element);
+
+        return $element;
+    }
+
+    private function linkChildren(User $user, StructuralElement $newElement): void
+    {
+        $children = self::findBySQL('parent_id = ?', [$this->id]);
+
+        foreach ($children as $child) {
+            $child->link($user, $newElement);
         }
     }
 

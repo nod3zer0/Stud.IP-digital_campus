@@ -12,11 +12,11 @@
                             <router-link v-if="prevElement" :to="'/structural_element/' + prevElement.id">
                                 <div class="cw-ribbon-button cw-ribbon-button-prev" :title="textRibbon.perv" />
                             </router-link>
-                            <div v-else class="cw-ribbon-button cw-ribbon-button-prev-disabled" :title="$gettext('keine vorherige Seite')"/>
+                            <div v-else class="cw-ribbon-button cw-ribbon-button-prev-disabled" :title="$gettext('Keine vorherige Seite')"/>
                             <router-link v-if="nextElement" :to="'/structural_element/' + nextElement.id">
                                 <div class="cw-ribbon-button cw-ribbon-button-next" :title="textRibbon.next" />
                             </router-link>
-                            <div v-else class="cw-ribbon-button cw-ribbon-button-next-disabled" :title="$gettext('keine nächste Seite')"/>
+                            <div v-else class="cw-ribbon-button cw-ribbon-button-next-disabled" :title="$gettext('Keine nächste Seite')"/>
                         </template>
                         <template #breadcrumbList>
                             <li
@@ -66,7 +66,7 @@
                     </courseware-ribbon>
 
                     <div
-                        v-if="canVisit && !sortMode"
+                        v-if="canVisit && !sortMode && !isLink"
                         class="cw-container-wrapper"
                         :class="{
                             'cw-container-wrapper-consume': consumeMode,
@@ -93,6 +93,35 @@
                             :container="container"
                             :canEdit="canEdit"
                             :canAddElements="canAddElements"
+                            :isTeacher="userIsTeacher"
+                            class="cw-container-item"
+                        />
+                    </div>
+                    <div
+                        v-if="isLink"
+                        class="container-wrapper"
+                        :class="{
+                            'cw-container-wrapper-consume': consumeMode,
+                            'cw-container-wrapper-discuss': discussView,
+                        }"
+                    >
+                        <courseware-structural-element-discussion
+                            v-if="discussView"
+                            :structuralElement="structuralElement"
+                            :canEdit="canEdit"
+                        />
+                        <courseware-companion-box
+                            v-if="editView"
+                            :msgCompanion="$gettextInterpolate('Dieser Inhalt ist aus den persönlichen Lerninhalten von %{ ownerName } verlinkt und kann nur dort bearbeitet werden.', { ownerName: ownerName })"
+                            mood="pointing"
+                        />
+                        <component
+                            v-for="container in linkedContainers"
+                            :key="container.id"
+                            :is="containerComponent(container)"
+                            :container="container"
+                            :canEdit="false"
+                            :canAddElements="false"
                             :isTeacher="userIsTeacher"
                             class="cw-container-item"
                         />
@@ -1058,6 +1087,9 @@ export default {
         discussView() {
             return this.viewMode === 'discuss';
         },
+        editView() {
+            return this.viewMode === 'edit';
+        },
         pdfExportURL() {
             if (this.context.type === 'users') {
                 return STUDIP.URLHelper.getURL(
@@ -1130,6 +1162,45 @@ export default {
                 (!this.isRoot && this.canEdit) || !this.canEdit || (!this.noContainers && this.isRoot && this.canEdit)
             );
         },
+
+        isLink() {
+            if (this.structuralElement) {
+                return this.structuralElement.attributes['is-link'] === 1;
+            }
+
+            return false;
+        },
+
+        linkedElement() {
+            if (this.isLink) {
+                return this.structuralElementById({ id: this.structuralElement.attributes['target-id']});
+            }
+
+            return null;
+        },
+
+        linkedContainers() {
+            let containers = [];
+            let relatedContainers = this.linkedElement?.relationships?.containers?.data;
+
+            if (relatedContainers) {
+                for (const container of relatedContainers) {
+                    containers.push(this.containerById({ id: container.id}));
+                }
+            }
+
+            return containers;
+        },
+        owner() {
+            const user = this.$store.getters['users/related']({
+                parent: { type: this.structuralElement.type, id: this.structuralElement.id },
+                relationship: 'owner'
+            });
+            return user ? user : null;
+        },
+        ownerName() {
+            return this.owner ? this.owner.attributes['formatted-name'] : '?';
+        },
     },
 
     methods: {
@@ -1157,6 +1228,7 @@ export default {
             setStructuralElementSortMode: 'setStructuralElementSortMode',
             sortContainersInStructualElements: 'sortContainersInStructualElements',
             loadTask: 'loadTask',
+            loadStructuralElement: 'loadStructuralElement',
         }),
 
         initCurrent() {
@@ -1422,6 +1494,10 @@ export default {
                 this.loadTask({
                     taskId: this.structuralElement.relationships.task.data.id,
                 });
+            }
+
+            if (this.isLink) {
+                this.loadStructuralElement(this.structuralElement.attributes['target-id']);
             }
         },
         containers() {
