@@ -1,7 +1,9 @@
 <template>
     <div>
         <div v-if="structureLoadingState === 'done'">
+            <courseware-search-results v-show="showSearchResults" />
             <courseware-structural-element
+                v-show="!showSearchResults"
                 :canVisit="canVisit"
                 :structural-element="selected"
                 :ordered-structural-elements="orderedStructuralElements"
@@ -10,11 +12,14 @@
             <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions">
                 <courseware-action-widget :structural-element="selected" :canVisit="canVisit"></courseware-action-widget>
             </MountingPortal>
-            <MountingPortal mountTo="#courseware-export-widget" name="sidebar-actions">
-                <courseware-export-widget :structural-element="selected" :canVisit="canVisit"></courseware-export-widget>
+            <MountingPortal mountTo="#courseware-search-widget" name="sidebar-search">
+                <courseware-search-widget></courseware-search-widget>
             </MountingPortal>
             <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
                 <courseware-view-widget :structural-element="selected" :canVisit="canVisit"></courseware-view-widget>
+            </MountingPortal>
+            <MountingPortal mountTo="#courseware-export-widget" name="sidebar-export">
+                <courseware-export-widget :structural-element="selected" :canVisit="canVisit"></courseware-export-widget>
             </MountingPortal>
         </div>
         <studip-progress-indicator
@@ -27,26 +32,34 @@
             mood="sad"
             :msgCompanion="loadingErrorMessage"
         />
+        <courseware-companion-overlay />
     </div>
 </template>
 
 <script>
 import CoursewareStructuralElement from './CoursewareStructuralElement.vue';
+import CoursewareSearchResults from './CoursewareSearchResults.vue';
 import CoursewareViewWidget from './CoursewareViewWidget.vue';
 import CoursewareActionWidget from './CoursewareActionWidget.vue';
 import CoursewareExportWidget from './CoursewareExportWidget.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
+import CoursewareSearchWidget from './CoursewareSearchWidget.vue';
+import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
 import StudipProgressIndicator from '../StudipProgressIndicator.vue';
+
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     components: {
         CoursewareStructuralElement,
+        CoursewareSearchResults,
         CoursewareViewWidget,
         CoursewareActionWidget,
         CoursewareCompanionBox,
         StudipProgressIndicator,
-        CoursewareExportWidget
+        CoursewareExportWidget,
+        CoursewareSearchWidget,
+        CoursewareCompanionOverlay,
     },
     data: () => ({
         canVisit: null,
@@ -61,6 +74,7 @@ export default {
             courseware: 'courseware',
             orderedStructuralElements: 'courseware-structure/ordered',
             relatedStructuralElement: 'courseware-structural-elements/related',
+            showSearchResults: 'showSearchResults',
             structuralElementLastMeta: 'courseware-structural-elements/lastMeta',
             structuralElements: 'courseware-structural-elements/all',
             structuralElementById: 'courseware-structural-elements/byId',

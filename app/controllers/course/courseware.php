@@ -117,6 +117,12 @@ class Course_CoursewareController extends AuthenticatedController
         $sidebar->addWidget($actions)->addLayoutCSSClass('courseware-action-widget');
 
         $views = new TemplateWidget(
+            _('Suche'),
+            $this->get_template_factory()->open('course/courseware/search_widget')
+        );
+        $sidebar->addWidget($views)->addLayoutCSSClass('courseware-search-widget');
+
+        $views = new TemplateWidget(
             _('Ansichten'),
             $this->get_template_factory()->open('course/courseware/view_widget')
         );

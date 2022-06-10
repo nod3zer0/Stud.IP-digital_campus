@@ -280,6 +280,10 @@ $consum_ribbon_width: calc(100% - 58px);
         .cw-ribbon-nav {
             display: flex;
             min-width: 75px;
+
+            &.single-icon {
+                min-width: 45px;
+            }
         }
 
         .cw-ribbon-breadcrumb {
@@ -326,6 +330,12 @@ $consum_ribbon_width: calc(100% - 58px);
 
     .cw-ribbon-wrapper-right {
         display: flex;
+
+        button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
     }
 
     .cw-ribbon-button {

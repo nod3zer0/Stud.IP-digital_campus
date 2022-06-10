@@ -3,7 +3,7 @@
         <div v-if="stickyRibbon" class="cw-ribbon-sticky-top"></div>
         <header class="cw-ribbon" :class="{ 'cw-ribbon-sticky': stickyRibbon, 'cw-ribbon-consume': consumeMode }">
             <div class="cw-ribbon-wrapper-left">
-                <nav class="cw-ribbon-nav">
+                <nav class="cw-ribbon-nav" :class="buttonsClass">
                     <slot name="buttons" />
                 </nav>
                 <nav class="cw-ribbon-breadcrumb">
@@ -17,7 +17,7 @@
                 <button
                     class="cw-ribbon-button cw-ribbon-button-menu"
                     :title="textRibbon.toolbar"
-                    @click="activeToolbar"
+                    @click.prevent="activeToolbar"
                 >
                 </button>
                 <button
@@ -54,6 +54,15 @@ export default {
     },
     props: {
         canEdit: Boolean,
+        showToolbarButton: {
+            default: true,
+            type: Boolean
+        },
+        showModeSwitchButton: {
+            default: true,
+            type: Boolean
+        },
+        buttonsClass: String,
     },
     data() {
         return {

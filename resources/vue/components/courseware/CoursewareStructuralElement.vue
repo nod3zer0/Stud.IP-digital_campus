@@ -170,8 +170,6 @@
                     </div>
                 </div>
 
-                <courseware-companion-overlay />
-
                 <studip-dialog
                     v-if="showEditDialog"
                     :title="textEdit.title"
@@ -581,7 +579,6 @@ import CoursewareAccordionContainer from './CoursewareAccordionContainer.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareWellcomeScreen from './CoursewareWellcomeScreen.vue';
 import CoursewareEmptyElementBox from './CoursewareEmptyElementBox.vue';
-import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
 import CoursewareListContainer from './CoursewareListContainer.vue';
 import CoursewareTabsContainer from './CoursewareTabsContainer.vue';
 import CoursewareRibbon from './CoursewareRibbon.vue';
@@ -605,7 +602,6 @@ export default {
         CoursewareAccordionContainer,
         CoursewareTabsContainer,
         CoursewareCompanionBox,
-        CoursewareCompanionOverlay,
         CoursewareWellcomeScreen,
         CoursewareEmptyElementBox,
         CoursewareTabs,

@@ -54,6 +54,9 @@ const getDefaultState = () => {
         showOverviewElementAddDialog: false,
 
         bookmarkFilter: 'all',
+
+        showSearchResults: false,
+        searchResults: [],
     };
 };
 
@@ -203,6 +206,12 @@ const getters = {
     },
     bookmarkFilter(state) {
         return state.bookmarkFilter;
+    },
+    showSearchResults(state) {
+        return state.showSearchResults;
+    },
+    searchResults(state) {
+        return state.searchResults;
     },
 };
 
@@ -844,6 +853,14 @@ export const actions = {
         commit('setExportProgress', percent);
     },
 
+    setShowSearchResults({ commit }, state) {
+        commit('setShowSearchResults', state);
+    },
+
+    setSearchResults({ commit }, state) {
+        commit('setSearchResults', state);
+    },
+
     addBookmark({ dispatch, rootGetters }, structuralElement) {
         const cw = rootGetters['courseware'];
 
@@ -1341,6 +1358,12 @@ export const mutations = {
     },
     setBookmarkFilter(state, course) {
         state.bookmarkFilter = course;
+    },
+    setShowSearchResults(state, searchState) {
+        state.showSearchResults = searchState;
+    },
+    setSearchResults(state, results) {
+        state.searchResults = results;
     },
 };
 
