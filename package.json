@@ -91,6 +91,7 @@
         "vue-loader": "^15.9.6",
         "vue-router": "^3.5.1",
         "vue-select": "^3.11.2",
+        "vue-template-babel-compiler": "^1.2.0",
         "vue-template-compiler": "^2.6.12",
         "vue-twentytwenty": "^0.10.1",
         "vue-typer": "^1.2.0",
