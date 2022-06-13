@@ -59,7 +59,7 @@ class NewsRangesInput extends Input
             foreach (\Institute::getMyInstitutes() as $institut) {
                 $inst_options[] = [
                     'value' => $institut['Institut_id'] . '__institute',
-                    'name'  => $institut['Name'],
+                    'name'  => (string) $institut['Name'],
                 ];
             }
             if (count($inst_options)) {
@@ -73,7 +73,7 @@ class NewsRangesInput extends Input
             foreach (\Course::findByUser(\User::findCurrent()->id) as $course) {
                 $course_options[] = [
                     'value' => $course->getId()."__seminar",
-                    'name' => $course['name']
+                    'name' => (string) $course['name']
                 ];
             }
             if (count($course_options)) {
