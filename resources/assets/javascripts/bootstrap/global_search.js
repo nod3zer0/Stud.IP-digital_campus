@@ -88,8 +88,9 @@ STUDIP.domReady(() => {
         }
     });
 
-    // Start searching 750 ms after user stopped typing.
-    $('#globalsearch-input').keyup(
+    // Start searching 750 ms after user stopped typing or content was added
+    // by pasting text via right-click.
+    $('#globalsearch-input').on('keyup paste',
         _.debounce(function() {
             STUDIP.GlobalSearch.doSearch();
         }, 750)
