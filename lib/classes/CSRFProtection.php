@@ -49,7 +49,7 @@ class CSRFProtection
      * This checks the request and throws an InvalidSecurityTokenException if
      * fails to verify its authenticity.
      *
-     * @throws MethodNotAllowed               The request has to be unsafe
+     * @throws MethodNotAllowedException      The request has to be unsafe
      *                                        in terms of RFC 2616.
      * @throws InvalidSecurityTokenException  The request is invalid as the
      *                                        security token does not match.
@@ -139,14 +139,19 @@ class CSRFProtection
      * <input type="hidden" name="security_token" value="012345678901234567890123456789==">
      * \endcode
      *
+     * @param array $attributes Additional attributes to be added to the input
      * @return string  the HTML snippet containing the input element
      */
-    public static function tokenTag()
+    public static function tokenTag(array $attributes = [])
     {
+        $attributes = array_merge($attributes, [
+            'name'  => self::TOKEN,
+            'value' => self::token(),
+        ]);
+
         return sprintf(
-            '<input type="hidden" name="%s" value="%s">',
-            self::TOKEN,
-            self::token()
+            '<input type="hidden" %s>',
+            arrayToHtmlAttributes($attributes)
         );
     }
 }

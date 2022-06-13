@@ -96,6 +96,25 @@ form.default {
         }
     }
 
+    .formpart {
+        margin-bottom: @gap;
+
+        output.calculator_result {
+            display: block;
+            margin-top: 2.3ex;
+        }
+    }
+    .editablelist {
+        margin-bottom: @gap;
+        > li {
+            margin-bottom: 10px;
+            &:last-child {
+                margin-bottom: 0px;
+            }
+        }
+    }
+
+
     .label-text {
         display: inline-block;
         text-indent: 0.25ex;
@@ -190,6 +209,12 @@ form.default {
             color: red;
         }
     }
+    .studiprequired {
+        font-weight: bold;
+        .asterisk {
+            color: red;
+        }
+    }
 
     input[type=checkbox], input[type=radio] {
         vertical-align: text-bottom;
@@ -281,6 +306,7 @@ form.default {
         display: flex;
         align-items: center;
         flex-wrap: wrap;
+        align-items: flex-start;
         max-width: @max-width-m;
 
         &.size-s {
@@ -313,6 +339,9 @@ form.default {
                 display: inline-block;
                 margin-top: 0;
                 width: auto;
+            }
+            .quicksearch_container input {
+                width: 100%;
             }
         }
 
@@ -443,6 +472,11 @@ form.default {
         }
     }
 
+    .validation_notes_icon {
+        position: relative;
+        top: -2px;
+    }
+
     &.show_validation_hints {
         :invalid, .invalid {
             .icon('before', 'exclaim-circle', 'attention', 16, 5px);
@@ -450,6 +484,42 @@ form.default {
         }
         textarea:invalid, input[type=text]:invalid {
             border-left: 4px solid @red;
+        }
+    }
+
+    //designing vue-select in studipform:
+    .vs__dropdown-toggle {
+        border-radius: 0px;
+    }
+    .vs__selected {
+        border-radius: 0px;
+        padding: 5px;
+    }
+
+    .range_input {
+        display: flex;
+        align-items: center;
+        input[type=range] {
+            &::-moz-range-track {
+                height: 11px;
+                border: 1px solid @content-color;
+                background-color: transparent;
+            }
+            &::-moz-range-progress {
+                background-color: @base-color;
+                height: 11px;
+            }
+            &::-moz-range-thumb {
+                border-radius: 0px;
+                width: 1.2em;
+                height: 1.2em;
+            }
+            &::-moz-range-thumb:hover {
+                background-color: @content-color;
+            }
+        }
+        output {
+            margin-left: 10px;
         }
     }
 }

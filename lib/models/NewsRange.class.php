@@ -52,7 +52,7 @@ class NewsRange extends SimpleORMap
     {
         switch ($this->type) {
             case 'global':
-                return 'Stud.IP';
+                return _('Stud.IP-Startseite');
                 break;
             case 'sem':
                 return $this->course->name;

@@ -49,7 +49,7 @@ class NewsWidget extends CorePlugin implements PortalPlugin
 
         if ($GLOBALS['perm']->have_perm('root')) {
             $navigation = new Navigation('', 'dispatch.php/news/edit_news/new/studip');
-            $navigation->setImage(Icon::create('add', 'clickable', ["title" => _('Ankündigungen bearbeiten')]), ['rel' => 'get_dialog']);
+            $navigation->setImage(Icon::create('add', Icon::ROLE_CLICKABLE, ['title' => _('Ankündigungen bearbeiten')]), ['data-dialog' => '1']);
             $icons[] = $navigation;
             if (Config::get()->NEWS_RSS_EXPORT_ENABLE) {
                 $navigation = new Navigation('', 'dispatch.php/news/rss_config/studip');

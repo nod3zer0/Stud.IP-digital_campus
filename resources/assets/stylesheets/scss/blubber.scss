@@ -7,11 +7,6 @@
         filter: blur(1px);
         opacity: 0.5;
     }
-    [v-if],
-    [v-for],
-    [v-show] {
-        display: none;
-    }
     .context_info {
         .followunfollow {
             &.loading {

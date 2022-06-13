@@ -220,8 +220,6 @@ class NewsController extends StudipController
                 $this->route .= "/{$template_id}";
         }
 
-        $msg_object = new messaging();
-
         if ($id === 'new') {
             unset($id);
             PageLayout::setTitle(_('Ankündigung erstellen'));
@@ -236,15 +234,14 @@ class NewsController extends StudipController
 
         // load news and comment data and check if user has permission to edit
         $news = new StudipNews($id);
-        if (!$news->isNew()) {
-            $this->comments = StudipComment::GetCommentsForObject($id);
-        }
 
         if (!$news->havePermission('edit') && !$news->isNew()) {
             throw new AccessDeniedException();
         }
 
-        if(!$news->isNew()){
+        if (!$news->isNew()) {
+            $this->comments = StudipComment::GetCommentsForObject($id);
+
             $this->assigned = NewsRoles::getRoles($id);
             if ($this->assigned){
                 $this->news_isvisible['news_visibility'] = true;
@@ -253,38 +250,12 @@ class NewsController extends StudipController
         }
 
         // if form sent, get news data by post vars
-        if (Request::get('news_isvisible')) {
-            // visible categories, selected areas, topic, and body are utf8 encoded when sent via ajax
-            $this->news_isvisible = json_decode(Request::get('news_isvisible'), true);
-            $this->area_options_selected = json_decode(Request::get('news_selected_areas'), true);
-            $this->area_options_selectable = json_decode(Request::get('news_selectable_areas'), true);
-
-            $news->topic          = Request::i18n('news_topic');
-            $news->body           = Request::i18n('news_body', null, function ($string) {
-                                        if (!$string) {
-                                            return $string;
-                                        }
-                                        return transformBeforeSave(Studip\Markup::purifyHtml($string));
-                                    });
-            $news->date           = $this->getTimeStamp(Request::get('news_startdate'), 'start');
-            $news->expire         = $this->getTimeStamp(Request::get('news_enddate'), 'end')
-                                  ? $this->getTimeStamp(Request::get('news_enddate'), 'end') - $news->date
-                                  : '';
-            $news->allow_comments = Request::bool('news_allow_comments', false);
-            $news->prio = Request::int('news_prio', 0);
-            $assignedroles = Request::intArray('assignedroles',false);
-
-            $this->assigned = NewsRoles::load($assignedroles);
-            if ($this->assigned){
-                $this->news_isvisible['news_visibility'] = true;
-            }
-        } elseif ($id) {
+        if ($id) {
             // if news id given check for valid id and load ranges
             if ($news->isNew()) {
                 PageLayout::postError(_('Die Ankündigung existiert nicht!'));
                 return $this->render_nothing();
             }
-            $ranges = $news->news_ranges->toArray();
         } elseif ($template_id) {
             // otherwise, load data from template
             $news_template = new StudipNews($template_id);
@@ -298,6 +269,7 @@ class NewsController extends StudipController
                 return $this->render_nothing();
             }
             $ranges = $news_template->news_ranges->toArray();
+
             // remove those ranges for which user doesn't have permission
             foreach ($ranges as $key => $news_range)
                 if (!$news->haveRangePermission('edit', $news_range['range_id'])) {
@@ -324,197 +296,110 @@ class NewsController extends StudipController
                 $ranges[] = $add_range->toArray();
             }
         }
-        // build news var for template
-        $this->news = $news;
 
-        // treat faculties and institutes as one area group (inst)
-        foreach ($ranges as $range) {
-            switch ($range['type']) {
-                case 'fak' :
-                    $this->area_options_selected['inst'][$range['range_id']] = $range['name'];
-                    break;
-                default:
-                    $this->area_options_selected[$range['type']][$range['range_id']] = (string) $range['name'];
-            }
+
+        foreach ($ranges as $range_array) {
+            $range = new NewsRange();
+            $range['range_id'] = $range_array['range_id'];
+            $news['news_ranges'][] = $range;
         }
 
-        // define search presets
-        $this->search_presets['user'] = _('Meine Profilseite');
-        if ($GLOBALS['perm']->have_perm('autor') && !$GLOBALS['perm']->have_perm('admin')) {
-            $my_sem = $this->search_area('__THIS_SEMESTER__');
-            if (is_array($my_sem['sem']) && count($my_sem['sem']))
-                $this->search_presets['sem'] = _('Meine Veranstaltungen im aktuellen Semester') . ' (' . count($my_sem['sem']) . ')';
-        }
-        if ($GLOBALS['perm']->have_perm('autor') && !$GLOBALS['perm']->have_perm('admin')) {
-            $my_nextsem = $this->search_area('__NEXT_SEMESTER__');
-            if (is_array($my_nextsem['sem']) && count($my_nextsem['sem']))
-                $this->search_presets['nextsem'] = _('Meine Veranstaltungen im nächsten Semester') . ' (' . count($my_nextsem['sem']) . ')';
-        }
-        if ($GLOBALS['perm']->have_perm('dozent') && !$GLOBALS['perm']->have_perm('root')) {
-            $my_inst = $this->search_area('__MY_INSTITUTES__');
-            if (count($my_inst))
-                $this->search_presets['inst'] = _('Meine Einrichtungen') . ' (' . count($my_inst['inst']) . ')';
-        }
-        if ($GLOBALS['perm']->have_perm('root')) {
-            $this->search_presets['global'] = $this->area_structure['global']['title'];
-        }
 
-        // perform search
-        if (Request::submitted('area_search') || Request::submitted('area_search_preset')) {
-            $this->news_isvisible['news_areas'] = true;
-
-            $this->anker = 'news_areas';
-            $this->search_term = Request::get('area_search_term');
-            if (Request::submitted('area_search')) {
-                $this->area_options_selectable = $this->search_area($this->search_term);
-            } else {
-                $this->current_search_preset = Request::option('search_preset');
-                if ($this->current_search_preset === 'inst') {
-                    $this->area_options_selectable = $my_inst;
-                } elseif ($this->current_search_preset === 'sem') {
-                    $this->area_options_selectable = $my_sem;
-                } elseif ($this->current_search_preset === 'nextsem') {
-                    $this->area_options_selectable = $my_nextsem;
-                } elseif ($this->current_search_preset === 'user') {
-                    $this->area_options_selectable = ['user' => [$GLOBALS['user']->id => get_fullname()]];
-                } elseif ($this->current_search_preset === 'global') {
-                    $this->area_options_selectable = ['global' => ['studip' => _('Stud.IP')]];
-                }
-            }
-
-            if (!count($this->area_options_selectable)) {
-                unset($this->search_term);
-            } else {
-                // already assigned areas won't be selectable
-                foreach($this->area_options_selected as $type => $data) {
-                    foreach ($data as $id => $title) {
-                        unset($this->area_options_selectable[$type][$id]);
-                    }
-                }
-            }
-        }
-        // delete comment(s)
-        if (Request::submitted('delete_marked_comments')) {
-            $this->anker = 'news_comments';
-            $this->flash['question_text'] = delete_comments(Request::optionArray('mark_comments'));
-            $this->flash['question_param'] = ['mark_comments' => Request::optionArray('mark_comments'),
-                                                   'delete_marked_comments' => 1];
-            // reload comments
-            if (!$this->flash['question_text']) {
-                $this->comments = StudipComment::GetCommentsForObject($id);
-            }
-        }
-        if ($news->havePermission('delete')) {
-            $this->comments_admin = true;
-        }
-        if (is_array($this->comments)) {
-            foreach ($this->comments as $key => $comment) {
-                if (Request::submitted('news_delete_comment_'.$comment['comment_id'])) {
-                    $this->anker = 'news_comments';
-                    $this->flash['question_text'] = delete_comments($comment['comment_id']);
-                    $this->flash['question_param'] = ['mark_comments' => [$comment['comment_id']],
-                                                           'delete_marked_comments' => 1];
-                }
-            }
-        }
-        // open / close category
-        foreach($this->news_isvisible as $category => $value) {
-            if (Request::get($category . '_js') == 'toggle') {
-                $this->news_isvisible[$category] = !$this->news_isvisible[$category];
-                $this->anker = $category;
-            }
-        }
-        // add / remove areas
-        if (Request::submitted('news_add_areas') && is_array($this->area_options_selectable)) {
-            $this->news_isvisible['news_areas'] = true;
-
-            $this->anker = 'news_areas';
-            foreach (Request::optionArray('area_options_selectable') as $range_id) {
-                foreach ($this->area_options_selectable as $type => $data) {
-                    if (isset($data[$range_id])) {
-                        $this->area_options_selected[$type][$range_id] = $data[$range_id];
-                        unset($this->area_options_selectable[$type][$range_id]);
-                    }
-                }
-            }
-        }
-        if (Request::submitted('news_remove_areas') && is_array($this->area_options_selected)) {
-            $this->news_isvisible['news_areas'] = true;
-
-            $this->anker = 'news_areas';
-            foreach (Request::optionArray('area_options_selected') as $range_id) {
-                foreach ($this->area_options_selected as $type => $data) {
-                    if (isset($data[$range_id])) {
-                        $this->area_options_selectable[$type][$range_id] = $data[$range_id];
-                        unset($this->area_options_selected[$type][$range_id]);
-                    }
-                }
-            }
-        }
-        // prepare to save news
-        if (Request::submitted('save_news') && Request::isPost()) {
-            CSRFProtection::verifySecurityToken();
-            //prepare ranges array for already assigned news_ranges
-            foreach($news->getRanges() as $range_id) {
-                $this->ranges[$range_id] = get_object_type($range_id, ['global', 'fak', 'inst', 'sem', 'user']);
-            }
-
-            // check if new ranges must be added
-            foreach ($this->area_options_selected as $type => $area_group) {
-                foreach ($area_group as $range_id => $area_title) {
-                    if (!isset($this->ranges[$range_id])) {
-                        if ($news->haveRangePermission('edit', $range_id)) {
-                            $news->addRange($range_id);
-                        } else {
-                            PageLayout::postError(sprintf(_('Sie haben keine Berechtigung zum Ändern der Bereichsverknüpfung für "%s".'), htmlReady($area_title)));
-                            $error++;
+        $this->form = \Studip\Forms\Form::fromSORM(
+            $news,
+            [
+                'legend' => _('Grunddaten'),
+                'fields' => [
+                    'topic' => [
+                        'label' => _('Titel'),
+                        'required' => true
+                    ],
+                    'body' => [
+                        'label' => _('Ankündigungstext'),
+                        'required' => true,
+                        'type' => 'i18n_formatted'
+                    ],
+                    'hgroup1' => new \Studip\Forms\InputRow(
+                        [
+                            'name' => 'date',
+                            'label' => _('Beginn'),
+                            'type' => 'datetimepicker',
+                            'required' => true
+                        ],
+                        [
+                            'name' => 'expire',
+                            'label' => _('Ende'),
+                            'type' => 'datetimepicker',
+                            'value' => $news['date'] + $news['expire'],
+                            'mindate' => 'date',
+                            'mapper' => function ($value, $obj) { //hier müssen wir vom UnixTimestamp noch den Beginn abziehen:
+                                return $value - $obj['date'];
+                            },
+                            'required' => true
+                        ],
+                        [
+                            'name' => 'days',
+                            'label' => _('Laufzeit in Tagen'),
+                            'type' => 'calculator',
+                            'value' => "Math.floor((expire - date) / 86400)"
+                        ]
+                    ),
+                    'allow_comments' => [
+                        'label' => _('Kommentare zulassen'),
+                        'type' => 'checkbox'
+                    ],
+                    'user_id' => [
+                        'type' => 'no',
+                        'mapper' => function () {
+                            return User::findCurrent()->id;
                         }
-                    }
-                }
-            }
+                    ],
+                    'author' => [
+                        'type' => 'no',
+                        'mapper' => function () {
+                            return get_fullname();
+                        }
+                    ]
+                ]
+            ],
+            URLHelper::getURL('?')
+        )->addSORM(
+            $news,
+            [
+                'legend' => _('In weiteren Bereichen anzeigen'),
+                'fields' => [
+                    'news_ranges' => [
+                        'label' => _('Bereich auswählen'),
+                        'type' => 'NewsRanges',
+                        'required' => true
+                    ]
+                ]
+            ]
+        )->addSORM(
+            $news,
+            [
+                'legend' => _('Sichtbarkeitseinstellungen'),
+                'fields' => [
+                    'prio' => [
+                        'label' => _('Priorität'),
+                        'type' => 'range'
+                    ],
+                    'newsroles' => [
+                        'permission' => $GLOBALS['perm']->have_perm('admin'),
+                        'label' => _('Sichtbarkeit'),
+                        'value' => $news->news_roles->pluck('roleid'),
+                        'type' => 'multiselect',
+                        'options' => array_map(function ($r) { return $r->getRolename(); }, RolePersistence::getAllRoles()),
+                        'store' => function ($value, $input) {
+                            $news = $input->getContextObject();
+                            NewsRoles::update($news->id, $value);
+                        }
+                    ]
+                ]
+            ]
+        )->setCollapsable()
+            ->autoStore();
 
-            // check if assigned ranges must be removed
-            foreach ($this->ranges as $range_id => $range_type) {
-                if (($range_type === 'fak' && !isset($this->area_options_selected['inst'][$range_id])) ||
-                    ($range_type !== 'fak' && !isset($this->area_options_selected[$range_type][$range_id])))
-                {
-                    if ($news->havePermission('unassign', $range_id)) {
-                        $news->deleteRange($range_id);
-                    } else {
-                        PageLayout::postError(_('Sie haben keine Berechtigung zum Ändern der Bereichsverknüpfung.'));
-                        $error++;
-                    }
-                }
-            }
-
-            // save news
-            if ($news->validate() && !$error) {
-                if ($news->user_id !== $GLOBALS['user']->id) {
-                    $news->chdate_uid = $GLOBALS['user']->id;
-                    setTempLanguage($news->user_id);
-                    $msg = sprintf(_('Ihre Ankündigung "%s" wurde von %s verändert.'), $news->topic, get_fullname() . ' ('.get_username().')'). "\n";
-                    $msg_object->insert_message($msg, get_username($news->user_id) , "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Ankündigung geändert"));
-                    restoreLanguage();
-                } else {
-                    $news->chdate_uid = '';
-                }
-
-                $news->store();
-
-                if ($GLOBALS['perm']->have_perm('admin')) {
-                    NewsRoles::update($news->id, $assignedroles);
-                }
-
-                PageLayout::postSuccess(_('Die Ankündigung wurde gespeichert.'));
-                if (!Request::isXhr() && !$id) {
-                    // in fallback mode redirect to edit page with proper news id
-                    $this->redirect('news/edit_news/' . $news->id);
-                } elseif (Request::isXhr()) {
-                    // if in dialog mode send empty result (STUDIP.News closes dialog and initiates reload)
-                    $this->render_nothing();
-                }
-            }
-        }
         // check if user has full permission on news object
         if ($news->havePermission('delete')) {
             $this->may_delete = true;
@@ -692,8 +577,8 @@ class NewsController extends StudipController
             _('Ankündigung erstellen'),
             $this->url_for('news/edit_news/new'),
             Icon::create('news+add'),
-            ['rel' => 'get_dialog', 'target' => '_blank']
-        );
+            ['target' => '_blank']
+        )->asDialog();
         $this->sidebar->addWidget($widget);
     }
 

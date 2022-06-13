@@ -3,7 +3,7 @@
         <input type="hidden"
                :name="name"
                :value="returnValue"
-               v-if="!autocomplete">
+               v-if="!autocomplete && name">
         <input type="text"
                :name="autocomplete ? name : null"
                v-model="inputValue"
@@ -38,7 +38,7 @@ export default {
         },
         name: {
             type: String,
-            required: true
+            required: false
         },
         value: {
             type: String,
@@ -61,6 +61,7 @@ export default {
             default: ''
         }
     },
+    inheritAttrs: false,
     data () {
         return {
             searching: false,
@@ -74,9 +75,9 @@ export default {
         };
     },
     methods: {
-        initialize (value) {
+        initialize (value, displayname) {
             this.initialValue = value;
-            this.inputValue = value;
+            this.inputValue = displayname ?? value;
             this.returnValue = value;
         },
         search (needle) {
@@ -117,7 +118,7 @@ export default {
             }
             this.results = [];
 
-            this.$emit('input', this.returnValue);
+            this.$emit('input', this.returnValue, this.inputValue);
         },
         selectUp () {
             if (this.selected > 0) {
@@ -156,7 +157,10 @@ export default {
         }
     },
     created () {
-        this.initialize(this.autocomplete ? this.value : this.needle);
+        this.initialize(
+            this.value,
+            this.autocomplete ? this.value : this.needle
+        );
     },
     computed: {
         isVisible() {
@@ -168,8 +172,8 @@ export default {
             this.reset(true);
             this.initialize(val);
         },
-        inputValue (needle) {
-            if (this.initialValue !== needle && needle.length > 2) {
+        inputValue (needle, oldneedle) {
+            if (oldneedle !== null && (oldneedle !== needle) && needle.length > 2) {
                 this.search(needle);
             }
         }

@@ -124,26 +124,26 @@
                             $menu->addLink(
                                 $controller->url_for('news/edit_news/' . $news['object']->news_id),
                                 _('Ankündigung bearbeiten'),
-                                Icon::create('edit', 'clickable'),
-                                ['rel' => 'get_dialog', 'target' => '_blank']
+                                Icon::create('edit'),
+                                ['data-dialog' => '', 'target' => '_blank']
                             );
                             $menu->addLink(
                                 $controller->url_for('news/edit_news/new/template/' . $news['object']->news_id),
                                 _('Kopieren, um neue Ankündigung zu erstellen'),
-                                Icon::create('news+export', 'clickable'),
-                                ['rel' => 'get_dialog', 'target' => '_blank']
+                                Icon::create('news+export'),
+                                ['data-dialog' => '1', 'target' => '_blank']
                             );
                             if ($news['object']->havePermission('unassign', $news['range_id'])) {
                                 $menu->addButton(
                                     'news_remove_' . $news['object']->news_id . '_' . $news['range_id'],
                                     _('Ankündigung aus diesem Bereich entfernen'),
-                                    Icon::create('remove', 'clickable')
+                                    Icon::create('remove')
                                 );
                             } else {
                                 $menu->addButton(
                                     'news_remove_' . $news['object']->news_id . '_' . $news['range_id'],
                                     _('Ankündigung löschen'),
-                                    Icon::create('trash', 'clickable')
+                                    Icon::create('trash')
                                 );
                             }
                             echo $menu->render();

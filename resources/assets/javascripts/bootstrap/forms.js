@@ -245,6 +245,114 @@ function createSelect2(element) {
 }
 
 STUDIP.ready(function () {
+    let forms = window.document.querySelectorAll('form.default.studipform:not(.vueified)');
+    if (forms.length > 0) {
+        STUDIP.Vue.load().then(({createApp}) => {
+            forms.forEach(f => {
+                createApp({
+                    el: f,
+                    data() {
+                        let params = JSON.parse(f.dataset.inputs);
+                        params.STUDIPFORM_REQUIRED = f.dataset.required ? JSON.parse(f.dataset.required) : [];
+                        params.STUDIPFORM_DISPLAYVALIDATION = false;
+                        params.STUDIPFORM_VALIDATIONNOTES = [];
+                        params.STUDIPFORM_AUTOSAVEURL = f.dataset.autosave;
+                        params.STUDIPFORM_REDIRECTURL = f.dataset.url;
+                        return params;
+                    },
+                    methods: {
+                        submit: function (e) {
+                            let v = this;
+                            v.STUDIPFORM_VALIDATIONNOTES = [];
+                            this.STUDIPFORM_DISPLAYVALIDATION = true;
+
+                            //validation:
+                            let validated = this.validate();
+
+                            if (!validated) {
+                                e.preventDefault();
+                                v.$el.scrollIntoView({
+                                    "behavior": "smooth"
+                                });
+                                return;
+                            }
+
+                            if (this.STUDIPFORM_AUTOSAVEURL) {
+                                let params = this.getFormValues();
+
+                                $.ajax({
+                                    url: this.STUDIPFORM_AUTOSAVEURL,
+                                    data: params,
+                                    type: 'post',
+                                    success() {
+                                        if (v.STUDIPFORM_REDIRECTURL) {
+                                            window.location.href = v.STUDIPFORM_REDIRECTURL
+                                        }
+                                    }
+                                });
+                                e.preventDefault();
+                            }
+                        },
+                        getFormValues() {
+                            let v = this;
+                            let params = {
+                                security_token: this.$refs.securityToken.value
+                            };
+                            Object.keys(v.$data).forEach(function (i) {
+                                if (!i.startsWith('STUDIPFORM_')) {
+                                    if (typeof v.$data[i] === 'boolean') {
+                                        params[i] = v.$data[i] ? 1 : 0;
+                                    } else {
+                                        params[i] = v.$data[i];
+                                    }
+                                }
+                            });
+                            return params;
+                        },
+                        validate() {
+                            let v = this;
+                            this.STUDIPFORM_VALIDATIONNOTES = [];
+
+                            let validated = this.$el.checkValidity();
+
+                            $(this.$el).find('input, select, textarea').each(function () {
+                                if (!this.validity.valid) {
+                                    let note = {
+                                        'name': $(this.labels[0]).find('.textlabel').text(),
+                                        'description': "Fehler!".toLocaleString(),
+                                        'describedby': this.id
+                                    };
+                                    if (this.validity.tooShort) {
+                                        note.description = "Geben Sie mindestens %s Zeichen ein.".toLocaleString().replace("%s", this.minLength);
+                                    }
+                                    if (this.validity.valueMissing) {
+                                        if (this.type === 'checkbox') {
+                                            note.description = "Dieses Feld muss ausgewählt sein.".toLocaleString();
+                                        } else {
+                                            note.description = "Hier muss ein Wert eingetragen werden.".toLocaleString();
+                                        }
+                                    }
+                                    v.STUDIPFORM_VALIDATIONNOTES.push(note);
+                                }
+                            });
+                            return validated;
+                        },
+                        setInputs(inputs) {
+                            for (const [key, value] of Object.entries(inputs)) {
+                                if (this[key] !== undefined) {
+                                    this[key] = value;
+                                }
+                            }
+                        }
+                    },
+                    mounted () {
+                        $(this.$el).addClass("vueified");
+                    }
+                });
+            });
+        });
+    }
+
     // Well, this is really nasty: Select2 can't determine the select
     // element's width if it is hidden (by itself or by it's parent).
     // This is due to the fact that elements are not rendered when hidden

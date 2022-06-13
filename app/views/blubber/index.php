@@ -2,7 +2,7 @@
      data-active_thread="<?= htmlReady($thread->getId()) ?>"
      data-thread_data="<?= htmlReady(json_encode($thread_data ?: ['thread_posting' => []])) ?>"
      data-threads_more_down="<?= htmlReady($threads_more_down) ?>"
-     :class="waiting ? 'waiting' : ''">
+     :class="waiting ? 'waiting' : ''" v-cloak>
 
     <div id="blubber_stream_container">
         <blubber-thread :thread_data="thread_data"></blubber-thread>

@@ -59,33 +59,6 @@ const News = {
         });
     },
 
-    get_dialog (id, route) {
-        // initialize dialog
-        $('body').append(`<div id="${id}"></div>`);
-        $(`#${id}`).dialog({
-            modal: true,
-            height: News.dialog_height,
-            title: $gettext('Dialog wird geladen...'),
-            width: News.dialog_width,
-            close () {
-                $(`#${id}`).remove();
-            }
-        });
-
-        // load actual dialog content
-        $.get(route, 'html').done(function (html, status, xhr) {
-            $(`#${id}`).dialog('option', 'title', decodeURIComponent(xhr.getResponseHeader('X-Title')));
-            $(`#${id}`).html(html);
-            $(`#${id}_content`).css({
-                height : (News.dialog_height - 120) + 'px',
-                maxHeight: (News.dialog_height - 120) + 'px'
-            });
-
-            News.init(id);
-        }).fail(function () {
-            window.alert($gettext('Fehler beim Aufruf des News-Controllers'));
-        });
-    },
 
     update_dialog (id, route, form_data) {
         if (!News.pending_ajax_request) {

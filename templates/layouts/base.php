@@ -72,6 +72,7 @@ $getInstalledLanguages = function () {
                 value: '<? try {echo CSRFProtection::token();} catch (SessionRequiredException $e){}?>'
             },
             INSTALLED_LANGUAGES: <?= json_encode($getInstalledLanguages()) ?>,
+            CONTENT_LANGUAGES: <?= json_encode(array_keys($GLOBALS['CONTENT_LANGUAGES'])) ?>,
             STUDIP_SHORT_NAME: "<?= htmlReady(Config::get()->STUDIP_SHORT_NAME) ?>",
             URLHelper: {
                 base_url: "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>",

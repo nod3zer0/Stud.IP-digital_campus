@@ -1,8 +1,9 @@
 <template>
-    <textarea 
+    <textarea
         :value="value"
         ref="studip_wysiwyg"
         class="studip-wysiwyg"
+        :required="required"
         @input="updateValue($event.target.value)"/>
 </template>
 
@@ -11,7 +12,12 @@
 export default {
     name: 'studip-wysiwyg',
     props: {
-        value: String
+        value: String,
+        required: {
+            type: Boolean,
+            required: false,
+            default: false
+        }
     },
     data() {
         return {
@@ -49,7 +55,3 @@ export default {
 
 }
 </script>
-
-<style>
-
-</style>

@@ -9,16 +9,6 @@ STUDIP.domReady(() => {
     }
     STUDIP.News.pending_ajax_request = false;
 
-    $(document).on('click', 'a[rel~="get_dialog"]', function(event) {
-        event.preventDefault();
-        STUDIP.News.get_dialog('news_dialog', $(this).attr('href'));
-    });
-
-    $(document).on('click', 'a[rel~="close_dialog"]', function(event) {
-        event.preventDefault();
-        $('#news_dialog').dialog('close');
-    });
-
     // open/close categories without ajax-request
     $(document).on('click', '.news_category_header', function(event) {
         event.preventDefault();

@@ -5,8 +5,8 @@
     </a>
 <? endif; ?>
 
-<span class='news_date' title="<?= ($perm ? _("Ablaufdatum") . ': ' . date('d.m.Y', $new['date'] + $new['expire']) : '') ?>">
-    <?= date('d.m.Y', $new['date']) ?>
+<span class='news_date' title="<?= ($perm ? _('Ablaufdatum') . ': ' . strftime('%x', $new['date'] + $new['expire']) : '') ?>">
+    <?= strftime('%x', $new['date']) ?>
 </span>
 
 <? if (Config::get()->NEWS_DISPLAY >= 2 || $new->havePermission('edit')): ?>
@@ -24,10 +24,10 @@ if ($new['allow_comments']) :
     <? if ($num): ?>
         <? if ($isnew): ?>
             <span class="news_comments_indicator nowrap" title="<?= sprintf(_('%s neue(r) Kommentar(e)'), $isnew) ?>">
-                <?= Icon::create("chat", "new")->asImg() ?>
+                <?= Icon::create('chat', Icon::ROLE_NEW) ?>
         <? else: ?>
             <span class="news_comments_indicator nowrap" title="<?= sprintf(_('%s Kommentare'), $num) ?>">
-                <?= Icon::create("chat", "info")->asImg() ?>
+                <?= Icon::create('chat', Icon::ROLE_INFO) ?>
         <? endif; ?>
                 <?= $num ?>
             </span>
@@ -37,17 +37,17 @@ if ($new['allow_comments']) :
 
 
 <? if ($new->havePermission('edit')): ?>
-    <a href="<?= URLHelper::getLink('dispatch.php/news/edit_news/' . $new->id) ?>" rel="get_dialog">
-        <?= Icon::create('edit', 'clickable')->asImg(); ?>
+    <a href="<?= URLHelper::getLink('dispatch.php/news/edit_news/' . $new->id) ?>" data-dialog>
+        <?= Icon::create('edit') ?>
     </a>
     <? if ($new->havePermission('unassign', $range)): ?>
         <a href=" <?= URLHelper::getLink('', ['remove_news' => $new->id, 'news_range' => $range]) ?>" >
-            <?= Icon::create('remove', 'clickable')->asImg(); ?>
+            <?= Icon::create('remove') ?>
         </a>
     <? endif; ?>
     <? if ($new->havePermission('delete')): ?>
         <a href=" <?= URLHelper::getLink('', ['delete_news' => $new->id]) ?>" >
-            <?= Icon::create('trash', 'clickable')->asImg(); ?>
+            <?= Icon::create('trash') ?>
         </a>
     <? endif; ?>
 <? endif; ?>
