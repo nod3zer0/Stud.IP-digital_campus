@@ -21,7 +21,7 @@ class InstituteMember extends SchemaProvider
     public function getAttributes($resource, ContextInterface $context): iterable
     {
         $defaultNull = function ($key) use ($resource) {
-            return $resource->$key ?: null;
+            return (string) $resource->$key ?: null;
         };
 
         $attributes = [

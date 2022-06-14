@@ -23,7 +23,7 @@ class InstitutesMembershipShowTest extends \Codeception\Test\Unit
     public function testShouldShowMemberships()
     {
         $credentials = $this->tester->getCredentialsForTestDozent();
-        $membershipId = '205f3efb7997a0fc9755da2b535038da_2560f7c7674942a7dce8eeb238e15d93';
+        $membershipId = '1';
 
         $app = $this->tester->createApp($credentials, 'get', '/institute-memberships/{id}', InstituteMembershipsShow::class);
 
