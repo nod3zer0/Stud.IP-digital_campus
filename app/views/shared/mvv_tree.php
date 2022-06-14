@@ -8,7 +8,7 @@
         <a data-dialog title="<?= htmlReady($current['name']) ?>" href="<?= URLHelper::getLink('dispatch.php/shared/modul/overview/' . $current['id'] . '/' . $course->start_semester->id) ?>">
             <?= htmlReady($current['name']) ?>
         </a>
-        <a data-dialog title="<?= htmlReady($current['name']) ?>" href="<?= URLHelper::getLink('dispatch.php/shared/modul/description/' . $current['id']) ?>">
+        <a data-dialog="size=auto" title="<?= htmlReady($current['name']) ?>" href="<?= URLHelper::getLink('dispatch.php/shared/modul/description/' . $current['id']) ?>">
         <?= Icon::create('log', 'clickable', ['title' => _('Modulbeschreibung')]); ?>
         </a>
     <? else : ?>

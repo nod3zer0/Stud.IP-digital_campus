@@ -1,4 +1,4 @@
-<? 
+<?
 $abschnitte = StgteilAbschnitt::findByStgteilVersion($version->getId());
 $abschnitteData = [];
 $fachsemesterData = [];
@@ -19,7 +19,7 @@ foreach ($abschnitte as $abschnitt) {
                 'name' => $abschnitt_modul->getDisplayName(),
                 'modulTeile' => []
         ];
-        
+
         foreach ($abschnitt_modul->modul->modulteile as $teil) {
             $fachSemester = $abschnitt_modul->getAllFachSemester($teil->getId());
 
@@ -78,11 +78,11 @@ foreach ($abschnitte as $abschnitt) {
                             <? $abschnitt_modul = StgteilabschnittModul::findOneBySQL('abschnitt_id = ? AND modul_id = ?', [$abschnitt_id, $modul_id]) ?>
                             <?= htmlReady($abschnitt_modul->getDisplayName()) ?>
                         </a>
-                        <a data-dialog title="<?= htmlReady($modul['name']) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= URLHelper::getLink('shared/modul/description/' . $modul_id) ?>">
+                        <a data-dialog="size=auto" title="<?= htmlReady($modul['name']) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= URLHelper::getLink('shared/modul/description/' . $modul_id) ?>">
                             <?= Icon::create('info-circle', 'clickable', [])->asImg(); ?>
                         </a>
                     </td>
-                    <? endif;?>   
+                    <? endif;?>
                     <td><?= htmlReady($modulTeil['name']) ?> </td>
                     <? foreach ($fachsemesterData as $i => $fachsemester) : ?>
                         <? $typ = isset($modulTeil['fachsemester'][$fachsemester]) ? $modulTeil['fachsemester'][$fachsemester] : null; ?>
@@ -94,14 +94,14 @@ foreach ($abschnitte as $abschnitt) {
                         <td data-mvv-field="mvv_modulteil_stgteilabschnitt.differenzierung" data-mvv-index="<?= $i; ?>" data-mvv-coid="<?= $abschnitt_id; ?>" class="type">&nbsp;</td>
                         <? endif; ?>
                     <? endforeach; ?>
-                   </tr>  
+                   </tr>
                 <? endforeach; ?>
             <? endforeach; ?>
             </tbody>
         </table>
         <? endif; ?>
         </dd>
-    <? else : ?>  
+    <? else : ?>
         <dt><?= htmlReady($abschnitt['zwischenUeberschrift']) ?></dt>
         <? if (trim($abschnitt['kommentar'])) : ?>
         <dd data-mvv-field="mvv_stgteilabschnitt.kommentar">

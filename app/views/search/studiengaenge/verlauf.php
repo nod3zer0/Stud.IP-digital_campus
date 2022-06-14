@@ -71,7 +71,7 @@
                                 <td rowspan="<?= count($modul['modulTeile']) ?>">
                                    <? // Anzeige der alternativen Bezeichnung aus mvv_stgteilabschnitt_modul ?>
                                     <? $abschnitt_modul = StgteilabschnittModul::findOneBySQL('`abschnitt_id` = ? AND `modul_id` = ?', [$abschnitt_id, $modul_id]) ?>
-                                    <a data-dialog title="<?= htmlReady($modul['name']) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= $controller->link_for('shared/modul/description/' . $modul_id, ['display_language' => ModuleManagementModel::getLanguage()]) ?>">
+                                    <a data-dialog="size=auto" title="<?= htmlReady($modul['name']) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= $controller->link_for('shared/modul/description/' . $modul_id, ['display_language' => ModuleManagementModel::getLanguage()]) ?>">
                                         <?= Icon::create('log', Icon::ROLE_CLICKABLE, ['title' => _('Vollständige Modulbeschreibung')]) ?>
                                     </a>
                                     <? if($modul['veranstaltungen']):?>
@@ -109,7 +109,7 @@
                             </td>
                         <? endif ?>
                             <td>
-                                <a data-dialog title="<?= htmlReady($modul['name']) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= $controller->link_for('shared/modul/description/' . $modul_id, ['display_language' => ModuleManagementModel::getLanguage()]) ?>">
+                                <a data-dialog="size=auto" title="<?= htmlReady($modul['name']) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= $controller->link_for('shared/modul/description/' . $modul_id, ['display_language' => ModuleManagementModel::getLanguage()]) ?>">
                                     <?= Icon::create('log', Icon::ROLE_CLICKABLE, ['title' => _('Vollständige Modulbeschreibung')]) ?>
                                 </a>
                             <? if ($modul['veranstaltungen']): ?>

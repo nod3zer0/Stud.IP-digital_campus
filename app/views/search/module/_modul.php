@@ -1,7 +1,7 @@
 <tbody class="<?= $modul_id == $modul->id ? 'not-collapsed' : 'collapsed' ?>">
     <tr class="table-header header-row" id="modul_<?= htmlReady($modul->id) ?>">
         <td style="vertical-align: middle; text-align: center;">
-            <a data-dialog title="<?= htmlReady($modul->getDisplayName(ModuleManagementModel::DISPLAY_CODE | ModuleManagementModel::DISPLAY_SEMESTER)) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= $controller->link_for('shared/modul/description/' . $modul->id) ?>">
+            <a data-dialog="size=auto" title="<?= htmlReady($modul->getDisplayName(ModuleManagementModel::DISPLAY_CODE | ModuleManagementModel::DISPLAY_SEMESTER)) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= $controller->link_for('shared/modul/description/' . $modul->id) ?>">
                 <?= Icon::create('log')->asImg(['title' => _('Vollständige Modulbeschreibung')]) ?>
             </a>
         </td>
