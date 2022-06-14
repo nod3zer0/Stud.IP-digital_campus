@@ -1,4 +1,4 @@
-<form action="<?= $controller->link_for("questionnaire/bulkdelete", $range_type ? ['range_type' => $range_type, 'range_id' => Context::getId()]: []) ?>"
+<form action="<?= $controller->link_for("questionnaire/bulkdelete", compact('range_type', 'range_id')) ?>"
       method="post">
     <table class="default" id="questionnaire_overview">
         <thead>
@@ -36,10 +36,19 @@
 </form>
 <?php
 $actions = new ActionsWidget();
-$actions->addLink(
-    _('Fragebogen erstellen'),
-    $controller->url_for('questionnaire/add_to_context', $range_type ? ['range_type' => $range_type, 'range_id' => Context::getId()]: []),
-    Icon::create('add'),
-    ['data-dialog' => 'size=auto']
-);
+if (!empty($statusgruppen)) {
+    $actions->addLink(
+        _('Fragebogen erstellen'),
+        $controller->url_for('questionnaire/add_to_context'),
+        Icon::create('add'),
+        ['data-dialog' => 'size=auto']
+    );
+} else {
+    $actions->addLink(
+        _('Fragebogen erstellen'),
+        $controller->url_for('questionnaire/edit', compact('range_type', 'range_id')),
+        Icon::create('add'),
+        ['data-dialog' => '']
+    );
+}
 Sidebar::Get()->addWidget($actions);

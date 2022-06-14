@@ -559,17 +559,17 @@ Dialog.calculateDimensions = function (instance, content, options) {
         // Remove helper element
         helper.remove();
     } else if (options.size === 'big') {
-        width = $('body').width() * 0.9;
-        height = $('body').height() * 0.8;
+        width = $(window).width() * 0.9;
+        height = $(window).height() * 0.8;
     } else if (options.size === 'medium') {
-        width = $('body').width() * 0.6;
-        height = $('body').height() * 0.5;
+        width = $(window).width() * 0.6;
+        height = $(window).height() * 0.5;
     } else if (options.size === 'medium-43') {
         //Medium size in 4:3 aspect ratio
-        height = $('body').height() * 0.8;
+        height = $(window).height() * 0.8;
         width = parseInt(height) * 1.33333333;
-        if (width > $('body').width()) {
-            width = $('body').width() * 0.9;
+        if (width > $(window).width()) {
+            width = $(window).width() * 0.9;
         }
     } else if (options.size === 'small') {
         width = 300;

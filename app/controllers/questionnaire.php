@@ -26,6 +26,8 @@ class QuestionnaireController extends AuthenticatedController
             Navigation::activateItem('/contents/questionnaire/overview');
         }
 
+        $this->range_id = null;
+        $this->range_type = null;
         if (!$GLOBALS['perm']->have_perm('autor')) {
             throw new AccessDeniedException('Only for logged in users.');
         }
@@ -42,21 +44,16 @@ class QuestionnaireController extends AuthenticatedController
 
     public function courseoverview_action()
     {
-        $this->range_type = Course::findCurrent() ? 'course' : 'institute';
-        if (($this->range_type === "institute") && $GLOBALS['perm']->have_perm('admin')) {
-            if (!Context::get()->id) {
-                Navigation::activateItem('/admin/institute/questionnaires');
-            }
-            require_once 'lib/admin_search.inc.php';
-        }
-        if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+        $this->range_id = Context::getId();
+        $this->range_type = Context::getType();
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->range_id)) {
             throw new AccessDeniedException("Only for logged in users.");
         }
         Navigation::activateItem("/course/admin/questionnaires");
-        $this->statusgruppen = Statusgruppen::findByRange_id(Context::get()->id);
+        $this->statusgruppen = Statusgruppen::findByRange_id($this->range_id);
         $this->questionnaires = Questionnaire::findBySQL(
             "INNER JOIN questionnaire_assignments USING (questionnaire_id) WHERE (questionnaire_assignments.range_id = ? AND questionnaire_assignments.range_type = ?) OR (questionnaire_assignments.range_id IN (?) AND questionnaire_assignments.range_type = 'statusgruppe') ORDER BY questionnaires.mkdate DESC",
-            [Context::get()->id, $this->range_type, array_map(function ($g) { return $g->getId(); }, $this->statusgruppen)]
+            [$this->range_id, $this->range_type, array_map(function ($g) { return $g->getId(); }, $this->statusgruppen)]
         );
         foreach ($this->questionnaires as $questionnaire) {
             if (!$questionnaire['visible'] && $questionnaire->isRunning()) {
@@ -77,14 +74,6 @@ class QuestionnaireController extends AuthenticatedController
     public function add_to_context_action()
     {
         $this->statusgruppen = Statusgruppen::findByRange_id(Context::get()->id);
-        if (!count($this->statusgruppen)) {
-            $this->redirect(
-                $this->url_for("questionnaire/edit", [
-                'range_type' => Context::getType(),
-                'range_id' => Context::get()->id
-            ]));
-            return;
-        }
         PageLayout::setTitle(_("Kontext auswählen"));
     }
 
@@ -578,7 +567,7 @@ class QuestionnaireController extends AuthenticatedController
         if (in_array($this->range_id, ["public", "start"])) {
             $this->range_type = "static";
         }
-        $statusgruppen_ids = [];
+        $this->statusgruppen_ids = [];
         if (in_array($this->range_type, ["course", "institute"])) {
             if ($GLOBALS['perm']->have_studip_perm("tutor", $this->range_id)) {
                 $statusgruppen = Statusgruppen::findByRange_id(Context::get()->id);
@@ -588,7 +577,7 @@ class QuestionnaireController extends AuthenticatedController
                     $GLOBALS['user']->id
                 ]);
             }
-            $statusgruppen_ids = array_map(function ($g) { return $g->getId(); }, $statusgruppen);
+            $this->statusgruppen_ids = array_map(function ($g) { return $g->getId(); }, $statusgruppen);
         }
         $statement = DBManager::get()->prepare("
             SELECT questionnaires.*
@@ -607,7 +596,7 @@ class QuestionnaireController extends AuthenticatedController
         $statement->execute([
             'range_id' => $this->range_id,
             'range_type' => $this->range_type,
-            'statusgruppe_id' => $statusgruppen_ids
+            'statusgruppe_id' => $this->statusgruppen_ids
         ]);
         $this->questionnaire_data = $statement->fetchAll(PDO::FETCH_ASSOC);
         $stopped_visible = 0;
