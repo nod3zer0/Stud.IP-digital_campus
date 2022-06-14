@@ -8,10 +8,9 @@ use Neomerx\JsonApi\Schema\Link;
 class ConsultationSlot extends SchemaProvider
 {
     const TYPE = 'consultation-slots';
+
     const REL_BLOCK = 'block';
     const REL_BOOKINGS = 'bookings';
-
-
 
     public function getId($resource): ?string
     {
@@ -42,21 +41,20 @@ class ConsultationSlot extends SchemaProvider
     public function getRelationships($resource, ContextInterface $context): iterable
     {
         $relationships = [];
-        $relationships = $this->getBlockRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_BLOCK));
 
         $isPrimary = $context->getPosition()->getLevel() === 0;
-        if (!$isPrimary) {
-            return $relationships;
+        if ($isPrimary) {
+            $relationships = $this->getBlockRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_BLOCK));
+            $relationships = $this->getBookingsRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_BOOKINGS));
         }
 
-        $relationships = $this->getBookingsRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_BOOKINGS));
 
         return $relationships;
     }
 
     // #### PRIVATE HELPERS ####
 
-    private function getBlockRelationship($relationships, $resource, $includeData)
+    private function getBlockRelationship($relationships, \ConsultationSlot $resource, $includeData)
     {
         $block = $resource->block;
 
@@ -70,14 +68,14 @@ class ConsultationSlot extends SchemaProvider
         return $relationships;
     }
 
-    private function getBookingsRelationship(array $relationships, \BlubberComment $resource, $includeData)
+    private function getBookingsRelationship(array $relationships, \ConsultationSlot $resource, $includeData)
     {
         if ($includeData) {
             $relatedBookings = $resource->bookings;
         } else {
-            $relatedBookings = array_map(function ($booking) {
-                return \ConsultationBooking::build(['slot_id' => $booking->slot_id], false);
-            }, $resource->bookings);
+            $relatedBookings = $resource->bookings->map(function ($booking) {
+                return \ConsultationBooking::build(['booking_id' => $booking->id], false);
+            });
         }
 
         $relationships[self::REL_BOOKINGS] = [

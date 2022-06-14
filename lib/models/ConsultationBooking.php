@@ -94,6 +94,26 @@ class ConsultationBooking extends SimpleORMap implements PrivacyObject
         parent::configure($config);
     }
 
+    /**
+     * Returns whether a user may create a booking for the given range.
+     *
+     * @param User $user
+     * @return bool
+     */
+    public static function userMayCreateBookingForRange(\Range $range, \User $user): bool
+    {
+        if (!($range instanceof \User)) {
+            return true;
+        }
+
+        $allowed_perms = ['user', 'autor', 'tutor'];
+        if (Config::get()->CONSULTATION_ALLOW_DOCENTS_RESERVING) {
+            $allowed_perms[] = 'dozent';
+        }
+
+        return in_array($user->perms, $allowed_perms);
+    }
+
     public function cancel($reason = '')
     {
         if ($GLOBALS['user']->id !== $this->user_id) {

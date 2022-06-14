@@ -142,6 +142,11 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
+        $config['has_many']['consultation_blocks'] = [
+            'class_name'        => ConsultationBlock::class,
+            'assoc_foreign_key' => 'range_id',
+            'on_delete'         => 'delete',
+        ];
 
         $config['has_and_belongs_to_many']['semesters'] = [
             'class_name'     => Semester::class,

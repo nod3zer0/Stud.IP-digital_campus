@@ -107,6 +107,11 @@ class Institute extends SimpleORMap implements Range
             'on_delete'  => 'delete',
             'on_store'   => 'store',
         ];
+        $config['has_many']['consultation_blocks'] = [
+            'class_name'        => ConsultationBlock::class,
+            'assoc_foreign_key' => 'range_id',
+            'on_delete'         => 'delete',
+        ];
         $config['has_many']['tools'] = [
             'class_name'        => ToolActivation::class,
             'assoc_foreign_key' => 'range_id',

@@ -2,55 +2,57 @@
 
 namespace JsonApi\Routes\Consultations;
 
-use ConsultationBlock;
-use ConsultationBooking;
-use ConsultationSlot;
+use JsonApi\Schemas\ConsultationBooking;
 
-class Authority
+final class Authority
 {
-    // TODO
-    public static function canShowBlubberThread(User $user, BlubberThread $resource)
+    public static function canShowRange(\User $user, \Range $range): bool
     {
-        return self::userIsAuthor($user) && $resource->isReadable($user->id);
+        return $range->isAccessibleToUser($user->id);
     }
 
-    public static function canCreatePrivateBlubberThread(User $user)
+    public static function canEditRange(\User $user, \Range $range): bool
     {
-        return self::userIsAuthor($user);
+        return $range->isEditableByUser($user->id);
     }
 
-    public static function canCreateComment(User $user, BlubberThread $resource)
+    public static function canShowBlock(\User $user, \ConsultationBlock $block): bool
     {
-        return self::userIsAuthor($user) && $resource->isCommentable($user->id);
+        return self::canShowRange($user, $block->range);
     }
 
-    public static function canDeleteComment(User $user, BlubberComment $resource)
+    public static function canEditBlock(\User $user, \ConsultationBlock $block): bool
     {
-        return self::canEditComment($user, $resource);
+        return self::canEditRange($user, $block->range);
     }
 
-    public static function canEditComment(User $user, BlubberComment $resource)
+    public static function canShowSlot(\User $user, \ConsultationSlot $slot): bool
     {
-        return self::userIsAuthor($user) && $resource->isWritable($user->id);
+        return self::canShowBlock($user, $slot->block);
     }
 
-    public static function canIndexComments(User $user, BlubberThread $resource = null)
+    public static function canEditSlot(\User $user, \ConsultationSlot $slot): bool
     {
-        return isset($resource)
-            ? self::canShowBlubberThread($user, $resource)
-            : self::userIsAuthor($user);
+        return self::canEditBlock($user, $slot->block);
     }
 
-    public static function canShowComment(User $user, BlubberComment $resource)
+    public static function canBookSlot(\User $user, \ConsultationSlot $slot): bool
     {
-        return self::canShowBlubberThread($user, $resource->thread);
+        return \ConsultationBooking::userMayCreateBookingForRange(
+            $slot->block->range,
+            $user
+        );
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
-    private static function userIsAuthor(User $user)
+    public static function canShowBooking(\User $user, \ConsultationBooking $booking): bool
     {
-        return $GLOBALS['perm']->have_perm('autor', $user->id);
+        return self::canShowSlot($user, $booking->slot)
+            || $booking->user_id === $user->id;
+    }
+
+    public static function canEditBooking(\User $user, \ConsultationBooking $booking): bool
+    {
+        return self::canEditSlot($user, $booking->slot)
+            || $booking->user_id === $user->id;
     }
 }

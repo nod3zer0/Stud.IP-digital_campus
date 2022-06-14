@@ -8,14 +8,21 @@ use Neomerx\JsonApi\Schema\Link;
 class ConsultationBooking extends SchemaProvider
 {
     const TYPE = 'consultation-bookings';
+
     const REL_SLOT = 'slot';
     const REL_USER = 'user';
 
+    /**
+     * @param \ConsultationBooking $resource
+     */
     public function getId($resource): ?string
     {
         return $resource->id;
     }
 
+    /**
+     * @param \ConsultationBooking $resource
+     */
     public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
@@ -28,23 +35,22 @@ class ConsultationBooking extends SchemaProvider
         return $attributes;
     }
 
-    /**
-     * In dieser Methode können Relationships zu anderen Objekten
-     * spezifiziert werden.
-     * {@inheritdoc}
-     */
     public function getRelationships($resource, ContextInterface $context): iterable
     {
         $relationships = [];
-        $relationships = $this->getSlotRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_SLOT));
-        $relationships = $this->getUserRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_USER));
+
+        $isPrimary = $context->getPosition()->getLevel() === 0;
+        if ($isPrimary) {
+            $relationships = $this->getSlotRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_SLOT));
+            $relationships = $this->getUserRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_USER));
+        }
 
         return $relationships;
     }
 
     // #### PRIVATE HELPERS ####
 
-    private function getSlotRelationship(array $relationships, \BlubberComment $resource, $includeData)
+    private function getSlotRelationship(array $relationships, \ConsultationBooking $resource, $includeData)
     {
         $slot = $resource->slot;
 
@@ -58,7 +64,7 @@ class ConsultationBooking extends SchemaProvider
         return $relationships;
     }
 
-    private function getRangeRelationship($relationships, $resource, $includeData)
+    private function getUserRelationship($relationships, \ConsultationBooking $resource, $includeData)
     {
         $user = $resource->user;
 

@@ -31,7 +31,7 @@ final class RangeFactory
      * @param string $type Range type
      * @param mixed  $id   Range id
      * @return mixed any of the supported range types
-     * @throws Exception when an invalid range type was given
+     * @throws Exception when an invalid range type was given
      *
      * @todo Should this be more dynamic in case any more ranges are added?
      */

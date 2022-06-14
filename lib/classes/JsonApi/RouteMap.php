@@ -115,7 +115,7 @@ class RouteMap
         $group->patch('/config-values/{id}', Routes\ConfigValues\ConfigValuesUpdate::class);
 
         $this->addAuthenticatedBlubberRoutes($group);
-        //        $this->addAuthenticatedConsultationRoutes($group);
+        $this->addAuthenticatedConsultationRoutes($group);
         $this->addAuthenticatedContactsRoutes($group);
         $this->addAuthenticatedCoursesRoutes($group);
         $this->addAuthenticatedCoursewareRoutes($group);
@@ -180,7 +180,7 @@ class RouteMap
 
     private function addAuthenticatedConsultationRoutes(RouteCollectorProxy $group): void
     {
-        $group->get('/users/{id}/consultations', Routes\Consultations\BlocksByUserIndex::class);
+        $group->get('/{type:courses|institutes|users}/{id}/consultations', Routes\Consultations\BlocksByRangeIndex::class);
 
         $group->get('/consultation-blocks/{id}', Routes\Consultations\BlockShow::class);
         $group->get('/consultation-blocks/{id}/slots', Routes\Consultations\SlotsByBlockIndex::class);
@@ -189,6 +189,7 @@ class RouteMap
         $group->get('/consultation-slots/{id}/bookings', Routes\Consultations\BookingsBySlotIndex::class);
         $group->post('/consultation-slots/{id}/bookings', Routes\Consultations\BookingsCreate::class);
 
+        $group->post('/consultation-bookings', Routes\Consultations\BookingsCreate::class);
         $group->get('/consultation-bookings/{id}', Routes\Consultations\BookingsShow::class);
         $group->delete('/consultation-bookings/{id}', Routes\Consultations\BookingsDelete::class);
     }

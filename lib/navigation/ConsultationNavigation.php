@@ -55,17 +55,8 @@ class ConsultationNavigation extends Navigation
             return;
         }
 
-        if ($this->range instanceof User) {
-            // Permissions that are allowed to book reservervations
-            $allowed = ['user', 'autor', 'tutor'];
-            if (Config::get()->CONSULTATION_ALLOW_DOCENTS_RESERVING) {
-                $allowed[] = 'dozent';
-            }
-
-            // User does not have required permissions
-            if (!in_array($GLOBALS['user']->perms, $allowed)) {
-                return null;
-            }
+        if (!ConsultationBooking::userMayCreateBookingForRange($this->range, User::findCurrent())) {
+            return;
         }
 
         // Create visitor navigation

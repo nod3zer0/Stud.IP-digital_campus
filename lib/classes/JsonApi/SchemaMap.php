@@ -19,6 +19,9 @@ class SchemaMap
             \BlubberThread::class => Schemas\BlubberThread::class,
 
             \CalendarEvent::class => Schemas\CalendarEvent::class,
+            \ConsultationBlock::class => Schemas\ConsultationBlock::class,
+            \ConsultationBooking::class => Schemas\ConsultationBooking::class,
+            \ConsultationSlot::class => Schemas\ConsultationSlot::class,
             \ConfigValue::class => Schemas\ConfigValue::class,
             \CourseEvent::class => Schemas\CourseEvent::class,
             \ContentTermsOfUse::class => Schemas\ContentTermsOfUse::class,

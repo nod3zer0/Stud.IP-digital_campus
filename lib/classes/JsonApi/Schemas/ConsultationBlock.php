@@ -8,9 +8,13 @@ use Neomerx\JsonApi\Schema\Link;
 class ConsultationBlock extends SchemaProvider
 {
     const TYPE = 'consultation-blocks';
+
     const REL_SLOTS = 'slots';
     const REL_RANGE = 'range';
 
+    /**
+     * @param \ConsultationBlock $resource
+     */
     public function getId($resource): ?string
     {
         return $resource->id;
@@ -22,14 +26,15 @@ class ConsultationBlock extends SchemaProvider
             'start' => date('c', $resource->start),
             'end'   => date('c', $resource->end),
 
-            'room' => $resource->room,
-            'size' => (int) $resource->size,
-
+            'size'              => (int) $resource->size,
             'show-participants' => (bool) $resource->show_participants,
             'require-reason'    => $resource->require_reason,
 
             'confirmation-text'      => $resource->confirmation_text ?: null,
             'confirmation-text-html' => formatLinks($resource->confirmation_text) ?: null,
+
+            'room'      => $resource->room,
+            'room-html' => formatLinks($resource->room),
 
             'note'      => $resource->note,
             'note-html' => formatLinks($resource->note),
@@ -49,28 +54,27 @@ class ConsultationBlock extends SchemaProvider
     public function getRelationships($resource, ContextInterface $context): iterable
     {
         $relationships = [];
-        $relationships = $this->getSlotsRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_SLOTS));
 
         $isPrimary = $context->getPosition()->getLevel() === 0;
-        if (!$isPrimary) {
-            return $relationships;
+        if ($isPrimary) {
+            $relationships = $this->getSlotsRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_SLOTS));
+            $relationships = $this->getRangeRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_RANGE));
         }
 
-        $relationships = $this->getRangeRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_RANGE));
 
         return $relationships;
     }
 
     // #### PRIVATE HELPERS ####
 
-    private function getSlotsRelationship(array $relationships, \BlubberComment $resource, $includeData)
+    private function getSlotsRelationship(array $relationships, \ConsultationBlock $resource, $includeData)
     {
         if ($includeData) {
             $relatedSlots = $resource->slots;
         } else {
-            $relatedSlots = array_map(function ($slot) {
+            $relatedSlots = $resource->slots->map(function ($slot) {
                 return \ConsultationSlot::build(['id' => $slot->id], false);
-            }, $resource->slots);
+            });
         }
 
         $relationships[self::REL_SLOTS] = [
@@ -97,7 +101,7 @@ class ConsultationBlock extends SchemaProvider
         return $relationships;
     }
 
-    private function getLinkForRange(Range $range)
+    private function getLinkForRange(\Range $range)
     {
         if (
             $range instanceof \Course ||
@@ -110,18 +114,18 @@ class ConsultationBlock extends SchemaProvider
         throw new \Exception('Unknown range type');
     }
 
-    private function getMinimalRange(Range $range)
+    private function getMinimalRange(\Range $range)
     {
         if ($range instanceof \Course) {
-            return Course::build(['id' => $range->id], false);
+            return \Course::build(['id' => $range->id], false);
         }
 
         if ($range instanceof \Institute) {
-            return Institute::build(['id' => $range->id], false);
+            return \Institute::build(['id' => $range->id], false);
         }
 
         if ($range instanceof \User) {
-            return User::build(['id' => $range->id], false);
+            return \User::build(['id' => $range->id], false);
         }
 
         throw new \Exception('Unknown range type');
