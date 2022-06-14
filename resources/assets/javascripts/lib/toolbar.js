@@ -44,41 +44,6 @@ const Toolbar = {
 
         button_set = button_set || Toolbar.buttonSet;
 
-        // if WYSIWYG is globally enabled then add a button so
-        // the user can activate it
-        if (STUDIP.wysiwyg_enabled && $element.hasClass('wysiwyg')) {
-            button_set.right.wysiwyg = {
-                label: 'WYSIWYG',
-                evaluate: function() {
-                    var question = [
-                        $gettext('Soll der WYSIWYG Editor aktiviert werden?'),
-                        '',
-                        $gettext('Die Seite muss danach neu geladen werden, um den WYSIWYG Editor zu laden.')
-                    ].join('\n');
-                    Dialog.confirm(question, function() {
-                        var url = STUDIP.URLHelper.resolveURL('dispatch.php/wysiwyg/settings/users/current');
-
-                        $.ajax({
-                            url: url,
-                            type: 'PUT',
-                            contentType: 'application/json',
-                            data: JSON.stringify({ disabled: false })
-                        }).fail(function(xhr) {
-                            window.alert(
-                                [
-                                    $gettext('Das Aktivieren des WYSIWYG Editors ist fehlgeschlagen.'),
-                                    '',
-                                    $gettext('URL') + ': ' + url,
-                                    $gettext('Status') + ': ' + xhr.status + ' ' + xhr.statusText,
-                                    $gettext('Antwort') + ': ' + xhr.responseText
-                                ].join('\n')
-                            );
-                        });
-                    });
-                }
-            };
-        }
-
         // Add flag so one element will never have more than one toolbar
         $element.data('toolbar-added', true);
 

@@ -170,7 +170,7 @@ const wysiwyg = {
             skin: 'studip,' + STUDIP.ASSETS_URL + 'stylesheets/ckeditor-skin/',
             // NOTE codemirror crashes when not explicitely loaded in CKEditor 4.4.7
             extraPlugins:
-                'emojione,studip-floatbar,studip-quote,studip-upload,studip-settings' +
+                'emojione,studip-floatbar,studip-quote,studip-upload' +
                 (extraPlugins ? ',' + extraPlugins : ''),
             removePlugins: removePlugins ? removePlugins : textarea.closest('.ui-dialog').length ? 'autogrow' : '',
             enterMode: CKEDITOR.ENTER_BR,
@@ -192,8 +192,7 @@ const wysiwyg = {
                 { name: 'basicstyles', groups: ['undo', 'basicstyles', 'cleanup'] },
                 { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'quote'] },
                 '/',
-                { name: 'styles', groups: ['styles', 'colors', 'tools', 'links', 'insert'] },
-                { name: 'others', groups: ['mode', 'settings'] }
+                { name: 'styles', groups: ['styles', 'colors', 'tools', 'links', 'insert', 'mode'] }
             ],
             removeButtons: 'Font,FontSize',
             toolbarCanCollapse: true,
