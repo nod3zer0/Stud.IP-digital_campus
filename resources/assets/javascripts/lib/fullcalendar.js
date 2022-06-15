@@ -13,7 +13,7 @@ import resourceCommonPlugin from '@fullcalendar/resource-common';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 
-import jsPDF from 'jspdf-yworks';
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 Date.prototype.getWeekNumber = function () {
