@@ -22,8 +22,8 @@ const Markup = {
         math_jax: function (element) {
             $('span.math-tex:not(:has(.MathJax)),.formatted-content:contains("[tex]")', element).each((index, block) => {
                 STUDIP.loadChunk('mathjax').then((MathJax) => {
-                    if (typeof MathJax.typeset === "function") {
-                        MathJax.typeset([block]);
+                    if (typeof MathJax.Hub.Typeset === "function") {
+                        MathJax.Hub.Typeset(block);
                     }
                 });
             });
