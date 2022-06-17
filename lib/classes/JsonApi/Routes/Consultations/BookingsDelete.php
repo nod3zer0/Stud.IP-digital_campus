@@ -14,7 +14,12 @@ class BookingsDelete extends JsonApiController
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $json = $this->validate($request);
+        $body = (string) $request->getBody();
+        if ($body) {
+            $json = $this->validate($request);
+        } else {
+            $json = [];
+        }
 
         $booking = \ConsultationBooking::find($args['id']);
         if (!$booking) {
