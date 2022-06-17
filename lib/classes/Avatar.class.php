@@ -244,6 +244,11 @@ class Avatar {
             $opt['class'] = $this->getCssClass($size);
         }
 
+        // Apply cast to string for title if necessary
+        if (isset($opt['title']) && !is_string($opt['title'])) {
+            $opt['title'] = (string) $opt['title'];
+        }
+
         if (!empty($opt['title']) && $opt['title'] !== html_entity_decode($opt['title'])) {
             // Decode already htmlready encoded titles (which were used until
             // all attributes were encoded inside this method)
