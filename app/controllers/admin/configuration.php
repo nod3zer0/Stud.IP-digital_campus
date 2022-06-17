@@ -46,10 +46,8 @@ class Admin_ConfigurationController extends AuthenticatedController
 
     /**
      * Maintenance view for the configuration parameters
-     *
-     * @param mixed $section Open section
      */
-    public function configuration_action($open_section = null)
+    public function configuration_action()
     {
         PageLayout::setTitle(_('Verwaltung von Systemkonfigurationen'));
 
@@ -67,7 +65,7 @@ class Admin_ConfigurationController extends AuthenticatedController
 
         // set variables for view
         $this->only_section = $section;
-        $this->open_section = $open_section ?? $section;
+        $this->open_section = Request::get('open_section', $section);
         $this->needle = $needle;
         $this->sections = ConfigurationModel::getConfig($section, $needle);
 
@@ -103,7 +101,7 @@ class Admin_ConfigurationController extends AuthenticatedController
                     htmlReady($field)
                 ));
 
-                $this->relocate("admin/configuration/configuration/{$section}#field-{$field}");
+                $this->relocate($this->action_url("configuration#field-{$field}", ['open_section' => $section]));
                 return;
             }
         }
