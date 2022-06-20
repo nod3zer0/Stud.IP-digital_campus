@@ -54,7 +54,7 @@
             <a class="button"
                target="_blank"
                href="<?= htmlReady($material['source_url']) ?>">
-                <?= _('Webseite') ?>
+                <?= _('Webseite des Lerninhalts öffnen') ?>
             </a>
         <? endif ?>
 
