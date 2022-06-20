@@ -1174,12 +1174,12 @@ function get_title_for_status($type, $count, $sem_type = NULL)
     $atype = 'title_'.$type;
     $index = $count == 1 ? 0 : 1;
 
-    if (isset($SEM_TYPE[$sem_type][$atype][$index])) {
-        $title = $SEM_TYPE[$sem_type][$atype][$index];
-    } else if (isset($DEFAULT_TITLE_FOR_STATUS[$type][$index])) {
-        $title = $DEFAULT_TITLE_FOR_STATUS[$type][$index];
-    } else {
-        $title = _('unbekannt');
+    $class = $SEM_TYPE[$sem_type]->getClass();
+
+    $title = $class->offsetGet($count == 1 ? $atype : $atype . '_plural');
+
+    if (!$title) {
+        $title = $DEFAULT_TITLE_FOR_STATUS[$type][$index] ?: _('unbekannt');
     }
 
     return $title;
