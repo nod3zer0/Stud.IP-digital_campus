@@ -1165,7 +1165,7 @@ function encode_header_parameter($name, $value)
  */
 function get_title_for_status($type, $count, $sem_type = NULL)
 {
-    global $SEM_TYPE, $DEFAULT_TITLE_FOR_STATUS;
+    global $SEM_CLASS, $SEM_TYPE, $DEFAULT_TITLE_FOR_STATUS;
 
     if (is_null($sem_type)) {
         $sem_type = Context::getArtNum();
@@ -1173,14 +1173,10 @@ function get_title_for_status($type, $count, $sem_type = NULL)
 
     $atype = 'title_'.$type;
     $index = $count == 1 ? 0 : 1;
+    $class_index = $count == 1 ? $atype : $atype . '_plural';
 
-    $class = $SEM_TYPE[$sem_type]->getClass();
-
-    $title = $class->offsetGet($count == 1 ? $atype : $atype . '_plural');
-
-    if (!$title) {
-        $title = $DEFAULT_TITLE_FOR_STATUS[$type][$index] ?: _('unbekannt');
-    }
+    $title = $SEM_CLASS[$SEM_TYPE[$sem_type]['class']][$class_index] ??
+             $DEFAULT_TITLE_FOR_STATUS[$type][$index] ?? _('unbekannt');
 
     return $title;
 }

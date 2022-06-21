@@ -579,12 +579,14 @@ function export_teilis($inst_id, $ex_sem_id = "no")
     } else {
 
         if (!in_array($filter, words('awaiting claiming'))) {
+            $course = Course::find($range_id);
+
             $gruppe = [
-                'dozent'   => get_title_for_status('dozent', 2),
-                'tutor'    => get_title_for_status('tutor', 2),
-                'autor'    => get_title_for_status('autor', 2),
-                'user'     => get_title_for_status('user', 2),
-                'accepted' => get_title_for_status('accepted', 2)
+                'dozent'   => get_title_for_status('dozent', 2, $course->status),
+                'tutor'    => get_title_for_status('tutor', 2, $course->status),
+                'autor'    => get_title_for_status('autor', 2, $course->status),
+                'user'     => get_title_for_status('user', 2, $course->status),
+                'accepted' => get_title_for_status('accepted', 2, $course->status)
             ];
         } else {
             $gruppe[$filter] = _('Anmeldeliste');
