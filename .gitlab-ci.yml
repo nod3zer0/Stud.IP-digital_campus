@@ -4,6 +4,7 @@ variables:
   MYSQL_USER: studip_user
   MYSQL_PASSWORD: studip_password
   MYSQL_HOST: mariadb
+  DEMO_DATA: 1
 
 stages:
   - Checks
