@@ -14,9 +14,12 @@ stages:
   - Release
   - Build
 
+image: studip/studip:tests
+services:
+  - mariadb
+
 Linting:
   stage: Checks
-  image: studip/studip:tests
   allow_failure: false
   before_script:
     - make composer-dev
@@ -24,7 +27,6 @@ Linting:
     - php -d memory_limit=-1 composer/bin/phplint
 
 Unit Test:
-  image: studip/studip:tests
   stage: Tests
   allow_failure: false
   before_script:
@@ -34,10 +36,7 @@ Unit Test:
     - make test
 
 Functional Test:
-  services:
-    - mariadb
   stage: Tests
-  image: studip/studip:tests
   allow_failure: false
   before_script:
     - chmod +x ./.gitlab/scripts/install_db.sh
@@ -50,10 +49,7 @@ Functional Test:
     - make test-functional
 
 JSONAPI Test:
-  services:
-    - mariadb
   stage: Tests
-  image: studip/studip:tests
   allow_failure: false
   before_script:
     - chmod +x ./.gitlab/scripts/install_db.sh
