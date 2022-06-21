@@ -28,13 +28,15 @@ class UserScheduleShowTest extends \Codeception\Test\Unit
             "INSERT INTO schedule (start, end, day, title, content, color, user_id)
              VALUES (?, ?, ?, ?, ?, ?, ?)"
         );
-        $stmt->execute(
-            [
-                1000, 1200, 1,
-                'a title', 'some content',
-                '#c0ffee', $credentials['id']
-            ]
-        );
+        $stmt->execute([
+            1000,
+            1200,
+            1,
+            'a title',
+            'some content',
+            1,
+            $credentials['id'],
+        ]);
         $scheduleId = \DBManager::get()->lastInsertId();
 
         $app = $this->tester->createApp($credentials, 'get', '/users/{id}/schedule', UserScheduleShow::class, 'get-schedule');
