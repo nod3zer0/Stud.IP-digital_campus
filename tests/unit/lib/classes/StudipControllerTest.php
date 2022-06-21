@@ -76,6 +76,12 @@ final class StudipControllerTest extends Codeception\Test\Unit
             $expected,
             $this->getRelativeURL($url)
         );
+
+        $link = $this->getController()->action_link(...$args);
+        $this->assertEquals(
+            htmlspecialchars($expected),
+            $this->getRelativeURL($link)
+        );
     }
 
     /**

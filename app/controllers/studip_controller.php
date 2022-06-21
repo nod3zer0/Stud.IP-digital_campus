@@ -740,10 +740,7 @@ abstract class StudipController extends Trails_Controller
      */
     public function action_link($action)
     {
-        $arguments = func_get_args();
-        array_unshift($arguments, $this->controller_path());
-
-        return $this->link_for(...$arguments);
+        return htmlReady($this->action_url(...func_get_args()));
     }
 
     /**
