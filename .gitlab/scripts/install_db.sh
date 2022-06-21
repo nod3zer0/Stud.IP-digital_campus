@@ -17,6 +17,8 @@ if [ $(mysql -f -u $MYSQL_USER -h $MYSQL_HOST -p$MYSQL_PASSWORD $MYSQL_DATABASE 
     if [ ! -z $DEMO_DATA ]; then
         echo "INSTALL DEMODATA"
         mysql -f -u $MYSQL_USER -h $MYSQL_HOST -p$MYSQL_PASSWORD $MYSQL_DATABASE < ./db/studip_demo_data.sql
+        mysql -f -u $MYSQL_USER -h $MYSQL_HOST -p$MYSQL_PASSWORD $MYSQL_DATABASE < ./db/studip_mvv_demo_data.sql.sql
+        mysql -f -u $MYSQL_USER -h $MYSQL_HOST -p$MYSQL_PASSWORD $MYSQL_DATABASE < ./db/studip_resources_demo_data.sql
     fi
 
     echo "INSTALLATION FINISHED"
