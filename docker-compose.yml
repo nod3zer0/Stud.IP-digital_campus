@@ -11,7 +11,8 @@ services:
       MYSQL_DATABASE: studip_db
       MYSQL_USER: studip_user
       MYSQL_PASSWORD: studip_password
-
+      DEMO_DATA: 1
+      MAIL_TRANSPORT: debug
   web:
     build:
       context: .

@@ -20,6 +20,7 @@ namespace {
     $DB_STUDIP_USER = getenv('MYSQL_USER');
     $DB_STUDIP_PASSWORD = getenv('MYSQL_PASSWORD');
     $DB_STUDIP_DATABASE = getenv('MYSQL_DATABASE');
+    $MAIL_TRANSPORT = getenv('MAIL_TRANSPORT');
 
     /*URL
     ----------------------------------------------------------------

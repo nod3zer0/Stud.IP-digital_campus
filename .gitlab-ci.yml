@@ -5,6 +5,7 @@ variables:
   MYSQL_PASSWORD: studip_password
   MYSQL_HOST: mariadb
   DEMO_DATA: 1
+  MAIL_TRANSPORT: debug
 
 stages:
   - Checks
