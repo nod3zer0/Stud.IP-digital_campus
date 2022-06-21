@@ -13,7 +13,9 @@
  */
 class RolePersistence
 {
-    const ROLES_CACHE_KEY = 'plugins/rolepersistence/roles';
+    const ROLES_CACHE_KEY = 'roles';
+    const USER_ROLES_CACHE_KEY = 'roles/user';
+    const PLUGIN_ROLES_CACHE_KEY = 'roles/plugin';
 
     /**
      * Returns all available roles.
@@ -181,9 +183,7 @@ class RolePersistence
     public static function getAssignedRoleInstitutes($user_id, $role_id)
     {
         $roles = self::loadUserRoles($user_id);
-        return isset($roles[$role_id])
-             ? $roles[$role_id]['institutes']
-             : [];
+        return $roles[$role_id] ?? [];
     }
 
     /**
@@ -209,11 +209,11 @@ class RolePersistence
         $user_roles = self::loadUserRoles($userid, true);
 
         return isset($user_roles[$role_id])
-             ? (
-                 in_array($institut_id, $user_roles[$role_id]['institutes'])
-                 || in_array($faculty_id, $user_roles[$role_id]['institutes'])
-               )
-             : false;
+            && (
+                 !$institut_id
+                 || in_array($institut_id, $user_roles[$role_id])
+                 || in_array($faculty_id, $user_roles[$role_id])
+               );
     }
 
     private static function loadUserRoles($user_id, $implicit = false)
@@ -225,13 +225,6 @@ class RolePersistence
                       FROM (
                           SELECT `roleid`, `institut_id`, 1 AS explicit
                           FROM `roles_user`
-                          WHERE `userid` = :user_id
-
-                          UNION
-
-                          SELECT `roleid`, `fakultaets_id` AS `institut_id`, 1 AS explicit
-                          FROM `roles_user`
-                          JOIN `Institute` USING (`institut_id`)
                           WHERE `userid` = :user_id
 
                           UNION
@@ -250,21 +243,28 @@ class RolePersistence
             foreach ($statement as $row) {
                 if (!isset($roles[$row['roleid']])) {
                     $roles[$row['roleid']] = [
+                        'id'         => $row['roleid'],
                         'institutes' => [],
                         'explicit'   => (bool) $row['explicit'],
                     ];
                 }
-                $roles[$row['roleid']]['institutes'][] = $row['institut_id'];
+                if ($row['institut_id']) {
+                    $roles[$row['roleid']]['institutes'][] = $row['institut_id'];
+                }
             }
 
             $cache[$user_id] = $roles;
         }
-        return array_filter(
+
+        // Filter implicit roles away if necessary
+        $roles = array_filter(
             $cache[$user_id],
             function ($role) use ($implicit) {
                 return $implicit || $role['explicit'];
             }
         );
+
+        return array_column($roles, 'institutes', 'id');
     }
 
     /**
@@ -484,7 +484,7 @@ class RolePersistence
     private static function getUserRolesCache()
     {
         if (self::$user_roles_cache === null) {
-            self::$user_roles_cache = new StudipCachedArray('UserRoles');
+            self::$user_roles_cache = new StudipCachedArray(self::USER_ROLES_CACHE_KEY);
         }
         return self::$user_roles_cache;
     }
@@ -492,7 +492,7 @@ class RolePersistence
     private static function getPluginRolesCache()
     {
         if (self::$plugin_roles_cache === null) {
-            self::$plugin_roles_cache = new StudipCachedArray('PluginRoles');
+            self::$plugin_roles_cache = new StudipCachedArray(self::PLUGIN_ROLES_CACHE_KEY);
         }
         return self::$plugin_roles_cache;
     }
