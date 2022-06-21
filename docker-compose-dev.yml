@@ -1,0 +1,50 @@
+version: "3.7"
+
+services:
+  db:
+    image: mariadb:10.4
+    volumes:
+      - db_data:/var/lib/mysql
+    command: mysqld --sql_mode=""
+    restart: always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: studip_db
+      MYSQL_USER: studip_user
+      MYSQL_PASSWORD: studip_password
+
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/studip/Dockerfile-Dev
+
+    depends_on:
+      - db
+    volumes:
+      - .:/var/www/studip:rw
+
+    # Use port to redirect port
+    ports:
+      - "8032:80"
+
+    restart: always
+    environment:
+      MYSQL_DATABASE: studip_db
+      MYSQL_USER: studip_user
+      MYSQL_PASSWORD: studip_password
+      MYSQL_HOST: db
+      STUDIP_MAIL_TRANSPORT: debug
+
+      # Use automigrate to migrate your instance on startup
+      AUTO_MIGRATE: 1
+
+      # Use proxy url OR autoproxy if run behind a proxy
+      # PROXY_URL: https://studip.example.com/
+      # AUTO_PROXY: 1
+
+      # Demo data for your studip instance
+      DEMO_DATA: 1
+
+volumes:
+  web_data: {}
+  db_data: {}

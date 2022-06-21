@@ -11,7 +11,8 @@
         "php-http/curl-client": "~1.7.0",
         "woohoolabs/yang": "2.3.2",
         "codeception/codeception": "~4.1.21",
-        "codeception/module-asserts": "^1.3"
+        "codeception/module-asserts": "^1.3",
+        "overtrue/phplint": "^3.0"
     },
     "require": {
         "php": "^7.2",

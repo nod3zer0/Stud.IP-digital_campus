@@ -1,0 +1,123 @@
+variables:
+  MYSQL_RANDOM_ROOT_PASSWORD: 1
+  MYSQL_DATABASE: studip_db
+  MYSQL_USER: studip_user
+  MYSQL_PASSWORD: studip_password
+  MYSQL_HOST: mariadb
+
+stages:
+  - Checks
+  - Packaging
+  - Release
+  - Tests
+  - Build
+
+Linting:
+  stage: Checks
+  image: studip/studip:tests
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+  before_script:
+    - make composer-dev
+  script:
+    - php -d memory_limit=-1 composer/bin/phplint
+
+Unit Test:
+  services:
+    - mariadb
+  image: studip/studip:tests
+  stage: Tests
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+  before_script:
+    - cp ./docker/studip/config_local.php ./config/config_local.inc.php
+    - cp ./config/config.inc.php.dist ./config/config.inc.php
+  script:
+    - make test
+
+Functional Test:
+  services:
+    - mariadb
+  stage: Tests
+  image: studip/studip:tests
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+  before_script:
+    - chmod +x ./.gitlab/scripts/install_db.sh
+    - ./.gitlab/scripts/install_db.sh
+    - cp ./docker/studip/config_local.php ./config/config_local.inc.php
+    - cp ./config/config.inc.php.dist ./config/config.inc.php
+    - make
+    - ./cli/studip migrate
+  script:
+    - make test-functional
+
+JSONAPI Test:
+  services:
+    - mariadb
+    - codeception
+  stage: Tests
+  image: studip/studip:tests
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+  before_script:
+    - chmod +x ./.gitlab/scripts/install_db.sh
+    - ./.gitlab/scripts/install_db.sh
+    - cp ./docker/studip/config_local.php ./config/config_local.inc.php
+    - cp ./config/config.inc.php.dist ./config/config.inc.php
+    - make
+    - ./cli/studip migrate
+  script:
+    - make test-jsonapi
+
+Packaging:
+  stage: Packaging
+  image: studip/studip:tests
+  rules:
+    - if: $CI_COMMIT_TAG
+  before_script:
+    - echo $CI_JOB_ID
+    - echo GE_JOB_NAME=$CI_JOB_NAME >> .packaging.env
+    - mkdir .pkg
+  script:
+    - echo 'Running packaging job'
+    - make build clean-npm
+    - zip -r9 .pkg/studip-release-$CI_COMMIT_TAG.zip *
+    - tar -czf .pkg/studip-release-$CI_COMMIT_TAG.tar.gz *
+  artifacts:
+    untracked: true
+    name: 'Stud.IP-Release-$CI_COMMIT_TAG'
+    paths:
+      - ./.pkg/studip-release.zip
+      - ./.pkg/studip-release.tar.gz
+    reports:
+      dotenv: .packaging.env
+
+Release:
+  stage: Release
+  image: studip/release-cli
+  rules:
+    - if: $CI_COMMIT_TAG
+  variables:
+    SETTINGS__GITLAB_ACCESS_TOKEN: $GITLAB_ACCESS_TOKEN
+  script:
+    - echo 'Running release job'
+  needs:
+    - job: Packaging
+      artifacts: true
+  release:
+    name: "Stud.IP-Release-$CI_COMMIT_TAG"
+    description: "Created using the release"
+    tag_name: "$CI_COMMIT_TAG"
+    assets:
+      links:
+        - name: "Stud.IP-Release-$CI_COMMIT_TAG.zip"
+          url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/jobs/artifacts/${CI_COMMIT_TAG}/raw/.pkg/studip-release.zip?job=${GE_JOB_NAME}"
+          link_type: package
+        - name: "Stud.IP-Release-$CI_COMMIT_TAG.tar.gz"
+          url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/jobs/artifacts/${CI_COMMIT_TAG}/raw/.pkg/studip-release.tar.gz?job=${GE_JOB_NAME}"
+          link_type: package
