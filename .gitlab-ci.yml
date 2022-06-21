@@ -50,7 +50,7 @@ Functional Test:
     - ./.gitlab/scripts/install_db.sh
     - cp ./docker/studip/config_local.php ./config/config_local.inc.php
     - cp ./config/config.inc.php.dist ./config/config.inc.php
-    - make
+    - make composer
     - ./cli/studip migrate
   script:
     - make test-functional
@@ -68,7 +68,7 @@ JSONAPI Test:
     - ./.gitlab/scripts/install_db.sh
     - cp ./docker/studip/config_local.php ./config/config_local.inc.php
     - cp ./config/config.inc.php.dist ./config/config.inc.php
-    - make
+    - make composer
     - ./cli/studip migrate
   script:
     - make test-jsonapi
