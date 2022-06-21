@@ -24,8 +24,6 @@ Linting:
     - php -d memory_limit=-1 composer/bin/phplint
 
 Unit Test:
-  services:
-    - mariadb
   image: studip/studip:tests
   stage: Tests
   allow_failure: false
