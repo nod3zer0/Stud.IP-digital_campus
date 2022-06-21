@@ -58,7 +58,6 @@ Functional Test:
 JSONAPI Test:
   services:
     - mariadb
-    - codeception
   stage: Tests
   image: studip/studip:tests
   allow_failure: false
