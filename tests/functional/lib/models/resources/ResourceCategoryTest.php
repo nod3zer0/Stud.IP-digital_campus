@@ -159,7 +159,7 @@ class ResourceCategoryTest extends \Codeception\Test\Unit
 
         $def = new ResourcePropertyDefinition();
         $def->name = 'test';
-        $def->type = 'unknown';
+        $def->type = 'bool';
         $def->store();
 
         $prop = $resource_cat->addProperty(

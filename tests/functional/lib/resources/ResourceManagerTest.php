@@ -29,7 +29,7 @@ class ResourceManagerTest extends \Codeception\Test\Unit
         // Workaround old-style Stud.IP-API using $GLOBALS['user']
         $this->oldUser = $GLOBALS['user'];
         $GLOBALS['user'] = new \Seminar_User(
-            \User::build(['user_id' => 'cli', 'username' => 'cli', 'perms' => 'autor'], false)
+            \User::findByUsername('root@studip')
         );
 
         //As a final step we create the SORM objects for our test cases:
@@ -299,139 +299,31 @@ class ResourceManagerTest extends \Codeception\Test\Unit
         );
     }
 
-    public function testEmptyPositionState()
+    /**
+     * @dataProvider coordinateProvider
+     */
+    public function testCoordinatesValidation($coordinates)
     {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->getId();
-        $position->property_id = $this->position_def->id;
-        $position->state = '';
-
-        ResourceManager::getPositionArray($position);
+        $this->assertFalse(ResourceManager::validateCoordinates($coordinates));
     }
 
-    public function testBadLatitudePositionState1()
+    public static function coordinateProvider(): array
     {
-        $this->expectException(ResourcePropertyStateException::class);
 
-        $position = new ResourceProperty();
-        $position->getId();
-        $position->property_id = $this->position_def->id;
-        $position->state = '14.29302-31.28323-5.292CRSWGS_84/';
+        return [
+            'empty' => [''],
 
-        ResourceManager::getPositionArray($position);
+            'bad-latitude-1' => ['14.29302-31.28323-5.292CRSWGS_84/'],
+            'bad-latitude-2' => ['+14-31.28323-5.292CRSWGS_84/'],
+            'missing-latitude' => ['-31.28323-5.292CRSWGS_84/'],
+
+            'bad-longitude-1' => ['-14.29302-31-5.292CRSWGS_84/'],
+            'bad-longitude-2' => ['-14.29302-+31.28323-5.292CRSWGS_84/'],
+
+            'missing-altitude' => ['-14.29302-31.28323CRSWGS_84/'],
+
+            'bad-suffix' => ['-14.29302-31.28323-5.292CRSWGS_84'],
+            'missing-suffix' => ['-14.29302-31.28323-5.292'],
+        ];
     }
-
-    public function testBadLatitudePositionState2()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->getId();
-        $position->property_id = $this->position_def->id;
-        $position->state = '+14-31.28323-5.292CRSWGS_84/';
-
-        ResourceManager::getPositionArray($position);
-    }
-
-    public function testMissingLatitudePositionState()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->property_id = $this->position_def->id;
-        $position->state = '-31.28323-5.292CRSWGS_84/';
-
-        ResourceManager::getPositionArray($position);
-    }
-
-    public function testBadLongitudePositionState1()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->property_id = $this->position_def->id;
-        $position->state = '-14.29302-31-5.292CRSWGS_84/';
-
-        ResourceManager::getPositionArray($position);
-    }
-
-    public function testBadLongitudePositionState2()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->property_id = $this->position_def->id;
-        $position->state = '-14.29302-+31.28323-5.292CRSWGS_84/';
-
-        ResourceManager::getPositionArray($position);
-    }
-
-    public function testMissingLongitudePositionState()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->property_id = $this->position_def->id;
-        $position->state = '-14.29302--5.292CRSWGS_84/';
-
-        ResourceManager::getPositionArray($position);
-    }
-
-    public function testBadAltitudePositionState1()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->property_id = $this->position_def->id;
-        $position->state = '-14.29302-31.28323-+5.292CRSWGS_84/';
-
-        ResourceManager::getPositionArray($position);
-    }
-
-    public function testBadAltitudePositionState2()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->property_id = $this->position_def->id;
-        $position->state = '-14.29302-31.28323+5292CRSWGS_84/';
-
-        ResourceManager::getPositionArray($position);
-    }
-
-    public function testMissingAltitudePositionState()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->property_id = $this->position_def->id;
-        $position->state = '-14.29302-31.28323CRSWGS_84/';
-
-        ResourceManager::getPositionArray($position);
-    }
-
-    public function testBadSuffixPositionState()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->property_id = $this->position_def->id;
-        $position->state = '-14.29302-31.28323-5.292CRSWGS_84';
-
-        ResourceManager::getPositionArray($position);
-    }
-
-    public function testMissingSuffixPositionState()
-    {
-        $this->expectException(ResourcePropertyStateException::class);
-
-        $position = new ResourceProperty();
-        $position->property_id = $this->position_def->id;
-        $position->state = '-14.29302-31.28323-5.292';
-
-        ResourceManager::getPositionArray($position);
-    }
-
 }

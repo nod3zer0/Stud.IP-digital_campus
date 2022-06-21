@@ -534,6 +534,24 @@ class ResourceManager
         }
     }
 
+    /**
+     * Check if the coordinate are in appropriate CRSWGS_84 format.
+     *
+     * - latitude: up to 2 digits, decimal point, 1 to 10 digits for fraction
+     * - longitude: up to 3 digits, decimal point, 1 to 10 digits for fraction
+     * - altitude: up to 5 digits, decimal point, 1 to 10 digits for fraction
+     *
+     * @param string $coordinate_string
+     * @return bool
+     */
+    public static function validateCoordinates(string $coordinate_string): bool
+    {
+        return preg_match(
+            ResourcePropertyDefinition::CRSWGS84_REGEX,
+            $coordinate_string
+        );
+    }
+
 
     // Static methods for position properties:
 
@@ -557,17 +575,8 @@ class ResourceManager
         $coordinate_string = $property->state;
 
 
-        //Check, if the coordinate string ends with "CRSWGS_84/"
-        //and if all the numbers are in the appropriate format:
-        //- latitude: up to 2 digits, decimal point, 1 to 10 digits for fraction
-        //- longitude: up to 3 digits, decimal point, 1 to 10 digits for fraction
-        //- altitude: up to 5 digits, decimal point, 1 to 10 digits for fraction
-        //before the decimal point. After the decimal point,
-        //In that case it is a coordinate format we can parse:
-        if(!preg_match(
-            ResourcePropertyDefinition::CRSWGS84_REGEX,
-            $coordinate_string
-        )) {
+        // Show error message when coordinates are invalid
+        if (!self::validateCoordinates($coordinate_string)) {
             PageLayout::postError(_('Die Positionsangabe kann nicht umgewandelt werden, da sie ungültige Daten enthält!'));
         }
 

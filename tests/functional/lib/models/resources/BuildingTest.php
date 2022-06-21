@@ -46,7 +46,7 @@ class BuildingTest extends \Codeception\Test\Unit
         // Workaround old-style Stud.IP-API using $GLOBALS['user']
         $this->oldUser = $GLOBALS['user'];
         $GLOBALS['user'] = new \Seminar_User(
-            \User::build(['user_id' => 'cli', 'username' => 'cli', 'perms' => 'autor'], false)
+            \User::findByUsername('root@studip')
         );
 
         //As a final step we create the SORM objects for our test cases:
