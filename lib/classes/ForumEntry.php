@@ -1242,8 +1242,8 @@ class ForumEntry  implements PrivacyObject
         $stmt->execute([$seminar_id, $seminar_id]);
         if ($stmt->fetchColumn() == 0) {
             $stmt = DBManager::get()->prepare("INSERT INTO forum_entries
-                (topic_id, seminar_id, user_id, name, mkdate, chdate, lft, rgt, depth)
-                VALUES (?, ?, '', 'Übersicht', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 1, 0)");
+                (topic_id, seminar_id, user_id, name, content, mkdate, chdate, lft, rgt, depth)
+                VALUES (?, ?, '', 'Übersicht', '', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 0, 1, 0)");
             $stmt->execute([$seminar_id, $seminar_id]);
         }
 
