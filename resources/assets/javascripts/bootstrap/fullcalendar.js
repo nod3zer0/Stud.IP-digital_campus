@@ -19,7 +19,7 @@ STUDIP.ready(function () {
         setTimeout(() => {
             calendar.updateSize();
             if (ttl > 0) {
-                continuousRefresh(ttl - 1);
+                continuousRefresh(calendar, ttl - 1);
             }
         }, 200);
     }
