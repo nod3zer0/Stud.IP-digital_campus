@@ -24,42 +24,75 @@ Linting:
   before_script:
     - make composer-dev
   script:
-    - php -d memory_limit=-1 composer/bin/phplint
+    - php -d memory_limit=-1 composer/bin/phplint --xml report.xml
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - tests/_output
+    reports:
+      junit: tests/_output/report.xml
 
 Unit Test:
   stage: Tests
   allow_failure: false
   before_script:
-    - cp ./docker/studip/config_local.php ./config/config_local.inc.php
-    - cp ./config/config.inc.php.dist ./config/config.inc.php
+    - cp docker/studip/config_local.php config/config_local.inc.php
+    - cp config/config.inc.php.dist config/config.inc.php
+    - make composer-dev
   script:
-    - make test
+    - composer/bin/codecept run unit --xml
+    # Remove absolute path in report
+    - sed -i "s%$PWD/%%" tests/_output/report.xml
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - tests/_output
+    reports:
+      junit: tests/_output/report.xml
 
 Functional Test:
   stage: Tests
   allow_failure: false
   before_script:
-    - chmod +x ./.gitlab/scripts/install_db.sh
-    - ./.gitlab/scripts/install_db.sh
-    - cp ./docker/studip/config_local.php ./config/config_local.inc.php
-    - cp ./config/config.inc.php.dist ./config/config.inc.php
-    - make composer
-    - ./cli/studip migrate
+    - chmod +x .gitlab/scripts/install_db.sh
+    - .gitlab/scripts/install_db.sh
+    - cp docker/studip/config_local.php config/config_local.inc.php
+    - cp config/config.inc.php.dist config/config.inc.php
+    - make composer-dev
+    - cli/studip migrate
   script:
-    - make test-functional
+    - composer/bin/codecept run functional --xml
+    - sed -i "s%$PWD/%%" tests/_output/report.xml
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - tests/_output
+    reports:
+      junit: tests/_output/report.xml
 
 JSONAPI Test:
   stage: Tests
   allow_failure: false
   before_script:
-    - chmod +x ./.gitlab/scripts/install_db.sh
-    - ./.gitlab/scripts/install_db.sh
-    - cp ./docker/studip/config_local.php ./config/config_local.inc.php
-    - cp ./config/config.inc.php.dist ./config/config.inc.php
-    - make composer
-    - ./cli/studip migrate
+    - chmod +x .gitlab/scripts/install_db.sh
+    - .gitlab/scripts/install_db.sh
+    - cp docker/studip/config_local.php config/config_local.inc.php
+    - cp config/config.inc.php.dist config/config.inc.php
+    - make composer-dev
+    - cli/studip migrate
   script:
-    - make test-jsonapi
+    - composer/bin/codecept run jsonapi --xml
+    - sed -i "s%$PWD/%%" tests/_output/report.xml
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - tests/_output
+    reports:
+      junit: tests/_output/report.xml
 
 Packaging:
   stage: Packaging
@@ -78,8 +111,8 @@ Packaging:
     untracked: true
     name: 'Stud.IP-Release-$CI_COMMIT_TAG'
     paths:
-      - ./.pkg/studip-release.zip
-      - ./.pkg/studip-release.tar.gz
+      - .pkg/studip-release.zip
+      - .pkg/studip-release.tar.gz
     reports:
       dotenv: .packaging.env
 
