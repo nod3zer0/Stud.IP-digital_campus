@@ -221,6 +221,9 @@ ul.resource-tree {
     }
 }
 
+.clipboard-draggable-item {
+    cursor: move;
+}
 
 .room-clipboard-special-actions {
     margin-top: 0.25em;
@@ -372,19 +375,6 @@ ul.resource-tree {
             height: 1em;
 
         }
-    }
-}
-
-article.room-list-item {
-    header > nav.action-menu > a.action-menu-icon {
-        border-right: none;
-        margin-right: 0;
-    }
-
-    section > ul.property-list {
-        list-style: none;
-        padding-left: 0;
-        flex-grow: 1;
     }
 }
 
