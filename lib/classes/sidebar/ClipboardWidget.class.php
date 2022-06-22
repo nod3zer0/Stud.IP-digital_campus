@@ -80,7 +80,7 @@ class ClipboardWidget extends SidebarWidget
         }
 
         $this->setId("ClipboardWidget_{$this->clipboard_widget_id}");
-        $this->setAdditionalAttribute('data-widget_id', $this->getId());
+        $this->setAdditionalAttribute('data-widget_id', $this->clipboard_widget_id);
         $this->addLayoutCSSClass('clipboard-widget');
     }
 

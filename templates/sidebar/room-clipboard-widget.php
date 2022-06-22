@@ -12,7 +12,6 @@
         ]
         ); ?>
 
-<? if (!$readonly): ?>
     <ul class="widget-list widget-links invisible">
     <? foreach ($elements as $index => $element): ?>
         <li id="<?= htmlReady('link-' . md5($element->url)) ?>" <?= $element->icon ? 'style="' . $element->icon->asCSS() .'"' : '' ?>>
@@ -23,6 +22,8 @@
         </li>
     <? endforeach; ?>
     </ul>
+</div>
+<? if (!$readonly): ?>
     <form class="default new-clipboard-form"
           action="<?= URLHelper::getLink(
                   'dispatch.php/clipboard/add'
@@ -49,4 +50,3 @@
 
     </form>
 <? endif ?>
-</div>
