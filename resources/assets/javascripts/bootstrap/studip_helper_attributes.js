@@ -98,13 +98,11 @@ $(document).on('change', '[data-activates],[data-deactivates]', function() {
 
         var state = $(this).prop('checked') || $(this).prop('indeterminate') || false;
         $(selector).each(function() {
-            const condition = $(this).data(`${type}Condition`);
-            const toggle = state && (!condition || $(condition).length > 0);
-            const disabled = type === 'activates' ? !toggle : toggle;
-            $(this).attr({
-                disabled: disabled,
-                'aria-disabled': disabled ? 'true' : 'false'
-            }).trigger('update.proxy');
+            var condition = $(this).data(`${type}Condition`),
+                toggle = state && (!condition || $(condition).length > 0);
+            $(this)
+                .attr('disabled', type === 'activates' ? !toggle : toggle)
+                .trigger('update.proxy');
         });
     });
 });
@@ -117,12 +115,9 @@ STUDIP.ready((event) => {
 // element. Define element to disable if select has a value different from
 // an empty string by a css selector in attribute "data-activates".
 $(document).on('change update.proxy', 'select[data-activates]', function() {
-    const activates = $(this).data('activates');
-    const disabled = $(this).is(':disabled') || $(this).val().length === 0;
-    $(activates).attr({
-        disabled: disabled,
-        'aria-disabled': disabled ? 'true' : 'false'
-    });
+    var activates = $(this).data('activates'),
+        disabled = $(this).is(':disabled') || $(this).val().length === 0;
+    $(activates).attr('disabled', disabled);
 });
 
 STUDIP.ready((event) => {
