@@ -1,5 +1,5 @@
 <form class="default" method="post" action="<?= $controller->link_for('course/members/circular_mail') ?>"
-      data-dialog>
+      data-dialog="size=default">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('An wen möchten Sie eine Rundmail schreiben?') ?></legend>
