@@ -1702,12 +1702,9 @@ function rmdirr($dirname){
 
 
 /**
- * Determines an appropriate MIME type for a file based on the
- * extension of the file name.
- *
- * @param string $filename      file name to check
+ * Returns the mapping of extensions to supported MIME types.
  */
-function get_mime_type($filename)
+function get_mime_types()
 {
     static $mime_types = [
         // archive types
@@ -1761,6 +1758,19 @@ function get_mime_type($filename)
         'webm' => 'video/webm',
     ];
 
+    return $mime_types;
+}
+
+
+/**
+ * Determines an appropriate MIME type for a file based on the
+ * extension of the file name.
+ *
+ * @param string $filename      file name to check
+ */
+function get_mime_type($filename)
+{
+    $mime_types = get_mime_types();
     $extension = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
     if (isset($mime_types[$extension])) {

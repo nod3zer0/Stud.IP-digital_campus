@@ -186,16 +186,9 @@ if (!file_exists($path_file)) {
     throw new Exception(_('Fehler beim Laden der Inhalte der Datei'));
 }
 
-$content_blacklisted = function ($mime) {
-    foreach (['html', 'javascript', 'svg', 'xml'] as $check) {
-        if (stripos($mime, $check) !== false) {
-            return true;
-        }
-    }
-    return false;
-};
+$allowed_mime_types = get_mime_types();
 
-if ($content_blacklisted($content_type)) {
+if (!in_array($content_type, $allowed_mime_types)) {
     $content_type = 'application/octet-stream';
 }
 if (Request::int('force_download') || $content_type == "application/octet-stream") {
