@@ -84,14 +84,12 @@ class BasicDataWizardStep implements CourseWizardStep
                         !$values['start_time'] && Request::isXhr()) {
                         $values['start_time'] = $s->beginn;
                     }
-                } else {
-                    if ((time() >= $s->beginn - Config::get()->SEMESTER_TIME_SWITCH * 86400 * 7)
-                        && (time() < $s->ende - Config::get()->SEMESTER_TIME_SWITCH * 86400 * 7)) {
-                        $values['start_time'] = $s->beginn;
-                    }
                 }
                 $semesters[] = $s;
             }
+        }
+        if (!$values['start_time']) {
+            $values['start_time'] = Semester::findDefault()->beginn;
         }
         if ($values['studygroup'] && (!count($typestruct) || !$values['institute']) ) {
             $message = sprintf(_('Die Konfiguration der Studiengruppen ist unvollständig. ' .

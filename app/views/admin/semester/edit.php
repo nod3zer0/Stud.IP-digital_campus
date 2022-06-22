@@ -30,10 +30,10 @@
                 'id' => 'description',
             ]) ?>
         </label>
-        
+
         <label>
             <?= _('Externe ID') ?>
-            
+
             <input type="text" name="external_id" value="<?= htmlReady($semester->external_id) ?>" maxlength="50">
         </label>
     </fieldset>
@@ -44,7 +44,7 @@
         </legend>
 
         <label class="col-3">
-            <?= _('Beginn') ?>
+            <span class="required"><?= _('Beginn') ?></span>
 
             <? if ($semester->absolute_seminars_count > 0): ?>
                 <?= tooltipIcon(_('Das Startdatum kann nur bei Semestern geändert werden, in denen keine Veranstaltungen liegen!'), true) ?>
@@ -61,7 +61,7 @@
         </label>
 
         <label class="col-3">
-            <?= _('Ende') ?>
+            <span class="required"><?= _('Ende') ?></span>
 
             <input required type="text" id="ende" name="ende"
                    <? if (isset($errors['ende'])) echo 'class="invalid"'; ?>
@@ -76,7 +76,7 @@
         </legend>
 
         <label class="col-3">
-            <?= _('Beginn') ?>
+            <span class="required"><?= _('Beginn') ?></span>
 
             <input required type="text" id="vorles_beginn" name="vorles_beginn"
                    <? if (isset($errors['vorles_beginn'])) echo 'class="invalid"'; ?>
@@ -85,7 +85,7 @@
         </label>
 
         <label class="col-3">
-            <?= _('Ende') ?>
+            <span class="required"><?= _('Ende') ?></span>
 
             <input required type="text" id="vorles_ende" name="vorles_ende"
                     <? if (isset($errors['vorles_ende'])) echo 'class="invalid"'; ?>
@@ -93,6 +93,20 @@
                    value="<? if ($semester->vorles_ende) echo date('d.m.Y', $semester->vorles_ende); ?>">
         </label>
    </fieldset>
+    <fieldset>
+        <legend>
+         <?= _('Tatsächlicher Semesterwechsel') ?>
+        </legend>
+
+        <label class="col-3">
+            <span><?= _('Beginn') ?></span>
+            <?= tooltipIcon(_('Optional. Wird kein Datum angegeben, wird das Wochen-Offset in SEMESTER_TIME_SWITCH berücksichtigt.')) ?>
+            <input type="text" id="semesterwechsel" name="semesterwechsel"
+                <? if (isset($errors['semesterwechsel'])) echo 'class="invalid"'; ?>
+                   data-date-picker='{"<=":"#beginn"}'
+                   value="<? if ($semester->sem_wechsel) echo date('d.m.Y', $semester->sem_wechsel) ?>">
+        </label>
+    </fieldset>
 
     <footer data-dialog-button>
         <?= Studip\Button::createAccept(_('Speichern')) ?>

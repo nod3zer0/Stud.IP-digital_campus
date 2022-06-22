@@ -43,12 +43,9 @@ class Shared_ContactsController extends MVVController
 
         // set default semester filter
         if (!isset($this->filter['start_sem.beginn'], $this->filter['end_sem.ende'])) {
-            $sem_time_switch = Config::get()->SEMESTER_TIME_SWITCH;
             // switch semester according to time switch
             // (n weeks before next semester)
-            $current_sem = Semester::findByTimestamp(
-                time() + $sem_time_switch * 7 * 24 * 3600
-            );
+            $current_sem = Semester::findDefault();
             if ($current_sem) {
                 $this->filter['start_sem.beginn'] = $current_sem->beginn;
                 $this->filter['end_sem.ende']     = $current_sem->beginn;
@@ -443,7 +440,7 @@ class Shared_ContactsController extends MVVController
 
         if (Request::submitted('store_ansprechpartner')) {
             CSRFProtection::verifySecurityToken();
-            
+
             if (!$user_id) {
                 if (Request::get('exansp_name')) {
                     $ext_contact->name = Request::i18n('exansp_name');
@@ -540,7 +537,7 @@ class Shared_ContactsController extends MVVController
 
     public function store_ansprechpartner_action ($contact_range_id, $origin = 'index') {
         CSRFProtection::verifySecurityToken();
-        
+
         $contact_range = MvvContactRange::find($contact_range_id);
         if (!$contact_range) {
             throw new Exception(_('Fehlerhafte Zuordnung!'));

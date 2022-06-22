@@ -214,8 +214,7 @@ abstract class GlobalSearchModule
      */
     public static function getCurrentSemester()
     {
-        $sem_time_switch = Config::get()->SEMESTER_TIME_SWITCH;
-        $current_semester = Semester::findByTimestamp(time() + $sem_time_switch * 7 * 24 * 3600);
+        $current_semester = Semester::findDefault();
 
         return (int)$current_semester['beginn'];
     }

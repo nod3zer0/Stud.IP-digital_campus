@@ -33,12 +33,9 @@ class Module_ModuleController extends MVVController
 
         // set default semester filter
         if (!isset($this->filter['start_sem.beginn'], $this->filter['end_sem.ende'])) {
-            $sem_time_switch = Config::get()->SEMESTER_TIME_SWITCH;
             // switch semester according to time switch
             // (n weeks before next semester)
-            $current_sem = Semester::findByTimestamp(
-                time() + $sem_time_switch * 7 * 24 * 3600
-            );
+            $current_sem = Semester::findDefault();
             if ($current_sem) {
                 $this->filter['start_sem.beginn'] = $current_sem->beginn;
                 $this->filter['end_sem.ende']     = $current_sem->beginn;
@@ -1159,12 +1156,9 @@ class Module_ModuleController extends MVVController
 
             // set default semester filter
             if (!isset($this->filter['start_sem.beginn']) || !isset($this->filter['end_sem.ende'])) {
-                $sem_time_switch = Config::get()->SEMESTER_TIME_SWITCH;
                 // switch semester according to time switch
                 // (n weeks before next semester)
-                $current_sem = Semester::findByTimestamp(
-                    time() + $sem_time_switch * 7 * 24 * 3600
-                );
+                $current_sem = Semester::findDefault();
                 if ($current_sem) {
                     $this->filter['start_sem.beginn'] = $current_sem->beginn;
                     $this->filter['end_sem.ende'] = $current_sem->beginn;

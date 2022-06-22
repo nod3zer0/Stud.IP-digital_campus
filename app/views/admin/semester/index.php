@@ -23,6 +23,7 @@
             <th><?= _('Kürzel') ?></th>
             <th><?= _('Zeitraum') ?></th>
             <th><?= _('Veranstaltungszeitraum') ?></th>
+            <th><?= _('Tatsächlicher Semesterwechsel') ?></th>
             <th><?= _('Veranstaltungen') ?></th>
             <th>&nbsp;</th>
         </tr>
@@ -70,6 +71,9 @@
                 <?= strftime('%x', $semester->vorles_beginn) ?>
                 -
                 <?= strftime('%x', $semester->vorles_ende) ?>
+            </td>
+            <td>
+                <?= Semester::getSemChangeDate($semester) ?>
             </td>
             <td>
                 <?= $semester->absolute_seminars_count ?>
@@ -144,7 +148,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="7">
+            <td colspan="8">
                 <?= Studip\Button::create(_('Markierte Einträge löschen'), 'delete', [
                         'data-confirm' => _('Sollen die Semester wirklich gelöscht werden?')
                 ]) ?>

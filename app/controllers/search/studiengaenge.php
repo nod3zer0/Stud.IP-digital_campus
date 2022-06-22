@@ -218,9 +218,7 @@ class Search_StudiengaengeController extends MVVController
 
             $this->semesters = $this->getSemester($versionen->findOneBy('id', $this->cur_version_id));
 
-            $semester_time_switch = (int) Config::get()->getValue('SEMESTER_TIME_SWITCH');
-            $cur_semester = Semester::findByTimestamp(time()
-                    + $semester_time_switch * 7 * 24 * 60 * 60);
+            $cur_semester = Semester::findDefault();
 
             $active_semester = $this->sessGet('selected_semester');
             if ($active_semester) {
@@ -339,7 +337,7 @@ class Search_StudiengaengeController extends MVVController
                 $this->url_for('/verlauf/' . $stgteil_id, ['with_courses' => intval(!$this->with_courses)])
             );
             Sidebar::get()->addWidget($widget, 'with_courses');
-            
+
             // add links to export Modulhandbücher as PDF
             $widget = new ActionsWidget();
             $widget->setTitle(_('Aktuelle Modulhandbücher'));
@@ -383,7 +381,7 @@ class Search_StudiengaengeController extends MVVController
                 ->toGroupedArray('category', ['name'], function ($ca) {
                     return array_values($ca);
                 });
-        
+
         $this->all_documents = [];
         // get documents in current selected language with fallback to default language
         // grouped by category
@@ -499,9 +497,7 @@ class Search_StudiengaengeController extends MVVController
     private function setVersionSelectWidget($versions, $url)
     {
 
-        $semester_time_switch = (int) Config::get()->getValue('SEMESTER_TIME_SWITCH');
-        $cur_semester = Semester::findByTimestamp(time()
-            + $semester_time_switch * 7 * 24 * 60 * 60);
+        $cur_semester = Semester::findDefault();
 
         $sidebar = Sidebar::get();
 

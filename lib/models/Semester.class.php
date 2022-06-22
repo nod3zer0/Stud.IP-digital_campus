@@ -477,4 +477,43 @@ class Semester extends SimpleORMap
     {
         StudipCacheFactory::getCache()->expire('DB_SEMESTER_DATA');
     }
+
+    /*
+     * for Admin
+     */
+    public static function getSemChangeDate($semester)
+    {
+
+        if ($semester->sem_wechsel) {
+            $semchangedate = strftime('%x', $semester->sem_wechsel);
+        } else {
+            $semesterSwitch = (int) Config::get()->SEMESTER_TIME_SWITCH;
+            $currentSem = $semester->beginn - $semesterSwitch * 7 * 24 * 60 * 60;
+            $semchangedate = strftime('%x', $currentSem);
+        }
+
+        return $semchangedate;
+    }
+
+    public static function findDefault()
+    {
+        $all_sems = self::getAll();
+
+        // $all_sems now contents only semesters with valid change dates, either manual or SEMESTER_TIME_SWITCH
+        foreach (array_reverse($all_sems) as $semester) {
+            if ($semester['ende'] <= time()) {
+                continue;
+            }
+
+            if (in_array('sem_wechsel', $semester->known_slots) && $semester['sem_wechsel']) {
+                $timestamp = $semester['sem_wechsel'];
+            } else {
+                $timestamp = $semester['beginn'] - (int)Config::get()->SEMESTER_TIME_SWITCH * 7 * 24 * 60 * 60;
+            }
+
+            if ($timestamp <= time()) {
+                return  $semester;
+            }
+        }
+    }
 }

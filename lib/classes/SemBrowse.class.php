@@ -1313,9 +1313,7 @@ class SemBrowse {
     {
         $default_sem = $_SESSION['_default_sem'];
         if (!$default_sem) {
-            $semester_time_switch = (int) Config::get()->getValue('SEMESTER_TIME_SWITCH');
-            $current_sem = Semester::findByTimestamp(time()
-                + $semester_time_switch * 7 * 24 * 60 * 60);
+            $current_sem = Semester::findDefault();
             $default_sem = $current_sem->id;
         }
 
