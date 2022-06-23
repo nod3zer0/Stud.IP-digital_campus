@@ -237,11 +237,7 @@ class Resources_RoomController extends AuthenticatedController
             foreach ($buildings as $building) {
                 //Build the complete hierarchy from the root resource to
                 //the building:
-                $hierarchy = ResourceManager::getHierarchyNames($building);
-
-                array_reverse($hierarchy);
-
-                $this->building_hierarchies[$building->id] = '/' . implode('/', $hierarchy);
+                $this->building_hierarchies[$building->id] = '/' . implode('/', ResourceManager::getHierarchyNames($building));
             }
 
             //In add-mode the category must be set before calling this method.
