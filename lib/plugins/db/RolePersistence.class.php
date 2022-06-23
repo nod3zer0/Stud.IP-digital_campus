@@ -221,21 +221,18 @@ class RolePersistence
         $cache = self::getUserRolesCache();
 
         if (!isset($cache[$user_id])) {
-            $query = "SELECT DISTINCT *
-                      FROM (
-                          SELECT `roleid`, `institut_id`, 1 AS explicit
-                          FROM `roles_user`
-                          WHERE `userid` = :user_id
+            $query = "SELECT `roleid`, `institut_id`, 1 AS explicit
+                      FROM `roles_user`
+                      WHERE `userid` = :user_id
 
-                          UNION
+                      UNION ALL
 
-                          SELECT `roleid`, '' AS institut_id, 0 AS explicit
-                          FROM `roles_studipperms`
-                          WHERE `permname` = :perm
-                      ) AS tmp";
+                      SELECT `roleid`, '' AS institut_id, 0 AS explicit
+                      FROM `roles_studipperms`
+                      WHERE `permname` = :perm";
             $statement = DBManager::get()->prepare($query);
             $statement->bindValue(':user_id', $user_id);
-            $statement->bindValue(':perm', $GLOBALS['perm']->get_perm($user_id));
+            $statement->bindValue(':perm', is_object($GLOBALS['perm']) ? $GLOBALS['perm']->get_perm($user_id) : 'nobody');
             $statement->execute();
             $statement->setFetchMode(PDO::FETCH_ASSOC);
 
