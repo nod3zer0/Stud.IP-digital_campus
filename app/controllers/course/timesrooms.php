@@ -1475,9 +1475,9 @@ class Course_TimesroomsController extends AuthenticatedController
     public function redirect($to)
     {
         $arguments = func_get_args();
+        $url       = call_user_func_array('parent::url_for', $arguments);
 
         if (Request::isXhr()) {
-            $url       = call_user_func_array('parent::url_for', $arguments);
             $index_url = $this->action_url('index');
 
             if (mb_strpos($url, $index_url) !== false) {
@@ -1485,7 +1485,7 @@ class Course_TimesroomsController extends AuthenticatedController
             }
         }
 
-        return call_user_func_array('parent::redirect', $arguments);
+        parent::redirect($url);
     }
 
     /**
