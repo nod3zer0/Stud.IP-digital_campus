@@ -48,22 +48,33 @@ class LESSCompiler implements Compiler
      * and variables for Stud.IP so almost all mixins and variables of the
      * core system can be used. This includes colors and icons.
      *
-     * @param String $less      LESS content to compile
-     * @param Array  $variables Additional variables for the LESS compilation
-     * @return String containing the generated CSS
+     * @param string $input      LESS content to compile
+     * @param array  $variables Additional variables for the LESS compilation
+     * @return string containing the generated CSS
      */
-    public function compile($input, array $variables = [])
+    public function compile($input, array $variables = []): string
     {
         $less = $this->getPrefix() . $input;
 
         $variables['image-path'] = '"' . Assets::url('images') . '"';
+
+        // Disable warnings since we currently have no other means to get rid
+        // of them
+        // TODO: Look again into this (2022-06-23)
+        $error_reporting = error_reporting();
+        error_reporting($error_reporting & ~E_WARNING);
 
         $parser = new Parser(['strictMath' => true], null, [
             new FileSystemImporter(["{$GLOBALS['STUDIP_BASE_PATH']}/resources/"])
         ]);
         $parser->setVariables($variables);
         $parser->parseString($less);
-        return $parser->getCSS();
+        $css = $parser->getCSS();
+
+        // Restore error reporting
+        error_reporting($error_reporting);
+
+        return $css;
     }
 
     /**
