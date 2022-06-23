@@ -41,7 +41,8 @@ function enhanceSortableTable(table) {
     $(table).tablesorter({
         headers: headers,
         sortLocaleCompare : true,
-        sortRestart: true
+        sortRestart: true,
+        widthFixed: false
     });
 }
 
