@@ -30,7 +30,7 @@ clean-composer:
 npm: node_modules/.package-lock.json
 
 node_modules/.package-lock.json: package.json package-lock.json
-	npm install --no-save
+	npm install --no-save --no-audit --no-fund
 
 clean-npm:
 	rm -rf node_modules
