@@ -510,6 +510,20 @@ $consum_ribbon_width: calc(100% - 58px);
     }
 }
 
+#courseware-public-index {
+    .cw-ribbon-tools {
+        top: 127px;
+
+        &.cw-ribbon-tools-consume {
+            top: 14px;
+        }
+
+        &.cw-ribbon-tools-sticky {
+            top: 56px;
+        }
+    }
+}
+
 .cw-structural-element-consumemode {
     .cw-ribbon-tools {
         top: 14px;
@@ -1932,6 +1946,9 @@ v i e w  w i d g e t
     }
     .cw-action-widget-oer{
         @include background-icon(oer-campus, clickable);
+    }
+    .cw-action-widget-link {
+        @include background-icon(group, clickable);
     }
 }
 .cw-export-widget {
@@ -4775,3 +4792,21 @@ cw tiles end
  /* * * * * * * * * * * * *
  i n p u t  f i l e  e n d
 * * * * * * * * * * * * * */
+
+/* * * * * * * * * * * *
+p u b l i c  l i n k s 
+* * * * * * * * * * * */
+.cw-public-link-clipboard-button {
+    width: 16px;
+    height: 16px;
+    margin-left: 0.5em;
+    background-color: transparent;
+    border: none;
+    vertical-align: text-bottom;
+    @include background-icon(clipboard, clickable, 16);
+    cursor: pointer;
+    
+}
+/* * * * * * * * * * * * * * *
+e n d  p u b l i c  l i n k s 
+* * * * * * * * * * * * * * */

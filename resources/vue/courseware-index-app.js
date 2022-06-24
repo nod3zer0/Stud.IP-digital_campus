@@ -95,6 +95,7 @@ const mountApp = (STUDIP, createApp, element) => {
                     'courseware-block-feedback',
                     'courseware-containers',
                     'courseware-instances',
+                    'courseware-public-links',
                     'courseware-structural-elements',
                     'courseware-structural-element-comments',
                     'courseware-structural-element-feedback',

@@ -60,6 +60,10 @@ class ContentsNavigation extends Navigation
             new Navigation(_('Verwaltung persönlicher Lernmaterialien'), 'dispatch.php/contents/courseware/courseware_manager')
         );
         $courseware->addSubNavigation(
+            'releases',
+            new Navigation(_('Freigaben'), 'dispatch.php/contents/courseware/releases')
+        );
+        $courseware->addSubNavigation(
             'bookmarks',
             new Navigation(_('Lesezeichen'), 'dispatch.php/contents/courseware/bookmarks')
         );

@@ -143,6 +143,9 @@ class RouteMap
         $group->get('/semesters/{id}', Routes\SemestersShow::class)->setName('get-semester');
 
         $group->get('/studip/properties', Routes\Studip\PropertiesIndex::class);
+
+        $group->get('/public/courseware/{link_id}/courseware-structural-elements/{id}', Routes\Courseware\PublicStructuralElementsShow::class);
+        $group->get('/public/courseware/{link_id}/courseware-structural-elements', Routes\Courseware\PublicStructuralElementsIndex::class);
     }
 
     private function getAuthenticator(): callable
@@ -449,6 +452,12 @@ class RouteMap
         $group->post('/courseware-templates', Routes\Courseware\TemplatesCreate::class);
         $group->patch('/courseware-templates/{id}', Routes\Courseware\TemplatesUpdate::class);
         $group->delete('/courseware-templates/{id}', Routes\Courseware\TemplatesDelete::class);
+
+        $group->get('/courseware-public-links/{id}', Routes\Courseware\PublicLinksShow::class);
+        $group->get('/courseware-public-links', Routes\Courseware\PublicLinksIndex::class);
+        $group->post('/courseware-public-links', Routes\Courseware\PublicLinksCreate::class);
+        $group->patch('/courseware-public-links/{id}', Routes\Courseware\PublicLinksUpdate::class);
+        $group->delete('/courseware-public-links/{id}', Routes\Courseware\PublicLinksDelete::class);
     }
 
     private function addAuthenticatedFilesRoutes(RouteCollectorProxy $group): void

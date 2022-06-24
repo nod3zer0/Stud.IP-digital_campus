@@ -185,6 +185,20 @@ class Contents_CoursewareController extends AuthenticatedController
         $this->setBookmarkSidebar();
     }
 
+    /**
+     * Show users releases
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+
+    public function releases_action()
+    {
+        Navigation::activateItem('/contents/courseware/releases');
+        $this->user_id = $GLOBALS['user']->id;
+    }
+
     private function setBookmarkSidebar()
     {
         $sidebar = Sidebar::Get();

@@ -61,6 +61,7 @@
                                 @sortContainers="menuAction('sortContainers')"
                                 @pdfExport="menuAction('pdfExport')"
                                 @showSuggest="menuAction('showSuggest')"
+                                @linkElement="menuAction('linkElement')"
                             />
                         </template>
                     </courseware-ribbon>
@@ -558,6 +559,30 @@
                     @confirm="deleteCurrentElement"
                     @close="closeDeleteDialog"
                 ></studip-dialog>
+                <studip-dialog
+                    v-if="showLinkDialog"
+                    :title="$gettext('Öffentlichen Link für Seite erzeugen')"
+                    :confirmText="$gettext('Erstellen')"
+                    confirmClass="accept"
+                    :closeText="$gettext('Schließen')"
+                    closeClass="cancel"
+                    class="cw-structural-element-dialog"
+                    @close="closeLinkDialog"
+                    @confirm="createElementLink"
+                >
+                    <template v-slot:dialogContent>
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                <translate>Passwort</translate>
+                                <input type="password" v-model="publicLink.password" />
+                            </label>
+                            <label>
+                                <translate>Ablaufdatum</translate>
+                                <input v-model="publicLink['expire-date']" type="date" class="size-l" />
+                            </label>
+                        </form>
+                    </template>
+                </studip-dialog>
             </div>
             <div v-else>
                 <courseware-companion-box
@@ -586,6 +611,7 @@ import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import CoursewareOerMessage from '@/vue/mixins/courseware/oermessage.js';
+import CoursewareDateInput from './CoursewareDateInput.vue';
 import { FocusTrap } from 'focus-trap-vue';
 import IsoDate from './IsoDate.vue';
 import StudipDialog from '../StudipDialog.vue';
@@ -606,6 +632,7 @@ export default {
         CoursewareEmptyElementBox,
         CoursewareTabs,
         CoursewareTab,
+        CoursewareDateInput,
         FocusTrap,
         IsoDate,
         StudipDialog,
@@ -665,6 +692,11 @@ export default {
             errorEmptyChapterName: false,
             consumModeTrap: false,
             additionalText: '',
+
+            publicLink: {
+                passsword: '',
+                'expire-date': ''
+            }
         };
     },
 
@@ -689,6 +721,7 @@ export default {
             showDeleteDialog: 'showStructuralElementDeleteDialog',
             showOerDialog: 'showStructuralElementOerDialog',
             showSuggestOerDialog: 'showSuggestOerDialog',
+            showLinkDialog: 'showStructuralElementLinkDialog',
             oerEnabled: 'oerEnabled',
             oerTitle: 'oerTitle',
             licenses: 'licenses',
@@ -756,6 +789,10 @@ export default {
                 ) {
                     valid = true;
                 }
+            }
+
+            if (context.type === 'public') {
+                valid = true;
             }
 
             return valid;
@@ -896,6 +933,9 @@ export default {
                 });
 
                 menu.push({ id: 3, label: this.$gettext('Seite hinzufügen'), icon: 'add', emit: 'addElement' });
+            }
+            if (this.context.type === 'users') {
+                menu.push({ id: 6, label: this.$gettext('Öffentlichen Link erzeugen'), icon: 'group', emit: 'linkElement' });
             }
             if (!this.isRoot && this.canEdit && !this.isTask) {
                 menu.push({
@@ -1219,12 +1259,14 @@ export default {
             showElementInfoDialog: 'showElementInfoDialog',
             showElementDeleteDialog: 'showElementDeleteDialog',
             showElementOerDialog: 'showElementOerDialog',
+            showElementLinkDialog: 'showElementLinkDialog',
             updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
             updateContainer: 'updateContainer',
             setStructuralElementSortMode: 'setStructuralElementSortMode',
             sortContainersInStructualElements: 'sortContainersInStructualElements',
             loadTask: 'loadTask',
             loadStructuralElement: 'loadStructuralElement',
+            createLink: 'createLink',
         }),
 
         initCurrent() {
@@ -1295,6 +1337,10 @@ export default {
                         return false;
                     }
                     this.enableSortContainers();
+                    break;
+                case 'linkElement':
+                    this.showElementLinkDialog(true);
+                    break;
             }
         },
         async closeEditDialog() {
@@ -1477,6 +1523,36 @@ export default {
         sendOerSuggestion() {
             this.suggestViaAction(this.currentElement, this.additionalText);
             this.updateShowSuggestOerDialog(false);
+        },
+        async createElementLink() {
+            const date = this.publicLink['expire-date'];
+            const publicLink = {
+                attributes: {
+                    password: this.publicLink.password,
+                    'expire-date': date === '' ? new Date(0).toISOString() : new Date(date).toISOString()
+                },
+                relationships: {
+                    'structural-element': {
+                        data: {
+                            id: this.currentElement.id,
+                            type: 'courseware-structural-elements'
+                        }
+                    }
+                }
+            }
+
+            await this.createLink({ publicLink });
+            this.companionSuccess({
+                info: this.$gettext('Öffentlicher Link wurde angelegt. Unter Freigaben finden Sie alle Ihre öffentlichen Links.'),
+            });
+            this.closeLinkDialog();
+        },
+        closeLinkDialog() {
+            this.publicLink = { 
+                passsword: '',
+                'expire-date': ''
+            };
+            this.showElementLinkDialog(false);
         }
     },
     created() {

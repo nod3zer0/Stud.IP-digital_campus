@@ -65,6 +65,7 @@ class SchemaMap
             \Courseware\TaskGroup::class => Schemas\Courseware\TaskGroup::class,
             \Courseware\TaskFeedback::class => Schemas\Courseware\TaskFeedback::class,
             \Courseware\Template::class => Schemas\Courseware\Template::class,
+            \Courseware\PublicLink::class => Schemas\Courseware\PublicLink::class,
         ];
     }
 }

@@ -101,21 +101,23 @@ class Block extends SchemaProvider
         ];
 
         $user = $this->currentUser;
-        $userDataField = UserDataField::getUserDataField($user, $resource);
-        $relationships[self::REL_USERDATAFIELD] = [
-            self::RELATIONSHIP_LINKS => [
-                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_USERDATAFIELD),
-            ],
-            self::RELATIONSHIP_DATA => $userDataField,
-        ];
-
-        $userProgress = UserProgress::getUserProgress($user, $resource);
-        $relationships[self::REL_USERPROGRESS] = [
-            self::RELATIONSHIP_LINKS => [
-                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_USERPROGRESS),
-            ],
-            self::RELATIONSHIP_DATA => $userProgress,
-        ];
+        if ($user) {
+            $userDataField = UserDataField::getUserDataField($user, $resource);
+            $relationships[self::REL_USERDATAFIELD] = [
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_USERDATAFIELD),
+                ],
+                self::RELATIONSHIP_DATA => $userDataField,
+            ];
+    
+            $userProgress = UserProgress::getUserProgress($user, $resource);
+            $relationships[self::REL_USERPROGRESS] = [
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_USERPROGRESS),
+                ],
+                self::RELATIONSHIP_DATA => $userProgress,
+            ];
+        }
 
         if ($resource->files) {
             $filesLink = $this->getRelationshipRelatedLink($resource, self::REL_FILES);

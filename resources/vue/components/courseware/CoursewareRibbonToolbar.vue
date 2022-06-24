@@ -24,7 +24,7 @@
                             />
                         </courseware-tab>
                         <courseware-tab
-                            v-if="!consumeMode && showEditMode && canEdit"
+                            v-if="displayAdder"
                             :name="$gettext('Elemente hinzufügen')"
                             :selected="showBlockAdder"
                             alias="blockadder"
@@ -36,7 +36,7 @@
                             />
                         </courseware-tab>
                         <courseware-tab
-                            v-if="!consumeMode && displaySettings"
+                            v-if="displaySettings"
                             :name="$gettext('Einstellungen')"
                             :selected="showAdmin"
                             alias="admin"
@@ -80,6 +80,14 @@ export default {
     props: {
         toolsActive: Boolean,
         canEdit: Boolean,
+        disableSettings: {
+            type: Boolean,
+            default: false,
+        },
+        disableAdder: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
@@ -105,9 +113,21 @@ export default {
         showEditMode() {
             return this.viewMode === 'edit';
         },
+        displayAdder() {
+            if (this.disableAdder) {
+                return false;
+            } else {
+                return !this.consumeMode && this.showEditMode && this.canEdit;
+            }
+        },
         displaySettings() {
-            let user = this.userById({ id: this.userId });
-            return this.context.type === 'courses' && (this.isTeacher || ['root', 'admin'].includes(user.attributes.permission));
+            if (this.disableSettings) {
+                return false;
+            } else {
+                let user = this.userById({ id: this.userId });
+                return !this.consumeMode && this.context.type === 'courses' && (this.isTeacher || ['root', 'admin'].includes(user.attributes.permission));
+            }
+            
         },
         isTeacher() {
             return this.userIsTeacher;
@@ -150,7 +170,9 @@ export default {
             setTimeout(() => {
                 let contents = this.$refs.contents.$el; 
                 let current = contents.querySelector('.cw-tree-item-link-current');
-                contents.scroll({ top: current.offsetTop - 4, behavior: 'smooth' });
+                if (current) {
+                    contents.scroll({ top: current.offsetTop - 4, behavior: 'smooth' });
+                }
             }, 360);
         },
     },

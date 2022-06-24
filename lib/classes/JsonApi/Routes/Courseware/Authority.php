@@ -14,6 +14,7 @@ use Courseware\TaskGroup;
 use Courseware\Template;
 use Courseware\UserDataField;
 use Courseware\UserProgress;
+use Courseware\PublicLink;
 use User;
 
 /**
@@ -425,6 +426,38 @@ class Authority
     public static function canDeleteTemplate(User $user, Template $resource)
     {
         return self::canCreateTemplate($user);
+    }
+
+    public static function canIndexPublicLinks(User $user): bool
+    {
+        return self::canCreatePublicLink($user);
+    }
+
+    public static function canShowPublicLink(User $user, PublicLink $resource): bool
+    {
+        return self::canUpdatePublicLink($user, $resource);
+    }
+
+    public static function canCreatePublicLink(User $user): bool
+    {
+        return true;
+    }
+
+    public static function canUpdatePublicLink(User $user, PublicLink $resource): bool
+    {
+        return $resource->user_id === $user->id;
+    }
+
+    public static function canDeletePublicLink(User $user, PublicLink $resource): bool
+    {
+        return self::canUpdatePublicLink($user, $resource);
+    }
+
+    public static function canShowPublicStructuralElement(StructuralElement $resource): bool
+    {
+        $publicLink = PublicLink::findOneBySQL('structural_element_id = ?', [$resource->id]);
+
+        return (bool) $publicLink;
     }
 
 }

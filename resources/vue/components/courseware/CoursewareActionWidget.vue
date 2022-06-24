@@ -35,6 +35,11 @@
                 <translate>Lesezeichen setzen</translate>
             </button>
         </li>
+        <li v-if="context.type === 'users'" class="cw-action-widget-link">
+            <button @click="linkElement">
+                <translate>Öffentlichen Link erzeugen</translate>
+            </button>
+        </li>
         <li v-if="!isOwner" class="cw-action-widget-oer">
             <button @click="suggestOER">
                 <translate>Material für %{oerTitle} vorschlagen</translate>
@@ -65,6 +70,7 @@ export default {
             userId: 'userId',
             consumeMode: 'consumeMode',
             showToolbar: 'showToolbar',
+            context: 'context',
         }),
         isRoot() {
             if (!this.structuralElement) {
@@ -110,6 +116,7 @@ export default {
             showElementAddDialog: 'showElementAddDialog',
             showElementDeleteDialog: 'showElementDeleteDialog',
             showElementInfoDialog: 'showElementInfoDialog',
+            showElementLinkDialog: 'showElementLinkDialog',
             updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
             setStructuralElementSortMode: 'setStructuralElementSortMode',
             companionInfo: 'companionInfo',
@@ -167,6 +174,9 @@ export default {
         suggestOER() {
             this.updateShowSuggestOerDialog(true);
         },
+        linkElement() {
+            this.showElementLinkDialog(true);
+        }
     },
 };
 </script>

@@ -64,4 +64,26 @@ STUDIP.domReady(() => {
             });
         });
     }
+
+    if (document.getElementById('courseware-public-app')) {
+        STUDIP.Vue.load().then(({ createApp }) => {
+            import(
+                /* webpackChunkName: "courseware-public-app" */
+                '@/vue/courseware-public-app.js'
+            ).then(({ default: mountApp }) => {
+                return mountApp(STUDIP, createApp, '#courseware-public-app');
+            });
+        });
+    }
+
+    if (document.getElementById('courseware-content-releases-app')) {
+        STUDIP.Vue.load().then(({ createApp }) => {
+            import(
+                /* webpackChunkName: "courseware-content-links-app" */
+                '@/vue/courseware-content-releases-app.js'
+            ).then(({ default: mountApp }) => {
+                return mountApp(STUDIP, createApp, '#courseware-content-releases-app');
+            });
+        });
+    }
 });

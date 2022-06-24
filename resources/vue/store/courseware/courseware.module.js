@@ -36,6 +36,7 @@ const getDefaultState = () => {
         showStructuralElementInfoDialog: false,
         showStructuralElementDeleteDialog: false,
         showStructuralElementOerDialog: false,
+        showStructuralElementLinkDialog: false,
 
         showSuggestOerDialog: false,
 
@@ -170,6 +171,9 @@ const getters = {
     },
     showStructuralElementDeleteDialog(state) {
         return state.showStructuralElementDeleteDialog;
+    },
+    showStructuralElementLinkDialog(state) {
+        return state.showStructuralElementLinkDialog;
     },
     showOverviewElementAddDialog(state) {
         return state.showOverviewElementAddDialog;
@@ -822,6 +826,10 @@ export const actions = {
         context.commit('setShowStructuralElementDeleteDialog', bool);
     },
 
+    showElementLinkDialog(context, bool) {
+        context.commit('setShowStructuralElementLinkDialog', bool);
+    },
+
     setShowOverviewElementAddDialog(context, bool) {
         context.commit('setShowOverviewElementAddDialog', bool);
     },
@@ -1194,6 +1202,28 @@ export const actions = {
     setBookmarkFilter({ commit }, course) {
         commit('setBookmarkFilter', course);
     },
+
+    createLink({ dispatch, rootGetters }, { publicLink }) {
+        dispatch('courseware-public-links/create', publicLink, { root: true });
+    },
+
+    deleteLink({ dispatch }, { linkId }) {
+        const data = {
+            id: linkId,
+        };
+        dispatch('courseware-public-links/delete', data, { root: true });
+    },
+
+    async updateLink({ dispatch }, { attributes, linkId }) {
+        const link = {
+            type: 'courseware-public-links',
+            attributes: attributes,
+            id: linkId,
+        };
+        await dispatch('courseware-public-links/update', link, { root: true });
+
+        return dispatch('courseware-public-links/loadById', { id: link.id }, { root: true });
+    }
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -1322,6 +1352,10 @@ export const mutations = {
 
     setShowOverviewElementAddDialog(state, showAdd) {
         state.showOverviewElementAddDialog = showAdd;
+    },
+
+    setShowStructuralElementLinkDialog(state, showLink) {
+        state.showStructuralElementLinkDialog = showLink;
     },
 
     setStructuralElementSortMode(state, mode) {

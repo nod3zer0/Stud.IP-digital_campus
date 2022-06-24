@@ -119,7 +119,7 @@ export default {
         defaultGrade: {
             type: Boolean,
             default: true,
-        }
+        },
     },
     data() {
         return {
@@ -141,10 +141,11 @@ export default {
     computed: {
         ...mapGetters({
             blockTypes: 'blockTypes',
+            containerById: 'courseware-containers/byId',
+            context: 'context',
             userId: 'userId',
             userById: 'users/byId',
             viewMode: 'viewMode',
-            containerById: 'courseware-containers/byId',
         }),
         showEditMode() {
             let show = this.viewMode === 'edit' || this.blockedByThisUser;
@@ -187,6 +188,9 @@ export default {
 
             return this.blockTypes.find((blockType) => blockType.type === type)?.title || this.$gettext('Fehler');
         },
+        public() {
+            return this.context.type === 'public';
+        }
     },
     mounted() {
         if (this.blocked) {
@@ -197,7 +201,7 @@ export default {
                 this.loadUserById({ id: this.blockerId });
             }
         }
-        if (this.userProgress && this.userProgress.attributes.grade === 0 && this.defaultGrade) {
+        if (!this.public && this.userProgress && this.userProgress.attributes.grade === 0 && this.defaultGrade) {
             this.userProgress = 1;
         }
     },

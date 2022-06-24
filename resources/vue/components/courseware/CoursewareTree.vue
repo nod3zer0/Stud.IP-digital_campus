@@ -19,6 +19,7 @@ export default {
     name: 'courseware-tree',
     computed: {
         ...mapGetters({
+            context: 'context',
             courseware: 'courseware',
             relatedStructuralElement: 'courseware-structural-elements/related',
             structuralElementById: 'courseware-structural-elements/byId',
@@ -33,12 +34,17 @@ export default {
         },
 
         rootElement() {
-            const root = this.relatedStructuralElement({
-                parent: { id: this.courseware.id, type: this.courseware.type },
-                relationship: 'root',
-            });
+            if (this.context.type !== 'public') {
+                    const root = this.relatedStructuralElement({
+                    parent: { id: this.courseware.id, type: this.courseware.type },
+                    relationship: 'root',
+                });
 
-            return root;
+                return root;
+            } else {
+                return this.structuralElementById({ id: this.context.rootId });
+            }
+
         },
     },
 };
