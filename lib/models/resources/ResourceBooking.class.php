@@ -465,8 +465,10 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         }
 
         // update the booking user
-        $this->booking_user = User::findCurrent();
-    
+        if (!$this->isNew() || !$this->booking_user_id) {
+            $this->booking_user = User::findCurrent();
+        }
+
         //Check if the user has booking rights on the resource.
         //The user must have either permanent permissions or they have to
         //have booking rights by a temporary permission in this moment
