@@ -8,9 +8,6 @@ module.exports = merge(common, {
     mode: 'production',
     stats: 'errors-only',
     devtool: 'source-map',
-    output: {
-        publicPath: undefined
-    },
     optimization: {
         minimize: true,
         minimizer: [
