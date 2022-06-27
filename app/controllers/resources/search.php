@@ -104,7 +104,7 @@ class Resources_SearchController extends AuthenticatedController
                     $_SERVER['REQUEST_URI'],
                     Icon::create('group')
                 );
-                $sidebar->insertWidget($actions, ':first');
+                $sidebar->addWidget($actions);
 
                 //Check if the time range criteria has been set.
                 //If so, set the begin date as parameter for the
