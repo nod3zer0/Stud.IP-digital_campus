@@ -569,13 +569,13 @@ class Fullcalendar
             },
             resourceRender (renderInfo) {
                 if ($(renderInfo.view.context.calendar.el).hasClass('room-group-booking-plan')) {
-                    var action = $(renderInfo.view.context.calendar.el).hasClass('semester-plan') ? 'semester' : 'booking';
-                    var url = STUDIP.URLHelper.getURL(`dispatch.php/resources/room_planning/${action}_plan/${renderInfo.resource.id}`);
+                    let action = $(renderInfo.view.context.calendar.el).hasClass('semester-plan') ? 'semester' : 'booking';
+                    let url = STUDIP.URLHelper.getURL(`dispatch.php/resources/room_planning/${action}_plan/${renderInfo.resource.id}`);
                     $(renderInfo.el).find('.fc-cell-text').html(
-                        $('<a>').attr('href', url).text(renderInfo.el.innerText)
+                        $('<a>').attr('href', url).text(renderInfo.resource.title)
                     );
                 } else if ($("*[data-fullcalendar='1']").hasClass('institute-plan') && renderInfo.resource.id > 0) {
-                    var icon = '<img class="text-bottom icon-role-clickable icon-shape-edit" width="16" height="16" src="' + STUDIP.URLHelper.getURL('assets/images/icons/blue/edit.svg') + '" alt="edit">';
+                    let icon = '<img class="text-bottom icon-role-clickable icon-shape-edit" width="16" height="16" src="' + STUDIP.URLHelper.getURL('assets/images/icons/blue/edit.svg') + '" alt="edit">';
                     $(renderInfo.el).append(
                         '<a href="'
                         + STUDIP.URLHelper.getURL('dispatch.php/admin/courseplanning/rename_column/'
