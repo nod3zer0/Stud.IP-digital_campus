@@ -143,7 +143,6 @@ class RoomSearchWidget extends SidebarWidget
             ],
             'day_of_week' => [
                 'options' => [
-                    '0' => _('Bitte wählen'),
                     '1' => _('Montag'),
                     '2' => _('Dienstag'),
                     '3' => _('Mittwoch'),
