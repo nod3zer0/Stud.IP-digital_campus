@@ -104,7 +104,7 @@ class Admission_UserListController extends AuthenticatedController
         CSRFProtection::verifyUnsafeRequest();
         $userlist = new AdmissionUserList($userlistId);
         $userlist->setName(Request::get('name'))
-            ->setFactor(Request::float('factor'))
+            ->setFactor(Request::float('factor', 0))
             ->setUsers(Request::getArray('users'))
             ->setOwnerId($GLOBALS['user']->id);
         if ($userlist->store()) {
