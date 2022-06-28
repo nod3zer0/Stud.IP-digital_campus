@@ -441,7 +441,6 @@ class DatabaseChangesTic9218 extends Migration
                   CHANGE COLUMN `end_time` `end_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
                   CHANGE COLUMN `mkdate` `mkdate` INT(11) UNSIGNED NOT NULL DEFAULT '0',
                   CHANGE COLUMN `chdate` `chdate` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-                  CHANGE COLUMN `topic_id` `topic_id` CHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL,
                   CHANGE COLUMN `metadate_id` `metadate_id` CHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL,
                   CHANGE COLUMN `resource_id` `resource_id` CHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT ''";
         DBManager::get()->exec($query);
@@ -1411,7 +1410,6 @@ class DatabaseChangesTic9218 extends Migration
                   CHANGE COLUMN `end_time` `end_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
                   CHANGE COLUMN `mkdate` `mkdate` INT(11) UNSIGNED NOT NULL DEFAULT '0',
                   CHANGE COLUMN `chdate` `chdate` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-                  CHANGE COLUMN `topic_id` `topic_id` CHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL,
                   CHANGE COLUMN `metadate_id` `metadate_id` CHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL";
         DBManager::get()->exec($query);
 
@@ -1993,7 +1991,6 @@ class DatabaseChangesTic9218 extends Migration
                   CHANGE COLUMN `end_time` `end_time` INT(20) NOT NULL DEFAULT '0',
                   CHANGE COLUMN `mkdate` `mkdate` INT(20) NOT NULL DEFAULT '0',
                   CHANGE COLUMN `chdate` `chdate` INT(20) NOT NULL DEFAULT '0',
-                  CHANGE COLUMN `topic_id` `topic_id` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL,
                   CHANGE COLUMN `metadate_id` `metadate_id` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL,
                   CHANGE COLUMN `resource_id` `resource_id` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT ''";
         DBManager::get()->exec($query);
@@ -2963,7 +2960,6 @@ class DatabaseChangesTic9218 extends Migration
                   CHANGE COLUMN `end_time` `end_time` INT(20) NOT NULL DEFAULT '0',
                   CHANGE COLUMN `mkdate` `mkdate` INT(20) NOT NULL DEFAULT '0',
                   CHANGE COLUMN `chdate` `chdate` INT(20) NOT NULL DEFAULT '0',
-                  CHANGE COLUMN `topic_id` `topic_id` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL,
                   CHANGE COLUMN `metadate_id` `metadate_id` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL";
         DBManager::get()->exec($query);
 
