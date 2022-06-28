@@ -2,7 +2,8 @@
     <?= \SelectWidget::arrayToHiddenInput($params) ?>
     <?= (strtolower($method) == 'post') ?  CSRFProtection::tokenTag() : ''; ?>
     <select class="sidebar-selectlist <?= $class ?> <? if ($__is_nested): ?>nested-select<? endif; ?>" <? !empty($size) ? printf('size="%u"', $size) : '' ?> <?= !empty($attributes) ? arrayToHtmlAttributes($attributes) : '' ?>
-        name="<?= sprintf('%s%s', htmlReady($name), $multiple ? '[]' : '') ?>" <? if ($multiple) echo 'multiple'; ?>>
+            name="<?= sprintf('%s%s', htmlReady($name), $multiple ? '[]' : '') ?>" <? if ($multiple) echo 'multiple'; ?>
+            aria-label="<?= htmlReady($title) ?>">
 
     <? foreach ($elements as $element): ?>
         <? if ($element instanceof SelectGroupElement && count($element->getElements()) > 0): ?>

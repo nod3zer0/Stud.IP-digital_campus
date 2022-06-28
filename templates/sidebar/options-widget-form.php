@@ -21,7 +21,7 @@
         <? elseif ($element['type'] == 'select'): ?>
             <label>
                 <?= htmlReady($element['label']) ?>
-                <select name="<?= htmlReady($element['name']) ?>">
+                <select name="<?= htmlReady($element['name']) ?>" aria-label="<?= htmlReady($title) ?>">
                     <? foreach ($element['options'] as $key => $name): ?>
                         <option value="<?= htmlReady($key) ?>">
                             <?= htmlReady($name) ?>

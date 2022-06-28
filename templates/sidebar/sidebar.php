@@ -1,5 +1,5 @@
 <div id="layout-sidebar">
-    <section class="sidebar">
+    <section class="sidebar" role="complementary" aria-label="<?= _('Seitenleiste') ?>">
         <div class="sidebar-image <? if ($avatar) echo 'sidebar-image-with-context'; ?>">
         <? if ($avatar) : ?>
             <div class="sidebar-context">
