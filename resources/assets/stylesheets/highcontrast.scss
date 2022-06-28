@@ -1,0 +1,1446 @@
+@import "mixins.scss";
+$darkgray: #30343b;
+$lightgray: #e7ebf1;
+
+$medium-gray: #cccccc;
+$darkergray: #444444;
+
+$contrast-blue: #2849d8;
+$contrast-blue-medium: #2D2C64;
+$contrast-blue-dark: #14246c;
+$contrast-red: #ff0000;
+$medium-red: #c80000;
+$contrast-yellow: #ffff00;
+$lightyellow: #fffa90;
+
+/* General contrasts */
+body #scroll-to-top {
+    background-color: $black;
+
+    &:hover {
+        background-color: $black;
+    }
+}
+
+body.fixed #barTopMenu li > a,
+#barBottomright > ul > li > a {
+    color: $white !important;
+    text-decoration: underline !important;
+}
+
+div.index_container div.index_main {
+    background-color: hsla(0, 0%, 100%, 1);
+}
+
+.js .drag-and-drop {
+    background-color: $white;
+    color: $black;
+    border: 1px solid $black;
+}
+
+.boxed-grid {
+    a {
+        background-color: $white;
+        border: 1px solid $black;
+
+        p {
+            color: $black;
+        }
+
+        img {
+            opacity: 0;
+        }
+
+        &:hover {
+            background-color: $black;
+
+            p, h3 {
+                color: $white;
+            }
+        }
+    }
+
+}
+
+#tour_tip {
+    background-color: $black;
+}
+
+.ui-widget-content {
+    color: $black;
+}
+
+/* HEADER */
+#barBottomLeft,
+#barBottomright {
+    background-color: $black;
+
+}
+
+#barTopFont {
+    background-color: $black;
+    color: $white;
+}
+
+#flex-header {
+    background-color: $white;
+    border-bottom: 1px solid $black !important;
+}
+
+body.fixed #barTopMenu {
+    background-color: $black;
+
+    li  a {
+        color: $white;
+    }
+
+    li:hover {
+        background-color: $white;
+
+        a {
+            color: $black !important;
+            img {
+                filter: brightness(0);
+            }
+
+        }
+    }
+
+}
+
+body:not(.fixed) #barTopMenu > li.active:after,
+#tabs > li.current:after {
+    background-color: $black;
+}
+
+#tabs li,
+#layout_wrapper #layout_page .tabs_wrapper {
+    background-color: $white;
+}
+
+#tabs li.current a,
+#tabs li:hover a,
+body:not(.fixed) #barTopMenu li.active .navtitle,
+body:not(.fixed) #barTopMenu li:hover .navtitle {
+    color: $contrast-blue;
+}
+
+/* RESPONSIVE NAVIGATION AND SIDEBAR */
+#responsive-navigation {
+    background-color: $black;
+    background-image: unset;
+    border-right: 6px solid $black;
+
+    ul > li {
+        background-color: rgba(150,150,150) !important;
+
+        > div > a {
+            color: $black !important;
+        }
+
+        > ul > li {
+            background-color: rgba(255,255,255) !important;
+
+            > div > a {
+                color: $black !important;
+            }
+
+        }
+    }
+
+}
+
+.responsive-display #layout-sidebar {
+    background-color: $black;
+    background-image: unset;
+    border-left: 6px solid $black;
+
+}
+
+/* MESSAGE BOXES */
+div.messagebox_exception {
+    color: $medium-red !important;
+    background-color: $white !important;
+}
+
+/* DIALOG */
+.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar {
+    background-color: $black;
+    color: $white;
+}
+
+ul.message-options > li a img {
+    filter: brightness(0);
+}
+
+/* BUTTONS */
+.ui-dialog.ui-widget.ui-widget-content .ui-dialog-buttonpane .ui-button,
+button.button,
+a.button,
+.fc .fc-button-group .fc-button {
+    border-color: $black !important;
+    color: $black !important;
+}
+
+.ui-dialog.ui-widget.ui-widget-content .ui-dialog-buttonpane .ui-button:hover,
+button.button:hover,
+a.button:hover,
+.fc .fc-button-group .fc-button:hover,
+.fc .fc-button-group .fc-button-active,
+.fc-button-primary:not(:disabled).fc-button-active {
+    background-color: $black;
+    color: $white !important;
+}
+
+button.button[disabled],
+button.button[disabled]:hover {
+    background-color: $white;
+    color: $black !important;
+    cursor: not-allowed;
+}
+
+/* SIDEBAR AND WIDGETS */
+
+.sidebar .sidebar-image {
+    background-image: unset;
+    background: $black;
+
+}
+
+.studip-widget .widget-header,
+.sidebar .sidebar-widget-header {
+    background-color: $black !important;
+    color: $white;
+}
+
+.sidebar-widget-content ul li form,
+.sidebar-widget-content form,
+.-widget-content form {
+    border: unset !important;
+}
+
+.studip-widget,
+.studip-widget:hover {
+    border: 2px solid $black;
+
+}
+
+// hover over sidebar list elements ...
+.sidebar-widget-content > ul > li > a {
+    color: $black;
+
+    &:hover {
+        background-color: $black;
+        color: $white;
+    }
+}
+// .. except for "Ansichten"
+.sidebar-widget-content > ul.sidebar-views > li > a:hover {
+    background-color: transparent;
+    color: $contrast-red;
+
+}
+
+.widget-links button,
+.widget-links.sidebar-views > li.active a,
+.widget-links.sidebar-views > li.active button {
+    color: $black;
+}
+.widget-links.sidebar-views > li:hover button,
+.widget-links.sidebar-views > li:hover a {
+    color: $black;
+    background-color: $medium-gray;
+}
+
+
+.widget-links.sidebar-navigation > li.active {
+    background-color: $black !important;
+    color: $white !important;
+    box-shadow: unset;
+
+}
+
+
+.widget-links.sidebar-navigation > li.active,
+.widget-links.sidebar-navigation > li.active a {
+
+    &::before,
+    &::after {
+        border-left-color: $black;
+    }
+}
+
+
+// "Ansichten" need to be white
+.widget-links.sidebar-views > li.active {
+    background-color: $medium-gray;
+    box-shadow: unset;
+    //border: 1px solid $black;
+    border-top: 2px solid $black;
+    border-bottom: 2px solid $black;
+
+    a {
+        color: $black;
+    }
+
+    &:hover {
+        background-color: $darkergray;
+
+        a {
+            color: $white;
+        }
+    }
+}
+
+.widget-links.sidebar-views > li.active:before {
+    border-left: 10px solid $black;
+}
+
+.widget-links.sidebar-views > li.active:after {
+    border-left-color: $medium-gray;
+}
+
+.sidebar-search input[type=submit] {
+    background-color: $black;
+}
+
+/* Black borders */
+.sidebar .sidebar-widget,
+.sidebar .sidebar-widget-placeholder,
+section.contentbox,
+article.studip,
+form.default,
+table.default {
+    // this is making problems in so many ways
+    border: 2px solid $black;
+
+    > header > nav {
+        > a {
+            color: $white;
+        }
+
+        > a:before {
+            filter: brightness(100);
+        }
+
+        .action-menu .action-menu-icon {
+            filter: brightness(100);
+        }
+
+        .action-menu.is-open .action-menu-icon {
+            filter: brightness(0);
+        }
+    }
+
+}
+
+// remove this border, else you end up having two
+.studip-widget > div > article.studip {
+    border: none !important;
+}
+
+/* Sections,Articles and Forms header */
+section.contentbox header,
+article.studip header,
+form.default fieldset > legend {
+    background-color: $black;
+}
+
+section.contentbox header h1,
+section.contentbox header h1 a,
+section.contentbox section span,
+article.studip > header,
+article.studip > header h1,
+article.studip > header h1 > a,
+article.studip > header > nav > *,
+form.default fieldset > legend  {
+    color: $white !important;
+    border: 1px solid $black;
+}
+
+.action-menu-wrapper .action-menu-icon span,
+.action-menu .action-menu-icon span {
+    border: unset;
+}
+
+section.contentbox header h1 a:before,
+article.studip.toggle > header h1 > a:before,
+article.studip > header h1 > a > img,
+article.studip > header > nav > a > img {
+    filter: brightness(100);
+
+}
+
+// brightness does not work with black icons,so make it white this way
+article.studip > header h1 > img {
+    filter: invert(100%);
+}
+
+
+article.new.toggle > header h1 > a::before {
+    filter: unset !important;
+}
+
+/* Sections,Articles and Forms footer */
+form.default footer,
+table.default > tfoot > tr > td {
+    background-color: $white;
+}
+
+/* Tables */
+table.default > tbody > tr > th,
+table.default > thead > tr > th {
+    background-color: $black;
+    color: $white !important;
+
+    a {
+        color: $white !important;
+        text-decoration: underline;
+    }
+}
+
+tr.sortable th.sortasc:after {
+    filter: brightness(100);
+}
+
+table td.printcontent,
+table td.printcontent:hover {
+    background-color: $white;
+}
+
+table.toolbar,
+td.printhead,
+td.toolbar {
+    background-color: $white !important;
+    background-image: unset;
+    border-top: 2px solid $black;
+    line-height: 30pt;
+}
+
+.table_header_bold {
+    background-color: $black;
+}
+
+// Table header Icons must be white ...
+table.default thead .actions img,
+table.default thead .actions input[type=image],
+table.default thead .actions svg {
+    filter: brightness(100);
+}
+
+// ... but Icons in Table Data must be black
+table.default .actions .action-menu .action-menu-icon {
+    filter: brightness(0);
+}
+
+table.dates .nextdate {
+    background-color: $lightgray;
+
+    > td > a {
+        color: $black;
+    }
+}
+
+/* Action Menu */
+.action-menu-wrapper .action-menu-content,
+.action-menu .action-menu-content {
+    border: 2px solid $black;
+    font-weight: 600;
+}
+
+/* FOOTER */
+#layout_footer {
+    background-color: $black;
+    color: $white;
+    font-weight: 700;
+
+    > ul > li > a {
+        color: $white;
+
+        &:hover {
+            color: $white !important;
+            text-decoration: underline;
+        }
+    }
+
+}
+
+/* ICONS */
+body:not(.fixed) #barTopMenu li.active > a img,
+body:not(.fixed) #barTopMenu li:hover > a img,
+form div.files-search.input-group .input-group-append img {
+    filter: brightness(0) !important;
+}
+
+tr.sortable th.sortdesc:after,
+.course-admin th .course-completion,
+.sortable-table .tablesorter-headerDesc .tablesorter-header-inner:after,
+.sortable-table .tablesorter-headerAsc .tablesorter-header-inner:after,
+.action-menu-wrapper .action-menu-icon, .action-menu .action-menu-icon,
+.contentbox header nav .tooltip-icon,
+article header h1 .tooltip-icon,
+section.course-statusgroups article header h1 a img {
+    filter: brightness(100);
+}
+
+// profile image
+#header_avatar_menu .action-menu-icon,
+.action-menu.is-open .action-menu-icon {
+    filter: unset;
+}
+
+.js form.default.collapsable fieldset legend,
+form.default fieldset.collapsable legend {
+    @include background-icon('arr_1down', 'info_alt', 20);
+}
+.js form.default.collapsable fieldset.collapsed legend,
+form.default fieldset.collapsable.collapsed legend {
+    @include background-icon('arr_1right', 'info_alt', 20);
+}
+
+.sidebar-widget-header .actions a img {
+    filter: brightness(100);
+}
+
+/* Stundenplan / Terminkalender */
+.celltoday {
+    background-color: $white;
+    border: 1px solid $black;
+
+    > a {
+        color: $black;
+        font-size: 1.5em;
+    }
+}
+a:link.calhead {
+    color: $contrast-blue;
+}
+
+.calhead label {
+    color: $contrast-blue !important;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+a .hidden-tiny-down {
+    color: $contrast-blue !important;
+}
+
+/* Date picker */
+
+// today's date
+.ui-state-highlight {
+    color: $black !important;
+    background-color: $lightyellow !important;
+}
+
+.ui-state-active {
+    color: $white !important;
+    background-color: $black !important;
+}
+
+.ui-state-default,
+.ui-widget-content .ui-state-default {
+    background-color: $white;
+    border: 1px solid $black;
+
+    &:hover {
+        background-color: $black;
+    }
+}
+
+
+/* Calendar categories */
+
+span li.calendar-category1,
+ul li.calendar-category1,
+span li.calendar-category2,
+ul li.calendar-category2,
+span li.calendar-category3,
+ul li.calendar-category3,
+span li.calendar-category4,
+ul li.calendar-category4,
+span li.calendar-category5,
+ul li.calendar-category5,
+span li.calendar-category6,
+ul li.calendar-category6,
+span li.calendar-category7,
+ul li.calendar-category7,
+span li.calendar-category8,
+ul li.calendar-category8,
+span li.calendar-category9,
+ul li.calendar-category9,
+span li.calendar-category10,
+ul li.calendar-category10,
+span li.calendar-category11,
+ul li.calendar-category11,
+span li.calendar-category12,
+ul li.calendar-category12,
+span li.calendar-category13,
+ul li.calendar-category13,
+span li.calendar-category14,
+ul li.calendar-category14,
+span li.calendar-category15,
+ul li.calendar-category15 {
+    color: $black;
+
+}
+
+div.schedule_entry {
+    dl {
+        &.hover:hover { opacity: unset; }
+
+        &.schedule-category1 {
+            background-color: $white;
+            border: 1px solid $calendar-category-1;
+            dt {
+                background-color: $calendar-category-1;
+                color: contrast($calendar-category-1, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category2 {
+            background-color: $white;
+            border: 1px solid $calendar-category-2;
+            dt {
+                background-color: $calendar-category-2;
+                color: contrast($calendar-category-2, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category3 {
+            background-color: $white;
+            border: 1px solid $calendar-category-3;
+            dt {
+                background-color: $calendar-category-3;
+                color: contrast($calendar-category-3, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category4 {
+            background-color: $white;
+            border: 1px solid $calendar-category-4;
+            dt {
+                background-color: $calendar-category-4;
+                color: contrast($calendar-category-4, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category5 {
+            background-color: $white;
+            border: 1px solid $calendar-category-5;
+            dt {
+                background-color: $calendar-category-5;
+                color: contrast($calendar-category-5, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category6 {
+            background-color: $white;
+            border: 1px solid $calendar-category-6;
+            dt {
+                background-color: $calendar-category-6;
+                color: contrast($calendar-category-6, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category7 {
+            background-color: $white;
+            border: 1px solid $calendar-category-7;
+            dt {
+                background-color: $calendar-category-7;
+                color: contrast($calendar-category-7, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category8 {
+            background-color: $white;
+            border: 1px solid $calendar-category-8;
+            dt {
+                background-color: $calendar-category-8;
+                color: contrast($calendar-category-8, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category9 {
+            background-color: $white;
+            border: 1px solid $calendar-category-9;
+            dt {
+                background-color: $calendar-category-9;
+                color: contrast($calendar-category-9, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category10 {
+            background-color: $white;
+            border: 1px solid $calendar-category-10;
+            dt {
+                background-color: $calendar-category-10;
+                color: contrast($calendar-category-10, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category11 {
+            background-color: $white;
+            border: 1px solid $calendar-category-11;
+            dt {
+                background-color: $calendar-category-11;
+                color: contrast($calendar-category-11, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category12 {
+            background-color: $white;
+            border: 1px solid $calendar-category-12;
+            dt {
+                background-color: $calendar-category-12;
+                color: contrast($calendar-category-12, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category13 {
+            background-color: $white;
+            border: 1px solid $calendar-category-13;
+            dt {
+                background-color: $calendar-category-13;
+                color: contrast($calendar-category-13, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category14 {
+            background-color: $white;
+            border: 1px solid $calendar-category-14;
+            dt {
+                background-color: $calendar-category-14;
+                color: contrast($calendar-category-14, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+        &.schedule-category15 {
+            background-color: $white;
+            border: 1px solid $calendar-category-15;
+            dt {
+                background-color: $calendar-category-15;
+                color: contrast($calendar-category-15, $black, $white);
+            }
+            dd {
+                color: $black;
+            }
+        }
+    }
+}
+
+table.calendar-week,
+table.calendar-day {
+    tbody tr td {
+        &.calendar-day-event {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-day-event;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-day-event;
+        }
+        &.calendar-category1,
+        &.calendar-course-category5 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-1;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-1;
+        }
+        &.calendar-category2,
+        &.calendar-course-category1 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-2;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-2;
+        }
+        &.calendar-category3,
+        &.calendar-course-category2 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color:  $calendar-category-3;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-3;
+        }
+        &.calendar-category4,
+        &.calendar-course-category3 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-4;
+                overflow: hidden;
+                color: $black;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-4;
+        }
+        &.calendar-category5,
+        &.calendar-course-category4 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-5;
+                overflow: hidden;
+                color: $black;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-5;
+        }
+        &.calendar-category6,
+        &.calendar-course-category6 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-6;
+                overflow: hidden;
+                color: $black;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-6;
+        }
+        &.calendar-category7,
+        &.calendar-course-category8 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-7;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-7;
+        }
+        &.calendar-category8,
+        &.calendar-course-category9 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-8;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-8;
+        }
+        &.calendar-category9,
+        &.calendar-course-category10 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-9;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-9;
+        }
+        &.calendar-category10,
+        &.calendar-course-category11 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-10;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-10;
+        }
+        &.calendar-category11,
+        &.calendar-course-category12 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-11;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-11;
+        }
+        &.calendar-category12,
+        &.calendar-course-category13 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-12;
+                overflow: hidden;
+                color: $black;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-12;
+        }
+        &.calendar-category13,
+        &.calendar-course-category14 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-13;
+                overflow: hidden;
+                color: $black;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-13;
+        }
+        &.calendar-category14,
+        &.calendar-course-category15 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-14;
+                overflow: hidden;
+                color: $black;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-14;
+        }
+        &.calendar-category15,
+        &.calendar-course-category7 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-15;
+                overflow: hidden;
+                color: $black;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-15;
+        }
+        &.calendar-category255,
+        &.calendar-course-category255 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $calendar-category-255;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $calendar-category-255;
+        }
+        /* Termin von im Stundenplan vorgemerkter Kurs */
+        &.calendar-course-category256 {
+            a {
+                color: $contrast-blue !important;
+            }
+            div:first-child {
+                background-color: $contrast-blue-medium;
+                overflow: hidden;
+            }
+            background: $white;
+            border: solid 1px $contrast-blue-medium;
+        }
+    }
+}
+
+
+/* links */
+div.index_container div.index_main nav div.login_link a {
+    text-decoration: underline;
+
+    p {
+        color: $black !important;
+    }
+}
+
+/* underlined links only in main content,not in navigation */
+a,
+a:link,
+a:visited,
+.content-items .content-item .content-item-link,
+.action-menu.avatar-menu .action-menu-content a:link,
+.action-menu.avatar-menu .action-menu-content a:visited,
+.action-menu .action-menu-item > label {
+    color: $contrast-blue;
+}
+
+#layout_content a,
+#layout_content a:link,
+#layout_content a:visited {
+    text-decoration: underline;
+}
+
+a:hover,
+a:active,
+a:hover.index,
+a:active.index,
+a:hover.tree {
+    color: $red;
+    text-decoration: none;
+}
+
+.header-options img.icon-role-clickable {
+    filter: brightness(100);
+
+}
+
+.header-options a {
+    text-decoration: none !important;
+}
+
+
+/* Text formatting */
+.cke_button_on {
+    background-color: $base-color !important;
+    border: 1px solid $white;
+
+    .cke_button_icon {
+        filter: brightness(10) !important;
+    }
+}
+
+/* Blubber */
+.blubber_thread,
+.blubber_sideinfo {
+    background-color: $white;
+    border: 2px solid $black;
+}
+
+.blubber_thread .empty_blubber_background {
+    color: $black;
+    background-color: $white;
+}
+
+.blubber_threads_widget .sidebar-widget-content ol li.active:before {
+    border-left: 10px solid $black;
+}
+
+.blubber_threads_widget .sidebar-widget-content ol li.active {
+    color: $black;
+    background-color: $medium-gray;
+}
+
+.blubber_threads_widget .sidebar-widget-content ol li:hover {
+    background-color: $darkergray;
+
+    & a {
+        color: $white;
+    }
+}
+
+.blubber_threads_widget .sidebar-widget-content ol li.active:after {
+    border-left: 10px solid $medium-gray;
+    right: -8px;
+}
+
+.blubber_thread ol.comments > li.mine > .content {
+    background-color: $black;
+}
+
+.blubber_thread ol.comments > li.theirs > .content {
+    background-color: $white;
+    border: 1px solid $black;
+
+    &:before {
+        border-right-color: $black;
+    }
+}
+
+.blubber_thread ol.comments > li.theirs > .content:after,
+.blubber_thread ol.comments > li.mine > .content:after {
+    background-color: $white;
+}
+
+.blubber_thread ol.comments > li.theirs > .content > .name,
+.blubber_thread ol.comments > li > .time,
+.blubber_threads_widget .sidebar-widget-content ol li a .info time,
+.blubber_public_info .indented .lowprio_info,
+.blubber_sideinfo .lowprio_info {
+    color: $black !important;
+
+}
+
+#blubber_stream_container img,
+.blubber_thread ol.comments > li.theirs .answer_comment > img {
+    filter: brightness(0);
+}
+
+.blubber_panel .context_info .followunfollow.unfollowed {
+    text-decoration: line-through !important;
+}
+
+/* Suchfelder und -ergebnisse */
+
+::placeholder,
+:-ms-input-placeholder, /* Internet Explorer 10-11 */
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: $black;
+}
+
+#globalsearch-searchbar #globalsearch-list section header {
+    color: $contrast-blue;
+}
+
+#globalsearch-list,
+#globalsearch-searchbar #globalsearch-results article {
+    border: 1px solid $black;
+}
+
+#globalsearch-searchbar #globalsearch-results article > header {
+    background-color: $white;
+}
+
+#search #search-results article {
+    border: 2px solid $black;
+
+    > header {
+        border: unset;
+
+        > h1 {
+            border: unset;
+
+            > a {
+                border: unset;
+                color: $black !important;
+            }
+        }
+
+    }
+}
+
+#search-active-filters .filter-items .button {
+    color: $black !important;
+    background-color: $white;
+    border: 1px solid $black;
+}
+
+table.course-search {
+    border: 2px solid $black;
+
+    caption.legend {
+        background-color: $black;
+        color: $white;
+    }
+}
+
+
+
+/* List tree */
+.css-tree ul:before {
+    border-left: 2px solid $black;
+}
+
+.css-tree ul li:before {
+    border-top: 2px solid $black;
+}
+
+/* Arbeitsplatz */
+.content-items {
+
+    .content-item {
+        background-color: $white;
+        border: solid thin $black;
+
+        .content-item-link {
+            color: unset;
+            display: flex;
+            height: 130px;
+            padding: 10px;
+            transition: 0.5s;
+
+            .content-item-img-wrapper > img {
+                filter: brightness(0);
+            }
+
+            .content-item-text {
+                padding-top: -2px;
+
+                .content-item-title {
+                    color: $base-color;
+                    font-size: 2rem;
+                }
+            }
+
+        }
+
+        &:hover {
+            background-color: $black;
+            color: unset;
+
+            .content-item-img-wrapper > img {
+                filter: brightness(100);
+            }
+
+            .content-item-link {
+                .content-item-text {
+                    .content-item-title {
+                        color: $white;
+                    }
+                    color: $white;
+                }
+            }
+        }
+
+    }
+}
+
+/* Forum */
+#forum .posting {
+    background-color: $white;
+    border: 1px solid $black;
+}
+
+#forum form {
+    display: revert;
+}
+
+/* OER Campus */
+.oer_search .searchform {
+    border: 1px solid $black;
+}
+
+.oer_search .oneliner button {
+    border: 1px solid $black;
+    background-color: $white;
+
+    img {
+        filter: brightness(0);
+    }
+}
+
+.oer_search .browser {
+    background-color: $white;
+    border: 1px solid $black;
+
+    .intro .illustration {
+        background-color: $content-color-20;
+    }
+}
+
+.contentbar {
+    border: 2px solid $black;
+    background-color: $white;
+}
+
+.oer_material_overview article.contentbox header,
+.oercampus_editmaterial article.contentbox header {
+    border-bottom: 1px solid $black;
+}
+
+/* Courseware */
+.cw-ribbon {
+    border: 2px solid $black;
+    background-color: $white;
+}
+
+.cw-ribbon.cw-ribbon-consume {
+    border: 1px solid $black;
+}
+
+.cw-container-wrapper.cw-container-wrapper-consume {
+    border: unset;
+}
+
+.cw-container-wrapper,
+.cw-ribbon-tools {
+    border: 2px solid $black;
+}
+
+.cw-container .cw-container-header,
+.cw-block-header,
+.cw-block-features header,
+.cw-discuss-wrapper header,
+.cw-collapsible .cw-collapsible-title,
+.cw-manager-element .cw-manager-container .cw-manager-container-title {
+    //background-color: $white;
+    border-bottom: 1px solid $black;
+}
+
+.cw-action-widget li button,
+.cw-view-widget li button,
+.cw-export-widget li button,
+.cw-action-widget li a,
+.cw-view-widget li a,
+.cw-export-widget li a {
+    //color: $black !important;
+}
+
+.cw-action-widget-add:hover span,
+.cw-action-widget li button:hover,
+.cw-export-widget li button:hover,
+.cw-action-widget li a:hover,
+.cw-export-widget li a:hover {
+    background-color: $black !important;
+    color: $white !important;
+}
+
+.studip-dialog-body .studip-dialog-header {
+    background-color: $black;
+}
+
+.cw-tiles .tile,
+.cw-companion-overlay {
+    border: 2px solid $black;
+}
+
+.cw-tiles .preview-image {
+    background-color: $white;
+}
+
+.cw-course-manager .cw-course-manager-tabs {
+    border: 1px solid $black;
+    max-width: 548px;
+}
+
+.cw-tabs-nav {
+    border: unset;
+    border-bottom: 1px solid $black;
+}
+
+.cw-collapsible .cw-collapsible-title,
+.cw-manager-element .cw-manager-container .cw-manager-container-title {
+    color: $black;
+}
+
+.cw-collapsible .cw-collapsible-content.cw-collapsible-content-open form {
+    border: unset;
+}
+
+.cw-ribbon-action-menu .action-menu-icon,
+.cw-block-actions .action-menu .action-menu-icon {
+    filter: unset;
+}
+
+.cw-tabs-nav button {
+    color: $contrast-blue;
+}
+
+/* Everything else */
+/* Selections */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: $base-color;
+}
+
+/* tile view Veranstaltungen */
+.tiles-grid-element-header {
+    background-color: $white !important;
+}
+
+.tiles-grid-element-options .action-menu-icon {
+    filter: unset;
+}
+
+/* Veranstaltungskategorien */
+fieldset.attribute_table div[container] > div.droparea > div.plugin {
+    border: 1px solid $black;
+    background-color: $white;
+}
+
+.helpbar {
+    background-color: $black;
+}
+
+.fc-unthemed td {
+    border-color: $darkergray !important;
+}
+
+section.course-statusgroups footer,
+#wikifooter {
+    background-color: $white;
+}
+
+#wikifooter {
+    border-top: 2px solid $black;
+}
+
+div#schedule_day {
+    border-right: 2px double $black;
+}
+
+table#schedule_data thead tr td {
+    border-bottom: 2px solid $darkergray;
+}
+
+table#schedule_data tbody td:first-child {
+    border-right: 2px solid $darkergray;
+}
+
+/* Skiplink box */
+button.skiplink {
+    color: $black;
+    line-height: 1.2em;
+}
+
+/* Notification */
+
+// Notifications: „Desktop-Benachrichtigungen aktivieren“: Blauer Text auf weißem Hintergrund.
+// Benachrichtigungen: Schwarzer Text auf weißem Hintergrund, beim Hovern invertieren.
+
+#notification_container a.enable-desktop-notifications,
+#notification_container a.mark-all-as-read {
+    background-color: $white;
+    color: $contrast-blue;
+}
+
+#notification_container .list .item {
+    background-color: $white;
+    color: $black;
+
+    &:hover {
+        background-color: $black;
+
+        a {
+            color: $white !important;
+
+            div.avatar {
+                filter: brightness(100);
+            }
+        }
+    }
+
+}

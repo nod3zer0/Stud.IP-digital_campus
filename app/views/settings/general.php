@@ -47,17 +47,6 @@ $start_pages = [
     <? endif ?>
 
         <label>
-            <input type="checkbox" name="skiplinks_enable"
-                   value="1"
-                <? if ($config->SKIPLINKS_ENABLE) echo 'checked'; ?>>
-            <?= _('Skiplinks einblenden') ?>
-            <?= tooltipIcon(_('Mit dieser Einstellung wird nach dem ersten Drücken der Tab-Taste eine '
-                .'Liste mit Skiplinks eingeblendet, mit deren Hilfe Sie mit der Tastatur '
-                .'schneller zu den Hauptinhaltsbereichen der Seite navigieren können. '
-                .'Zusätzlich wird der aktive Bereich einer Seite hervorgehoben.')) ?>
-        </label>
-
-        <label>
             <input type="checkbox"
                    name="showsem_enable"
                    value="1"

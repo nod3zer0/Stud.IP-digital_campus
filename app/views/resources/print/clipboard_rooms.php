@@ -1,8 +1,10 @@
 <? if (!$print_schedules): ?>
-    <form class="default" method="post"
-          action="<?= $controller->link_for('resources/print/clipboard_rooms') ?>">
-        <?= CSRFProtection::tokenTag() ?>
-        <? if ($clipboard_selected): ?>
+
+    <? if ($clipboard_selected): ?>
+        <form class="default" method="post"
+              action="<?= $controller->link_for('resources/print/clipboard_rooms') ?>">
+            <?= CSRFProtection::tokenTag() ?>
+
             <input type="hidden" name="clipboard_id" value="<?= htmlReady($selected_clipboard_id) ?>">
             <input type="hidden" name="schedule_type" value="<?= htmlReady($schedule_type) ?>">
             <input type="hidden" name="date" value="<?= htmlReady($selected_date_string) ?>">
@@ -27,16 +29,16 @@
                         ) ?>
                     </legend>
                     <ul>
-                    <? foreach ($available_rooms as $room): ?>
-                        <li>
-                            <label>
-                                <input type="checkbox" value="<?= htmlReady($room->id) ?>"
-                                       checked="checked"
-                                       name="selected_room_ids[]">
-                                <?= htmlReady($room->getFullName()) ?>
-                            </label>
-                        </li>
-                    <? endforeach ?>
+                        <? foreach ($available_rooms as $room): ?>
+                            <li>
+                                <label>
+                                    <input type="checkbox" value="<?= htmlReady($room->id) ?>"
+                                           checked="checked"
+                                           name="selected_room_ids[]">
+                                    <?= htmlReady($room->getFullName()) ?>
+                                </label>
+                            </li>
+                        <? endforeach ?>
                     </ul>
                 <? endif ?>
             </fieldset>
@@ -52,8 +54,13 @@
                     'null'
                 ) ?>
             </div>
-        <? else: ?>
-            <? if(count($available_clipboards)) : ?>
+        </form>
+    <? else: ?>
+        <? if(count($available_clipboards)) : ?>
+            <form class="default" method="post"
+                  action="<?= $controller->link_for('resources/print/clipboard_rooms') ?>">
+                <?= CSRFProtection::tokenTag() ?>
+
                 <fieldset>
                     <label>
                         <?= _('Individuelle Raumgruppe') ?>:
@@ -69,21 +76,21 @@
                         <?= _('Art des Belegungsplanes') ?>:
                         <select name="schedule_type">
                             <option value="w"
-                                    <?= $selected_schedule == 'w'
-                                        ? 'selected="selected"'
-                                        : '' ?>>
+                                <?= $selected_schedule == 'w'
+                                    ? 'selected="selected"'
+                                    : '' ?>>
                                 <?= _('Wochenplan') ?>
                             </option>
                             <option value="w+we"
-                                    <?= $selected_schedule == 'w+we'
-                                        ? 'selected="selected"'
-                                        : '' ?>>
+                                <?= $selected_schedule == 'w+we'
+                                    ? 'selected="selected"'
+                                    : '' ?>>
                                 <?= _('Wochenplan inklusive Wochenende') ?>
                             </option>
                             <option value="d"
-                                    <?= $selected_schedule == 'd'
-                                        ? 'selected="selected"'
-                                        : '' ?>>
+                                <?= $selected_schedule == 'd'
+                                    ? 'selected="selected"'
+                                    : '' ?>>
                                 <?= _('Tagesplan') ?>
                             </option>
                         </select>
@@ -111,19 +118,19 @@
                         'select_clipboard'
                     ) ?>
                 </div>
-            <? else :?>
-                <?= MessageBox::info(
-                    _('Sie müssen zunächst Raumgruppen erstellen'),
-                    [
-                        sprintf(
-                            _('Klicken %shier%s, um ein Raumgruppen anzulegen.'),
-                            '<a href="' . URLHelper::getLink('dispatch.php/room_management/overview/rooms') . '">',
-                            '</a>')
-                    ]
-                )?>
-            <? endif ?>
+            </form>
+        <? else :?>
+            <?= MessageBox::info(
+                _('Sie müssen zunächst Raumgruppen erstellen'),
+                [
+                    sprintf(
+                        _('Klicken %shier%s, um ein Raumgruppen anzulegen.'),
+                        '<a href="' . URLHelper::getLink('dispatch.php/room_management/overview/rooms') . '">',
+                        '</a>')
+                ]
+            )?>
         <? endif ?>
-    </form>
+    <? endif ?>
 <? else: ?>
     <? if (Request::get("allday")) {
         $min_time = '00:00:00';
@@ -158,14 +165,14 @@
                     ],
                     'defaultView' =>
                         in_array(Request::get("defaultView"), ['dayGridMonth','timeGridWeek','timeGridDay'])
-                                 ? Request::get("defaultView")
-                                 : 'timeGridWeek',
+                            ? Request::get("defaultView")
+                            : 'timeGridWeek',
                     'defaultDate' => Request::get("defaultDate", $print_date),
                     'eventSources' => [
                         [
                             'url' => URLHelper::getURL(
                                 'api.php/resources/resource/'
-                              . $room->id . '/booking_plan'
+                                . $room->id . '/booking_plan'
                             ),
                             'method' => 'GET',
                             'extraParams' => [

@@ -120,7 +120,7 @@ class Seminar_Auth
                 # Check for user supplied automatic login procedure
                 if ($uid = $this->auth_preauth()) {
                     $this->auth["uid"] = $uid;
-                    $sess->regenerate_session_id(['auth', '_language', 'phpCAS']);
+                    $sess->regenerate_session_id(['auth', '_language', 'phpCAS', 'contrast']);
                     $sess->freeze();
                     $GLOBALS['user'] = new Seminar_User($this->auth['uid']);
                     return true;
@@ -170,7 +170,7 @@ class Seminar_Auth
                     case "log":
                         if ($uid = $this->auth_validatelogin()) {
                             $this->auth["uid"] = $uid;
-                            $keep_session_vars = ['auth', 'forced_language', '_language'];
+                            $keep_session_vars = ['auth', 'forced_language', '_language', 'contrast'];
                             if ($this->auth['perm'] === 'root') {
                                 $keep_session_vars[] = 'plugins_disabled';
                             }
@@ -455,5 +455,9 @@ class Seminar_Auth
         // init of output via I18N
         $_language_path = init_i18n($_SESSION['_language']);
         include 'config.inc.php';
+
+        if (isset($_SESSION['contrast'])) {
+            PageLayout::addStylesheet('accessibility.css');
+        }
     }
 }

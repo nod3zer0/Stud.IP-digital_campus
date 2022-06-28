@@ -62,6 +62,19 @@ if ($bg_mobile) {
         <? endforeach; ?>
         </div>
 
+        <div id="contrast">
+            <? if (isset($_SESSION['contrast'])) : ?>
+                <?= Icon::create('accessibility')->asImg(24) ?>
+                <a href="index.php?unset_contrast=1"><?= _('Normalen Kontrast aktivieren') ?></a>
+                <?= tooltipIcon(_('Aktiviert standardmäßige, nicht barrierefreie Kontraste.')); ?>
+            <? else : ?>
+                <?= Icon::create('accessibility')->asImg(24) ?>
+                <a href="index.php?set_contrast=1" id="highcontrastlink"><?= _('Hohen Kontrast aktivieren')?></a>
+                <?= tooltipIcon(_('Aktiviert einen hohen Kontrast gemäß WCAG 2.1. Diese Einstellung wird nach dem Login übernommen.
+                Sie können sie in Ihren persönlichen Einstellungen ändern.')); ?>
+            <? endif ?>
+        </div>
+
         <div class="login_info">
             <div>
                 <?= _('Aktive Veranstaltungen') ?>:

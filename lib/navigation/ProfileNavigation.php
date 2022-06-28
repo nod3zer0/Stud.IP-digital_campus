@@ -114,6 +114,11 @@ class ProfileNavigation extends Navigation
                     $navigation->addSubNavigation('tfa', new Navigation(_('Zwei-Faktor-Authentifizierung'), 'dispatch.php/tfa'));
                 }
 
+                $navigation->addSubNavigation('accessibility', new Navigation(
+                    _('Barrierefreiheitseinstellungen'),
+                    'dispatch.php/settings/accessibility'
+                ));
+
                 $this->addSubNavigation('settings', $navigation);
             }
 

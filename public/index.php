@@ -23,6 +23,14 @@ page_open(['sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm'
 
 $auth->login_if(Request::get('again') && ($auth->auth['uid'] == 'nobody'));
 
+// if desired, switch to high contrast stylesheet and store when user logs in
+if (Request::get('unset_contrast')) {
+    unset($_SESSION['contrast']);
+}
+if (Request::get('set_contrast') ) {
+    $_SESSION['contrast'] = true;
+}
+
 // evaluate language clicks
 // has to be done before seminar_open to get switching back to german (no init of i18n at all))
 if (Request::get('set_language')) {

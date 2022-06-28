@@ -38,6 +38,11 @@ class AvatarNavigation extends Navigation
             $navigation = new Navigation(_('Einstellungen'), 'dispatch.php/settings/general');
             $navigation->setImage(Icon::create('admin'));
             $this->addSubNavigation('settings', $navigation);
+
+            // Link to accessibility settings
+            $navigation = new Navigation(_('Barrierefreiheit'), 'dispatch.php/settings/accessibility');
+            $navigation->setImage(Icon::create('accessibility'));
+            $this->addSubNavigation('accessibility', $navigation);
         }
 
         // Link to logout

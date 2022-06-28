@@ -59,6 +59,25 @@ div.index_container {
                 }
             }
 
+            div#contrast {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                border-top: 1px solid @light-gray-color;
+                font-size: 0.9em;
+                padding: 10px;
+
+                a {
+                    text-decoration: underline;
+                    color: @contrast-blue;
+
+                    &:hover, &:focus {
+                        font-size: 1em;
+                        color: @red;
+                    }
+                }
+            }
+
             div.login_info {
                 border-top: 1px solid @light-gray-color;
                 font-size: 0.8em;
