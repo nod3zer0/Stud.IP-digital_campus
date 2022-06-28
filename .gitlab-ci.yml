@@ -37,61 +37,93 @@ stages:
     - sed -i "s%$PWD/%%" tests/_output/report.xml
 
 .artifacts:
-  common: &common
+  common: &common-artifacts
     when: always
     expire_in: 1 week
   tests: &test-artifacts
-    <<: *common
+    <<: *common-artifacts
     paths:
       - tests/_output
     reports:
       junit: tests/_output/report.xml
 
 .caches:
-  php: &php-cache
+  php: &composer-cache
     key: "php-$CI_COMMIT_REF_SLUG"
     paths:
       - composer/
-      - .phplint-cache
-  js: &js-cache
+      - .caches/phplint-cache
+  js: &npm-cache
     key: "js-$CI_COMMIT_REF_SLUG"
     paths:
       - node_modules/
-      - .eslintcache
+      - .caches/eslint-cache
+      - .caches/stylelint-cache
 
 lint-php:
   stage: checks
   needs: []
-  cache: *php-cache
+  cache: *composer-cache
   allow_failure: false
   interruptible: true
   before_script:
     - !reference [.scripts, install-composer]
+    - mkdir -p .reports
   script:
-    - php -d memory_limit=-1 composer/bin/phplint --xml report.xml
+    - php -d memory_limit=-1 composer/bin/phplint --xml .reports/phplint-report.xml --cache=.caches/phplint-cache
   artifacts:
-    <<: *common
+    <<: *common-artifacts
     paths:
-      - report.xml
+      - .reports/phplint-report.xml
     reports:
-      junit: report.xml
+      junit: .reports/phplint-report.xml
 
 lint-js:
   stage: checks
   needs: []
-  cache: *js-cache
+  cache: *npm-cache
   allow_failure: false
   interruptible: true
   before_script:
     - make npm
   script:
-    - npm run lint -- --cache
+    - npm run lint -- --cache --cache-location .caches/eslint-cache --format ./node_modules/eslint-junit/index.js
+  only:
+    changes:
+      - resources/assets/javascripts/**/*
+      - resources/vue/**/*
+  artifacts:
+    <<: *common-artifacts
+    paths:
+      - .reports/eslint-report.xml
+    reports:
+       junit: .reports/eslint-report.xml
+
+lint-css:
+  stage: checks
+  needs: []
+  cache: *npm-cache
+  allow_failure: false
+  interruptible: true
+  before_script:
+    - make npm
+  script:
+    - npm run css-lint -s -- --cache --cache-location .caches/stylelint-cache --custom-formatter node_modules/stylelint-junit-formatter --output-file .reports/stylelint-report.xml
+  only:
+    changes:
+      - resources/assets/stylesheets/**/*
+  artifacts:
+    <<: *common-artifacts
+    paths:
+      - .reports/stylelint-report.xml
+    reports:
+      junit: .reports/stylelint-report.xml
 
 test-unit:
   stage: tests
   needs: [lint-php]
   cache:
-    <<: *php-cache
+    <<: *composer-cache
     policy: pull
   allow_failure: false
   interruptible: true
@@ -107,7 +139,7 @@ test-functional:
   stage: tests
   needs: [lint-php]
   cache:
-    <<: *php-cache
+    <<: *composer-cache
     policy: pull
   services:
     - mariadb
@@ -125,7 +157,7 @@ test-jsonapi:
   stage: tests
   needs: [lint-php]
   cache:
-    <<: *php-cache
+    <<: *composer-cache
     policy: pull
   services:
     - mariadb

@@ -4,7 +4,8 @@
 composer
 node_modules
 nbproject
-.phplint-cache
+.caches/*
+.reports/*
 
 config/config_local.inc.php
 config/config.inc.php

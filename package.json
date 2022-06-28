@@ -5,6 +5,7 @@
     "private": true,
     "scripts": {
         "lint": "eslint resources/assets/javascripts resources/vue",
+        "css-lint": "stylelint resources/assets/stylesheets",
         "wds": "webpack serve --progress --config webpack.dev-server.js",
         "webpack-dev": "webpack --config webpack.dev.js --mode development",
         "webpack-prod": "webpack --config webpack.prod.js --mode production",
@@ -48,6 +49,7 @@
         "easygettext": "^2.17.0",
         "es6-promise": "4.2.8",
         "eslint": "^7.32.0",
+        "eslint-junit": "^1.0.1",
         "eslint-plugin-vue": "7.7.0",
         "eslint-webpack-plugin": "^3.1.1",
         "expose-loader": "1.0.1",
@@ -74,7 +76,9 @@
         "pdfjs-dist": "^2.6.347",
         "portal-vue": "^2.1.7",
         "postcss": "^8.1.8",
+        "postcss-less": "^6.0.0",
         "postcss-loader": "4.1.0",
+        "postcss-scss": "^4.0.4",
         "sanitize-html": "^2.7.0",
         "sass": "^1.29.0",
         "sass-loader": "^10.1.0",
@@ -83,6 +87,9 @@
         "sticky-kit": "1.1.3",
         "stream-browserify": "^3.0.0",
         "style-loader": "^2.0.0",
+        "stylelint": "^14.9.1",
+        "stylelint-config-standard": "^26.0.0",
+        "stylelint-junit-formatter": "^0.2.2",
         "svgo": "^2.3.1",
         "tablesorter": "2.31.3",
         "vrp-vue-resizable": "1.2.7",
@@ -122,5 +129,8 @@
         "printWidth": 120,
         "singleQuote": true,
         "tabWidth": 4
+    },
+    "eslint-junit": {
+        "output": "./.reports/eslint-report.xml"
     }
 }
