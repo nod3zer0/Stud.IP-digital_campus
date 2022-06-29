@@ -21,7 +21,7 @@ class Settings_AccessibilityController extends Settings_SettingsController
     {
         parent::before_filter($action, $args);
 
-        PageLayout::setTitle(_('Barrierefreiheitseinstellungen'));
+        PageLayout::setTitle(_('Barrierefreiheit'));
         Navigation::activateItem('/profile/settings/accessibility');
         SkipLinks::addIndex(_('Barrierefreiheitseinstellungen anpassen'), 'layout_content', 100);
     }

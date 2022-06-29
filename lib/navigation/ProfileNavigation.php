@@ -115,7 +115,7 @@ class ProfileNavigation extends Navigation
                 }
 
                 $navigation->addSubNavigation('accessibility', new Navigation(
-                    _('Barrierefreiheitseinstellungen'),
+                    _('Barrierefreiheit'),
                     'dispatch.php/settings/accessibility'
                 ));
 
