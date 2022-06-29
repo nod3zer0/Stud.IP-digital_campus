@@ -17,6 +17,16 @@
 
                         {{ item.label }}
                     </a>
+                    <label v-else-if="item.icon" class="undecorated" v-bind="linkAttributes(item)" v-on="linkEvents(item)">
+                        <studip-icon :shape="item.icon.shape" :role="item.icon.role" :name="item.name" :title="item.label" v-bind="item.attributes ?? {}"></studip-icon>
+                        {{ item.label }}
+                    </label>
+                    <template v-else>
+                        <span class="action-menu-no-icon"></span>
+                        <button :name="item.name" v-bind="Object.assign(item.attributes ?? {}, linkAttributes(item))" v-on="linkEvents(item)">
+                            {{ item.label }}
+                        </button>
+                    </template>
                 </li>
             </ul>
         </div>
@@ -79,7 +89,7 @@ export default {
     computed: {
         navigationItems () {
             return this.items.map((item) => {
-                let classes = item.classes || '';
+                let classes = item.classes ?? '';
                 if (item.disabled) {
                     classes += " action-menu-item-disabled";
                 }
@@ -93,6 +103,7 @@ export default {
                         role: item.disabled ? 'inactive' : 'clickable'
                     } : false,
                     type: item.type || 'link',
+                    name: item.name ?? null,
                     classes: classes.trim(),
                     attributes: item.attributes || {},
                     disabled: item.disabled,
