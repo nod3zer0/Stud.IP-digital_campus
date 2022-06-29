@@ -153,9 +153,16 @@ class Consultation_AdminController extends ConsultationController
         CSRFProtection::verifyUnsafeRequest();
 
         try {
+            $start = $this->getDateAndTime('start');
+            $end = $this->getDateAndTime('end');
+
+            if (date('Hi', $end) <= date('Hi', $start)) {
+                throw new InvalidArgumentException(_('Die Endzeit liegt vor der Startzeit!'));
+            }
+
             $slot_count = ConsultationBlock::countBlocks(
-                $this->getDateAndTime('start'),
-                $this->getDateAndTime('end'),
+                $start,
+                $end,
                 Request::int('day-of-week'),
                 Request::int('interval'),
                 Request::int('duration'),
@@ -169,8 +176,8 @@ class Consultation_AdminController extends ConsultationController
 
             $blocks = ConsultationBlock::generateBlocks(
                 $this->range,
-                $this->getDateAndTime('start'),
-                $this->getDateAndTime('end'),
+                $start,
+                $end,
                 Request::int('day-of-week'),
                 Request::int('interval')
             );
