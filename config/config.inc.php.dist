@@ -72,7 +72,7 @@ $UNI_URL = "http://www.studip.de";
 $UNI_LOGIN_ADD='';
 $UNI_LOGOUT_ADD=sprintf(_("Und hier geht's zur %sStud.IP Portalseite%s&nbsp;"), "<a href=\"http://www.studip.de\"><b>", "</b></a>");
 $UNI_CONTACT = "<please insert your general contact mail-adress here>";
-$UNI_INFO = "Stud.IP 4.3 - Studienbegleitender Internetsupport von Präsenzlehre";
+$UNI_INFO = "Stud.IP 5.1 - Studienbegleitender Internetsupport von Präsenzlehre";
 
 
 /* $SEM_CLASS and $SEM_TYPE configuration moved to database
@@ -251,14 +251,6 @@ $SCM_PRESET[2] = array("name"=>_("Literatur"));
 $SCM_PRESET[3] = array("name"=>_("Links"));
 $SCM_PRESET[4] = array("name"=>_("Verschiedenes"));
 //you can add more presets here
-
-//preset template for formatting of literature list entries
-$LIT_LIST_FORMAT_TEMPLATE = "**{dc_creator}** |({dc_contributor})||\n"
-                        . "{dc_title}||\n"
-                        . "{dc_identifier}||\n"
-                        . "%%{published}%%||\n"
-                        . "{note}||\n"
-                        . "[{lit_plugin_display_name}]{external_link}|\n";
 
 //Shortcuts for smileys
 $SMILE_SHORT = array( //diese Kuerzel fuegen das angegebene Smiley ein (Dateiname + ".gif")

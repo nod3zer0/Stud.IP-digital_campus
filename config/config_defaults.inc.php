@@ -162,7 +162,7 @@ $ELEARNING_INTERFACE_MODULES["loncapa"] =
 $PLUGINS_UPLOAD_ENABLE = TRUE;      //Upload of Plugins is enabled
 
 $PLUGIN_REPOSITORIES = [
-    'http://plugins.studip.de/plugins.xml',
+    'https://develop.studip.de/studip/plugins.php/pluginmarket/extern/xml',
 ];
 
 /*domain name and path translation
