@@ -177,6 +177,7 @@ INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `c
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM', 'tutor', 'string', 'global', 'global', 1311411856, 1311411856, 'Ab welchem Status soll in Veranstaltungen mit automatisch eingetragenen Nutzern der Teilnehmerreiter zu sehen sein?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('AUX_RULE_ADMIN_PERM', 'admin', 'string', 'global', 'permissions', 1240427632, 1240427632, 'mit welchem Status dürfen Zusatzangaben definiert werden (admin, root)');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('BANNER_ADS_ENABLE', '0', 'boolean', 'global', 'modules', 1293118059, 1293118059, 'Schaltet ein oder aus, ob die Bannerwerbung global verfügbar ist.');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('BANNER_ONLY_SYSTEM_ROLES', '1', 'boolean', 'global', '', 1656513810, 1656513810, 'Über diese Option wird die Auswahl der rollenspezifischen Banner auf Systemrollen begrenzt');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('BLUBBER_DEFAULT_THREAD', '1', 'string', 'user', '', 1591630778, 1591630778, 'Dieses ist bei dem globalen Blubber-Messenger der vorausgewählte Blubber.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('BLUBBER_GLOBAL_MESSENGER_ACTIVATE', '1', 'boolean', 'global', 'global', 1591630778, 1591630778, 'Ist Blubber unter Community global aktiv? Blubber in Veranstaltungen wird über das Plugin Blubber aktiviert oder deaktiviert.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('BLUBBER_GLOBAL_THREAD_OPTOUT', '1', 'boolean', 'global', 'global', 1640797278, 1640797278, 'Gibt an, ob beim globalen Blubber Thread ein Opt-Out-Verfahren genutzt werden soll');
@@ -199,7 +200,6 @@ INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `c
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('COURSEWARE_SEQUENTIAL_PROGRESSION', '0', 'boolean', 'range', '', 1640797279, 1640797279, 'Mit dieser Konfigurationseinstellung wird für eine Courseware festgelegt, ob Lernende sequentiell durch die Inhalte gehen müssen.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('COURSE_ADMIN_NOTICE', '', 'string', 'course', '', 1640797279, 1640797279, 'Admins: Notiz zu einer Veranstaltung');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('COURSE_CALENDAR_ENABLE', '0', 'boolean', 'global', 'calendar', 1326799692, 1326799692, 'Kalender als Inhaltselement in Veranstaltungen.');
-INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('COURSE_MEMBERGROUPS_HIDE', '0', 'boolean', 'course', '', 1640797277, 1640797277, 'Über diese Option können Sie die Teilnehmendengruppenliste für Studierende der Veranstaltung unsichtbar machen');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('COURSE_MEMBERS_HIDE', '0', 'boolean', 'course', '', 1640797277, 1640797277, 'Über diese Option können Sie die Teilnehmendenliste für Studierende der Veranstaltung unsichtbar machen');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('COURSE_NUMBER_FORMAT', '', 'string', 'global', 'global', 1510849314, 1510849314, 'Erlaubt das Eintragen eines regulären Ausdrucks zur Validierung einer Veranstaltungsnummer. Im Kommentarfeld kann ein entsprechender Hilfetext hinterlegt werden.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('COURSE_PUBLIC_TOPICS', '0', 'boolean', 'course', '', 1543856103, 1543856103, 'Über diese Option können Sie die Themen einer Veranstaltung öffentlich einsehbar machen.');
@@ -235,9 +235,6 @@ INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `c
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('EVAL_AUSWERTUNG_CONFIG_ENABLE', '1', 'boolean', 'global', 'evaluation', 1141225624, 1141225624, 'Ermöglicht es dem Nutzer, die grafische Darstellung der Evaluationsauswertung zu konfigurieren');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('EVAL_AUSWERTUNG_GRAPH_FORMAT', 'png', 'string', 'global', 'evaluation', 1141225624, 1141225624, 'Das Format, in dem die Diagramme der grafischen Evaluationsauswertung erstellt werden (jpg, png, gif).');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('EXPORT_ENABLE', '1', 'boolean', 'global', 'modules', 1293118059, 1293118059, 'Schaltet ein oder aus, ob der Export global verfügbar ist.');
-INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('EXTERNAL_HELP', '1', 'boolean', 'global', '', 1155128579, 1155128579, 'Schaltet das externe Hilfesystem ein');
-INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('EXTERNAL_HELP_LOCATIONID', 'default', 'string', 'global', '', 1155128579, 1155128579, 'Eine eindeutige ID zur Identifikation der gewünschten Hilfeseiten, leer bedeutet Standardhilfe');
-INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('EXTERNAL_HELP_URL', 'https://hilfe.studip.de/index.php/%s', 'string', 'global', '', 1155128579, 1155128579, 'URL Template für das externe Hilfesystem');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG', '0', 'boolean', 'global', 'global', 1510849314, 1510849314, 'Free access to external pages (without the need of a configuration), independent of SRI settings above');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('EXTERN_ENABLE', '1', 'boolean', 'global', 'modules', 1293118059, 1293118059, 'Schaltet ein oder aus, ob die externen Seiten global verfügbar sind.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('EXTERN_SRI_ENABLE', '0', 'boolean', 'global', 'global', 1510849314, 1510849314, 'Allow the usage of SRI-interface (Stud.IP Remote Include)');
@@ -250,7 +247,6 @@ INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `c
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('GLOBALSEARCH_ASYNC_QUERIES', '0', 'boolean', 'global', 'globalsearch', 1530289048, 1530289048, 'Sollen die Suchanfragen asynchron über mysqli gestellt werden? Andernfalls wird PDO verwendet.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('GLOBALSEARCH_MAX_RESULT_OF_TYPE', '5', 'integer', 'global', 'globalsearch', 1530289048, 1530289048, 'Wie viele Ergebnisse sollen in der globalen Schnellsuche pro Kategorie angezeigt werden?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('GLOBALSEARCH_MODULES', '{\"GlobalSearchBuzzwords\":{\"order\":1,\"active\":true,\"fulltext\":false},\"GlobalSearchMyCourses\":{\"order\":2,\"active\":true,\"fulltext\":false},\"GlobalSearchCourses\":{\"order\":3,\"active\":true,\"fulltext\":false},\"GlobalSearchUsers\":{\"order\":4,\"active\":true,\"fulltext\":false},\"GlobalSearchInstitutes\":{\"order\":5,\"active\":true,\"fulltext\":false},\"GlobalSearchFiles\":{\"order\":6,\"active\":true,\"fulltext\":false},\"GlobalSearchCalendar\":{\"order\":7,\"active\":true,\"fulltext\":false},\"GlobalSearchMessages\":{\"order\":8,\"active\":true,\"fulltext\":false},\"GlobalSearchForum\":{\"order\":9,\"active\":true,\"fulltext\":false},\"GlobalSearchResources\":{\"order\":10,\"active\":true,\"fulltext\":false},\"GlobalSearchRoomAssignments\":{\"order\":11,\"active\":true,\"fulltext\":false},\"GlobalSearchModules\":{\"order\":12,\"active\":true,\"fulltext\":false},\"GlobalSearchBlubber\":{\"order\":13,\"active\":true,\"fulltext\":true}}', 'array', 'global', 'globalsearch', 1530289048, 1530289048, 'Aktivierung und Reihenfolge der Module in der globalen Suche');
-INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('HELP_CONTENT_CURRENT_VERSION', '3.1', 'string', 'global', 'global', 1416496271, 1416496271, 'Aktuelle Version der Helpbar-Einträge in Stud.IP');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('HIDE_STUDYGROUPS_FROM_PROFILE', '0', 'boolean', 'global', 'studygroups', 1640797277, 1640797277, 'Sollen Studiengruppen bei der Anzeige der Veranstaltungen auf dem Profil versteckt werden?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('HOMEPAGEPLUGIN_DEFAULT_ACTIVATION', '0', 'boolean', 'global', 'privacy', 1403258014, 1403258014, 'Sollen neu installierte Homepageplugins automatisch für Benutzer aktiviert sein?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('HOMEPAGE_VISIBILITY_DEFAULT', 'VISIBILITY_STUDIP', 'string', 'global', 'privacy', 1293118059, 1293118059, 'Standardsichtbarkeit für Homepageelemente, falls der Benutzer nichts anderes eingestellt hat. Gültige Werte sind: VISIBILITY_ME, VISIBILITY_BUDDIES, VISIBILITY_DOMAIN, VISIBILITY_STUDIP, VISIBILITY_EXTERN');
@@ -301,10 +297,14 @@ INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `c
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('MY_INSTITUTES_INCLUDE_CHILDREN', '1', 'boolean', 'user', '', 1530289048, 1530289048, 'Sollen untergeordnete Institute mit angezeigt werden in der Veranstaltungsübersicht für Admins?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('NEWS_DISABLE_GARBAGE_COLLECT', '1', 'boolean', 'global', '', 1123751948, 1123751948, 'Schaltet den Garbage-Collect für News ein oder aus');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('NEWS_DISPLAY', '2', 'integer', 'global', 'view', 1462287310, 1462287310, 'Legt fest, wie sich News für Anwender präsentieren. (2 zeigt sowohl Autor als auch Zugriffszahlen an. 1 zeigt nur den Autor an. 0 blendet beides für Benutzer aus.');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('NEWS_ONLY_SYSTEM_ROLES', '1', 'boolean', 'global', '', 1656513810, 1656513810, 'Über diese Option wird die Auswahl der rollenspezifischen Ankündigungen auf Systemrollen begrenzt');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('NEWS_RSS_EXPORT_ENABLE', '1', 'boolean', 'global', '', 0, 0, 'Schaltet die Möglichkeit des rss-Export von privaten News global ein oder aus');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('NEW_INDICATOR_THRESHOLD', '90', 'integer', 'global', 'global', 1448561064, 1448561064, 'Gibt an, nach wieviel Tagen ein Eintrag als alt angesehen und nicht mehr rot markiert werden soll (0 angeben, um nur das tatsäcliche Alter) zu betrachten.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('NOTIFY_ON_WAITLIST_ADVANCE', '1', 'boolean', 'global', 'global', 1543856103, 1543856103, 'Versendet Nachrichten an Teilnehmer bei jeder Änderung der Position auf der Warteliste');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('OERCAMPUS_ENABLED', '1', 'boolean', 'global', 'OERCampus', 1640797278, 1640797278, 'Ist der OER Campus aktiviert?');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('OERCAMPUS_ENABLE_TWILLO', '0', 'boolean', 'global', 'OERCampus', 1656513810, 1656513810, 'Soll der Upload zu twillo.de vom OERCampus möglich sein? Folgen Sie dazu der Installationsanleitung.');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('OERCAMPUS_TWILLO_APPID', '', 'string', 'global', 'OERCampus', 1656513810, 1656513810, 'Welche ID hat dieses Stud.IP, wenn es mit twillo.de kommuniziert?');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('OERCAMPUS_TWILLO_DFNAAIID_DATAFIELD', '', 'string', 'global', 'OERCampus', 1656513810, 1656513810, 'Welches Datenfeld eines Nutzers trägt dessen DFN-AAI-ID?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('OER_DISABLE_LICENSE', '0', 'boolean', 'global', 'OERCampus', 1640797278, 1640797278, 'Sollen die Lizenzen deaktiviert / nicht angezeigt werden?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('OER_PUBLIC_STATUS', 'autor', 'string', 'global', 'OERCampus', 1640797278, 1640797278, 'Ab welchem Nutzerstatus (nobody, user, autor, tutor, dozent) darf man den Marktplatz sehen?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('OER_TITLE', 'OER Campus', 'string', 'global', 'OERCampus', 1640797278, 1640797278, 'Name des OER Campus in Stud.IP');
@@ -322,6 +322,7 @@ INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `c
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('PROFILE_LAST_VISIT', '0', 'integer', 'user', '', 1403258015, 1403258015, 'Zeitstempel des letzten Besuchs der Profilseite');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('PROPOSED_TEACHER_LABELS', '', 'string', 'global', 'global', 1326799692, 1326799692, 'Write a list of comma separated possible labels for teachers and tutor here.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RANGE_TREE_ADMIN_PERM', 'root', 'string', 'global', 'permissions', 1219328498, 1219328498, 'mit welchem Status darf die Einrichtungshierarchie bearbeitet werden (admin oder root)');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_ADDITIONAL_TEXT_ROOM_EXPORT', '', 'string', 'global', 'resources', 1656513808, 1656513808, 'Zusatztext, der beim Seriendruck unter jedem Raumplan angezeigt werden soll');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_ALLOW_ROOM_PROPERTY_REQUESTS', '1', 'boolean', 'global', 'resources', 0, 1074780851, 'Schaltet in der Ressourcenverwaltung die Möglichkeit, im Rahmen einer Anfrage Raumeigenschaften zu wünschen, ein oder aus');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_ALLOW_ROOM_REQUESTS', '1', 'boolean', 'global', 'resources', 0, 1100709567, 'Schaltet in der Ressourcenverwaltung das System zum Stellen und Bearbeiten von Raumanfragen ein oder aus');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE', '50', 'integer', 'global', 'resources', 0, 1100709567, 'Wert (in Prozent), ab dem ein Raum mit Einzelbelegungen (statt Serienbelegungen) gefüllt wird, wenn dieser Anteil an möglichen Belegungen bereits durch andere Belegungen zu Überschneidungen führt');
@@ -329,9 +330,11 @@ INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `c
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_ALLOW_VIEW_RESOURCE_OCCUPATION', '1', 'boolean', 'global', 'resources', 1462287310, 1462287310, 'Dürfen alle Nutzer Ressourcenbelegungen einsehen?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_BOOKING_PLAN_END_HOUR', '21:00', 'string', 'global', 'resources', 1591630777, 1591630777, 'The start hour for the default view of the booking plan.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_BOOKING_PLAN_START_HOUR', '07:00', 'string', 'global', 'resources', 1591630777, 1591630777, 'The start hour for the default view of the booking plan.');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_CONFIRM_PLAN_DRAG_AND_DROP', '0', 'boolean', 'user', 'resources', 1656513808, 1656513808, 'Soll beim Verschieben von Buchungen im Belegungsplan eine Sicherheitsabfrage erscheinen?');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_DIRECT_ROOM_REQUESTS_ONLY', '0', 'boolean', 'global', 'resources', 1591630777, 1591630777, 'Restricts room requests so that only specific rooms can be requested.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_DISPLAY_CURRENT_REQUESTS_IN_OVERVIEW', '1', 'boolean', 'global', 'resources', 1591630777, 1591630777, 'Whether to display the list with current requests in the room management overview (true) or not (false).');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_ENABLE', '0', 'boolean', 'global', '', 0, 0, 'Enable the Stud.IP resource management module');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT', '[0,1,2]', 'array', 'global', 'resources', 1656513808, 1656513808, 'Standardmäßig zu exportierende Belegungstypen');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_MAP_SERVICE_URL', 'https://www.openstreetmap.org/#map=19/LATITUDE/LONGITUDE', 'string', 'global', 'resources', 1591630777, 1591630777, 'The URL for a map service if you wish to use another service instead of OpenStreetMap. The default is: https://www.openstreetmap.org/#map=17/LATITUDE/LONGITUDE (LATITUDE and LONGITUDE are placeholders!)');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_MAX_PREPARATION_TIME', '120', 'integer', 'global', 'resources', 1591630777, 1591630777, 'The maximum amount of time that can be used for preparation before the actual booking begins. The value represents minutes, not hours!');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('RESOURCES_MIN_BOOKING_PERMS', 'autor', 'string', 'global', 'resources', 1591630777, 1591630777, 'The minimum permission level for global booking rights on a resource.');
@@ -367,13 +370,16 @@ INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `c
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('STUDYGROUPS_INVISIBLE_ALLOWED', '0', 'boolean', 'global', 'studygroups', 1403258018, 1403258018, 'Ermöglicht unsichtbare Studiengruppen');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('STUDYGROUP_ACCEPTANCE_TEXT', 'Die Moderatorinnen und Moderatoren der Studiengruppe können Ihren Aufnahmewunsch bestätigen oder ablehnen. Erst nach Bestätigung erhalten Sie vollen Zugriff auf die Gruppe.', 'string', 'global', 'studygroups', 1448561064, 1448561064, 'Text, der angezeigt wird, wenn man sich in eine zugriffsbeschränkte Studiengruppe eintragen möchte');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('STUDYGROUP_DEFAULT_INST', '', 'string', 'global', 'studygroups', 1258042892, 1258042892, 'Die Standardeinrichtung für Studiengruppen kann hier gesetzt werden.');
-INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('STUDYGROUP_TERMS', 'Mir ist bekannt, dass ich die Gruppe nicht zu rechtswidrigen Zwecken nutzen darf. Dazu zählen u.a. Urheberrechtsverletzungen, Beleidigungen und andere Persönlichkeitsdelikte.\n\nIch erkläre mich damit einverstanden, daß Administratorinnen und Administratoren die Inhalte der Gruppe zu Kontrollzwecken einsehen dürfen.', 'string', 'global', 'studygroups', 1257956185, 1257956185, 'Hier werden die Nutzungsbedinungen der Studiengruppen hinterlegt.');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('STUDYGROUP_TERMS', 'Mir ist bekannt, dass ich die Gruppe nicht zu rechtswidrigen Zwecken nutzen darf. Dazu zählen u.a. Urheberrechtsverletzungen, Beleidigungen und andere Persönlichkeitsdelikte.\n\nIch erkläre mich damit einverstanden, daß Administratorinnen und Administratoren die Inhalte der Gruppe zu Kontrollzwecken einsehen dürfen.', 'i18n', 'global', 'studygroups', 1257956185, 1257956185, 'Hier werden die Nutzungsbedinungen der Studiengruppen hinterlegt.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('SYSTEMCACHE', '{\"type\":\"StudipDbCache\",\"config\":[]}', 'array', 'global', 'global', 1640797278, 1640797278, 'Typ und Konfiguration des zu verwendenden Systemcaches');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('TERMS_ACCEPTED', '0', 'boolean', 'user', '', 1640797279, 1640797279, 'Die Nutzungsbedingungen wurden akzeptiert');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('TERMS_CONFIG', '{\"compulsory\":false,\"denial_message\":\"\"}', 'array', 'global', 'global', 1607702429, 1607702429, 'In case the terms are not compulsory, user can deny them.if denial_message is not set, a default text is displayed.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('TFA_MAX_TRIES', '3', 'integer', 'global', 'Zwei-Faktor-Authentifizierung', 1573236813, 1573236813, 'Maximale Anzahl fehlerhafter Versuche innerhalb eines Zeitraums');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('TFA_MAX_TRIES_TIMESPAN', '300', 'integer', 'global', 'Zwei-Faktor-Authentifizierung', 1573236813, 1573236813, 'Zeitraum in Sekunden, nach dem fehlerhafte Versuche vergessen werden');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('TFA_PERMS', 'root', 'string', 'global', 'Zwei-Faktor-Authentifizierung', 1573236813, 1573236813, 'Systemrollen für die die Zwei-Faktor-Authentifizierung aktiviert ist (kommaseparierte Liste, mögliche Werte: autor, tutor, dozent, admin, root)');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('TFA_TEXT_APP', 'Richten Sie dafür eine geeignete OTP-Authenticator-App ein. Hier finden Sie eine Liste bekannter und kompatibler Apps:\n- [Authy]https://authy.com/\n- [FreeOTP]https://freeotp.github.io/\n- Google Authenticator: [Android]https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2 oder [iOS]https://apps.apple.com/app/google-authenticator/id388497605\n- [LastPass Authenticator]https://lastpass.com/auth/\n- [Microsoft Authenticator]https://www.microsoft.com/authenticator', 'i18n', 'global', 'Zwei-Faktor-Authentifizierung', 1656513808, 1656513808, 'Text, der als Einleitung beim Einrichten der Zwei-Faktor-Authentisierung via App angezeigt wird');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('TFA_TEXT_INTRODUCTION', 'Mittels Zwei-Faktor-Authentifizierung können Sie Ihr Konto schützen, indem bei jedem Login ein Token von Ihnen eingegeben werden muss. Dieses Token erhalten Sie entweder per E-Mail oder können es über eine geeignete Authenticator-App erzeugen lassen.', 'i18n', 'global', 'Zwei-Faktor-Authentifizierung', 1656513808, 1656513808, 'Text, der als Einleitung beim Einrichten der Zwei-Faktor-Authentisierung angezeigt wird');
+INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('TFA_TRUST_DURATION', '30', 'integer', 'global', 'Zwei-Faktor-Authentifizierung', 1656513809, 1656513809, 'Dauer, denen Geräte vertraut werden soll in Tagen (0 für dauerhaftes Vertrauen)');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('TOURS_ENABLE', '1', 'boolean', 'global', 'global', 1416496223, 1416496223, 'Aktiviert die Funktionen zum Anbieten von Touren in Stud.IP');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('UNI_NAME_CLEAN', 'Stud.IP', 'string', 'global', 'global', 1510849314, 1510849314, 'Name der Stud.IP-Installation bzw. Hochschule.');
 INSERT INTO `config` (`field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`) VALUES('USERNAME_REGULAR_EXPRESSION', '/^([a-zA-Z0-9_@.-]{4,})$/', 'string', 'global', 'global', 1510849314, 1510849314, 'Regex for allowed characters in usernames');
@@ -1020,21 +1026,28 @@ INSERT INTO `help_tour_steps` (`tour_id`, `step`, `title`, `tip`, `orientation`,
 INSERT INTO `help_tour_steps` (`tour_id`, `step`, `title`, `tip`, `orientation`, `interactive`, `css_selector`, `route`, `action_prev`, `action_next`, `author_email`, `mkdate`, `chdate`) VALUES('fa963d2ca827b28e0082e98aafc88765', 9, 'Study groups and institutes', 'There is moreover the possibility to access personal study groups or institutes.', 'R', 0, '#nav_browse_my_institutes A', 'dispatch.php/my_courses', '', '', '', 1405932519, 0);
 
 --
+-- Daten für Tabelle `i18n`
+--
+
+INSERT INTO `i18n` (`object_id`, `table`, `field`, `lang`, `value`) VALUES('3c28f017886d9acf0b0f654195ec478f', 'config', 'value', 'en_GB', 'Using two-factor authentication you can protect your account by entering a token on each login. You get that token either via E-Mail or by using an appropriate authenticator app.');
+INSERT INTO `i18n` (`object_id`, `table`, `field`, `lang`, `value`) VALUES('e98bde4d61d028203eb3c2c26fa5ac4a', 'config', 'value', 'en_GB', 'Set up a suitable OTP authenticator app for this purpose. Here you will find a list of known and compatible apps:\n- [Authy]https://authy.com/\n- [FreeOTP]https://freeotp.github.io/\n- Google Authenticator: [Android]https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2 oder [iOS]https://apps.apple.com/app/google-authenticator/id388497605\n- [LastPass Authenticator]https://lastpass.com/auth/\n- [Microsoft Authenticator]https://www.microsoft.com/authenticator');
+
+--
 -- Daten für Tabelle `licenses`
 --
 
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-1.0', 'Creative Commons Attribution 1.0 Generic', 'https://creativecommons.org/licenses/by/1.0/legalcode', 0, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-2.0', 'Creative Commons Attribution 2.0 Generic', 'https://creativecommons.org/licenses/by/2.0/legalcode', 0, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-2.5', 'Creative Commons Attribution 2.5 Generic', 'https://creativecommons.org/licenses/by/2.5/legalcode', 0, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-3.0', 'Creative Commons Attribution 3.0 Unported', 'https://creativecommons.org/licenses/by/3.0/legalcode', 0, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-4.0', 'Creative Commons Attribution 4.0 International', 'https://creativecommons.org/licenses/by/4.0/legalcode', 0, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-SA-1.0', 'Creative Commons Attribution Share Alike 1.0 Generic', 'https://creativecommons.org/licenses/by-sa/1.0/legalcode', 0, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-SA-2.0', 'Creative Commons Attribution Share Alike 2.0 Generic', 'https://creativecommons.org/licenses/by-sa/2.0/legalcode', 0, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-SA-2.5', 'Creative Commons Attribution Share Alike 2.5 Generic', 'https://creativecommons.org/licenses/by-sa/2.5/legalcode', 0, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-SA-3.0', 'Creative Commons Attribution Share Alike 3.0 Unported', 'https://creativecommons.org/licenses/by-sa/3.0/legalcode', 0, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-BY-SA-4.0', 'Creative Commons Attribution Share Alike 4.0 International', 'https://creativecommons.org/licenses/by-sa/4.0/legalcode', 1, NULL, 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC-PDDC', 'Creative Commons Public Domain Dedication and Certification', 'https://creativecommons.org/licenses/publicdomain/', 0, 'Diese Lizenz ist nur sinnvoll, wenn Sie Material eintragen, das gemeinfrei ist. Gemeinfreie Materialien stammen von Autoren, die mindetens 80 Jahre tot sind, oder von Autoren, die im Ausland leben und ihre Werke unter die sogenannte Public Domain gestellt haben. Diese Lizenz ist nicht sinnvoll für Werke, bei denen ein Copyright besteht.', 1640797278, 1640797278);
-INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `chdate`, `mkdate`) VALUES('CC0-1.0', 'Creative Commons Zero v1.0 Universal', 'https://creativecommons.org/publicdomain/zero/1.0/legalcode', 0, NULL, 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-1.0', 'Creative Commons Attribution 1.0 Generic', 'https://creativecommons.org/licenses/by/1.0/legalcode', 0, NULL, 'CC_BY', '1.0', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-2.0', 'Creative Commons Attribution 2.0 Generic', 'https://creativecommons.org/licenses/by/2.0/legalcode', 0, NULL, 'CC_BY', '2.0', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-2.5', 'Creative Commons Attribution 2.5 Generic', 'https://creativecommons.org/licenses/by/2.5/legalcode', 0, NULL, 'CC_BY', '2.5', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-3.0', 'Creative Commons Attribution 3.0 Unported', 'https://creativecommons.org/licenses/by/3.0/legalcode', 0, NULL, 'CC_BY', '3.0', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-4.0', 'Creative Commons Attribution 4.0 International', 'https://creativecommons.org/licenses/by/4.0/legalcode', 0, NULL, 'CC_BY', '4.0', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-SA-1.0', 'Creative Commons Attribution Share Alike 1.0 Generic', 'https://creativecommons.org/licenses/by-sa/1.0/legalcode', 0, NULL, 'CC_BY_SA', '1.0', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-SA-2.0', 'Creative Commons Attribution Share Alike 2.0 Generic', 'https://creativecommons.org/licenses/by-sa/2.0/legalcode', 0, NULL, 'CC_BY_SA', '2.0', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-SA-2.5', 'Creative Commons Attribution Share Alike 2.5 Generic', 'https://creativecommons.org/licenses/by-sa/2.5/legalcode', 0, NULL, 'CC_BY_SA', '2.5', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-SA-3.0', 'Creative Commons Attribution Share Alike 3.0 Unported', 'https://creativecommons.org/licenses/by-sa/3.0/legalcode', 0, NULL, 'CC_BY_SA', '3.0', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-BY-SA-4.0', 'Creative Commons Attribution Share Alike 4.0 International', 'https://creativecommons.org/licenses/by-sa/4.0/legalcode', 1, NULL, 'CC_BY_SA', '4.0', 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC-PDDC', 'Creative Commons Public Domain Dedication and Certification', 'https://creativecommons.org/licenses/publicdomain/', 0, 'Diese Lizenz ist nur sinnvoll, wenn Sie Material eintragen, das gemeinfrei ist. Gemeinfreie Materialien stammen von Autoren, die mindetens 80 Jahre tot sind, oder von Autoren, die im Ausland leben und ihre Werke unter die sogenannte Public Domain gestellt haben. Diese Lizenz ist nicht sinnvoll für Werke, bei denen ein Copyright besteht.', NULL, NULL, 1640797278, 1640797278);
+INSERT INTO `licenses` (`identifier`, `name`, `link`, `default`, `description`, `twillo_licensekey`, `twillo_cclicenseversion`, `chdate`, `mkdate`) VALUES('CC0-1.0', 'Creative Commons Zero v1.0 Universal', 'https://creativecommons.org/publicdomain/zero/1.0/legalcode', 0, NULL, 'CC_0', '1.0', 1640797278, 1640797278);
 
 --
 -- Daten für Tabelle `loginbackgrounds`
@@ -1088,7 +1101,7 @@ INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, 
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`, `filename`, `class`, `type`, `mkdate`, `chdate`) VALUES('3f9b68eacae768ff01cc1cc2d0d82174', 'MVV_FACHBERATER_NEW', 'MVV: Person zu Fach Zuweisung erstellen', '%user weist dem Studiengangteil %stgteil(%affected) %user(%coaffected) zu.', 1, 0, NULL, 'MVV', 'core', NULL, NULL);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`, `filename`, `class`, `type`, `mkdate`, `chdate`) VALUES('40455e06f6a679cd87c68c375c9dfa5a', 'MVV_STGTEILBEZ_DEL', 'MVV: Studiengangteil-Bezeichnung löschen', '%user löscht Studiengangteil-Bezeichnung %stgteilbez(%affected).', 1, 0, NULL, 'MVV', 'core', NULL, NULL);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`, `filename`, `class`, `type`, `mkdate`, `chdate`) VALUES('428c09d5a31b1057b08ca5e3b3877109', 'MVV_FACHBERATER_UPDATE', 'MVV: Person zu Fach Zuweisung ändern', '%user ändert die Zuweisung von %user(%coaffected) zum Studiengangteil %stgteil(%affected).', 1, 0, NULL, 'MVV', 'core', NULL, NULL);
-INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`, `filename`, `class`, `type`, `mkdate`, `chdate`) VALUES('42b01c873e3066a840ab3237e3aa0911', 'RES_PERM_CHANGE', 'Änderung der Berechtigungsstufe an einer Ressource.', NULL, 1, 0, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`, `filename`, `class`, `type`, `mkdate`, `chdate`) VALUES('42b01c873e3066a840ab3237e3aa0911', 'RES_PERM_CHANGE', 'Änderung der Berechtigungsstufe an einer Ressource.', '%user ändert Berechtigung von %res(%affected): %info', 1, 0, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`, `filename`, `class`, `type`, `mkdate`, `chdate`) VALUES('447d6ae1b51b97b04f7ae290c6b002d7', 'MVV_DOKUMENT_DEL', 'MVV: Dokument löschen', '%user löscht Dokument %dokument(%affected).', 1, 0, NULL, 'MVV', 'core', NULL, NULL);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`, `filename`, `class`, `type`, `mkdate`, `chdate`) VALUES('4490aa3d29644e716440fada68f54032', 'LOG_ERROR', 'Allgemeiner Log-Fehler', 'Allgemeiner Logging-Fehler, Details siehe Debug-Info.', 1, 0, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`, `filename`, `class`, `type`, `mkdate`, `chdate`) VALUES('46bc7faabfc73864998b561b1011e3fe', 'RES_REQUEST_UPDATE', 'Geänderte Raumanfrage', '%user ändert Raumanfrage für %sem(%affected), gewünschter Raum: %res(%coaffected), %info', 0, 0, NULL, NULL, NULL, NULL, NULL);
@@ -1446,354 +1459,24 @@ INSERT INTO `roles_studipperms` (`roleid`, `permname`) VALUES(6, 'tutor');
 INSERT INTO `roles_user` (`roleid`, `userid`, `institut_id`) VALUES(7, 'nobody', '');
 
 --
--- Daten für Tabelle `schema_versions`
+-- Daten für Tabelle `schema_version`
 --
 
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 1);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 2);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 3);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 4);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 5);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 6);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 7);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 8);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 9);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 10);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 11);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 12);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 13);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 14);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 15);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 16);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 17);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 18);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 19);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 21);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 22);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 23);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 24);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 25);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 26);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 27);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 28);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 29);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 30);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 31);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 32);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 33);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 34);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 35);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 36);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 37);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 38);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 39);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 40);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 41);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 42);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 43);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 44);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 45);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 46);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 47);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 48);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 49);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 50);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 51);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 52);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 53);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 54);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 55);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 56);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 57);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 58);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 59);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 60);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 61);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 62);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 63);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 64);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 65);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 66);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 67);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 68);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 69);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 70);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 71);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 72);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 73);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 74);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 75);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 76);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 77);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 78);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 79);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 80);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 81);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 82);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 83);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 84);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 85);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 86);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 87);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 88);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 89);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 90);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 91);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 92);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 93);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 94);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 95);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 96);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 97);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 98);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 99);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 100);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 101);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 102);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 103);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 104);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 105);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 106);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 107);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 108);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 109);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 110);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 111);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 112);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 113);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 114);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 115);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 116);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 117);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 118);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 119);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 120);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 121);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 122);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 123);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 124);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 125);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 126);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 127);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 128);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 129);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 130);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 131);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 132);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 133);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 134);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 135);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 136);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 137);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 138);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 139);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 140);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 141);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 142);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 143);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 144);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 145);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 146);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 147);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 148);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 149);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 150);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 151);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 152);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 153);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 154);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 155);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 156);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 157);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 158);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 159);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 160);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 161);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 162);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 163);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 164);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 165);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 166);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 167);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 168);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 169);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 170);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 171);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 172);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 173);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 174);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 175);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 176);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 177);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 178);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 179);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 180);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 181);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 182);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 183);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 184);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 185);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 186);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 187);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 188);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 189);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 190);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 191);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 192);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 193);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 194);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 195);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 196);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 197);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 198);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 199);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 200);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 201);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 202);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 203);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 204);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 205);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 206);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 207);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 208);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 209);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 210);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 211);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 212);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 213);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 214);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 215);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 216);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 217);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 218);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 219);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 220);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 221);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 222);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 223);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 224);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 225);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 226);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 227);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 228);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 229);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 230);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 231);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 232);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 233);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 234);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 235);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 236);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 237);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 238);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 239);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 240);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 241);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 242);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 243);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 244);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 245);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 246);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 247);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 248);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 249);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 250);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 251);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 252);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 253);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 254);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 255);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 256);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 257);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 258);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 259);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20190702);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20190705);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20190823);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20190903);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20190904);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20190917);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20190919);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191002);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191014);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191018);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191105);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191112);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191115);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191120);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191122);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191210);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20191211);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20192208);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200108);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200306);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200307);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200414);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200423);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200514);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200515);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200522);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200709);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200713);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200811);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200909);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20200910);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201002);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201005);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201007);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201023);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201024);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201025);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201103);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201108);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201110);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201113);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201114);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201115);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201116);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201203);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201211);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20201212);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210104);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210108);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210201);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210204);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210212);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210226);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210317);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210322);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210406);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210422);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210425);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210503);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210505);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20210511);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20211015);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20211108);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20211115);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 20211117);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 201908014);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 201908015);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 201908016);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 201908017);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 202001291);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 202011031);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 202102161);
-INSERT INTO `schema_versions` (`domain`, `version`) VALUES('studip', 202106231);
+INSERT INTO `schema_version` (`domain`, `branch`, `version`) VALUES('studip', '1', 327);
+INSERT INTO `schema_version` (`domain`, `branch`, `version`) VALUES('studip', '5.1', 32);
 
 --
 -- Daten für Tabelle `semester_data`
 --
 
 INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`, `visible`, `external_id`, `mkdate`, `chdate`) VALUES('322f640f3f4643ebe514df65f1163eb1', 'SS 2022', '', '', 1648764000, 1664575199, 1650319200, 1658527199, 1, '', NULL, NULL);
-INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`, `visible`, `external_id`, `mkdate`, `chdate`) VALUES('4967f0a483e36554b77e3dc47aa58941', 'WS 2021/2022', '', '', 1633039200, 1648763999, 1635112800, 1644620399, 1, '', NULL, NULL);
+INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`, `visible`, `external_id`, `mkdate`, `chdate`) VALUES('4967f0a483e36554b77e3dc47aa58941', 'WS 2022/2023', '', '', 1664575200, 1680299999, 1666562400, 1676069999, 1, '', NULL, 1656513998);
 
 --
 -- Daten für Tabelle `semester_holiday`
 --
 
-INSERT INTO `semester_holiday` (`holiday_id`, `semester_id`, `name`, `description`, `beginn`, `ende`, `mkdate`, `chdate`) VALUES('704038f0cb3ea0a285ba0a453788ebed', '', 'Unterbrechung', '', 1640300400, 1641769199, NULL, NULL);
+INSERT INTO `semester_holiday` (`holiday_id`, `semester_id`, `name`, `description`, `beginn`, `ende`, `mkdate`, `chdate`) VALUES('704038f0cb3ea0a285ba0a453788ebed', '', 'Unterbrechung', '', 1671836400, 1673045999, NULL, 1656514040);
 
 --
 -- Daten für Tabelle `sem_classes`
@@ -1823,17 +1506,15 @@ INSERT INTO `sem_types` (`id`, `name`, `class`, `mkdate`, `chdate`) VALUES(12, '
 INSERT INTO `sem_types` (`id`, `name`, `class`, `mkdate`, `chdate`) VALUES(13, 'sonstige', 3, 1366882120, 1366882120);
 INSERT INTO `sem_types` (`id`, `name`, `class`, `mkdate`, `chdate`) VALUES(99, 'Studiengruppe', 99, 1366882120, 1366882120);
 
-
 --
 -- Daten für Tabelle `siteinfo_details`
 --
 
-INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(1, 1, NULL, '[lang=de]Ansprechpartner[/lang][lang=en]Contact[/lang]', '[style=float: right]\n[img]http://www.studip.de/images/studipanim.gif\n**Version:** (:version:)\n[/style]\n[lang=de]Für diese Stud.IP-Installation ((:uniname:)) sind folgende Administratoren zuständig:[/lang]\n[lang=en]The following administrators are responsible for this Stud.IP installation ((:uniname:)):[/lang]\n(:rootlist:)\n[lang=de]allgemeine Anfragen wie Passwort-Anforderungen u.a. richten Sie bitte an:[/lang]\n[lang=en]General queries e.g., password queries, please contact:[/lang]\n(:unicontact:)\n[lang=de]Folgende Einrichtungen sind beteiligt:\n(Genannt werden die jeweiligen Administratoren der Einrichtungen für entsprechende Anfragen)[/lang]\n[lang=en]The following institutes participate:\n(Named are the institutes administrators responsible for the corresponding query areas)[/lang]\n(:adminlist:)');
-INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(2, 1, NULL, '[lang=de]Entwickler[/lang][lang=en]Developer[/lang]', '[style=float: right]\r\n[img]http://www.studip.de/images/studipanim.gif\r\n**Version:** (:version:)\r\n[/style]\r\n[lang=de]Stud.IP ist ein Open Source Projekt zur Unterstützung von Präsenzlehre an Universitäten, Hochschulen und anderen Bildungseinrichtungen. Das System entstand am Zentrum für interdisziplinäre Medienwissenschaft (ZiM) der Georg-August-Universität Göttingen unter Mitwirkung der Suchi & Berg GmbH (data-quest) , Göttingen. Heute erfolgt die Weiterentwicklung von Stud.IP verteilt an vielen Standorten (Göttingen, Osnabrück, Oldenburg, Bremen, Hannover, Jena und weiteren). Die Koordination der Entwicklung erfolgt durch die Stud.IP-CoreGroup.\r\nStud.IP steht unter der GNU General Public License, Version 2.\r\n\r\nWeitere Informationen finden sie auf ** [www.studip.de]http://www.studip.de **,**  [develop.studip.de]http://develop.studip.de ** und ** [blog.studip.de]http://blog.studip.de **.[/lang]\r\n\r\n[lang=en]Stud.IP is an opensource project for supporting attendance courses offered by universities, institutions of higher education and other educational institutions. The system was established at the Zentrum für interdisziplinäre Medienwissenschaft (ZiM) in the Georg-August-Universität Göttingen in cooperation with Suchi & Berg GmbH (data-quest) , Göttingen. At the present further developing takes place at various locations (among others Göttingen, Osnabrück, Oldenburg, Bremen, Hannover, Jena) under coordination through the Stud.IP-CoreGroup.\r\n\r\nStud.IP is covered by the GNU General Public Licence, version 2.\r\n\r\nFurther information can be found under ** [www.studip.de]http://www.studip.de **,**  [develop.studip.de]http://develop.studip.de ** and ** [blog.studip.de]http://blog.studip.de **.[/lang]\r\n\r\n(:coregroup:)\r\n[lang=de]Sie erreichen uns auch über folgende **Mailinglisten**:\r\n\r\n**Nutzer-Anfragen**, E-Mail: studip-users@lists.sourceforge.net : Fragen, Anregungen und Vorschläge an die Entwickler - bitte __keine__ Passwort Anfragen!\r\n**News-Mailingsliste**, E-Mail: studip-news@lists.sourceforge.net : News rund um Stud.IP (Eintragung notwendig)\r\n\r\nWir laden alle Entwickler, Betreiber und Nutzer von Stud.IP ein, sich auf dem Developer-Server http://develop.studip.de an den Diskussionen rund um die Weiterentwicklung und Nutzung der Plattform zu beteiligen.[/lang]\r\n[lang=en]You can contact us via the following **mailing lists**:\r\n\r\n**User enquiries**, E-Mail: studip-users@lists.sourceforge.net : Questions, suggestions and recommendations to the developers - __please no password queries__!\r\n\r\n**News mailing list**, E-Mail: studip-news@lists.sourceforge.net : News about Stud.IP (registration necessary)\r\n\r\nWe invite all developers, administrators and users of Stud.IP to join the discussions on further developing and using the platform available at the developer server http://develop.studip.de[/lang]');
-INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(3, 2, NULL, '[lang=de]Technik[/lang][lang=en]Technology[/lang]', '[style=float: right]\n[img]https://www.studip.de/images/studipanim.gif\n**Version:** (:version:)\n[/style]\n[lang=de]Stud IP ist ein Open-Source Projekt und steht unter der GNU General Public License. Sämtliche zum Betrieb notwendigen Dateien können unter http://sourceforge.net/projects/studip/ heruntergeladen werden.\nDie technische Grundlage bietet ein LINUX-System mit Apache Webserver sowie eine MySQL Datenbank, die über PHP gesteuert wird.\nIm System findet ein 6-stufiges Rechtesystem Verwendung, das individuell auf verschiedenen Ebenen wirkt - etwa in Veranstaltungen, Einrichtungen, Fakultäten oder systemweit.\n\nDas System wird ständig weiterentwickelt und an die Wünsche unserer Nutzer angepasst - [sagen Sie uns Ihre Meinung!]studip-users@lists.sourceforge.net[/lang]\n[lang=en]Stud.IP is an Open Source Project and is covered by the Gnu General Public License (GPL). All files necessary for operation can be downloaded from http://sourceforge.net/projects/studip/ .\nThe technical basis can be provided by a LINUX system with Apache Webserver and a MySQL database, which is then controlled by PHP.\nThe system features a authorisation system with six ranks, that affects individually different levels - in courses, institutes,faculties or system wide.\n\nThe system is continually being developed and customised to the wishes of our users - [Tell us your opinion!]studip-users@lists.sourceforge.net[/lang]');
+INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(1, 1, NULL, '[lang=de]Ansprechpartner[/lang][lang=en]Contact[/lang]', '[style=float: right]\r\n[img]https://develop.studip.de/logos/logoklein.png\r\n**Version:** (:version:)\r\n[/style]\r\n[lang=de]Für diese Stud.IP-Installation ((:uniname:)) sind folgende Administratoren zuständig:[/lang]\r\n[lang=en]The following administrators are responsible for this Stud.IP installation ((:uniname:)):[/lang]\r\n(:rootlist:)\r\n[lang=de]allgemeine Anfragen wie Passwort-Anforderungen u.a. richten Sie bitte an:[/lang]\r\n[lang=en]General queries e.g., password queries, please contact:[/lang]\r\n(:unicontact:)\r\n[lang=de]Folgende Einrichtungen sind beteiligt:\r\n(Genannt werden die jeweiligen Administratoren der Einrichtungen für entsprechende Anfragen)[/lang]\r\n[lang=en]The following institutes participate:\r\n(Named are the institutes administrators responsible for the corresponding query areas)[/lang]\r\n(:adminlist:)');
+INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(2, 1, NULL, '[lang=de]Entwickler[/lang][lang=en]Developer[/lang]', '[style=float: right]\r\n\r\n[img]https://develop.studip.de/logos/logoklein.png\r\n\r\n**Version:** (:version:)\r\n\r\n[/style]\r\n\r\n[lang=de]Stud.IP ist ein Open Source Projekt zur Unterstützung von Präsenzlehre an Universitäten, Hochschulen und anderen Bildungseinrichtungen. Das System entstand am Zentrum für interdisziplinäre Medienwissenschaft (ZiM) der Georg-August-Universität Göttingen unter Mitwirkung der Suchi & Berg GmbH (data-quest) , Göttingen. Heute erfolgt die Weiterentwicklung von Stud.IP verteilt an vielen Standorten (Göttingen, Osnabrück, Oldenburg, Bremen, Hannover, Jena und weiteren). Die Koordination der Entwicklung erfolgt durch die Stud.IP-CoreGroup.\r\n\r\nStud.IP steht unter der GNU General Public License, Version 2.\r\n\r\n\r\n\r\nWeitere Informationen finden sie auf ** [www.studip.de]http://www.studip.de **,**  [develop.studip.de]http://develop.studip.de **.[/lang]\r\n\r\n\r\n\r\n[lang=en]Stud.IP is an opensource project for supporting attendance courses offered by universities, institutions of higher education and other educational institutions. The system was established at the Zentrum für interdisziplinäre Medienwissenschaft (ZiM) in the Georg-August-Universität Göttingen in cooperation with Suchi & Berg GmbH (data-quest) , Göttingen. At the present further developing takes place at various locations (among others Göttingen, Osnabrück, Oldenburg, Bremen, Hannover, Jena) under coordination through the Stud.IP-CoreGroup.\r\n\r\n\r\n\r\nStud.IP is covered by the GNU General Public Licence, version 2.\r\n\r\n\r\n\r\nFurther information can be found under ** [www.studip.de]http://www.studip.de **,**  [develop.studip.de]http://develop.studip.de **.[/lang]\r\n\r\n\r\n\r\n(:coregroup:)\r\n\r\n[lang=de]Sie erreichen uns auch über folgende **Mailinglisten**:\r\n\r\n\r\n\r\n**Nutzer-Anfragen**, E-Mail: studip-users@lists.sourceforge.net : Fragen, Anregungen und Vorschläge an die Entwickler - bitte __keine__ Passwort Anfragen!\r\n\r\n**News-Mailingsliste**, E-Mail: studip-news@lists.sourceforge.net : News rund um Stud.IP (Eintragung notwendig)\r\n\r\n\r\n\r\nWir laden alle Entwickler, Betreiber und Nutzer von Stud.IP ein, sich auf dem Developer-Server http://develop.studip.de an den Diskussionen rund um die Weiterentwicklung und Nutzung der Plattform zu beteiligen.[/lang]\r\n\r\n[lang=en]You can contact us via the following **mailing lists**:\r\n\r\n\r\n\r\n**User enquiries**, E-Mail: studip-users@lists.sourceforge.net : Questions, suggestions and recommendations to the developers - __please no password queries__!\r\n\r\n\r\n\r\n**News mailing list**, E-Mail: studip-news@lists.sourceforge.net : News about Stud.IP (registration necessary)\r\n\r\n\r\n\r\nWe invite all developers, administrators and users of Stud.IP to join the discussions on further developing and using the platform available at the developer server http://develop.studip.de[/lang]');
+INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(3, 2, NULL, '[lang=de]Technik[/lang][lang=en]Technology[/lang]', '[style=float: right]\r\n[img]https://develop.studip.de/logos/logoklein.png\r\n**Version:** (:version:)\r\n[/style]\r\n[lang=de]Stud IP ist ein Open-Source Projekt und steht unter der GNU General Public License. Sämtliche zum Betrieb notwendigen Dateien können unter http://sourceforge.net/projects/studip/ heruntergeladen werden.\r\nDie technische Grundlage bietet ein LINUX-System mit Apache Webserver sowie eine MySQL Datenbank, die über PHP gesteuert wird.\r\nIm System findet ein 6-stufiges Rechtesystem Verwendung, das individuell auf verschiedenen Ebenen wirkt - etwa in Veranstaltungen, Einrichtungen, Fakultäten oder systemweit.\r\n\r\nDas System wird ständig weiterentwickelt und an die Wünsche unserer Nutzer angepasst - [sagen Sie uns Ihre Meinung!]studip-users@lists.sourceforge.net[/lang]\r\n[lang=en]Stud.IP is an Open Source Project and is covered by the Gnu General Public License (GPL). All files necessary for operation can be downloaded from http://sourceforge.net/projects/studip/ .\r\nThe technical basis can be provided by a LINUX system with Apache Webserver and a MySQL database, which is then controlled by PHP.\r\nThe system features a authorisation system with six ranks, that affects individually different levels - in courses, institutes,faculties or system wide.\r\n\r\nThe system is continually being developed and customised to the wishes of our users - [Tell us your opinion!]studip-users@lists.sourceforge.net[/lang]');
 INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(4, 2, NULL, '[lang=de]Statistik[/lang][lang=en]Statistics[/lang]', '[lang=de]!!Top-Listen aller Veranstaltungen[/lang][lang=en]!!Top list of all courses[/lang]\n[style=float: right]\n[lang=de]!!Statistik[/lang][lang=en]!!statistics[/lang]\n(:indicator seminar_all:)\n(:indicator seminar_archived:)\n(:indicator institute_firstlevel_all:)\n(:indicator institute_secondlevel_all:)\n(:indicator user_admin:)\n(:indicator user_dozent:)\n(:indicator user_tutor:)\n(:indicator user_autor:)\n(:indicator posting:)\n(:indicator document:)\n(:indicator link:)\n(:indicator litlist:)\n(:indicator termin:)\n(:indicator news:)\n(:indicator guestbook:)\n(:indicator vote:)\n(:indicator test:)\n(:indicator evaluation:)\n(:indicator wiki_pages:)\n(:indicator lernmodul:)\n(:indicator resource:)\n[/style]\n(:toplist mostparticipants:)\n(:toplist recentlycreated:)\n(:toplist mostdocuments:)\n(:toplist mostpostings:)\n(:toplist mostvisitedhomepages:)');
 INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(5, 2, NULL, 'History', '(:history:)');
-INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(6, 2, NULL, 'Stud.IP-Blog', '[lang=de]Das Blog der Stud.IP-Entwickler finden Sie auf:[/lang]\n[lang=en]The Stud.IP-Developer-Blog can be found under:[/lang]\nhttp://blog.studip.de');
 INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`) VALUES(7, 1, NULL, 'Datenschutzerklärung', '++**Datenschutzerklärung**++\n\nSie erhalten als Nutzer/-in unserer Internetseite in dieser Datenschutzerklärung notwendige Informationen darüber, wie und in welchem Umfang sowie zu welchem Zweck die  **[Betreibereinrichtung]** Daten von Ihnen erhebt und wie diese verwendet werden. Die Daten werden nur innerhalb der **[Betreibereinrichtung]** verarbeitet und verwendet und nicht an Dritte weitergegeben.\n\n\n++**Rechtsgrundlagen**++\n\nDie Erhebung und Nutzung Ihrer Daten erfolgt streng nach den gesetzlichen Vorgaben. Regelungen dazu finden sich in:\nEuropäische Datenschutzgrundverordnung (EU DSGVO)\nBundesdatenschutzgesetz (BDSG)\nNiedersächsisches Datenschutzgesetz (NDSG)\nTeledienstegesetz (TDG)\nMediendienste-Staatsvertrag (MDStV)\nTeledienstedatenschutzgesetz (TDDSG).\n\n\n++**Personenbezogene Daten**++\n\nPersonenbezogene Daten werden zum Zwecke der administrativen Nutzerverwaltung, zur Kontaktaufnahme und Interaktion mit Ihnen sowie zur Bereitstellung personalisierter Dienste [zur Durchführung Ihres Studium bzw. Ihrer Arbeit an **[Betreibereinrichtung]**] von uns gespeichert.\nFür die Nutzung von Stud.IP  werden folgende Daten abgefragt und gespeichert:\n- Nutzername\n- Vorname, Nachname\n- Mailadresse\n- [ggf. weitere Daten]\n\n\nWeitere Daten, die evtl. Ihnen gespeichert werden, sind Inhalte, die Sie selbst im Rahmen Ihrer Arbeit oder Ihres Studiums in Stud.IP einstellen. Dazu gehören:\n- Freiwillige Angaben zur Person\n- Beiträge in Foren\n- hochgeladene Dateien\n- Chatverläufe in Blubber\n- interne Nachrichten\n- Kalendereinträge und Stundenpläne\n- Teilnahme an Lehrveranstaltungen, Studiengruppen, Orgagremien\n- Persönliche Einstellungen und Konfigurationen\n- [ggf. Plugindaten]\n\n\nDiese Inhalte werden mit Ihrem Klarnamen gespeichert und angezeigt. Sie haben die Möglichkeit über die Privatsphäreeinstellungen selbst zu bestimmen, ob und ggf. welche Personengruppen diese Daten sehen dürfen. Diese Daten werden von Stud.IP intern verschlüsselt abgelegt.\n\n\n++**Aufbewahrungsfristen **++\n\nIhre personenbezogenen Daten werden für die Dauer Ihres Studiums/Ihrer Arbeit bei [Beitreibereinrichtung] gespeichert. Nach Beendigung ihrer Tätigkeit und Ablauf der gesetzlichen Aufbewahrungsfristen werden Ihre Daten gelöscht.\n\n\n++**Auskunft, Löschung, Sperrung**++\n\nSie erhalten jederzeit auf Anfrage Auskunft über die von uns über Sie gespeicherten personenbezogenen Daten sowie dem Zweck von Datenerhebung sowie Datenverarbeitung. Bitte wenden Sie sich hierzu an o.g. Kontaktadresse.\n\nAußerdem haben Sie das Recht, die Berichtigung, die Sperrung oder Löschung Ihrer Daten zu verlangen. Sie können Ihre Einwilligung ohne Angabe von Gründen durch Schreiben an die o.g. Kontakadresse widerrufen. Ihre Daten werden dann umgehend gelöscht. Eine weitere Nutzung der Lernplattform Stud.IP ist dann aber nicht mehr möglich.\n\nAusgenommen von der Löschung sind Daten, die aufgrund gesetzlicher Vorschriften aufbewahrt oder zur ordnungsgemäßen Geschäftsabwicklung benötigt werden. Damit eine Datensperre jederzeit realisiert werden kann, werden Daten zu Kontrollzwecken in einer Sperrdatei vorgehalten.\n\nWerden Daten nicht von einer gesetzlichen Archivierungspflicht erfasst, löschen wir Ihre Daten auf Ihren Wunsch. Greift die Archivierungspflicht, sperren wir Ihre Daten. Für alle Fragen und Anliegen zur Berichtigung, Sperrung oder Löschung von personenbezogenen Daten wenden Sie sich bitte an unsere Datenschutzbeauftragten unter den Kontaktdaten in dieser Datenschutzerklärung bzw. an die im Impressum genannte Adresse.\n\n\n++**Datenübertragbarkeit**++\n\nSie haben das Recht, jederzeit Ihre Daten ausgehändigt zu bekommen. Auf Anfrage stellen wir Ihnen Ihre Daten in menschenlesbaren, gängigen und bearbeitbaren Formaten zur Verfügung.\n\n\n++**Cookies**++\n\nStud.IP verwendet ein Session-Cookie. Diese kleine Textdatei beinhaltet lediglich eine verschlüsselte Zeichenfolge, die bei der Navigation im System hilft. Das Cookie wird bei der Abmeldung aus Stud.IP oder beim Schließen des Browsers gelöscht.\n\n\n++**Server Logfiles**++\n\nMit dem Zugriff auf Stud.IP werden IP-Adresse, Datum, Uhrzeit und Browserversion zum Zeitpunkt des Zugriffs registriert und anonymisiert gespeichert. Die Erhebung und Nutzung dieser Log-File-Daten dient lediglich der Auswertung zu rein statistischen Forschungs- und Evaluationszwecken der Lernplattform, werden also nicht in Verbindung mit Namen oder Mailadresse gespeichert oder ausgewertet. Diese Daten werden für die Zeit von [X] Monaten auf gesicherten Systemen der **[Betreibereinrichtung]** gespeichert und ebenfalls nicht an Dritte weitergegeben.\n\n\n++**SSL-Verschlüsselung**++\n\nDie Verbindung zu Stud.IP erfolgt mit einer SSL-Verschlüsselung. Über SSL verschlüsselte Daten sind nicht von Dritten lesbar. Übermitteln Sie Ihre vertraulichen Informationen nur bei aktivierter SSL-Verschlüsselung und wenden Sie sich im Zweifel an uns.\n\n\n++Kontaktdaten:++\n**Name:**\n**Telefonnummer:**\n**E-Mail-Adresse:**\n**Unternehmensbezeichnung:**\n\n++Datenschutzbeauftragte/-r:++\n**Name:**\n**Telefonnummer:**\n**E-Mail-Adresse:**\n**Unternehmensbezeichnung:**\n\n\n');
 
 --
