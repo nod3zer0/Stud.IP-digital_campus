@@ -18,6 +18,7 @@ class QuestionnaireController extends AuthenticatedController
         class_exists('Vote');
         class_exists('Test');
         class_exists('Freetext');
+        PageLayout::setHelpKeyword('Basis/Votings');
     }
 
     public function overview_action()

@@ -125,6 +125,9 @@ abstract class StudipController extends Trails_Controller
         if (Request::isXhr() && !isset($this->response->headers['X-Title']) && PageLayout::hasTitle()) {
             $this->response->add_header('X-Title', rawurlencode(PageLayout::getTitle()));
         }
+        if (Request::isXhr() && !isset($this->response->headers['X-WikiLink']) && PageLayout::getHelpKeyword()) {
+            $this->response->add_header('X-WikiLink', format_help_url(PageLayout::getHelpKeyword()));
+        }
 
         if ($this->with_session) {
             page_close();
