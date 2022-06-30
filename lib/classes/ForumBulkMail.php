@@ -12,7 +12,8 @@
  * @category    Stud.IP
  */
 
-class ForumBulkMail extends Messaging {
+class ForumBulkMail extends Messaging
+{
     var $bulk_mail;
 
     /**
@@ -29,13 +30,11 @@ class ForumBulkMail extends Messaging {
      * @param string $subject      subject for the message
      * @param string $message_id   the message_id in the database
      */
-    function sendingEmail($rec_user_id, $snd_user_id, $message, $subject, $message_id)
+    public function sendingEmail($rec_user_id, $snd_user_id, $message, $subject, $message_id)
     {
         $receiver = User::find($rec_user_id);
 
         if ($receiver && $receiver->email) {
-            $rec_fullname = 'Sie';
-
             setTempLanguage($receiver->id);
 
             if (empty($this->bulk_mail[md5($message)][getenv('LANG')])) {
@@ -78,10 +77,12 @@ class ForumBulkMail extends Messaging {
     /**
      * Sends the collected messages from sendingMail as e-mail.
      */
-    function bulkSend()
+    public function bulkSend()
     {
         // if nothing to do, return
-        if (empty($this->bulk_mail)) return;
+        if (empty($this->bulk_mail)) {
+            return;
+        }
 
         // send a mail, for each language one
         foreach ($this->bulk_mail as $lang_data) {
@@ -97,34 +98,27 @@ class ForumBulkMail extends Messaging {
                 ->setBodyText($data['text']);
 
                 if (mb_strlen($data['reply_to'])) {
-                    $mail->setSenderEmail($data['reply_to'])
-                         ->setSenderName($snd_fullname);
+                    $mail->setSenderEmail($data['reply_to']);
                 }
 
                 $user_cfg = UserConfig::get($user_id);
-                if ($user_cfg->getValue('MAIL_AS_HTML')) {
-                    $mail->setBodyHtml($mailhtml);
+                if ($user_cfg->MAIL_AS_HTML) {
+                    $mail->setBodyHtml($data['html']);
                 }
 
-                if($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
+                if ($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
                     $message = Message::find($data['message_id']);
 
                     $current_user = User::findCurrent();
 
-                    $message_folder = MessageFolder::findMessageTopFolder(
-                        $message->id,
-                        $current_user->id
-                    );
-
-                    $message_folder = $message_folder->getTypedFolder();
+                    $message_folder = MessageFolder::findTopFolder($message->id);
 
                     $attachments = FileManager::getFolderFilesRecursive(
                         $message_folder,
                         $current_user->id
                     );
 
-
-                    foreach($attachments as $attachment) {
+                    foreach ($attachments as $attachment) {
                         $mail->addStudipAttachment($attachment);
                     }
                 }
