@@ -161,7 +161,7 @@ class StudipLog
      * @param string $name The name of the log action.
      * @return mixed Number of deleted objects or false if action is unknown.
      */
-    public function unregisterAction($name)
+    public static function unregisterAction($name)
     {
         $action = LogAction::findOneByName($name);
         if ($action) {
