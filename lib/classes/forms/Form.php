@@ -336,7 +336,7 @@ class Form extends Part
         $bracket_pos = strpos($requestparam, "[");
         if ($bracket_pos !== false) {
             $requestparam = substr($requestparam, 0, $bracket_pos);
-            $value = Request::getArray($requestparam);
+            $value = \Request::getArray($requestparam);
             foreach ($value as $i => $v) {
                 $value[$i] = $input->dataMapper($v);
             }
