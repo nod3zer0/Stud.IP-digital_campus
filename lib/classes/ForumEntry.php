@@ -827,15 +827,15 @@ class ForumEntry  implements PrivacyObject
                 $search_word = '%'. $val .'%';
                 $zw_search_string = [];
                 if ($options['search_title']) {
-                    $zw_search_string[] .= "name LIKE " . DBManager::get()->quote($search_word);
+                    $zw_search_string[] = "name LIKE " . DBManager::get()->quote($search_word);
                 }
 
                 if ($options['search_content']) {
-                    $zw_search_string[] .= "content LIKE " . DBManager::get()->quote($search_word);
+                    $zw_search_string[] = "content LIKE " . DBManager::get()->quote($search_word);
                 }
 
                 if ($options['search_author']) {
-                    $zw_search_string[] .= "author LIKE " . DBManager::get()->quote($search_word);
+                    $zw_search_string[] = "author LIKE " . DBManager::get()->quote($search_word);
                 }
 
                 if (!empty($zw_search_string)) {
