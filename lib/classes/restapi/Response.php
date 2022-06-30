@@ -41,9 +41,9 @@ class Response implements \ArrayAccess
     /**
      * Finishes the response with the given response renderer.
      *
-     * @param RESTAPI\Renderer\DefaultRenderer $content_renderer Used response
-     *                                         renderer, only applied if body
-     *                                         is not a callable closure
+     * @param Renderer\DefaultRenderer $content_renderer Used response renderer,
+     *                                                   only applied if body is
+     *                                                   not a callable closure
      */
     public function finish($content_renderer)
     {

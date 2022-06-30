@@ -242,7 +242,7 @@ abstract class RouteMap
      * @param mixed  $offset
      * @param mixed  $limit
      *
-     * @return RESTAPI\Routemap Returns instance of self to allow chaining
+     * @return Routemap Returns instance of self to allow chaining
      */
     public function paginate($uri_format, $total, $offset = null, $limit = null)
     {
@@ -266,15 +266,15 @@ abstract class RouteMap
      * Be aware that the passed data has to be already sliced according to
      * the pagination information.
      *
-     * @param Array $data Actual dataset
-     * @return Array Collection "object"
+     * @param array $data Actual dataset
+     * @return array Collection "object"
      */
     public function collect($data)
     {
         $collection = [
             'collection' => $data
         ];
-        if ($this->pagination) {
+        if (is_array($this->pagination)) {
             extract($this->pagination);
 
             $offset = $offset - $offset % $limit;
@@ -1020,9 +1020,9 @@ abstract class RouteMap
      * Extracts defined conditions from a given docblock.
      *
      * @param Docblock $docblock   DocBlock to examine
-     * @param Array    $conditions Optional array of already defined
+     * @param array    $conditions Optional array of already defined
      *                             conditions to extend
-     * @return Array of all extracted conditions with the variable name
+     * @return array of all extracted conditions with the variable name
      *         as key and pattern to match as value
      */
     protected function extractConditions($docblock, $conditions = [])

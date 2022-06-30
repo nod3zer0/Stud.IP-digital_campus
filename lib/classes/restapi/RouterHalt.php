@@ -11,6 +11,7 @@ class RouterHalt extends \Exception
 {
     public function __construct($response)
     {
+        parent::__construct();
         $this->response = $response;
     }
 }

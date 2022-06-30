@@ -5,7 +5,7 @@
  * die für die RESTful Web Services von Stud.IP benötigt werden.
  */
 namespace RESTAPI;
-use BadMethodCallException;
+use RESTAPI\Renderer\DefaultRenderer;
 
 /**
  * Die Aufgabe des Routers ist das Anlegen und Auswerten eines
@@ -145,7 +145,7 @@ class Router
      *                                  Defaults to false.
      *
      * @return Router  returns itself to allow chaining
-     * @throws Exception  if passed HTTP request method is not supported
+     * @throws \Exception  if passed HTTP request method is not supported
      */
     public function register($request_method, $uri_template, $handler, $conditions = [], $source = 'unknown', $allow_nobody = false)
     {
@@ -305,7 +305,7 @@ class Router
      *                              consumer is authorized to,
      *                              defaults to `true`
      *
-     * @return Array list of registered routes
+     * @return array list of registered routes
      */
     public function getRoutes($describe = false, $check_access = true)
     {
@@ -364,7 +364,7 @@ class Router
 
         $content_renderer = $this->negotiateContent($uri);
 
-        list($route, $parameters, $allow_nobody) = $this->matchRoute($uri, $method, $content_renderer);
+        [$route, $parameters, $allow_nobody] = $this->matchRoute($uri, $method, $content_renderer);
         if (!$route) {
             //No route found for the combination of URI and method.
             //We return the allowed methods for the route in the HTTP header:
@@ -472,7 +472,7 @@ class Router
         $handler = $route['handler'];
 
         if (!is_object($handler[0])) {
-            throw new RuntimeException("Handler is not a method.");
+            throw new \RuntimeException("Handler is not a method.");
         }
 
         $handler[0]->init($this, $route);
@@ -502,7 +502,7 @@ class Router
     /**
      * Registers a content renderer.
      *
-     * @param ContentRenderer $renderer    instance of a content renderer
+     * @param DefaultRenderer $renderer    instance of a content renderer
      * @param boolean         $is_default  (optional) set this
      *                                     renderer as default?;
      *                                     defaults to `false`
@@ -560,12 +560,12 @@ class Router
      *
      * @param String $uri     the URI to match
      * @param String $method  the HTTP request method to match
-     * @param ContentRenderer $content_renderer the used
+     * @param DefaultRenderer $content_renderer the used
      *                                          ContentRenderer which
      *                                          is needed to remove
      *                                          a file extension
      *
-     * @return Array  an array containing the matched route and the
+     * @return array  an array containing the matched route and the
      *                found parameters
      */
     protected function matchRoute($uri, $method, $content_renderer)

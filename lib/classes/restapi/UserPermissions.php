@@ -17,7 +17,7 @@ class UserPermissions
      * Permissions object will be cached for each user.
      *
      * @param mixed $user_id Id of user (optional, defaults to global)
-     * @return Permissions Returns permissions object
+     * @return UserPermissions Returns permissions object
      */
     public static function get($user_id = null)
     {
@@ -48,14 +48,12 @@ class UserPermissions
     }
 
     /**
-     * Defines whether access if allowed for the current user to the
+     * Defines whether access is allowed for the current user to the
      * passed route via the passed method.
      *
-     * @param String $route_id Route template (hash)
-     * @param String $method   HTTP method
+     * @param String $user_id Id of the user
      * @param mixed  $granted  Granted state (PHP'ish boolean)
-     * @param bool   $overwrite May values be overwritten
-     * @return bool Indicates if value could be changed.
+     * @return UserPermissions Returns instance of self to allow chaining
      */
     public function set($user_id, $granted = true)
     {
@@ -130,7 +128,7 @@ class UserPermissions
     /**
      * Get a list of all consumer the user has granted acces to.
      *
-     * @return Array List of consumer objects
+     * @return array List of consumer objects
      */
     public function getConsumers()
     {

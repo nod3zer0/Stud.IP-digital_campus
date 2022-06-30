@@ -17,7 +17,7 @@ class ConsumerPermissions
      * Permissions object will be cached for each consumer.
      *
      * @param mixed $consumer_id Id of consumer (optional, defaults to global)
-     * @return Permissions Returns permissions object
+     * @return ConsumerPermissions Returns permissions object
      */
     public static function get($consumer_id = null)
     {
@@ -88,7 +88,7 @@ class ConsumerPermissions
     /**
      * Convenience method for activating all routes in a route map.
      *
-     * @param  RESTAPI\RouteMap $routemap RouteMap to activate
+     * @param  \RESTAPI\RouteMap $routemap RouteMap to activate
      */
     public function activateRouteMap(RouteMap $routemap)
     {
@@ -126,7 +126,7 @@ class ConsumerPermissions
     /**
      * Convenience method for deactivating all routes in a route map.
      *
-     * @param RESTAPIRouteMap $routemap RouteMap to activate
+     * @param \RESTAPI\RouteMap $routemap RouteMap to activate
      */
     public function deactivateRouteMap(RouteMap $routemap)
     {
@@ -144,7 +144,7 @@ class ConsumerPermissions
      *
      * @param String $consumer_id Id of the consumer in question
      * @param bool   $overwrite May values be overwritten
-     * @return Permissions Returns instance of self to allow chaining
+     * @return ConsumerPermissions Returns instance of self to allow chaining
      */
     protected function loadPermissions($consumer_id, $overwrite = false)
     {

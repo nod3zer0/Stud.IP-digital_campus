@@ -75,9 +75,9 @@ abstract class Base extends \SimpleORMap
      * object of the associated type.
      *
      * @param String $id Id of the consumer
-     * @return RESTAPI\Consumer\Base Associated consumer object (derived
+     * @return \RESTAPI\Consumer\Base Associated consumer object (derived
      *                               from consumer base type)
-     * @throws Exception if either consumer id or consumer type is invalid
+     * @throws \Exception if either consumer id or consumer type is invalid
      */
     public static function find($id)
     {
@@ -99,7 +99,7 @@ abstract class Base extends \SimpleORMap
     /**
      * Returns a list of all known consumers.
      *
-     * @return Array List of all known consumers (as specialized consumer
+     * @return array List of all known consumers (as specialized consumer
      *               objects)
      */
     public static function findAll()
@@ -115,14 +115,14 @@ abstract class Base extends \SimpleORMap
      * Creates a new consumer of the given type.
      *
      * @param String $type Name of the type
-     * @return RESTAPI\Consumer\Base Consumer object of the given (derived
+     * @return \RESTAPI\Consumer\Base Consumer object of the given (derived
      *                               from consumer base type)
-     * @throws Exception if type is invalid
+     * @throws \Exception if type is invalid
      */
     public static function create($type)
     {
         if (!isset(self::$known_types[$type])) {
-            throw new Exception('Consumer is of unknown type "' . $type . '"');
+            throw new \Exception('Consumer is of unknown type "' . $type . '"');
         }
 
         return new self::$known_types[$type];
@@ -136,7 +136,7 @@ abstract class Base extends \SimpleORMap
      * @param mixed $request_type Type of request (optional; defaults to any)
      * @return mixed Either the detected consumer or false if no consumer
      *               was detected
-     * @throws Exception if type is invalid
+     * @throws \Exception if type is invalid
      */
     public static function detectConsumer($type = null, $request_type = null)
     {
@@ -145,7 +145,7 @@ abstract class Base extends \SimpleORMap
                  : [$type];
         foreach ($needles as $needle) {
             if (!isset(self::$known_types)) {
-                throw new Exception('Trying to detect consumer of unkown type "' . $needle . '"');
+                throw new \Exception('Trying to detect consumer of unkown type "' . $needle . '"');
             }
             $consumer_class = self::$known_types[$needle];
             if ($consumer = $consumer_class::detect($request_type)) {
@@ -180,11 +180,11 @@ abstract class Base extends \SimpleORMap
     /**
      * Retrieve the api permissions associated with this consumer.
      *
-     * @return RESTAPI\ConsumerPermissions Permission object for this consumer
+     * @return \RESTAPI\ConsumerPermissions Permission object for this consumer
      */
     public function getPermissions()
     {
-        return new RESTAPI\ConsumerPermissions($this->id);
+        return \RESTAPI\ConsumerPermissions::get($this->id);
     }
 
     /**
@@ -192,7 +192,7 @@ abstract class Base extends \SimpleORMap
      * "having a user authenticated by this consumer".
      *
      * @param mixed $user Either a user object or a user id
-     * @return RESTAPI\Consumer\Base Returns instance of self to allow
+     * @return \RESTAPI\Consumer\Base Returns instance of self to allow
      *                               chaining
      */
     public function setUser($user)
