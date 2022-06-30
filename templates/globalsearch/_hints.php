@@ -1,4 +1,4 @@
-<article id="globalsearch-hints">
+<article id="globalsearch-hints" aria-live="polite">
     <section>
         <header>
             <?= _('Hinweis:') ?>
