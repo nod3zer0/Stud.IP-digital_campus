@@ -175,9 +175,10 @@ class InboxOutboxFolder implements FolderType
             _('InboxOutbox-Ordner können nicht bearbeitet werden!')
         );
     }
+
     public function store()
     {
-
+        return false;
     }
 
     /**

@@ -202,7 +202,7 @@ class StandardFolder implements FolderType
     }
 
     /**
-     * @param Request $request
+     * @param array $request
      * @return FolderType|MessageBox
      */
     public function setDataFromEditTemplate($request)
@@ -357,6 +357,8 @@ class StandardFolder implements FolderType
         if ($file_ref) {
             return $file_ref->delete();
         }
+
+        return 0;
     }
 
 

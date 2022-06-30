@@ -136,7 +136,7 @@ class UnknownFolderType implements FolderType
      */
     public function getDescriptionTemplate()
     {
-
+        return '';
     }
 
 
@@ -145,7 +145,7 @@ class UnknownFolderType implements FolderType
      */
     public function getEditTemplate()
     {
-
+        return '';
     }
 
     /**
@@ -153,7 +153,7 @@ class UnknownFolderType implements FolderType
      */
     public function setDataFromEditTemplate($request)
     {
-
+        return MessageBox::error('Not applicable for unknown folder type');
     }
 
     /**

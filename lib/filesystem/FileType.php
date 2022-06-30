@@ -3,6 +3,14 @@
 interface FileType
 {
     /**
+     * StandardFile constructor.
+     * @param $fileref
+     * @param null $file : (optional) Is set if fileref and file are both new and not connected with
+     *                     each other in the database.
+     */
+    public function __construct($fileref, $file = null);
+
+    /**
      * Returns the name of the icon shape that shall be used with the FileType implementation.
      *
      * @param string $role role of icon

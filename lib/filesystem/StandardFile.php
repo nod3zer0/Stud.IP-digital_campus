@@ -30,7 +30,7 @@ class StandardFile implements FileType, ArrayAccess
      * @param null|string $user_id : the id of the user that should own the new file
      * @return FileType|array : FileType (of called class) on success or an array with errors if an error occurred.
      */
-    static public function create($data, $user_id = null)
+    public static function create($data, $user_id = null)
     {
         $errors = [];
         $user_id || $user_id = $GLOBALS['user']->id;

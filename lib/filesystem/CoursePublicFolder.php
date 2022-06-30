@@ -38,6 +38,7 @@ class CoursePublicFolder extends StandardFolder
         if ($course && !$course->isNew()) {
             return Seminar_Perm::get()->have_studip_perm('tutor', $course->id, $user_id);
         }
+        return false;
     }
 
     public function getIcon($role = Icon::DEFAULT_ROLE)

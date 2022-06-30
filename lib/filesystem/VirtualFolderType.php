@@ -165,6 +165,7 @@ class VirtualFolderType implements FolderType
      */
     public function setDataFromEditTemplate($request)
     {
+        return MessageBox::error('Not applicable for virtual folder type');
     }
 
     /**
@@ -257,11 +258,9 @@ class VirtualFolderType implements FolderType
         return true;
     }
 
-    /**
-     *
-     */
     public function store()
     {
+        return 0;
     }
 
     /**

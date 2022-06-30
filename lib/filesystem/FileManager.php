@@ -742,7 +742,7 @@ class FileManager
                     return [_('Datei konnte nicht gespeichert werden.')];
                 }
             } else {
-                return $error;
+                return [$error];
             }
 
         } else {
@@ -1081,7 +1081,7 @@ class FileManager
                     $file_ref = FileRef::build((array) $file_ref, false);
                     $file_ref->setFolderType('foldertype', $source_folder);
                 }
-                $result = self::moveFileRef($file_ref, $new_folder, $user);
+                $result = self::moveFile($file_ref->getFileType(), $new_folder, $user);
                 if (!$result instanceof FileRef) {
                     //error
                     return $result;

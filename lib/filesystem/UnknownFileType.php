@@ -20,7 +20,7 @@ class UnknownFileType implements FileType, ArrayAccess
      */
     protected $fileref = null;
 
-    public function __construct($fileref = null)
+    public function __construct($fileref = null, $file = null)
     {
         $this->fileref = $fileref;
     }
@@ -151,6 +151,7 @@ class UnknownFileType implements FileType, ArrayAccess
      */
     public function getPath(): string
     {
+        return '';
     }
 
     /**
@@ -210,6 +211,7 @@ class UnknownFileType implements FileType, ArrayAccess
      */
     public function delete()
     {
+        return 0;
     }
 
     /**
@@ -272,6 +274,7 @@ class UnknownFileType implements FileType, ArrayAccess
      */
     public function getAdditionalColumnOrderWeigh($column_index)
     {
+        return 0;
     }
 
     /**
@@ -279,5 +282,6 @@ class UnknownFileType implements FileType, ArrayAccess
      */
     public function getInfoTemplate(bool $include_downloadable_infos = false)
     {
+        return '';
     }
 }

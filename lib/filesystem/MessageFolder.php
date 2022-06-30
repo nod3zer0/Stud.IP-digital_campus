@@ -236,6 +236,7 @@ class MessageFolder extends StandardFolder implements FolderType
      */
     public function setDataFromEditTemplate($request)
     {
+        return MessageBox::error('Not applicable for message folders');
     }
 
     /**
@@ -307,6 +308,7 @@ class MessageFolder extends StandardFolder implements FolderType
      */
     public function deleteSubfolder($subfolder_id)
     {
+        return false;
     }
 
     /**

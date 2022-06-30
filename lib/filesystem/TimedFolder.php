@@ -42,6 +42,7 @@ class TimedFolder extends PermissionEnabledFolder
         if ($course && !$course->isNew()) {
             return Seminar_Perm::get()->have_studip_perm('tutor', $course->id, $user_id);
         }
+        return false;
     }
 
     /**

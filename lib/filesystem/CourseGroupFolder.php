@@ -40,12 +40,14 @@ class CourseGroupFolder extends StandardFolder
         if ($course && !$course->isNew()) {
             return Seminar_Perm::get()->have_studip_perm('tutor', $course->id, $user_id) && Statusgruppen::countBySql("range_id = ?" , [$course->id]);
         }
+
+        return false;
     }
 
     /**
      * This method check the permission (global and if he is in the group) for a given user
      *
-     * @param $user_id The User-ID
+     * @param string $user_id The User-ID
      * @return bool True if user have permission, False otherwise
      */
     public function checkPermission($user_id)
@@ -60,7 +62,7 @@ class CourseGroupFolder extends StandardFolder
     /**
      * Check if this GroupFolder instance is visible for this user or not.
      *
-     * @param user_id The User-ID
+     * @param string $user_id The User-ID
      * @return bool True, if the user is in this group or is the lecturer, false otherwise
      */
     public function isVisible($user_id)
@@ -71,7 +73,7 @@ class CourseGroupFolder extends StandardFolder
     /**
      * Check if this GroupFolder instance is readable for this user or not.
      *
-     * @param user_id The User-ID
+     * @param string $user_id The User-ID
      * @return bool True, if the user is in this group or is the lecturer, false otherwise
      */
     public function isReadable($user_id)
@@ -82,7 +84,7 @@ class CourseGroupFolder extends StandardFolder
     /**
      * Check if this GroupFolder instance is writable for this user or not.
      *
-     * @param user_id The User-ID
+     * @param string $user_id The User-ID
      * @return bool True, if the user is in this group or is the lecturer, false otherwise
      */
     public function isWritable($user_id)

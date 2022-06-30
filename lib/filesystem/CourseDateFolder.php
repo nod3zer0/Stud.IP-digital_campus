@@ -40,6 +40,8 @@ class CourseDateFolder extends PermissionEnabledFolder implements FolderType
             return Seminar_Perm::get()->have_studip_perm('tutor', $course->id, $user_id)
                 && CourseDate::countBySql("range_id = ?" , [$course->id]);
         }
+
+        return false;
     }
 
     public function __construct($folderdata = null)
@@ -56,10 +58,7 @@ class CourseDateFolder extends PermissionEnabledFolder implements FolderType
         );
     }
 
-    /**
-     * @return CourseDate
-     */
-    public function getDate()
+    public function getDate(): ?CourseDate
     {
         if (isset($this->folderdata['data_content']['termin_id'])) {
             if ($this->date === null) {
@@ -72,6 +71,8 @@ class CourseDateFolder extends PermissionEnabledFolder implements FolderType
             }
             return $this->date;
         }
+
+        return null;
     }
 
     /**

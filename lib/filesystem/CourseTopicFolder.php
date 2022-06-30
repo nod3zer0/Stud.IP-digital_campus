@@ -31,6 +31,7 @@ class CourseTopicFolder extends PermissionEnabledFolder implements FolderType
         if ($course && !$course->isNew()) {
             return Seminar_Perm::get()->have_studip_perm('tutor', $course->id, $user_id) && CourseTopic::countBySql("seminar_id = ?" , [$course->id]);
         }
+        return false;
     }
 
     public function __construct($folderdata = null)
@@ -47,10 +48,7 @@ class CourseTopicFolder extends PermissionEnabledFolder implements FolderType
         );
     }
 
-    /**
-     * @return CourseTopic
-     */
-    public function getTopic()
+    public function getTopic(): ?CourseTopic
     {
         if (isset($this->folderdata['data_content']['topic_id'])) {
             if ($this->topic === null) {
@@ -64,13 +62,15 @@ class CourseTopicFolder extends PermissionEnabledFolder implements FolderType
             }
             return $this->topic;
         }
+
+        return null;
     }
 
     /**
      * @param CourseTopic $topic
      * @return CourseTopic
      */
-    public function setTopic(CourseTopic $topic)
+    public function setTopic(CourseTopic $topic): ?CourseTopic
     {
         $this->topic = $topic;
         $this->folderdata['data_content']['topic_id'] = $this->topic->id;
