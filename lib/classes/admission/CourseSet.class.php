@@ -247,7 +247,7 @@ class CourseSet
     {
         NotificationCenter::postNotification('CourseSetAlgorithmWillStart', $state, $this->getId());
         $this->hasAlgorithmRun = (bool)$state;
-        $db = DbManager::get();
+        $db = DBManager::get();
         $ok = $db->execute("UPDATE coursesets SET algorithm_run = ? WHERE set_id = ?", [$this->hasAlgorithmRun, $this->getId()]);
         if ($ok) {
             NotificationCenter::postNotification('CourseSetAlgorithmDidStart', $state, $this->getId());

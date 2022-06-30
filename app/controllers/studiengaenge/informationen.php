@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Peter Thienel <thienel@data-quest.de>
- * @author      
+ * @author
  * @license     GPL2 or any later version
  * @since       4.6
  */
@@ -11,7 +11,7 @@ class Studiengaenge_InformationenController extends MVVController
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-        
+
         if (!($GLOBALS['perm']->have_perm('root') || RolePersistence::isAssignedRole(
                         $GLOBALS['user']->id, 'MVVAdmin'))) {
             throw new AccessDeniedException();
@@ -21,7 +21,7 @@ class Studiengaenge_InformationenController extends MVVController
             Navigation::activateItem('mvv/studiengaenge/informationen');
         }
     }
-    
+
     public function index_action()
     {
         $this->createSidebar();
@@ -38,13 +38,13 @@ class Studiengaenge_InformationenController extends MVVController
             [':inst_ids' => $inst_ids]);
         }
     }
-    
+
     public function degree_action ()
     {
         $this->createSidebar('degrees');
         $this->degree = Degree::findBySQL('abschluss_id IN (SELECT DISTINCT(abschluss_id) FROM user_studiengang) ORDER BY name');
     }
-    
+
     public function showdegree_action($studycourse_id, $nr = 0)
     {
         $this->studycourse = Fach::find($studycourse_id);
@@ -55,7 +55,7 @@ class Studiengaenge_InformationenController extends MVVController
                 ['studycourse_id' => $studycourse_id,
                  'abschluss_ids' => $this->studycourse->degrees->pluck('abschluss_id')]);
     }
-    
+
     public function showstudycourse_action($degree_id, $nr = 0)
     {
         $this->nr = $nr;
@@ -75,7 +75,7 @@ class Studiengaenge_InformationenController extends MVVController
             [':inst_ids' => $inst_ids]);
         }
     }
-    
+
     public function messagehelper_action()
     {
         $fach_id = Request::get('fach_id');
@@ -96,7 +96,7 @@ class Studiengaenge_InformationenController extends MVVController
                 [':abschluss_id' => $degree_id]);
         }
         if (empty($user)) {
-            Pagelayout::postError(_('Keine Studierenden zu den gewählten Angaben gefunden'));
+            PageLayout::postError(_('Keine Studierenden zu den gewählten Angaben gefunden'));
             $this->redirect('index');
             return;
         }
@@ -114,7 +114,7 @@ class Studiengaenge_InformationenController extends MVVController
             ['default_subject' => $subject, 'emailrequest' => 1]
         ));
     }
-    
+
     private function createSidebar($view = 'subject' )
     {
         $widget = new ViewsWidget();
@@ -124,7 +124,7 @@ class Studiengaenge_InformationenController extends MVVController
                 ->setActive($view == 'degrees');
         Sidebar::Get()->addWidget($widget);
     }
-    
+
     public static function getStudyCount($degree_id)
     {
         if ($GLOBALS['perm']->have_perm('root', $GLOBALS['user']->id)) {
@@ -142,5 +142,5 @@ class Studiengaenge_InformationenController extends MVVController
 
         }
     }
-    
+
 }

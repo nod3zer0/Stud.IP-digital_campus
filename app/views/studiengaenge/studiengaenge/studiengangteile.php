@@ -5,11 +5,11 @@
             <col width="1%">
         </colgroup>
         <? foreach ($stgteile as $stgteil) : ?>
-            <tbody id="<?= $stg_stgbez_id . '_' . $stgteil->id ?>"<?= MvvPerm::haveFieldPermStudiengangteil($studiengang, MVVPerm::PERM_WRITE) ? 'class="sort_items"' : '' ?>>
+            <tbody id="<?= $stg_stgbez_id . '_' . $stgteil->id ?>"<?= MvvPerm::haveFieldPermStudiengangteil($studiengang, MvvPerm::PERM_WRITE) ? 'class="sort_items"' : '' ?>>
                 <tr class="header-row">
                     <td width="90%"><?= htmlReady($stgteil->getDisplayName()) ?></td>
                     <td class="actions">
-                        <? if (MvvPerm::haveFieldPermStudiengangteil($studiengang, MVVPerm::PERM_CREATE)) : ?>
+                        <? if (MvvPerm::haveFieldPermStudiengangteil($studiengang, MvvPerm::PERM_CREATE)) : ?>
                             <? if ($stg_bez) : ?>
                                 <? $msg = sprintf(
                                         _('Wollen Sie die Zuordnung des Studiengangteils "%s" als "%s" zum Studiengang "%s" wirklich löschen?'),
@@ -47,7 +47,7 @@
                 </tr>
             </tbody>
         <? endforeach; ?>
-        <? if (MvvPerm::haveFieldPermStudiengangteil($studiengang, MVVPerm::PERM_CREATE)) : ?>
+        <? if (MvvPerm::haveFieldPermStudiengangteil($studiengang, MvvPerm::PERM_CREATE)) : ?>
             <tfoot>
                 <tr>
                     <td colspan="2">

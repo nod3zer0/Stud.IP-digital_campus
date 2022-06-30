@@ -943,7 +943,7 @@ class MessagesController extends AuthenticatedController {
     public function delete_tag_action()
     {
         CSRFProtection::verifyUnsafeRequest();
-        DbManager::get()->execute("DELETE FROM message_tags WHERE user_id=? AND tag LIKE ?", [$GLOBALS['user']->id, Request::get('tag')]);
+        DBManager::get()->execute("DELETE FROM message_tags WHERE user_id=? AND tag LIKE ?", [$GLOBALS['user']->id, Request::get('tag')]);
         PageLayout::postMessage(MessageBox::success(_('Schlagwort gelöscht!')));
         $this->redirect('messages/overview');
     }

@@ -8,7 +8,7 @@ class Tic5170CleanUp extends Migration
 
     public function up()
     {
-        $db = DbManager::get();
+        $db = DBManager::get();
         $db->exec("ALTER TABLE `message` DROP `chat_id`, DROP `readed`");
         $db->exec("ALTER TABLE `message_user` DROP `confirmed_read`");
         try {

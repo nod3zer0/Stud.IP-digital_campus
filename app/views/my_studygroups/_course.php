@@ -27,7 +27,7 @@
                 <? foreach (MyRealmModel::array_rtrim($group['navigation']) as $key => $nav)  : ?>
                     <? if (isset($nav) && $nav->isVisible(true)) : ?>
                         <a href="<?=
-                        UrlHelper::getLink('seminar_main.php',
+                        URLHelper::getLink('seminar_main.php',
                             ['auswahl'     => $group['seminar_id'],
                                   'redirect_to' => strtr($nav->getURL(), '?', '&')]) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
                             <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>

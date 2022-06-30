@@ -1,7 +1,7 @@
 <?php
 use JsonApi\Routes\Consultations\BookingsCreate;
 use JsonApi\Schemas\ConsultationBooking as Schema;
-use JsonAPi\Schemas\User as UserSchema;
+use JsonApi\Schemas\User as UserSchema;
 use WoohooLabs\Yang\JsonApi\Response\JsonApiResponse;
 
 require_once __DIR__ . '/ConsultationHelper.php';

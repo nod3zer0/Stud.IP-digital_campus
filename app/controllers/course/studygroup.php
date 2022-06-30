@@ -775,7 +775,7 @@ class Course_StudygroupController extends AuthenticatedController
             // save invite in database
             StudygroupModel::inviteMember($receiver, $id);
             // send invite message to user
-            $msg     = new Messaging();
+            $msg     = new messaging();
             $sem     = new Seminar($id);
             $message = sprintf(_("%s möchte Sie auf die Studiengruppe %s aufmerksam machen. Klicken Sie auf den untenstehenden Link, um direkt zur Studiengruppe zu gelangen.\n\n %s"),
                 get_fullname(), $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, ['cid' => null]));
@@ -795,7 +795,7 @@ class Course_StudygroupController extends AuthenticatedController
                 $addedUsers
             ));
         } else if ($count >= 1) {
-            pageLayout::postSuccess(sprintf(
+            PageLayout::postSuccess(sprintf(
                 _('%s wurden in die Studiengruppe eingeladen.'),
                 $addedUsers
             ));

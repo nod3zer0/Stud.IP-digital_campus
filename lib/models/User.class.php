@@ -249,7 +249,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 FROM auth_user_md5
                 LEFT JOIN user_info USING (user_id)
                 WHERE user_id = ?";
-        $data = DbManager::get()->fetchOne($sql, [$id]);
+        $data = DBManager::get()->fetchOne($sql, [$id]);
         if ($data) {
             return self::buildExisting($data);
         }
@@ -268,7 +268,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 FROM auth_user_md5
                 LEFT JOIN user_info USING (user_id)
                 WHERE user_id IN (?) " . $order_by;
-        $data = DbManager::get()->fetchAll($sql, [$ids], 'User::buildExisting');
+        $data = DBManager::get()->fetchAll($sql, [$ids], 'User::buildExisting');
         return $data;
     }
 
@@ -1118,9 +1118,9 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             $new_avatar = Avatar::getAvatar($new_id);
             if ($old_avatar->is_customized()) {
                 if (!$new_avatar->is_customized()) {
-                    $avatar_file = $old_avatar->getFilename(AVATAR::ORIGINAL);
+                    $avatar_file = $old_avatar->getFilename(Avatar::ORIGINAL);
                     if (!file_exists($avatar_file)) {
-                        $avatar_file = $old_avatar->getFilename(AVATAR::NORMAL);
+                        $avatar_file = $old_avatar->getFilename(Avatar::NORMAL);
                     }
                     $new_avatar->createFrom($avatar_file);
                 }

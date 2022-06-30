@@ -48,7 +48,7 @@
             <span class="container">
                 <select name="user_ids[]" class="select2" id="blubber_contacts" multiple>
                     <? foreach ($contacts as $contact) : ?>
-                        <option value="<?= htmlReady($contact['user_id']) ?>" data-avatar="<?= htmlReady(Avatar::getAvatar($contact['user_id'])->getImageTag(AVATAR::SMALL)) ?>">
+                        <option value="<?= htmlReady($contact['user_id']) ?>" data-avatar="<?= htmlReady(Avatar::getAvatar($contact['user_id'])->getImageTag(Avatar::SMALL)) ?>">
                             <?= htmlReady($contact->friend->getFullName()) ?>
                         </option>
                     <? endforeach ?>

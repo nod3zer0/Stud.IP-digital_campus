@@ -60,7 +60,7 @@ class CheckAdmissionJob extends CronJob
                   INNER JOIN coursesets USING(set_id)
                   WHERE type = 'ParticipantRestrictedAdmission'
                     AND algorithm_run = 0";
-        $sets = DbManager::get()->fetchFirst($query);
+        $sets = DBManager::get()->fetchFirst($query);
         if (count($sets) > 0) {
             if ($verbose) {
                 echo date('r') . ' - Starting seat distribution ' . chr(10);

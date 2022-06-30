@@ -483,9 +483,9 @@ class ELearningUtils
                 if (self::isCMSActive($system_type)) {
                     self::loadClass($system_type);
                     $connected_courses['courses'][$system_type] = [
-                        'url' => UrlHelper::getLink($connected_cms[$system_type]->link->cms_link . '?client_id=' . $connected_cms[$system_type]->getClientId() . '&cms_select=' . $system_type . '&ref_id=' . $crs_id . '&type=crs&target=start'),
+                        'url' => URLHelper::getLink($connected_cms[$system_type]->link->cms_link . '?client_id=' . $connected_cms[$system_type]->getClientId() . '&cms_select=' . $system_type . '&ref_id=' . $crs_id . '&type=crs&target=start'),
                         'cms_name' => $connected_cms[$system_type]->getName()];
-                    $course_output[] = "<a href=\"" . UrlHelper::getLink($connected_cms[$system_type]->link->cms_link . "?" . "client_id=" . $connected_cms[$system_type]->getClientId() . "&cms_select=" . $system_type . "&ref_id=" . $crs_id . "&type=crs&target=start") . "\" target=\"_blank\" rel=\"noopener noreferrer\">".sprintf(_("Kurs in %s"), htmlReady($connected_cms[$system_type]->getName()))."</a>";
+                    $course_output[] = "<a href=\"" . URLHelper::getLink($connected_cms[$system_type]->link->cms_link . "?" . "client_id=" . $connected_cms[$system_type]->getClientId() . "&cms_select=" . $system_type . "&ref_id=" . $crs_id . "&type=crs&target=start") . "\" target=\"_blank\" rel=\"noopener noreferrer\">".sprintf(_("Kurs in %s"), htmlReady($connected_cms[$system_type]->getName()))."</a>";
                     // gegebenenfalls zugeordnete Module aktualisieren
                     if (Request::option('update')) {
                         if ((method_exists($connected_cms[$system_type], "updateConnections"))) {

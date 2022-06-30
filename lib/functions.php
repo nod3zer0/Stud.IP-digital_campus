@@ -1588,7 +1588,7 @@ function strtokebabcase($string) {
  * @return int number of rows
  */
 function count_table_rows($table) {
-    $stat = DbManager::get()->fetchOne("SHOW TABLE STATUS LIKE ?", [$table]);
+    $stat = DBManager::get()->fetchOne("SHOW TABLE STATUS LIKE ?", [$table]);
     return (int)$stat['Rows'];
 }
 

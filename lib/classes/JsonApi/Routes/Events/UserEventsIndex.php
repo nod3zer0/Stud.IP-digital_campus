@@ -18,9 +18,6 @@ class UserEventsIndex extends JsonApiController
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        require_once 'lib/calendar/CalendarExportFile.class.php';
-        require_once 'lib/calendar/CalendarWriterICalendar.class.php';
-
         if (!$observedUser = \User::find($args['id'])) {
             throw new RecordNotFoundException();
         }

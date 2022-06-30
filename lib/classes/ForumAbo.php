@@ -78,7 +78,6 @@ class ForumAbo
         // send message to all abo-users
         $db = DBManager::get();
         $messaging = new ForumBulkMail();
-        // $messaging = new Messaging();
 
         // get all parent topic-ids, to find out which users to notify
         $path = ForumEntry::getPathToPosting($topic_id);

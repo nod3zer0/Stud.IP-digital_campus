@@ -552,7 +552,7 @@ class StudygroupModel
         $dozenten   = $sem->getMembers();
         $tutors     = $sem->getMembers('tutor');
         $recipients = [];
-        $msging     = new Messaging();
+        $msging     = new messaging();
 
         foreach (array_merge($dozenten, $tutors) as $uid => $user) {
             $recipients[] = $user['username'];

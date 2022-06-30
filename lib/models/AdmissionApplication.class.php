@@ -56,7 +56,7 @@ class AdmissionApplication extends SimpleORMap implements PrivacyObject
 
     public static function findByCourse($course_id)
     {
-        $db = DbManager::get();
+        $db = DBManager::get();
         return $db->fetchAll("SELECT admission_seminar_user.*, aum.vorname,aum.nachname,aum.email,
                              aum.username,ui.title_front,ui.title_rear
                              FROM admission_seminar_user
@@ -69,7 +69,7 @@ class AdmissionApplication extends SimpleORMap implements PrivacyObject
 
     public static function findByUser($user_id)
     {
-        $db = DbManager::get();
+        $db = DBManager::get();
         return $db->fetchAll("SELECT admission_seminar_user.*, seminare.Name as course_name
                              FROM admission_seminar_user
                              LEFT JOIN seminare USING (seminar_id)

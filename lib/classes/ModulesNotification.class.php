@@ -149,7 +149,7 @@ class ModulesNotification
     function getPluginText($nav, $seminar_id, $id)
     {
         $base_url = URLHelper::setBaseURL('');
-        UrlHelper::setBaseURl($base_url);
+        URLHelper::setBaseURl($base_url);
         if ($nav instanceof Navigation && $nav->isVisible(true)) {
                 $url = 'seminar_main.php?again=yes&auswahl=' . $seminar_id . '&redirect_to=' . strtr($nav->getURL(), '?', '&');
                 $icon = $nav->getImage();

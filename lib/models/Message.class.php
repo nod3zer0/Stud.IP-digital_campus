@@ -156,7 +156,7 @@ class Message extends SimpleORMap implements PrivacyObject
                     ORDER BY Nachname, Vorname";
             $params = [$this->receivers->pluck('user_id')];
         }
-        $db = DbManager::get();
+        $db = DBManager::get();
         return new SimpleCollection(
             $db->fetchAll($sql,
                              $params,

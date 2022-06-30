@@ -887,7 +887,7 @@ class SemBrowse {
 
             }
             $send_from_search = URLHelper::getUrl(basename($_SERVER['PHP_SELF']), ['keep_result_set' => 1, 'cid' => null]);
-            $send_from_search_link = UrlHelper::getLink($this->target_url,
+            $send_from_search_link = URLHelper::getLink($this->target_url,
                     [
                         $this->target_id => $seminar_id,
                         'cid' => null,
@@ -984,7 +984,7 @@ class SemBrowse {
                             $row .= '... <a href="' . $send_from_search_link . '">(' . _('mehr') . ')</a>';
                             break;
                         }
-                        $row .= '<a href="' . UrlHelper::getLink('dispatch.php/profile', ['username' => $doz_uname[$index]]) . '">' . htmlReady($value) . '</a>';
+                        $row .= '<a href="' . URLHelper::getLink('dispatch.php/profile', ['username' => $doz_uname[$index]]) . '">' . htmlReady($value) . '</a>';
                         if ($i != count($doz_name) - 1) {
                             $row .= ', ';
                         }

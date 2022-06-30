@@ -50,7 +50,7 @@ class UserStudyCourse extends SimpleORMap implements PrivacyObject
 
     public static function findByUser($user_id)
     {
-        $db = DbManager::get();
+        $db = DBManager::get();
         $st = $db->prepare("SELECT user_studiengang.*, abschluss.name as degree_name,
                             fach.name as studycourse_name
                             FROM user_studiengang

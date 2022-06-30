@@ -52,7 +52,8 @@ class iCalController extends StudipController
             $GLOBALS['perm'] = new Seminar_Perm();
 
             $extype = 'ALL_EVENTS';
-            $export = new CalendarExport(new CalendarWriterICalendar());
+            $calender_writer = new CalendarWriterICalendar();
+            $export = new CalendarExport($calender_writer);
             $export->exportFromDatabase($user_id, strtotime('-4 week'), 2114377200, 'ALL_EVENTS');
 
             if ($GLOBALS['_calendar_error']->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {

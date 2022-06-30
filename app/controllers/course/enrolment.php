@@ -46,7 +46,7 @@ class Course_EnrolmentController extends AuthenticatedController
             (in_array($enrolment_info['cause'], words('root courseadmin member'))
                 || ($enrolment_info['cause'] == 'free_access' && $GLOBALS['user']->id == 'nobody'))
         ) {
-            $redirect_url = UrlHelper::getUrl('seminar_main.php', ['auswahl' => $this->course_id]);
+            $redirect_url = URLHelper::getUrl('seminar_main.php', ['auswahl' => $this->course_id]);
             if (Request::isXhr()) {
                 $this->response->add_header('X-Location', $redirect_url);
                 $this->render_nothing();

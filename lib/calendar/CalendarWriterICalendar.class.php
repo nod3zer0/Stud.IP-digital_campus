@@ -18,7 +18,7 @@
 
 define('CALENDAR_WEEKSTART', 'MO');
 
-class CalendarWriteriCalendar extends CalendarWriter
+class CalendarWriterICalendar extends CalendarWriter
 {
     var $newline = "\r\n";
 

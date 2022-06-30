@@ -27,7 +27,7 @@
                 <? endif; ?>
             </tbody>
         <? endforeach; ?>
-        <? if ($studiengang->typ === 'mehrfach' && MvvPerm::haveFieldPermStudiengangteil($studiengang, MVVPerm::PERM_CREATE)) : ?>
+        <? if ($studiengang->typ === 'mehrfach' && MvvPerm::haveFieldPermStudiengangteil($studiengang, MvvPerm::PERM_CREATE)) : ?>
             <tfoot>
                 <tr>
                     <td colspan="3">

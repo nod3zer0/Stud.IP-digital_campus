@@ -46,7 +46,7 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
         if ($connected_cms[$this->cms_type]->isAuthNecessary() AND (! $connected_cms[$this->cms_type]->user->isConnected())) {
             return false;
         }
-        $output = "<a href=\"" . UrlHelper::getLink($this->cms_link . "?"
+        $output = "<a href=\"" . URLHelper::getLink($this->cms_link . "?"
         . "client_id=" . $connected_cms[$this->cms_type]->getClientId()
         . "&cms_select=" . $this->cms_type
         . "&ref_id=" . $module_id

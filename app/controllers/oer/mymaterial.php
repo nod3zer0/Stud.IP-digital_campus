@@ -21,7 +21,7 @@ class Oer_MymaterialController extends AuthenticatedController
 
     public function edit_action(OERMaterial $material = null)
     {
-        Pagelayout::setTitle($material->isNew() ? _('Neues Material hochladen') : _('Material bearbeiten'));
+        PageLayout::setTitle($material->isNew() ? _('Neues Material hochladen') : _('Material bearbeiten'));
         if ($material->id && !$material->isMine() && !$GLOBALS['perm']->have_perm('root')) {
             throw new AccessDeniedException();
         }
@@ -198,7 +198,7 @@ class Oer_MymaterialController extends AuthenticatedController
 
     public function statistics_action(OERMaterial $material)
     {
-        Pagelayout::setTitle(sprintf(
+        PageLayout::setTitle(sprintf(
             _('Zugriffszahlen für %s'),
             $material->name
         ));

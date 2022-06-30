@@ -37,7 +37,7 @@ class MvvCourse extends ModuleManagementModelTreeItem
      */
     public function getTrailParent()
     {
-        return LvGruppe::findCached($this->getTrailParentId());
+        return Lvgruppe::findCached($this->getTrailParentId());
     }
 
     /**

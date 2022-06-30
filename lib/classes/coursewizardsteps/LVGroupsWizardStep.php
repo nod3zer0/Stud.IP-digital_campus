@@ -444,7 +444,7 @@ class LVGroupsWizardStep implements CourseWizardStep
             $area = Lvgruppe::find($lvg_id);
             $selection->add($area);
         }
-        LvGruppe::setLvgruppen($course->id, $selection->getLvgruppenIDs());
+        Lvgruppe::setLvgruppen($course->id, $selection->getLvgruppenIDs());
 
         return $course;
     }

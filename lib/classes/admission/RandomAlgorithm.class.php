@@ -425,7 +425,7 @@ class RandomAlgorithm extends AdmissionAlgorithm
         $sum = function($r) use (&$distributed_users) {
             $distributed_users[$r['user_id']] += $r['c'];
         };
-        $db = DbManager::get();
+        $db = DBManager::get();
         $db->fetchAll("SELECT user_id, COUNT(*) as c FROM seminar_user
             WHERE seminar_id IN(?) AND user_id IN(?) AND status IN (?) GROUP BY user_id",
             [$course_ids, $user_ids, ['user', 'autor']], $sum);

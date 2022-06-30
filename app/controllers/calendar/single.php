@@ -197,7 +197,8 @@ class Calendar_SingleController extends Calendar_CalendarController
         $calendar = new SingleCalendar($this->range_id);
         $event = $calendar->getEvent($event_id);
         if (!$event->isNew()) {
-            $export = new CalendarExportFile(new CalendarWriterICalendar());
+            $calender_writer = new CalendarWriterICalendar();
+            $export = new CalendarExportFile($calender_writer);
             $export->exportFromObjects($event);
             $export->sendFile();
         }
@@ -210,7 +211,8 @@ class Calendar_SingleController extends Calendar_CalendarController
         $this->calendar = new SingleCalendar($this->range_id);
 
         if (Request::submitted('export')) {
-            $export = new CalendarExportFile(new CalendarWriterICalendar());
+            $calender_writer = new CalendarWriterICalendar();
+            $export = new CalendarExportFile($calender_writer);
             if (Request::get('event_type') == 'user') {
                 $types = ['CalendarEvent'];
             } else if (Request::get('event_type') == 'course') {
@@ -245,8 +247,8 @@ class Calendar_SingleController extends Calendar_CalendarController
         if ($this->calendar->havePermission(Calendar::PERMISSION_OWN)) {
             if (Request::submitted('import')) {
                 CSRFProtection::verifySecurityToken();
-                $import = new CalendarImportFile(new CalendarParserICalendar(),
-                        $_FILES['importfile']);
+                $calender_parser = new CalendarParserICalendar();
+                $import = new CalendarImportFile($calender_parser, $_FILES['importfile']);
                 if (Request::get('import_as_private_imp')) {
                     $import->changePublicToPrivate();
                 }

@@ -345,11 +345,11 @@ class Result
     private function getOrderBy()
     {
         switch ($this->query->getSort()) {
-            case QUERY::SORT_CHDATE:
+            case Query::SORT_CHDATE:
                 $orderBy = 'ORDER BY fsa.file_ref_mkdate DESC';
                 break;
 
-            case QUERY::SORT_RELEVANCE:
+            case Query::SORT_RELEVANCE:
                 $orderBy = 'ORDER BY sr.ranking DESC';
                 break;
 

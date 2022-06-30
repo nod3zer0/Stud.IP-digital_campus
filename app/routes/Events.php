@@ -83,8 +83,8 @@ class Events extends \RESTAPI\RouteMap
         if ($user_id !== $GLOBALS['user']->id) {
             $this->error(401);
         }
-
-        $export = new CalendarExport(new CalendarWriterICalendar());
+        $calender_writer = new CalendarWriterICalendar();
+        $export = new CalendarExport($calender_writer);
         $export->exportFromDatabase($user_id, 0, 2114377200, 'ALL_EVENTS');
 
         if ($GLOBALS['_calendar_error']->getMaxStatus(\ErrorHandler::ERROR_CRITICAL)) {

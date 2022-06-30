@@ -276,9 +276,9 @@ class Course_LvgselectorController extends AuthenticatedController
         if ($this->is_locked($course_id)) {
             throw new AccessDeniedException();
         }
-        
+
         $lv_group_ids = $selection->getLvgruppenIDs();
-        
+
         // check whether at least one lv-group or study area is required
         $study_areas_combined_enabled = CourseWizardStepRegistry::findOneBySQL("
                 `classname` = 'StudyAreasLVGroupsCombinedWizardStep'
@@ -291,7 +291,7 @@ class Course_LvgselectorController extends AuthenticatedController
             }
         }
         // write the new lvgruppen to the db
-        LvGruppe::setLvgruppen($course_id, $lv_group_ids);
+        Lvgruppe::setLvgruppen($course_id, $lv_group_ids);
         PageLayout::postMessage(MessageBox::success(_('Die Zuordnung der LV-Gruppen wurde übernommen.')));
     }
 

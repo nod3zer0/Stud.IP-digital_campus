@@ -77,7 +77,7 @@ case "sbb":
     $excel_text = strip_tags(DecodeHtml($intro_text));
     break;
 case "s":
-    $db = DbManager::get();
+    $db = DBManager::get();
     $bereich_typ=_("Einrichtung");
     $head_text = _("Übersicht aller Veranstaltungen einer Einrichtung");
     $intro_text = sprintf(_("Alle Veranstaltungen der Einrichtung: <b>%s</b>"), htmlReady(Institute::find($id)->name));
