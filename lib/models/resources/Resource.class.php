@@ -1581,7 +1581,7 @@ class Resource extends SimpleORMap implements StudipItem
      * @param mixed $state The state of the resource property.
      * @param User|null $user The user who wishes to set the property.
      *
-     * @return True, if the property state could be set, false otherwise.
+     * @return bool True, if the property state could be set, false otherwise.
      */
     public function setProperty(string $name, $state = '', $user = null)
     {
@@ -1638,6 +1638,8 @@ class Resource extends SimpleORMap implements StudipItem
             }
             return true;
         }
+
+        return false;
     }
 
     /**
@@ -2395,7 +2397,7 @@ class Resource extends SimpleORMap implements StudipItem
             return $perm_string;
         }
 
-
+        return '';
     }
 
     /**

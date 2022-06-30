@@ -298,7 +298,7 @@ class ResourcePropertyDefinition extends SimpleORMap
                 $invalid_state = true;
             }
         } elseif ($this->type == 'num') {
-            if (!preg_match('[0-9.]+', $state)) {
+            if (!preg_match('/[0-9.]+/', $state)) {
                 //not a number
                 $invalid_state = true;
             }
@@ -375,6 +375,8 @@ class ResourcePropertyDefinition extends SimpleORMap
             $property->state = $state;
             return $property;
         }
+
+        throw new Exception('Could not validate state');
     }
 
     public function __toString()

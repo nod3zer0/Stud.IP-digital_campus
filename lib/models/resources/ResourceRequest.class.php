@@ -1365,7 +1365,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                     $parts[] = $rra->appointment->getFullname('include-room');
                 }
             }
-            $strings[] .= implode('; ', $parts);
+            $strings[] = implode('; ', $parts);
         } elseif ($this->termin_id) {
             if ($this->date) {
                 $strings[] = $this->date->getFullname('include-room');

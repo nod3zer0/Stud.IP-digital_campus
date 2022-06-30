@@ -339,19 +339,16 @@ class ResourceCategory extends SimpleORMap
         if ($existing_property) {
             $existing_property->requestable = $requestable ? '1' : '0';
             $existing_property->protected   = $protected ? '1' : '0';
-            if ($existing_property->isDirty()) {
-                if ($existing_property->store()) {
-                    return $existing_property;
-                } else {
-                    throw new ResourcePropertyException(
-                        sprintf(
-                            _('Fehler beim Aktualisieren der Eigenschaft %1$s (vom Typ %2$s)!'),
-                            $name,
-                            $type
-                        )
-                    );
-                }
+            if ($existing_property->isDirty() && !$existing_property->store()) {
+                throw new ResourcePropertyException(
+                    sprintf(
+                        _('Fehler beim Aktualisieren der Eigenschaft %1$s (vom Typ %2$s)!'),
+                        $name,
+                        $type
+                    )
+                );
             }
+            return $existing_property;
         } else {
             $definition = ResourcePropertyDefinition::findOneBySql(
                 'name = :name AND type = :type',
