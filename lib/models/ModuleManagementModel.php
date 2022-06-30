@@ -16,7 +16,7 @@
 
 require_once 'config/mvv_config.php';
 
-abstract class ModuleManagementModel extends SimpleORMap
+abstract class ModuleManagementModel extends SimpleORMap implements ModuleManagementInterface
 {
     /**
      * Usable as option for ModuleManagementModel::getDisplayName().
@@ -133,7 +133,7 @@ abstract class ModuleManagementModel extends SimpleORMap
     /**
      * Returns an object by given id with all relations and additional fields.
      *
-     * @param tring $id The id of the object.
+     * @param string $id The id of the object.
      * @return ModuleManagementModel
      */
     public static function getEnriched($id)
@@ -493,7 +493,7 @@ abstract class ModuleManagementModel extends SimpleORMap
      * @param array $params Array with the parameters used in query
      * @param int $row_count Number of rows to return
      * @param int $offset Offset where the result set starts
-     * @return object SimpleOrMapCollection with all found objects or empty array
+     * @return SimpleOrMapCollection with all found objects or empty array
      */
     public static function getEnrichedByQuery($query = null, $params = [],
             $row_count = null, $offset = null)

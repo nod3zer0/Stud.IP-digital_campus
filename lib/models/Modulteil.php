@@ -97,7 +97,7 @@ class Modulteil extends ModuleManagementModelTreeItem
     /**
      * Retrieves all Modulteile of the given Modul.
      *
-     * @param type $modul_id The id of a Modul.
+     * @param string $modul_id The id of a Modul.
      * @return SimpleORMapCollection A collection of Modulteile.
      */
     public static function findByModul($modul_id)
@@ -117,7 +117,7 @@ class Modulteil extends ModuleManagementModelTreeItem
     /**
      * Retrieves all Modulteile the given LV-Gruppe is assigned to.
      *
-     * @param type $lvgruppe_id The id of a LV-Gruppe.
+     * @param string $lvgruppe_id The id of a LV-Gruppe.
      * @return SimpleORMapCollection A collection of Modulteile.
      */
     public static function findByLvgruppe($lvgruppe_id)

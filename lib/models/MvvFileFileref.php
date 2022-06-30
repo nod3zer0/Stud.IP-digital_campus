@@ -44,12 +44,14 @@ class MvvFileFileref extends ModuleManagementModel
      *
      * @return string Name of the file.
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         if ($this->file_ref) {
             $filetype = $this->file_ref->getFileType();
             return $filetype->getFilename();
         }
+
+        throw new Exception("Could not load file ref for file");
     }
 
     /**
@@ -92,5 +94,7 @@ class MvvFileFileref extends ModuleManagementModel
                 }
             }
         }
+
+        return false;
     }
 }

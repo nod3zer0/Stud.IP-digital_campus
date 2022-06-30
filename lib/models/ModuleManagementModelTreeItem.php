@@ -7,20 +7,18 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- * 
+ *
  * @author      Peter Thienel <thienel@data-quest.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
  */
 
-require_once 'ModuleManagementModel.php';
-
 abstract class ModuleManagementModelTreeItem extends ModuleManagementModel implements MvvTreeItem
 {
     /**
      * The default route through the MVV object structure.
-     * 
+     *
      * @var array
      */
     public static $TRAIL_DEFAULT = [
@@ -36,15 +34,15 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
         'Abschluss',
         'AbschlussKategorie'
         ];
-    
+
     /**
      * An array of functions to filter mvv objects during path creation.
      * The class name is the key and the filter function the value.
-     * 
+     *
      * @var array
      */
-    protected static $object_filter = []; 
-    
+    protected static $object_filter = [];
+
     /**
      * @see MvvTreeItem::getTrailParentId()
      */
@@ -52,7 +50,7 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
     {
         return ($_SESSION['MVV/' . get_class() . '/trail_parent_id']);
     }
-    
+
     public function getTrails($types = null, $mode = null, $path = null, $in_recursion = false)
     {
         $path = $path ?: self::$TRAIL_DEFAULT;
@@ -61,7 +59,7 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
         $class_name = get_class($this);
         $next = $path[array_search($class_name, $path) + 1];
         $parents = $this->getParents($next);
-        
+
         foreach ($parents as $parent) {
             if ($parent) {
                 if ($this->checkFilter($parent)) {
@@ -81,17 +79,17 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
                 }
             }
         }
-        
+
         if (empty($trails) && in_array($class_name, $types)) {
             $trails = [[$class_name => $this]];
         }
-        
+
         return $trails;
     }
-    
+
     /**
      * Checks trails object filter.
-     * 
+     *
      * @param MvvTreeItem $item The item to check.
      * @return boolean True if item has passed the check.
      */
@@ -106,22 +104,22 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
         }
         return true;
     }
-    
+
     protected static function sortTrails($trail_a, $trail_b)
     {
-        
+
     }
-    
+
     /**
      * Returns whether this object is assignable to courses.
-     * 
+     *
      * @return boolean True if the object is assignable.
      */
     public function isAssignable()
     {
         return false;
     }
-    
+
     /**
      * @see MvvTreeItem::hasChildren()
      */
@@ -129,11 +127,11 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
     {
         return count($this->getChildren()) > 0;
     }
-    
+
     /**
      * Formats the trails to pathes. The path consists of alle names of the
      * objects of a trail glued together with the given delimiter.
-     * 
+     *
      * @param array $trails All trails as array.
      * @param string $delimiter A string used as the "glue".
      * @param int $display_options Display options set by constants defined
@@ -153,10 +151,10 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
         sort($pathes, SORT_LOCALE_STRING);
         return $pathes;
     }
-    
+
     /**
      * Filters trails by given object types.
-     * 
+     *
      * @param array $trails An array of trails.
      * @param array $filter_objects An array of object class names.
      * @return array The filtered trails.
@@ -183,11 +181,11 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
         }
         return $filtered_trails;
     }
-    
+
     /**
      * Stores filter function to restrict pathes only to objects fulfilling
      * all conditions defined in this function.
-     * 
+     *
      * @param string $class_name The name of the class.
      * @param Closure $filter_func The function defining the filter.
      * @param array $params Parameters used by filter function.

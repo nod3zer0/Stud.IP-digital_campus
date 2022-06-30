@@ -37,7 +37,7 @@ class MvvCourse extends ModuleManagementModelTreeItem
      */
     public function getTrailParent()
     {
-        return LvGruppe::findCached($this->getTrailParent_id());
+        return LvGruppe::findCached($this->getTrailParentId());
     }
 
     /**
@@ -58,7 +58,7 @@ class MvvCourse extends ModuleManagementModelTreeItem
 
     public function getDisplayName($options = self::DISPLAY_DEFAULT)
     {
-        $this->getName();
+        return $this->name;
     }
 
     /**
