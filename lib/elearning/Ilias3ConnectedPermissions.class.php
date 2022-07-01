@@ -73,8 +73,6 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
     {
         global $connected_cms;
 
-//      $this->operations = $this->db_class->getOperations($connected_cms[$this->cms_type]->db);
-
         $this->operations = $connected_cms[$this->cms_type]->soap_client->getOperations();
     }
 

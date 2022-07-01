@@ -30,10 +30,6 @@ class ConnectedCMS
     var $USER_PREFIX;
     var $target_file;
     var $logo_file;
-    var $DB_ELEARNINGMODULES_HOST;
-    var $DB_ELEARNINGMODULES_USER;
-    var $DB_ELEARNINGMODULES_PASSWORD;
-    var $DB_ELEARNINGMODULES_DATABASE;
     var $db_classes;
     var $soap_data;
     var $soap_client;
@@ -92,13 +88,6 @@ class ConnectedCMS
         $this->USER_PREFIX = $ELEARNING_INTERFACE_MODULES[$cms]["USER_PREFIX"];
         $this->target_file = $ELEARNING_INTERFACE_MODULES[$cms]["target_file"];
         $this->logo_file = $ELEARNING_INTERFACE_MODULES[$cms]["logo_file"];
-        $this->DB_ELEARNINGMODULES_HOST = $ELEARNING_INTERFACE_MODULES[$cms]["DB_ELEARNINGMODULES_HOST"];
-        $this->DB_ELEARNINGMODULES_USER = $ELEARNING_INTERFACE_MODULES[$cms]["DB_ELEARNINGMODULES_USER"];
-        $this->DB_ELEARNINGMODULES_PASSWORD = $ELEARNING_INTERFACE_MODULES[$cms]["DB_ELEARNINGMODULES_PASSWORD"];
-        $this->DB_ELEARNINGMODULES_DATABASE = $ELEARNING_INTERFACE_MODULES[$cms]["DB_ELEARNINGMODULES_DATABASE"];
-        if ($this->DB_ELEARNINGMODULES_HOST != "") {
-            $this->db = new DB_ELearning($this->cms_type);
-        }
         $this->soap_data = $ELEARNING_INTERFACE_MODULES[$cms]["soap_data"];
         $this->types = $ELEARNING_INTERFACE_MODULES[$cms]["types"];
         $this->roles = $ELEARNING_INTERFACE_MODULES[$cms]["roles"];
