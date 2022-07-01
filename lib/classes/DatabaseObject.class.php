@@ -86,7 +86,7 @@ class DatabaseObject extends AuthorObject
     public function setObjectID($objectID)
     {
         if (empty ($objectID))
-            throwError(1, _("Die ObjectID darf nicht leer sein."));
+            $this->throwError(1, _("Die ObjectID darf nicht leer sein."));
         else
             $this->objectID = $objectID;
     }
@@ -112,7 +112,7 @@ class DatabaseObject extends AuthorObject
     public function setAuthorID($authorID)
     {
         if (empty ($authorID))
-            throwError(1, _("Die AuthorID darf nicht leer sein."));
+            $this->throwError(1, _("Die AuthorID darf nicht leer sein."));
         else
             $this->authorID = $authorID;
     }
@@ -138,11 +138,9 @@ class DatabaseObject extends AuthorObject
     public function setRangeID($rangeID)
     {
         if (empty ($rangeID))
-            throwError(1, _("Die RangeID darf nicht leer sein."));
+            $this->throwError(1, _("Die RangeID darf nicht leer sein."));
         else
             $this->rangeID = $rangeID;
     }
 
 }
-
-?>

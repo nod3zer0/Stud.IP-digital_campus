@@ -231,7 +231,7 @@ class AuthorObject
             return;
         }
         $this->throwError($no, $str, $line, $file, ERROR_CRITICAL);
-        echo createErrorReport($this, "Schwerer PHP-Laufzeitfehler");
+        echo MessageBox::error("Schwerer PHP-Laufzeitfehler");
     }
 }
 

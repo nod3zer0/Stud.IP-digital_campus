@@ -161,7 +161,7 @@ class StudipObject extends AuthorObject {
     */
    function setAuthorID ($authorID) {
      if (empty ($authorID))
-       throwError (1, _("Die AuthorID darf nicht leer sein."));
+       $this->throwError (1, _("Die AuthorID darf nicht leer sein."));
      else
        $this->authorID = $authorID;
    }
