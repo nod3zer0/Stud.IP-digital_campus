@@ -118,7 +118,7 @@ class MVV implements Loggable {
                 break;
 
             case 'mvv_files':
-                $dokument = MvvDokument::find($event->affected_range_id);
+                $dokument = MvvFile::find($event->affected_range_id);
                 if ($dokument) {
                     $url = URLHelper::getURL('dispatch.php/materialien/dokumente/details/' . $dokument->getId(), [], true);
                     $templ = str_replace('%dokument(%affected)', '<a href="' . $url . '">' . htmlReady($dokument->getDisplayName()) . '</a>', $templ);
@@ -593,13 +593,15 @@ class MVV implements Loggable {
             'MVV_DOK_ZUORD_DEL',
             'MVV_DOK_ZUORD_UPDATE'
         ])) {
-            $dokumente = MvvDokument::findBySQL("name LIKE CONCAT('%', " . $sql_needle . ", '%') OR name_en LIKE CONCAT('%', " . $sql_needle . ", '%') OR dokument_id = " . $sql_needle);
-            foreach ($dokumente as $dokument) {
-                $result[] = [
-                    $dokument->getId(),
-                    $dokument->getDisplayName()
-                ];
-            }
+            MvvFile::findEachBySQL(
+                function (MvvFile $file) use (&$result) {
+                    $result[] = [
+                        $file->id,
+                        $file->getDisplayName(),
+                    ];
+                },
+                "name LIKE CONCAT('%', " . $sql_needle . ", '%') OR mvvfile_id = " . $sql_needle
+            );
         }
 
         return $result;
