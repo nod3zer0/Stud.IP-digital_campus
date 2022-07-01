@@ -720,14 +720,14 @@ STUDIP.ready(function () {
         }
     );
 
-    jQuery('*.resource-plan[data-resources-fullcalendar="1"]').each(function () {
+    jQuery('.resource-plan[data-resources-fullcalendar="1"]').each(function () {
         STUDIP.loadChunk('fullcalendar').then(() => {
             //Get the default date from the sessionStorage, if it is set
             //and no date is specified in the url.
-            var use_session_date = true;
-            var url_param_string = window.location.search;
+            let use_session_date = true;
+            let url_param_string = window.location.search;
             if (url_param_string) {
-                var url_params = new URLSearchParams(url_param_string);
+                let url_params = new URLSearchParams(url_param_string);
                 if (url_params.get('defaultDate')) {
                     use_session_date = false;
                 }
@@ -739,17 +739,17 @@ STUDIP.ready(function () {
                         {
                             loading: function (isLoading) {
                                 if (!isLoading) {
-                                    var h = jQuery('section.studip-fullcalendar-header');
+                                    let h = jQuery('section.studip-fullcalendar-header');
                                     if (h) {
                                         jQuery(h).removeClass('invisible');
-                                        jQuery(h).insertAfter('.fc .fc-toolbar');
+                                        jQuery(h).insertBefore(this);
                                     }
                                 }
                             }
                         }
                     );
                 } else {
-                    var config = {
+                    let config = {
                         studip_functions: {
                             drop_event:
                             STUDIP.Resources.dropEventInRoomGroupBookingPlan,
@@ -758,16 +758,16 @@ STUDIP.ready(function () {
                         },
                         loading: function (isLoading) {
                             if (!isLoading) {
-                                var h = jQuery('section.studip-fullcalendar-header');
+                                let h = jQuery('section.studip-fullcalendar-header');
                                 if (h) {
                                     jQuery(h).removeClass('invisible');
-                                    jQuery(h).insertAfter('.fc .fc-toolbar');
+                                    jQuery(h).insertBefore(this);
                                 }
                             }
                         }
                     };
                     if (use_session_date) {
-                        var session_date_string = sessionStorage.getItem('booking_plan_date');
+                        let session_date_string = sessionStorage.getItem('booking_plan_date');
                         if (session_date_string) {
                             config.defaultDate = session_date_string;
                         }
@@ -789,8 +789,8 @@ STUDIP.ready(function () {
                             drop: function (event, ui_element) {
                                 event.preventDefault();
 
-                                var booking_plan_entry = event.target;
-                                var new_background_colour = jQuery(
+                                let booking_plan_entry = event.target;
+                                let new_background_colour = jQuery(
                                     ui_element.helper
                                 ).css('background-color');
 
@@ -813,10 +813,10 @@ STUDIP.ready(function () {
                                 );
                             }
                         });
-                        var h = jQuery('section.studip-fullcalendar-header').clone();
+                        let h = jQuery('section.studip-fullcalendar-header').clone();
                         if (h) {
                             jQuery(h).removeClass('invisible');
-                            jQuery(h).insertAfter('.fc .fc-toolbar');
+                            jQuery(h).insertBefore(this);
                         }
                     }
                 }
