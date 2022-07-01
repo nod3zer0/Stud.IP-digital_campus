@@ -25,7 +25,7 @@ class LonCapaContentModule extends ContentModule
      * @param string $module_type
      * @param string $cms_type
      */
-    public function __construct($module_id = "", $module_type, $cms_type)
+    public function __construct($module_id, $module_type, $cms_type)
     {
         $this->lcRequest = new LonCapaRequest();
         $this->cmsUrl = $GLOBALS['ELEARNING_INTERFACE_MODULES'][$cms_type]['ABSOLUTE_PATH_ELEARNINGMODULES'];

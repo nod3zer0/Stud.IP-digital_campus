@@ -17,7 +17,7 @@
 
 /**
 *
-* This class contains methods to handle PmWiki learning modules 
+* This class contains methods to handle PmWiki learning modules
 *
 * @author   Marco Diedrich <mdiedric@uos.de>
 * @access   public
@@ -32,19 +32,19 @@ class PmWikiContentModule extends ContentModule
     /**
     * constructor
     *
-    * init class. 
+    * init class.
     * @access public
     * @param string $module_id module-id
     * @param string $module_type module-type
     * @param string $cms_type system-type
-    */ 
+    */
 
-    function __construct($module_id = "", $module_type, $cms_type)
+    function __construct($module_id, $module_type, $cms_type)
     {
         parent::__construct($module_id, $module_type, $cms_type);
         $this->link = $GLOBALS['connected_cms'][$this->cms_type]->ABSOLUTE_PATH_ELEARNINGMODULES.$this->id."/";
-        $this->client = WebserviceClient::instance( $this->link. '?' . 
-                                                    $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['URL_PARAMS'], 
+        $this->client = WebserviceClient::instance( $this->link. '?' .
+                                                    $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['URL_PARAMS'],
                                                     $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['WEBSERVICE_CLASS']);
     }
 
@@ -98,7 +98,7 @@ class PmWikiContentModule extends ContentModule
         if ($authorized)
         {
             return true;
-        } else 
+        } else
         {
             # old authorization
             if (is_array($this->accepted_users) && in_array($username, $this->accepted_users))

@@ -15,8 +15,13 @@
 * @module       ContentModule
 * @package  ELearning-Interface
 */
-class ContentModule
+abstract class ContentModule
 {
+    /**
+     * Fetches data from conencted cms.
+     */
+    abstract function readData();
+
     var $id;
     var $title;
     var $module_type;
@@ -41,7 +46,7 @@ class ContentModule
     * @param string $module_type module-type
     * @param string $cms_type system-type
     */
-    function __construct($module_id = "", $module_type, $cms_type)
+    function __construct($module_id, $module_type, $cms_type)
     {
         global $connected_cms;
 
