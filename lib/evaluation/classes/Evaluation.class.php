@@ -125,8 +125,6 @@ class Evaluation extends EvaluationObject implements PrivacyObject
     public function __construct($objectID = "", $parentObject = null, $loadChildren = EVAL_LOAD_NO_CHILDREN)
     {
         parent::__construct($objectID, $parentObject, $loadChildren);
-        $this->setAuthorEmail("mail@AlexanderWillner.de");
-        $this->setAuthorName("Alexander Willner");
         $this->instanceof = INSTANCEOF_EVAL;
 
         $this->rangeID = [];

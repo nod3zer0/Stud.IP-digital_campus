@@ -87,8 +87,6 @@ class EvaluationGroup extends EvaluationObject {
                               $loadChildren = EVAL_LOAD_NO_CHILDREN) {
     /* Set default values ------------------------------------------------- */
     parent::__construct($objectID, $parentObject, $loadChildren);
-    $this->setAuthorEmail ("mail@AlexanderWillner.de");
-    $this->setAuthorName ("Alexander Willner");
     $this->instanceof = INSTANCEOF_EVALGROUP;
 
     $this->childType = NULL;

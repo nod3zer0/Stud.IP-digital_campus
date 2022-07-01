@@ -94,8 +94,6 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
     register_shutdown_function([&$this, "_EvaluationExportManagerCSV"]);
     ini_set('memory_limit', '256M');
     parent::__construct($evalID);
-    $this->setAuthorEmail ("mail@AlexanderWillner.de");
-    $this->setAuthorName ("Alexander Willner");
     $this->instanceof = INSTANCEOF_EVALEXPORTMANAGERCSV;
 
     $this->extension     = EVALEXPORT_EXTENSION;

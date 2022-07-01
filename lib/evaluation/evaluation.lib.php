@@ -163,48 +163,31 @@ class EvalCommon
 
 
     /**
-     * Creates an errormessage from an object
-     * @param object StudipObejct   $object   A Stud.IP-object
-     */
-    public static function showErsrorReport(&$object, $errortitle = "")
-    {
-        $errors = $object->getErrors();
-        if (empty ($errortitle)) {
-            if ($errors && count($errors) > 1) {
-                $errortitle = _("Es sind Fehler aufgetreten.");
-            } else {
-                $errortitle = _("Es ist ein Fehler aufgetreten.");
-            }
-        }
-
-        if (!$object->isError()) {
-            return MessageBox::success(_("Es ist kein Fehler aufgetreten"));
-        } else {
-            $details = [];
-            if (!empty($errors)) {
-                foreach ($errors as $error) {
-                    $string = $error['string'];
-                    if ($error["type"] == ERROR_CRITICAL) {
-                        $string .= _("Datei: ") . $error["file"] . '<br>';
-                        $string .= _("Zeile: ") . $error["line"] . '<br>';
-
-                    }
-                    $details[] = $string;
-                }
-            }
-            return MessageBox::error($errortitle, $details);
-        }
-    }
-
-    /**
      * @param $object
      * @param string $errortitle
-     * @return MessageBox|object
+     * @return MessageBox
      * @deprecated
      */
-    public static function createErrorReport(&$object, $errortitle = "")
+    public static function createErrorReport(AuthorObject $object, string $errortitle = ''): MessageBox
     {
-        return MessageBox::error($errortitle);
+        $errors = $object->getErrors();
+
+        if (!$errortitle) {
+            if (count($errors) > 1) {
+                $errortitle = _('Es sind Fehler aufgetreten.');
+            } else {
+                $errortitle = _('Es ist ein Fehler aufgetreten.');
+            }
+        }
+
+        $details = array_map(
+            function ($error) {
+                return "#{$error['code']}: {$error['string']}";
+            },
+            $errors
+        );
+
+        return MessageBox::error($errortitle, $details);
     }
 
     /**

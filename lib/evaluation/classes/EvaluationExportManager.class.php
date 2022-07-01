@@ -121,8 +121,6 @@ class EvaluationExportManager extends AuthorObject
         register_shutdown_function([&$this, "_EvaluationExportManager"]);
 
         parent::__construct();
-        $this->setAuthorEmail("mail@AlexanderWillner.de");
-        $this->setAuthorName("Alexander Willner");
         $this->instanceof = INSTANCEOF_EVALEXPORTMANAGER;
 
         $this->filename = "";

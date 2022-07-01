@@ -52,20 +52,6 @@ class AuthorObject
     public $errorArray;
 
     /**
-     * Holds the emailadress of the author
-     * @access   private
-     * @var      array $authorEmail
-     */
-    public $authorEmail;
-
-    /**
-     * Holds the name of the author
-     * @access   private
-     * @var      array $authorName
-     */
-    public $authorName;
-
-    /**
      * Holds the type of object. See INSTANCEOF_*
      * @access   private
      * @var      string $instanceof
@@ -80,56 +66,6 @@ class AuthorObject
     {
         $this->instanceof = 'AuthorObject';
         $this->errorArray = [];
-    }
-
-
-    /**
-     * Destructor. Should be used every time after an object is not longer
-     * usefull!
-     * @access   public
-     */
-    public function finalize()
-    {
-    }
-
-    /**
-     * Sets the emailaddress of the author
-     * @access  public
-     * @param string $email The emailaddress
-     */
-    public function setAuthorEmail($email)
-    {
-        $this->authorEmail = $email;
-    }
-
-    /**
-     * Gets the emailaddress of the author
-     * @access  public
-     * @return  string The emailaddress
-     */
-    public function getAuthorEmail()
-    {
-        return $this->authorEmail;
-    }
-
-    /**
-     * Sets the name of the author
-     * @access  public
-     * @param string $name The name
-     */
-    public function setAuthorName($name)
-    {
-        $this->authorNmae = $name;
-    }
-
-    /**
-     * Gets the name of the author
-     * @access  public
-     * @return  string The name
-     */
-    public function getAuthorName()
-    {
-        return $this->authorName;
     }
 
     /**
@@ -149,7 +85,7 @@ class AuthorObject
      */
     public function isError()
     {
-        return (count($this->errorArray) != 0);
+        return count($this->errorArray) > 0;
     }
 
     /**
@@ -176,33 +112,17 @@ class AuthorObject
      * @access  public
      * @param integer $errcode The code of the error
      * @param string $errstring The description of the error
-     * @param integer $errline The line
-     * @param string $errfile The file
-     * @param integer $errtype Defines wheter the error is critical
      */
-    public function throwError($errcode, $errstring, $errline = 0, $errfile = 0, $errtype = ERROR_NORMAL)
+    public function throwError($errcode, $errstring)
     {
         if (!is_array($this->errorArray)) {
             $this->errorArray = [];
         }
 
-        array_push($this->errorArray,
-            ["code" => $errcode,
-                "string" => $errstring,
-                "file" => $errfile,
-                "line" => $errline,
-                "type" => $errtype]
-        );
-        if ($errtype == ERROR_CRITICAL) {
-            @mail($this->getAuthorEmail(),
-                "Critical error in Stud.IP",
-                "Hello " . $this->getAuthorName() . "\n\n" .
-                "there is an error in file " . $errfile . " " .
-                "in line " . $errline . ". \n" .
-                "The code is " . $errcode . "\n" .
-                "Description: " . $errstring . ".\n\n\n" .
-                "regards, *an AuthorObject*\n\n");
-        }
+        $this->errorArray [] = [
+            'code'   => $errcode,
+            'string' => $errstring,
+        ];
     }
 
     /**
@@ -210,28 +130,10 @@ class AuthorObject
      * @access  private
      * @param object $class The class with the error
      */
-    public function throwErrorFromClass(&$class)
+    public function throwErrorFromClass(AuthorObject $class)
     {
         $this->errorArray = $class->getErrors();
         $class->resetErrors();
-    }
-
-    /**
-     * An errorHandler for PHP-errors
-     * @access  private
-     * @param int $no Errornumber
-     * @param string $str Errordescription
-     * @param string $file Filename
-     * @param int $line Linenumber
-     * @param array $ctx All variables
-     */
-    public function errorHandler($no, $str, $file, $line, $ctx)
-    {
-        if (!($no & error_reporting())) {
-            return;
-        }
-        $this->throwError($no, $str, $line, $file, ERROR_CRITICAL);
-        echo MessageBox::error("Schwerer PHP-Laufzeitfehler");
     }
 }
 

@@ -156,8 +156,6 @@ class EvaluationObject extends StudipObject {
 
     /* Set default values -------------------------------------------------- */
     parent::__construct($objectID);
-    $this->setAuthorEmail ("mail@AlexanderWillner.de");
-    $this->setAuthorName ("Alexander Willner");
     $this->instanceof = INSTANCEOF_EVALOBJECT;
 
     $this->parentObject   = $parentObject;
