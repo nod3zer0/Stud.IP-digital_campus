@@ -2,7 +2,7 @@
 /**
  * StudipLock.class.php
  * class with methods to perform cooperative advisory locking
- * using the GET_LOCK feature from Mysql 
+ * using the GET_LOCK feature from Mysql
  * https://dev.mysql.com/doc/refman/5.0/en/miscellaneous-functions.html#function_get-lock
  *
  * This program is free software; you can redistribute it and/or
@@ -33,23 +33,26 @@ class StudipLock
     }
 
     /**
-     * Tries to obtain a lock with a name given by the string $lockname, 
-     * using a timeout of $timeout seconds. Returns 1 if the lock was obtained 
-     * successfully, 0 if the attempt timed out 
+     * Tries to obtain a lock with a name given by the string $lockname,
+     * using a timeout of $timeout seconds. Returns 1 if the lock was obtained
+     * successfully, 0 if the attempt timed out
      * (for example, because another client has previously locked the name),
      * or NULL if an error occurred
      * If a name has been locked by one client, any request by another client
      * for a lock with the same name is blocked.
-     * 
+     *
      * @param string $lockname
      * @param number $timeout in seconds
      * @throws UnexpectedValueException if there is already an active lock
-     * @return integer 1 if the lock was obtained successfully, 0 if the attempt timed out 
+     * @return integer 1 if the lock was obtained successfully, 0 if the attempt timed out
      */
     public static function get($lockname, $timeout = 10)
     {
         if (self::$current !== null) {
-            throw new UnexpectedValueException(sprintf('could not acquire new lock, %s still active'));
+            throw new UnexpectedValueException(sprintf(
+                'could not acquire new lock, %s still active',
+                self::$current
+            ));
         }
         $ok = DBManager::get()->fetchColumn("SELECT GET_LOCK(?,?)", [self::lockname($lockname), $timeout]);
         if ($ok) {
@@ -60,7 +63,7 @@ class StudipLock
 
     /**
      * check if lock with given name is available
-     * 
+     *
      * @param string $lockname
      * @return integer 1 if lock is available
      */
@@ -68,10 +71,10 @@ class StudipLock
     {
         return DBManager::get()->fetchColumn("SELECT IS_FREE_LOCK(?)", [self::lockname($lockname)]);
     }
-    
+
     /**
      * release the current lock
-     * 
+     *
      * @return integer 1 if the lock could be released
      */
     public static function release()
@@ -80,11 +83,11 @@ class StudipLock
             return DBManager::get()->fetchColumn("SELECT RELEASE_LOCK(?)", [self::lockname(self::$current)]);
         }
     }
-    
+
     /**
      * prepends the name of current database to lockname
      * because locks are server-wide
-     * 
+     *
      * @param string $lockname
      * @return string
      */
