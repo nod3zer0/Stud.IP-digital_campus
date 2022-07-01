@@ -165,7 +165,7 @@ class EvaluationGroupDB extends EvaluationObjectDB
      * @access  public
      * @param EvaluationObject  &$parentObject The parent object
      */
-    public function addChildren(&$parentObject)
+    public static function addChildren(&$parentObject)
     {
         $result = DBManager::get()->fetchFirst("
         SELECT evalgroup_id FROM evalgroup
@@ -176,9 +176,8 @@ class EvaluationGroupDB extends EvaluationObjectDB
             $loadChildren = EVAL_LOAD_NO_CHILDREN;
 
         foreach ($result as $groupID) {
-            $parentObject->addChild(
-                new EvaluationGroup ($groupID, $parentObject, $loadChildren)
-            );
+            $child = new EvaluationGroup ($groupID, $parentObject, $loadChildren);
+            $parentObject->addChild($child);
         }
     }
 
@@ -218,7 +217,7 @@ class EvaluationGroupDB extends EvaluationObjectDB
      * @param string $objectID The object id
      * @return string  The id from the parent object
      */
-    public function getParentID($objectID)
+    public static function getParentID($objectID)
     {
         return DBManager::get()->fetchColumn("
             SELECT parent_id FROM evalgroup WHERE evalgroup_id = ?", [$objectID]);

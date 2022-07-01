@@ -101,7 +101,7 @@ class StudipObject extends AuthorObject {
     * @access  public
     * @return  string  The new ID
     */
-   function createNewID () {
+   public static function createNewID () {
      srand ((double) microtime () * 1000000);
      return md5 (uniqid (rand ()));
    }

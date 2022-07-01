@@ -36,9 +36,9 @@
  * @deprecated
  */
 
-class IssueDB {
-
-    function restoreIssue($issue_id)
+class IssueDB
+{
+    public static function restoreIssue($issue_id)
     {
         $query = "SELECT *
                   FROM themen
@@ -48,11 +48,8 @@ class IssueDB {
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    function storeIssue(&$issue)
+    public static function storeIssue(&$issue)
     {
-        global $user;
-
-
         if ($issue->new) {
             $query = "INSERT INTO themen
                         (issue_id, seminar_id, author_id, title, description, mkdate, chdate, priority)
@@ -104,7 +101,7 @@ class IssueDB {
         return TRUE;
     }
 
-    function deleteIssue($issue_id, $seminar_id, $title = '', $description = '')
+    public static function deleteIssue($issue_id)
     {
         $query = "DELETE FROM themen WHERE issue_id = ?";
         $statement = DBManager::get()->prepare($query);
@@ -115,7 +112,7 @@ class IssueDB {
         $statement->execute([$issue_id]);
     }
 
-    function isIssue($issue_id)
+    public static function isIssue($issue_id)
     {
         $query = "SELECT 1 FROM themen WHERE issue_id = ?";
         $statement = DBManager::get()->prepare($query);
@@ -123,7 +120,7 @@ class IssueDB {
         return (bool)$statement->fetchColumn();
     }
 
-    function getDatesforIssue($issue_id)
+    public static function getDatesforIssue($issue_id)
     {
         $query = "SELECT termine.*
                   FROM themen_termine
@@ -140,7 +137,7 @@ class IssueDB {
         return $ret;
     }
 
-    static function deleteAllIssues($course_id)
+    public static function deleteAllIssues($course_id)
     {
         $query = "SELECT issue_id FROM themen WHERE seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
@@ -154,4 +151,3 @@ class IssueDB {
         return count($themen);
     }
 }
-?>

@@ -886,15 +886,6 @@ class EvalTemplateGUI
         /* uebernehmen / loeschen Button ---------------------------- */
         $input = Button::create(_('Übernehmen'),
             'template_savefree_button');
-        $odb = new EvaluationObjectDB();
-        //if($odb->getGlobalPerm()=="root"){
-        //  $myuserid = 0;
-        //}
-        //else{
-        //   $myuserid = $user->id;
-        //}
-        //if($question->getParentID()==$myuserid){
-        //   $loesch=1;
         if (!mb_strstr($this->command, "create")) {
             $showDelete = YES;
             $input2 = Button::createAccept(_('Löschen'),

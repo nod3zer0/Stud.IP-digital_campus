@@ -441,7 +441,7 @@ class EvaluationObject extends StudipObject {
    function init ($objectID = "") {
      /* Load an evaluationobject or create a new one ----------------------- */
      if (empty ($objectID)) {
-       $this->setObjectID ($this->createNewID ());
+       $this->setObjectID(self::createNewID());
      } else {
        $this->setObjectID ($objectID);
        $this->load ();

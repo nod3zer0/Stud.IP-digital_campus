@@ -12,7 +12,7 @@
 
 class StudipContentmoduleHelper
 {
-    function find_seminars_using_contentmodule($system_type, $module_id)
+    public static function find_seminars_using_contentmodule($system_type, $module_id)
     {
         $db = DBManager::get();
 
@@ -25,7 +25,7 @@ class StudipContentmoduleHelper
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    function find_institutes_using_contentmodule($system_type, $module_id)
+    public static function find_institutes_using_contentmodule($system_type, $module_id)
     {
         $db = DBManager::get();
 

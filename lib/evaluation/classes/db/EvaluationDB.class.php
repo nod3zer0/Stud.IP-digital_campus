@@ -258,9 +258,9 @@ class EvaluationDB extends EvaluationObjectDB
      * @access public
      * @param string $evalID The eval id
      * @param array $answerIDs The answerIDs to get the pseudonym users
-     * @return integer  The number of users
+     * @return string[] Ids of the users who voted
      */
-    public function getUserVoted($evalID, $answerIDs = [], $questionIDs = [])
+    public static function getUserVoted($evalID, $answerIDs = [], $questionIDs = [])
     {
         $sql = "SELECT DISTINCT user_id FROM ";
 

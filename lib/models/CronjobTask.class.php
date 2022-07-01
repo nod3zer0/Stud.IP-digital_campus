@@ -123,7 +123,7 @@ class CronjobTask extends SimpleORMap
      * "getParameters" from the task class.
      *
      * @param  String $field Field which should be accessed.
-     * @return String Value of the method call
+     * @return mixed Value of the method call
      */
     public function getValue($field)
     {
@@ -163,7 +163,12 @@ class CronjobTask extends SimpleORMap
     public function scheduleOnce($timestamp, $priority = CronjobSchedule::PRIORITY_NORMAL,
                                  $parameters = [])
     {
-        return CronjobScheduler::scheduleOnce($this->id, $timestamp, $priority, $parameters);
+        return CronjobScheduler::getInstance()->scheduleOnce(
+            $this->id,
+            $timestamp,
+            $priority,
+            $parameters
+        );
     }
 
     /**
@@ -200,8 +205,16 @@ class CronjobTask extends SimpleORMap
                                      $priority = CronjobSchedule::PRIORITY_NORMAL,
                                      $parameters = [])
     {
-        return CronjobScheduler::schedulePeriodic($this->id, $minute, $hour, $day, $month,
-                                                  $day_of_week, $priority, $parameters);
+        return CronjobScheduler::getInstance()->schedulePeriodic(
+            $this->id,
+            $minute,
+            $hour,
+            $day,
+            $month,
+            $day_of_week,
+            $priority,
+            $parameters
+        );
     }
 
     /**

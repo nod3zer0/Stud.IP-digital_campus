@@ -58,7 +58,7 @@ class Bookmark extends \SimpleORMap
      *
      * @return Bookmark[] the list of bookmarks
      */
-    public function findUsersBookmarks($user): array
+    public static function findUsersBookmarks($user): array
     {
         return self::findBySQL('user_id = ? ORDER BY chdate', [$user->id]);
     }

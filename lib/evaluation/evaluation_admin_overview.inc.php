@@ -225,7 +225,7 @@ $td = new HTML ("td");
 $td->addAttr("class", "blank");
 
 
-if ($lib->db->getGlobalPerm() != "autor") {
+if (EvaluationObjectDB::getGlobalPerm() !== 'autor') {
     $td->addContent($lib->createShowRangeForm());
 } else {
     $td->addHTMLContent("Evaluationen aus dem Bereich \"" .

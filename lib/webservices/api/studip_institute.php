@@ -14,7 +14,7 @@ require_once 'lib/webservices/api/studip_user.php';
 
 class StudipInstituteHelper
 {
-    function get_users_by_status($institute_id, $status)
+    public static function get_users_by_status($institute_id, $status)
     {
         $db = DBManager::get();
 
@@ -26,7 +26,7 @@ class StudipInstituteHelper
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    function get_user_status($username, $institute_id)
+    public static function get_user_status($username, $institute_id)
     {
         $db = DBManager::get();
 
@@ -38,27 +38,27 @@ class StudipInstituteHelper
         return $stmt->fetchColumn();
     }
 
-    function get_admins($institute_id)
+    public static function get_admins($institute_id)
     {
         return StudipInstituteHelper::get_users_by_status($institute_id, 'admin');
     }
 
-    function get_lecturers($institute_id)
+    public static function get_lecturers($institute_id)
     {
         return StudipInstituteHelper::get_users_by_status($institute_id, 'dozent');
     }
 
-    function get_authors($institute_id)
+    public static function get_authors($institute_id)
     {
         return StudipInstituteHelper::get_users_by_status($institute_id, 'autor');
     }
 
-    function get_users($institute_id)
+    public static function get_users($institute_id)
     {
         return StudipInstituteHelper::get_users_by_status($institute_id, 'user');
     }
 
-    function get_higher_level_institute($institute_id)
+    public static function get_higher_level_institute($institute_id)
     {
         $db = DBManager::get();
 
@@ -70,7 +70,7 @@ class StudipInstituteHelper
         return $stmt->fetchColumn();
     }
 
-    function get_admins_upward_recursive($institute_id)
+    public static function get_admins_upward_recursive($institute_id)
     {
         $institute_fak = StudipInstituteHelper::get_higher_level_institute($institute_id);
 

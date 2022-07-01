@@ -84,10 +84,10 @@ class ExternModule {
         // the module is called via extern.php (not via the admin area) and there is
         // no config_id so it's necessary to check the range_id
         if (!$config_id && !$this->checkRangeId($range_id)) {
-            $this->printError();
+            self::printError();
         }
         if (is_null($this->type)) {
-            $this->printError();
+            self::printError();
         }
 
         $this->name = $module_name;
@@ -325,10 +325,8 @@ class ExternModule {
         return in_array(get_object_type($range_id), $GLOBALS['EXTERN_MODULE_TYPES'][$this->type]['view']);
     }
 
-    /**
-    *
-    */
-    function printError () {
+    public static function printError ()
+    {
         page_close();
         exit;
     }

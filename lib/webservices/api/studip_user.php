@@ -52,9 +52,7 @@ class Studip_User {
 
 
     /**
-     * <MethodDescription>
-     *
-     * @return type <description>
+     * @return bool
      */
     function save()
     {
@@ -88,9 +86,7 @@ class Studip_User {
 
 
     /**
-     * <MethodDescription>
-     *
-     * @return type <description>
+     * @return bool
      */
     function destroy()
     {
@@ -112,7 +108,7 @@ class Studip_User {
      *
      * @return mixed <description>
      */
-    function find_by_user_name($user_name)
+    public static function find_by_user_name($user_name)
     {
         $db = DBManager::get();
 
@@ -141,7 +137,7 @@ class Studip_User {
      *
      * @return mixed <description>
      */
-    function find_by_user_id($user_id)
+    public static function find_by_user_id($user_id)
     {
         $db = DBManager::get();
 
@@ -170,7 +166,7 @@ class Studip_User {
      *
      * @return mixed <description>
      */
-    function find_by_status($status)
+    public static function find_by_status($status)
     {
         $db = DBManager::get();
 
@@ -185,7 +181,7 @@ class Studip_User {
      *
      * @return array <description>
      */
-    function get_fields()
+    public static function get_fields()
     {
         $fields = ['auth_user_md5.user_id'  => 'id',
                         'auth_user_md5.username' => 'user_name',

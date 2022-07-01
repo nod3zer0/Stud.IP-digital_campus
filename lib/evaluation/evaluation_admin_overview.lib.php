@@ -1716,7 +1716,7 @@ class EvalOverview
         $db = new EvaluationObjectDB ();
         $evalDB = new EvaluationDB ();
         $evalID = $eval->getObjectID();
-        $globalperm = $db->getGlobalPerm();
+        $globalperm = EvaluationObjectDB::getGlobalPerm();
 
         // linked ranges
         $rangeIDs = $eval->getRangeIDs();
@@ -2049,9 +2049,8 @@ class EvalOverview
 
     function createDomainLinks($search)
     {
-        $db = new EvaluationObjectDB ();
         $evalDB = new EvaluationDB ();
-        $globalperm = $db->getGlobalPerm();
+        $globalperm = EvaluationObjectDB::getGlobalPerm();
 
         // search results
         $results = $evalDB->search_range($search);

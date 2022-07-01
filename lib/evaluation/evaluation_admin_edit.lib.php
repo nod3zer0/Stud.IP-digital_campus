@@ -44,7 +44,7 @@ class EvalEdit
      * @param string $rigt the right site of the table
      * @return  string  the html-table
      */
-    public function createSite($left = "", $right = "")
+    public static function createSite($left = "", $right = "")
     {
         $table = new HTML("table");
         $table->addAttr("border", "0");
@@ -78,7 +78,7 @@ class EvalEdit
         return $table->createContent();
     }
 
-    public function createHiddenIDs()
+    public static function createHiddenIDs()
     {
         $input = new HTML ("input");
         $input->addAttr("type", "hidden");
@@ -95,5 +95,3 @@ class EvalEdit
         return;
     }
 }
-
-?>

@@ -16,14 +16,14 @@ require_once 'lib/webservices/api/studip_session.php';
 
 class StudipSeminarHelper
 {
-    function get_title($seminar_id)
+    public static function get_title($seminar_id)
     {
         $seminar_id = preg_replace('/\W/', '', $seminar_id);
 
         return Seminar::getInstance($seminar_id)->getName();
     }
 
-    function validate_seminar_permission($ticket, $seminar_id, $permission)
+    public static function validate_seminar_permission($ticket, $seminar_id, $permission)
     {
         $username = StudipSessionHelper::get_session_username($ticket);
 
@@ -35,7 +35,7 @@ class StudipSeminarHelper
         }
     }
 
-    function get_user_status($username, $seminar_id)
+    public static function get_user_status($username, $seminar_id)
     {
         $db = DBManager::get();
 
@@ -57,7 +57,7 @@ class StudipSeminarHelper
         return $status;
     }
 
-    function get_participants($seminar_id, $status = 'all')
+    public static function get_participants($seminar_id, $status = 'all')
     {
         $db = DBManager::get();
 
@@ -79,7 +79,7 @@ class StudipSeminarHelper
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    function get_main_institute($seminar_id)
+    public static function get_main_institute($seminar_id)
     {
         $db = DBManager::get();
 
@@ -89,7 +89,7 @@ class StudipSeminarHelper
         return $stmt->fetchColumn();
     }
 
-    function get_additional_institutes($seminar_id)
+    public static function get_additional_institutes($seminar_id)
     {
         $db = DBManager::get();
 
@@ -99,14 +99,14 @@ class StudipSeminarHelper
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    function get_all_institutes($seminar_id)
+    public static function get_all_institutes($seminar_id)
     {
         $institute_list = array_unique(array_merge([StudipSeminarHelper::get_main_institute($seminar_id)],
                                                    StudipSeminarHelper::get_additional_institutes($seminar_id)));
         return $institute_list;
     }
 
-    function get_admins_for_seminar($seminar_id)
+    public static function get_admins_for_seminar($seminar_id)
     {
         $all_institutes = StudipSeminarHelper::get_all_institutes($seminar_id);
         $admins = [];
@@ -120,7 +120,7 @@ class StudipSeminarHelper
         return $admins;
     }
 
-    function get_seminar_groups($seminar_id)
+    public static function get_seminar_groups($seminar_id)
     {
         $db = DBManager::get();
 
@@ -132,7 +132,7 @@ class StudipSeminarHelper
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    function get_seminar_group_members($seminar_id, $group_name)
+    public static function get_seminar_group_members($seminar_id, $group_name)
     {
         $db = DBManager::get();
         $result = [];

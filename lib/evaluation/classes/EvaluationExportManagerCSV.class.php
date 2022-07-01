@@ -138,8 +138,6 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
       fputs ($this->filehandle, EVALEXPORT_DELIMITER . _("Vorname") . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
       fputs ($this->filehandle, EVALEXPORT_DELIMITER . _("E-Mail") . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
 
-      $db      = new EvaluationAnswerDB ();
-
       /* for each question -------------------------------------------------- */
       foreach ($this->evalquestions as $evalquestion) {
          $type     = $evalquestion->getType ();
@@ -147,7 +145,7 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
 
          /* Questiontype: likert scale -------------------------------------- */
          if ($type == EVALQUESTION_TYPE_LIKERT) {
-             $db->addChildren($evalquestion);
+            EvaluationAnswerDB::addChildren($evalquestion);
             $header = $evalquestion->getText ().":";
             while ($answer = &$evalquestion->getNextChild ()) {
                if ($answer->isResidual ()) {
@@ -171,7 +169,7 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
 
          /* Questiontype: pol scale ----------------------------------------- */
          } elseif ($type == EVALQUESTION_TYPE_POL) {
-            $db->addChildren($evalquestion);
+            EvaluationAnswerDB::addChildren($evalquestion);
             $header = $evalquestion->getText ().":";
             $answer = $evalquestion->getNextChild ();
             $header .= $answer->getText ();
@@ -195,7 +193,7 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
          /* Questiontype: multiple chioice ---------------------------------- */
          } elseif ($type == EVALQUESTION_TYPE_MC) {
             if ($evalquestion->isMultiplechoice ()) {
-                $db->addChildren($evalquestion);
+               EvaluationAnswerDB::addChildren($evalquestion);
                while ($answer = &$evalquestion->getNextChild ()) {
                   $header = $evalquestion->getText ();
                   $header .= ":".$answer->getText ();

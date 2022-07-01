@@ -181,10 +181,12 @@ class AddFilesSearchIndex extends Migration
 
     private function installCronjob()
     {
+        $scheduler = CronjobScheduler::getInstance();
+
         require_once 'lib/classes/FilesSearch/Cronjob.php';
         $task = new  \FilesSearch\Cronjob();
-        $taskId = CronjobScheduler::getInstance()->registerTask($task);
-        CronjobScheduler::scheduleOnce($taskId, strtotime('+1 minute'))->activate();
-        CronjobScheduler::schedulePeriodic($taskId, 55, 0)->activate();
+        $taskId = $scheduler->registerTask($task);
+        $scheduler->scheduleOnce($taskId, strtotime('+1 minute'))->activate();
+        $scheduler->schedulePeriodic($taskId, 55, 0)->activate();
     }
 }

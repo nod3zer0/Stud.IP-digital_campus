@@ -208,7 +208,7 @@ class EvaluationQuestionDB extends EvaluationObjectDB
      * @access  public
      * @param EvaluationObject  &$parentObject The parent object
      */
-    public function addChildren(&$parentObject)
+    public static function addChildren(&$parentObject)
     {
         $db = DBManager::get();
 
@@ -228,9 +228,8 @@ class EvaluationQuestionDB extends EvaluationObjectDB
             : EVAL_LOAD_NO_CHILDREN;
 
         foreach ($result as $evalquestion_id) {
-            $parentObject->addChild(new EvaluationQuestion
-            ($evalquestion_id,
-                $parentObject, $loadChildren));
+            $child = new EvaluationQuestion($evalquestion_id, $parentObject, $loadChildren);
+            $parentObject->addChild($child);
         }
     }
 
@@ -256,7 +255,7 @@ class EvaluationQuestionDB extends EvaluationObjectDB
      * @param string $objectID The object id
      * @return string  The id from the parent object
      */
-    public function getParentID($objectID)
+    public static function getParentID($objectID)
     {
         $db = DBManager::get();
 

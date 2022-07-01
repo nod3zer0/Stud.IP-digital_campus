@@ -91,22 +91,22 @@ class EvaluationObjectDB extends DatabaseObject
      * @param boolean $as_value If YES return as value
      * @return  string   the perm or NULL
      */
-    public function getGlobalPerm($as_value = false)
+    public static function getGlobalPerm($as_value = false)
     {
         if ($GLOBALS['perm']->have_perm("root")) {
-            return ($as_value) ? 63 : "root";
+            return $as_value ? 63 : "root";
         } elseif ($GLOBALS['perm']->have_perm("admin")) {
-            return ($as_value) ? 31 : "admin";
+            return $as_value ? 31 : "admin";
         } elseif ($GLOBALS['perm']->have_perm("dozent")) {
-            return ($as_value) ? 15 : "dozent";
+            return $as_value ? 15 : "dozent";
         } elseif ($GLOBALS['perm']->have_perm("tutor")) {
-            return ($as_value) ? 7 : "dozent";
+            return $as_value ? 7 : "dozent";
         } elseif ($GLOBALS['perm']->have_perm("autor")) {
-            return ($as_value) ? 3 : "autor";
+            return $as_value ? 3 : "autor";
         } elseif ($GLOBALS['perm']->have_perm("user")) {
-            return ($as_value) ? 1 : "user";
+            return $as_value ? 1 : "user";
         } else {
-            return ($as_value) ? 0 : NULL;
+            return $as_value ? 0 : NULL;
         }
     }
 
@@ -118,7 +118,7 @@ class EvaluationObjectDB extends DatabaseObject
      * @access   public
      * @return   string
      */
-    public function getRangePerm($rangeID, $userID = NULL, $as_value = false)
+    public static function getRangePerm($rangeID, $userID = NULL, $as_value = false)
     {
         if (!$rangeID) {
             print "no rangeID!<br>";
@@ -194,9 +194,9 @@ class EvaluationObjectDB extends DatabaseObject
      * @access   public
      * @param EvaluationObject   &$eval The evaluation
      * @param boolean $return_ids If YES return the ids
-     * @return   integer            Number of ranges with no permission
+     * @return array|integer Number of ranges with no permission or array of ids
      */
-    public function getEvalUserRangesWithNoPermission(&$eval, $return_ids = false)
+    public static function getEvalUserRangesWithNoPermission(&$eval, $return_ids = false)
     {
         $no_permisson = 0;
         $rangeIDs = $eval->getRangeIDs();

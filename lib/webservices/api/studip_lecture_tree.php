@@ -12,7 +12,7 @@
 
 class StudipLectureTreeHelper
 {
-    function get_seminars_by_sem_tree_id($sem_tree_id, $term_id)
+    public static function get_seminars_by_sem_tree_id($sem_tree_id, $term_id)
     {
         $db = DBManager::get();
         $semester = Semester::find($term_id);
@@ -32,7 +32,7 @@ class StudipLectureTreeHelper
         return $stmt->fetchAll();
     }
 
-    function get_sem_path($sem_tree_id)
+    public static function get_sem_path($sem_tree_id)
     {
         $stack = (array) $sem_tree_id;
         $info = StudipLectureTreeHelper::get_info_for_sem_tree_id($sem_tree_id);
@@ -49,7 +49,7 @@ class StudipLectureTreeHelper
         return implode (" > ", $name_parts);
     }
 
-    function get_info_for_sem_tree_id($sem_tree_id)
+    public static function get_info_for_sem_tree_id($sem_tree_id)
     {
         $db = DBManager::get();
 
@@ -64,7 +64,7 @@ class StudipLectureTreeHelper
         return $stmt->fetchAll();
     }
 
-    function get_subtree($sem_tree_id)
+    public static function get_subtree($sem_tree_id)
     {
         $stack = $collected = [$sem_tree_id];
 
@@ -77,7 +77,7 @@ class StudipLectureTreeHelper
         return $collected;
     }
 
-    function get_subtree_seminar_count($sem_tree_id, $only_visible = true)
+    public static function get_subtree_seminar_count($sem_tree_id, $only_visible = true)
     {
         $db = DBManager::get();
 
@@ -94,7 +94,7 @@ class StudipLectureTreeHelper
         return $stmt->fetchColumn();
     }
 
-    function get_local_tree($sem_tree_id)
+    public static function get_local_tree($sem_tree_id)
     {
         $db = DBManager::get();
 

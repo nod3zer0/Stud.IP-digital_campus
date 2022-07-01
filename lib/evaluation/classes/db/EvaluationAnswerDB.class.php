@@ -184,7 +184,7 @@ class EvaluationAnswerDB extends EvaluationObjectDB
      * @access  public
      * @param EvaluationObject  &$parentObject The parent object
      */
-    function addChildren(&$parentObject)
+    public static function addChildren(&$parentObject)
     {
         $result = DBManager::get()->fetchFirst("SELECT evalanswer_id FROM evalanswer
                                             WHERE parent_id= ? ORDER by position",
@@ -194,8 +194,8 @@ class EvaluationAnswerDB extends EvaluationObjectDB
             $parentObject->loadChildren == EVAL_LOAD_ALL_CHILDREN ? EVAL_LOAD_ALL_CHILDREN : EVAL_LOAD_NO_CHILDREN;
 
         foreach ($result as $row) {
-            $parentObject->addChild(new EvaluationAnswer
-            ($row, $parentObject, $loadChildren));
+            $child = new EvaluationAnswer($row, $parentObject, $loadChildren);
+            $parentObject->addChild($child);
         }
     }
 
@@ -220,11 +220,11 @@ class EvaluationAnswerDB extends EvaluationObjectDB
      * @param string $objectID The object id
      * @return string  The id from the parent object
      */
-    function getParentID($objectID)
+    public static function getParentID($objectID)
     {
         return DBManager::get()->fetchColumn("SELECT parent_id FROM evalanswer
                                             WHERE evalanswer_id = ?",
-            [$objectID()]);
+            [$objectID]);
     }
 
     /**

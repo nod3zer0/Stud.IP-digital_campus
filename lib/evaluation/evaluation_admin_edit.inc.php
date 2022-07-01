@@ -153,7 +153,6 @@ if ($eval->hasVoted()) {
 
 // only the author or user with tutor perm in all evalRangeIDs should edit an eval
 $authorID = $eval->getAuthorID();
-$db = new EvaluationObjectDB();
 
 if ($authorID != $user->id) {
 
@@ -163,7 +162,7 @@ if ($authorID != $user->id) {
 
         foreach ($eval->getRangeIDs() as $rangeID) {
 
-            $user_perm = $db->getRangePerm($rangeID, $user->id, YES);
+            $user_perm = EvaluationObjectDB::getRangePerm($rangeID, $user->id, YES);
 
             // every range with a lower perm than Tutor
             if ($user_perm < 7)
@@ -225,5 +224,3 @@ if (Request::submitted('newButton')) {
 }
 $editSite = $EditTree->showEvalTree($itemID, 1);
 echo EvalEdit::createSite($editSite, $templateSite);
-
-?>

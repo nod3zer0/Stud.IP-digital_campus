@@ -65,8 +65,7 @@ if (empty ($rangeID)) {
 }
 
 $command = $lib->getPageCommand();
-$odb = new EvaluationObjectDB();
-if ($odb->getGlobalPerm() == "root") {
+if (EvaluationObjectDB::getGlobalPerm() === 'root') {
     $myuserid = 0;
 } else {
     $myuserid = $user->id;

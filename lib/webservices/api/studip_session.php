@@ -14,21 +14,21 @@ require_once 'lib/webservices/api/studip_seminar.php';
 
 class StudipSessionHelper
 {
-    function is_session_valid($session_id)
+    public static function is_session_valid($session_id)
     {
         $session_id = preg_replace('/\W/', '', $session_id);
 
         return Token::isValid($session_id);
     }
 
-    function get_session_user_id($session_id)
+    public static function get_session_user_id($session_id)
     {
         $session_id = preg_replace('/\W/', '', $session_id);
 
         return Token::isValid($session_id);
     }
 
-    function get_session_username($session_id)
+    public static function get_session_username($session_id)
     {
         $session_id = preg_replace('/\W/', '', $session_id);
         $user_id = Token::isValid($session_id);
