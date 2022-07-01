@@ -149,12 +149,11 @@
     color: @contrast-content-white;
     display: flex;
     padding: 2px 0px;
-    flex: 0 1 auto;        // fourth row of flex-main
     min-width: @site-width;
     width: 100%;
 }
 #footer {
-    flex: 1;
+    flex-grow: 1;
     margin-left: 8px;
     margin-top: 2px;
     line-height: 28px;
@@ -176,26 +175,15 @@
         flex-wrap: nowrap;
         align-content: stretch;
         align-items: stretch;
-        justify-content: flex-start;
+        justify-content: space-between;
 
         width: 100%;
         min-width: @site-width;
 
-        flex: 0 1 auto;
         border-bottom: 1px solid @light-gray-color-40;
-
-        #barTopMenu {                   // column 1 of flex-header
-            flex: 1 1 auto;
-        }
-
-        #barTopStudip {             // column 2 of flex-header
-            flex: 0 1 auto;
-        }
     }
 
     #barBottomContainer {       // second row of flex-main
-        flex: 0 1 auto;
-
         min-width: @site-width;
         z-index: 1001; // High enough so it will be above the sidebar
     }
@@ -208,7 +196,7 @@
         align-items: stretch;
         justify-content: flex-start;
 
-        flex: 10 1 auto;
+        flex-grow: 1;
 
         min-width: @page-width;
 
@@ -223,8 +211,6 @@
         }
 
         #tabs { // row 1 of layout_page
-            width: 100%;
-            flex: 0 1 auto;
             padding-left: @page-margin;
             transition: margin-left;
             transition-duration: 300ms;
@@ -239,17 +225,12 @@
             align-items: stretch;
             justify-content: flex-start;
 
-            flex: 1 1 auto;
+            flex-grow: 1;
             min-width: @page-width;
 
             #layout_content {           // column 1 of layout_container
-                flex: 1 1 auto;
+                flex-grow: 1;
             }
-
-            #layout_sidebar {           // column 2 of layout_container
-                flex: 0 1 auto;
-            }
-
         }
     }
 
