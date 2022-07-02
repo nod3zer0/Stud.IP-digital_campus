@@ -30,17 +30,18 @@
  * @property string booking_user_id database column
  *     The user who created the booking (booking).
  * @property string description database column
- * @property string begin database column
- * @property string end database column
- * @property string booking_type database column: The booking type.
+ * @property int begin database column
+ * @property int end database column
+ * @property int $preparation_time database column
+ * @property int booking_type database column: The booking type.
  *     The following types are defined:
  *     0 = normal booking
  *     1 = reservation
  *     2 = lock
  *     3 = planned booking (reservation from external tools)
  *
- * @property string repeat_end database column
- * @property string repeat_quantity database column
+ * @property int repeat_end database column
+ * @property int repeat_quantity database column
  * @property string repetition_interval database column
  *     The repetition_interval column contains a date interval string in a
  *     format that is accepted by the DateInterval class constructor.
@@ -51,11 +52,14 @@
  *     https://secure.php.net/manual/en/class.dateinterval.php
  *
  * @property string internal_comment database column
- * @property string mkdate database column
- * @property string chdate database column
+ * @property int mkdate database column
+ * @property int chdate database column
  * @property Resource resource belongs_to Resource
  * @property User assigned_user belongs_to User
  * @property CourseDate assigned_course_date belongs_to CourseDate
+ *
+ * @property-read int $real_begin
+ * @property-read DateTime $real_begin_dt
  */
 class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calendar\EventSource
 {
@@ -91,6 +95,19 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
 
         $config['additional_fields']['course_id'] = ['assigned_course_date', 'range_id'];
         $config['additional_fields']['room_name'] = ['resource', 'name'];
+
+        $config['additional_fields']['real_begin'] = [
+            'get' => function (ResourceBooking $booking) {
+                return $booking->begin - $booking->preparation_time;
+            }
+        ];
+        $config['additional_fields']['real_begin_dt'] = [
+            'get' => function (ResourceBooking $booking) {
+                $real_begin = new DateTime();
+                $real_begin->setTimestamp($booking->real_begin);
+                return $real_begin;
+            }
+        ];
 
         $config['registered_callbacks']['after_store'][] = 'updateIntervals';
         $config['registered_callbacks']['after_store'][] = 'createStoreLogEntry';
@@ -457,7 +474,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                     _('Es wurde ein Wiederholungsintervall ohne Begrenzung angegeben!')
                 );
             }
-            if ((!$this->repeat_quantity) && ($real_begin > $this->repeat_end)) {
+            if ((!$this->repeat_quantity) && ($this->real_begin > $this->repeat_end)) {
                 throw new InvalidArgumentException(
                     _('Der Startzeitpunkt darf nicht hinter dem Ende der Wiederholungen liegen!')
                 );
@@ -691,8 +708,6 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
      */
     public function deleteOverlappingBookings()
     {
-        $real_begin = new DateTime();
-        $real_begin->setTimestamp($this->begin - $this->preparation_time);
         $end = new DateTime();
         $end->setTimestamp($this->end);
         $repetition_end = new DateTime();
@@ -707,14 +722,14 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                     _('Es wurde ein Wiederholungsintervall ohne Begrenzung angegeben!')
                 );
             }
-            if ((!$this->repeat_quantity) && ($real_begin > $this->repeat_end)) {
+            if ((!$this->repeat_quantity) && ($this->real_begin > $this->repeat_end)) {
                 throw new InvalidArgumentException(
                     _('Der Startzeitpunkt darf nicht hinter dem Ende der Wiederholungen liegen!')
                 );
             }
 
             //Look in each repetition for overlapping bookings and delete them.
-            $current_date = clone $real_begin;
+            $current_date = $this->real_begin_dt;
             while ($current_date <= $repetition_end) {
                 $current_begin = clone $current_date;
                 $current_end = clone $current_date;
@@ -758,10 +773,10 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
             }
         } else {
             $derived_resource = $this->resource->getDerivedClassInstance();
-            if ($derived_resource->userHasPermission($this->booking_user, 'autor', [$real_begin, $end])) {
+            if ($derived_resource->userHasPermission($this->booking_user, 'autor', [$this->real_begin_dt, $end])) {
                 $delete_sql = 'begin < :end AND end > :begin AND resource_id = :resource_id ';
                 $sql_params = [
-                    'begin' => $real_begin->getTimestamp(),
+                    'begin' => $this->real_begin,
                     'end' => $end->getTimestamp(),
                     'resource_id' => $this->resource->id
                 ];
@@ -804,11 +819,6 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         $booking_resource = Resource::find($this->resource_id);
         $booking_user = User::find($this->booking_user_id);
 
-        $real_begin = new DateTime();
-        $real_begin->setTimestamp($this->begin - $this->preparation_time);
-        $end = new DateTime();
-        $end->setTimestamp($this->end);
-
         $deleted_c = 0;
 
         $template_factory = new Flexi_TemplateFactory(
@@ -819,8 +829,8 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
             $booking_resource,
             [
                 [
-                    'begin' => $real_begin->getTimestamp(),
-                    'end' => $end->getTimestamp(),
+                    'begin' => $this->real_begin,
+                    'end' => $this->end,
                 ]
             ],
             [1, 3],
