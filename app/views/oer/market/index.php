@@ -25,7 +25,7 @@ if ($materialien !== null) {
 ?>
 <form class="oer_search"
       action="<?= $controller->link_for("oer/market/search") ?>"
-      method="GET"
+      method="GET" aria-live="polite"
       data-searchresults="<?= htmlReady(json_encode($material_data)) ?>"
       data-filteredtag="<?= htmlReady(Request::get("tag")) ?>"
       data-filteredcategory="<?= htmlReady(Request::get("category")) ?>"
