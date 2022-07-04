@@ -23,8 +23,9 @@ class UserEventsIcal extends NonJsonApiController
             // damit unsichtbare Nutzer nicht ermittelt werden können
             throw new RecordNotFoundException();
         }
-        $calender_writer = new \CalendarWriterICalendar();
-        $export = new \CalendarExport($calender_writer);
+
+        $writer = new \CalendarWriterICalendar();
+        $export = new \CalendarExport($writer);
         $export->exportFromDatabase($observedUser->id, 0, 2114377200, ['CalendarEvent', 'CourseEvent', 'CourseCancelledEvent']);
         if ($GLOBALS['_calendar_error']->getMaxStatus(\ErrorHandler::ERROR_CRITICAL)) {
             throw new InternalServerError();

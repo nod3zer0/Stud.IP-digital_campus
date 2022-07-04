@@ -8,6 +8,8 @@ use Courseware\BlockFeedback;
 use Courseware\Container;
 use Courseware\Instance;
 use Courseware\StructuralElement;
+use Courseware\StructuralElementComment;
+use Courseware\StructuralElementFeedback;
 use Courseware\Task;
 use Courseware\TaskFeedback;
 use Courseware\TaskGroup;
@@ -81,7 +83,7 @@ class Authority
     }
 
     public static function canUpdateEditBlocker(User $user, $resource)
-    { 
+    {
         $structural_element = null;
         if ($resource instanceof Block) {
             $structural_element = $resource->container->structural_element;
@@ -268,6 +270,16 @@ class Authority
         return $resource->user_id === $user->id || self::canUpdateBlock($user, $resource->block);
     }
 
+    public static function canUpdateBlockFeedback(User $user, BlockFeedback $resource)
+    {
+        return self::canShowBlockFeedback($user, $resource);
+    }
+
+    public static function canDeleteBlockFeedback(User $user, BlockFeedback $resource)
+    {
+        return self::canUpdateBlockFeedback($user, $resource);
+    }
+
     public static function canUploadStructuralElementsImage(User $user, StructuralElement $resource)
     {
         return self::canUpdateStructuralElement($user, $resource);
@@ -306,12 +318,12 @@ class Authority
 
     public static function canDeleteTask(User $user, Task $resource): bool
     {
-        return self::canCreateTasks($user, $resource['structural_element']);
+        return self::canCreateTasks($user, $resource->structural_element);
     }
 
     public static function canCreateTaskFeedback(User $user, Task $resource): bool
     {
-        return self::canCreateTasks($user, $resource['structural_element']);
+        return self::canCreateTasks($user, $resource->structural_element);
     }
 
     public static function canShowTaskFeedback(User $user, Task $resource): bool
@@ -337,7 +349,7 @@ class Authority
 
     public static function canShowStructuralElementComment(User $user, StructuralElementComment $resource)
     {
-        return self::canShowStructuralElement($user, $resource);
+        return self::canShowStructuralElement($user, $resource->structural_element);
     }
 
     public static function canCreateStructuralElementComment(User $user, StructuralElement $resource)
@@ -392,7 +404,7 @@ class Authority
 
     public static function canShowStructuralElementFeedback(User $user, StructuralElementFeedback $resource)
     {
-        return $resource->user_id === $user->id || self::canUpdateStructuralElement($resource->structural_element);
+        return $resource->user_id === $user->id || self::canUpdateStructuralElement($user, $resource->structural_element);
     }
 
     public static function canDeleteStructuralElementFeedback(User $user, StructuralElementComment $resource)

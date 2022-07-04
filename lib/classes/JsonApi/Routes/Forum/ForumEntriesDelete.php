@@ -4,6 +4,7 @@ namespace JsonApi\Routes\Forum;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
 use JsonApi\Models\ForumEntry;

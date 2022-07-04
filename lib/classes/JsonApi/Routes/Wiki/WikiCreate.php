@@ -4,8 +4,10 @@ namespace JsonApi\Routes\Wiki;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use JsonApi\Errors\ConflictError;
+use JsonApi\Errors\AuthorizationFailedException;
+use JsonApi\Errors\ConflictException;
 use JsonApi\Errors\InternalServerError;
+use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
 use JsonApi\Routes\ValidationTrait;
 use JsonApi\Schemas\WikiPage;
@@ -38,7 +40,7 @@ class WikiCreate extends JsonApiController
         $keyword = self::arrayGet($json, 'data.attributes.keyword');
 
         if (\WikiPage::findLatestPage($range->id, $keyword)) {
-            throw new ConflictError('Wiki page already exists.');
+            throw new ConflictException('Wiki page already exists.');
         }
 
         if (!$wiki = $this->createWikiFromJSON($user, $range, $json)) {

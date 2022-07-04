@@ -4,6 +4,7 @@ namespace JsonApi\Routes\Files;
 
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\InternalServerError;
+use JsonApi\Routes\ArrayHelperTrait;
 use JsonApi\Schemas\FileRef as FileRefSchema;
 use JsonApi\Schemas\Folder as FolderSchema;
 use JsonApi\Schemas\ContentTermsOfUse as ContentTermsOfUseSchema;
@@ -13,28 +14,33 @@ use Slim\Psr7\UploadedFile;
 
 trait RoutesHelperTrait
 {
+    use ArrayHelperTrait {
+        arrayHas as array_has;
+        arrayGet as array_get;
+    }
+
     protected function validateResourceIdentifier($json, $type, $newResource = true)
     {
-        if (!self::arrayHas($json, 'data')) {
+        if (!self::array_has($json, 'data')) {
             return 'Missing `data` member at document´s top level.';
         }
 
         // type
-        if (self::arrayGet($json, 'data.type')
+        if (self::array_get($json, 'data.type')
             !== $type
         ) {
             return 'Missing `type` member of document´s `data`.';
         }
 
         // id
-        if ($newResource && self::arrayHas($json, 'data.id')) {
+        if ($newResource && self::array_has($json, 'data.id')) {
             return 'New document must not have an `id`.';
         }
     }
 
     protected function validateFileRefResourceObject($json, \FileRef $fileRef = null)
     {
-        if (!self::arrayHas($json, 'data')) {
+        if (!self::array_has($json, 'data')) {
             return 'Missing `data` member at document´s top level.';
         }
 
@@ -49,12 +55,12 @@ trait RoutesHelperTrait
         }
 
         // Relationship: terms-of-use
-        if (self::arrayHas($json, 'data.relationships.terms-of-use')) {
-            $license = self::arrayGet($json, 'data.relationships.terms-of-use');
+        if (self::array_has($json, 'data.relationships.terms-of-use')) {
+            $license = self::array_get($json, 'data.relationships.terms-of-use');
             if ($err = $this->validateResourceIdentifier($license, ContentTermsOfUseSchema::TYPE, false)) {
                 return $err;
             }
-            $termsId = self::arrayGet($license, 'data.id');
+            $termsId = self::array_get($license, 'data.id');
             if (!\ContentTermsOfUse::find($termsId)) {
                 return 'Invalid `terms-of-use` specified.';
             }
@@ -66,12 +72,12 @@ trait RoutesHelperTrait
     private function validateFileRefAttributes($json)
     {
         // Attributes
-        if (!self::arrayHas($json, 'data.attributes')) {
+        if (!self::array_has($json, 'data.attributes')) {
             return 'Missing `attributes` member of document´s `data`.';
         }
 
         // Attribute: name
-        $name = self::arrayGet($json, 'data.attributes.name');
+        $name = self::array_get($json, 'data.attributes.name');
         if (!$name || 0 === mb_strlen(trim($name))) {
             return '`name` must not be empty.';
         }
@@ -81,24 +87,24 @@ trait RoutesHelperTrait
     {
         // Attributes needed to create a new folder
         if (!$folder) {
-            if (!self::arrayHas($json, 'data.attributes')) {
+            if (!self::array_has($json, 'data.attributes')) {
                 return 'Missing `attributes` member of document´s `data`.';
             }
 
-            if (!self::arrayHas($json, 'data.attributes.name')) {
+            if (!self::array_has($json, 'data.attributes.name')) {
                 return 'Missing `data.name`.';
             }
         }
 
         // Attribute: name must not be empty if present
-        if (self::arrayHas($json, 'data.attributes.name')
-            && !mb_strlen(trim(self::arrayGet($json, 'data.attributes.name', '')))) {
+        if (self::array_has($json, 'data.attributes.name')
+            && !mb_strlen(trim(self::array_get($json, 'data.attributes.name', '')))) {
             return '`name` must not be empty.';
         }
 
         // Relationship: parent
-        if (self::arrayHas($json, 'data.relationships.parent')) {
-            $parent = self::arrayGet($json, 'data.relationships.parent');
+        if (self::array_has($json, 'data.relationships.parent')) {
+            $parent = self::array_get($json, 'data.relationships.parent');
             if ($err = $this->validateResourceIdentifier($parent, FolderSchema::TYPE, false)) {
                 return $err;
             }

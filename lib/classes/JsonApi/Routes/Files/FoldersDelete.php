@@ -5,6 +5,7 @@ namespace JsonApi\Routes\Files;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use JsonApi\Errors\AuthorizationFailedException;
+use JsonApi\Errors\InternalServerError;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
 

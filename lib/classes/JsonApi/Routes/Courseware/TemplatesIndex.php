@@ -3,7 +3,7 @@
 namespace JsonApi\Routes\Courseware;
 
 use Courseware\Template;
-use JsonApi\Errors\RecordNotFoundException;
+use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\JsonApiController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

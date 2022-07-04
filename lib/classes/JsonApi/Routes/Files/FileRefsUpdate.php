@@ -6,8 +6,8 @@ use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
 use JsonApi\Routes\ValidationTrait;
-use Neomerx\JsonApi\Document\Error;
 use Neomerx\JsonApi\Exceptions\JsonApiException;
+use Neomerx\JsonApi\Schema\Error;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -61,7 +61,7 @@ class FileRefsUpdate extends JsonApiController
 
         if (!$result instanceof \FileRef) {
             throw new JsonApiException(array_map(function ($error) {
-                return new Error('Bad Request Error', null, 400, null, null, $error);
+                return new Error('Bad Request Error', null, null, null, 400, $error);
             }, $result), 400);
         }
     }

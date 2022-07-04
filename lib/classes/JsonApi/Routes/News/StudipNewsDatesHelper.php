@@ -2,6 +2,7 @@
 
 namespace JsonApi\Routes\News;
 
+use DateTime;
 use JsonApi\Routes\TimestampTrait;
 
 trait StudipNewsDatesHelper

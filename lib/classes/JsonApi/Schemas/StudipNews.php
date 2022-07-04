@@ -113,7 +113,7 @@ class StudipNews extends SchemaProvider
         return $news->news_ranges->map(function ($range) use ($include) {
             switch ($range->type) {
                 case 'global':
-                    return new \Jsonapi\Models\Studip();
+                    return new \JsonApi\Models\Studip();
 
                 case 'sem':
                     return $include

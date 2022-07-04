@@ -3,11 +3,8 @@
 namespace JsonApi\Routes\Courseware\Rel;
 
 use Courseware\Bookmark;
-use Courseware\Instance;
 use Courseware\StructuralElement;
 use JsonApi\Errors\AuthorizationFailedException;
-use JsonApi\Errors\BadRequestException;
-use JsonApi\Errors\ConflictException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\Routes\Courseware\Authority;
 use JsonApi\Routes\Courseware\CoursewareInstancesHelper;

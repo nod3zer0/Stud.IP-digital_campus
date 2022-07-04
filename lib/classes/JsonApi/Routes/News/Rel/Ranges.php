@@ -189,7 +189,7 @@ class Ranges extends RelationshipsController
 
     private function getGlobalRange()
     {
-        return new \JsonApi\Model\Studip();
+        return new \JsonApi\Models\Studip();
     }
 
     private function addRanges(\StudipNews $news, array $ranges)

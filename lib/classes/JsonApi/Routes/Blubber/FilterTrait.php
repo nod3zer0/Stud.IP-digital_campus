@@ -2,7 +2,7 @@
 
 namespace JsonApi\Routes\Blubber;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use JsonApi\Errors\BadRequestException;
 
 trait FilterTrait
 {

@@ -6,6 +6,7 @@ use Courseware\Filesystem\PublicFolder;
 use Courseware\StructuralElement;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
+use JsonApi\Errors\InternalServerError;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\NonJsonApiController;
 use JsonApi\Routes\Files\RoutesHelperTrait as FilesRoutesHelper;

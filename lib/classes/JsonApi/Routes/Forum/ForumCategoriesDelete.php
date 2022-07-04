@@ -2,6 +2,7 @@
 
 namespace JsonApi\Routes\Forum;
 
+use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
 use JsonApi\Models\ForumCat;

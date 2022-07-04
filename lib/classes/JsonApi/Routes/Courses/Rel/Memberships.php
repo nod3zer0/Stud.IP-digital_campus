@@ -3,6 +3,7 @@
 namespace JsonApi\Routes\Courses\Rel;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
+use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\Routes\Courses\Authority;
 use JsonApi\Routes\RelationshipsController;
 

@@ -4,6 +4,7 @@ namespace JsonApi\Routes\CourseMemberships;
 
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
+use JsonApi\Errors\InternalServerError;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
 use JsonApi\Routes\ValidationTrait;
