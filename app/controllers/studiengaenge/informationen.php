@@ -12,8 +12,8 @@ class Studiengaenge_InformationenController extends MVVController
     {
         parent::before_filter($action, $args);
 
-        if (!($GLOBALS['perm']->have_perm('root') || RolePersistence::isAssignedRole(
-                        $GLOBALS['user']->id, 'MVVAdmin'))) {
+        if (!($GLOBALS['perm']->have_perm('root')
+            || User::findCurrent()->hasRole('MVVAdmin'))) {
             throw new AccessDeniedException();
         }
         PageLayout::setTitle(_('Verwaltung der Studiengänge'));
@@ -49,21 +49,16 @@ class Studiengaenge_InformationenController extends MVVController
     {
         $this->studycourse = Fach::find($studycourse_id);
         $this->nr = $nr;
-        $this->degree = Degree::findBySQL('abschluss_id IN (SELECT DISTINCT(abschluss_id) FROM user_studiengang '
-                . 'WHERE fach_id = :studycourse_id AND abschluss_id IN (:abschluss_ids)) '
-                . 'ORDER BY name',
-                ['studycourse_id' => $studycourse_id,
-                 'abschluss_ids' => $this->studycourse->degrees->pluck('abschluss_id')]);
     }
 
     public function showstudycourse_action($degree_id, $nr = 0)
     {
         $this->nr = $nr;
-        $this->degree = Degree::find($degree_id);
-        if ($GLOBALS['perm']->have_perm("root",$GLOBALS['user']->id)) {
-            $this->studycourses = StudyCourse::findBySQL('fach_id IN (SELECT DISTINCT(fach_id) FROM user_studiengang '
-                    . 'WHERE abschluss_id = :abschluss_id AND fach_id IN (:studycourse_ids)) ORDER BY name',
-                    [':abschluss_id' => $degree_id, ':studycourse_ids' => $this->degree->professions->pluck('fach_id')]);
+        $this->degree = Abschluss::find($degree_id);
+        $this->professions = $this->degree->professions;
+
+        if ($GLOBALS['perm']->have_perm('root',$GLOBALS['user']->id)) {
+            $this->studycourses = $this->degree->professions;
         } else {
             $inst_ids = SimpleCollection::createFromArray(Institute::findBySQL('Institut_id IN (SELECT institut_id FROM roles_user WHERE userid = :user_id)
                 OR fakultaets_id IN (SELECT institut_id FROM roles_user WHERE userid = :user_id)',
@@ -78,37 +73,32 @@ class Studiengaenge_InformationenController extends MVVController
 
     public function messagehelper_action()
     {
-        $fach_id = Request::get('fach_id');
-        $degree_id = Request::get('abschluss_id');
+        $fach = Fach::find(Request::get('fach_id'));
+        $degree = Degree::find(Request::get('abschluss_id'));
 
-        $fach = new Fach($fach_id);
-        $degree = new Degree($degree_id);
-
-        $user = array();
-        if (is_null($degree_id) && !is_null($fach_id)) {
-            $user = UserStudyCourse::findBySql('fach_id = :fach_id',
-                [':fach_id' => $fach->fach_id]);
-        } else if (!is_null($degree_id) && !is_null($fach_id)) {
-            $user = UserStudyCourse::findBySql('fach_id = :fach_id AND abschluss_id = :abschluss_id',
-                [':fach_id' => $fach_id, ':abschluss_id' => $degree_id]);
-        } else if (!is_null($degree_id) && is_null($fach_id)) {
-            $user = UserStudyCourse::findBySql('abschluss_id = :abschluss_id',
-                [':abschluss_id' => $degree_id]);
+        if (!$degree && $fach) {
+            $users = UserStudyCourse::findBySql('fach_id = :fach_id', [':fach_id' => $fach->id]);
+        } else if ($degree && !$fach) {
+            $users = UserStudyCourse::findBySql('abschluss_id = :abschluss_id', [':abschluss_id' => $degree->id]);
+        } else {
+            $users = UserStudyCourse::findBySql('fach_id = :fach_id AND abschluss_id = :abschluss_id',
+                [':fach_id' => $fach->id, ':abschluss_id' => $degree->id]
+            );
         }
-        if (empty($user)) {
+        if (empty($users)) {
             PageLayout::postError(_('Keine Studierenden zu den gewählten Angaben gefunden'));
-            $this->redirect('index');
+            $this->redirect($this->indexURL());
             return;
         }
 
-        foreach ($user as $u) {
-            $send_to[] = $u->user->username;
-        }
+        $_SESSION['sms_data']['p_rec'] = SimpleCollection::createFromArray(
+            SimpleCollection::createFromArray($users)->pluck('user')
+        )->pluck('username');
 
-        $_SESSION['sms_data']['p_rec'] = $send_to;
-
-        $subject = sprintf(_('Information zum Studiengang: %s %s'),
-            !$fach->isNew() ? $fach->name: '' , !$degree->isNew() ? $degree->name : '');
+        $subject = sprintf(
+            _('Information zum Studiengang: %s %s'),
+            $fach ? $fach->name: '' , $degree ? $degree->name : ''
+        );
 
         $this->redirect(URLHelper::getURL('dispatch.php/messages/write',
             ['default_subject' => $subject, 'emailrequest' => 1]
@@ -118,29 +108,10 @@ class Studiengaenge_InformationenController extends MVVController
     private function createSidebar($view = 'subject' )
     {
         $widget = new ViewsWidget();
-        $widget->addLink(_('Gruppieren nach Fächern'), $this->url_for('/index'))
-                ->setActive($view == 'subject');
-        $widget->addLink(_('Gruppieren nach Abschlüssen'), $this->url_for('/degree'))
-                ->setActive($view == 'degrees');
+        $widget->addLink(_('Gruppieren nach Fächern'), $this->indexURL())
+                ->setActive($view === 'subject');
+        $widget->addLink(_('Gruppieren nach Abschlüssen'), $this->degreeURL())
+                ->setActive($view === 'degrees');
         Sidebar::Get()->addWidget($widget);
     }
-
-    public static function getStudyCount($degree_id)
-    {
-        if ($GLOBALS['perm']->have_perm('root', $GLOBALS['user']->id)) {
-            return UserStudyCourse::countBySql('abschluss_id = :abschluss_id',
-            [':abschluss_id' => $degree_id]);
-        } else {
-            $inst_ids = SimpleCollection::createFromArray(Institute::findBySQL('Institut_id IN (SELECT institut_id FROM roles_user WHERE userid = :user_id)
-                OR fakultaets_id IN (SELECT institut_id FROM roles_user WHERE userid = :user_id)',
-                    [':user_id' => $GLOBALS['user']->user_id]))->pluck('institut_id');
-
-            return UserStudyCourse::countBySql('JOIN mvv_fach_inst as fach_inst ON (user_studiengang.fach_id = fach_inst.fach_id)
-                WHERE user_studiengang.abschluss_id = :abschluss_id AND fach_inst.institut_id IN (:inst_ids)',
-            [':abschluss_id' => $degree_id, ':inst_ids' => $inst_ids]);
-
-
-        }
-    }
-
 }

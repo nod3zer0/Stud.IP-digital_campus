@@ -35,16 +35,27 @@ class Degree extends SimpleORMap
         ];
 
         $config['additional_fields']['count_user']['get'] = 'countUser';
-
+        $config['registered_callbacks']['before_store'][] = "cbUpdateAuthorId";
         parent::configure($config);
     }
 
     public function countUser()
     {
-        $stmt = DBManager::get()->prepare('SELECT COUNT(DISTINCT user_id) '
-                . 'FROM user_studiengang WHERE abschluss_id = ?');
-        $stmt->execute([$this->id]);
-        return $stmt->fetchColumn();
+        $sql = 'SELECT COUNT(DISTINCT `user_id`) FROM `user_studiengang`';
+        $parameters = [':degree_id' => $this->id];
+        if (!$GLOBALS['perm']->have_perm('root')) {
+            $inst_ids = SimpleCollection::createFromArray(Institute::findBySQL('Institut_id IN (SELECT institut_id FROM roles_user WHERE userid = :user_id)
+                OR fakultaets_id IN (SELECT institut_id FROM roles_user WHERE userid = :user_id)',
+                [':user_id' => $GLOBALS['user']->user_id]))->pluck('institut_id');
+
+            $sql .=  'JOIN `mvv_fach_inst` as `fach_inst` ON (`user_studiengang`.`fach_id` = `fach_inst`.`fach_id`)
+                WHERE `user_studiengang`.`abschluss_id` = :degree_id AND `fach_inst`.`institut_id` IN (:inst_ids)';
+            $parameters[':inst_ids'] = $inst_ids;
+        } else {
+            $sql .= ' WHERE `user_studiengang`.`abschluss_id` = :degree_id';
+        }
+
+        return DBManager::get()->fetchColumn($sql, $parameters);
     }
 
     public function countUserByStudycourse($studycourse_id)
@@ -56,7 +67,7 @@ class Degree extends SimpleORMap
         return $stmt->fetchColumn();
     }
 
-    public function store()
+    public function cbUpdateAuthorId()
     {
         if ($this->isNew() || $this->isDirty()) {
             $this->editor_id = $GLOBALS['user']->id;
@@ -64,8 +75,5 @@ class Degree extends SimpleORMap
                 $this->author_id = $GLOBALS['user']->id;
             }
         }
-
-        return parent::store();
     }
-
 }
