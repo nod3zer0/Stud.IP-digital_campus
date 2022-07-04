@@ -4,6 +4,7 @@
 composer
 node_modules
 nbproject
+phpstan.neon
 .caches/*
 .reports/*
 

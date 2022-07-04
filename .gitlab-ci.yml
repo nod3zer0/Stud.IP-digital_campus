@@ -8,6 +8,7 @@ variables:
   MYSQL_HOST: mariadb
   DEMO_DATA: "true"
   MAIL_TRANSPORT: debug
+  PHPSTAN_LEVEL: 0
   # Optimize caching
   FF_USE_FASTZIP: "true"
   CACHE_COMPRESSION_LEVEL: "fast"
@@ -16,6 +17,7 @@ variables:
 
 stages:
   - checks
+  - analyse
   - tests
   - packaging
   - release
@@ -53,6 +55,9 @@ stages:
     paths:
       - composer/
       - .caches/phplint-cache
+      - .caches/resultCache.php
+      - .caches/cache/*
+      - .caches/resultCaches/*
   js: &npm-cache
     key: "js-$CI_COMMIT_REF_SLUG"
     paths:
@@ -128,6 +133,23 @@ lint-css:
       - .reports/stylelint-report.xml
     reports:
       junit: .reports/stylelint-report.xml
+
+phpstan:
+  stage: analyse
+  needs: [lint-php]
+  allow_failure: true
+  interruptible: true
+  when: manual
+  cache: *composer-cache
+  before_script:
+    - make composer-dev
+    - mkdir .reports -p
+  script:
+    - php composer/bin/phpstan analyse --memory-limit=1G --no-progress --level=$PHPSTAN_LEVEL > .reports/report-phpstan.xml
+  artifacts:
+    when: always
+    reports:
+      junit: .reports/report-phpstan.xml
 
 test-unit:
   stage: tests

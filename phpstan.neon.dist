@@ -1,0 +1,24 @@
+parameters:
+    level: 0
+    phpVersion: 70200 # PHP 7.2
+    paths:
+        # - app/routes
+        - lib
+        # - tests
+    scanDirectories:
+        - app/controllers
+        - lib
+        - vendor
+    excludePaths:
+        - lib/classes/ZipArchiveLegacyTrait.php
+        - lib/soap/StudipSoapClient_PHP5.class.php
+    tmpDir: .caches
+    earlyTerminatingMethodCalls:
+        RESTAPI\RouteMap:
+            - error
+            - halt
+    errorFormat:
+       junit
+    ignoreErrors:
+        - '#Access to an undefined property#'
+        - '#Undefined variable#'
