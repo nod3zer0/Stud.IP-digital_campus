@@ -25,6 +25,7 @@ class Course_FeedbackController extends AuthenticatedController
 
         if ($this->admin_perm) {
             Navigation::activateItem('/course/feedback/index');
+            PageLayout::setHelpKeyword('Basis.Feedback');
             PageLayout::setTitle(sprintf(_('%s - Feedback'), Context::getHeaderLine()));
         }
     }
