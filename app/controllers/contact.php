@@ -23,7 +23,7 @@ class ContactController extends AuthenticatedController
         $this->groups = SimpleCollection::createFromArray(Statusgruppen::findByRange_id(User::findCurrent()->id));
 
         // Load requested group
-        if ($args[0]) {
+        if (!empty($args[0])) {
             $this->group = $this->groups->findOneBy('statusgruppe_id', $args[0]);
 
             //Check for cheaters

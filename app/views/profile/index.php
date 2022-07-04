@@ -110,17 +110,6 @@
     <?= $this->render_partial('profile/seminare') ?>
 <? endif ?>
 
-<? if ($show_lit && $lit_list) : ?>
-    <article class="studip">
-        <header>
-            <h1><?= _('Literaturlisten') ?></h1>
-        </header>
-        <section>
-            <?= $lit_list ?>
-        </section>
-    </article>
-<? endif ?>
-
 <? if (!empty($longDatafields)) : ?>
     <? foreach ($longDatafields as $name => $entry) : ?>
         <article class="studip">

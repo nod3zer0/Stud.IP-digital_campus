@@ -100,6 +100,7 @@ abstract class DataFieldEntry
         if (!$range_id) {
             return []; // we necessarily need a range ID
         }
+        $clause1 = '';
         $parameters = [];
         if(is_array($range_id)) {
             // rangeID may be an array ("classic" rangeID and second rangeID used for user roles)

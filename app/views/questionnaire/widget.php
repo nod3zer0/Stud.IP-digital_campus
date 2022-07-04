@@ -27,7 +27,7 @@
         <? foreach ($questionnaire_data as $questionnaire): ?>
             <?= $this->render_partial("questionnaire/_widget_questionnaire", ['questionnaire' => Questionnaire::buildExisting($questionnaire), 'range_type' => $range_type, 'range_id' => $range_id]) ?>
         <? endforeach; ?>
-    <? elseif (!$suppress_empty_output): ?>
+    <? elseif (empty($suppress_empty_output)): ?>
         <section class="noquestionnaires">
             <?= _('Es sind keine Fragebögen vorhanden.') ?>
             <? if ($allowed_to_add) : ?>

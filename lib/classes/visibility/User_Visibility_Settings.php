@@ -20,25 +20,25 @@ class User_Visibility_Settings extends SimpleORMap
 
     // parent of the Visibility
     public $parent;
-    
+
     // children of the visibility
     public $children = [];
-    
+
     // determines if the option is displayed in settings
     public $displayed = false;
 
     /**
      * Find a User_Visibility_Setting by an id or an identifier and a user
-     * 
+     *
      * @param type $id
      */
     public static function find($id = null, $userid = null) {
-        
+
         // If we have no id or we have a real int id use standard construction
         if (!$id || is_int($id)) {
             parent::find($id);
         } else {
-            
+
             // Rewrite user if nessecary
             $userid = $userid ? : $GLOBALS['user']->id;
 
@@ -72,7 +72,7 @@ class User_Visibility_Settings extends SimpleORMap
         $pluginManager = PluginManager::getInstance();
         $plugin = $pluginManager->getPluginInfoById($this->plugin);
         $pluginDisplay = ($this->plugin == 0 || ($pluginManager->isPluginActivatedForUser($this->plugin, $this->user_id)) && $plugin['enabled']);
-        
+
         // now check both
         if ($catDisplay && $pluginDisplay) {
             $this->setDisplayed();
@@ -99,12 +99,13 @@ class User_Visibility_Settings extends SimpleORMap
     public function getHTMLArgs(&$result, $depth = 0)
     {
         if ($this->displayed) {
+            $entry = [];
             $entry['is_header'] = $this->category == 0 && $this->parent_id == 0;
             $entry['is_category'] = $this->category == 0;
             $entry['id'] = $this->visibilityid;
             $entry['state'] = $this->state;
             $entry['padding'] = ($depth * 20) . "px";
-            $entry['name'] .= $this->name;
+            $entry['name'] = $this->name ?? '';
             $result[] = $entry;
 
             // Now add the html args for the children

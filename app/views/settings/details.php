@@ -78,13 +78,6 @@
         <fieldset>
             <legend> <?= _('Zusätzliche Datenfelder') ?></legend>
             <? foreach ($user_entries as $id => $entry): ?>
-
-                <? if (isset($invalid_entries[$id])): ?>
-
-                    <? $entry = $invalid_entries[$id]; // Exchange entry ?>
-                <? else: ?>
-                <? endif; ?>
-
                     <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId())): ?>
                         <?= $entry->getHTML('datafields', [
                             'tooltip'   => $entry->isVisible($user->perms) ? '' : _('Systemfeld (für die Person selbst nicht sichtbar)'),

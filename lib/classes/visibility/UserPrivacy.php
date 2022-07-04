@@ -47,6 +47,7 @@ class UserPrivacy
             if (User_Visibility_Settings::countBySQL('user_id = ? AND category = 0', [$this->user->id]) == 0) {
                 Visibility::createDefaultCategories($this->user->id);
             }
+            $idmap = [];
             $this->profileSettings = User_Visibility_Settings::findBySQL("user_id = ? AND parent_id = 0 AND identifier <> 'plugins'", [$this->user->id]);
             foreach ($this->profileSettings as $i => $vis) {
                 $vis->loadChildren();

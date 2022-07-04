@@ -31,6 +31,7 @@ class vCard {
             return self::exportUser($users);
         }
 
+        $export = '';
         foreach ($users as $user) {
             $export .= self::exportUser($user);
         }
@@ -102,6 +103,7 @@ class vCard {
         $vCard['END'] = 'VCARD';
 
         // Produce string
+        $exportString = '';
         foreach ($vCard as $index => $value) {
             $exportString .= $value ? $index . ':' . (is_array($value) ? join(';', $value) : $value) . "\r\n" : "";
         }

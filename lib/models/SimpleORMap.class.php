@@ -217,7 +217,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         if (isset($config['additional_fields'])) {
             foreach ($config['additional_fields'] as $a_field => $a_config) {
-                if (is_array($a_config) && !(isset($a_config['get']) || isset($a_config['set']))) {
+                if (!empty($a_config) && is_array($a_config) && !(isset($a_config['get']) || isset($a_config['set']))) {
                     $relation = $a_config[0] ?? '';
                     $relation_field = $a_config[1] ?? '';
                     if (!$relation) {

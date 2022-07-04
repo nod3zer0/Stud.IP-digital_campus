@@ -40,7 +40,7 @@ class EvaluationController extends AuthenticatedController
         }
 
         // Special case: from widget and no data -> no output
-        if ($this->suppress_empty_output && count($this->evaluations) === 0) {
+        if (count($this->evaluations) === 0) {
             $this->render_nothing();
         } else {
             $this->visit();

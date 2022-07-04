@@ -53,7 +53,6 @@ class Settings_DetailsController extends Settings_SettingsController
                                : false;
         $this->is_dozent       = $this->user->perms == 'dozent';
         $this->user_entries    = $userEntries;
-        $this->invalid_entries = $invalidEntries;
     }
 
     /**

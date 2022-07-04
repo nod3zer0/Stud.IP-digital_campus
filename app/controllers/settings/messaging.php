@@ -26,6 +26,17 @@ class Settings_MessagingController extends Settings_SettingsController
         Navigation::activateItem('/profile/settings/messaging');
 
         $this->settings = $this->config->MESSAGING_SETTINGS;
+        $all_settings_fields = [
+            'save_snd',
+            'request_mail_forward',
+            'show_adressees',
+            'logout_markreaded'
+        ];
+        foreach ($all_settings_fields as $field) {
+            if (!array_key_exists($field, $this->settings)) {
+                $this->settings[$field] = 0;
+            }
+        }
     }
 
     public function index_action()

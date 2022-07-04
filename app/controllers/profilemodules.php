@@ -296,12 +296,12 @@ class ProfileModulesController extends AuthenticatedController
                 'url'         => $plugin->getPluginURL(),
                 'activated'   => $manager->isPluginActivatedForUser($plugin->getPluginId(), $this->user->id),
                 'icon'        => $icon,
-                'abstract'    => str_replace('\n', ' ', $metadata['descriptionshort'] ?: $metadata['summary']),
-                'description' => str_replace('\n', ' ', $metadata['descriptionlong'] ?: $metadata['description']),
+                'abstract'    => str_replace('\n', ' ', $metadata['descriptionshort'] ?? $metadata['summary']),
+                'description' => str_replace('\n', ' ', $metadata['descriptionlong'] ?? $metadata['description']),
                 'screenshots' => [],
                 'keywords'    => $metadata['keywords'] ? explode(';', $metadata['keywords']) : [],
-                'homepage'    => $metadata['homepage'],
-                'helplink'    => $metadata['helplink'],
+                'homepage'    => $metadata['homepage'] ?? '',
+                'helplink'    => $metadata['helplink'] ?? '',
             ];
 
             if (isset($metadata['screenshot'])) {

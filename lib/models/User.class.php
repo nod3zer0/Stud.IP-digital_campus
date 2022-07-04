@@ -756,7 +756,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         // Now join all available elements with visibility settings.
         $homepage_elements = [];
 
-        if (Avatar::getAvatar($this->id)->is_customized() && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['picture']) {
+        if (Avatar::getAvatar($this->id)->is_customized() && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['picture'])) {
             $homepage_elements['picture'] = [
                 'name'        => _('Eigenes Bild'),
                 'visibility'  => $homepage_visibility['picture'] ?: get_default_homepage_visibility($this->id),
@@ -765,7 +765,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             ];
         }
 
-        if ($this->info->motto && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['motto']) {
+        if ($this->info->motto && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['motto'])) {
             $homepage_elements['motto'] = [
                 'name'       => _('Motto'),
                 'visibility' => $homepage_visibility['motto'] ?: get_default_homepage_visibility($this->id),
@@ -773,7 +773,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             ];
         }
         if (Config::get()->ENABLE_SKYPE_INFO) {
-            if ($GLOBALS['user']->cfg->getValue('SKYPE_NAME') && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['skype_name']) {
+            if ($GLOBALS['user']->cfg->getValue('SKYPE_NAME') && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['skype_name'])) {
                 $homepage_elements['skype_name'] = [
                     'name'       => _('Skype Name'),
                     'visibility' => $homepage_visibility['skype_name'] ?: get_default_homepage_visibility($this->id),
@@ -781,28 +781,28 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 ];
             }
         }
-        if ($this->info->privatnr && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['Private Daten_phone']) {
+        if ($this->info->privatnr && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['Private Daten_phone'])) {
             $homepage_elements['private_phone'] = [
                 'name'       => _('Private Telefonnummer'),
                 'visibility' => $homepage_visibility['private_phone'] ?: get_default_homepage_visibility($this->id),
                 'identifier' => 'privatedata'
             ];
         }
-        if ($this->info->privatcell && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['private_cell']) {
+        if ($this->info->privatcell && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['private_cell'])) {
             $homepage_elements['private_cell'] = [
                 'name'       => _('Private Handynummer'),
                 'visibility' => $homepage_visibility['private_cell'] ?: get_default_homepage_visibility($this->id),
                 'identifier' => 'privatedata'
             ];
         }
-        if ($this->info->privadr && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['privadr']) {
+        if ($this->info->privadr && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['privadr'])) {
             $homepage_elements['privadr'] = [
                 'name'         => _('Private Adresse'),
                 'visibility'   => $homepage_visibility['privadr'] ?: get_default_homepage_visibility($this->id),
                 'identifier'   => 'privatedata'
             ];
         }
-        if ($this->info->home && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['homepage']) {
+        if ($this->info->home && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['homepage'])) {
             $homepage_elements['homepage'] = [
                 'name'        => _('Homepage-Adresse'),
                 'visibility'  => $homepage_visibility['homepage'] ?: get_default_homepage_visibility($this->id),
@@ -810,7 +810,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 'identifier'  => 'privatedata'
             ];
         }
-        if ($news && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['news']) {
+        if ($news && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['news'])) {
             $homepage_elements['news'] = [
                 'name'       => _('Ankündigungen'),
                 'visibility' => $homepage_visibility['news'] ?: get_default_homepage_visibility($this->id),
@@ -818,7 +818,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 'identifier' => 'commondata'
             ];
         }
-        if (Config::get()->CALENDAR_ENABLE && $dates && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['dates']) {
+        if (Config::get()->CALENDAR_ENABLE && $dates && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['dates'])) {
             $homepage_elements['termine'] = [
                 'name'       => _('Termine'),
                 'visibility' => $homepage_visibility['termine'] ?: get_default_homepage_visibility($this->id),
@@ -826,7 +826,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 'identifier' => 'commondata'
             ];
         }
-        if (Config::get()->VOTE_ENABLE && ($activeVotes || $stoppedVotes || $activeEvals) && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['votes']) {
+        if (Config::get()->VOTE_ENABLE && ($activeVotes || $stoppedVotes || $activeEvals) && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['votes'])) {
             $homepage_elements['votes'] = [
                 'name'       => _('Fragebögen'),
                 'visibility' => $homepage_visibility['votes'] ?: get_default_homepage_visibility($this->id),
@@ -840,14 +840,14 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                   WHERE user_id = ? AND inst_perms = 'user'";
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$this->id]);
-        if ($statement->fetchColumn() && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['studying']) {
+        if ($statement->fetchColumn() && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['studying'])) {
             $homepage_elements['studying'] = [
                 'name'       => _('Wo ich studiere'),
                 'visibility' => $homepage_visibility['studying'] ?: get_default_homepage_visibility($this->id),
                 'identifier' => 'studdata'
             ];
         }
-        if ($this->info->lebenslauf && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['lebenslauf']) {
+        if ($this->info->lebenslauf && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['lebenslauf'])) {
             $homepage_elements['lebenslauf'] = [
                 'name'       => _('Lebenslauf'),
                 'visibility' => $homepage_visibility['lebenslauf'] ?: get_default_homepage_visibility($this->id),
@@ -855,14 +855,14 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 'identifier' => 'privatedata'
             ];
         }
-        if ($this->info->hobby && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['hobby']) {
+        if ($this->info->hobby && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['hobby'])) {
             $homepage_elements['hobby'] = [
                 'name'       => _('Hobbys'),
                 'visibility' => $homepage_visibility['hobby'] ?: get_default_homepage_visibility($this->id),
                 'identifier' => 'privatedata'
             ];
         }
-        if ($this->info->publi && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['publi']) {
+        if ($this->info->publi && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['publi'])) {
             $homepage_elements['publi'] = [
                 'name'       => _('Publikationen'),
                 'visibility' => $homepage_visibility['publi'] ?: get_default_homepage_visibility($this->id),
@@ -870,7 +870,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 'identifier' => 'privatedata'
             ];
         }
-        if ($this->info->schwerp && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['schwerp']) {
+        if ($this->info->schwerp && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['schwerp'])) {
             $homepage_elements['schwerp'] = [
                 'name'       => _('Arbeitsschwerpunkte'),
                 'visibility' => $homepage_visibility['schwerp'] ?: get_default_homepage_visibility($this->id),
@@ -881,7 +881,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
 
         if ($data_fields) {
             foreach ($data_fields as $key => $field) {
-                if ($field->getValue() && $field->isEditable($this->perms) && !$GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms][$key]) {
+                if ($field->getValue() && $field->isEditable($this->perms) && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms][$key])) {
                     $homepage_elements[$key] = [
                         'name'       => $field->getName(),
                         'visibility' => $homepage_visibility[$key] ?: get_default_homepage_visibility($this->id),

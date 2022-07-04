@@ -91,6 +91,7 @@ class ProfileController extends AuthenticatedController
         $this->homepage     = $this->profile->getVisibilityValue('Home', 'homepage');
 
         // skype informations
+        $this->skype_name = '';
         if (Config::get()->ENABLE_SKYPE_INFO && Visibility::verify('skype_name', $this->current_user->user_id)) {
             $this->skype_name = UserConfig::get($this->current_user->user_id)->SKYPE_NAME;
         }
@@ -121,6 +122,7 @@ class ProfileController extends AuthenticatedController
         }
 
         // calendar
+        $this->dates = '';
         if (Config::get()->CALENDAR_ENABLE) {
             if (!in_array($this->current_user->perms, ['admin', 'root'])) {
                 if (Visibility::verify('termine', $this->current_user->user_id)) {
