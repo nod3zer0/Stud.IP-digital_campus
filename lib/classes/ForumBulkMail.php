@@ -12,7 +12,7 @@
  * @category    Stud.IP
  */
 
-class ForumBulkMail extends Messaging
+class ForumBulkMail extends messaging
 {
     var $bulk_mail;
 

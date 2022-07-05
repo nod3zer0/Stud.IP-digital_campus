@@ -2515,7 +2515,7 @@ class EvaluationTreeEditView
 
         $tr = new HTML ("tr");
 
-        $td = new HTMl ("td");
+        $td = new HTML ("td");
         $td->addAttr("class", "table_row_odd");
         $td->addAttr("colspan", "2");
 
@@ -2529,13 +2529,13 @@ class EvaluationTreeEditView
 
         $tr = new HTML ("tr");
 
-        $td = new HTMl ("td");
+        $td = new HTML ("td");
         $td->addAttr("style", "border-bottom:0px dotted black;");
         $td->addContent(_("Die Fragen dieses Blocks müssen beantwortet werden (Pflichtfelder):"));
 
         $tr->addContent($td);
 
-        $td = new HTMl ("td");
+        $td = new HTML ("td");
         $td->addAttr("style", "border-bottom:0px dotted black;");
 
         $input = new HTMLempty ("input");

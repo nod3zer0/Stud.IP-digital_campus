@@ -323,7 +323,7 @@ class EvalOverview
         $form->addAttr("style", "display:inline;");
         $form->addHTMLContent(CSRFProtection::tokenTag());
 
-        $input = new HTMLEmpty("input");
+        $input = new HTMLempty("input");
         $input->addAttr("type", "hidden");
         $input->addAttr("name", "evalID");
         $input->addAttr("value", $evalID);
@@ -469,14 +469,14 @@ class EvalOverview
         $form->addAttr("style", "display:inline;");
         $form->addHTMLContent(CSRFProtection::tokenTag());
 
-        $input = new HTMLEmpty("input");
+        $input = new HTMLempty("input");
         $input->addAttr("type", "hidden");
         $input->addAttr("name", "evalID");
         $input->addAttr("value", $evalID);
 
         $form->addContent($input);
 
-        $a = new HTMLEmpty("a");
+        $a = new HTMLempty("a");
         $a->addAttr("name", "open");
 
         $table = new HTML("table");
@@ -520,7 +520,7 @@ class EvalOverview
             // no RuntimeSettings if there are ranges with no permission
             $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "eval_grey_border" : "eval_light_border"));
 
-            $td2->addContent(new HTMLEmpty("br"));
+            $td2->addContent(new HTMLempty("br"));
 
             $saveButton = Button::create(_('Übernehmen'), 'save_button', ['title' => _('Einstellungen speichern')]);
             $td2->addContent($saveButton);
@@ -528,7 +528,7 @@ class EvalOverview
             $td2->addHTMLContent($this->createRuntimeSettings($eval, $state, $number % 2 ? "eval_grey_border" : "eval_light_border"));
 
             $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "eval_grey_border" : "eval_light_border"));
-            $td2->addContent(new HTMLEmpty("br"));
+            $td2->addContent(new HTMLempty("br"));
 
             $saveButton = Button::create(_('Übernehmen'), 'save_button', ['title' => _('Einstellungen speichern')]);
 
@@ -685,7 +685,7 @@ class EvalOverview
         if ($GLOBALS["perm"]->have_perm("admin")) {
             $form->addHTMLContent('<label>');
             $form->addContent(_("Nach weiteren Bereichen suchen"));
-            $input = new HTMLEmpty("input");
+            $input = new HTMLempty("input");
             $input->addAttr("type", "text");
             $input->addAttr("name", "search");
             $input->addAttr("size", "30");

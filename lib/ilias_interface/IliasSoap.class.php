@@ -203,7 +203,7 @@ class IliasSoap extends StudipSoapClient
     function ParseXML($data)
     {
         //$xml_parser = new Ilias3ObjectXMLParser($data);
-        $xml_parser = new IlObjectXMLParser($data);
+        $xml_parser = new ilObjectXMLParser($data);
         $xml_parser->startParsing();
         return $xml_parser->getObjectData();
     }
