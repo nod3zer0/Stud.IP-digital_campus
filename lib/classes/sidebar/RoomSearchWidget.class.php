@@ -63,6 +63,9 @@ class RoomSearchWidget extends SidebarWidget
                     'range_search' => $property->range_search,
                     'optional' => true
                 ];
+                if ($property->type === 'select') {
+                    $this->criteria[$property->name]['options'] = $property->getOptionsArray();
+                }
             }
         }
 
@@ -273,11 +276,16 @@ class RoomSearchWidget extends SidebarWidget
                 } elseif ($data['type'] === 'num' && $data['range_search']) {
                     if (Request::submitted($name . '_min')
                         || Request::submitted($name . '_max')) {
-                        $this->selected_criteria[$name] = $data;
+                        $this->selected_criteria[$name]          = $data;
                         $this->selected_criteria[$name]['value'] = [
                             Request::get($name . '_min'),
                             Request::get($name . '_max')
                         ];
+                    }
+                } elseif ($data['type'] === 'bool') {
+                    if (Request::submitted('options_' . $name)) {
+                        $this->selected_criteria[$name]          = $data;
+                        $this->selected_criteria[$name]['value'] = Request::get($name);
                     }
                 } else {
                     if (Request::submitted($name)) {

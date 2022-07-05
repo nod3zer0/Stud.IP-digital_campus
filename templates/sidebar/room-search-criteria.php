@@ -35,10 +35,12 @@
                <?= $criteria['enabled'] ? 'checked="checked"' : ''?>>
     <? endif ?>
     <? if ($criteria['type'] == 'bool'): ?>
-        <input type="hidden"
-               name="<?= htmlReady($criteria['name'])?>"
-               value="1">
-        <label class="undecorated" for="cb_<?= htmlReady($criteria['name']); ?>">
+    <input type="hidden" name="options_<?= htmlReady($criteria['name']) ?>" value="1">
+        <label class="undecorated" for="cb_<?= htmlReady($criteria['name']) ?>">
+            <input type="checkbox"
+                   value="1"
+                    <?= Request::get($criteria['name']) ? 'checked': ''?>
+                   name="<?= htmlReady($criteria['name'])?>">
             <span><?= htmlReady($criteria['title']) ?></span>
         </label>
     <? elseif ($criteria['type'] == 'num'): ?>

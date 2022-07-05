@@ -5,10 +5,12 @@
             'class' => 'text-bottom remove-icon'
         ]
     ) ?>
-    <input type="hidden"
-           value="1"
-           class="room-search-widget_criteria-list_input">
+    <input type="hidden" value="1">
     <label class="undecorated">
+        <input type="checkbox"
+               value="1"
+               checked
+               class="room-search-widget_criteria-list_input">
         <span></span>
     </label>
 </li>

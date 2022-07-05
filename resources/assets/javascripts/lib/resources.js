@@ -278,8 +278,10 @@ class Resources
         jQuery(new_criteria_text_field).text(option_title);
 
         if (option_type === 'bool') {
-            let new_criteria_input = jQuery(new_criteria).find('input');
+            let new_criteria_input = jQuery(new_criteria).find('input[type=checkbox]');
             jQuery(new_criteria_input).attr('name', option_value);
+            let new_criteria_hidden_input = jQuery(new_criteria).find('input[type=hidden]');
+            jQuery(new_criteria_hidden_input).attr('name', 'options_' + option_value);
         } else if (option_type === 'select') {
             let new_criteria_select = jQuery(new_criteria).find('select')[0];
             jQuery(new_criteria_select).attr('name', option_value);
@@ -292,9 +294,10 @@ class Resources
             for (let option of option_select_options) {
                 let splitted_option = option.split('~~');
                 options_html += '<option value="' + splitted_option[0] + '">'
-                    + splitted_option[1]
+                    + (splitted_option[1] ?? splitted_option[0])
                     + '</option>';
             }
+            $(new_criteria_select).append(options_html);
         } else if (option_type === 'date') {
             let time_inputs = jQuery(new_criteria).find('input[data-time="yes"]');
             let date_inputs = jQuery(new_criteria).find('input[type="date"]');

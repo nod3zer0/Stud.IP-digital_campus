@@ -168,7 +168,10 @@ ul.resource-tree {
             }
 
             & > label {
-                input, select {
+                input[type=text],
+                input[type=number],
+                input[type=date],
+                select {
                     width: calc(100% - 2em);
                     height: 30px;
 
