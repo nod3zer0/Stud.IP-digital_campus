@@ -99,7 +99,7 @@
                ? htmlReady($clipboard_range_type)
                : 'Resource' ?>"
            data-name="<?= htmlReady($resource->name) ?>"
-           class="clipboard-draggable-item">
+           <?= $resource instanceof Room ? 'class="clipboard-draggable-item"' : '' ?>>
             <? if ($show_picture): ?>
                 <? $picture_url = $resource->getPictureUrl(); ?>
                 <? if ($picture_url): ?>
