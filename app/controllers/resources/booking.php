@@ -1430,8 +1430,12 @@ class Resources_BookingController extends AuthenticatedController
             );
 
             if (!$errors && Request::isXhr()) {
+                $parameters = ['defaultDate'=> date('Y-m-d', $this->begin->getTimestamp())];
+                if (count($this->resources) === 1) {
+                    $parameters['resource_id'] = current($this->resources)->id;
+                }
                 $this->response->add_header('X-Dialog-Close', '1');
-                $this->response->add_header('X-Location', URLHelper::getURL('', ['defaultDate'=> date('Y-m-d', $this->begin->getTimestamp())]));
+                $this->response->add_header('X-Location', URLHelper::getURL('', $parameters));
                 $this->render_nothing();
             }
 
