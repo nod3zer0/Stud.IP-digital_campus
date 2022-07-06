@@ -89,7 +89,8 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
     public function __set($key, $value)
     {
         if ($this->flag == self::ARRAY_AS_PROPS) {
-            return $this->offsetSet($key, $value);
+            $this->offsetSet($key, $value);
+            return;
         }
 
         $this->validateKeyUsage($key);
@@ -106,7 +107,8 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
     public function __unset($key)
     {
         if ($this->flag == self::ARRAY_AS_PROPS) {
-            return $this->offsetUnset($key);
+            $this->offsetUnset($key);
+            return;
         }
 
         $this->validateKeyUsage($key);
@@ -122,7 +124,6 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
      */
     public function __get($key)
     {
-        $ret = null;
         if ($this->flag == self::ARRAY_AS_PROPS) {
             $ret = $this->offsetGet($key);
             return $ret;
@@ -300,7 +301,8 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
     public function offsetSet($key, $value)
     {
         if (is_null($key)) {
-            return $this->append($value);
+            $this->append($value);
+            return;
         }
         $this->storage[$key] = $value;
     }

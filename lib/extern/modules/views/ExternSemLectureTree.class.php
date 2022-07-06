@@ -5,11 +5,11 @@
 # Lifter010: TODO
 
 class ExternSemLectureTree extends StudipSemTreeViewSimple {
-    
+
     var $config;
     var $param;
     var $root_id;
-    
+
     function __construct(&$config, $start_item_id = "", $sem_number = FALSE)
     {
         $this->config = $config;
@@ -21,7 +21,7 @@ class ExternSemLectureTree extends StudipSemTreeViewSimple {
 
         $this->start_item_id = ($start_item_id) ? $start_item_id : $this->root_id;
         $this->param = "range_id={$this->config->range_id}&module=Semlecturetree&config_id={$this->config->id}&";
-        
+
         parent::__construct($this->start_item_id, $sem_number);
     }
 
@@ -63,7 +63,7 @@ class ExternSemLectureTree extends StudipSemTreeViewSimple {
         }
         echo "</table>\n";
     }
-    
+
     function backLink ($item_id) {
         if ($item_id != $this->root_id){
             echo "<table width=\"100%\" border=\"0\"";
@@ -82,7 +82,7 @@ class ExternSemLectureTree extends StudipSemTreeViewSimple {
         }
     }
 
-    function showContent ($item_id) {
+    function showContent ($item_id, $num_all_entries = 0) {
         echo "<table" . $this->config->getAttributes("TreeLevelName", "table");
         echo ">\n<tr><td" . $this->config->getAttributes("TreeLevelName", "td") . ">";
         echo "<font" . $this->config->getAttributes("TreeLevelName", "font") . ">";
@@ -115,10 +115,10 @@ class ExternSemLectureTree extends StudipSemTreeViewSimple {
             $ret .= $delimiter;
         $ret .= htmlReady($this->tree->tree_data[$this->start_item_id]["name"]);
         $ret .= "</font></td></tr></table>\n";
-        
+
         return $ret;
     }
-    
+
 }
 
 ?>

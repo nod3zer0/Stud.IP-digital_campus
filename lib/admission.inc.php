@@ -50,7 +50,7 @@ require_once 'lib/dates.inc.php';
  *                                    to seminar_user. Overrides the $contingent-parameter
  * @param string   $contingent   optional studiengang_id, if no id is given, no contingent is considered
  * @param string   $log_message  optional log-message. if no log-message is given a default one is used
- * @return void
+ * @return bool
  */
 function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse = false, $contingent = false, $log_message = false) {
 

@@ -224,7 +224,7 @@ class LVGroupsWizardStep implements CourseWizardStep
             }
 
             $factory = new Flexi_TemplateFactory($GLOBALS['STUDIP_BASE_PATH'] . '/app/views');
-            $html = $factory->render('course/wizard/steps/lvgroups/lvgroup_searchentry', compact('area', 'inlist'));
+            $html = $factory->render('course/wizard/steps/lvgroups/lvgroup_searchentry', compact('area'));
             $data = [
                 'id' => $area->id,
                 'html_string' => $html

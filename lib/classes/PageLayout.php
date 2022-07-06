@@ -392,7 +392,6 @@ class PageLayout
         $package_elements = [];
 
         if (isset($GLOBALS['_include_stylesheet'])) {
-            unset($package_elements['base-style.css']);
             self::addStylesheet($GLOBALS['_include_stylesheet'], ['media' => 'screen, print']);
         }
 

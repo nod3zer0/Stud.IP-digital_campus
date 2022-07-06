@@ -25,10 +25,14 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+$sem_start_times = [];
 foreach (Semester::findAllVisible() as $key => $value){
     if (isset($value['beginn']) && $value['beginn'])
       $sem_start_times[] = $value['beginn'];
 }
+
+$_views = [];
+
 $_views['sem_number_sql'] = "INTERVAL(start_time," . join(",",$sem_start_times) .")";
 $_views['sem_number_end_sql'] = "IF(duration_time=-1,-1,INTERVAL(start_time+duration_time," . join(",",$sem_start_times) ."))";
 
@@ -80,4 +84,5 @@ $_views["CAT_DEL"] = ["query" => "DELETE FROM kategorien WHERE kategorie_id IN (
 $_views["CAT_DEL_RANGE"] = ["query" => "DELETE FROM kategorien WHERE range_id IN (&)"];
 
 $_views["STATUS_COUNT"] = ["query"=>"SELECT count(DISTINCT user_id) AS anzahl FROM statusgruppen LEFT JOIN statusgruppe_user USING(statusgruppe_id) WHERE range_id=?"];
-?>
+
+return $_views;

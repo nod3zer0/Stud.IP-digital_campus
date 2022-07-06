@@ -44,7 +44,7 @@ class StudipSemTreeViewSimple
     * constructor
     *
     */
-    public function __construct($start_item_id = "root", $sem_number = false, $sem_status, $visible_only = false)
+    public function __construct($start_item_id = 'root', $sem_number = false, $sem_status = false, $visible_only = false)
     {
         $this->start_item_id = ($start_item_id) ? $start_item_id : "root";
         $this->root_content = $GLOBALS['UNI_INFO'];
@@ -75,7 +75,7 @@ class StudipSemTreeViewSimple
                         <div class="sem-path">'.
                             '<div class="sem-path-dir">'.
                                 $this->getSemPath($start_id);
-                    echo 
+                    echo
                         '</div>
                         <div class="sem_path_info">
                             <div class="sem_path_title">'.
@@ -179,7 +179,7 @@ class StudipSemTreeViewSimple
         return $ret;
     }
 
-    public function showContent($item_id, $num_all_entries)
+    public function showContent($item_id, $num_all_entries = 0)
     {
         echo "\n<div align=\"left\" style=\"margin-top:10px;margin-bottom:10px;font-size:10pt\">";
         if ($item_id != "root"){

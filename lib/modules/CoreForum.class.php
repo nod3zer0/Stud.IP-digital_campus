@@ -163,12 +163,12 @@ class CoreForum extends CorePlugin implements ForumModule
 
     public function migrateUser($user_from, $user_to)
     {
-        return ForumEntry::migrateUser($user_from, $user_to);
+        ForumEntry::migrateUser($user_from, $user_to);
     }
 
     public function deleteContents($seminar_id)
     {
-        return ForumEntry::delete($seminar_id);
+        ForumEntry::delete($seminar_id);
     }
 
     public function getDump($seminar_id)

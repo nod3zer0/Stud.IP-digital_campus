@@ -70,8 +70,6 @@ class ExternElementLinkInternSimple extends ExternElement {
     function toStringEdit ($post_vars = "", $faulty_values = "",
             $edit_form = "", $anker = "") {
         global $EXTERN_MODULE_TYPES;
-        $out = "";
-        $table = "";
         if ($edit_form == "") {
             $edit_form = new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
         }
@@ -95,11 +93,12 @@ class ExternElementLinkInternSimple extends ExternElement {
         if (is_array($configs) && count($configs)) {
             $module_name = $EXTERN_MODULE_TYPES[$this->link_module_type]["module"];
             $values = array_keys($configs[$module_name]);
-            unset($names);
-            foreach ($configs[$module_name] as $config)
+
+            $names = [];
+            foreach ($configs[$module_name] as $config) {
                 $names[] = $config["name"];
-        }
-        else {
+            }
+        } else {
             $values = [];
             $names = [];
         }

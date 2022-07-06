@@ -68,7 +68,7 @@ class SRULibraryResultParser implements LibraryResultParser
     /**
      * @see LibraryResultParser::readRecord
      */
-    public function readRecord($data = '') : LibraryDocument
+    public function readRecord($data = ''): LibraryDocument
     {
         $dom = new \DOMDocument();
         @$dom->loadXML($data);
@@ -88,9 +88,9 @@ class SRULibraryResultParser implements LibraryResultParser
             $document = $parser->readResultNode($record);
             if ($document->getTitle()) {
                 return $document;
-            } else {
-                return null;
             }
         }
+
+        throw new Exception('Could not read record');
     }
 }

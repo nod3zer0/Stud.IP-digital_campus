@@ -25,12 +25,13 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-
+$sem_start_times = [];
 foreach (Semester::findAllVisible() as $key => $value){
     if (isset($value['beginn']) && $value['beginn'])
       $sem_start_times[] = $value['beginn'];
 }
 
+$_views = [];
 $_views['sem_number_sql'] = "INTERVAL(start_time," . join(",",$sem_start_times) .")";
 $_views['sem_number_end_sql'] = "IF(duration_time=-1,-1,INTERVAL(start_time+duration_time," . join(",",$sem_start_times) ."))";
 
@@ -104,4 +105,5 @@ $_views["SEM_INST_GET_SEM"] = ["query" => "SELECT c.Seminar_id, " . $_views['sem
 
 $_views["SEM_USER_GET_SEM"] = ["query" =>"SELECT b.Seminar_id,b.Name, " . $_views['sem_number_sql'] . " AS sem_number , " . $_views['sem_number_end_sql'] . " AS sem_number_end FROM seminar_user a LEFT JOIN seminare b USING(Seminar_id)
                                             WHERE b.visible=1 AND a.user_id=? AND a.status=?  §"];
-?>
+
+return $_views;

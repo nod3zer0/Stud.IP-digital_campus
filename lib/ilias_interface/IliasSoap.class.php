@@ -87,8 +87,9 @@ class IliasSoap extends StudipSoapClient
             return $this->admin_sid;
         }
         if ($this->user_type == "user") {
-            if ($this->user_sid == false)
-                $this->loginUser();
+            if ($this->user_sid == false) {
+                throw new Exception('Not implemented');
+            }
             return $this->user_sid;
         }
         return false;

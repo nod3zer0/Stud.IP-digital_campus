@@ -144,13 +144,15 @@ class BASELibraryResultParser implements LibraryResultParser
     /**
      * @see LibraryResultParser::readRecord
      */
-    public function readRecord($data = '') : LibraryDocument
+    public function readRecord($data = ''): LibraryDocument
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         @$dom->loadXML($data);
         $record = $dom->getElementsByTagName('doc')[0];
         if ($record) {
            return $this->readXMLRecord($record);
         }
+
+        throw new Exception('Could not read record');
     }
 }

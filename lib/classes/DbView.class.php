@@ -162,9 +162,9 @@ class DbView
     {
         foreach (self::$dbviewfiles as $view => $status) {
             if ($status === 0) {
-                include 'lib/dbviews/' . $view . '.view.php';
-                self::$dbviews += $_views;
-                unset($_views);
+                $views = include 'lib/dbviews/' . $view . '.view.php';
+                self::$dbviews += $views;
+
                 self::$dbviewfiles[$view] = 1;
             }
         }

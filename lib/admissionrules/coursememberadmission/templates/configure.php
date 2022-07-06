@@ -41,7 +41,7 @@
 <div style="display:flex; align-items: flex-start; column-gap: 1em; flex-wrap: wrap">
 
     <?=
-    QuickSearch::get("mandatory_course_id", new SeminarSearch('number-name-lecturer'))
+    QuickSearch::get('mandatory_course_id', new SeminarSearch())
         ->fireJSFunctionOnSelect('addcourse')
         ->setInputStyle('flex: 0 0 40%')
         ->render();

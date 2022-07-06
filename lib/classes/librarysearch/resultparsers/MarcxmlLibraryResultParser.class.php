@@ -201,12 +201,14 @@ class MarcxmlLibraryResultParser implements LibraryResultParser
      */
     public function readRecord($data = ''): LibraryDocument
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->loadXML($data);
         $record = $dom->getElementsByTagName('record')[0];
         if ($record instanceof \DOMElement) {
             return $this->readResultNode($record);
         }
+
+        throw new Exception('Could not read record');
     }
 
     /**
