@@ -27,7 +27,7 @@ interface PortalPlugin
      *  admin_url    admin link for this plugin (if any)
      *  admin_title  title for admin link (default: Administration)
      *
-     * @return object   template object to render or NULL
+     * @return ?Flexi_Template template object to render or NULL
      */
     function getPortalTemplate();
 }

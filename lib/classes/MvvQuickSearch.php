@@ -45,7 +45,7 @@ class MvvQuickSearch extends SQLSearch
         if (!$id) {
             return $this->zusatz;
         }
-        parent::getAvatarImageTag($id, $size = Avatar::SMALL, $options);
+        return parent::getAvatarImageTag($id, $size = Avatar::SMALL, $options);
     }
     
     public function setQsName($qs_name)

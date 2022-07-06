@@ -100,6 +100,8 @@ class ConnectedUser
         $this->category          = $data['external_user_category'];
         $this->type              = $data['external_user_type'];
         $this->is_connected      = true;
+
+        return true;
     }
 
     /**
@@ -168,13 +170,10 @@ class ConnectedUser
     /**
     * update user-account
     *
-    * dummy-method. returns false. must be overwritten by subclass.
-    * @access public
-    * @return boolean returns false
+    * dummy-method. must be overwritten by subclass.
     */
-    function updateUser()
+    public function updateUser()
     {
-        return false;
     }
 
     /**
@@ -464,13 +463,12 @@ class ConnectedUser
     }
 
     /**
-    * save connection for user-account
-    *
-    * saves user-connection to database and sets type for actual user
-    * @access public
-    * @param string $user_type user-type
-    */
-    function setConnection($user_type)
+     * save connection for user-account
+     *
+     * saves user-connection to database and sets type for actual user
+     * @param string $user_type user-type
+     */
+    public function setConnection($user_type)
     {
         $this->setUserType($user_type);
 

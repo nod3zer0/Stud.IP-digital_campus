@@ -223,8 +223,6 @@ class CourseSet
 
     /**
      * Starts the seat distribution algorithm.
-     *
-     * @return CourseSet
      */
     public function distributeSeats() {
         if ($this->algorithm) {

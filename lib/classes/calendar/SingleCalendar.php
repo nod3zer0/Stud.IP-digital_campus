@@ -131,7 +131,7 @@ class SingleCalendar
         if (!$attendee_ids) {
             $attendee_ids = [$GLOBALS['user']->id];
         }
-        if (count($attendee_ids) == 1) {
+        if (count($attendee_ids) === 1) {
             if (!$this->havePermission(Calendar::PERMISSION_WRITABLE)) {
                 return false;
             }
@@ -142,19 +142,21 @@ class SingleCalendar
                 $this->sendStoreMessage($event, $is_new);
             }
             return $stored;
-        } else {
-            if (in_array($this->getRangeId(), $attendee_ids)) {
-                // set default status if the organizer is an attendee...
-                $event->group_status = CalendarEvent::PARTSTAT_TENTATIVE;
-            }
-            if ($event->isNew()) {
-                return $this->storeAttendeeEvents($event, $attendee_ids);
-            } else {
-                if ($event->havePermission(Event::PERMISSION_WRITABLE)) {
-                    return $this->storeAttendeeEvents($event, $attendee_ids);
-                }
-            }
         }
+
+        if (in_array($this->getRangeId(), $attendee_ids)) {
+            // set default status if the organizer is an attendee...
+            $event->group_status = CalendarEvent::PARTSTAT_TENTATIVE;
+        }
+        if ($event->isNew()) {
+            return $this->storeAttendeeEvents($event, $attendee_ids);
+        }
+
+        if (!$event->havePermission(Event::PERMISSION_WRITABLE)) {
+            return false;
+        }
+
+        return $this->storeAttendeeEvents($event, $attendee_ids);
     }
 
     /**
@@ -955,6 +957,8 @@ class SingleCalendar
                 $events_created[implode('', (array) $event->getId()) . $start] = $new_event;
             }
         }
+
+        return true;
     }
 
     /**

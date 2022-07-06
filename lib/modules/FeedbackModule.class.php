@@ -39,6 +39,8 @@ class FeedbackModule extends CorePlugin implements StudipModule, SystemPlugin
             $navigation->addSubNavigation('index', new Navigation(_('Übersicht'), 'dispatch.php/course/feedback'));
             return ['feedback' => $navigation];
         }
+
+        return [];
     }
     /**
      * {@inheritdoc}

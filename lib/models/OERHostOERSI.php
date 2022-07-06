@@ -77,7 +77,7 @@ class OERHostOERSI extends OERHost
      */
     public function pushDataToEndpoint($endpoint, $data)
     {
-        //nothing to do
+        return true;
     }
 
     /**

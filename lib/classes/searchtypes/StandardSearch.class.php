@@ -78,6 +78,8 @@ class StandardSearch extends SQLSearch
                 return _("Arbeitsgruppe suchen");
             case "Institut_id":
                 return _("Einrichtung suchen");
+            default:
+                throw new UnexpectedValueException("Invalid search type {$this->search}");
         }
     }
 
@@ -174,6 +176,8 @@ class StandardSearch extends SQLSearch
                             "OR Institute.email LIKE :input " .
                             "OR range_tree.name LIKE :input " .
                         "ORDER BY Institute.Name";
+            default:
+                throw new UnexpectedValueException("Invalid search type {$this->search}");
         }
     }
 

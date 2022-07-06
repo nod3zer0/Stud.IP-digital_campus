@@ -36,7 +36,7 @@ class MultiDimArrayObject extends StudipArrayObject
      * Exchange the array for another one.
      *
      * @param  array|ArrayObject $data
-     * @return
+     * @return array
      */
     public function exchangeArray($data)
     {
@@ -51,8 +51,11 @@ class MultiDimArrayObject extends StudipArrayObject
             $data = (array) $data;
         }
 
+        $storage = $this->storage;
+
         $this->storage = $this->recursiveArrayToArrayObjects($data);
 
+        return $storage;
     }
 
     /**
@@ -124,4 +127,3 @@ class MultiDimArrayObject extends StudipArrayObject
         return $data;
     }
 }
-

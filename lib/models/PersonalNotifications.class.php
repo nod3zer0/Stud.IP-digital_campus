@@ -176,7 +176,6 @@ class PersonalNotifications extends SimpleORMap
      * notification-list on top of its site.
      * @param string $notification_id : ID of the notification
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
-     * @return boolean : true on success, false if it failed.
      */
     public static function markAsRead($notification_id, $user_id = null)
     {
@@ -224,7 +223,6 @@ class PersonalNotifications extends SimpleORMap
      * notification-list on top of its site.
      * @param string $html_id : HTML ID attribute of the notification
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
-     * @return boolean : true on success, false if it failed.
      */
     public static function markAsReadByHTML($html_id, $user_id = null)
     {

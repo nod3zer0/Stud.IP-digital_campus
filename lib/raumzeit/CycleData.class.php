@@ -344,13 +344,11 @@ class CycleData
      *
      * @param int $filterStart
      * @param int $filterEnd
-     * @return array
+     * @return array|false
      */
     function getFreeTextPredominantRoom($filterStart = 0, $filterEnd = 0)
     {
-        if ($room = CycleDataDB::getFreeTextPredominantRoomDB($this->metadate_id, $filterStart, $filterEnd)) {
-            return $room;
-        }
+        return CycleDataDB::getFreeTextPredominantRoomDB($this->metadate_id, $filterStart, $filterEnd);
     }
 
     /**

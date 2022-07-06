@@ -131,12 +131,12 @@ class Context
         switch (self::getType()) {
             case self::COURSE:
                 return 'sem';
-                break;
 
             case self::INSTITUTE:
                 return 'inst';
-                break;
         }
+
+        throw new UnexpectedValueException('Invalid context type');
     }
 
     /**
@@ -151,9 +151,13 @@ class Context
     {
         if (self::isCourse()) {
             return self::get()->status;
-        } else if (Context::isInstitute()) {
+        }
+
+        if (self::isInstitute()) {
             return self::get()->type;
         }
+
+        throw new UnexpectedValueException('Invalid context type');
     }
 
     /**
@@ -172,6 +176,8 @@ class Context
             case self::INSTITUTE:
                 return _('Einrichtung');
         }
+
+        throw new UnexpectedValueException('Invalid context type');
     }
 
     /**

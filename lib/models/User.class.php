@@ -209,13 +209,15 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
     /**
      * Returns the currently authenticated user.
      *
-     * @return User User
+     * @return ?User User
      */
     public static function findCurrent()
     {
         if (is_object($GLOBALS['user'])) {
             return $GLOBALS['user']->getAuthenticatedUser();
         }
+
+        return null;
     }
 
     /**
@@ -241,7 +243,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
      * Returns user object including user_info
      *
      * @param string $id
-     * @return User User
+     * @return ?User User
      */
     public static function findFull($id)
     {
@@ -253,6 +255,8 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         if ($data) {
             return self::buildExisting($data);
         }
+
+        return null;
     }
 
     /**

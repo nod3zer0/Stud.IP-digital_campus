@@ -126,10 +126,6 @@ abstract class CronJob
 
     /**
      * Unregisters a previously registered task.
-     *
-     * @param String $task_id Id of the task to be unregistered
-     * @return CronjobScheduler to allow chaining
-     * @throws InvalidArgumentException when no task with the given id exists
      */
     public static function unregister()
     {

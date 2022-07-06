@@ -196,7 +196,7 @@ class CourseDate extends SimpleORMap implements PrivacyObject
      *
      * @param mixed $topic Topic definition (might be an id, an array or an
      *                     object)
-     * @return number addition of all return values, false if none was called
+     * @return int|false number addition of all return values, false if none was called
      */
     public function addTopic($topic)
     {
@@ -205,6 +205,7 @@ class CourseDate extends SimpleORMap implements PrivacyObject
             $this->topics[] = $topic;
             return $this->storeRelations('topics');
         }
+        return false;
     }
 
     /**

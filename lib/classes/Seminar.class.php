@@ -2344,14 +2344,15 @@ class Seminar
      * returns StudipModule object for given slot, null when deactivated or not available
      *
      * @param string $slot
-     * @return StudipModule
+     * @return StudipModule|null
      */
-    public function getSlotModule($slot)
+    public function getSlotModule($slot): ?StudipModule
     {
         $module = 'Core' . ucfirst($slot);
         if ($this->course->isToolActive($module)) {
             return PluginEngine::getPlugin($module);
         }
+        return null;
     }
 
     /**

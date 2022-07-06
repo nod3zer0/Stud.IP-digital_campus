@@ -110,8 +110,10 @@ class IliasObjectConnections
             $query = "SELECT 1 FROM object_contentmodules WHERE object_id = ? AND system_type = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute([$object_id, $index]);
-            return (bool)$statement->fetchColumn();
+            return (bool) $statement->fetchColumn();
         }
+
+        return false;
     }
 
     /**

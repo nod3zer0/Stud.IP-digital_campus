@@ -38,25 +38,27 @@ class EvaluationsWidget extends CorePlugin implements PortalPlugin
      */
     public function getPortalTemplate()
     {
-        // include and show votes and tests
-        if (Config::get()->VOTE_ENABLE) {
-            $controller = new AuthenticatedController(new StudipDispatcher());
-            $controller->suppress_empty_output = true;
-
-            $response = $controller->relay('evaluation/display/studip')->body;
-
-            $controller->suppress_empty_output = (bool)$response;
-            $response .= $controller->relay('questionnaire/widget/start')->body;
-
-            $template = $GLOBALS['template_factory']->open('shared/string');
-            $template->content = $response;
-
-            if ($GLOBALS['perm']->have_perm('root')) {
-                $navigation = new Navigation('', 'dispatch.php/questionnaire/overview');
-                $navigation->setImage(Icon::create('add', 'clickable', ["title" => _('Umfragen bearbeiten')]));
-                $template->icons = [$navigation];
-            }
-            return $template;
+        if (!Config::get()->VOTE_ENABLE) {
+            return null;
         }
+
+        // include and show votes and tests
+        $controller = new AuthenticatedController(new StudipDispatcher());
+        $controller->suppress_empty_output = true;
+
+        $response = $controller->relay('evaluation/display/studip')->body;
+
+        $controller->suppress_empty_output = (bool)$response;
+        $response .= $controller->relay('questionnaire/widget/start')->body;
+
+        $template = $GLOBALS['template_factory']->open('shared/string');
+        $template->content = $response;
+
+        if ($GLOBALS['perm']->have_perm('root')) {
+            $navigation = new Navigation('', 'dispatch.php/questionnaire/overview');
+            $navigation->setImage(Icon::create('add', 'clickable', ["title" => _('Umfragen bearbeiten')]));
+            $template->icons = [$navigation];
+        }
+        return $template;
     }
 }

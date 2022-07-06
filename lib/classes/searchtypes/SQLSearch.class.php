@@ -86,7 +86,6 @@ class SQLSearch extends SearchType
      * returns an adress of the avatar of the searched item (if avatar enabled)
      *
      * @param string $id id of the item which can be username, user_id, Seminar_id or Institut_id
-     * @param string $size enum(NORMAL, SMALL, MEDIUM): size of the avatar-image
      *
      * @return string adress of an image
      */
@@ -102,6 +101,8 @@ class SQLSearch extends SearchType
                 return CourseAvatar::getAvatar($id)->getURL(Avatar::SMALL);
             case "Institut_id":
                 return InstituteAvatar::getAvatar($id)->getURL(Avatar::SMALL);
+            default:
+                return '';
         }
     }
 
@@ -109,7 +110,8 @@ class SQLSearch extends SearchType
      * returns an html tag of the image of the searched item (if avatar enabled)
      *
      * @param string $id id of the item which can be username, user_id, Seminar_id or Institut_id
-     * @param constant $size enum(NORMAL, SMALL, MEDIUM): size of the avatar
+     * @param string $size enum(NORMAL, SMALL, MEDIUM): size of the avatar
+     * @param array $options
      *
      * @return string like "<img src="...avatar.jpg" ... >"
      */
@@ -125,6 +127,8 @@ class SQLSearch extends SearchType
                 return CourseAvatar::getAvatar($id)->getImageTag($size, $options);
             case "Institut_id":
                 return InstituteAvatar::getAvatar($id)->getImageTag($size, $options);
+            default:
+                return '';
         }
     }
 

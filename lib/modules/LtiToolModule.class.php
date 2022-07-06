@@ -55,6 +55,10 @@ class LtiToolModule extends CorePlugin implements StudipModule, SystemPlugin, Pr
      */
     public function getTabNavigation($course_id)
     {
+        if ($GLOBALS['user']->id === 'nobody') {
+            return [];
+        }
+
         $title = CourseConfig::get($course_id)->LTI_TOOL_TITLE;
         $grades = LtiData::countBySQL('course_id = ?', [$course_id]);
 
@@ -67,9 +71,7 @@ class LtiToolModule extends CorePlugin implements StudipModule, SystemPlugin, Pr
             $navigation->addSubNavigation('grades', new Navigation(_('Ergebnisse'), 'dispatch.php/course/lti/grades'));
         }
 
-        if ($GLOBALS['user']->id !== 'nobody') {
-            return ['lti' => $navigation];
-        }
+        return ['lti' => $navigation];
     }
 
     /**

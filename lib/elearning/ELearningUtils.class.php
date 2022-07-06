@@ -446,8 +446,6 @@ class ELearningUtils
      * delete cms-data
      *
      * deletes all data belonging to the specified cms from stud.ip database
-     *
-     * @return boolean successful
      */
     public static function deleteCMSData($cms_type)
     {

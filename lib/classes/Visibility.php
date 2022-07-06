@@ -147,7 +147,7 @@ class Visibility
      * (under the usage of a userid) therefore all identifier set for one user
      * MUST be unique.
      *
-     * @param int|string $parent Determines the parent of the visibility to add.
+     * @param int|string $parent_identifier Determines the parent of the visibility to add.
      * Use the direct visibilityid of the parent visibility or the identifier.
      * If the visibility should be created on the top level the value has to be
      * 0. Plugins creating a privacysetting will automaticly be added to the
@@ -159,9 +159,6 @@ class Visibility
      * 0 - The setting is only a header without any options
      * 1 (Default) - Normal setting
      *
-     * @param string $user Userid of the user that should be added the visibility.
-     * Default: The current logged on user
-     *
      * @param int $default int representation of the visibility that should be
      * set. Use with caution since the API provides the easy change of the
      * visibility int representation
@@ -170,8 +167,6 @@ class Visibility
      * Important: If addPrivacySetting is called in a file of a plugin there is
      * no need to set the pluginid manually, because the API will normally find
      * it
-     *
-     * @return int the created visibilityid
      */
     public static function addPrivacySettingForAll($name, $identifier = "", $parent_identifier = 0, $category = 1, $default = null, $pluginid = null)
     {

@@ -337,10 +337,8 @@ class Ilias3ConnectedCMS extends ConnectedCMS
     * terminate
     *
     * terminates connection.
-    * @access public
-    * @return boolean returns false
     */
-    function terminate()
+    public function terminate()
     {
 //      $this->soap_client->logout();
         $this->soap_client->saveCacheData();

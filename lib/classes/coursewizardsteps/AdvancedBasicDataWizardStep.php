@@ -39,13 +39,16 @@ class AdvancedBasicDataWizardStep extends BasicDataWizardStep
         $factory = new Flexi_TemplateFactory($GLOBALS['STUDIP_BASE_PATH'].'/app/views/course/wizard/steps');
         $template = $factory->open('advancedbasicdata/index');
 
-        if ($template = $this->setupTemplateAttributes($template, $values, $stepnumber, $temp_id)) {
-            $values = $this->makeI18N($values[__CLASS__], ['name', 'description', 'subtitle', 'kind']);
-
-            $template->set_attribute('values', array_merge($template->values, $values));
-
-            return $template->render();
+        $template = $this->setupTemplateAttributes($template, $values, $stepnumber, $temp_id);
+        if (!$template) {
+            return '';
         }
+
+        $values = $this->makeI18N($values[__CLASS__], ['name', 'description', 'subtitle', 'kind']);
+
+        $template->set_attribute('values', array_merge($template->values, $values));
+
+        return $template->render();
     }
 
     /**

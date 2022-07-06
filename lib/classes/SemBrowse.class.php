@@ -1147,9 +1147,9 @@ class SemBrowse {
      *
      * @param string $target
      * @param string $option_name
-     * @return \Navigation
+     * @return Navigation|null
      */
-    public static function getSearchOptionNavigation($target, $option_name = null)
+    public static function getSearchOptionNavigation($target, $option_name = null): ?Navigation
     {
         // return first visible search option
         if (is_null($option_name)) {
@@ -1227,6 +1227,8 @@ class SemBrowse {
                             'option'        => $option_name
                         ], true));
         }
+
+        return null;
     }
 
     /**

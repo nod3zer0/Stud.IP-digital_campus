@@ -192,7 +192,7 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
     /**
      * This method increments the download counter of the FileRef.
      *
-     * @return The number of rows of the file_refs table that have been altered.
+     * @return int The number of rows of the file_refs table that have been altered.
      */
     public function incrementDownloadCounter()
     {
@@ -204,6 +204,8 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
                       WHERE {$where_query}";
             return DBManager::get()->exec($query);
         }
+
+        return 0;
     }
 
     /**

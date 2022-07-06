@@ -238,7 +238,7 @@ class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
      * TODO should throw an exception if input values are wrong
      *
      * @param array $r_rule
-     * @return array The values of the recurrence rule.
+     * @return array|false The values of the recurrence rule.
      */
     function setRecurrence($r_rule)
     {
@@ -453,6 +453,8 @@ class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
         $this->event->duration = $rrule[7];
         $this->event->count = $r_rule['count'];
         $this->event->expire = $r_rule['expire'];
+
+        return $r_rule;
     }
 
     /**
@@ -1027,7 +1029,9 @@ class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
             case 'inst':
             case 'fak':
                 return (string) $this->institute->name;
-            }
+            default:
+                return '';
+        }
     }
 
     /**

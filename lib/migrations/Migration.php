@@ -45,6 +45,7 @@ abstract class Migration
      */
     public function description()
     {
+        return '';
     }
 
     /**

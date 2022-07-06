@@ -114,11 +114,7 @@ class ConnectedIlias
     }
 
     /**
-     * load settings
-     *
      * load ILIAS settings from config table
-     * @access public
-     * @return string messages
      */
     public function loadSettings()
     {
@@ -912,7 +908,7 @@ class ConnectedIlias
      * creates new ilias course
      * @access public
      * @param string $studip_course_id seminar-id
-     * @return boolean successful
+     * @return string|false|null
      */
     public function addCourse($studip_course_id)
     {
@@ -1034,6 +1030,8 @@ class ConnectedIlias
             $this->CheckUserCoursePermissions($crs_id);
             return $crs_id;
         }
+
+        return null;
     }
 
     /**

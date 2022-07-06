@@ -434,15 +434,10 @@ class ConnectedCMS
     }
 
     /**
-    * terminate
-    *
-    * dummy-method. returns false. can be overwritten by subclass.
-    * @access public
-    * @return boolean returns false
+    * dummy-method. can be overwritten by subclass.
     */
     public function terminate()
     {
-        return false;
     }
 
     public function deleteConnectedModules($object_id){

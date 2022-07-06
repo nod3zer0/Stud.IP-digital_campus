@@ -483,40 +483,6 @@ class StudygroupModel
     }
 
     /**
-     * callback function - used to compare sequences of studygroup statuses
-     *
-     * @param array status a
-     * @param array status b
-     * @return int ordering
-     */
-    public static function compare_status($a, $b)
-    {
-        if ($a['status'] === $b['status']) {
-            return strnatcmp($a['fullname'], $b['fullname']);
-        }
-
-        if ($a['status'] === 'dozent') {
-            if ($b['status'] === 'tutor') {
-                return -1;
-            } elseif ($b['status'] === 'autor') {
-                return -1;
-            }
-        } elseif ($a['status'] === 'tutor') {
-            if ($b['status'] === 'dozent') {
-                return 1;
-            } elseif ($b['status'] === 'autor') {
-                return -1;
-            }
-        } elseif ($a['status'] === 'autor') {
-            if ($b['status'] === 'tutor') {
-                return 1;
-            } elseif ($b['status'] === 'dozent') {
-                return 1;
-            }
-        }
-    }
-
-    /**
      * Checks for a given seminar_id whether a course is a studygroup
      *
      * @param   string id of a seminar

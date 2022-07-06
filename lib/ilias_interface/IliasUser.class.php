@@ -99,6 +99,8 @@ class IliasUser
         $this->category          = $data['external_user_category'];
         $this->type              = $data['external_user_type'];
         $this->is_connected      = true;
+
+        return true;
     }
 
     /**
@@ -205,12 +207,11 @@ class IliasUser
      * set id
      *
      * returns id
-     * @access public
      * @return string id
      */
-    function setId($ilias_user_id)
+    public function setId($ilias_user_id)
     {
-        $this->id = $ilias_user_id;
+        return $this->id = $ilias_user_id;
     }
 
     /**

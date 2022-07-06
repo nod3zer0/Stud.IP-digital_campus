@@ -361,9 +361,7 @@ class StudipAuthAbstract
      * place special treatment of new users here
      *
      * @access private
-     * @param
-     *            User the user object
-     * @return bool
+     * @param User $user the user object
      */
     function doNewUserInit($user)
     {

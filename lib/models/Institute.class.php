@@ -139,6 +139,7 @@ class Institute extends SimpleORMap implements Range
         if (Context::isInstitute()) {
             return Context::get();
         }
+        return null;
     }
 
     /**

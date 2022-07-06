@@ -213,6 +213,8 @@ class IliasModule
             case 'add'         : return 'course/ilias_interface/edit_object_assignment/'.$this->ilias_index.'?add_module=1&ilias_module_id='.$this->id;
             case 'remove'      : return 'course/ilias_interface/edit_object_assignment/'.$this->ilias_index.'?remove_module&ilias_module_id='.$this->id;
         }
+
+        throw new InvalidArgumentException("Unknown action {$action}");
     }
 
 

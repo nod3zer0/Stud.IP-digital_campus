@@ -250,13 +250,9 @@ class Ilias3ConnectedUser extends ConnectedUser
     }
 
     /**
-    * update user
-    *
-    * update user-account
-    * @access public
-    * @return boolean returns false on error
-    */
-    function updateUser()
+     * update user-account
+     */
+    public function updateUser()
     {
     }
 
@@ -288,18 +284,17 @@ class Ilias3ConnectedUser extends ConnectedUser
     }
 
     /**
-    * set connection
-    *
-    * set user connection
-    * @access public
-    * @param string user_type user-type
-    * @return boolean returns false on error
-    */
-    function setConnection($user_type, $ignore_encrypt_passwords = false)
+     * set connection
+     *
+     * set user connection
+     * @access public
+     * @param string user_type user-type
+     */
+    public function setConnection($user_type, $ignore_encrypt_passwords = false)
     {
         global $connected_cms;
 
-        if (!$ignore_encrypt_passwords && $connected_cms[$this->cms_type]->encrypt_passwords == "md5")
+        if (!$ignore_encrypt_passwords && $connected_cms[$this->cms_type]->encrypt_passwords === "md5")
         {
 //          echo "PASSWORD-ENCRYPTION";
             $this->external_password = $this->getCryptedPassword( $this->external_password );

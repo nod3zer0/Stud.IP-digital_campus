@@ -166,6 +166,8 @@ class GlobalSearchForum extends GlobalSearchModule implements GlobalSearchFullte
 
             return $result;
         }
+
+        return [];
     }
 
     /**

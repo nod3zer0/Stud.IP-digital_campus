@@ -605,8 +605,6 @@ class ForumEntry  implements PrivacyObject
                 $postings = ForumEntry::getLastPostings($postings);
                 return ['list' => $postings, 'count' => $list['count']];
 
-                break;
-
             case 'list':
                 $constraint = ForumEntry::getConstraints($parent_id);
 
@@ -632,11 +630,9 @@ class ForumEntry  implements PrivacyObject
                 $postings = ForumEntry::getLastPostings($postings);
 
                 return ['list' => $postings, 'count' => $count];
-                break;
 
             case 'postings':
                 return ForumEntry::getEntries($parent_id, ForumEntry::WITH_CHILDS, '', 'ASC', $start);
-                break;
 
             case 'newest':
                 $constraint = ForumEntry::getConstraints($parent_id);
@@ -678,16 +674,13 @@ class ForumEntry  implements PrivacyObject
 
                 // return results
                 return ['list' => $postings, 'count' => $stmt_count->fetchColumn()];
-                break;
 
             case 'latest':
                 return ForumEntry::getEntries($parent_id, ForumEntry::WITH_CHILDS, '', 'DESC', $start);
-                break;
 
             case 'favorites':
                 $add = "AND ou.topic_id IS NOT NULL";
                 return ForumEntry::getEntries($parent_id, ForumEntry::WITH_CHILDS, $add, 'DESC', $start);
-                break;
 
             case 'dump':
                 $constraint = ForumEntry::getConstraints($parent_id);
@@ -703,7 +696,6 @@ class ForumEntry  implements PrivacyObject
                 $stmt->execute([$seminar_id, $constraint['lft'], $constraint['rgt']]);
 
                 return ForumEntry::parseEntries($stmt->fetchAll(PDO::FETCH_ASSOC));
-                break;
 
             case 'flat':
                 $constraint = ForumEntry::getConstraints($parent_id);
@@ -744,7 +736,6 @@ class ForumEntry  implements PrivacyObject
                 }
 
                 return ['list' => $posting_list, 'count' => $count];
-                break;
 
             case 'depth_to_large':
                 $constraint = ForumEntry::getConstraints($parent_id);
@@ -757,8 +748,9 @@ class ForumEntry  implements PrivacyObject
                 $count = DBManager::get()->query("SELECT FOUND_ROWS()")->fetchColumn();
 
                 return ['list' => $stmt->fetchAll(PDO::FETCH_ASSOC), 'count' => $count];
-                break;
         }
+
+        throw new InvalidArgumentException("Invalid type {$type}");
     }
 
     /**

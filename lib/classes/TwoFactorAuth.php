@@ -171,9 +171,8 @@ final class TwoFactorAuth
      * @param  string $text   Text to display to the user
      * @param  array  $data   Optional additional data to pass to the
      *                        confirmation screen (for internal use)
-     * @return bool
      */
-    public function confirm($action, $text, array $data = [])
+    public function confirm($action, $text, array $data = []): void
     {
         if (isset($_SESSION[self::SESSION_CONFIRMATIONS])
             && is_array($_SESSION[self::SESSION_CONFIRMATIONS])
@@ -183,12 +182,11 @@ final class TwoFactorAuth
                 $_SESSION[self::SESSION_CONFIRMATIONS],
                 [$action]
             );
-            return true;
+        } else {
+            $this->showConfirmationScreen($text, $data + [
+                'confirm' => $action,
+            ]);
         }
-
-        $this->showConfirmationScreen($text, $data + [
-            'confirm' => $action,
-        ]);
     }
 
     /**

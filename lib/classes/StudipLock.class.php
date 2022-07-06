@@ -82,6 +82,7 @@ class StudipLock
         if (self::$current) {
             return DBManager::get()->fetchColumn("SELECT RELEASE_LOCK(?)", [self::lockname(self::$current)]);
         }
+        return 0;
     }
 
     /**

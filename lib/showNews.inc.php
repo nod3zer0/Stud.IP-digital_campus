@@ -150,8 +150,7 @@ function delete_news($delete_news_array)
  * generates proper text for confirmation question and removes range_id from news
  *
  *
- * @param $remove_array array with $news_id as key and array of range_ids as value
- * @param string $range_id
+ * @param array $remove_array with $news_id as key and array of range_ids as value
  * @return string text for confirmation question or empty string after removal
  */
 function remove_news($remove_array)
@@ -159,7 +158,7 @@ function remove_news($remove_array)
     $confirmed = false;
     $question_text = [];
     if (!is_array($remove_array)) {
-        return false;
+        return '';
     }
     if (Request::submitted('yes') && Request::isPost()) {
         CSRFProtection::verifySecurityToken();
@@ -227,6 +226,8 @@ function remove_news($remove_array)
     if (count($question_text) == 1) {
         return _('Wollen Sie diese Aktion jetzt ausführen?') . "\n" . implode($question_text);
     }
+
+    return '';
 }
 
 /**

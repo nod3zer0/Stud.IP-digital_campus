@@ -46,18 +46,21 @@ class GlobalSearchCalendar extends GlobalSearchModule
     public static function getSQL($search, $filter, $limit)
     {
         $time    = strtotime($search);
+
+        if ($time === false) {
+            return '';
+        }
+
         $endtime = $time + 24 * 60 * 60;
         $user_id = DBManager::get()->quote($GLOBALS['user']->id);
 
-        if ($time) {
-            return "SELECT SQL_CALC_FOUND_ROWS `date`, `end_time`, `seminar_id`
-                    FROM `termine`
-                    JOIN `seminar_user` ON (`range_id` = `seminar_id`)
-                    WHERE `user_id` = {$user_id}
-                      AND `date` BETWEEN {$time} AND {$endtime}
-                    ORDER BY `date`
-                    LIMIT " . $limit;
-        }
+        return "SELECT SQL_CALC_FOUND_ROWS `date`, `end_time`, `seminar_id`
+                FROM `termine`
+                JOIN `seminar_user` ON (`range_id` = `seminar_id`)
+                WHERE `user_id` = {$user_id}
+                  AND `date` BETWEEN {$time} AND {$endtime}
+                ORDER BY `date`
+                LIMIT " . $limit;
     }
 
     /**

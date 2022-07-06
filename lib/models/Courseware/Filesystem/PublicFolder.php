@@ -163,6 +163,7 @@ class PublicFolder extends StandardFolder
      */
     public function setDataFromEditTemplate($request)
     {
+        return $this;
     }
 
     /**
@@ -204,6 +205,7 @@ class PublicFolder extends StandardFolder
      */
     public function deleteSubfolder($subfolderId)
     {
+        return false;
     }
 
     /**

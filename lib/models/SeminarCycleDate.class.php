@@ -110,7 +110,7 @@ class SeminarCycleDate extends SimpleORMap
      * Returns the time fraction for a given field.
      *
      * @param String $field Time fraction field
-     * @return String containing the time fraction
+     * @return int the time fraction
      */
     protected function getTimeFraction($field)
     {
@@ -122,6 +122,8 @@ class SeminarCycleDate extends SimpleORMap
             list($end_hour, $end_minute) = explode(':', $this->end_time);
             return (int)$$field;
         }
+
+        throw new InvalidArgumentException("Invalid field {$field}");
     }
 
     /**
@@ -149,6 +151,8 @@ class SeminarCycleDate extends SimpleORMap
             $this->end_time = sprintf('%02u:%02u:00', $this->end_hour, $value);
             return $this->end_minute;
         }
+
+        throw new InvalidArgumentException("Invalid field {$field}");
     }
 
     /**

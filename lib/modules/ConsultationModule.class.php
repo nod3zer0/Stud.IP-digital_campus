@@ -57,9 +57,11 @@ class ConsultationModule extends CorePlugin implements StudipModule, SystemPlugi
      */
     public function getTabNavigation($course_id)
     {
-        if ($GLOBALS['user']->id !== 'nobody') {
-            return ['consultation' => new ConsultationNavigation(RangeFactory::find($course_id))];
+        if ($GLOBALS['user']->id === 'nobody') {
+            return [];
         }
+
+        return ['consultation' => new ConsultationNavigation(RangeFactory::find($course_id))];
     }
 
     /**

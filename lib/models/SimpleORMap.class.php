@@ -1885,7 +1885,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * is instead invoked
      *
      * @param null|array|string $only_these
-     * @return number addition of all return values, false if none was called
+     * @return int|false number addition of all return values, false if none was called
      */
     protected function storeRelations($only_these = null)
     {
@@ -1955,9 +1955,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                             WHERE ". join(" AND ", $where_query));
                 return true;
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

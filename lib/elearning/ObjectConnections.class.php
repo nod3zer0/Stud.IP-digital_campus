@@ -106,14 +106,12 @@ class ObjectConnections
      * @param string $object_id object-id (optional)
      * @return boolean connection-status
      */
-    public static function isObjectConnected($object_id = null)
+    public static function isObjectConnected($object_id)
     {
-        if (isset($object_id)) {
-            $query = "SELECT 1 FROM object_contentmodules WHERE object_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([$object_id]);
-            return (bool)$statement->fetchColumn();
-        }
+        $query = "SELECT 1 FROM object_contentmodules WHERE object_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute([$object_id]);
+        return (bool)$statement->fetchColumn();
     }
 
     /**

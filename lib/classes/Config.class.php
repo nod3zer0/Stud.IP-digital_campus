@@ -123,7 +123,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
      * for compatibility reasons an existing variable in global
      * namespace with the same name is also returned
      * @param string $field
-     * @return Ambigous
+     * @return mixed
      */
     public function getValue($field)
     {
@@ -133,13 +133,15 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         if (isset($GLOBALS[$field]) && !isset($_REQUEST[$field])) {
             return $GLOBALS[$field];
         }
+
+        return null;
     }
 
     /**
      * set config entry to given value, but don't store it
      * in database
      * @param string $field
-     * @param unknown_type $value
+     * @param mixed $value
      * @return
      */
     public function setValue($field, $value)
@@ -324,7 +326,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
      * @param string name of entry
      * @param array data to insert as assoc array
      * @throws InvalidArgumentException
-     * @return Ambigous <NULL, ConfigEntry>
+     * @return null|ConfigEntry
      */
     public function create($field, $data = [])
     {

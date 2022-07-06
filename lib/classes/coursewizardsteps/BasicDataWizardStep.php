@@ -38,6 +38,8 @@ class BasicDataWizardStep implements CourseWizardStep
         if ($this->setupTemplateAttributes($tpl, $values, $stepnumber, $temp_id)) {
             return $tpl->render();
         }
+
+        return '';
     }
 
     protected function setupTemplateAttributes($tpl, $values, $stepnumber, $temp_id)

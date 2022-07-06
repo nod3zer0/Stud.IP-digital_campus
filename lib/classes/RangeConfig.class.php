@@ -194,7 +194,7 @@ class RangeConfig extends Config
             $data['range'] = static::RANGE_TYPE;
         }
 
-        parent::create($field, $data);
+        return parent::create($field, $data);
     }
 
     /**

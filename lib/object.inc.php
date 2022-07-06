@@ -342,7 +342,7 @@ function object_return_views ($object_id)
 /**
  * converts a ouv type to an id
  * @param $type string former used type of visited objects or module (i.e. news, documents, wiki)
- * @return int
+ * @return ?int
  */
 function object_type_to_id($type)
 {
@@ -375,6 +375,7 @@ function object_type_to_id($type)
         }
     }
 
+    return null;
 }
 
 /**

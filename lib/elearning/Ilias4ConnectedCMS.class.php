@@ -79,7 +79,6 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
      * checks if there are modules in the course that are not connected to the seminar
      * @access public
      * @param string $course_id course-id
-     * @return boolean successful
      */
     function updateConnections($course_id)
     {

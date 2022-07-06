@@ -149,7 +149,7 @@ class SimpleORMapCollection extends SimpleCollection
      * by calling the finder function
      *
      * @throws InvalidArgumentException
-     * @return number of records after refresh
+     * @return ?int number of records after refresh
      */
     public function refresh()
     {
@@ -164,6 +164,8 @@ class SimpleORMapCollection extends SimpleCollection
             $this->deleted->exchangeArray([]);
             return $this->last_count = $this->count();
         }
+
+        return null;
     }
 
     /**

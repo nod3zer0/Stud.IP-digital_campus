@@ -122,6 +122,8 @@ class Ilias3ContentModule extends ContentModule
         }
 
 //      echo "PERM".implode($this->allowed_operations,"-");
+
+        return true;
     }
 
     /**

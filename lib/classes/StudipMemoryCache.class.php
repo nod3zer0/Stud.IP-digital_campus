@@ -57,11 +57,13 @@ class StudipMemoryCache implements StudipCache
      * @returns mixed  returns TRUE on success or FALSE on failure.
      *
      */
-    public function write($name, $content, $expire = self::DEFAULT_EXPIRATION)
+    public function write($name, $content, $expires = self::DEFAULT_EXPIRATION)
     {
         $this->memory_cache[$name] = [
             'expires' => time() + $expire,
             'data'    => $content,
         ];
+
+        return true;
     }
 }

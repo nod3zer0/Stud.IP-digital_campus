@@ -54,7 +54,7 @@ interface StudipCache
      *
      * @param string $name     the item's key.
      * @param mixed  $content  the item's content (will be serialized if necessary).
-     * @param int    $expired  the item's expiry time in seconds. Optional, defaults to 12h.
+     * @param int    $expires  the item's expiry time in seconds. Optional, defaults to 12h.
      *
      * @return bool     returns TRUE on success or FALSE on failure.
      */

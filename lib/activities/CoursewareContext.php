@@ -29,28 +29,32 @@ class CoursewareContext extends Context
 
     public function getContextType()
     {
-        if($this->context == 'user') {
+        if ($this->context === 'user') {
             return \Context::USER;
         }
 
-        if ($this->content == 'course') {
+        if ($this->context === 'course') {
             return \Context::COURSE;
         }
+
+        throw new UnexpectedValueException("Unknown context type {$this->context}");
     }
 
     public function getContextFullname($format = 'default')
     {
-        if($this->context == 'user') {
+        if ($this->context === 'user') {
             $user = \User::find($this->range_id);
 
             return $user->getFullname($format);
         }
 
-        if($this->context == 'course') {
+        if ($this->context === 'course') {
             $course = \Course::find($this->range_id);
 
             return $course->getFullname($format);
         }
+
+        throw new UnexpectedValueException("Unknown context {$this->context}");
     }
 
 }

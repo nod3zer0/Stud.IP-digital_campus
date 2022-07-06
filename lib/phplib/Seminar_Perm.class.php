@@ -67,7 +67,7 @@ class Seminar_Perm
 
     /**
      * @param bool $user_id
-     * @return string
+     * @return string|null
      */
     public function get_perm($user_id = false)
     {
@@ -90,6 +90,8 @@ class Seminar_Perm
 
             return $this->studip_perms['studip'][$user_id] = $perms;
         }
+
+        return null;
     }
 
     /**

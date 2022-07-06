@@ -230,6 +230,7 @@ class StudipPDO extends PDO
         if ($ok === true) {
             return $st->rowCount();
         }
+        return 0;
     }
 
     /**

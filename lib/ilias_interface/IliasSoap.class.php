@@ -985,8 +985,8 @@ class IliasSoap extends StudipSoapClient
                     return $ret;
                 }
             }
-            return false;
         }
+        return false;
     }
 
     /**

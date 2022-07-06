@@ -208,6 +208,8 @@ class Seminar_Auth
                 throw new RuntimeException("Error in auth handling: invalid state reached.");
                 break;
         }
+
+        return false;
     }
 
 
@@ -319,11 +321,10 @@ class Seminar_Auth
 
                     return $user->id;
                 }
-            } else {
-                return false;
             }
         }
-        // end of single sign on
+
+        return false;
     }
 
     /**
