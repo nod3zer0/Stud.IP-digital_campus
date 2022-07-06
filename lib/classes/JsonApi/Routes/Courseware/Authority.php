@@ -59,19 +59,13 @@ class Authority
     public static function canUpdateBlock(User $user, Block $resource)
     {
         if ($resource->isBlocked()) {
-            $structural_element = $resource->container->structural_element;
-
-            if ($structural_element->range_type === 'user') {
-                return $structural_element->range_id === $user->id;
-            }
-
             $perm = $GLOBALS['perm']->have_studip_perm(
-                $structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
-                $structural_element->course->id,
+                $resource->container->structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
+                $resource->container->structural_element->course->id,
                 $user->id
             );
 
-            return $resource->edit_blocker_id === $user->id || $perm;
+            return $resource->getBlockerUserId() == $user->id || $perm;
         }
 
         return self::canUpdateContainer($user, $resource->container);
