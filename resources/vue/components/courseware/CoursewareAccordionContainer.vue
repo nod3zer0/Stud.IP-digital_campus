@@ -230,7 +230,7 @@ export default {
     },
     watch: {
         blocks() {
-            if (!this.showEdit && !this.sortMode) {
+            if (!this.showEdit) {
                 this.initCurrentData();
             }
         }
