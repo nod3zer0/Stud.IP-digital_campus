@@ -15,16 +15,42 @@
  */
 class Seminar_Register_Auth extends Seminar_Auth
 {
-    /**
-     * @var string
-     */
-    protected $mode = 'reg';
+    public function start()
+    {
+        global $sess;
 
-    public $error_msg = '';
+        switch ($this->getState()) {
+            # No valid auth info or auth is expired
+            case 1:
 
-    /**
-     *
-     */
+                if ($this->nobody) {
+                    # Authenticate as nobody
+                    $this->auth['uid'] = 'nobody';
+                    return true;
+                } else {
+                    # Show the registration form
+                    $this->auth_registerform();
+                    $this->auth['uid'] = 'form';
+                    exit;
+                }
+            # Login in progress, check results and act accordingly
+            case 3:
+                $uid = $this->auth_doregister();
+                if ($uid) {
+                    $this->auth['uid'] = $uid;
+                    $GLOBALS['user'] = new Seminar_User($this->auth['uid']);
+                    return true;
+                } else {
+                    $this->auth_registerform();
+                    $this->auth['uid'] = 'form';
+                    $sess->freeze();
+                    exit;
+                }
+        }
+
+        return parent::start();
+    }
+
     public function auth_registerform()
     {
         $this->check_environment();

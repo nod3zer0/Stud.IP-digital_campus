@@ -31,12 +31,6 @@ class Seminar_Auth
     protected $persistent_slots = ["auth", "classname"];
 
     /**
-     * @var string
-     */
-    protected $mode = "log"; ## "log" for login only systems,
-    ## "reg" for user self registration
-
-    /**
      * @var bool
      */
     protected $nobody = false; ## If true, a default auth is created...
@@ -74,22 +68,20 @@ class Seminar_Auth
         }
     }
 
-
     /**
-     * @return bool
-     * @throws RuntimeException
+     * Check current auth state. Should be one of
+     * 1) Not logged in (no valid auth info or auth expired)
+     * 2) Logged in (valid auth info)
+     * 3) Login in progress (if $this->cancel_login, revert to state 1)
+
+     * @return int
      */
-    function start()
+    protected function getState(): int
     {
-        global $sess;
-        # Check current auth state. Should be one of
-        #  1) Not logged in (no valid auth info or auth expired)
-        #  2) Logged in (valid auth info)
-        #  3) Login in progress (if $this->cancel_login, revert to state 1)
         if ($this->is_authenticated()) {
-            $uid = $this->auth["uid"];
+            $uid = $this->auth['uid'];
             switch ($uid) {
-                case "form":
+                case 'form':
                     # Login in progress
                     if (Request::option($this->cancel_login)) {
                         # If $this->cancel_login is set, delete all auth info and set
@@ -113,7 +105,18 @@ class Seminar_Auth
             $state = 1;
         }
 
-        switch ($state) {
+        return $state;
+    }
+
+    /**
+     * @return bool
+     * @throws RuntimeException
+     */
+    public function start()
+    {
+        global $sess;
+
+        switch ($this->getState()) {
             case 1:
                 # No valid auth info or auth is expired
 
@@ -126,87 +129,43 @@ class Seminar_Auth
                     return true;
                 }
 
-                # Check for "log" vs. "reg" mode
-                switch ($this->mode) {
-                    case "yes":
-                    case "log":
-                        if ($this->nobody) {
-                            # Authenticate as nobody
-                            $this->auth["uid"] = "nobody";
-                            return true;
-                        } else {
-                            # Show the login form
-                            $this->auth_loginform();
-                            $this->auth["uid"] = "form";
-                            $sess->freeze();
-                            exit;
-                        }
-                        break;
-                    case "reg":
-                        if ($this->nobody) {
-                            # Authenticate as nobody
-                            $this->auth["uid"] = "nobody";
-                            return true;
-                        } else {
-                            # Show the registration form
-                            $this->auth_registerform();
-                            $this->auth["uid"] = "form";
-                            exit;
-                        }
-                        break;
-                    default:
-                        # This should never happen. Complain.
-                        throw new RuntimeException("Error in auth handling: no valid mode specified.");
+                if ($this->nobody) {
+                    # Authenticate as nobody
+                    $this->auth["uid"] = "nobody";
+                    return true;
+                } else {
+                    # Show the login form
+                    $this->auth_loginform();
+                    $this->auth["uid"] = "form";
+                    $sess->freeze();
+                    exit;
                 }
-                break;
             case 2:
                 # Valid auth info
                 # do nothin
                 break;
             case 3:
                 # Login in progress, check results and act accordingly
-                switch ($this->mode) {
-                    case "yes":
-                    case "log":
-                        if ($uid = $this->auth_validatelogin()) {
-                            $this->auth["uid"] = $uid;
-                            $keep_session_vars = ['auth', 'forced_language', '_language', 'contrast'];
-                            if ($this->auth['perm'] === 'root') {
-                                $keep_session_vars[] = 'plugins_disabled';
-                            }
-                            $sess->regenerate_session_id($keep_session_vars);
-                            $sess->freeze();
-                            $GLOBALS['user'] = new Seminar_User($this->auth['uid']);
-                            return true;
-                        } else {
-                            $this->auth_loginform();
-                            $this->auth["uid"] = "form";
-                            $sess->freeze();
-                            exit;
-                        }
-                        break;
-                    case "reg":
-                        if ($uid = $this->auth_doregister()) {
-                            $this->auth["uid"] = $uid;
-                            $GLOBALS['user'] = new Seminar_User($this->auth['uid']);
-                            return true;
-                        } else {
-                            $this->auth_registerform();
-                            $this->auth["uid"] = "form";
-                            $sess->freeze();
-                            exit;
-                        }
-                        break;
-                    default:
-                        # This should never happen. Complain.
-                        throw new RuntimeException("Error in auth handling: no valid mode specified.");
-                        break;
+                $uid = $this->auth_validatelogin();
+                if ($uid) {
+                    $this->auth["uid"] = $uid;
+                    $keep_session_vars = ['auth', 'forced_language', '_language', 'contrast'];
+                    if ($this->auth['perm'] === 'root') {
+                        $keep_session_vars[] = 'plugins_disabled';
+                    }
+                    $sess->regenerate_session_id($keep_session_vars);
+                    $sess->freeze();
+                    $GLOBALS['user'] = new Seminar_User($this->auth['uid']);
+                    return true;
+                } else {
+                    $this->auth_loginform();
+                    $this->auth["uid"] = "form";
+                    $sess->freeze();
+                    exit;
                 }
-                break;
             default:
                 # This should never happen. Complain.
                 throw new RuntimeException("Error in auth handling: invalid state reached.");
-                break;
         }
 
         return false;
