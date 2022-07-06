@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="false"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div v-if="currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
@@ -27,7 +26,7 @@
                         <img :src="oembedData.fullsize_url" />
                     </div>
                 </div>
-                <div class="cw-block-embed-info" v-if="oembedData">
+                <div class="cw-block-embed-info" v-if="oembedData !== null">
                     <span class="cw-block-embed-title">{{ oembedData.title }}</span>
                     <span class="cw-block-embed-author-name">
                         <translate>erstellt von</translate>
@@ -103,7 +102,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentTitle: '',
             currentSource: '',
             currentUrl: '',
@@ -178,9 +176,6 @@ export default {
                 this.updateTime();
             }
         },
-        setShowEdit(state) {
-            this.showEdit = state;
-        },
         addTimeData(data) {
             if (this.currentSource === 'youtube') {
                 if (this.currentStartTime !== '') {
@@ -235,41 +230,5 @@ export default {
             });
         },
     },
-    watch: {
-        title() {
-            if (!this.showEdit) {
-                this.currentTitle = this.title;
-            }
-        },
-        source() {
-            if (!this.showEdit) {
-                this.currentSource = this.source;
-            }
-        },
-        url() {
-            if (!this.showEdit) {
-                this.currentUrl = this.url;
-            }
-        },
-        startTime() {
-            if (!this.showEdit) {
-                this.currentStartTime = this.startTime;
-            }
-        },
-        endTime() {
-            if (!this.showEdit) {
-                this.currentEndTime = this.endTime;
-            }
-        },
-        oembed() {
-            if (!this.showEdit) {
-                this.oembedData = this.oembed;
-                if (this.oembedData !== null) {
-                    this.calcContentHeight();
-                    this.updateTime();
-                }
-            }
-        },
-    }
 };
 </script>

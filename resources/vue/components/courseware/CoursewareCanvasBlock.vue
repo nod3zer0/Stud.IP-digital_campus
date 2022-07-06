@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div v-if="currentTitle" class="cw-block-title">
@@ -165,7 +164,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentTitle: '',
             currentImage: '',
             currentFileId: '',
@@ -257,7 +255,12 @@ export default {
         },
     },
     mounted() {
-        this.loadImageFile();
+        this.loadFileRefs(this.block.id).then((response) => {
+            this.file = response[0];
+            this.currentFile = this.file;
+            this.initCurrentData();
+            this.buildCanvas();
+        });
     },
     methods: {
         ...mapActions({
@@ -282,17 +285,6 @@ export default {
                 this.clickTool = JSON.parse(this.canvasDraw.clickTool);
                 this.Text = JSON.parse(this.canvasDraw.Text);
             }
-        },
-        setShowEdit(state) {
-            this.showEdit = state;
-        },
-        loadImageFile() {
-            this.loadFileRefs(this.block.id).then((response) => {
-                this.file = response[0];
-                this.currentFile = this.file;
-                this.initCurrentData();
-                this.buildCanvas();
-            });
         },
         updateCurrentFile(file) {
             this.currentFile = file;
@@ -604,34 +596,5 @@ export default {
             }
         },
     },
-    watch: {
-        title() {
-            if (!this.showEdit) {
-                this.currentTitle = this.title;
-            }
-        },
-        image() {
-            if (!this.showEdit) {
-                this.currentImage = this.image;
-                this.buildCanvas();
-            }
-        },
-        fileId() {
-            if (!this.showEdit) {
-                this.currentFileId = this.fileId;
-                this.loadImageFile();
-            }
-        },
-        uploadFolderId() {
-            if (!this.showEdit) {
-                this.currentUploadFolderId = this.uploadFolderId;
-            }
-        },
-        showUsersData() {
-            if (!this.showEdit) {
-                this.currentShowUserData = this.showUsersData;
-            }
-        },
-    }
 };
 </script>

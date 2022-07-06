@@ -863,17 +863,16 @@ export default {
             }
         },
         containers() {
-            let containers = [];
-            let relatedContainers = this.structuralElement?.relationships?.containers?.data;
-
-            if (relatedContainers) {
-                for (const container of relatedContainers) {
-                    containers.push(this.containerById({ id: container.id}));
-                }
+            if (!this.structuralElement) {
+                return [];
             }
 
-            return containers;
-
+            return (
+                this.relatedContainers({
+                    parent: this.structuralElement,
+                    relationship: 'containers',
+                }) ?? []
+            );
         },
         noContainers() {
             if (this.containers === null) {
@@ -1109,10 +1108,10 @@ export default {
             return '';
         },
         blocked() {
-            return this.structuralElement?.relationships?.['edit-blocker']?.data !== null;
+            return this.structuralElement?.relationships['edit-blocker'].data !== null;
         },
         blockerId() {
-            return this.blocked ? this.structuralElement?.relationships?.['edit-blocker']?.data?.id : null;
+            return this.blocked ? this.structuralElement?.relationships['edit-blocker'].data?.id : null;
         },
         blockedByThisUser() {
             return this.blocked && this.userId === this.blockerId;

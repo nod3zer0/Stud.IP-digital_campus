@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div v-if="currentStyle === 'countdown'" class="cw-date-countdown">
@@ -70,7 +69,7 @@
                     </label>
                     <label>
                         <translate>Layout</translate>
-                        <select v-model="currentStyle" @change="computeTimestamp">
+                        <select v-model="currentStyle">
                             <option value="countdown"><translate>Countdown</translate></option>
                             <option value="date"><translate>Datum</translate></option>
                         </select>
@@ -98,7 +97,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentTitle: '',
             currentTimestamp: 0,
             currentStyle: '',
@@ -140,29 +138,20 @@ export default {
         initCurrentData() {
             this.currentTitle = this.title;
             this.currentTimestamp = this.timestamp;
-            this.setCurrentDate();
-            this.setCurrentDeDate();
-            this.currentTime = ('0' + this.date.getHours()).slice(-2) + ':' + ('0' + this.date.getMinutes()).slice(-2);
-            this.currentStyle = this.style;
-        },
-        setCurrentDate() {
             this.currentDate =
                 this.date.getFullYear() +
                 '-' +
                 ('0' + (this.date.getMonth() + 1)).slice(-2) +
                 '-' +
                 ('0' + this.date.getDate()).slice(-2);
-        },
-        setCurrentDeDate() {
             this.currentDeDate =
                 ('0' + this.date.getDate()).slice(-2) +
                 '.' +
                 ('0' + (this.date.getMonth() + 1)).slice(-2) +
                 '.' +
                 this.date.getFullYear();
-        },
-        setShowEdit(state) {
-            this.showEdit = state;
+            this.currentTime = ('0' + this.date.getHours()).slice(-2) + ':' + ('0' + this.date.getMinutes()).slice(-2);
+            this.currentStyle = this.style;
         },
         countdown() {
             let view = this;
@@ -182,11 +171,6 @@ export default {
         },
         computeTimestamp() {
             this.currentTimestamp = new Date(this.currentDate + ' ' + this.currentTime).getTime();
-            this.setCurrentDate();
-            this.setCurrentDeDate();
-            if (this.currentStyle === 'countdown') {
-                this.countdown();
-            }
         },
         storeBlock() {
             let cmpInfo = false;
@@ -212,24 +196,9 @@ export default {
                     containerId: this.block.relationships.container.data.id,
                 });
             }
+
+
         },
     },
-    watch: {
-        title() {
-            if (!this.showEdit) {
-                this.currentTitle = this.title;
-            }
-        },
-        timestamp() {
-            if (!this.showEdit) {
-                this.initCurrentData();
-            }
-        },
-        style() {
-            if (!this.showEdit) {
-                this.currentStyle = this.style;
-            }
-        },
-    }
 };
 </script>

@@ -2,13 +2,11 @@
     <div class="cw-block-actions">
         <studip-action-menu
             :items="menuItems"
-            collapseAt="2"
             :context="block.attributes.title"
             @editBlock="editBlock"
             @setVisibility="setVisibility"
             @showInfo="showInfo"
             @deleteBlock="deleteBlock"
-            @removeLock="removeLock"
         />
     </div>
 </template>
@@ -30,68 +28,57 @@ export default {
         },
         block: Object,
     },
+    data() {
+        return {
+            menuItems: [],
+        };
+    },
     computed: {
         ...mapGetters({
             userId: 'userId',
-            userIsTeacher: 'userIsTeacher',
         }),
         blocked() {
-            return this.block?.relationships?.['edit-blocker']?.data !== null;
+            return this.block?.relationships['edit-blocker'].data !== null;
         },
         blockerId() {
-            return this.blocked ? this.block?.relationships?.['edit-blocker']?.data?.id : null;
+            return this.blocked ? this.block?.relationships['edit-blocker'].data?.id : null;
         },
-        blockedByThisUser() {
-            return this.blocked && this.userId === this.blockerId;
-        },
-        blockedByAnotherUser() {
-            return this.blocked && this.userId !== this.blockerId;
-        },
-        menuItems() {
-            let menuItems = [];
-            if (this.canEdit) {
-                if (!this.deleteOnly) {
-                    if (!this.blocked) {
-                        menuItems.push({ id: 1, label: this.$gettext('Block bearbeiten'), icon: 'edit', emit: 'editBlock' });
-                        menuItems.push({
-                            id: 2,
-                            label: this.block.attributes.visible
-                                ? this.$gettext('unsichtbar setzen')
-                                : this.$gettext('sichtbar setzen'),
-                            icon: this.block.attributes.visible ? 'visibility-visible' : 'visibility-invisible', // do we change the icons ?
-                            emit: 'setVisibility',
-                        });
-                    }
-                    if (this.blocked && this.blockedByAnotherUser && this.userIsTeacher) {
-                        menuItems.push({
-                            id: 8,
-                            label: this.$gettext('Sperre aufheben'),
-                            icon: 'lock-unlocked',
-                            emit: 'removeLock',
-                        });
-                    }
-                    if (!this.blocked || this.blockedByThisUser) {
-                        menuItems.push({
-                            id: 9,
-                            label: this.$gettext('Block löschen'), 
-                            icon: 'trash',
-                            emit: 'deleteBlock' 
-                        });
-                    }
-                    menuItems.push({
-                        id: 7,
-                        label: this.$gettext('Informationen zum Block'),
-                        icon: 'info',
-                        emit: 'showInfo',
-                    });
-                }
+    },
+    mounted() {
+        if (this.canEdit) {
+            if (!this.deleteOnly) {
+                this.menuItems.push({
+                    id: 1,
+                    label: this.$gettext('Block bearbeiten'),
+                    icon: 'edit',
+                    emit: 'editBlock',
+                });
+                this.menuItems.push({
+                    id: 2,
+                    label: this.block.attributes.visible
+                        ? this.$gettext('unsichtbar setzen')
+                        : this.$gettext('sichtbar setzen'),
+                    icon: this.block.attributes.visible ? 'visibility-visible' : 'visibility-invisible', // do we change the icons ?
+                    emit: 'setVisibility',
+                });
+                this.menuItems.push({
+                    id: 7,
+                    label: this.$gettext('Informationen zum Block'),
+                    icon: 'info',
+                    emit: 'showInfo',
+                });
             }
-
-            menuItems.sort((a, b) => {
-                return a.id > b.id ? 1 : b.id > a.id ? -1 : 0;
+            this.menuItems.push({
+                id: 9,
+                label: this.$gettext('Block löschen'), 
+                icon: 'trash',
+                emit: 'deleteBlock',
             });
-            return menuItems;
         }
+
+        this.menuItems.sort((a, b) => {
+            return a.id > b.id ? 1 : b.id > a.id ? -1 : 0;
+        });
     },
     methods: {
         ...mapActions({
@@ -130,12 +117,12 @@ export default {
 
             await this.unlockObject({ id: this.block.id, type: 'courseware-blocks' });
         },
+        copyToClipboard() {
+            // use JSONAPI to copy to clipboard
+        },
         deleteBlock() {
             this.$emit('deleteBlock');
         },
-        removeLock() {
-            this.$emit('removeLock');
-        }
     },
 };
 </script>

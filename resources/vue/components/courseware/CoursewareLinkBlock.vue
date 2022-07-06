@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div v-if="currentType === 'external'">
@@ -77,7 +76,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentType: '',
             currentTarget: '',
             currentUrl: '',
@@ -116,9 +114,6 @@ export default {
             this.currentTitle = this.title;
             this.fixUrl();
         },
-        setShowEdit(state) {
-            this.showEdit = state;
-        },
         fixUrl() {
             if (
                 this.currentUrl.indexOf('http://') !== 0 &&
@@ -150,27 +145,5 @@ export default {
 
         },
     },
-    watch: {
-        type() {
-            if (!this.showEdit) {
-                this.currentType = this.type;
-            }
-        },
-        target() {
-            if (!this.showEdit) {
-                this.currentTarget = this.target;
-            }
-        },
-        url() {
-            if (!this.showEdit) {
-                this.currentUrl = this.url;
-            }
-        },
-        title() {
-            if (!this.showEdit) {
-                this.currentTitle = this.title;
-            }
-        },
-    }
 };
 </script>

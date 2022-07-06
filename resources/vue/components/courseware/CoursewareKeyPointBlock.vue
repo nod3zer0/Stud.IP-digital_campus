@@ -5,10 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="closeEdit"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
-            
+            @closeEdit="closeEdit"
         >
             <template #content>
                 <div class="cw-keypoint-content" :class="['cw-keypoint-' + currentColor]">
@@ -96,7 +94,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentText: '',
             currentColor: '',
             currentIcon: '',
@@ -184,9 +181,6 @@ export default {
             this.currentColor = this.color;
             this.currentIcon = this.icon;
         },
-        setShowEdit(state) {
-            this.showEdit = state;
-        },
         storeBlock() {
             let attributes = {};
             attributes.payload = {};
@@ -207,22 +201,5 @@ export default {
     mounted() {
         this.initCurrentData();
     },
-    watch: {
-        text() {
-            if (!this.showEdit) {
-                this.currentText = this.text;
-            }
-        },
-        color() {
-            if (!this.showEdit) {
-                this.currentColor = this.color;
-            }
-        },
-        icon() {
-            if (!this.showEdit) {
-                this.currentIcon = this.icon;
-            }
-        },
-    }
 };
 </script>

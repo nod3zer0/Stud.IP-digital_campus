@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div class="cw-block-dialog-cards-content">
@@ -136,7 +135,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentCards: [],
             setCardTab: 0
         };
@@ -172,12 +170,9 @@ export default {
         }),
         initCurrentData() {
             if (this.cards !== '') {
-                this.currentCards = this.cards;
+                this.currentCards = JSON.parse(JSON.stringify(this.cards));
             }
             this.setCardTab = 0;
-        },
-        setShowEdit(state) {
-            this.showEdit = state;
         },
         storeBlock() {
             let cards = JSON.parse(JSON.stringify(this.currentCards));
@@ -269,21 +264,6 @@ export default {
                     card.active = false;
                 }
             });
-        },
-        cardsEqual(a1, a2) {
-            return a1.length === a2.length && a1.every((o, idx) => {
-                return  o.back_file_id === a2[idx].back_file_id &&
-                        o.back_text === a2[idx].back_text &&
-                        o.front_file_id === a2[idx].front_file_id &&
-                        o.front_text === a2[idx].front_text;
-            });
-        }
-    },
-    watch: {
-        cards() {
-            if (!this.showEdit && !this.cardsEqual(this.currentCards, this.cards)) {
-                this.initCurrentData();
-            }
         },
     },
 };

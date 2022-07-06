@@ -89,10 +89,10 @@ export default {
             return this.structuralElement?.id;
         },
         blocked() {
-            return this.structuralElement?.relationships?.['edit-blocker']?.data !== null;
+            return this.structuralElement?.relationships['edit-blocker'].data !== null;
         },
         blockerId() {
-            return this.blocked ? this.structuralElement?.relationships?.['edit-blocker']?.data?.id : null;
+            return this.blocked ? this.structuralElement?.relationships['edit-blocker'].data?.id : null;
         },
         blockedByThisUser() {
             return this.blocked && this.userId === this.blockerId;

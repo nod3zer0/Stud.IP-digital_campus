@@ -2,8 +2,8 @@
     <div class="cw-wellcome-screen">
         <courseware-companion-box :msgCompanion="this.$gettext('Es wurden bisher noch keine Inhalte eingepflegt.')">
             <template v-slot:companionActions>
-                <button v-show="canEdit && noContainers" class="button" @click="addContainer"><translate>Einen Abschnitt hinzufügen</translate></button>
-                <button v-show="canEdit && !noContainers && !editMode" class="button" @click="switchToEditView"><translate>Seite bearbeiten</translate></button>
+                <button v-if="canEdit && noContainers" class="button" @click="addContainer"><translate>Einen Abschnitt hinzufügen</translate></button>
+                <button v-if="canEdit && !noContainers && !editMode" class="button" @click="switchToEditView"><translate>Seite bearbeiten</translate></button>
             </template>
         </courseware-companion-box>
     </div>

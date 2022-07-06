@@ -65,8 +65,7 @@ export default {
         canVisit: null,
         selected: null,
         structureLoadingState: 'idle',
-        loadingErrorStatus: null,
-        polling: null
+        loadingErrorStatus: null
     }),
     computed: {
         ...mapGetters({
@@ -90,9 +89,6 @@ export default {
                 default:
                     return this.$gettext('Beim Laden der Seite ist ein Fehler aufgetreten.');
             }
-        },
-        selectedId() {
-            return this.$route.params?.id;
         }
     },
     methods: {
@@ -113,11 +109,6 @@ export default {
             this.canVisit = this.structuralElementLastMeta['can-visit'];
             this.selected = this.structuralElementById({ id });
         },
-        pollData () {
-            this.polling = setInterval(async () => {
-                await this.selectStructuralElement(this.selectedId);
-            }, 4000);
-        }
     },
     async mounted() {
         this.structureLoadingState = 'loading';
@@ -135,10 +126,6 @@ export default {
         this.structureLoadingState = 'done';
         const selectedId = this.$route.params?.id;
         await this.selectStructuralElement(selectedId);
-        this.pollData();
-    },
-    beforeDestroy () {
-        clearInterval(this.polling)
     },
     watch: {
         $route(to) {

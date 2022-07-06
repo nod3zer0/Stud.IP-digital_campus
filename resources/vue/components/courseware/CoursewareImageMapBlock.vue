@@ -5,12 +5,11 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
-                <img v-if="currentUrl" :src="currentUrl" class="cw-image-map-original-img" ref="original_img" @load="buildCanvas" />
+                <img :src="currentUrl" class="cw-image-map-original-img" ref="original_img" @load="buildCanvas" />
                 <canvas class="cw-image-map-canvas" ref="canvas"></canvas>
                 <img
                     class="cw-image-from-canvas"
@@ -179,7 +178,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentFileId: '',
             currentFile: {},
             currentShapes: {},
@@ -217,11 +215,11 @@ export default {
             return this.block?.attributes?.payload?.shapes;
         },
         currentUrl() {
-            if (this.currentFile.download_url) {
+            if (this.currentFile.download_url !== 'undefined') {
                 return this.currentFile.download_url;
+            } else {
+                return '';
             }
-
-            return '';
         },
     },
     mounted() {
@@ -238,17 +236,10 @@ export default {
             await this.loadFile();
             this.buildCanvas();
         },
-        setShowEdit(state) {
-            this.showEdit = state;
-        },
         async loadFile() {
             const id = this.currentFileId;
-            let fileRef = null;
-
-            if (id) {
-                await this.loadFileRef({ id });
-                fileRef = this.fileRefById({ id });
-            }
+            await this.loadFileRef({ id });
+            const fileRef = this.fileRefById({ id });
 
             if (fileRef) {
                 this.updateCurrentFile({
@@ -280,18 +271,16 @@ export default {
         },
 
         buildCanvas() {
-            if (this.currentUrl) {
-                let canvas = this.$refs.canvas;
-                let original_img = this.$refs.original_img;
-                canvas.width = 1085;
-                if (original_img.height > 0) {
-                    canvas.height = Math.round((canvas.width / original_img.width) * original_img.height);
-                } else {
-                    canvas.height = 484;
-                }
-                this.context = canvas.getContext('2d');
-                this.drawScreen();
+            let canvas = this.$refs.canvas;
+            let original_img = this.$refs.original_img;
+            canvas.width = 1085;
+            if (original_img.height > 0) {
+                canvas.height = Math.round((canvas.width / original_img.width) * original_img.height);
+            } else {
+                canvas.height = 484;
             }
+            this.context = canvas.getContext('2d');
+            this.drawScreen();
         },
         drawScreen() {
             let context = this.context;
@@ -530,17 +519,5 @@ export default {
             this.currentShapes[index].target_external = url;
         },
     },
-    watch: {
-        fileId() {
-            if (!this.showEdit) {
-                this.initCurrentData();
-            }
-        },
-        shapes() {
-            if (!this.showEdit) {
-                this.initCurrentData();
-            }
-        }
-    }
 };
 </script>

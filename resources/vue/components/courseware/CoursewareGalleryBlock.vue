@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div v-if="files.length !== 0" class="cw-block-gallery-content" :style="{ 'max-height': currentHeight + 'px' }">
@@ -100,7 +99,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentFolderId: '',
             currentAutoplay: '',
             currentNav: '',
@@ -151,9 +149,6 @@ export default {
             this.currentNav = this.nav;
             this.currentHeight = this.height;
             this.currentShowFileNames = this.showFileNames;
-        },
-        setShowEdit(state) {
-            this.showEdit = state;
         },
         startGallery() {
             this.slideIndex = 0;
@@ -257,38 +252,6 @@ export default {
         currentAutoplayTimer(value) {
             if (value > 60 || value < 1) {
                 this.currentAutoplayTimer = '2';
-            }
-        },
-        folderId() {
-            if (!this.showEdit) {
-                this.currentFolderId = this.folderId;
-            }
-        },
-        autoplay() {
-            if (!this.showEdit) {
-                this.currentAutoplay = this.autoplay;
-                this.startGallery();
-            }
-        },
-        autoplayTimer() {
-            if (!this.showEdit) {
-                this.currentAutoplayTimer = this.autoplayTimer;
-                this.startGallery();
-            }
-        },
-        nav() {
-            if (!this.showEdit) {
-                this.currentNav = this.nav;
-            }
-        },
-        height() {
-            if (!this.showEdit) {
-                this.currentHeight = this.height;
-            }
-        },
-        showFileNames() {
-            if (!this.showEdit) {
-                this.currentShowFileNames = this.showFileNames;
             }
         },
     },

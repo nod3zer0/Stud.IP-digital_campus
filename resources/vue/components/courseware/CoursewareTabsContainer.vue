@@ -4,10 +4,9 @@
         containerClass="cw-container-tabs"
         :canEdit="canEdit"
         :isTeacher="isTeacher"
-        @closeEdit="initCurrentData"
-        @showEdit="setShowEdit"
-        @sortBlocks="enableSort"
         @storeContainer="storeContainer"
+        @closeEdit="initCurrentData"
+        @sortBlocks="enableSort"
     >
         <template v-slot:containerContent>
             <courseware-tabs v-if="!sortMode">
@@ -130,7 +129,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentContainer: null,
             currentSections: [],
             textDeleteSection: this.$gettext('Sektion entfernen'),
@@ -182,9 +180,6 @@ export default {
             });
 
             this.currentSections = sections;
-        },
-        setShowEdit(state) {
-            this.showEdit = state;
         },
         addSection() {
             this.currentContainer.attributes.payload.sections.push({ name: '', icon: '', blocks: [] });
@@ -248,9 +243,7 @@ export default {
     },
     watch: {
         blocks() {
-            if (!this.showEdit) {
-                this.initCurrentData();
-            }
+            this.initCurrentData();
         }
     }
 };

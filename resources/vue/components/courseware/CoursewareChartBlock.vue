@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <canvas class="cw-chart-block-canvas" ref="chartCanvas" />
@@ -88,11 +87,9 @@ import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import Chart from 'chart.js';
 import { mapActions } from 'vuex';
 import StudipIcon from '../StudipIcon.vue';
-import { blockMixin } from './block-mixin.js';
 
 export default {
     name: 'courseware-chart-block',
-    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         StudipIcon,
@@ -104,7 +101,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             chart: null,
             currentContent: [],
             currentLabel: '',
@@ -149,9 +145,6 @@ export default {
             this.currentContent = this.content;
             this.currentLabel = this.label;
             this.currentType = this.type;
-        },
-        setShowEdit(state) {
-            this.showEdit = state;
         },
         storeBlock() {
             let attributes = {};
@@ -288,28 +281,11 @@ export default {
                     });
                     break;
             }
-        }
+        },
     },
     watch: {
         currentType() {
             this.buildChart();
-        },
-        content() {
-            if (!this.showEdit && !this.contentsEqual(this.currentContent,this.content)) {
-                this.currentContent = this.content;
-                this.buildChart();
-            }
-        },
-        label() {
-            if (!this.showEdit) {
-                this.currentLabel = this.label;
-                this.buildChart();
-            }
-        },
-        type() {
-            if (!this.showEdit) {
-                this.currentType = this.type;
-            }
         },
     },
 };

@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div v-if="currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
@@ -19,7 +18,7 @@
                     allowfullscreen
                     sandbox="allow-forms allow-popups allow-pointer-lock allow-same-origin allow-scripts"
                 />
-                <div v-if="currentCcInfo !== 'false'" class="cw-block-iframe-cc-data">
+                <div v-if="currentCcInfo" class="cw-block-iframe-cc-data">
                     <span class="cw-block-iframe-cc" :class="['cw-block-iframe-cc-' + currentCcInfo]"></span>
                     <div class="cw-block-iframe-cc-infos">
                         <p v-if="currentCcWork !== ''"><translate>Werk</translate> {{ currentCcWork }}</p>
@@ -121,7 +120,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentTitle: '',
             currentUrl: '',
             currentHeight: '',
@@ -199,9 +197,6 @@ export default {
             this.currentCcBase = this.ccBase;
             this.setProtocol();
         },
-        setShowEdit(state) {
-            this.showEdit = state;
-        },
         setProtocol() {
             if (location.protocol === 'https:') {
                 if (!this.currentUrl.includes('https:')) {
@@ -239,58 +234,5 @@ export default {
             });
         },
     },
-    watch: {
-        title() {
-            if (!this.showEdit) {
-                this.currentTitle = this.title;
-            }
-        },
-        url() {
-            if (!this.showEdit) {
-                this.currentUrl = this.url;
-                this.setProtocol();
-            }
-        },
-        height() {
-            if (!this.showEdit) {
-                this.currentHeight = this.height;
-            }
-        },
-        submitUserId() {
-            if (!this.showEdit) {
-                this.currentSubmitUserId = this.submitUserId;
-            }
-        },
-        submitParam() {
-            if (!this.showEdit) {
-                this.currentSubmitParam = this.submitParam;
-            }
-        },
-        salt() {
-            if (!this.showEdit) {
-                this.currentSalt = this.salt;
-            }
-        },
-        ccInfo() {
-            if (!this.showEdit) {
-                this.currentCcInfo = this.ccInfo;
-            }
-        },
-        ccWork() {
-            if (!this.showEdit) {
-                this.currentCcWork = this.ccWork;
-            }
-        },
-        ccAuthor() {
-            if (!this.showEdit) {
-                this.currentCcAuthor = this.ccAuthor;
-            }
-        },
-        ccBase() {
-            if (!this.showEdit) {
-                this.currentCcBase = this.ccBase;
-            }
-        },
-    }
 };
 </script>

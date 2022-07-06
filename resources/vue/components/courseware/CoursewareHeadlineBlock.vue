@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
-            @storeEdit="storeBlock"
+            @storeEdit="storeText"
+            @closeEdit="closeEdit"
         >
             <template #content>
                 <div
@@ -183,7 +182,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentTitle: '',
             currentSubtitle: '',
             currentStyle: '',
@@ -322,9 +320,6 @@ export default {
                 this.loadFile();
             }
         },
-        setShowEdit(state) {
-            this.showEdit = state;
-        },
         async loadFile() {
             const id = this.currentBackgroundImageId;
             const options = { include: 'terms-of-use' };
@@ -347,7 +342,10 @@ export default {
             this.currentBackgroundImageId = file.id;
             this.currentBackgroundURL = file.download_url;
         },
-        storeBlock() {
+        closeEdit() {
+            this.initCurrentData();
+        },
+        storeText() {
             let attributes = {};
             attributes.payload = {};
             attributes.payload.title = this.currentTitle;
@@ -409,60 +407,5 @@ export default {
             return hex.length === 1 ? '0' + hex : hex;
         },
     },
-    watch: {
-        title() {
-            if (!this.showEdit) {
-                this.currentTitle = this.title;
-            }
-        },
-        subtitle() {
-            if (!this.showEdit) {
-                this.currentSubtitle = this.subtitle;
-            }
-        },
-        style() {
-            if (!this.showEdit) {
-                this.currentStyle = this.style;
-            }
-        },
-        height() {
-            if (!this.showEdit) {
-                this.currentHeight = this.height;
-            }
-        },
-        backgroundColor() {
-            if (!this.showEdit) {
-                this.currentBackgroundColor = this.backgroundColor;
-            }
-        },
-        textColor() {
-            if (!this.showEdit) {
-                this.currentTextColor = this.textColor;
-            }
-        },
-        icon() {
-            if (!this.showEdit) {
-                this.currentIcon = this.icon;
-            }
-        },
-        iconColor() {
-            if (!this.showEdit) {
-                this.currentIconColor = this.iconColor;
-            }
-        },
-        backgroundType() {
-            if (!this.showEdit) {
-                this.currentBackgroundType = this.backgroundType;
-            }
-        },
-        backgroundImageId() {
-            if (!this.showEdit) {
-                this.currentBackgroundImageId = this.backgroundImageId;
-                if (this.currentBackgroundImageId !== '') {
-                    this.loadFile();
-                }
-            }
-        },
-    }
 };
 </script>

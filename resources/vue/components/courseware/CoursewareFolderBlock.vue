@@ -5,9 +5,8 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @closeEdit="initCurrentData"
-            @showEdit="setShowEdit"
             @storeEdit="storeBlock"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div v-if="currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
@@ -65,7 +64,6 @@ export default {
     },
     data() {
         return {
-            showEdit: false,
             currentTitle: '',
             currentFolderId: '',
             currentFileType: '',
@@ -101,21 +99,13 @@ export default {
             this.currentFolderId = this.folderId;
             this.currentFolderType = this.folderType;
         },
-        setShowEdit(state) {
-            this.showEdit = state;
-        },
         async getFolderFiles() {
-            if (this.currentFolderId) {
-                const parent = { type: 'folders', id: `${this.currentFolderId}` };
-                const relationship = 'file-refs';
-                const options = { include: 'terms-of-use' };
-                await this.loadRelatedFileRefs({ parent, relationship, options });
-                const fileRefs = this.relatedFileRefs({ parent, relationship }) ?? [];
-                this.processFiles(fileRefs);
-            } else {
-                this.files = [];
-            }
-
+            const parent = { type: 'folders', id: `${this.currentFolderId}` };
+            const relationship = 'file-refs';
+            const options = { include: 'terms-of-use' };
+            await this.loadRelatedFileRefs({ parent, relationship, options });
+            const fileRefs = this.relatedFileRefs({ parent, relationship }) ?? [];
+            this.processFiles(fileRefs);
         },
         processFiles(files) {
             this.files = files
@@ -198,21 +188,6 @@ export default {
     watch: {
         currentFolderId() {
             this.getFolderFiles();
-        },
-        title() {
-            if (!this.showEdit) {
-                this.currentTitle = this.title;
-            }
-        },
-        folderId() {
-            if (!this.showEdit) {
-                this.currentFolderId = this.folderId;
-            }
-        },
-        folderType() {
-            if (!this.showEdit) {
-                this.currentFolderType = this.folderType;
-            }
         },
     },
 };
