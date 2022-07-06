@@ -20,7 +20,7 @@ class UnknownFileType implements FileType, ArrayAccess
      */
     protected $fileref = null;
 
-    public function __construct($fileref = null, $file = null)
+    public function __construct($fileref = null)
     {
         $this->fileref = $fileref;
     }

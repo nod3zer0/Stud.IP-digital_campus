@@ -12,7 +12,7 @@
  * @license   http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category  Stud.IP
  */
-class StandardFile implements FileType, ArrayAccess
+class StandardFile implements FileType, ArrayAccess, StandardFileInterface
 {
 
     /**
