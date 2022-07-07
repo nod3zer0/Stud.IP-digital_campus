@@ -6,6 +6,7 @@
              :data-lang="language.name"
              :data-icon="'url(' + assetsURL + 'images/languages/' + language.picture + ')'">
             <input type=text
+                   ref="inputfield"
                    :name="nameOfInput(language.id)"
                    v-model="values[selectedLanguage.id]"
                    :required="required && defaultLanguage === language.id"
@@ -13,18 +14,21 @@
                    v-on="$listeners"
                    v-if="type === 'text'">
             <textarea :name="nameOfInput(language.id)"
+                      ref="inputfield"
                       v-bind="$attrs"
                       v-on="$listeners"
                       v-model="values[language.id]"
                       :required="required && defaultLanguage === language.id"
                       v-else-if="type === 'textarea'">{{ values[language.id] }}</textarea>
             <studip-wysiwyg :name="nameOfInput(language.id)"
+                            ref="inputfield"
                             v-model="values[selectedLanguage.id]"
                             v-bind="$attrs"
                             v-on="$listeners"
                             :required="required && defaultLanguage === language.id"
                             v-else-if="type === 'wysiwyg' && !wysiwyg_disabled"></studip-wysiwyg>
             <textarea-with-toolbar :name="nameOfInput(language.id)"
+                      ref="inputfield"
                       v-else
                       v-model="values[selectedLanguage.id]"
                       v-bind="$attrs"
@@ -38,14 +42,16 @@
                :required="required && defaultLanguage === language.id"
                :name="nameOfInput(language.id)">
         <select class="i18n"
-                tabindex="-1"
+                tabindex="0"
                 @change="selectLanguage"
+                :aria-label="$gettext('Sprache des Textfeldes auswählen.')"
                 :style="'background-image: url(' + assetsURL + 'images/languages/' + selectedLanguage.picture + ')'">
             <option v-for="language in languages" :value="language.id">{{language.name}}</option>
         </select>
     </div>
     <div v-else>
         <input type=text
+               ref="inputfield"
                :name="name"
                v-model="values[selectedLanguage.id]"
                v-bind="$attrs"
@@ -53,18 +59,21 @@
                :required="required"
                v-if="type === 'text'">
         <textarea :name="name"
+                  ref="inputfield"
                   v-model="values[selectedLanguage.id]"
                   v-bind="$attrs"
                   v-on="$listeners"
                   :required="required"
                   v-else-if="type === 'textarea'"></textarea>
         <studip-wysiwyg :name="name"
+                        ref="inputfield"
                         v-model="values[selectedLanguage.id]"
                         v-bind="$attrs"
                         v-on="$listeners"
                         :required="required"
                         v-else-if="type === 'wysiwyg' && !wysiwyg_disabled"></studip-wysiwyg>
         <textarea-with-toolbar :name="name"
+                  ref="inputfield"
                   v-else
                   v-model="values[selectedLanguage.id]"
                   v-bind="$attrs"
@@ -139,6 +148,11 @@ export default {
             for (let i in this.languages) {
                 if (e.target.value === this.languages[i].id) {
                     this.selectedLanguage = this.languages[i];
+                    this.$nextTick(() => {
+                        if (typeof this.$refs.inputfield[0].focus === "function") {
+                            this.$refs.inputfield[0].focus();
+                        }
+                    });
                     break;
                 }
             }

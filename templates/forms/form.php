@@ -39,7 +39,7 @@ $form_id = md5(uniqid());
             </h1>
         </header>
         <div class="required_note" v-if="STUDIPFORM_REQUIRED.length > 0">
-            <div aria-hidden>
+            <div aria-hidden="true">
                 <?= _('Pflichtfelder sind mit Sternchen gekennzeichnet.') ?>
             </div>
             <div class="sr-only">
