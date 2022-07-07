@@ -60,7 +60,7 @@ class StudipMemoryCache implements StudipCache
     public function write($name, $content, $expires = self::DEFAULT_EXPIRATION)
     {
         $this->memory_cache[$name] = [
-            'expires' => time() + $expire,
+            'expires' => time() + $expires,
             'data'    => $content,
         ];
 
