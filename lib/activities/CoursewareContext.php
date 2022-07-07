@@ -37,7 +37,7 @@ class CoursewareContext extends Context
             return \Context::COURSE;
         }
 
-        throw new UnexpectedValueException("Unknown context type {$this->context}");
+        throw new \UnexpectedValueException("Unknown context type {$this->context}");
     }
 
     public function getContextFullname($format = 'default')
@@ -54,7 +54,7 @@ class CoursewareContext extends Context
             return $course->getFullname($format);
         }
 
-        throw new UnexpectedValueException("Unknown context {$this->context}");
+        throw new \UnexpectedValueException("Unknown context {$this->context}");
     }
 
 }
