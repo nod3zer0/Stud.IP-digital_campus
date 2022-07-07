@@ -166,9 +166,9 @@ class DBSchemaVersion implements SchemaVersion
         $result = $db->query("SHOW TABLES LIKE 'schema_versions'");
 
         if ($result && $result->rowCount() > 0) {
-            $base_version = 269;    // 4.4
+            $base_version = 263;    // 4.4
             $schema_mapping = [
-                20200307 => 285,    // 4.5
+                20200307 => 284,    // 4.5
                 20200522 => 290,    // 4.6
                 20210511 => 327     // 5.0
             ];
