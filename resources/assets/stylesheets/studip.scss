@@ -48,6 +48,8 @@
     width: 1px;
 }
 
+// Hide unrendered vue templates that have [v-cloak] set until they are rendered.
+// @see https://vuejs.org/api/built-in-directives.html#v-cloak
 [v-cloak] {
     display: none;
 }
