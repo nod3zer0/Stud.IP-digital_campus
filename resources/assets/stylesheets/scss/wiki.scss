@@ -39,9 +39,6 @@ textarea.wiki-editor {
 }
 
 body#wiki #main_content {
-    a:not([href]) {
-        scroll-margin-top: ceil($bar-bottom-container-height + 10);
-    }
     td.printcontent:last-child:not(:first-child) {
         padding-right: 22px;
     }

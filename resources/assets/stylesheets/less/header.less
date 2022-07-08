@@ -9,9 +9,7 @@
     color: @contrast-content-white;
     border-bottom-style: solid;
     height: @bar-bottom-container-height;
-
     width: 100%;
-    position: relative;
 
     display: flex;
     flex-direction: row;
@@ -31,6 +29,11 @@
     z-index: 2;
 }
 
+// Fix header covering relevant other areas
+// @see https://gitlab.studip.de/studip/studip/-/issues/1019
+html {
+    scroll-padding-top: calc(@bar-bottom-container-height + 1em);
+}
 
 #layout_footer,
 #barBottomright {

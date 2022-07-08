@@ -48,13 +48,6 @@
     width: 1px;
 }
 
-// Fix header covering relevant other areas
-// @see https://gitlab.studip.de/studip/studip/-/issues/1019
-html {
-    overflow: auto;
-    scroll-padding-top: calc(#{$bar-bottom-container-height} + 1em);
-}
-
 [v-cloak] {
     display: none;
 }
