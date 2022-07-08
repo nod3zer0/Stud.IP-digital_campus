@@ -1,6 +1,8 @@
 <?php
 class Biest348 extends Migration
 {
+    use DatabaseMigrationTrait;
+
     public function description ()
     {
         return 'Adds a column to the resources table to mark resources as lockable, default is 1.';
@@ -8,7 +10,7 @@ class Biest348 extends Migration
 
     public function up()
     {
-        if ($this->columnExists()) {
+        if ($this->columnExists('resources', 'lockable')) {
             return;
         }
 
@@ -21,10 +23,5 @@ class Biest348 extends Migration
     {
         $query = 'ALTER TABLE `resources` DROP `lockable`';
         DBManager::get()->exec($query);
-    }
-
-    private function columnExists()
-    {
-        return DBManager::get()->fetchFirst("SHOW COLUMNS FROM `resources` LIKE 'lockable'");
     }
 }

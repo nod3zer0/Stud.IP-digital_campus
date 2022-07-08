@@ -2,6 +2,8 @@
 
 class AddIndexResourceBookingIntervals extends Migration
 {
+    use DatabaseMigrationTrait;
+
     public function description()
     {
         return 'add index for booking_id to resource_booking_intervals';
@@ -9,34 +11,24 @@ class AddIndexResourceBookingIntervals extends Migration
 
     public function up()
     {
-        $db = DBManager::get();
-
         // avoid running this migration twice
-        $sql = "SHOW INDEX FROM resource_booking_intervals WHERE Key_name = 'booking_id'";
-        $result = $db->query($sql);
-
-        if ($result && $result->rowCount() > 0) {
+        if ($this->keyExists('resource_booking_intervals', 'booking_id')) {
             return;
         }
 
         // index "assign_object_id" may not exist (depending on upgrade path)
-        $sql = "SHOW INDEX FROM resource_booking_intervals WHERE Key_name = 'assign_object_id'";
-        $result = $db->query($sql);
-
-        if ($result && $result->rowCount() > 0) {
-            $sql = 'ALTER TABLE resource_booking_intervals DROP INDEX assign_object_id';
-            $db->exec($sql);
+        if ($this->keyExists('resource_booking_intervals', 'assign_object_id')) {
+            $sql = "ALTER TABLE resource_booking_intervals DROP INDEX assign_object_id";
+            DBManager::get()->exec($sql);
         }
 
-        $sql = 'ALTER TABLE resource_booking_intervals ADD INDEX booking_id (booking_id)';
-        $db->exec($sql);
+        $sql = "ALTER TABLE resource_booking_intervals ADD INDEX booking_id (booking_id)";
+        DBManager::get()->exec($sql);
     }
 
     public function down()
     {
-        $db = DBManager::get();
-
-        $query = 'ALTER TABLE resource_booking_intervals DROP INDEX booking_id';
-        $db->exec($query);
+        $query = "ALTER TABLE resource_booking_intervals DROP INDEX booking_id";
+        DBManager::get()->exec($query);
     }
 }

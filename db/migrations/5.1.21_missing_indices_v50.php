@@ -1,6 +1,8 @@
 <?php
 final class MissingIndicesV50 extends Migration
 {
+    use DatabaseMigrationTrait;
+
     public function description()
     {
         return 'Add missing indices on some tables';
@@ -8,6 +10,11 @@ final class MissingIndicesV50 extends Migration
 
     public function up()
     {
+        // avoid running this migration twice
+        if ($this->keyExists('mvv_files_ranges', 'range_id')) {
+            return;
+        }
+
         $query = "CREATE INDEX `range_id` ON `mvv_files_ranges` (`range_id`)";
         DBManager::get()->exec($query);
 
