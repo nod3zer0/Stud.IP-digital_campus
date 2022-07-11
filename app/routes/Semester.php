@@ -43,6 +43,44 @@ class Semester extends \RESTAPI\RouteMap
     }
 
     /**
+     * Returns the semester week as string for a given string
+     *
+     * @get /semester/:timestamp/week
+     */
+    public function getSemesterWeek(int $timestamp)
+    {
+        $semester = \Semester::findByTimestamp($timestamp);
+        if (!$semester) {
+            return null;
+        }
+        $timestamp = strtotime('today', $timestamp);
+        $week_begin_timestamp = strtotime('monday this week', $semester->vorles_beginn);
+        $end_date = $semester->vorles_ende;
+
+        $i = 0;
+        $result = [
+            'semester_name' => (string)$semester->name,
+            'week_number' => sprintf(_('KW %u'), date('W', $timestamp)),
+            'current_day' => strftime('%x', $timestamp)
+        ];
+        while ($week_begin_timestamp < $end_date) {
+            $next_week_timestamp = strtotime('+1 week', $week_begin_timestamp);
+            if ($week_begin_timestamp <= $timestamp && $timestamp < $next_week_timestamp) {
+                $result['sem_week'] = sprintf(
+                    _('%u. Vorlesungswoche (ab %s)'),
+                    $i + 1,
+                    strftime('%x', $week_begin_timestamp));
+                break;
+            }
+            $i += 1;
+
+            $week_begin_timestamp = $next_week_timestamp;
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns a single semester.
      *
      * @get /semester/:semester_id

@@ -24,14 +24,14 @@
                 <strong>
                     <?= _('Semester')?>
                     <span id="booking-plan-header-semname"><?= htmlReady($semester->name) ?></span>
-                    <span id="booking-plan-header-semspan">
-                        <? if (Request::get("semester_timerange") == 'fullsem') : ?>
-                            <?= sprintf('(%1$s - %2$s)', date('d.m.Y',$semester->beginn), date('d.m.Y', $semester->ende)); ?>
-                        <? else : ?>
-                            <?= sprintf('(%1$s - %2$s)', date('d.m.Y',$semester->vorles_beginn), date('d.m.Y', $semester->vorles_ende)); ?>
-                        <? endif ?>
-                    </span>
                 </strong>
+                <span id="booking-plan-header-semspan">
+                    <? if (Request::get("semester_timerange") == 'fullsem') : ?>
+                        <?= sprintf('(%1$s - %2$s)', date('d.m.Y',$semester->beginn), date('d.m.Y', $semester->ende)); ?>
+                    <? else : ?>
+                        <?= sprintf('(%1$s - %2$s)', date('d.m.Y',$semester->vorles_beginn), date('d.m.Y', $semester->vorles_ende)); ?>
+                    <? endif ?>
+                </span>
             </span>
         </div>
     </section>

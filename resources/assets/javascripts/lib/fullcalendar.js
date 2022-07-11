@@ -535,37 +535,31 @@ class Fullcalendar
                 }
             },
             datesRender (info) {
-                var activeRange = info.view.props.dateProfile.activeRange;
-                var start = activeRange.start;
-                var end = activeRange.end;
-
+                let activeRange = info.view.props.dateProfile.activeRange;
+                let timestamp = activeRange.start.getTime() / 1000;
                 if ($(info.el).hasClass('institute-plan')) {
                     $('.fc-slats tr:odd .fc-widget-content:not(.fc-axis)').remove();
                 }
 
-                if ($('.booking-plan-header').length) {
-                    end.setDate(end.getDate());
-                    let semester = $('.booking-plan-header').data('semester');
-                    let sem_start = null;
-                    let sem_end = null;
-                    if (semester) {
-                        sem_start = semester.seminars_begin;
-                        sem_end = semester.seminars_end;
-                    }
+                STUDIP.api.GET(`semester/${timestamp}/week`).done((data) => {
 
-                    if (sem_start && (start.getTime() / 1000 < sem_start || start.getTime() / 1000 > sem_end)) {
-                        sem_start = null;
-                        sem_end = null;
-                    } else if (sem_start) {
-                        STUDIP.Resources.updateBookingPlanDateInfos(activeRange.start, activeRange.end, semester);
+                    if (data) {
+                        $('#booking-plan-header-semname').text(data.semester_name);
+                        if (data.sem_week) {
+                            $('#booking-plan-header-semweek').text(data.sem_week);
+                            $('#booking-plan-header-semweek-part').show();
+                        } else {
+                            $('#booking-plan-header-semweek').text('');
+                            $('#booking-plan-header-semweek-part').hide();
+                        }
+                        $('#booking-plan-header-semrow').show();
+                        $('#booking-plan-header-calweek').text(data.week_number);
+                        $('#booking-plan-header-calbegin').text('(' + data.current_day + ')');
+                    } else {
+                        $('#booking-plan-header-semrow').hide();
+                        $('#booking-plan-header-semweek-part').hide();
                     }
-                    $('#booking-plan-header-calweek').text(start.getWeekNumber());
-                    $('#booking-plan-header-calbegin').text(start.toLocaleDateString('de-DE', {weekday: 'short'}) + ' ' + start.toLocaleDateString('de-DE'));
-                    $('#booking-plan-header-calend').text(end.toLocaleDateString('de-DE', {weekday: 'short'}) + ' ' + end.toLocaleDateString('de-DE'));
-                    if (!sem_start || !sem_end) {
-                        STUDIP.Resources.updateBookingPlanSemesterByView(activeRange);
-                    }
-                }
+            })
             },
             resourceRender (renderInfo) {
                 if ($(renderInfo.view.context.calendar.el).hasClass('room-group-booking-plan')) {

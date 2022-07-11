@@ -18,18 +18,14 @@
         <div>
             <?= _('Raumgruppe') ?>
             <span id="booking-plan-header-roomgroup"><?= htmlReady($clipboard->name) ?></span>
-            <strong>
-                <?= _('KW') ?>
-                <span id="booking-plan-header-calweek"></span>
-                (<span id="booking-plan-header-calbegin"></span>)
-                <span id="booking-plan-header-semrow">
-                    <span id="booking-plan-header-semname"></span>
-                    <span id="booking-plan-header-semweek-part">
-                        <?= _('Vorlesungswoche') ?>
-                        <span id="booking-plan-header-semweek"></span>
-                    </span>
+            <span id="booking-plan-header-calweek"></span>
+            <span id="booking-plan-header-calbegin"></span>
+            <span id="booking-plan-header-semrow">
+                <strong><span id="booking-plan-header-semname"></span></strong>
+                <span id="booking-plan-header-semweek-part">
+                    <span id="booking-plan-header-semweek"></span>
                 </span>
-            </strong>
+            </span>
         </div>
     </section>
 

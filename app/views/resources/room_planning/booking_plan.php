@@ -19,13 +19,10 @@
                     <?= htmlReady($resource->name) ?>
                 <? endif ?>
                 <span id="booking-plan-header-semrow">
-                    <strong>
-                        <span id="booking-plan-header-semname"></span>
-                        <span id="booking-plan-header-semweek-part">
-                            <?= _('Vorlesungswoche') ?>
-                            <span id="booking-plan-header-semweek"></span>
-                        </span>
-                    </strong>
+                    <strong><span id="booking-plan-header-semname"></span> </strong>
+                    <span id="booking-plan-header-semweek-part">
+                        <span id="booking-plan-header-semweek"></span>
+                    </span>
                 </span>
             </span>
             <? if ($resource->getProperty('room_administrator')): ?>

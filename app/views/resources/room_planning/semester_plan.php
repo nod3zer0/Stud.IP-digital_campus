@@ -50,9 +50,10 @@
                     <?= htmlReady($resource->name) ?>
                 <? endif ?>
                 <span id="booking-plan-header-semrow">
-                    <strong>
-                        <?= _('Semester') ?>
-                        <span id="booking-plan-header-semname"><?= htmlReady($semester->name) ?></span>
+                        <strong>
+                            <?= _('Semester') ?>
+                            <span id="booking-plan-header-semname"><?= htmlReady($semester->name) ?></span>
+                        </strong>
                         <span id="booking-plan-header-semspan">
                             <? if (Request::get("semester_timerange") == 'fullsem') : ?>
                                 <?= sprintf('(%1$s - %2$s)', date('d.m.Y',$semester->beginn), date('d.m.Y', $semester->ende)); ?>
@@ -60,7 +61,6 @@
                                 <?= sprintf('(%1$s - %2$s)', date('d.m.Y',$semester->vorles_beginn), date('d.m.Y', $semester->vorles_ende)); ?>
                             <? endif ?>
                         </span>
-                    </strong>
                 </span>
             </div>
             <? if ($resource->getProperty('room_administrator')): ?>
