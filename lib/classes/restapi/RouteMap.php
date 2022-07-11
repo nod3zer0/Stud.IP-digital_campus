@@ -199,10 +199,10 @@ abstract class RouteMap
      * Initializes the route map by binding it to a router and passing in
      * the current route.
      *
-     * @param RESTAPI\Router $router Router to bind this route map to
-     * @param Array          $route  The matched route out of
-     *                               Router::matchRoute; an array with keys
-     *                               'handler', 'conditions' and 'source'
+     * @param Router $router Router to bind this route map to
+     * @param array $route   The matched route out of Router::matchRoute;
+     *                       an array with keys 'handler', 'conditions' and
+     *                       'source'
      */
     public function init($router, $route)
     {
@@ -1038,5 +1038,14 @@ abstract class RouteMap
         }
 
         return $conditions;
+    }
+
+    /**
+     * Returns the response object
+     * @return Response
+     */
+    public function getResponse(): Response
+    {
+        return $this->response;
     }
 }

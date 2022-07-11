@@ -458,10 +458,10 @@ class Router
      * Takes a route and the parameters out of the requested path and
      * executes the handler of the route.
      *
-     * @param Array $route      the matched route out of
+     * @param array $route      the matched route out of
      *                          Router::matchRoute; an array with keys
      *                          'handler', 'conditions' and 'source'
-     * @param Array $parameters the matched parameters out of
+     * @param array $parameters the matched parameters out of
      *                          Router::matchRoute; something like:
      *                          `array('user_id' => '23a21d...e78f')`
      * @return Response  the resulting Response object which is then
@@ -496,7 +496,7 @@ class Router
             $handler[0]->after($this, $parameters);
         }
 
-        return $handler[0]->response;
+        return $handler[0]->getResponse();
     }
 
     /**
