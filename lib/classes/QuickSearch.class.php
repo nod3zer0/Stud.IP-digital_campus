@@ -81,7 +81,6 @@ class QuickSearch
     private $search;            //may be an object or a string
     private $avatarLike;        //like "user_id", "username", "Seminar_id" or stuff
     private $withButton;        //if true, the field will be displayed with a looking-glass-button to click on
-    private $specialBeschriftung;
     private $selectBox = true;
     private $withAttributes = [];
     private $box_width = "233"; //width of the box withButton
@@ -89,6 +88,12 @@ class QuickSearch
     private $autocomplete_disabled = false;
     private $search_button_name;
     private $reset_button_name;
+    private $defaultID = null;
+    private $defaultName = null;
+    private $jsfunction = null;
+    private $inputClass = null;
+    private $inputStyle = null;
+    private $specialQuery = null;
 
     /**
      * Deletes all older requests that have not been used for three hours

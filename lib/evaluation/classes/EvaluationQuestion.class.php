@@ -84,6 +84,9 @@ class EvaluationQuestion extends EvaluationObject {
    * @var    string   $isMultiplechoice
    */
   var $isMultiplechoice;
+
+  var $templateID;
+
 # ============================================================ end: variables #
 
 # Define constructor and destructor ========================================= #
@@ -113,7 +116,7 @@ class EvaluationQuestion extends EvaluationObject {
     /* --------------------------------------------------------------------- */
   }
 # =========================================== end: constructor and destructor #
-  
+
 
 # Define public functions =================================================== #
   /**
@@ -124,7 +127,7 @@ class EvaluationQuestion extends EvaluationObject {
   function setType ($type) {
     $this->type = $type;
   }
-  
+
   /**
    * Sets the type of a question
    * @access  public
@@ -133,7 +136,7 @@ class EvaluationQuestion extends EvaluationObject {
   function getType () {
     return  $this->type;
   }
-  
+
 
   /**
    * Sets multiplechoice value of a question
@@ -141,19 +144,19 @@ class EvaluationQuestion extends EvaluationObject {
    * @param   $tinyint  The multiplechoice Value.
    */
   function setMultiplechoice ($multiplechoice) {
-    $this->multiplechoice = $multiplechoice == YES ? YES : NO;
+    $this->isMultiplechoice = $multiplechoice == YES ? YES : NO;
   }
-  
+
   /**
    * Checks for multiplechoice
    * @access   public
    * @return   boolean   YES if it is an multiplechoice question
    */
   function isMultiplechoice () {
-    return $this->multiplechoice == YES ? YES : NO;
+    return $this->isMultiplechoice == YES ? YES : NO;
   }
-  
-  
+
+
   /**
    * Adds a child and sets the value to pos+1
    * @access  public

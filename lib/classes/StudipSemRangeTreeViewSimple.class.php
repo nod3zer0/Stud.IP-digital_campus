@@ -41,6 +41,8 @@ class StudipSemRangeTreeViewSimple {
 
     var $tree;
     var $show_entries;
+    var $start_item_id;
+    var $root_content;
 
     /**
     * constructor
@@ -83,7 +85,7 @@ class StudipSemRangeTreeViewSimple {
                                     formatReady($this->tree->getValue($this->start_item_id, 'name')).
                                     '</div>
                                     <div class="sem_path_text">' .
-                                    
+
                                     formatReady($this->getTooltip($this->start_item_id)) .
                                     '</div>
                                 </div>';
@@ -180,7 +182,7 @@ class StudipSemRangeTreeViewSimple {
     function showContent($item_id){
         echo "\n<div align=\"left\" style=\"margin-top:10px;margin-bottom:10px;font-size:10pt\">";
         if ($item_id != "root"){
-            
+
             if ($num_entries = $this->tree->getNumEntries($item_id)){
                 if ($this->show_entries != "level"){
                     echo "<a " . tooltip(_("alle Einträge auf dieser Ebene anzeigen")) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range_tree&item_id=$item_id")) ."\">";

@@ -5,9 +5,9 @@
 # Lifter010: TODO
 /**
 * ExternElementMain.class.php
-* 
-*  
-* 
+*
+*
+*
 *
 * @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -19,7 +19,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // ExternElementMain.class.php
-// 
+//
 // Copyright (C) 2003 Peter Thienel <pthienel@web.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
@@ -41,8 +41,9 @@ class ExternElementMain extends ExternElement {
 
     var $attributes = [];
     var $edit_function;
-    
-    
+    var $data_fields;
+    var $field_names;
+
     /**
     *
     */
@@ -51,18 +52,18 @@ class ExternElementMain extends ExternElement {
             $main_class_name = 'ExternElementMain' . ucfirst($module_name);
             require_once "lib/extern/elements/main/$main_class_name.class.php";
             $main_module = new $main_class_name($module_name, $data_fields, $field_names, $config);
-            
+
             return $main_module;
         }
-        
+
         return NULL;
     }
-    
+
     /**
     * Constructor
     *
     */
-    function __construct ($module_name, &$data_fields, &$field_names, &$config) { 
+    function __construct ($module_name, &$data_fields, &$field_names, &$config) {
         $this->real_name = _("Grundeinstellungen");
         $this->description = _("In den Grundeinstellungen können Sie allgemeine Daten des Elements ändern.");
         $this->name = 'Main';
@@ -75,30 +76,30 @@ class ExternElementMain extends ExternElement {
             $this->attributes[] = 'sriurl';
         }
     }
-    
+
     /**
-    * 
+    *
     */
     function getDefaultConfig () {}
-    
+
     /**
-    * 
+    *
     */
     function toStringEdit ($post_vars = "", $faulty_values = "",
             $edit_form = "", $anker = "") {
-        
+
         $out = '';
         $table = '';
         if ($edit_form == '')
             $edit_form = new ExternEdit($this->config, $post_vars, $faulty_values, $anker);
-        
+
         $edit_form->setElementName($this->getName());
         $element_headline = $edit_form->editElementHeadline($this->real_name,
                 $this->config->getName(), $this->config->getId(), TRUE);
-        
+
         if ($faulty_values == '')
             $faulty_values = [];
-        
+
         $edit_function = $this->edit_function;
         $table = $edit_form->$edit_function($this->field_names);
 
@@ -107,10 +108,10 @@ class ExternElementMain extends ExternElement {
                 $this->config->getId(), $this->getName());
         $out = $edit_form->editContent($content_table, $submit);
         $out .= $edit_form->editBlank();
-        
+
         return $element_headline . $out;
     }
-    
+
     function getSRIFormContent (&$edit_form, $include_url = false) {
         $content = '';
         $sri_info = _("Nur bei Benutzung der SRI-Schnittstelle für dieses Modul: Geben Sie hier die vollständige URL der Seite an, in die die Ausgabe des Moduls eingefügt werden soll.");
@@ -133,5 +134,5 @@ class ExternElementMain extends ExternElement {
         }
         return $content;
     }
-        
+
 }

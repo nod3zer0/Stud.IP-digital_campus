@@ -39,6 +39,8 @@ class StudipSemTreeViewSimple
 {
     var $tree;
     var $show_entries;
+    var $start_item_id;
+    var $root_content;
 
     /**
     * constructor

@@ -40,15 +40,18 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
     var $markers = [];
     var $args = [];
     var $sem_browse_data = [];
-    var $search_helper;
+    var $search_obj;
     var $sem_tree;
     var $range_tree;
     var $sem_number = [];
+    var $sem_dates;
+    var $sem_types_position = [];
     var $group_by_fields = [];
     //var $current_level_name = ''; //only set if tree is rendered with getContentTree()!
     var $global_markers = [];
     var $approved_params = [];
     var $module_params = [];
+    var $classes_show_class = null;
 
 
     function __construct($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
@@ -1243,20 +1246,6 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             }
         }
         return in_array($this->sem_browse_data['show_class'], $this->classes_show_class);
-    }
-
-    function get_sem_class()
-    {
-        $query = "SELECT `Seminar_id`
-                  FROM `seminare`
-                  WHERE `status` IN (?)
-                    AND visible = 1";
-
-        $sem_ids = DBManager::get()->fetchAll(PDO::FETCH_COLUMN);
-        if (is_array($sem_ids)) {
-            $this->sem_browse_data['search_result'] = array_flip($sem_ids);
-        }
-        $this->show_result = true;
     }
 
     function printout ($args) {

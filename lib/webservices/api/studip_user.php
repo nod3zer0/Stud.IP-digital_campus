@@ -33,6 +33,7 @@ class Studip_User {
     var $fullname;
     var $auth_plugin;
     var $visibility;
+    var $error;
 
 
     // Constructor

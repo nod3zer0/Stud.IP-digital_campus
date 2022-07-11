@@ -27,14 +27,14 @@ class ResourceSearch extends SearchType
      * the permission levels specified in this attribute.
      * Defaults to ['user', 'autor', 'tutor', 'admin'].
      */
-    protected $accepted_permission_levels;
+    protected $accepted_permission_levels = ['user', 'autor', 'tutor', 'admin'];
 
     /**
      * bool
      * Whether to use global permissions when searching for resources
      * where a person has permissions on (true) or not. Defaults to true.
      */
-    protected $use_global_permissions;
+    protected $use_global_permissions = true;
 
 
     /**
@@ -42,7 +42,7 @@ class ResourceSearch extends SearchType
      * Additional properties that shall be appended to the name of the resource.
      * The array must be one-dimensional.
      */
-    protected $additional_display_properties;
+    protected $additional_display_properties = [];
 
 
     /**
@@ -53,7 +53,7 @@ class ResourceSearch extends SearchType
      * the string ", ".
      * This attribute defaults to '[%s]'.
      */
-    protected $additional_property_format;
+    protected $additional_property_format = '[%s]';
 
 
     /**
@@ -61,22 +61,7 @@ class ResourceSearch extends SearchType
      * Array of class_names of Resource classes that will be included in the search.
      * An empty array will include all resource classes.
      */
-    protected $searchable_resource_classes;
-
-
-    //Setup and search configuration methods:
-
-
-    public function __construct()
-    {
-        $this->accepted_permission_levels = [
-            'user', 'autor', 'tutor', 'admin'
-        ];
-        $this->use_global_permissions = true;
-        $this->additional_display_properties = [];
-        $this->additional_property_format = '[%s]';
-        $this->searchable_resource_classes = [];
-    }
+    protected $searchable_resource_classes = [];
 
 
     /**

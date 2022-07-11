@@ -98,7 +98,6 @@ class Ilias4ConnectedPermissions extends Ilias3ConnectedPermissions
             if ($type != "") {
                 $connected_cms[$this->cms_type]->soap_client->addMember( $connected_cms[$this->cms_type]->user->getId(), $type, $course_id );
                 if ($GLOBALS["debug"] == true) echo "addMember";
-                $this->permissions_changed = true;
             }
         }
 
@@ -114,7 +113,6 @@ class Ilias4ConnectedPermissions extends Ilias3ConnectedPermissions
                 $connected_cms[$this->cms_type]->soap_client->addUserRoleEntry( $connected_cms[$this->cms_type]->user->getId(), $proper_role);
                 if ($GLOBALS["debug"] == true) echo "Role $proper_role added.";
             }
-            $this->permissions_changed = true;
 
         }
 

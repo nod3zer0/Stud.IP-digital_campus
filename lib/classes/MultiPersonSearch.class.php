@@ -403,16 +403,6 @@ class MultiPersonSearch {
         return $this->description;
     }
 
-
-    /**
-     * returns the url of the page where the GUI element is added.
-     *
-     * @return string
-     */
-    public function getPageUrl() {
-        return $this->pageURL;
-    }
-
     /**
      * adds a new quickfilter.
      *
@@ -486,7 +476,6 @@ class MultiPersonSearch {
         $_SESSION['multipersonsearch'][$this->name]['additionalHMTL'] = $this->additionalHMTL;
         $_SESSION['multipersonsearch'][$this->name]['executeURL'] = $this->executeURL;
         $_SESSION['multipersonsearch'][$this->name]['jsFunction'] = $this->jsFunction;
-        $_SESSION['multipersonsearch'][$this->name]['pageURL'] = Request::url();
         $_SESSION['multipersonsearch'][$this->name]['defaultSelectableUsersIDs'] = $this->defaultSelectableUsersIDs;
         $_SESSION['multipersonsearch'][$this->name]['defaultSelectedUsersIDs'] = $this->defaultSelectedUsersIDs;
         $_SESSION['multipersonsearch'][$this->name]['quickfilterIds'] = $this->quickfilterIds;
@@ -505,7 +494,6 @@ class MultiPersonSearch {
         $this->additionalHMTL = $_SESSION['multipersonsearch'][$this->name]['additionalHMTL'];
         $this->executeURL = html_entity_decode($_SESSION['multipersonsearch'][$this->name]['executeURL']);
         $this->jsFunction = $_SESSION['multipersonsearch'][$this->name]['jsFunction'];
-        $this->pageURL = $_SESSION['multipersonsearch'][$this->name]['pageURL'];
         $this->defaultSelectableUsersIDs = $_SESSION['multipersonsearch'][$this->name]['defaultSelectableUsersIDs'];
         $this->defaultSelectedUsersIDs = $_SESSION['multipersonsearch'][$this->name]['defaultSelectedUsersIDs'];
         $this->searchObject = unserialize($_SESSION['multipersonsearch'][$this->name]['searchObject']);

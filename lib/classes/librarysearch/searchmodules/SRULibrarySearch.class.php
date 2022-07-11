@@ -114,7 +114,7 @@ class SRULibrarySearch extends LibrarySearch
             }
         }
 
-        $query_parameters = $this->additional_query_parameters;
+        $query_parameters = [];
         $query_parameters['version'] = '1.1'; //TODO: is version 2.0 supported?
         $query_parameters['operation'] = 'searchRetrieve';
         $query_parameters['recordSchema'] = 'marcxml';

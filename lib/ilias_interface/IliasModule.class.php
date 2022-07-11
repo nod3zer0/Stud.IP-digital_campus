@@ -27,10 +27,13 @@ class IliasModule
     public $change_date;
     public $path;
     public $ilias_index;
-    public $ilias_version;
     public $allowed_operations;
     public $is_offline;
     public $is_connected;
+    public $owner;
+    public $author_studip;
+    public $siblings_count;
+    public $icon_file;
 
     /**
     * constructor
@@ -366,4 +369,3 @@ class IliasModule
         return Icon::create($this->icon_file, 'inactive', [])->asImg();
     }
 }
-?>

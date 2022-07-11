@@ -10,6 +10,9 @@ namespace RESTAPI;
  */
 class UriTemplate
 {
+    public $uri_template;
+    public $conditions;
+
     public function __construct($uri_template, $conditions = [])
     {
         $this->uri_template = $uri_template;

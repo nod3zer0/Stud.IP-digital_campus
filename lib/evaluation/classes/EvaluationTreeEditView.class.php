@@ -159,6 +159,12 @@ class EvaluationTreeEditView
     var $itemID;
 
     /**
+     * Holds the currently moved Item-ID
+     * @var string $moveItemID
+     */
+    var $moveItemID;
+
+    /**
      * Holds the current evalID
      * @access   private
      * @var      integer $evalID
@@ -171,6 +177,13 @@ class EvaluationTreeEditView
      * @var      string $itemInstance
      */
     var $itemInstance;
+
+    /**
+     * Possible messages
+     *
+     * @var array $msg
+     */
+    var $msg = [];
 
     /**
      * constructor

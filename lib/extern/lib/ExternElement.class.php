@@ -46,6 +46,7 @@ class ExternElement {
     var $real_name;
     var $description;
     var $headlines = [];
+    var $link_module_type;
 
 
     /**

@@ -34,10 +34,8 @@ class ErrorHandler
 
     public function __construct()
     {
-
         $this->errors = [];
         $this->status = ErrorHandler::ERROR_NORMAL;
-        $this->_is_instantiated = true;
     }
 
     public function getStatus($status = NULL)
@@ -84,7 +82,7 @@ class ErrorHandler
         }
         return $errors;
     }
-    
+
     public function nextError($status)
     {
         if(is_array($this->errors[$status])) {

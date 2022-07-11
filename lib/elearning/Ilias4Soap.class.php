@@ -34,7 +34,7 @@ class Ilias4Soap extends Ilias3Soap
     function __construct($cms)
     {
         parent::__construct($cms);
-        $this->seperator_string = " / ";
+        $this->separator_string = " / ";
     }
 
     /**
@@ -145,7 +145,7 @@ class Ilias4Soap extends Ilias3Soap
         }
 
         if (is_array($path)) {
-            return implode($path, $this->seperator_string);
+            return implode($path, $this->separator_string);
         } else {
             return false;
         }

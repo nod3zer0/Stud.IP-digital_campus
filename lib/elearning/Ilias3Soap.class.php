@@ -22,6 +22,7 @@ class Ilias3Soap extends StudipSoapClient
     var $user_sid;
     var $user_type;
     var $soap_cache;
+    var $caching_active = false;
 
     /**
     * constructor
@@ -39,7 +40,6 @@ class Ilias3Soap extends StudipSoapClient
         $this->user_type = "admin";
 
         $this->loadCacheData($cms);
-        $this->caching_active = false;
     }
 
 
@@ -1067,4 +1067,3 @@ class Ilias3Soap extends StudipSoapClient
         return false;
     }
 }
-

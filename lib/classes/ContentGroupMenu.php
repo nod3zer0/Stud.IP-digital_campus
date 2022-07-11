@@ -36,6 +36,8 @@ class ContentGroupMenu
     private $label;
     private $aria_label;
 
+    private $attributes = [];
+
 
     /**
      * Private constructur.

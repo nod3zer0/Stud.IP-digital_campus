@@ -46,6 +46,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
 
     var $markers = [];
     var $args = ['seminar_id'];
+    var $seminar_id;
 
     /**
     *

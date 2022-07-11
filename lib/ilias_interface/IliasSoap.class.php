@@ -29,6 +29,7 @@ class IliasSoap extends StudipSoapClient
     private $user_type;
     private $soap_cache;
     private $separator_string;
+    private $caching_active = false;
 
 
     /**
@@ -57,7 +58,6 @@ class IliasSoap extends StudipSoapClient
         $this->user_type = "admin";
 
         $this->loadCacheData();
-        $this->caching_active = false;
     }
 
     /**

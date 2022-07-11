@@ -12,6 +12,7 @@ class Helpbar extends WidgetContainer
     protected $should_render = true;
     protected $variables = [];
     protected $ignore_db = false;
+    protected $help_admin;
 
     /**
      * Constructs the helpbar

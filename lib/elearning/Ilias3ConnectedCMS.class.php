@@ -20,7 +20,6 @@ use Studip\Button, Studip\LinkButton;
 class Ilias3ConnectedCMS extends ConnectedCMS
 {
     var $client_id;
-//  var $root_user_id;
     var $root_user_sid;
     var $main_category_node_id;
     var $user_role_template_id;
@@ -28,12 +27,10 @@ class Ilias3ConnectedCMS extends ConnectedCMS
     var $user_style;
     var $crs_roles;
     var $global_roles;
-
-    var $db_class_object;
-    var $db_class_tree;
-    var $db_class_course;
-
     var $soap_client;
+    var $encrypt_passwords;
+    var $is_first_call = true;
+
     /**
     * constructor
     *
@@ -64,8 +61,6 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         $this->crs_roles = $ELEARNING_INTERFACE_MODULES[$cms]["crs_roles"];
         $this->client_id = $ELEARNING_INTERFACE_MODULES[$cms]["soap_data"]["client"];
         $this->global_roles = $ELEARNING_INTERFACE_MODULES[$cms]["global_roles"];
-//      $this->root_user_sid = $this->soap_client->login();
-        $this->is_first_call = true;
     }
 
     /**

@@ -15,13 +15,15 @@
  * @category    Stud.IP
  */
 
-class CalendarColumn {
+class CalendarColumn
+{
     protected static $number = 0;
     protected $title = "";
     protected $id = "";
     public    $entries = [];
     protected $url = "";
-    protected $grouped    = false;
+    protected $grouped = false;
+    protected $sorted_entries = null;
 
     /**
      * creates instance of type CalendarColumn

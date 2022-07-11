@@ -47,6 +47,8 @@ class SingleCalendar
      */
     public $end;
 
+    public $ts;
+
     public function __construct($range_id, $start = null, $end = null)
     {
         $this->setRangeObject($range_id);
@@ -1153,7 +1155,7 @@ class SingleCalendar
                     break;
 
                 case 'YEARLY' :
-                    for ($ayear = $this->year - 1; $ayear <= $this->year; $ayear++) {
+                    for ($ayear = $year - 1; $ayear <= $year; $ayear++) {
                         if ($rep['day']) {
                             $lwst = mktime(12, 0, 0, $rep['month'], $rep['day'], $ayear);
                             $hgst = $lwst + $duration * 86400;

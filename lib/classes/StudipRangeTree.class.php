@@ -34,13 +34,14 @@
 * @author   André Noack <noack@data-quest.de>
 * @package
 */
-class StudipRangeTree extends TreeAbstract {
-
+class StudipRangeTree extends TreeAbstract
+{
     var $sem_number;
-
     var $sem_status;
-
     var $sem_dates;
+    var $studip_objects = [];
+    var $visible_only;
+    var $entries_init_done = false;
 
     /**
     * constructor

@@ -162,6 +162,11 @@ use gossi\docblock\Docblock;
  */
 abstract class RouteMap
 {
+    protected $router;
+    protected $route;
+    protected $data = null;
+    protected $response;
+
     /**
      * Internal property which is used by RouteMap::paginated and
      * contains everything about a paginated collection.

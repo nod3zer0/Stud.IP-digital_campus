@@ -36,10 +36,7 @@ class IliasUser
     public $firstname;
     public $lastname;
     public $institution;
-    public $department;
     public $street;
-    public $city;
-    public $zipcode;
     public $country;
     public $phone_home;
     public $fax;
@@ -47,8 +44,8 @@ class IliasUser
     public $email;
     public $type;
     public $is_connected;
+    public $auth_plugin;
 
-    public $db_class;
     /**
     * constructor
     *
@@ -112,7 +109,7 @@ class IliasUser
     */
     function getStudipUserData()
     {
-        $query = "SELECT username, password, title_front, title_rear, Vorname, 
+        $query = "SELECT username, password, title_front, title_rear, Vorname,
                          Nachname, Email, privatnr, privadr, geschlecht
                   FROM auth_user_md5
                   LEFT JOIN  user_info USING (user_id)
@@ -444,7 +441,7 @@ class IliasUser
     {
         $this->setUserType($user_type);
 
-        $query = "INSERT INTO auth_extern (studip_user_id, external_user_id, external_user_name, 
+        $query = "INSERT INTO auth_extern (studip_user_id, external_user_id, external_user_name,
                                            external_user_password, external_user_category,
                                            external_user_system_type, external_user_type)
                   VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -467,7 +464,7 @@ class IliasUser
         $this->is_connected = true;
         $this->readData();
     }
-    
+
     /**
      * remove connection for user-account
      *
@@ -479,7 +476,7 @@ class IliasUser
         if (!$ignore_usertype && ($this->getUserType() != self::USER_TYPE_ORIGINAL)) {
             return;
         }
-        
+
         $query = "DELETE FROM auth_extern WHERE studip_user_id = ? AND external_user_system_type = ? AND external_user_type = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute([
@@ -487,11 +484,11 @@ class IliasUser
                         (string)$this->index,
                         (int)$this->type
         ]);
-        
+
         $this->is_connected = false;
         $this->readData();
     }
-    
+
     /**
     * get connection-status
     *
@@ -513,7 +510,7 @@ class IliasUser
     function getToken()
     {
         $token = md5(uniqid("iliastoken538"));
-        $query = "UPDATE `auth_extern` SET `external_user_token` = ?, `external_user_token_valid_until` = ? 
+        $query = "UPDATE `auth_extern` SET `external_user_token` = ?, `external_user_token_valid_until` = ?
                             WHERE `auth_extern`.`studip_user_id` = ? AND `auth_extern`.`external_user_system_type` = ? AND `auth_extern`.`external_user_type` = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute([

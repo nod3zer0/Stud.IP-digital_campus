@@ -1,4 +1,4 @@
-<?php 
+<?php
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
@@ -9,6 +9,8 @@ require_once 'vendor/nusoap/nusoap.php';
 
 class Soap_WebserviceClient extends WebserviceClient
 {
+    private $client;
+
     public function __construct($webservice_url)
     {
         $this->client = new soap_client($webservice_url);
@@ -17,7 +19,7 @@ class Soap_WebserviceClient extends WebserviceClient
 
     public function &call($method_name, &$args)
     {
-        return $this->client->call($method_name, $args);
+        $result = $this->client->call($method_name, $args);
+        return $result;
     }
 }
-

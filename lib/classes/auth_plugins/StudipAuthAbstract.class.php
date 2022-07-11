@@ -95,6 +95,8 @@ class StudipAuthAbstract
      */
     private static $plugin_instances;
 
+    private $config_data = [];
+
     /**
      * static method to instantiate and retrieve a reference to an object (singleton)
      *
@@ -474,7 +476,9 @@ class StudipAuthAbstract
      */
     function verifyUsername($username)
     {
-        if ($this->username_case_insensitiv) $username = mb_strtolower($username);
+        if ($this->username_case_insensitiv) {
+            $username = mb_strtolower($username);
+        }
         if ($this->bad_char_regex) {
             return preg_replace($this->bad_char_regex, '', $username);
         } else {
@@ -511,5 +515,26 @@ class StudipAuthAbstract
     {
         $this->error = sprintf(_('Methode %s nicht implementiert!'), get_class($this) . '::isAuthenticated()');
         return false;
+    }
+
+    // Store dynamically set dynamically created properties in $config_data
+    public function __isset($offset)
+    {
+        return isset($this->config_data[$offset]);
+    }
+
+    public function __set($offset, $value)
+    {
+        $this->config_data[$offset] = $value;
+    }
+
+    public function __get($offset)
+    {
+        return $this->config_data[$offset] ?? null;
+    }
+
+    public function __unset($offset)
+    {
+        unset($this->config_data[$offset]);
     }
 }

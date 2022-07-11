@@ -39,6 +39,7 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
 
     var $USER_OPERATIONS;
     var $AUTHOR_OPERATIONS;
+
     /**
     * constructor
     *
@@ -60,7 +61,6 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
         }
         $this->USER_OPERATIONS = [OPERATION_VISIBLE, OPERATION_READ];
 //      $this->AUTHOR_OPERATIONS = array(OPERATION_VISIBLE, OPERATION_READ, OPERATION_CREATE_LM, OPERATION_CREATE_TEST, OPERATION_CREATE_QUESTIONS, OPERATION_CREATE_FILE);
-        $this->permissions_changed = false;
     }
 
     /**
@@ -141,7 +141,6 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
                 $connected_cms[$this->cms_type]->soap_client->addMember( $connected_cms[$this->cms_type]->user->getId(), $type, $course_id );
                 if ($GLOBALS["debug"] == true)
                     echo "addMember";
-                $this->permissions_changed = true;
             }
         }
 
@@ -162,7 +161,6 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
                 if ($GLOBALS["debug"] == true)
                     echo "Role $proper_role added.";
             }
-            $this->permissions_changed = true;
 
         }
         if (!$this->getContentModulePerms($course_id)) {

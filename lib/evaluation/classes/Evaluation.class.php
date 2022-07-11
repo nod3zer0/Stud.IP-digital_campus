@@ -111,9 +111,9 @@ class Evaluation extends EvaluationObject implements PrivacyObject
     /**
      * Counts the number of connected ranges
      * @access   private
-     * @var      integer $numberRanges
+     * @var      integer $rangeNum
      */
-    var $numberRanges;
+    var $rangeNum;
 
     /**
      * Constructor
@@ -136,7 +136,6 @@ class Evaluation extends EvaluationObject implements PrivacyObject
         $this->anonymous = NO;
         $this->visible = NO;
         $this->shared = NO;
-        $this->isUsed = NO;
         $this->rangeNum = 0;
         $this->db = new EvaluationDB ();
         if ($this->db->isError()) {

@@ -25,7 +25,7 @@ class CalendarImport
     private $data;
     private $public_to_private = false;
 
-    public function __construct(&$parser, $data = null)
+    public function __construct(CalendarParser &$parser, $data = null)
     {
         $this->_parser = $parser;
         $this->data = $data;

@@ -187,6 +187,8 @@ class ExternSemBrowseTemplate extends SemBrowse {
 
     var $module;
     var $sem_types_position;
+    var $sem_dates;
+    var $start_sem;
 
     function __construct(&$module, $start_item_id) {
 

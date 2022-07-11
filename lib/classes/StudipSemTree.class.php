@@ -19,6 +19,7 @@ class StudipSemTree extends TreeAbstract
     public $sem_number = null;
     public $visible_only = false;
     public $sem_status = [];
+    protected $entries_init_done = false;
 
     /**
     * constructor

@@ -42,6 +42,12 @@ use Studip\Button, Studip\LinkButton;
 class StudipSemTreeViewAdmin extends TreeView
 {
     var $admin_ranges = [];
+    var $msg = [];
+    var $marked_item;
+    var $marked_sem;
+    var $mode;
+    var $move_item_id;
+    var $edit_item_id;
 
     /**
     * constructor

@@ -36,36 +36,22 @@
 class StudipSemSearch {
 
     var $form;
-
     var $search_result;
-
     var $form_name;
-
-    var $num_sem;
-
     var $sem_tree;
-
     var $range_tree;
-
     var $search_done = false;
-
     var $found_rows = false;
-
     var $search_button_clicked = false;
-
     var $new_search_button_clicked = false;
-
     var $sem_change_button_clicked = false;
-
     var $override_sem = false;
-
     var $attributes_default = ['style' => 'width:100%;'];
-
     var $search_scopes = [];
     var $search_ranges = [];
     var $search_sem_class = 'all';
-
     var $visible_only = false;
+    var $sem_dates;
 
     function __construct($form_name = "search_sem", $auto_search = true, $visible_only = false, $sem_class = 'all'){
 

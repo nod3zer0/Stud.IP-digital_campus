@@ -25,6 +25,7 @@ class CalendarParser
     protected $public_to_private = false;
     protected $client_identifier;
     private $time;
+    protected $import_sem = false;
 
     public function __construct()
     {
@@ -91,7 +92,7 @@ class CalendarParser
 
         return false;
     }
-    
+
     private function setProperties($calendar_event, $component)
     {
         $calendar_event->setStart($component['DTSTART']);
@@ -129,4 +130,3 @@ class CalendarParser
         return $this->client_identifier;
     }
 }
-

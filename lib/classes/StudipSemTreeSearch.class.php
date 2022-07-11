@@ -36,28 +36,18 @@
 class StudipSemTreeSearch {
 
     var $view;
-
     var $num_search_result = false;
-
     var $num_inserted;
-
     var $num_deleted;
-
     var $form_name;
-
     var $tree;
-
     var $seminar_id;
-
     var $institut_id = [];
-
     var $sem_tree_ranges = [];
-
     var $sem_tree_ids = [];
-
     var $selected = [];
-
     var $search_result = [];
+    var $search_done = false;
 
     function __construct($seminar_id,$form_name = "search_sem_tree", $auto_search = true){
         $this->view = DbView::getView('sem_tree');

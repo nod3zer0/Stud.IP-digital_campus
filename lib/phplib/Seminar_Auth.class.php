@@ -45,6 +45,8 @@ class Seminar_Auth
      */
     public $auth = []; ## Data array
 
+    public $need_email_activation = false;
+
     /**
      *
      */

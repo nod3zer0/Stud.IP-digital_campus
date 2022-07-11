@@ -38,16 +38,20 @@
 class Ilias3ObjectXMLParser extends Ilias3SaxParser
 {
     var $object_data = [];
+    var $curr_obj;
+    var $reference_count;
+    var $cdata = '';
 
     /**
-    * Constructor
-    *
-    * @param    object      $a_content_object   must be of type ilObjContentObject
-    *                                           ilObjTest or ilObjQuestionPool
-    * @param    string      $a_xml_file         xml data
-    * @param    string      $a_subdir           subdirectory in import directory
-    * @access   public
-    */
+     * Constructor
+     *
+     * @param object $a_content_object           must be of type ilObjContentObject
+     *                                           ilObjTest or ilObjQuestionPool
+     * @param string $a_xml_file                 xml data
+     * @param string $a_subdir                   subdirectory in import directory
+     *
+     * @access   public
+     */
     function __construct($a_xml_data = '')
     {
         parent::__construct();
@@ -60,33 +64,31 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
     }
 
     /**
-    * set event handlers
-    *
-    * @param    resource    reference to the xml parser
-    * @access   private
-    */
+     * set event handlers
+     *
+     * @param resource    reference to the xml parser
+     *
+     * @access   private
+     */
     function setHandlers($a_xml_parser)
     {
-        xml_set_object($a_xml_parser,$this);
-        xml_set_element_handler($a_xml_parser,'handlerBeginTag','handlerEndTag');
-        xml_set_character_data_handler($a_xml_parser,'handlerCharacterData');
+        xml_set_object($a_xml_parser, $this);
+        xml_set_element_handler($a_xml_parser, 'handlerBeginTag', 'handlerEndTag');
+        xml_set_character_data_handler($a_xml_parser, 'handlerCharacterData');
     }
 
 
-
-
     /**
-    * handler for begin of element
-    *
-    * @param    resource    $a_xml_parser       xml parser
-    * @param    string      $a_name             element name
-    * @param    array       $a_attribs          element attributes array
-    */
-    function handlerBeginTag($a_xml_parser,$a_name,$a_attribs)
+     * handler for begin of element
+     *
+     * @param resource $a_xml_parser xml parser
+     * @param string   $a_name       element name
+     * @param array    $a_attribs    element attributes array
+     */
+    function handlerBeginTag($a_xml_parser, $a_name, $a_attribs)
     {
 
-        switch($a_name)
-        {
+        switch ($a_name) {
             case 'Objects':
                 $this->curr_obj = -1;
                 break;
@@ -95,8 +97,8 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
                 ++$this->curr_obj;
                 $this->reference_count = -1;
 
-                $this->addProperty__('type',$a_attribs['type']);
-                $this->addProperty__('obj_id',$a_attribs['obj_id']);
+                $this->addProperty__('type', $a_attribs['type']);
+                $this->addProperty__('obj_id', $a_attribs['obj_id']);
                 break;
 
             case 'Title':
@@ -128,17 +130,15 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
     }
 
 
-
     /**
-    * handler for end of element
-    *
-    * @param    resource    $a_xml_parser       xml parser
-    * @param    string      $a_name             element name
-    */
-    function handlerEndTag($a_xml_parser,$a_name)
+     * handler for end of element
+     *
+     * @param resource $a_xml_parser xml parser
+     * @param string   $a_name       element name
+     */
+    function handlerEndTag($a_xml_parser, $a_name)
     {
-        switch($a_name)
-        {
+        switch ($a_name) {
             case 'Objects':
                 break;
 
@@ -146,27 +146,27 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
                 break;
 
             case 'Title':
-                $this->addProperty__('title',trim($this->cdata));
+                $this->addProperty__('title', trim($this->cdata));
                 break;
 
             case 'Description':
-                $this->addProperty__('description',trim($this->cdata));
+                $this->addProperty__('description', trim($this->cdata));
                 break;
 
             case 'Owner':
-                $this->addProperty__('owner',trim($this->cdata));
+                $this->addProperty__('owner', trim($this->cdata));
                 break;
 
             case 'CreateDate':
-                $this->addProperty__('create_date',trim($this->cdata));
+                $this->addProperty__('create_date', trim($this->cdata));
                 break;
 
             case 'LastUpdate':
-                $this->addProperty__('last_update',trim($this->cdata));
+                $this->addProperty__('last_update', trim($this->cdata));
                 break;
 
             case 'ImportId':
-                $this->addProperty__('import_id',trim($this->cdata));
+                $this->addProperty__('import_id', trim($this->cdata));
                 break;
 
             case 'References':
@@ -184,17 +184,16 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
     }
 
     /**
-    * handler for character data
-    *
-    * @param    resource    $a_xml_parser       xml parser
-    * @param    string      $a_data             character data
-    */
-    function handlerCharacterData($a_xml_parser,$a_data)
+     * handler for character data
+     *
+     * @param resource $a_xml_parser xml parser
+     * @param string   $a_data       character data
+     */
+    function handlerCharacterData($a_xml_parser, $a_data)
     {
-        if($a_data != "\n")
-        {
+        if ($a_data != "\n") {
             // Replace multiple tabs with one space
-            $a_data = preg_replace("/\t+/"," ",$a_data);
+            $a_data = preg_replace("/\t+/", " ", $a_data);
 
             $this->cdata .= $a_data;
         }
@@ -203,27 +202,26 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
     }
 
     // PRIVATE
-    function addProperty__($a_name,$a_value)
+    function addProperty__($a_name, $a_value)
     {
-            $this->object_data[$this->curr_obj][$a_name] = $a_value;
-    /*/
-        if (is_array($this->object_data[$this->curr_obj][$a_name]))
-            $this->object_data[$this->curr_obj][$a_name][] = $a_value;
-        elseif ($this->object_data[$this->curr_obj][$a_name] != "")
-        {
-            $old_value = $this->object_data[$this->curr_obj][$a_name];
-            $this->object_data[$this->curr_obj][$a_name] = array($old_value);
-            $this->object_data[$this->curr_obj][$a_name][] = $a_value;
-        }
-        else
-            $this->object_data[$this->curr_obj][$a_name] = $a_value;
-        /**/
+        $this->object_data[$this->curr_obj][$a_name] = $a_value;
+        /*/
+            if (is_array($this->object_data[$this->curr_obj][$a_name]))
+                $this->object_data[$this->curr_obj][$a_name][] = $a_value;
+            elseif ($this->object_data[$this->curr_obj][$a_name] != "")
+            {
+                $old_value = $this->object_data[$this->curr_obj][$a_name];
+                $this->object_data[$this->curr_obj][$a_name] = array($old_value);
+                $this->object_data[$this->curr_obj][$a_name][] = $a_value;
+            }
+            else
+                $this->object_data[$this->curr_obj][$a_name] = $a_value;
+            /**/
     }
 
     function addReference__($a_value, $a_accessinfo = "")
     {
-        if($a_value)
-        {
+        if ($a_value) {
             $this->object_data[$this->curr_obj]['references'][$this->reference_count]["ref_id"] = $a_value;
             $this->object_data[$this->curr_obj]['references'][$this->reference_count]["accessInfo"] = $a_accessinfo;
         }
@@ -231,9 +229,8 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
 
     function addOperation__($a_value)
     {
-        if($a_value)
+        if ($a_value) {
             $this->object_data[$this->curr_obj]['references'][$this->reference_count]["operations"][] = $a_value;
+        }
     }
-
 }
-?>

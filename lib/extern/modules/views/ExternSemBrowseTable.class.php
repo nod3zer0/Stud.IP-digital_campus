@@ -44,6 +44,7 @@ class ExternSemBrowseTable extends SemBrowse {
 
     var $module;
     var $sem_types_position;
+    var $sem_dates;
 
     function __construct(&$module, $start_item_id) {
 
@@ -181,7 +182,7 @@ class ExternSemBrowseTable extends SemBrowse {
                 $sem_inst_query = " AND seminare.Institut_id='{$this->module->config->range_id}' ";
             }
             if (Request::option('aggregation')) {
-                $i = Institute::find($this->config->range_id);
+                $i = Institute::find($this->module->config->range_id);
                 $children = $i->sub_institutes->pluck('institut_id');
                 $children[] = $i->institut_id;
                 $sem_inst_query = " AND seminare.Institut_id IN ('".(implode("', '", $children))."')";

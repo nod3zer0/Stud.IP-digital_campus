@@ -27,6 +27,7 @@ require_once 'lib/user_visible.inc.php';
 
 class messaging
 {
+    var $send_as_email = false;
     var $sig_string; //String, der Signaturen vom eigentlichen Text abgrenzt
 
     public static function sendSystemMessage($recipient, $message_title, $message_body)

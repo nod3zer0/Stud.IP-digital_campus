@@ -52,12 +52,7 @@ class ConnectedCMS
     public function __construct($cms = "")
     {
         $this->cms_type = $cms;
-        if (Config::get()->getValue("ELEARNING_INTERFACE_{$this->cms}_ACTIVE")) {
-            $this->is_active = true;
-        }
-        else {
-            $this->is_active = false;
-        }
+        $this->is_active = (bool) Config::get()->getValue("ELEARNING_INTERFACE_{$cms}_ACTIVE");
         $this->init($cms);
     }
 

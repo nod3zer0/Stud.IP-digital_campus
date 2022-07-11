@@ -11,16 +11,16 @@
 *
 * @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 */
-class ExternRangeLectureTree {
-
-    
+class ExternRangeLectureTree
+{
     var $tree;
     var $config;
     var $param;
     var $root_id;
-    
+    var $start_item_id;
+
     /**
     * constructor
     *
@@ -44,10 +44,10 @@ class ExternRangeLectureTree {
             $args['sem_status'] =  $sem_status;
         }
         $this->param = "range_id={$this->config->range_id}&module=Rangelecturetree&config_id={$this->config->id}&";
-        
+
         $this->tree = TreeAbstract::GetInstance("StudipRangeTree",$args);
     }
-    
+
     function showSemRangeTree () {
         echo "\n<table" . $this->config->getAttributes("Main", "table") . ">";
         echo "\n<tr><td>". $this->getSemPath() . "</td></tr>\n<tr><td>";
@@ -65,7 +65,7 @@ class ExternRangeLectureTree {
         }
         echo "\n</table>";
     }
-    
+
     function showKids ($item_id) {
         $num_kids = $this->tree->getNumKids($item_id);
         $kids = $this->tree->getKids($item_id);
@@ -86,7 +86,7 @@ class ExternRangeLectureTree {
         }
         echo "</table>\n";
     }
-    
+
     function backLink ($item_id) {
         if ($item_id != $this->root_id){
             echo "<table width=\"100%\" border=\"0\"";
@@ -104,7 +104,7 @@ class ExternRangeLectureTree {
             echo "</td></tr></table>\n";
         }
     }
-    
+
     function showContent ($item_id) {
         echo "<table" . $this->config->getAttributes("RangeTreeLevelName", "table");
         echo ">\n<tr><td" . $this->config->getAttributes("RangeTreeLevelName", "td") . ">";
@@ -132,7 +132,7 @@ class ExternRangeLectureTree {
             echo "</td></tr></table>\n";
         }
     }
-    
+
     function getSemPath () {
         $delimiter = $this->config->getValue("TreePath", "delimiter");
         $attributes_a = $this->config->getAttributes("TreePath", "a");
@@ -154,12 +154,12 @@ class ExternRangeLectureTree {
             $ret .= $delimiter;
         $ret .= htmlReady($this->tree->tree_data[$this->start_item_id]["name"]);
         $ret .= "</font></td></tr></table>\n";
-        
+
         return $ret;
     }
-            
-    
-    
+
+
+
     function getSelf ($param = "", $with_start_item = true) {
         if ($param)
             $url = $_SERVER['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id . "&" : "?") . $param ;

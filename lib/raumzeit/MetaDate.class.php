@@ -40,6 +40,7 @@ class MetaDate
     var $seminarStartTime    = 0;
     var $seminarDurationTime = 0;
     var $cycles              = [];
+    var $hasDatesTmp         = [];
 
     /**
      * Constructor

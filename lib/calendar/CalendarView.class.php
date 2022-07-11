@@ -20,7 +20,7 @@
  * Kind of bean class for the calendar view.
  *
  * Example of use:
- * 
+ *
  *  // create a calendar-view and add a column
  *  $plan = new CalendarView();
  *  $plan->addColumn(_('Spalte 1'))
@@ -33,7 +33,7 @@
  *          'content' => 'Die Mathematiker kreiden sich mal wieder was an.'
  *      )
  *  );
- *   
+ *
  *  // display the calendar (containing one column)
  *  print $plan->render();
  *
@@ -53,8 +53,10 @@ class CalendarView
     protected $templates      = [];
     protected $read_only      = false;
 
-    static protected $number_of_instances = 1;
+    protected static $number_of_instances = 1;
     protected $view_id;
+
+    public $sorted_entries = [];
 
 
     /**
@@ -126,7 +128,7 @@ class CalendarView
     /**
      * adds a new column to this view. All entries created with addEntry will be
      * added to this column.
-     * 
+     *
      * @param string  $title  like "monday" to be displayed on top of the column
      * @param string  $url    to be called when clicked on the title of the column
      * @param string  $id     any kind of id of the column
@@ -142,7 +144,7 @@ class CalendarView
 
 
     /**
-     * adds a new entry to the last current column. The entry needs to be an 
+     * adds a new entry to the last current column. The entry needs to be an
      * associative array with parameters as follows:
      * @param array $entry_array: associative array for an entry in the column like
      * array (
@@ -187,7 +189,7 @@ class CalendarView
      *   column_id: id of the column
      *   hour: integer number from 0 to 23
      * If js_function_object is an empty string, nothing will be done.
-     * 
+     *
      * @param string  $js_function_object  name of js-function or anonymous js-function
      * @return CalendarView
      */

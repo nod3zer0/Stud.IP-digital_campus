@@ -18,22 +18,9 @@
 class RoomSearch extends ResourceSearch
 {
      //Setup and search configuration methods:
-
-
-    public function __construct()
-    {
-        $this->accepted_permission_levels = [
-            'user', 'autor', 'tutor', 'admin'
-        ];
-        $this->use_global_permissions = true;
-        $this->with_seats = 0;
-        $this->additional_display_properties = [];
-        $this->additional_property_format = '[%s]';
-    }
-
+    public $with_seats = 0;
 
     //SearchType interface implementations:
-
 
     public function getTitle()
     {

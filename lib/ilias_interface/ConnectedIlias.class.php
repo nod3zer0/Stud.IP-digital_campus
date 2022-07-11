@@ -47,6 +47,11 @@ class ConnectedIlias
     public $user;
     public $user_modules;
 
+    public $operations;
+    public $user_operations;
+    public $allowed_operations;
+    public $tree_allowed_operations;
+
     /**
     * constructor
     *
@@ -1124,7 +1129,6 @@ class ConnectedIlias
             $member_data["passed"] = self::CRS_PASSED_VALUE;
             if ($type != "") {
                 $this->soap_client->addMember( $this->user->getId(), $type, $ilias_course_id);
-                $this->permissions_changed = true;
             }
         }
 
@@ -1138,7 +1142,6 @@ class ConnectedIlias
             if ($proper_role) {
                 $this->soap_client->addUserRoleEntry( $this->user->getId(), $proper_role);
             }
-            $this->permissions_changed = true;
         }
 
         if (! $this->getUserModuleViewPermission($ilias_course_id)) {

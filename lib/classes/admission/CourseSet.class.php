@@ -70,6 +70,11 @@ class CourseSet
      */
     protected $user_id = false;
 
+    /**
+     * When was the course set changed?
+     */
+    protected $chdate = null;
+
     /*
      * Lists of users who are treated differently on seat distribution
      */

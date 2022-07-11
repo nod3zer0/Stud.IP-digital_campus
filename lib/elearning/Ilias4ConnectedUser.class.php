@@ -19,6 +19,8 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser
 {
     var $roles;
     var $user_sid;
+    var $auth_plugin;
+
     /**
      * constructor
      *
@@ -48,11 +50,13 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser
         if ($this->getLoginData($this->login)) {
             //automatische Zuordnung von bestehenden Ilias Accounts
             //nur wenn ldap Modus benutzt wird und Stud.IP Nutzer passendes ldap plugin hat
-            if ($connected_cms[$this->cms_type]->USER_AUTO_CREATE == true &&
-            $connected_cms[$this->cms_type]->USER_PREFIX == '' &&
-            $this->auth_plugin &&
-            $this->auth_plugin != "standard" &&
-            $this->auth_plugin  == $connected_cms[$this->cms_type]->ldap_enable) {
+            if (
+                $connected_cms[$this->cms_type]->USER_AUTO_CREATE
+                && !$connected_cms[$this->cms_type]->USER_PREFIX
+                && $this->auth_plugin
+                && $this->auth_plugin !== 'standard'
+                && $this->auth_plugin === $connected_cms[$this->cms_type]->ldap_enable
+            ) {
                 if (!$this->external_password) {
                     $this->setPassword(md5(uniqid("4dfmjsnll")));
                 }

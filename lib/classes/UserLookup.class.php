@@ -192,7 +192,6 @@ class UserLookup
     public function clearFilters()
     {
         $this->filters = [];
-        $this->study_course_filter = [];
         return $this;
     }
 

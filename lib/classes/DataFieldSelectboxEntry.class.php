@@ -11,6 +11,8 @@
 class DataFieldSelectboxEntry extends DataFieldEntry
 {
     protected $template = 'selectbox.php';
+    protected $type_param;
+    protected $is_assoc_param = false;
 
     /**
      * Constructs this datafield

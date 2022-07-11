@@ -26,9 +26,6 @@ class StudipAuthCAS extends StudipAuthSSO
 
     /**
      * Constructor
-     *
-     *
-     *
      */
     public function __construct($config = [])
     {

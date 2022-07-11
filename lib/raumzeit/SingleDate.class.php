@@ -571,7 +571,6 @@ class SingleDate
                     htmlReady($room->name)
                 );
 
-                $this->assign_id = $booking->id;
                 SingleDateDB::storeSingleDate($this);
                 $msg = sprintf(
                     _('Für den Termin %1$s wurde der Raum %2$s gebucht.'),

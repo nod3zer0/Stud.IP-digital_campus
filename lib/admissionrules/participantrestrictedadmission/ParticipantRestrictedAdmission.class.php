@@ -28,6 +28,8 @@ class ParticipantRestrictedAdmission extends AdmissionRule
 
     public $minimum_timespan_to_distribution_time = 120;
 
+    public $prio_exists = false;
+
 
     // --- OPERATIONS ---
 

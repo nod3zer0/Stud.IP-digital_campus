@@ -7,6 +7,7 @@ class StudipSoapClient
 {
     var $soap_client;
     var $error;
+    var $faultstring;
 
     function __construct($path)
     {

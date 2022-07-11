@@ -8,12 +8,13 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  */
-class StudipAuthIP extends StudipAuthAbstract {
-    
+class StudipAuthIP extends StudipAuthAbstract
+{
     /**
      * {@inheritdoc}
      */
-    function isAuthenticated($username, $password) {
+    function isAuthenticated($username, $password)
+    {
         return $this->allowed_users[$username] && in_array($_SERVER['REMOTE_ADDR'], $this->allowed_users[$username]);
     }
 }

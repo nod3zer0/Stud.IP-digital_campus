@@ -29,6 +29,7 @@ abstract class DataFieldEntry
     ];
 
     protected $language = '';
+    protected $template = null;
 
     /**
      * Returns all supported datafield types.

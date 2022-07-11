@@ -113,7 +113,7 @@ class K10PlusZentralLibrarySearch extends LibrarySearch
             }
         }
 
-        $query_parameters = $this->additional_query_parameters;
+        $query_parameters = [];
         //Special handling for the query parameter:
         $query_parameters['q'] = $query_string;
         if ($order_by = self::ORDER_BY_YEAR) {

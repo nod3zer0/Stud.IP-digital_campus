@@ -116,7 +116,7 @@ class ConsumerPermissions
 
         unset($this->permissions[$route_id][$method]);
 
-        if (count($this->permission[$route_id]) === 0) {
+        if (count($this->permissions[$route_id]) === 0) {
             unset($this->permissions[$route_id]);
         }
 

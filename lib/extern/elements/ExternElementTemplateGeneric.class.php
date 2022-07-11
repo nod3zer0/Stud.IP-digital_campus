@@ -99,7 +99,7 @@ class ExternElementTemplateGeneric extends ExternElement {
         $content_table .= $edit_form->editContentTable($headline, $table);
         $content_table .= $edit_form->editBlankContent();
 
-        $hidden = [$this->getName . '_chdate' => time()];
+        $hidden = [$this->getName() . '_chdate' => time()];
         $submit = $edit_form->editSubmit($this->config->getName(),
                 $this->config->getId(), $this->getName(), $hidden);
         $out = $edit_form->editContent($content_table, $submit);

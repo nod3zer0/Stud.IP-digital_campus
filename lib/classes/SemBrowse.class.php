@@ -22,6 +22,8 @@ class SemBrowse {
     public $group_by_fields = [];
     public $target_url;
     public $target_id;
+    public $classes_show_module;
+    public $classes_show_class;
 
     public function __construct($sem_browse_data_init = [])
     {

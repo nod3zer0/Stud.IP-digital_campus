@@ -125,11 +125,6 @@ class Issue {
         return $this->seminar_id;
     }
 
-    function addSingleDate($termin_id) {
-        $this->singleDates[] = $termin_id;
-        return TRUE;
-    }
-
     function readSingleDates() {
         /*if ($termin_data = IssueDB::getTermine($this->issue_id)) {
             foreach ($termin_data as $val) {
@@ -153,7 +148,7 @@ class Issue {
                 $forum_module->setThreadForIssue($this->issue_id, $this->title, $this->description);
             }
         }
-        
+
         IssueDB::storeIssue($this);
         $this->new = false;
     }
@@ -197,7 +192,7 @@ class Issue {
         $this->priority = $data['priority'];
         $this->file = ($data['range_id'] == '') ? FALSE : TRUE;
         if ($this->file) {
-            $this->folder_id = $data['folder_id'];      
+            $this->folder_id = $data['folder_id'];
         }
         $this->new = false;
 
@@ -263,10 +258,10 @@ class Issue {
         return $temp;
     }
 
-  /* * * * * * * * * * * * * * * * * * * * 
-     * * S T A T I C   F U N C T I O N S * * 
+  /* * * * * * * * * * * * * * * * * * * *
+     * * S T A T I C   F U N C T I O N S * *
    * * * * * * * * * * * * * * * * * * * */
-     
+
     function isIssue($issue_id) {
         return IssueDB::isIssue($issue_id);
     }

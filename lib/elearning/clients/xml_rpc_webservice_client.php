@@ -8,6 +8,8 @@ require_once __DIR__ . '/webservice_client.php';
 
 class XML_RPC_WebserviceClient extends WebserviceClient
 {
+    private $client;
+
     public function __construct($webservice_url)
     {
         $this->client = new xmlrpc_client($webservice_url);
@@ -28,6 +30,7 @@ class XML_RPC_WebserviceClient extends WebserviceClient
         }
 
         $xmlrpc_return = $this->client->send(new xmlrpcmsg($method_name, $xmlrpc_args), 300);
-        return $xmlrpc_return->value();
+        $xmlrpc_result = $xmlrpc_return->value();
+        return $xmlrpc_result;
     }
 }

@@ -24,9 +24,8 @@
 
 class CalendarWeekView extends CalendarView
 {
-    protected $days       = [1,2,3,4,5];
-    protected static $day_names  = ["Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"];
-    
+    protected $days = [1,2,3,4,5];
+    protected $context;
 
 
     /**
@@ -64,7 +63,7 @@ class CalendarWeekView extends CalendarView
             $entry_column->groupEntries();
         }
     }
-    
+
     /* * * * * * * * * * * * * * *
      * * *   G E T T E R S   * * *
      * * * * * * * * * * * * * * */

@@ -46,7 +46,6 @@ class ExternElementLinkInternSimple extends ExternElement {
 
     var $attributes = ["font_size", "font_face", "font_color", "font_class", "font_style",
             "a_class", "a_style", "config", "srilink", "externlink"];
-    var $link_module_type;
 
     /**
     * Constructor

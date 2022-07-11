@@ -103,6 +103,8 @@ class TreeView {
     * @var  boolean $use_aging
     */
     var $use_aging = false;
+    var $pic_open;
+    var $pic_close;
 
     /**
     * constructor

@@ -9,6 +9,8 @@ namespace RESTAPI;
  */
 class RouterHalt extends \Exception
 {
+    public $response;
+
     public function __construct($response)
     {
         parent::__construct();

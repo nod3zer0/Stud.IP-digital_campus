@@ -4,14 +4,14 @@ require_once 'lib/classes/searchtypes/SQLSearch.class.php';
 
 class MvvQuickSearch extends SQLSearch
 {
-    
     private $qs_name;
-    
+    protected $zusatz;
+
     public function __construct($query, $title = '', $avatarLike = '')
     {
         parent::__construct($query, $title, $avatarLike);
     }
-    
+
     public function getResults($input, $contextual_data = [],
             $limit = PHP_INT_MAX, $offset = 0)
     {
@@ -39,18 +39,18 @@ class MvvQuickSearch extends SQLSearch
         }
         return $results;
     }
-    
-    public function getAvatarImageTag($id, $size = Avatar::SMALL, $options = []) 
+
+    public function getAvatarImageTag($id, $size = Avatar::SMALL, $options = [])
     {
         if (!$id) {
             return $this->zusatz;
         }
         return parent::getAvatarImageTag($id, $size = Avatar::SMALL, $options);
     }
-    
+
     public function setQsName($qs_name)
     {
         $this->qs_name = $qs_name;
     }
-    
+
 }

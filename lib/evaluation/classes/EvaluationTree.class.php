@@ -49,20 +49,22 @@ class EvaluationTree extends TreeAbstract {
   * @var      object Evaluation $eval
   */
   var $eval;
-  
+
  /**
   * Holds the Evaluation ID
   * @access   public
   * @var      string $evalID
   */
   var $evalID;
-  
+
  /**
   * Holds the eval constructor load mode
   * @access   public
   * @var      integer $load_mode
   */
   var $load_mode;
+
+  var $root_content;
 
 # ============================================================ end: variables #
 
@@ -74,13 +76,13 @@ class EvaluationTree extends TreeAbstract {
     * @param    array  the eval's ID (optional - if not given, it must be in $_REQUEST).
     */
   function __construct( $args ) {
-      
-      
+
+
       if (isset($args['evalID']))
         $this->evalID = $args['evalID'];
       else
         $this->evalID = Request::option("evalID");
-      
+
       $this->load_mode = ($args['load_mode'] ? $args['load_mode'] : EVAL_LOAD_NO_CHILDREN);
       if (empty($this->evalID)){
       print _("Fehler in EvaluationTree: Es wurde keine evalID übergeben");
@@ -120,10 +122,10 @@ class EvaluationTree extends TreeAbstract {
       /* <---------------------------------------- */
   }
 
-  
+
   /**
    * initialize the sub-groups.
-   * 
+   *
    * @access  private
    * @param   object EvaluationGroup  the current group to be initialized.
    */
@@ -145,7 +147,7 @@ class EvaluationTree extends TreeAbstract {
             $group->getTitle(), $group->getPosition() );
 
   }
-  
+
   function &getGroupObject($item_id, $renew = false){
       if (is_object($this->tree_data[$item_id]['object'])){
           if ($renew) $this->recursiveInit(new EvaluationGroup($item_id,null,$this->load_mode));

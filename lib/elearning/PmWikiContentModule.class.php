@@ -28,6 +28,10 @@
 
 class PmWikiContentModule extends ContentModule
 {
+    public $link;
+    public $client;
+    public $chdate;
+    public $accepted_users;
 
     /**
     * constructor

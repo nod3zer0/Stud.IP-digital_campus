@@ -4,6 +4,9 @@ namespace Studip\Activity;
 
 class CoursewareContext extends Context
 {
+    protected $courseware;
+    protected $context;
+    protected $range_id;
 
     public function __construct($courseware, $observer)
     {

@@ -79,7 +79,7 @@ define ("EVALEXPORT_EXTENSION", "csv");
  */
 class EvaluationExportManagerCSV extends EvaluationExportManager {
 # Define all required variables ============================================= #
-
+    var $evalquestions_residual = [];
 # ============================================================ end: variables #
 
 

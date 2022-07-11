@@ -85,7 +85,7 @@ class BASELibrarySearch extends LibrarySearch
             $query_string .= sprintf('%1$s:(%2$s)', $key, $value);
         }
 
-        $query_parameters = $this->additional_query_parameters;
+        $query_parameters = [];
         $query_parameters['func'] = 'PerformSearch';
         $query_parameters['coll'] = $this->settings['collection']
                                   ? $this->settings['collection']

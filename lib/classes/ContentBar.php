@@ -13,7 +13,7 @@ class ContentBar
 {
 
     public $infoText = '';
-    public $iconShape = '';
+    public $icon = '';
     public $toc = null;
     /**
      * ContentBar constructor.

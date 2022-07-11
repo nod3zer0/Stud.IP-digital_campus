@@ -34,6 +34,10 @@ require_once 'clients/webservice_client.php';
 
 class PmWikiConnectedCMS extends ConnectedCMS
 {
+    public $client;
+    public $api_key;
+    public $field_script;
+
     function __construct($cms)
     {
         parent::__construct($cms);
@@ -43,7 +47,7 @@ class PmWikiConnectedCMS extends ConnectedCMS
 
         $this->api_key = $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['soap_data']['api-key'];
     }
-    
+
     function init($cms)
     {
         parent::init($cms);
@@ -62,20 +66,20 @@ class PmWikiConnectedCMS extends ConnectedCMS
     function searchContentModules($key)
     {
         $fields_found = $this->client->call("search_content_modules", $args = [
-                $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['soap_data']['api-key'], 
-                $key]); 
+                $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['soap_data']['api-key'],
+                $key]);
 
         $result = [];
 
         foreach($fields_found as $field)
         {
 
-            $result[$field['field_id']] = [    'ref_id'            => $field['field_id'], 
+            $result[$field['field_id']] = [    'ref_id'            => $field['field_id'],
                                                                                         'type'              => $field['field_type'],
                                                                                         'obj_id'            => $field_id,
                                                                                         'create_date' => $field['create_date'],
                                                                                         'last_update' => $field['change_date'],
-                                                                                        'title'             => $field['field_title'], 
+                                                                                        'title'             => $field['field_title'],
                                                                                         'description' => $field['field_description']];
         }
         return $result;

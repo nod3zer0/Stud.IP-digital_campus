@@ -47,6 +47,9 @@ define("INSTANCEOF_DATABASEOBJECT", "DatabaseObject");
  */
 class DatabaseObject extends AuthorObject
 {
+    public $authorID;
+    public $objectID;
+    public $rangeID;
 
 # Define constructor and destructor ========================================= #
     /**
