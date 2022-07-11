@@ -99,7 +99,8 @@ class MultiDimArrayObject extends StudipArrayObject
     {
         $new_value = $this->recursiveArrayToArrayObjects($value);
         if (is_array($new_value)) {
-            $new_value = new static($new_value, $this->getFlags(), $this->getIteratorClass());
+            $class = get_called_class();
+            $new_value = new $class($new_value, $this->getFlags(), $this->getIteratorClass());
         }
         if (is_null($key)) {
             return $this->storage[] = $new_value;
@@ -117,7 +118,8 @@ class MultiDimArrayObject extends StudipArrayObject
             foreach ($data as $key => $value) {
                 $new_value = $this->recursiveArrayToArrayObjects($value);
                 if (is_array($new_value)) {
-                    $new_data[$key] = new static($new_value, $this->getFlags(), $this->getIteratorClass());
+                    $class = get_called_class();
+                    $new_data[$key] = new $class($new_value, $this->getFlags(), $this->getIteratorClass());
                 } else {
                     $new_data[$key] = $value;
                 }

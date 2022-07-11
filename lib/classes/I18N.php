@@ -66,7 +66,7 @@ class I18N
      * @param array_merge           $attributes Additional variables for the
      *                                          element
      */
-    protected function __construct($template, $name, $value, array $attributes)
+    final protected function __construct($template, $name, $value, array $attributes)
     {
         $this->template = $GLOBALS['template_factory']->open($template);
         $this->name     = $name;

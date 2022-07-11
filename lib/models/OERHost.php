@@ -21,7 +21,7 @@ class OERHost extends OERIdentity
             }
             return $host;
         } else {
-            $host = new static();
+            $host = new self();
             $host['name'] = Config::get()->UNI_NAME_CLEAN;
             $host['url'] = $GLOBALS['oer_PREFERRED_URI'] ?: $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/";
             $host['last_updated'] = time();

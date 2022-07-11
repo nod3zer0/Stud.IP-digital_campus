@@ -305,7 +305,7 @@ class StudipNews extends SimpleORMap implements PrivacyObject
                     $objects[$area][$id]['title'] = _('Ankündigungen auf der Stud.IP Startseite');
                 }
                 if ($as_objects) {
-                    $objects[$area][$id]['object'] = new static();
+                    $objects[$area][$id]['object'] = new self();
                     $objects[$area][$id]['object']->setData($result, true);
                     $objects[$area][$id]['object']->setNew(false);
                 }
@@ -439,25 +439,6 @@ class StudipNews extends SimpleORMap implements PrivacyObject
             }
             return $killed;
         }
-    }
-
-    /**
-     * DEPRECATED
-     */
-    public static function TouchNews($news_id, $touch_stamp = null)
-    {
-        $ret = false;
-        if (!$touch_stamp) {
-            $touch_stamp = time();
-        }
-        $news = new static($news_id);
-        if (!$news->isNew()) {
-            $news->date = strtotime('today 0:00:00', $touch_stamp);
-            if (!$news->store()) {
-                $news->triggerChdate();
-            }
-        }
-        return $ret;
     }
 
     public static function DeleteNewsRanges($range_id)

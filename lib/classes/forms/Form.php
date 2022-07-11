@@ -49,6 +49,15 @@ class Form extends Part
         return $form;
     }
 
+    /**
+     * Finalized constructor.
+     *
+     * @param mixed[] ...$parts
+     */
+    final public function __construct(...$parts)
+    {
+        parent::__construct($parts);
+    }
 
     /**
      * Adds a new Fieldset to the Form object with the SORM object's fields as

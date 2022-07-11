@@ -88,7 +88,7 @@ abstract class Input
      * @param $value
      * @param $attributes
      */
-    public function __construct($name, $title, $value, array $attributes = [])
+    final public function __construct($name, $title, $value, array $attributes = [])
     {
         $this->name = $name;
         $this->title = $title;

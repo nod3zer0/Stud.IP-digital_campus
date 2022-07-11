@@ -15,7 +15,6 @@ namespace Studip;
  */
 abstract class Interactable
 {
-
     public $label, $attributes;
 
     /**
@@ -107,7 +106,7 @@ abstract class Interactable
      * @param string $trait      the specific trait of the current element
      * @param array  $attributes the attributes of the button element
      *
-     * @return Interactable a Interactable element
+     * @return Interactable element
      */
     public static function create($label = NULL, $trait = NULL, $attributes = [])
     {

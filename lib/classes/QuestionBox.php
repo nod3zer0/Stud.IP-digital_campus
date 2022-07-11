@@ -60,7 +60,7 @@ class QuestionBox implements LayoutMessage
      *
      * @param string $question The question that should be confirmed
      */
-    protected function __construct($question, $accept_url, $decline_url)
+    final protected function __construct($question, $accept_url, $decline_url)
     {
         $this->question = $question;
         $this->setAcceptURL($accept_url);

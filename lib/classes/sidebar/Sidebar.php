@@ -18,10 +18,8 @@ class Sidebar extends WidgetContainer
     /**
      * Constructor, tries to automagically set the sidebar's title.
      */
-    public function __construct()
+    protected function __construct()
     {
-        parent::__construct();
-
         $this->setTitle();
     }
 

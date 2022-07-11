@@ -9,7 +9,7 @@ class OERDownloadcounter extends SimpleORMap
 
     public static function addCounter($material_id)
     {
-        $counter = new static();
+        $counter = new self();
         $counter['material_id'] = $material_id;
         if (Config::get()->oer_GEOLOCATOR_API) {
             list($url, $lon, $lat) = explode(" ", Config::get()->oer_GEOLOCATOR_API);

@@ -78,7 +78,7 @@ class RangeConfig extends Config
      * @param string $range_id
      * @param array $data
      */
-    public function __construct($range_id = null, $data = null)
+    final public function __construct($range_id = null, $data = null)
     {
         $this->range_id = $range_id;
         if ($range_id !== null || $data !== null) {

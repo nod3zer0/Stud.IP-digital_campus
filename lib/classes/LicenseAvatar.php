@@ -25,7 +25,7 @@ class LicenseAvatar extends Avatar
      */
     public static function getAvatar($id)
     {
-        return new static($id);
+        return new self($id);
     }
 
     /**
@@ -35,7 +35,7 @@ class LicenseAvatar extends Avatar
      */
     public static function getNobody()
     {
-        return new static('nobody');
+        return new self('nobody');
     }
 
     /**

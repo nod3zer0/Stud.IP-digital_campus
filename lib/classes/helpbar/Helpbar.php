@@ -17,10 +17,8 @@ class Helpbar extends WidgetContainer
     /**
      * Constructs the helpbar
      */
-    public function __construct()
+    protected function __construct()
     {
-        parent::__construct();
-
         $this->help_admin = isset($GLOBALS['perm']) && ($GLOBALS['perm']->have_perm('root') || RolePersistence::isAssignedRole($GLOBALS['user']->id, 'Hilfe-Administrator(in)'));
     }
 

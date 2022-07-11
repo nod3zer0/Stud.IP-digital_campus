@@ -50,7 +50,7 @@ class Token extends SimpleORMap
      */
     public static function create($duration = 30, $user_id = null)
     {
-        $token = new static();
+        $token = new self();
         $token->user_id    = $user_id ?? $GLOBALS['user']->id;
         $token->expiration = strtotime("+{$duration} seconds");
         $token->store();

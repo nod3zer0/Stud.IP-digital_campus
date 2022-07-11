@@ -458,7 +458,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public static function create($data)
     {
-        $record = new static();
+        $class = get_called_class();
+        $record = new $class();
         $record->setData($data, false);
         if ($record->store()) {
             return $record;
@@ -653,7 +654,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $sql = "WHERE {$sql}";
         }
 
-        $record = new static();
+        $class = get_called_class();
+        $record = new $class();
         $record->setNew(false);
 
         $db_table = static::config('db_table');

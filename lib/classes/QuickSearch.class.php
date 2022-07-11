@@ -174,7 +174,7 @@ class QuickSearch
      *
      * @return void
      */
-    public function __construct($name, $search = NULL)
+    final public function __construct($name, $search = NULL)
     {
         self::$count_QS++;
         $this->name = $name;

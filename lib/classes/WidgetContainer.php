@@ -10,6 +10,14 @@
 abstract class WidgetContainer
 {
     /**
+     * Protected constructor to ensure that the singleton Get() method is always
+     * used.
+     *
+     * @see WidgetContainer::Get
+     */
+    abstract protected function __construct();
+
+    /**
      * The singleton instance of the container
      */
     protected static $instances = null;
@@ -28,16 +36,6 @@ abstract class WidgetContainer
             static::$instances[$class] = new static;
         }
         return static::$instances[$class];
-    }
-
-    /**
-     * Private constructor to ensure that the singleton Get() method is always
-     * used.
-     *
-     * @see WidgetContainer::Get
-     */
-    protected function __construct()
-    {
     }
 
     /**
