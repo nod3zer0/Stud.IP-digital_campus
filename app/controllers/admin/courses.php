@@ -487,7 +487,8 @@ class Admin_CoursesController extends AuthenticatedController
 
             $data = [];
             foreach ($courses as $course_id => $course) {
-                $sem = new Seminar(Course::buildExisting($course));
+                $course_model = Course::buildExisting($course);
+                $sem = new Seminar($course_model);
                 $row = [];
 
                 if (in_array('number', $filter_config)) {
@@ -541,7 +542,7 @@ class Admin_CoursesController extends AuthenticatedController
                 }
 
                 if (in_array('semester', $filter_config)) {
-                    $row['semester'] = $course->semester_text;
+                    $row['semester'] = $course_model->getTextualSemester();
                 }
 
                 if (in_array('institute', $filter_config)) {
