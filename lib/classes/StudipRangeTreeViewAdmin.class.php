@@ -652,6 +652,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function getEditItemContent(){
+        $content = '';
         ob_start();
         ?>
         <div style="margin: 0px 5%">
@@ -733,6 +734,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
 
     function getEditCatContent($item_id, $cat_snap)
     {
+        $content = '';
         ob_start();
         ?>
         <form name="cat_form_<?= $item_id ?>" method="post" class="default"

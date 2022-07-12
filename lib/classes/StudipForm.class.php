@@ -259,6 +259,7 @@ class StudipForm {
     {
         $date_values = explode("-", $default); //YYYY-MM-DD
         $value = '';
+        $ret = '';
         if(count($date_values)==3){
             $value = $date_values[2]. '.' . $date_values[1]. '.' .$date_values[0];
         }

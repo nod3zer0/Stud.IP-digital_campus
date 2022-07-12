@@ -17,7 +17,7 @@ class MvvI18N extends I18N
      */
     public function checkPermission(ModuleManagementModel $object, $perm = MvvPerm::PERM_WRITE)
     {
-        $may_edit = MvvPerm::get($object)->haveFieldPerm($field ?: $this->name, $perm);
+        $may_edit = MvvPerm::get($object)->haveFieldPerm($this->name, $perm);
         return $this->setReadOnly(!$may_edit);
     }
 }

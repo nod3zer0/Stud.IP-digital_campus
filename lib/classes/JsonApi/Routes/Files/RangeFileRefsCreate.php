@@ -41,7 +41,7 @@ class RangeFileRefsCreate extends JsonApiController
 
         $json = $this->validate($request);
 
-        if (!$parent = $this->getRelationshipParent($json)) {
+        if (!$parentFolder = $this->getRelationshipParent($json)) {
             throw new RecordNotFoundException('Bad `parent` folder.');
         }
         if ($parentFolder->range_id !== $range->id) {

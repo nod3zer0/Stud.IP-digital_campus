@@ -289,6 +289,7 @@ class TreeView {
     * @param    string  $item_id
     */
     function printItemDetails($item_id){
+        $level_output = '';
         if (!$this->tree->hasKids($item_id) || !$this->open_ranges[$item_id] || $item_id == $this->start_item_id)
             $level_output = "<td class=\"blank\" background=\"" . Assets::image_path('forumleer.gif') . "\">"
                           . Assets::img('forumleer.gif', ['size' => '10@20'])
@@ -326,7 +327,6 @@ class TreeView {
         echo "<td class=\"printcontent\" width=\"100%\"><br>";
         echo $this->getItemContent($item_id);
         echo "<br></td></tr></table>";
-        return;
     }
 
     /**

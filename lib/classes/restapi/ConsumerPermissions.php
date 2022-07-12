@@ -195,14 +195,14 @@ class ConsumerPermissions
                   VALUES (:route, IFNULL(:consumer_id, 'global'), :method, :granted)
                   ON DUPLICATE KEY UPDATE granted = VALUES(granted)";
         $statement = DBManager::get()->prepare($query);
-        $statement->bindParam(':route', $route_id);
         $statement->bindValue(':consumer_id', $this->consumer_id);
-        $statement->bindParam(':method', $method);
-        $statement->bindParam(':granted', $granted);
 
         foreach ($this->permissions as $route_id => $methods) {
+            $statement->bindParam(':route', $route_id);
             foreach ($methods as $method => $granted) {
+                $statement->bindParam(':method', $method);
                 $granted = (int) !empty($granted);
+                $statement->bindParam(':granted', $granted);
                 $result = $result && $statement->execute();
             }
         }

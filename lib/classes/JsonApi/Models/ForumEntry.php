@@ -125,7 +125,6 @@ class ForumEntry extends \SimpleORMap
 
         $stmt_four = \DBManager::get()->prepare('DELETE FROM forum_categories_entries
             WHERE topic_id = ?');
-        $stmt_four->bindParam(':ids', $ids, \StudipPDO::PARAM_ARRAY);
         $stmt_four->execute([$topicId]);
 
         return $stmt_one && $stmt_two && $stmt_three && $stmt_four;

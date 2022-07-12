@@ -397,7 +397,7 @@ class Smiley
             'update'    => 0
         ];
 
-        if ($filename === null) {
+        if ($smiley_file === null) {
             $files = glob(self::getFilename('*'));
         } else {
             $files = [$smiley_file];
