@@ -36,12 +36,7 @@ class LinkButton extends Interactable
     public function __toString()
     {
         // add "button" to attribute @class
-        @$this->attributes["class"] .= " button";
-
-        // add tabindex of zero to make buttons accesible when tabbing
-        if (!isset($this->attributes['tabindex'])) {
-            $this->attributes['tabindex'] = '0';
-        }
+        $this->attributes['class'] .= ' button';
 
         $attributes = [];
         ksort($this->attributes);
