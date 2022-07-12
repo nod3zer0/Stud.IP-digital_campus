@@ -13,7 +13,7 @@ function getScrollableParents(element, menu_width, menu_height) {
     const offset     = $(element).offset();
     const breakpoint = determineBreakpoint(element);
 
-    var elements = [];
+    let elements = [];
     $(element).parents().each(function () {
         // Stop at breakpoint
         if ($(this).is(breakpoint)) {
@@ -110,9 +110,6 @@ class ActionMenu {
             throw new Error('Cannot create ActionMenu. Use ActionMenu.create()!');
         }
 
-        const offset     = $(element).offset();
-        const height     = $('.action-menu-content').height();
-        const width      = $('.action-menu-content').width();
         const breakpoint = determineBreakpoint(element);
 
         this.element = $(element);
@@ -120,13 +117,12 @@ class ActionMenu {
         this.content = $('.action-menu-content', element);
         this.is_reversed = reversed;
         this.is_open = false;
-
         const menu_width  = this.content.width();
         const menu_height = this.content.height();
 
         // Reposition the menu?
         if (position) {
-            var parents = getScrollableParents(this.element, menu_width, menu_height);
+            let parents = getScrollableParents(this.element, menu_width, menu_height);
             if (parents.length > 0) {
                 this.menu = $('<div class="action-menu-wrapper">').append(this.content.remove());
                 $('.action-menu-icon', element).clone().data('action-menu-element', element).prependTo(this.menu);
@@ -138,7 +134,7 @@ class ActionMenu {
                 // Always add breakpoint
                 parents.push(breakpoint);
                 parents.forEach((parent, index) => {
-                    var data = $(parent).data('action-menu-scroll-data') || {
+                    let data = $(parent).data('action-menu-scroll-data') || {
                         menus: [],
                         left: parent.scrollLeft,
                         top: parent.scrollTop
@@ -153,7 +149,6 @@ class ActionMenu {
                 });
             }
         }
-
         this.update();
     }
 
@@ -185,6 +180,10 @@ class ActionMenu {
         this.is_open = state === null ? !this.is_open : state;
 
         this.update();
+
+        if (this.is_open) {
+            this.menu.find('.action-menu-icon').focus();
+        }
     }
 
     /**
@@ -192,10 +191,10 @@ class ActionMenu {
      */
     update() {
         this.element.toggleClass('is-open', this.is_open);
-
         this.menu.toggleClass('is-open', this.is_open);
         this.menu.toggleClass('is-reversed', this.is_reversed);
-        this.menu.find('.action-menu-icon').attr('aria-expanded', this.is_open ? 'true' : 'false');
+        this.menu.find('.action-menu-icon')
+            .attr('aria-expanded', this.is_open ? 'true' : 'false')
     }
 
     /**
@@ -207,11 +206,11 @@ class ActionMenu {
         //duplicate the functionality in the done() handler.
         //(code copied from copyable_link.js and modified)
         (new Promise((resolve, reject) => {
-            var confirmation = $('<div class="js-action-confirmation">');
+            let confirmation = $('<div class="js-action-confirmation">');
             confirmation.text = jQuery(element).data('confirmation_text');
             confirmation.insertBefore(element);
             jQuery(element).parent().addClass('js-action-confirm-animation');
-            var timeout = setTimeout(() => {
+            let timeout = setTimeout(() => {
                 jQuery(element).parent().off('animationend');
                 resolve(confirmation);
             }, 1500);

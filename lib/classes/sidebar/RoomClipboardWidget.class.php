@@ -13,9 +13,6 @@ class RoomClipboardWidget extends ClipboardWidget
 {
     public function __construct()
     {
-        $all_classes = get_declared_classes();
-        $allowed_item_classes = [];
-
         parent::__construct(['Room']);
 
         $this->setTitle(_('Individuelle Raumgruppen'));
@@ -38,9 +35,11 @@ class RoomClipboardWidget extends ClipboardWidget
                 _('Raumgruppe buchen'),
                 URLHelper::getURL('dispatch.php/resources/booking/add/clipboard_CLIPBOARD_ID'),
                 Icon::create('link-intern'),
-                ['class' => 'room-clipboard-group-action',
-                 'data-show_in_dialog' => 'size=auto',
-                 'data-needs_items'=> '1']
+                [
+                    'class' => 'room-clipboard-group-action',
+                    'data-show_in_dialog' => 'size=auto',
+                    'data-needs_items '=> '1'
+                ]
             );
         }
         if (ResourceManager::userHasGlobalPermission($current_user, 'admin')) {
@@ -48,8 +47,10 @@ class RoomClipboardWidget extends ClipboardWidget
                 _('Berechtigungen für die gesamte Raumgruppe setzen'),
                 URLHelper::getURL('dispatch.php/resources/room_group/permissions/CLIPBOARD_ID'),
                 Icon::create('link-intern'),
-                ['class' => 'room-clipboard-group-action',
-                 'data-show_in_dialog' => '1']
+                [
+                    'class' => 'room-clipboard-group-action',
+                    'data-show_in_dialog' => '1'
+                ]
             );
         }
     }

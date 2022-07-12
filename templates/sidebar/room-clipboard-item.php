@@ -30,7 +30,7 @@ if (!$item) {
 ?>
 <tr class="<?= htmlReady($classes) ?>"
     data-range_id="<?= htmlReady($item['range_id']) ?>">
-    <td class="item-name">
+    <td>
         <label>
             <input type="checkbox"
                    name="selected_clipboard_items[]"
@@ -46,50 +46,30 @@ if (!$item) {
             <?= htmlReady($item['name']) ?>
         </label>
     </td>
-    <td class="item-actions">
-        <?
-        $actions = ActionMenu::get()->setContext($item['name'] ?: '');
-        $actions->addLink(
-            Room::getLinkForAction(
-                'show',
-                ($item ? $item['range_id'] : 'RANGE_ID')
-            ),
-            _('Info'),
-            Icon::create('info', 'clickable'),
-            [
-                'data-dialog' => '1'
-            ]
-        );
-        $actions->addLink(
-            Room::getLinkForAction(
-                'booking_plan',
-                ($item ? $item['range_id'] : 'RANGE_ID')
-            ),
-            _('Wochenbelegung'),
-            Icon::create('timetable', 'clickable'),
-            [
-                'target' => '_blank'
-            ]
-        );
-        $actions->addLink(
-            Room::getLinkForAction(
-                'semester_plan',
-                ($item ? $item['range_id'] : 'RANGE_ID')
-            ),
-            _('Semesterbelegung'),
-            Icon::create('timetable', 'clickable'),
-            [
-                'target' => '_blank'
-            ]
-        );
-        ?>
-        <span class="clipboard-item-actions-container">
-            <?= $actions->render() ?>
-        </span>
+    <td class="actions">
+        <a href="<?= Room::getLinkForAction('show', ($item ? $item['range_id'] : 'RANGE_ID')) ?>" data-dialog>
+            <?= Icon::create(
+                    'info',
+                    Icon::ROLE_CLICKABLE,
+                    [
+                        'title' => _('Rauminformationen'),
+                        'class' => 'text-bottom'
+                    ])?>
+        </a>
+        <a href="<?= Room::getLinkForAction('semester_plan', ($item ? $item['range_id'] : 'RANGE_ID')) ?>" target="_blank">
+            <?= Icon::create(
+                    'timetable',
+                    Icon::ROLE_CLICKABLE,
+                    [
+                        'title' => _('Semesterbelegung'),
+                        'class' => 'text-bottom'
+                    ]
+            )?>
+        </a>
         <? if (!$readonly): ?>
-            <?= Icon::create('trash', 'clickable')->asImg(
-                '20px',
+            <?= Icon::create('trash')->asInput(
                 [
+                    'data-confirm-message' => _('Sind Sie sicher?'),
                     'class' => 'text-bottom clipboard-item-remove-button'
                 ]
             ) ?>

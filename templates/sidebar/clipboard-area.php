@@ -17,49 +17,31 @@
         <? if (!$readonly): ?>
 
             <input class="clipboard-name invisible" type="text" name="clipboard_name" value="">
-
-            <?= Icon::create('edit', 'clickable')->asImg(
-                '20px',
+            <?= Icon::create('edit')->asInput(
                 [
-                    'class' => 'middle clipboard-edit-button'
-                           . (
-                               $clipboards ? '' : ' invisible'
-                           ),
-                    'onClick' => "STUDIP.Clipboard.toggleEditButtons('"
-                             . htmlReady($clipboard_widget_id)
-                             . "');"
+                    'data-widget-id' => $clipboard_widget_id,
+                    'class' => 'middle clipboard-edit-button' . ($clipboards ? '' : ' invisible')
                 ]
             ) ?>
 
-            <?= Icon::create('accept', 'clickable')->asImg(
-                '20px',
+            <?= Icon::create('accept')->asInput(
                 [
                     'class' => 'middle clipboard-edit-accept invisible',
-                    'onClick' => "STUDIP.Clipboard.rename(
-                        {
-                            'clipboard_id': '" . htmlReady($selected_clipboard_id) ."',
-                            'widget_id': '" . htmlReady($clipboard_widget_id) . "'
-                        });"
+                    'data-widget-id' => $clipboard_widget_id
                 ]
             ) ?>
 
-            <?= Icon::create('decline', 'clickable')->asImg(
-                '20px',
+            <?= Icon::create('decline')->asInput(
                 [
+                    'data-widget-id' => $clipboard_widget_id,
                     'class' => 'middle clipboard-edit-cancel invisible',
-                    'onClick' => "STUDIP.Clipboard.toggleEditButtons('"
-                             . htmlReady($clipboard_widget_id)
-                             . "');"
                 ]
             ) ?>
 
-            <?= Icon::create('trash', 'clickable')->asImg(
-                '20px',
+            <?= Icon::create('trash')->asInput(
                 [
-                    'class' => 'middle clipboard-remove-button'
-                           . (
-                               $clipboards ? '' : ' invisible'
-                           )
+                    'class' => 'middle clipboard-remove-button' . ($clipboards ? '' : ' invisible'),
+                    'data-confirm-message' => _('Sind Sie sicher?')
                 ]
             ) ?>
         <? endif ?>
@@ -72,6 +54,9 @@
                                                ? 'invisible'
                                                : '' ?>"
                        data-id="<?= htmlReady($clipboard->id) ?>">
+                    <colgroup>
+                        <col style="width: 70%">
+                    </colgroup>
                     <? $items = $clipboard->getContent(false) ?>
                     <? if ($items): ?>
                         <? foreach ($items as $item): ?>
@@ -98,11 +83,11 @@
                                                             ? 'draggable'
                                                             : '' ?>"
                                     data-range_id="<?= htmlReady($item['range_id']) ?>">
-                                    <td class="item-name">
+                                    <td>
                                         <label>
                                             <input type="checkbox"
                                                    name="selected_clipboard_items[]"
-                                                   title="<?= _('Diesen Eintrag auswählen.') ?>"
+                                                   title="<?= sprintf(_('%s auswählen.'), htmlReady($item['name'])) ?>"
                                                    value="<?= htmlReady($item['id']) ?>"
                                                    <?= in_array($item['id'], $selected_clipboard_items)
                                                      ? 'checked="checked"'
@@ -114,10 +99,11 @@
                                         </label>
                                     </td>
                                     <? if (!$readonly): ?>
-                                        <td class="item-actions">
-                                        <?= Icon::create('trash', 'clickable')->asImg(
-                                            '16px',
+                                        <td class="actions">
+                                        <?= Icon::create('trash')->asInput(
                                             [
+                                                'title' => sprintf(_('%s löschen.'), htmlReady($item['name'])),
+                                                'data-confirm-message' => _('Sind Sie sicher?'),
                                                 'class' => 'text-bottom clipboard-item-remove-button'
                                             ]
                                         ) ?>
@@ -154,8 +140,7 @@
                             </td>
                             <? if (!$readonly): ?>
                                 <td class="item-actions">
-                                    <?= Icon::create('trash', 'clickable')->asImg(
-                                        '16px',
+                                    <?= Icon::create('trash')->asInput(
                                         [
                                             'class' => 'text-bottom clipboard-item-remove-button'
                                         ]
@@ -170,6 +155,9 @@
         <table id="Clipboard_CLIPBOARD_ID"
                class="clipboard-area clipboard-template invisible"
                data-id="CLIPBOARD_ID">
+            <colgroup>
+                <col style="width: 80%">
+            </colgroup>
             <tr class="empty-clipboard-message">
                 <td>
                 <?= htmlReady($empty_clipboard_string) ?>
@@ -191,12 +179,13 @@
                     data-range_id="">
                     <td>
                         <input type="checkbox"
-                               name="clipboard_selected_items[]"
+                               name="selected_clipboard_items[]"
+                               title="<?= _('Diesen Eintrag auswählen.') ?>"
                                value="">
+                        <label></label>
                     </td>
                     <td>
-                        <?= Icon::create('trash', 'clickable')->asImg(
-                            '16px',
+                        <?= Icon::create('trash')->asInput(
                             [
                                 'class' => 'text-bottom clipboard-item-remove-button'
                             ]

@@ -968,7 +968,7 @@ STUDIP.domReady(function() {
                 }
             }
 
-            var url_path = jQuery(event.target).data('url_path');
+            var url_path = jQuery(event.target).attr('href');
             url_path = url_path.replace(/CLIPBOARD_ID/, clipboard_id);
 
             var complete_url = STUDIP.URLHelper.getURL(

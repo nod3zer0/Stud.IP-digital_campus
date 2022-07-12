@@ -14,11 +14,8 @@
 
     <ul class="widget-list widget-links invisible">
     <? foreach ($elements as $index => $element): ?>
-        <li id="<?= htmlReady('link-' . md5($element->url)) ?>" <?= $element->icon ? 'style="' . $element->icon->asCSS() .'"' : '' ?>>
-        <a <?= arrayToHtmlAttributes($element->attributes) ?>
-            data-url_path = "<?= htmlReady($element->url) ?>">
-            <?= htmlReady($element->label) ?>
-        </a>
+        <li id="<?= htmlReady($index) ?>" <?= $element->icon ? 'style="' . $element->icon->asCSS() .'"' : '' ?>>
+            <?= $element->render() ?>
         </li>
     <? endforeach; ?>
     </ul>
@@ -39,7 +36,7 @@
             <?= tooltipIcon(_('Geben Sie bitte einen Namen ein und klicken Sie auf das Plus-Symbol um eine neue Raumgruppe zu erstellen.')) ?>
             <input type="text" name="name" placeholder="<?= _('Name der neuen Raumgruppe') ?>">
 
-            <?= Icon::create('add', 'clickable',
+            <?= Icon::create('add', Icon::ROLE_CLICKABLE,
                 [   'title' => _('Hinzufügen')])->asInput([
                     'name'   => 'save',
                     'id' => 'add-clipboard-button',

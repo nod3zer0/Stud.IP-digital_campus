@@ -22,7 +22,7 @@
     border: @drag_and_drop_border;
     color: @base-color;
     font-weight: bold;
-    font-size: 16px;
+    font-size: @font-size-large;
     background-color: @white;
 }
 
@@ -35,7 +35,6 @@ div.clipboard-area-container {
 table.clipboard-area {
     width: 100%;
     border: 1px solid @content-color-40;
-    min-height: 8em;
     height: 8em;
     padding: 0.25em;
 }
@@ -43,21 +42,6 @@ table.clipboard-area {
 table.clipboard-area tr.empty-clipboard-message > td {
     padding: 0.5em;
     text-align: center;
-}
-
-.clipboard-item {
-
-    > td.item-name, > td.item-actions {
-        vertical-align: top;
-    }
-
-    > .item-name {
-        width: 80%;
-    }
-
-    > .item-actions {
-        width: 20%;
-    }
 }
 
 .clipboard-widget {

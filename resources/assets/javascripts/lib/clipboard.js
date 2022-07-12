@@ -1,24 +1,21 @@
 import {$gettext} from './gettext';
 
 const Clipboard = {
-
-    current_delete_icon: null,
-
     switchClipboard: function(event) {
-        var select = jQuery(event.target);
+        let select = jQuery(event.target);
 
         if (!select) {
             return;
         }
 
-        var selected_clipboard_id = jQuery(select).val();
+        let selected_clipboard_id = jQuery(select).val();
 
         //Make all clipboard areas of that clipboard invisible, except the one
         //that has been selected:
-        var clipboard_areas = jQuery(select).parent().parent().find('.clipboard-area');
+        let clipboard_areas = jQuery(select).parent().parent().find('.clipboard-area');
 
-        for (var clipboard of clipboard_areas) {
-            var current_clipboard_id = jQuery(clipboard).attr('data-id');
+        for (let clipboard of clipboard_areas) {
+            let current_clipboard_id = jQuery(clipboard).attr('data-id');
 
             if (current_clipboard_id) {
                 if (current_clipboard_id === selected_clipboard_id) {
@@ -40,15 +37,15 @@ const Clipboard = {
             return false;
         }
 
-        event.preventDefault();
+
 
         //Check if a name is entered in the form:
-        var name_input = jQuery(event.target).find('input[type="text"][name="name"]');
+        let name_input = jQuery(event.target).find('input[type="text"][name="name"]');
         if (!name_input) {
             //Something is wrong with the HTML:
             return false;
         }
-        var name = jQuery(name_input).val().trim();
+        let name = jQuery(name_input).val().trim();
         if (!name) {
             //The name field is empty. Why send an empty field?
             return false;
@@ -70,13 +67,13 @@ const Clipboard = {
         }
 
         //Get the clipboard template:
-        var widget_node = jQuery('#ClipboardWidget_' + data['widget_id'])[0];
+        let widget_node = jQuery('#ClipboardWidget_' + data['widget_id'])[0];
         if (!widget_node) {
             //No widget? No clipboard.
             return;
         }
 
-        var clipboard_template = jQuery(widget_node).find(
+        let clipboard_template = jQuery(widget_node).find(
             '.clipboard-area.clipboard-template'
         )[0];
 
@@ -85,23 +82,23 @@ const Clipboard = {
             return;
         }
 
-        var clipboard_node = jQuery(clipboard_template).clone();
+        let clipboard_node = jQuery(clipboard_template).clone();
 
         //Remove classes:
         jQuery(clipboard_node).removeClass('clipboard-template');
         jQuery(clipboard_node).removeClass('invisible');
 
-        var clipboard_html = jQuery('<div></div>').append(clipboard_node).html();
+        let clipboard_html = jQuery('<div></div>').append(clipboard_node).html();
 
         //Replace placeholders for CLIPBOARD_ID:
         clipboard_html = clipboard_html.replace(/CLIPBOARD_ID/g, data['id']);
 
         //Get the widget content element to append the clipboard:
-        var content_node = jQuery(widget_node).find('.sidebar-widget-content');
+        let content_node = jQuery(widget_node).find('.sidebar-widget-content');
 
         //Append the new clipboard's HTML code to the last clipboard:
-        var clipboards = jQuery(content_node).find('.clipboard-area');
-        var last_clipboard = undefined;
+        let clipboards = jQuery(content_node).find('.clipboard-area');
+        let last_clipboard = undefined;
         if (clipboards.length > 0) {
             last_clipboard = clipboards[clipboards.length -1];
         } else {
@@ -110,15 +107,15 @@ const Clipboard = {
         }
 
         //Add the select option:
-        var clipboard_selector = jQuery(widget_node).find('.clipboard-selector')[0];
+        let clipboard_selector = jQuery(widget_node).find('.clipboard-selector')[0];
         if (!clipboard_selector) {
             //Something is wrong with the HTML.
             return;
         }
-        var old_options = jQuery(clipboard_selector).find('option');
+        let old_options = jQuery(clipboard_selector).find('option');
         jQuery(old_options).removeAttr('selected');
 
-        var new_option = jQuery('<option></option>');
+        let new_option = jQuery('<option></option>');
         jQuery(new_option).val(data['id']);
         jQuery(new_option).text(data['name']);
         jQuery(new_option).attr('selected', 'selected');
@@ -153,10 +150,10 @@ const Clipboard = {
 
         event.preventDefault();
 
-        var range_id = jQuery(ui_element.helper).data('id');
-        var range_type = jQuery(ui_element.helper).data('range_type');
+        let range_id = jQuery(ui_element.helper).data('id');
+        let range_type = jQuery(ui_element.helper).data('range_type');
 
-        var clipboard = event.target;
+        let clipboard = event.target;
         if (!clipboard) {
             //An event without a target. Nothing to do here.
             return;
@@ -169,25 +166,24 @@ const Clipboard = {
         if (!event) {
             return;
         }
-        event.preventDefault();
 
-        var button = event.target;
+        let button = event.target;
         if (!button) {
             return;
         }
 
-        var clipboard_id = jQuery(button).data('clipboard_id');
-        var clipboard_widget = jQuery('#ClipboardWidget_' + clipboard_id)[0];
+        let clipboard_id = jQuery(button).data('clipboard_id');
+        let clipboard_widget = jQuery('#ClipboardWidget_' + clipboard_id)[0];
         if (!clipboard_widget) {
             return;
         }
-        var clipboard = jQuery(clipboard_widget).find('.clipboard-area:not(.invisible)')[0];
+        let clipboard = jQuery(clipboard_widget).find('.clipboard-area:not(.invisible)')[0];
         if (!clipboard) {
             return;
         }
 
-        var range_id = jQuery(button).data('range_id');
-        var range_type = jQuery(button).data('range_type');
+        let range_id = jQuery(button).data('range_id');
+        let range_type = jQuery(button).data('range_type');
 
         STUDIP.Clipboard.prepareAddingItem(clipboard, range_id, range_type);
         STUDIP.ActionMenu.confirmJSAction(event.target);
@@ -198,10 +194,10 @@ const Clipboard = {
             return false;
         }
 
-        var clipboard_id = clipboard.getAttribute('data-id');
-        var widget_id = jQuery(clipboard).parents('.clipboard-widget').data('widget_id');
+        let clipboard_id = clipboard.getAttribute('data-id');
+        let widget_id = jQuery(clipboard).parents('.clipboard-widget').data('widget_id');
 
-        var allowed_classes = clipboard.getAttribute('data-allowed_classes');
+        let allowed_classes = clipboard.getAttribute('data-allowed_classes');
         if (allowed_classes) {
             //A list of allowed classes is set. Check if the specified
             //range_type is in the list of allowed classes.
@@ -233,7 +229,7 @@ const Clipboard = {
         }
 
         //Check for duplicates:
-        var already_existing_entry = jQuery(clipboard).find(
+        let already_existing_entry = jQuery(clipboard).find(
             ".clipboard-item[data-range_id='" + range_id + "']"
         ).length > 0;
         if (already_existing_entry) {
@@ -251,7 +247,9 @@ const Clipboard = {
                     'widget_id': widget_id
                 }
             }
-        ).done(STUDIP.Clipboard.addDroppedItem);
+        ).done(function(data) {
+            STUDIP.Clipboard.addDroppedItem(data);
+        });
     },
 
     addDroppedItem: function(response_data) {
@@ -262,8 +260,8 @@ const Clipboard = {
             return;
         }
 
-        var widget = jQuery('#ClipboardWidget_' + response_data['widget_id']);
-        var clipboard_id = jQuery(widget).find(".clipboard-selector").val();
+        let widget = jQuery('#ClipboardWidget_' + response_data['widget_id']);
+        let clipboard_id = jQuery(widget).find(".clipboard-selector").val();
 
         if (!widget) {
             //The widget with the speicified widget-ID
@@ -271,7 +269,7 @@ const Clipboard = {
             return;
         }
 
-        var clipboard = jQuery(widget).find(
+        let clipboard = jQuery(widget).find(
             '.clipboard-area[data-id="' + clipboard_id + '"]'
         )[0];
         if (!clipboard) {
@@ -280,7 +278,7 @@ const Clipboard = {
         }
 
         //Check for duplicates:
-        var already_existing_entry = jQuery(clipboard).find(
+        let already_existing_entry = jQuery(clipboard).find(
             ".clipboard-item[data-range_id='" + response_data['range_id'] + "']"
         ).length > 0;
         if (already_existing_entry) {
@@ -288,14 +286,14 @@ const Clipboard = {
             return;
         }
 
-        var template = jQuery(clipboard).find('.clipboard-item-template')[0];
+        let template = jQuery(clipboard).find('.clipboard-item-template')[0];
         if (!template) {
             //What is the use of continuing when there is no template?
             return;
         }
 
-        var new_item_node = jQuery(template).clone();
-        var checkbox_id = "item_" + clipboard_id + "_" + response_data['range_type'] + "_" + response_data['range_id'];
+        let new_item_node = jQuery(template).clone();
+        let checkbox_id = "item_" + clipboard_id + "_" + response_data['range_type'] + "_" + response_data['range_id'];
 
         //Set some HTML attributes of the template:
         jQuery(new_item_node).attr('data-range_id', response_data['range_id']);
@@ -303,15 +301,14 @@ const Clipboard = {
         jQuery(new_item_node).removeClass('clipboard-item-template');
         jQuery(new_item_node).removeClass('invisible');
 
-        var name_label = jQuery(new_item_node).find('label');
-        jQuery(name_label).text(response_data['name']);
-        var id_field = jQuery(new_item_node).find("input[name='selected_clipboard_items[]']");
+        let name_label = jQuery(new_item_node).find('label');
+        jQuery('<span/>').text(response_data['name']).appendTo(name_label)
+        let id_field = jQuery(new_item_node).find("input[name='selected_clipboard_items[]']");
         jQuery(id_field).val(checkbox_id);
 
-        var new_item_html = jQuery('<div></div>').append(new_item_node).html();
+        let new_item_html = jQuery('<div></div>').append(new_item_node).html();
         //Replace RANGE_ID with an escaped real range-ID:
         new_item_html = new_item_html.replace(/RANGE_ID/g, _.escape(response_data['range_id']));
-
         //Append the template to the clipboard:
         jQuery(clipboard).append(jQuery(new_item_html));
 
@@ -327,17 +324,16 @@ const Clipboard = {
         );
     },
 
-    rename: function(data) {
-         if (!data['widget_id']) {
+    rename: function(widget_id) {
+         if (!widget_id) {
             //Required data are missing!
             return;
         }
 
-        var widget = jQuery('#ClipboardWidget_' + data['widget_id']);
-        var clipboard_id = jQuery(widget).find(".clipboard-selector").val();
-        var namer = jQuery(widget).find("input.clipboard-name");
+        let widget = jQuery('#ClipboardWidget_' + widget_id);
+        let clipboard_id = jQuery(widget).find(".clipboard-selector").val();
+        let namer = jQuery(widget).find("input.clipboard-name");
 
-        var widget_id = data['widget_id'];
         STUDIP.api.PUT(
             'clipboard/' + clipboard_id,
             {
@@ -355,9 +351,8 @@ const Clipboard = {
             //Required data are missing!
             return;
         }
-
-        var widget = jQuery('#ClipboardWidget_' + widget_id);
-        var selector = jQuery(widget).find("select.clipboard-selector");
+        let widget = jQuery('#ClipboardWidget_' + widget_id);
+        let selector = jQuery(widget).find("select.clipboard-selector");
         selector.find("option[value=" + data['id'] + "]").text(data['name']);
         STUDIP.Clipboard.toggleEditButtons(widget_id);
     },
@@ -368,9 +363,9 @@ const Clipboard = {
             return;
         }
 
-        var widget = jQuery('#ClipboardWidget_' + widget_id);
+        let widget = jQuery('#ClipboardWidget_' + widget_id);
 
-        var clipboard_selector = jQuery(widget).find('.clipboard-selector')[0];
+        let clipboard_selector = jQuery(widget).find('.clipboard-selector')[0];
         if (!clipboard_selector) {
             //Something is wrong with the HTML.
             return;
@@ -378,10 +373,10 @@ const Clipboard = {
 
         //Get the option and the corresponding clipboard area
         //for the deleted clipboard:
-        var clipboard_select_option = jQuery(clipboard_selector).find(
+        let clipboard_select_option = jQuery(clipboard_selector).find(
             'option[value="' + clipboard_id + '"]'
         )[0];
-        var clipboard_area = jQuery(widget).find(
+        let clipboard_area = jQuery(widget).find(
             '.clipboard-area[data-id="' + clipboard_id + '"]'
         )[0];
 
@@ -390,13 +385,13 @@ const Clipboard = {
 
         //Display the previous or the next select option
         //and the previous or next clipboard area:
-        var new_selected_clipboard_id = null;
-        var predecessor = jQuery(clipboard_select_option).prev();
+        let new_selected_clipboard_id = null;
+        let predecessor = jQuery(clipboard_select_option).prev();
         if (predecessor.length > 0) {
             jQuery(predecessor).attr('selected', 'selected');
             new_selected_clipboard_id = jQuery(predecessor).val();
         } else {
-            var successor = jQuery(clipboard_select_option).next();
+            let successor = jQuery(clipboard_select_option).next();
             if (successor.length > 0) {
                 jQuery(successor).attr('selected', 'selected');
                 new_selected_clipboard_id = jQuery(successor).val();
@@ -418,8 +413,8 @@ const Clipboard = {
             jQuery(widget).find('#clipboard-group-container').addClass('invisible');
             jQuery(clipboard_selector).attr('disabled', 'disabled');
             //Change the icon next to the clipboard selector:
-            var active_icon = jQuery(clipboard_selector).next();
-            var inactive_icon = jQuery(active_icon).next();
+            let active_icon = jQuery(clipboard_selector).next();
+            let inactive_icon = jQuery(active_icon).next();
             jQuery(active_icon).addClass('invisible');
             jQuery(inactive_icon).removeClass('invisible');
         }
@@ -430,36 +425,25 @@ const Clipboard = {
         jQuery(clipboard_area).remove();
     },
 
-
-    confirmRemoveClick: function(event) {
-        STUDIP.Clipboard.current_delete_icon = event.target;
-        STUDIP.Dialog.confirm(
-            $gettext('Sind Sie sicher?'),
-            STUDIP.Clipboard.handleRemoveClick
-        );
-    },
-
-
-    handleRemoveClick: function() {
-        var delete_icon = STUDIP.Clipboard.current_delete_icon;
+    handleRemoveClick: function(delete_icon) {
         if (!delete_icon) {
             return;
         }
 
         //Get the data of the clipboard:
-        var clipboard_select = jQuery(delete_icon).siblings('.clipboard-selector')[0];
+        let clipboard_select = jQuery(delete_icon).siblings('.clipboard-selector')[0];
         if (!clipboard_select) {
             //Something is wrong with the HTML.
             return;
         }
 
-        var clipboard_id = jQuery(clipboard_select).val();
-        var widget = jQuery(delete_icon).parents('.clipboard-widget')[0];
+        let clipboard_id = jQuery(clipboard_select).val();
+        let widget = jQuery(delete_icon).parents('.clipboard-widget')[0];
         if (!widget) {
             //Another case where something is wrong with the HTML.
             return;
         }
-        var widget_id = jQuery(widget).data('widget_id');
+        let widget_id = jQuery(widget).data('widget_id');
 
         STUDIP.api.DELETE(
             'clipboard/' + clipboard_id,
@@ -473,26 +457,16 @@ const Clipboard = {
         });
     },
 
-
-    confirmRemoveItemClick: function(event) {
-        STUDIP.Clipboard.current_delete_icon = event.target;
-        STUDIP.Dialog.confirm(
-            $gettext('Sind Sie sicher?'),
-            STUDIP.Clipboard.removeItem
-        );
-    },
-
-    removeItem: function() {
-        var delete_icon = STUDIP.Clipboard.current_delete_icon;
+    removeItem: function(delete_icon) {
         if (!delete_icon) {
             return;
         }
 
         //Get the item-ID:
-        var item_html = jQuery(delete_icon).parents('tr');
-        var range_id = jQuery(item_html).data('range_id');
-        var clipboard_element = jQuery(item_html).parents('table');
-        var clipboard_id = jQuery(clipboard_element).data('id');
+        let item_html = jQuery(delete_icon).parents('tr');
+        let range_id = jQuery(item_html).data('range_id');
+        let clipboard_element = jQuery(item_html).parents('table');
+        let clipboard_id = jQuery(clipboard_element).data('id');
 
         if (!range_id || !clipboard_id) {
             //We cannot proceed without the item-ID and the clipboard-ID!
@@ -503,7 +477,7 @@ const Clipboard = {
             'clipboard/' + clipboard_id + '/item/' + range_id
         ).done(function() {
             //Check if the item has siblings:
-            var siblings = jQuery(item_html).siblings();
+            let siblings = jQuery(item_html).siblings();
             if (siblings.length < 3) {
                 //Only the "no items" element and the template
                 //are siblings of the item.
@@ -523,14 +497,15 @@ const Clipboard = {
            //Required data are missing!
            return;
        }
-       var widget = jQuery('#ClipboardWidget_' + widget_id);
-       jQuery(widget).find("img.clipboard-edit-accept").toggle();
-       jQuery(widget).find("img.clipboard-edit-cancel").toggle();
-       jQuery(widget).find("img.clipboard-edit-button").toggle();
-       jQuery(widget).find("img.clipboard-remove-button").toggle();
 
-       var selector = jQuery(widget).find("select.clipboard-selector");
-       var namer = jQuery(widget).find("input.clipboard-name");
+       let widget = jQuery('#ClipboardWidget_' + widget_id);
+       jQuery(widget).find(".clipboard-edit-accept").toggle();
+       jQuery(widget).find(".clipboard-edit-cancel").toggle();
+       jQuery(widget).find(".clipboard-edit-button").toggle();
+       jQuery(widget).find(".clipboard-remove-button").toggle();
+
+       let selector = jQuery(widget).find("select.clipboard-selector");
+       let namer = jQuery(widget).find("input.clipboard-name");
        selector.toggle();
        namer.val(selector.find("option:selected").text().trim());
        namer.toggle();
