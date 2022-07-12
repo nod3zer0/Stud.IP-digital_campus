@@ -169,10 +169,11 @@ use Studip\Button, Studip\LinkButton;
             </section>
         <? elseif ($datafield->type === 'selectbox' || $datafield->type === 'radio') : ?>
             <? $datafield_entry = DataFieldEntry::createDataFieldEntry($datafield);?>
+            <? [$type_param, $is_assoc_param] = $datafield_entry->getParameters(); ?>
             <select name="<?= $datafield->id ?>">
                 <option value="---ignore---"><?= _('alle') ?></option>
-            <? foreach ($datafield_entry->type_param as $pkey => $pval) :?>
-                <? $value = $datafield_entry->is_assoc_param ? (string) $pkey : $pval; ?>
+            <? foreach ($type_param as $pkey => $pval) :?>
+                <? $value = $is_assoc_param ? (string) $pkey : $pval; ?>
                 <option value="<?= $value ?>" <?= ($request[$datafield->id] === $value) ? 'selected' : '' ?>>
                     <?= htmlReady($pval) ?>
                 </option>
