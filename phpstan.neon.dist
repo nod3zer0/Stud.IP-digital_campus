@@ -20,5 +20,4 @@ parameters:
     errorFormat:
        junit
     ignoreErrors:
-        - '#Access to an undefined property#'
         - '#Undefined variable#'

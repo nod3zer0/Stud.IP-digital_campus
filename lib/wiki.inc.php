@@ -1821,7 +1821,9 @@ Information Processing Letters 35, 6 (1990), 317-323.
 
 class line_diff
 {
-    var $arr1,$arr2,$m,$n,$pos,$key,$plus,$minus,$equal,$reverse;
+    var $arr1,$arr2,$m,$n,$pos,$key,$plus,$minus,$equal,$reverse,$result,$path;
+    var $add_count;
+    var $delete_count;
 
     function __construct($plus='+',$minus='-',$equal='=')
     {
