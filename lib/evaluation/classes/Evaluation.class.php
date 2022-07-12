@@ -111,6 +111,13 @@ class Evaluation extends EvaluationObject implements PrivacyObject
     /**
      * Counts the number of connected ranges
      * @access   private
+     * @var      integer $numberRanges
+     */
+    var $numberRanges;
+
+    /**
+     * Counts the number of connected ranges
+     * @access   private
      * @var      integer $rangeNum
      */
     var $rangeNum;
