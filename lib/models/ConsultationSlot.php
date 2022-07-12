@@ -241,11 +241,16 @@ class ConsultationSlot extends SimpleORMap
         foreach ($this->events as $event) {
             setTempLanguage($event->user_id);
 
-            if (count($this->bookings) > 0) {
+            $bookings = $this->bookings->filter(function (ConsultationBooking $booking) {
+                return !$booking->isDeleted()
+                    && $booking->user;
+            });
+
+            if (count($bookings) > 0) {
                 $event->event->category_intern = 1;
 
-                if (count($this->bookings) === 1) {
-                    $booking = $this->bookings->first();
+                if (count($bookings) === 1) {
+                    $booking = $bookings->first();
 
                     $event->event->summary = sprintf(
                         _('Termin mit %s'),
@@ -255,9 +260,9 @@ class ConsultationSlot extends SimpleORMap
                 } else {
                     $event->event->summary = sprintf(
                         _('Termin mit %u Personen'),
-                        count($this->bookings)
+                        count($bookings)
                     );
-                    $event->event->description = implode("\n\n----\n\n", $this->bookings->map(function ($booking) {
+                    $event->event->description = implode("\n\n----\n\n", $bookings->map(function ($booking) {
                         return "- {$booking->user->getFullName()}:\n{$booking->reason}";
                     }));
                 }
