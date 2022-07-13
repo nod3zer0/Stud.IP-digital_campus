@@ -82,7 +82,7 @@ class Resources extends \RESTAPI\RouteMap
             $resource->description = $description;
         }
         if ($parent_id) {
-            if (!Resource::exists($parent_id)) {
+            if (!\Resource::exists($parent_id)) {
                 $this->halt(
                     400,
                     'No resource exists with the ID \'' . $parent_id . '\'!'

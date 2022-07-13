@@ -116,17 +116,17 @@ class FileSystem extends \RESTAPI\RouteMap
      */
     public function copyFileRef($file_ref_id, $destination_folder_id)
     {
-        $result = \FileManager::copyFileRef(
-            $this->requireFileRef($file_ref_id),
+        $result = \FileManager::copyFile(
+            $this->requireFileRef($file_ref_id)->getFileType(),
             $this->requireFolder($destination_folder_id)->getTypedFolder(),
             \User::findCurrent()
         );
 
-        if (!$result instanceof \FileRef) {
+        if (!($result instanceof \FileType)) {
             $this->error(500, 'Error while copying a file reference: ' . implode(' ', $result));
         }
 
-        return $this->filerefToJSON($result);
+        return $this->filerefToJSON($result->getFileRef());
     }
 
     /**
@@ -136,17 +136,17 @@ class FileSystem extends \RESTAPI\RouteMap
      */
     public function moveFileRef($file_ref_id, $destination_folder_id)
     {
-        $result = \FileManager::moveFileRef(
-            $this->requireFileRef($file_ref_id),
+        $result = \FileManager::moveFile(
+            $this->requireFileRef($file_ref_id)->getFileType(),
             $this->requireFolder($destination_folder_id)->getTypedFolder(),
              \User::findCurrent()
         );
 
-        if (!$result instanceof \FileRef) {
+        if (!($result instanceof \FileType)) {
             $this->error(500, 'Error while moving a file reference: ' . implode(' ', $result));
         }
 
-        return $this->filerefToJSON($result);
+        return $this->filerefToJSON($result->getFileRef());
     }
 
     /**
@@ -274,10 +274,10 @@ class FileSystem extends \RESTAPI\RouteMap
         $query = "folder_id = :folder_id ORDER BY name ASC";
         $parameters[':folder_id'] = $folder->id;
 
-        if ($limit || $offset) {
+        if ($this->limit || $this->offset) {
             $query .= " LIMIT :limit OFFSET :offset";
-            $parameters[':limit'] = $limit;
-            $parameters[':offset'] = $offset;
+            $parameters[':limit'] = $this->limit;
+            $parameters[':offset'] = $this->offset;
         }
 
         $file_refs = \FileRef::findAndMapBySql(function (\FileRef $ref) {
@@ -467,7 +467,7 @@ class FileSystem extends \RESTAPI\RouteMap
 
     /**
      * Requires a valid user object.
-     * @return User object
+     * @return \User object
      */
     private function requireUser()
     {
@@ -477,7 +477,7 @@ class FileSystem extends \RESTAPI\RouteMap
     /**
      * Requires a valid file reference object
      * @param  mixed $id_or_object Either a file reference id or object
-     * @return FileRef object
+     * @return \FileRef object
      */
     private function requireFileRef($id_or_object)
     {
@@ -512,7 +512,7 @@ class FileSystem extends \RESTAPI\RouteMap
 
     /**
      * Converts a file reference object to JSON.
-     * @param  FileRef $ref      File reference object
+     * @param  \FileRef $ref     File reference object
      * @param  boolean $extended Extended output? (includes folder, owner and terms of use)
      * @return array representation for json encoding
      */

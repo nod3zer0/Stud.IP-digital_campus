@@ -183,22 +183,13 @@ class Feedback extends \RESTAPI\RouteMap
             'user_id'       => $GLOBALS['user']->id
         ]);
 
-        if($feedback->commentable === 1) {
-            $entry->comment = $this->data['comment'];
-        }
+        $entry->rating = $this->getRating(
+            $feedback->mode,
+            (int) $this->data['rating']
+        );
 
-        if($feedback->mode !== 0) {
-            $rating = intval($this->data['rating']);
-            if ($rating === 0) {
-                $rating = 1;
-            }
-            if ($feedback->mode === 1) {
-                $rating = ($rating > 5 ? 5 : $rating);
-            }
-            if ($feedback->mode === 2) {
-                $rating = ($rating > 10 ? 10 : $rating);
-            }
-            $entry->rating = $rating;
+        if ($feedback->commentable) {
+            $entry->comment = $this->data['comment'];
         }
 
         $entry->store();
@@ -213,28 +204,25 @@ class Feedback extends \RESTAPI\RouteMap
      */
     public function editFeedbackEntry($entry_id)
     {
-        if (!$entry = \FeedbackEntry::find($entry_id)) {
-            $this->error(404);
+        $entry = \FeedbackEntry::find($entry_id);
+
+        if (!$entry) {
+            $this->notFound();
         }
+
         if (!$entry->isEditable()) {
             $this->error(403);
         }
-        if($feedback->mode !== 0) {
-            $rating = intval($this->data['rating']);
-            if ($rating === 0) {
-                $rating = 1;
-            }
-            if ($feedback->mode === 1) {
-                $rating = ($rating > 5 ? 5 : $rating);
-            }
-            if ($feedback->mode === 2) {
-                $rating = ($rating > 10 ? 10 : $rating);
-            }
-            $entry->rating = $rating;
+
+        $entry->rating = $this->getRating(
+            $entry->feedback->mode,
+            (int) $this->data['rating']
+        );
+
+        if ($entry->feedback->commentable) {
+            $entry->comment = $this->data['comment'] ?? $entry->comment;
         }
-        if($feedback->commentable === 1) {
-            $entry->comment = $this->data['comment'] !== null ? $this->data['comment'] : $entry->comment;
-        }
+
         $entry->store();
         return $entry->toArray();
     }
@@ -253,5 +241,31 @@ class Feedback extends \RESTAPI\RouteMap
         if ($entry->delete()){
             $this->halt(200);
         }
+    }
+
+    /**
+     * @param int $mode
+     * @param int $rating
+     * @return int
+     */
+    private function getRating(int $mode, int $rating): int
+    {
+        if ($mode === 0) {
+            return 0;
+        }
+
+        if ($rating === 0) {
+            return 1;
+        }
+
+        if ($mode === 1) {
+            return min(5, $rating);
+        }
+
+        if ($mode === 2) {
+            return min(10, $rating);
+        }
+
+        throw new \InvalidArgumentException("Invalid mode {$mode}");
     }
 }

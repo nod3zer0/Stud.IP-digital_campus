@@ -34,12 +34,12 @@ class RoomClipboard extends \RESTAPI\RouteMap
         $current_user = \User::findCurrent();
 
         //Permission check:
-        if ($clipboard->user_id != $current_user->id) {
-            throw new AccessDeniedException();
+        if ($clipboard->user_id !== $current_user->id) {
+            throw new \AccessDeniedException();
         }
 
-        $display_requests = \Request::get('display_requests');
-        $display_all_requests = \Request::get('display_all_requests');
+        $display_requests = \Request::bool('display_requests');
+        $display_all_requests = \Request::bool('display_all_requests');
 
         $begin_date = \Request::get('start');
         $end_date = \Request::get('end');
@@ -134,15 +134,7 @@ class RoomClipboard extends \RESTAPI\RouteMap
                             ]
                         ],
                         $booking_types,
-                        (
-                            $display_all_requests
-                            ? 'all'
-                            : (
-                                $display_requests
-                                ? true
-                                : false
-                            )
-                        )
+                        $display_all_requests ? 'all' : $display_requests
                     )
                 );
             }
@@ -173,12 +165,12 @@ class RoomClipboard extends \RESTAPI\RouteMap
         $current_user = \User::findCurrent();
 
         //Permission check:
-        if ($clipboard->user_id != $current_user->id) {
-            throw new AccessDeniedException();
+        if ($clipboard->user_id !== $current_user->id) {
+            throw new \AccessDeniedException();
         }
 
-        $display_requests = \Request::get('display_requests');
-        $display_all_requests = \Request::get('display_all_requests');
+        $display_requests = \Request::bool('display_requests');
+        $display_all_requests = \Request::bool('display_all_requests');
 
         $begin = new \DateTime();
         $end = new \DateTime();
@@ -257,15 +249,7 @@ class RoomClipboard extends \RESTAPI\RouteMap
                             ]
                         ],
                         $booking_types,
-                        (
-                            $display_all_requests
-                            ? 'all'
-                            : (
-                                $display_requests
-                                ? true
-                                : false
-                            )
-                        )
+                        $display_all_requests ? 'all' : $display_requests
                     )
                 );
             }

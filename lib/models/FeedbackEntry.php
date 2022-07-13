@@ -4,12 +4,14 @@
  *
  * @author Nils Gehrke <nils.gehrke@uni-goettingen.de>
  *
- * @property integer id database column
- * @property integer feedback_id database column
- * @property string user_id database column
- * @property string comment database column
- * @property integer rating database column
+ * @property int $id database column
+ * @property int $feedback_id database column
+ * @property string $user_id database column
+ * @property string $comment database column
+ * @property int $rating database column
  *
+ * @property FeedbackElement $feedback
+ * @property User $user
  */
 
 class FeedbackEntry extends SimpleORMap
@@ -32,11 +34,7 @@ class FeedbackEntry extends SimpleORMap
 
     public function isEditable()
     {
-        $editable = false;
-        if ($this->user_id == $GLOBALS['user']->id) {
-            $editable = true;
-        }
-        return $editable;
+        return $this->user_id === $GLOBALS['user']->id;
     }
 
     public function isDeletable()

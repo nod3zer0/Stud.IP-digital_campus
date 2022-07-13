@@ -68,7 +68,7 @@ class ResourceRequest extends \RESTAPI\RouteMap
         try {
             $request->store();
             return $this->sendReturnData($request->toRawArray());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->halt(500, $e->getMessage());
         }
     }
@@ -92,29 +92,17 @@ class ResourceRequest extends \RESTAPI\RouteMap
             throw new \AccessDeniedException();
         }
 
-        $quiet = \Request::get('quiet');
-        $new_reply_comment = \Request::get('reply_comment');
+        $request->reply_comment = \Request::get('reply_comment');
 
-        $request->reply_comment = $new_reply_comment;
-
-        if ($request->isDirty()) {
-            try {
-                $request->store();
-                if ($this->quiet) {
-                    return '';
-                } else {
-                    return $this->sendReturnData($request->toRawArray());
-                }
-            } catch (Exception $e) {
-                $this->halt(500, $e->getMessage());
+        try {
+            if ($request->store() === false) {
+                throw new \RuntimeException('Could not store comment');
             }
-        } else {
-            if ($this->quiet) {
-                return '';
-            } else {
-                return $this->sendReturnData($request->toRawArray());
-            }
+        } catch (\Exception $e) {
+            $this->halt(500, $e->getMessage());
         }
+
+        return $this->sendReturnData($request->toRawArray());
     }
 
 

@@ -260,7 +260,7 @@ class User extends \RESTAPI\RouteMap
      */
     public function patchCourseGroup($user_id, $course_id)
     {
-        $user = User::find($user_id);
+        $user = \User::find($user_id);
         if (!$user) {
             $this->notFound('User not found');
         }

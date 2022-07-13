@@ -3,6 +3,9 @@
 /**
  * ResourceCategory.class.php - model class for resource categories
  *
+ * The ResourceCategory class can be used as a Factory for
+ * Resource objects.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -15,21 +18,18 @@
  * @package     resources
  * @since       4.1
  *
- * @property string id database column
- * @property string name database column
- * @property string description database column
- * @property string class_name database column: The name of the SORM class
+ * @property string $id database column
+ * @property string $name database column
+ * @property string $description database column
+ * @property string $class_name database column: The name of the SORM class
  *     that handles the resource object, defaults to Resource.
- * @property string system database column
- * @property string iconnr database column
- * @property string mkdate database column
- * @property string chdate database column
- */
-
-
-/**
- * The ResourceCategory class can be used as a Factory for
- * Resource objects.
+ * @property bool $system database column
+ * @property int $iconnr database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ *
+ * @property ResourcePropertyDefinition[]|SimpleORMapCollection $property_definitions
+ * @property ResourceCategoryProperty[]|SimpleORMapCollection $property_links
  */
 class ResourceCategory extends SimpleORMap
 {

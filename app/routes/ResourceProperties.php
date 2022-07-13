@@ -13,16 +13,22 @@ namespace RESTAPI\Routes;
 class ResourceProperties extends \RESTAPI\RouteMap
 {
     /**
+     * Validate access to each route.
+     */
+    public function before()
+    {
+        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
+            throw new \AccessDeniedException();
+        }
+    }
+
+    /**
      * Returns all resource property definitions.
      *
      * @get /resources/properties
      */
     public function getAllResourcePropertyDefinitions()
     {
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
-        }
-
         $properties = \ResourcePropertyDefinition::findBySql('TRUE ORDER BY name ASC');
 
         $result = [];
@@ -44,55 +50,38 @@ class ResourceProperties extends \RESTAPI\RouteMap
      */
     public function addResourcePropertyDefinition()
     {
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
-        }
-
-        $defined_types = \ResourcePropertyDefinition::getDefinedTypes();
-
         $name = \Request::get('name');
         $description = \Request::i18n('description');
         $type = \Request::get('type');
         $write_permission_level = \Request::get('write_permission_level');
-        $options = \Request::get('options');
-        $range_search = \Request::get('range_search');
+        $options = \Request::get('options', '');
+        $range_search = \Request::bool('range_search');
 
         if (!$name) {
             $this->halt(
                 400,
                 'The field \'name\' must not be empty!'
             );
-            return;
         }
-        if (!in_array($type, $defined_types)) {
+        if (!in_array($type, \ResourcePropertyDefinition::getDefinedTypes())) {
             $this->halt(
                 400,
                 'Invalid property type specified!'
             );
-            return;
         }
         if (!in_array($write_permission_level, ['user', 'autor', 'tutor', 'admin'])) {
             $this->halt(
                 400,
                 'Invalid permission level in field \'write_permission_level\'!'
             );
-            return;
         }
 
         $property = new \ResourcePropertyDefinition();
         $property->name = $name;
         $property->description = $description;
         $property->type = $type;
-        if ($options) {
-            $property->options = $options;
-        } else {
-            $property->options = '';
-        }
-        $property->range_search = (
-            $range_search
-            ? '1'
-            : '0'
-        );
+        $property->options = $options ?: '';
+        $property->range_search = $range_search;
         $property->write_permission_level = $write_permission_level;
 
         if (!$property->store()) {
@@ -117,10 +106,6 @@ class ResourceProperties extends \RESTAPI\RouteMap
             $this->notFound('ResourcePropertyDefinition object not found!');
         }
 
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
-        }
-
         return $property->toRawArray();
     }
 
@@ -137,17 +122,11 @@ class ResourceProperties extends \RESTAPI\RouteMap
             $this->notFound('ResourcePropertyDefinition object not found!');
         }
 
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            $this->halt(403);
-            return;
-        }
-
         if ($property->system) {
             $this->halt(
                 403,
                 'System properties must not be edited!'
             );
-            return;
         }
 
         $name = $this->data['name'];
@@ -166,12 +145,11 @@ class ResourceProperties extends \RESTAPI\RouteMap
         }
 
         if ($type) {
-            if (!in_array($type, $defined_types)) {
+            if (!in_array($type, \ResourcePropertyDefinition::getDefinedTypes())) {
                 $this->halt(
                     400,
                     'Invalid property type specified!'
                 );
-                return;
             }
             $property->type = $type;
         }
@@ -182,7 +160,6 @@ class ResourceProperties extends \RESTAPI\RouteMap
                     400,
                     'Invalid permission level in field \'write_permission_level\'!'
                 );
-                return;
             }
             $property->write_permission_level = $write_permission_level;
         }
@@ -203,7 +180,6 @@ class ResourceProperties extends \RESTAPI\RouteMap
                     500,
                     'Error while saving the property!'
                 );
-                return;
             }
         }
 
@@ -225,7 +201,6 @@ class ResourceProperties extends \RESTAPI\RouteMap
 
         if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
             $this->halt(403);
-            return;
         }
 
         //Check if the property is in use:
@@ -235,7 +210,6 @@ class ResourceProperties extends \RESTAPI\RouteMap
                 403,
                 'The property is in use and can therefore not be deleted!'
             );
-            return;
         }
 
         if ($property->delete()) {

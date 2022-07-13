@@ -37,7 +37,7 @@ class ResourcePermissions extends \RESTAPI\RouteMap
         $resource = $resource->getDerivedClassInstance();
 
         if (!$resource->userHasPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
+            throw new \AccessDeniedException();
         }
 
         $levels_str = \Request::get('levels');
@@ -82,7 +82,6 @@ class ResourcePermissions extends \RESTAPI\RouteMap
                     404,
                     'Resource not found!'
                 );
-                return;
             }
         }
 
@@ -92,24 +91,21 @@ class ResourcePermissions extends \RESTAPI\RouteMap
                 400,
                 'No user was provided!'
             );
-            return;
         }
 
         $current_user = \User::findCurrent();
 
         if (!\ResourceManager::userHasGlobalPermission($current_user, 'admin')) {
-            if ($resource_id != 'global') {
+            if ($resource_id !== 'global') {
                 $resource = \Resource::find($resource_id);
                 $resource = $resource->getDerivedClassInstance();
                 if (!$resource->userHasPermission($current_user, 'admin')) {
                     $this->halt(403);
-                    return;
                 }
             } else {
                 //$resource_id == 'global': One must be admin
                 //to perform this action!
                 $this->halt(403);
-                return;
             }
         }
 
@@ -151,24 +147,21 @@ class ResourcePermissions extends \RESTAPI\RouteMap
                 400,
                 'No user was provided!'
             );
-            return;
         }
 
         $current_user = \User::findCurrent();
 
         if (!\ResourceManager::userHasGlobalPermission($current_user, 'admin')) {
-            if ($resource_id != 'global') {
+            if ($resource_id !== 'global') {
                 $resource = \Resource::find($resource_id);
                 $resource = $resource->getDerivedClassInstance();
                 if (!$resource->userHasPermission($current_user, 'admin')) {
                     $this->halt(403);
-                    return;
                 }
             } else {
                 //$resource_id == 'global': One must be admin
                 //to perform this action!
                 $this->halt(403);
-                return;
             }
         }
 
@@ -180,7 +173,6 @@ class ResourcePermissions extends \RESTAPI\RouteMap
                 400,
                 'Invalid permission level specified!'
             );
-            return;
         }
 
         //Check if permissions are already present for the user.
@@ -201,15 +193,11 @@ class ResourcePermissions extends \RESTAPI\RouteMap
 
         $permission->perms = $perms;
 
-        if ($permission->isDirty()) {
-            if ($permission->store()) {
-                return $permission->toRawArray();
-            } else {
-                $this->halt(
-                    500,
-                    'Error while saving permissions!'
-                );
-            }
+        if ($permission->store() === false) {
+            $this->halt(
+                500,
+                'Error while saving permissions!'
+            );
         }
 
         return $permission->toRawArray();
@@ -221,14 +209,8 @@ class ResourcePermissions extends \RESTAPI\RouteMap
      */
     public function deletePermission($resource_id, $user_id)
     {
-        if ($resource_id !== 'global') {
-            if (!\Resource::exists($resource_id)) {
-                $this->halt(
-                    404,
-                    'Resource not found!'
-                );
-                return;
-            }
+        if ($resource_id !== 'global' && !\Resource::exists($resource_id)) {
+            $this->notFound('Resource not found!');
         }
 
         $user = \User::find($user_id);
@@ -237,24 +219,21 @@ class ResourcePermissions extends \RESTAPI\RouteMap
                 400,
                 'No user was provided!'
             );
-            return;
         }
 
         $current_user = \User::findCurrent();
 
         if (!\ResourceManager::userHasGlobalPermission($current_user, 'admin')) {
-            if ($resource_id != 'global') {
+            if ($resource_id !== 'global') {
                 $resource = \Resource::find($resource_id);
                 $resource = $resource->getDerivedClassInstance();
                 if (!$resource->userHasPermission($current_user, 'admin')) {
                     $this->halt(403);
-                    return;
                 }
             } else {
                 //$resource_id == 'global': One must be admin
                 //to perform this action!
                 $this->halt(403);
-                return;
             }
         }
 
@@ -309,7 +288,7 @@ class ResourcePermissions extends \RESTAPI\RouteMap
         $resource = $resource->getDerivedClassInstance();
 
         if (!$resource->userHasPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
+            throw new \AccessDeniedException();
         }
 
         $begin = \Request::get('begin');
@@ -344,19 +323,13 @@ class ResourcePermissions extends \RESTAPI\RouteMap
             $sql_array['levels'] = $levels;
         }
 
-        $permissions = \ResourceTemporaryPermission::findBySql(
+        return \ResourceTemporaryPermission::findAndMapBySql(
+            function (\ResourceTemporaryPermission $permission) {
+                return $permission->toRawArray();
+            },
             $sql,
             $sql_array
         );
-
-        $result = [];
-        if ($permissions) {
-            foreach ($permissions as $permission) {
-                $result[] = $permission->toRawArray();
-            }
-        }
-
-        return $result;
     }
 
 
@@ -369,11 +342,7 @@ class ResourcePermissions extends \RESTAPI\RouteMap
     {
         if ($resource_id !== 'global') {
             if (!\Resource::exists($resource_id)) {
-                $this->halt(
-                    404,
-                    'Resource not found!'
-                );
-                return;
+                $this->notFound('Resource not found!');
             }
         }
 
@@ -383,7 +352,6 @@ class ResourcePermissions extends \RESTAPI\RouteMap
                 400,
                 'No user was provided!'
             );
-            return;
         }
 
         $current_user = \User::findCurrent();
@@ -393,7 +361,7 @@ class ResourcePermissions extends \RESTAPI\RouteMap
         $begin = null;
         $end = null;
         $with_time_range = false;
-        if ($begin_str and $end_str) {
+        if ($begin_str && $end_str) {
             $with_time_range = true;
             $begin = new \DateTime();
             $begin->setTimestamp($begin_str);
@@ -402,18 +370,16 @@ class ResourcePermissions extends \RESTAPI\RouteMap
         }
 
         if (!\ResourceManager::userHasGlobalPermission($current_user, 'admin')) {
-            if ($resource_id != 'global') {
+            if ($resource_id !== 'global') {
                 $resource = \Resource::find($resource_id);
                 $resource = $resource->getDerivedClassInstance();
                 if (!$resource->userHasPermission($current_user, 'admin')) {
                     $this->halt(403);
-                    return;
                 }
             } else {
                 //$resource_id == 'global': One must be admin
                 //to perform this action!
                 $this->halt(403);
-                return;
             }
         }
 
@@ -467,41 +433,30 @@ class ResourcePermissions extends \RESTAPI\RouteMap
      */
     public function setTemporaryPermission($resource_id, $user_id)
     {
-        if (!\Resource::exists($resource_id)) {
-            $this->halt(
-                404,
-                'Resource not found!'
-            );
-            return;
+        $resource = \Resource::find($resource_id);
+        if (!$resource) {
+            $this->notFound('Resource not found!');
         }
 
         $user = \User::find($user_id);
         if (!$user) {
-            $this->halt(
-                400,
-                'No user was provided!'
-            );
-            return;
+            $this->notFound('User not found!');
         }
 
         $current_user = \User::findCurrent();
 
         if (!\ResourceManager::userHasGlobalPermission($current_user, 'admin')
-            and !$resource->userHasPermission($current_user, 'admin')) {
+            && !$resource->userHasPermission($current_user, 'admin')) {
             $this->halt(403);
-            return;
         }
 
         $begin_str = \Request::get('begin');
         $end_str = \Request::get('end');
-        $begin = null;
-        $end = null;
-        if (!$begin_str or !$end_str) {
+        if (!$begin_str || !$end_str) {
             $this->halt(
                 400,
                 'No time range specified for temporary permission!'
             );
-            return;
         }
 
         $begin = new \DateTime();
@@ -517,7 +472,6 @@ class ResourcePermissions extends \RESTAPI\RouteMap
                 400,
                 'Invalid permission level specified!'
             );
-            return;
         }
 
         //Check if permissions are already present for the user.
@@ -543,15 +497,11 @@ class ResourcePermissions extends \RESTAPI\RouteMap
 
         $permission->perms = $perms;
 
-        if ($permission->isDirty()) {
-            if ($permission->store()) {
-                return $permission->toRawArray();
-            } else {
-                $this->halt(
-                    500,
-                    'Error while saving permissions!'
-                );
-            }
+        if ($permission->store() === false) {
+            $this->halt(
+                500,
+                'Error while saving permissions!'
+            );
         }
 
         return $permission->toRawArray();
@@ -569,38 +519,28 @@ class ResourcePermissions extends \RESTAPI\RouteMap
     {
         if ($resource_id !== 'global') {
             if (!\Resource::exists($resource_id)) {
-                $this->halt(
-                    404,
-                    'Resource not found!'
-                );
-                return;
+                $this->notFound('Resource not found!');
             }
         }
 
         $user = \User::find($user_id);
         if (!$user) {
-            $this->halt(
-                400,
-                'No user was provided!'
-            );
-            return;
+            $this->notFound('User not found!');
         }
 
         $current_user = \User::findCurrent();
 
         if (!\ResourceManager::userHasGlobalPermission($current_user, 'admin')) {
-            if ($resource_id != 'global') {
+            if ($resource_id !== 'global') {
                 $resource = \Resource::find($resource_id);
                 $resource = $resource->getDerivedClassInstance();
                 if (!$resource->userHasPermission($current_user, 'admin')) {
                     $this->halt(403);
-                    return;
                 }
             } else {
                 //$resource_id == 'global': One must be admin
                 //to perform this action!
                 $this->halt(403);
-                return;
             }
         }
 

@@ -122,12 +122,12 @@ class Wiki extends \RESTAPI\RouteMap
         $json = $page->toArray(words("range_id keyword chdate version"));
 
         // (pre-rendered) content
-        if (!in_array("content", $without)) {
+        if (!in_array('content', $without)) {
             $json['content']      = $page->body;
             $json['content_html'] = wikiReady($page->body);
         }
-        if (!in_array("user", $without)) {
-            if($page->author) {
+        if (!in_array('user', $without)) {
+            if ($page->author) {
                 $json['user'] = User::getMiniUser($this, $page->author);
             }
         }
@@ -139,9 +139,9 @@ class Wiki extends \RESTAPI\RouteMap
         }
 
         // string to int conversions as SORM does not know about ints
-        foreach (words("chdate mkdate filesize downloads") as $key) {
-            if (isset($result[$key])) {
-                $result[$key] = intval($result[$key]);
+        foreach (['chdate', 'mkdate', 'filesize', 'downloads'] as $key) {
+            if (isset($json[$key])) {
+                $json[$key] = (int) $json[$key];
             }
         }
 

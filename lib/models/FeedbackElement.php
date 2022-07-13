@@ -4,24 +4,27 @@
  *
  * @author Nils Gehrke <nils.gehrke@uni-goettingen.de>
  *
- * @property integer id database column
- * @property string user_id database column
- * @property string range_id database column
- * @property string range_type database column:
+ * @property int $id database column
+ * @property string $user_id database column
+ * @property string $range_id database column
+ * @property string $range_type database column:
  *                  name of class that implements FeedbackRange
  *
- * @property string course_id database column
- * @property string question database column
- * @property string description database column
- * @property integer mode database column:
+ * @property string $course_id database column
+ * @property string $question database column
+ * @property string $description database column
+ * @property int $mode database column:
  *                  0 without rating;
  *                  1 with star rating from 1 to 5;
  *                  2 with star rating from 1 to 10;
  *
- * @property boolean results_visible database column:
+ * @property boolean $results_visible database column:
  *                   show rating results to users after feedback submission
- * @property boolean commentable database column: users may comment ratings
+ * @property boolean $commentable database column: users may comment ratings
  *
+ * @property Feedbackentry[]|SimpleORMapCollection $entries
+ * @property Course $course
+ * @property User $user
  */
 
 class FeedbackElement extends SimpleORMap

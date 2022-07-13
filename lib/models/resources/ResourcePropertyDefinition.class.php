@@ -3,6 +3,9 @@
 /**
  * ResourcePropertyDefinition.class.php - model class for resource property definitions
  *
+ * The ResourcePropertyDefinition class can be used as a Factory
+ * for ResourceProperty objects.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -15,32 +18,30 @@
  * @package     resources
  * @since       4.1
  *
- * @property string property_id database column
- * @property string id alias for resource_id
- * @property string name database column The internal name of the property.
- * @property string display_name The display name of the property.
- * @property string description database column
- * @property string type database column ('bool', 'text', 'num', 'select',
+ * @property string $property_id database column
+ * @property string $id alias for resource_id
+ * @property string $name database column The internal name of the property.
+ * @property string $display_name The display name of the property.
+ * @property string $description database column
+ * @property string $type database column ('bool', 'text', 'num', 'select',
  *     'user', 'institute', 'position', 'fileref', 'url')
- * @property string options database column
- * @property string system database column
- * @property string info_label database column
- * @property string searchable database column
+ * @property string $options database column
+ * @property string $system database column
+ * @property string $info_label database column
+ * @property bool $searchable database column
  *     0 = not searchable, 1 = searchable
- * @property string range_search database column: Whether a search field
+ * @property string $range_search database column: Whether a search field
  *     for this property shall display a range selector (1) or not (0).
  *     Setting this attribute is only useful for the property types
  *     'num' and 'position'.
- * @property string write_permission_level database column
- * @property string mkdate database column
- * @property string chdate database column
+ * @property string $write_permission_level database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ *
+ * @property ResourcePropertyGroup $group
  */
 
 
-/**
- * The ResourcePropertyDefinition class can be used as a Factory
- * for ResourceProperty objects.
- */
 class ResourcePropertyDefinition extends SimpleORMap
 {
     /**

@@ -125,7 +125,7 @@ class ResourceBooking extends \RESTAPI\RouteMap
         try {
             $booking->store();
             return $this->sendReturnData($booking->toRawArray());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->halt(500, $e->getMessage());
         }
     }

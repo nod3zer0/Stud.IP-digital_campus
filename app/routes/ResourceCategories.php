@@ -13,26 +13,28 @@ namespace RESTAPI\Routes;
 class ResourceCategories extends \RESTAPI\RouteMap
 {
     /**
+     * Validate access to each route.
+     */
+    public function before()
+    {
+        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
+            throw new \AccessDeniedException();
+        }
+    }
+
+    /**
      * Returns all defined resource categories.
      *
      * @get /resources/categories
      */
     public function getAllResourceCategories()
     {
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
-        }
-
-        $categories = \ResourceCategory::findBySql('TRUE ORDER BY name ASC');
-
-        $result = [];
-
-        if ($categories) {
-            foreach ($categories as $c) {
-                $result[] = $c->toRawArray();
-            }
-        }
-        return $result;
+        return \ResourceCategory::findAndMapBySql(
+            function (\ResourceCategory $category) {
+                return $category->toRawArray();
+            },
+            'TRUE ORDER BY name ASC'
+        );
     }
 
 
@@ -48,10 +50,6 @@ class ResourceCategories extends \RESTAPI\RouteMap
             $this->notFound('ResourceCategory object not found!');
         }
 
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
-        }
-
         return $category->toRawArray();
     }
 
@@ -63,23 +61,19 @@ class ResourceCategories extends \RESTAPI\RouteMap
      */
     public function addResourceCategory()
     {
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
-        }
-
-        $this->name = \Request::get('name');
-        $this->description = \Request::get('description');
-        $this->class_name = \Request::get('class_name');
-        $this->iconnr = \Request::int('iconnr');
+        $name = \Request::get('name');
+        $description = \Request::get('description');
+        $class_name = \Request::get('class_name');
+        $iconnr = \Request::int('iconnr');
 
         $properties_name = \Request::getArray('properties_name');
         $properties_type = \Request::getArray('properties_type');
         $properties_requestable = \Request::getArray('properties_requestable');
         $properties_protected = \Request::getArray('properties_protected');
 
-        $this->set_properties = [];
+        $set_properties = [];
         foreach ($properties_name as $key => $property_name) {
-            $this->set_properties[] = [
+            $set_properties[] = [
                 'name' => $property_name,
                 'type' => $properties_type[$key],
                 'requestable' => $properties_requestable[$key],
@@ -88,83 +82,70 @@ class ResourceCategories extends \RESTAPI\RouteMap
         }
 
         //validation:
-        if (!$this->name) {
+        if (!$name) {
             $this->halt(
                 400,
                 _('Der Name der Kategorie ist leer!')
             );
-            return;
         }
 
-        if (!is_a($this->class_name, 'Resource', true)) {
+        if (!is_a($class_name, 'Resource', true)) {
             $this->halt(
                 400,
                 _('Es wurde keine gültige Ressourcen-Datenklasse ausgewählt!')
             );
-            return;
         }
 
-        switch ($this->class_name) {
-            case 'Location': {
-                $this->category = \ResourceManager::createLocationCategory(
-                    $this->name,
-                    $this->description
+        switch ($class_name) {
+            case 'Location':
+                $category = \ResourceManager::createLocationCategory(
+                    $name,
+                    $description
                 );
                 break;
-            } case 'Building': {
-                $this->category = \ResourceManager::createBuildingCategory(
-                    $this->name,
-                    $this->description
+            case 'Building':
+                $category = \ResourceManager::createBuildingCategory(
+                    $name,
+                    $description
                 );
                 break;
-            } case 'Room': {
-                $this->category = \ResourceManager::createRoomCategory(
-                    $this->name,
-                    $this->description
+            case 'Room':
+                $category = \ResourceManager::createRoomCategory(
+                    $name,
+                    $description
                 );
                 break;
-            } default: {
-                $this->category = \ResourceManager::createCategory(
-                    $this->name,
-                    $this->description,
-                    $this->class_name,
+            default:
+                $category = \ResourceManager::createCategory(
+                    $name,
+                    $description,
+                    $class_name,
                     false,
-                    $this->iconnr
+                    $iconnr
                 );
-            }
         }
 
-        $successfully_stored = false;
-        if ($this->category->isDirty()) {
-            $successfully_stored = $this->category->store();
-        } else {
-            $successfully_stored = true;
-        }
-
-        if ($successfully_stored) {
-            //After we have stored the category we must store
-            //the properties or create them, if necessary:
-
-            $properties_successfully_stored = false;
-            foreach ($this->set_properties as $set_property) {
-                $this->category->addProperty(
-                    $set_property['name'],
-                    $set_property['type'],
-                    $set_property['requestable'],
-                    $set_property['protected']
-                );
-            }
-
-            $this->show_form = false;
-            return $this->category;
-        } else {
+        if ($category->store() === false) {
             $this->halt(
                 500,
                 _('Fehler beim Speichern der Kategorie!')
             );
         }
-    }
 
+        //After we have stored the category we must store
+        //the properties or create them, if necessary:
+
+        foreach ($set_properties as $set_property) {
+            $category->addProperty(
+                $set_property['name'],
+                $set_property['type'],
+                $set_property['requestable'],
+                $set_property['protected']
+            );
+        }
+
+        return $category->toRawArray();
+    }
 
     /**
      * Modifies a resource category.
@@ -176,11 +157,6 @@ class ResourceCategories extends \RESTAPI\RouteMap
         $category = \ResourceCategory::find($category_id);
         if (!$category) {
             $this->notFound('ResourceCategory object not found!');
-        }
-
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            $this->halt(403);
-            return;
         }
 
         if ($category->system) {
@@ -203,16 +179,11 @@ class ResourceCategories extends \RESTAPI\RouteMap
             $category->iconnr = $iconnr;
         }
 
-        if ($category->isDirty()) {
-            if ($category->store()) {
-                return $category->toRawArray();
-            } else {
-                $this->halt(
-                    500,
-                    'Error while saving the category!'
-                );
-                return;
-            }
+        if ($category->store() === false) {
+            $this->halt(
+                500,
+                'Error while saving the category!'
+            );
         }
 
         return $category->toRawArray();
@@ -229,10 +200,6 @@ class ResourceCategories extends \RESTAPI\RouteMap
         $category = \ResourceCategory::find($category_id);
         if (!$category) {
             $this->notFound('ResourceCategory object not found!');
-        }
-
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            $this->halt(403);
         }
 
         if ($category->system) {
@@ -261,10 +228,6 @@ class ResourceCategories extends \RESTAPI\RouteMap
         $category = \ResourceCategory::find($category_id);
         if (!$category) {
             $this->notFound('ResourceCategory object not found!');
-        }
-
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
         }
 
         $result = [];
@@ -303,10 +266,6 @@ class ResourceCategories extends \RESTAPI\RouteMap
         $category = \ResourceCategory::find($category_id);
         if (!$category) {
             $this->notFound('ResourceCategory object not found!');
-        }
-
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
         }
 
         $offset = \Request::int('offset');
@@ -358,9 +317,6 @@ class ResourceCategories extends \RESTAPI\RouteMap
             $this->notFound('ResourceCategory object not found!');
         }
 
-        if (!\ResourceManager::userHasGlobalPermission(\User::findCurrent(), 'admin')) {
-            throw new AccessDeniedException();
-        }
 
         $name = \Request::get('name');
         $description = \Request::get('description');
