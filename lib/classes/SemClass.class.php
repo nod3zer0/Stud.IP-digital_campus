@@ -52,7 +52,7 @@ class SemClass implements ArrayAccess
     static public function getDefaultSemClass() {
         $data = [
             'name' => "Fehlerhafte Seminarklasse!",
-            'modules' => '{"CoreOverview":{"activated":1,"sticky":1},"CoreAdmin":{"activated":1,"sticky":1}, "CoreResources":{"activated":1,"sticky":0}}',
+            'modules' => '{"CoreOverview":{"activated":1,"sticky":1},"CoreAdmin":{"activated":1,"sticky":1}}',
             'visible' => 1,
             'is_group' => false
         ];
@@ -115,10 +115,20 @@ class SemClass implements ArrayAccess
         } else {
             $this->data = $data;
         }
-        if ($this->data['modules']) {
+        if (!empty($this->data['modules'])) {
             $this->data['modules'] = self::object2array(json_decode($this->data['modules']));
+
         } else {
             $this->data['modules'] = [];
+        }
+        if (!empty($this->data['studygroup_mode'])) {
+            if (!isset($this->data['modules']['CoreStudygroupAdmin'])) {
+                $this->data['modules']['CoreStudygroupAdmin'] = ['activated' => 1, 'sticky' => 1];
+            }
+        } else {
+            if (!isset($this->data['modules']['CoreAdmin'])) {
+                $this->data['modules']['CoreAdmin'] = ['activated' => 1, 'sticky' => 1];
+            }
         }
         foreach (array_keys($this->data['modules']) as $modulename) {
             if ($this->isModuleForbidden($modulename)) {
@@ -592,6 +602,7 @@ class SemClass implements ArrayAccess
      */
     static public function refreshClasses()
     {
+        StudipCacheFactory::getCache()->expire('DB_SEM_CLASSES_ARRAY');
         self::$sem_classes = null;
         return self::getClasses();
     }

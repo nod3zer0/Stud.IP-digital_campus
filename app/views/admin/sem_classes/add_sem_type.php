@@ -1,4 +1,4 @@
-<form action="?" method="post" class="default" id="add_sem_class_window" data-dialog>
+<form action="?" method="post" class="default" id="add_sem_class_window">
     <fieldset>
         <legend>
             <?= _('Veranstaltungskategorie anlegen') ?>
