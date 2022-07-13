@@ -580,7 +580,9 @@ class FilesController extends AuthenticatedController
         }
 
         if (!$folder) {
-            throw new Exception(_('Fehler beim Laden des Hauptordners!'));
+            PageLayout::postError(_('Der gewählte Ordner wurde nicht gefunden.'));
+            $this->relocate($this->indexURL());
+            return;
         }
 
         $this->topFolder = $folder->getTypedFolder();
