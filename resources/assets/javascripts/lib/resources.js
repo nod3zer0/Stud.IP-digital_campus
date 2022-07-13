@@ -227,13 +227,13 @@ class Resources
         let option_type = jQuery(selected_option).data('type');
         let option_select_options = jQuery(selected_option).data('select_options').split(';;');
         let option_range_search = jQuery(selected_option).data('range-search');
-        let template = undefined;
+        let template;
 
         if (option_type === 'bool') {
             template = jQuery(select_node).parent().parent().find(
                 '.criteria-list .template[data-template-type="'
-                    + option_type
-                    + '"]'
+                + option_type
+                + '"]'
             )[0];
         } else if (option_type === 'select') {
             template = jQuery(select_node).parent().parent().find(

@@ -8,8 +8,7 @@
         <li <?=  ((!$resource_path && $resource->level > $max_open_depth) || $hide) ? 'style="display: none;"' : ''; ?> >
             <? if (count($resource->children)): ?>
 
-                <?= Icon::create('arr_1right', 'clickable')->asImg(
-                    '16px',
+                <?= Icon::create('arr_1right')->asImg(
                     [
                         'class' => implode(
                             ' ',
@@ -39,8 +38,7 @@
 
             <? endif ?>
             <span id="<?= $search_object; ?>" style="cursor: pointer;">
-                <?= $resource->getIcon('clickable')->asImg(
-                    '16px',
+                <?= $resource->getIcon()->asImg(
                     [
                         'class' => 'text-bottom'
                     ]

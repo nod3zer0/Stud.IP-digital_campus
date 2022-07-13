@@ -491,19 +491,16 @@ STUDIP.ready(function () {
         $("#clipboard-group-container").find('.widget-links').removeClass('invisible');
     }
 
-    $('.special-item-switch').each(function () {
-        if ($(this).prop('checked') == false) {
-            $(this).next('label').children(':not(span)').hide();
-        }
-    });
-
     jQuery(document).on(
-        'click',
+        'change',
         '.special-item-switch',
         function () {
-            $(this).next('label').children(':not(span)').toggle();
+            let checked = $(this).prop('checked');
+            jQuery(this).parent().next('.special-item-content').toggle(checked);
         }
     );
+
+    jQuery('.special-item-switch').trigger('change');
 
     jQuery(document).on(
         'change',

@@ -159,25 +159,13 @@ ul.resource-tree {
         li {
             margin-bottom: 0.5em;
 
-            img.remove-icon {
-                margin-right: 5px;
-            }
-
-            .special-item-switch {
-                vertical-align: text-bottom;
-            }
-
-            & > label {
+            > label {
                 input[type=text],
                 input[type=number],
                 input[type=date],
                 select {
                     width: calc(100% - 2em);
                     height: 30px;
-
-                    &.has-date-picker {
-                        width: calc(100% - 2em - 84px);
-                    }
 
                     &[type=number], &[data-time=yes] {
                         width: 4em;
@@ -196,28 +184,21 @@ ul.resource-tree {
                     }
                 }
             }
-        }
-    }
-}
 
-.room-search-widget_criteria-list {
-    list-style-type: none;
-    padding-left: 0.5em;
+            input[type="number"] {
+                max-width: 5em;
+            }
 
-    .item {
-        margin-bottom: 0.75em;
+            .range-input-container {
+                input {
+                    &.hasDatePicker {
+                        width: 70%;
+                    }
 
-        > label {
-            display: inline-block;
-            width: calc(100% - 2em);
-        }
-
-        > label.range-search-label {
-            > .range-input-container {
-                margin-left: 1em;
-
-                > input[type="number"] {
-                    max-width: 5em;
+                    &.hasTimepicker {
+                        width: 20%;
+                        margin: 5px 0;
+                    }
                 }
             }
         }
@@ -423,6 +404,7 @@ form#resolve-request, form#decline-request {
                 margin-bottom: 5px;
             }
         }
+
         dt {
             grid-column: 1;
         }
@@ -451,6 +433,7 @@ form#resolve-request, form#decline-request {
                     max-height: 250px;
                 }
             }
+
             article.assign-dates, div[data-dialog-button] {
                 header {
                     margin: 0;
@@ -464,6 +447,7 @@ form#resolve-request, form#decline-request {
                             }
                         }
                     }
+
                     &.default {
                         > thead {
                             > tr {
@@ -474,6 +458,7 @@ form#resolve-request, form#decline-request {
                                         min-width: 180px;
                                         left: 0;
                                     }
+
                                     position: sticky;
                                     top: 0;
                                     z-index: 1;
@@ -483,6 +468,7 @@ form#resolve-request, form#decline-request {
                                 }
                             }
                         }
+
                         > tbody {
                             > tr {
                                 > td {
@@ -515,6 +501,7 @@ form#resolve-request, form#decline-request {
                 &.left-part {
                     width: 50%;
                 }
+
                 &.right-part {
                     width: 40%;
                     padding-left: 1em;

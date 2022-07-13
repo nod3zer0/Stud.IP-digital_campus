@@ -3,12 +3,12 @@
     <label>
         <?= _('Dateien neuer als') ?>:
         <input type="text" name="begin" value="<?= htmlReady($begin) ?>"
-               class="has-date-picker">
+               class="hasDatePicker">
     </label>
     <label>
         <?= _('Dateien älter als') ?>:
         <input type="text" name="end" value="<?= htmlReady($end) ?>"
-               class="has-date-picker submit-on-change">
+               class="hasDatePicker submit-on-change">
     </label>
     <? if ($course_options) : ?>
         <label>

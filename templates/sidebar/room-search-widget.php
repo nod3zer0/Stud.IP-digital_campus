@@ -60,14 +60,12 @@
             ) ?>
         <? endif; ?>
         <?= $this->render_partial(
-            'sidebar/room-search-criteria.php',
+            'sidebar/room-search-criteria-seats.php',
             [
-                'criteria' => (
+                'criteria' =>
                     $selected_criteria['special__seats']
                     ? $selected_criteria['special__seats']
                     : $criteria['special__seats']
-                    ),
-                'removable' => false
             ]
         ) ?>
         <?= $this->render_partial(
