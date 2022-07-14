@@ -350,7 +350,7 @@ const Search = {
     showFilter: function (category) {
         var filters = $('#search-results').data('filters');
         STUDIP.Search.hideAllFilters();
-        if (filters && filters.category !== undefined && category != 'show_all_categories') {
+        if (filters && filters[category] !== undefined && category != 'show_all_categories') {
             for (let i = 0; i < filters[category].length; i++) {
                 $(`#${filters[category][i]}_filter`).show();
             }
