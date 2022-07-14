@@ -2,7 +2,7 @@ parameters:
     level: 0
     phpVersion: 70200 # PHP 7.2
     paths:
-        # - app/routes
+        - app/routes
         - lib
         # - tests
     scanFiles:
@@ -20,7 +20,5 @@ parameters:
         RESTAPI\RouteMap:
             - error
             - halt
-    errorFormat:
-       junit
     ignoreErrors:
         # - '#Undefined variable#'

@@ -145,11 +145,14 @@ phpstan:
     - make composer-dev
     - mkdir .reports -p
   script:
-    - php composer/bin/phpstan analyse --memory-limit=1G --no-progress --level=$PHPSTAN_LEVEL > .reports/report-phpstan.xml
+    - php composer/bin/phpstan analyse --memory-limit=1G --no-progress --level=$PHPSTAN_LEVEL --error-format=gitlab > .reports/report-phpstan.json
   artifacts:
+    paths:
+        - .reports/report-phpstan.json
+    expire_in: 14 days
     when: always
     reports:
-      junit: .reports/report-phpstan.xml
+      codequality: .reports/report-phpstan.json
 
 test-unit:
   stage: tests
