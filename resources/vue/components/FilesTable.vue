@@ -95,17 +95,21 @@
                     <th data-sort="false">{{ $gettext('Aktionen') }}</th>
                 </tr>
             </thead>
-            <tbody class="subfolders">
-                <tr v-if="!hasData" class="empty">
+            <tbody v-if="!hasData">
+                <tr class="empty">
                     <td :colspan="numberOfColumns">
                         {{ $gettext('Dieser Ordner ist leer') }}
                     </td>
                 </tr>
-                <tr v-else-if="displayedFolders.length + displayedFiles.length === 0" class="empty">
+            </tbody>
+            <tbody v-else-if="displayedFolders.length + displayedFiles.length === 0">
+                <tr class="empty">
                     <td :colspan="numberOfColumns">
                         <translate>Keine Ordner oder Dateien entsprechen Ihrem Filter.</translate>
                     </td>
                 </tr>
+            </tbody>
+            <tbody class="subfolders" v-if="displayedFolders.length > 0">
                 <tr v-for="folder in displayedFolders"
                     :id="'row_folder_' + folder.id "
                     :data-permissions="folder.permissions">
@@ -150,7 +154,7 @@
                     </td>
                 </tr>
             </tbody>
-            <tbody class="files">
+            <tbody class="files" v-if="displayedFiles.length > 0">
                 <tr v-for="file in displayedFiles"
                     :class="file.new ? 'new' : ''"
                     :id="'fileref_' + file.id"
