@@ -9,8 +9,8 @@
  * the License, or (at your option) any later version.
  */
 
-require_once __DIR__ . '/studip_controller_properties_trait.php';
-require_once __DIR__ . '/studip_response.php';
+require_once 'studip_controller_properties_trait.php';
+require_once 'studip_response.php';
 
 abstract class StudipController extends Trails_Controller
 {
