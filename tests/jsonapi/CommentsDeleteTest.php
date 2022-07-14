@@ -1,6 +1,8 @@
 <?php
 
 
+use JsonApi\Routes\Blubber\CommentsDelete;
+
 class CommentsDeleteTest extends \Codeception\Test\Unit
 {
     /**
@@ -21,7 +23,7 @@ class CommentsDeleteTest extends \Codeception\Test\Unit
     {
         $commentId = '372d6c3bd41cd503c022961e73698d4c';
         $credentials = $this->tester->getCredentialsForRoot();
-        $response = $this->deleteComment($credentials, $newsId);
+        $this->deleteComment($credentials, $commentId);
     }
 
     private function deleteComment(array $credentials, $commentId)

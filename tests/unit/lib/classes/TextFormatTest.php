@@ -191,7 +191,7 @@ function markupSum($markup, $matches)
 
 class TextFormatTest extends \Codeception\Test\Unit
 {
-    public function setUp(): void
+    private function getMarkup(): TextFormat
     {
         $markup = new TextFormat();
 
@@ -231,70 +231,70 @@ class TextFormatTest extends \Codeception\Test\Unit
         $markup->addMarkup('mail', '(\[.*?\])?\b([\w!#%+.-]+@[[:alnum:].-]+)', NULL, 'markupMail');
         $markup->addMarkup('sum', '\(:sum\((\d+)\\\\(\d+)\):\)', NULL, 'markupSum');
 
-        $this->markup = $markup;
+        return $markup;
     }
 
     public function testLine()
     {
         $input = "Test\n--\nTest";
         $expected = "Test\n<hr>\nTest";
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testHeading()
     {
         $input = '!!%%Überschrift%%';
         $expected = '<h3 class="content"><i>Überschrift</i></h3>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testBoldItalics()
     {
         $input = '**some %%code%%**';
         $expected = '<b>some <i>code</i></b>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testBigSmall()
     {
         $input = '++some --code--++';
         $expected = '<big>some <small>code</small></big>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testSimpleBoldItalics()
     {
         $input = '*bold*text* %some%italics%';
         $expected = '<b>bold text</b> <i>some italics</i>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testMissingClose()
     {
         $input = '**missing %%close';
         $expected = $input;
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testCloseBeforeOpen()
     {
         $input = 'there is -}no markup{- here';
         $expected = $input;
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testIncorrectNesting()
     {
         $input = '** test %% test ** test %%';
         $expected = '** test <i> test ** test </i>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testImage()
     {
         $input = '[img=Stud.IP-Logo]http://www.studip.de/logo.png';
         $expected = '<img src="http://www.studip.de/logo.png" title="Stud.IP-Logo">';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testTable()
@@ -312,7 +312,7 @@ class TextFormatTest extends \Codeception\Test\Unit
                    .'<td>Mathe Diplom</td>'
                    .'</tr>'
                    .'</table>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testList()
@@ -326,7 +326,7 @@ class TextFormatTest extends \Codeception\Test\Unit
                    .'</ol></li>'
                    .'<li>Schluss</li>'
                    .'</ul>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testIndent()
@@ -340,21 +340,21 @@ class TextFormatTest extends \Codeception\Test\Unit
                    .'</p>'
                    ."Ebene 1\n"
                    .'</p>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testNop()
     {
         $input = '[nop]**A**[quote]B[/quote]{-C-}[/nop]';
         $expected = '**A**[quote]B[/quote]{-C-}';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testPre()
     {
         $input = '[pre]**A**{-C-}[/pre]';
         $expected = '<pre><b>A</b><strike>C</strike></pre>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testQuote()
@@ -363,27 +363,27 @@ class TextFormatTest extends \Codeception\Test\Unit
         $expected = '<blockquote class="quote">'
                    .'<b><u>Anonymous</u> hat geschrieben:</b><hr>some text'
                    .'</blockquote>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testLink()
     {
         $input = '[Testlink]https://www.studip.de/';
         $expected = '<a href="https://www.studip.de/">Testlink</a>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testMail()
     {
         $input = '[Mail]some.user@example.com';
         $expected = '<a href="mailto:some.user@example.com">Mail</a>';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 
     public function testSum()
     {
         $input = '(:sum(3\\4):)';
         $expected = '7';
-        $this->assertEquals($expected, $this->markup->format($input));
+        $this->assertEquals($expected, $this->getMarkup()->format($input));
     }
 }

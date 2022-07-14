@@ -36,8 +36,7 @@ class ForumEntriesDeleteTest extends \Codeception\Test\Unit
         $requestBuilder = $this->tester->createRequestBuilder($credentials);
         $requestBuilder
             ->setUri('/forum-entries/'.$entry->id)
-            ->delete()
-            ->setJsonApiBody($entry_json);
+            ->delete();
 
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
 
@@ -54,8 +53,7 @@ class ForumEntriesDeleteTest extends \Codeception\Test\Unit
         $requestBuilder = $this->tester->createRequestBuilder($credentials);
         $requestBuilder
             ->setUri('/forum-entries/badId')
-            ->delete()
-            ->setJsonApiBody($entry_json);
+            ->delete();
 
         $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
         $this->tester->assertSame(404, $response->getStatusCode());

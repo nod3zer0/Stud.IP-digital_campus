@@ -9,17 +9,6 @@
  * the License, or (at your option) any later version.
  */
 
-class StringWrapper {
-    function __construct($string)
-    {
-        $this->string = $string;
-    }
-    function __toString()
-    {
-        return (string) $this->string;
-    }
-}
-
 class FunctionsTest extends \Codeception\Test\Unit
 {
     function testWords()

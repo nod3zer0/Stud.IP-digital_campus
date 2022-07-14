@@ -6,7 +6,11 @@ class ResourceManagerTest extends \Codeception\Test\Unit
     protected $db_handle;
     protected $oldUser;
 
-    protected function _before()
+    private $test_cat;
+    private $position_def;
+    private $perm_resource;
+
+    protected function setUp(): void
     {
         //First we must initialise the StudipPDO database connection:
         $this->db_handle = new \StudipPDO(
@@ -34,34 +38,32 @@ class ResourceManagerTest extends \Codeception\Test\Unit
 
         //As a final step we create the SORM objects for our test cases:
 
-        $this->test_cat = new ResourceCategory();
-        $this->test_cat->class_name = 'Resource';
-        $this->test_cat->store();
+        $this->test_cat = ResourceCategory::create([
+            'class_name' => Resource::class,
+        ]);
 
-        $this->position_def = new ResourcePropertyDefinition();
-        $this->position_def->name = 'test_pos';
-        $this->position_def->type = 'position';
-        $this->position_def->store();
+        $this->position_def = ResourcePropertyDefinition::create([
+            'name' => 'test_pos',
+            'type' => 'position',
+        ]);
 
-        $this->perm_user = new User();
-        $this->perm_user->username = 'test_resource_perm';
-        $this->perm_user->perms = 'autor';
-        $this->perm_user->store();
+        User::create([
+            'username' => 'test_resource_perm',
+            'perms'    => 'autor',
+        ]);
 
         $this->perm_resource = $this->test_cat->createResource(
             'Permission Test Resource'
         );
         $this->perm_resource->store();
 
-        $this->test_def = new ResourcePropertyDefinition();
-        $this->test_def->name = 'test_is_test';
-        $this->test_def->type = 'bool';
-        $this->test_def->store();
-
-        //Everything is set up for the test cases.
+        ResourcePropertyDefinition::create([
+            'name' => 'test_is_test',
+            'type' => 'bool',
+        ]);
     }
 
-    protected function _after()
+    protected function tearDown(): void
     {
         //We must roll back the changes we made in this test
         //so that the live database remains unchanged after
@@ -115,8 +117,7 @@ class ResourceManagerTest extends \Codeception\Test\Unit
             $category->iconnr
         );
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $category->hasProperty('test_is_test', 'bool')
         );
     }
@@ -137,14 +138,12 @@ class ResourceManagerTest extends \Codeception\Test\Unit
         );
 
         //Test default properties:
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $location_cat->hasProperty('geo_coordinates', 'position')
         );
 
         //Test optional properties:
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $location_cat->hasProperty('test_is_test', 'bool')
         );
     }
@@ -165,29 +164,24 @@ class ResourceManagerTest extends \Codeception\Test\Unit
         );
 
         //Test default properties:
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $building_cat->hasProperty('address', 'text')
         );
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $building_cat->hasProperty('accessible', 'bool')
         );
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $building_cat->hasProperty('geo_coordinates', 'position')
         );
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $building_cat->hasProperty('number', 'text')
         );
 
         //Test optional properties:
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $building_cat->hasProperty('test_is_test', 'bool')
         );
     }
@@ -208,24 +202,20 @@ class ResourceManagerTest extends \Codeception\Test\Unit
         );
 
         //Test default properties:
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $room_cat->hasProperty('room_type', 'select')
         );
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $room_cat->hasProperty('seats', 'num')
         );
 
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $room_cat->hasProperty('booking_plan_is_public', 'bool')
         );
 
         //Test optional properties:
-        $this->assertEquals(
-            true,
+        $this->assertTrue(
             $room_cat->hasProperty('test_is_test', 'bool')
         );
     }
@@ -309,7 +299,6 @@ class ResourceManagerTest extends \Codeception\Test\Unit
 
     public static function coordinateProvider(): array
     {
-
         return [
             'empty' => [''],
 

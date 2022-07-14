@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * StudipVersionTest.php - unit tests for the StudipVersion class
  *
  * This program is free software; you can redistribute it and/or
@@ -10,19 +10,11 @@
  * @author      Till Glöggler
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ *
+ * @backupGlobals enabled
  */
-
 class StudipVersionTest extends \Codeception\Test\Unit
 {
-    function setUp(): void {
-        $this->version = $GLOBALS['SOFTWARE_VERSION'];
-    }
-
-    function tearDown(): void
-    {
-        $GLOBALS['SOFTWARE_VERSION'] = $this->version;
-    }
-
     public function testStandardVersion()
     {
         $GLOBALS['SOFTWARE_VERSION'] = '1.0';

@@ -26,7 +26,10 @@ class LocationTest extends \Codeception\Test\Unit
     protected $db_handle;
     protected $oldUser;
 
-    protected function _before()
+    private $location_cat;
+    private $location;
+
+    protected function setUp(): void
     {
         //First we must initialise the StudipPDO database connection:
         $this->db_handle = new \StudipPDO(
@@ -65,7 +68,7 @@ class LocationTest extends \Codeception\Test\Unit
         //Everything is set up for the test cases.
     }
 
-    protected function _after()
+    protected function tearDown(): void
     {
         //We must roll back the changes we made in this test
         //so that the live database remains unchanged after

@@ -47,7 +47,6 @@ class NewsCreateTest extends \Codeception\Test\Unit
         $resourceObject = $document->primaryResource();
         $this->tester->assertNotNull($resourceObject->attribute('title'));
         $this->tester->assertNotNull($resourceObject->attribute('content'));
-        $newsId = $news->id;
     }
 
     public function testShouldNotStudipNewsCreate()
@@ -116,7 +115,6 @@ class NewsCreateTest extends \Codeception\Test\Unit
         $resourceObject = $document->primaryResource();
         $this->tester->assertNotNull($resourceObject->attribute('title'));
         $this->tester->assertNotNull($resourceObject->attribute('content'));
-        $newsId = $news->id;
     }
 
     public function testShouldNotCourseNewsCreate()
@@ -160,7 +158,6 @@ class NewsCreateTest extends \Codeception\Test\Unit
         $resourceObject = $document->primaryResource();
         $this->tester->assertNotNull($resourceObject->attribute('title'));
         $this->tester->assertNotNull($resourceObject->attribute('content'));
-        $newsId = $news->id;
     }
 
     public function testShouldNotUserNewsCreate()

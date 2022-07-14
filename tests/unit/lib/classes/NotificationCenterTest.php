@@ -20,6 +20,8 @@ interface Observer
 # @see http://php.net/language.oop5.magic
 class NotificationCenterTestSoundexPredicate
 {
+    private $goldStandard;
+
     public function __construct($goldStandard)
     {
         $this->goldStandard = $goldStandard;
@@ -33,6 +35,9 @@ class NotificationCenterTestSoundexPredicate
 
 class NotificationCenterTest extends \Codeception\Test\Unit
 {
+    private $observer;
+    private $subject;
+
     public function setUp(): void
     {
         $this->observer = $this->createMock("Observer");

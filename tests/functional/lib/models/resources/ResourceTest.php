@@ -3,9 +3,29 @@
 class ResourceTest extends \Codeception\Test\Unit
 {
     protected $db_handle;
-    protected $oldPerm, $oldUser;
+    protected $oldPerm;
+    protected $oldUser;
 
-    protected function _before()
+    private $test_user_username;
+    private $test_user;
+    private $test_property_name;
+    private $test_property2_name;
+    private $resource_cat;
+    private $test_resource_name;
+    private $resource;
+    private $booking_start_time;
+    private $booking_end_time;
+    private $booking_repeat_end;
+    private $booking;
+    private $lock_start_time;
+    private $lock_end_time;
+    private $lock;
+    private $course;
+    private $course_date;
+    private $user2;
+
+
+    protected function setUp(): void
     {
         //First we must initialise the StudipPDO database connection:
         $this->db_handle = new \StudipPDO(
@@ -36,44 +56,44 @@ class ResourceTest extends \Codeception\Test\Unit
         //As a final step we create the SORM objects for our test cases:
 
         $this->test_user_username = 'test_user_' . date('YmdHis');
-        $this->test_user = new User();
-        $this->test_user->username = $this->test_user_username;
-        $this->test_user->vorname = 'Test';
-        $this->test_user->nachname = 'User';
-        $this->test_user->perms = 'admin';
-        $this->test_user->store();
+        $this->test_user = User::create([
+            'username' => $this->test_user_username,
+            'vorname'  => 'Test',
+            'nachname' => 'User',
+            'perms'    => 'admin',
+        ]);
 
         $this->test_property_name = 'test_' . date('YmdHis');
         $this->test_property2_name = 'some_test_user_' . date('YmdHis');
 
-        $this->resource_cat = new ResourceCategory();
-        $this->resource_cat->name = 'Test Category';
-        $this->resource_cat->class_name = 'Resource';
-        $this->resource_cat->iconnr = '1';
-        $this->resource_cat->store();
+        $this->resource_cat = ResourceCategory::create([
+            'name'       => 'Test Category',
+            'class_name' => Resource::class,
+            'iconnr'     => 1,
+        ]);
 
-        $def = new ResourcePropertyDefinition();
-        $def->name = $this->test_property_name;
-        $def->type = 'text';
-        $def->searchable = '0';
-        $def->range_search = '0';
-        $def->store();
+        ResourcePropertyDefinition::create([
+            'name'         => $this->test_property_name,
+            'type'         => 'text',
+            'searchable'   => false,
+            'range_search' => false,
+        ]);
 
-        $def2 = new ResourcePropertyDefinition();
-        $def2->name = $this->test_property2_name;
-        $def2->type = 'user';
-        $def2->searchable = '0';
-        $def2->range_search = '0';
-        $def2->store();
+        ResourcePropertyDefinition::create([
+            'name'         => $this->test_property2_name,
+            'type'         => 'user',
+            'searchable'   => false,
+            'range_search' => false,
+        ]);
 
-        $this->test_property = $this->resource_cat->addProperty(
+        $this->resource_cat->addProperty(
             $this->test_property_name,
             'text',
             true,
             true
         );
 
-        $this->test_property2 = $this->resource_cat->addProperty(
+        $this->resource_cat->addProperty(
             $this->test_property2_name,
             'user',
             false,
@@ -86,7 +106,7 @@ class ResourceTest extends \Codeception\Test\Unit
             $this->test_resource_name,
             'Resource Description 20171013'
         );
-        $this->resource->requestable = '1';
+        $this->resource->requestable = true;
         $this->resource->store();
 
         $this->resource->setProperty(
@@ -99,11 +119,11 @@ class ResourceTest extends \Codeception\Test\Unit
             $this->test_user
         );
 
-        $permission = new ResourcePermission();
-        $permission->user_id = $this->test_user->id;
-        $permission->resource_id = $this->resource->id;
-        $permission->perms = 'admin';
-        $permission->store();
+        ResourcePermission::create([
+            'user_id'     => $this->test_user->id,
+            'resource_id' => $this->resource->id,
+            'perms'       => 'admin',
+        ]);
 
         $this->booking_start_time = new DateTime('2017-10-02 8:00:00 +0000');
         $this->booking_end_time = new DateTime('2017-10-02 10:00:00 +0000');
@@ -132,18 +152,18 @@ class ResourceTest extends \Codeception\Test\Unit
             $this->lock_end_time
         );
 
-        $this->course = new Course();
-        $this->course->name = 'Test Resource Course ' . date('YmdHis');
-        $this->course->store();
+        $this->course = Course::create([
+            'name' => 'Test Resource Course ' . date('YmdHis'),
+        ]);
 
-        $this->course_date = new CourseDate();
-        $this->course_date->range_id = $this->course->id;
-        $this->course_date->autor_id = $this->test_user->id;
-        $this->course_date->date = strtotime('2017-10-02 11:00:00 +0000');
-        $this->course_date->end_time = strtotime('2017-10-02 12:00:00 +0000');
-        $this->course_date->store();
+        CourseDate::create([
+            'range_id' => $this->course->id,
+            'autor_id' => $this->test_user->id,
+            'date'     => strtotime('2017-10-02 11:00:00 +0000'),
+            'end_time' => strtotime('2017-10-02 12:00:00 +0000'),
+        ]);
 
-        $this->request = $this->resource->createRequest(
+        $this->resource->createRequest(
             $this->test_user,
             $this->course->id,
             'test createRequest',
@@ -152,12 +172,12 @@ class ResourceTest extends \Codeception\Test\Unit
             ]
         );
 
-        $this->user2 = new User();
-        $this->user2->username = 'test_user2_' . date('YmdHis');
-        $this->user2->perms = 'tutor';
-        $this->user2->vorname = 'Test';
-        $this->user2->nachname = 'User 2';
-        $this->user2->store();
+        $this->user2 = User::create([
+            'username' => 'test_user2_' . date('YmdHis'),
+            'perms'    => 'tutor',
+            'vorname'  => 'Test',
+            'nachname' => 'User 2',
+        ]);
 
         $this->resource->setUserPermission(
             $this->user2,
@@ -167,7 +187,7 @@ class ResourceTest extends \Codeception\Test\Unit
         //Everything is set up for the test cases.
     }
 
-    protected function _after()
+    protected function tearDown(): void
     {
         //We must roll back the changes we made in this test
         //so that the live database remains unchanged after
@@ -185,14 +205,14 @@ class ResourceTest extends \Codeception\Test\Unit
             InvalidResourceException::class
         );
 
-        $r = new Resource();
-        $r->name = 'Invalid Resource';
-        $r->store();
+        Resource::create([
+            'name' => 'Invalid Resource',
+        ]);
     }
 
     public function testCreateResource()
     {
-        //$this->resource has been created in the _before() method
+        //$this->resource has been created in the setUp() method
         $this->assertEquals(
             $this->test_resource_name,
             $this->resource->name
@@ -206,7 +226,7 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testCreateBooking()
     {
-        //The booking has been created in the _before() method.
+        //The booking has been created in the setUp() method.
 
         $this->assertEquals(
             $this->resource->id,
@@ -246,7 +266,7 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testCreateLock()
     {
-        //The resource lock has been created in the _before() method.
+        //The resource lock has been created in the setUp() method.
 
         $this->assertEquals(
             $this->resource->id,
@@ -266,7 +286,7 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testPropertyExists()
     {
-        //The property has been created in the _before() method.
+        //The property has been created in the setUp() method.
 
         $this->assertTrue(
             $this->resource->propertyExists(
@@ -277,7 +297,7 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testGetPropertyObject()
     {
-        //The property has been created in the _before() method.
+        //The property has been created in the setUp() method.
 
         $property = $this->resource->getPropertyObject(
             $this->test_property_name
@@ -296,7 +316,7 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testGetProperty()
     {
-        //The property has been created in the _before() method.
+        //The property has been created in the setUp() method.
 
         $state = $this->resource->getProperty(
             $this->test_property_name
@@ -310,7 +330,7 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testNonexistingProperty()
     {
-        //The resource has been created in the _before() method.
+        //The resource has been created in the setUp() method.
 
         $this->assertFalse(
             $this->resource->propertyExists(
@@ -321,7 +341,7 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testGetNonexistingPropertyObject()
     {
-        //The resource has been created in the _before() method.
+        //The resource has been created in the setUp() method.
 
         $no_object = $this->resource->getPropertyObject(
             'nonexistant_property_' . date('YmdHis')
@@ -334,7 +354,7 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testGetNonexistingProperty()
     {
-        //The resource has been created in the _before() method.
+        //The resource has been created in the setUp() method.
 
         $no_object = $this->resource->getProperty(
             'nonexistant_property_' . date('YmdHis')
@@ -349,7 +369,7 @@ class ResourceTest extends \Codeception\Test\Unit
     {
         $this->expectException(TypeError::class);
 
-        //The resource has been created in the _before() method.
+        //The resource has been created in the setUp() method.
 
         $no_object = $this->resource->getPropertyObject();
 
@@ -362,7 +382,7 @@ class ResourceTest extends \Codeception\Test\Unit
     public function testGetPropertyWithoutName()
     {
         $this->expectException(TypeError::class);
-        //The resource has been created in the _before() method.
+        //The resource has been created in the setUp() method.
 
         $this->assertEquals(
             null,
@@ -376,10 +396,7 @@ class ResourceTest extends \Codeception\Test\Unit
             $this->test_property2_name
         );
 
-        $this->assertEquals(
-            true,
-            ($user instanceof User)
-        );
+        $this->assertInstanceOf(User::class, $user);
 
         $this->assertEquals(
             $this->test_user_username,
@@ -393,13 +410,11 @@ class ResourceTest extends \Codeception\Test\Unit
             'nonexistant_property' . date('YmdHis')
         );
 
-        $this->assertNull(
-            $no_object
-        );
+        $this->assertNull($no_object);
     }
 
     //Resource::setProperty and Resource::setPropertyRelatedObject
-    //don't need to be tested since they are called in the _before() method.
+    //don't need to be tested since they are called in the setUp() method.
     //If those set methods wouldn't work then the tests where
     //properties or property objects are retrieved would fail.
 
@@ -407,20 +422,14 @@ class ResourceTest extends \Codeception\Test\Unit
     {
         $properties = $this->resource->getPropertyArray();
 
-        $this->assertEquals(
-            2,
-            count($properties)
-        );
+        $this->assertCount(2, $properties);
     }
 
     public function testGetOnlyRequestablePropertyArray()
     {
         $properties = $this->resource->getPropertyArray(true);
 
-        $this->assertEquals(
-            1,
-            count($properties)
-        );
+        $this->assertCount(1, $properties);
 
         $this->assertEquals(
             $this->test_property_name,
@@ -444,35 +453,35 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testResourceAddChild()
     {
-        //$this->resource has been created in the _before() method.
+        //$this->resource has been created in the setUp() method.
 
-        $this->child = $this->resource_cat->createResource(
+        $child = $this->resource_cat->createResource(
             'Test Resource Child 20171013',
             'Resource Child Description 20171013'
         );
 
-        $this->resource->addChild($this->child);
+        $this->resource->addChild($child);
 
         $this->assertEquals(
             $this->resource->children[0]->id,
-            $this->child->id
+            $child->id
         );
 
         $this->assertEquals(
-            $this->child->parent_id,
+            $child->parent_id,
             $this->resource->id
         );
 
         $this->assertEquals(
-            $this->child->level,
-            ($this->resource->level+1)
+            $child->level,
+            $this->resource->level + 1
         );
     }
 
     public function testResourceIsAssigned()
     {
         //$this->resource has been created
-        //in the _before()-Method.
+        //in the setUp()-Method.
 
         $this->assertTrue(
             $this->resource->isAssigned(
@@ -506,17 +515,14 @@ class ResourceTest extends \Codeception\Test\Unit
 
     public function testGetResourceBookings()
     {
-        //$this->resource has been created in the _before() method.
+        //$this->resource has been created in the setUp() method.
 
         $bookings = $this->resource->getResourceBookings(
             new DateTime('2017-01-01 0:00:00 +0000'),
             new DateTime('2017-12-31 23:59:59 +0000')
         );
 
-        $this->assertEquals(
-            count($bookings),
-            1
-        );
+        $this->assertCount(1, $bookings);
 
         $this->assertEquals(
             $bookings[0]->id,
@@ -592,7 +598,7 @@ class ResourceTest extends \Codeception\Test\Unit
             )
         );
 
-        //user2 is set up in the _before() method and user2's
+        //user2 is set up in the setUp() method and user2's
         //permission level on $this->resource is set to admin.
 
         $user2_perms = $this->resource->getUserPermission($this->user2);

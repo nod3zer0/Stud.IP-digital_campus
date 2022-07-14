@@ -45,20 +45,21 @@ class VisualFunctionsTest extends \Codeception\Test\Unit
     public function testHtmlReady()
     {
         $pairs = [
-          'abc'    => 'abc',
-          'äöü'    => 'äöü',
-          '<'      => '&lt;',
-          '"'      => '&quot;',
-          "'"      => '&#039;',
-          '&amp;'  => '&amp;amp;',
-          '&#039;' => '&amp;#039;',
-          ''       => '',
-          NULL     => NULL
+            'abc'    => 'abc',
+            'äöü'    => 'äöü',
+            '<'      => '&lt;',
+            '"'      => '&quot;',
+            "'"      => '&#039;',
+            '&amp;'  => '&amp;amp;',
+            '&#039;' => '&amp;#039;',
+            ''       => '',
         ];
 
         foreach ($pairs as $string => $expected) {
-          $this->assertEquals($expected, htmlReady($string));
+            $this->assertEquals($expected, htmlReady($string));
         }
+
+        $this->assertEquals(null, htmlReady(null));
     }
 
     public function testFormatReadyTicket1255()

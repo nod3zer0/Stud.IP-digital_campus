@@ -66,15 +66,15 @@ class CronjobScheduleTest extends \Codeception\Test\Unit
     /**
      * @depends testOnceSchedule
      */
-    function testNextExecutionOnceFuture($schedule)
+    function testNextExecutionOnceFuture(CronjobSchedule $schedule)
     {
         $now  = strtotime('10.11.2013 01:02:00');
         $then = strtotime('+2 weeks', $now);
 
-        $schedule->next_execution = $next_execution;
-        $schedule->calculateNextExecution();
+        $schedule->next_execution = $then;
+        $schedule->calculateNextExecution($now);
 
-        $this->assertEquals($next_execution, $schedule->next_execution);
+        $this->assertEquals($then, $schedule->next_execution);
     }
 
     function testPeriodicSchedule()

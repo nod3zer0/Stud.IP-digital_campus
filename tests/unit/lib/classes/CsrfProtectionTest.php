@@ -12,6 +12,8 @@
 
 class CSRFProtectionTokenTest extends \Codeception\Test\Unit
 {
+    private $original_session;
+
     function setUp(): void
     {
         if (session_id() === '') {
@@ -64,6 +66,8 @@ class CSRFProtectionTokenTest extends \Codeception\Test\Unit
 
 class CSRFRequestTest extends \Codeception\Test\Unit
 {
+    private $original_state;
+    private $token;
 
     function setUp(): void
     {

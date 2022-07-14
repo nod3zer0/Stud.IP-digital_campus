@@ -1,6 +1,8 @@
 <?php
 
 
+use JsonApi\Routes\News\CourseNewsCreate;
+
 class CourseNewsCreateTest extends \Codeception\Test\Unit
 {
     /**
@@ -26,7 +28,7 @@ class CourseNewsCreateTest extends \Codeception\Test\Unit
         $date = time();
         $expire = $date + 1 * 7 * 24 * 60 * 60;
         $credentials = $this->tester->getCredentialsForRoot();
-        $response = $this->createCourseNews($credentials, $courseId, $title, $content, $date, $expire);
+        $this->createCourseNews($credentials, $courseId, $title, $content, $date, $expire);
     }
 
     //helpers:

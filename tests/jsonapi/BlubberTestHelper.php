@@ -144,7 +144,7 @@ trait BlubberTestHelper
             array_map(function ($thread) {
                 return \BlubberThread::upgradeThread($thread);
             }, $threads),
-            function ($thread) use ($user) {
+            function ($thread) use ($credentials) {
                 return $thread->isVisibleInStream() && $thread->isReadable($credentials['id']);
             }
         );

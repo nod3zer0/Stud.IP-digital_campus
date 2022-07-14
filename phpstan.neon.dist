@@ -4,7 +4,9 @@ parameters:
     paths:
         - app/routes
         - lib
-        # - tests
+        - tests/functional
+        - tests/jsonapi
+        - tests/unit
     scanFiles:
         - composer/phpxmlrpc/phpxmlrpc/lib/xmlrpc.inc
     scanDirectories:

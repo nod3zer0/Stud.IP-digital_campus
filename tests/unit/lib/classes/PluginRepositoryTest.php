@@ -14,12 +14,14 @@ require_once 'lib/plugins/engine/PluginRepository.class.php';
 
 class PluginRepositoryTest extends \Codeception\Test\Unit
 {
+    private $repository;
+
     public function setUp (): void
     {
         $GLOBALS['SOFTWARE_VERSION'] = '1.9.0';
         $GLOBALS['CACHING_ENABLE'] = false;
 
-        $url = 'file://'.dirname(__FILE__).'/plugin_repository_test.xml';
+        $url = 'file://' . __DIR__ . '/plugin_repository_test.xml';
         $this->repository = new PluginRepository($url);
     }
 

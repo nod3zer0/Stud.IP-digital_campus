@@ -161,7 +161,7 @@ class ArrayFileStream
             'gid'     => function_exists('posix_getgid') ? posix_getgid() : 0,
             'rdev'    => 0,
             'size'    => $flags & STREAM_URL_STAT_QUIET
-            ? @mb_strlen($this->_pointer) : mb_strlen($this->_pointer),
+            ? @mb_strlen($this->open_file) : mb_strlen($this->open_file),
             'atime'   => $time,
             'mtime'   => $time,
             'ctime'   => $time,
@@ -213,4 +213,3 @@ class ArrayFileStream
 #unlink('var://tmp/a');
 
 #var_dump(include 'var://tmp/b');
-

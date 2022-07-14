@@ -203,7 +203,7 @@ class MarkupClassTest extends \Codeception\Test\Unit
                         . $test['exception'] . '. Output: ' . $out . '.'
                     );
                 }
-            } catch (PHPUnit_Framework_Error_Notice $e) {
+            } catch (PHPUnit\Framework\Error\Notice $e) {
                 throw $e;
             } catch (Exception $e) {
                 if ( !isset($test['exception'])) {

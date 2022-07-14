@@ -24,9 +24,23 @@ require_once __DIR__ . '/../../../_bootstrap.php';
 class RoomTest extends \Codeception\Test\Unit
 {
     protected $db_handle;
-    protected $oldPerm, $oldUser;
+    protected $oldPerm;
+    protected $oldUser;
 
-    protected function _before()
+    private $test_user_username;
+    private $test_user;
+    private $location_cat;
+    private $building_cat;
+    private $room_cat;
+    private $location;
+    private $building;
+    private $room;
+    private $request_begin_date;
+    private $request_end_date;
+    private $course_date;
+    private $room_request;
+
+    protected function setUp(): void
     {
         //First we must initialise the StudipPDO database connection:
         $this->db_handle = new \StudipPDO(
@@ -57,32 +71,24 @@ class RoomTest extends \Codeception\Test\Unit
         //As a final step we create the SORM objects for our test cases:
 
         $this->test_user_username = 'test_user_' . date('YmdHis');
-        $this->test_user = new User();
-        $this->test_user->username = $this->test_user_username;
-        $this->test_user->vorname = 'Test';
-        $this->test_user->nachname = 'User';
-        $this->test_user->perms = 'admin';
-        $this->test_user->store();
+        $this->test_user = User::create([
+            'username' => $this->test_user_username,
+            'vorname'  => 'Test',
+            'nachname' => 'User',
+            'perms'    => 'admin',
+        ]);
 
-        $perms = new ResourcePermission();
-        $perms->user_id = $this->test_user->id;
-        $perms->resource_id = 'global';
-        $perms->perms = 'tutor';
-        $perms->store();
+        ResourcePermission::create([
+            'user_id'     => $this->test_user->id,
+            'resource_id' => 'global',
+            'perms'       => 'tutor',
+        ]);
 
-        $this->location_cat = ResourceManager::createLocationCategory(
-            'TestLocation'
-        );
-        $this->building_cat = ResourceManager::createBuildingCategory(
-            'TestBuilding'
-        );
-        $this->room_cat = ResourceManager::createRoomCategory(
-            'TestRoom'
-        );
+        $this->location_cat = ResourceManager::createLocationCategory('TestLocation');
+        $this->building_cat = ResourceManager::createBuildingCategory('TestBuilding');
+        $this->room_cat = ResourceManager::createRoomCategory('TestRoom');
 
-        $this->location = $this->location_cat->createResource(
-            'Test location object'
-        );
+        $this->location = $this->location_cat->createResource('Test location object');
 
         $this->building = $this->building_cat->createResource(
             'Test building object',
@@ -100,19 +106,18 @@ class RoomTest extends \Codeception\Test\Unit
         //it when we're testing finding rooms by a room request.
         //The request we create is for a room with at least 22 seats.
         $this->room->seats = 25;
-
-        $this->room->requestable = '1';
-
+        $this->room->requestable = true;
         $this->room->store();
 
         $this->request_begin_date = new DateTime();
         $this->request_begin_date->setTime(12,0,0);
         $this->request_end_date = clone $this->request_begin_date;
         $this->request_end_date->setTime(14,0,0);
-        $this->course_date = new CourseDate();
-        $this->course_date->date = $this->request_begin_date->getTimestamp();
-        $this->course_date->end_time = $this->request_end_date->getTimestamp();
-        $this->course_date->store();
+
+        $this->course_date = CourseDate::create([
+            'date'     => $this->request_begin_date->getTimestamp(),
+            'end_time' => $this->request_end_date->getTimestamp(),
+        ]);
 
         $this->room_request = $this->room->createRequest(
             $this->test_user,
@@ -126,7 +131,7 @@ class RoomTest extends \Codeception\Test\Unit
         //Everything is set up for the test cases.
     }
 
-    protected function _after()
+    protected function tearDown(): void
     {
         //We must roll back the changes we made in this test
         //so that the live database remains unchanged after

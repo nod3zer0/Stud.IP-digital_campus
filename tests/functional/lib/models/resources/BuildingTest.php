@@ -23,10 +23,15 @@ class BuildingTest extends \Codeception\Test\Unit
     protected $db_handle;
     protected $oldUser;
 
+    private $location_cat;
+    private $building_cat;
+    private $location;
+    private $building;
+
     /**
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    protected function _before()
+    protected function setUp(): void
     {
         //First we must initialise the StudipPDO database connection:
         $this->db_handle = new \StudipPDO(
@@ -61,7 +66,7 @@ class BuildingTest extends \Codeception\Test\Unit
         //Everything is set up for the test cases.
     }
 
-    protected function _after()
+    protected function tearDown(): void
     {
         //We must roll back the changes we made in this test
         //so that the live database remains unchanged after

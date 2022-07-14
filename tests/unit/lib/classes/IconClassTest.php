@@ -10,6 +10,8 @@
 
 class IconClassTest extends \Codeception\Test\Unit
 {
+    private $memo_assets_url;
+
     function setUp(): void
     {
         $this->memo_assets_url = Assets::url();

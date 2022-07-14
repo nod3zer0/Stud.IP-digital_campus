@@ -14,6 +14,9 @@ class ObjectBuilderTest extends \Codeception\Test\Unit
     protected $another_object;
     protected $another_changed_object;
 
+    private $simple_array_definition;
+    private $another_simple_array_definition;
+
     public function setUp (): void
     {
         require_once 'lib/functions.php';

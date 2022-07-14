@@ -19,17 +19,20 @@ function markupBold($markup, $matches, $contents)
 
 class StudipFormatTest extends \Codeception\Test\Unit
 {
-    function setUp(): void {
+    private $old_rules;
+
+    function setUp(): void
+    {
         $this->old_rules = StudipCoreFormat::getStudipMarkups();
     }
 
     function tearDown(): void
     {
-        foreach(StudipCoreFormat::getStudipMarkups() as $key => $value) {
+        foreach (StudipCoreFormat::getStudipMarkups() as $key => $value) {
             StudipCoreFormat::removeStudipMarkup($key);
         }
 
-        foreach($this->old_rules as $key => $value) {
+        foreach ($this->old_rules as $key => $value) {
             StudipCoreFormat::addStudipMarkup($key, @$value['start'], @$value['end'], @$value['callback']);
         }
     }

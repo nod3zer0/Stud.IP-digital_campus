@@ -50,7 +50,7 @@ class NewsDeleteTest extends \Codeception\Test\Unit
     }
     public function testShouldCommentDelete()
     {
-        
+
         $title = 'A course testing title';
         $credentials = $this->tester->getCredentialsForTestDozent();
         $content = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit';
@@ -62,10 +62,9 @@ class NewsDeleteTest extends \Codeception\Test\Unit
         $requestBuilder = $this->tester->createRequestBuilder($credentials);
         $requestBuilder
             ->setUri('/comments/'.$comment->id)
-            ->delete()
-            ->setJsonApiBody($entry_json);
-    
-        $response = $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
+            ->delete();
+
+        $this->tester->sendMockRequest($app, $requestBuilder->getRequest());
         $this->tester->assertIsEmpty(StudipComment::find($comment->id));
     }
 }

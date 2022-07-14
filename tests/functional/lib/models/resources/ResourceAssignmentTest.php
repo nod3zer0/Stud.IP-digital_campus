@@ -20,9 +20,16 @@
 class ResourceAssignmentTest extends \Codeception\Test\Unit
 {
     protected $db_handle;
-    protected $oldPerm, $oldUser;
+    protected $oldPerm;
+    protected $oldUser;
 
-    protected function _before()
+    private $test_user_username;
+    private $test_user;
+    private $resource_category;
+    private $resource;
+    private $booking;
+
+    protected function setUp(): void
     {
         //First we must initialise the StudipPDO database connection:
         $this->db_handle = new \StudipPDO(
@@ -55,12 +62,12 @@ class ResourceAssignmentTest extends \Codeception\Test\Unit
         //As a final step we create the SORM objects for our test cases:
 
         $this->test_user_username = 'test_user_' . date('YmdHis');
-        $this->test_user = new User();
-        $this->test_user->username = $this->test_user_username;
-        $this->test_user->vorname = 'Test';
-        $this->test_user->nachname = 'User';
-        $this->test_user->perms = 'admin';
-        $this->test_user->store();
+        $this->test_user = User::create([
+            'username' => $this->test_user_username,
+            'vorname'  => 'Test',
+            'nachname' => 'User',
+            'perms'    => 'admin',
+        ]);
 
         $perm = new ResourcePermission();
         $perm->user_id = $this->test_user->id;
@@ -88,21 +95,9 @@ class ResourceAssignmentTest extends \Codeception\Test\Unit
             0,
             new DateTime('2017-12-04 15:00:00+0000')
         );
-
-        $this->another_booking = $this->resource->createBooking(
-            $this->test_user,
-            $this->test_user->id,
-            [
-                [
-                    'begin' => new DateTime('2017-12-06 0:00:00+0000'),
-                    'end' => new DateTime('2017-12-06 12:00:00+0000')
-                ]
-            ]
-        );
-        //Everything is set up for the test cases.
     }
 
-    protected function _after()
+    protected function tearDown(): void
     {
         //We must roll back the changes we made in this test
         //so that the live database remains unchanged after
@@ -175,9 +170,6 @@ class ResourceAssignmentTest extends \Codeception\Test\Unit
     {
         $time_intervals = $this->booking->getTimeIntervals();
 
-        $this->assertEquals(
-            4,
-            count($time_intervals)
-        );
+        $this->assertCount(4, $time_intervals);
     }
 }

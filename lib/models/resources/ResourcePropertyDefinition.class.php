@@ -30,7 +30,7 @@
  * @property string $info_label database column
  * @property bool $searchable database column
  *     0 = not searchable, 1 = searchable
- * @property string $range_search database column: Whether a search field
+ * @property bool $range_search database column: Whether a search field
  *     for this property shall display a range selector (1) or not (0).
  *     Setting this attribute is only useful for the property types
  *     'num' and 'position'.
