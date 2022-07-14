@@ -8,7 +8,7 @@
             <? $perm = MvvPerm::get($modulteil) ?>
             <tbody class="<?= ($modulteil_id === $modulteil->getId() ? 'not-collapsed' : 'collapsed') ?><?= $perm->haveFieldPerm('position') ? ' sort_items' : '' ?>"
                    id="<?= $modulteil->getId() ?>">
-                <tr class="header-row">
+                <tr class="header-row sort_item">
                     <td class="toggle-indicator">
                         <? if (count($modulteil->lvgruppen) || $perm->haveFieldPermLvgruppen(MvvPerm::PERM_CREATE)) : ?>
                             <a class="mvv-load-in-new-row"

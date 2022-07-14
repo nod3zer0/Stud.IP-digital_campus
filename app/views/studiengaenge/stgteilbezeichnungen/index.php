@@ -19,7 +19,7 @@
                 <? $perm = MvvPerm::get($stgteilbezeichnung) ?>
                 <tbody id="<?= $stgteilbezeichnung->id ?>"
                        class="collapsed <?php if ($perm->haveFieldPerm('position')) echo 'sort_items'; ?>">
-                    <tr class="header-row">
+                    <tr class="header-row sort_item">
                         <td class="toggle-indicator">
                             <a class="mvv-load-in-new-row"
                                href="<?= $controller->url_for('/details/' . $stgteilbezeichnung->id) ?>">

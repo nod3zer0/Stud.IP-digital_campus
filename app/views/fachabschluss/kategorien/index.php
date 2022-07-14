@@ -22,7 +22,7 @@
                 <? $abschluesse = $kategorie->abschluesse; ?>
                 <tbody id="<?= $kategorie->id ?>"
                        class="<?= count($abschluesse) ? '' : 'empty' ?> collapsed<?= $perm->haveFieldPerm('position') ? ' sort_items' : '' ?>">
-                    <tr class="header-row">
+                    <tr class="header-row sort_item">
                         <td class="toggle-indicator">
                             <? if (count($abschluesse) < 1): ?>
                                 <?= htmlReady($kategorie->name) ?>

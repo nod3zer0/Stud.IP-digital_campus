@@ -8,7 +8,7 @@
             </colgroup>
         <? foreach ($assignments as $assignment) : ?>
             <tbody class="<?= count($assignment->modul->modulteile) ? '' : 'empty' ?> <?= ($modul_id == $assignment->modul->id ? 'not-collapsed' : 'collapsed') ?><?= MvvPerm::haveFieldPermPosition($assignment, MvvPerm::PERM_WRITE) ? ' sort_items' : '' ?>" id="<?= $assignment->id ?>">
-                <tr id="modul_<?= $assignment->modul->id ?>" class="header-row">
+                <tr id="modul_<?= $assignment->modul->id ?>" class="header-row sort_item">
                     <td class="toggle-indicator">
                         <? if (count($assignment->modul->modulteile)) : ?>
                         <a class="mvv-load-in-new-row" href="<?= $controller->url_for('/modulteile', $assignment->id) ?>"><?= htmlReady($assignment->getDisplayName()) ?></a>
@@ -50,7 +50,7 @@
             </tbody>
         <? endforeach; TextHelper::reset_cycle(); ?>
         <? if (MvvPerm::haveFieldPermModul_zuordnungen($abschnitt, MvvPerm::PERM_CREATE)) : ?>
-            <tfoot>
+            <tbody>
                 <tr>
                     <td colspan="2">
                         <?= _('Modul hinzufügen') ?>
@@ -68,7 +68,7 @@
                             ); ?>
                     </td>
                 </tr>
-            </tfoot>
+            </tbody>
         <? endif; ?>
         </table>
     </form>

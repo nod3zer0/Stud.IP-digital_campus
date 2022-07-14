@@ -28,7 +28,7 @@
             </tbody>
         <? endforeach; ?>
         <? if ($studiengang->typ === 'mehrfach' && MvvPerm::haveFieldPermStudiengangteil($studiengang, MvvPerm::PERM_CREATE)) : ?>
-            <tfoot>
+            <tbody>
                 <tr>
                     <td colspan="3">
                         <form style="width: 100%;"
@@ -63,7 +63,7 @@
                         </form>
                     </td>
                 </tr>
-            </tfoot>
+            </tbody>
         <? endif; ?>
     </table>
 </td>

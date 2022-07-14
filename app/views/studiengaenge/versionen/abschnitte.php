@@ -7,7 +7,7 @@
         <? foreach ($abschnitte as $abschnitt) : ?>
             <tbody id="<?= $abschnitt->id ?>"
                    class="<?= ($abschnitt_id === $abschnitt->id ? 'not-collapsed' : 'collapsed') ?><?= MvvPerm::haveFieldPermPosition($abschnitt, MvvPerm::PERM_WRITE) ? ' sort_items' : '' ?>">
-                <tr class="header-row" id="abschnittt_<?= $abschnitt->id ?>">
+                <tr class="header-row sort_item" id="abschnittt_<?= $abschnitt->id ?>">
                     <td class="toggle-indicator">
                         <a class="mvv-load-in-new-row"
                            href="<?= $controller->url_for('/details_abschnitt/' . $abschnitt->id) ?>">
@@ -53,7 +53,7 @@
         TextHelper::reset_cycle(); ?>
         <? if (count($version->abschnitte) > 0 && MvvPerm::haveFieldPermModul_zuordnungen('StgteilAbschnitt', MvvPerm::PERM_CREATE)
         ) : ?>
-            <tfoot>
+            <tbody>
                 <tr>
                     <td colspan="3">
                         <form class="mvv-qsform" action="<?= $controller->link_for('/add_modul/' . $version->id) ?>"
@@ -83,7 +83,7 @@
                         </form>
                     </td>
                 </tr>
-            </tfoot>
+            </tbody>
         <? endif; ?>
     </table>
 </td>

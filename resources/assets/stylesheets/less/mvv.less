@@ -116,13 +116,13 @@ table {
         }
 
         > tbody.sort_items {
-            > tr.header-row > td:first-child {
+            > tr.sort_item > td:first-child {
                 background: #fff url("@{image-path}/anfasser_24.png") no-repeat left center;
                 cursor: move;
                 padding-left: 10px;
             }
-            &.empty > tr.header-row > td:first-child {
-                &:extend(& > tr.header-row > td:first-child);
+            &.empty > tr.sort_item > td:first-child {
+                &:extend(& > tr.sort_item > td:first-child);
                 padding-left: 30px;
             }
         }

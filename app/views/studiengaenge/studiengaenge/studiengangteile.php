@@ -6,7 +6,7 @@
         </colgroup>
         <? foreach ($stgteile as $stgteil) : ?>
             <tbody id="<?= $stg_stgbez_id . '_' . $stgteil->id ?>"<?= MvvPerm::haveFieldPermStudiengangteil($studiengang, MvvPerm::PERM_WRITE) ? 'class="sort_items"' : '' ?>>
-                <tr class="header-row">
+                <tr class="sort_item">
                     <td width="90%"><?= htmlReady($stgteil->getDisplayName()) ?></td>
                     <td class="actions">
                         <? if (MvvPerm::haveFieldPermStudiengangteil($studiengang, MvvPerm::PERM_CREATE)) : ?>
@@ -48,7 +48,7 @@
             </tbody>
         <? endforeach; ?>
         <? if (MvvPerm::haveFieldPermStudiengangteil($studiengang, MvvPerm::PERM_CREATE)) : ?>
-            <tfoot>
+            <tbody>
                 <tr>
                     <td colspan="2">
                         <form style="width: 100%;"
@@ -80,7 +80,7 @@
                         </form>
                     </td>
                 </tr>
-            </tfoot>
+            </tbody>
         <? endif; ?>
     </table>
 </td>

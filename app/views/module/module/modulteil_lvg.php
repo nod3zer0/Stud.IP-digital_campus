@@ -7,7 +7,7 @@
         <? foreach ($modulteil->lvgruppen as $lvgruppe) : ?>
             <? $lvgruppe_modulteil = LvgruppeModulteil::get([$lvgruppe->getId(), $modulteil->getId()]) ?>
             <tbody id="<?= $modulteil_id . '_' . $lvgruppe->getId() ?>"<?= MvvPerm::haveFieldPermPosition($lvgruppe_modulteil) ? 'class="sort_items"' : '' ?>>
-                <tr class="header-row">
+                <tr class="sort_item">
                     <td><?= htmlReady($lvgruppe->getDisplayName()) ?></td>
                     <td class="actions">
                         <form method="post">
@@ -46,7 +46,7 @@
             </tbody>
         <? endforeach; ?>
         <? if (MvvPerm::haveFieldPermLvgruppen($modulteil, MvvPerm::PERM_CREATE)) : ?>
-            <tfoot>
+            <tbody>
                 <tr>
                     <td colspan="2">
                         <form action="<?= $controller->url_for('/add_lvgruppe/' . $modulteil->id) ?>" method="post">
@@ -60,7 +60,7 @@
                         </form>
                     </td>
                 </tr>
-            </tfoot>
+            </tbody>
         <? endif; ?>
     </table>
 </td>

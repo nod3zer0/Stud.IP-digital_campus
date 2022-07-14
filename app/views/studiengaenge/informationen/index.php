@@ -1,4 +1,4 @@
-<table class="default nohover collapsable">
+<table class="default collapsable">
     <colgroup>
         <col style="width: 70%">
         <col style="width: 29%">
