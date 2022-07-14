@@ -226,7 +226,7 @@ class Oer_MymaterialController extends AuthenticatedController
         }
         $this->counter = OERDownloadcounter::countBySQL("material_id = ?", [$material->id]);
         $this->counter_today = OERDownloadcounter::countBySQL("material_id = :material_id AND mkdate >= :start", [
-            'material_id' => $materia->id,
+            'material_id' => $material->id,
             'start' => mktime(0, 0, 0)
         ]);
     }
