@@ -58,29 +58,27 @@ class PmWikiConnectedCMS extends ConnectedCMS
     * search for content modules
     *
     * returns found content modules
-    * @access public
     * @param string $key keyword
     * @return array list of content modules
     */
-
-    function searchContentModules($key)
+    public function searchContentModules($key)
     {
-        $fields_found = $this->client->call("search_content_modules", $args = [
-                $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['soap_data']['api-key'],
-                $key]);
+        $fields_found = $this->client->call("search_content_modules", [
+            $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['soap_data']['api-key'],
+            $key
+        ]);
 
         $result = [];
-
-        foreach($fields_found as $field)
-        {
-
-            $result[$field['field_id']] = [    'ref_id'            => $field['field_id'],
-                                                                                        'type'              => $field['field_type'],
-                                                                                        'obj_id'            => $field_id,
-                                                                                        'create_date' => $field['create_date'],
-                                                                                        'last_update' => $field['change_date'],
-                                                                                        'title'             => $field['field_title'],
-                                                                                        'description' => $field['field_description']];
+        foreach ($fields_found as $field) {
+            $result[$field['field_id']] = [
+                'ref_id'      => $field['field_id'],
+                'type'        => $field['field_type'],
+                'obj_id'      => null,
+                'create_date' => $field['create_date'],
+                'last_update' => $field['change_date'],
+                'title'       => $field['field_title'],
+                'description' => $field['field_description'],
+            ];
         }
         return $result;
     }

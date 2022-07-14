@@ -159,7 +159,7 @@ class HTMLempty
      */
     public function printContent($indent = 0)
     {
-        echo $this->createContent($str);
+        echo $this->createContent($indent);
     }
 
     /**

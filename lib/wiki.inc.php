@@ -13,7 +13,7 @@ use Studip\Button, Studip\LinkButton;
 * @param int    Version number. If empty, latest version is returned.
 *
 **/
-function getWikiPage($keyword, $version)
+function getWikiPage($keyword, $version = null)
 {
     $page = null;
     if ($version) {
@@ -686,10 +686,10 @@ function listPages($mode, $sortby = NULL)
 /**
 * List all versions of a wiki page
 *
-* @param  string  WikiPage name
-* @param  sortby  string  Different sortings of entries.
+* @param  string $keyword WikiPage name
+* @param  string|null $sortby Different sortings of entries.
 **/
-function listPageVersions($keyword, $sortby = NULL)
+function listPageVersions($keyword, $sortby = null)
 {
     $selfurl = '?view=pageversions';
     $sort = "ORDER by version DESC"; // default sort order for versions"
@@ -724,13 +724,10 @@ function listPageVersions($keyword, $sortby = NULL)
 
     $pages = WikiPage::findBySQL("range_id = ? AND keyword = ? ".$sort, [Context::getId(), $keyword]);
 
-    if (count($pages) === 0) {
-        #PageLayout::postInfo($nopages);
-    } else {
+    if (count($pages) > 0) {
         $template = $GLOBALS['template_factory']->open('wiki/pageversions.php');
         $template->keyword         = $keyword;
         $template->url             = $selfurl;
-        $template->titlesortlink   = $titlesortlink;
         $template->versionsortlink = $versionsortlink;
         $template->changesortlink  = $changesortlink;
         $template->pages           = $pages;
@@ -738,11 +735,11 @@ function listPageVersions($keyword, $sortby = NULL)
         echo $template->render();
     }
 
-    $wikiData = getWikiPage($keyword, $version);
+    $wikiData = getWikiPage($keyword);
 
-    getShowPageInfobox($keyword, $wikiData->isLatestVersion(),TRUE);
+    getShowPageInfobox($keyword, $wikiData->isLatestVersion());
 
-    showPageFrameEnd([]);
+    showPageFrameEnd();
 }
 
 

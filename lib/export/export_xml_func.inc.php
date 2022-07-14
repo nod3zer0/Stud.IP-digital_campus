@@ -74,8 +74,12 @@ global $SOFTWARE_VERSION, $ex_type, $ex_sem, $range_name, $range_id;
 */
 function xml_open_tag($tag_name, $tag_key = "")
 {
-    if ($tag_key != "")
+    $xml_tag_string = '';
+
+    if ($tag_key) {
         $xml_tag_string .= " key=\"" . xml_escape ($tag_key ) ."\"" ;
+    }
+
     $xml_tag_string = "<" . $tag_name . $xml_tag_string .  ">\n";
     return $xml_tag_string;
 }

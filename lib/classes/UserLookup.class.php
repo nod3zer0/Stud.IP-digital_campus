@@ -231,20 +231,20 @@ class UserLookup
             throw new Exception('[UserLookup] Unknown type "' . $type . '"');
         }
 
-        if (self::USE_CACHE) {
-            $cache = StudipCacheFactory::getCache();
-            $cache_key = "UserLookup/{$type}/values";
-            $cached_values = $cache->read($cache_key);
-            if ($cached_values) {
-                return unserialize($cached_values);
-            }
+        if (!self::USE_CACHE) {
+            return call_user_func(self::$types[$type]['values']);
+        }
+
+        $cache = StudipCacheFactory::getCache();
+        $cache_key = "UserLookup/{$type}/values";
+        $cached_values = $cache->read($cache_key);
+        if ($cached_values) {
+            return unserialize($cached_values);
         }
 
         $values = call_user_func(self::$types[$type]['values']);
 
-        if (self::USE_CACHE) {
-            $cache->write($cache_key, serialize($values), self::CACHE_DURATION);
-        }
+        $cache->write($cache_key, serialize($values), self::CACHE_DURATION);
 
         return $values;
     }

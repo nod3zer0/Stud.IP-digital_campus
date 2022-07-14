@@ -106,10 +106,6 @@ class Ilias4Soap extends Ilias3Soap
      */
     function copyObject($source_id, $target_id)
     {
-        $type = $object_data["type"];
-        $title = $object_data["title"];
-        $description = $object_data["description"];
-
         $xml = "<Settings source_id=\"$source_id\" target_id=\"$target_id\" default_action=\"COPY\"/>";
 
         $param = [

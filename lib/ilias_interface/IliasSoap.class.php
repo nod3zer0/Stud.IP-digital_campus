@@ -1065,15 +1065,12 @@ class IliasSoap extends StudipSoapClient
     function copyObject($source_id, $target_id)
     {
         $this->clearCache();
-        $type = $object_data["type"];
-        $title = $object_data["title"];
-        $description = $object_data["description"];
 
         $xml = "<Settings source_id=\"$source_id\" target_id=\"$target_id\" default_action=\"COPY\"/>";
 
         $param = [
-                        'sid' => $this->getSID(),
-                        'xml' => $xml
+            'sid' => $this->getSID(),
+            'xml' => $xml
         ];
         return $this->call('copyObject', $param);
     }

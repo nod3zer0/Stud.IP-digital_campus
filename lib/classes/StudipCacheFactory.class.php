@@ -66,49 +66,6 @@ class StudipCacheFactory
         self::$cache = NULL;
     }
 
-
-    /**
-     * Configure the file, class and arguments used for instantiation of the
-     * StudipCache instance. After sending this method, the previously used cache
-     * instance is voided and a new instance will be created on demand.
-     *
-     * @param    string             the absolute path to the implementing class
-     * @param    string             the name of the class
-     * @param    array              an array of custom arguments
-     *
-     * @return void
-     */
-    public static function configure($file, $class, $arguments)
-    {
-        # TODO encoding for strings... but probably the caller should care..
-        $arguments = json_encode($arguments);
-
-        // strip leading STUDIP_BASE_PATH from file path
-        $file = studip_relative_path($file);
-
-        self::unconfigure();
-
-        $cfg = self::getConfig();
-
-        $cfg->create('cache_class', [
-            'comment' => 'Pfad der Datei, die die StudipCache-Klasse enthält',
-            'value'   => $class]
-        );
-        $cfg->create('cache_class_file', [
-            'comment' => 'Klassenname des zu verwendenden StudipCaches',
-            'value'   => $file]
-        );
-        $cfg->create('cache_init_args', [
-            'comment' => 'JSON-kodiertes Array von Argumenten für die Instanziierung der StudipCache-Klasse',
-            'value'   => $arguments]
-        );
-
-        $cfg->store('cache_class', $class);
-        $cfg->store('cache_class_file', $file);
-        $cfg->store('cache_init_args', $arguments);
-    }
-
-
     /**
      * Resets the configuration and voids the cache instance.
      *
@@ -118,7 +75,6 @@ class StudipCacheFactory
     {
         self::$cache = NULL;
     }
-
 
     /**
      * Returns a cache instance.
@@ -187,7 +143,7 @@ class StudipCacheFactory
         $cache_class = $cacheConfig['type'] ?: null;
 
         # default class
-        if (is_null($cache_class)) {
+        if ($cache_class === null) {
             $version = new DBSchemaVersion();
             if ($version->get(1) < 224) {
                 // db cache is not yet available, use StudipMemoryCache
@@ -197,18 +153,8 @@ class StudipCacheFactory
             return self::DEFAULT_CACHE_CLASS;
         }
 
-        # already loaded
-        if (class_exists($cache_class)) {
-            return $cache_class;
-        }
-
-        $loaded = false;
-        if (file_exists($cache_class_file) || file_exists($GLOBALS['STUDIP_BASE_PATH'] . '/' . $cache_class_file)) {
-            $loaded = include $cache_class_file;
-        }
-        if ($loaded === FALSE || !class_exists($cache_class)) {
-            # TODO (mlunzena) a more specific exception would be welcome here
-            throw new Exception("Could not find class: '$cache_class'");
+        if (!class_exists($cache_class)) {
+            throw new UnexpectedValueException("Could not find class: '$cache_class'");
         }
 
         return $cache_class;

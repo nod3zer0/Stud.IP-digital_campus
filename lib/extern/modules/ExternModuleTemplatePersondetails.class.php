@@ -257,9 +257,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             $global_view = true;
             $selected_item_ids = $this->config->getValue('SelectInstitutes', 'institutesselected');
             // at least one institute has to be selected in the configuration
-            if (!is_array($selected_item_ids)) {
-                // default to always show user for now
-            } else if ($this->config->getValue('Main', 'onlylecturers')) {
+            if (is_array($selected_item_ids)) {
                 // is user lecturer ?
                 $current_semester = get_sem_num(time());
                 $stm = DBManager::get()->prepare(sprintf(
@@ -287,7 +285,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                     get_ext_vis_query()));
                 $stm->execute([$username]);
                 // user is not a lecturer
-                if (!$row = $stm->fetch()) {
+                if (!$stm->fetch()) {
                     return [];
                 }
             } else {
@@ -303,13 +301,11 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                     implode("','", $selected_item_ids), get_ext_vis_query()));
                 $stm->execute([$username]);
                 // user is not dozent at an institute that is in the list of accepted institutes
-                if (!$row = $stm->fetch()) {
+                if (!$stm->fetch()) {
                     return [];
                 }
             }
         }
-
-        $row = false;
 
         // Mitarbeiter/in am Institut
         $stm_inst = DBManager::get()->prepare(
@@ -346,7 +342,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 . "LEFT JOIN auth_user_md5 aum USING(user_id) "
                 . "WHERE s.Seminar_id = ? "
                 . "AND si.institut_id != ? AND ui.inst_perms = 'dozent' AND aum.username = ? AND " . get_ext_vis_query());
-            $stm_inst->execute([$sem_id, $intituts_id, $username]);
+            $stm_inst->execute([$sem_id, $instituts_id, $username]);
             if ($row = $stm_inst->fetch(PDO::FETCH_ASSOC)) {
                 $instituts_id = $row['institut_id'];
             }
@@ -434,8 +430,6 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         $allRows = $stm->fetchAll();
 
         $this->user_id = $row['user_id'];
-
-        $this->user_perm = $visibilities['perms'];
 
         $content['__GLOBAL__']['STUDIP-EDIT-HREF'] = "{$GLOBALS['ABSOLUTE_URI_STUDIP']}dispatch.php/settings/account?username=$username&login=yes";
 

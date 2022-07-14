@@ -567,7 +567,7 @@ class ExternConfig
                     "sri" => $sri, "sri_structure" => $sri_structure, "link_sri" => $link_sri,
                     "level" => $level, "link_br" => $link_br];
             } else {
-                $info = ["module_type" => $module_type, "module_name" => $module_name,
+                $info = ["module_type" => $module_type, "module_name" => $module,
                     "name" =>$res['name'], "make_date" => $make,
                     "change_date" => $change,   "sri" => $sri, "link_sri" => $link_sri,
                     "level" => $level];

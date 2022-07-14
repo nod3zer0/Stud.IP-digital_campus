@@ -84,43 +84,45 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
     * @param string $course_id course-id
     * @return boolean returns false on error
     */
-    function checkUserPermissions($course_id = "")
+    function checkUserPermissions($course_id)
     {
         global $connected_cms, $messages;
 
-        if ($course_id == "")
+        if (!$course_id) {
             return false;
-        if ($connected_cms[$this->cms_type]->user->getId() == "")
+        }
+        if (!$connected_cms[$this->cms_type]->user->getId()) {
             return false;
+        }
 
         // get course role folder and local roles
         $local_roles = $connected_cms[$this->cms_type]->soap_client->getLocalRoles($course_id);
         $active_role = "";
         $proper_role = "";
-        $user_crs_role = $connected_cms[$this->cms_type]->crs_roles[$perm->get_studip_perm(Context::getId())];
-        if (is_array($local_roles))
-            foreach ($local_roles as $key => $role_data)
-                // check only if local role is il_crs_member, -tutor or -admin
-                if (! (mb_strpos($role_data["title"], "_crs_") === false))
-                {
-                    if ( in_array( $role_data["obj_id"], $connected_cms[$this->cms_type]->user->getRoles() ) )
+        $user_crs_role = $connected_cms[$this->cms_type]->crs_roles[$GLOBALS['perm']->get_studip_perm(Context::getId())];
+        if (is_array($local_roles)) {
+            foreach ($local_roles as $key => $role_data) { // check only if local role is il_crs_member, -tutor or -admin
+                if (mb_strpos($role_data["title"], "_crs_") !== false) {
+                    if (in_array($role_data["obj_id"], $connected_cms[$this->cms_type]->user->getRoles())) {
                         $active_role = $role_data["obj_id"];
-                    if ( mb_strpos( $role_data["title"], $user_crs_role) > 0 )
+                    }
+                    if (mb_strpos($role_data["title"], $user_crs_role) > 0) {
                         $proper_role = $role_data["obj_id"];
+                    }
                 }
-    //          if ($GLOBALS["debug"] == true)
-    //              echo "P$proper_role A$active_role U" . $user_crs_role . " R" . implode($connected_cms[$this->cms_type]->user->getRoles(), ".")."<br>";
+            }
+//             if ($GLOBALS["debug"] == true)
+//                 echo "P$proper_role A$active_role U" . $user_crs_role . " R" . implode($connected_cms[$this->cms_type]->user->getRoles(), ".")."<br>";
+        }
 
         // is user already course-member? otherwise add member with proper role
         $is_member = $connected_cms[$this->cms_type]->soap_client->isMember( $connected_cms[$this->cms_type]->user->getId(), $course_id);
-        if (! $is_member)
-        {
+        if (!$is_member) {
             $member_data["usr_id"] = $connected_cms[$this->cms_type]->user->getId();
             $member_data["ref_id"] = $course_id;
             $member_data["status"] = CRS_NO_NOTIFICATION;
             $type = "";
-            switch ($user_crs_role)
-            {
+            switch ($user_crs_role) {
                 case "admin":
                     $member_data["role"] = CRS_ADMIN_ROLE;
                     $type = "Admin";
@@ -237,22 +239,20 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
     * get operation-ids
     *
     * returns an array of operation-ids
-    * @access public
-    * @param string $operation operation
-    * @return array operation-ids
+    * @param array $operation operation
+    * @return array|false operation-ids
     */
-    function getOperationArray($operation)
+    public function getOperationArray($operation)
     {
-        if (is_array($operation))
-        {
-            foreach ($operation as $key => $operation_name)
-            {
-                $ops_array[] = $this->operations[$operation_name];
-            }
-        }
-        else
+        if (!is_array($operation)) {
             return false;
-        return $ops_array;
+        }
+
+        return array_map(
+            function ($operation_name) {
+                return $this->operations[$operation_name];
+            },
+            $operation
+        );
     }
 }
-?>

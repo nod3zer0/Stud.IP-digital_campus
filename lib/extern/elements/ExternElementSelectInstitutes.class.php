@@ -65,14 +65,12 @@ class ExternElementSelectInstitutes extends ExternElement {
         return $config;
     }
 
-    public function toStringEdit ($post_vars = '', $faulty_values = '', $edit_form = '', $anker = '') {
-
-        if ($faulty_values == '') {
+    public function toStringEdit ($post_vars = '', $faulty_values = '', $edit_form = '', $anker = '')
+    {
+        if (!$faulty_values) {
             $faulty_values = [];
         }
-        $out = '';
-        $table = '';
-        if ($edit_form == '') {
+        if (!$edit_form) {
             $edit_form = new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
         }
 
@@ -81,7 +79,7 @@ class ExternElementSelectInstitutes extends ExternElement {
 
         $table = $edit_form->editSelectInstitutes();
 
-        $content_table .= $edit_form->editContentTable($headline, $table);
+        $content_table = $edit_form->editContentTable('', $table);
         $content_table .= $edit_form->editBlankContent();
 
         $submit = $edit_form->editSubmit($this->config->getName(), $this->config->getId(), $this->getName());

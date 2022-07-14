@@ -151,7 +151,7 @@ class ExternElementPersondetailsLecturesTemplate extends ExternElementPersondeta
         }
         $table .= $edit_form->editCheckboxGeneric("semclass", $title, $info, $class_values, $class_names);
 
-        $content_table .= $edit_form->editContentTable($headline, $table);
+        $content_table = $edit_form->editContentTable($headline, $table);
         $content_table .= $edit_form->editBlankContent();
 
         $submit = $edit_form->editSubmit($this->config->getName(),

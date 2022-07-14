@@ -114,11 +114,11 @@ class UserPermissions
                                           chdate = UNIX_TIMESTAMP()";
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':user_id', $this->user_id);
-        $statement->bindParam(':consumer_id', $consumer_id);
-        $statement->bindParam(':granted', $granted);
 
         foreach ($this->permissions as $consumer_id => $granted) {
-            $granted = (int)!empty($granted);
+            $statement->bindValue(':consumer_id', $consumer_id);
+            $statement->bindValue(':granted', (int) !empty($granted));
+
             $result = $result && $statement->execute();
         }
 

@@ -97,12 +97,15 @@ class ExternEdit {
         return htmlReady($this->config->getValue($this->element_name, $attribute));
     }
 
-    function getEditFormContent ($attributes, $tag_headlines = NULL) {
+    function getEditFormContent ($attributes, $tag_headlines = NULL)
+    {
         $previous_tag = '';
+
+        $out = '';
 
         foreach ($attributes as $attribute) {
             $attribute_part = explode('_', $attribute);
-            
+
             if (!$attribute_part[2] && $attribute_part[1]) {
                 $edit_function = 'edit' . $attribute_part[1];
 
@@ -128,9 +131,9 @@ class ExternEdit {
                     $previous_tag = $attribute_part[0];
                 }
                 $table .= $this->$edit_function($attribute);
-                
+
             } elseif ($attribute_part[2] && $tag_headlines["{$attribute_part[0]}_{$attribute_part[2]}"]) {
-            
+
                 $attribute_name = $attribute_part[0] . '_' . $attribute_part[2];
                 $edit_function = 'edit' . $attribute_part[1];
                 if ($attribute_name != $previous_tag) {
@@ -146,9 +149,9 @@ class ExternEdit {
                 }
                 $table .= $this->$edit_function($attribute);
             }
-            
+
         }
-        
+
         $out .= $this->editContentTable($headline, $table);
 
         return $out;

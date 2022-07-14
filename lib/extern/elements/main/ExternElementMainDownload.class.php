@@ -216,7 +216,7 @@ class ExternElementMainDownload extends ExternElementMain {
                     $icon_titles[$i], $icon_infos[$i] . $info_add, 50, 200);
             }
         }
-    
+
         $content_table .= $edit_form->editContentTable($headline, $table);
         $content_table .= $edit_form->editBlankContent();
 
@@ -242,12 +242,14 @@ class ExternElementMainDownload extends ExternElementMain {
             case "iconrtf" :
             case "iconzip" :
             case "icondefault" :
-                return ($value[$i] != ""
-                        && (preg_match("/(<|>|\"|<script|<php)/i", $value[$i])
-                        || !preg_match("/^[^.\/\\\].*\.(png|jpg|jpeg|gif)$/i", $value[$i])));
+                return $value
+                        && (
+                            preg_match("/(<|>|\"|<script|<php)/i", $value)
+                            || !preg_match("/^[^.\/\\\].*\.(png|jpg|jpeg|gif)$/i", $value)
+                        );
         }
 
-        return FALSE;
+        return false;
     }
 
 }

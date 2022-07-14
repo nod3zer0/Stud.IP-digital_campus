@@ -111,7 +111,7 @@ class ExternEditGeneric extends ExternEdit {
 
         $invalidClass = $this->faulty_values[$form_name][0] ? "class=\"invalid\" " : "";
 
-        $out .= "<label $invalidClass>$title\n";
+        $out = "<label $invalidClass>$title\n";
         $out .= tooltipIcon($info);
         $out .= "<input type=\"text\" name=\"$form_name\" size=\"$size\"";
         $out .= " maxlength=\"$maxlength\" value=\"$value\">";

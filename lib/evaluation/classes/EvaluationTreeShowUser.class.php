@@ -315,7 +315,6 @@ class EvaluationTreeShowUser
      */
     public function getQuestionContent($question, $group)
     {
-
         $type = $question->isMultipleChoice() ? "checkbox" : "radio";
         $answerBorder = "1px dotted #909090";
         $residualBorder = "1px dotted #909090";
@@ -327,6 +326,8 @@ class EvaluationTreeShowUser
             in_array($question->getObjectID(), $GLOBALS["mandatories"]))
             ? "background-image:url(" . Assets::image_path("steelgroup1.gif") . "); border-left:3px solid red; border-right:3px solid red;"
             : "";
+
+        $html = '';
 
         /* Skala (one row question) ---------------------------------------- */
         if ($question->getType() == EVALQUESTION_TYPE_LIKERT || $question->getType() == EVALQUESTION_TYPE_POL) {

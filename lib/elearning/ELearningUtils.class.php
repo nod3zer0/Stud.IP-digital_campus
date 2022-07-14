@@ -225,8 +225,6 @@ class ELearningUtils
             $template->set_attribute('is_connected', 1);
         }
         $template->set_attribute('my_account_cms', $my_account_cms);
-        $template->set_attribute('search_key', $search_key);
-        $template->set_attribute('view', $view);
         $template->set_attribute('message', $message);
         return $template->render();
     }
@@ -318,7 +316,6 @@ class ELearningUtils
                 }
             }
         } elseif (!$is_verified) {
-            $output .= '<font size="-1">';
             if (Request::submitted('start')) {
                 $messages["info"] = sprintf(_("Sie versuchen zum erstem Mal ein Lernmodul des angebundenen Systems %s zu starten. Bevor Sie das Modul nutzen können, muss Ihrem Stud.IP-Benutzeraccount ein Account im angebundenen System zugeordnet werden."), htmlReady($connected_cms[$new_account_cms]->getName())) . "<br><br>\n\n";
             }
@@ -464,7 +461,7 @@ class ELearningUtils
      *
      * creates output of ilias courses linked to the chosen seminar. also updates object-connections.
      *
-     * @return boolean successful
+     * @return array
      */
     public static function getIliasCourses($sem_id)
     {
@@ -475,15 +472,20 @@ class ELearningUtils
                           FROM object_contentmodules
                           WHERE module_type = 'crs' AND object_id = " . $db->quote($sem_id))
                         ->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($rs as $row) $courses[$row['system_type']] = $row['module_id'];
+        foreach ($rs as $row) {
+            $courses[$row['system_type']] = $row['module_id'];
+        }
+
+        $connected_courses = [
+            'courses' => [],
+        ];
         if (is_array($courses))
-            foreach($courses as $system_type => $crs_id)
+            foreach ($courses as $system_type => $crs_id)
                 if (self::isCMSActive($system_type)) {
                     self::loadClass($system_type);
                     $connected_courses['courses'][$system_type] = [
                         'url' => URLHelper::getLink($connected_cms[$system_type]->link->cms_link . '?client_id=' . $connected_cms[$system_type]->getClientId() . '&cms_select=' . $system_type . '&ref_id=' . $crs_id . '&type=crs&target=start'),
                         'cms_name' => $connected_cms[$system_type]->getName()];
-                    $course_output[] = "<a href=\"" . URLHelper::getLink($connected_cms[$system_type]->link->cms_link . "?" . "client_id=" . $connected_cms[$system_type]->getClientId() . "&cms_select=" . $system_type . "&ref_id=" . $crs_id . "&type=crs&target=start") . "\" target=\"_blank\" rel=\"noopener noreferrer\">".sprintf(_("Kurs in %s"), htmlReady($connected_cms[$system_type]->getName()))."</a>";
                     // gegebenenfalls zugeordnete Module aktualisieren
                     if (Request::option('update')) {
                         if ((method_exists($connected_cms[$system_type], "updateConnections"))) {
@@ -496,17 +498,11 @@ class ELearningUtils
                 }
 
         if ($connected_courses['courses']) {
-            if (count($connected_courses['courses']) > 1)
+            if (count($connected_courses['courses']) > 1) {
                 $connected_courses['text'] = _("Diese Veranstaltung ist mit folgenden Ilias-Kursen verknüpft. Hier gelangen Sie direkt in den jeweiligen Kurs: ");
-            else
+            } else {
                 $connected_courses['text'] = _("Diese Veranstaltung ist mit einem Ilias-Kurs verknüpft. Hier gelangen Sie direkt in den Kurs: ");
-            $output["update"] .= _("Hier können Sie die Zuordnungen zu den verknüpften Kursen aktualisieren."). "<br>";
-            $output["update"] .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "#anker\">\n";
-            $output["update"] .= CSRFProtection::tokenTag();
-            $output["update"] .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
-            $output["update"] .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . htmlReady($cms_select) . "\">\n";
-            $output["update"] .= Button::create(_('Aktualisieren'), 'update');
-            $output["update"] .= "</form>";
+            }
         }
 
         return $connected_courses;

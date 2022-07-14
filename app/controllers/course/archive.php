@@ -187,51 +187,5 @@ class Course_ArchiveController extends AuthenticatedController
             }
         }
 
-        /*
-        // enable the following code when archive.inc.php is replaced
-
-        //get all courses:
-        $courses = Course::findMany($courseIds);
-
-        //now create ArchivedCourse objects out of the Course objects:
-
-        foreach ($courses as $course) {
-            in_archiv($course->id);
-        }
-            $archivedCourse = new ArchivedCourse();
-            $archivedCourse->id = $course->id;
-            $archivedCourse->name = $course->name;
-            $archivedCourse->untertitel = $course->untertitel;
-            $archivedCourse->beschreibung = $course->beschreibung;
-            $archivedCourse->start_time = $course->start_time;
-            $archivedCourse->semester = $course->end_semester; //TODO: maybe start_semester is better
-            $archivedCourse->heimat_inst_id = $course->home_institut->id;
-            $archivedCourse->institute = $course->institutes;
-
-            //get "dozenten":
-            $archivedCourse->dozenten = $course->members->filter(
-                                function ($member) {
-                                    return $member['status'] === "dozent";
-                                }
-                            );
-
-            $archivedCourse->fakultaet = $course->home_institut->faculty;
-
-
-            //dump is an HTML table with the seminar data
-            $archivedCourse->dump = $this->createArchivedCourseHTMLTable($course);
-
-            //TODO:
-            //$archivedCourse->archiv_file_id =
-            //$archivedCourse->archiv_protected_file_id =
-            $archivedCourse->mkdate = time();
-            //$archivedCourse->forumdump =
-            //$archivedCourse->wikidump =
-            $archivedCourse->studienbereiche = $course->study_areas;
-            $archivedCourse->veranstaltungsnummer = $course->veranstaltungsnummer;
-            $archivedCourse->members = $course->members;
-            $archivedCourse->home_institut = $course->home_institut;
-        }
-        */
     }
 }

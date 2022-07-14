@@ -305,9 +305,7 @@ class ExternModuleLecturedetails extends ExternModule {
 
 
         setlocale(LC_TIME, $this->config->getValue("Main", "timelocale"));
-        $order = $this->config->getValue("Main", "order");
         $visible = $this->config->getValue("Main", "visible");
-        $aliases = $this->config->getValue("Main", "aliases");
         $j = -1;
 
         $data["name"] = $data_sem["name"];
@@ -328,12 +326,12 @@ class ExternModuleLecturedetails extends ExternModule {
 
         if ($visible[++$j]) {
             $aliases_sem_type = $this->config->getValue("ReplaceTextSemType",
-                    "class_{$SEM_TYPE[$data_sem['semtype']]['class']}");
+                    "class_{$GLOBALS['SEM_TYPE'][$data_sem['semtype']]['class']}");
             if ($aliases_sem_type[$sem_types_position[$data_sem['semtype']] - 1])
                 $data["status"] = $aliases_sem_type[$sem_types_position[$data_sem['semtype']] - 1];
             else {
-                $data["status"] = htmlReady($SEM_TYPE[$data_sem['semtype']]["name"]
-                        ." (". $SEM_CLASS[$SEM_TYPE[$data_sem['semtype']]["class"]]["name"].")");
+                $data["status"] = htmlReady($GLOBALS['SEM_TYPE'][$data_sem['semtype']]["name"]
+                        ." (". $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$data_sem['semtype']]["class"]]["name"].")");
             }
         }
 
@@ -391,11 +389,13 @@ class ExternModuleLecturedetails extends ExternModule {
     }
 
 
-    // private
-    function toStringMainTable ($data, $preview) {
+    private function toStringMainTable ($data, $preview)
+    {
         $order = $this->config->getValue("Main", "order");
         $visible = $this->config->getValue("Main", "visible");
         $aliases = $this->config->getValue("Main", "aliases");
+
+        $out = '';
 
         if ($this->config->getValue("Main", "studiplink")) {
             $out .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"";

@@ -136,16 +136,11 @@ class ExternModuleTemplateDownload extends ExternModule {
     }
 
     function getContent ($args = NULL, $raw = FALSE) {
-        $error_message = "";
         if (!$args) {
             $args = [];
         }
         $content = [];
 
-        // check for valid range_id
-        if(!$this->checkRangeId($this->config->range_id)) {
-            $error_message = $GLOBALS['EXTERN_ERROR_MESSAGE'];
-        }
         // if $args['seminar_id'] is given, check for free access
         if ($args['seminar_id']) {
             $seminar_id = $args['seminar_id'];
@@ -156,9 +151,6 @@ class ExternModuleTemplateDownload extends ExternModule {
             $statement = DBManager::get()->prepare($query);
             $statement->execute($params);
             $row = $statement->fetchColumn();
-            if ($row !== false && $row == 0 ) {
-                 $error_message = $GLOBALS['EXTERN_ERROR_MESSAGE'];
-            }
         } else {
             $seminar_id = $this->config->range_id;
         }
@@ -288,15 +280,17 @@ class ExternModuleTemplateDownload extends ExternModule {
 
     }
 
-    function printoutPreview () {
-        if (!$language = $this->config->getValue("Main", "language"))
-            $language = "de_DE";
+    public function printoutPreview ()
+    {
+        $language = $this->config->getValue("Main", "language") ?: 'de_DE';
         init_i18n($language);
 
-        echo $this->elements['TemplateGeneric']->toString(['content' => $this->getContent($args), 'subpart' => 'DOWNLOAD', 'hide_markers' => FALSE]);
+        echo $this->elements['TemplateGeneric']->toString([
+            'content'      => $this->getContent(),
+            'subpart'      => 'DOWNLOAD',
+            'hide_markers' => false,
+        ]);
 
     }
 
 }
-
-?>

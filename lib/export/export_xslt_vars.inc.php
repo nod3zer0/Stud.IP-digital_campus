@@ -188,5 +188,3 @@ $xslt_files["csv-veranstaltung-2"]["desc"] = _("Modul zur Ausgabe von Veranstalt
 $xslt_files["csv-veranstaltung-2"]["file"] = "csv-v-2.xsl";
 $xslt_files["csv-veranstaltung-2"]["csv"] = true;
 $xslt_files["csv-veranstaltung-2"]["veranstaltung"] = true;
-
-?>

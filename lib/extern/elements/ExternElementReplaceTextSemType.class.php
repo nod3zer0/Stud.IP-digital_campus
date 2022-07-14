@@ -85,9 +85,8 @@ class ExternElementReplaceTextSemType extends ExternElement {
         return $config;
     }
 
-    function toStringEdit ($post_vars = "", $faulty_values = "",
-            $edit_form = "", $anker = "") {
-
+    function toStringEdit ($post_vars = "", $faulty_values = "", $edit_form = "", $anker = "")
+    {
         global $SEM_TYPE;
 
         $order = $this->config->getValue($this->name, "order");
@@ -96,19 +95,19 @@ class ExternElementReplaceTextSemType extends ExternElement {
             $this->config->store();
         }
 
-        if ($faulty_values == '')
+        if (!$faulty_values)
             $faulty_values = [];
-        $out = '';
-        $table = '';
-        if ($edit_form == '')
+
+        if (!$edit_form) {
             $edit_form = new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
+        }
 
         $edit_form->setElementName($this->getName());
         $element_headline = $this->getEditFormHeadline($edit_form);
 
         $table = $edit_form->editSemTypes();
 
-        $content_table .= $edit_form->editContentTable($headline, $table);
+        $content_table = $edit_form->editContentTable('', $table);
         $content_table .= $edit_form->editBlankContent();
 
         $submit = $edit_form->editSubmit($this->config->getName(),

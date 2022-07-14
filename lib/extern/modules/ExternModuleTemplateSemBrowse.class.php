@@ -1113,20 +1113,6 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             $sem_types_query = '';
         }
 
-        // participated institutes (or show only courses located at this faculty)
-        /*
-        $sem_inst_query = '';
-        if (!$this->config->getValue('Main', 'allseminars')) {
-            $tree = TreeAbstract::GetInstance('StudipRangeTree');
-            $kidskids = $tree->getKidsKids($this->sem_browse_data['start_item_id']);
-            $institute_ids = array($tree->tree_data[$this->sem_browse_data['start_item_id']]['studip_object_id']);
-            foreach ($kidskids as $kid) {
-                $institute_ids[] = $tree->tree_data[$kid]['studip_object_id'];
-            }
-            $sem_inst_query = " AND seminare.Institut_id IN ('" . join("','", $institute_ids) . "')";
-        }
-        */
-
         if (!$nameformat = $this->config->getValue('Main', 'nameformat')) {
             $nameformat = 'full_rev';
         }
@@ -1138,7 +1124,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                 LEFT JOIN auth_user_md5 USING (user_id)
                 LEFT JOIN user_info USING (user_id)
                 $add_query
-                WHERE seminare.Seminar_id IN('" . join("','", array_keys($this->sem_browse_data['search_result'])) . "') $sem_types_query $sem_inst_query $sem_tree_query $limit_sql";
+                WHERE seminare.Seminar_id IN('" . join("','", array_keys($this->sem_browse_data['search_result'])) . "') $sem_types_query $sem_tree_query $limit_sql";
         $db = new DB_Seminar($query);
         if (!$db->num_rows()) {
             return [[], []];

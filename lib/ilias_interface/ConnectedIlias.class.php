@@ -738,14 +738,12 @@ class ConnectedIlias
             $found = [];
             $added = 0;
             $deleted = 0;
-            $messages["info"] .= "<b>".sprintf(_("Aktualisierung der Zuordnungen zum System \"%s\":"), $this->getName()) . "</b><br>";
             foreach($result as $ref_id => $data) {
                 if (($data['accessInfo'] == 'granted') || ($this->ilias_interface_config['show_offline'] && $data['offline'])) {
                     $this->course_modules[$ref_id] = new IliasModule($ref_id, $data, $this->index, $this->ilias_int_version);
                 }
                 $check->execute([Context::getId(), $ref_id, $this->index, $data["type"]]);
                 if (!$check->fetch()) {
-                    $messages["info"] .= sprintf(_("Zuordnung zur Lerneinheit \"%s\" wurde hinzugefügt."), ($data["title"])) . "<br>";
                     IliasObjectConnections::setConnection(Context::getId(), $ref_id, $data["type"], $this->index);
                     $added++;
                 }
@@ -756,10 +754,6 @@ class ConnectedIlias
             while ($row = $to_delete->fetch(PDO::FETCH_ASSOC)) {
                 IliasObjectConnections::unsetConnection(Context::getId(), $row["module_id"], $row["module_type"], $this->index);
                 $deleted++;
-                $messages["info"] .= sprintf(_("Zuordnung zu \"%s\" wurde entfernt."), $row["module_id"]  . '_' . $row["module_type"]) . "<br>";
-            }
-            if (($added + $deleted) < 1) {
-                $messages["info"] .= _("Die Zuordnungen sind bereits auf dem aktuellen Stand.") . "<br>";
             }
             return true;
         }

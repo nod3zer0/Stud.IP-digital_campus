@@ -964,7 +964,7 @@ class EvalTemplateGUI
         }
 
         if (empty($rangeID)) {
-            $rangeID = get_Username($user->id);
+            $rangeID = get_Username($GLOBALS['user']->id);
         }
 
         $actions = new ActionsWidget();

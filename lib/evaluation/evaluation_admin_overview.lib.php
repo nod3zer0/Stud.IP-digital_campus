@@ -849,10 +849,10 @@ class EvalOverview
         /* -------------------------------------- end: errorcheck while loading */
 
         /* Check for permissions in all ranges of the evaluation -------------- */
+        $no_permission_msg = '';
         if (!$eval->isTemplate() && ($GLOBALS['user']->id != $eval->getAuthorID())) {
 
             $no_permisson = (int)EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval);
-            $no_permission_msg = '';
             if ($no_permisson > 0) {
                 if ($no_permisson === 1) {
                     $no_permission_msg .= sprintf(_("Die Evaluation %s ist einem Bereich zugeordnet, für den Sie keine Veränderungsrechte besitzen."), $evalName);
@@ -1094,8 +1094,10 @@ class EvalOverview
 
             case "save2":
             case "save":
+
                 $eval = new Evaluation($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
                 $update_message = sprintf(_("Die Evaluation %s wurde mit den Veränderungen gespeichert."), $evalName);
+                $time_msg = '';
                 /* Timesettings ---------------------------------------------------- */
                 if (Request::option("startMode")) {
                     switch (Request::option("startMode")) {
@@ -1131,14 +1133,15 @@ class EvalOverview
                     }
 
                     if ($no_permission_msg &&
-                        ($eval->getStopdate != $stopDate &&
-                            $eval->getTimespan != $timeSpan)) {
-                        $time_msg = ($time_msg) ? $time_msg . "<br>" : $no_permission_msg;
+                        ($eval->getStopdate() != $stopDate &&
+                            $eval->getTimespan() != $timeSpan)) {
+                        $time_msg = $time_msg ? $time_msg . "<br>" : $no_permission_msg;
                         $time_msg .= _("Die Einstellungen zur Endzeit wurden nicht verändert.");
                     }
                 }
                 /* ----------------------------------------------- end: timesettings */
 
+                $message = '';
 
                 /* link eval to ranges --------------------------------------------- */
                 $link_range_Array = Request::optionArray("link_range");

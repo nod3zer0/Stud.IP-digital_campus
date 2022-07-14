@@ -67,12 +67,9 @@ class Ilias3ConnectedCMS extends ConnectedCMS
     * get preferences
     *
     * shows additional settings.
-    * @access public
     */
-    function getPreferences()
+    public function getPreferences()
     {
-        global $connected_cms;
-
         $role_template_name = Request::get('role_template_name');
         $cat_name = Request::get('cat_name');
         $style_setting = Request::option('style_setting');
@@ -80,48 +77,46 @@ class Ilias3ConnectedCMS extends ConnectedCMS
 
         $this->soap_client->setCachingStatus(false);
 
-        if ($cat_name != "")
-        {
+        $messages = ['error' => ''];
+
+        if ($cat_name) {
             $cat = $this->soap_client->getReferenceByTitle( trim( $cat_name ), "cat");
-            if ($cat == false)
+            if (!$cat) {
                 $messages["error"] .= sprintf(_("Das Objekt mit dem Namen \"%s\" wurde im System %s nicht gefunden."), htmlReady($cat_name), htmlReady($this->getName())) . "<br>\n";
-            if ($cat != "")
-            {
+            } else {
                 ELearningUtils::setConfigValue("category_id", $cat, $this->cms_type);
                 $this->main_category_node_id = $cat;
             }
         }
 
-        if ($role_template_name != "")
-        {
+        if ($role_template_name) {
             $role_template = $this->soap_client->getObjectByTitle( trim( $role_template_name ), "rolt" );
-            if ($role_template == false)
+            if (!$role_template) {
                 $messages["error"] .= sprintf(_("Das Rollen-Template mit dem Namen \"%s\" wurde im System %s nicht gefunden."), htmlReady($role_template_name), htmlReady($this->getName())) . "<br>\n";
-            if (is_array($role_template))
-            {
+            } elseif (is_array($role_template)) {
                 ELearningUtils::setConfigValue("user_role_template_id", $role_template["obj_id"], $this->cms_type);
                 ELearningUtils::setConfigValue("user_role_template_name", $role_template["title"], $this->cms_type);
                 $this->user_role_template_id = $role_template["obj_id"];
             }
         }
 
-        if (Request::submitted('submit'))
-        {
+        if (Request::submitted('submit')) {
             ELearningUtils::setConfigValue("user_style", $style_setting, $this->cms_type);
             ELearningUtils::setConfigValue("user_skin", $style_setting, $this->cms_type);
             ELearningUtils::setConfigValue("encrypt_passwords", $encrypt_passwords, $this->cms_type);
-        }
-        else
-        {
-            if (ELearningUtils::getConfigValue("user_style", $this->cms_type) != "")
+        } else {
+            if (ELearningUtils::getConfigValue("user_style", $this->cms_type)) {
                 $style_setting = ELearningUtils::getConfigValue("user_style", $this->cms_type);
-            if (ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type) != "")
+            }
+            if (ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type)) {
                 $encrypt_passwords = ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type);
+            }
         }
 
 
-        if ($messages["error"] != "")
+        if ($messages['error']) {
             echo "<b>" . Icon::create('decline', 'attention')->asImg(['class' => 'text-top', 'title' => _('Fehler')]) . " " . $messages["error"] . "</b><br><br>";
+        }
 
         echo "<table>";
         echo "<tr valign=\"top\"><td width=30% align=\"left\"><font size=\"-1\">";

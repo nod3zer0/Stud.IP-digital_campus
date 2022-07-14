@@ -264,9 +264,8 @@ function kategorien (&$module, $data, $alias_content, $text_div, $text_div_end) 
     echo "</font>$text_div_end</td></tr>\n</table>\n</td></tr>\n";
 }
 
-function lehre (&$module, $data, $alias_content, $text_div, $text_div_end) {
-    global $attr_text_td;
-
+function lehre (&$module, $data, $alias_content, $text_div, $text_div_end)
+{
     $all_semester = Semester::findAllVisible(false);
     // old hard coded $SEMESTER-array starts with index 1
     array_unshift($all_semester, 0);
@@ -274,25 +273,23 @@ function lehre (&$module, $data, $alias_content, $text_div, $text_div_end) {
     if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
         $subheadline_div = "<div style=\"margin-left:$margin;\">";
         $subheadline_div_end = "</div>";
-    }
-    else {
+    } else {
         $subheadline_div = "";
         $subheadline_div_end = "";
     }
     if ($margin = $module->config->getValue("List", "margin")) {
         $list_div = "<div style=\"margin-left:$margin;\">";
         $list_div_end = "</div>";
-    }
-    else {
+    } else {
         $list_div = "";
         $list_div_end = "";
     }
     // sem-types in class 1 (Lehre)
     foreach ($GLOBALS["SEM_TYPE"] as $key => $type) {
-        if ($type["class"] == 1)
+        if ($type["class"] == 1) {
             $types[] = $key;
+        }
     }
-    $types = implode("','", $types);
 
 
     $switch_time = mktime(0, 0, 0, date("m"),
@@ -302,25 +299,30 @@ function lehre (&$module, $data, $alias_content, $text_div, $text_div_end) {
 
     switch ($module->config->getValue("PersondetailsLectures", "semstart")) {
         case "previous" :
-            if (isset($all_semester[$current_sem - 1]))
+            if (isset($all_semester[$current_sem - 1])) {
                 $current_sem--;
+            }
             break;
         case "next" :
-            if (isset($all_semester[$current_sem + 1]))
+            if (isset($all_semester[$current_sem + 1])) {
                 $current_sem++;
+            }
             break;
         case "current" :
             break;
         default :
-            if (isset($all_semester[$module->config->getValue("PersondetailsLectures", "semstart")]))
+            if (isset($all_semester[$module->config->getValue("PersondetailsLectures", "semstart")])) {
                 $current_sem = $module->config->getValue("PersondetailsLectures", "semstart");
+            }
     }
 
     $last_sem = $current_sem + $module->config->getValue("PersondetailsLectures", "semrange") - 1;
-    if ($last_sem < $current_sem)
+    if ($last_sem < $current_sem) {
         $last_sem = $current_sem;
-    if (!isset($all_semester[$last_sem]))
-        $last_sem = sizeof($all_semester) - 1;
+    }
+    if (!isset($all_semester[$last_sem])) {
+        $last_sem = count($all_semester) - 1;
+    }
 
     $out = "";
     for (;$current_sem <= $last_sem; $last_sem--) {
@@ -361,9 +363,11 @@ function lehre (&$module, $data, $alias_content, $text_div, $text_div_end) {
             $out .= $text_div;
             $j = 0;
             foreach ($data as $dat) {
-                if ($j) $out .= "<br><br>";
+                if ($j) {
+                    $out .= "<br><br>";
+                }
                 $out .= "<font" . $module->config->getAttributes("LinkIntern", "font") . ">";
-                $out .= "<a href=\"$lnk\"" . $module->config->getAttributes("LinkIntern", "a") . ">";
+                $out .= "<a href=\"\"" . $module->config->getAttributes("LinkIntern", "a") . ">";
                 $out .= $dat["name"] . "</a></font>\n";
                 $out .= "<font" . $module->config->getAttributes("TableParagraphText", "font") . ">";
                 $out .= "<br>" . $dat["untertitel"] . "</font>\n";

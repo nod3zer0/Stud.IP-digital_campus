@@ -82,16 +82,11 @@ class ExternElementMain extends ExternElement {
     */
     function getDefaultConfig () {}
 
-    /**
-    *
-    */
-    function toStringEdit ($post_vars = "", $faulty_values = "",
-            $edit_form = "", $anker = "") {
-
-        $out = '';
-        $table = '';
-        if ($edit_form == '')
+    public function toStringEdit ($post_vars = "", $faulty_values = "", $edit_form = "", $anker = "")
+    {
+        if (!$edit_form) {
             $edit_form = new ExternEdit($this->config, $post_vars, $faulty_values, $anker);
+        }
 
         $edit_form->setElementName($this->getName());
         $element_headline = $edit_form->editElementHeadline($this->real_name,
@@ -103,7 +98,7 @@ class ExternElementMain extends ExternElement {
         $edit_function = $this->edit_function;
         $table = $edit_form->$edit_function($this->field_names);
 
-        $content_table = $edit_form->editContentTable($tag_headline, $table);
+        $content_table = $edit_form->editContentTable('', $table);
         $submit = $edit_form->editSubmit($this->config->getName(),
                 $this->config->getId(), $this->getName());
         $out = $edit_form->editContent($content_table, $submit);

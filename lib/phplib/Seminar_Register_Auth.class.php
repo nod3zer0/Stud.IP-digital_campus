@@ -219,12 +219,13 @@ class Seminar_Register_Auth extends Seminar_Auth
         $lang_path = getUserLanguagePath($user->id);
 
         // include language-specific subject and mailbody
-        include_once "locale/{$lang_path}/LC_MAILS/register_mail.inc.php";
+        // TODO: This should be refactored so that the included file returns an array
+        include "locale/{$lang_path}/LC_MAILS/register_mail.inc.php"; // Defines $subject and $mailbody
 
         // send the mail
-        $mail->setSubject($subject)
+        $mail->setSubject($subject ?? '')
             ->addRecipient($to)
-            ->setBodyText($mailbody)
+            ->setBodyText($mailbody ?? '')
             ->send();
     }
 

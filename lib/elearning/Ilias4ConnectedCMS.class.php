@@ -191,23 +191,25 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
 
         $this->soap_client->setCachingStatus(false);
 
-        if ($cat_name != "") {
+        $messages = ['error' => ''];
+
+        if ($cat_name) {
             $cat = $this->soap_client->getReferenceByTitle( trim( $cat_name ), "cat");
-            if ($cat == false) {
-                $messages["error"] .= sprintf(_("Das Objekt mit dem Namen \"%s\" wurde im System %s nicht gefunden."), htmlReady($cat_name), htmlReady($this->getName())) . "<br>\n";
-            } elseif ($cat != "") {
+            if (!$cat) {
+                $messages["error"] .= sprintf(_('Das Objekt mit dem Namen "%s" wurde im System %s nicht gefunden.'), htmlReady($cat_name), htmlReady($this->getName())) . "<br>\n";
+            } else {
                 ELearningUtils::setConfigValue("category_id", $cat, $this->cms_type);
                 $this->main_category_node_id = $cat;
             }
         }
 
         if (($this->main_category_node_id != false) AND (ELearningUtils::getConfigValue("user_category_id", $this->cms_type) == "")) {
-            $object_data["title"] = sprintf(_("User-Daten"));
+            $object_data["title"] = _("User-Daten");
             $object_data["description"] = _("Hier befinden sich die persönlichen Ordner der Stud.IP-User.");
             $object_data["type"] = "cat";
             $object_data["owner"] = $this->user->getId();
             $user_cat = $connected_cms[$this->cms_type]->soap_client->addObject($object_data, $connected_cms[$this->cms_type]->main_category_node_id);
-            if ($user_cat != false) {
+            if ($user_cat) {
                 $this->user_category_node_id = $user_cat;
                 ELearningUtils::setConfigValue("user_category_id", $user_cat, $this->cms_type);
             } else {

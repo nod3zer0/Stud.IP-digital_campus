@@ -69,7 +69,10 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
     {
         global $connected_cms, $view, $search_key, $cms_select, $current_module;
 
-        if (! $connected_cms[$this->cms_type]->content_module[$current_module]->isDummy()) {
+        $output = '';
+
+        $result = false;
+        if (!$connected_cms[$this->cms_type]->content_module[$current_module]->isDummy()) {
             $result = $connected_cms[$this->cms_type]->soap_client->getPath($connected_cms[$this->cms_type]->content_module[$current_module]->getId());
         }
         if ($result) {
@@ -119,4 +122,3 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
         return $output;
     }
 }
-?>

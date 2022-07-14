@@ -31,13 +31,13 @@ class MvvPerm {
      * of the designated field.
      */
     const PERM_CREATE = 7;
-    
+
     /**
     * Permission to read, write/create and delete the value
     * of the designated field. Possibly the admin have permission to
     * particular functions.
     */
-    const PERM_ADMIN = 15; 
+    const PERM_ADMIN = 15;
 
     private static $privileges;
 
@@ -47,21 +47,21 @@ class MvvPerm {
 
     /**
      * The actual mvv object.
-     * 
+     *
      * @var object
      */
     private $mvv_object;
 
     /**
-     * to distinguish config files between different languages 
-     * 
+     * to distinguish config files between different languages
+     *
      * @var string
      */
     private $variant;
 
     /**
      * Creates a new perm object for given mvv object.
-     * 
+     *
      * @param ModuleManagementModel $mvv_object
      */
     public function __construct(ModuleManagementModel $mvv_object)
@@ -71,7 +71,7 @@ class MvvPerm {
 
     /**
      * Returns a new perm object for given mvv object.
-     * 
+     *
      * @param ModuleManagementModel|string $mvv_object Class name or instance of
      * mvv object.
      * @return MvvPerm A new perm object.
@@ -105,11 +105,11 @@ class MvvPerm {
 
     /**
      * Intercepts static calls to retrieve permission from configuration.
-     * 
+     *
      * Allowed calls are:
-     * 
+     *
      * MvvPerm::getFieldPermFIELD($mvv_object, $user_id, $institut_id)
-     * 
+     *
      * @see MvvPerm:getFieldPerm()
      * FIELD is the name of the table field.
      * $mvv_object: Class name or instance of mvv object.
@@ -117,9 +117,9 @@ class MvvPerm {
      * $institut_id: The id of an institute or an array of institute ids the
      * user has a mvv related role.
      * Last two arguments are optional.
-     * 
+     *
      * MvvPerm::havePermPERM($mvv_object, $status, $user_id, $institut_id)
-     * 
+     *
      * @see MvvPerm::havePerm()
      * PERM is the constant defining the permission (MvvPerm::PERM_ADMIN,
      * MvvPerm::PERM_CREATE, MvvPerm::PERM_READ, MvvPerm::PERM_WRITE)
@@ -130,9 +130,9 @@ class MvvPerm {
      * $institut_id: The id of an institute or an array of institute ids the
      * user has a mvv related role.
      * Last three arguments are optional
-     * 
+     *
      * MvvPerm::haveFieldPermFIELD($mvv_object, $perm, $user_id, $institut_id)
-     * 
+     *
      * @see MvvPerm::haveFieldPerm()
      * FIELD is the name of the table field.
      * $mvv_object: Class name or instance of mvv object.
@@ -143,7 +143,7 @@ class MvvPerm {
      * $institut_id: The id of an institute or an array of institute ids the
      * user has a mvv related role.
      * Last three arguments are optional.
-     * 
+     *
      * @param type $name
      * @param type $arguments
      * @return type
@@ -183,11 +183,11 @@ class MvvPerm {
 
     /**
      * Intercepts instance methods to retrieve permission from configuration.
-     * 
+     *
      * Allowed calls are:
-     * 
+     *
      * havePermPERM($status, $user_id, $institut_id)
-     * 
+     *
      * @see MvvPerm::havePerm()
      * PERM is the constant defining the permission (MvvPerm::PERM_ADMIN,
      * MvvPerm::PERM_CREATE, MvvPerm::PERM_READ, MvvPerm::PERM_WRITE)
@@ -197,19 +197,19 @@ class MvvPerm {
      * $institut_id: The id of an institute or an array of institute ids the
      * user has a mvv related role.
      * All three arguments are optional
-     * 
+     *
      * getFieldPermFIELD($user_id, $institut_id)
-     * 
+     *
      * @see MvvPerm::getFieldPerm()
      * FIELD is the name of the table field.
      * $user_id: The id of an user. Id of current user as default.
      * $institut_id: The id of an institute or an array of institute ids the
      * user has a mvv related role.
      * All two arguments are optional.
-     * 
-     * 
+     *
+     *
      * haveFieldPermFIELD($perm, $user_id, $institut_id)
-     * 
+     *
      * @see MvvPerm::haveFieldPerm()
      * FIELD is the name of the table field.
      * $perm: The constant defining the permission (MvvPerm::PERM_ADMIN,
@@ -219,10 +219,10 @@ class MvvPerm {
      * $institut_id: The id of an institute or an array of institute ids the
      * user has a mvv related role.
      * All three arguments are optional.
-     * 
-     * 
+     *
+     *
      * @param string $name
-     * @param array $arguments 
+     * @param array $arguments
      * @return mixed
      * @throws InvalidArgumentException If called with unknown permission.
      * @throws BadMethodCallException If called with unknown method to
@@ -262,7 +262,7 @@ class MvvPerm {
      * Sets the variant of an mvv object. The variant means that a different
      * configuration file is used to retrieve the permissions. It is used to
      * determines permissions for different languages of a descriptor.
-     * 
+     *
      * @param string $variant The suffix (part after las underscore) of the
      * file name of a config file.
      * @return $this Returns this instance for method chaining.
@@ -367,15 +367,15 @@ class MvvPerm {
      * Accepts the id of the user, an institute id and the status of this object
      * as optional arguments. Returns whether the user has the given permission
      * to this object.
-     * 
-     * The status of this object is defined in the configuration file 
-     * 
+     *
+     * The status of this object is defined in the configuration file
+     *
      * @param int $perm The permission to check against.
      * @param string $status The status of the object defined in config.
      * @param string $user_id The id of the user.
      * @param string|array $institut_id The id of an institute or an array of
      * institute ids the user has a mvv related role.
-     * @return bool 
+     * @return bool
      */
     public final function havePerm($perm, $status = null,
             $user_id = null, $institut_id = null)
@@ -389,7 +389,7 @@ class MvvPerm {
      * Returns whether the given user has at least the given permission to this
      * object with the actual status. The user_id is optional. Default is the
      * id of the current user.
-     * 
+     *
      * @param int $perm The permission to check against.
      * @param type $user_id The id of an user.
      * @return bool True if the permission is granted.
@@ -405,9 +405,9 @@ class MvvPerm {
     /**
      * Returns whether the actual user has at least the given permission to
      * the datafield entry.
-     * 
+     *
      * @param $datafield_id The id of a datafield.
-     * @param int $perm 
+     * @param int $perm
      * @return bool True if permission is granted.
      */
     public function haveDfEntryPerm($datafield_id, $perm)
@@ -497,9 +497,9 @@ class MvvPerm {
 
     /**
      * Returns true if the user have at least the given permission status.
-     * 
+     *
      * @param string $field The name of the table field.
-     * @param int $perm The optional (default PERM_WRITE) permission status. 
+     * @param int $perm The optional (default PERM_WRITE) permission status.
      * @param string $user_id Optional. The ID of the user. If not set the ID of
      * the current user.
      * @param string|array $institut_id Optional. The id of an institute or an array of
@@ -515,7 +515,7 @@ class MvvPerm {
 
     /**
      * Returns 'readonly' if the given user has no access to the given field.
-     * 
+     *
      * @param string $field The name of the table field.
      * @param int $perm Optional. The permission. Defaults to MvvPerm:PERM_WRITE.
      * @param string $user_id Optional. The ID of the user. If not set the ID of
@@ -532,10 +532,10 @@ class MvvPerm {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param type $user_id
-     * @return 
+     * @return
      */
     public static function getRoles($user_id)
     {
@@ -543,7 +543,7 @@ class MvvPerm {
             $assigned = RolePersistence::getAssignedRoles($user_id);
             foreach (RolePersistence::getAssignedRoles($user_id) as $role_id => $role) {
                 if (substr_compare($role->rolename, 'MVV', 1, 3, true)) {
-                    self::$roles[$user_id][] = $role;    
+                    self::$roles[$user_id][] = $role;
                 }
             }
         }
@@ -560,13 +560,14 @@ class MvvPerm {
             self::$privileges = unserialize($cache->read(MVV::CACHE_KEY . '/privileges'));
         }
 
-        if (self::$privileges[$mvv_table] === null) {            
+        if (self::$privileges[$mvv_table] === null) {
             $config_dir = $GLOBALS['STUDIP_BASE_PATH'] . '/config/mvvconfig';
             if ($config_dir) {
                 $config_file = $config_dir . '/' . $mvv_table . '.php';
                 if (filetype($config_file) === 'file') {
-                    include $config_file;
-                    self::$privileges[$mvv_table] = $privileges;
+                    // TODO: This should be refactored in a way that $config_file returns an array
+                    include $config_file; // Defines $privileges
+                    self::$privileges[$mvv_table] = $privileges ?? [];
                 }
                 $cache = StudipCacheFactory::getCache();
                 $cache->write(MVV::CACHE_KEY . '/privileges', serialize(self::$privileges));
@@ -607,10 +608,10 @@ class MvvPerm {
         if (self::$user_role_institutes[$user_id] === null) {
             $institutes = [];
             foreach ($roles as $role) {
-                
+
                 // don't check system roles or roles not related to MVV
                 if (stripos($role->rolename, 'MVV') !== 0) continue;
-                
+
                 if ($GLOBALS['perm']->have_perm('root', $user_id)) {
                     $institutes = [];
                     break;

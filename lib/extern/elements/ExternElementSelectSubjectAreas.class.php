@@ -98,7 +98,7 @@ class ExternElementSelectSubjectAreas extends ExternElement {
         $names = '';
         $table .= $edit_form->editCheckboxGeneric('reverseselection', $title, $info, $values, $names);
 
-        $content_table .= $edit_form->editContentTable($headline, $table);
+        $content_table = $edit_form->editContentTable('', $table);
         $content_table .= $edit_form->editBlankContent();
 
         $submit = $edit_form->editSubmit($this->config->getName(),

@@ -37,19 +37,10 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-class ExternConfigDb extends ExternConfig {
-
-    /**
-    *
-    */
-    function __construct ($range_id, $module_name, $config_id = '') {
-        parent::__construct ($range_id, $module_name, $config_id);
-    }
-
-    /**
-    *
-    */
-    function store () {
+class ExternConfigDb extends ExternConfig
+{
+    public function store ()
+    {
         parent::store();
         $serialized_config = json_encode($this->config);
 
@@ -67,10 +58,8 @@ class ExternConfigDb extends ExternConfig {
 
     }
 
-    /**
-    *
-    */
-    function parse () {
+    public function parse ()
+    {
         $query = "SELECT config FROM extern_config WHERE config_id = ?";
         $parameters = [$this->id];
         $statement = DBManager::get()->prepare($query);
@@ -83,20 +72,24 @@ class ExternConfigDb extends ExternConfig {
         }
     }
 
-    function insertConfiguration () {
+    public function insertConfiguration ()
+    {
         if (!parent::insertConfiguration()) {
             return false;
         }
-         $serialized_config = json_encode($config_obj->config);
+         $serialized_config = json_encode($this->config);
          $time = time();
-         $query = "INSERT INTO extern_config VALUES (?,?,?,?,0,?,?,?)";
+         $query = "INSERT INTO extern_config VALUES (?, ?, ?, ?, 0, ?, ?, ?)";
          $statement = DBManager::get()->prepare($query);
-         $statement->execute([$this->id, $this->range_id, $this->module_type,
-                $this->config_name, $serialized_config, $time, $time
-            ]);
-            if (!$statement->rowCount()) {
-                return FALSE;
-            }
-        return TRUE;
+         $statement->execute([
+             $this->id,
+             $this->range_id,
+             $this->module_type,
+             $this->config_name,
+             $serialized_config,
+             $time,
+             $time
+        ]);
+        return $statement->rowCount() > 0;
     }
 }

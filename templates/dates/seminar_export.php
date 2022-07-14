@@ -57,7 +57,7 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
     $rooms = array_merge(getPlainRooms($irregular_rooms, false), array_keys($freetext_rooms));
 
     if (is_array($irregular) && sizeof($irregular)) :
-        if (isset($shrink) && !$shrink && sizeof($irregular < 20)) :
+        if (isset($shrink) && !$shrink && sizeof($irregular) < 20) :
             foreach ($irregular as $date) :
                 echo $date['tostring'];
 

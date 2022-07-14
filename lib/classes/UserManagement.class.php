@@ -539,10 +539,12 @@ class UserManagement
             // include language-specific subject and mailbody
             $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']);
             $Zeit = strftime('%x, %X');
-            include "locale/{$user_language}/LC_MAILS/change_mail.inc.php";
+
+            // TODO: This should be refactored so that the included file returns an array
+            include "locale/{$user_language}/LC_MAILS/change_mail.inc.php"; // Defines $subject and $mailbody
 
             // send mail
-            StudipMail::sendMessage($this->user_data['auth_user_md5.Email'], $subject, $mailbody);
+            StudipMail::sendMessage($this->user_data['auth_user_md5.Email'], $subject ?? '', $mailbody ?? '');
         }
         // Upgrade to admin or root?
         if (in_array($newuser['auth_user_md5.perms'], ['admin', 'root'])) {
@@ -999,7 +1001,7 @@ class UserManagement
                 $this->user_data['auth_user_md5.user_id']
             ]);
             if ($statement->rowCount() > 0) {
-                $msg .= 'info§' . _('Benutzername anonymisiert.') . '§';
+                $this->msg .= 'info§' . _('Benutzername anonymisiert.') . '§';
             }
             NotificationCenter::postNotification('UserDataDidRemove', $this->user_data['auth_user_md5.user_id'], 'names');
         }
@@ -1036,10 +1038,12 @@ class UserManagement
             if ($this->checkMail($this->user_data['auth_user_md5.Email'])) {
                 // include language-specific subject and mailbody
                 $Zeit = strftime('%x, %X');
-                include "locale/$user_language/LC_MAILS/delete_mail.inc.php";
+
+                // TODO: This should be refactored so that the included file returns an array
+                include "locale/$user_language/LC_MAILS/delete_mail.inc.php"; // Defines $subject and $mailbody
 
                 // send mail
-                StudipMail::sendMessage($this->user_data['auth_user_md5.Email'], $subject, $mailbody);
+                StudipMail::sendMessage($this->user_data['auth_user_md5.Email'], $subject ?? '', $mailbody ?? '');
             }
 
             // Remove plugin associations/activations

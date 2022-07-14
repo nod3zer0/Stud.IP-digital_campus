@@ -582,6 +582,7 @@ class Router
                     $route['uri_template'] = new UriTemplate($uri_template, $route['conditions']);
                 }
 
+                $prmtrs = null; // Will be filled by a successful match()
                 if ($route['uri_template']->match($uri, $prmtrs)) {
                     if (!$this->permissions->check($uri_template, $method)) {
                         throw new RouterException(403, "Route not activated");

@@ -127,7 +127,7 @@ class ExternElementContact extends ExternElement {
         $info = _("Zusatz zur Adresse der Einrichtung, z.B. Universitätsname.");
         $table .= $edit_form->editTextfieldGeneric("adradd", $title, $info, 35, 100);
 
-        $content_table .= $edit_form->editContentTable($headline, $table);
+        $content_table = $edit_form->editContentTable($headline, $table);
         $content_table .= $edit_form->editBlankContent();
 
         $attributes = ["table_width", "table_align",

@@ -246,10 +246,7 @@ class LibraryFile extends StandardFile
                 _('Datei löschen'),
                 Icon::create('trash', Icon::ROLE_CLICKABLE, ['size' => 20]),
                 [
-                    'formaction'   => URLHelper::getURL(
-                        sprintf('dispatch.php/file/delete/%s', $this->fileref->id),
-                        $flat_view ? ['from_flat_view' => 1] : []
-                    ),
+                    'formaction'   => URLHelper::getURL("dispatch.php/file/delete/{$this->fileref->id}"),
                     'data-confirm' => sprintf(_('Soll die Datei "%s" wirklich gelöscht werden?'), $this->fileref->name),
                 ]
             );

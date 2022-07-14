@@ -253,7 +253,7 @@ class User extends SchemaProvider
             self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_COURSE_MEMBERSHIPS),
             ],
-            self::RELATIONSHIP_DATA => $resource->course_memberships,
+            self::RELATIONSHIP_DATA => $user->course_memberships,
         ];
 
         return $relationships;

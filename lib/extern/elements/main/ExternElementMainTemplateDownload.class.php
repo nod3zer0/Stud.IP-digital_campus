@@ -206,9 +206,11 @@ class ExternElementMainTemplateDownload extends ExternElementMain {
             case "iconrtf" :
             case "iconzip" :
             case "icondefault" :
-                return ($value[$i] != ""
-                        && (preg_match("/(<|>|\"|<script|<php)/i", $value[$i])
-                        || !preg_match("/^[^.\/\\\].*\.(png|jpg|jpeg|gif)$/i", $value[$i])));
+                return $value
+                    && (
+                        preg_match("/(<|>|\"|<script|<php)/i", $value)
+                        || !preg_match("/^[^.\/\\\].*\.(png|jpg|jpeg|gif)$/i", $value)
+                    );
         }
 
         return FALSE;

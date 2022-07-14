@@ -395,7 +395,7 @@ function export_sem($inst_id, $ex_sem_id = 'all')
     $statement->execute($parameters);
     $data = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $data_object .= xml_open_tag($xml_groupnames_lecture['group']);
+    $data_object = xml_open_tag($xml_groupnames_lecture['group']);
 
     foreach ($data as $row) {
         if (is_array($ex_sem_id) && !isset($ex_sem_id[$row['seminar_id']])) {
@@ -412,16 +412,6 @@ function export_sem($inst_id, $ex_sem_id = 'all')
                 $group_string .= xml_open_tag($xml_groupnames_lecture['subgroup1'], $row[$group_tab_zelle]);
             }
             $group = $row[$group_tab_zelle];
-            if ($do_subgroup && $subgroup == $row[$subgroup_tab_zelle]) {
-                $subgroup = "NEXTGROUP";
-            }
-        }
-        if ($do_subgroup && $subgroup != $row[$subgroup_tab_zelle]) {
-            if ($subgroup != 'FIRSTGROUP') {
-                $group_string = xml_close_tag($xml_groupnames_lecture['subgroup2']) . $group_string;
-            }
-            $group_string .= xml_open_tag($xml_groupnames_lecture['subgroup2'], $row[$subgroup_tab_zelle]);
-            $subgroup     = $row[$subgroup_tab_zelle];
         }
         $data_object    .= $group_string;
         $object_counter += 1;
@@ -540,9 +530,6 @@ function export_sem($inst_id, $ex_sem_id = 'all')
         $data_object = '';
     }
 
-    if ($do_subgroup && $subgroup != 'FIRSTGROUP') {
-        $data_object .= xml_close_tag($xml_groupnames_lecture['subgroup2']);
-    }
     if ($do_group && $group != 'FIRSTGROUP') {
         $data_object .= xml_close_tag($xml_groupnames_lecture['subgroup1']);
     }

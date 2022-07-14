@@ -1001,9 +1001,11 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             if($lang == '') {
                 $lang = 'de';
             }
-            include_once("locale/$lang/LC_MAILS/change_self_mail.inc.php");
 
-            $mail = StudipMail::sendMessage($email, $subject, $mailbody);
+            // TODO: This should be refactored so that the included file returns an array
+            include "locale/$lang/LC_MAILS/change_self_mail.inc.php"; // Defines $subject and $mailbody
+
+            $mail = StudipMail::sendMessage($email, $subject ?? '', $mailbody ?? '');
 
             if (!$mail) {
                 return true;

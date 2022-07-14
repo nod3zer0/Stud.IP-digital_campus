@@ -840,77 +840,28 @@ class EvaluationTreeEditView
      * @param string $item_id the current item
      * @return  string   the item details (html)
      */
-    function createTreeItemDetails($item_id)
+    private function createTreeItemDetails($item_id)
     {
-
         $mode = $this->getInstance($item_id);
 
         switch ($mode) {
-
             case ROOT_BLOCK:
-                $eval = new Evaluation ($this->evalID, NULL, EVAL_LOAD_FIRST_CHILDREN);
-                $hasKids = ($eval->getNumberChildren() == 0)
-                    ? NO
-                    : YES;
-                $isLastKid = YES;
+                $eval = new Evaluation($this->evalID, NULL, EVAL_LOAD_FIRST_CHILDREN);
+                $hasKids = $eval->getNumberChildren() == 0 ? NO : YES;
                 break;
-                break;
-
             case ARRANGMENT_BLOCK:
-                $group = &$this->tree->getGroupObject($item_id);
-                $hasKids = ($group->getNumberChildren() == 0)
-                    ? NO
-                    : YES;
-
-                $par = $this->getInstance($group->getParentID());
-
-                if ($par == ROOT_BLOCK)
-                    $parent = new Evaluation ($group->getParentID(), NULL, EVAL_LOAD_FIRST_CHILDREN);
-                else
-                    $parent =& $this->tree->getGroupObject($group->getParentID());
-
-                $isLastKid = ($parent->getNumberChildren()
-                    == $group->getPosition() + 1)
-                    ? YES
-                    : NO;
+                $group = $this->tree->getGroupObject($item_id);
+                $hasKids = $group->getNumberChildren() == 0 ? NO : YES;
                 break;
-
-            case QUESTION_BLOCK:
-
-                $hasKids = NO;
-
-                $group =& $this->tree->getGroupObject($item_id);
-                $par = $this->getInstance($group->getParentID());
-
-                if ($par == ROOT_BLOCK) $parent = new Evaluation ($group->getParentID(), NULL, EVAL_LOAD_FIRST_CHILDREN);
-                else $parent = &$this->tree->getGroupObject($group->getParentID);
-                $isLastKid = ($parent->getNumberChildren()
-                    == $group->getPosition() + 1)
-                    ? YES
-                    : NO;
-                break;
-
             default:
                 $hasKids = NO;
-                $isLastKid = NO;
                 break;
         }
 
-        if (!$hasKids || (!$this->itemID == $item_id))
-            $level_output = $this->createLevelOutputTD("forumleer.gif") . $level_output;
-        else
-            $level_output = $this->createLevelOutputTD("forumstrich.gif") . $level_output;#
-
-
-        if ($item_id != $this->startItemID) {
-            $parent_id = $item_id;
-
-            while (($this->tree->tree_data[$parent_id]['parent_id'] != $this->tree->tree_data[$this->startItemID]['parent_id']) &&
-                ($this->tree->tree_data[$parent_id]['parent_id'] != $start_itemID) &&
-                ($this->tree->tree_data[$parent_id]['parent_id'] != ROOT_BLOCK)) {
-
-                $parent_id = $this->tree->tree_data[$parent_id]['parent_id'];
-            }
+        if (!$hasKids || $this->itemID != $item_id) {
+            $level_output = $this->createLevelOutputTD();
+        } else {
+            $level_output = $this->createLevelOutputTD("forumstrich.gif");
         }
 
         $table = new HTML ("table");
@@ -920,8 +871,6 @@ class EvaluationTreeEditView
         $table->addAttr("width", "100%");
 
         $tr = new HTML ("tr");
-
-        if ($level_output) ;
         $tr->addHTMLContent($level_output);
 
         $td = new HTML ("td");
@@ -1794,13 +1743,10 @@ class EvaluationTreeEditView
         $this->swapPosition($this->itemID, $questionID, $oldposition,
             "down");
 
-        if ($oldposition == $numberchild - 1)
-            $this->msg[$this->itemID] = "msg§"
-                . sprintf(_("Die Frage wurde von Position %s an die erste Stelle verschoben.")
-                    , $oldposition + 1);
-        else
-            $this->msg[$this->itemID] = "msg§"
-                . sprintf(_("Die Frage wurde von Position %s nach oben verschoben."), $oldposition + 1);
+        $this->msg[$this->itemID] = "msg§" . sprintf(
+            _("Die Frage wurde von Position %s nach unten verschoben."),
+            $oldposition + 1
+        );
 
         $this->msg[$this->itemID] .= "<br>" . _("Veränderungen wurden gespeichert.");
         return true;

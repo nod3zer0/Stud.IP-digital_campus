@@ -62,21 +62,19 @@ class TaskFeedbackUpdate extends JsonApiController
         }
         $resource->store();
 
-        if ($struct->range_type === 'courses') {
-            $data = [
+        if ($resource->getStructuralElement()->range_type === 'courses') {
+            Activity::create([
                 'provider'     => 'Studip\Activity\CoursewareProvider',
                 'context'      => 'course',
-                'context_id'   => $task->seminar_id,
+                'context_id'   => $resource->getStructuralElement()->range_id,
                 'content'      => self::arrayGet($json, 'data.attributes.content', ''),
                 'actor_type'   => 'user',
                 'actor_id'     => $user->id,
                 'verb'         => 'answered',
-                'object_id'    => $task->structural_element_id,
+                'object_id'    => $resource->task->structural_element_id,
                 'object_type'  => 'courseware',
                 'mkdate'       => time()
-            ];
-    
-            $activity = Activity::create($data);
+            ]);
         }
 
         return $resource;

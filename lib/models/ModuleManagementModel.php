@@ -302,7 +302,7 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
     /**
      * Logs all changes of this object.
      *
-     * @param type $action new, update or delete
+     * @param string $action new, update or delete
      * @return boolean Return true if logging was successful.
      */
     protected function logChanges ($action = null) {
@@ -462,14 +462,16 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
 
             if ($action == 'update') {
                 foreach ($this->content as $name => $value) {
-                    if ($name == 'author_id' || $name == 'editor_id' || $name == 'mkdate' || $name == 'chdate' ) continue;
+                    if ($name == 'author_id' || $name == 'editor_id' || $name == 'mkdate' || $name == 'chdate' ) {
+                        continue;
+                    }
                     if ($this->isFieldDirty($name)) {
                         $info = ($num_index == 3) ? $debuginfo.';'.$value : $value;
-                        StudipLog::log($logging, $aff, $coaff, $this->db_table.'.'.$name, $info, $editor_id);
+                        StudipLog::log($logging, $aff, $coaff, $this->db_table.'.'.$name, $info);
                     }
                 }
             } else {
-                StudipLog::log($logging, $aff, $coaff, $this->db_table, $debuginfo, $editor_id);
+                StudipLog::log($logging, $aff, $coaff, $this->db_table, $debuginfo);
             }
 
             return true;

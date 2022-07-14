@@ -176,7 +176,7 @@ class ExternEditModule extends ExternEditHtml {
                 $out .= " checked=\"checked\"";
             $out .= ">" . _("Pixel") . "&nbsp; &nbsp;\n";
             $out .= tooltipIcon($info);
-            $out .= "$error_sign</td></tr>\n";
+            $out .= "</td></tr>\n";
         }
 
         $out .= "</table>\n";

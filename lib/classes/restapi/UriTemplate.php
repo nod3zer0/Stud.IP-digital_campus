@@ -31,7 +31,7 @@ class UriTemplate
      * be stored in the parameters array.
      *
      * @param String $uri        The uri to test
-     * @param Array  $parameters Stores evaluated parameters on match (optional)
+     * @param array  $parameters Stores evaluated parameters on match (optional)
      *
      * @return bool Returns true if the uri matches the template
      */

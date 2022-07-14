@@ -934,12 +934,10 @@ class SemBrowse {
                         . htmlReady(mb_substr($seminar_obj->description, 0, 100))
                         . '</div>';
             } else {
-                $temp_turnus_string = $seminar_obj->getDatesExport(
-                        [
-                            'short' => true,
-                            'shrink' => true,
-                            'semester_id' => $current_semester_id
-                        ]);
+                $temp_turnus_string = $seminar_obj->getDatesExport([
+                    'short' => true,
+                    'shrink' => true,
+                ]);
                 //Shorten, if string too long (add link for details.php)
                 if (mb_strlen($temp_turnus_string) > 70) {
                     $temp_turnus_string = htmlReady(mb_substr($temp_turnus_string, 0, mb_strpos(mb_substr($temp_turnus_string, 70, mb_strlen($temp_turnus_string)), ',') + 71));

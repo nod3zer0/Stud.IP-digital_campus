@@ -86,42 +86,36 @@ class Ilias3ContentModule extends ContentModule
     {
         global $connected_cms;
 
-        switch ($access_info)
-        {
+        switch ($access_info) {
             case "granted":
-                $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations );
+                $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations);
                 break;
             case "no_permission":
-                $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations );
-                $this->setDescription($object_data["description"] . "<br><br><i>" . _("Sie haben keine Leseberechtigung für dieses Modul.") . "</i>");
+                $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations);
+                $this->setDescription("<i>" . _("Sie haben keine Leseberechtigung für dieses Modul.") . "</i>");
                 return false;
-                break;
             case "missing_precondition":
                 $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations );
-                $this->setDescription($object_data["description"] . "<br><br><i>" . _("Sie haben zur Zeit noch keinen Zugriff auf deses Modul (fehlende Vorbedingungen).") . "</i>");
+                $this->setDescription("<i>" . _("Sie haben zur Zeit noch keinen Zugriff auf deses Modul (fehlende Vorbedingungen).") . "</i>");
                 break;
             case "no_object_access":
                 $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations );
-                $this->setDescription($object_data["description"] . "<br><br><i>" . _("Dieses Modul ist momentan offline oder durch Payment-Regeln gesperrt.") . "</i>");
+                $this->setDescription("<i>" . _("Dieses Modul ist momentan offline oder durch Payment-Regeln gesperrt.") . "</i>");
                 break;
             case "no_parent_access":
                 $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations );
-                $this->setDescription($object_data["description"] . "<br><br><i>" . _("Sie haben keinen Zugriff auf die übergeordneten Objekte dieses Moduls.") . "</i>");
+                $this->setDescription("<i>" . _("Sie haben keinen Zugriff auf die übergeordneten Objekte dieses Moduls.") . "</i>");
                 return false;
-                break;
             case "object_deleted":
                 $this->createDummyForErrormessage("deleted");
                 return false;
-                break;
         }
-        if ($connected_cms[$this->cms_type]->isAuthNecessary() AND ($connected_cms[$this->cms_type]->user->isConnected()))
-        {
+        if ($connected_cms[$this->cms_type]->isAuthNecessary() && $connected_cms[$this->cms_type]->user->isConnected()) {
             // If User has no permission, don't show module data
-            if ((! $this->isAllowed(OPERATION_VISIBLE) ) AND (! $this->isDummy()) AND ($connected_cms[$this->cms_type]->user->isConnected()))
+            if (!$this->isAllowed(OPERATION_VISIBLE) && !$this->isDummy() && $connected_cms[$this->cms_type]->user->isConnected()) {
                 $this->createDummyForErrormessage("no permission");
+            }
         }
-
-//      echo "PERM".implode($this->allowed_operations,"-");
 
         return true;
     }
