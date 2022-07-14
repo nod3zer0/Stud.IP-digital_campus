@@ -652,7 +652,6 @@ class Admin_CourseplanningController extends AuthenticatedController
      * Returns a course type widthet depending on all available courses and theirs types
      * @param string $selected
      * @param array $params
-     * @return ActionsWidget
      */
     private function setCourseTypeWidget($selected = 'all')
     {
@@ -702,7 +701,6 @@ class Admin_CourseplanningController extends AuthenticatedController
     /**
      * Returns a widget to selected a specific teacher
      * @param array $teachers
-     * @return ActionsWidget|null
      */
     private function setTeacherWidget()
     {
@@ -751,7 +749,7 @@ class Admin_CourseplanningController extends AuthenticatedController
      * @param String $course_id Id of the course
      * @return array of user infos [user_id, username, Nachname, fullname]
      */
-    private function getTeacher($course_id)
+    private function getTeacher($course_id): array
     {
         $teachers   = CourseMember::findByCourseAndStatus($course_id, 'dozent');
         $collection = SimpleCollection::createFromArray($teachers);
@@ -769,11 +767,10 @@ class Admin_CourseplanningController extends AuthenticatedController
      * Returns all courses matching set criteria.
      *
      * @param Array $params Additional parameters
-     * @param String $parent_id Fetch only subcourses of this parent
-     * @param display_all : boolean should we show all courses or check for a limit of 500 courses?
+     * @param bool $display_all should we show all courses or check for a limit of 500 courses?
      * @return Array of courses
      */
-    private function getCourses($params = [], $display_all = false)
+    private function getCourses($params = [], $display_all = false): array
     {
         // Init
         if ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT === "all") {

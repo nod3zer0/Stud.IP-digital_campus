@@ -335,8 +335,10 @@ class Institute_MembersController extends AuthenticatedController
                             $relevant_users = $this->institute->members->findBy('inst_perms', $in);
                             foreach ($relevant_users as $user) {
                                 $user_language = getUserLanguagePath($user->id);
-                                include("locale/$user_language/LC_MAILS/new_admin_mail.inc.php");
-                                StudipMail::sendMessage($user->email, $subject, $mailbody);
+
+                                // TODO: This should be refactored so that the included file returns an array
+                                include "locale/$user_language/LC_MAILS/new_admin_mail.inc.php"; // Defines $subject and $mailbody
+                                StudipMail::sendMessage($user->email, $subject ?? '', $mailbody ?? '');
                                 $notin[] = $user->id;
 
                                 $mails_sent += 1;
@@ -351,8 +353,9 @@ class Institute_MembersController extends AuthenticatedController
                                     }
 
                                     $user_language = getUserLanguagePath($user->id);
-                                    include("locale/$user_language/LC_MAILS/new_admin_mail.inc.php");
-                                    StudipMail::sendMessage($user->email, $subject, $mailbody);
+                                    // TODO: This should be refactored so that the included file returns an array
+                                    include("locale/$user_language/LC_MAILS/new_admin_mail.inc.php");  // Defines $subject and $mailbody
+                                    StudipMail::sendMessage($user->email, $subject ?? '', $mailbody ?? '');
                                     $notin[] = $user->id;
 
                                     $mails_sent += 1;

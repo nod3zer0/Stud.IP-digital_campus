@@ -845,6 +845,6 @@ class Course_Forum_IndexController extends ForumController
             $GLOBALS['auth']->login_if($GLOBALS['user']->id === 'nobody');
         }
 
-        parent::rescue($exception);
+        return parent::rescue($exception);
     }
 }

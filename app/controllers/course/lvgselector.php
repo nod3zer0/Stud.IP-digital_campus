@@ -33,6 +33,10 @@ class Course_LvgselectorController extends AuthenticatedController
         }
         $this->selection = new StudipLvgruppeSelection($this->course_id);
         $this->semester_id = $this->course->start_semester->id;
+
+        $widget = new HelpbarWidget();
+        $widget->addElement(new WidgetElement(_('Auf dieser Seite kann die Veranstaltung ausgewählten Lehrveranstaltungsgruppen zugeordnet werden.')));
+        Helpbar::get()->addWidget($widget);
     }
 
     /**
@@ -61,7 +65,8 @@ class Course_LvgselectorController extends AuthenticatedController
         $this->lvgruppen_not_allowed = !$this->course->getSemClass()->offsetGet('module');
 
         if ($this->lvgruppen_not_allowed) {
-            return $this->render_text(MessageBox::info(_('Für diesen Veranstaltungstyp ist die Zuordnung zu Lehrveranstaltungsgruppen nicht vorgesehen.')));
+            $this->render_text(MessageBox::info(_('Für diesen Veranstaltungstyp ist die Zuordnung zu Lehrveranstaltungsgruppen nicht vorgesehen.')));
+            return;
         }
         $this->open_lvg_nodes = [];
         if (Request::submitted('open_nodes')) {
@@ -209,7 +214,8 @@ class Course_LvgselectorController extends AuthenticatedController
 
         if ($id === NULL) {
             $this->set_status(400);
-            return $this->render_nothing();
+            $this->render_nothing();
+            return;
         }
 
         $selection = new StudipLvgruppeSelection($this->course_id);
@@ -218,7 +224,8 @@ class Course_LvgselectorController extends AuthenticatedController
 
         if ($selection->size() == 1) {
             $this->set_status(409);
-            return $this->render_nothing();
+            $this->render_nothing();
+            return;
         }
         $selection->remove($id);
         $this->store_selection($this->course_id, $selection);
@@ -294,29 +301,4 @@ class Course_LvgselectorController extends AuthenticatedController
         Lvgruppe::setLvgruppen($course_id, $lv_group_ids);
         PageLayout::postMessage(MessageBox::success(_('Die Zuordnung der LV-Gruppen wurde übernommen.')));
     }
-
-    /**
-     * Creates the sidebar widgets
-     */
-    protected function setSidebar()
-    {
-        $helpbar = Helpbar::get();
-        $widget = new HelpbarWidget();
-        $widget->addElement(new WidgetElement(_('Auf dieser Seite kann die Veranstaltung ausgewählten Lehrveranstaltungsgruppen zugeordnet werden.')));
-        $helpbar->addWidget($widget);
-
-        if ($GLOBALS['perm']->have_perm('admin')) {
-            $admin_list_template = AdminList::getInstance()
-                    ->getSelectTemplate($this->course_id);
-            if ($admin_list_template) {
-                $sidebar = Sidebar::get();
-                $widget  = new SidebarWidget();
-                $widget->setTitle('Veranstaltungliste');
-                $widget->addElement(new WidgetElement($admin_list_template->render()));
-                $sidebar->addWidget($widget, 'Veranstaltungliste');
-
-            }
-        }
-    }
-
 }

@@ -11,6 +11,25 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.5
+ *
+ * @property string $id
+ * @property string $contact_range_id
+ * @property string $contact_id
+ * @property string $range_id
+ * @property string $range_type
+ * @property string $type
+ * @property string $category
+ * @property int|null $position
+ * @property string $author_id
+ * @property string $editor_id
+ * @property int $mkdate
+ * @property int $chdate
+ *
+ * @property MvvContact $contact
+ *
+ * @property int $count_relations
+ * @property string $name
+ * @property string $contact_status
  */
 
 class MvvContactRange extends ModuleManagementModel

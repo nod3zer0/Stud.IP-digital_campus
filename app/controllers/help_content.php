@@ -24,11 +24,16 @@ class HelpContentController extends AuthenticatedController
     /**
      * Callback function being called before an action is executed.
      */
-    function before_filter(&$action, &$args)
+    public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
 
-        $this->help_admin = $GLOBALS['perm']->have_perm('root') || RolePersistence::isAssignedRole($GLOBALS['user']->id, 'Hilfe-Administrator(in)');
+        if (
+            !$GLOBALS['perm']->have_perm('root')
+            && !User::findCurrent()->hasRole('Hilfe-Administrator(in)')
+        ) {
+            throw new AccessDeniedException();
+        }
 
         $this->buildSidebar($action);
     }
@@ -38,11 +43,6 @@ class HelpContentController extends AuthenticatedController
      */
     public function admin_overview_action()
     {
-        // check permission
-        if (!$this->help_admin) {
-            throw new AccessDeniedException();
-        }
-
         // initialize
         PageLayout::setTitle(_('Verwalten von Hilfe-Texten'));
         PageLayout::setHelpKeyword('Basis.HelpContentAdmin');
@@ -77,11 +77,6 @@ class HelpContentController extends AuthenticatedController
      */
     public function admin_conflicts_action()
     {
-        // check permission
-        if (!$this->help_admin) {
-            throw new AccessDeniedException();
-        }
-
         // initialize
         PageLayout::setTitle(_('Versions-Konflikte der Hilfe-Texte'));
         PageLayout::setHelpKeyword('Basis.HelpContentAdmin');
@@ -103,10 +98,6 @@ class HelpContentController extends AuthenticatedController
      */
     public function resolve_conflict_action($id, $mode)
     {
-        // check permission
-        if (!$this->help_admin) {
-            throw new AccessDeniedException();
-        }
         $GLOBALS['perm']->check('root');
 
         $this->help_content = HelpContent::GetContentByID($id);
@@ -125,9 +116,6 @@ class HelpContentController extends AuthenticatedController
      */
     public function add_action()
     {
-        if (!$this->help_admin) {
-            return $this->render_nothing();
-        }
         PageLayout::setTitle(_('Hilfe-Text erstellen'));
 
         $parameters = [];
@@ -147,10 +135,6 @@ class HelpContentController extends AuthenticatedController
      */
     public function edit_action($id)
     {
-        if (!$this->help_admin) {
-            return $this->render_nothing();
-        }
-
         PageLayout::setTitle(_('Hilfe-Text bearbeiten'));
 
         $parameters = [];
@@ -173,9 +157,6 @@ class HelpContentController extends AuthenticatedController
      */
     public function store_action($id = '')
     {
-        if (!$this->help_admin) {
-            return $this->render_nothing();
-        }
         CSRFProtection::verifySecurityToken();
 
         $content_id         = md5(uniqid('help_content', 1));
@@ -233,9 +214,6 @@ class HelpContentController extends AuthenticatedController
      */
     public function store_settings_action()
     {
-        if (!$this->help_admin) {
-            return $this->render_nothing();
-        }
         CSRFProtection::verifyUnsafeRequest();
 
         $this->help_contents = HelpContent::GetContentByFilter(Request::get('help_content_searchterm'));
@@ -265,10 +243,6 @@ class HelpContentController extends AuthenticatedController
      */
     public function delete_action($id)
     {
-        if (!$this->help_admin) {
-            return $this->render_nothing();
-        }
-
         CSRFProtection::verifySecurityToken();
         PageLayout::setTitle(_('Hilfe-Text löschen'));
 
@@ -278,7 +252,8 @@ class HelpContentController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::success(sprintf(_('Der Hilfe-Text zur Route "%s" wurde gelöscht.'), htmlReady($this->help_content->route))));
                 $this->help_content->delete();
                 $this->response->add_header('X-Dialog-Close', 1);
-                return $this->render_nothing();
+                $this->render_nothing();
+                return;
             }
         }
 

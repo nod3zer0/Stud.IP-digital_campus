@@ -9,14 +9,20 @@
  * the License, or (at your option) any later version.
  */
 
+require_once __DIR__ . '/studip_controller_properties_trait.php';
 require_once __DIR__ . '/studip_response.php';
 
 abstract class StudipController extends Trails_Controller
 {
+    use StudipControllerPropertiesTrait;
+
     protected $with_session = false; //do we need to have a session for this controller
     protected $allow_nobody = true; //should 'nobody' allowed for this controller or redirected to login?
     protected $_autobind = false;
 
+    /**
+     * @return false|void
+     */
     public function before_filter(&$action, &$args)
     {
         $this->current_action = $action;
@@ -408,7 +414,7 @@ abstract class StudipController extends Trails_Controller
     public function render_json($data)
     {
         $this->set_content_type('application/json;charset=utf-8');
-        return $this->render_text(json_encode($data));
+        $this->render_text(json_encode($data));
     }
 
     /**
@@ -441,7 +447,7 @@ abstract class StudipController extends Trails_Controller
 
         $this->response->add_header('Content-Length', strlen($csv_data));
 
-        return $this->render_text($csv_data);
+        $this->render_text($csv_data);
     }
 
     /**

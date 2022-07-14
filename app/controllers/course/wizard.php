@@ -423,10 +423,11 @@ class Course_WizardController extends AuthenticatedController
     }
 
     /**
-     * @param $stepclass class name of the current step.
-     * @return Array
+     * @param string $stepclass name of the current step.
+     * @param mixed $values
      */
-    private function setStepValues($stepclass, $values) {
+    private function setStepValues($stepclass, $values)
+    {
         $_SESSION['coursewizard'][$this->temp_id][$stepclass] = $values;
     }
 

@@ -52,16 +52,18 @@ class Admission_CoursesetController extends AuthenticatedController
     /**
      * Show all coursesets the current user has access to.
      */
-    public function index_action() {
+    public function index_action()
+    {
         $this->course_set_details = Request::option('course_set_details');
         if ($this->course_set_details && Request::isXhr()) {
             $courseset = new CourseSet($this->course_set_details);
-            return $this->render_text($courseset->toString());
+            $this->render_text($courseset->toString());
+            return;
         }
         $this->ruleTypes = AdmissionRule::getAvailableAdmissionRules(false);
         $this->coursesets = [];
         foreach (words('current_institut_id current_rule_types set_name_prefix current_semester_id current_rule_types') as $param) {
-            $this->$param = $_SESSION[get_class($this)][$param];
+            $this->$param = $_SESSION[self::class][$param] ?? null;
         }
         if (Request::submitted('choose_institut')) {
             $this->current_institut_id = Request::option('choose_institut_id');
@@ -75,7 +77,9 @@ class Admission_CoursesetController extends AuthenticatedController
             $_SESSION['_default_sem'] = $this->current_semester_id;
         }
         if (!isset($this->current_rule_types)) {
-            $this->current_rule_types['ParticipantRestrictedAdmission'] = true;
+            $this->current_rule_types = [
+                'ParticipantRestrictedAdmission' => true,
+            ];
         }
         $filter['course_set_name'] = $this->set_name_prefix;
         $filter['semester_id'] = $this->current_semester_id != 'all' ? $this->current_semester_id : null;
@@ -112,8 +116,12 @@ class Admission_CoursesetController extends AuthenticatedController
         uasort($this->coursesets, function($a,$b) {
             return strnatcasecmp($a->getName(), $b->getName());
         });
+
+        if (!isset($_SESSION[self::class])) {
+            $_SESSION[self::class] = [];
+        }
         foreach (words('current_institut_id current_rule_types set_name_prefix current_semester_id current_rule_types') as $param) {
-            $_SESSION[get_class($this)][$param] = $this->$param;
+            $_SESSION[self::class][$param] = $this->$param;
         }
         $not_distributed_coursesets = array_filter(array_map(function ($cs) {
                 return ($cs->isSeatDistributionEnabled() && $cs->getSeatDistributionTime() < (time() - 1000) && !$cs->hasAlgorithmRun())

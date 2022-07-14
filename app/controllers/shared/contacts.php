@@ -469,11 +469,10 @@ class Shared_ContactsController extends MVVController
                 }
                 if (!$user_id) {
                     if (Request::isXhr()) {
-                        header('X-Dialog-Close: 1');
-                        exit;
-                    } else {
-                        return;
+                        $this->response->add_header('X-Dialog-Close', 1);
+                        $this->render_nothing();
                     }
+                    return;
                 }
             }
 
@@ -565,7 +564,7 @@ class Shared_ContactsController extends MVVController
             $this->response->add_header('X-Dialog-Close', 1);
         } else {
             $this->response->add_header('X-Dialog-Close', 1);
-            $this->response->add_header('X-Location', $this->url_for('/index', ['contact_id' => $mvv_contact->id]));
+            $this->response->add_header('X-Location', $this->url_for('/index', ['contact_id' => $contact_range->contact_id]));
         }
         $this->render_nothing();
     }
@@ -584,10 +583,9 @@ class Shared_ContactsController extends MVVController
             PageLayout::postSuccess(_('Die Verknüpfung wurde gelöscht.'));
         }
 
-        $this->range_id = $range_id;
         if (Request::isXhr()) {
-            header('X-Dialog-Close: 1');
-            exit;
+            $this->response->add_header('X-Dialog-Close', 1);
+            $this->render_nothing();
         }
     }
 
@@ -607,8 +605,8 @@ class Shared_ContactsController extends MVVController
             ));
         }
         if (Request::isXhr()) {
-            header('X-Dialog-Close: 1');
-            exit;
+            $this->response->add_header('X-Dialog-Close', 1);
+            $this->render_nothing();
         }
     }
 
@@ -627,8 +625,8 @@ class Shared_ContactsController extends MVVController
             ));
         }
         if (Request::isXhr()) {
-            header('X-Dialog-Close: 1');
-            exit;
+            $this->response->add_header('X-Dialog-Close', 1);
+            $this->render_nothing();
         }
     }
 

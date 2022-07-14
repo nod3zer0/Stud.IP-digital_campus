@@ -1,6 +1,10 @@
 <?php
+require_once __DIR__ . '/studip_controller_properties_trait.php';
+
 class Admin_InstallController extends Trails_Controller
 {
+    use StudipControllerPropertiesTrait;
+
     public function __construct($dispatcher)
     {
         if (basename($dispatcher->trails_uri, '.php') !== 'install') {

@@ -833,16 +833,19 @@ class FilesController extends AuthenticatedController
 
         switch ($destination_folder->range_type) {
             case 'course':
-                return $this->redirect(URLHelper::getURL('dispatch.php/course/files/index/' . $destination_folder->getId() . '?cid=' . $dest_range));
+                $this->redirect(URLHelper::getURL('dispatch.php/course/files/index/' . $destination_folder->getId() . '?cid=' . $dest_range));
+                break;
             case 'institute':
-                return $this->redirect(URLHelper::getURL('dispatch.php/institute/files/index/' . $destination_folder->getId() . '?cid=' . $dest_range));
+                $this->redirect(URLHelper::getURL('dispatch.php/institute/files/index/' . $destination_folder->getId() . '?cid=' . $dest_range));
+                break;
             case 'user':
-                return $this->redirect(URLHelper::getURL('dispatch.php/files/index/' . $destination_folder->getId()));
+                $this->redirect(URLHelper::getURL('dispatch.php/files/index/' . $destination_folder->getId()));
+                break;
             default:
                 if ($destination_plugin) {
-                    return $this->redirect(URLHelper::getURL('dispatch.php/files/system/' . $destination_plugin->getPluginId() .'/'. $destination_folder->getId()));
+                    $this->redirect(URLHelper::getURL('dispatch.php/files/system/' . $destination_plugin->getPluginId() .'/'. $destination_folder->getId()));
                 } else {
-                    return $this->redirect(URLHelper::getURL('dispatch.php/course/files/index/' . $destination_folder->getId()));
+                    $this->redirect(URLHelper::getURL('dispatch.php/course/files/index/' . $destination_folder->getId()));
                 }
         }
 

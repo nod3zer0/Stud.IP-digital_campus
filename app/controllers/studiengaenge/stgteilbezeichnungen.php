@@ -138,8 +138,7 @@ class Studiengaenge_StgteilbezeichnungenController extends MVVController
 
     /**
      * Display details
-     * @param $bezeichnung_id
-     * @return bool
+     * @param string $bezeichnung_id
      */
     public function details_action($bezeichnung_id)
     {
@@ -148,7 +147,6 @@ class Studiengaenge_StgteilbezeichnungenController extends MVVController
 
         if (!Request::isXhr()) {
             $this->perform_relayed('stgteilbezeichnungen');
-            return true;
         }
     }
 

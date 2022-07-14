@@ -1222,7 +1222,7 @@ class Admin_CoursesController extends AuthenticatedController
             $filter->filterByStgTeil($GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL);
         }
         if ($params['sortby'] === "status") {
-            $filter->orderBy(sprintf('sem_classes.name %s, sem_types.name %s, VeranstaltungsNummer', $params['sortFlag'], $params['sortFlag'], $params['sortFlag']), $params['sortFlag']);
+            $filter->orderBy(sprintf('sem_classes.name %s, sem_types.name %s, VeranstaltungsNummer %s', $params['sortFlag'], $params['sortFlag'], $params['sortFlag']), $params['sortFlag']);
         } elseif ($params['sortby'] === 'institute') {
             $filter->orderBy('Institute.Name', $params['sortFlag']);
         } elseif ($params['sortby']) {
@@ -1419,7 +1419,6 @@ class Admin_CoursesController extends AuthenticatedController
     /**
      * Adds HTML-Selector to the sidebar
      * @param null $selected_action
-     * @return string
      */
     private function setActionsWidget($selected_action = null)
     {
@@ -1438,7 +1437,6 @@ class Admin_CoursesController extends AuthenticatedController
      * Returns a course type widthet depending on all available courses and theirs types
      * @param string $selected
      * @param array $params
-     * @return ActionsWidget
      */
     private function setCourseTypeWidget($selected = 'all')
     {
@@ -1488,7 +1486,6 @@ class Admin_CoursesController extends AuthenticatedController
     /**
      * Returns a widget to selected a specific teacher
      * @param array $teachers
-     * @return ActionsWidget|null
      */
     private function setTeacherWidget()
     {
@@ -1547,7 +1544,7 @@ class Admin_CoursesController extends AuthenticatedController
      *
      * @return array containing the filter configuration
      */
-    private function getFilterConfig()
+    private function getFilterConfig(): array
     {
         $available_filters = array_keys($this->getViewFilters());
 

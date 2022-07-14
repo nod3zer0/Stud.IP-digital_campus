@@ -17,18 +17,18 @@
                        placeholder="<?= _('Bitte geben Sie eine Route für den Hilfe-Text an') ?>">
             </label>
         <? endif ?>
-        <? if ($help_admin) : ?>
-            <label for="help_content_language">
-                <span class="required"><?= _('Sprache des Textes') ?>:</span>
-                <select name="help_content_language">
-                    <? foreach ($GLOBALS['INSTALLED_LANGUAGES'] as $key => $language) : ?>
-                        <option value="<?= mb_substr($key, 0, 2) ?>"<?= ($help_content->language == mb_substr($key, 0, 2)) ? ' selected' : '' ?>>
-                            <?= $language['name'] ?>
-                        </option>
-                    <? endforeach ?>
-                </select>
-            </label>
-        <? endif ?>
+
+        <label for="help_content_language">
+            <span class="required"><?= _('Sprache des Textes') ?>:</span>
+            <select name="help_content_language">
+                <? foreach ($GLOBALS['INSTALLED_LANGUAGES'] as $key => $language) : ?>
+                    <option value="<?= mb_substr($key, 0, 2) ?>"<?= ($help_content->language == mb_substr($key, 0, 2)) ? ' selected' : '' ?>>
+                        <?= $language['name'] ?>
+                    </option>
+                <? endforeach ?>
+            </select>
+        </label>
+
         <label for="help_content_content">
             <?= _('Hilfe-Text') ?>:
             <textarea cols="60" rows="5" name="help_content_content"

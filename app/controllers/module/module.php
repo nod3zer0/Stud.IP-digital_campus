@@ -1290,12 +1290,9 @@ class Module_ModuleController extends MVVController
 
     public function reset_filter_action()
     {
-        $this->filter = [];
         $this->reset_page();
-        // current semester is set in index_action()
-        unset($this->filter['start_sem.beginn']);
-        unset($this->filter['end_sem.ende']);
-        $this->sessSet('filter', $this->filter);
+
+        $this->sessSet('filter', []);
         $this->redirect($this->url_for('/index'));
     }
 

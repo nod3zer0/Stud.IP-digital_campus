@@ -594,7 +594,7 @@ class Course_MembersController extends AuthenticatedController
 
     /**
      * Old version of CSV import (copy and paste from teilnehmer.php
-     * @return type
+     *
      * @throws AccessDeniedException
      */
     public function set_autor_csv_action()
@@ -1000,7 +1000,6 @@ class Course_MembersController extends AuthenticatedController
      * @param String $status
      * @param String $cmd
      * @param String $target_status
-     * @return String
      * @throws AccessDeniedException
      */
     public function insert_admission_action($status, $cmd, $target_status = 'autor')
@@ -1265,14 +1264,13 @@ class Course_MembersController extends AuthenticatedController
 
     /**
      * Displays all members of the course and their aux data
-     * @return int fake return to stop after redirect;
      */
     public function additional_action($format = null)
     {
         // Users get forwarded to aux_input
         if (!($this->is_dozent || $this->is_tutor)) {
             $this->redirect('course/members/additional_input');
-            return 0;
+            return;
         }
 
         Navigation::activateItem('/course/members/additional');

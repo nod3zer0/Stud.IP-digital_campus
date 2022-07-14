@@ -81,12 +81,14 @@ class NewsController extends StudipController
     {
         if (!$range_id) {
             $this->set_status(400);
-            return $this->render_nothing();
+            $this->render_nothing();
+            return;
         }
 
         if (!StudipNews::haveRangePermission('view', $range_id, $GLOBALS['user']->id)) {
             $this->set_status(401);
-            return $this->render_nothing();
+            $this->render_nothing();
+            return;
         }
 
         // Store visit if user opened comments
@@ -229,7 +231,8 @@ class NewsController extends StudipController
         // user has to have autor permission at least
         if (!$GLOBALS['perm']->have_perm('autor')) {
             $this->set_status(401);
-            return $this->render_nothing();
+            $this->render_nothing();
+            return;
         }
 
         // load news and comment data and check if user has permission to edit
@@ -254,19 +257,22 @@ class NewsController extends StudipController
             // if news id given check for valid id and load ranges
             if ($news->isNew()) {
                 PageLayout::postError(_('Die Ankündigung existiert nicht!'));
-                return $this->render_nothing();
+                $this->render_nothing();
+                return;
             }
         } elseif ($template_id) {
             // otherwise, load data from template
             $news_template = new StudipNews($template_id);
             if ($news_template->isNew()) {
                 PageLayout::postError(_('Die Ankündigung existiert nicht!'));
-                return $this->render_nothing();
+                $this->render_nothing();
+                return;
             }
             // check for permission
             if (!$news_template->havePermission('edit')) {
                 $this->set_status(401);
-                return $this->render_nothing();
+                $this->render_nothing();
+                return;
             }
             $ranges = $news_template->news_ranges->toArray();
 

@@ -17,7 +17,7 @@
  * @property string range_type database column
  * @property string plugin_id database column
  * @property string position database column
- * @property string metadata database column
+ * @property array metadata database column
  * @property string mkdate database column
  * @property string chdate database column
  */

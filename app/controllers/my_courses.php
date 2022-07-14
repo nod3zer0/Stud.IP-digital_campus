@@ -768,9 +768,8 @@ class MyCoursesController extends AuthenticatedController
 
     /**
      * Get widget for grouping selected courses (e.g. by colors, ...)
-     * @param      $action
-     * @param bool $selected
-     * @return string
+     *
+     * @param string $group_field
      */
     private function setGroupingSelector($group_field)
     {
@@ -794,9 +793,8 @@ class MyCoursesController extends AuthenticatedController
     /**
      * Returns a widget for semester selection
      * @param $sem
-     * @return OptionsWidget
      */
-    private function setSemesterWidget(&$sem)
+    private function setSemesterWidget($sem)
     {
         $semesters = new SimpleCollection(Semester::getAll());
         $semesters = $semesters->orderBy('beginn desc');
@@ -805,12 +803,12 @@ class MyCoursesController extends AuthenticatedController
 
         $widget = new SelectWidget(_('Semesterfilter'), $this->url_for('my_courses/set_semester'), 'sem_select');
         $widget->setMaxLength(50);
-        $widget->addElement(new SelectElement('current', _('Aktuelles Semester'), $sem == 'current'));
-        $widget->addElement(new SelectElement('future', _('Aktuelles und nächstes Semester'), $sem == 'future'));
-        $widget->addElement(new SelectElement('last', _('Aktuelles und letztes Semester'), $sem == 'last'));
-        $widget->addElement(new SelectElement('lastandnext', _('Letztes, aktuelles, nächstes Semester'), $sem == 'lastandnext'));
+        $widget->addElement(new SelectElement('current', _('Aktuelles Semester'), $sem === 'current'));
+        $widget->addElement(new SelectElement('future', _('Aktuelles und nächstes Semester'), $sem === 'future'));
+        $widget->addElement(new SelectElement('last', _('Aktuelles und letztes Semester'), $sem === 'last'));
+        $widget->addElement(new SelectElement('lastandnext', _('Letztes, aktuelles, nächstes Semester'), $sem === 'lastandnext'));
         if (Config::get()->MY_COURSES_ENABLE_ALL_SEMESTERS) {
-            $widget->addElement(new SelectElement('all', _('Alle Semester'), $sem == 'all'));
+            $widget->addElement(new SelectElement('all', _('Alle Semester'), $sem === 'all'));
         }
 
         $query = "SELECT semester_data.semester_id
@@ -831,7 +829,7 @@ class MyCoursesController extends AuthenticatedController
             $group = new SelectGroupElement(_('Semester auswählen'));
             foreach ($semesters as $semester) {
                 if ($semester->visible || in_array($semester->id,$courses)) {
-                    $group->addElement(new SelectElement($semester->id, $semester->name, $sem == $semester->id));
+                    $group->addElement(new SelectElement($semester->id, $semester->name, $sem === $semester->id));
                 }
             }
             $widget->addElement($group);

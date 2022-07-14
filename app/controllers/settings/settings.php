@@ -142,7 +142,9 @@ abstract class Settings_SettingsController extends AuthenticatedController
             $text = $layout->render();
         }
 
-        return parent::render_text($text);
+        parent::render_text($text);
+
+        return $text;
     }
 
     /**

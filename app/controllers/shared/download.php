@@ -7,7 +7,7 @@ class Shared_DownloadController extends AuthenticatedController
 
         parent::before_filter($action, $args);
     }
-    
+
     /**
      * @param type $format only pdf is implememted yet
      * @param type $semester_id
@@ -27,14 +27,14 @@ class Shared_DownloadController extends AuthenticatedController
         }
 
         include  $GLOBALS['STUDIP_BASE_PATH'] . '/config/mvv_config.php';
-        
+
         $this->MHBPdf($semester_id, $version_id, $language);
 
         init_i18n($current_lang);
         $_SESSION['_language'] = $current_lang;
         include  $GLOBALS['STUDIP_BASE_PATH'] . '/config/mvv_config.php';
     }
-    
+
     private function MHBPdf($semester_id, $version_id, $language)
     {
         $semester = Semester::find($semester_id);
@@ -90,13 +90,11 @@ class Shared_DownloadController extends AuthenticatedController
             $language
         ));
     }
-    
+
     /**
      * Renders a template and outputs it as a PDF file.
      * @param string $view_path the path of the template (controller/view...)
      * @param string $title the title, optional. If not set, takes title from pagelayout.
-     * @param bool $force_pdf forces PDF download, oterwise can be overridden by setting the request no_export.
-     * @return type
      */
     protected function exportTcpdf($html, string $title = '')
     {
@@ -129,19 +127,10 @@ class Shared_DownloadController extends AuthenticatedController
             $pdf->writeHTMLCell(0, 0, '', '', $html_block , 0, 1, 0, true, '', true);
         }
 
-        $output = $pdf->Output(null, 'S');
-
         $filename = trim($title ?: PageLayout::getTitle());
-
-        $this->set_content_type('application/pdf');
-        $this->response->add_header('Content-Disposition', sprintf(
-            'attachment;filename="%s.pdf"',
-            preg_replace('/_{2,}/', '_', preg_replace('/\W/', '_', $filename))
-        ));
-        $this->response->add_header('Content-Length', strlen($output));
-        $this->render_text($output);
+        $this->render_pdf($pdf, $filename . '.pdf');
     }
-    
+
     private static function sanitizeFilename($filename)
     {
         $replacements = [
@@ -161,7 +150,7 @@ class Shared_DownloadController extends AuthenticatedController
 
         return $filename;
     }
-    
+
     public function getMVVPluginModulDescription($modul, $display_language = null)
     {
         if ($display_language == null) {
@@ -211,11 +200,11 @@ class Shared_DownloadController extends AuthenticatedController
 
         return $content;
     }
-    
+
     /**
      * Retrieves all modules assigned to the given Studiengangteilversion
      * grouped by Studiengangteilabschnitte
-     * 
+     *
      * @param StgteilVersion $StgteilVersion
      * @param Semester $semester
      * @return type

@@ -77,7 +77,7 @@ class Admin_SmileysController extends AuthenticatedController
             }
 
             $short = Request::get('short', $smiley->short);
-            if (!$message && $smiley->short != $short) { // rename short
+            if ($smiley->short != $short) { // rename short
                 if (Smiley::getByShort($short)->id) {
                     $error = sprintf(_('Es gibt bereits einen Smileys mit dem Kürzel "%s".'), $short);
                     PageLayout::postError($error);

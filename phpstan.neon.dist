@@ -2,6 +2,7 @@ parameters:
     level: 0
     phpVersion: 70200 # PHP 7.2
     paths:
+        - app/controllers
         - app/routes
         - lib
         - tests/functional
@@ -22,5 +23,4 @@ parameters:
         RESTAPI\RouteMap:
             - error
             - halt
-    ignoreErrors:
-        # - '#Undefined variable#'
+            - notFound

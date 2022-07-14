@@ -18,7 +18,6 @@ class Calendar_ContentboxController extends StudipController {
      * Widget controller to produce the formally known show_dates()
      *
      * @param String $range_id range id (or array of range ids) of the news to get displayed
-     * @return array() Array of votes
      */
      public function display_action($range_id, $timespan = 604800, $start = null)
      {

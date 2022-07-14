@@ -195,7 +195,8 @@ class Institute_BasicdataController extends AuthenticatedController
         // Do we have all necessary data?
         if (!mb_strlen($institute->name)) {
             PageLayout::postError(_('Bitte geben Sie eine Bezeichnung für die Einrichtung ein!'));
-            return $this->redirect('institute/basicdata/index/' . $i_id);
+            $this->redirect('institute/basicdata/index/' . $i_id);
+            return;
         }
 
         if ($create_institute) {
@@ -204,13 +205,15 @@ class Institute_BasicdataController extends AuthenticatedController
             // Is the user allowed to create new faculties
             if (!$institute->fakultaets_id && !$GLOBALS['perm']->have_perm('root')) {
                 PageLayout::postError(_('Sie haben nicht die Berechtigung, neue Fakultäten zu erstellen'));
-                return $this->redirect('institute/basicdata/index/new');
+                $this->redirect('institute/basicdata/index/new');
+                return;
             }
 
             // Is the user allowed to create new institutes
             if (!$GLOBALS['perm']->have_perm('root') && !($GLOBALS['perm']->is_fak_admin() && Config::get()->INST_FAK_ADMIN_PERMS !== 'none'))  {
                 PageLayout::postError(_('Sie haben nicht die Berechtigung, um neue Einrichtungen zu erstellen!'));
-                return $this->redirect('institute/basicdata/index/new');
+                $this->redirect('institute/basicdata/index/new');
+                return;
             }
 
             // Does an institute with the given name already exist in the given faculty?
@@ -219,13 +222,15 @@ class Institute_BasicdataController extends AuthenticatedController
                     _('Die Einrichtung "%s" existiert bereits innerhalb der angegebenen Fakultät!'),
                     htmlReady($institute->name)
                 ));
-                return $this->redirect('institute/basicdata/index/new');
+                $this->redirect('institute/basicdata/index/new');
+                return;
             }
 
             // Does a faculty with the given name already exist
             if (!$institute->fakultaets_id && Institute::findOneBySQL('Name = ? AND fakultaets_id = Institut_id', [$institute->name]) !== null) {
                 PageLayout::postError(sprintf(_('Die Fakultät "%s" existiert bereits!'), htmlReady($institute->name)));
-                return $this->redirect('institute/basicdata/index/new');
+                $this->redirect('institute/basicdata/index/new');
+                return;
             }
 
 
@@ -237,7 +242,8 @@ class Institute_BasicdataController extends AuthenticatedController
             // Is the user allowed to change the institute/faculty?
             if (!$GLOBALS['perm']->have_studip_perm('admin', $institute->id)) {
                 PageLayout::postError(_('Sie haben nicht die Berechtigung diese Einrichtung zu verändern!'));
-                return $this->redirect('institute/basicdata/index/' . $institute->id);
+                $this->redirect('institute/basicdata/index/' . $institute->id);
+                return;
             }
 
             // Save datafields
@@ -273,7 +279,8 @@ class Institute_BasicdataController extends AuthenticatedController
             } else {
                 PageLayout::postError(_('Die Änderungen konnten nicht gespeichert werden.'));
             }
-            return $this->redirect('institute/basicdata/index/' . $i_id);
+            $this->redirect('institute/basicdata/index/' . $i_id);
+            return;
         }
 
         if ($create_institute) {
@@ -306,19 +313,22 @@ class Institute_BasicdataController extends AuthenticatedController
 
         // Missing parameter
         if (!Request::get('i_kill')) {
-            return $this->redirect('institute/basicdata/index/' . $i_id);
+            $this->redirect('institute/basicdata/index/' . $i_id);
+            return;
         }
 
         // Invalid ticket
         if (!check_ticket(Request::option('studipticket'))) {
             PageLayout::postError(_('Ihr Ticket ist abgelaufen. Versuchen Sie die letzte Aktion erneut.'));
-            return $this->redirect('institute/basicdata/index/' . $i_id);
+            $this->redirect('institute/basicdata/index/' . $i_id);
+            return;
         }
 
         // User may not delete this institue
         if (!$GLOBALS['perm']->have_perm('root') && !($GLOBALS['perm']->is_fak_admin() && Config::get()->INST_FAK_ADMIN_PERMS === 'all')) {
             PageLayout::postError(_('Sie haben nicht die Berechtigung Fakultäten zu löschen!'));
-            return $this->redirect('institute/basicdata/index/' . $i_id);
+            $this->redirect('institute/basicdata/index/' . $i_id);
+            return;
         }
 
         $institute = Institute::find($i_id);
@@ -331,7 +341,8 @@ class Institute_BasicdataController extends AuthenticatedController
             PageLayout::postError(
                 _('Diese Einrichtung kann nicht gelöscht werden, da noch Veranstaltungen an dieser Einrichtung existieren!')
             );
-            return $this->redirect('institute/basicdata/index/' . $i_id);
+            $this->redirect('institute/basicdata/index/' . $i_id);
+            return;
         }
 
         // Institute has sub institutes?
@@ -339,13 +350,15 @@ class Institute_BasicdataController extends AuthenticatedController
             PageLayout::postError(
                 _('Diese Einrichtung kann nicht gelöscht werden, da sie den Status Fakultät hat und noch andere Einrichtungen zugeordnet sind!')
             );
-            return $this->redirect('institute/basicdata/index/' . $i_id);
+            $this->redirect('institute/basicdata/index/' . $i_id);
+            return;
         }
 
         // Is the user allowed to delete faculties?
         if ($institute->is_fak && !$GLOBALS['perm']->have_perm('root')) {
             PageLayout::postError(_('Sie haben nicht die Berechtigung Fakultäten zu löschen!'));
-            return $this->redirect('institute/basicdata/index/' . $i_id);
+            $this->redirect('institute/basicdata/index/' . $i_id);
+            return;
         }
 
         // Save users, name and number of courses

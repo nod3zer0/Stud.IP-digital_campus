@@ -723,7 +723,7 @@ class QuestionnaireController extends AuthenticatedController
                 //We can only add those courses where the current user
                 //has at least admin permissions:
                 foreach ($courses as $course) {
-                    if ($GLOBALS['perm']->have_studip_perm('admin', $course->id, $user_id)) {
+                    if ($GLOBALS['perm']->have_studip_perm('admin', $course->id)) {
                         $this->found_courses[] = $course;
                     }
                 }
@@ -742,7 +742,7 @@ class QuestionnaireController extends AuthenticatedController
                 }
                 $courses_without_perms = [];
                 foreach ($this->selected_courses as $course) {
-                    if (!$GLOBALS['perm']->have_studip_perm('admin', $course->id, $user_id)) {
+                    if (!$GLOBALS['perm']->have_studip_perm('admin', $course->id)) {
                         $courses_without_perms[] = $course->getFullName();
                     }
                 }

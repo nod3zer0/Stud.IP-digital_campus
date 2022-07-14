@@ -696,7 +696,7 @@ class MessagesController extends AuthenticatedController {
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
         } else {
             $this->set_status(400);
-            return $this->render_nothing();
+            $this->render_nothing();
         }
     }
 

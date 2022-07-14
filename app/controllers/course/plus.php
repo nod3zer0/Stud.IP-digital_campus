@@ -131,7 +131,8 @@ class Course_PlusController extends AuthenticatedController
         $id = explode('_', $plugin)[1];
         $this->tool = ToolActivation::find([$this->sem->id, $id]);
         if (!$this->tool) {
-            return $this->render_nothing();
+            $this->render_nothing();
+            return;
         }
         if (Request::submitted('save')) {
             CSRFProtection::verifyUnsafeRequest();

@@ -59,7 +59,8 @@ class TourController extends AuthenticatedController
         $this->route = get_route(Request::get('route'));
         $this->tour  = new HelpTour($tour_id);
         if (!$this->tour->isVisible() || !$this->route) {
-            return $this->render_nothing();
+            $this->render_nothing();
+            return;
         }
 
         $this->user_visit = new HelpTourUser([$tour_id, $GLOBALS['user']->user_id]);
@@ -103,8 +104,10 @@ class TourController extends AuthenticatedController
         }
         if ($this->tour->steps[$step_nr - 1]->route !== $this->route) {
             $data['redirect'] = URLHelper::getURL($this->tour->steps[$step_nr - 1]->route, null, true);
-        } elseif (!count($data['data']))
-            return $this->render_nothing();
+        } elseif (!count($data['data'])) {
+            $this->render_nothing();
+            return;
+        }
         if ($next_first_step <= count($this->tour->steps)) {
             if ($this->tour->type === 'tour') {
                 $data['proceed_link'] = URLHelper::getURL($this->tour->steps[$next_first_step - 1]->route, null, true);
@@ -120,8 +123,8 @@ class TourController extends AuthenticatedController
         $template                  = $GLOBALS['template_factory']->open('tour/tour.php');
         $template->set_layout(null);
         $data['tour_html'] = $template->render();
-        $this->set_content_type('application/json; charset=UTF-8');
-        return $this->render_text(json_encode($data));
+
+        $this->render_json($data);
     }
 
     /**
@@ -137,7 +140,8 @@ class TourController extends AuthenticatedController
         $GLOBALS['perm']->check('user');
         $this->tour = new HelpTour($tour_id);
         if (!$this->tour->isVisible()) {
-            return $this->render_nothing();
+            $this->render_nothing();
+            return;
         }
         $this->user_visit = new HelpTourUser([$tour_id, $GLOBALS['user']->user_id]);
         $this->user_visit->step_nr = $step_nr;

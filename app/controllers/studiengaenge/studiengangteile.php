@@ -28,13 +28,14 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
 
         // Nur Studiengangteile mit zugeordnetem Fach an dessen verantwortlicher
         // Einrichtung der User eine Rolle hat
-        $this->filter['mvv_fach_inst.institut_id'] = MvvPerm::getOwnInstitutes();
+        $filter = [
+            'mvv_fach_inst.institut_id' => MvvPerm::getOwnInstitutes(),
+        ];
 
         $search_result = $this->getSearchResult('StudiengangTeil');
-        $filter = $this->filter;
         $this->sortby = $this->sortby ?: 'fach_name,zusatz,kp';
         $this->order = $this->order ?: 'ASC';
-        unset($filter['start_sem.beginn'], $filter['end_sem.ende']);
+
         //get data
         if (count($search_result)) {
             $filter['stgteil_id'] = $search_result;

@@ -204,7 +204,7 @@ class Admin_AutoinsertController extends AuthenticatedController
 
         if (Request::get('sem_search') and Request::get('sem_select')) {
             if (Request::get('sem_search')) {
-                $search = new SeminarSearch('number-name');
+                $search = new SeminarSearch();
                 $this->seminar_search = $search->getResults(Request::get('sem_search'), ['search_sem_sem' => $this->sem_select]);
                 if (count($this->seminar_search) == 0) {
                     PageLayout::postInfo(_('Es wurden keine Veranstaltungen gefunden.'));
@@ -249,7 +249,6 @@ class Admin_AutoinsertController extends AuthenticatedController
             }
             $data = ['users' => count($userlookup->execute())];
         }
-        $this->set_content_type('application/json;charset=utf-8');
-        return $this->render_text(json_encode($data));
+        $this->render_json($data);
     }
 }
