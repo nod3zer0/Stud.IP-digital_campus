@@ -357,43 +357,40 @@ class RoomManagement_OverviewController extends AuthenticatedController
 
         $search = new SearchWidget($this->roomsURL());
         $search->setTitle(_('Raumsuche'));
-        $search->addNeedle(_('Gebäude'), 'building_name', true);
-        if ($this->user_is_global_resource_user) {
-            $search->addNeedle(_('Raum'), 'room_name', true);
-        }
+        $search->addNeedle(_('Gebäude oder Raum'), 'building_room_name', true);
+        
         $sidebar->addWidget($search);
 
+        // search for all rooms
+        $rooms_sql = "INNER JOIN resource_categories rc
+                      ON resources.category_id = rc.id
+                      INNER JOIN resources pr
+                      ON resources.parent_id = pr.id
+                      WHERE rc.class_name IN ( :room_class_names )";
+        // narrow down rooms according to search parameter (room or building name)
+        $rooms_sql_with_request = $rooms_sql . 
+                     "AND (resources.name LIKE CONCAT('%', :room_name, '%')
+                      OR pr.name LIKE CONCAT('%', :building_name, '%'))";
+
+        $rooms_parameter['room_class_names'] = RoomManager::getAllRoomClassNames();
+        $rooms_parameter['room_name'] = Request::get('building_room_name');
+        $rooms_parameter['building_name'] = Request::get('building_room_name');
+
         if ($this->user_is_global_resource_user) {
-            if(Request::get('room_name') || Request::get('building_name')) {
-                $this->rooms = Room::findByNameOrBuilding(Request::get('room_name'), Request::get('building_name'));
+            if(Request::get('building_room_name')) {
+                $rooms_sql_with_request .= " ORDER BY sort_position DESC, name ASC, mkdate ASC";
+                $this->rooms = Room::findBySQL($rooms_sql_with_request, $rooms_parameter);
             } else {
                 $this->rooms = Room::findAll();
             }
         } else {
             //Get only the locations for which
             //the user has at least user permissions:
-            $rooms_parameter = [
-                'user_id' => $this->user->id,
-                'now' => time()
-            ];
-            $rooms_sql = "";
-            if (Request::get('building_name')) {
-                $rooms_sql .= " INNER JOIN resources pr ON resources.parent_id = pr.id";
-            }
-
-            $rooms_sql .= " INNER JOIN resource_categories rc
-                        ON resources.category_id = rc.id
-                        WHERE rc.class_name IN ( :room_class_names )";
-            $rooms_parameter['room_class_names'] = RoomManager::getAllRoomClassNames();
-
-            if (Request::get('room_name')) {
-                $rooms_sql .= " AND resources.name LIKE CONCAT('%', :room_name, '%')";
-                $rooms_parameter['room_name'] = Request::get('room_name');
-            }
-            if (Request::get('building_name')) {
-                $rooms_sql .= " AND pr.name LIKE CONCAT('%', :building_name, '%')";
-                $rooms_parameter['building_name'] = Request::get('building_name');
-            }
+            $rooms_parameter['user_id'] = $this->user->id;
+            $rooms_parameter['now']     = time();
+            
+            // did the user search for a specific room or building name?
+            $rooms_sql = Request::get('building_room_name') ? $rooms_sql_with_request : $rooms_sql;
 
             $rooms_sql .= " AND resources.id IN (
                             SELECT resource_id
