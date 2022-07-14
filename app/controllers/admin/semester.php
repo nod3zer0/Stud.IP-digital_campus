@@ -390,7 +390,6 @@ class Admin_SemesterController extends AuthenticatedController
      * @param  string   $lock_rule     Lock rule to apply (might be null for none)
      * @param  bool     $lock_enroll   Lock enrolment?
      * @param  bool     $degrade_users Degrade users?
-     * @return [type]                  [description]
      */
     private function lockCourses(Semester $semester, $lock_rule, $degrade_users, $lock_enroll)
     {
@@ -398,23 +397,32 @@ class Admin_SemesterController extends AuthenticatedController
         // this
         static $locked_courseset_id = null;
 
+        // Get course ids
+        $query = "SELECT `course_id`
+                  FROM `semester_courses`
+                  JOIN `semester_data` USING (`semester_id`)
+                  GROUP BY `course_id`
+                  HAVING MAX(`beginn`) <= ?";
+        $course_ids = DBManager::get()->fetchFirst($query, [$semester->beginn]);
+
+        // Leave early if no courses are affected
+        if (count($course_ids) === 0) {
+            return;
+        }
+
         // Hide courses and set lock rule
         $query = "UPDATE `seminare`
                   SET `visible` = 0, `lock_rule` = ?
-                  WHERE `Seminar_id` IN (
-                      SELECT course_id FROM semester_courses WHERE semester_courses.semester_id = ?
-                  )";
-        DBManager::get()->execute($query, [$lock_rule, $semester->semester_id]);
+                  WHERE `Seminar_id` IN (?)";
+        DBManager::get()->execute($query, [$lock_rule, $course_ids]);
 
         // Degrade users
         if ($degrade_users) {
             $query = "UPDATE `seminar_user`
                       SET `status` = 'user'
-                      WHERE `Seminar_id` IN (
-                              SELECT course_id FROM semester_courses WHERE semester_courses.semester_id = ?
-                          )
-                          AND `status` = 'autor'";
-            DBManager::get()->execute($query, [$semester->semester_id]);
+                      WHERE `Seminar_id` IN (?)
+                        AND `status` = 'autor'";
+            DBManager::get()->execute($query, [$course_ids]);
         }
 
         // Lock enrolment

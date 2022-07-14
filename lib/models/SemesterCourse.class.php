@@ -21,6 +21,9 @@
  * @property string mkdate The database entry's creation date.
  * @property string chdate The database entry's last modification date.
  *
+ * @property Semester $semester
+ * @property Course $course
+ *
  * The combination of semester_id and course_id form the primary key.
  */
 class SemesterCourse extends SimpleORMap
@@ -30,7 +33,13 @@ class SemesterCourse extends SimpleORMap
         $config['db_table'] = 'semester_courses';
 
         $config['belongs_to']['semester'] = [
-            'class_name' => Semester::class
+            'class_name'  => Semester::class,
+            'foreign_key' => 'semester_id',
+        ];
+
+        $config['belongs_to']['course'] = [
+            'class_name'  => Course::class,
+            'foreign_key' => 'course_id',
         ];
 
         parent::configure($config);
