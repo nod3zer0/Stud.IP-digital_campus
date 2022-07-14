@@ -87,7 +87,7 @@ class Course_AdmissionController extends AuthenticatedController
                 if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
                     $available_coursesets[] = ['id' => $cs->getId(),
                                                     'name' => $cs->getName(),
-                                                    'chdate' => $cs->chdate,
+                                                    'chdate' => $cs->getChdate(),
                                                     'my_own' => $cs->getUserId() === $GLOBALS['user']->id];
                 }
             }
@@ -96,7 +96,7 @@ class Course_AdmissionController extends AuthenticatedController
                 if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
                     $available_coursesets[] = ['id' => $cs->getId(),
                                                     'name' => $cs->getName(),
-                                                    'chdate' => $cs->chdate,
+                                                    'chdate' => $cs->getChdate(),
                                                     'my_own' => $cs->getUserId() === $GLOBALS['user']->id];
                 }
             }
