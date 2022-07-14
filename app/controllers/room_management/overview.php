@@ -36,19 +36,31 @@ class RoomManagement_OverviewController extends AuthenticatedController
             }
         }
         parent::before_filter($action, $args);
-
-        if ($action == 'public_booking_plans') {
-            //Nothing else to be done in that case.
-            return;
-        }
-
         $this->user = User::findCurrent();
+        $this->show_resource_actions = (
+            ResourceManager::userHasGlobalPermission($this->user, 'autor')
+            ||
+            ResourceManager::userHasResourcePermissions($this->user, 'autor')
+        );
+
+        $this->show_admin_actions = (
+            $this->user_is_global_resource_admin
+            ||
+            ResourceManager::userHasResourcePermissions($this->user)
+            ||
+            $GLOBALS['perm']->have_perm('root')
+        );
         $this->user_is_global_resource_user = ResourceManager::userHasGlobalPermission($this->user);
         $this->user_is_root = $GLOBALS['perm']->have_perm('root');
         $this->user_is_global_resource_admin = ResourceManager::userHasGlobalPermission(
             $this->user,
             'admin'
         ) || $this->user_is_root;
+        $this->show_global_admin_actions = $this->user_is_global_resource_admin
+                                        && ResourceManager::userHasGlobalPermission(
+                                               $this->user,
+                                               'admin'
+                                           );
     }
 
     public function index_action()
@@ -64,20 +76,6 @@ class RoomManagement_OverviewController extends AuthenticatedController
         if (!$sufficient_permissions) {
             throw new AccessDeniedException();
         }
-
-        $this->show_resource_actions = (
-            ResourceManager::userHasGlobalPermission($this->user, 'autor')
-            ||
-            ResourceManager::userHasResourcePermissions($this->user, 'autor')
-        );
-
-        $this->show_admin_actions = (
-            $this->user_is_global_resource_admin
-            ||
-            ResourceManager::userHasResourcePermissions($this->user)
-            ||
-            $GLOBALS['perm']->have_perm('root')
-        );
 
         if (!$this->show_admin_actions) {
             $this->redirect($this->url_for('/rooms'));
@@ -371,11 +369,6 @@ class RoomManagement_OverviewController extends AuthenticatedController
             } else {
                 $this->rooms = Room::findAll();
             }
-
-            $this->show_global_admin_actions = ResourceManager::userHasGlobalPermission(
-                $this->user,
-                'admin'
-            );
         } else {
             //Get only the locations for which
             //the user has at least user permissions:
@@ -420,11 +413,6 @@ class RoomManagement_OverviewController extends AuthenticatedController
                         ORDER BY sort_position DESC, name ASC, mkdate ASC";
 
             $this->rooms = Room::findBySql($rooms_sql, $rooms_parameter);
-
-            $this->show_global_admin_actions = ResourceManager::userHasGlobalPermission(
-                $this->user,
-                'admin'
-            );
         }
 
         if (!$this->rooms) {

@@ -1,15 +1,15 @@
 <?
 /**
-Template parameters:
-- $title: The list title
-- $grouped_rooms: The rooms, grouped by RoomManager::groupRooms
-- $link_template: An optional link template where the room-ID is
-       represented by the only "%s" placeholder.
-       If $link_template is not set, the link to the booking plan
-       of the room is generated.
-- $show_in_dialog: Whether to show the room link in a dialog (true)
-       or not (false).
-*/
+ * Template parameters:
+ * - $title: The list title
+ * - $grouped_rooms: The rooms, grouped by RoomManager::groupRooms
+ * - $link_template: An optional link template where the room-ID is
+ * represented by the only "%s" placeholder.
+ * If $link_template is not set, the link to the booking plan
+ * of the room is generated.
+ * - $show_in_dialog: Whether to show the room link in a dialog (true)
+ * or not (false).
+ */
 ?>
 <? if ($grouped_rooms) : ?>
     <? if ($title) : ?>
@@ -17,45 +17,62 @@ Template parameters:
     <? endif ?>
     <? foreach ($grouped_rooms as $group) : ?>
         <?
-        $location = $group['location'];
+        $location  = $group['location'];
         $buildings = $group['buildings'];
         ?>
         <div class="studip-widget-wrapper">
             <article class="studip">
                 <header><h1><?= htmlReady($location->name) ?></h1></header>
                 <? foreach ($buildings as $building_group) : ?>
-                    <?
-                    $building = $building_group['building'];
-                    $rooms = $building_group['rooms'];
-                    ?>
                     <article class="studip toggle">
-                        <header><h1><a href="#"><?= htmlReady($building->name) ?></a></h1></header>
+                        <header><h1><a href="#"><?= htmlReady($building_group['building']->name) ?></a></h1></header>
                         <section>
                             <table class="default">
                                 <thead>
-                                    <tr><th><?= _('Raum') ?></th></tr>
+                                    <tr>
+                                        <th>
+                                            <?= _('Raum') ?>
+                                        </th>
+                                        <th class="actions">
+                                            <?= _('Aktionen') ?>
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                    <? foreach ($rooms as $room) : ?>
+                                    <? foreach ($building_group['rooms'] as $resource) : ?>
                                         <?
                                         $room_link = '';
                                         if ($link_template) {
                                             $room_link = $controller->link_for(
                                                 sprintf(
                                                     $link_template,
-                                                    $room->id
+                                                    $resource->id
                                                 )
                                             );
                                         } else {
-                                            $room_link = $room->getActionLink('booking_plan');
+                                            $room_link = $resource->getActionLink('booking_plan');
                                         }
                                         ?>
                                         <tr>
                                             <td>
                                                 <a href="<?= $room_link ?>"
-                                                   <?= $show_in_dialog ? 'data-dialog="size=big"' : '' ?>>
-                                                        <?= htmlReady($room->name) ?>
+                                                    <?= $show_in_dialog ? 'data-dialog="size=big"' : '' ?>>
+                                                    <?= htmlReady($resource->name) ?>
                                                 </a>
+                                            </td>
+                                            <td class="actions">
+                                                <?
+                                                $perms = [
+                                                    'show_global_admin_actions' => $show_global_admin_actions,
+                                                    'show_admin_actions'        => $resource->userHasPermission($user, 'admin'),
+                                                    'show_tutor_actions'        => $resource->userHasPermission($user, 'tutor'),
+                                                    'show_autor_actions'        => $resource->userHasPermission($user, 'autor'),
+                                                    'show_user_actions'         => $resource->userHasPermission($user, 'user'),
+                                                    'user_has_booking_rights'   => $resource->userHasBookingRights($user)];
+                                                ?>
+                                                <?= $this->render_partial('resources/_common/_action_menu.php',
+                                                    compact('resource') + $perms
+                                                );?>
                                             </td>
                                         </tr>
                                     <? endforeach ?>
