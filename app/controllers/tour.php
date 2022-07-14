@@ -370,7 +370,7 @@ class TourController extends AuthenticatedController
             $this->response->add_header('X-Action', 'complete');
             $this->tour->delete();
         } elseif (Request::submitted('no')) {
-            $this->response-add_header('X-Action', 'complete');
+            $this->response->add_header('X-Action', 'complete');
         } else {
             $this->response->add_header('X-Action', 'question');
             return (string) QuestionBox::create(
