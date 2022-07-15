@@ -56,7 +56,7 @@ class Form extends Part
      */
     final public function __construct(...$parts)
     {
-        parent::__construct($parts);
+        parent::__construct(...$parts);
     }
 
     /**
