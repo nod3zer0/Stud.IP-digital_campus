@@ -37,6 +37,8 @@ $commands = [
     Commands\Migrate\MigrateList::class,
     Commands\Migrate\MigrateStatus::class,
     Commands\Migrate\Migrate::class,
+    Commands\OAuth2\Keys::class,
+    Commands\OAuth2\Purge::class,
     Commands\Plugins\PluginActivate::class,
     Commands\Plugins\PluginDeactivate::class,
     Commands\Plugins\PluginInfo::class,

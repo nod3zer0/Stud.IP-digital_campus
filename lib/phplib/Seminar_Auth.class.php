@@ -151,7 +151,7 @@ class Seminar_Auth
                 $uid = $this->auth_validatelogin();
                 if ($uid) {
                     $this->auth["uid"] = $uid;
-                    $keep_session_vars = ['auth', 'forced_language', '_language', 'contrast'];
+                    $keep_session_vars = ['auth', 'forced_language', '_language', 'contrast', 'oauth2'];
                     if ($this->auth['perm'] === 'root') {
                         $keep_session_vars[] = 'plugins_disabled';
                     }

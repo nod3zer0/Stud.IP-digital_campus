@@ -198,6 +198,8 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('api', new Navigation(_('API'), 'dispatch.php/admin/api'));
             }
 
+            $navigation->addSubNavigation('oauth2', new Navigation(_('OAuth2'), 'dispatch.php/admin/oauth2/index'));
+
             $navigation->addSubNavigation('globalsearch', new Navigation(_('Globale Suche'), 'dispatch.php/globalsearch/settings'));
             $navigation->addSubNavigation('cache', new Navigation(_('Cache'), 'dispatch.php/admin/cache/settings'));
         }

@@ -48,6 +48,7 @@ class Authentication
         $guards = [
             new Auth\SessionStrategy(),
             new Auth\HttpBasicAuthStrategy($request, $this->authenticator),
+            new Auth\OAuth2Strategy($request, $this->authenticator),
             new Auth\OAuth1Strategy($request, $this->authenticator),
         ];
 

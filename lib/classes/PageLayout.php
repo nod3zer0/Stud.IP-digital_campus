@@ -511,6 +511,9 @@ class PageLayout
      */
     public static function postMessage(LayoutMessage $message, $id = null)
     {
+        if (!isset($_SESSION['messages'])) {
+            $_SESSION['messages'] = [];
+        }
         if ($id === null ) {
             $_SESSION['messages'][] = $message;
         } else {

@@ -46,3 +46,5 @@ tests/_helpers/_generated
 tests/_output/
 
 .idea
+/config/oauth2/*.key
+/config/oauth2/encryption_key.php

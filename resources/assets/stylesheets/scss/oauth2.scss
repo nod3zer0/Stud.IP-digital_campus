@@ -1,0 +1,26 @@
+article.admin-oauth2--setup {
+    margin-bottom: 3em;
+}
+
+.oauth2-clients--confidentiality > div {
+    display: flex;
+    align-items: flex-start;
+}
+
+#api-oauth2-authorize-index {
+
+    font-size: 16px;
+
+    #layout-sidebar, #layout_footer {
+        display: none;
+    }
+
+    .scopes, .buttons {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .buttons {
+        display: flex;
+    }
+}

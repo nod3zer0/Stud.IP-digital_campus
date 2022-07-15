@@ -23,11 +23,12 @@
             htmlReady($GLOBALS['user']->username)
         ) ?><br>
         <small>
-            <?= sprintf(
-                _('Sind sie nicht <strong>%s</strong>, so <a href="%s">melden Sie sich bitte ab</a> und versuchen es erneut.'),
-                htmlReady($GLOBALS['user']->getFullName()),
-                URLHelper::getLink('logout.php')
-            ) ?>
+            <a href="<?= URLHelper::getLink('logout.php') ?>">
+                <?= sprintf(
+                    _('Sind sie nicht <strong>%s</strong>, so melden Sie sich bitte ab und versuchen es erneut.'),
+                    htmlReady($GLOBALS['user']->getFullName())
+                ) ?>
+            </a>
         </small>
     </p>
 </section>
