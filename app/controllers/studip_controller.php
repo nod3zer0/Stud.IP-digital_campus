@@ -234,7 +234,7 @@ abstract class StudipController extends Trails_Controller
 
                     $arg = $sorm;
                     if ($this->_autobind) {
-                        $this->{$info['var']} =& $arg;
+                        $this->{$info['var']} = $arg;
                     }
                     break;
 

@@ -21,6 +21,8 @@
  */
 class Resources_RoomRequestController extends AuthenticatedController
 {
+    protected $filter;
+
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
