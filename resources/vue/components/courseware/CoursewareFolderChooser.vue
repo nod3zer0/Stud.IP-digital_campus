@@ -17,6 +17,56 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 
+function filterCourseFolders(folders, { allowHomeworkFolders }) {
+    const validatedParents = new Map();
+
+    return folders.filter((folder) => {
+        if (validateParentFolder(folder)) {
+            switch (folder.attributes['folder-type']) {
+                case 'HiddenFolder':
+                    if (folder.attributes['data-content']['download_allowed'] === 1) {
+                        return true;
+                    }
+                    break;
+                case 'HomeworkFolder':
+                    if (allowHomeworkFolders) {
+                        return true;
+                    }
+                    break;
+                default:
+                    return true;
+            }
+        }
+    });
+
+    function validateParentFolder(folder) {
+        let isValid = true;
+        if (folder?.relationships?.parent) {
+            let parentId = folder.relationships.parent.data.id;
+            if (validatedParents.has(parentId)) {
+                isValid = validatedParents.get(parentId);
+            } else {
+                let parent = folders.find((f) => f.id === parentId);
+                if (parent) {
+                    isValid = hiddenParentFolderValidation(parent);
+                    validatedParents.set(parentId, isValid);
+                }
+            }
+        }
+        return isValid;
+    }
+
+    function hiddenParentFolderValidation(parentFolder) {
+        if (parentFolder.attributes['folder-type'] === 'HiddenFolder') {
+            return false;
+        } else if (parentFolder?.relationships?.parent) {
+            // Recursively validating the parents.
+            return validateParentFolder(parentFolder);
+        } else {
+            return true;
+        }
+    }
+}
 export default {
     name: 'courseware-folder-chooser',
     props: {
@@ -45,32 +95,17 @@ export default {
             return { type: 'users', id: `${this.userId}` };
         },
         loadedCourseFolders() {
-            let loadedCourseFolders = [];
-            let CourseFolders = this.relatedFolders({ parent: this.courseObject, relationship: 'folders' }) ?? [];
-            CourseFolders.forEach(folder => {
-                if (this.validateParentFolder(folder)) {
-                    switch (folder.attributes['folder-type']) {
-                        case 'HiddenFolder':
-                            if (folder.attributes['data-content']['download_allowed'] === 1) {
-                                loadedCourseFolders.push(folder);
-                            }
-                            break;
-                        case 'HomeworkFolder':
-                            if(this.allowHomeworkFolders) {
-                                loadedCourseFolders.push(folder);
-                            }
-                            break;
-                        default:
-                            loadedCourseFolders.push(folder);
-                    }
+            return filterCourseFolders(
+                this.relatedFolders({ parent: this.courseObject, relationship: 'folders' }) ?? [],
+                {
+                    allowHomeworkFolders: this.allowHomeworkFolders,
                 }
-            });
-            return loadedCourseFolders;
+            );
         },
         loadedUserFolders() {
             let loadedUserFolders = [];
             let UserFolders = this.relatedFolders({ parent: this.userObject, relationship: 'folders' }) ?? [];
-            UserFolders.forEach(folder => {
+            UserFolders.forEach((folder) => {
                 if (folder.attributes['folder-type'] === 'PublicFolder') {
                     loadedUserFolders.push(folder);
                 }
@@ -81,7 +116,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            loadRelatedFolders: 'folders/loadRelated'
+            loadRelatedFolders: 'folders/loadRelated',
         }),
 
         changeSelection() {
@@ -103,30 +138,6 @@ export default {
 
             return this.loadRelatedFolders({ parent, relationship, options });
         },
-
-        validateParentFolder(folder) {
-            let courseFolders = this.relatedFolders({ parent: this.courseObject, relationship: 'folders' }) ?? [];
-            let validation = true;
-            if (courseFolders.length > 0 && folder?.relationships?.parent) {
-                let parentId = folder.relationships.parent.data.id;
-                let parent = courseFolders.find(f => f.id === parentId);
-                if (parent) {
-                    validation = this.hiddenParentFolderValidation(parent);
-                }
-            }
-            return validation;
-        },
-
-        hiddenParentFolderValidation(parentFolder) {
-            if (parentFolder.attributes['folder-type'] === 'HiddenFolder') {
-                return false;
-            } else if (parentFolder?.relationships?.parent) {
-                // Recursively validating the parents.
-                return this.validateParentFolder(parentFolder);
-            } else {
-                return true;
-            }
-        }
     },
     mounted() {
         this.currentValue = this.value;
