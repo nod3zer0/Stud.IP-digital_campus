@@ -64,9 +64,8 @@ class PluginController extends StudipController
      */
     public function __call($method, $arguments)
     {
-        $variables = get_object_vars($this);
-        if (isset($variables[$method]) && is_callable($variables[$method])) {
-            return call_user_func_array($variables[$method], $arguments);
+        if (isset($this->_template_variables[$method]) && is_callable($this->_template_variables[$method])) {
+            return call_user_func_array($this->_template_variables[$method], $arguments);
         }
         return parent::__call($method, $arguments);
     }
