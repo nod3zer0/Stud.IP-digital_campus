@@ -1,3 +1,30 @@
+15.07.2022 v 5.0.2
+https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.0.2&state=all
+- Meine Räume: Suche findet nur Gebäude, keine Räume [#378]
+- Sidebar und deren Elemente haben keine ARIA-Rollen [#519]
+- Suchschlitz der globalen Suche verwendet keine ARIA-Rollen [#520]
+- Footer ist nicht per ARIA-Rolle ausgezeichnet [#521]
+- Beim Anlegen von Terminen prüfen, ob Terminende nach Terminbeginn [#651]
+- Courseware: Import bzw. Kopieren aller Inhalte aus einem anderen Kurs nicht direkt möglich [#886]
+- Courseware: Import legt Ordner im Dateibereich an, obwohl der Export keine Dateien enthält [#906]
+- Schließenbutton im Dialog in Courseware ist falsch gestylet [#976]
+- Fragebögen erstellen - Dialog zu klein [#1086]
+- Courseware: Bearbeiten-Ansicht des Dokumenten-Blocks hängt sich auf, wenn es im Kurs viele verschachtelte Ordner gibt [#1130]
+- Dialog zum Erstellen/Bearbeiten von Fragebögen hat keine konsistente Größe [#1148]
+- Raumsuche: zwei Einträge mit "Bitte wählen" im Dropdown [#1161]
+- Nutzer finden nach Abschalten des WYSIWYG-Editors die Einstellung nicht mehr wieder [#1165]
+- Fehlerhafte Rollenzuweisung bei Einrichtungszuordnung [#1180]
+- Tex-Markup in Stud.IP-Dialogen gibt es nur einmal [#1181]
+- Error: Call to a member function get_perm() on null [#1209]
+- Fehler bei Migration auf 5.0: Unknown column 'topic_id' in 'termine' [#1223]
+- Englische Übersetzung ist mit Screenreadern unbrauchbar [#1229]
+- OER Campus: Neue Suchergebnisse sind für Screenreader nicht erkennbar [#1246]
+- Migration von 5.0 auf 5.1 (und 5.2) läuft in 5.1.21 und 5.1.27 auf Fehler [#1265]
+- Neue Veranstaltungskategorie kann nicht angelegt werden [#1290]
+- Veranstaltungsadministration: Semester wird nicht exportiert [#1296]
+- Semester sperren wird die Veranstaltungen des Semester nicht dem gesperrten Anmeldeset zuordnen [#1329]
+- Typo in Oer_MymaterialController::statistics_action() [#1330]
+
 15.07.2022 v 4.6.6
 https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+4.6.6&state=all
 - Tabellenzellen in letzter Zeile einer umgebenden Tabelle bekommen immer einen css-border [#90]
