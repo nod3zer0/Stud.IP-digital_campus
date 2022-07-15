@@ -182,6 +182,9 @@ final class StudipControllerTest extends Codeception\Test\Unit
         $this->getController()->relocate(...$args);
     }
 
+    /**
+     * @covers StudipController::get_assigned_variables
+     */
     public function testVariableAssignment(): void
     {
         $controller = $this->getController();
