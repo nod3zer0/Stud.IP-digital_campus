@@ -618,6 +618,8 @@ class RoomManagementMigration extends Migration
             WHERE property_id = :property_id;"
         );
 
+        $changed_property_ids = [];
+
         $properties_to_be_modified = $GLOBALS['RESOURCE_PROPERTIES_TO_BE_MODIFIED'];
         foreach ($properties_to_be_modified as $old_name => $data) {
             //Check if the old property exists:
@@ -740,6 +742,8 @@ class RoomManagementMigration extends Migration
                 }
             }
 
+            $changed_property_ids[] = $final_property_id;
+
             if ($duplicate_ids) {
                 $this->write(
                     sprintf(
@@ -814,6 +818,20 @@ class RoomManagementMigration extends Migration
                 ]
             );
         }
+
+        //All old properties of type "num" that have not been modified yet
+        //and which are not the "seats" property will be converted to the
+        //type "text" so that they continue to be represented in a text input
+        //instead of being represented in a number input:
+        $num_to_text_stmt = $db->prepare(
+            "UPDATE `resource_property_definitions`
+            SET `type` = 'text'
+            WHERE
+            `type` = 'num'
+            AND `name` <> 'seats'
+            AND `property_id` NOT IN ( :changed_property_ids )"
+        );
+        $num_to_text_stmt->execute(['changed_property_ids' => $changed_property_ids]);
 
         $this->write(
             'Finished migrating existing properties.'
