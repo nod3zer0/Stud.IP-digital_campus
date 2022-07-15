@@ -200,6 +200,9 @@ final class StudipControllerTest extends Codeception\Test\Unit
         $controller->baz[] = 23;
         $this->assertEquals([23], $controller->baz);
 
+        $controller->bad[] = 23;
+        $this->assertEquals([23], $controller->bad);
+
         // Test fetching all variables
         $variables = $controller->get_assigned_variables();
 
@@ -219,6 +222,10 @@ final class StudipControllerTest extends Codeception\Test\Unit
         $this->assertArrayHasKey('baz', $variables);
         $this->assertCount(1, $variables['baz']);
         $this->assertEquals([23], $variables['baz']);
+
+        $this->assertArrayHasKey('bad', $variables);
+        $this->assertCount(1, $variables['bad']);
+        $this->assertEquals([23], $variables['bad']);
     }
 
     /**

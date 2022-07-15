@@ -44,11 +44,10 @@ trait StudipControllerPropertiesTrait
      */
     public function &__get(string $offset)
     {
-        $result = null;
-        if (isset($this->_template_variables[$offset])) {
-            $result = &$this->_template_variables[$offset];
+        if (!isset($this->_template_variables[$offset])) {
+            $this->_template_variables[$offset] = null;
         }
-        return $result;
+        return $this->_template_variables[$offset];
     }
 
     /**
