@@ -182,6 +182,42 @@ final class StudipControllerTest extends Codeception\Test\Unit
         $this->getController()->relocate(...$args);
     }
 
+    public function testVariableAssignment(): void
+    {
+        $controller = $this->getController();
+
+        // Set and test assignments
+        $controller->foo = 'bar';
+        $this->assertEquals('bar', $controller->foo);
+
+        $controller->bar = 42;
+        $this->assertEquals(42, $controller->bar);
+
+        $controller->baz = [];
+        $controller->baz[] = 23;
+        $this->assertEquals([23], $controller->baz);
+
+        // Test fetching all variables
+        $variables = $controller->get_assigned_variables();
+
+        $this->assertIsArray($variables);
+
+        // - Implicit variables
+        $this->assertArrayHasKey('controller', $variables);
+        $this->assertArrayHasKey('current_action', $variables);
+
+        // - Explicit variables
+        $this->assertArrayHasKey('foo', $variables);
+        $this->assertEquals('bar', $variables['foo']);
+
+        $this->assertArrayHasKey('bar', $variables);
+        $this->assertEquals(42, $variables['bar']);
+
+        $this->assertArrayHasKey('baz', $variables);
+        $this->assertCount(1, $variables['baz']);
+        $this->assertEquals([23], $variables['baz']);
+    }
+
     /**
      * Returns a relative url for Stud.IP if given url matches.
      */

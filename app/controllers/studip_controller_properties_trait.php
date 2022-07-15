@@ -42,9 +42,13 @@ trait StudipControllerPropertiesTrait
      * @param string $offset
      * @return mixed
      */
-    public function __get(string $offset)
+    public function &__get(string $offset)
     {
-        return $this->_template_variables[$offset] ?? null;
+        $result = null;
+        if (isset($this->_template_variables[$offset])) {
+            $result = &$this->_template_variables[$offset];
+        }
+        return $result;
     }
 
     /**

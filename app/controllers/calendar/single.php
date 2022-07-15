@@ -98,6 +98,7 @@ class Calendar_SingleController extends Calendar_CalendarController
         $timestamp = mktime(12, 0, 0, date('n', $this->atime), date('j', $this->atime), date('Y', $this->atime));
         $monday = $timestamp - 86400 * (strftime('%u', $timestamp) - 1);
         $day_count = $this->settings['type_week'] == 'SHORT' ? 5 : 7;
+        $this->calendars = [];
         for ($i = 0; $i < $day_count; $i++) {
             $this->calendars[$i] =
                 SingleCalendar::getDayCalendar(
