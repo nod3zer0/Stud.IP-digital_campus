@@ -243,7 +243,6 @@ class Materialien_FilesController extends MVVController
             $this->response->add_header('X-Dialog-Execute', 'STUDIP.MVV.Document.reload_documenttable("' . $range_id . '", "' . $range_type . '")');
             $this->response->add_header('X-Dialog-Close', 1);
             $this->render_nothing();
-            return;
         }
     }
 
@@ -293,7 +292,6 @@ class Materialien_FilesController extends MVVController
             $this->response->add_header('X-Dialog-Execute', 'STUDIP.MVV.Document.reload_documenttable()');
             $this->response->add_header('X-Dialog-Close', 1);
             $this->render_nothing();
-            return;
         }
     }
 
@@ -438,7 +436,6 @@ class Materialien_FilesController extends MVVController
             $this->response->add_header('X-Dialog-Execute', 'STUDIP.MVV.Document.reload_documenttable("' . $range_id . '", "' . $range_type . '")');
             $this->response->add_header('X-Dialog-Close', 1);
             $this->render_nothing();
-            return;
         }
     }
 
@@ -466,7 +463,6 @@ class Materialien_FilesController extends MVVController
             $this->response->add_header('X-Dialog-Execute', 'STUDIP.MVV.Document.reload_documenttable("' . $range_id . '")');
             $this->response->add_header('X-Dialog-Close', 1);
             $this->render_nothing();
-            return;
         }
     }
 
@@ -481,10 +477,9 @@ class Materialien_FilesController extends MVVController
         PageLayout::postSuccess(_('Das Dokument und alle seine Zuweisungen wurden gelöscht.'));
 
         if (Request::isXhr()) {
-            $this->response->add_header('X-Dialog-Execute', 'STUDIP.MVV.Document.reload_documenttable("' . $range_id . '")');
+            $this->response->add_header('X-Dialog-Execute', 'STUDIP.MVV.Document.reload_documenttable()');
             $this->response->add_header('X-Dialog-Close', 1);
             $this->render_nothing();
-            return;
         }
     }
 
@@ -512,7 +507,6 @@ class Materialien_FilesController extends MVVController
 
         if (!Request::isXhr()) {
             $this->perform_relayed('index');
-            return;
         }
     }
 
