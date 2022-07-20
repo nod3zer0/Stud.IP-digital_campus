@@ -371,7 +371,7 @@
                             </tr>
                             <tr>
                                 <td><translate>Seite wurde erstellt von</translate>:</td>
-                                <td>{{ owner }}</td>
+                                <td>{{ ownerName }}</td>
                             </tr>
                             <tr>
                                 <td><translate>Seite wurde erstellt am</translate>:</td>
@@ -527,7 +527,7 @@
                     @confirm="sendOerSuggestion"
                 >
                     <template v-slot:dialogContent>
-                        <p><translate>Das folgende Courseware-Material wird {{ owner }}
+                        <p><translate>Das folgende Courseware-Material wird {{ ownerName }}
                             zur Veröffentlichung im OER Campus vorgeschlagen:</translate></p>
                         <table class="cw-structural-element-info">
                             <tr>
