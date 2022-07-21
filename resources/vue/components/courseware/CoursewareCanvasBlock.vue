@@ -341,8 +341,7 @@ export default {
                 canvas.height = 500;
             }
             this.context = canvas.getContext('2d');
-            this.currentColor = 'blue';
-            this.currentColorRGBA = this.colors['blue'];
+            this.setColor('blue');
             this.currentSize = this.sizes['normal'];
             this.currentTool = this.tools['pen'];
             this.redraw();
