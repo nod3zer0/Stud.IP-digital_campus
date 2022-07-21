@@ -398,47 +398,45 @@ class StudipNews extends SimpleORMap implements PrivacyObject
     public static function DoGarbageCollect($news_deletion_days = false)
     {
         $db = DBManager::get();
-        if (!Config::get()->NEWS_DISABLE_GARBAGE_COLLECT) {
-            $queries = [];
-            $parameters = [];
+        $queries = [];
+        $parameters = [];
 
-            if ($news_deletion_days !== false) {
-                $queries[] = "SELECT news.news_id
-                              FROM news
-                              WHERE date + expire + ? < UNIX_TIMESTAMP()";
-                $parameters[] = (int) $news_deletion_days;
-            }
-
-            $queries[] = "SELECT news_range.news_id
-                          FROM news_range
-                          LEFT JOIN news USING (news_id)
-                          WHERE news.news_id IS NULL";
+        if ($news_deletion_days !== false) {
             $queries[] = "SELECT news.news_id
                           FROM news
-                          LEFT JOIN news_range USING (news_id)
-                          WHERE range_id IS NULL";
-
-            $query = implode(' UNION DISTINCT ', $queries);
-            $stm = $db->prepare($query);
-            $stm->execute($parameters);
-            $result = $stm->fetchAll(PDO::FETCH_COLUMN);
-
-            if (count($result) > 0) {
-                $query = "DELETE FROM news WHERE news_id IN (?)";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute([$result]);
-                $killed = $statement->rowCount();
-
-                $query = "DELETE FROM news_range WHERE news_id IN (?)";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute([$result]);
-
-                object_kill_visits(null, $result);
-                object_kill_views($result);
-                StudipComment::DeleteCommentsByObject($result);
-            }
-            return $killed;
+                          WHERE date + expire + ? < UNIX_TIMESTAMP()";
+            $parameters[] = (int) $news_deletion_days;
         }
+
+        $queries[] = "SELECT news_range.news_id
+                      FROM news_range
+                      LEFT JOIN news USING (news_id)
+                      WHERE news.news_id IS NULL";
+        $queries[] = "SELECT news.news_id
+                      FROM news
+                      LEFT JOIN news_range USING (news_id)
+                      WHERE range_id IS NULL";
+
+        $query = implode(' UNION DISTINCT ', $queries);
+        $stm = $db->prepare($query);
+        $stm->execute($parameters);
+        $result = $stm->fetchAll(PDO::FETCH_COLUMN);
+
+        if (count($result) > 0) {
+            $query = "DELETE FROM news WHERE news_id IN (?)";
+            $statement = $db->prepare($query);
+            $statement->execute([$result]);
+            $killed = $statement->rowCount();
+
+            $query = "DELETE FROM news_range WHERE news_id IN (?)";
+            $statement = $db->prepare($query);
+            $statement->execute([$result]);
+
+            object_kill_visits(null, $result);
+            object_kill_views($result);
+            StudipComment::DeleteCommentsByObject($result);
+        }
+        return $killed;
     }
 
     public static function DeleteNewsRanges($range_id)
