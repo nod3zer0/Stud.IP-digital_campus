@@ -12,9 +12,6 @@ const Fullscreen = {
         // transisitions
         $('html').addClass('is-fullscreen').toggleClass('is-fullscreen-immediately', immediate);
 
-        // Move toggle element into viewport
-        $('.fullscreen-toggle').prependTo('#layout_content');
-
         // Attach key handler that allows keypress on escape to leave fullscreen
         $(document).on('keydown.key27', (event) => {
             if (event.key === 'Escape') {
@@ -33,10 +30,6 @@ const Fullscreen = {
         // Deactivate key handler
         $(document).off('keydown.key27');
 
-        // Move toggle element into secondary navigation
-        $('.fullscreen-toggle').insertBefore('.helpbar-container');
-
-        //
         (new Promise((resolve, reject) => {
             var timeout = setTimeout(() => {
                 $('#layout-sidebar').off('transitionend');

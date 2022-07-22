@@ -3,7 +3,5 @@ STUDIP.domReady(function () {
 
     if (sessionStorage.getItem('studip-fullscreen') == 'on' && $('.fullscreen-toggle').length > 0) {
         STUDIP.Fullscreen.enter(true);
-    } else {
-        $('.fullscreen-toggle').insertBefore('.helpbar-container');
     }
 }, true);

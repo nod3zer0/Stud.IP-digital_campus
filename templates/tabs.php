@@ -60,6 +60,13 @@ $ebene3 = [];
         <? endforeach ?>
        <? endif; ?>
     </ul>
+    <? if (PageLayout::isFullscreenModeAllowed()): ?>
+        <div class="fullscreen-container">
+            <button class="fullscreen-toggle" aria-label="<?= _('Vollbildmodus') ?>" title="<?= _('Vollbildmodus') ?>">
+                <?= Icon::create('zoom-in2')->asImg(24) ?>
+            </button>
+        </div>
+    <? endif ?>
     <? if (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('autor')) : ?>
         <?= Helpbar::get()->render() ?>
     <? endif; ?>

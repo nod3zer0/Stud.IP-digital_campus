@@ -185,9 +185,11 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
         <div id="layout_container">
             <?= Sidebar::get()->render() ?>
             <div id="layout_content">
-            <? if (PageLayout::isFullscreenModeAllowed()): ?>
-                <?= $this->render_partial('shared/fullscreen-toggle.php') ?>
-            <? endif; ?>
+                <? if (PageLayout::isFullscreenModeAllowed()): ?>
+                    <button hidden class="fullscreen-toggle unfullscreen" aria-label="<?= _('Vollbildmodus verlassen') ?>" title="<?= _('Vollbildmodus verlassen') ?>">
+                        <?= Icon::create('zoom-out2')->asImg(24) ?>
+                    </button>
+                <? endif; ?>
                 <?= implode(PageLayout::getMessages()) ?>
                 <?= $content_for_layout ?>
             </div>
