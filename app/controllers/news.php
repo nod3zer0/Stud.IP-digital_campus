@@ -187,7 +187,7 @@ class NewsController extends StudipController
             }
         }
 
-        $this->render_nothing();
+        $this->render_json(true);
     }
 
     /**

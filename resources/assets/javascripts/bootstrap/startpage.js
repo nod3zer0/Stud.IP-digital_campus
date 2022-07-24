@@ -5,7 +5,7 @@ STUDIP.domReady(() => {
 });
 
 // Add handler for "read all" on news widget
-$(document).on('click', '#start-index a[href*="newswidget/read_all"]', function(event) {
+$(document).on('click', '#start-index .visit-all', function(event) {
     var icon = $(this),
         url = icon.attr('href'),
         widget = icon.closest('.studip-widget');
