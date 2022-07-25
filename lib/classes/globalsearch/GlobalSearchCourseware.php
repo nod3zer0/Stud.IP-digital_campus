@@ -117,7 +117,7 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
                 'name' => self::mark($structural_element->title, $search, true),
                 'description' => $description,
                 'url' => $pageData['url'],
-                'img' => $structural_element->image ? $structural_element->getImageUrl(): null,
+                'img' => $structural_element->image ? $structural_element->getImageUrl() : Icon::create('courseware')->asImagePath(),
                 'additional' => '<a href="' . $pageData['originUrl'] . '" title="' . $pageData['originName'] . '">' . $pageData['originName'] . '</a>',
                 'date' => $date->format('d.m.Y H:i'),
                 'structural-element-id' => $structural_element->id
@@ -171,7 +171,10 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
 
     public static function getSearchURL($searchterm)
     {
-        return null;
+        return URLHelper::getURL('dispatch.php/search/globalsearch', [
+            'q'        => $searchterm,
+            'category' => self::class
+        ]);
     }
 
 }
