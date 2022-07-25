@@ -91,12 +91,8 @@ class Course_StudygroupController extends AuthenticatedController
             $stmt->execute([$GLOBALS['user']->id, $id]);
             $data = $stmt->fetch();
 
-            if ($data['status'] == 'accepted') {
-                $membership_requested = true;
-            }
+            $membership_requested = $data['status'] === 'accepted';
             $invited = StudygroupModel::isInvited($GLOBALS['user']->id, $id);
-
-            $participant = $perm->have_studip_perm('autor', $id);
 
             if (!preg_match('/^(' . preg_quote($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'], '/') . ')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', Request::get('send_from_search_page'))) {
                 $send_from_search_page = '';
@@ -141,7 +137,7 @@ class Course_StudygroupController extends AuthenticatedController
 
             $awidget = new LinksWidget();
             $awidget->setTitle($action);
-            $awidget->addLink($infotext, $infolink, $icon, $infolink_options);
+            $awidget->addLink($infotext, $infolink ?? '#', $icon, $infolink_options ?? []);
             if ($send_from_search_page) {
                 $awidget->addLink(
                     _('zurück zur Suche'),
