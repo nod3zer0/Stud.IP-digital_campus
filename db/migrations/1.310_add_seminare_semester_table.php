@@ -19,19 +19,15 @@ class AddSeminareSemesterTable extends Migration
             );"
         );
 
-        //This select looks unorthodox but I am trying to catch even broken
-        //database entries for when start_time and duration_time don't exactly
-        //match the begin or end of the semester.
         DBManager::get()->exec("
             INSERT IGNORE INTO `semester_courses`
             (`semester_id`, `course_id`, `mkdate`, `chdate`)
             SELECT `semester_data`.`semester_id`, `seminare`.`Seminar_id`, `seminare`.`mkdate`, `seminare`.`chdate`
             FROM `seminare`
-            INNER JOIN `semester_data` ON (`seminare`.`start_time` < `semester_data`.`ende`
-                     AND (
-                         `seminare`.`start_time` >= `semester_data`.`beginn` AND `seminare`.`duration_time` >= '0'
-                     )
-                )
+            INNER JOIN `semester_data` ON 
+                `seminare`.`start_time` <= `semester_data`.`beginn` AND
+                `semester_data`.`beginn` <= `seminare`.`start_time` + `seminare`.`duration_time` AND
+                `seminare`.`duration_time` >= 0
         ");
     }
 
