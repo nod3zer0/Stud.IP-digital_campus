@@ -458,20 +458,7 @@ class Resources_ResourceController extends AuthenticatedController
         //and the user has at least 'user' permissions on the resource.
         //The booking plan is also visible when the resource is a room
         //and its booking plan is publicly available.
-        $booking_plan_is_visible = false;
-        if ($GLOBALS['user']->id != 'nobody') {
-            $booking_plan_is_visible = $this->resource->userHasPermission(
-                $current_user,
-                'user'
-            );
-        }
-        if ($booking_plan_is_visible === false) {
-            $booking_plan_is_visible = (
-                ($this->resource instanceof Room)
-                and $this->resource->booking_plan_is_public
-            );
-        }
-        if (!$booking_plan_is_visible) {
+        if (!$this->resource->bookingPlanVisibleForUser($current_user)) {
             throw new AccessDeniedException(
                 _('Der Belegungsplan ist für Sie nicht zugänglich!')
             );
@@ -561,17 +548,15 @@ class Resources_ResourceController extends AuthenticatedController
                 );
             }
         }
-        if (($this->resource instanceof Room) and $this->resource->booking_plan_is_public) {
-            $actions->addLink(
-                _('QR-Code anzeigen'),
-                $this->resource->getActionURL('booking_plan'),
-                Icon::create('code-qr'),
-                [
-                    'data-qr-code' => '',
-                    'data-qr-code-print' => '1'
-                ]
-            );
-        }
+        $actions->addLink(
+            _('QR-Code anzeigen'),
+            $this->resource->getActionURL('booking_plan'),
+            Icon::create('code-qr'),
+            [
+                'data-qr-code' => '',
+                'data-qr-code-print' => '1'
+            ]
+        );
 
         $sidebar->addWidget($actions);
 

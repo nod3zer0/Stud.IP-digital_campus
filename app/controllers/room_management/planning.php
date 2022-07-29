@@ -457,10 +457,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
             }
 
             //Check the permissions for the room:
-            $sufficient_permissions =
-                $room->userHasPermission($current_user, 'user')
-                || $room->booking_plan_is_public;
-            if (!$sufficient_permissions) {
+            if (!$room->bookingPlanVisibleForUser($current_user)) {
                 throw new AccessDeniedException();
             }
         }

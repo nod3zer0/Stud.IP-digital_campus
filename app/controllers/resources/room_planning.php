@@ -160,11 +160,10 @@ class Resources_RoomPlanningController extends AuthenticatedController
             if ($this->resource->userHasPermission($current_user, 'admin')) {
                 $this->booking_types[] = 3;
             }
-        }
-        //If the plan visibility cannot be determined by the user,
-        //we can still check if the plan is visible to the public:
-        if (!$plan_is_visible && ($this->resource instanceof Room)) {
-            $plan_is_visible = $this->resource->booking_plan_is_public;
+        } else {
+            //If the plan visibility cannot be determined by the user,
+            //we can still check if the plan is visible to the public:
+            $plan_is_visible = $this->resource->bookingPlanVisibleForUser($current_user);
         }
         if (!$plan_is_visible) {
             throw new AccessDeniedException(
@@ -351,18 +350,16 @@ class Resources_RoomPlanningController extends AuthenticatedController
                 }
             }
         }
-        if ($this->resource instanceof Room && $this->resource->booking_plan_is_public) {
-            $actions->addLink(
-                _('QR-Code anzeigen'),
-                $this->resource->getActionURL('booking_plan'),
-                Icon::create('code-qr'),
-                [
-                    'data-qr-code'       => '',
-                    'data-qr-code-print' => '1',
-                    'data-qr-title'      => _('Aktueller Belegungsplan')
-                ]
-            );
-        }
+        $actions->addLink(
+            _('QR-Code anzeigen'),
+            $this->resource->getActionURL('booking_plan'),
+            Icon::create('code-qr'),
+            [
+                'data-qr-code'       => '',
+                'data-qr-code-print' => '1',
+                'data-qr-title'      => _('Aktueller Belegungsplan')
+            ]
+        );
 
         if ($current_user instanceof User) {
             //No check necessary here: This part of the controller is only called

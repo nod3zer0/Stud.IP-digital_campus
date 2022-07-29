@@ -2403,8 +2403,8 @@ class Resource extends SimpleORMap implements StudipItem
     /**
      * Determines if a user has the specified permission.
      *
-     * @param User $user The user whose permissions shall be checked on this
-     *     resource object.
+     * @param ?User $user The user whose permissions shall be checked on this
+     *     resource object. May be null.
      * @param string $permission The permission level.
      * @param $time_range @TODO
      *
@@ -2412,12 +2412,12 @@ class Resource extends SimpleORMap implements StudipItem
      *     false otherwise.
      */
     public function userHasPermission(
-        User $user,
+        ?User $user,
         string $permission = 'user',
         array $time_range = []
     )
     {
-        if (!in_array($permission, ['user', 'autor', 'tutor', 'admin'])) {
+        if (!in_array($permission, ['user', 'autor', 'tutor', 'admin']) || $user === null) {
             return false;
         }
 
@@ -2559,8 +2559,8 @@ class Resource extends SimpleORMap implements StudipItem
      * Determines if the booking plan of the resource is visible for a
      * specified user.
      *
-     * @param User $user The user whose permission to view the booking plan
-     *     shall be determined.
+     * @param ?User $user The user whose permission to view the booking plan
+     *     shall be determined. May be null.
      *
      * @param DateTime[] $time_range An optional time range for the
      *     permission check.
@@ -2569,10 +2569,9 @@ class Resource extends SimpleORMap implements StudipItem
      * @see Resource::getUserPermission
      *
      */
-    public function bookingPlanVisibleForUser(User $user, $time_range = [])
+    public function bookingPlanVisibleForUser(?User $user, $time_range = [])
     {
-        return $this->userHasPermission($user, 'user', $time_range)
-            || $GLOBALS['perm']->have_perm('root', $user->id);
+        return $this->userHasPermission($user, 'user', $time_range);
     }
 
     /**

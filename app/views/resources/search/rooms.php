@@ -28,7 +28,7 @@
                         ) ?>
                     </td>
                     <td>
-                        <? if ($room->userHasPermission($current_user, 'autor') || $room->booking_plan_is_public && Config::get()->RESOURCES_SHOW_PUBLIC_ROOM_PLANS): ?>
+                        <? if ($room->bookingPlanVisibleForUser($current_user)): ?>
                             <a href="<?= $room->getActionLink('booking_plan', $booking_plan_action_params) ?>" data-dialog="size=big">
                                 <?= htmlReady($room->name) ?>
                             </a>

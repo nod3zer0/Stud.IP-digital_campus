@@ -410,12 +410,6 @@ class Resources_ExportController extends AuthenticatedController
         if (!$user_has_user_permissions) {
             throw new AccessDeniedException();
         }
-        if ($this->resource instanceof Room) {
-            if (!$this->resource->booking_plan_is_public
-                && !$user_has_user_permissions) {
-                throw new AccessDeniedException();
-            }
-        }
 
         $week_timestamp = Request::get('timestamp', time());
 

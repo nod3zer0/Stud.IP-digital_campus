@@ -308,7 +308,7 @@ class Resources extends \RESTAPI\RouteMap
                 throw new \AccessDeniedException();
             }
         } elseif ($resource instanceof \Room) {
-            if (!$resource->booking_plan_is_public) {
+            if (!$resource->bookingPlanVisibleForUser($current_user)) {
                 throw new \AccessDeniedException();
             }
         }
