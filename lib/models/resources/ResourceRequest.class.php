@@ -276,7 +276,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         //This is done in the rest of the SQL query:
 
         // FIXME this subselect looks unnecessarily complex
-        $whole_sql = 'resource_requests.id IN (
+        $whole_sql = '
                 SELECT id FROM resource_requests
                 WHERE
                 resource_id = :resource_id
@@ -338,9 +338,11 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             . $closed_status_sql
             . '
             GROUP BY id
-        ) '
+         '
             . $excluded_request_ids_sql;
-
+        $request_ids = DBManager::get()->fetchFirst($whole_sql, $sql_params);
+        $whole_sql = "resource_requests.id IN(:request_ids)";
+        $sql_params = ['request_ids' => $request_ids];
         if ($additional_conditions) {
             $whole_sql .= ' AND ' . $additional_conditions;
             if ($additional_parameters) {
