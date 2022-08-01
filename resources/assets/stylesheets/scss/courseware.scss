@@ -203,6 +203,9 @@ r i b b o n
 $consum_ribbon_width: calc(100% - 58px);
 #course-courseware-index,
 #contents-courseware-courseware {
+    &.consume {
+        overflow: hidden;
+    }
     #layout_container {
         overflow-x: hidden;
         position: relative;

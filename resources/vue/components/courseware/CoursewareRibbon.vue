@@ -106,9 +106,9 @@ export default {
         },
         handleScroll() {
             if (window.outerWidth > 767) {
-                this.stickyRibbon = window.scrollY > 130;
+                this.stickyRibbon = window.scrollY > 130 && !this.consumeMode;
             } else {
-                this.stickyRibbon = window.scrollY > 75;
+                this.stickyRibbon = window.scrollY > 75 && !this.consumeMode;
             }
         },
     },
@@ -132,6 +132,11 @@ export default {
         },
         consumeMode(newState) {
             this.$refs.consumeModeSwitch.focus();
+            if (newState) {
+                document.body.classList.add('consume');
+            } else {
+                document.body.classList.remove('consume');
+            }
         }
     }
 };
