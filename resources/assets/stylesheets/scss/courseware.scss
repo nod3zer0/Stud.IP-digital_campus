@@ -3031,10 +3031,18 @@ a u d i o  b l o c k
         border: solid thin $content-color-40;
         border-top: none;
 
+        &.empty {
+            border: none;
+        }
+
         .cw-audio-playlist {
             padding-left: 0;
             list-style: none;
             cursor: pointer;
+
+            &.with-recorder {
+                border-bottom: solid thin $content-color-40;
+            }
 
             li {
                 margin: 0 1em;
@@ -3066,7 +3074,6 @@ a u d i o  b l o c k
             }
         }
         .cw-audio-playlist-recorder {
-            border-top: solid thin $content-color-40;
             padding: 1em;
         }
     }

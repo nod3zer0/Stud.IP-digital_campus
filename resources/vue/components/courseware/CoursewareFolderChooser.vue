@@ -138,13 +138,25 @@ export default {
 
             return this.loadRelatedFolders({ parent, relationship, options });
         },
+
+        confirmSelectedFolder() {
+            const folders = this.loadedUserFolders.concat(this.loadedCourseFolders);
+
+            let folder = folders.find( folder => folder.id === this.currentValue);
+
+            if (this.currentValue !== '' && folder === undefined) {
+                this.currentValue = '';
+                this.changeSelection();
+            }
+        }
     },
-    mounted() {
+    async mounted() {
         this.currentValue = this.value;
         if (this.context.type !== 'users') {
-            this.getCourseFolders();
+            await this.getCourseFolders();
         }
-        this.getUserFolders();
+        await this.getUserFolders();
+        this.confirmSelectedFolder();
     },
 };
 </script>

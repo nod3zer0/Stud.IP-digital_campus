@@ -41,8 +41,11 @@
                         <button class="cw-audio-button cw-audio-stopbutton" :title="$gettext('Anhalten')" @click="stopAudio" />
                     </div>
                 </div>
-                <div class="cw-audio-playlist-wrapper">
-                    <ul v-show="hasPlaylist" class="cw-audio-playlist">
+                <div v-if="emptyAudio" class="cw-audio-empty">
+                    <p><translate>Es ist keine Audio-Datei verfügbar</translate></p>
+                </div>
+                <div v-show="currentSource === 'studip_folder'" class="cw-audio-playlist-wrapper" :class="[!showRecorder && emptyAudio ? 'empty' : '']">
+                    <ul v-show="hasPlaylist" class="cw-audio-playlist" :class="[showRecorder ? 'with-recorder' : '']">
                         <li v-for="(file, index) in files" :key="file.id">
                             <a
                                 :aria-current="(index === currentPlaylistItem) ? 'true' : 'false'"
@@ -59,13 +62,12 @@
                             </a>
                         </li>
                     </ul>
-                    <div v-if="emptyAudio" class="cw-audio-empty">
-                        <p><translate>Es ist keine Audio-Datei verfügbar</translate></p>
-                    </div>
                     <div v-if="showRecorder && canGetMediaDevices" class="cw-audio-playlist-recorder">
                         <button 
                             v-show="!userRecorderEnabled"
                             class="button"
+                            :disabled="!folderSelected || folderLoadError"
+                            :title="enableRecorderTitle"
                             @click="enableRecorder"
                         >
                             <translate>Aufnahme aktivieren</translate>
@@ -143,7 +145,11 @@
                     </label>
                     <label v-show="currentSource === 'studip_folder'">
                         <translate>Audio Aufnahmen zulassen</translate>
-                        <select v-model="currentRecorderEnabled">
+                        <span
+                            class="tooltip tooltip-icon"
+                            :data-tooltip="$gettext('Um Aufnahmen zu ermöglichen, muss ein Ordner ausgewählt werden.')"
+                        ></span>
+                        <select v-model="currentRecorderEnabled" :disabled="!folderSelected">
                             <option :value="true"><translate>Ja</translate></option>
                             <option :value="false"><translate>Nein</translate></option>
                         </select>
@@ -195,6 +201,7 @@ export default {
             timer: 0,
             isRecording: false,
             newRecording: false,
+            folderLoadError: false
         };
     },
     computed: {
@@ -258,6 +265,9 @@ export default {
         folderId() {
             return this.block?.attributes?.payload?.folder_id;
         },
+        folderSelected() {
+            return this.currentFolderId !== '';
+        },
         webUrl() {
             return this.block?.attributes?.payload?.web_url;
         },
@@ -265,7 +275,7 @@ export default {
             return this.block?.attributes?.payload?.recorder_enabled;
         },
         showRecorder() {
-            return this.currentRecorderEnabled;
+            return this.currentRecorderEnabled && this.currentSource === 'studip_folder';
         },
         hasPlaylist() {
             return this.files.length > 0 && this.currentSource === 'studip_folder';
@@ -318,6 +328,17 @@ export default {
                 return false;
             }
             return true;
+        },
+        enableRecorderTitle() {
+            if (!this.folderSelected) {
+                return this.$gettext('Aufnahme nicht möglich, es wurde kein Ordner ausgewählt.');
+            }
+
+            if (this.folderLoadError) {
+                return this.$gettext('Aufnahme nicht möglich, der ausgewählte Ordner konnte nicht gefunden werden.');
+            }
+
+            return this.$gettext('Aktiviert die Aufnahmefunktion');
         }
     },
     mounted() {
@@ -348,12 +369,16 @@ export default {
             this.currentFile = file;
             this.currentFileId = file.id;
         },
-        getFolderFiles() {
-            return this.loadRelatedFileRefs({
-                parent: { type: 'folders', id: this.currentFolderId },
-                relationship: 'file-refs',
-                options: { include: 'terms-of-use' }
-            });
+        async getFolderFiles() {
+            try {
+                await this.loadRelatedFileRefs({
+                    parent: { type: 'folders', id: this.currentFolderId },
+                    relationship: 'file-refs',
+                    options: { include: 'terms-of-use' }
+                });
+            } catch(error) {
+                this.folderLoadError = true;
+            }
         },
         storeBlock() {
             let attributes = {};
@@ -521,6 +546,9 @@ export default {
             }
         },
         enableRecorder() {
+            if (!this.folderSelected || this.folderLoadError) {
+                return false;
+            }
             let view = this;
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(function(stream) {
@@ -593,8 +621,12 @@ export default {
         },
     },
     watch: {
-        currentFolderId() {
-            this.getFolderFiles();
+        currentFolderId(newState) {
+            if (newState === '') {
+                this.currentRecorderEnabled = false;
+            } else {
+                this.getFolderFiles();
+            }
         },
     },
 };
