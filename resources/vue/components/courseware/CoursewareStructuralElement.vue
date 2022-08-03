@@ -893,15 +893,6 @@ export default {
             return this.structuralElement.relationships.parent.data === null;
         },
 
-        owner() {
-            const owner = this.relatedUsers({
-                parent: this.structuralElement,
-                relationship: 'owner',
-            });
-
-            return owner?.attributes['formatted-name'] ?? '';
-        },
-
         editor() {
             const editor = this.relatedUsers({
                 parent: this.structuralElement,
