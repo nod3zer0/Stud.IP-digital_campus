@@ -1,35 +1,43 @@
 <template>
-    <ul class="widget-list widget-links sidebar-views cw-view-widget">
-        <li :class="{ active: readView }">
-            <button @click="setReadView">
-                <translate>Lesen</translate>
-            </button>
-        </li>
-        <li
-            v-if="canEdit"
-            :class="{ active: editView }"
-        >
-            <button @click="setEditView">
-                <translate>Bearbeiten</translate>
-            </button>
-        </li>
-        <li 
-            v-if="context.type === 'courses' && canVisit"
-            :class="{ active: discussView }"
-        >
-            <button @click="setDiscussView">
-                <translate>Kommentieren</translate>
-            </button>
-        </li>
-    </ul>
+    <sidebar-widget :title="$gettext('Ansichten')" v-if="structuralElement">
+        <template #content>
+            <ul class="widget-list widget-links sidebar-views cw-view-widget">
+                <li :class="{ active: readView }">
+                    <button @click="setReadView">
+                        <translate>Lesen</translate>
+                    </button>
+                </li>
+                <li
+                    v-if="canEdit"
+                    :class="{ active: editView }"
+                >
+                    <button @click="setEditView">
+                        <translate>Bearbeiten</translate>
+                    </button>
+                </li>
+                <li
+                    v-if="context.type === 'courses' && canVisit"
+                    :class="{ active: discussView }"
+                >
+                    <button @click="setDiscussView">
+                        <translate>Kommentieren</translate>
+                    </button>
+                </li>
+            </ul>
+        </template>
+    </sidebar-widget>
 </template>
 
 <script>
+import SidebarWidget from '../SidebarWidget.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-view-widget',
     props: ['structuralElement', 'canVisit'],
+    components: {
+        SidebarWidget
+    },
     computed: {
         ...mapGetters({
             viewMode: 'viewMode',

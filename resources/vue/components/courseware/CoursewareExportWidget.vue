@@ -1,33 +1,41 @@
 <template>
-    <ul class="widget-list widget-links cw-export-widget" v-if="structuralElement">
-        <li v-if="showExportArchiv" class="cw-export-widget-export">
-            <button @click="exportElement">
-                <translate>Seite exportieren</translate>
-            </button>
-        </li>
-        <li v-if="showExportPdf" class="cw-export-widget-export-pdf">
-            <button @click="pdfElement">
-                <translate>Seite als pdf-Dokument exportieren</translate>
-            </button>
-        </li>
-        <li v-if="showOer" class="cw-export-widget-oer">
-            <button @click="oerElement">
-                <translate>Seite auf %{oerTitle} veröffentlichen</translate>
-            </button>
-        </li>
-        <li v-if="!showExportArchiv && !showExportPdf && !showOer">
-            <translate>Keine Exportoptionen verfügbar</translate>
-        </li>
-    </ul>
+    <sidebar-widget :title="$gettext('Export')" v-if="structuralElement">
+        <template #content>
+            <ul class="widget-list widget-links cw-export-widget" v-if="structuralElement">
+                <li v-if="showExportArchiv" class="cw-export-widget-export">
+                    <button @click="exportElement">
+                        <translate>Seite exportieren</translate>
+                    </button>
+                </li>
+                <li v-if="showExportPdf" class="cw-export-widget-export-pdf">
+                    <button @click="pdfElement">
+                        <translate>Seite als pdf-Dokument exportieren</translate>
+                    </button>
+                </li>
+                <li v-if="showOer" class="cw-export-widget-oer">
+                    <button @click="oerElement">
+                        <translate>Seite auf %{oerTitle} veröffentlichen</translate>
+                    </button>
+                </li>
+                <li v-if="!showExportArchiv && !showExportPdf && !showOer">
+                    <translate>Keine Exportoptionen verfügbar</translate>
+                </li>
+            </ul>
+        </template>
+    </sidebar-widget>
 </template>
 
 <script>
+import SidebarWidget from '../SidebarWidget.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-export-widget',
     props: ['structuralElement', 'canVisit'],
+    components: {
+        SidebarWidget
+    },
     mixins: [CoursewareExport],
     computed: {
         ...mapGetters({

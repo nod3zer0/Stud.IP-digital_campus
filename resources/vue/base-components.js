@@ -1,6 +1,7 @@
 import Multiselect from './components/Multiselect.vue';
 import EditableList from "./components/EditableList.vue";
 import Quicksearch from './components/Quicksearch.vue';
+import SidebarWidget from './components/SidebarWidget.vue';
 import StudipActionMenu from './components/StudipActionMenu.vue';
 import StudipAssetImg from './components/StudipAssetImg.vue';
 import StudipDateTime from './components/StudipDateTime.vue';
@@ -23,6 +24,7 @@ const BaseComponents = {
     EditableList,
     Quicksearch,
     RangeInput,
+    SidebarWidget,
     StudipActionMenu,
     StudipAssetImg,
     StudipDateTime,

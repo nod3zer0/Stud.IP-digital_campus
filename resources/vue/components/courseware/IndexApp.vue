@@ -10,16 +10,16 @@
                 @select="selectStructuralElement"
             ></courseware-structural-element>
             <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions">
-                <courseware-action-widget :structural-element="selected" :canVisit="canVisit"></courseware-action-widget>
+                <courseware-action-widget :structural-element="selected" :canVisit="canVisit" v-if="!showSearchResults"></courseware-action-widget>
             </MountingPortal>
             <MountingPortal mountTo="#courseware-search-widget" name="sidebar-search">
                 <courseware-search-widget></courseware-search-widget>
             </MountingPortal>
             <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
-                <courseware-view-widget :structural-element="selected" :canVisit="canVisit"></courseware-view-widget>
+                <courseware-view-widget :structural-element="selected" :canVisit="canVisit" v-if="!showSearchResults"></courseware-view-widget>
             </MountingPortal>
             <MountingPortal mountTo="#courseware-export-widget" name="sidebar-export">
-                <courseware-export-widget :structural-element="selected" :canVisit="canVisit"></courseware-export-widget>
+                <courseware-export-widget :structural-element="selected" :canVisit="canVisit" v-if="!showSearchResults"></courseware-export-widget>
             </MountingPortal>
         </div>
         <studip-progress-indicator

@@ -15,12 +15,14 @@
             </div>
             <div class="cw-ribbon-wrapper-right">
                 <button
+                    v-if="showToolbarButton"
                     class="cw-ribbon-button cw-ribbon-button-menu"
                     :title="textRibbon.toolbar"
                     @click.prevent="activeToolbar"
                 >
                 </button>
                 <button
+                    v-if="showModeSwitchButton"
                     ref="consumeModeSwitch"
                     class="cw-ribbon-button"
                     :class="[consumeMode ? 'cw-ribbon-button-zoom-out' : 'cw-ribbon-button-zoom']"

@@ -110,11 +110,7 @@ class Course_CoursewareController extends AuthenticatedController
     private function setIndexSidebar(): void
     {
         $sidebar = Sidebar::Get();
-        $actions = new TemplateWidget(
-            _('Aktionen'),
-            $this->get_template_factory()->open('course/courseware/action_widget')
-        );
-        $sidebar->addWidget($actions)->addLayoutCSSClass('courseware-action-widget');
+        $sidebar->addWidget(new VueWidget('courseware-action-widget'));
 
         $views = new TemplateWidget(
             _('Suche'),
@@ -122,19 +118,9 @@ class Course_CoursewareController extends AuthenticatedController
         );
         $sidebar->addWidget($views)->addLayoutCSSClass('courseware-search-widget');
 
-        $views = new TemplateWidget(
-            _('Ansichten'),
-            $this->get_template_factory()->open('course/courseware/view_widget')
-        );
-        $sidebar->addWidget($views)->addLayoutCSSClass('courseware-view-widget');
-
-        $exports = new TemplateWidget(
-            _('Export '),
-            $this->get_template_factory()->open('course/courseware/export_widget')
-        );
-        $sidebar->addWidget($exports)->addLayoutCSSClass('courseware-export-widget');
+        $sidebar->addWidget(new VueWidget('courseware-view-widget'));
+        $sidebar->addWidget(new VueWidget('courseware-export-widget'));
     }
-
 
     private function setDashboardSidebar(): void
     {

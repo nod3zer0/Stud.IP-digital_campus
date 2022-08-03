@@ -1,60 +1,65 @@
 <template>
-    <ul class="widget-list widget-links cw-action-widget" v-if="structuralElement">
-        <li class="cw-action-widget-show-toc">
-            <button @click="toggleTOC">
-                {{ tocText }}
-            </button>
-        </li>
-        <li class="cw-action-widget-show-consume-mode">
-            <button @click="showConsumeMode">
-                <translate>Vollbild einschalten</translate>
-            </button>
-        </li>
-        <li v-if="canEdit" class="cw-action-widget-edit">
-            <button @click="editElement">
-                <translate>Seite bearbeiten</translate>
-            </button>
-        </li>
-        <li v-if="canEdit" class="cw-action-widget-sort">
-            <button @click="sortContainers">
-                <translate>Abschnitte sortieren</translate>
-            </button>
-        </li>
-        <li v-if="canEdit" class="cw-action-widget-add">
-            <button @click="addElement">
-                <translate>Seite hinzufügen</translate>
-            </button>
-        </li>
-        <li class="cw-action-widget-info">
-            <button @click="showElementInfo">
-                <translate>Informationen anzeigen</translate>
-            </button>
-        </li>
-        <li class="cw-action-widget-star">
-            <button @click="createBookmark">
-                <translate>Lesezeichen setzen</translate>
-            </button>
-        </li>
-        <li v-if="context.type === 'users'" class="cw-action-widget-link">
-            <button @click="linkElement">
-                <translate>Öffentlichen Link erzeugen</translate>
-            </button>
-        </li>
-        <li v-if="!isOwner" class="cw-action-widget-oer">
-            <button @click="suggestOER">
-                <translate>Material für %{oerTitle} vorschlagen</translate>
-            </button>
-        </li>
-        <li v-if="!isRoot && canEdit" class="cw-action-widget-trash">
-            <button @click="deleteElement">
-                <translate>Seite löschen</translate>
-            </button>
-        </li>
-    </ul>
+    <sidebar-widget :title="$gettext('Aktionen')" v-if="structuralElement">
+        <template #content>
+            <ul class="widget-list widget-links cw-action-widget">
+                <li class="cw-action-widget-show-toc">
+                    <button @click="toggleTOC">
+                        {{ tocText }}
+                    </button>
+                </li>
+                <li class="cw-action-widget-show-consume-mode">
+                    <button @click="showConsumeMode">
+                        <translate>Vollbild einschalten</translate>
+                    </button>
+                </li>
+                <li v-if="canEdit" class="cw-action-widget-edit">
+                    <button @click="editElement">
+                        <translate>Seite bearbeiten</translate>
+                    </button>
+                </li>
+                <li v-if="canEdit" class="cw-action-widget-sort">
+                    <button @click="sortContainers">
+                        <translate>Abschnitte sortieren</translate>
+                    </button>
+                </li>
+                <li v-if="canEdit" class="cw-action-widget-add">
+                    <button @click="addElement">
+                        <translate>Seite hinzufügen</translate>
+                    </button>
+                </li>
+                <li class="cw-action-widget-info">
+                    <button @click="showElementInfo">
+                        <translate>Informationen anzeigen</translate>
+                    </button>
+                </li>
+                <li class="cw-action-widget-star">
+                    <button @click="createBookmark">
+                        <translate>Lesezeichen setzen</translate>
+                    </button>
+                </li>
+                <li v-if="context.type === 'users'" class="cw-action-widget-link">
+                    <button @click="linkElement">
+                        <translate>Öffentlichen Link erzeugen</translate>
+                    </button>
+                </li>
+                <li v-if="!isOwner" class="cw-action-widget-oer">
+                    <button @click="suggestOER">
+                        <translate>Material für %{oerTitle} vorschlagen</translate>
+                    </button>
+                </li>
+                <li v-if="!isRoot && canEdit" class="cw-action-widget-trash">
+                    <button @click="deleteElement">
+                        <translate>Seite löschen</translate>
+                    </button>
+                </li>
+            </ul>
+        </template>
+    </sidebar-widget>
 </template>
 
 <script>
 import StudipIcon from './../StudipIcon.vue';
+import SidebarWidget from '../SidebarWidget.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -63,6 +68,7 @@ export default {
     props: ['structuralElement', 'canVisit'],
     components: {
         StudipIcon,
+        SidebarWidget,
     },
     mixins: [CoursewareExport],
     computed: {
