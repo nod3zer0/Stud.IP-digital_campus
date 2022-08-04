@@ -33,6 +33,7 @@
                         >
                             <courseware-tools-blockadder
                                 id="cw-ribbon-tool-blockadder"
+                                :stickyRibbon="stickyRibbon"
                             />
                         </courseware-tab>
                         <courseware-tab
@@ -85,6 +86,10 @@ export default {
             default: false,
         },
         disableAdder: {
+            type: Boolean,
+            default: false,
+        },
+        stickyRibbon: {
             type: Boolean,
             default: false,
         },

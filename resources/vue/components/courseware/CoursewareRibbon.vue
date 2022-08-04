@@ -36,7 +36,9 @@
             <courseware-ribbon-toolbar
                 v-if="showTools"
                 :toolsActive="unfold"
+                :stickyRibbon="stickyRibbon"
                 :class="{ 'cw-ribbon-tools-sticky': stickyRibbon }"
+                :style="{ maxHeight: maxHeight + 'px' }"
                 :canEdit="canEdit"
                 @deactivate="deactivateToolbar"
             />
@@ -89,6 +91,13 @@ export default {
         breadcrumbFallback() {
             return window.outerWidth < 1200;
         },
+        maxHeight() {
+            if (this.stickyRibbon) {
+                return parseInt(window.innerHeight * 0.75);
+            } else {
+                return parseInt(Math.min(window.innerHeight * 0.75, window.innerHeight - 197));
+            }
+        }
     },
     methods: {
         toggleConsumeMode() {

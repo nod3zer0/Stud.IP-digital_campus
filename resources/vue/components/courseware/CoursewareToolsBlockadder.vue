@@ -1,7 +1,7 @@
 <template>
     <div class="cw-tools-element-adder">
         <courseware-tabs class="cw-tools-element-adder-tabs">
-            <courseware-tab :name="$gettext('Blöcke')" :selected="showBlockadder" :index="0">
+            <courseware-tab :name="$gettext('Blöcke')" :selected="showBlockadder" :index="0" :style="{ maxHeight: maxHeight + 'px' }">
                 <courseware-collapsible-box :title="textBlockHelper">
                     <courseware-block-helper :blockTypes="blockTypes" />
                 </courseware-collapsible-box>
@@ -76,7 +76,7 @@
                     </div>
                 </courseware-collapsible-box>
             </courseware-tab>
-            <courseware-tab :name="$gettext('Abschnitte')" :selected="showContaineradder" :index="1">
+            <courseware-tab :name="$gettext('Abschnitte')" :selected="showContaineradder" :index="1" :style="{ maxHeight: maxHeight + 'px' }">
                 <courseware-collapsible-box
                     v-for="(style, index) in containerStyles"
                     :key="index"
@@ -119,6 +119,12 @@ export default {
         CoursewareContainerAdderItem,
         CoursewareBlockHelper,
         CoursewareCompanionBox,
+    },
+    props: {
+        stickyRibbon: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
@@ -164,6 +170,13 @@ export default {
                 { title: this.$gettext('Dateien'), type: 'files' },
                 { title: this.$gettext('Externe Inhalte'), type: 'external' },
             ];
+        },
+        maxHeight() {
+            if (this.stickyRibbon) {
+                return parseInt(window.innerHeight * 0.75) - 120;
+            } else {
+                return parseInt(Math.min(window.innerHeight * 0.75, window.innerHeight - 197)) - 120;
+            }
         }
     },
     methods: {
