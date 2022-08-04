@@ -1,4 +1,3 @@
-<h5><?= sprintf(_('Block-Typ: %s'), htmlReady($title)) ?></h5>
-<h5><?= htmlReady($payload['title']) ?></h5>
-<h6><?= htmlReady($payload['subtitle']) ?></h6>
+<h5 style="font-size: 14px;"><?= htmlReady($payload['title']) ?></h5>
+<h6 style="font-size: 12px;"><?= htmlReady($payload['subtitle']) ?></h6>
 

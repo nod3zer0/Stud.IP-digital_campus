@@ -1,2 +1,3 @@
-<h5><?= sprintf(_('Block-Typ: %s'), htmlReady($title)) ?></h5>
-<?= formatReady($payload['text']) ?>
+<div style="font-size: 12px;">
+    <?= formatReady($payload['text']) ?>
+</div>

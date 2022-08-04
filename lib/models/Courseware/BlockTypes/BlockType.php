@@ -292,6 +292,18 @@ abstract class BlockType
         }
     }
 
+    protected function getFileRefById(string $fileId)
+    {
+        $file_ref = \FileRef::find($fileId);
+        $user = \User::findCurrent();
+
+        if ($file_ref && $file_ref->getFileType()->isDownloadable($user->id)) {
+            return $file_ref;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Copies a file to a specified range.
      *
@@ -419,7 +431,8 @@ abstract class BlockType
             }
             $template->set_attributes([
                 'title' => $this->getTitle(),
-                'payload' => $this->getPayload()
+                'payload' => $this->getPayload(),
+                'files' => $this->getFiles()
             ]);
         } catch (\Exception $e) {
             // it catches the exception mostly because the template file could not be found.

@@ -43,11 +43,13 @@ class DialogCards extends BlockType
         foreach ($payload['cards'] as &$card) {
             if ($card['front_file_id']) {
                 $card['front_file'] = $this->getFileById($card['front_file_id']);
+                $card['front_file_ref'] = $this->getFileRefById($card['front_file_id']);
             } else {
                 $card['front_file'] = [];
             }
             if ($card['back_file_id']) {
                 $card['back_file'] = $this->getFileById($card['back_file_id']);
+                $card['back_file_ref'] = $this->getFileRefById($card['back_file_id']);
             } else {
                 $card['back_file'] = [];
             }

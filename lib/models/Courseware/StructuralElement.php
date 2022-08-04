@@ -830,45 +830,52 @@ SQL;
             $doc->setHeaderTitle(sprintf(_('Courseware von %s'), $this->user->getFullname()));
         }
 
-        $doc->addPage();
-
         if (!self::canRead($user)) {
+            $doc->addPage();
             $doc->addContent(_('Diese Seite steht Ihnen nicht zur Verfügung!'));
 
             return $doc;
         }
 
-        $doc->writeHTML($this->getElementPdfExport('', $with_children, $user));
+        $this->getElementPdfExport(0, $with_children, $user, $doc);
+
+        if ($with_children) {
+            $doc->addTOCPage();
+            $doc->SetFont('helvetica', 'B', 16);
+            $doc->MultiCell(0, 0, _('Inhaltsverzeichnis'), 0, 'C', 0, 1, '', '', true, 0);
+            $doc->Ln();
+            $doc->SetFont('helvetica', '', 12);
+            $doc->addTOC(1, 'helvetica', '.', _('Inhaltsverzeichnis'), 'B', array(0,0,0));
+            $doc->endTOCPage();
+        }
+
 
         return $doc;
     }
 
-    private function getElementPdfExport(string $parent_name, bool $with_children, $user)
+    private function getElementPdfExport(int $depth, bool $with_children, $user, $doc)
     {
         if (!$this->canRead($user)) {
             return '';
         }
-        if ($parent_name !== '') {
-            $parent_name .= ' / ';
-        }
-        $html = '<h1>' . $parent_name . $this->title . '</h1>';
+        $doc->addPage();
+        $doc->Bookmark(htmlReady($this->title), $depth, 0, '', '', array(128,0,0));
+        $html = "<h1>" . htmlReady($this->title) . "</h1>";
         $html .= $this->getContainerPdfExport();
-        if ($with_children) {
-            $html .= $this->getChildrenPdfExport($parent_name, $with_children, $user);
-        }
+        $doc->writeHTML($html);
 
-        return $html;
+        if ($with_children) {
+            $this->getChildrenPdfExport($depth, $with_children, $user, $doc);
+        }
     }
 
-    private function getChildrenPdfExport(string $parent_name, bool $with_children, $user)
+    private function getChildrenPdfExport(int $depth, bool $with_children, $user, $doc)
     {
         $children = self::findBySQL('parent_id = ?', [$this->id]);
-        $html = '';
+        $depth++;
         foreach ($children as $child) {
-            $html .= $child->getElementPdfExport($parent_name . $this->title, $with_children, $user);
+            $child->getElementPdfExport($depth, $with_children, $user, $doc);
         }
-
-        return $html;
     }
 
     private function getContainerPdfExport()

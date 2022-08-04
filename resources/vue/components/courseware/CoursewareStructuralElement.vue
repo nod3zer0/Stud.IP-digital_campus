@@ -681,6 +681,7 @@ export default {
             exportChildren: false,
             oerExportRunning: false,
             oerChildren: true,
+            pdfExportChildren: false,
             containerList: [],
             isDragging: false,
             dragOptions: {
