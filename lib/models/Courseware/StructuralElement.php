@@ -227,20 +227,23 @@ class StructuralElement extends \SimpleORMap
             case 'course':
                 $hasEditingPermission = $this->hasEditingPermission($user);
                 if ($this->isTask()) {
-                    // TODO: Was tun wir, wenn dieses Strukturelement purpose=task aber keinen Task hat?
-                    if (!$this->task) {
-                        return false;
+                    $task = $this->task;
+                    if (!$task) {
+                        $task = $this->findParentTask();
+                        if (!$task) {
+                            return false;
+                        }
                     }
 
                     if ($hasEditingPermission) {
                         return false;
                     }
 
-                    if ($this->task->isSubmitted()) {
+                    if ($task->isSubmitted()) {
                         return false;
                     }
 
-                    return $this->task->userIsASolver($user);
+                    return $task->userIsASolver($user);
                 }
 
                 if ($hasEditingPermission) {
