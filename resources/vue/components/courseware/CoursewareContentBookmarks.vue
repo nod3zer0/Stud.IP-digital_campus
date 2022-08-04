@@ -10,7 +10,7 @@
                 <a :href="getElementUrl(bookmark)" :title="bookmark.attributes.title">
                     <div
                         class="preview-image"
-                        :class="[hasImage(child) ? '' : 'default-image']"
+                        :class="[hasImage(bookmark) ? '' : 'default-image']"
                         :style="getChildStyle(bookmark)"
                     ></div>
                     <div class="description">
@@ -96,8 +96,8 @@ export default {
                 return {};
             }
         },
-        hasImage(child) {
-            return child.relationships?.image?.data !== null;
+        hasImage(bookmark) {
+            return bookmark.relationships?.image?.data !== null;
         },
     },
 
