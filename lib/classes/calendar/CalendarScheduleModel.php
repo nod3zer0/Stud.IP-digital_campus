@@ -220,10 +220,10 @@ class CalendarScheduleModel
                 $stmt->execute([$sem->getId(), $user_id, $cycle->getMetaDateId()]);
                 $details = $stmt->fetch();
 
-                if ($entry['type'] == 'virtual') {
-                    $entry['color'] = $details['color'] ? $details['color'] : DEFAULT_COLOR_VIRTUAL;
+                if ($entry['type'] === 'virtual') {
+                    $entry['color'] = $details['color'] ?: DEFAULT_COLOR_VIRTUAL;
                     $entry['icons'][] = [
-                        'image' => 'virtual.png',
+                        'image' => Icon::create('tag', Icon::ROLE_INFO_ALT)->asImagePath(),
                         'title' => _("Dies ist eine vorgemerkte Veranstaltung")
                     ];
                 } else {
@@ -240,7 +240,7 @@ class CalendarScheduleModel
 
                     $entry['icons'][] = [
                         'url'   => $bind_url,
-                        'image' => Icon::create('visibility-invisible', 'info_alt')->asImagePath(16),
+                        'image' => Icon::create('visibility-invisible', Icon::ROLE_INFO_ALT)->asImagePath(),
                         'onClick' => "function(id) { window.location = '". $bind_url ."'; }",
                         'title' => _("Diesen Eintrag wieder einblenden"),
                     ];
@@ -252,7 +252,7 @@ class CalendarScheduleModel
                                 . $seminar_id . '/' . $cycle->getMetaDateId());
                     $entry['icons'][] = [
                         'url'     => $unbind_url,
-                        'image'   => Icon::create('visibility-visible', 'info_alt')->asImagePath(16),
+                        'image'   => Icon::create('visibility-visible', Icon::ROLE_INFO_ALT)->asImagePath(),
                         'onClick' => "function(id) { window.location = '". $unbind_url ."'; }",
                         'title'   => _("Diesen Eintrag ausblenden"),
                     ];
