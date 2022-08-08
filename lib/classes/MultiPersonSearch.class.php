@@ -126,12 +126,14 @@ class MultiPersonSearch {
 
     /**
      * renders a link to open the multipersonsearch dialog.
+     *
+     * @param string $with_link_text include link text in output
      */
-    public function render() {
+    public function render($with_link_text = true) {
         $template = $GLOBALS['template_factory']->open('multipersonsearch/link.php');
 
         $template->set_attribute('linkIconPath', $this->linkIconPath);
-        $template->set_attribute('linkText', $this->linkText);
+        $template->set_attribute('linkText', $with_link_text ? $this->linkText : '');
         $template->set_attribute('title', $this->title);
         $template->set_attribute('name', $this->name);
         $template->set_attribute('description', $this->description);

@@ -16,6 +16,6 @@
             </button>
         <? endif ?>
     <? elseif ($action['type'] === 'multi-person-search'): ?>
-        <?= $action['object']->render() ?>
+        <?= $action['object']->render(false) ?>
     <? endif ?>
 <? endforeach ?>
