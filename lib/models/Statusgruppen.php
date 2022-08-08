@@ -550,18 +550,14 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
      */
     public function sortMembersAlphabetic()
     {
-        foreach ($this->members as $member) {
-            $assoc[$member->id] = $member->user->nachname."_".$member->user->vorname;
-        }
-        asort($assoc);
-
         $i = 0;
-        foreach ($assoc as $key => $value) {
-            $statusgruppenuser = new StatusgruppeUser(explode('_', $key));
-            $statusgruppenuser->position = $i++;
-            $statusgruppenuser->store();
+
+        foreach ($this->members->orderBy('nachname, vorname') as $member) {
+            $member->position = $i++;
+            $member->store();
         }
     }
+
     /**
      * Sorts subgroups alphabetical
      */
