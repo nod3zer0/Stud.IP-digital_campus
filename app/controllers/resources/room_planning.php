@@ -88,7 +88,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
 
         PageLayout::setTitle(_('Belegungsplan'));
 
-        $current_user = User::findCurrent();
+        $this->user = User::findCurrent();
 
         $new_resource_id = Request::get('new_resource_id');
         if ($new_resource_id) {
@@ -101,11 +101,11 @@ class Resources_RoomPlanningController extends AuthenticatedController
             $resource_id = Request::get('resource_id');
         }
         $this->rooms = null;
-        if ($current_user instanceof User) {
-            $this->rooms = RoomManager::getUserRooms($current_user);
+        if ($this->user instanceof User) {
+            $this->rooms = RoomManager::getUserRooms($this->user);
         }
         if (!$resource_id) {
-            if ($current_user instanceof User) {
+            if ($this->user instanceof User) {
                 //Get a list of all available rooms and let the user select
                 //one of those.
                 $this->selection_link_template =
@@ -147,23 +147,23 @@ class Resources_RoomPlanningController extends AuthenticatedController
         $plan_is_visible      = false;
         $this->anonymous_view = true;
         $this->booking_types  = [0, 1, 2];
-        if ($current_user instanceof User) {
+        if ($this->user instanceof User) {
             if ($this->display_all_requests) {
                 $plan_is_visible = $this->resource->userHasPermission(
-                    $current_user,
+                    $this->user,
                     'autor'
                 );
             } else {
-                $plan_is_visible = $this->resource->bookingPlanVisibleForUser($current_user);
+                $plan_is_visible = $this->resource->bookingPlanVisibleForUser($this->user);
             }
             $this->anonymous_view = false;
-            if ($this->resource->userHasPermission($current_user, 'admin')) {
+            if ($this->resource->userHasPermission($this->user, 'admin')) {
                 $this->booking_types[] = 3;
             }
         } else {
             //If the plan visibility cannot be determined by the user,
             //we can still check if the plan is visible to the public:
-            $plan_is_visible = $this->resource->bookingPlanVisibleForUser($current_user);
+            $plan_is_visible = $this->resource->bookingPlanVisibleForUser($this->user);
         }
         if (!$plan_is_visible) {
             throw new AccessDeniedException(
@@ -173,11 +173,9 @@ class Resources_RoomPlanningController extends AuthenticatedController
 
         $this->user_has_request_permissions = false;
         $this->user_has_booking_permissions = false;
-        if ($current_user instanceof User) {
-            $this->user_has_request_permissions = $this->resource->userHasRequestRights($current_user);
-            $this->user_has_booking_permissions = $this->resource->userHasBookingRights(
-                $current_user
-            );
+        if ($this->user instanceof User) {
+            $this->user_has_request_permissions = $this->resource->userHasRequestRights($this->user);
+            $this->user_has_booking_permissions = $this->resource->userHasBookingRights($this->user);
         }
 
         if (!$this->user_has_booking_permissions && $this->display_all_requests) {
@@ -217,7 +215,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
 
         $views = new ViewsWidget();
         if ($GLOBALS['user']->id && ($GLOBALS['user']->id != 'nobody')) {
-            if ($this->resource->userHasPermission($current_user)) {
+            if ($this->resource->userHasPermission($this->user)) {
                 $views->addLink(
                     _('Standard Zeitfenster'),
                     URLHelper::getURL(
@@ -298,7 +296,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
                     Icon::create('add')
                 )->asDialog('size=auto');
             }
-            if ($this->resource->userHasPermission($current_user)) {
+            if ($this->resource->userHasPermission($this->user)) {
                 $actions->addLink(
                     _('Belegungsplan drucken'),
                     'javascript:void(window.print());',
@@ -361,10 +359,10 @@ class Resources_RoomPlanningController extends AuthenticatedController
             ]
         );
 
-        if ($current_user instanceof User) {
+        if ($this->user instanceof User) {
             //No check necessary here: This part of the controller is only called
             //when a room has been selected before.
-            if (($this->resource instanceof Room) && RoomManager::userHasRooms($current_user)) {
+            if (($this->resource instanceof Room) && RoomManager::userHasRooms($this->user)) {
                 $actions->addLink(
                     _('Anderen Raum wählen'),
                     URLHelper::getURL(
@@ -409,8 +407,8 @@ class Resources_RoomPlanningController extends AuthenticatedController
                 ]
             ];
             if (!$this->anonymous_view) {
-                if ($current_user instanceof User) {
-                    if ($this->resource->userHasPermission($current_user, 'admin')) {
+                if ($this->user instanceof User) {
+                    if ($this->resource->userHasPermission($this->user, 'admin')) {
                         $planned_booking_colour = ColourValue::find('Resources.BookingPlan.PlannedBooking.Bg');
                         $this->table_keys[]     = [
                             'colour' => (string)$planned_booking_colour,
