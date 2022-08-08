@@ -1429,7 +1429,7 @@ function get_route($route = '')
         foreach ($pieces as $index => $piece) {
             $trail .= ($trail ? '/' : '') . $piece;
             if ($dispatcher->file_exists($trail . '.php')) {
-                $route = 'dispatch.php/' . $trail . (isset($pieces[$index+1]) ? '/' . $pieces[$index+1] : '');
+                $route = 'dispatch.php/' . $trail . (!empty($pieces[$index+1]) ? '/' . $pieces[$index+1] : '');
             }
         }
     }
