@@ -1820,8 +1820,7 @@ class Course_MembersController extends AuthenticatedController
 
     public function circular_mail_action()
     {
-        if (!$this->is_tutor ||
-            ($this->config->COURSE_STUDENT_MAILING && !$this->is_autor)) {
+        if (!$this->is_tutor && !$this->config->COURSE_STUDENT_MAILING) {
             throw new AccessDeniedException();
         }
 
