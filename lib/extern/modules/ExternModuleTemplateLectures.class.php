@@ -470,7 +470,7 @@ class ExternSemBrowseTemplate extends SemBrowse {
                         $doz_titlerear = array_keys($sem_data[$seminar_id]['title_rear']);
                         $doz_uname = array_keys($sem_data[$seminar_id]['username']);
                         $doz_position = array_keys($sem_data[$seminar_id]['position']);
-                        if (sizeof($doz_position) < $doz_name) {
+                        if (sizeof($doz_position) < sizeof($doz_name)) {
                             $doz_position = array_fill(0, sizeof($doz_name), 0);
                         }
                         if (is_array($doz_name)){
