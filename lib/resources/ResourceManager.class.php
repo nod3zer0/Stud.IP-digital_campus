@@ -870,16 +870,6 @@ class ResourceManager
             return '';
         }
 
-        if (GlobalResourceLock::currentlyLocked()) {
-            //A global permission object exist. But since the
-            //resource management is locked only 'user' permissions
-            //are allowed, when the user does not have 'admin' permissions:
-            return (
-                $permission->perms == 'admin'
-                ? 'admin'
-                : 'user'
-            );
-        }
         return $permission->perms;
     }
 

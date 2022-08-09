@@ -5,14 +5,6 @@
             <dd>
                 <? if ($global_permission): ?>
                     <?= htmlReady($global_permission->perms) ?>
-                    <? if ($current_global_lock and ($global_permission->perms != 'admin')): ?>
-                        <?= Icon::create('exclaim', 'attention')->asImg(
-                            [
-                                'class' => 'text-bottom',
-                                'title' => _('Die Berechtigung kann zurzeit aufgrund einer globalen Sperrung der Raumverwaltung nicht genutzt werden!')
-                            ]
-                        )?>
-                    <? endif ?>
                 <? else: ?>
                     <?= _('keine') ?>
                 <? endif ?>
@@ -94,15 +86,6 @@
                         </td>
                         <td>
                             <?= htmlReady($permission->perms) ?>
-                            <? if ($current_global_lock) : ?>
-                                <?= Icon::create('exclaim', 'attention')->asImg(
-                                    '20px',
-                                    [
-                                        'class' => 'text-bottom',
-                                        'title' => _('Die Berechtigung kann aufgrund einer globalen Sperrung der Raumverwaltung zurzeit nicht genutzt werden!')
-                                    ]
-                                )?>
-                            <? endif ?>
                         </td>
                         <td>
                             <?= date('d.m.Y H:i', $permission->begin) ?>
@@ -164,14 +147,6 @@
                         </td>
                         <td>
                             <?= htmlReady($permission->perms) ?>
-                            <? if ($current_global_lock and ($permission->perms != 'admin')): ?>
-                                <?= Icon::create('exclaim', 'attention')->asImg(
-                                    [
-                                        'class' => 'text-bottom',
-                                        'title' => _('Die Berechtigung kann zurzeit aufgrund einer globalen Sperrung der Raumverwaltung nicht genutzt werden!')
-                                    ]
-                                )?>
-                            <? endif ?>
                         </td>
                         <td class="actions">
                             <a href="<?= $permission->resource->getActionLink(

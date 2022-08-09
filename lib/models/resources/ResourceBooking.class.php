@@ -492,7 +492,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         //(the moment this booking is saved).
         $derived_resource = $this->resource->getDerivedClassInstance();
         $user_has_booking_rights = $derived_resource->userHasBookingRights(
-            $this->booking_user
+            $this->booking_user, $this->begin, $this->end
         );
         if (!$user_has_booking_rights) {
             throw new ResourcePermissionException(

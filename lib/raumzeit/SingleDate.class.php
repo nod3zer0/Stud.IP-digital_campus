@@ -437,7 +437,7 @@ class SingleDate
         }
 
         // check permissions (is current user allowed to book the passed room?)
-        if (!$room->userHasBookingRights(User::findCurrent())) {
+        if (!$room->userHasBookingRights(User::findCurrent(), $this->date, $this->end_time)) {
             return false;
         }
 

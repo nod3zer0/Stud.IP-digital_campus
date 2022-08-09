@@ -1,13 +1,4 @@
-<? if ($current_lock): ?>
-    <?= MessageBox::info(
-        sprintf(
-            _('Die Raumverwaltung ist vom %1$s bis zum %2$s gesperrt.'),
-            date('d.m.Y H:i', $current_lock->begin),
-            date('d.m.Y H:i', $current_lock->end)
-        )
-    ) ?>
-<? endif ?>
-<? if ($future_locks): ?>
+<? if ($locks): ?>
     <table class="default">
         <thead>
             <tr>
@@ -18,7 +9,7 @@
             </tr>
         </thead>
         <tbody>
-            <? foreach ($future_locks as $lock): ?>
+            <? foreach ($locks as $lock): ?>
                 <tr>
                     <td><?= date('d.m.Y H:i', $lock->begin) ?></td>
                     <td><?= date('d.m.Y H:i', $lock->end) ?></td>

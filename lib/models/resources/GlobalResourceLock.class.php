@@ -53,17 +53,11 @@ class GlobalResourceLock extends SimpleORMap
         parent::configure($config);
     }
     
-    public static function currentlyLocked()
+    public static function isLocked($begin, $end)
     {
-        $now = time();
-        return self::countBySql(
-                'begin <= :now AND end >= :now',
-                [
-                    'now' => $now
-                ]
-            ) > 0;
+        return self::countBySql('begin < :end AND end > :begin', compact('begin', 'end')) > 0;
     }
-    
+
     /**
      * Returns a list of defined lock types.
      *

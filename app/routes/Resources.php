@@ -926,7 +926,7 @@ class Resources extends \RESTAPI\RouteMap
 
         $resource = $resource->getDerivedClassInstance();
 
-        if (!$resource->userHasPermission(\User::findCurrent(), 'autor')) {
+        if (!$resource->userHasPermission(\User::findCurrent(), 'autor', [$interval->begin, $interval->end])) {
             $this->halt(403, 'You do not have sufficient permissions to modify the interval!');
         }
 

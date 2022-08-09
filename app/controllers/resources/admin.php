@@ -93,22 +93,7 @@ class Resources_AdminController extends AuthenticatedController
         );
         $this->sidebar->addWidget($actions);
 
-        $now = time();
-
-        $this->current_lock = GlobalResourceLock::findOneBySql(
-            'begin <= :now AND end >= :now',
-            [
-                'now' => $now
-            ]
-        );
-
-        $this->future_locks = GlobalResourceLock::findBySql(
-            '(begin > :now) OR (end > :now)
-            ORDER BY begin ASC, end ASC',
-            [
-                'now' => $now
-            ]
-        );
+        $this->locks = GlobalResourceLock::findBySql('1 ORDER BY begin, end');
     }
 
 
@@ -148,9 +133,6 @@ class Resources_AdminController extends AuthenticatedController
                     $this->user->perms
                 )
             );
-            if (GlobalResourceLock::currentlyLocked()) {
-                $this->current_global_lock = true;
-            }
 
             //get the permissions of that user:
 
