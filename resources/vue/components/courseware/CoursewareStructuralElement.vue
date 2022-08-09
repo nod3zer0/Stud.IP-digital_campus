@@ -527,8 +527,8 @@
                     @confirm="sendOerSuggestion"
                 >
                     <template v-slot:dialogContent>
-                        <p><translate>Das folgende Courseware-Material wird {{ ownerName }}
-                            zur Veröffentlichung im OER Campus vorgeschlagen:</translate></p>
+                        <p><translate>Das folgende Courseware-Material wird %{ ownerName }
+                            zur Veröffentlichung im %{ oerTitle } vorgeschlagen:</translate></p>
                         <table class="cw-structural-element-info">
                             <tr>
                                 <td><translate>Titel</translate>:</td>
@@ -749,7 +749,7 @@ export default {
 
         textSuggestOer() {
             return {
-                title: this.$gettext('Material für OER Campus vorschlagen'),
+                title: this.$gettextInterpolate('Material für %{ oerTitle } vorschlagen', {oerTitle: this.oerTitle}),
                 confirm: this.$gettext('Material vorschlagen'),
                 close: this.$gettext('Schließen'),
             };
@@ -1539,7 +1539,7 @@ export default {
             this.closeLinkDialog();
         },
         closeLinkDialog() {
-            this.publicLink = { 
+            this.publicLink = {
                 passsword: '',
                 'expire-date': ''
             };
