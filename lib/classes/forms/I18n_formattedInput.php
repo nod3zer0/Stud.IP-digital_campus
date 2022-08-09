@@ -44,6 +44,12 @@ class I18n_formattedInput extends Input
 
     public function getRequestValue()
     {
-        return \Request::i18n($this->name);
+        $output = \Request::i18n($this->name);
+        if (\Studip\Markup::editorEnabled()) {
+            $output = \Studip\Markup::purifyHtml(
+                \Studip\Markup::markAsHtml($output)
+            );
+        }
+        return $output;
     }
 }
