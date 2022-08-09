@@ -506,14 +506,8 @@ class FileController extends AuthenticatedController
         $this->formatted_link = '['. $this->linktext .']' . $this->link_to_share;
         $additional_text = htmlReady(Request::get('additional_text'));
 
-        // file details and preview, if available
-        $this->is_downloadable = $this->file->isDownloadable(User::findCurrent()->id);
-        $this->file_info_template = $this->file->getInfoTemplate($this->is_downloadable);
-        $folder = $this->file->getFolderType();
-        $this->fullpath = FileManager::getFullPath($folder);
-
         $oer_suggestion_message = sprintf(_("Ihre hochgeladene Datei wurde zur Veröffentlichung im
-            OER-Campus vorgeschlagen:\n\n"
+            OER Campus vorgeschlagen:\n\n"
             . "Dateiname: %s \n"
             . "Beschreibung: %s \n\n"
             . "%s \n\n"
@@ -538,11 +532,13 @@ class FileController extends AuthenticatedController
                 Request::option('message_id'),
                 '',
                 null,
-                _('Vorschlag zur Veröffentlichung einer Datei im OER-Campus')
+                _('Vorschlag zur Veröffentlichung einer Datei im OER Campus')
             );
             $this->response->add_header('X-Dialog-Close', '1');
             $this->render_nothing();
-            PageLayout::postSuccess(_('Vorschlag zur Veröffentlichung im OER-Campus wurde eingereicht.'));
+
+            PageLayout::postSuccess(_('Vorschlag wurde eingereicht.'));
+
         }
 
     }
