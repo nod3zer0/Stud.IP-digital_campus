@@ -1,11 +1,16 @@
 <? if ($rooms): ?>
     <table class="default sortable-table rooms-list">
+        <colgroup>
+            <col style="width: 70%">
+            <col style="width: 10%">
+            <col>
+            <col style="width: 20px">
+        </colgroup>
         <thead>
             <tr>
                 <th data-sort="text"><?= _('Name') ?></th>
                 <th data-sort="number"><?= _('Sitzplätze') ?></th>
                 <th data-sort="text"><?= _('Raumkategorie') ?></th>
-                <th data-sort="text"><?= _('Raumtyp') ?></th>
                 <th class="actions"><?= _('Aktionen') ?></th>
             </tr>
         </thead>
@@ -38,7 +43,6 @@
                         'show_room_picture' => true,
                         'additional_columns' => [
                             $room->category->name,
-                            $room->room_type,
                         ]
                     ]
                 ) ?>

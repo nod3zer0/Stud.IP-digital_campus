@@ -75,7 +75,7 @@ if ($show_user_actions) {
     $actions['0100'] = [
         $resource->getActionLink('files'),
         _('Dateien anzeigen'),
-        Icon::create($resource->hasFiles() ? 'folder-full' : 'folder-empty')
+        Icon::create('folder-full')
     ];
     if ($show_global_admin_actions) {
         $actions['0110'] = [
