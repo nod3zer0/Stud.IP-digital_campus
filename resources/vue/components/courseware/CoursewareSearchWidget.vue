@@ -3,7 +3,11 @@
       <ul class="needles">
           <li>
               <form @submit.prevent="">
-                <input type="text" v-model="searchTerm"/>
+                <input
+                    type="text"
+                    v-model="searchTerm"
+                    :aria-label="$gettext('Geben Sie einen Suchbegriff mit mindestens 3 Zeichen ein.')"
+                />
                 <input
                     type="submit"
                     :value="$gettext('Suchen')"
