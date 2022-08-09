@@ -1,9 +1,9 @@
 <? if ($requests): ?>
     <form class="default" method="post"
           action="<?= $controller->link_for('room_request/assign') ?>">
-        <table class="default sortable-table request-list" data-sortlist="[[8, 0]]">
+        <table class="default request-list tablesorter">
             <caption>
-                <? if ($request_status == 'closed') : ?>
+                <? if ($request_status === 'closed') : ?>
                     <?= sprintf(
                         ngettext(
                             'Anfragenliste (%d bearbeitete Anfrage)',
@@ -12,7 +12,7 @@
                         ),
                         $count_requests
                     ) ?>
-                <? elseif ($request_status == 'denied') : ?>
+                <? elseif ($request_status === 'denied') : ?>
                     <?= sprintf(
                         ngettext(
                             'Anfragenliste (%d abgelehnte Anfrage)',
@@ -33,23 +33,60 @@
                 <? endif ?>
             </caption>
             <thead>
-                <tr>
-                    <th data-sort="htmldata">
-                        <?= Icon::create('radiobutton-checked')->asImg(
-                            [
-                                'title' => _('Markierung')
-                            ]
-                        ) ?>
+                <tr class="sortable">
+                    <th <? if ($sort_var === 1) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 1 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=1&sort_order=%s', $sortorder)) ?>">
+                         <?= Icon::create('radiobutton-checked')->asImg(
+                             [
+                                 'title' => _('Markierung')
+                             ]
+                        ) ?></a>
                     </th>
-                    <th data-sort="text"><?= _('Nr.') ?></th>
-                    <th data-sort="text"><?= _('Name') ?></th>
-                    <th data-sort="text"><?= _('Lehrende Person(en)') ?></th>
-                    <th data-sort="text"><?= _('Raum') ?></th>
-                    <th data-sort="text"><?= _('Plätze') ?></th>
-                    <th data-sort="text"><?= _('Anfragende Person') ?></th>
-                    <th data-sort="htmldata"><?= _('Art') ?></th>
-                    <th data-sort="htmldata"><?= _('Dringlichkeit') ?></th>
-                    <th data-sort="num"><?= _('letzte Änderung') ?></th>
+                    <th <? if ($sort_var == 2) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 2 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=2&sort_order=%s', $sortorder)) ?>">
+                        <?= _('Nr.') ?></a>
+                    </th>
+                    <th <? if ($sort_var === 3) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 3 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=3&sort_order=%s', $sortorder)) ?>">
+                        <?= _('Name') ?></a>
+                    </th>
+                    <th <? if ($sort_var === 4) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 4 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=4&sort_order=%s', $sortorder)) ?>">
+                        <?= _('Lehrende Person(en)') ?></a>
+                    </th>
+                    <th <? if ($sort_var === 5) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 5 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=5&sort_order=%s', $sortorder)) ?>">
+                        <?= _('Raum') ?></a>
+                    </th>
+                    <th <? if ($sort_var === 6) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 6 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=6&sort_order=%s', $sortorder)) ?>">
+                        <?= _('Plätze') ?></a>
+                    </th>
+                    <th <? if ($sort_var === 7) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 7 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=7&sort_order=%s', $sortorder)) ?>">
+                        <?= _('Anfragende Person') ?></a>
+                    </th>
+                    <th <? if ($sort_var === 8) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 8 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=8&sort_order=%s', $sortorder)) ?>">
+                        <?= _('Art') ?></a>
+                    </th>
+                    <th <? if ($sort_var === 9) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 9 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=9&sort_order=%s', $sortorder)) ?>">
+                        <?= _('Dringlichkeit') ?></a>
+                    </th>
+                    <th <? if ($sort_var === 10) printf('class="sort%s"', $sort_order) ?>>
+                        <? $sortorder = $sort_var !== 10 ? 'desc' : ($sort_order === 'asc' ? 'desc' : 'asc') ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sorting=10&sort_order=%s', $sortorder)) ?>">
+                        <?= _('letzte Änderung') ?></a>
                     <th class="actions"><?= _('Aktionen') ?></th>
                 </tr>
             </thead>

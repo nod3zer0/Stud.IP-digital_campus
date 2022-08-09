@@ -173,6 +173,13 @@ class Resources_RoomRequestController extends AuthenticatedController
                 }
             }
 
+            // if sorting according to table column was chosen, set the correct
+            // sort order (ascending vs descending)
+            if ($sort_value = Request::int('sorting')) {
+                $this->filter['sorting'] = $sort_value;
+                $this->filter['sort_order'] = Request::get('sort_order') === 'desc' ? 'desc' : 'asc';
+            }
+
             //At this point, only the "marked" filter is definetly set.
             //If more filters are set, we must show the reset button.
             $this->show_filter_reset_button = count($this->filter) > 2;
@@ -331,7 +338,20 @@ class Resources_RoomRequestController extends AuthenticatedController
             $sql = 'TRUE ';
         }
 
-        $sql .= " GROUP BY resource_requests.id ORDER BY mkdate ASC";
+        $sql .= " GROUP BY resource_requests.id ";
+
+        // if table should be sorted by marking state
+        switch ($this->filter['sorting']) {
+            case 1:
+                $sql .= " ORDER BY resource_requests.marked ";
+                break;
+            case 10:
+                $sql .= " ORDER BY resource_requests.chdate ";
+                break;
+            default:
+                $sql .= " ORDER BY mkdate ";
+        }
+        $sql .= $this->filter['sort_order'] === 'desc' ? 'DESC' : 'ASC';
 
         $requests = RoomRequest::findBySql($sql, $sql_params);
         $result = [];
@@ -386,9 +406,122 @@ class Resources_RoomRequestController extends AuthenticatedController
                 return SimpleCollection::createFromArray($requests)->pluck('id');
             }
         }
+        // sort requests according to display table columns not in the resource request db table
+        if (!empty($this->filter['sorting']) &&
+            $this->filter['sorting'] != 1 && $this->filter['sorting'] != 10) {
+            $result = $this->sort_request_table($result, $this->filter['sorting'], $this->filter['sort_order']);
+        }
+
         return $result;
     }
 
+    /**
+    * Sorts the resource requests according to columns not belonging to the
+    * resource requests db table.
+    *
+    * @param Array $requests array of ResourceRequest objects
+    * @param int $sort_variable property according to which the requests should be sorted
+    *               values 1 and 10 are database columns (marked state and chdate) and already dealt with
+                    2 = lecture number
+                    3 = lecture name
+                    4 = dozent name
+                    5 = room name
+                    6 = available seats
+                    7 = requesting person
+                    8 = type of date
+                    9 = priority
+    * @param string $order ascending ('asc') or descending ('desc') order
+    *
+    * @return sorted array of resource requests
+    */
+    protected function sort_request_table($requests, int $sort_variable, string $order)
+    {
+        usort($requests,
+            function ($a, $b) use ($sort_variable, $order) {
+                $rangeObjA = $a->getRangeObject();
+                $rangeObjB = $b->getRangeObject();
+
+                // lecture number
+                if ($sort_variable === 2) {
+                    if ($order === 'asc') {
+                        return strcmp($rangeObjA->veranstaltungsnummer, $rangeObjB->veranstaltungsnummer);
+                    } else {
+                        return strcmp($rangeObjB->veranstaltungsnummer, $rangeObjA->veranstaltungsnummer);
+                    }
+                }
+                // lecture name
+                if ($sort_variable === 3) {
+                    if ($order === 'asc') {
+                        return strcmp($rangeObjA->name, $rangeObjB->name);
+                    } else {
+                        return strcmp($rangeObjB->name, $rangeObjA->name);
+                    }
+                }
+                // dozent name
+                if ($sort_variable === 4) {
+                    $a_dozent_strings = '';
+                    foreach ($rangeObjA->getMembersWithStatus('dozent') as $dozent) {
+                        $a_dozent_strings .= $dozent->nachname . ', ' . $dozent->vorname;
+                    }
+
+                    $b_dozent_strings = '';
+                    foreach ($rangeObjB->getMembersWithStatus('dozent') as $dozent) {
+                        $b_dozent_strings .= $dozent->nachname . ', ' . $dozent->vorname;
+                    }
+
+                    if ($order === 'asc') {
+                        return strcmp($a_dozent_strings, $b_dozent_strings);
+
+                    } else {
+                        return strcmp($b_dozent_strings, $a_dozent_strings);
+                    }
+
+                }
+                // room name
+                if ($sort_variable === 5) {
+                    if ($order === 'asc') {
+                        return strcmp($a->resource->name, $b->resource->name);
+                    } else {
+                        return strcmp($b->resource->name, $a->resource->name);
+                    }
+                }
+                // available seats
+                if ($sort_variable === 6) {
+                    return ($order === 'asc' ? (intval($a->getProperty('seats')) - intval($b->getProperty('seats'))) :
+                                               (intval($b->getProperty('seats')) - intval($a->getProperty('seats'))));
+                }
+                // requesting person
+                if ($sort_variable === 7) {
+                    if ($order === 'asc') {
+                        return strcmp($a->user->nachname . $a->user->vorname, $b->user->nachname . $b->user->vorname);
+                    } else {
+                        return strcmp($b->user->nachname . $b->user->vorname, $a->user->nachname . $a->user->vorname);
+                    }
+                }
+                // type
+                if ($sort_variable === 8) {
+                    if ($order === 'asc') {
+                        return strcmp($a->getTypeString(true) . $a->getStartDate()->format('YnjHis'),
+                                      $b->getTypeString(true) . $b->getStartDate()->format('YnjHis'));
+                    } else {
+                        return strcmp($b->getTypeString(true) . $b->getStartDate()->format('YnjHis'),
+                                      $a->getTypeString(true) . $a->getStartDate()->format('YnjHis'));
+                    }
+                }
+                // priority
+                if ($sort_variable === 9) {
+                    if ($order === 'asc') {
+                        return (($a->getPriority()) - $b->getPriority());
+                    } else {
+                        return (($b->getPriority()) - $a->getPriority());
+                    }
+                }
+
+                return 0;
+        });
+
+        return $requests;
+    }
 
     protected function getRoomAvailability(Room $room, $time_intervals = [])
     {
@@ -650,7 +783,7 @@ class Resources_RoomRequestController extends AuthenticatedController
         $this->count_requests = count($requests);
         $requests = array_slice(
             $requests,
-            $this->entries_per_page * ($page - 1),
+            $this->entries_per_page * ($page),
             $this->entries_per_page
         );
 
@@ -660,6 +793,9 @@ class Resources_RoomRequestController extends AuthenticatedController
             $this->entries_per_page
         );
         $this->requests = $requests;
+        $this->page = $page;
+        $this->sort_order = $this->filter['sort_order'];
+        $this->sort_var = $this->filter['sorting'];
 
         $this->request_status = $this->filter['request_status'];
     }
