@@ -289,6 +289,7 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
 
         if (Config::get()->OERCAMPUS_ENABLED && Config::get()->OER_ENABLE_SUGGESTIONS &&
             $GLOBALS['user']->id !== 'nobody' && $this->fileref->user_id !== $GLOBALS['user']->id &&
+            !$this->isEditable($GLOBALS['user']->id) &&
             in_array($this->fileref->content_terms_of_use_id, ['SELFMADE_NONPUB', 'FREE_LICENSE'])
         ) {
             $actionMenu->addLink(
