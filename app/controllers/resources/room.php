@@ -233,12 +233,13 @@ class Resources_RoomController extends AuthenticatedController
 
             //We must convert the buildings to a hierarchy since rooms can be
             //placed multiple layers below a building:
-            $this->building_hierarchies = [];
+            $building_hierarchies = [];
             foreach ($buildings as $building) {
                 //Build the complete hierarchy from the root resource to
                 //the building:
-                $this->building_hierarchies[$building->id] = '/' . implode('/', ResourceManager::getHierarchyNames($building));
+                $building_hierarchies[$building->parent->id][$building->id] = '/' . implode('/', ResourceManager::getHierarchyNames($building));
             }
+            $this->building_hierarchies = array_reduce($building_hierarchies, 'array_merge', []);
 
             //In add-mode the category must be set before calling this method.
             if ($mode == 'edit') {
