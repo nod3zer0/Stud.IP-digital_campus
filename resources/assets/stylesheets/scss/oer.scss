@@ -219,6 +219,10 @@ ul.reviews, ol.reviews {
             }
             .title {
                 max-height: 34px;
+                max-width: 85%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                hyphens: auto;
             }
         }
 

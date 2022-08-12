@@ -34,7 +34,7 @@
                                              role="clickable"
                                              size="20"
                                              class="text-bottom"></studip-icon>
-                                {{ name }}
+                                <div class="title">{{ name }}</div>
                             </h1>
                         </header>
                         <div class="image"
