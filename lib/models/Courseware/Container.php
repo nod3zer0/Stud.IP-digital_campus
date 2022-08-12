@@ -120,7 +120,7 @@ class Container extends \SimpleORMap
 
         $container->store();
 
-        $blockMap = self::copyBlocks($user, $container, $this);
+        $blockMap = $this->copyBlocks($user, $container);
 
         $container['payload'] = $container->type->copyPayload($blockMap);
 
@@ -129,13 +129,11 @@ class Container extends \SimpleORMap
         return $container;
     }
 
-    private function copyBlocks(User $user, Container $newContainer, Container $remoteContainer): array
+    private function copyBlocks(User $user, Container $newContainer): array
     {
         $blockMap = [];
 
-        $blocks = Block::findBySQL('container_id = ?', [$remoteContainer->id]);
-
-        foreach ($blocks as $block) {
+        foreach ($this->blocks as $block) {
             $newBlock = $block->copy($user, $newContainer);
             $blockMap[$block->id] = $newBlock->id;
         }
