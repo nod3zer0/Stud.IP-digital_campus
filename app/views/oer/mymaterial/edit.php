@@ -213,7 +213,7 @@
                 </a>
             </div>
 
-            <div style="margin-top: 13px; max-width: 682px;">
+            <div class="level_filter" style="margin-top: 13px; max-width: 682px;">
                 <?= _('Niveau') ?>
 
                 <input type="hidden" id="difficulty_start" name="data[difficulty_start]"
@@ -221,7 +221,7 @@
                 <input type="hidden" id="difficulty_end" name="data[difficulty_end]"
                        value="<?= htmlReady($material['difficulty_end']) ?>">
 
-                <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: grey;">
+                <div class="level_labels">
                     <div><?= _('Leicht') ?></div>
                     <div><?= _('Schwer') ?></div>
                 </div>

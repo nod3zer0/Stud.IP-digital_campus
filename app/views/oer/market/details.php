@@ -98,8 +98,8 @@
 
         <? if ($material['difficulty_start'] != 1 || $material['difficulty_end'] != 12) : ?>
             <h2><?= _('Niveau') ?></h2>
-            <div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: grey;">
+            <div class="level_filter">
+                <div class="level_labels">
                     <div><?= _('Leicht') ?></div>
                     <div><?= _('Schwer') ?></div>
                 </div>

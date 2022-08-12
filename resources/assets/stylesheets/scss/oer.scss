@@ -164,6 +164,14 @@ ul.reviews, ol.reviews {
         margin-top: 10px;
     }
 
+    .level_labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8em;
+        color: $black;
+        margin-top: 20px;
+    }
+
 }
 
 .oercampus_editmaterial, .oer_material_overview {
@@ -338,7 +346,7 @@ ul.reviews, ol.reviews {
                 display: flex;
                 justify-content: space-between;
                 font-size: 0.8em;
-                color: grey;
+                color: $black;
                 margin-top: 20px;
             }
             .level_numbers {
@@ -437,6 +445,14 @@ ul.reviews, ol.reviews {
     }
     > div {
         padding-left: 20px;
+    }
+
+    .level_labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8em;
+        color: $black;
+        margin-top: 20px;
     }
 }
 
