@@ -9,7 +9,7 @@
                 _('Hier können Sie für die gesamte Veranstaltung, also für alle regelmäßigen und unregelmäßigen Termine, '
                     . 'eine Raumanfrage erstellen.')
             ) ?>
-            <a class="link-add" href="<?= $controller->url_for('course/room_requests/request_start',
+            <a class="link-add" href="<?= $controller->url_for('course/room_requests/new_request',
                 [
                     'cid'                 => $course->id,
                     'range_str'           => 'course',

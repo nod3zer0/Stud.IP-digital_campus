@@ -245,6 +245,62 @@ class Course_RoomRequestsController extends AuthenticatedController
     }
 
 
+
+    public function new_request_action($request_id = '')
+    {
+        if (!Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) {
+            throw new AccessDeniedException(
+                _('Das Erstellen von Raumanfragen ist nicht erlaubt!')
+            );
+        }
+        Helpbar::get()->addPlainText(
+            _('Information'),
+            _('Hier können Sie Angaben zu gewünschten Raumeigenschaften machen.')
+        );
+
+        $this->request_id = $request_id;
+        if (Request::submitted('request_id')) {
+            $this->request_id = Request::get('request_id');
+        }
+        if (!$this->request_id) {
+            $this->request_id = md5(uniqid('RoomRequest'));
+        }
+
+        $this->request = null;
+        $this->request = RoomRequest::find(Request::get('request_id'));
+        $this->available_room_categories = ResourceCategory::findByClass_name(
+            'Room'
+        );
+
+    }
+
+    public function request_first_step_action($request_id)
+    {
+        $this->request_id = $request_id;
+
+        if (Request::isPost()) {
+        CSRFProtection::verifyUnsafeRequest();
+        $this->room_name = Request::get('room_name');
+        $this->category_id = Request::get('category_id');
+
+            if ($this->room_name != null) {
+                $_SESSION[$request_id]['room_name'] = $this->room_name;
+                $this->redirect(
+                    'course/room_requests/find_by_roomname/' . $this->request_id
+                );
+            }
+        }
+
+    }
+
+    public function find_by_roomname_action($request_id)
+    {
+        $this->request_id = $request_id;
+
+    }
+
+
+    /************ OLD STUFF *******/
     /**
      * This action is the entry point for adding properties to a room request.
      */
