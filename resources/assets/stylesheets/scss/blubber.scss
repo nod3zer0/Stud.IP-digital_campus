@@ -237,9 +237,13 @@
                         top: 100%;
                     }
                     > .name {
-                        color: $light-gray-color-80;
+                        color: $base-color;
                         font-size: 0.8em;
                         display: block;
+
+                        &:hover {
+                            color: $red;
+                        }
                     }
                 }
                 > .avatar {
@@ -263,7 +267,7 @@
             }
             > .time {
                 font-size: 0.8em;
-                color: $light-gray-color;
+                color: $black;
                 time {
                     @media screen and (max-width: $major-breakpoint-small) {
                         display: none;
@@ -470,7 +474,7 @@
 }
 
 .lowprio_info {
-    color: $light-gray-color;
+    color: $black;
 }
 
 .studip-dialog {
@@ -614,7 +618,7 @@
                         time {
                             font-size: 0.8em;
                             font-weight: normal;
-                            color: $light-gray-color;
+                            color: $black;
                         }
                     }
 
