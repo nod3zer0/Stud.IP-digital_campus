@@ -22,22 +22,6 @@ class URLHelper {
     }
 
     /**
-     * method to extend short URLs like "dispatch.php/profile" to "http://.../dispatch.php/profile"
-     */
-    resolveURL(url) {
-        if (!_.isString(this.base_url) || url.match(/^[a-zA-Z][a-zA-Z0-9+-.]*:/) !== null || url.charAt(0) === '?') {
-            //this method cannot do any more:
-            return url;
-        }
-        var base_url = this.base_url;
-        if (url.charAt(0) === '/') {
-            var host = this.base_url.match(/^[a-zA-Z][a-zA-Z0-9+-.]*:\/\/[\w:.-]+/);
-            base_url = host ? host[0] : '';
-        }
-        return base_url + url;
-    }
-
-    /**
      * returns a readily encoded URL with the mandatory parameters and additionally passed
      * parameters.
      *
@@ -47,40 +31,31 @@ class URLHelper {
      * @return: url with all necessary and additional parameters, encoded
      */
     getURL(url, param_object, ignore_params) {
-        var params = _.defaults(param_object || {}, ignore_params ? {} : this.parameters),
-            tmp,
-            fragment,
-            query;
+        let result;
 
-        tmp = url.split('#');
-        url = tmp[0];
-        fragment = tmp[1];
-
-        tmp = url.split('?');
-        url = tmp[0];
-        query = tmp[1] || '';
-
-        if (url !== '') {
-            url = this.resolveURL(url);
+        if (url === '' || url.match(/^[?#]/)) {
+            result = new URL(url, location.href.replace(/\?.*/, ''));
+        } else {
+            result = new URL(url, this.base_url);
         }
-        query = decodeURIComponent(query);
-        // split query string and merge with param_object
-        _.each((query && query.split('&')) || [], function(e) {
-            var pair = e.split('=');
-            if (!(pair[0] in params)) {
-                params[pair[0]] = pair[1];
+
+        if (!ignore_params) {
+            for (let key in this.parameters) {
+                if (!result.searchParams.has(key)) {
+                    result.searchParams.set(key, this.parameters[key]);
+                }
             }
-        });
-
-        if (_.keys(params).length || url === '') {
-            url += '?' + jQuery.param(params);
         }
 
-        if (fragment) {
-            url += '#' + fragment;
+        for (let key in param_object) {
+            if (param_object[key] !== null) {
+                result.searchParams.set(key, param_object[key]);
+            } else {
+                result.searchParams.delete(key);
+            }
         }
 
-        return url;
+        return result.href;
     }
 }
 
