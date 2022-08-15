@@ -109,15 +109,16 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
     /**
      * Creates or updates a statusgroup.
      *
-     * @param string $id                ID of an existing group or empty if new group
-     * @param string $name              group name
-     * @param int    $position          position or null if automatic position after other groups
-     * @param string $range_id          ID of the object this group belongs to
-     * @param int    $size              max number of members or 0 if unlimited
-     * @param int    $selfassign        may users join this group by themselves?
-     * @param int    $selfassign_start  group joining is possible starting at ...
-     * @param int    $makefolder        create a document folder assigned to this group?
-     * @param array  $dates             dates assigned to this group
+     * @param string      $id                ID of an existing group or empty if new group
+     * @param string      $name              group name
+     * @param int         $position          position or null if automatic position after other groups
+     * @param string      $range_id          ID of the object this group belongs to
+     * @param int         $size              max number of members or 0 if unlimited
+     * @param int         $selfassign        may users join this group by themselves?
+     * @param int         $selfassign_start  group joining is possible starting at ...
+     * @param int         $makefolder        create a document folder assigned to this group?
+     * @param array|null  $dates             dates assigned to this group. Defaults to null which means already assigned
+     *                                       dates are not changed.
      * @return Statusgruppen The saved statusgroup.
      * @throws Exception
      */
@@ -131,7 +132,7 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
         $selfassign_start,
         $selfassign_end,
         $makefolder,
-        $dates = []
+        $dates = null
     )
     {
         $group = new Statusgruppen($id);
@@ -145,10 +146,8 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
         $group->selfassign_end = $selfassign ? $selfassign_end : 0;
 
         // Set assigned dates.
-        if ($dates) {
+        if (isset($dates)) {
             $group->dates = CourseDate::findMany($dates);
-        } else {
-            $group->dates = [];
         }
 
         $group->store();

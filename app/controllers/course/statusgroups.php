@@ -1112,11 +1112,17 @@ class Course_StatusgroupsController extends AuthenticatedController
         $groups = Statusgruppen::findMany(Request::getArray('groups'));
 
         foreach ($groups as $g) {
-            Statusgruppen::createOrUpdate($g->id, $g->name,
-                $g->position, $this->course_id,
+            Statusgruppen::createOrUpdate(
+                $g->id,
+                $g->name,
+                $g->position,
+                $this->course_id,
                 Request::int('size', 0),
-                $g->selfassign, $g->selfassign_start, $g->selfassign_end,
-                false);
+                $g->selfassign,
+                $g->selfassign_start,
+                $g->selfassign_end,
+                false
+            );
         }
         PageLayout::postSuccess(_('Die Einstellungen der ausgewählten Gruppen wurden gespeichert.'));
         $this->relocate('course/statusgroups');
