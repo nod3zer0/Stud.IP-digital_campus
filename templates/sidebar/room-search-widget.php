@@ -6,31 +6,30 @@
             'sidebar/room-search-criteria.php',
             [
                 'criteria' => (
-                    $selected_criteria['special__room_name']
-                    ? $selected_criteria['special__room_name']
-                    : $criteria['special__room_name']
-                    ),
+                $selected_criteria['special__room_name']
+                    ?: $criteria['special__room_name']
+                ),
                 'removable' => false
             ]
         ) ?>
-        <?= $this->render_partial(
-            'sidebar/room-search-criteria.php',
-            [
-                'criteria' => (
-                    $selected_criteria['room_type']
-                    ? $selected_criteria['room_type']
-                    : $criteria['room_type']
-                    ),
-                'removable' => false
-            ]
-        ) ?>
+        <? if (isset($criteria['room_type'])): ?>
+            <?= $this->render_partial(
+                'sidebar/room-search-criteria.php',
+                [
+                    'criteria' => (
+                        $selected_criteria['room_type']
+                        ?: $criteria['room_type']
+                        ),
+                    'removable' => false
+                ]
+            ) ?>
+        <? endif ?>
         <?= $this->render_partial(
             'sidebar/room-search-criteria.php',
             [
                 'criteria' => (
                 $selected_criteria['room_category_id']
-                    ? $selected_criteria['room_category_id']
-                    : $criteria['room_category_id']
+                    ?: $criteria['room_category_id']
                 ),
                 'removable' => false
             ]
@@ -40,8 +39,7 @@
             [
                 'criteria' => (
                     $selected_criteria['special__building_location']
-                    ? $selected_criteria['special__building_location']
-                    : $criteria['special__building_location']
+                    ?: $criteria['special__building_location']
                     ),
                 'removable' => false
             ]
@@ -52,8 +50,7 @@
                 [
                     'criteria' => (
                         $selected_criteria['special__building_location_label']
-                        ? $selected_criteria['special__building_location_label']
-                        : $criteria['special__building_location_label']
+                        ?: $criteria['special__building_location_label']
                         ),
                     'removable' => false
                 ]
@@ -64,16 +61,14 @@
             [
                 'criteria' =>
                     $selected_criteria['special__seats']
-                    ? $selected_criteria['special__seats']
-                    : $criteria['special__seats']
+                    ?: $criteria['special__seats']
             ]
         ) ?>
         <?= $this->render_partial(
             'sidebar/room-search-criteria-available-range.php',
             [
                 'criteria' => $selected_criteria['special__time_range']
-                          ? $selected_criteria['special__time_range']
-                          : $criteria['special__time_range']
+                          ?: $criteria['special__time_range']
             ]
         ) ?>
 

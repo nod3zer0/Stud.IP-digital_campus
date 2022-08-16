@@ -33,7 +33,7 @@ class RoomSearchWidget extends SidebarWidget
         }
 
         $room_types = Room::getAllRoomTypes();
-        if ($room_types) {
+        if (!empty($room_types)) {
             $filtered_room_types = [];
             foreach ($room_types as $type) {
                 $filtered_room_types[$type] = $type;
@@ -42,10 +42,6 @@ class RoomSearchWidget extends SidebarWidget
                 ['' => _('Alle Raumtypen')],
                 $filtered_room_types
             );
-        } else {
-            $room_types = [
-                '' => _('Alle Raumtypen')
-            ];
         }
 
         $this->criteria = [];
@@ -89,16 +85,18 @@ class RoomSearchWidget extends SidebarWidget
             'value' => '',
             'optional' => false
         ];
-        $this->criteria['room_type'] = [
-            'name' => 'room_type',
-            'title' => _('Raumtyp'),
-            'type' => 'select',
-            'range_search' => false,
-            'options' => $room_types,
-            'switch' => false,
-            'value' => '',
-            'optional' => false
-        ];
+        if (!empty($room_types)) {
+            $this->criteria['room_type'] = [
+                'name'         => 'room_type',
+                'title'        => _('Raumtyp'),
+                'type'         => 'select',
+                'range_search' => false,
+                'options'      => $room_types,
+                'switch'       => false,
+                'value'        => '',
+                'optional'     => false
+            ];
+        }
         $this->criteria['special__building_location'] = [
             'name' => 'special__building_location',
             'title' => _('Standort / Gebäude'),
@@ -167,6 +165,7 @@ class RoomSearchWidget extends SidebarWidget
             'value' => [10, 100],
             'optional' => false
         ];
+
     }
 
 
