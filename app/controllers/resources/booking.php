@@ -91,6 +91,18 @@ class Resources_BookingController extends AuthenticatedController
             )
             || $this->make_comment_editable
         );
+        $this->user_may_see_course_data = false;
+        if ($this->booking->getAssignedUserType() === 'course') {
+            $course = $this->booking->assigned_course_date->course;
+            if ($course instanceof Course) {
+                $has_perms = $GLOBALS['perm']->have_studip_perm('user', $course->id, $user->id);
+                $vis_perms = $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM, $user->id);
+                if ($has_perms || $vis_perms || $course->visible) {
+                    $this->user_may_see_course_data = true;
+                }
+            }
+            Seminar_Perm::get()->have_studip_perm('user', $this->booking->getAssignedUser()->id);
+        }
 
         if ($this->make_comment_editable && Request::submitted('save')) {
             CSRFProtection::verifyUnsafeRequest();
