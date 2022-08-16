@@ -331,12 +331,7 @@ class FileController extends AuthenticatedController
 
             //The file system object is a folder.
             //Calculate the files and the folder size:
-            $this->folder_size = 0;
-            $this->folder_file_amount = 0;
-            foreach ($this->folder->getFiles() as $file) {
-                $this->folder_file_amount++;
-                $this->folder_size += $file->getSize();
-            }
+            list($this->folder_size, $this->folder_file_amount) = $this->getFolderSize($this->folder);
             PageLayout::setTitle($this->folder->name);
             $this->render_action('folder_details');
         }
@@ -1918,6 +1913,7 @@ class FileController extends AuthenticatedController
                 PageLayout::postMessage($result);
             }
         }
+        list($this->folder_size, $this->folder_file_amount) = $this->getFolderSize($folder);
     }
 
     public function delete_folder_action($folder_id)
@@ -2147,5 +2143,16 @@ class FileController extends AuthenticatedController
         require_once 'app/controllers/files.php';
 
         return \FilesController::getRangeLink($folder) . '#fileref_' . $fileRef->id;
+    }
+
+    private function getFolderSize($folder): array
+    {
+        $folder_size = 0;
+        $folder_file_amount = 0;
+        foreach ($folder->getFiles() as $file) {
+            $folder_size += $file->getSize();
+            $folder_file_amount++;
+        }
+        return [$folder_size, $folder_file_amount];
     }
 }
