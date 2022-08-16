@@ -109,7 +109,7 @@ if (!$values['parent_course'] || !in_array($values['parent_course'], array_keys(
         <? endif ?>
         <? if (in_array('members', $view_filter)) : ?>
             <td style="text-align: center;">
-                <a title="<?=_('Teilnehmende')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', ['cid' => $semid])?>">
+                <a title="<?=_('Teilnehmende')?>" href="<?= URLHelper::getLink(count($children) > 0 ? 'dispatch.php/course/grouping/members' : 'dispatch.php/course/members', ['cid' => $semid]) ?>">
                     <?= $values["teilnehmer"] ?>
                 </a>
             </td>
