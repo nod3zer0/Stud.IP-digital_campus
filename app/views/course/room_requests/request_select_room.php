@@ -26,7 +26,8 @@
 <div>
 <? if ($available_rooms) : ?>
     <section class="contentbox">
-        <header><h1><?= _('Passende Räume') ?></h1></header>
+        <header><h1><?= _('Passende Räume') ?>                 <?= count($available_rooms) ?>
+            </h1></header>
         <section class="selectbox">
             <fieldset>
                 <? foreach ($available_rooms as $room): ?>

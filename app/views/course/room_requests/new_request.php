@@ -9,9 +9,10 @@
     'course/room_requests/_new_request_header') ?>
 
 <?= $request_id ?>
-<?= var_dump($request) ?>
-<?= $room_name ?>
-<section class="resources-grid">
+    <br/>
+    <?= var_dump($request_time_intervals) ?>
+
+    <section class="resources-grid">
     <div>
         <fieldset>
             <legend><?= _('Wünschbare Eigenschaften') ?></legend>
@@ -45,7 +46,7 @@
                             [
                                 'type'  => 'image',
                                 'class' => 'text-bottom',
-                                'name'  => 'select_properties',
+                                'name'  => 'search_by_category',
                                 'value' => _('Raumtyp auswählen'),
                                 'style' => 'margin-left: 0.2em; margin-top: 0.6em;'
                             ]
@@ -89,5 +90,5 @@
 
     </div>
 </section>
-<?= $this->render_partial('course/room_requests/_request_form_footer') ?>
+<?= $this->render_partial('course/room_requests/_new_request_form_footer', ['step' => 0]) ?>
 <? endif ?>

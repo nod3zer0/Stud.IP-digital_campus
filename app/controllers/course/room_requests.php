@@ -258,6 +258,7 @@ class Course_RoomRequestsController extends AuthenticatedController
             _('Hier können Sie Angaben zu gewünschten Raumeigenschaften machen.')
         );
 
+        // create a new request
         $this->request_id = $request_id;
         if (Request::submitted('request_id')) {
             $this->request_id = Request::get('request_id');
@@ -267,10 +268,15 @@ class Course_RoomRequestsController extends AuthenticatedController
         }
 
         $this->request = null;
-        $this->request = RoomRequest::find(Request::get('request_id'));
-        $this->available_room_categories = ResourceCategory::findByClass_name(
-            'Room'
-        );
+        $this->request = RoomRequest::find(Request::get('request_id')) ? RoomRequest::find(Request::get('request_id')) :  new RoomRequest($this->request_id);
+
+        // TODO no idea why we need this and what it does
+        $this->request->setRangeFields('course', [Context::getId()]);
+        $this->request_time_intervals = $this->request->getTimeIntervals();
+
+
+
+        $this->available_room_categories = ResourceCategory::findByClass_name('Room');
 
     }
 
@@ -279,14 +285,26 @@ class Course_RoomRequestsController extends AuthenticatedController
         $this->request_id = $request_id;
 
         if (Request::isPost()) {
-        CSRFProtection::verifyUnsafeRequest();
-        $this->room_name = Request::get('room_name');
-        $this->category_id = Request::get('category_id');
+            CSRFProtection::verifyUnsafeRequest();
+            $this->room_name = Request::get('room_name');
+            $this->search_by_roomname = Request::submitted('search_by_name');
+            $this->category_id = Request::get('category_id');
+            $this->search_by_category = Request::submitted('select_properties');
 
-            if ($this->room_name != null) {
+            // user looks for a special room OR for room within a selected category
+            if ($this->room_name != null && $this->search_by_roomname != null) {
                 $_SESSION[$request_id]['room_name'] = $this->room_name;
                 $this->redirect(
                     'course/room_requests/find_by_roomname/' . $this->request_id
+                );
+            } else if ($this->category_id != null && $this->search_by_category != null ) {
+                $_SESSION[$request_id]['room_category'] = $this->catgeory_id;
+                $this->redirect(
+                    'course/room_requests/find_by_category/' . $this->request_id
+                );
+            } else {
+                $this->redirect(
+                    'course/room_requests/new_request/' . $this->request_id
                 );
             }
         }
@@ -296,6 +314,77 @@ class Course_RoomRequestsController extends AuthenticatedController
     public function find_by_roomname_action($request_id)
     {
         $this->request_id = $request_id;
+        $this->room_name = $_SESSION[$request_id]['room_name'];
+        $this->available_rooms = RoomManager::findRooms(
+            $this->room_name,
+            null,
+            null,
+            null,
+            [],
+            'name ASC, mkdate ASC'
+        );
+
+        // small icons before room name to show whether they are bookable or not
+        $this->available_room_icons = $this->getRoomBookingIcons($this->available_rooms, $this->request_id);
+
+
+    }
+
+    private function getRoomBookingIcons($available_rooms, $request_id)
+    {
+        $this->request_id = $request_id;
+
+        $this->available_room_icons = [];
+        $this->request = RoomRequest::find($this->request_id) ? RoomRequest::find($this->request_id) :  new RoomRequest($this->request_id);
+
+        // TODO set range fields for other
+        $this->request->setRangeFields('course', [Context::getId()]);
+        $request_time_intervals = $this->request->getTimeIntervals();
+
+        foreach ($available_rooms as $room) {
+            $request_dates_booked = 0;
+            foreach ($request_time_intervals as $interval) {
+                $booked = ResourceBookingInterval::countBySql(
+                        'resource_id = :room_id AND begin < :end AND end > :begin',
+                        [
+                            'room_id' => $room->id,
+                            'begin' => $interval['begin'],
+                            'end' => $interval['end']
+                        ]
+                    ) > 0;
+                if ($booked) {
+                    $request_dates_booked++;
+                }
+            }
+            if ($request_dates_booked == 0) {
+                $this->available_room_icons[$room->id] =
+                    Icon::create('check-circle', Icon::ROLE_STATUS_GREEN)->asImg(
+                        [
+                            'class' => 'text-bottom',
+                            'title' => _('freier Raum')
+                        ]
+                    );
+                $available_rooms[] = $room;
+            } elseif ($request_dates_booked < $request_time_intervals) {
+                $this->available_room_icons[$room->id] =
+                    Icon::create('exclaim-circle', Icon::ROLE_STATUS_YELLOW)->asImg(
+                        [
+                            'class' => 'text-bottom',
+                            'title' => _('teilweise belegter Raum')
+                        ]
+                    );
+                $available_rooms[] = $room;
+            }
+        }
+        return $this->available_room_icons;
+    }
+
+
+
+
+    public function find_by_category_action($request_id)
+    {
+
 
     }
 
@@ -391,7 +480,6 @@ class Course_RoomRequestsController extends AuthenticatedController
             );
             return;
         }
-
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
             $this->room_name = Request::get('room_name');
@@ -680,6 +768,7 @@ class Course_RoomRequestsController extends AuthenticatedController
             );
         }
         $this->available_room_icons = [];
+
         $request_time_intervals = $this->request->getTimeIntervals();
         $request_date_amount = count($request_time_intervals);
         foreach ($this->matching_rooms as $room) {

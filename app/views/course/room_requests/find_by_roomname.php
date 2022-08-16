@@ -8,7 +8,6 @@
     <?= $this->render_partial(
         'course/room_requests/_new_request_header') ?>
 
-    <?= $request_id ?>
     <?= var_dump($_SESSION[$request_id]) ?>
     <section class="resources-grid">
         <div>
@@ -84,9 +83,34 @@
                 </span>
                 </label>
 
+                <? if ($available_rooms) : ?>
+                    <label><?= _('Passende Räume') ?>
+                        <section class="selectbox">
+                                <? foreach ($available_rooms as $room): ?>
+                                    <div class="flex-row">
+                                        <label class="horizontal">
+                                            <?= $available_room_icons[$room->id] ?>
+                                            <input type="radio" name="selected_room_id"
+                                                   data-activates="button[type='submit'][name='select_room']"
+                                                   value="<?= htmlReady($room->id) ?>">
+                                            <?= htmlReady(mb_substr($room->name, 0, 50)); ?>
+                                            <? if ($room->properties): ?>
+                                                <? $property_names = $room->getInfolabelPrperties()
+                                                    ->pluck('fullname') ?>
+                                                <?= tooltipIcon(implode("\n", $property_names)) ?>
+                                            <? endif ?>
+                                        </label>
+                                    </div>
+                                <? endforeach ?>
+                        </section>
+                    </label>
+                <? else : ?>
+                    <?= MessageBox::info(_('Es wurden keine passenden Räume gefunden!')) ?>
+                <? endif ?>
+
             </fieldset>
 
         </div>
     </section>
-<?= $this->render_partial('course/room_requests/_request_form_footer') ?>
+<?= $this->render_partial('course/room_requests/_new_request_form_footer', ['step' => 1]) ?>
 <? endif ?>
