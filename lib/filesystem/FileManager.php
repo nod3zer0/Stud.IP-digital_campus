@@ -278,6 +278,7 @@ class FileManager
     /**
      * This is a helper method that checks an uploaded file for errors
      * which appeared during upload.
+     * @param array $uploaded_file
      */
     public static function checkUploadedFileStatus($uploaded_file)
     {
@@ -296,7 +297,7 @@ class FileManager
     /**
      * Handles uploading one or more files
      *
-     * @param uploaded_files A two-dimensional array with file data for all uploaded files.
+     * @param array $uploaded_files A two-dimensional array with file data for all uploaded files.
      *     The array has the following structure in the second dimension:
      *      [
      *          'name': The name of the file
@@ -305,12 +306,12 @@ class FileManager
      *          'tmp_name': Name of the temporary file that was created right after the upload.
      *          'size': Size of the uploaded file in bytes.
      *      ]
-     * @param folder the folder where the files are inserted
-     * @param user_id the ID of the user who wants to upload files
+     * @param FolderType $folder the folder where the files are inserted
+     * @param string $user_id the ID of the user who wants to upload files
      *
-     * @return mixed[] Array with the created file objects and error strings
+     * @return array Array with the created file objects and error strings
      */
-    public static function handleFileUpload(Array $uploaded_files, FolderType $folder, $user_id = null)
+    public static function handleFileUpload(array $uploaded_files, FolderType $folder, $user_id = null)
     {
         $user_id || $user_id = $GLOBALS['user']->id;
         $result = [];
@@ -327,7 +328,6 @@ class FileManager
         //two-dimensional array. Each index of the first dimension
         //contains an array attribute for uploaded files, one entry per file.
         if (is_array($uploaded_files['name'])) {
-            $error = [];
             foreach ($uploaded_files['name'] as $key => $filename) {
                 $uploaded_file = StandardFile::create([
                     'name'     => $filename,
@@ -360,8 +360,6 @@ class FileManager
         return array_merge($result, compact('error'));
     }
 
-    //FILEREF METHODS
-
     /**
      * This method handles updating the File a FileRef is pointing to.
      *
@@ -371,7 +369,7 @@ class FileManager
      * @param FileRef $source The file reference pointing to a file that
      *     shall be updated.
      * @param User $user The user who wishes to update the file.
-     * @param Array $uploaded_file_data The data of the uploaded new version
+     * @param array $uploaded_file_data The data of the uploaded new version
      *     of the file that is going to be updated.
      * @param bool $update_filename True, if the file name of the File and the
      *     FileRef shall be set to the name of the uploaded new version
@@ -418,8 +416,6 @@ class FileManager
         // If we don't update other file references that point to the File instance
         // we must first copy the file and then link the $source FileRef to the
         // new file:
-
-        $data_file = null;
 
         if (!$source->file) {
             if (!$update_other_references) {
@@ -544,12 +540,12 @@ class FileManager
      * content_terms_of_use_id must be set. Otherwise this method
      * will do nothing.
      *
-     * @param FileRef file_ref The file reference that shall be edited.
-     * @param User user The user who wishes to edit the file reference.
-     * @param string|null name The new name for the file reference
-     * @param string|null description The new description for the file reference.
-     * @param string|null content_terms_of_use_id The ID of the new ContentTermsOfUse object.
-     * @param string|null url The new URL for the file to link to.
+     * @param FileRef $file_ref The file reference that shall be edited.
+     * @param User $user The user who wishes to edit the file reference.
+     * @param string|null $name The new name for the file reference
+     * @param string|null $description The new description for the file reference.
+     * @param string|null $content_terms_of_use_id The ID of the new ContentTermsOfUse object.
+     * @param string|null $url The new URL for the file to link to.
      *     This is only regarded if the file_ref points to an URL instead
      *     of a file stored by Stud.IP.
      *
@@ -758,8 +754,8 @@ class FileManager
     /**
      * This method handles deletign a file reference.
      *
-     * @param FileRef file_ref The file reference that shall be deleted
-     * @param User user The user who wishes to delete the file reference.
+     * @param FileRef $file_ref The file reference that shall be deleted
+     * @param User $user The user who wishes to delete the file reference.
      *
      * @return FileRef|string[] The FileRef object that was deleted from the database on success
      * or an array with error messages on failure.
@@ -785,8 +781,6 @@ class FileManager
 
         return [_('Dateireferenz konnte nicht gelöscht werden.')];
     }
-
-    // FOLDER METHODS
 
     /**
      * Handles the sub folder creation routine.
@@ -1135,7 +1129,6 @@ class FileManager
      */
     public static function getFolderTypes()
     {
-        $result = [];
         foreach (scandir(__DIR__) as $filename) {
             $path = pathinfo($filename);
             if ($path['extension'] === 'php') {
@@ -1181,14 +1174,14 @@ class FileManager
      * Copies the content of a folder (files and subfolders) into a given
      * path in the operating system's file system.
      *
-     * @param FolderType folder The folder whose content shall be copied.
-     * @param string path The path in the operating system's file system
+     * @param FolderType $folder The folder whose content shall be copied.
+     * @param string $path The path in the operating system's file system
      *     where the content shall be copied into.
-     * @param string user_id The user who wishes to copy the content.
-     * @param string min_perms If set, the selection of subfolders and files
+     * @param string $user_id The user who wishes to copy the content.
+     * @param string $min_perms If set, the selection of subfolders and files
      *     is limited to those which are visible for users having
      *     the minimum permissions.
-     * @param bool ignore_perms If set to true, files are copied without checking
+     * @param bool $ignore_perms If set to true, files are copied without checking
      *     the minimum permissions or the permissions of the user given by user_id.
      * @return bool True on success, false on error.
      */
@@ -1421,7 +1414,7 @@ class FileManager
      * This method can also get FolderType instances which are defined
      * in a file system plugin.
      *
-     * @param $id The ID of a Folder object.
+     * @param string $id The ID of a Folder object.
      * @param null $pluginclass The name of a Plugin's main class.
      * @return FolderType|null A FolderType object if it can be retrieved
      *     using the Folder-ID (and by option the plugin class name)
@@ -1641,7 +1634,7 @@ class FileManager
     /**
      * Returns an INBOX folder for the given user.
      *
-     * @param User user The user whose inbox folder is requested.
+     * @param User $user The user whose inbox folder is requested.
      * @return FolderType|null Returns the inbox folder on success, null on failure.
      */
     public static function getInboxFolder(User $user)
@@ -1684,7 +1677,7 @@ class FileManager
     /**
      * Returns a FolderType object for the outbox folder of the given user.
      *
-     * @param User user The user whose outbox folder is requested.
+     * @param User $user The user whose outbox folder is requested.
      * @return FolderType|null Returns the inbox folder on success, null on failure.
      */
     public static function getOutboxFolder(User $user)
@@ -1853,8 +1846,8 @@ class FileManager
 
     /**
      * Returns true if the mime-type of that FileType object starts with image/
-     * @param FileType $file : The file
-     * @return bool : True if it is an image else false
+     * @param FileType $file The file
+     * @return bool True if it is an image else false
      */
     public static function fileIsImage(FileType $file)
     {
@@ -1865,8 +1858,8 @@ class FileManager
 
     /**
      * Returns true if the mime-type of that FileType object starts with audio/
-     * @param FileType $file : The file
-     * @return bool : True if it is an audio file else false
+     * @param FileType $file The file
+     * @return bool True if it is an audio file else false
      */
     public static function fileIsAudio(FileType $file)
     {
@@ -1877,8 +1870,8 @@ class FileManager
 
     /**
      * Returns true if the mime-type of that FileType object starts with video/
-     * @param FileType $file : The file
-     * @return bool : True if it is an video file else false
+     * @param FileType $file The file
+     * @return bool True if it is an video file else false
      */
     public static function fileIsVideo(FileType $file)
     {
@@ -1932,7 +1925,6 @@ class FileManager
             ? $filename
             : substr($filename, mb_strrpos($filename, ".") + 1);
         $extension = strtolower($extension);
-        //Icon auswaehlen
         switch ($extension){
             case 'rtf':
             case 'doc':
