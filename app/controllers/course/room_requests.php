@@ -48,6 +48,9 @@ class Course_RoomRequestsController extends AuthenticatedController
         $pagetitle .= Course::find($this->course_id)->getFullname() . ' - ';
         $pagetitle .= _('Verwalten von Raumanfragen');
         PageLayout::setTitle($pagetitle);
+
+        $this->available_room_categories = ResourceCategory::findByClass_name('Room');
+
     }
 
     /**
@@ -276,7 +279,6 @@ class Course_RoomRequestsController extends AuthenticatedController
 
 
 
-        $this->available_room_categories = ResourceCategory::findByClass_name('Room');
 
     }
 
@@ -286,10 +288,11 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
+            // either search by room (name) or room category, then go to next step
             $this->room_name = Request::get('room_name');
             $this->search_by_roomname = Request::submitted('search_by_name');
             $this->category_id = Request::get('category_id');
-            $this->search_by_category = Request::submitted('select_properties');
+            $this->search_by_category = Request::submitted('search_by_category');
 
             // user looks for a special room OR for room within a selected category
             if ($this->room_name != null && $this->search_by_roomname != null) {
@@ -298,7 +301,7 @@ class Course_RoomRequestsController extends AuthenticatedController
                     'course/room_requests/find_by_roomname/' . $this->request_id
                 );
             } else if ($this->category_id != null && $this->search_by_category != null ) {
-                $_SESSION[$request_id]['room_category'] = $this->catgeory_id;
+                $_SESSION[$request_id]['room_category'] = $this->category_id;
                 $this->redirect(
                     'course/room_requests/find_by_category/' . $this->request_id
                 );
@@ -327,6 +330,19 @@ class Course_RoomRequestsController extends AuthenticatedController
         // small icons before room name to show whether they are bookable or not
         $this->available_room_icons = $this->getRoomBookingIcons($this->available_rooms, $this->request_id);
 
+
+    }
+
+    public function find_by_category_action($request_id)
+    {
+        $this->request_id = $request_id;
+        $this->room_category_id = $_SESSION[$request_id]['room_category'];
+        $this->category = ResourceCategory::find($this->room_category_id);
+
+        $this->request = RoomRequest::find($this->request_id) ? RoomRequest::find($this->request_id) :  new RoomRequest($this->request_id);
+
+        RoomManager::findRoomsByRequest($this->request);
+        $this->available_properties = $this->category->getRequestableProperties();
 
     }
 
@@ -382,11 +398,7 @@ class Course_RoomRequestsController extends AuthenticatedController
 
 
 
-    public function find_by_category_action($request_id)
-    {
 
-
-    }
 
 
     /************ OLD STUFF *******/

@@ -8,10 +8,8 @@
 <?= $this->render_partial(
     'course/room_requests/_new_request_header') ?>
 
-<?= $request_id ?>
+Request ID: <?= $request_id ?>
     <br/>
-    <?= var_dump($request_time_intervals) ?>
-
     <section class="resources-grid">
     <div>
         <fieldset>
