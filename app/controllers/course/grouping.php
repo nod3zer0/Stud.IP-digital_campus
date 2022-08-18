@@ -64,7 +64,7 @@ class Course_GroupingController extends AuthenticatedController
                     return $i['Institut_id'];
                 }, Institute::getMyInstitutes()),
                 'exclude'    => [$this->course->parent_course ?: ''],
-                'semesters'  => [$this->start_semester->id],
+                'semesters'  => [$this->course->start_semester->id],
             ];
         } else {
             $parameters = [
