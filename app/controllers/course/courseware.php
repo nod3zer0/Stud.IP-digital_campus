@@ -228,7 +228,7 @@ class Course_CoursewareController extends AuthenticatedController
         $usersCounter = count($courseMemberIds);
         foreach ($blks as $blk) {
             $progresses = $userProgresses[$blk];
-            $usersProgress = $progresses['count'] ? (float) $progresses['sum'] : 0;
+            $usersProgress = $progresses['count'] ? (float) $progresses['grade'] : 0;
             $data['progress'] += $usersProgress / $usersCounter;
         }
 
