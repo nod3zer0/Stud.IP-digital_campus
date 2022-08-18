@@ -3,6 +3,10 @@ class HashOpengraphTable extends Migration
 {
     public function up()
     {
+        //Prevent duplicate entries in one of the following queries
+        //by deleting all entries in the opengraphdata table:
+        DBManager::get()->exec("DELETE FROM `opengraphdata`");
+
         $query = "ALTER TABLE `opengraphdata`
                   ADD COLUMN `hash` CHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '' AFTER `opengraph_id`";
         DBManager::get()->exec($query);
