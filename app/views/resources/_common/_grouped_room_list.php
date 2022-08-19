@@ -61,18 +61,20 @@
                                                 </a>
                                             </td>
                                             <td class="actions">
-                                                <?
-                                                $perms = [
-                                                    'show_global_admin_actions' => $show_global_admin_actions,
-                                                    'show_admin_actions'        => $resource->userHasPermission($user, 'admin'),
-                                                    'show_tutor_actions'        => $resource->userHasPermission($user, 'tutor'),
-                                                    'show_autor_actions'        => $resource->userHasPermission($user, 'autor'),
-                                                    'show_user_actions'         => $resource->userHasPermission($user, 'user'),
-                                                    'user_has_booking_rights'   => $resource->userHasBookingRights($user)];
-                                                ?>
-                                                <?= $this->render_partial('resources/_common/_action_menu.php',
-                                                    compact('resource') + $perms
-                                                );?>
+                                                <? if ($user) :?>
+                                                    <?
+                                                    $perms = [
+                                                        'show_global_admin_actions' => $show_global_admin_actions,
+                                                        'show_admin_actions'        => $resource->userHasPermission($user, 'admin'),
+                                                        'show_tutor_actions'        => $resource->userHasPermission($user, 'tutor'),
+                                                        'show_autor_actions'        => $resource->userHasPermission($user, 'autor'),
+                                                        'show_user_actions'         => $resource->userHasPermission($user, 'user'),
+                                                        'user_has_booking_rights'   => $resource->userHasBookingRights($user)];
+                                                    ?>
+                                                    <?= $this->render_partial('resources/_common/_action_menu.php',
+                                                        compact('resource') + $perms
+                                                    )?>
+                                                <? endif ?>
                                             </td>
                                         </tr>
                                     <? endforeach ?>
