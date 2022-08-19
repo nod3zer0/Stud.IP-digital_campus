@@ -44,7 +44,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
         $sidebar = Sidebar::get();
 
         $views = new ViewsWidget();
-        if ($GLOBALS['user']->id && ($GLOBALS['user']->id != 'nobody')) {
+        if ($GLOBALS['user']->id && ($GLOBALS['user']->id !== 'nobody')) {
             $views->addLink(
                 _('Standard Zeitfenster'),
                 URLHelper::getURL(
@@ -82,7 +82,6 @@ class RoomManagement_PlanningController extends AuthenticatedController
 
         //Add clipboard widget:
         $clipboard_widget = new RoomClipboardWidget();
-        $clipboard_widget->setReadonly(true);
         $clipboard_widget->setApplyButtonTitle(
             _('Anzeigen')
         );
@@ -382,7 +381,6 @@ class RoomManagement_PlanningController extends AuthenticatedController
 
         //Add clipboard widget:
         $clipboard_widget = new RoomClipboardWidget();
-        $clipboard_widget->setReadonly(true);
         $clipboard_widget->setApplyButtonTitle(
             _('Anzeigen')
         );
@@ -1102,7 +1100,6 @@ class RoomManagement_PlanningController extends AuthenticatedController
 
         //Add clipboard widget:
         $clipboard_widget = new RoomClipboardWidget();
-        $clipboard_widget->setReadonly(true);
         $clipboard_widget->setApplyButtonTitle(
             _('Anzeigen')
         );

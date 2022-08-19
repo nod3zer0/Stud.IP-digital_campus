@@ -66,13 +66,11 @@ if (!$item) {
                     ]
             )?>
         </a>
-        <? if (!$readonly): ?>
-            <?= Icon::create('trash')->asInput(
-                [
-                    'data-confirm-message' => _('Sind Sie sicher?'),
-                    'class' => 'text-bottom clipboard-item-remove-button'
-                ]
-            ) ?>
-        <? endif ?>
+        <?= Icon::create('trash')->asInput(
+            [
+                'data-confirm-message' => _('Sind Sie sicher?'),
+                'class' => 'text-bottom clipboard-item-remove-button'
+            ]
+        ) ?>
     </td>
 </tr>

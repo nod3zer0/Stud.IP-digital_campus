@@ -10,9 +10,8 @@
  */
 class ClipboardWidget extends SidebarWidget
 {
-    protected $allowed_item_class;
     protected $draggable_items;
-
+    protected $current_selected_items = [];
 
     /**
      * clipboard_widget_id is required in the case that multiple
@@ -49,7 +48,7 @@ class ClipboardWidget extends SidebarWidget
             //Check if all allowed item classes are SimpleORMap objects
             //and if the classes implement the StudipItem interface:
             foreach ($allowed_item_classes as $class) {
-                if (!is_subclass_of($class, 'StudipItem', true)) {
+                if (!is_subclass_of($class, 'StudipItem')) {
                     throw new InvalidArgumentException(
                         sprintf(
                             'The class %s does not implement the StudipItem interface which is required for clipboard items!',
@@ -66,31 +65,20 @@ class ClipboardWidget extends SidebarWidget
         $this->allowed_item_classes = $allowed_item_classes;
         $this->template = 'sidebar/clipboard-widget';
         $this->title = _('Eigene Merkzettel');
-        $this->readonly = false;
         $this->apply_button_title = _('Hauptbereich aktualisieren');
 
         $this->clipboard_widget_id = md5(uniqid('clipboard_widget_id'));
-        $this->draggable_items = false;
 
         $this->updateSessionVariables();
         $this->current_clipboard_id = $_SESSION['selected_clipboard_id'];
-        $this->current_selected_items = $_SESSION['selected_clipboard_items'];
-        if (!is_array($this->current_selected_items)) {
-            $this->current_selected_items = [];
+        if (is_array($_SESSION['selected_clipboard_items'])) {
+            $this->current_selected_items = $_SESSION['selected_clipboard_items'];
         }
 
         $this->setId("ClipboardWidget_{$this->clipboard_widget_id}");
         $this->setAdditionalAttribute('data-widget_id', $this->clipboard_widget_id);
         $this->addLayoutCSSClass('clipboard-widget');
     }
-
-
-    public function clearSessionVariables()
-    {
-        $_SESSION['selected_clipboard_id'] = null;
-        $_SESSION['selected_clipboard_items'] = [];
-    }
-
 
     /**
      * Updates session variables if a special POST request is made.
@@ -109,37 +97,6 @@ class ClipboardWidget extends SidebarWidget
         }
     }
 
-
-    /**
-     * Enables clipboard items to be dragged to the main area of the page.
-     */
-    public function enableDraggableItems()
-    {
-        $this->draggable_items = true;
-    }
-
-
-    /**
-     * Disables the dragging of clipboard items.
-     */
-    public function disableDraggableItems()
-    {
-        $this->draggable_items = false;
-    }
-
-
-    public function setReadonly($readonly = false)
-    {
-        $this->readonly = (bool)$readonly;
-    }
-
-
-    public function isReadonly()
-    {
-        return $this->readonly;
-    }
-
-
     public function setApplyButtonTitle($title = '')
     {
         if ($title) {
@@ -147,18 +104,10 @@ class ClipboardWidget extends SidebarWidget
         }
     }
 
-
-    public function getApplyButtonTitle()
-    {
-        return $this->apply_button_title;
-    }
-
-
     public function getClipboardWidgetId()
     {
         return $this->clipboard_widget_id;
     }
-
 
     public function render($variables = [])
     {
@@ -177,7 +126,6 @@ class ClipboardWidget extends SidebarWidget
             'allowed_item_classes'     => $this->allowed_item_classes,
             'clipboard_widget_id'      => $this->clipboard_widget_id,
             'draggable_items'          => $this->draggable_items,
-            'readonly'                 => $this->readonly,
             'apply_button_title'       => $this->apply_button_title,
             'elements'                 => $this->elements,
             'selected_clipboard_id'    => $this->current_clipboard_id,

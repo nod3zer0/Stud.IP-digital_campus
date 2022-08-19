@@ -14,8 +14,6 @@
                 <? endforeach ?>
             <? endif ?>
         </select>
-        <? if (!$readonly): ?>
-
             <input class="clipboard-name invisible" type="text" name="clipboard_name" value="">
             <?= Icon::create('edit')->asInput(
                 [
@@ -44,7 +42,6 @@
                     'data-confirm-message' => _('Sind Sie sicher?')
                 ]
             ) ?>
-        <? endif ?>
     </div>
     <div class="clipboard-area-container">
         <? if ($clipboards): ?>
@@ -74,7 +71,6 @@
                                     [
                                         'item' => $item,
                                         'draggable_items' => $draggable_items,
-                                        'readonly' => $readonly,
                                         'checkbox_id' => $checkbox_id
                                     ]
                                 ) ?>
@@ -98,17 +94,15 @@
                                             <?= htmlReady($item['name']) ?>
                                         </label>
                                     </td>
-                                    <? if (!$readonly): ?>
-                                        <td class="actions">
-                                        <?= Icon::create('trash')->asInput(
-                                            [
-                                                'title' => sprintf(_('%s löschen.'), htmlReady($item['name'])),
-                                                'data-confirm-message' => _('Sind Sie sicher?'),
-                                                'class' => 'text-bottom clipboard-item-remove-button'
-                                            ]
-                                        ) ?>
-                                        </td>
-                                    <? endif ?>
+                                    <td class="actions">
+                                    <?= Icon::create('trash')->asInput(
+                                        [
+                                            'title' => sprintf(_('%s löschen.'), htmlReady($item['name'])),
+                                            'data-confirm-message' => _('Sind Sie sicher?'),
+                                            'class' => 'text-bottom clipboard-item-remove-button'
+                                        ]
+                                    ) ?>
+                                    </td>
                                 </tr>
                             <? endif ?>
                         <? endforeach ?>
@@ -138,15 +132,13 @@
                                        value=""
                                        class="item-id">
                             </td>
-                            <? if (!$readonly): ?>
-                                <td class="item-actions">
-                                    <?= Icon::create('trash')->asInput(
-                                        [
-                                            'class' => 'text-bottom clipboard-item-remove-button'
-                                        ]
-                                    ) ?>
-                                </td>
-                            <? endif ?>
+                            <td class="item-actions">
+                                <?= Icon::create('trash')->asInput(
+                                    [
+                                        'class' => 'text-bottom clipboard-item-remove-button'
+                                    ]
+                                ) ?>
+                            </td>
                         </tr>
                     <? endif ?>
                 </table>
@@ -195,13 +187,4 @@
             <? endif ?>
         </table>
     </div>
-    <? if ($readonly): ?>
-        <?= \Studip\Button::create(
-            $apply_button_title,
-            'clipboard_update_session_special_action',
-            [
-                'class' => 'apply-button'
-            ]
-        ) ?>
-    <? endif ?>
 </form>
