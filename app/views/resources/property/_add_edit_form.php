@@ -40,7 +40,7 @@
 <label>
     <?= _('Mögliche Werte') ?>
     <input type="text" name="options" value="<?= htmlReady($options) ?>"
-        <?= $property->system ? 'readonly="readonly"' : '' ?>>
+        <?= $property->system && !$GLOBALS['perm']->have_perm('root') ? 'readonly="readonly"' : '' ?>>
 </label>
 <label>
     <?= _('Angezeigter Name') ?>
