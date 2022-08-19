@@ -454,8 +454,7 @@ class Resources_ExportController extends AuthenticatedController
                     [0, 2]
                 );
             } else {
-                $intervals = ResourceManager::getBookingIntervalsForResource(
-                    $this->resource,
+                $intervals = $this->resource->getResourceBookings(
                     $week_begin,
                     $week_end,
                     [0, 2]

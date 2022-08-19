@@ -2739,10 +2739,11 @@ class Resource extends SimpleORMap implements StudipItem
      *
      * @param DateTime $begin Begin of timeframe.
      * @param DateTime $end End of timeframe.
+     * @param array $booking_types
      *
      * @return ResourceBooking[] An array of ResourceBooking objects.
      */
-    public function getResourceBookings(DateTime $begin, DateTime $end)
+    public function getResourceBookings(DateTime $begin, DateTime $end, array $booking_types = [0])
     {
         return ResourceBooking::findByResourceAndTimeRanges(
             $this,
@@ -2752,7 +2753,7 @@ class Resource extends SimpleORMap implements StudipItem
                     'end' => $end->getTimestamp()
                 ]
             ],
-            [0]
+            $booking_types
         );
     }
 

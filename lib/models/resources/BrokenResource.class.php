@@ -38,17 +38,17 @@ class BrokenResource extends Resource
     {
         return null;
     }
-    
+
     public function setFolder(ResourceFolder $folder)
     {
         return false;
     }
-    
+
     public function createFolder()
     {
         return null;
     }
-    
+
     public function createSimpleBooking(
         User $user,
         DateTime $begin,
@@ -75,7 +75,7 @@ class BrokenResource extends Resource
     {
         return null;
     }
-    
+
     public function createBooking(
         User $user,
         $range_id = null,
@@ -91,7 +91,7 @@ class BrokenResource extends Resource
     ) {
         return null;
     }
-    
+
     public function createSimpleRequest(
         User $user,
         DateTime $begin,
@@ -114,7 +114,7 @@ class BrokenResource extends Resource
     {
         return null;
     }
-    
+
     public function createLock(
         User $user,
         DateTime $begin,
@@ -124,28 +124,28 @@ class BrokenResource extends Resource
     {
         return null;
     }
-    
+
     public function propertyExists($name = '')
     {
         //Resource labels don't have properties:
         return false;
     }
-    
+
     public function getPropertyObject(string $name = '')
     {
         return null;
     }
-    
+
     public function getProperty(string $name = '')
     {
         return null;
     }
-    
+
     public function getPropertyRelatedObject(string $name = '')
     {
         return null;
     }
-    
+
     public function setProperty(string $name = '', $state = '', $user_id = null)
     {
         return false;
@@ -155,7 +155,7 @@ class BrokenResource extends Resource
     {
         return false;
     }
-    
+
     public function setPropertyByDefinitionId(
         $property_definition_id = null,
         $state = null
@@ -163,22 +163,22 @@ class BrokenResource extends Resource
     {
         return false;
     }
-    
+
     public function setPropertyRelatedObject(string $name, SimpleORMap $object)
     {
         return false;
     }
-    
+
     public function getIcon($role = Icon::ROLE_INFO)
     {
         return Icon::create('resources-broken', $role);
     }
-    
+
     public function getPropertyArray($only_requestable_properties = false)
     {
         return [];
     }
-    
+
     public function isAssigned(
         DateTime $begin,
         DateTime $end,
@@ -196,7 +196,7 @@ class BrokenResource extends Resource
     {
         return false;
     }
-    
+
     public function isLocked(
         DateTime $begin,
         DateTime $end,
@@ -205,7 +205,7 @@ class BrokenResource extends Resource
     {
         return true;
     }
-    
+
     public function isAvailable(
         DateTime $begin,
         DateTime $end,
@@ -214,12 +214,12 @@ class BrokenResource extends Resource
     {
         return false;
     }
-    
+
     public function isAvailableForRequest(ResourceRequest $request)
     {
         return false;
     }
-    
+
     public function getFullName()
     {
         return sprintf('%1$s (%2$s)', $this->name, _('defekt'));
@@ -230,7 +230,7 @@ class BrokenResource extends Resource
         return [];
     }
 
-    public function getResourceBookings(DateTime $begin, DateTime $end)
+    public function getResourceBookings(DateTime $begin, DateTime $end, array $booking_types = [0])
     {
         return [];
     }
