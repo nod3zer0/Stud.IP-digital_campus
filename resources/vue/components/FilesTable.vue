@@ -130,7 +130,10 @@
                             <span v-html="highlightString(folder.name)"></span>
                         </a>
                     </td>
-                    <td class="responsive-hidden"></td>
+                    <td class="responsive-hidden" :data-sort-value="folder.object_count">
+                        <studip-folder-size v-if="folder.object_count"
+                                            :object_count="folder.object_count"></studip-folder-size>
+                    </td>
                     <td v-if="showdownloads"
                         class="responsive-hidden">
                     </td>

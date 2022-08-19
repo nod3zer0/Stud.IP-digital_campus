@@ -7,6 +7,7 @@ import StudipAssetImg from './components/StudipAssetImg.vue';
 import StudipDateTime from './components/StudipDateTime.vue';
 import StudipDialog from './components/StudipDialog.vue';
 import StudipFileSize from './components/StudipFileSize.vue';
+import StudipFolderSize from './components/StudipFolderSize.vue';
 import StudipIcon from './components/StudipIcon.vue';
 import RangeInput from './components/RangeInput.vue';
 import Datetimepicker from './components/Datetimepicker.vue';
@@ -31,6 +32,7 @@ const BaseComponents = {
     Datetimepicker,
     StudipDialog,
     StudipFileSize,
+    StudipFolderSize,
     StudipIcon,
     I18nTextarea,
 //    StudipLoadingIndicator,

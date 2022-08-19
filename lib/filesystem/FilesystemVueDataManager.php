@@ -133,6 +133,10 @@ class FilesystemVueDataManager
             'name' => $folder->name,
             'url' => URLHelper::getURL('dispatch.php/' . $controllerpath . '/' . $folder->getId()),
             'user_id' => $folder->user_id,
+            'object_count' => (Config::get()->SHOW_FOLDER_SIZE
+                ? count($folder->getFiles()) + count($folder->getSubfolders())
+                : 0
+            ),
             'author_name' => $folder->owner ? $folder->owner->getFullname('no_title_rev') : '',
             'author_url' => $folder->owner && $folder->owner->id !== $GLOBALS['user']->id? URLHelper::getURL('dispatch.php/profile', ['username' => $folder->owner->username]) : '',
             'chdate' => (int) $folder->chdate,
