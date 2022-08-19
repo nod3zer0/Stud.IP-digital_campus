@@ -667,34 +667,6 @@ class RoomManager
             }
         }
 
-        //sort $result array by building name and then by room name:
-        usort($result, function ($a, $b) {
-            if ($a->building->name > $b->building->name) {
-                return 1;
-            } elseif ($a->building->name < $b->building->name) {
-                return -1;
-            } else {
-                //building names are identical: compare room names:
-                if ($a->name > $b->name) {
-                    return 1;
-                } elseif ($a->name < $b->name) {
-                    return -1;
-                } else {
-                    //building names and room names are identical:
-                    //order by mkdate
-                    if ($a->mkdate > $b->mkdate) {
-                        return 1;
-                    } elseif ($a->mkdate < $b->mkdate) {
-                        return -1;
-                    } else {
-                        //Even the mkdate is equal?
-                        //Well then there is nothing else we can do here...
-                        return 0;
-                    }
-                }
-            }
-        });
-
         return $result;
     }
 
