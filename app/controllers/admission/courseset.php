@@ -518,7 +518,7 @@ class Admission_CoursesetController extends AuthenticatedController
             $hidden = Request::intArray('configure_courses_hidden');
             $ok = 0;
             foreach($this->courses as $course) {
-                if ($GLOBALS['perm']->have_studip_perm('admin', $course->id)) {
+                if ($GLOBALS['perm']->have_studip_perm(Config::get()->ALLOW_DOZENT_COURSESET_ADMIN ? 'dozent' : 'admin', $course->id)) {
                     $do_update_admission = $course->admission_turnout < $admission_turnouts[$course->id];
                     $course->admission_turnout = $admission_turnouts[$course->id];
                     $course->admission_disable_waitlist = isset($admission_waitlists[$course->id]) ? 0 : 1;
