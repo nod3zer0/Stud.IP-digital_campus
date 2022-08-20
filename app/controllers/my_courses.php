@@ -925,14 +925,14 @@ class MyCoursesController extends AuthenticatedController
 
         $export_widget = $sidebar->addWidget(new ExportWidget());
         $export_widget->addLink(
-            _('Veranstaltungsübersicht exportieren'),
+            _('Veranstaltungsübersicht'),
             $this->url_for('my_courses/courseexport', ['modules' => '1']),
-            Icon::create('file-pdf')
+            Icon::create('export')
         );
         $export_widget->addLink(
-            _('Veranstaltungsübersicht ohne Module exportieren'),
+            _('Veranstaltungsübersicht ohne Module'),
             $this->url_for('my_courses/courseexport'),
-            Icon::create('file-pdf')
+            Icon::create('export')
         );
     }
 
