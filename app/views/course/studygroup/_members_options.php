@@ -11,7 +11,8 @@
 <? endif ?>
 
 <? if ($m['user_id'] !== $GLOBALS['user']->id && $GLOBALS['perm']->have_studip_perm('dozent', $sem_id)): ?>
-    <a href="<?= $controller->link_for('course/studygroup/edit_members/remove', ['user' => $m['username']]) ?>" data-confirm="<?= _('Wollen Sie die Person wirklich rauswerfen?') ?>">
+    <a href="<?= $controller->link_for('course/studygroup/edit_members/remove', ['user' => $m['username']]) ?>"
+       data-confirm="<?= _('Möchten Sie die Person wirklich aus der Studiengruppe entfernen?') ?>">
         <?= Icon::create('trash')->asImg(['title' => _('Rauswerfen')])?>
     </a>
 <? endif; ?>
