@@ -87,7 +87,6 @@ class RoomClipboard extends \RESTAPI\RouteMap
 
         //Check if a clipboard is selected:
         $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
-        $selected_clipboard_item_ids = $_SESSION['selected_clipboard_items'];
 
         $rooms = [];
         if ($clipboard_id) {
@@ -98,21 +97,7 @@ class RoomClipboard extends \RESTAPI\RouteMap
             $this->halt(400, 'No clipboard selected!');
         }
         if ($clipboard) {
-            $room_ids = [];
-            if ($selected_clipboard_id && $selected_clipboard_item_ids) {
-                //The array of current clipboard item IDs is not empty.
-                //This means that at least one but not necessarily all
-                //clipboard items are selected.
-                $room_ids = $clipboard->getSomeRangeIds(
-                    'Room',
-                    $selected_clipboard_item_ids
-                );
-            } else {
-                //Use all items from the clipboard:
-                $room_ids = $clipboard->getAllRangeIds('Room');
-            }
-
-            $rooms = \Room::findMany($room_ids);
+            $rooms = \Room::findMany($clipboard->getAllRangeIds('Room'));
         } else {
             $this->halt(404, 'Clipboard not found!');
         }
@@ -200,7 +185,6 @@ class RoomClipboard extends \RESTAPI\RouteMap
 
         //Check if a clipboard is selected:
         $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
-        $selected_clipboard_item_ids = $_SESSION['selected_clipboard_items'];
 
         $rooms = [];
         if ($clipboard_id) {
@@ -211,21 +195,7 @@ class RoomClipboard extends \RESTAPI\RouteMap
             $this->halt(400, 'No clipboard selected!');
         }
         if ($clipboard) {
-            $room_ids = [];
-            if ($selected_clipboard_id && $selected_clipboard_item_ids) {
-                //The array of current clipboard item IDs is not empty.
-                //This means that at least one but not necessarily all
-                //clipboard items are selected.
-                $room_ids = $clipboard->getSomeRangeIds(
-                    'Room',
-                    $selected_clipboard_item_ids
-                );
-            } else {
-                //Use all items from the clipboard:
-                $room_ids = $clipboard->getAllRangeIds('Room');
-            }
-
-            $rooms = \Room::findMany($room_ids);
+            $rooms = \Room::findMany($clipboard->getAllRangeIds('Room'));
         } else {
             $this->halt(404, 'Clipboard not found!');
         }

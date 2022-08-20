@@ -30,26 +30,11 @@ if (!$item) {
 ?>
 <tr class="<?= htmlReady($classes) ?>"
     data-range_id="<?= htmlReady($item['range_id']) ?>">
-    <td>
-        <label>
-            <input type="checkbox"
-                   name="selected_clipboard_items[]"
-                   title="<?= _('Diesen Raum auswählen.') ?>"
-                   value="<?= htmlReady($item['id']) ?>"
-                   <?= in_array($item['id'], $selected_clipboard_items)
-                     ? 'checked="checked"'
-                     : (!$selected_clipboard_items
-                      ? 'checked="checked"'
-                      : ''
-                     ) ?>
-                   >
-            <?= htmlReady($item['name']) ?>
-        </label>
-    </td>
+    <td class="item-name"><?= htmlReady($item['name']) ?></td>
     <td class="actions">
         <a href="<?= Room::getLinkForAction('show', ($item ? $item['range_id'] : 'RANGE_ID')) ?>" data-dialog>
             <?= Icon::create(
-                    'info',
+                    'info-circle',
                     Icon::ROLE_CLICKABLE,
                     [
                         'title' => _('Rauminformationen'),

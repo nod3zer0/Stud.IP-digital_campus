@@ -884,7 +884,7 @@ STUDIP.domReady(function() {
         '.room-clipboard-group-action',
         function (event) {
             //Get the IDs of the rooms of the clipboard:
-            var active_clipboard = jQuery(event.target).parents("#clipboard-group-container").find(
+            let active_clipboard = jQuery(event.target).parents("#clipboard-group-container").find(
                 '.clipboard-area:not(.invisible)'
             )[0];
             if (!active_clipboard) {
@@ -892,41 +892,12 @@ STUDIP.domReady(function() {
                 return;
             }
 
-            var clipboard_id = jQuery(active_clipboard).data('id');
-            var action_needs_items = jQuery(event.target).data('needs_items');
-            var show_in_dialog = jQuery(event.target).data('show_in_dialog');
-            var ids = [];
-            if (action_needs_items) {
-                var items = jQuery(active_clipboard).find(
-                    'tr.clipboard-item:not(.clipboard-item-template)'
-                );
-
-                for (var item of items) {
-                    var input = jQuery(item).find("input[name='selected_clipboard_items[]']:checked")[0];
-                    if (input) {
-                        var id = jQuery(item).data('range_id');
-                        //Check if id is an md5 sum:
-                        if (id.match(/[0-9a-f]{32}/)) {
-                            ids.push(id);
-                        }
-                    }
-                }
-                if (ids.length == items.length) {
-                    //All items are selected. No need to use the Range-IDs, we
-                    //can use the clipboard-ID instead.
-                    action_needs_items = false;
-                }
-            }
-
-            var url_path = jQuery(event.target).attr('href');
+            let clipboard_id = jQuery(active_clipboard).data('id');
+            let show_in_dialog = jQuery(event.target).data('show_in_dialog');
+            let url_path = jQuery(event.target).attr('href');
             url_path = url_path.replace(/CLIPBOARD_ID/, clipboard_id);
 
-            var complete_url = STUDIP.URLHelper.getURL(
-                url_path,
-                (
-                    action_needs_items ? {'resource_ids': ids} : null
-                )
-            );
+            let complete_url = STUDIP.URLHelper.getURL(url_path);
 
             if (show_in_dialog) {
                 //If we have collected at least one ID we can create a dialog
@@ -934,7 +905,7 @@ STUDIP.domReady(function() {
                 STUDIP.Dialog.fromURL(
                     complete_url,
                     {
-                        size: 'normal'
+                        size: 'auto'
                     }
                 );
             } else {

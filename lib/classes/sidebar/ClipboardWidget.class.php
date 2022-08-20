@@ -11,7 +11,6 @@
 class ClipboardWidget extends SidebarWidget
 {
     protected $draggable_items;
-    protected $current_selected_items = [];
 
     /**
      * clipboard_widget_id is required in the case that multiple
@@ -71,10 +70,6 @@ class ClipboardWidget extends SidebarWidget
 
         $this->updateSessionVariables();
         $this->current_clipboard_id = $_SESSION['selected_clipboard_id'];
-        if (is_array($_SESSION['selected_clipboard_items'])) {
-            $this->current_selected_items = $_SESSION['selected_clipboard_items'];
-        }
-
         $this->setId("ClipboardWidget_{$this->clipboard_widget_id}");
         $this->setAdditionalAttribute('data-widget_id', $this->clipboard_widget_id);
         $this->addLayoutCSSClass('clipboard-widget');
@@ -88,12 +83,7 @@ class ClipboardWidget extends SidebarWidget
         if (Request::submitted('clipboard_update_session_special_action')) {
             CSRFProtection::verifyUnsafeRequest();
 
-            $_SESSION['selected_clipboard_id'] = Request::get(
-                'selected_clipboard_id'
-            );
-            $_SESSION['selected_clipboard_items'] = Request::getArray(
-                'selected_clipboard_items'
-            );
+            $_SESSION['selected_clipboard_id'] = Request::get('selected_clipboard_id');
         }
     }
 
@@ -117,7 +107,6 @@ class ClipboardWidget extends SidebarWidget
 
         if (!$this->current_clipboard_id && $clipboards) {
             $_SESSION['selected_clipboard_id'] = $clipboards[0]->id;
-            $_SESSION['selected_clipboard_items'] = [];
             $this->current_clipboard_id = $clipboards[0]->id;
         }
 
@@ -129,7 +118,6 @@ class ClipboardWidget extends SidebarWidget
             'apply_button_title'       => $this->apply_button_title,
             'elements'                 => $this->elements,
             'selected_clipboard_id'    => $this->current_clipboard_id,
-            'selected_clipboard_items' => $this->current_selected_items,
         ]);
     }
 

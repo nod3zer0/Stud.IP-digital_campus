@@ -79,21 +79,7 @@
                                                             ? 'draggable'
                                                             : '' ?>"
                                     data-range_id="<?= htmlReady($item['range_id']) ?>">
-                                    <td>
-                                        <label>
-                                            <input type="checkbox"
-                                                   name="selected_clipboard_items[]"
-                                                   title="<?= sprintf(_('%s auswählen.'), htmlReady($item['name'])) ?>"
-                                                   value="<?= htmlReady($item['id']) ?>"
-                                                   <?= in_array($item['id'], $selected_clipboard_items)
-                                                     ? 'checked="checked"'
-                                                     : (!$selected_clipboard_items
-                                                      ? 'checked="checked"'
-                                                      : '') ?>
-                                                   >
-                                            <?= htmlReady($item['name']) ?>
-                                        </label>
-                                    </td>
+                                    <td class="item-name"><?= htmlReady($item['name']) ?></td>
                                     <td class="actions">
                                     <?= Icon::create('trash')->asInput(
                                         [
@@ -126,12 +112,7 @@
                                                     : ''
                                                   ?> clipboard-item-template invisible"
                             data-range_id="">
-                            <td class="item-name">
-                                <input type="checkbox"
-                                       name="selected_clipboard_items[]"
-                                       value=""
-                                       class="item-id">
-                            </td>
+                            <td class="item-name"></td>
                             <td class="item-actions">
                                 <?= Icon::create('trash')->asInput(
                                     [
@@ -169,13 +150,7 @@
                                             : ''
                                           ?> clipboard-item-template invisible"
                     data-range_id="">
-                    <td>
-                        <input type="checkbox"
-                               name="selected_clipboard_items[]"
-                               title="<?= _('Diesen Eintrag auswählen.') ?>"
-                               value="">
-                        <label></label>
-                    </td>
+                    <td class="item-name"></td>
                     <td>
                         <?= Icon::create('trash')->asInput(
                             [

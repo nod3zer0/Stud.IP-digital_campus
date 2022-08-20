@@ -30,12 +30,11 @@ class RoomManagement_PlanningController extends AuthenticatedController
         if (Navigation::hasItem('/resources/planning/index')) {
             Navigation::activateItem('/resources/planning/index');
         }
-
+        $selected_clipboard_id = Request::get('clipboard_id', $selected_clipboard_id);
         if ($selected_clipboard_id) {
             $_SESSION['selected_clipboard_id'] = $selected_clipboard_id;
-            $this->redirect(
-                $this->url_for('room_management/planning/index', $_GET)
-            );
+        } else {
+            $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
         }
 
         $this->display_all_requests = Request::get('display_all_requests');
@@ -80,22 +79,23 @@ class RoomManagement_PlanningController extends AuthenticatedController
         $dpicker->addElement(new WidgetElement($picker_html));
         $sidebar->addWidget($dpicker);
 
-        //Add clipboard widget:
-        $clipboard_widget = new RoomClipboardWidget();
-        $clipboard_widget->setApplyButtonTitle(
-            _('Anzeigen')
-        );
-        $sidebar->addWidget($clipboard_widget);
-
-        //Check if a clipboard is selected:
-        $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
-        if (!$selected_clipboard_id) {
-            $clipboards = Clipboard::getClipboardsForUser($GLOBALS['user']->id);
-            if (!empty($clipboards)) {
-                $selected_clipboard_id = $clipboards[0]->id;
+        $clipboards = Clipboard::getClipboardsForUser($GLOBALS['user']->id);
+        if (!empty($clipboards)) {
+            $clipboard_widget = new SelectWidget(
+                _('Individuelle Raumgruppen'),
+                $this->indexURL(),
+                'clipboard_id',
+                'get'
+            );
+            foreach ($clipboards as $clipboard) {
+                $clipboard_widget->addElement(new SelectElement(
+                    $clipboard->id,
+                    $clipboard->name,
+                    $clipboard->id === $selected_clipboard_id
+                ), "clipboard_id-{$clipboard->id}");
             }
+            $sidebar->addWidget($clipboard_widget);
         }
-        $selected_clipboard_item_ids = $_SESSION['selected_clipboard_items'];
 
         $rooms = [];
         if ($selected_clipboard_id) {
@@ -105,19 +105,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
                 PageLayout::setTitle(
                     $clipboard->name . ': ' . _('Raumgruppen-Belegungsplan')
                 );
-                if ($selected_clipboard_item_ids) {
-                    //The array of current clipboard item IDs is not empty.
-                    //This means that at least one but not necessarily all
-                    //clipboard items are selected.
-                    $room_ids = $clipboard->getSomeRangeIds(
-                        'Room',
-                        $selected_clipboard_item_ids
-                    );
-                } else {
-                    //Use all items from the clipboard:
-                    $room_ids = $clipboard->getAllRangeIds('Room');
-                }
-
+                $room_ids = $clipboard->getAllRangeIds('Room');
                 $rooms = Room::findMany($room_ids);
             } else {
                 $this->no_clipboard = true;
@@ -270,11 +258,11 @@ class RoomManagement_PlanningController extends AuthenticatedController
             Navigation::activateItem('/resources/planning/semestergroup_plan');
         }
 
+        $selected_clipboard_id = Request::get('clipboard_id', $selected_clipboard_id);
         if ($selected_clipboard_id) {
             $_SESSION['selected_clipboard_id'] = $selected_clipboard_id;
-            $this->redirect(
-                $this->url_for('room_management/planning/semester_plan', $_GET)
-            );
+        } else {
+            $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
         }
 
         $this->display_all_requests = Request::get('display_all_requests');
@@ -379,17 +367,26 @@ class RoomManagement_PlanningController extends AuthenticatedController
         );
         $sidebar->addWidget($semester_selector);
 
-        //Add clipboard widget:
-        $clipboard_widget = new RoomClipboardWidget();
-        $clipboard_widget->setApplyButtonTitle(
-            _('Anzeigen')
-        );
-        $sidebar->addWidget($clipboard_widget);
+        $clipboards = Clipboard::getClipboardsForUser($GLOBALS['user']->id);
+        if (!empty($clipboards)) {
+            $clipboard_widget = new SelectWidget(
+                _('Individuelle Raumgruppen'),
+                $this->semester_planURL(),
+                'clipboard_id',
+                'get'
+            );
+            foreach ($clipboards as $clipboard) {
+                $clipboard_widget->addElement(new SelectElement(
+                    $clipboard->id,
+                    $clipboard->name,
+                    $clipboard->id === $selected_clipboard_id
+                ), "clipboard_id-{$clipboard->id}");
+            }
+            $sidebar->addWidget($clipboard_widget);
+        }
 
         //Check if a clipboard is selected:
         $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
-        $selected_clipboard_item_ids = $_SESSION['selected_clipboard_items'];
-
         $rooms = [];
         if ($selected_clipboard_id) {
             $clipboard = Clipboard::find($selected_clipboard_id);
@@ -398,19 +395,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
                 PageLayout::setTitle(
                     $clipboard->name . ': ' . _('Raumgruppen-Semester-Belegungsplan')
                 );
-                if ($selected_clipboard_item_ids) {
-                    //The array of current clipboard item IDs is not empty.
-                    //This means that at least one but not necessarily all
-                    //clipboard items are selected.
-                    $room_ids = $clipboard->getSomeRangeIds(
-                        'Room',
-                        $selected_clipboard_item_ids
-                    );
-                } else {
-                    //Use all items from the clipboard:
-                    $room_ids = $clipboard->getAllRangeIds('Room');
-                }
-
+                $room_ids = $clipboard->getAllRangeIds('Room');
                 $rooms = Room::findMany($room_ids);
             } else {
                 $this->no_clipboard = true;
@@ -555,7 +540,6 @@ class RoomManagement_PlanningController extends AuthenticatedController
 
         //Check if the clipboard is selected:
         $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
-        $selected_clipboard_item_ids = $_SESSION['selected_clipboard_items'];
 
         $user = User::findCurrent();
 
@@ -602,9 +586,6 @@ class RoomManagement_PlanningController extends AuthenticatedController
         }
 
         $this->selected_room_ids = [];
-        if ($selected_clipboard_id == $this->clipboard->id) {
-            $this->selected_room_ids = $selected_clipboard_item_ids;
-        }
 
         //Get all available semesters:
         $this->available_semesters = Semester::getAll();
@@ -1060,11 +1041,11 @@ class RoomManagement_PlanningController extends AuthenticatedController
             Navigation::activateItem('/resources/planning/booking_comments');
         }
 
+        $selected_clipboard_id = Request::get('clipboard_id', $selected_clipboard_id);
         if ($selected_clipboard_id) {
             $_SESSION['selected_clipboard_id'] = $selected_clipboard_id;
-            $this->redirect(
-                $this->url_for('room_management/planning/booking_comments', $_GET)
-            );
+        } else {
+            $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
         }
 
         //Get the selected date or use the current date, if none specified:
@@ -1099,20 +1080,23 @@ class RoomManagement_PlanningController extends AuthenticatedController
         $sidebar->addWidget($date_search);
 
         //Add clipboard widget:
-        $clipboard_widget = new RoomClipboardWidget();
-        $clipboard_widget->setApplyButtonTitle(
-            _('Anzeigen')
-        );
-        $sidebar->addWidget($clipboard_widget);
-
-        $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
-        if (!$selected_clipboard_id) {
-            $clipboards = Clipboard::getClipboardsForUser($GLOBALS['user']->id);
-            if (!empty($clipboards)) {
-                $selected_clipboard_id = $clipboards[0]->id;
+        $clipboards = Clipboard::getClipboardsForUser($GLOBALS['user']->id);
+        if (!empty($clipboards)) {
+            $clipboard_widget = new SelectWidget(
+                _('Individuelle Raumgruppen'),
+                $this->booking_commentsURL(),
+                'clipboard_id',
+                'get'
+            );
+            foreach ($clipboards as $clipboard) {
+                $clipboard_widget->addElement(new SelectElement(
+                    $clipboard->id,
+                    $clipboard->name,
+                    $clipboard->id === $selected_clipboard_id
+                ), "clipboard_id-{$clipboard->id}");
             }
+            $sidebar->addWidget($clipboard_widget);
         }
-        $selected_clipboard_item_ids = $_SESSION['selected_clipboard_items'];
 
         $this->current_user = User::findCurrent();
         $this->room_ids = [];
@@ -1123,26 +1107,12 @@ class RoomManagement_PlanningController extends AuthenticatedController
                 PageLayout::setTitle(
                     $clipboard->name . ': ' . _('Buchungen mit Kommentaren')
                 );
-                if ($selected_clipboard_item_ids) {
-                    //The array of current clipboard item IDs is not empty.
-                    //This means that at least one but not necessarily all
-                    //clipboard items are retrieved, checked for user
-                    //resource permissions and then added, if the user's
-                    //permissions are high enough.
-                    $room_ids = $clipboard->getSomeRangeIds(
-                        'Room',
-                        $selected_clipboard_item_ids
-                    );
-                } else {
-                    //Use all items from the clipboard:
-                    $room_ids = $clipboard->getAllRangeIds('Room');
-                }
-
+                $room_ids = $clipboard->getAllRangeIds('Room');
                 $rooms = Resource::findMany($room_ids);
                 foreach ($rooms as $room) {
                     $room = $room->getDerivedClassInstance();
                     if ($room instanceof Room) {
-                        if ($room->userHasPermission($this->current_user, 'user')) {
+                        if ($room->userHasPermission($this->current_user)) {
                             $this->room_ids[] = $room->id;
                         }
                     }

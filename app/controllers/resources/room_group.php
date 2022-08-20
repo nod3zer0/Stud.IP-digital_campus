@@ -144,27 +144,12 @@ class Resources_RoomGroupController extends AuthenticatedController
             $clipboard->name . ': ' . _('Berechtigungen setzen')
         );
 
-        $selected_clipboard_item_ids = $_SESSION['selected_clipboard_items'];
-
-        if ($selected_clipboard_item_ids) {
-            $this->room_ids = $clipboard->getSomeRangeIds(
-                'Room',
-                $selected_clipboard_item_ids
+        $this->room_ids = $clipboard->getAllRangeIds('Room');
+        if (!$this->room_ids) {
+            PageLayout::postInfo(
+                _('Die Raumgruppe enthält keine Räume!')
             );
-            if (!$this->room_ids) {
-                PageLayout::postError(
-                    _('Es wurden keine Räume ausgewählt!')
-                );
-                return;
-            }
-        } else {
-            $this->room_ids = $clipboard->getAllRangeIds('Room');
-            if (!$this->room_ids) {
-                PageLayout::postInfo(
-                    _('Die Raumgruppe enthält keine Räume!')
-                );
-                return;
-            }
+            return;
         }
 
         $this->rooms = Room::findMany($this->room_ids);
