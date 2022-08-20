@@ -49,8 +49,9 @@ class Course_RoomRequestsController extends AuthenticatedController
         $pagetitle .= _('Verwalten von Raumanfragen');
         PageLayout::setTitle($pagetitle);
 
-        $this->available_room_categories = ResourceCategory::findByClass_name('Room');
 
+        $this->available_room_categories = ResourceCategory::findByClass_name('Room');
+        $this->step = 0;
     }
 
     /**
@@ -273,7 +274,7 @@ class Course_RoomRequestsController extends AuthenticatedController
         $this->request = null;
         $this->request = RoomRequest::find(Request::get('request_id')) ? RoomRequest::find(Request::get('request_id')) :  new RoomRequest($this->request_id);
 
-        // TODO no idea why we need this and what it does
+        // time ranges (start date, end date)
         $this->request->setRangeFields('course', [Context::getId()]);
         $this->request_time_intervals = $this->request->getTimeIntervals();
 
@@ -285,25 +286,28 @@ class Course_RoomRequestsController extends AuthenticatedController
     public function request_first_step_action($request_id)
     {
         $this->request_id = $request_id;
+        $this->step = 1;
 
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
+
             // either search by room (name) or room category, then go to next step
             $this->room_name = Request::get('room_name');
+            $_SESSION[$request_id]['room_name'] = $this->room_name;
             $this->search_by_roomname = Request::submitted('search_by_name');
             $this->category_id = Request::get('category_id');
+            $_SESSION[$request_id]['room_category'] = $this->category_id;
             $this->search_by_category = Request::submitted('search_by_category');
+            // TODO do we need to delete one of these after step 0?
 
             // user looks for a special room OR for room within a selected category
             if ($this->room_name != null && $this->search_by_roomname != null) {
-                $_SESSION[$request_id]['room_name'] = $this->room_name;
                 $this->redirect(
-                    'course/room_requests/find_by_roomname/' . $this->request_id
+                    'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
                 );
             } else if ($this->category_id != null && $this->search_by_category != null ) {
-                $_SESSION[$request_id]['room_category'] = $this->category_id;
                 $this->redirect(
-                    'course/room_requests/find_by_category/' . $this->request_id
+                    'course/room_requests/find_by_category/' . $this->request_id . '/' . $this->step
                 );
             } else {
                 $this->redirect(
@@ -314,10 +318,12 @@ class Course_RoomRequestsController extends AuthenticatedController
 
     }
 
-    public function find_by_roomname_action($request_id)
+    public function find_by_roomname_action($request_id, $step)
     {
         $this->request_id = $request_id;
+        $this->step = $step;
         $this->room_name = $_SESSION[$request_id]['room_name'];
+
         $this->available_rooms = RoomManager::findRooms(
             $this->room_name,
             null,
@@ -329,20 +335,46 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         // small icons before room name to show whether they are bookable or not
         $this->available_room_icons = $this->getRoomBookingIcons($this->available_rooms, $this->request_id);
+        $this->selected_room = Resource::find($_SESSION[$request_id]['room_id']);
 
+        // after selecting a room, go to next step
+        if ((Request::submitted('request_second_step'))) {
+            $this->selected_room_id = Request::get('selected_room_id');
+            $_SESSION[$request_id]['room_id'] = $this->selected_room_id;
+
+            $this->redirect(
+                'course/room_requests/request_second_step/' . $this->request_id
+            );
+
+        }
 
     }
 
-    public function find_by_category_action($request_id)
+    public function find_by_category_action($request_id, $step)
     {
         $this->request_id = $request_id;
+        $this->step = $step;
+
         $this->room_category_id = $_SESSION[$request_id]['room_category'];
+
         $this->category = ResourceCategory::find($this->room_category_id);
 
         $this->request = RoomRequest::find($this->request_id) ? RoomRequest::find($this->request_id) :  new RoomRequest($this->request_id);
 
         RoomManager::findRoomsByRequest($this->request);
         $this->available_properties = $this->category->getRequestableProperties();
+
+    }
+
+    public function request_second_step_action($request_id)
+    {
+        $this->request_id = $request_id;
+        $this->step = 2;
+        //$this->selected_room = Resource::find($_SESSION[$request_id]['room_id']);
+
+        $this->redirect(
+            'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
+        );
 
     }
 

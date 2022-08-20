@@ -4,20 +4,13 @@
             _('Zurück'),
             $controller->link_for('course/room_requests/new_request/' . $request_id),
             [
-                'step' => $step,
                 'data-dialog' => 'size=big'
             ]
 
         ) ?>
-        <?= \Studip\LinkButton::create(
-            _('Raum auswählen und weiter'),
-            $controller->link_for('course/room_requests/new_request/' . $request_id),
-            [
-                'step' => $step +1,
-                'data-dialog' => 'size=auto'
-            ]
 
-        ) ?>
+        <?= \Studip\Button::create(_('Raum auswählen und weiter'), 'request_second_step') ?>
+
     <? endif ?>
 
     <?= \Studip\LinkButton::createCancel(

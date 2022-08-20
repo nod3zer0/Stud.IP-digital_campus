@@ -8,7 +8,7 @@
 <?= $this->render_partial(
     'course/room_requests/_new_request_header') ?>
 
-Request ID: <?= $request_id ?>
+<?= var_dump($_SESSION[$request_id]) ?>
     <br/>
     <section class="resources-grid">
     <div>
@@ -23,7 +23,7 @@ Request ID: <?= $request_id ?>
                         <option value=""><?= _('bitte auswählen') ?></option>
                         <? foreach ($available_room_categories as $rc): ?>
                             <option value="<?= htmlReady($rc->id) ?>"
-                                    <?= ($category_id == $rc->id)
+                                    <?= ($_SESSION[$request_id]['room_category'] == $rc->id)
                                         ? 'selected="selected"'
                                         : '' ?>>
                         <?= htmlReady($rc->name) ?>
@@ -88,5 +88,5 @@ Request ID: <?= $request_id ?>
 
     </div>
 </section>
-<?= $this->render_partial('course/room_requests/_new_request_form_footer', ['step' => 0]) ?>
+<?= $this->render_partial('course/room_requests/_new_request_form_footer', ['step' => $step]) ?>
 <? endif ?>

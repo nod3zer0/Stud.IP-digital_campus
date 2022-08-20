@@ -1,5 +1,5 @@
 <form method="post" name="room_request" class="default"
-      action="<?= $this->controller->link_for('course/room_requests/request_first_step/' . $request_id) ?>"
+      action="<?= $this->controller->link_for('course/room_requests/request_second_step/' . $request_id . '/' . $this->step) ?>"
     <?= Request::isXhr() ? 'data-dialog="size=big"' : ''?>>
     <input type="hidden" name="request_id" value="<?= htmlReady($request_id) ?>">
     <?= CSRFProtection::tokenTag() ?>
@@ -125,4 +125,4 @@
     </section>
 
 
-<?= $this->render_partial('course/room_requests/_new_request_form_footer', ['step' => 1]) ?>
+<?= $this->render_partial('course/room_requests/_new_request_form_footer', ['step' => $step]) ?>
