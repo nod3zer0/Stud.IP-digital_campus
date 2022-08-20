@@ -203,7 +203,7 @@ class Course_MembersController extends AuthenticatedController
         $results = SimpleCollection::createFromArray($members)->pluck('email');
 
         if (!empty($results)) {
-            return sprintf('<a href="mailto:%s">%s</a>', htmlReady(join(',', $results)), Icon::create('mail+move_right', 'clickable', ['title' => sprintf('E-Mail an alle %s versenden',$textStatus)])->asImg(16));
+            return sprintf('<a href="mailto:%s">%s</a>', htmlReady(join(',', $results)), Icon::create('mail', 'clickable', ['title' => sprintf('E-Mail an alle %s versenden',$textStatus)])->asImg(16));
         } else {
             return null;
         }
@@ -1426,7 +1426,7 @@ class Course_MembersController extends AuthenticatedController
                     'course_id' => $this->course_id,
                     'default_subject' => $this->subject
                 ]),
-                Icon::create('inbox')
+                Icon::create('mail')
             )->asDialog('size=auto');
         }
         if ($this->is_tutor) {
@@ -1497,7 +1497,7 @@ class Course_MembersController extends AuthenticatedController
                             $membersOfInstitute)
                         ->setNavigationItem('/course/members/view')
                         ->render();
-                    $element = LinkElement::fromHTML($mp, Icon::create('community+add'));
+                    $element = LinkElement::fromHTML($mp, Icon::create('add'));
                     $widget->addElement($element);
                 }
                 if (!$this->tutor_is_locked) {
@@ -1553,7 +1553,7 @@ class Course_MembersController extends AuthenticatedController
                             $membersOfInstitute)
                         ->setNavigationItem('/course/members/view')
                         ->render();
-                    $element = LinkElement::fromHTML($mp, Icon::create('community+add'));
+                    $element = LinkElement::fromHTML($mp, Icon::create('add'));
                     $widget->addElement($element);
                 }
             }
@@ -1617,7 +1617,7 @@ class Course_MembersController extends AuthenticatedController
                     ->render();
                 $widget->addElement(LinkElement::fromHTML(
                     $mp,
-                    Icon::create('community+add')
+                    Icon::create('add')
                 ));
 
                 // add "add person to waitlist" to sidebar
@@ -1644,13 +1644,13 @@ class Course_MembersController extends AuthenticatedController
                         ->addQuickfilter(_('Mitglieder der Einrichtung'), $membersOfInstitute)
                         ->setNavigationItem('/course/members/view')
                         ->render();
-                    $element = LinkElement::fromHTML($mp, Icon::create('community+add'));
+                    $element = LinkElement::fromHTML($mp, Icon::create('add'));
                     $widget->addElement($element);
                 }
                 $widget->addLink(
                     _('Teilnehmendenliste importieren'),
                     $this->url_for('course/members/import_autorlist'),
-                    Icon::create('community+add'),
+                    Icon::create('persons'),
                     ['data-dialog' => 1]
                 );
             }
@@ -1671,7 +1671,7 @@ class Course_MembersController extends AuthenticatedController
                 );
                 $widget->addLinkFromHTML(
                     $csvExport,
-                    Icon::create('file-office')
+                    Icon::create('export')
                 );
 
                 // create csv-export link
@@ -1687,7 +1687,7 @@ class Course_MembersController extends AuthenticatedController
                 );
                 $widget->addLinkFromHTML(
                     $rtfExport,
-                    Icon::create('file-text')
+                    Icon::create('export')
                 );
 
                 if (count($this->awaiting) > 0) {
@@ -1703,7 +1703,7 @@ class Course_MembersController extends AuthenticatedController
                     );
                     $widget->addLinkFromHTML(
                         $awaiting_rtf,
-                        Icon::create('file-office+export')
+                        Icon::create('export')
                     );
 
                     $awaiting_csv = export_link(
@@ -1718,7 +1718,7 @@ class Course_MembersController extends AuthenticatedController
                     );
                     $widget->addLinkFromHTML(
                         $awaiting_csv,
-                        Icon::create('file-text+export')
+                        Icon::create('export')
                     );
                 }
             }

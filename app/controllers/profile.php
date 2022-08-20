@@ -279,14 +279,14 @@ class ProfileController extends AuthenticatedController
                 $actions->addLink(
                     _('Zu den Kontakten hinzufügen'),
                     $this->url_for('profile/add_buddy?username=' . $this->current_user->username),
-                    Icon::create('person+add', Icon::ROLE_CLICKABLE, tooltip2(_('Zu den Kontakten hinzufügen'))),
+                    Icon::create('add', Icon::ROLE_CLICKABLE, tooltip2(_('Zu den Kontakten hinzufügen'))),
                     ['data-confirm' => _('Wollen Sie die Person wirklich als Kontakt hinzufügen?')]
                 )->asButton();
             } else {
                 $actions->addLink(
                     _('Von den Kontakten entfernen'),
                     $this->url_for('profile/remove_buddy', ['username' => $this->current_user->username]),
-                    Icon::create('person+remove', Icon::ROLE_CLICKABLE, tooltip2(_('Zu den Kontakten hinzufügen'))),
+                    Icon::create('trash', Icon::ROLE_CLICKABLE, tooltip2(_('Zu den Kontakten hinzufügen'))),
                     ['data-confirm' => _('Wollen Sie die Person wirklich von den Kontakten entfernen?')]
                 )->asButton();
             }

@@ -49,7 +49,7 @@ class Course_FeedbackController extends AuthenticatedController
                 $widget->addLink(
                     _('Neues Feedback-Element'),
                     $this->url_for('course/feedback/create_form'),
-                    Icon::create('star+add')
+                    Icon::create('star')
                 )->asDialog();
             }
         }

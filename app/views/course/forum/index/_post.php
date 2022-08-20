@@ -257,7 +257,7 @@
 
         <? if ($is_new): ?>
         <span class="new_posting">
-            <?= Icon::create('forum+new', 'attention', ['title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")])->asImg(16) ?>
+            <?= Icon::create('forum', 'attention', ['title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")])->asImg(16) ?>
         </span>
         <? endif ?>
     </span>

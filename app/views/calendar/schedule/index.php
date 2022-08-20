@@ -17,7 +17,7 @@ if (!$inst_mode) {
     $actions->addLink(
         _('Neuer Eintrag'),
         $controller->url_for('calendar/schedule/entry'),
-        Icon::create('date+add'),
+        Icon::create('add'),
         ['data-dialog' => 'size=auto']
     );
 }

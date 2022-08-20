@@ -56,18 +56,15 @@ class Admin_PluginController extends AuthenticatedController
         $views = Sidebar::get()->addWidget(new ViewsWidget());
         $views->addLink(
             _('Pluginverwaltung'),
-            $this->indexURL(),
-            Icon::create('plugin')
+            $this->indexURL()
         )->setActive($action === 'index');
         $views->addLink(
             _('Weitere Plugins installieren'),
-            $this->searchURL(),
-            Icon::create('search')
+            $this->searchURL()
         )->setActive($action === 'search');
         $views->addLink(
             _('Vorhandene Plugins registrieren'),
-            $this->unregisteredURL(),
-            Icon::create('plugin+add')
+            $this->unregisteredURL()
         )->setActive($action === 'unregistered');
     }
 

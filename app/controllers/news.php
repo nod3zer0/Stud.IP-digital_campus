@@ -582,7 +582,7 @@ class NewsController extends StudipController
         $widget->addLink(
             _('Ankündigung erstellen'),
             $this->url_for('news/edit_news/new'),
-            Icon::create('news+add'),
+            Icon::create('add'),
             ['target' => '_blank']
         )->asDialog();
         $this->sidebar->addWidget($widget);

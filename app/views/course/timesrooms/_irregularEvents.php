@@ -18,14 +18,14 @@ $room_request_filter = function ($date) {
             <? $actionMenu->addLink(
                 $controller->url_for('course/timesrooms/createSingleDate/' . $course->id, $linkAttributes),
                 _('Einzeltermin hinzufügen'),
-                Icon::create('date+add', Icon::ROLE_CLICKABLE, ['title' => _('Einzeltermin hinzufügen')]),
+                Icon::create('date', Icon::ROLE_CLICKABLE, ['title' => _('Einzeltermin hinzufügen')]),
                 ['data-dialog' => 'size=600']
             ) ?>
 
             <? $actionMenu->addLink(
                 $controller->url_for('course/block_appointments/index/' . $course->id, $linkAttributes),
                 _('Blocktermin hinzufügen'),
-                Icon::create('timetable+add', Icon::ROLE_CLICKABLE, ['title' => _('Blocktermin hinzufügen')]),
+                Icon::create('date-block', Icon::ROLE_CLICKABLE, ['title' => _('Blocktermin hinzufügen')]),
                 ['data-dialog' => 'size=600']
             ) ?>
             <?= $actionMenu->render() ?>

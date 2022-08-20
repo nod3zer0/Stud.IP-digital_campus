@@ -614,7 +614,7 @@ class Materialien_FilesController extends MVVController
             $widget->addLink(
                 _('Neues Dokument anlegen'),
                 $this->url_for('/new_dokument'),
-                Icon::create('file+add')
+                Icon::create('add')
             )->asDialog('size=auto');
         }
         $sidebar->addWidget($widget);

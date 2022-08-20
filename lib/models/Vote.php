@@ -7,7 +7,7 @@ class Vote extends QuestionnaireQuestion implements QuestionType
 {
     public static function getIcon($active = false, $add = false)
     {
-        return Icon::create($add ?  'vote+add' : 'vote', $active ? 'clickable' : 'info');
+        return Icon::create('vote', $active ? 'clickable' : 'info');
     }
 
     public static function getName()

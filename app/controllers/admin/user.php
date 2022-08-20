@@ -1528,18 +1528,18 @@ class Admin_UserController extends AuthenticatedController
             $actions->addLink(
                 _('Neues Konto anlegen'),
                 $this->url_for('admin/user/new'),
-                Icon::create('person+add')
+                Icon::create('add')
             )->asDialog();
         }
         $actions->addLink(
             _('Vorläufiges Konto anlegen'),
             $this->url_for('admin/user/new/prelim'),
-            Icon::create('date+add')
+            Icon::create('add')
         )->asDialog();
         $actions->addLink(
             _('Konten zusammenführen'),
             $this->url_for('admin/user/migrate/' . (($this->user && is_array($this->user)) ? $this->user['user_id'] : '')),
-            Icon::create('persons+new')
+            Icon::create('community')
         );
 
         $search = $sidebar->addWidget(new SearchWidget());
@@ -1554,7 +1554,7 @@ class Admin_UserController extends AuthenticatedController
             $export = $sidebar->addWidget(new ExportWidget());
             $export->addLink(_('Suchergebnis exportieren'),
                 $this->url_for('admin/user?export=1'),
-                Icon::create('persons+move_right')
+                Icon::create('export')
             );
         }
 

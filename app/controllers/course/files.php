@@ -73,7 +73,7 @@ class Course_FilesController extends AuthenticatedController
             $actions->addLink(
                 _('Neuer Ordner'),
                 URLHelper::getUrl('dispatch.php/file/new_folder/' . $this->topFolder->getId()),
-                Icon::create('folder-empty+add', 'clickable')
+                Icon::create('folder-empty', 'clickable')
             )->asDialog();
 
         }
@@ -81,7 +81,7 @@ class Course_FilesController extends AuthenticatedController
             $actions->addLink(
                 _('Dokument hinzufügen'),
                 '#',
-                Icon::create('file+add', 'clickable'),
+                Icon::create('add', 'clickable'),
                 ['onclick' => "STUDIP.Files.openAddFilesWindow(); return false;"]
             );
         }
@@ -89,7 +89,7 @@ class Course_FilesController extends AuthenticatedController
             $actions->addLink(
                 _('Neues Feedback-Element'),
                 $this->url_for('course/feedback/create_form/' . $this->topFolder->getId() . '/Folder'),
-                Icon::create('star+add')
+                Icon::create('star')
             )->asDialog();
 
         }

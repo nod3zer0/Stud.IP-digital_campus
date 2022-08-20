@@ -180,7 +180,7 @@ class Fachabschluss_AbschluesseController extends MVVController
             $widget->addLink(
                 _('Neuen Abschluss anlegen'),
                 $this->url_for('/abschluss'),
-                    Icon::create('file')
+                    Icon::create('add')
             );
             $sidebar->addWidget($widget);
         }

@@ -37,7 +37,7 @@
                         <? $actionMenu->addLink(
                             $controller->url_for('/abschnitt', ['version_id' => $version->id]),
                             _('Studiengangteil-Abschnitt anlegen'),
-                            Icon::create('file+add', Icon::ROLE_CLICKABLE, ['title' => _('Studiengangteil-Abschnitt anlegen')]),
+                            Icon::create('file', Icon::ROLE_CLICKABLE, ['title' => _('Studiengangteil-Abschnitt anlegen')]),
                             ['data-dialog' => true])
                         ?>
                     <? endif; ?>

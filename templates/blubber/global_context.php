@@ -8,7 +8,7 @@
        class="followunfollow<?= $unfollowed ? " unfollowed" : "" ?>"
        title="<?= _("Benachrichtigungen für diese Konversation abstellen.") ?>"
        data-thread_id="global">
-        <?= Icon::create("notification2+remove")->asImg(20, ['class' => "follow text-bottom"]) ?>
+        <?= Icon::create("decline")->asImg(20, ['class' => "follow text-bottom"]) ?>
         <?= Icon::create("notification2")->asImg(20, ['class' => "unfollow text-bottom"]) ?>
         <?= _("Benachrichtigungen aktiviert") ?>
     </a>

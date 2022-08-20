@@ -38,13 +38,13 @@
             <? $actionMenu->addLink(
                 $controller->url_for('online/buddy/remove?username=' . $user['username']),
                 _('Aus den Kontakten entfernen'),
-                Icon::create('person+remove', 'clickable')
+                Icon::create('trash', 'clickable')
             ) ?>
         <? else: ?>
             <? $actionMenu->addLink(
                 $controller->url_for('online/buddy/add?username=' . $user['username']),
                 _('Zu den Kontakten hinzufügen'),
-                Icon::create('person+add', 'clickable')
+                Icon::create('add', 'clickable')
             ) ?>
         <? endif; ?>
         <?= $actionMenu->render() ?>

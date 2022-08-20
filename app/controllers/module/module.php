@@ -1317,7 +1317,7 @@ class Module_ModuleController extends MVVController
             $widget->addLink(
                 _('Neues Modul anlegen'),
                 $this->url_for('/modul'),
-                Icon::create('file+add')
+                Icon::create('add')
             );
         }
         $sidebar->addWidget($widget, 'actions');

@@ -133,7 +133,7 @@ class Course_GroupingController extends AuthenticatedController
             $actions->addLink(
                 _('Unterveranstaltungen anlegen'),
                 $this->url_for('course/grouping/create_children'),
-                Icon::create('seminar+add', 'clickable')
+                Icon::create('add', 'clickable')
             )->asDialog('size=auto');
             $sidebar->addWidget($actions);
         }

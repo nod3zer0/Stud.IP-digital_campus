@@ -221,7 +221,7 @@ class ContactController extends AuthenticatedController
         $actions->addLink(
             _('Neue Gruppe anlegen'),
             $this->url_for('contact/editGroup'),
-            Icon::create('group3+add')
+            Icon::create('group3')
         )->asDialog('size=auto');
         $actions->addLink(
             _('Nachricht an alle'),

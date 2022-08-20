@@ -1446,7 +1446,7 @@ class Resources_ResourceController extends AuthenticatedController
             $actions->addLink(
                 _('Dokument hinzufügen'),
                 '#',
-                Icon::create('file+add'),
+                Icon::create('file'),
                 [
                     'onclick' => 'STUDIP.Files.openAddFilesWindow(); return false;'
                 ]

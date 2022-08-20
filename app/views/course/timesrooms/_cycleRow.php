@@ -116,7 +116,7 @@ $is_exTermin = $termin instanceof CourseExDate;
         <? $actionMenu->addButton(
             'delete_part',
             _('Termin wiederherstellen'),
-            Icon::create('trash+decline', Icon::ROLE_CLICKABLE, $params)
+            Icon::create('refresh', Icon::ROLE_CLICKABLE, $params)
         ) ?>
 
     <? elseif (!$locked) : ?>

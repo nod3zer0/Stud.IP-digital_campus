@@ -66,7 +66,7 @@ class Course_ManagementController extends AuthenticatedController
                     $actions->addLink(
                         _('Veranstaltung kopieren'),
                         URLHelper::getURL($this->url_for('course/wizard/copy/'.$course->id), ['studip_ticket' => Seminar_Session::get_ticket()]),
-                        Icon::create('seminar+add')
+                        Icon::create('seminar')
                     );
                 }
 
@@ -74,7 +74,7 @@ class Course_ManagementController extends AuthenticatedController
                     $actions->addLink(
                         _('Veranstaltung löschen'),
                         URLHelper::getURL( $this->url_for('course/archive/confirm'), ['studip_ticket' => Seminar_Session::get_ticket()]),
-                        Icon::create('seminar+remove')
+                        Icon::create('trash')
                     )->asDialog('size=auto');
                 }
 

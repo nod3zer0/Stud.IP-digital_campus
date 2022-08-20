@@ -31,7 +31,7 @@ class ActivityFeed extends CorePlugin implements PortalPlugin
         $icons[] = $navigation;
 
         $navigation = new Navigation('', '#', ['cid' => null]);
-        $navigation->setImage(Icon::create('headache+visibility-visible', 'clickable'));
+        $navigation->setImage(Icon::create('person-online', 'clickable'));
         $navigation->setLinkAttributes([
             'id'    => 'toggle-user-activities',
             'title' => _('Eigene Aktivitäten ein-/ausblenden'),

@@ -58,7 +58,7 @@ if ($coursesets) {
                     </a>
                     <? if ($courseset->isUserAllowedToEdit($GLOBALS['user']->id)) : ?>
                     <a href="<?= $controller->link_for('admission/courseset/copy/'.$courseset->getId()); ?>">
-                            <?= Icon::create('edit+add', 'clickable', ['title' => _('Anmeldeset kopieren')])->asImg(16, ["alt" => _('Anmeldeset kopieren')]); ?>
+                            <?= Icon::create('clipboard', 'clickable', ['title' => _('Anmeldeset kopieren')])->asImg(16, ["alt" => _('Anmeldeset kopieren')]); ?>
                         </a>
                     <a href="<?= $controller->link_for('admission/courseset/configure/'.$courseset->getId()); ?>">
                             <?= Icon::create('edit')->asImg(['title' => _('Anmeldeset bearbeiten')]) ?>

@@ -80,7 +80,7 @@
                         <? $actionMenu->addLink(
                             $controller->url_for('/modulteil', ['modul_id' => $modul->id]),
                             _('Modulteil anlegen'),
-                            Icon::create('file+add', Icon::ROLE_CLICKABLE,['title' => _('Modulteil anlegen')])
+                            Icon::create('add', Icon::ROLE_CLICKABLE,['title' => _('Modulteil anlegen')])
                         ) ?>
                     <? endif; ?>
                     <? if ($perm->havePermWrite()) : ?>

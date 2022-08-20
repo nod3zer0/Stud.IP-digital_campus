@@ -577,7 +577,7 @@
                                 <?= $interval->takes_place ? ' invisible' : ''; ?>
                                 "
                                            data-interval_id="<?= htmlReady($interval->id) ?>">
-                                            <?= Icon::create('trash+decline')->asImg(
+                                            <?= Icon::create('refresh')->asImg(
                                                 [
                                                     'class' => 'text-bottom',
                                                     'title' => _('wiederherstellen')

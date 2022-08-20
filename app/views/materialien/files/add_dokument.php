@@ -37,7 +37,7 @@
             <td>
                 <div class="attachments" style="<?= (!$documents || !key_exists($key, $documents))  ? '' : 'display: none;'?>">
                     <span style="cursor:pointer;" onClick="$('#fileselector_<?= $key; ?>').toggle();$(this).toggle();">
-                        <?= Icon::create('file+add', Icon::ROLE_CLICKABLE, ['title' => _("Datei hinzufügen"), 'class' => 'text-bottom']); ?>
+                        <?= Icon::create('add', Icon::ROLE_CLICKABLE, ['title' => _("Datei hinzufügen"), 'class' => 'text-bottom']); ?>
                         <?= _("Datei hinzufügen") ?>
                     </span>
                     <div id="fileselector_<?= $key; ?>" style="display:none;">

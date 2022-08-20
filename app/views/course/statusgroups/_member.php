@@ -52,7 +52,7 @@
                 $actions->addLink(
             $controller->url_for('course/statusgroups/move_member', $m->user_id, $group->id),
             _('In eine andere Gruppe verschieben'),
-            Icon::create('person+move_right', 'clickable', [
+            Icon::create('arr_1right', 'clickable', [
                 'title' => sprintf(
                     _('%s in eine andere Gruppe verschieben'),
                             $user_fullname

@@ -32,7 +32,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
     {
 
         $actions = new ActionsWidget();
-        $actions->addLink(_("Export"), $this->url_for('admission/restricted_courses', ['csv' => 1]), Icon::create('file-excel+export', 'clickable'));
+        $actions->addLink(_("Export"), $this->url_for('admission/restricted_courses', ['csv' => 1]), Icon::create('export', 'clickable'));
         Sidebar::get()->addWidget($actions);
 
         $sem_condition = "";

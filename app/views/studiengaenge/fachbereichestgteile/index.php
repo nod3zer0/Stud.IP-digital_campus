@@ -23,7 +23,7 @@
                     <td class="actions dont-hide" style="white-space: nowrap;">
                         <? if (MvvPerm::havePermCreate('StudiengangTeil')) : ?>
                             <a href="<?= $controller->url_for('/stgteil_fachbereich/' . $fachbereich['institut_id']) ?>">
-                                <?= Icon::create('file+add', Icon::ROLE_CLICKABLE , ['title' => _('Neuen Studiengangteil in diesem Fachbereich anlegen')])->asImg(); ?>
+                                <?= Icon::create('file', Icon::ROLE_CLICKABLE , ['title' => _('Neuen Studiengangteil in diesem Fachbereich anlegen')])->asImg(); ?>
                             </a>
                         <? endif; ?>
                     </td>

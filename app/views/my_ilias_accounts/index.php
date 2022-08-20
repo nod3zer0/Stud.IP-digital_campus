@@ -55,7 +55,7 @@
                     <? if ($module->isAllowed('edit')) $actionMenu->addButton(
                             'edit',
                             _('In ILIAS bearbeiten'),
-                            Icon::create('learnmodule+edit', Icon::ROLE_CLICKABLE, [
+                            Icon::create('edit', Icon::ROLE_CLICKABLE, [
                                 'title'        => _('In ILIAS bearbeiten'),
                                 'formaction'   => $controller->url_for($module->getRoute('edit')),
                                 'formtarget'       => '_blank',
@@ -111,7 +111,7 @@
                     <? if ($ilias->ilias_config['allow_change_account'] && ($ilias->user->getUserType() === IliasUser::USER_TYPE_CREATED)) $actionMenu->addButton(
                             'new_account',
                             _('Account neu zuordnen'),
-                            Icon::create('person+new', Icon::ROLE_CLICKABLE, [
+                            Icon::create('person', Icon::ROLE_CLICKABLE, [
                                 'title'        => _('Account neu zuordnen'),
                                 'formaction'   => $controller->url_for('my_ilias_accounts/new_account/'.$ilias_index),
                                 'data-confirm' =>
@@ -124,7 +124,7 @@
                     <? if ($ilias->ilias_config['allow_change_account'] && ($ilias->user->getUserType() === IliasUser::USER_TYPE_ORIGINAL)) $actionMenu->addButton(
                             'change_account',
                             _('Account-Zuordnung aufheben'),
-                            Icon::create('person+remove', Icon::ROLE_CLICKABLE, [
+                            Icon::create('trash', Icon::ROLE_CLICKABLE, [
                                 'title'        => _('Account-Zuordnung aufheben'),
                                 'formaction'   => $controller->url_for('my_ilias_accounts/change_account/'.$ilias_index.'/remove'),
                                 'data-confirm' =>
@@ -136,7 +136,7 @@
                     <? if ($ilias->user->getUserType() === IliasUser::USER_TYPE_CREATED) $actionMenu->addButton(
                             'update_account',
                             _('Account aktualisieren'),
-                            Icon::create('person+refresh', Icon::ROLE_CLICKABLE, [
+                            Icon::create('refresh', Icon::ROLE_CLICKABLE, [
                                 'title'        => _('Account aktualisieren'),
                                 'formaction'   => $controller->url_for('my_ilias_accounts/change_account/'.$ilias_index.'/update')
                             ])

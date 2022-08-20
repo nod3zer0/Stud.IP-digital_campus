@@ -82,7 +82,7 @@
                                     Icon::create('vcard')) ?>
                                 <?= $actionMenu->addButton('remove_person',
                                     $filter ? _('Kontakt aus Gruppe entfernen') : _('Kontakt entfernen'),
-                                    Icon::create('person+remove',
+                                    Icon::create('trash',
                                         [
                                             'data-confirm' => sprintf(
                                                 _('Wollen Sie %s wirklich von der Liste entfernen'),

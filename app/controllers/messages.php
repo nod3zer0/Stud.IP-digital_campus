@@ -997,7 +997,7 @@ class MessagesController extends AuthenticatedController {
             $actions->addLink(
                 _('Neue Nachricht schreiben'),
                 $this->url_for('messages/write'),
-                Icon::create('mail+add'),
+                Icon::create('mail'),
                 ['data-dialog' => 'width=700;height=700']
             );
         }

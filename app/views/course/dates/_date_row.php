@@ -1,5 +1,5 @@
 <?php
-$icon = $date->chdate > $last_visitdate ? 'date+new' : 'date';
+$icon = 'date';
 $dialog_url = $show_raumzeit
             ? $controller->url_for('course/dates/details/' . $date->id)
             : $controller->url_for('course/dates/singledate/' . $date->id);
@@ -54,7 +54,7 @@ $dialog_url = $show_raumzeit
         <? if ($has_access): ?>
             <? $actionMenu->addLink($dialog_url, _('Termin bearbeiten'), Icon::create('edit'), ['data-dialog' => '']) ?>
             <? $actionMenu->addLink($controller->url_for('course/dates/new_topic?termin_id=' . $date->id),
-                                    _('Thema hinzufügen'), Icon::create('topic+add'), ['data-dialog' => 'size=auto']) ?>
+                                    _('Thema hinzufügen'), Icon::create('add'), ['data-dialog' => 'size=auto']) ?>
         <? endif ?>
         <? if ($filecount): ?>
             <? $actionMenu->addLink($controller->url_for('course/dates/details_files/' . $date->id),

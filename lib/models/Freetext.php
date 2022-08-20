@@ -15,7 +15,7 @@ class Freetext extends QuestionnaireQuestion implements QuestionType
     public static function getIcon($active = false, $add = false)
     {
         return Icon::create(
-            ($add ?  'add/' : '') . 'guestbook',
+            'guestbook',
             $active ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO
         );
     }

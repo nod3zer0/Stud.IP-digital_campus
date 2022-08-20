@@ -53,7 +53,7 @@
 
             <? elseif ($group["binding"]) : ?>
                 <a href="<?= URLHelper::getLink('', ['auswahl' => $group['seminar_id'], 'cmd' => 'no_kill']) ?>">
-                    <?= Icon::create('door-leave+decline', 'inactive', ['title' => _("Die Teilnahme ist bindend. Bitte wenden Sie sich an die Lehrenden.")])->asImg(20) ?>
+                    <?= Icon::create('door-leave', 'inactive', ['title' => _("Die Teilnahme ist bindend. Bitte wenden Sie sich an die Lehrenden.")])->asImg(20) ?>
                 </a>
             <?
             else : ?>

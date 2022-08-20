@@ -228,7 +228,7 @@ class Fachabschluss_FaecherController extends MVVController
             $widget->addLink(
                 _('Neues Fach anlegen'),
                 $this->url_for('/fach'),
-                Icon::create('file+add')
+                Icon::create('add')
             );
             $sidebar->addWidget($widget);
         }

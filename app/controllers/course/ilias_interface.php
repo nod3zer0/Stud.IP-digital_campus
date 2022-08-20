@@ -103,14 +103,14 @@ class Course_IliasInterfaceController extends AuthenticatedController
                 $widget->addLink(
                     _('Lernobjekte suchen'),
                     $this->url_for('course/ilias_interface/add_object/search'),
-                    Icon::create('learnmodule+add')
+                    Icon::create('add')
                 )->asDialog();
             }
             if ($this->author_permission) {
                 $widget->addLink(
                     _('Meine Lernobjekte'),
                     $this->url_for('course/ilias_interface/add_object/my_modules'),
-                    Icon::create('learnmodule+add')
+                    Icon::create('add')
                 )->asDialog();
             }
             if ($this->ilias_interface_config['search_active'] || $this->author_permission) {
@@ -124,20 +124,20 @@ class Course_IliasInterfaceController extends AuthenticatedController
             $widget->addLink(
                 _('Neuen ILIAS-Kurs anlegen'),
                 $this->url_for('course/ilias_interface/add_object/new_course'),
-                Icon::create('seminar+add')
+                Icon::create('add')
             )->asDialog('size=auto;reload-on-close');
             if ($this->change_course_permission) {
                 $widget->addLink(
                     _('ILIAS-Kurs aus einer anderen Veranstaltung zuordnen'),
                     $this->url_for('course/ilias_interface/add_object/assign_course'),
-                    Icon::create('seminar+add')
+                    Icon::create('learnmodule')
                 )->asDialog('size=auto;reload-on-close');
             }
             if ($this->add_own_course_permission) {
                 $widget->addLink(
                     _('Eigenen ILIAS-Kurs zuordnen'),
                     $this->url_for('course/ilias_interface/add_object/assign_own_course'),
-                    Icon::create('seminar+add')
+                    Icon::create('learnmodule')
                 )->asDialog('size=auto;reload-on-close');
             }
         }
@@ -152,7 +152,7 @@ class Course_IliasInterfaceController extends AuthenticatedController
                 $widget->addLink(
                     sprintf(_('Verknüpfung zu %s entfernen'), $this->ilias_list[$ilias_index]->getName()),
                     $this->url_for("course/ilias_interface/remove_course/{$ilias_index}/{$crs_id}"),
-                    Icon::create('seminar+remove'),
+                    Icon::create('trash'),
                     [
                         'data-confirm' => sprintf(
                             _('Verknüpfung zum Kurs in %s entfernen? Hierdurch werden auch die Verknüpfungen zu allen Objekten innerhalb des Kurses entfernt.'),
@@ -170,7 +170,7 @@ class Course_IliasInterfaceController extends AuthenticatedController
                 $widget->addLink(
                     _('Gruppen übertragen'),
                     $this->url_for('course/ilias_interface/add_groups'),
-                    Icon::create('group2+refresh')
+                    Icon::create('group2')
                 )->asDialog('size=auto');
             }
             if ($this->author_permission) {

@@ -376,7 +376,7 @@ class Course_StudygroupController extends AuthenticatedController
             $actions->addLink(
                 _('Neue Studiengruppe anlegen'),
                 $this->url_for('course/wizard?studygroup=1'),
-                Icon::create('studygroup+add')
+                Icon::create('add')
             );
             if ($GLOBALS['perm']->have_studip_perm('tutor', $id)) {
                 $actions->addLink(
@@ -551,7 +551,7 @@ class Course_StudygroupController extends AuthenticatedController
                                     ->setNavigationItem('/course/members')
                                     ->render();
 
-            $element = LinkElement::fromHTML($mp, Icon::create('community+add', 'clickable'));
+            $element = LinkElement::fromHTML($mp, Icon::create('add', 'clickable'));
             $actions->addElement($element);
         }
 

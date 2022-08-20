@@ -557,7 +557,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             $filter_reset_widget->addLink(
                 _('Filter zurücksetzen'),
                 $this->overviewURL(['reset_filter' => '1']),
-                Icon::create('filter+decline')
+                Icon::create('decline')
             );
             $sidebar->addWidget($filter_reset_widget);
         }
@@ -770,12 +770,12 @@ class Resources_RoomRequestController extends AuthenticatedController
         $export->addLink(
             _('Gefilterte Anfragen'),
             $this->export_listURL($export_url_params),
-            Icon::create('file-excel')
+            Icon::create('export')
         );
         $export->addLink(
             _('Alle Anfragen'),
             $this->export_listURL(),
-            Icon::create('file-excel')
+            Icon::create('export')
         );
         $sidebar->addWidget($export);
 
@@ -2593,7 +2593,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             $filter_reset_widget->addLink(
                 _('Filter zurücksetzen'),
                 $this->planningURL(['reset_filter' => '1']),
-                Icon::create('filter+decline')
+                Icon::create('decline')
             );
             $sidebar->addWidget($filter_reset_widget);
         }

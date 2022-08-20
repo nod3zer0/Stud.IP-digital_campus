@@ -286,7 +286,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
         $actions->addLink(
             _('Buchungen kopieren'),
             $this->url_for('room_management/planning/copy_bookings'),
-            Icon::create('assessment+add'),
+            Icon::create('clipboard'),
             ['data-dialog' => 'size=auto']
         );
         $sidebar->addWidget($actions);
@@ -1132,7 +1132,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
                     'date' => $this->date->format('d.m.Y')
                 ]
             ),
-            Icon::create('file-text')
+            Icon::create('export')
         );
         $actions->addLink(
             _('Export als CSV'),
@@ -1143,7 +1143,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
                     'date' => $this->date->format('d.m.Y')
                 ]
             ),
-            Icon::create('file-excel')
+            Icon::create('export')
         );
         $sidebar->addWidget($actions);
 

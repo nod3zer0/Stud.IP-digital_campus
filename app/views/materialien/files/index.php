@@ -67,7 +67,7 @@
                 $actions->addLink(
                     $controller->url_for('materialien/files/add_ranges_to_file',$mvv_file->mvvfile_id),
                     _('Dokument zuordnen'),
-                    Icon::create('file+add'),
+                    Icon::create('add'),
                     ['data-dialog' => 'size=auto']
                 );
                 foreach ($mvv_file->file_refs as $fileref) {

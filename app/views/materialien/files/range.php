@@ -9,10 +9,10 @@
     <caption>
         <span class="actions">
             <a href="<?= $controller->url_for('materialien/files/add_dokument', 'range', $range_type, $range_id);?>" data-dialog="">
-                <?= Icon::create('upload+add', Icon::ROLE_CLICKABLE, ['title' => _('neues Dokument hinzufügen')]); ?>
+                <?= Icon::create('upload', Icon::ROLE_CLICKABLE, ['title' => _('neues Dokument hinzufügen')]); ?>
             </a>
             <a href="<?= $controller->url_for('materialien/files/add_files_to_range',$range_type, $range_id);?>" data-dialog="">
-                <?= Icon::create('file+add', Icon::ROLE_CLICKABLE, ['title' => _('vorhandenes Dokument hinzufügen')]); ?>
+                <?= Icon::create('add', Icon::ROLE_CLICKABLE, ['title' => _('vorhandenes Dokument hinzufügen')]); ?>
             </a>
             <a href="<?= $controller->url_for('materialien/files/sort', $range_type, $range_id);?>" data-dialog="size=auto">
                 <?= Icon::create('arr_2up', Icon::ROLE_CLICKABLE, ['title' => _('Reihenfolge der Dokumente ändern')]); ?>

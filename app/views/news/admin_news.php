@@ -130,7 +130,7 @@
                             $menu->addLink(
                                 $controller->url_for('news/edit_news/new/template/' . $news['object']->news_id),
                                 _('Kopieren, um neue Ankündigung zu erstellen'),
-                                Icon::create('news+export'),
+                                Icon::create('clipboard'),
                                 ['data-dialog' => '1', 'target' => '_blank']
                             );
                             if ($news['object']->havePermission('unassign', $news['range_id'])) {

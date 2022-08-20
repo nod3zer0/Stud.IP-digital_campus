@@ -34,16 +34,16 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsImgWithAddition()
     {
         $this->assertEquals(
-            '<img width="16" height="16" src="images/icons/blue/add/vote.svg" alt="" class="icon-role-clickable icon-shape-vote+add">',
-            Icon::create('vote+add', 'clickable')->asImg()
+            '<img width="16" height="16" src="images/icons/blue/vote.svg" alt="" class="icon-role-clickable icon-shape-vote">',
+            Icon::create('vote', 'clickable')->asImg()
         );
     }
 
     function testIconCreateAsImgWithSize()
     {
         $this->assertEquals(
-            '<img width="20" height="20" src="images/icons/blue/add/vote.svg" alt="" class="icon-role-clickable icon-shape-vote+add">',
-            Icon::create('vote+add', 'clickable')->asImg(20)
+            '<img width="20" height="20" src="images/icons/blue/vote.svg" alt="" class="icon-role-clickable icon-shape-vote">',
+            Icon::create('vote', 'clickable')->asImg(20)
         );
     }
 
@@ -135,16 +135,16 @@ class IconClassTest extends \Codeception\Test\Unit
     function testIconCreateAsCSSWithSize()
     {
         $this->assertEquals(
-            'background-image:url(images/icons/blue/add/vote.svg);background-size:17px 17px;',
-            Icon::create('vote+add', 'clickable')->asCSS(17)
+            'background-image:url(images/icons/blue/vote.svg);background-size:17px 17px;',
+            Icon::create('vote', 'clickable')->asCSS(17)
         );
     }
 
     function testIconCreateAsImagePath()
     {
         $this->assertEquals(
-            'images/icons/blue/add/vote.svg',
-            Icon::create('vote+add', 'clickable')->asImagePath()
+            'images/icons/blue/vote.svg',
+            Icon::create('vote', 'clickable')->asImagePath()
         );
     }
 

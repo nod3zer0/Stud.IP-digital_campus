@@ -251,7 +251,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
             $widget->addLink(
                 _('Neuen Studiengangteil anlegen'),
                 $this->url_for('/stgteil'),
-                Icon::create('file+add')
+                Icon::create('add')
             );
         }
         $sidebar->addWidget($widget);

@@ -250,7 +250,7 @@ class Course_TopicsController extends AuthenticatedController
             $actions->addLink(
                 _('Themen aus Veranstaltung kopieren'),
                 $this->url_for('course/topics/copy'),
-                Icon::create('topic+add')
+                Icon::create('clipboard')
             )->asDialog();
         }
 

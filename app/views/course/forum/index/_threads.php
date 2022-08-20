@@ -40,7 +40,7 @@
                     <td class="icon">
                         <a href="<?= $controller->link_for("course/forum/index/index/{$jump_to_topic_id}#{$jump_to_topic_id}") ?>">
                             <? if ($entry['chdate'] >= $visitdate && $entry['user_id'] != $GLOBALS['user']->id): ?>
-                                <?= Icon::create('forum+new', Icon::ROLE_ATTENTION)->asImg([
+                                <?= Icon::create('forum', Icon::ROLE_ATTENTION)->asImg([
                                     'title' => _('Dieser Eintrag ist neu!'),
                                 ]) ?>
                             <? else : ?>
@@ -126,7 +126,7 @@
                             ->addLink(
                                 "javascript:STUDIP.Forum.moveThreadDialog('{$entry['topic_id']}');",
                                 _('Dieses Thema verschieben'),
-                                Icon::create('folder-full+move_right'),
+                                Icon::create('folder-full'),
                                 ['class' => 'js']
                             )
                             // Open/close thread

@@ -287,7 +287,7 @@ class Course_DetailsController extends AuthenticatedController
                     'cid'    => null,
                     'again'  => 'yes',
                 ]),
-                Icon::create('group')
+                Icon::create('clipboard')
             );
             $sidebar->addWidget($share);
 

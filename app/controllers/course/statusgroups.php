@@ -236,14 +236,14 @@ class Course_StatusgroupsController extends AuthenticatedController
         if ($this->is_tutor) {
             if (!$this->is_locked) {
                 $actions->addLink(
-                    _('Neue Gruppe anlegen'),
+                    _('Gruppe anlegen'),
                     $this->url_for('course/statusgroups/edit'),
                     Icon::create('add')
                 )->asDialog('size=auto');
                 $actions->addLink(
                     _('Mehrere Gruppen anlegen'),
                     $this->url_for('course/statusgroups/create_groups'),
-                    Icon::create('group2+add')
+                    Icon::create('add')
                 )->asDialog('size=auto');
             }
             if (Config::get()->EXPORT_ENABLE) {
@@ -252,18 +252,18 @@ class Course_StatusgroupsController extends AuthenticatedController
                 $csvExport = export_link($this->course_id, 'person',
                     sprintf('%s %s', _('Gruppenliste'), htmlReady($this->course_title)),
                     'csv', 'csv-gruppen', 'status',
-                    _('Gruppen als CSV-Dokument exportieren'),
+                    _('Als CSV-Dokument exportieren'),
                     'passthrough');
-                $element = LinkElement::fromHTML($csvExport, Icon::create('file-office'));
+                $element = LinkElement::fromHTML($csvExport, Icon::create('export'));
                 $export->addElement($element);
 
                 // create rtf-export link
                 $rtfExport = export_link($this->course_id, 'person',
                     sprintf('%s %s', _('Gruppenliste'), htmlReady($this->course_title)),
                     'rtf', 'rtf-gruppen', 'status',
-                    _('Gruppen als RTF-Dokument exportieren'),
+                    _('Als RTF-Dokument exportieren'),
                     'passthrough');
-                $element = LinkElement::fromHTML($rtfExport, Icon::create('file-text'));
+                $element = LinkElement::fromHTML($rtfExport, Icon::create('export'));
                 $export->addElement($element);
 
                 $sidebar->addWidget($export);
@@ -287,7 +287,7 @@ class Course_StatusgroupsController extends AuthenticatedController
             $actions->addLink(
                 _('Alle Gruppen aufklappen'),
                 $this->url_for('course/statusgroups', ['open_groups' => '1']),
-                Icon::create('arr_2down')
+                Icon::create('arr_1down')
             );
         }
         $sidebar->addWidget($actions);

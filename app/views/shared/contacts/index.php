@@ -37,7 +37,7 @@
                     $actions->addLink(
                         $controller->url_for('shared/contacts/add_ranges_to_contact', $mvv_contact->contact_id),
                         _('Ansprechpartner zuordnen'),
-                        Icon::create('person+add'),
+                        Icon::create('person'),
                         ['data-dialog' => 'size=auto']
                     );
                     $actions->addLink(

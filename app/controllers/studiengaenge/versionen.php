@@ -281,7 +281,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
                 $widget->addLink(
                     _('Neue Version anlegen'),
                     $this->url_for('/version', $this->chooser_filter['stgteil']),
-                    Icon::create('file+add')
+                    Icon::create('add')
                 );
             }
         }

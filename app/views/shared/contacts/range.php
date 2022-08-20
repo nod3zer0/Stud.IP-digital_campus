@@ -10,7 +10,7 @@
         <span class="actions">
             <? if ($perm_contacts >= MvvPerm::PERM_CREATE) : ?>
                 <a href="<?= $controller->url_for('shared/contacts/add_ansprechpartner', 'range', $range_type, $range_id);?>" data-dialog="size=auto">
-                    <?= Icon::create('headache+add', Icon::ROLE_CLICKABLE, ['title' => _('Ansprechpartner hinzufügen')]); ?>
+                    <?= Icon::create('person', Icon::ROLE_CLICKABLE, ['title' => _('Ansprechpartner hinzufügen')]); ?>
                 </a>
             <? endif ?>
             <? if (reset($contacts) && MvvPerm::get(reset($contacts))->haveFieldPerm('position', MvvPerm::PERM_WRITE)) : ?>

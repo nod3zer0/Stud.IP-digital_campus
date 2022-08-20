@@ -17,7 +17,7 @@
                     </a>
                 <? endif ?>
                 <a href="<?= URLHelper::getLink("dispatch.php/questionnaire/" . ($range_type == 'course' || $range_type == 'institute' ? 'course' : ''). "overview") ?>" title="<?= _('Fragebögen verwalten') ?>">
-                    <?= Icon::create("edit", "clickable")->asimg("16px", ['class' => "text-bottom"]) ?>
+                    <?= Icon::create("admin", "clickable")->asimg("16px", ['class' => "text-bottom"]) ?>
                 </a>
             <? endif ?>
         </nav>

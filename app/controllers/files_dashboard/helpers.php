@@ -56,7 +56,7 @@ trait Helpers
             $actionMenu->addLink(
                 URLHelper::getURL('dispatch.php/file/choose_destination/move/'.$fileRef->id),
                 _('Datei verschieben'),
-                Icon::create('file+move_right', Icon::ROLE_CLICKABLE, ['size' => 20]),
+                Icon::create('arr_1right', Icon::ROLE_CLICKABLE, ['size' => 20]),
                 ['data-dialog' => 'size=auto']
             );
         }
@@ -65,7 +65,7 @@ trait Helpers
             $actionMenu->addLink(
                 URLHelper::getURL('dispatch.php/file/choose_destination/copy/'.$fileRef->id),
                 _('Datei kopieren'),
-                Icon::create('file+add', Icon::ROLE_CLICKABLE, ['size' => 20]),
+                Icon::create('clipboard', Icon::ROLE_CLICKABLE, ['size' => 20]),
                 ['data-dialog' => 'size=auto']
             );
         }

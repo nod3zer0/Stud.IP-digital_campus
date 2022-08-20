@@ -37,7 +37,7 @@
                                 <? $actionMenu->addLink(
                                     $controller->url_for('/lvgruppe/' . $modulteil->id),
                                     _('Neue LV-Gruppe anlegen'),
-                                    Icon::create('file+add', Icon::ROLE_CLICKABLE, ['title' => _('Neue LV-Gruppe anlegen')]),
+                                    Icon::create('file', Icon::ROLE_CLICKABLE, ['title' => _('Neue LV-Gruppe anlegen')]),
                                     [
                                         'data-dialog' => 'size=normal',
                                         'title'       => _('Neue LV-Gruppe anlegen')

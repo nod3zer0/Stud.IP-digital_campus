@@ -88,7 +88,7 @@
                 )->condition($block->has_bookings && !$block->is_expired)->addLink(
                     $controller->cancel_blockURL($block, $page),
                     _('Termine absagen'),
-                    Icon::create('consultation+remove'),
+                    Icon::create('decline'),
                     ['data-dialog' => 'size=auto']
                 )->condition(!$block->has_bookings || $block->is_expired)->addButton(
                     'remove',
@@ -214,7 +214,7 @@
                 )->condition(!$slot->is_expired && count($slot->bookings) < $slot->block->size)->addLink(
                     $controller->bookURL($slot->block, $slot, $page),
                     _('Termin reservieren'),
-                    Icon::create('consultation+add'),
+                    Icon::create('consultation'),
                     ['data-dialog' => 'size=auto']
                 )->condition($slot->has_bookings)->addLink(
                     $controller->reasonURL($slot->block, $slot, $slot->bookings->first(), $page),
@@ -229,7 +229,7 @@
                 )->condition($slot->has_bookings && !$slot->is_expired)->addLink(
                     $controller->cancel_slotURL($slot->block, $slot, $page),
                     _('Termin absagen'),
-                    Icon::create('consultation+remove'),
+                    Icon::create('decline'),
                     ['data-dialog' => 'size=auto']
                 )->condition(!$slot->has_bookings || $slot->is_expired)->addButton(
                     'delete',

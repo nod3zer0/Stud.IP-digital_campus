@@ -58,7 +58,7 @@
                     <? if ($module->isAllowed('edit')) $actionMenu->addButton(
                             'edit',
                             _('In ILIAS bearbeiten'),
-                            Icon::create('learnmodule+edit', Icon::ROLE_CLICKABLE, [
+                            Icon::create('edit', Icon::ROLE_CLICKABLE, [
                                 'title'        => _('In ILIAS bearbeiten'),
                                 'formaction'   => $controller->url_for($module->getRoute('edit')),
                                 'target'       => '_blank',
@@ -68,7 +68,7 @@
                     <? if ($edit_permission && $module->isAllowed('delete')) $actionMenu->addButton(
                             'remove',
                             _('Entfernen'),
-                            Icon::create('learnmodule+decline', Icon::ROLE_CLICKABLE, [
+                            Icon::create('trash', Icon::ROLE_CLICKABLE, [
                                 'title'        => _('Entfernen'),
                                 'formaction'   => $controller->url_for($module->getRoute('remove')),
                                 'data-confirm' => $module->siblings_count < 2 ? sprintf(_('Dies ist die einzige Instanz des Objekts "%s". Durch das Entfernen aus dem Kurs wird das Objekt unwiderruflich gelöscht! Wollen Sie das Objekt wirklich löschen?'), htmlReady($module->getTitle())) : sprintf(_('Wollen Sie das Objekt "%s" jetzt entfernen?'), htmlReady($module->getTitle())),
@@ -111,7 +111,7 @@
                     <? if ($edit_permission) $actionMenu->addButton(
                             'remove',
                             _('Entfernen'),
-                            Icon::create('learnmodule+decline', Icon::ROLE_CLICKABLE, [
+                            Icon::create('trash', Icon::ROLE_CLICKABLE, [
                                 'title'        => _('Entfernen'),
                                 'formaction'   => $controller->url_for('course/ilias_interface/remove_course/'.$ilias_index.'/'.$courses[$ilias_index]),
                                 'data-confirm' => sprintf(_('Verknüpfung zum Kurs in %s entfernen? Hierdurch werden auch die Verknüpfungen zu allen Objekten innerhalb des Kurses entfernt.'), $ilias->getName()),

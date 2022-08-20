@@ -93,20 +93,20 @@ if ($folder->isReadable($GLOBALS['user']->id)) {
            $actionMenu->addLink(
                $controller->url_for('file/choose_destination/move/' . $folder->getId(), ['isfolder' => 1]),
                 _('Ordner verschieben'),
-                Icon::create('folder-empty+move_right', 'clickable', ['size' => 20]),
+                Icon::create('arr_1right', 'clickable', ['size' => 20]),
                 ['data-dialog' => 'size=auto']
             );
             $actionMenu->addLink(
                 $controller->url_for('file/choose_destination/copy/' . $folder->getId(), ['isfolder' => 1]),
                 _('Ordner kopieren'),
-                Icon::create('folder-empty+add', 'clickable', ['size' => 20]),
+                Icon::create('clipboard', 'clickable', ['size' => 20]),
                 ['data-dialog' => 'size=auto']
             );
             if (Feedback::isActivated() && Feedback::hasCreatePerm($course->id)) {
                 $actionMenu->addLink(
                     $controller->url_for('course/feedback/create_form/' . $folder->getId() . '/Folder'),
                     _('Neues Feedback-Element'),
-                    Icon::create('star+add', Icon::ROLE_CLICKABLE, ['size' => 20]),
+                    Icon::create('star', Icon::ROLE_CLICKABLE, ['size' => 20]),
                     ['data-dialog' => '1']
                 );
             }

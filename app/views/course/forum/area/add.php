@@ -6,7 +6,7 @@
 
         <a href="<?= $controller->link_for("course/forum/index/index/{$entry['topic_id']}#{$entry['topic_id']}") ?>">
         <? if ($entry['chdate'] >= $visitdate && $entry['user_id'] !== $GLOBALS['user']->id): ?>
-            <?= Icon::create('forum+new', Icon::ROLE_ATTENTION)->asImg([
+            <?= Icon::create('forum', Icon::ROLE_ATTENTION)->asImg([
                 'title' => _('Dieser Eintrag ist neu!'),
                 'style' => 'margin-bottom: 15px',
             ]) ?>

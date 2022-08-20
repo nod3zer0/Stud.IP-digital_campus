@@ -1027,7 +1027,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
             $widget->addLink(
                 _('Neuen Studiengang anlegen'),
                 $this->url_for('/studiengang'),
-                Icon::create('file+add')
+                Icon::create('add')
             );
         }
         $sidebar->addWidget($widget);

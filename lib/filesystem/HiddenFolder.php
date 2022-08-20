@@ -45,8 +45,8 @@ class HiddenFolder extends PermissionEnabledFolder
     public function getIcon($role = Icon::DEFAULT_ROLE)
     {
         $shape = $this->is_empty
-               ? 'folder-lock-empty+visibility-invisible'
-               : 'folder-lock-full+visibility-invisible';
+               ? 'folder-lock-empty'
+               : 'folder-lock-full';
         return Icon::create($shape, $role);
     }
 

@@ -44,7 +44,7 @@
                                 <? $actionMenu->addLink(
                                     $controller->url_for('/version/' . $stgteil->getId()),
                                     _('Neue Version anlegen'),
-                                    Icon::create('file+add', Icon::ROLE_CLICKABLE, ['title' => _('Neue Version anlegen')])
+                                    Icon::create('file', Icon::ROLE_CLICKABLE, ['title' => _('Neue Version anlegen')])
                                 ) ?>
                             <? endif; ?>
                             <? if (MvvPerm::havePermWrite($stgteil)) : ?>

@@ -1361,7 +1361,7 @@ function getShowPageInfobox($keyword, $latest_version)
             $widget->addLink(
                 _('Seiten importieren'),
                 URLHelper::getURL('dispatch.php/wiki/import/' . Context::getId()),
-                Icon::create('wiki+add')
+                Icon::create('import')
             )->asDialog('size=auto');
         }
 

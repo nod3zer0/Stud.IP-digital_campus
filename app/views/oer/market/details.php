@@ -325,7 +325,7 @@ if ($GLOBALS['perm']->have_perm("autor")) {
     $actions->addLink(
         _('Zu Veranstaltung hinzufügen'),
         $controller->url_for( "oer/market/add_to_course/" . $material->getId()),
-        Icon::create("seminar+move_right", Icon::ROLE_CLICKABLE),
+        Icon::create("seminar", Icon::ROLE_CLICKABLE),
         ['data-dialog' => "1"]
     );
 }

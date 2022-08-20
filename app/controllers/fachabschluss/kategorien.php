@@ -225,7 +225,7 @@ class Fachabschluss_KategorienController extends MVVController
             $widget->addLink(
                 _('Neue Abschluss-Kategorie anlegen'),
                 $this->url_for('/kategorie'),
-                Icon::create('file+add')
+                Icon::create('add')
             );
             $sidebar->addWidget($widget);
         }

@@ -96,7 +96,7 @@ class FilesController extends AuthenticatedController
             $actions->addLink(
                 _('Neuer Ordner'),
                 URLHelper::getUrl('dispatch.php/file/new_folder/' . $folder->getId()),
-                Icon::create('folder-empty+add', 'clickable'), ['data-dialog' => 1]
+                Icon::create('folder-empty', 'clickable'), ['data-dialog' => 1]
             );
         }
 
@@ -113,7 +113,7 @@ class FilesController extends AuthenticatedController
             $actions->addLink(
                 _('Dokument hinzufügen'),
                 '#',
-                Icon::create('file+add', 'clickable'),
+                Icon::create('add', 'clickable'),
                 ['onClick' => "STUDIP.Files.openAddFilesWindow(); return false;"]
             );
         }

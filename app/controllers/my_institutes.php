@@ -118,14 +118,14 @@ class MyInstitutesController extends AuthenticatedController
             $links->addLink(
                 _('Einrichtungsdaten bearbeiten'),
                 URLHelper::getURL('dispatch.php/settings/statusgruppen'),
-                Icon::create('institute+edit')
+                Icon::create('edit')
             );
         }
         if ($GLOBALS['perm']->have_perm('autor')) {
             $links->addLink(
                 _('Einrichtungen suchen'),
                 URLHelper::getURL('dispatch.php/search/globalsearch#GlobalSearchInstitutes'),
-                Icon::create('institute+add')
+                Icon::create('search')
             );
             $links->addLink(
                 _('Studiendaten bearbeiten'),

@@ -94,17 +94,17 @@ class Lvgruppen_LvgruppenController extends MVVController
 
         $this->setSidebar();
         $sidebar = Sidebar::get();
-        $widget  = new ActionsWidget();
+        $widget  = new ExportWidget();
 
         $widget->addLink(_('Lehrveranstaltungsgruppen mit Zuordnungen exportieren'),
                 $this->url_for('/export_xls'),
-                Icon::create('download'));
+                Icon::create('export'));
 
         if (Config::get()->MVV_ALLOW_CREATE_LVGRUPPEN_INDEPENDENTLY
                 && MvvPerm::havePermCREATE('Lvgruppe')) {
             $widget->addLink(_('Neue LV-Gruppe anlegen'),
                 $this->url_for('/lvgruppe'),
-                Icon::create('file+add'), ['data-dialog' => 'size=auto']);
+                Icon::create('add'), ['data-dialog' => 'size=auto']);
         }
 
         $sidebar->addWidget($widget);

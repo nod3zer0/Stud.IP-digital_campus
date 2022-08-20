@@ -70,7 +70,7 @@ class Admin_StatusgroupsController extends AuthenticatedController
             $widget = new ActionsWidget();
             $widget->addLink(_('Neue Gruppe anlegen'),
                              $this->url_for('admin/statusgroups/editGroup'),
-                             Icon::create('group3+add', 'clickable'))
+                             Icon::create('add', 'clickable'))
                    ->asDialog('size=auto');
             $widget->addLink(_('Gruppenreihenfolge ändern'),
                              $this->url_for('admin/statusgroups/sortGroups'),

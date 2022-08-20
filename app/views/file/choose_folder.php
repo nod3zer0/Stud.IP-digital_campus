@@ -123,9 +123,9 @@ $buttonLabels = [
             <tr>
                 <td class="document-icon" data-sort-value="0">
                 <? if ($subfolder->is_empty): ?>
-                    <?= Icon::create('folder-empty+decline', Icon::ROLE_INFO)->asImg(24) ?>
+                    <?= Icon::create('folder-empty', Icon::ROLE_INACTIVE)->asImg(24) ?>
                 <? else: ?>
-                    <?= Icon::create('folder-full+decline', Icon::ROLE_INFO)->asImg(24) ?>
+                    <?= Icon::create('folder-full', Icon::ROLE_INACTIVE)->asImg(24) ?>
                 <? endif ?>
                 </td>
                 <td>

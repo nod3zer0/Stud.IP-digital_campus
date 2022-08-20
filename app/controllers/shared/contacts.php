@@ -267,13 +267,13 @@ class Shared_ContactsController extends MVVController
             $widget->addLink(
                 _('Neuen Ansprechpartner anlegen'),
                 $this->url_for('/new_ansprechpartner'),
-                Icon::create('headache+add')
+                Icon::create('add')
             )->asDialog('size=auto');
         }
         $widget->addLink(
             _('Liste exportieren (CSV)'),
             $this->url_for('/export_csv'),
-            Icon::create('download')
+            Icon::create('export')
         );
         $sidebar->addWidget($widget);
 

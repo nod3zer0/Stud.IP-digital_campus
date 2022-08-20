@@ -93,7 +93,7 @@ class Settings_DeputiesController extends Settings_SettingsController
             ->setSearchObject($this->search)
             ->setNavigationItem('/links/settings/deputies')
             ->render();
-        $element = LinkElement::fromHTML($mp, Icon::create('community+add'));
+        $element = LinkElement::fromHTML($mp, Icon::create('add'));
         $actions->addElement($element);
         Sidebar::Get()->addWidget($actions);
     }

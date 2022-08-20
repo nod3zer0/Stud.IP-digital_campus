@@ -257,7 +257,7 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
             $actionMenu->addLink(
                 URLHelper::getURL('dispatch.php/file/choose_destination/move/' . $this->fileref->id),
                 _('Datei verschieben'),
-                Icon::create('file+move_right', Icon::ROLE_CLICKABLE, ['size' => 20]),
+                Icon::create('arr_1right', Icon::ROLE_CLICKABLE, ['size' => 20]),
                 ['data-dialog' => 'size=auto'],
                 'file-move'
             );
@@ -266,14 +266,14 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
             $actionMenu->addLink(
                 URLHelper::getURL('dispatch.php/file/choose_destination/copy/' . $this->fileref->id),
                 _('Datei kopieren'),
-                Icon::create('file+add', Icon::ROLE_CLICKABLE, ['size' => 20]),
+                Icon::create('files', Icon::ROLE_CLICKABLE, ['size' => 20]),
                 ['data-dialog' => 'size=auto'],
                 'file-copy'
             );
             $actionMenu->addLink(
                 $this->fileref->getDownloadURL('force_download'),
                 _('Link kopieren'),
-                Icon::create('group'),
+                Icon::create('clipboard'),
                 ['class' => 'copyable-link'],
                 'link-to-clipboard'
             );
@@ -305,7 +305,7 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
                 $actionMenu->addLink(
                     URLHelper::getURL('dispatch.php/course/feedback/create_form/'. $this->fileref->id . '/FileRef'),
                     _('Neues Feedback-Element'),
-                    Icon::create('star+add', Icon::ROLE_CLICKABLE, ['size' => 20]),
+                    Icon::create('star', Icon::ROLE_CLICKABLE, ['size' => 20]),
                     ['data-dialog' => '1']
                 );
             }

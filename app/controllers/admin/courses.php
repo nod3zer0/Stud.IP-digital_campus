@@ -222,7 +222,7 @@ class Admin_CoursesController extends AuthenticatedController
             $actions->addLink(
                 _('Neue Veranstaltung anlegen'),
                   URLHelper::getURL('dispatch.php/course/wizard'),
-                  Icon::create('seminar+add')
+                  Icon::create('add')
             )->asDialog('size=50%');
             $actions->addLink(
                 _('Diese Seitenleiste konfigurieren'),

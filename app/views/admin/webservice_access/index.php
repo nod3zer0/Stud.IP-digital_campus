@@ -76,7 +76,7 @@
 $sidebar = Sidebar::Get();
 
 $actions = new ActionsWidget();
-$actions->addLink(_('Regeln testen'),$controller->url_for('admin/webservice_access/test'), Icon::create('add', 'clickable'));
+$actions->addLink(_('Regeln testen'),$controller->url_for('admin/webservice_access/test'), Icon::create('unit-test', 'clickable'));
 $actions->addLink(_('Neue Zugriffsregel anlegen'),$controller->url_for('admin/webservice_access/new'), Icon::create('add', 'clickable'));
 
 $sidebar->addWidget($actions);

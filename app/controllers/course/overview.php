@@ -153,7 +153,7 @@ class Course_OverviewController extends AuthenticatedController
                     'cid'   => null,
                     'again' => 'yes',
                 ]),
-                Icon::create('group')
+                Icon::create('clipboard')
             );
         } else {
             $share->addCopyableLink(
@@ -163,7 +163,7 @@ class Course_OverviewController extends AuthenticatedController
                     'cid'    => null,
                     'again'  => 'yes',
                 ]),
-                Icon::create('group')
+                Icon::create('clipboard')
             );
         }
         $sidebar->addWidget($share);

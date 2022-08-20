@@ -67,14 +67,14 @@ class Institute_FilesController extends AuthenticatedController
                 URLHelper::getUrl(
                     'dispatch.php/file/new_folder/' . $this->topFolder ->getId()
                 ),
-                Icon::create('folder-empty+add', 'clickable')
+                Icon::create('folder-empty', 'clickable')
             )->asDialog();
         }
         if ($this->topFolder && $this->topFolder->isWritable($GLOBALS['user']->id)) {
             $actions->addLink(
                 _('Dokument hinzufügen'),
                 '#',
-                Icon::create('file+add', 'clickable'),
+                Icon::create('add', 'clickable'),
                 ['onclick' => "STUDIP.Files.openAddFilesWindow(); return false;"]
             );
         }

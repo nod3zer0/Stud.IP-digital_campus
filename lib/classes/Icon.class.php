@@ -90,7 +90,7 @@ class Icon
      * constructor instead.
      *
      * @param String $shape      Shape of the icon, may contain a mixed definition
-     *                           like 'seminar+add'
+     *                           like 'seminar'
      * @param String $role       Role of the icon, defaults to Icon::DEFAULT_ROLE
      * @param Array $attributes  Additional attributes like 'title';
      *                           only use semantic ones describing
@@ -113,7 +113,7 @@ class Icon
      * Constructor of the object.
      *
      * @param String $shape      Shape of the icon, may contain a mixed definition
-     *                           like 'seminar+add'
+     *                           like 'seminar'
      * @param String $role       Role of the icon, defaults to Icon::DEFAULT_ROLE
      * @param Array $attributes  Additional attributes like 'title';
      *                           only use semantic ones describing
@@ -380,7 +380,7 @@ class Icon
         return mb_strpos($shape, 'http') === 0;
     }
 
-    // transforms a shape w/ possible additions (`shape+addition`) to a path `(addition/)?shape`
+    // transforms a shape w/ possible additions (`shape`) to a path `(addition/)?shape`
     private function shapeToPath()
     {
         return self::isStatic($this->shape)
