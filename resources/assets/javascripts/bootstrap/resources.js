@@ -81,54 +81,6 @@ STUDIP.ready(function () {
         }
     }
 
-    //Room search widget: remove empty form inputs from URL:
-    jQuery('.sidebar-widget-content form.room-search-form').submit(function() {
-        //Check if the seats checkbox is checked. Only include "its" input
-        //fields when it is checked.
-        let seats_checked = jQuery(this).find('input[name="special__seats_enabled"]').is(':checked');
-        if (!seats_checked) {
-            jQuery(this).find('input[name="special__seats_min"]').attr('disabled', 'disabled');
-            jQuery(this).find('input[name="special__seats_max"]').attr('disabled', 'disabled');
-        }
-
-        //Check if the time range checkbox is checked. Only include "its" input
-        //fields when it is checked.
-        let time_range_checked = jQuery('#cb_special__time_range').is(':checked');
-        if (time_range_checked) {
-            var dow_select = jQuery(this).find('select[name="special__time_range_day_of_week"]')[0];
-            if (dow_select) {
-                if (!jQuery(dow_select).val() || (jQuery(dow_select).val() < 1)) {
-                    jQuery(dow_select).attr('disabled', 'disabled');
-                }
-            }
-        } else {
-            jQuery(this).find('select[name="special__time_range_semester_id"]').attr('disabled', 'disabled');
-            jQuery('#special__time_range_begin_date').attr('disabled', 'disabled');
-            jQuery('#special__time_range_begin_time').attr('disabled', 'disabled');
-            jQuery('#special__time_range_end_date').attr('disabled', 'disabled');
-            jQuery('#special__time_range_end_time').attr('disabled', 'disabled');
-            jQuery(this).find('select[name="special__time_range_day_of_week"]').attr('disabled', 'disabled');
-        }
-
-        //Disable all form input fields that don't have a value:
-        jQuery(this).find(':input').filter(
-            function(){
-                //A list of allowed input fields without values
-                //(submit buttons):
-                let empty_inputs = ['room_search', 'room_search_reset'];
-                if (jQuery.inArray(jQuery(this).prop('name'), empty_inputs) >= 0) {
-                    return false;
-                }
-                return !this.value;
-            }
-        ).attr('disabled', 'disabled');
-
-        //The form shall still be submitted.
-        return true;
-    });
-
-    //other:
-
     jQuery(document).on(
         'click',
         '.booking-list-interval .takes-place-status-toggle',
