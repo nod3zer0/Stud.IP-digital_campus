@@ -159,7 +159,7 @@ class Metrics {
      *
      * @endcode
      *
-     * @return function  the timing function
+     * @return Callable  the timing function
      */
     public static function startTimer()
     {

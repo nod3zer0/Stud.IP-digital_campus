@@ -28,6 +28,9 @@ require_once 'lib/object.inc.php';
 
 class MyCoursesController extends AuthenticatedController
 {
+    /**
+     * @var Callable
+     */
     private $performance_timer = null;
 
     public function before_filter(&$action, &$args)
