@@ -278,7 +278,7 @@ class Oer_MymaterialController extends AuthenticatedController
     {
         $actions = new ActionsWidget();
         $actions->addLink(
-            _('Eigenes Lernmaterial hochladen'),
+            _('Neues Lernmaterial hochladen'),
             $this->editURL(),
             Icon::create('add'),
             ['data-dialog' => 'size=auto']

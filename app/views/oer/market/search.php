@@ -10,7 +10,7 @@
 if ($GLOBALS['perm']->have_perm("autor")) {
     $actions = new ActionsWidget();
     $actions->addLink(
-        _('Eigenes Lernmaterial hochladen'),
+        _('Neues Lernmaterial hochladen'),
         $controller->url_for("oer/mymaterial/edit"),
         Icon::create("add", Icon::ROLE_CLICKABLE),
         ['data-dialog' => "1"]
