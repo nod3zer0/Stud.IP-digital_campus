@@ -5,4 +5,4 @@
     <?= htmlReady($selected_room->name) ?>
 <? endif ?>
 
-<?= var_dump($selected_room); ?>
+

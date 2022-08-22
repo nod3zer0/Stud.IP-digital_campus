@@ -76,7 +76,7 @@
                             [
                                 'type'  => 'image',
                                 'class' => 'text-bottom',
-                                'name'  => 'reset_category',
+                                'name'  => 'reset_name',
                                 'style' => 'margin-left: 0.2em; margin-top: 0.6em;'
                             ]
                         ) ?>

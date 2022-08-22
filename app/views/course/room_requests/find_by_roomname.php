@@ -56,9 +56,24 @@
                     </span>
                     </label>
                 <? endif ?>
+                <!-- ROOM CATEGORY PROPERTIES -->
+                <? if ($available_properties) : ?>
+                    <? foreach ($available_properties as $property) : ?>
+                        <?= $property->toHtmlInput(
+                            $selected_properties[$property->name],
+                            'selected_properties[' . htmlReady($property->name) . ']',
+                            true,
+                            false
+                        ) ?>
+                    <? endforeach ?>
+                <? endif ?>
+
+
+
                 <? if (!$embedded) : ?>
             </fieldset>
         </div>
+
 
         <div>
             <fieldset>

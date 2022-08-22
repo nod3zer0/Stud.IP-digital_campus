@@ -9,7 +9,7 @@
 
         ) ?>
 
-        <?= \Studip\Button::create(_('Raum auswählen und weiter'), 'request_second_step') ?>
+        <?= \Studip\Button::create(_('Weiter'), 'request_second_step') ?>
 
     <? endif ?>
 
