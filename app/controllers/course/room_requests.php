@@ -292,11 +292,12 @@ class Course_RoomRequestsController extends AuthenticatedController
     {
         $this->request_id = $request_id;
         $this->step = 1;
+        $_SESSION[$request_id]['search_by'] = '';
 
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
 
-            // either search by room (name) or room category, then go to next step
+            // either search by room name or room category, then go to next step
             $this->room_name = Request::get('room_name');
             $_SESSION[$request_id]['room_name'] = $this->room_name;
             $this->search_by_roomname = Request::submitted('search_by_name');
@@ -306,10 +307,13 @@ class Course_RoomRequestsController extends AuthenticatedController
 
             // user looks for a special room OR for room within a selected category
             if ($this->room_name != null && $this->search_by_roomname != null) {
+                $_SESSION[$request_id]['search_by'] = 'roomname';
                 $this->redirect(
                     'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
                 );
             } else if ($this->category_id != null && $this->search_by_category != null ) {
+                $_SESSION[$request_id]['search_by'] = 'category';
+
                 $this->redirect(
                     'course/room_requests/find_by_category/' . $this->request_id . '/' . $this->step
                 );
@@ -345,7 +349,6 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         // for step 2 after choosing a room
         if ($step == 2) {
-            echo"Hallo";
             $this->category = ResourceCategory::find($this->selected_room_category_id);
             $this->available_properties = $this->category->getRequestableProperties();
         }
@@ -368,6 +371,25 @@ class Course_RoomRequestsController extends AuthenticatedController
             $this->redirect(
                 'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
             );
+        }
+        $this->selected_properties = Request::getArray('selected_properties');
+        $_SESSION[$request_id]['seats'] = $this->selected_properties['seats'];
+
+        if (Request::submitted('save_request')) {
+            // we need the seats property with at least one seat, else we get an error
+            if ($_SESSION[$request_id]['seats'] < 1) {
+                PageLayout::postError(
+                    _('Es wurde keine Anzahl an gewünschten Sitzplätzen angegeben!')
+                );
+                $this->redirect(
+                    'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
+                );
+            } else {
+                // TODO actually save the request
+                PageLayout::postSuccess(_('Die Anfrage wurde gespeichert!'));
+                $this->relocate('course/timesrooms/');
+            }
+
         }
 
 
@@ -398,6 +420,13 @@ class Course_RoomRequestsController extends AuthenticatedController
         $this->redirect(
             'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
         );
+
+    }
+
+    public function save_request_action($request_id) {
+        $this->request_id = $request_id;
+
+
 
     }
 

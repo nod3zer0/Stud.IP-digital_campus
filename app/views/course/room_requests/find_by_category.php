@@ -56,6 +56,7 @@
                 <!-- ROOM CATEGORY PROPERTIES -->
                 <? if ($available_properties) : ?>
                     <? foreach ($available_properties as $property) : ?>
+                    <?= var_dump($property) ?>
                         <?= $property->toHtmlInput(
                             $selected_properties[$property->name],
                             'selected_properties[' . htmlReady($property->name) . ']',

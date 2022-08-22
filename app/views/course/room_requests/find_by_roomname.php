@@ -56,24 +56,46 @@
                     </span>
                     </label>
                 <? endif ?>
-                <!-- ROOM CATEGORY PROPERTIES -->
-                <? if ($available_properties) : ?>
-                    <? foreach ($available_properties as $property) : ?>
-                        <?= $property->toHtmlInput(
-                            $selected_properties[$property->name],
-                            'selected_properties[' . htmlReady($property->name) . ']',
-                            true,
-                            false
-                        ) ?>
-                    <? endforeach ?>
+
+                <? if ($step == 2) : ?>
+                    <!-- After choosing a category or room -->
+                    <? if ($available_properties) : ?>
+                        <? foreach ($available_properties as $property) : ?>
+                            <?= $property->toHtmlInput(
+                                $selected_properties[$property->name],
+                                'selected_properties[' . htmlReady($property->name) . ']',
+                                true,
+                                false
+                            ) ?>
+                        <? endforeach ?>
+                    <? endif ?>
+                    <label>
+                        <?= _('Rüstzeit (in Minuten)') ?>
+                        <input type="number" name="preparation_time"
+                               value="<?= htmlReady($preparation_time) ?>"
+                               min="0" max="<?= htmlReady($max_preparation_time) ?>">
+                    </label>
+                    <? if ($user_is_global_resource_admin) : ?>
+                        <label>
+                            <input type="checkbox" name="reply_lecturers" value="1"
+                                <?= $reply_lecturers
+                                    ? 'checked="checked"'
+                                    : ''
+                                ?>>
+                            <?= _('Benachrichtigung bei Ablehnung der Raumanfrage auch an alle Lehrenden der Veranstaltung senden') ?>
+                        </label>
+                    <? endif ?>
+
+                    <label>
+                        <?= _('Nachricht an die Raumvergabe') ?>
+                        <textarea name="comment" cols="58" rows="4"
+                                  placeholder="<?= _('Weitere Wünsche oder Bemerkungen zur angefragten Raumbelegung') ?>"><?= htmlReady($comment) ?></textarea>
+                    </label>
                 <? endif ?>
-
-
 
                 <? if (!$embedded) : ?>
             </fieldset>
         </div>
-
 
         <div>
             <fieldset>
@@ -81,7 +103,7 @@
                 <label>
                     <?= _('Raumname') ?>
                     <span class="flex-row">
-                    <input type="text" name="room_name" value="<?= htmlReady($room_name) ?>">
+                    <input type="text" name="room_name" value="<?= htmlReady($_SESSION[$request_id]['room_name']) ?>">
                     <?= Icon::create('search', Icon::ROLE_CLICKABLE)->asInput(
                         [
                             'name'  => 'search_by_name',
@@ -89,7 +111,7 @@
                             'style' => 'margin-left: 0.2em; margin-top: 0.6em;'
                         ]
                     ) ?>
-                        <? if ($room_name) : ?>
+                        <? if ($_SESSION[$request_id]['room_name']) : ?>
                             <?= Icon::create('refresh', Icon::ROLE_CLICKABLE, ['title' => _('alle Angaben zurücksetzen')])->asInput(
                                 [
                                     'type'  => 'image',

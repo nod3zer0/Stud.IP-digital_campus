@@ -63,7 +63,7 @@
             <label>
                 <?= _('Raumname') ?>
                 <span class="flex-row">
-                    <input type="text" name="room_name" value="<?= htmlReady($room_name) ?>">
+                    <input type="text" name="room_name" value="<?= htmlReady($_SESSION[$request_id]['room_name']) ?>">
                     <?= Icon::create('search', Icon::ROLE_CLICKABLE)->asInput(
                         [
                             'name'  => 'search_by_name',
