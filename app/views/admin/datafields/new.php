@@ -90,7 +90,7 @@ use Studip\Button, Studip\LinkButton;
         </label>
 
         <label>
-            <?= _('benötigter Status') ?>
+            <?= _('Benötigter Status zum Bearbeiten') ?>
 
             <select name="edit_perms">
             <? foreach (array_keys($controller->user_status) as $perm): ?>
