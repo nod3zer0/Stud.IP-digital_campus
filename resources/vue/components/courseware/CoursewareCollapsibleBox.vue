@@ -35,7 +35,19 @@ export default {
             isOpen: this.open,
         };
     },
-    methods: {},
+    mounted(){
+        this.updateCollapsible();
+    },
+    updated() {
+        this.updateCollapsible();
+    },
+    methods: {
+        updateCollapsible() {
+            if (this.isOpen) {
+                STUDIP.eventBus.emit('courseware:update-collapsible', { 'uid': this._uid });
+            }
+        }
+    },
     watch: {
         open(state) {
             this.isOpen = state;

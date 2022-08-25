@@ -36,6 +36,12 @@ export default {
     mounted() {
         this.isActive = this.selected;
     },
+    updated () {
+        if (this.isActive) {
+            STUDIP.eventBus.emit('courseware:update-tab',{ 'uid': this._uid });
+        }
+
+    },
     watch: {
         selected(newValue) {
             this.isActive = newValue;

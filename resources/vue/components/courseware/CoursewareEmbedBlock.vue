@@ -154,8 +154,16 @@ export default {
     },
     mounted() {
         this.initCurrentData();
-
         window.addEventListener('resize', this.calcContentHeight);
+    },
+
+    created () {
+        STUDIP.eventBus.on('courseware:update-tab', (data) => {
+            this.recalculateContentHeight(data);
+        });
+        STUDIP.eventBus.on('courseware:update-collapsible', (data) => {
+            this.recalculateContentHeight(data);
+        });
     },
     destroyed() {
         window.removeEventListener('resize', this.calcContentHeight);
@@ -172,8 +180,15 @@ export default {
             this.currentEndTime = this.endTime;
             this.oembedData = this.oembed;
             if (this.oembedData !== null) {
-                this.calcContentHeight();
                 this.updateTime();
+                this.calcContentHeight();
+            }
+        },
+        recalculateContentHeight(data){
+            if (this.$parent._uid === data.uid) {
+                if (this.oembedData !== null) {
+                    this.calcContentHeight();
+                }
             }
         },
         addTimeData(data) {
