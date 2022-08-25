@@ -1,5 +1,5 @@
 #sort1, #sort0, #sort3 {
-    padding : 0 0px;
+    padding : 0;
 }
 #admin_widget_container {
     padding-top: 1em;
@@ -8,7 +8,7 @@
 
 #main, #choices {
     width: 99%;
-    border: 1px solid @dark-gray-color-60;
+    border: 1px solid $dark-gray-color-60;
 }
 
 .studip-widget-wrapper {
@@ -17,21 +17,18 @@
 }
 
 .studip-widget {
-    border: 1px solid @base-color-20;
+    border: 1px solid $base-color-20;
     transition: border-color 300ms ease-in-out;
 
     .widget-header {
         box-sizing: border-box;
-
-        background-color: @content-color-20;
-        color: @brand-color-dark;
-
+        background-color: $content-color-20;
+        color: $brand-color-dark;
         font-size: 1.1em;
         font-weight: bold;
         line-height: 2em;
         padding: 0 1ex;
         text-align: left;
-
         overflow: hidden;
         text-overflow: ellipsis;
     }
@@ -57,12 +54,12 @@
 }
 
 .studip-widget:hover {
-    border: 1px solid @brand-color-darker;
+    border: 1px solid $brand-color-darker;
     transition: border-color 300ms ease-in-out;
 
 }
 #widget_choices{
-    border-right: 1px dashed @brand-color-darker;
+    border-right: 1px dashed $brand-color-darker;
     margin-right: 25px;
 }
 .start-widgetcontainer {
@@ -83,7 +80,7 @@
     width: 100%;
 }
 .ui-widgetContainer {
-    color: white;
+    color: $white;
     background-image: none;
 }
 
@@ -95,9 +92,9 @@
     line-height: 30px;
 
     text-align: center;
-    color: white;
+    color: $white;
     font-size: 1.3em;
-    background-color: @content-color;
+    background-color: $content-color;
 }
 
 .ui-widget_head:hover {
@@ -107,24 +104,24 @@
 .ui-widget_head h1 {
     line-height: 100px;
     text-align: center;
-    color: black;
+    color: $black;
 }
 
 .addclip-widgets {
-    color: #000;
+    color: $black;
     list-style: none;
     margin: 0;
     padding: 0;
 
     a:link, a:visited {
-        color: #000;
+        color: $black;
     }
     a:hover, a:active {
-        color: @active-color;
+        color: $active-color;
     }
 
     li {
-        border-top: 1px solid @content-color;
+        border-top: 1px solid $content-color;
         padding: 4px 0;
 
         &:first-child {
@@ -166,7 +163,7 @@ div.start-widgetcontainer {
             display: none;
         }
         &.move {
-            border: @base-color-80 dashed 1px;
+            border: $base-color-80 dashed 1px;
         }
     }
 }
@@ -195,7 +192,7 @@ div.available-widgets {
         }
 
         &.move {
-            border: @base-color-80 dashed 1px;
+            border: $base-color-80 dashed 1px;
         }
     }
 

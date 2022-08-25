@@ -13,14 +13,13 @@
     padding: 0 1em;
 }
 .profile-view-actions {
-    .list-unstyled();
-
+    @include list-unstyled();
     img {
         vertical-align: text-top;
     }
 }
 
-.media-breakpoint-tiny-down({
+@include media-breakpoint-tiny-down(){
 
     table.settings-privacy {
         &, thead, tbody, th, td, tr {
@@ -46,7 +45,7 @@
             width: auto;
         }
     }
-});
+};
 
 
 
@@ -78,10 +77,10 @@
 }
 
 #select_fach_abschluss > tbody > tr:last-child > td {
-    border-bottom: 1px solid @table-header-color;
+    border-bottom: 1px solid $table-header-color;
 }
 
-.media-breakpoint-small-up({
+@include media-breakpoint-small-up(){
     #select_fach_abschluss tbody {
         td::before {
             display: none;
@@ -104,4 +103,4 @@
             text-align: center;
         }
     }
-});
+};

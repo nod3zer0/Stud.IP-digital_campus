@@ -26,7 +26,7 @@ ul.studygroup-gallery {
         }
     }
     .new-member .member-avatar {
-        .icon('after', 'star', 'new', 12);
+        @include icon(after, star, new, 12px);
         &::after {
             position: absolute;
             margin: -1px 0 0 -14px;

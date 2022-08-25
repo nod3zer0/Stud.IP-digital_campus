@@ -28,20 +28,20 @@
     .pagination--link {
         background-color: transparent;
         border: 0;
-        color: @base-color;
+        color: $base-color;
         cursor: pointer;
         padding: 0;
     }
 
     .current .pagination--link {
         font-weight: bold;
-        color: #000;
+        color: $black;
     }
 
     .prev,
     .next {
         .pagination--link {
-            .hide-text;
+            @include hide-text();
             background-position: center;
             background-repeat: no-repeat;
             display: inline-block;
@@ -51,9 +51,9 @@
         }
     }
     .prev .pagination--link {
-        .background-icon('arr_1left');
+        @include background-icon(arr_1left);
     }
     .next .pagination--link {
-        .background-icon('arr_1right');
+        @include background-icon(arr_1right);
     }
 }

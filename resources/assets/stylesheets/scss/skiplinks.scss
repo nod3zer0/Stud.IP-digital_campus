@@ -1,7 +1,7 @@
 /* skiplink-area highlighting -------------------------------------------- */
 #skip_link_navigation {
-    background-color: #fff;
-    border: 2px solid #f60;
+    background-color: $white;
+    border: 2px solid $orange;
     left: -600px;
     margin: 0;
     padding: 10px;
@@ -18,7 +18,7 @@
 
 .skip_target {
     position: absolute;
-    .hide-text();
+    @include hide-text();
 }
 
 #skiplink_list {
@@ -27,15 +27,15 @@
 
 button.skiplink {
     border: 0;
-    background-color: #fff;
-    color: @base-color;
+    background-color: $white;
+    color: $base-color;
     line-height: 1em;
     margin-bottom: 0.1em;
 }
 
 body.enable-skiplinks {
     *:not(:empty):focus {
-        outline: 2px dashed @orange;
+        outline: 2px dashed $orange;
     }
 
     #tabs {

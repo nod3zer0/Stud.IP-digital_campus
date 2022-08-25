@@ -17,10 +17,10 @@
     bottom: 20px;
     right: 20px;
     z-index:20001;
-    border: solid 1px #28497c;
-    background-color: #ffffff;
+    border: solid 1px $base-color;
+    background-color: $white;
     padding: 10px 10px;
-    font-family: @font-family-base;
+    font-family: $font-family-base;
     overflow-y: auto;
     box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
 }
@@ -30,7 +30,7 @@
 }
 
 .tour_focus_box {
-    border: 2px dashed #ffbd33;
+    border: 2px dashed $yellow;
 }
 
 #tour_tip {
@@ -38,25 +38,26 @@
     position: absolute;
     z-index:20000;
     max-width: 300px;
-    font-family: @font-family-base;
+    font-family: $font-family-base;
     font-size: 16px;
     box-sizing: border-box;
-    background-color: #28497c;
-    color: #ffffff; border:
-    solid 1px #aaaaaa;
+    background-color: $base-color;
+    color: $white;
+    border: solid 1px $dark-gray-color-80;
     box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
+
     a.link-extern {
-        .icon('before', 'link-extern', 'info_alt', 16, 2px);
+        @include icon(before, link-extern, info-alt);
     }
     a.link-intern {
-        .icon('before', 'link-intern', 'info_alt', 16, 2px);
+        @include icon(before, link-intern, info-alt);
     }
     a, a:link, a:visited {
-        color: #FFFFFF;
+        color: $white;
         text-decoration: none;
     }
     a:hover, a:active, a:hover.index, a:active.index, a:hover.tree {
-        color: #FFFFFF;
+        color: $white;
         text-decoration: underline;
     }
 }
@@ -66,12 +67,12 @@
     position: absolute;
     z-index:20000;
     max-width: 300px;
-    font-family: @font-family-base;
+    font-family: $font-family-base;
     font-size: 16px;
     box-sizing: border-box;
-    background-color: #ffbd33;
-    color: #000000;
-    border: solid 1px #aaaaaa;
+    background-color: $yellow;
+    color: $black;
+    border: solid 1px $dark-gray-color-10;
     box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
 }
 
@@ -87,7 +88,7 @@
 }
 
 #tour_overlay {
-    background-color: #ffffff;
+    background-color: $white;
     opacity: 0.4;
     position: fixed;
     z-index: 10000;
@@ -96,7 +97,7 @@
 }
 
 #tour_selector_overlay {
-    background-color: #000000;
+    background-color: $white;
     opacity: 0.5;
     position: absolute;
 }

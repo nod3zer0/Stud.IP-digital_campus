@@ -1,6 +1,6 @@
 /* --- Links ---------------------------------------------------------------- */
 a, a:link, a:visited {
-    color: @base-color;
+    color: $base-color;
     text-decoration: none;
 
     &.index     { color: #444; }
@@ -12,7 +12,7 @@ a, a:link, a:visited {
     }
 }
 a[href] {
-    @media not (prefers-reduced-motion) {
+    @media not prefers-reduced-motion {
         transition: color 0.3s;
     }
 }
@@ -21,7 +21,7 @@ a[disabled] {
 }
 
 a:hover, a:active, a:hover.index, a:active.index, a:hover.tree {
-    color: @active-color;
+    color: $active-color;
     text-decoration: none;
 }
 
@@ -34,16 +34,16 @@ a.link-intern, a.link-extern {
 }
 
 a.link-intern {
-    .icon('before', 'link-intern', 'clickable', 16, 2px);
+    @include icon(before, link-intern, clickable, 16px, 2px);
 }
 a.link-extern {
-    .icon('before', 'link-extern', 'clickable', 16, 2px);
+    @include icon(before, link-extern, clickable, 16px, 2px);
 }
 a.link-add {
-    .icon('before', 'add', 'clickable', 16, 2px);
+    @include icon(before, add, clickable, 16px, 2px);
 }
 a.link-edit {
-    .icon('before', 'edit', 'clickable', 16, 2px);
+    @include icon(before, edit, clickable, 16px, 2px);
 }
 
 a img {
