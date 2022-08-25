@@ -14,7 +14,7 @@
                 </li>
                 <li v-if="showOer" class="cw-export-widget-oer">
                     <button @click="oerElement">
-                        <translate>Seite auf %{oerTitle} veröffentlichen</translate>
+                        <translate>Seite auf dem OER Campus veröffentlichen</translate>
                     </button>
                 </li>
                 <li v-if="!showExportArchiv && !showExportPdf && !showOer">
@@ -41,7 +41,6 @@ export default {
         ...mapGetters({
             context: 'context',
             oerEnabled: 'oerEnabled',
-            oerTitle: 'oerTitle',
             userIsTeacher: 'userIsTeacher',
         }),
         canEdit() {

@@ -593,7 +593,7 @@ class OERMaterial extends SimpleORMap
         $statement->execute([$GLOBALS['user']->id]);
         $usernames = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
         $messsaging = new messaging();
-        $subject = sprintf(_("Neues Material im %s"), Config::get()->OER_TITLE);
+        $subject = _("Neues Material im OER Campus");
         if ($this->users[0]) {
             $user_name = $this->users[0]['external_contact']
                 ? $this->users[0]['oeruser']['name']
@@ -603,9 +603,8 @@ class OERMaterial extends SimpleORMap
         }
         $oldbase = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
         $message = sprintf(
-            _('%1$s hat soeben neues Material auf dem %2$s zur verfügung gestellt. Viel Spaß! <br> %3$s'),
+            _('%1$s hat soeben neues Material auf dem OER Campus zur verfügung gestellt. Viel Spaß! <br> %2$s'),
             $user_name,
-            Config::get()->OER_TITLE,
             URLHelper::getURL("dispatch.php/oer/market/details/".$this->getId())
         );
         URLHelper::setBaseURL($oldbase);
@@ -620,7 +619,7 @@ class OERMaterial extends SimpleORMap
             $subject,
             '',
             'normal',
-            [Config::get()->OER_TITLE],
+            [_('OER Campus')],
             false
         );
     }

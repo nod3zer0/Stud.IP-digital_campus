@@ -9,7 +9,6 @@ const getDefaultState = () => {
         courseware: {},
         currentElement: {},
         oerEnabled: null,
-        oerTitle: null,
         licenses: null, // we need a route for License SORM
         httpClient: null,
         lastElement: null,
@@ -78,9 +77,6 @@ const getters = {
     },
     oerEnabled(state) {
         return state.oerEnabled;
-    },
-    oerTitle(state) {
-        return state.oerTitle;
     },
     licenses(state) {
         return state.licenses;
@@ -734,10 +730,6 @@ export const actions = {
         context.commit('oerEnabledSet', enabled);
     },
 
-    oerTitle(context, title) {
-        context.commit('oerTitleSet', title);
-    },
-
     licenses(context, licenses) {
         context.commit('licensesSet', licenses);
     },
@@ -1243,10 +1235,6 @@ export const mutations = {
 
     oerEnabledSet(state, data) {
         state.oerEnabled = data;
-    },
-
-    oerTitleSet(state, data) {
-        state.oerTitle = data;
     },
 
     licensesSet(state, data) {

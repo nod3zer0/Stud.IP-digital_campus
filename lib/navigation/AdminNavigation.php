@@ -143,7 +143,7 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation(
                     'oer',
                     new Navigation(
-                        Config::get()->OER_TITLE,
+                        _('OER Campus'),
                         URLHelper::getURL("dispatch.php/oer/admin/hosts")
                     )
                 );

@@ -528,7 +528,7 @@
                 >
                     <template v-slot:dialogContent>
                         <p><translate>Das folgende Courseware-Material wird %{ ownerName }
-                            zur Veröffentlichung im %{ oerTitle } vorgeschlagen:</translate></p>
+                            zur Veröffentlichung im OER Campus vorgeschlagen:</translate></p>
                         <table class="cw-structural-element-info">
                             <tr>
                                 <td><translate>Titel</translate>:</td>
@@ -724,7 +724,6 @@ export default {
             showSuggestOerDialog: 'showSuggestOerDialog',
             showLinkDialog: 'showStructuralElementLinkDialog',
             oerEnabled: 'oerEnabled',
-            oerTitle: 'oerTitle',
             licenses: 'licenses',
             exportState: 'exportState',
             exportProgress: 'exportProgress',
@@ -741,7 +740,7 @@ export default {
 
         textOer() {
             return {
-                title: this.$gettextInterpolate('Seite auf %{ oerTitle } veröffentlichen', {oerTitle: this.oerTitle}),
+                title: this.$gettext('Seite auf dem OER Campus veröffentlichen'),
                 confirm: this.$gettext('Veröffentlichen'),
                 close: this.$gettext('Schließen'),
             };
@@ -749,7 +748,7 @@ export default {
 
         textSuggestOer() {
             return {
-                title: this.$gettextInterpolate('Material für %{ oerTitle } vorschlagen', {oerTitle: this.oerTitle}),
+                title: this.$gettext('Material für den OER Campus vorschlagen'),
                 confirm: this.$gettext('Material vorschlagen'),
                 close: this.$gettext('Schließen'),
             };
@@ -906,7 +905,7 @@ export default {
             let menu = [
                 { id: 4, label: this.$gettext('Informationen anzeigen'), icon: 'info', emit: 'showInfo' },
                 { id: 5, label: this.$gettext('Lesezeichen setzen'), icon: 'star', emit: 'setBookmark' },
-                { id: 6, label: this.$gettextInterpolate('Material für %{ oerTitle } vorschlagen', {oerTitle: this.oerTitle}), icon: 'oer-campus', emit: 'showSuggest' },
+                { id: 6, label: this.$gettext('Material für den OER Campus vorschlagen', icon: 'oer-campus', emit: 'showSuggest' },
 
             ];
             if (this.canEdit) {

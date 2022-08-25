@@ -5,7 +5,7 @@
 
     <label>
         <input type="checkbox" name="abo" value="1"<?= $abo ? " checked" : "" ?>>
-        <?= sprintf(_('Ich möchte Nachrichten bekommen über neue Inhalte im %s'), Config::get()->OER_TITLE) ?>
+        <?= _('Ich möchte Nachrichten bekommen über neue Inhalte im OER Campus') ?>
     </label>
 
     <div data-dialog-button>

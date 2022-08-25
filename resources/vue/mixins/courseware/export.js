@@ -11,7 +11,6 @@ export default {
             containerById: 'courseware-containers/byId',
             folderById: 'folders/byId',
             filesById: 'files/byId',
-            oerTitle: 'oerTitle',
             structuralElementById: 'courseware-structural-elements/byId',
         }),
     },
@@ -187,7 +186,7 @@ export default {
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data"}
             }).then( () => {
-                this.companionInfo({ info: this.$gettextInterpolate('Die Seite wurde an %{ oerTitle } gesendet.', {oerTitle: this.oerTitle}) });
+                this.companionInfo({ info: this.$gettext('Die Seite wurde an den OER Campus gesendet.') });
             }).catch(error => {
                 this.companionError({ info: this.$gettext('Beim Veröffentlichen der Seite ist ein Fehler aufgetreten.') });
                 console.debug(error);

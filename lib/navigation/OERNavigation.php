@@ -23,9 +23,9 @@ class OERNavigation extends Navigation
      */
     public function __construct()
     {
-        parent::__construct(Config::get()->OER_TITLE);
+        parent::__construct(_('OER Campus'));
 
-        $this->setImage(Icon::create('oer-campus', Icon::ROLE_NAVIGATION, ["title" => Config::get()->OER_TITLE]));
+        $this->setImage(Icon::create('oer-campus', Icon::ROLE_NAVIGATION, ["title" => _('OER Campus')]));
     }
 
     /**
@@ -37,7 +37,7 @@ class OERNavigation extends Navigation
         global $perm;
         parent::initSubNavigation();
 
-        $navigation = new Navigation(Config::get()->OER_TITLE, 'dispatch.php/oer/market');
+        $navigation = new Navigation(_('OER Campus'), 'dispatch.php/oer/market');
         $this->addSubNavigation('market', $navigation);
 
         if ($perm->have_perm('autor')) {

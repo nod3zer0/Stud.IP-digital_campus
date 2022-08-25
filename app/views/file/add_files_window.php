@@ -17,7 +17,7 @@ if ($folder_id) {
 <div class="files_source_selector" data-folder_id="<?= htmlReady($folder_id) ?>" <? if ($hidden) echo ' style="display: none;"'; ?>>
     <h2 class="dialog-subtitle"><?= _('Quelle auswählen') ?></h2>
     <div class="file_select_possibilities">
-        <? if ($range instanceof Course && !$range->getSemClass()['studygroup_mode'] && $GLOBALS['perm']->have_studip_perm('tutor', $range->id) 
+        <? if ($range instanceof Course && !$range->getSemClass()['studygroup_mode'] && $GLOBALS['perm']->have_studip_perm('tutor', $range->id)
             && $GLOBALS['LIBRARY_CATALOGS'] && $show_library_functions && $library_search_description) : ?>
             <div>
                 <a class="important-item" data-dialog="size=medium-43"
@@ -66,7 +66,7 @@ if ($folder_id) {
                 <a href="<?= $controller->link_for('oer/addfile/choose_file', array_merge($options, ['from_plugin' => ""])) ?>"
                    data-dialog="size=800x800">
                     <?= Icon::create('oer-campus')->asImg(50) ?>
-                    <?= htmlReady(Config::get()->OER_TITLE) ?>
+                    <?= _('OER Campus') ?>
                 </a>
             <? endif ?>
             <? foreach (PluginManager::getInstance()->getPlugins('FilesystemPlugin') as $plugin) : ?>

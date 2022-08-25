@@ -1,4 +1,4 @@
-<h1><?= htmlReady(Config::get()->OER_TITLE) ?></h1>
+<h1><?= _('OER Campus') ?></h1>
 
 <h2><?= _('Version') ?></h2>
 <?= _('Stud.IP') ?>: <?= htmlReady($GLOBALS['SOFTWARE_VERSION']) ?>
