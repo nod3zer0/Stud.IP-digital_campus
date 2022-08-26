@@ -15318,7 +15318,7 @@ msgid ""
 "(Studienbegleitender Internetsupport von Präsenzlehre)\n"
 "- %s -\n"
 "\n"
-"Ihr Passwort wurde soben von einem/einer Administrator/in geändert.\n"
+"Ihr Passwort wurde soeben von einem/einer Administrator/in geändert.\n"
 msgstr ""
 
 #: ../lib/classes/PluginAdministration.php:35

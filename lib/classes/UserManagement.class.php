@@ -1297,7 +1297,7 @@ class UserManagement
         $mailbody = sprintf(
             _("Dies ist eine Informationsmail des Stud.IP-Systems\n"
                 ."(Studienbegleitender Internetsupport von Präsenzlehre)\n- %s -\n\n"
-                ."Ihr Passwort wurde soben von einem/einer Administrator/in geändert.\n"
+                ."Ihr Passwort wurde soeben von einem/einer Administrator/in geändert.\n"
             ),
             Config::get()->UNI_NAME_CLEAN
         );
