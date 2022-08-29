@@ -384,33 +384,6 @@ jQuery(document).on('click', 'a[data-behaviour~="ajax-toggle"]', function (event
     });
 }(jQuery));
 
-// Detect high contrast mode
-// https://gist.github.com/ffoodd/78f99204b5806e183574
-$(window).on('load', () => {
-    function prefersContrast () {
-        if (window.matchMedia('prefers-contrast: more').matches || window.matchMedia('prefers-contrast: high').matches) {
-            return true;
-        }
-
-        const testColor = 'rgb(31,41,59)';
-        const testElement = document.createElement('a');
-        let strColor;
-
-        testElement.style.color = testColor;
-        document.documentElement.appendChild(testElement);
-        strColor = document.defaultView ? document.defaultView.getComputedStyle(testElement, null).color : testElement.currentStyle.color;
-        strColor = strColor.replace(/ /g, '');
-        document.documentElement.removeChild(testElement);
-        return strColor !== testColor;
-    }
-
-    document.querySelector('html').classList.toggle(
-        'high-contrast-mode-activated',
-        prefersContrast()
-    );
-});
-
-
 // Trigger consuming mode on contentbar
 STUDIP.domReady(function () {
     $(document).on("click", ".consuming_mode_trigger", function () {

@@ -70,7 +70,7 @@ $icon-padding: 3px;
     a {
         padding: $icon-padding - $border-width;
     }
-    html.high-contrast-mode-activated &  {
+    @media (prefers-contrast: more) {
         a {
             border: 1px dashed mixins.$black;
         }
