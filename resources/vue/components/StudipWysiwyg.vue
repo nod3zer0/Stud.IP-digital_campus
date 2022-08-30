@@ -1,57 +1,59 @@
 <template>
+    <ckeditor
+        v-if="enabled"
+        :editor="editor"
+        :config="editorConfig"
+        @ready="prefill"
+        v-model="currentText"
+        @input="onInput"
+    ></ckeditor>
     <textarea
-        :value="value"
-        ref="studip_wysiwyg"
-        class="studip-wysiwyg"
-        :required="required"
-        @input="updateValue($event.target.value)"/>
+        v-else
+        :value="text"
+        @input="$emit('input', $event.target.value)"
+        ref="textarea"
+        class="studip-wysiwyg wysiwyg"
+    ></textarea>
 </template>
 
 <script>
-// need v-model to provide and get content -> <studip-wysiwyg v-model="content" />
+import ClassicEditor from '../../assets/javascripts/chunks/wysiwyg.js';
+import Toolbar from '../../assets/javascripts/lib/toolbar.js';
+
 export default {
     name: 'studip-wysiwyg',
+    model: {
+        prop: 'text',
+        event: 'input',
+    },
     props: {
-        value: String,
-        required: {
-            type: Boolean,
-            required: false,
-            default: false
-        }
+        text: String,
     },
     data() {
         return {
-            fallbackActive: false
-        }
+            currentText: '',
+            editor: ClassicEditor,
+            editorConfig: {},
+        };
     },
-    mounted() {
-        let ckeInit = this.initCKE();
-        if (!ckeInit) {
-            this.fallbackActive = true;
-        }
+    computed: {
+        enabled() {
+            return STUDIP.editor_enabled;
+        },
     },
     methods: {
-        initCKE() {
-            if (!STUDIP.wysiwyg_enabled) {
-                return false;
-            }
-            let view = this;
-            STUDIP.wysiwyg.replace(view.$refs.studip_wysiwyg);
-            let wysiwyg_editor = CKEDITOR.instances[view.$refs.studip_wysiwyg.id];
-            wysiwyg_editor.on('blur', function() {
-                //console.log('cke blur');
-            });
-            wysiwyg_editor.on('change', function() {
-                view.$emit('input', wysiwyg_editor.getData());
-            });
-            return true;
+        prefill(editor) {
+            this.currentText = this.text;
         },
-        updateValue(value) {
-            if (this.fallbackActive) {
-                this.$emit('input', value);
-            }
+        onInput(value) {
+            this.currentText = value;
+            this.$emit('input', value);
+        },
+    },
+    mounted() {
+        if (!this.enabled) {
+            Toolbar.initialize(this.$refs.textarea);
         }
     },
-
-}
+};
 </script>

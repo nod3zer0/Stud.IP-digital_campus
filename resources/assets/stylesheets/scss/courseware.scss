@@ -2591,7 +2591,7 @@ p r o g r e s s  c i r c l e
 
     @for $i from 1 through 100 {
         &.p#{$i} .value-bar {
-            transform: rotate(360 * $i / 100 + 0deg);
+            transform: rotate(calc(360deg * $i / 100));
         }
     }
 }
@@ -3058,7 +3058,7 @@ a u d i o  b l o c k
                     @include background-icon(file-audio2, clickable, 24);
                     background-repeat: no-repeat;
                     background-position: 1em center;
-    
+
                     margin: 1em 0;
                     padding: 1em;
                     padding-left: 4em;
@@ -3110,6 +3110,26 @@ a u d i o  b l o c k
 /* * * * * * * * * * * * * *
 a u d i o  b l o c k  e n d
 * * * * * * * * * * * * * */
+
+/* * * * * * * * * * * * * * * * * * * *
+f o r  m u l t i m e d i a  b l o c k s
+* * * * * * * * * * * * * * * * * * * */
+.cw-file-empty {
+    @include background-icon(file, info, 96);
+    border: solid thin $content-color-40;
+    background-position: center 1em;
+    background-repeat: no-repeat;
+    min-height: 140px;
+    padding: 1em;
+    p {
+        text-align: center;
+        padding-top: 106px;
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * *
+f o r  m u l t i m e d i a  b l o c k s  e n d
+* * * * * * * * * * * * * * * * * * * * * * * */
 
 /* * * * * * * * * *
 v i d e o  b l o c k
@@ -4782,7 +4802,7 @@ cw tiles end
 * * * * * * * * * * * * * */
 
 /* * * * * * * * * * * *
-p u b l i c  l i n k s 
+p u b l i c  l i n k s
 * * * * * * * * * * * */
 .cw-public-link-clipboard-button {
     width: 16px;
@@ -4793,8 +4813,8 @@ p u b l i c  l i n k s
     vertical-align: text-bottom;
     @include background-icon(clipboard, clickable, 16);
     cursor: pointer;
-    
+
 }
 /* * * * * * * * * * * * * * *
-e n d  p u b l i c  l i n k s 
+e n d  p u b l i c  l i n k s
 * * * * * * * * * * * * * * */

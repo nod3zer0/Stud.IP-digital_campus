@@ -74,6 +74,15 @@ STUDIP.loadChunk = (function () {
                 );
                 break;
 
+            case 'wysiwyg':
+                promise = import(
+                    /* webpackChunkName: "vue.js" */
+                    './chunks/wysiwyg'
+                ).then(({default: ClassicEditor}) => {
+                    return ClassicEditor;
+                });
+                break;
+
             default:
                 promise = Promise.reject(new Error(`Unknown chunk: ${chunk}`));
         }

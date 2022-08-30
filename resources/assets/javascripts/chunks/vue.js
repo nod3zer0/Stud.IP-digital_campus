@@ -8,6 +8,7 @@ import PortalVue from 'portal-vue';
 import BaseComponents from '../../../vue/base-components.js';
 import BaseDirectives from "../../../vue/base-directives.js";
 import StudipStore from "../../../vue/store/StudipStore.js";
+import CKEditor from '@ckeditor/ckeditor5-vue2';
 
 // Setup gettext
 Vue.use(GetTextPlugin, getVueConfig());
@@ -42,6 +43,7 @@ Vue.mixin({
     },
 });
 
+Vue.use(CKEditor);
 
 // Define createApp function
 function createApp(options, ...args) {

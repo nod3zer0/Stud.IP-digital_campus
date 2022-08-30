@@ -3,6 +3,9 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
+
+const { styles } = require('@ckeditor/ckeditor5-dev-utils');
 
 const assetsPath = path.resolve(__dirname, "resources/assets/javascripts");
 
@@ -25,6 +28,10 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+                use: [ 'raw-loader' ]
+            },
+            {
                 test: /\.css$/,
                 use: [
                     {
@@ -38,7 +45,15 @@ module.exports = {
                         }
                     },
                     {
-                        loader: "postcss-loader"
+                        loader: "postcss-loader",
+                        options: {
+                            postcssOptions: styles.getPostCssConfig( {
+                                themeImporter: {
+                                    themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+                                },
+                                minify: true
+                            } )
+                        }
                     }
                 ]
             },
@@ -118,6 +133,10 @@ module.exports = {
                 'resources/assets/javascripts/vendor',
                 'resources/assets/javascripts/jquery/jstree/jquery.jstree.js',
             ]
+        }),
+        new CKEditorWebpackPlugin({
+            language: 'de',
+            addMainLanguageTranslationsToAllAssets: true
         }),
     ],
     resolve: {

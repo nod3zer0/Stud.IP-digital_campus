@@ -98,7 +98,7 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
     <?= PageLayout::getHeadElements() ?>
 
     <script>
-    window.STUDIP.editor_enabled = <?= json_encode((bool) Studip\Markup::editorEnabled()) ?> && CKEDITOR.env.isCompatible;
+    window.STUDIP.editor_enabled = <?= json_encode((bool) Studip\Markup::editorEnabled()) ?>;
     </script>
 </head>
 

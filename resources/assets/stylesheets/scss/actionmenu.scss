@@ -53,9 +53,9 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
 
         // Create animated icon that changes to close icon on activation/hover
         span {
-            width: ($action-menu-icon-size / 4);
-            height: ($action-menu-icon-size / 4);
-            transform: translate((-($action-menu-icon-size / 8)), 0);
+            width: calc($action-menu-icon-size / 4);
+            height: calc($action-menu-icon-size / 4);
+            transform: translate(calc(-1 * ($action-menu-icon-size / 8)), 0);
             transition: all .25s ease-in-out;
 
             display: block;
@@ -70,8 +70,8 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
             }
 
             &:nth-child(2) {
-                top: ($action-menu-icon-size / 2);
-                transform: translate((-($action-menu-icon-size / 8)), (-($action-menu-icon-size / 8)));
+                top: calc($action-menu-icon-size / 2);
+                transform: translate(calc(-1 * ($action-menu-icon-size / 8)), calc(-1 * ($action-menu-icon-size / 8)));
             }
 
             &:nth-child(3) {
@@ -151,7 +151,7 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
 
                 &:nth-child(1) {
                     left: 0;
-                    transform: rotate(45deg) translate((($action-menu-icon-size / 4) + 0.5), (($action-menu-icon-size / 4) + 0.5));
+                    transform: rotate(45deg) translate(calc(($action-menu-icon-size / 4) + 0.5px), calc(($action-menu-icon-size / 4) + 0.5px));
                     width: 100%;
                 }
 
@@ -161,7 +161,7 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
 
                 &:nth-child(3) {
                     left: 0;
-                    transform: rotate(-45deg) translate(($action-menu-icon-size / 4), (-($action-menu-icon-size / 4)));
+                    transform: rotate(-45deg) translate(calc($action-menu-icon-size / 4), calc(-1 * ($action-menu-icon-size / 4)));
                     width: 100%;
                 }
             }

@@ -13,7 +13,7 @@
                 <section class="cw-block-content formatted-content" v-html="currentText" ref="content"></section>
             </template>
             <template v-if="canEdit" #edit>
-                <studip-wysiwyg v-model="currentText"></studip-wysiwyg>
+                <ckeditor :editor="editor" v-model="currentText" :config="editorConfig"></ckeditor>
             </template>
             <template #info><translate>Informationen zum Text-Block</translate></template>
         </courseware-default-block>
@@ -22,14 +22,13 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
-import StudipWysiwyg from '../StudipWysiwyg.vue';
+import ClassicEditor from '../../../assets/javascripts/chunks/wysiwyg.js'
 import { mapActions } from 'vuex';
 
 export default {
     name: 'courseware-text-block',
     components: {
         CoursewareDefaultBlock,
-        StudipWysiwyg,
     },
     props: {
         block: Object,
@@ -39,6 +38,10 @@ export default {
     data() {
         return {
             currentText: '',
+            editor: ClassicEditor,
+            editorConfig: {
+                // The configuration of the editor.
+            }
         };
     },
     computed: {

@@ -14,14 +14,14 @@ $(document).on('click', '#wiki button[name="submit-and-edit"]', function(event) 
         data = {},
         form_data,
         i,
-        id,
         wysiwyg_editor = false;
 
     if (STUDIP.editor_enabled) {
-        id = $('textarea[name="body"]', form).attr('id');
-        wysiwyg_editor = CKEDITOR.instances[id];
-        wysiwyg_editor.setData(STUDIP.wysiwyg.markAsHtml(wysiwyg_editor.getData()));
-        wysiwyg_editor.updateElement();
+        const textarea = $('textarea[name="body"]', form).get(0);
+        if (textarea) {
+            wysiwyg_editor = STUDIP.wysiwyg.getEditor(textarea);
+            wysiwyg_editor.sourceElement.value = STUDIP.wysiwyg.markAsHtml(wysiwyg_editor.getData());
+        }
     }
 
     form_data = form.serializeArray();

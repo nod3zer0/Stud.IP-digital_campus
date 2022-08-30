@@ -1,0 +1,387 @@
+:root {
+
+    /* --dark-gray-color-5: #f5f5f6;
+    --content-color-40: #d0d7e3;
+    --red: #d60000;
+    --green: #6ead10; */
+
+    --ck-color-base-foreground: var(--dark-gray-color-5);
+    --ck-color-base-background: #fff;
+
+    --ck-color-base-border: var(--content-color-40);
+    --ck-color-base-action: var(--green);
+    --ck-color-base-focus: var(--base-color);
+    --ck-color-base-text: #000;
+    --ck-color-base-active: var(--base-color);
+    --ck-color-base-active-focus: var(--base-color);
+    --ck-color-base-error: var(--red);
+
+    /* -- Buttons ------------------------------------------------------------------------------- */
+
+    --ck-color-button-default-hover-background: var(--base-color);
+    --ck-color-button-default-active-background: var(--base-color);
+    --ck-color-button-default-active-shadow: transparent;
+
+    --ck-color-button-on-background: var(--base-color);
+    --ck-color-button-on-hover-background: var(--base-color);
+    --ck-color-button-on-active-background: var(--base-color);
+    --ck-color-button-on-active-shadow: transparent;
+
+    --ck-color-button-action-background: #fff;
+    --ck-color-switch-button-on-background: var(--base-color);
+    --ck-color-switch-button-on-hover-background: var(--base-color);
+
+    --ck-color-split-button-hover-border: transparent;
+    --ck-color-split-button-hover-background: transparent;
+
+    /* -- Generic colors ------------------------------------------------------------------------ */
+
+    --ck-color-focus-border: var(--base-color);
+    --ck-color-text: var(--ck-color-base-text);
+
+
+    /* -- Link -------------------------------------------------------------------------------- */
+
+    --ck-color-link-default: var(--base-color);
+    --ck-color-link-selected-background: var(--base-color);
+    --ck-color-link-fake-selection: var(--base-color);
+
+    /* disable border radius*/
+
+    --ck-border-radius: 0;
+
+    /* disable shadows */
+
+    --ck-inner-shadow: unset;
+    --ck-drop-shadow: unset;
+    --ck-drop-shadow-active: unset;
+    --ck-focus-outer-shadow-geometry: 0;
+
+    /* fonts */
+
+    --ck-font-size-base: 14px;
+    --ck-font-face: "Lato", sans-serif;
+
+    /* tooltip */
+    --ck-tooltip-arrow-size: 8px;
+    --ck-color-tooltip-background: var(--dark-gray-color-5);
+
+}
+.ck.ck-icon, .ck.ck-icon * {
+    color: var(--base-color);
+}
+.ck.ck-button.ck-on:not(.ck-dropdown__button) .ck.ck-icon,
+.ck.ck-button.ck-on:not(.ck-dropdown__button) .ck.ck-icon *,
+.ck.ck-button:not(.ck-dropdown__button.ck-button_with-text):not(.ck-disabled):hover .ck.ck-icon,
+.ck.ck-button:not(.ck-dropdown__button.ck-button_with-text):not(.ck-disabled):hover .ck.ck-icon * {
+    color: #fff;
+}
+
+/* buttons */
+
+.ck.ck-button:hover {
+    cursor: pointer;
+}
+
+.ck.ck-button.ck-off.ck-button-save {
+    background-image: url('../../assets/images/icons/blue/accept.svg');
+    background-repeat: no-repeat;
+    background-size: 24px;
+    background-position: center;
+}
+
+.ck.ck-button.ck-off.ck-button-cancel {
+    background-image: url('../../assets/images/icons/blue/decline.svg');
+    background-repeat: no-repeat;
+    background-size: 24px;
+    background-position: center;
+}
+
+.ck.ck-button.ck-off.ck-button_with-text:not(.ck-character-grid__tile):not(.ck-source-editing-button) {
+    background-position: 5px 50%;
+    border: solid thin var(--base-color);
+}
+
+.ck-list .ck.ck-button.ck-off.ck-button_with-text:not(.ck-character-grid__tile):not(.ck-source-editing-button) {
+    border: none;
+}
+
+.ck.ck-button.ck-off.ck-button_with-text:hover {
+    background-color: var(--base-color);
+}
+.ck.ck-button.ck-on.ck-dropdown__button,
+.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover,
+a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
+    background-color: #fff;
+    color: var(--base-color);
+}
+
+
+.ck.ck-button.ck-off.ck-button_with-text.ck-disabled:hover,
+.ck.ck-button.ck-off.ck-button_with-text.ck-character-grid__tile:hover {
+    background: transparent;
+    color: var(--black);
+}
+
+.ck.ck-button.ck-off.ck-button_with-text:not(.ck-disabled) .ck.ck-button__label {
+    color: var(--base-color);
+}
+
+.ck.ck-button.ck-on.ck-button_with-text:not(.ck-disabled):not(.ck-switchbutton):not(.ck-dropdown__button) .ck.ck-button__label,
+.ck.ck-button.ck-off.ck-button_with-text:not(.ck-disabled):not(.ck-dropdown__button):hover .ck.ck-button__label {
+    color: #fff;
+}
+
+.ck.ck-button.ck-on.ck-button_with-text.ck-switchbutton {
+    color: var(--base-color);
+}
+.ck.ck-button.ck-on.ck-button_with-text.ck-switchbutton:hover {
+    color: #fff;
+}
+
+.ck.ck-button.ck-off.ck-button-save:hover:not(.ck-disabled) {
+    background-image: url('../../assets/images/icons/white/accept.svg');
+}
+
+.ck.ck-button.ck-off.ck-button-save.ck-disabled {
+    background-image: url('../../assets/images/icons/grey/accept.svg');
+}
+
+.ck.ck-button.ck-off.ck-button-cancel:hover {
+    background-image: url('../../assets/images/icons/white/decline.svg');
+}
+
+.ck.ck-button.ck-off.ck-button-save svg,
+.ck.ck-button.ck-off.ck-button-cancel svg {
+    display: none;
+}
+
+.ck.ck-button.ck-off.ck-button_with-text.ck-disabled:not(.ck-character-grid__tile):not(.ck-source-editing-button) {
+    border: solid thin var(--dark-gray-color-20);
+    cursor: default;
+}
+
+.ck.ck-collapsible.ck-collapsible_collapsed .ck.ck-button.ck-off.ck-button_with-text.ck-disabled:not(.ck-character-grid__tile):not(.ck-source-editing-button) {
+    border: none;
+}
+
+.ck.ck-button.ck-button_with-text.ck-switchbutton {
+    color: var(--base-color);
+    background-color: #fff;
+}
+
+.ck.ck-button.ck-button_with-text.ck-switchbutton,
+.ck.ck-button.ck-numbered-list-properties__reversed-order.ck-button_with-text.ck-switchbutton {
+    border: none !important;
+}
+
+.ck.ck-collapsible .ck.ck-button.ck-off.ck-button_with-text {
+    border: none;
+}
+
+.ck.ck-collapsible.ck-collapsible_collapsed .ck.ck-button.ck-button_with-text:hover .ck.ck-button__label,
+.ck.ck-collapsible .ck.ck-button.ck-on.ck-button_with-text:not(.ck-disabled):not(.ck-switchbutton):not(.ck-dropdown__button) .ck.ck-button__label {
+    color: var(--base-color);
+}
+
+.ck.ck-collapsible.ck-collapsible_collapsed .ck.ck-button.ck-disabled.ck-button_with-text:hover .ck.ck-button__label {
+    color: var(--black);
+}
+
+.ck.ck-collapsible .ck.ck-icon.ck-button__icon *,
+.ck.ck-collapsible .ck.ck-button:hover .ck.ck-icon.ck-button__icon *,
+.ck.ck-collapsible .ck.ck-button.ck-on .ck.ck-icon.ck-button__icon *  {
+    color: var(--base-color);
+}
+
+
+
+.ck.ck-button.ck-button_with-text.ck-switchbutton.ck-on:hover,
+.ck.ck-button.ck-button_with-text.ck-switchbutton:hover {
+    background-color: #fff;
+    
+}
+.ck.ck-button.ck-button_with-text.ck-switchbutton.ck-on:hover span,
+.ck.ck-button.ck-button_with-text.ck-switchbutton:hover span {
+    color: var(--active-color) !important;
+}
+
+.ck.ck-button.ck-disabled .ck-button__icon, a.ck.ck-button.ck-disabled .ck-button__icon {
+    opacity: unset;
+    cursor: default;
+    filter: hue-rotate(350deg) saturate(8.7%) brightness(177.3%);
+}
+
+.ck .ck-button .ck-disabled .ck-off .ck-button_with-text, .ck .ck-button .ck-disabled .ck-off .ck-button_with-text:hover {
+    display: none;
+}
+
+/* links */
+.ck .ck-fake-link-selection,
+.ck .ck-link_selected {
+    color: #fff;
+}
+
+/* input */
+.ck.ck-labeled-field-view.ck-labeled-field-view_focused .ck.ck-label {
+    display: none;
+}
+
+.ck.ck-link-actions .ck-button.ck-link-actions__preview .ck-button__label {
+    min-width: 250px;
+    text-align: left;
+}
+
+/* math */
+.ck.ck-math-form {
+    padding: var(--ck-spacing-large);
+}
+.ck.ck-math-form .ck-button-display-toggle {
+    display: none;
+}
+
+/* blockquote */
+.ck-content blockquote {
+    border-left: 3px solid #899ab9;
+    padding: 5px;
+    margin: 8px;
+    margin-top: 8px;
+    margin-right: 8px;
+    margin-left: 8px;
+    padding-left: 8px;
+    margin-left: 0px;
+    background-color: rgba(0, 0, 0, 0.05);
+    font-style: unset;
+}
+
+/* hr */
+.ck-content hr {
+    margin: 7px 0;
+    height: 0;
+    background: initial;
+    border: 1px solid #808080;
+}
+
+/* StudipWikiLink plugin */
+.ck.ck-studip-wiki-link-form {
+    max-width: 100%;
+    width: 400px;
+}
+
+.ck.ck-studip-wiki-link-form fieldset {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: start;
+    align-content: stretch;
+    padding: var(--ck-spacing-large);
+    border: 0;
+    margin: 0;
+
+}
+.ck.ck-studip-wiki-link-form fieldset > * + * {
+    margin-left: var(--ck-spacing-standard);
+}
+
+.ck.ck-studip-wiki-link-form fieldset .ck-button {
+    flex: 0 0 auto;
+    padding-left: var(--ck-spacing-large);
+    padding-right: var(--ck-spacing-large);
+}
+
+.ck.ck-studip-wiki-link-form fieldset .ck-labeled-field-view {
+    flex: 1 1 auto;
+}
+
+.ck.ck-studip-wiki-link-form fieldset .ck-labeled-field-view .ck-input {
+    width: 100%;
+    min-width: 50px;
+}
+
+/* tool balloons*/
+.ck.ck-balloon-panel.ck-balloon-panel_visible {
+    z-index: 1003;
+}
+
+/* table inserter */
+.ck .ck-insert-table-dropdown-grid-box.ck-on {
+    background: var(--base-color-20);
+}
+
+/* tooltips */
+
+
+.ck.ck-tooltip.ck-tooltip_s {
+
+}
+
+.ck.ck-tooltip .ck-tooltip__text {
+    border: 1px solid #c5c7ca;
+    -webkit-box-shadow: 0 1px 0 hsla(0,0%,100%,.5) inset;
+    box-shadow: inset 0 1px 0 hsla(0,0%,100%,.5);
+    font-size: 14px;
+    margin-bottom: 8px;
+    padding: 8px;
+    text-align: left;
+    text-shadow: 0 1px 0 hsla(0,0%,100%,.5);
+    white-space: normal;
+    z-index: 10000;
+    word-wrap: break-word;
+    color: var(--black);
+    top: 4px;
+}
+
+.ck.ck-tooltip.ck-tooltip_s .ck-tooltip__text::after {
+    content: "";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border: 8px solid rgba(245,246,246,0);
+    border-bottom-color: #f5f6f6;
+    bottom: 100%;
+    right: 50%;
+    margin-right: -8px;
+    top: -16px;
+}
+.ck.ck-tooltip.ck-tooltip_s .ck-tooltip__text::before {
+    content: "";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border: 9px solid rgba(197,199,202,0);
+    border-bottom-color: #c5c7ca;
+    bottom: 100%;
+    right: 50%;
+    margin-right: -9px;
+    top: -19px;
+}
+
+/* search and replace */
+.ck.ck-find-and-replace-form fieldset .ck-labeled-field-view .ck-input {
+    margin-top: 0 !important; /* overwrite form css in dialogs*/
+    max-height: var(--ck-ui-component-min-height);
+}
+
+/* editor */
+.ck-source-editing-area,
+.ck-editor__editable_inline {
+    min-height: 8em;
+    max-height: 12em;
+}
+
+form.default label:not(.undecorated):not(.ck-voice-label) .ck-source-editing-area textarea {
+    max-width: unset;
+    margin-top: 0;
+}
+
+/* forum fixes */
+#forum .ck-source-editing-area textarea {
+    height: unset;
+    min-height: 8em;
+}
+
+#forum .ck form {
+    display: inherit;
+}

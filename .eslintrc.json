@@ -22,7 +22,7 @@
         "no-await-in-loop": "error",
         "no-promise-executor-return": "error",
         "require-atomic-updates": "error",
-        "max-nested-callbacks": ["error", 3],
+        "max-nested-callbacks": ["error", 4],
         "no-return-await": "error",
         "prefer-promise-reject-errors": "error"
     }

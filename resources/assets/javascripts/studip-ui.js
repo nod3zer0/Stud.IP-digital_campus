@@ -5,6 +5,27 @@ import { $gettext } from './lib/gettext.js';
  */
 
 (function ($, STUDIP) {
+
+    $.widget( "ui.dialog", $.ui.dialog, {
+        _allowInteraction: function( event ) {
+            return hasParentWhich(isCKBodyWrapper)(event.target) ||  this._super( event );
+        },
+    });
+
+    function hasParentWhich(predicate) {
+        return function tryParent(element) {
+            if (!element?.parentElement) {
+                return false;
+            }
+
+            return predicate(element) || tryParent(element.parentElement);
+        };
+    }
+
+    function isCKBodyWrapper(element) {
+        return element?.classList?.contains('ck-body-wrapper');
+    }
+
     /**
      * Setup and refine date picker, add automated handling for .has-date-picker
      * and [data-date-picker].
