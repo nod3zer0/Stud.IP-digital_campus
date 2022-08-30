@@ -1064,8 +1064,12 @@ export const actions = {
         );
     },
 
-    loadTeacherStatus({ dispatch, rootGetters, state, commit, getters }, userId) {
-        const user = rootGetters['users/byId']({ id: userId });
+    async loadTeacherStatus({ dispatch, rootGetters, state, commit, getters }, userId) {
+        let user = rootGetters['users/byId']({ id: userId });
+        if (!user) {
+            await dispatch('users/loadById', { id: userId });
+            user = rootGetters['users/byId']({ id: userId });
+        }
 
         if (user.attributes.permission === 'root') {
             commit('setUserIsTeacher', true);
@@ -1074,25 +1078,30 @@ export const actions = {
 
         const membershipId = `${state.context.id}_${userId}`;
 
-        return dispatch('course-memberships/loadById', { id: membershipId })
-            .then(() => {
-                const membership = rootGetters['course-memberships/byId']({ id: membershipId });
-                const editingLevel = getters.courseware.attributes['editing-permission-level'];
-                const membershipPermission = membership.attributes.permission;
+        await dispatch('course-memberships/loadById', { id: membershipId });
+        const membership = rootGetters['course-memberships/byId']({ id: membershipId });
+        if (membership) {
+            let editingLevel = 'tutor';
+            if (getters.courseware.attributes) {
+                editingLevel = getters.courseware.attributes['editing-permission-level'];
+            }
+            const membershipPermission = membership.attributes.permission;
 
-                let isTeacher = false;
-                if (editingLevel === 'dozent') {
-                    isTeacher = membershipPermission === 'dozent';
-                } else if (editingLevel === 'tutor') {
-                    isTeacher = membershipPermission === 'dozent' || membershipPermission === 'tutor';
-                }
+            let isTeacher = false;
+            if (editingLevel === 'dozent') {
+                isTeacher = membershipPermission === 'dozent';
+            } else if (editingLevel === 'tutor') {
+                isTeacher = membershipPermission === 'dozent' || membershipPermission === 'tutor';
+            }
+            commit('setUserIsTeacher', isTeacher);
 
-                commit('setUserIsTeacher', isTeacher);
-            })
-            .catch((error) => {
-                console.error(`Could not find course membership for ${membershipId}.`);
-                commit('setUserIsTeacher', false);
-            });
+            return true;
+        } else {
+            console.error(`Could not find course membership for ${membershipId}.`);
+            commit('setUserIsTeacher', false);
+
+            return false;
+        }
     },
 
     loadFeedback({ dispatch }, blockId) {
