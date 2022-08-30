@@ -7,7 +7,6 @@
 
     --ck-color-base-foreground: var(--dark-gray-color-5);
     --ck-color-base-background: #fff;
-
     --ck-color-base-border: var(--content-color-40);
     --ck-color-base-action: var(--green);
     --ck-color-base-focus: var(--base-color);
@@ -21,16 +20,13 @@
     --ck-color-button-default-hover-background: var(--base-color);
     --ck-color-button-default-active-background: var(--base-color);
     --ck-color-button-default-active-shadow: transparent;
-
     --ck-color-button-on-background: var(--base-color);
     --ck-color-button-on-hover-background: var(--base-color);
     --ck-color-button-on-active-background: var(--base-color);
     --ck-color-button-on-active-shadow: transparent;
-
     --ck-color-button-action-background: #fff;
     --ck-color-switch-button-on-background: var(--base-color);
     --ck-color-switch-button-on-hover-background: var(--base-color);
-
     --ck-color-split-button-hover-border: transparent;
     --ck-color-split-button-hover-background: transparent;
 
@@ -199,7 +195,7 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 .ck.ck-button.ck-button_with-text.ck-switchbutton.ck-on:hover,
 .ck.ck-button.ck-button_with-text.ck-switchbutton:hover {
     background-color: #fff;
-    
+
 }
 .ck.ck-button.ck-button_with-text.ck-switchbutton.ck-on:hover span,
 .ck.ck-button.ck-button_with-text.ck-switchbutton:hover span {
