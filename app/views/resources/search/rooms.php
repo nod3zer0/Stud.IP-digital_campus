@@ -55,10 +55,15 @@
                             Icon::create('info-circle'),
                             ['data-dialog' => '']
                         );
-                        if ($room->userHasPermission($current_user, 'autor')) {
+                        if (($room->booking_plan_is_public && Config::get()->RESOURCES_SHOW_PUBLIC_ROOM_PLANS)
+                            || ($room->userHasPermission($current_user, 'autor'))) {
                             $actions->addLink(
                                 $room->getActionURL('booking_plan', $booking_plan_action_params),
-                                _('Wochenbelegung'),
+                                (
+                                    $room->userHasPermission($current_user, 'autor')
+                                        ? _('Wochenbelegung')
+                                        : _('Belegungsplan')
+                                ),
                                 Icon::create('timetable'),
                                 ['target' => '_blank']
                             );
@@ -68,21 +73,6 @@
                                 Icon::create('timetable'),
                                 ['target' => '_blank']
                             );
-                        } else {
-                            if ($room->booking_plan_is_public && Config::get()->RESOURCES_SHOW_PUBLIC_ROOM_PLANS) {
-                                $actions->addLink(
-                                    $room->getActionURL('booking_plan', $booking_plan_action_params),
-                                    _('Belegungsplan'),
-                                    Icon::create('timetable'),
-                                    ['data-dialog' => 'size=big']
-                                );
-                                $actions->addLink(
-                                    $room->getActionURL('semester_plan'),
-                                    _('Semesterbelegung'),
-                                    Icon::create('timetable'),
-                                    ['data-dialog' => 'size=big']
-                                );
-                            }
                         }
                         if ($room->requestable && $room->userHasRequestRights($current_user)) {
                             $actions->addLink(

@@ -296,44 +296,47 @@ class Resources_RoomPlanningController extends AuthenticatedController
                     Icon::create('add')
                 )->asDialog('size=auto');
             }
-            if ($this->resource->userHasPermission($this->user)) {
+
+            if ($this->resource->bookingPlanVisibleForUser($this->user)) {
                 $actions->addLink(
                     _('Belegungsplan drucken'),
                     'javascript:void(window.print());',
                     Icon::create('print')
                 );
-                if ($this->resource instanceof Room) {
+                if ($this->resource->userHasPermission($this->user)) {
+                    if ($this->resource instanceof Room) {
+                        $actions->addLink(
+                            _('Individuelle Druckansicht'),
+                            URLHelper::getURL(
+                                'dispatch.php/resources/print/individual_booking_plan/'
+                                . $this->resource->id,
+                                [
+                                    'timestamp' => $week_timestamp,
+                                    'defaultDate' => date('Y-m-d', $week_timestamp)
+                                ]
+                            ),
+                            Icon::create('print'),
+                            [
+                                'class' => 'resource-bookings-actions'
+                            ]
+                        );
+                    }
                     $actions->addLink(
-                        _('Individuelle Druckansicht'),
+                        _('Buchungen exportieren'),
                         URLHelper::getURL(
-                            'dispatch.php/resources/print/individual_booking_plan/'
-                            . $this->resource->id,
+                            'dispatch.php/resources/export/resource_bookings/' . $this->resource->id,
                             [
                                 'timestamp' => $week_timestamp,
                                 'defaultDate' => date('Y-m-d', $week_timestamp)
                             ]
                         ),
-                        Icon::create('print'),
+                        Icon::create('file-excel'),
                         [
-                            'class'  => 'resource-bookings-actions'
+                            'data-dialog' => 'size=auto',
+                            'class' => 'resource-bookings-actions'
                         ]
                     );
                 }
-                $actions->addLink(
-                    _('Buchungen exportieren'),
-                    URLHelper::getURL(
-                        'dispatch.php/resources/export/resource_bookings/' . $this->resource->id,
-                        [
-                            'timestamp' => $week_timestamp,
-                            'defaultDate' => date('Y-m-d', $week_timestamp)
-                        ]
-                    ),
-                    Icon::create('file-excel'),
-                    [
-                        'data-dialog' => 'size=auto',
-                        'class'       => 'resource-bookings-actions'
-                    ]
-                );
             }
             if($GLOBALS['perm']->have_perm('admin')) {
                 if ($this->resource instanceof Room) {

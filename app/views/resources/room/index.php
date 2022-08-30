@@ -81,12 +81,12 @@
     <? elseif ($room->bookingPlanVisibleForUser(User::findCurrent())) : ?>
         <?= \Studip\LinkButton::create(
             _('Belegungsplan'),
-            $room->getActionURL('booking_plan'),
-            ['data-dialog' => 'size=big']) ?>
+            $room->getActionURL('booking_plan')
+        ) ?>
         <?= \Studip\LinkButton::create(
             _('Semesterbelegung'),
-            $room->getActionURL('semester_plan'),
-            ['data-dialog' => 'size=big']) ?>
+            $room->getActionURL('semester_plan')
+        ) ?>
     <? endif ?>
 
     <? if ($geo_coordinates_object instanceof ResourceProperty): ?>
