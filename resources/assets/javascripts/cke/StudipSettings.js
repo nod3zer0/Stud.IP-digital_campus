@@ -3,7 +3,7 @@ import { createDropdown, ButtonView, View } from 'ckeditor5/src/ui';
 import { $gettext } from '../lib/gettext.js';
 
 const settings = {
-    url: STUDIP.URLHelper.resolveURL('dispatch.php/wysiwyg/settings/users/current'),
+    url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/settings/users/current'),
     save: function (data) {
         return $.ajax({
             url: this.url,
