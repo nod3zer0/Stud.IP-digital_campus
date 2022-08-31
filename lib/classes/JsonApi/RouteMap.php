@@ -93,7 +93,7 @@ class RouteMap
      */
     public function authenticatedRoutes(RouteCollectorProxy $group): void
     {
-        \PluginEngine::sendMessage(JsonApiPlugin::class, 'registerAuthenticatedRoutes', $this->app);
+        \PluginEngine::sendMessage(JsonApiPlugin::class, 'registerAuthenticatedRoutes', $group);
 
         $group->get('/users', Routes\Users\UsersIndex::class);
         $group->get('/users/me', Routes\Users\UsersShow::class)->setName('get-myself');
