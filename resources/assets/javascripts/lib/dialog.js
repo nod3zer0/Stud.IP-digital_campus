@@ -34,23 +34,18 @@ function extractButtons(element) {
             var cancel = $(this).is('.cancel');
             var index = cancel ? 'cancel' : label;
             var classes = $(this).attr('class') || '';
+            var name = $(this).attr('name') || '';
+            var disabled = $(this).is(':disabled');
 
             classes = classes.replace(/\bbutton\b/, '').trim();
 
-            if ($(this).is('.accept,.cancel')) {
-                buttons[index] = {
-                    text: label,
-                    click: () => this.click()
-                };
-            } else {
-                buttons[index] = () => this.click();
-            }
-
-            if ($(this).is(':disabled')) {
-                classes = classes + ' disabled';
-            }
-
-            buttons[index]['class'] = classes;
+            buttons[index] = {
+                text: label,
+                class: classes,
+                name: name,
+                disabled: disabled,
+                click: () => this.click()
+            };
         });
 
     return buttons;
