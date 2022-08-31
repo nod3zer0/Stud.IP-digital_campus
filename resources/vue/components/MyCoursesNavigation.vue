@@ -70,15 +70,5 @@ $icon-padding: 3px;
     a {
         padding: $icon-padding - $border-width;
     }
-    @media (prefers-contrast: more) {
-        a {
-            border: 1px dashed mixins.$black;
-        }
-
-        img,
-        svg {
-            filter: grayscale(100%) invert(1);
-        }
-    }
 }
 </style>
