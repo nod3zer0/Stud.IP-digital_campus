@@ -561,29 +561,25 @@
                                         <? endif ?>
                                     </td>
                                     <td class="booking-list-interval-actions">
-                                        <a class="takes-place-delete takes-place-status-toggle
-                                <?= $interval->takes_place ? '' : ' invisible'; ?>
-                                "
-                                           data-interval_id="<?= htmlReady($interval->id) ?>">
+                                        <button class="takes-place-delete takes-place-status-toggle <?= $interval->takes_place ? '' : ' invisible'; ?>"
+                                                data-interval_id="<?= htmlReady($interval->id) ?>">
                                             <?= Icon::create('trash')->asImg(
                                                 [
                                                     'class' => 'text-bottom',
                                                     'title' => _('löschen')
                                                 ]
                                             ) ?>
-                                        </a>
+                                        </button>
 
-                                        <a class="takes-place-revive takes-place-status-toggle
-                                <?= $interval->takes_place ? ' invisible' : ''; ?>
-                                "
-                                           data-interval_id="<?= htmlReady($interval->id) ?>">
+                                        <button class="takes-place-revive takes-place-status-toggle <?= $interval->takes_place ? ' invisible' : ''; ?>"
+                                                data-interval_id="<?= htmlReady($interval->id) ?>">
                                             <?= Icon::create('refresh')->asImg(
                                                 [
                                                     'class' => 'text-bottom',
                                                     'title' => _('wiederherstellen')
                                                 ]
                                             ) ?>
-                                        </a>
+                                        </button>
                                     </td>
                                 </tr>
                             <? endforeach ?>

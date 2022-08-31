@@ -83,12 +83,6 @@ STUDIP.ready(function () {
 
     jQuery(document).on(
         'click',
-        '.booking-list-interval .takes-place-status-toggle',
-        STUDIP.Resources.toggleBookingIntervalStatus
-    );
-
-    jQuery(document).on(
-        'click',
         '.resource-category-properties-table .add-action',
         STUDIP.Resources.addResourcePropertyToTable
     );
@@ -879,6 +873,12 @@ STUDIP.ready(function () {
 
 
 STUDIP.domReady(function() {
+    jQuery(document).on(
+        'click',
+        '.booking-list-interval .takes-place-status-toggle',
+        STUDIP.Resources.toggleBookingIntervalStatus
+    );
+
     jQuery(document).on(
         'click',
         '.room-clipboard-group-action',

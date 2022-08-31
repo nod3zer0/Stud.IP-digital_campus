@@ -485,6 +485,7 @@ class Resources
 
     static toggleBookingIntervalStatus(event)
     {
+        event.preventDefault();
         var li = jQuery(event.target).parents('tr')[0];
         if (!li) {
             //Something is wrong with the HTML.
