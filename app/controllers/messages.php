@@ -370,7 +370,7 @@ class MessagesController extends AuthenticatedController {
                     $query = "SELECT user_id, 'rec' AS snd_rec
                                       FROM seminar_user
                                       JOIN auth_user_md5 USING (user_id)
-                                      WHERE Seminar_id = ? AND seminar_user.visible != 'no'
+                                      WHERE Seminar_id = :course_id AND seminar_user.visible != 'no'
                                       ORDER BY Nachname, Vorname";
                 }
                 if ($query) {

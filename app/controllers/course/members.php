@@ -564,7 +564,6 @@ class Course_MembersController extends AuthenticatedController
             $this->redirect(URLHelper::getURL('dispatch.php/messages/write', [
                 'default_subject' => $this->getSubject(),
                 'tmpsavesnd' => 1,
-                'course_id' => $this->course_id,
                 'emailrequest' => 1
             ]));
         } else {
