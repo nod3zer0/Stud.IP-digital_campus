@@ -121,7 +121,26 @@ class Step00349 extends Migration
         $all_plugins = $db->fetchPairs("SELECT pluginclassname, pluginid FROM plugins");
 
         foreach ($db->query("SELECT seminar_id, status, modules, class  FROM seminare LEFT JOIN sem_types ON sem_types.id = seminare.status") as $row) {
-            $activated_plugins = $db->fetchPairs("SELECT plugins_activated.pluginid, state FROM `plugins_activated` INNER JOIN `plugins` USING(pluginid) WHERE range_id=? AND range_type='sem' ORDER BY navigationpos", [$row['seminar_id']]);
+            $query = "SELECT pluginid, MIN(state) AS state
+                      FROM (
+                        SELECT plugins_activated.pluginid, state
+                        FROM `plugins_activated`
+                        JOIN `plugins` USING (pluginid)
+                        WHERE range_id = :course_id
+                          AND range_type = 'sem'
+
+                        UNION ALL
+
+                        SELECT pluginid, 1
+                        FROM seminare
+                        JOIN plugins_default_activations
+                          ON Institut_id = institutid
+                        WHERE Seminar_id = :course_id
+                      ) AS tmp
+                      JOIN plugins USING (pluginid)
+                      GROUP BY pluginid
+                      ORDER BY navigationpos";
+            $activated_plugins = $db->fetchPairs($query, [':course_id' => $row['seminar_id']]);
             $sem_class = OldSemClass::getClasses()[$row['class']] ?: OldSemClass::getDefaultSemClass();
             foreach ($sem_class->getModules() as $sem_class_module => $sem_class_module_meta) {
                 if (!isset($studip_modules[$sem_class_module]) && isset($all_plugins[$sem_class_module])) {
@@ -254,7 +273,7 @@ class Step00349 extends Migration
                       DROP `elearning_interface`");
         $db->exec("DELETE FROM `plugins_activated` WHERE `range_type`  IN('sem','inst')");
         $db->exec("ALTER TABLE `plugins_activated` CHANGE `range_type` `range_type` ENUM('user') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'user'");
-        
+
 
     }
 
@@ -670,4 +689,3 @@ class OldSemClass implements ArrayAccess
         return $arr;
     }
 }
-
