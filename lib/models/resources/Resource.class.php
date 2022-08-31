@@ -741,7 +741,7 @@ class Resource extends SimpleORMap implements StudipItem
 
             $duration     = $end->getTimestamp() - $begin->getTimestamp();
             $min_duration = Config::get()->RESOURCES_MIN_BOOKING_TIME;
-            if ($duration < ($min_duration * 60)) {
+            if ($min_duration && ($duration < ($min_duration * 60))) {
                 throw new InvalidArgumentException(
                     sprintf(
                         _('Die minimale Buchungsdauer von %1$d Minuten wurde unterschritten!'),

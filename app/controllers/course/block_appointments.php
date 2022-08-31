@@ -133,6 +133,22 @@ class Course_BlockAppointmentsController extends AuthenticatedController
             }
         }
 
+        //Calculate the duration if a minimum booking time is set:
+        if (Config::get()->RESOURCES_MIN_BOOKING_TIME) {
+            $fake_start_time = strtotime(Request::get('block_appointments_start_time'), $start_day);
+            $fake_end_time = strtotime(Request::get('block_appointments_end_time'), $start_day);
+            $duration = $fake_end_time - $fake_start_time;
+            if ($duration < Config::get()->RESOURCES_MIN_BOOKING_TIME * 60) {
+                $errors[] = sprintf(
+                    ngettext(
+                        'Die minimale Dauer eines Termins von einer Minute wurde unterschritten.',
+                        'Die minimale Dauer eines Termins von %u Minuten wurde unterschritten.',
+                        Config::get()->RESOURCES_MIN_BOOKING_TIME
+                    ),
+                    Config::get()->RESOURCES_MIN_BOOKING_TIME
+                );
+            }
+        }
 
         $termin_typ     = Request::int('block_appointments_termin_typ', 0);
         $free_room_text = Request::get('block_appointments_room_text');

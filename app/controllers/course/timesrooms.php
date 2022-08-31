@@ -106,6 +106,13 @@ class Course_TimesroomsController extends AuthenticatedController
         }
     }
 
+
+    protected function bookingTooShort(int $start_time, int $end_time)
+    {
+        return Config::get()->RESOURCES_MIN_BOOKING_TIME &&
+            (($end_time - $start_time) < Config::get()->RESOURCES_MIN_BOOKING_TIME * 60);
+    }
+
     /**
      * Displays the times and rooms of a course
      *
@@ -378,6 +385,20 @@ class Course_TimesroomsController extends AuthenticatedController
             $end_time = $termin->end_time;
             PageLayout::postError(_('Die Zeitangaben sind nicht korrekt. Bitte überprüfen Sie diese!'));
         }
+        if ($this->bookingTooShort($date, $end_time)) {
+            PageLayout::postError(
+                sprintf(
+                    ngettext(
+                        'Die minimale Dauer eines Termins von einer Minute wurde unterschritten.',
+                        'Die minimale Dauer eines Termins von %u Minuten wurde unterschritten.',
+                        Config::get()->RESOURCES_MIN_BOOKING_TIME
+                    ),
+                    Config::get()->RESOURCES_MIN_BOOKING_TIME
+                )
+            );
+            $this->redirect('course/timesrooms/editDate/' . $termin_id, ['contentbox_open' => $termin->metadate_id]);
+            return;
+        }
 
         $time_changed = ($date != $termin->date || $end_time != $termin->end_time);
         //time changed for regular date. create normal singledate and cancel the regular date
@@ -534,6 +555,20 @@ class Course_TimesroomsController extends AuthenticatedController
             PageLayout::postError(_('Die Zeitangaben sind nicht korrekt. Bitte überprüfen Sie diese!'));
             $this->redirect('course/timesrooms/createSingleDate');
 
+            return;
+        }
+        if ($this->bookingTooShort($start_time, $end_time)) {
+            PageLayout::postError(
+                sprintf(
+                    ngettext(
+                        'Die minimale Dauer eines Termins von einer Minute wurde unterschritten.',
+                        'Die minimale Dauer eines Termins von %u Minuten wurde unterschritten.',
+                        Config::get()->RESOURCES_MIN_BOOKING_TIME
+                    ),
+                    Config::get()->RESOURCES_MIN_BOOKING_TIME
+                )
+            );
+            $this->redirect('course/timesrooms/createSingleDate');
             return;
         }
 
@@ -1177,6 +1212,20 @@ class Course_TimesroomsController extends AuthenticatedController
 
             return;
         }
+        if ($this->bookingTooShort($start, $end)) {
+            PageLayout::postError(
+                sprintf(
+                    ngettext(
+                        'Die minimale Dauer eines Termins von einer Minute wurde unterschritten.',
+                        'Die minimale Dauer eines Termins von %u Minuten wurde unterschritten.',
+                        Config::get()->RESOURCES_MIN_BOOKING_TIME
+                    ),
+                    Config::get()->RESOURCES_MIN_BOOKING_TIME
+                )
+            );
+            $this->redirect('course/timesrooms/createCycle');
+            return;
+        }
 
         $cycle              = new SeminarCycleDate();
         $cycle->seminar_id  = $this->course->id;
@@ -1235,6 +1284,23 @@ class Course_TimesroomsController extends AuthenticatedController
             $cycle->start_time  = date('H:i:00', $start);
             $cycle->end_time    = date('H:i:00', $end);
         }
+
+        //Check the duration:
+        if ($this->bookingTooShort($start, $end)) {
+            PageLayout::postError(
+                sprintf(
+                    ngettext(
+                        'Die minimale Dauer eines Termins von einer Minute wurde unterschritten.',
+                        'Die minimale Dauer eines Termins von %u Minuten wurde unterschritten.',
+                        Config::get()->RESOURCES_MIN_BOOKING_TIME
+                    ),
+                    Config::get()->RESOURCES_MIN_BOOKING_TIME
+                )
+            );
+            $this->redirect('course/timesrooms/createCycle/' . $cycle_id);
+            return;
+        }
+
         $cycle->weekday     = Request::int('day');
         $cycle->description = Request::get('description');
         $cycle->sws         = Request::get('teacher_sws');
