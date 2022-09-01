@@ -17,6 +17,9 @@ const Dialogs = {
             })
         );
 
+        //Set the focus inside the confirm dialog:
+        $(confirmDialog).find(':focusable').first().focus();
+
         return false;
     },
 

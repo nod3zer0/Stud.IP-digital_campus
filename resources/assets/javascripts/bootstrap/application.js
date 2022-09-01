@@ -64,6 +64,11 @@ jQuery(document).on('click', '.messagebox .messagebox_buttons a', function () {
     return false;
 });
 
+STUDIP.ready(function() {
+    //Set the focus on the modal overlay dialog, if any:
+    $('.modaloverlay').find(':focusable').first().focus();
+});
+
 
 /* ------------------------------------------------------------------------
  * application wide setup
