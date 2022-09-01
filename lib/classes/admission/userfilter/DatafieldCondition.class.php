@@ -88,7 +88,6 @@ class DatafieldCondition extends UserFilterField
     public function getUsers($restrictions = [])
     {
         $db = DBManager::get();
-        $users = [];
         // Standard query getting the values without respecting other values.
         $select = "SELECT user_id FROM
                     auth_user_md5 LEFT JOIN
@@ -103,8 +102,8 @@ class DatafieldCondition extends UserFilterField
      * Gets the value for the given user that is relevant for this
      *
      * @param  String $userId User to check.
-     * @param  Array additional conditions that are required for check.
-     * @return The value(s) for this user.
+     * @param  Array $additional additional conditions that are required for check.
+     * @return array The value(s) for this user.
      */
     public function getUserValues($userId, $additional = null)
     {

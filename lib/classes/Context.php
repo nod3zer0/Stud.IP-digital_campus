@@ -242,14 +242,11 @@ class Context
                 && !match_route('dispatch.php/course/members/additional_input')
                 && !match_route('dispatch.php/course/change_view/*'))
             {
-                $query = "SELECT 1
-                          FROM datafields_entries
-                          WHERE range_id = ? AND sec_range_id = ?
-                          LIMIT 1";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute([$GLOBALS['user']->id, $course['Seminar_id']]);
-
-                if (!$statement->rowCount()) {
+                $count = DatafieldEntryModel::countBySql(
+                    'range_id = ? AND sec_range_id = ?',
+                    [$GLOBALS['user']->id, $course['Seminar_id']]
+                );
+                if (!$count) {
                     header('Location: ' . URLHelper::getURL('dispatch.php/course/members/additional_input'));
                     page_close();
                     die;

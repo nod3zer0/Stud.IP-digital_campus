@@ -648,11 +648,7 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
         }
 
         // Remove datafields
-        $query = "DELETE FROM datafields_entries
-                  WHERE range_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute([$this->id]);
-
+        DatafieldEntryModel::deleteBySQL('range_id = ?', [$this->id]);
         $result += parent::delete();
 
         return $result;

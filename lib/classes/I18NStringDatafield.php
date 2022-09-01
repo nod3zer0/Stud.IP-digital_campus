@@ -52,22 +52,23 @@ class I18NStringDatafield extends I18NString
     public function storeTranslations()
     {
         if (is_array($this->lang)) {
-            $db = DBManager::get();
             $object_id = $this->metadata['object_id'];
             /* Replace translations */
-            $deleted = $db->execute("DELETE FROM `datafields_entries` "
-                . "WHERE `datafield_id` = ? "
-                . "AND `range_id` = ? "
-                . "AND `sec_range_id` = ? "
-                . "AND `lang` <> ''",
-                [$object_id[0], $object_id[1], $object_id[2]]);
-            $i18nSQL = $db->prepare("INSERT INTO `datafields_entries` "
-                    . "(`datafield_id`, `range_id`, `sec_range_id`, `content`, `lang`) "
-                    . "VALUES (?,?,?,?,?)");
+            DatafieldEntryModel::deleteBySQL(
+                "`datafield_id` = ? AND `range_id` = ? AND `sec_range_id` = ? AND `lang` <> ''",
+                [$object_id[0], $object_id[1], $object_id[2]]
+            );
             foreach ($this->lang as $lang => $value) {
                 if (mb_strlen($value)) {
-                    $i18nSQL->execute([$object_id[0], $object_id[1], $object_id[2],
-                        (string) $value, (string) $lang]);
+                    DataField::create(
+                        [
+                            'datafield_id' => $object_id[0],
+                            'range_id' => $object_id[1],
+                            'sec_range_id' => $object_id[2],
+                            'content' => (string) $value,
+                            'lang' => (string) $lang,
+                        ]
+                    );
                 }
             }
         }
@@ -85,18 +86,15 @@ class I18NStringDatafield extends I18NString
      */
     public static function load($object_id, $table = '', $field = '', $base = null)
     {
-        $db = DBManager::get();
         if (is_null($base)) {
-            $base = $db->fetchColumn("SELECT `content` "
-                    . "FROM `datafields_entries` "
-                    . "WHERE `datafield_id` = ? "
-                    . "AND `range_id` = ? "
-                    . "AND `sec_range_id` = ? "
-                    . "AND `lang` = ''", $object_id);
+            $base = DataField::findOneBySQL(
+                "`datafield_id` = ? AND `range_id` = ? AND `sec_range_id` = ? AND `lang` = ''",
+                $object_id
+            );
         }
         $table = null;
         $field = null;
-        return new self($base, self::fetchDataForField($object_id, $table, $field),
+        return new self($base->content, self::fetchDataForField($object_id, $table, $field),
                 compact('object_id', 'table', 'field'));
     }
 
@@ -110,13 +108,17 @@ class I18NStringDatafield extends I18NString
      */
     public static function fetchDataForField($object_id, $table, $field)
     {
-        $db = DBManager::get();
-        return $db->fetchPairs("SELECT `lang`, `content` "
-                . "FROM `datafields_entries` "
-                . "WHERE `datafield_id` = ? "
-                . "AND `range_id` = ? "
-                . "AND `sec_range_id` = ? "
-                . "AND `lang` <> ''", $object_id);
+        $result = [];
+        
+        DatafieldEntryModel::findEachBySQL(
+            function (DatafieldEntryModel $model) use (&$result) {
+                $result[$model->lang] = $model->content;
+           },
+            "`datafield_id` = ? AND `range_id` = ? AND `sec_range_id` = ? AND `lang` <> ''",
+            $object_id
+        );
+
+        return $result;
     }
 
     /**

@@ -116,7 +116,7 @@ class DataField extends SimpleORMap implements PrivacyObject
      * Returns a list of all datatype classes with an id as key and a name as
      * value.
      *
-     * @return array() list of all datatype classes
+     * @return array list of all datatype classes
      */
     public static function getDataClass()
     {
@@ -136,8 +136,8 @@ class DataField extends SimpleORMap implements PrivacyObject
     /**
      * Return the mask for the given permission
      *
-     * @param    string     the name of the permission
-     * @return integer  the mask for the permission
+     * @param  string $perm the name of the permission
+     * @return integer the mask for the permission
      * @static
      */
     public static function permMask($perm)
@@ -148,7 +148,7 @@ class DataField extends SimpleORMap implements PrivacyObject
     /**
      * liefert String zu gegebener user_class-Maske
      *
-     * @param    integer    the user class mask
+     * @param integer $class the user class mask
      * @return string       a string consisting of a comma separated list of
      *                      permissions
      */

@@ -96,13 +96,11 @@ class Course_OverviewController extends AuthenticatedController
                     foreach ((array) $rule['attributes'] as $val) {
                         if ($val == 1) {
                             // Es gibt also Zusatzangaben. Nun noch überprüfen ob der Nutzer diese Angaben schon gemacht hat...
-                            $query = "SELECT 1
-                                      FROM datafields
-                                      LEFT JOIN datafields_entries USING (datafield_id)
-                                      WHERE object_type = 'usersemdata' AND sec_range_id = ? AND range_id = ?";
-                            $statement = DBManager::get()->prepare($query);
-                            $statement->execute([$this->course_id, $GLOBALS['user']->id]);
-                            if (!$statement->fetchColumn()) {
+                            $count = DataField::countBySql("LEFT JOIN datafields_entries ON datafields_entries.datafield_id = datafields.datafield_id
+                                WHERE datafield_id.object_type = 'usersemdata' AND datafields_entries.sec_range_id = ? AND datafields_entries.range_id = ?",
+                                [$this->course_id, $GLOBALS['user']->id]
+                            );
+                            if (!$count) {
                                 $show = true;
                             }
                             break;

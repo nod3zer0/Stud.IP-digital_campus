@@ -295,17 +295,14 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
      */
     public static function findByDatafield($datafield_id, $value)
     {
-        $query = "SELECT range_id
-                  FROM datafields_entries
-                  WHERE datafield_id = :datafield_id
-                    AND content = :value";
-        $search = DBManager::get()->prepare($query);
-        $search->execute(compact('datafield_id', 'value'));
-        $users = [];
-        foreach ($search->fetchAll(PDO::FETCH_COLUMN) as $user_id) {
-            $users[] = new User($user_id);
-        }
-        return $users;
+        return User::findMany(
+            SimpleCollection::createFromArray(
+                DatafieldEntryModel::findBySQL(
+                    'datafield_id = :datafield_id AND content = :value',
+                    compact('datafield_id', 'value')
+                )
+            )->pluck('range_id')
+        );
     }
 
     public static function findDozentenByTermin_id($termin_id)
@@ -1091,20 +1088,18 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             // Generische Datenfelder zusammenführen (bestehende Einträge des
             // "neuen" Nutzers werden dabei nicht überschrieben)
             $old_user = User::find($old_id);
-
-            $query = "INSERT INTO datafields_entries
-                        (datafield_id, range_id, sec_range_id, content, mkdate, chdate)
-                      VALUES (:datafield_id, :range_id, :sec_range_id, :content,
-                              :mkdate, :chdate)
-                      ON DUPLICATE KEY
-                        UPDATE content = IF(content IN ('', 'default_value'), VALUES(content), content),
-                               chdate = UNIX_TIMESTAMP()";
-
-            $old_user->datafields->each(function ($field) use ($new_id, $query) {
+            $old_user->datafields->each(function ($field) use ($new_id) {
                 if (!$field->isNew() && $field->content !== null) {
                     $data = $field->toArray('datafield_id sec_range_id content mkdate chdate');
                     $data['range_id'] = $new_id;
-                    DBManager::get()->execute($query, $data);
+
+                    $datafield = DatafieldEntryModel::findOneBySQL('datafield_id = ?', [$data['datafield_id']]);
+                    if(!$datafield) {
+                        $datafield = DatafieldEntryModel::build($data);
+                    } else {
+                        $datafield->setData($data);
+                    }
+                    $datafield->store();
                 }
             });
 
