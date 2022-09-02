@@ -58,7 +58,7 @@ class Resources_ExportController extends AuthenticatedController
         if (Navigation::hasItem('/resources/export/select_booking_sources')) {
             Navigation::activateItem('/resources/export/select_booking_sources');
         }
-        if (!ResourceManager::userHasGlobalPermission(User::findCurrent(), 'admin')) {
+        if (!ResourceManager::userHasGlobalPermission(User::findCurrent())) {
             throw new AccessDeniedException();
         }
 

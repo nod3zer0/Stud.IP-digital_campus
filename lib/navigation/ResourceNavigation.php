@@ -216,7 +216,8 @@ class ResourceNavigation extends Navigation
             );
             $this->addSubNavigation('structure', $sub_navigation);
         }
-        if ($show_global_admin_actions) {
+
+        if ($user_is_global_resource_user) {
             //Export tab:
             $export_navigation = new Navigation(
                 _('Export'),
@@ -245,8 +246,8 @@ class ResourceNavigation extends Navigation
                 )
             );
             $export_navigation->addSubNavigation('print_clipboard_rooms', $sub_nav);
-
-
+        }
+        if ($show_global_admin_actions) {
             //Mail tab:
 
             $messages_navigation = new Navigation(
