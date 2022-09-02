@@ -62,16 +62,14 @@
                            value="<?= htmlReady($preparation_time) ?>"
                            min="0" max="<?= htmlReady($max_preparation_time) ?>">
                 </label>
-                <? if ($user_is_global_resource_admin) : ?>
-                    <label>
-                        <input type="checkbox" name="reply_lecturers" value="1"
-                               <?= $reply_lecturers
-                                   ? 'checked="checked"'
-                                   : ''
-                               ?>>
-                        <?= _('Benachrichtigung bei Ablehnung der Raumanfrage auch an alle Lehrenden der Veranstaltung senden') ?>
-                    </label>
-                <? endif ?>
+                <label>
+                    <input type="checkbox" name="reply_lecturers" value="1"
+                            <?= $reply_lecturers
+                                ? 'checked="checked"'
+                                : ''
+                            ?>>
+                    <?= _('Benachrichtigung bei Ablehnung der Raumanfrage auch an alle Lehrenden der Veranstaltung senden') ?>
+                </label>
             </fieldset>
         </div>
         <div>
