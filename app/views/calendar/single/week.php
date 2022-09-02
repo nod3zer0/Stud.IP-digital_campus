@@ -52,7 +52,7 @@ if ($rowspan > 1) {
     $calLabel = $this->render_partial('calendar/single/_calhead_label_week', compact('week_type'));
     ?>
 
-    <?= $this->render_partial('calendar/single/_calhead', compact('calendar', 'atime', 'calType', 'calLabel')) ?>
+    <?= $this->render_partial('calendar/single/_calhead', compact('atime', 'calType', 'calLabel')) ?>
 
     <span style="white-space: nowrap; text-align: right;">
         <a href="<?= $controller->url_for('calendar/single/week', ['atime' => strtotime('+1 week', $atime)]) ?>">

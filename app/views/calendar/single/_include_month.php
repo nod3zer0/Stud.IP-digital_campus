@@ -70,9 +70,6 @@
                     $style = 'light';
                 }
                 $hday = holiday($i);
-                if ($j % 7 == 0) {
-                    $ret .= '<tr>';
-                }
                 ?>
                 <? if (abs($now - $i) < 43199 && !($style == 'light')) : ?>
                     <td class="celltoday" align="center" width="25" height="25">
@@ -82,7 +79,7 @@
                     <td class="month" align="center" width="25" height="25">
                 <? endif; ?>
                 <? $js_inc = ''; ?>
-                <? if (is_array($js_include)) : ?>
+                <? if (!empty($js_include) && is_array($js_include)) : ?>
                     <?
                     $js_inc = " onClick=\"{$js_include['function']}(";
                     if (sizeof($js_include['parameters'])) {
@@ -95,7 +92,7 @@
                     <? $aday = '<span class="current">'.$aday.'</span>' ?>
                 <? endif; ?>
                 <? if (($j + 1) % 7 == 0) : ?>
-                    <a class="<?= $style ?>sday" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= $hday['name'] ? tooltip($hday['name']) : '' ?> <?= $js_inc ?>>
+                    <a class="<?= $style ?>sday" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= is_array($hday) ? tooltip($hday['name'] ?: '') : '' ?> <?= $js_inc ?>>
                         <?= $aday ?>
                     </a>
                 </td>
@@ -106,23 +103,25 @@
                 </td>
             </tr>
                 <? else : ?>
-                    <? switch ($hday['col']) {
-                        case 1:
-                            ?><a class="<?= $style ?>day" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
-                               <?= $aday ?>
-                            </a><?
-                            break;
-                        case 2:
-                        case 3;
-                            ?><a class="<?= $style ?>hday" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
-                                <?= $aday ?>
-                            </a><?
-                            break;
-                        default:
-                            ?><a class="<?= $style ?>day" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= $js_inc ?>>
-                                <?= $aday ?>
-                            </a>
-                    <?}?>
+                    <? if (is_array($hday)) : ?>
+                        <? switch ($hday['col']) {
+                            case 1:
+                                ?><a class="<?= $style ?>day" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
+                                   <?= $aday ?>
+                                </a><?
+                                break;
+                            case 2:
+                            case 3;
+                                ?><a class="<?= $style ?>hday" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
+                                    <?= $aday ?>
+                                </a><?
+                                break;
+                            default:
+                                ?><a class="<?= $style ?>day" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= $js_inc ?>>
+                                    <?= $aday ?>
+                                </a>
+                        <?}?>
+                    <? endif ?>
                     </td>
                 <? endif; ?>
             <? endfor; ?>

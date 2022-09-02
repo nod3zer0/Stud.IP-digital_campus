@@ -33,6 +33,7 @@
 
             <thead>
                 <tr>
+                    <? $ts_month = 0; ?>
                     <? for ($i = 1; $i < 13; $i++) : ?>
                         <?  $ts_month += ( $days_per_month[$i] - 1) * 86400; ?>
                         <th align="center" width="8%">
@@ -76,28 +77,30 @@
 
                                     <span class="yday">
                                         <? $hday = holiday($aday); ?>
-                                        <? if ($hday['col'] == '1') : ?>
-                                            <? if (date('w', $aday) == '0') : ?>
-                                                <a style="font-weight:bold;" class="sday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
-                                                <? $count++; ?>
+                                        <? if (is_array($hday)) : ?>
+                                            <? if ($hday['col'] == '1') : ?>
+                                                <? if (date('w', $aday) == '0') : ?>
+                                                    <a style="font-weight:bold;" class="sday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
+                                                    <? $count++; ?>
+                                                <? else : ?>
+                                                    <a style="font-weight:bold;" class="day" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
+                                                <? endif; ?>
+                                            <? elseif ($hday['col'] == '2' || $hday['col'] == '3') : ?>
+                                                <? if (date('w', $aday) == '0') : ?>
+                                                    <a style="font-weight:bold;" class="sday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
+                                                    <? $count++; ?>
+                                                <? else : ?>
+                                                    <a style="font-weight:bold;" class="hday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
+                                                <? endif; ?>
                                             <? else : ?>
-                                                <a style="font-weight:bold;" class="day" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
+                                                <? if (date('w', $aday) == '0') : ?>
+                                                    <a style="font-weight:bold;" class="sday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
+                                                    <? $count++; ?>
+                                                <? else : ?>
+                                                    <a style="font-weight:bold;" class="day" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
+                                                <? endif; ?>
                                             <? endif; ?>
-                                        <? elseif ($hday['col'] == '2' || $hday['col'] == '3') : ?>
-                                            <? if (date('w', $aday) == '0') : ?>
-                                                <a style="font-weight:bold;" class="sday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
-                                                <? $count++; ?>
-                                            <? else : ?>
-                                                <a style="font-weight:bold;" class="hday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
-                                            <? endif; ?>
-                                        <? else : ?>
-                                            <? if (date('w', $aday) == '0') : ?>
-                                                <a style="font-weight:bold;" class="sday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
-                                                <? $count++; ?>
-                                            <? else : ?>
-                                                <a style="font-weight:bold;" class="day" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
-                                            <? endif; ?>
-                                        <? endif; ?>
+                                        <? endif ?>
                                     </span>
 
                                     <? if (isset($count_list[$iday]) && count($count_list[$iday])) : ?>

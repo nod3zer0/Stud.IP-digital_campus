@@ -127,7 +127,6 @@ class Calendar_SingleController extends Calendar_CalendarController
         $cor = date('n', $this->atime) == 3 ? 1 : 0;
         $this->first_day = $month_start - $adow * 86400;
         $this->last_day = ((42 - ($adow + date('t', $this->atime))) % 7 + $cor) * 86400 + $month_end;
-
         $this->calendars = [];
         for ($start_day = $this->first_day; $start_day <= $this->last_day; $start_day += 86400) {
             $this->calendars[] = SingleCalendar::getDayCalendar($this->range_id,

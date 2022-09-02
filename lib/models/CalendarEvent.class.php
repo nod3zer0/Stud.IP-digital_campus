@@ -1194,7 +1194,7 @@ class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
         if (is_null($user_id)) {
             $user_id = $this->permission_user_id ?: $GLOBALS['user']->id;
         }
-        if (!$permissions[$user_id][$this->event_id]) {
+        if (empty($permissions[$user_id][$this->event_id])) {
             if ($user_id == $this->event->author_id) {
                 $permissions[$user_id][$this->event_id] = Event::PERMISSION_OWN;
             } else

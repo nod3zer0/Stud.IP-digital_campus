@@ -1,5 +1,3 @@
-<? $month = $calendar->view; ?>
-
 <nav class="calendar-nav" style="vertical-align: middle">
     <span style="white-space: nowrap;">
         <a class="hidden-medium-down" style="padding-right: 2em;" href="<?= $controller->url_for('calendar/single/month', ['atime' => strtotime('-1 year', $atime)]) ?>">
@@ -17,7 +15,7 @@
     $calLabel = htmlReady(strftime("%B ", $calendars[15]->getStart())) .' '. date('Y', $calendars[15]->getStart());
     ?>
 
-    <?= $this->render_partial('calendar/single/_calhead', compact('calendar', 'atime', 'calType', 'calLabel')) ?>
+    <?= $this->render_partial('calendar/single/_calhead', compact('atime', 'calType', 'calLabel')) ?>
 
     <span style="text-align: right; white-space: nowrap;">
         <a class="hidden-tiny-down" style="padding-right: 2em;" href="<?= $controller->url_for('calendar/single/month', ['atime' => strtotime('+1 month', $atime)]) ?>">
@@ -70,7 +68,7 @@
                 <a class="<?= $class_day . 'sday' ?>" href="<?= $controller->url_for('calendar/single/day', ['atime' => $i]) ?>">
                     <?= $aday ?>
                 </a>
-                <? if ($hday["name"] != "") : ?>
+                <? if (!empty($hday['name'])) : ?>
                     <div style="color: #aaaaaa;" class="inday"><?= $hday['name'] ?></div>
                 <? endif; ?>
                 <? foreach ($calendars[$j]->events as $event) : ?>
@@ -86,7 +84,7 @@
                 </tr>
             <? else : ?>
                 <? $hday_class = ['day', 'day', 'shday', 'hday'] ?>
-                <? if ($hday['col']) : ?>
+                <? if (!empty($hday['col'])) : ?>
                     <a class="<?= $class_day . $hday_class[$hday['col']] ?>" href="<?= $controller->url_for('calendar/single/day', ['atime' => $i]) ?>">
                         <?= $aday ?>
                     </a>

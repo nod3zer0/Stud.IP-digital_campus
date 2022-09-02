@@ -4,7 +4,7 @@
     </div>
     <div class="hidden-medium-down" style="flex-grow:1; padding-left:1em;">
         <? $imt = Request::int('imt', mktime(12, 0, 0, date('n', $atime) - 1, date('j', $atime), date('Y', $atime))) ?>
-        <?= $this->render_partial('calendar/single/_include_month', ['imt' => $imt, 'href' => '']) ?>
+        <?= $this->render_partial('calendar/single/_include_month', ['imt' => $imt, 'href' => '', 'mod' => '']) ?>
         <? $imt = mktime(12, 0, 0, date('n', $imt) + 1, date('j', $imt), date('Y', $imt)) ?>
         <?= $this->render_partial('calendar/single/_include_month', ['imt' => $imt, 'href' => '', 'mod' => 'NONAVARROWS']) ?>
         <? $imt = mktime(12, 0, 0, date('n', $imt) + 1, date('j', $imt), date('Y', $imt)) ?>

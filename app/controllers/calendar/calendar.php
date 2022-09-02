@@ -41,11 +41,13 @@ class Calendar_CalendarController extends AuthenticatedController
         $this->restrictions = [
             'STUDIP_CATEGORY'     => $this->category ?: null,
             // hide events with status 3 (CalendarEvent::PARTSTAT_DECLINED)
-            'STUDIP_GROUP_STATUS' => $this->settings['show_declined'] ? null : [0,1,2,5]
+            'STUDIP_GROUP_STATUS' => !empty($this->settings['show_declined']) ? null : [0,1,2,5]
         ];
         if ($this->category) {
             URLHelper::bindLinkParam('category', $this->category);
         }
+
+        $this->range_id = '';
 
         if (Config::get()->COURSE_CALENDAR_ENABLE
             && !Request::get('self')

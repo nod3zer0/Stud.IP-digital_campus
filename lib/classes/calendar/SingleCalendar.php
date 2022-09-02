@@ -365,7 +365,7 @@ class SingleCalendar
 
         $user_id = $user_id ?: $GLOBALS['user']->id;
         $id = $user_id . $this->getRangeId();
-        if ($user_permission[$id]) {
+        if (!empty($user_permission[$id])) {
             return $user_permission[$id];
         }
         // own calendar
@@ -952,11 +952,12 @@ class SingleCalendar
                 || ($start >= $cl_start && $start < $cl_end)
                 || ($end > $cl_start && $end <= $cl_end)) {
 
-            if (!$events_created[implode('', (array) $event->getId()) . $start]) {
+            $key = implode('', (array) $event->getId()) . $start;
+            if (empty($events_created[$key])) {
                 $new_event = clone $event;
                 $new_event->setStart($start);
                 $new_event->setEnd($end);
-                $events_created[implode('', (array) $event->getId()) . $start] = $new_event;
+                $events_created[$key] = $new_event;
             }
         }
 
@@ -1263,6 +1264,7 @@ class SingleCalendar
         $term = [];
         $em = $this->adapt_events($start, $end, $step);
         $max_cols = 0;
+        $mapping = [];
         // calculate maximum number of columns
         $w = 0;
         for ($i = $start / $step; $i < $end / $step + 3600 / $step; $i++) {
@@ -1273,6 +1275,12 @@ class SingleCalendar
                 $rows = ceil($em['events'][$w]->getDuration() / $step);
                 if ($rows < 1) {
                     $rows = 1;
+                }
+                if (empty($term[$row])) {
+                    $term[$row] = [];
+                }
+                if (empty($term[$row][$col])) {
+                    $term[$row][$col] = '';
                 }
                 while ($term[$row][$col] != '' && $term[$row][$col] != '#') {
                     $col++;
@@ -1300,8 +1308,8 @@ class SingleCalendar
         for ($i = $start / $step; $i < $end / $step + 3600 / $step; $i++) {
             $row = $i - $start / $step;
             $row_min = $row;
-            while ($this->maxValue($term[$row], $step) > 1) {
-                $row += $this->maxValue($term[$row], $step) - 1;
+            while ($this->maxValue($term[$row] ?? 0, $step) > 1) {
+                $row += $this->maxValue($term[$row] ?? 0, $step) - 1;
             }
             $size = 0;
             for ($j = $row_min; $j <= $row; $j++) {
@@ -1315,10 +1323,11 @@ class SingleCalendar
             $i = $row + $start / $step;
         }
         $rows = [];
+        $cspan = [];
         for ($i = $start / $step; $i < $end / $step + 3600 / $step; $i++) {
             $row = $i - $start / $step;
             $cspan_0 = 0;
-            if ($term[$row]) {
+            if (!empty($term[$row])) {
                 if ($colsp[$row] > 0) {
                     $cspan_0 = (int) ($max_cols / $colsp[$row]);
                 }
@@ -1332,7 +1341,7 @@ class SingleCalendar
                         // Wieviele Termine sind zum aktuellen Termin zeitgleich?
                         $p = 0;
                         $count = 0;
-                        while ($aterm = $em['events'][$p]) {
+                        while (array_key_exists($p, $em['events']) && ($aterm = $em['events'][$p])) {
                             if ($aterm->getStart() >= $term[$row][$j]->getStart()
                                     && $aterm->getStart() <= $term[$row][$j]->getEnd()) {
                                 $count++;
@@ -1430,6 +1439,8 @@ class SingleCalendar
     {
         $tmp_events = [];
         $map_events = [];
+        $tmp_day_event = [];
+        $map_day_events = [];
         for ($i = 0; $i < sizeof($this->events); $i++) {
             $event = $this->events[$i];
             if (($event->getEnd() > $this->getStart() + $start)
