@@ -79,7 +79,7 @@ class Search_GlobalsearchController extends AuthenticatedController
             null,
             'semester',
             $this->getSemesters(),
-            (int) $_SESSION['global_search']['selects']['semester'],
+            'future',
             ['id' => 'semester_select']
         );
 
@@ -90,7 +90,7 @@ class Search_GlobalsearchController extends AuthenticatedController
             null,
             'seminar_type',
             $this->getSemClasses(),
-            $_SESSION['global_search']['selects']['seminar_type'],
+            '',
             ['id' => 'seminar_type_select']
         );
 
@@ -101,7 +101,7 @@ class Search_GlobalsearchController extends AuthenticatedController
             null,
             'institute',
             $this->getInstitutes(),
-            $_SESSION['global_search']['selects']['institute'],
+            '',
             ['id' => 'institute_select']
         );
     }
@@ -115,12 +115,8 @@ class Search_GlobalsearchController extends AuthenticatedController
      */
     private function getSemesters()
     {
-        // set the current semester as the initially selected semester
-        if (!$_SESSION['global_search']['selects']) {
-            $current_sem = GlobalSearchModule::getCurrentSemester();
-            $_SESSION['global_search']['selects']['semester'] = $current_sem;
-        }
         $semesters = [];
+        $semesters['future'] = _('Aktuelles und nächstes Semester');
         $semesters[''] = _('Alle Semester');
 
         $sems = array_reverse(Semester::getAll());
