@@ -3111,26 +3111,6 @@ a u d i o  b l o c k
 a u d i o  b l o c k  e n d
 * * * * * * * * * * * * * */
 
-/* * * * * * * * * * * * * * * * * * * *
-f o r  m u l t i m e d i a  b l o c k s
-* * * * * * * * * * * * * * * * * * * */
-.cw-file-empty {
-    @include background-icon(file, info, 96);
-    border: solid thin $content-color-40;
-    background-position: center 1em;
-    background-repeat: no-repeat;
-    min-height: 140px;
-    padding: 1em;
-    p {
-        text-align: center;
-        padding-top: 106px;
-    }
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * *
-f o r  m u l t i m e d i a  b l o c k s  e n d
-* * * * * * * * * * * * * * * * * * * * * * * */
-
 /* * * * * * * * * *
 v i d e o  b l o c k
 * * * * * * * * * * */
