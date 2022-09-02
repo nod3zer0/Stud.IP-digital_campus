@@ -2,7 +2,7 @@
     <?= $this->render_partial('file/_folder_aside.php') ?>
     <div id="file_management_forms">
         <form method="post" class="default"
-              action="<?= $controller->url_for('/edit_folder/' . $folder->getId()) ?>"
+              action="<?= $controller->action_link('edit_folder/' . $folder->getId()) ?>"
               data-dialog="reload-on-close"
         >
             <?= CSRFProtection::tokenTag() ?>

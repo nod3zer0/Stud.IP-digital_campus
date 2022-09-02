@@ -104,7 +104,7 @@ class Fachabschluss_FaecherController extends MVVController
                     $success_message,
                     htmlReady($this->fach->name)
                 ));
-                $this->redirect($this->url_for('/index'));
+                $this->redirect($this->action_url('index'));
                 return;
             }
         }
@@ -149,7 +149,7 @@ class Fachabschluss_FaecherController extends MVVController
                 ));
             }
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -214,11 +214,11 @@ class Fachabschluss_FaecherController extends MVVController
         $widget  = new ViewsWidget();
         $widget->addLink(
             _('Fächer mit zugeordneten Abschlüssen'),
-            $this->url_for('/index')
+            $this->action_url('index')
         )->setActive(in_array($this->action, ['index', 'details']));
         $widget->addLink(
             _('Gruppierung nach Fachbereichen'),
-            $this->url_for('/fachbereiche')
+            $this->action_url('fachbereiche')
         )->setActive(in_array($this->action, ['fachbereiche', 'details_fachbereich']));
 
         $sidebar->addWidget($widget);
@@ -227,7 +227,7 @@ class Fachabschluss_FaecherController extends MVVController
             $widget  = new ActionsWidget();
             $widget->addLink(
                 _('Neues Fach anlegen'),
-                $this->url_for('/fach'),
+                $this->action_url('fach'),
                 Icon::create('add')
             );
             $sidebar->addWidget($widget);

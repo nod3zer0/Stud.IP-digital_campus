@@ -1,4 +1,4 @@
-<form class="default" action="<?= $controller->url_for('/select_range', $range_type) ?>" method="post" data-dialog="">
+<form class="default" action="<?= $controller->action_link('select_range', $range_type) ?>" method="post" data-dialog="">
     <label>
         <select class="nested-select" multiple name="range_id[]">
     <? if ($range_type == 'Studiengang'): ?>

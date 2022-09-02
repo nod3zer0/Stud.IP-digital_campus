@@ -20,7 +20,7 @@ jQuery(function ($) {
     </div>
 </div>
 
-<form class="default" id="order_form" action="<?= $controller->url_for('/sort', $range_type, $range_id) ?>" method="POST" data-dialog="size=auto">
+<form class="default" id="order_form" action="<?= $controller->action_link('sort', $range_type, $range_id) ?>" method="POST" data-dialog="size=auto">
     <input type="hidden" name="ordering" id="ordering">
     <footer data-dialog-button>
         <?= Studip\Button::createAccept(_('Speichern'), 'order') ?>

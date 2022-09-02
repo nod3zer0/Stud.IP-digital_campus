@@ -184,7 +184,7 @@ class Shared_ContactsController extends MVVController
                     trim(Request::get('ansprechpartner_suche_parameter')),
                     Request::get('ansprechpartner_suche'), $this->filter);
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -244,7 +244,7 @@ class Shared_ContactsController extends MVVController
         // store filter
         $this->reset_page();
         $this->sessSet('filter', $this->filter);
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     public function reset_filter_action()
@@ -266,13 +266,13 @@ class Shared_ContactsController extends MVVController
         if (MvvPerm::get('MvvContactRange')->havePermCreate()) {
             $widget->addLink(
                 _('Neuen Ansprechpartner anlegen'),
-                $this->url_for('/new_ansprechpartner'),
+                $this->action_url('new_ansprechpartner'),
                 Icon::create('add')
             )->asDialog('size=auto');
         }
         $widget->addLink(
             _('Liste exportieren (CSV)'),
-            $this->url_for('/export_csv'),
+            $this->action_url('export_csv'),
             Icon::create('export')
         );
         $sidebar->addWidget($widget);
@@ -311,7 +311,7 @@ class Shared_ContactsController extends MVVController
         $search_term = $this->search_term ? $this->search_term : _('Ansprechpartner suchen');
 
         $sidebar = Sidebar::get();
-        $widget = new SearchWidget($this->url_for('/search'));
+        $widget = new SearchWidget($this->action_url('search'));
         $widget->addNeedle(
             _('Ansprechpartner suchen'),
             'ansprechpartner_suche',
@@ -361,8 +361,8 @@ class Shared_ContactsController extends MVVController
             'status'             => $this->findStatusByIds(),
             'selected_status'    => $this->filter['mvv_contacts.contact_status'],
             'status_array'       => ['intern' => ['name' => _('Intern')], 'extern' => ['name' =>_('Extern')]],
-            'action'             => $this->url_for('/set_filter'),
-            'action_reset'       => $this->url_for('/reset_filter')
+            'action'             => $this->action_url('set_filter'),
+            'action_reset'       => $this->action_url('reset_filter')
         ]);
 
         $sidebar = Sidebar::get();
@@ -510,7 +510,7 @@ class Shared_ContactsController extends MVVController
                     $this->render_nothing();
                 } else {
                     $this->response->add_header('X-Dialog-Close', 1);
-                    $this->response->add_header('X-Location', $this->url_for('/index', ['contact_id' => $mvv_contact->id]));
+                    $this->response->add_header('X-Location', $this->action_url('index', ['contact_id' => $mvv_contact->id]));
                 }
                 return;
             }
@@ -564,7 +564,7 @@ class Shared_ContactsController extends MVVController
             $this->response->add_header('X-Dialog-Close', 1);
         } else {
             $this->response->add_header('X-Dialog-Close', 1);
-            $this->response->add_header('X-Location', $this->url_for('/index', ['contact_id' => $contact_range->contact_id]));
+            $this->response->add_header('X-Location', $this->indexURL(['contact_id' => $contact_range->contact_id]));
         }
         $this->render_nothing();
     }
@@ -666,7 +666,7 @@ class Shared_ContactsController extends MVVController
 
         $this->range_type = $range_type;
         if (!$this->range_type) {
-            $this->redirect($this->url_for('/select_range_type',$user_id));
+            $this->redirect($this->action_url('select_range_type',$user_id));
             return;
         }
 

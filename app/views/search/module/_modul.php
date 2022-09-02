@@ -7,7 +7,7 @@
         </td>
     <? if (count($modul->getAssignedCoursesBySemester($selected_semester->id, $GLOBALS['user']->id))) : ?>
         <td class="toggle-indicator">
-            <a class="mvv-search-modules-row-link mvv-load-in-new-row" href="<?= $controller->link_for("/details/{$modul->id}/#{$modul->id}") ?>">
+            <a class="mvv-search-modules-row-link mvv-load-in-new-row" href="<?= $controller->action_link("details/{$modul->id}/#{$modul->id}") ?>">
                 <?= htmlReady($modul->getDisplayName(ModuleManagementModel::DISPLAY_CODE)) ?>
             </a>
         </td>

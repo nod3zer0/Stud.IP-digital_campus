@@ -108,7 +108,7 @@ class Module_InstituteController extends Module_ModuleController
                 $this->render_template('module/institute/details');
             }
         } else {
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
         }
     }
 }

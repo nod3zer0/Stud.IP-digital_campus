@@ -18,7 +18,7 @@
         <tr class="header-row">
             <td class="toggle-indicator">
                 <? if ($abschluss->count_faecher) : ?>
-                    <a class="mvv-load-in-new-row" href="<?= $controller->url_for('/details/' . $abschluss->id) ?>"><?= htmlReady($abschluss->name) ?> </a>
+                    <a class="mvv-load-in-new-row" href="<?= $controller->action_link('details/' . $abschluss->id) ?>"><?= htmlReady($abschluss->name) ?> </a>
                 <? else: ?>
                     <?= htmlReady($abschluss->name) ?>
                 <? endif; ?>
@@ -27,7 +27,7 @@
             <td style="text-align: center;" class="dont-hide"><?= $abschluss->count_faecher ?></td>
             <td class="dont-hide actions" style="white-space: nowrap;">
             <? if (MvvPerm::havePermWrite($abschluss)) : ?>
-                <a href="<?=$controller->url_for('/abschluss/' . $abschluss->id)?>">
+                <a href="<?=$controller->action_link('abschluss/' . $abschluss->id)?>">
                     <?= Icon::create('edit', Icon::ROLE_CLICKABLE, tooltip2(_('Abschluss bearbeiten')))->asImg(); ?>
                 </a>
             <? endif; ?>
@@ -35,7 +35,7 @@
                 <? if (!$abschluss->count_faecher) : ?>
                 <?= Icon::create('trash', Icon::ROLE_CLICKABLE, tooltip2(_('Abschluss löschen')))->asInput(
                         [
-                            'formaction'   => $controller->url_for('/delete/' . $abschluss->id),
+                            'formaction'   => $controller->action_url('delete/' . $abschluss->id),
                             'data-confirm' => sprintf(
                                 _('Wollen Sie wirklich den Abschluss "%s" löschen?'),
                                 htmlReady($abschluss->name)
@@ -63,7 +63,7 @@
                         $pagination->set_attribute('perPage', MVVController::$items_per_page);
                         $pagination->set_attribute('num_postings', $count);
                         $pagination->set_attribute('page', $page);
-                        $page_link = reset(explode('?', $controller->url_for('/index'))) . '?page_abschluesse=%s';
+                        $page_link = reset(explode('?', $controller->action_url('index'))) . '?page_abschluesse=%s';
                         $pagination->set_attribute('pagelink', $page_link);
                         echo $pagination->render('shared/pagechooser');
                     ?>

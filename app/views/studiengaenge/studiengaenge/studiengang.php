@@ -1,7 +1,7 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 <?= $controller->jsUrl() ?>
 <? $perm = MvvPerm::get($studiengang) ?>
-<form class="default" action="<?= $controller->link_for('/studiengang', $studiengang->id) ?>" method="post">
+<form class="default" action="<?= $controller->action_link('studiengang', $studiengang->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
     <fieldset class="collapsable">
@@ -352,7 +352,7 @@
             <?= Button::createAccept(_('Übernehmen'), 'store',
                     [
                         'title'      => _('Änderungen übernehmen'),
-                        'formaction' => $controller->url_for('/studiengang', $studiengang->id),
+                        'formaction' => $controller->action_url('studiengang', $studiengang->id),
                         'formmethod' => 'post'
                     ]) ?>
             <? endif ?>

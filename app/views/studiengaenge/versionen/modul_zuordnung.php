@@ -1,6 +1,6 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 <? $perm = new MvvPerm($zuordnung) ?>
-<form class="default" action="<?= $controller->url_for('/modul_zuordnung/' . $zuordnung->id) ?>" method="post">
+<form class="default" action="<?= $controller->action_link('modul_zuordnung/' . $zuordnung->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Grunddaten') ?></legend>
@@ -34,7 +34,7 @@
         ) ?>
         <?= LinkButton::createCancel(
             _('Abbrechen'),
-            $controller->url_for('/'),
+            $controller->action_url(''),
             ['title' => _('zurück zur Übersicht')]
         ) ?>
     </footer>

@@ -154,7 +154,7 @@ class Module_ModuleController extends MVVController
             $sidebar_template = $template_factory->render('shared/deskriptor_language', [
                 'modul'   => $this->modul,
                 'sprache' => $this->display_language,
-                'link'    => $this->url_for('/modul', $this->modul->id, $this->institut_id),
+                'link'    => $this->modulURL($this->modul->id, $this->institut_id),
                 'url'     => $this->url]
             );
 
@@ -176,7 +176,7 @@ class Module_ModuleController extends MVVController
             );
             $action_widget->addLink(
                 _('Vergleich mit anderem Modul'),
-                $this->url_for('/diff_select', $this->modul->id),
+                $this->diff_selectURL($this->modul->id),
                 Icon::create('learnmodule'),
                 ['data-dialog' => 'size=auto']
             );
@@ -184,7 +184,7 @@ class Module_ModuleController extends MVVController
             if ($this->modul->stat === 'planung' && MvvPerm::haveFieldPermStat($this->modul)) {
                 $action_widget->addLink(
                     _('Modul genehmigen'),
-                    $this->url_for('/approve', $this->modul->id),
+                    $this->approveURL($this->modul->id),
                     Icon::create('accept'),
                     ['data-dialog' => 'size=auto;buttons=false']
                 );
@@ -207,7 +207,7 @@ class Module_ModuleController extends MVVController
                     $template_factory->render('shared/modul_variants',
                         [
                             'variants' => $variants,
-                            'link'     => $this->url_for('/modul')
+                            'link'     => $this->modulURL()
                         ])
                 ));
                 $sidebar->addWidget($widget, 'variants');
@@ -302,7 +302,7 @@ class Module_ModuleController extends MVVController
                         $success_message,
                         htmlReady($this->modul->getDisplayName())
                     ));
-                    $this->redirect($this->url_for('/index'));
+                    $this->redirect($this->indexURL());
                     return;
                 }
             }
@@ -365,7 +365,7 @@ class Module_ModuleController extends MVVController
                 ->fireJSFunctionOnSelect('STUDIP.MVV.Search.addSelected')
                 ->noSelectbox();
 
-        $this->cancel_url = $this->url_for('/index');
+        $this->cancel_url = $this->indexURL();
 
         $this->render_template('module/module/modul', $this->layout);
     }
@@ -396,7 +396,7 @@ class Module_ModuleController extends MVVController
                 ));
             }
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->indexURL());
     }
 
     public function assignments_action($modul_id)
@@ -429,7 +429,7 @@ class Module_ModuleController extends MVVController
                     _('Modul "%s" genehmigt!'),
                     htmlReady($this->modul->getDisplayName())
                 ));
-                $this->redirect($this->url_for('/details/' . $modul_id));
+                $this->redirect($this->detailsURL($modul_id));
                 return;
             }
         }
@@ -451,8 +451,8 @@ class Module_ModuleController extends MVVController
             PageLayout::postError(_('Unbekanntes Modul'));
         } else {
             $this->perm = MvvPerm::get($this->modul);
-            $this->submit_url = $this->url_for('/copy/' . $this->modul->id);
-            $this->cancel_url = $this->url_for('/index');
+            $this->submit_url = $this->copyURL($this->modul->id);
+            $this->cancel_url = $this->indexURL();
         }
         PageLayout::setTitle(_('Modul kopieren'));
     }
@@ -511,7 +511,7 @@ class Module_ModuleController extends MVVController
                 }
             }
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->indexURL());
     }
 
     /**
@@ -586,7 +586,7 @@ class Module_ModuleController extends MVVController
                 $this->render_nothing();
             }
         } else {
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->indexURL());
         }
     }
 
@@ -597,7 +597,7 @@ class Module_ModuleController extends MVVController
             $this->modul = Modul::find(Request::option('modul_id'));
             if (!$this->modul) {
                 PageLayout::postError(_('Unbekanntes Modul'));
-                $this->redirect($this->url_for('/index'));
+                $this->redirect($this->indexURL());
                 return;
             }
             $this->modulteil = new Modulteil();
@@ -668,7 +668,7 @@ class Module_ModuleController extends MVVController
                     [
                         'modul'   => $this->modulteil,
                         'sprache' => $this->display_language,
-                        'link'    => $this->url_for('/modulteil', $this->modulteil->id),
+                        'link'    => $this->modulteilURL($this->modulteil->id),
                         'url'     => $this->url
                     ]
                 )
@@ -769,7 +769,7 @@ class Module_ModuleController extends MVVController
                 } else {
                     PageLayout::postInfo(_('Es wurden keine Änderungen vorgenommen.'));
                 }
-                $this->redirect($this->url_for('/details/' . $this->modulteil->modul_id));
+                $this->redirect($this->detailsURL($this->modulteil->modul_id));
                 return;
             }
         }
@@ -780,7 +780,7 @@ class Module_ModuleController extends MVVController
                 htmlReady($GLOBALS['MVV_MODUL_DESKRIPTOR']['SPRACHE']['values'][$this->display_language]['name'])
             ));
         }
-        $this->cancel_url = $this->url_for('/details/' .  $this->modulteil->modul_id);
+        $this->cancel_url = $this->detailsURL($this->modulteil->modul_id);
 
         $action_widget = Sidebar::get()->getWidget('actions');
         $action_widget->addLink(
@@ -820,7 +820,7 @@ class Module_ModuleController extends MVVController
                 ));
             }
         }
-        $this->redirect($this->url_for('/details/' . Request::option('modul_id')));
+        $this->redirect($this->detailsURL(Request::option('modul_id')));
     }
 
     public function copy_modulteil_action($modulteil_id)
@@ -828,7 +828,7 @@ class Module_ModuleController extends MVVController
         $modulteil = Modulteil::find($modulteil_id);
         if (!$modulteil) {
             PageLayout::postError(_('Unbekannter Modulteil'));
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->indexURL());
             return;
         }
         $copy_modulteil = $modulteil->copy();
@@ -837,7 +837,7 @@ class Module_ModuleController extends MVVController
             _('Der Modulteil "%s" wurde kopiert. Klicken Sie auf "übernehmen", um Änderungen an der Kopie zu speichern.'),
             htmlReady($copy_modulteil->getDisplayName())
         ));
-        $this->redirect($this->url_for('/modulteil/' . $copy_modulteil->id));
+        $this->redirect($this->modulteilURL($copy_modulteil->id));
     }
 
     public function modulteil_lvg_action($modulteil_id)
@@ -845,7 +845,7 @@ class Module_ModuleController extends MVVController
         $this->modulteil = Modulteil::find($modulteil_id);
         if (is_null($this->modulteil)) {
             PageLayout::postError(_('Unbekannter Modulteil'));
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->indexURL());
             return;
         } else {
             $this->modulteil_id = $this->modulteil->getId();
@@ -881,7 +881,7 @@ class Module_ModuleController extends MVVController
         $this->modulteil = Modulteil::find($modulteil_id);
         if (is_null($this->modulteil)) {
             PageLayout::postError(_('Unbekannter Modulteil'));
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->indexURL());
             return;
         } else {
             $this->lvgruppe = Lvgruppe::find(
@@ -911,7 +911,7 @@ class Module_ModuleController extends MVVController
                     ));
                 }
             }
-            $this->redirect($this->url_for('/details/' . $this->modulteil->modul_id . '/' . $this->modulteil->id));
+            $this->redirect($this->detailsURL($this->modulteil->modul_id . '/' . $this->modulteil->id));
         }
     }
 
@@ -933,7 +933,7 @@ class Module_ModuleController extends MVVController
                 $lvg_modulteil->delete();
             }
         }
-        $this->redirect($this->url_for('/details/' . $modulteil->modul_id . '/' . $modulteil->id));
+        $this->redirect($this->detailsURL($modulteil->modul_id . '/' . $modulteil->id));
     }
 
     public function lvgruppe_action($modulteil_id, $lvgruppe_id = null)
@@ -941,7 +941,7 @@ class Module_ModuleController extends MVVController
         $this->modulteil = Modulteil::find($modulteil_id);
         if (is_null($this->modulteil)) {
             PageLayout::postError(_('Unbekannter Modulteil'));
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->indexURL());
             return;
         } else {
             $this->lvgruppe = Lvgruppe::get($lvgruppe_id);
@@ -956,8 +956,8 @@ class Module_ModuleController extends MVVController
                 $this->headline = sprintf(_('Lehrveranstaltungsgruppe "%s" bearbeiten.'),
                     $this->lvgruppe->getDisplayName());
             }
-            $this->cancel_url = $this->url_for('/index');
-            $this->submit_url = $this->url_for('/lvgruppe' . '/' . $this->modulteil->id . '/' . $this->lvgruppe->id);
+            $this->cancel_url = $this->indexURL();
+            $this->submit_url = $this->lvgruppeURL($this->modulteil->id . '/' . $this->lvgruppe->id);
             if (Request::submitted('store')) {
                 CSRFProtection::verifyUnsafeRequest();
                 $stored = false;
@@ -987,7 +987,7 @@ class Module_ModuleController extends MVVController
                     } else {
                         PageLayout::postInfo(_('Es wurden keine Änderungen vorgenommen.'));
                     }
-                    $this->relocate($this->url_for('/details/' . $this->modulteil->modul_id . '/' . $this->modulteil->id));
+                    $this->relocate($this->detailsURL($this->modulteil->modul_id . '/' . $this->modulteil->id));
                     return;
                 }
             }
@@ -1010,7 +1010,7 @@ class Module_ModuleController extends MVVController
                 $modul->delete();
             }
         }
-        $this->redirect($this->url_for('/details/' . $modul->id));
+        $this->redirect($this->detailsURL($modul->id));
     }
 
     public function delete_modulteil_action($modulteil_id)
@@ -1029,7 +1029,7 @@ class Module_ModuleController extends MVVController
                 $modulteil->delete();
             }
         }
-        $this->redirect($this->url_for('/details/' . $modul_id));
+        $this->redirect($this->detailsURL($modul_id));
     }
 
     public function details_action($modul_id, $modulteil_id = null)
@@ -1042,7 +1042,7 @@ class Module_ModuleController extends MVVController
             $this->search_lvgruppe($this->modulteil_id);
         }
         if (Request::isXhr()) {
-            $this->details_url = '/modulteil_lvg/';
+            $this->details_action = 'modulteil_lvg';
         } else {
             $this->perform_relayed('index');
         }
@@ -1076,7 +1076,7 @@ class Module_ModuleController extends MVVController
             $this->variante = $this->modul->modul_variante;
         } else {
             PageLayout::postError(_('Unbekanntes Modul'));
-            $this->relocate($this->url_for('/index'));
+            $this->relocate($this->indexURL());
         }
     }
 
@@ -1088,15 +1088,15 @@ class Module_ModuleController extends MVVController
         if (!$new_module || !$old_module) {
             PageLayout::postError(_('Unbekanntes Modul'));
             if ($new_module) {
-                $this->redirect($this->url_for('/diff_select/' . $new_module->id));
+                $this->redirect($this->diff_selectURL($new_module->id));
             } else {
-                $this->redirect($this->url_for('/index'));
+                $this->redirect($this->indexURL());
             }
         } else {
             if (Request::isXhr()) {
                 $this->response->add_header(
                     'X-Location',
-                    $this->url_for('/diff/' . $new_module->id . '/' . $old_module->id)
+                    $this->diffURL($new_module->id . '/' . $old_module->id)
                 );
             }
             $type_new = 1;
@@ -1171,7 +1171,7 @@ class Module_ModuleController extends MVVController
                 Request::get('modul_suche'), $this->filter
             );
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->indexURL());
     }
 
     /**
@@ -1285,7 +1285,7 @@ class Module_ModuleController extends MVVController
         // store filter
         $this->reset_page();
         $this->sessSet('filter', $this->filter);
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->indexURL());
     }
 
     public function reset_filter_action()
@@ -1293,7 +1293,7 @@ class Module_ModuleController extends MVVController
         $this->reset_page();
 
         $this->sessSet('filter', []);
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->indexURL());
     }
 
     protected function setSidebar()
@@ -1316,7 +1316,7 @@ class Module_ModuleController extends MVVController
         if (MvvPerm::havePermCreate('Modul')) {
             $widget->addLink(
                 _('Neues Modul anlegen'),
-                $this->url_for('/modul'),
+                $this->modulURL(),
                 Icon::create('add')
             );
         }
@@ -1378,8 +1378,8 @@ class Module_ModuleController extends MVVController
         $template->set_attribute('selected_semester', $selected_semester->id);
         $template->set_attribute('default_semester', Semester::findCurrent()->id);
 
-        $template->set_attribute('action', $this->url_for('/set_filter'));
-        $template->set_attribute('action_reset', $this->url_for('/reset_filter'));
+        $template->set_attribute('action', $this->set_filterURL());
+        $template->set_attribute('action_reset', $this->reset_filterURL());
 
         $filter_template = $template->render();
 
@@ -1414,7 +1414,7 @@ class Module_ModuleController extends MVVController
                 $this->search_term ? $this->search_term : _('Modul suchen');
 
         $sidebar = Sidebar::get();
-        $widget = new SearchWidget($this->url_for('/search'));
+        $widget = new SearchWidget($this->searchURL());
         $widget->addNeedle(
             _('Modul suchen'),
             'modul_suche',

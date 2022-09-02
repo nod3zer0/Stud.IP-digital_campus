@@ -83,7 +83,7 @@ class Materialien_FilesController extends MVVController
         if (MvvFile::countBySql() === 0) {
             PageLayout::postInfo(sprintf(
                 _('Es wurden noch keine Dokumente angelegt. Klicken Sie %shier%s, um ein neues Dokument anzulegen.'),
-                '<a data-dialog="size=auto" href="' . $this->link_for('/new_dokument') . '">',
+                '<a data-dialog="size=auto" href="' . $this->action_link('new_dokument') . '">',
                 '</a>')
             );
         }
@@ -175,7 +175,7 @@ class Materialien_FilesController extends MVVController
                     $this->render_nothing();
                 } else {
                     $this->response->add_header('X-Dialog-Close', 1);
-                    $this->response->add_header('X-Location', $this->url_for('/index'));
+                    $this->response->add_header('X-Location', $this->action_url('index'));
                 }
                 return;
             }
@@ -253,7 +253,7 @@ class Materialien_FilesController extends MVVController
 
         $this->range_type = $range_type?:$mvv_file->getRangeType();
         if (!$this->range_type) {
-            $this->redirect($this->url_for('/select_range_type',$mvvfile_id));
+            $this->redirect($this->action_url('select_range_type',$mvvfile_id));
             return;
         }
         $this->pre_selected = $mvv_file->ranges->pluck('range_id');
@@ -530,7 +530,7 @@ class Materialien_FilesController extends MVVController
             );
         }
 
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -591,7 +591,7 @@ class Materialien_FilesController extends MVVController
         // store filter
         $this->reset_page();
         $this->sessSet('filter', $this->filter);
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     public function reset_filter_action()
@@ -613,7 +613,7 @@ class Materialien_FilesController extends MVVController
         if (MvvPerm::get('MvvFile')->havePermCreate()) {
             $widget->addLink(
                 _('Neues Dokument anlegen'),
-                $this->url_for('/new_dokument'),
+                $this->action_url('new_dokument'),
                 Icon::create('add')
             )->asDialog('size=auto');
         }
@@ -665,8 +665,8 @@ class Materialien_FilesController extends MVVController
             'selected_institut'  => $this->filter['mvv_studiengang.institut_id'],
             'zuordnungen'        => MvvFile::getAllRelations($this->search_result['MvvFile']),
             'selected_zuordnung' => $this->filter['mvv_files_ranges.range_type'],
-            'action'             => $this->url_for('/set_filter'),
-            'action_reset'       => $this->url_for('/reset_filter')]
+            'action'             => $this->action_url('set_filter'),
+            'action_reset'       => $this->action_url('reset_filter')]
         );
 
         $sidebar = Sidebar::get();

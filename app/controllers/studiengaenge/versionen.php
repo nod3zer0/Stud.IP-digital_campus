@@ -47,7 +47,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
             case 'stgteile_fach' :
                 $this->chooser_filter['stgteile'] =
                     Request::option('id', $this->chooser_filter['stgteile']);
-                $this->redirect($this->url_for('/index/' .  $this->chooser_filter['stgteile']));
+                $this->redirect($this->action_url('index/' .  $this->chooser_filter['stgteile']));
                 return;
             default :
                 throw new Trails_Exception(400);
@@ -260,7 +260,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
                 $this->set_status(404, 'Not Found');
                 $this->render_nothing();
             } else {
-                $this->redirect($this->url_for('/index'));
+                $this->redirect($this->action_url('index'));
             }
         }
     }
@@ -272,7 +272,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
         $widget = new ActionsWidget();
         $widget->addLink(
             _('Auswahl zurücksetzen'),
-            $this->url_for('/reset'),
+            $this->action_url('reset'),
             Icon::create('refresh')
         );
         if ($this->chooser_filter['stgteil']) {
@@ -280,7 +280,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
             if ($stgteil && MvvPerm::haveFieldPermVersionen($stgteil, MvvPerm::PERM_CREATE)) {
                 $widget->addLink(
                     _('Neue Version anlegen'),
-                    $this->url_for('/version', $this->chooser_filter['stgteil']),
+                    $this->action_url('version', $this->chooser_filter['stgteil']),
                     Icon::create('add')
                 );
             }
@@ -334,8 +334,8 @@ class Studiengaenge_VersionenController extends SharedVersionController
                 'status'            => $status_results,
                 'selected_status'   => $this->filter['mvv_stgteilversion.stat'],
                 'status_array'      => $GLOBALS['MVV_STGTEILVERSION']['STATUS']['values'],
-                'action'            => $this->url_for('/set_filter'),
-                'action_reset'      => $this->url_for('/reset_filter')
+                'action'            => $this->action_url('set_filter'),
+                'action_reset'      => $this->action_url('reset_filter')
             ]
         );
 
@@ -371,7 +371,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
         // store filter
         $this->sessSet('filter', $this->filter);
         $this->reset_page();
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     public function reset_filter_action()
@@ -382,7 +382,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
         $this->filter['start_sem.beginn'] = 2147483647;
         $this->filter['end_sem.ende'] = 1;
         $this->sessSet('filter', $this->filter);
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
 }

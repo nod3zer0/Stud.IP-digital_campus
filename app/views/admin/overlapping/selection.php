@@ -64,6 +64,6 @@
     </fieldset>
     <footer>
         <?= \Studip\Button::createAccept(_('Vergleichen'), 'compare') ?>
-        <?= \Studip\Button::createCancel(_('Zurücksetzen'), 'index', ['formaction' => $controller->url_for('/reset')]) ?>
+        <?= \Studip\Button::createCancel(_('Zurücksetzen'), 'index', ['formaction' => $controller->action_url('reset')]) ?>
     </footer>
 </form>

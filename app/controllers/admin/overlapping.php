@@ -162,7 +162,7 @@ class Admin_OverlappingController extends AuthenticatedController
             PageLayout::postError('Die Basis-Version muss angegeben werden!');
         }
         $_SESSION['MVV_OVL_HIDDEN'] = Request::int('show_hidden');
-        $this->redirect($this->url_for('/index', ['selection' => $selection_id]));
+        $this->redirect($this->indexURL(['selection' => $selection_id]));
     }
 
     /**

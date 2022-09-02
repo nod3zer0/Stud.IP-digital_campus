@@ -13,7 +13,7 @@ $options = array_filter([
 
 <? if ($GLOBALS['perm']->have_perm("admin")) : ?>
 <form id="folderchooser_institute_search" method="post"
-      action="<?= $controller->link_for('/choose_folder_from_institute') ?>"
+      action="<?= $controller->action_link('choose_folder_from_institute') ?>"
       data-dialog>
     <?= QuickSearch::get('Institut_id', $instsearch)
         ->fireJSFunctionOnSelect("function () { jQuery('#folderchooser_institute_search').submit(); }")
@@ -60,7 +60,7 @@ $options = array_filter([
     <footer data-dialog-button>
         <!-- neu -->
         <?= Studip\Button::create(_('Zurück'), [
-            'formaction'  => $controller->url_for('/choose_destination/' . $options['copymode']),
+            'formaction'  => $controller->action_url('choose_destination/' . $options['copymode']),
             'data-dialog' => 'size=auto',
         ]) ?>
     </footer>

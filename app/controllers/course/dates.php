@@ -624,7 +624,7 @@ class Course_DatesController extends AuthenticatedController
             }
             PageLayout::postSuccess(sprintf(_('Es wurden %u Ordner erstellt.'), $count));
             $this->response->add_header('X-Dialog-Close', '1');
-            $this->relocate($this->url_for('/index'));
+            $this->relocate($this->action_url('index'));
         }
     }
 }

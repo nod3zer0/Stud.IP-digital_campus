@@ -13,7 +13,7 @@
                 <td class="toggle-indicator">
                     <? if ($institut->count_objects) : ?>
                         <a class="mvv-load-in-new-row"
-                           href="<?= $controller->url_for('/details', ['institut_id' => $institut->id]) ?>">
+                           href="<?= $controller->action_link('details', ['institut_id' => $institut->id]) ?>">
                             <?= htmlReady($institut->getDisplayName()) ?>
                         </a>
                     <? else : ?>

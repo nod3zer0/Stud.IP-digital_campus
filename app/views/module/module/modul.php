@@ -13,7 +13,7 @@ if ($GLOBALS['MVV_MODUL']['SPRACHE']['default'] != $display_language) {
     </script>
 <? endif; ?>
 
-<form id="modul_form" class="default" action="<?= $controller->url_for('/modul', $modul->id) ?>" method="post">
+<form id="modul_form" class="default" action="<?= $controller->action_link('modul', $modul->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
     <fieldset class="collapsable">
@@ -686,7 +686,7 @@ if ($GLOBALS['MVV_MODUL']['SPRACHE']['default'] != $display_language) {
             <? endif; ?>
             <? if (!$def_lang && !$deskriptor->isNew() && in_array($display_language, $translations)) : ?>
                 <?= Button::create(_('Löschen'), 'delete', ['title'      => _('Deskriptor löschen'), 'data-confirm' => sprintf(_('Soll der Deskriptor in der Ausgabesprache %s gelöscht werden?'), htmlReady($GLOBALS['MVV_LANGUAGES']['values'][$display_language]['name'])),
-                                                            'formaction' => $controller->url_for('/delete_modul_deskriptor', $deskriptor->id, $display_language)]); ?>
+                                                            'formaction' => $controller->action_url('delete_modul_deskriptor', $deskriptor->id, $display_language)]); ?>
             <? endif; ?>
         <? endif; ?>
         <?= LinkButton::createCancel(_('Abbrechen'), $cancel_url, ['title' => _('zurück zur Übersicht')]) ?>

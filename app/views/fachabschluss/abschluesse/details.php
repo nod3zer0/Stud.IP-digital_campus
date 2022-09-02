@@ -13,7 +13,7 @@
                     </td>
                     <td class="actions">
                         <? if (MvvPerm::havePermWrite($fach)) : ?>
-                            <a data-dialog href="<?= $controller->url_for('/fach/' . $fach->id) ?>">
+                            <a data-dialog href="<?= $controller->action_link('fach/' . $fach->id) ?>">
                                 <?= Icon::create('edit', 'clickable', ['title' => _('Fach bearbeiten')])->asImg(); ?>
                             </a>
                         <? endif; ?>

@@ -151,7 +151,7 @@ class Course_ManagementController extends AuthenticatedController
                 }
             }
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -166,7 +166,7 @@ class Course_ManagementController extends AuthenticatedController
         $course = Course::findCurrent();
 
         if (!$course) {
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
             return;
         }
 
@@ -201,6 +201,6 @@ class Course_ManagementController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::success($msg));
             }
         }
-        $this->relocate($this->url_for('/index'));
+        $this->relocate($this->action_url('index'));
     }
 }

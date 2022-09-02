@@ -203,9 +203,9 @@ class Studiengaenge_StudiengaengeController extends MVVController
                     PageLayout::postInfo(_('Es wurden keine Änderungen vorgenommen.'));
                 }
                 if (Request::submitted('store_cancel')) {
-                    $this->redirect($this->url_for('/index', $this->studiengang->id));
+                    $this->redirect($this->action_url('index', $this->studiengang->id));
                 } else {
-                    $this->redirect($this->url_for('/studiengang', $this->studiengang->id));
+                    $this->redirect($this->action_url('studiengang', $this->studiengang->id));
                 }
                 return;
             }
@@ -231,9 +231,9 @@ class Studiengaenge_StudiengaengeController extends MVVController
             ->noSelectbox();
 
         if ($this->parent_id) {
-            $this->cancel_url = $this->url_for('/index/' . $this->parent_id . '/' . $studiengang_id);
+            $this->cancel_url = $this->action_url('index/' . $this->parent_id . '/' . $studiengang_id);
         } else {
-            $this->cancel_url = $this->url_for('/index/' .  $studiengang_id);
+            $this->cancel_url = $this->action_url('index/' .  $studiengang_id);
         }
 
         $helpbar = Helpbar::get();
@@ -247,17 +247,17 @@ class Studiengaenge_StudiengaengeController extends MVVController
             $action_widget = $sidebar->getWidget('actions');
             $action_widget->addLink(
                 _('Download des Studienganges'),
-                $this->url_for('/export/' . $this->studiengang->getId()),
+                $this->action_url('export/' . $this->studiengang->getId()),
                 Icon::create('file-word')
             );
             $action_widget->addLink(
                 _('Studiengang als PDF'),
-                $this->url_for('/export/' . $this->studiengang->getId(), ['pdf' => '1']),
+                $this->action_url('export/' . $this->studiengang->getId(), ['pdf' => '1']),
                 Icon::create('file-pdf')
             );
             if ($this->studiengang->stat === 'planung' && MvvPerm::haveFieldPermStat($this->studiengang)) {
                 $action_widget->addLink(_('Studiengang genehmigen'),
-                    $this->url_for('/approve/' . $this->studiengang->getId()),
+                    $this->action_url('approve/' . $this->studiengang->getId()),
                     Icon::create('accept'),
                     ['data-dialog' => 'buttons=false']
                 );
@@ -300,7 +300,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
                 }
             }
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -471,7 +471,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
                 }
                 if (!$stgteil_bez) {
                     PageLayout::postError(_('Bitte Studiengangteil-Bezeichnung auswählen!'));
-                    $this->redirect($this->url_for('/details_studiengang/' . $studiengang->id . '/' . $stgteil->id));
+                    $this->redirect($this->action_url('details_studiengang/' . $studiengang->id . '/' . $stgteil->id));
                     return;
                 }
             } else {
@@ -510,17 +510,17 @@ class Studiengaenge_StudiengaengeController extends MVVController
                     }
                 } else {
                     PageLayout::postError(_('Unbekannter Studiengangteil'));
-                    $this->redirect($this->url_for('/details_studiengang/' . $studiengang->id));
+                    $this->redirect($this->action_url('details_studiengang/' . $studiengang->id));
                     return;
                 }
             }
             $this->redirect(
-                $this->url_for('/details_studiengang/' . $studiengang->id . '/' . $stgteil_bez->id)
+                $this->action_url('details_studiengang/' . $studiengang->id . '/' . $stgteil_bez->id)
             );
             return;
         } else {
             PageLayout::postError(_('Unbekannter Studiengang'));
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
         }
     }
 
@@ -557,11 +557,11 @@ class Studiengaenge_StudiengaengeController extends MVVController
                 }
             }
             $this->redirect(
-                $this->url_for('/details_studiengang/' .  $studiengang->id . '/' . $stgbez_id)
+                $this->action_url('details_studiengang/' .  $studiengang->id . '/' . $stgbez_id)
             );
         } else {
             PageLayout::postError(_('Unbekannter Studiengang'));
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
         }
     }
 
@@ -573,7 +573,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
         );
         $this->delete_stgteil($studiengang, $stg_stgteil);
         $this->redirect(
-            $this->url_for('/details_studiengang/' . $studiengang_id . '/' .  $stg_stgteil->stgbez_id)
+            $this->action_url('details_studiengang/' . $studiengang_id . '/' .  $stg_stgteil->stgbez_id)
         );
     }
 
@@ -613,7 +613,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
             }
         } else {
             PageLayout::postError(_('Unbekannter Studiengang'));
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
         }
     }
 
@@ -635,7 +635,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
                 $this->filter
             );
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -989,7 +989,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
         // store filter
         $this->sessSet('filter', $this->filter);
         $this->reset_page();
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     public function reset_filter_action()
@@ -997,7 +997,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
         $this->reset_page();
 
         $this->sessSet('filter', []);
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->indexURL());
     }
 
     protected function setSidebar()
@@ -1026,7 +1026,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
         if (MvvPerm::havePermCreate('Studiengang')) {
             $widget->addLink(
                 _('Neuen Studiengang anlegen'),
-                $this->url_for('/studiengang'),
+                $this->action_url('studiengang'),
                 Icon::create('add')
             );
         }
@@ -1072,8 +1072,8 @@ class Studiengaenge_StudiengaengeController extends MVVController
             'selected_institut'    => $this->filter['mvv_studiengang.institut_id'],
             'fachbereiche'         => Fach::getAllAssignedInstitutes($studiengang_ids),
             'selected_fachbereich' => $this->filter['mvv_fach_inst.institut_id'],
-            'action'               => $this->url_for('/set_filter'),
-            'action_reset'         => $this->url_for('/reset_filter')
+            'action'               => $this->action_url('set_filter'),
+            'action_reset'         => $this->action_url('reset_filter')
         ]);
         $sidebar = Sidebar::get();
         $widget  = new SidebarWidget();
@@ -1115,7 +1115,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
                 $this->search_term ? $this->search_term : _('Studiengang suchen');
 
         $sidebar = Sidebar::get();
-        $widget = new SearchWidget($this->url_for('/search'));
+        $widget = new SearchWidget($this->action_url('search'));
         $widget->addNeedle(
             _('Studiengang suchen'),
             'studiengang_suche',
@@ -1135,7 +1135,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
 
         if (!$this->studiengang) {
             PageLayout::postError(_('Unbekannter Studiengang'));
-            $this->relocate($this->url_for('/index'));
+            $this->relocate($this->action_url('index'));
             return;
         }
 
@@ -1152,7 +1152,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
                     _('Studiengang "%s" genehmigt!'),
                     htmlReady($studiengang->getDisplayName())
                 ));
-                $this->relocate($this->url_for('/index'));
+                $this->relocate($this->action_url('index'));
                 return;
             }
         }
@@ -1166,10 +1166,10 @@ class Studiengaenge_StudiengaengeController extends MVVController
 
         if (!$studiengang) {
             PageLayout::postError(_('Unbekannter Studiengang'));
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
         } else {
             if (Request::isXhr()) {
-                $this->relocate($this->url_for('/export/' . $studiengang->id));
+                $this->relocate($this->action_url('export/' . $studiengang->id));
             }
 
             $all_contacts = $studiengang->contact_assignments->orderBy('position')

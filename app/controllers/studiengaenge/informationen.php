@@ -105,13 +105,17 @@ class Studiengaenge_InformationenController extends MVVController
         ));
     }
 
-    private function createSidebar($view = 'subject' )
+    private function createSidebar($view = 'subject')
     {
         $widget = new ViewsWidget();
-        $widget->addLink(_('Gruppieren nach Fächern'), $this->indexURL())
-                ->setActive($view === 'subject');
-        $widget->addLink(_('Gruppieren nach Abschlüssen'), $this->degreeURL())
-                ->setActive($view === 'degrees');
+        $widget->addLink(
+            _('Gruppieren nach Fächern'),
+            $this->indexURL()
+        )->setActive($view === 'subject');
+        $widget->addLink(
+            _('Gruppieren nach Abschlüssen'),
+            $this->degreeURL()
+        )->setActive($view === 'degrees');
         Sidebar::Get()->addWidget($widget);
     }
 }

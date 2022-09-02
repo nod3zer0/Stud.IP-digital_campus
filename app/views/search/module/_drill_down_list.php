@@ -31,7 +31,7 @@
  */ ?>
  
  
-<form action="<?= $controller->link_for('/index') ?>" method="post">
+<form action="<?= $controller->action_link('index') ?>" method="post">
     <select name="actlist" style="margin:0;" class="submit-upon-select">
     <? foreach ($lists as $lname => $list) : ?>
     	<option value="<?= $lname ?>" <?= $lname == $act_list ? 'selected' :''; ?>><?= $list['name'] ?></option>

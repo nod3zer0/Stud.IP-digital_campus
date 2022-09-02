@@ -9,7 +9,7 @@
 <? endforeach; ?>
 
 <? if ($admission_form): ?>
-    <form name="apply_admission" action="<?= $controller->link_for("/apply/{$course_id}") ?>" method="post">
+    <form name="apply_admission" action="<?= $controller->action_link("apply/{$course_id}") ?>" method="post">
         <?= $admission_form ?>
         <div data-dialog-button>
             <?= Studip\Button::createAccept(_('OK'), 'apply', ['data-dialog' => 'size=big']) ?>
@@ -18,7 +18,7 @@
         <?= CSRFProtection::tokenTag() ?>
     </form>
 <? elseif ($priocourses): ?>
-    <form name="claim_admission" action="<?= $controller->link_for("/claim/{$course_id}") ?>" method="post" class="default">
+    <form name="claim_admission" action="<?= $controller->action_link("claim/{$course_id}") ?>" method="post" class="default">
     <? if (is_array($priocourses)): ?>
         <?= $this->render_partial('course/enrolment/_priocourses.php') ?>
 

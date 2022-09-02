@@ -1,4 +1,4 @@
-<form class="default" action="<?= $controller->url_for('/add_dokument', $origin,  $range_type, $range_id, $mvvfile_id) ?>" method="post" data-dialog="size=auto">
+<form class="default" action="<?= $controller->action_link('add_dokument', $origin,  $range_type, $range_id, $mvvfile_id) ?>" method="post" data-dialog="size=auto">
     <input type="hidden" name="mvvfile_id" id="mvvfile_id" value="<?= htmlReady($mvvfile_id) ?>">
     <input type="hidden" name="range_id" id="range_id" value="<?= htmlReady($range_id) ?>">
     <input type="hidden" name="range_type" id="range_type" value="<?= htmlReady($range_type) ?>">

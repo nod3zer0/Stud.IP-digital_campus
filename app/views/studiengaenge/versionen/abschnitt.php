@@ -1,7 +1,7 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 <? $perm = MvvPerm::get($abschnitt) ?>
 
-<form class="default" action="<?= $controller->url_for('/abschnitt/' . $abschnitt->id) ?>" method="post">
+<form class="default" action="<?= $controller->action_link('abschnitt/' . $abschnitt->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Grunddaten') ?></legend>

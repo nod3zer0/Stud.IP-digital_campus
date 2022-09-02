@@ -97,13 +97,13 @@ class Lvgruppen_LvgruppenController extends MVVController
         $widget  = new ExportWidget();
 
         $widget->addLink(_('Lehrveranstaltungsgruppen mit Zuordnungen exportieren'),
-                $this->url_for('/export_xls'),
+                $this->action_url('export_xls'),
                 Icon::create('export'));
 
         if (Config::get()->MVV_ALLOW_CREATE_LVGRUPPEN_INDEPENDENTLY
                 && MvvPerm::havePermCREATE('Lvgruppe')) {
             $widget->addLink(_('Neue LV-Gruppe anlegen'),
-                $this->url_for('/lvgruppe'),
+                $this->action_url('lvgruppe'),
                 Icon::create('add'), ['data-dialog' => 'size=auto']);
         }
 
@@ -184,8 +184,8 @@ class Lvgruppen_LvgruppenController extends MVVController
                 $this->lvgruppe->getDisplayName()
             );
         }
-        $this->cancel_url = $this->url_for('/index');
-        $this->submit_url = $this->url_for('/lvgruppe/' . $this->lvgruppe->getId());
+        $this->cancel_url = $this->action_url('index');
+        $this->submit_url = $this->action_url('lvgruppe/' . $this->lvgruppe->getId());
         if (Request::submitted('store')) {
             CSRFProtection::verifyUnsafeRequest();
             $stored = false;
@@ -204,7 +204,7 @@ class Lvgruppen_LvgruppenController extends MVVController
                     $success_message,
                     htmlReady($this->lvgruppe->getDisplayName())
                 ));
-                $this->relocate($this->url_for('/index'));
+                $this->relocate($this->action_url('index'));
                 return;
             }
         }
@@ -300,7 +300,7 @@ class Lvgruppen_LvgruppenController extends MVVController
             trim(Request::get('lvgruppe_suche_parameter')),
             Request::option('lvgruppe_suche')
         );
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -310,7 +310,7 @@ class Lvgruppen_LvgruppenController extends MVVController
     {
         $this->reset_search('Lvgruppe');
         $this->reset_page();
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -340,7 +340,7 @@ class Lvgruppen_LvgruppenController extends MVVController
 
         $widget = new SelectWidget(
             _('Verwendung in Semester:'),
-            $this->url_for('/set_filter', ['fachbereich_filter' => $selected_fachbereich]),
+            $this->action_url('set_filter', ['fachbereich_filter' => $selected_fachbereich]),
             'semester_filter'
         );
 
@@ -366,7 +366,7 @@ class Lvgruppen_LvgruppenController extends MVVController
         if ($perm_institutes !== false) {
             $widget = new SelectWidget(
                 _('Verwendet von Fachbereich:'),
-                $this->url_for('/set_filter', ['semester_filter' => $this->semester_filter]),
+                $this->action_url('set_filter', ['semester_filter' => $this->semester_filter]),
                 'fachbereich_filter'
             );
 
@@ -416,7 +416,7 @@ class Lvgruppen_LvgruppenController extends MVVController
         $this->reset_page();
         $this->sessSet('filter', $this->filter);
         $this->sessSet('semester_filter', $this->semester_filter);
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     public function reset_filter_action()
@@ -426,7 +426,7 @@ class Lvgruppen_LvgruppenController extends MVVController
         $this->semester_filter = null;
         $this->sessRemove('semester_filter');
         $this->reset_page();
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**

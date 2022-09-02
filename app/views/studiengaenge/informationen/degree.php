@@ -17,7 +17,7 @@
                 <tr class="table-header header-row">
                     <td class="toggle-indicator">
                         <a id="<?= $deg->abschluss_id ?>" class="mvv-load-in-new-row"
-                           href="<?= $controller->url_for('/showstudycourse', $deg->abschluss_id, $key + 1) ?>">
+                           href="<?= $controller->action_link('showstudycourse', $deg->abschluss_id, $key + 1) ?>">
                             <?= htmlReady($deg->name) ?>
                         </a>
                     </td>

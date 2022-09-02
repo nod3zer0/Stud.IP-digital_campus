@@ -19,7 +19,7 @@
                 <tbody class="<?= $lvgruppe->count_seminare || true ? '' : 'empty' ?>  <?= ($lvgruppe_id ? 'not-collapsed' : 'collapsed') ?>">
                 <tr class="header-row">
                     <td class="toggle-indicator">
-                        <a class="mvv-load-in-new-row" href="<?= $controller->url_for('/details/' . $lvgruppe->id) ?>">
+                        <a class="mvv-load-in-new-row" href="<?= $controller->action_link('details/' . $lvgruppe->id) ?>">
                             <?= htmlReady($lvgruppe->getDisplayName()) ?>
                         </a>
                     </td>
@@ -30,7 +30,7 @@
                         <? $actionMenu = ActionMenu::get()->setContext($lvgruppe->getDisplayName()) ?>
                         <? if (MvvPerm::get($lvgruppe)->havePermWrite()) : ?>
                             <? $actionMenu->addLink(
-                                $controller->url_for('/lvgruppe/' . $lvgruppe->id),
+                                $controller->action_url('lvgruppe/' . $lvgruppe->id),
                                 _('Lehrveranstaltungsgruppe bearbeiten'),
                                 Icon::create('edit', Icon::ROLE_CLICKABLE, tooltip2(_('Lehrveranstaltungsgruppe bearbeiten'))),
                                 ['data-dialog' => 'size=']
@@ -50,7 +50,7 @@
                                     _('Lehrveranstaltungsgruppe löschen'),
                                     Icon::create('trash', Icon::ROLE_CLICKABLE, tooltip2(_('Modulteil löschen'))),
                                     [
-                                        'formaction'   => $controller->url_for('/delete', $lvgruppe->id),
+                                        'formaction'   => $controller->action_url('delete', $lvgruppe->id),
                                         'data-confirm' => sprintf(
                                                 _('Wollen Sie wirklich die Lehrveranstaltungsgruppe "%s" löschen?'),
                                                 htmlReady($lvgruppe->getDisplayName())
@@ -89,7 +89,7 @@
                     $pagination->set_attribute('perPage', MVVController::$items_per_page);
                     $pagination->set_attribute('num_postings', $count);
                     $pagination->set_attribute('page', $page);
-                    $page_link = reset(explode('?', $controller->url_for('/index'))) . '?page_lvgruppen=%s';
+                    $page_link = reset(explode('?', $controller->action_url('index'))) . '?page_lvgruppen=%s';
                     $pagination->set_attribute('pagelink', $page_link);
                     echo $pagination->render("shared/pagechooser");
                     ?>

@@ -2,7 +2,7 @@
 <?= $controller->jsUrl() ?>
 
 <? $perm = MvvPerm::get($fach) ?>
-<form class="default" action="<?= $controller->url_for('/fach/', $fach->id) ?>" method="post">
+<form class="default" action="<?= $controller->action_link('fach/', $fach->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset class="collapsable">
         <legend>
@@ -105,6 +105,6 @@
                 <?= Button::createAccept(_('Übernehmen'), 'store', ['title' => _('Änderungen übernehmen')]) ?>
             <? endif; ?>
         <? endif; ?>
-        <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('/index'), ['title' => _('zurück zur Übersicht')]) ?>
+        <?= LinkButton::createCancel(_('Abbrechen'), $controller->action_url('index'), ['title' => _('zurück zur Übersicht')]) ?>
     </footer>
 </form>

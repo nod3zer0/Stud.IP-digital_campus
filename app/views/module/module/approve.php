@@ -1,5 +1,5 @@
 <form name="approve"
-      action="<?= $controller->url_for('/approve/' . $modul_id) ?>"
+      action="<?= $controller->action_link('approve/' . $modul_id) ?>"
       method="post" class="default">
     
     <? $response = $controller->relay('shared/modul/description/' . $modul_id); ?>

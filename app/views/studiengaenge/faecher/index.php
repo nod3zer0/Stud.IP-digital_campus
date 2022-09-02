@@ -18,7 +18,7 @@
                     <td class="toggle-indicator">
                         <? if ($fach->count_stgteile) : ?>
                             <a class="mvv-load-in-new-row"
-                               href="<?= $controller->url_for('/details_fach/' . $fach->id) ?>">
+                               href="<?= $controller->action_link('details_fach/' . $fach->id) ?>">
                                 <?= htmlReady($fach->name) ?>
                             </a>
                         <? else: ?>
@@ -28,7 +28,7 @@
                     <td style="text-align: center;" class="dont-hide"><?= $fach->count_stgteile ?> </td>
                     <td class="dont-hide actions">
                         <? if (MvvPerm::havePermCreate('StudiengangTeil')) : ?>
-                            <a href="<?= $controller->url_for('/stgteil_fach/' . $fach->id) ?>">
+                            <a href="<?= $controller->action_link('stgteil_fach/' . $fach->id) ?>">
                                 <?= Icon::create('file',  Icon::ROLE_CLICKABLE ,['title' => _('Neuen Studiengangteil für gewähltes Fach anlegen')])->asImg(); ?>
                             </a>
                         <? endif; ?>
@@ -51,7 +51,7 @@
                         $pagination->set_attribute('perPage', MVVController::$items_per_page);
                         $pagination->set_attribute('num_postings', $count);
                         $pagination->set_attribute('page', $page);
-                        $page_link = reset(explode('?', $controller->url_for('/index'))) . '?page_faecher=%s';
+                        $page_link = reset(explode('?', $controller->action_url('index'))) . '?page_faecher=%s';
                         $pagination->set_attribute('pagelink', $page_link);
                         echo $pagination->render("shared/pagechooser");
                         ?>

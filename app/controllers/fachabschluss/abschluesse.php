@@ -106,7 +106,7 @@ class Fachabschluss_AbschluesseController extends MVVController
                 } else {
                     PageLayout::postInfo(_('Es wurden keine Änderungen vorgenommen.'));
                 }
-                $this->redirect($this->url_for('/index'));
+                $this->redirect($this->action_url('index'));
                 return;
             }
         }
@@ -151,7 +151,7 @@ class Fachabschluss_AbschluesseController extends MVVController
 
             }
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     public function fach_action($fach_id = null)
@@ -179,7 +179,7 @@ class Fachabschluss_AbschluesseController extends MVVController
             $widget = new ActionsWidget();
             $widget->addLink(
                 _('Neuen Abschluss anlegen'),
-                $this->url_for('/abschluss'),
+                $this->action_url('abschluss'),
                     Icon::create('add')
             );
             $sidebar->addWidget($widget);

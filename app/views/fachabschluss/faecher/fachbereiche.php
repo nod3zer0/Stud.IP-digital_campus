@@ -14,7 +14,7 @@
                 <tr class="header-row">
                     <td class="toggle-indicator">
                         <a class="mvv-load-in-new-row"
-                           href="<?= $controller->url_for('/details_fachbereich/' . $fachbereich['institut_id']) ?>"><?= htmlReady($fachbereich['name']) ?></a>
+                           href="<?= $controller->action_link('details_fachbereich/' . $fachbereich['institut_id']) ?>"><?= htmlReady($fachbereich['name']) ?></a>
                     </td>
                     <td style="text-align: center;" class="dont-hide"><?= htmlReady($fachbereich['faecher']) ?> </td>
                 </tr>

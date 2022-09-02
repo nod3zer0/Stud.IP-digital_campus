@@ -1,4 +1,4 @@
-<form class="default" action="<?= $controller->url_for('/store_ansprechpartner', $contact_range->contact_range_id, $origin) ?>" method="post" data-dialog="size=auto">
+<form class="default" action="<?= $controller->action_link('store_ansprechpartner', $contact_range->contact_range_id, $origin) ?>" method="post" data-dialog="size=auto">
     <fieldset>
         <legend>
             <?= _('Personendaten') ?>

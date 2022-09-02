@@ -11,7 +11,7 @@
                 <tr id="modul_<?= $assignment->modul->id ?>" class="header-row sort_item">
                     <td class="toggle-indicator">
                         <? if (count($assignment->modul->modulteile)) : ?>
-                        <a class="mvv-load-in-new-row" href="<?= $controller->url_for('/modulteile', $assignment->id) ?>"><?= htmlReady($assignment->getDisplayName()) ?></a>
+                        <a class="mvv-load-in-new-row" href="<?= $controller->action_link('modulteile', $assignment->id) ?>"><?= htmlReady($assignment->getDisplayName()) ?></a>
                         <? else : ?>
                         <?= htmlReady($assignment->getDisplayName()) ?>
                         <? endif; ?>
@@ -24,7 +24,7 @@
                     </td>
                     <td class="dont-hide actions" style="white-space: nowrap;">
                     <? if (MvvPerm::haveFieldPermModul_zuordnungen($abschnitt, MvvPerm::PERM_WRITE)) : ?>
-                        <a data-dialog="" href="<?= $controller->link_for('/modul_zuordnung', $assignment->id) ?>">
+                        <a data-dialog="" href="<?= $controller->action_link('modul_zuordnung', $assignment->id) ?>">
                             <?= Icon::create('edit', Icon::ROLE_CLICKABLE , tooltip2(_('Modulzuordnung bearbeiten')))->asImg(); ?>
                         </a>
                     <? endif; ?>
@@ -32,7 +32,7 @@
                         <?= Icon::create('trash', Icon::ROLE_CLICKABLE , tooltip2(_('Modulzuordnung löschen')))
                             ->asInput([
                                 'name'         => 'delete',
-                                'formaction'   => $controller->url_for('/delete_modul', $assignment->abschnitt_id, $assignment->modul_id),
+                                'formaction'   => $controller->action_url('delete_modul', $assignment->abschnitt_id, $assignment->modul_id),
                                 'data-confirm' => sprintf(
                                         _('Wollen Sie die Zuordnung des Moduls "%s" zum Studiengangteil-Abschnitt "%s" wirklich löschen?'),
                                         htmlReady($assignment->modul->getDisplayName()),
@@ -61,7 +61,7 @@
                         <?= Icon::create('accept',  Icon::ROLE_CLICKABLE , tooltip2(_('Modul hinzufügen')))
                             ->asInput(
                                 [
-                                    'formaction'   => $controller->url_for('/add_modul', $version->id),
+                                    'formaction'   => $controller->action_url('add_modul', $version->id),
                                     'name'         => 'add_modul',
                                     'class'        => 'text-top mvv-submit'
                                 ]

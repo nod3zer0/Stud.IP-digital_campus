@@ -81,7 +81,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
         }
 
         if (!$this->show_admin_actions) {
-            $this->redirect($this->url_for('/rooms'));
+            $this->redirect($this->action_url('rooms'));
             return;
         }
 

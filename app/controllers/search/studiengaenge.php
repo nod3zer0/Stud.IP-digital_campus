@@ -106,7 +106,7 @@ class Search_StudiengaengeController extends MVVController
 
         if (!$this->studiengang || !in_array($this->studiengang->stat, $status_filter)) {
             PageLayout::postError( _('Unbekannter Studiengang'));
-            $this->relocate($this->url_for('/index'));
+            $this->relocate($this->action_url('index'));
             return null;
         }
 
@@ -183,7 +183,7 @@ class Search_StudiengaengeController extends MVVController
                 }
             }
             if (!$this->verlauf_url) {
-                $this->verlauf_url = '/verlauf';
+                $this->verlauf_url = 'search/studiengang/verlauf';
             }
             $this->breadcrumb->append(Studiengang::find($studiengang_id), 'einfach');
             $this->render_template('search/studiengaenge/einfach', $this->layout);
@@ -316,7 +316,7 @@ class Search_StudiengaengeController extends MVVController
 
             $this->setVersionSelectWidget(
                 $versionen,
-                $this->url_for('/verlauf', $studiengangTeil->id, $stgteil_bez_id, $studiengang_id)
+                $this->action_url('verlauf', $studiengangTeil->id, $stgteil_bez_id, $studiengang_id)
             );
 
             ksort($fachsemesterData);
@@ -334,7 +334,7 @@ class Search_StudiengaengeController extends MVVController
             $widget->addCheckbox(
                 _('Nur Module mit Veranstaltungen anzeigen'),
                 $this->with_courses,
-                $this->url_for('/verlauf/' . $stgteil_id, ['with_courses' => intval(!$this->with_courses)])
+                $this->action_url('verlauf/' . $stgteil_id, ['with_courses' => intval(!$this->with_courses)])
             );
             Sidebar::get()->addWidget($widget, 'with_courses');
 

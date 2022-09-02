@@ -1,4 +1,4 @@
-<form class="default" action="<?= $controller->url_for('/add_ranges_to_contact', $mvvcontact_id,  $range_type) ?>" method="post" data-dialog="size=auto">
+<form class="default" action="<?= $controller->action_link('add_ranges_to_contact', $mvvcontact_id,  $range_type) ?>" method="post" data-dialog="size=auto">
 
     <label>
     <? if ($range_type == 'Studiengang'): ?>

@@ -1,4 +1,4 @@
-<form class="default" action="<?= $controller->url_for('/add_files_to_range',$range_type, $range_id) ?>" method="post" data-dialog="">
+<form class="default" action="<?= $controller->action_link('add_files_to_range',$range_type, $range_id) ?>" method="post" data-dialog="">
     <label>
         <select id="search-file-select" class="nested-select"  multiple name="files[]">
         <? if ($files) : ?>

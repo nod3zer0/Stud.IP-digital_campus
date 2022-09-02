@@ -22,7 +22,7 @@
                         <td class="toggle-indicator">
                             <? if ($stgteil->count_versionen) : ?>
                                 <a class="mvv-load-in-new-row"
-                                   href="<?= $controller->url_for('/details/' . $stgteil->getId()) ?>">
+                                   href="<?= $controller->action_link('details/' . $stgteil->getId()) ?>">
                                     <?= htmlReady($stgteil->fach_name) ?>
                                     <? if ($stgteil->count_contacts) : ?>
                                         <?= Icon::create('community', Icon::ROLE_INFO, ['title' => sprintf(ngettext('%s Kontakt zugeordnet', '%s Kontakte zugeordnet', $stgteil->count_contacts), $stgteil->count_contacts)]) ?>
@@ -42,21 +42,21 @@
                             <? $actionMenu = ActionMenu::get()->setContext($stgteil->fach_name) ?>
                             <? if (MvvPerm::havePermCreate('StgteilVersion')) : ?>
                                 <? $actionMenu->addLink(
-                                    $controller->url_for('/version/' . $stgteil->getId()),
+                                    $controller->action_url('version/' . $stgteil->getId()),
                                     _('Neue Version anlegen'),
                                     Icon::create('file', Icon::ROLE_CLICKABLE, ['title' => _('Neue Version anlegen')])
                                 ) ?>
                             <? endif; ?>
                             <? if (MvvPerm::havePermWrite($stgteil)) : ?>
                                 <? $actionMenu->addLink(
-                                    $controller->url_for('/stgteil/' . $stgteil->getId()),
+                                    $controller->action_url('stgteil/' . $stgteil->getId()),
                                     _('Studiengangteil bearbeiten'),
                                     Icon::create('edit', Icon::ROLE_CLICKABLE, ['title' => _('Studiengangteil bearbeiten')])
                                 ) ?>
                             <? endif; ?>
                             <? if (MvvPerm::havePermCreate('StudiengangTeil')) : ?>
                                 <? $actionMenu->addLink(
-                                    $controller->url_for('/copy/' . $stgteil->getId()),
+                                    $controller->action_url('copy/' . $stgteil->getId()),
                                     _('Studiengangteil kopieren'),
                                     Icon::create('files', Icon::ROLE_CLICKABLE, ['title' => _('Studiengangteil kopieren')])
                                 ) ?>
@@ -67,7 +67,7 @@
                                     _('Studiengangteil löschen'),
                                     Icon::create('trash', Icon::ROLE_CLICKABLE, [
                                         'title'        => _('Studiengangteil löschen'),
-                                        'formaction'   => $controller->url_for('/delete/' . $stgteil->getId()),
+                                        'formaction'   => $controller->action_url('delete/' . $stgteil->getId()),
                                         'data-confirm' => sprintf(_('Wollen Sie wirklich den Studiengangteil "%s" löschen?'), htmlReady($stgteil->getDisplayName())),
                                     ])
                                 ) ?>
@@ -88,7 +88,7 @@
                     <tr>
                         <td colspan="5" style="text-align: right;">
                             <?
-                            $page_link = reset(explode('?', $controller->url_for('/index'))) . '?page_studiengangteile=%s';
+                            $page_link = reset(explode('?', $controller->action_url('index'))) . '?page_studiengangteile=%s';
 
                             $pagination = $GLOBALS['template_factory']->open('shared/pagechooser');
                             $pagination->clear_attributes();

@@ -17,13 +17,13 @@
         <tr class="header-row" id="abschluss_<?= $abschluss->id ?>">
             <td class="toggle-indicator">
                 <? if (is_null($abschluss->name) && $abschluss->count_studiengaenge) : ?>
-                    <a class="mvv-load-in-new-row" href="<?= $controller->link_for('/details/' . $abschluss->id) ?>">
+                    <a class="mvv-load-in-new-row" href="<?= $controller->action_link('details/' . $abschluss->id) ?>">
                         <?= _('Keinem Abschluss zugeordnet') ?>
                     </a>
                 <? else : ?>
                     <? if ($abschluss->count_studiengaenge) : ?>
                         <a class="mvv-load-in-new-row"
-                           href="<?= $controller->link_for('/details/' . $abschluss->id) ?>">
+                           href="<?= $controller->action_link('details/' . $abschluss->id) ?>">
                             <?= htmlReady($abschluss->getDisplayName()) ?>
                         </a>
                     <? else : ?>

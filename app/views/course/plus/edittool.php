@@ -1,4 +1,4 @@
-<form class="default" action="<?=$controller->link_for('/edittool/plugin_' . $tool->plugin_id)?>" method="post">
+<form class="default" action="<?=$controller->action_link('edittool/plugin_' . $tool->plugin_id)?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <label for="displayname">

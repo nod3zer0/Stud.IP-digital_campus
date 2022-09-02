@@ -4,7 +4,7 @@
         <tr class="table-header header-row" id="studiengang_<?= $studiengang->id ?>">
             <td class="toggle-indicator">
                 <a class="mvv-load-in-new-row"
-                   href="<?= $controller->url_for('/details_studiengang/' . $studiengang->id) ?>">
+                   href="<?= $controller->action_link('details_studiengang/' . $studiengang->id) ?>">
                     <? $ampel_icon = $GLOBALS['MVV_STUDIENGANG']['STATUS']['values'][$studiengang->stat]['icon'] ?>
                     <? $ampelstatus = $GLOBALS['MVV_STUDIENGANG']['STATUS']['values'][$studiengang->stat]['name'] ?>
                     <? if ($ampel_icon) : ?>
@@ -41,7 +41,7 @@
                     <? $actionMenu = ActionMenu::get()->setContext($studiengang->name) ?>
                     <? if ($studiengang->stat === 'planung' && MvvPerm::haveFieldPermStat($studiengang)) : ?>
                         <? $actionMenu->addLink(
-                            $controller->url_for('/approve/' . $studiengang->id),
+                            $controller->action_url('approve/' . $studiengang->id),
                             _('Studiengang genehmigen'),
                             Icon::create('accept', Icon::ROLE_CLICKABLE , ['title' => _('Studiengang genehmigen')]),
                             ['data-dialog' => 'buttons=false'])
@@ -49,7 +49,7 @@
                     <? endif; ?>
                     <? if ($perm->havePerm(MvvPerm::PERM_WRITE)) : ?>
                         <? $actionMenu->addLink(
-                            $controller->url_for('/studiengang/' . $studiengang->id),
+                            $controller->action_url('studiengang/' . $studiengang->id),
                             _('Studiengang bearbeiten'),
                             Icon::create('edit', Icon::ROLE_CLICKABLE , ['title' => _('Studiengang bearbeiten')]))
                         ?>
@@ -61,7 +61,7 @@
                                 _('Studiengang löschen'),
                                 Icon::create('trash', Icon::ROLE_CLICKABLE ,tooltip2(_('Studiengang löschen'))),
                                 [
-                                    'formaction'   => $controller->url_for('/delete/' . $studiengang->id),
+                                    'formaction'   => $controller->action_url('delete/' . $studiengang->id),
                                     'data-confirm' => sprintf(_('Wollen Sie wirklich den Studiengang "%s" löschen?'), htmlReady($studiengang->name))
                                 ]
                             ) ?>

@@ -11,7 +11,7 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
     STUDIP.MVV.PARENT_ID = '<?= $modulteil->getId() ?>';
 </script>
 
-<form id="modulteil_form" class="default" action="<?= $controller->url_for('/modulteil/', $modulteil->id) ?>"
+<form id="modulteil_form" class="default" action="<?= $controller->action_link('modulteil/', $modulteil->id) ?>"
       method="post">
     <?= CSRFProtection::tokenTag() ?>
 
@@ -468,7 +468,7 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
                     _('Löschen'),
                     'delete',
                     ['title'      => _('Deskriptor löschen'), 'data-confirm' => sprintf(_('Soll der Deskriptor in der Ausgabesprache %s gelöscht werden?'), htmlReady($GLOBALS['MVV_LANGUAGES']['values'][$display_language]['name'])),
-                     'formaction' => $controller->url_for('/delete_modulteil_deskriptor', $deskriptor->id, $display_language)
+                     'formaction' => $controller->action_url('delete_modulteil_deskriptor', $deskriptor->id, $display_language)
                     ]
                 ); ?>s
             <? endif; ?>

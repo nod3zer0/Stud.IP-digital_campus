@@ -3,7 +3,7 @@
 <h3>
     <?= _('Zuordnung der Modulteile zu Fachsemestern') ?>
 </h3>
-<form class="default" data-dialog="" action="<?= $controller->url_for('/modulteil_semester', $abschnitt_modul->id, $modulteil->id) ?>" method="post">
+<form class="default" data-dialog="" action="<?= $controller->action_link('modulteil_semester', $abschnitt_modul->id, $modulteil->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Belegung in folgenden Fachsemestern') ?></legend>
@@ -51,7 +51,7 @@
         <? if ($perm_abschnitt >= MvvPerm::PERM_WRITE) : ?>
             <?= Button::createAccept(_('Übernehmen'), 'store', ['title' => _('Änderungen übernehmen')]) ?>
         <? endif; ?>
-        <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('/modulteile', $abschnitt_modul->abschnitt->id), ['title' => _('zurück zur Übersicht')]) ?>
+        <?= LinkButton::createCancel(_('Abbrechen'), $controller->action_url('modulteile', $abschnitt_modul->abschnitt->id), ['title' => _('zurück zur Übersicht')]) ?>
     </div>
 </form>
 <script>

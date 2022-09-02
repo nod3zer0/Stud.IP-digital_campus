@@ -243,8 +243,8 @@ class Course_EnrolmentController extends AuthenticatedController
                     _('Wollen Sie sich zu der Veranstaltung "%s" wirklich anmelden?'),
                     htmlReady(Course::find($this->course_id)->name)
                 ),
-                $this->url_for("/apply/{$this->course_id}", ['apply' => 1]),
-                $this->url_for("/apply/{$this->course_id}", ['decline' => 1])
+                $this->action_url("apply/{$this->course_id}", ['apply' => 1]),
+                $this->action_url("apply/{$this->course_id}", ['decline' => 1])
             );
 
             $this->relocate(URLHelper::getLink('dispatch.php/course/details', ['sem_id' => $this->course_id]));
@@ -323,6 +323,6 @@ class Course_EnrolmentController extends AuthenticatedController
                 }
             }
         }
-        $this->redirect($this->url_for("/apply/{$this->course_id}{$anchor}"));
+        $this->redirect($this->action_url("apply/{$this->course_id}{$anchor}"));
     }
 }

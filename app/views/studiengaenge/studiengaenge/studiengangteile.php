@@ -17,7 +17,7 @@
                                         htmlReady($stg_bez->getDisplayName()),
                                         htmlReady($studiengang->getDisplayName())
                                 ) ?>
-                                <form action="<?= $controller->url_for('/delete_stgteilmf/' . $studiengang->id, $stgteil->id, $stg_bez->id) ?>"
+                                <form action="<?= $controller->action_link('delete_stgteilmf/' . $studiengang->id, $stgteil->id, $stg_bez->id) ?>"
                                       method="post">
                                     <?= CSRFProtection::tokenTag(); ?>
                                     <?= Icon::create(
@@ -32,7 +32,7 @@
                                         htmlReady($stgteil->getDisplayName()),
                                         htmlReady($studiengang->getDisplayName())
                                 ) ?>
-                                <form action="<?= $controller->url_for('/delete_stgteil/' . $studiengang->id, $stgteil->id) ?>"
+                                <form action="<?= $controller->action_link('delete_stgteil/' . $studiengang->id, $stgteil->id) ?>"
                                       method="post">
                                     <?= CSRFProtection::tokenTag(); ?>
                                     <?= Icon::create(
@@ -52,7 +52,7 @@
                 <tr>
                     <td colspan="2">
                         <form style="width: 100%;"
-                              action="<?= $controller->url_for('/add_stgteil/' . $studiengang->id) ?>" method="post">
+                              action="<?= $controller->action_link('add_stgteil/' . $studiengang->id) ?>" method="post">
                             <?= CSRFProtection::tokenTag() ?>
                             <?= _('Studiengangteil hinzufügen') ?></div>
                             <?= $search->render() ?>

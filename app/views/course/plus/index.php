@@ -113,14 +113,14 @@ use Studip\Button;
                                     <?
                                     $actionMenu = ActionMenu::get()->setContext($pluginname);
                                     $actionMenu->addLink(
-                                        $controller->url_for('/edittool/' . $key),
+                                        $controller->action_url('edittool/' . $key),
                                         _('Optionen bearbeiten'),
                                         Icon::create('edit'),
                                         ['data-dialog' => 'size=auto']
                                     );
                                     if (method_exists($plugin, 'deleteContent')) {
                                         $actionMenu->addLink(
-                                            $controller->url_for('/index', ['deleteContent' => 1, 'name' => $key]),
+                                            $controller->action_url('index', ['deleteContent' => 1, 'name' => $key]),
                                             _('Inhalte löschen'),
                                             Icon::create('trash')
                                         );

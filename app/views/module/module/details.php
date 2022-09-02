@@ -12,7 +12,7 @@
                     <td class="toggle-indicator">
                         <? if (count($modulteil->lvgruppen) || $perm->haveFieldPermLvgruppen(MvvPerm::PERM_CREATE)) : ?>
                             <a class="mvv-load-in-new-row"
-                               href="<?= $controller->url_for('/modulteil_lvg/' . $modulteil->id) ?>">
+                               href="<?= $controller->action_link('modulteil_lvg/' . $modulteil->id) ?>">
                                 <?= htmlReady($modulteil->getDisplayName()) ?></a>
                         <? else : ?>
                             <?= htmlReady($modulteil->getDisplayName()) ?>
@@ -22,7 +22,7 @@
                         <? if ($perm->havePermWrite()) : ?>
                             <? foreach ($modulteil->deskriptoren->getAvailableTranslations() as $language) : ?>
                                 <? $lang = $GLOBALS['MVV_MODUL_DESKRIPTOR']['SPRACHE']['values'][$language]; ?>
-                                <a href="<?= $controller->url_for('/modulteil/' . join('/', [$modulteil->id, $institut_id]), ['display_language' => $language]) ?>">
+                                <a href="<?= $controller->action_link('modulteil/' . join('/', [$modulteil->id, $institut_id]), ['display_language' => $language]) ?>">
                                     <img src="<?= Assets::image_path('languages/lang_' . mb_strtolower($language) . '.gif') ?>"
                                          alt="<?= $lang['name'] ?>" title="<?= $lang['name'] ?>">
                                 </a>
@@ -35,7 +35,7 @@
                             <? $actionMenu = ActionMenu::get()->setContext($modulteil->getDisplayName()) ?>
                             <? if (MvvPerm::havePermCreate('Lvgruppe') && $perm->haveFieldPermLvgruppen(MvvPerm::PERM_CREATE)) : ?>
                                 <? $actionMenu->addLink(
-                                    $controller->url_for('/lvgruppe/' . $modulteil->id),
+                                    $controller->action_url('lvgruppe/' . $modulteil->id),
                                     _('Neue LV-Gruppe anlegen'),
                                     Icon::create('file', Icon::ROLE_CLICKABLE, ['title' => _('Neue LV-Gruppe anlegen')]),
                                     [
@@ -46,14 +46,14 @@
                             <? endif; ?>
                             <? if ($perm->havePermWrite()) : ?>
                                 <? $actionMenu->addLink(
-                                    $controller->url_for('/modulteil/' . $modulteil->id),
+                                    $controller->action_url('modulteil/' . $modulteil->id),
                                     _('Modulteil bearbeiten'),
                                     Icon::create('edit', Icon::ROLE_CLICKABLE, ['title' => _('Modulteil bearbeiten')])
                                 ) ?>
                             <? endif; ?>
                             <? if ($perm->havePermCreate()) : ?>
                                 <? $actionMenu->addLink(
-                                    $controller->url_for('/copy_modulteil/' . $modulteil->id),
+                                    $controller->action_url('copy_modulteil/' . $modulteil->id),
                                     _('Modulteil kopieren'),
                                     Icon::create('files', Icon::ROLE_CLICKABLE,['title' => _('Modulteil kopieren')])
                                 ) ?>
@@ -64,7 +64,7 @@
                                     _('Modulteil löschen'),
                                     Icon::create('trash', Icon::ROLE_CLICKABLE, ['title' => _('Modulteil löschen')]),
                                     [
-                                        'formaction'   => $controller->url_for('/delete_modulteil/' . $modulteil->id),
+                                        'formaction'   => $controller->action_url('delete_modulteil/' . $modulteil->id),
                                         'data-confirm' => sprintf(
                                             _('Wollen Sie wirklich den Modulteil "%s" löschen?'),
                                             htmlReady($modulteil->getDisplayName())

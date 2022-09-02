@@ -117,7 +117,7 @@ class Course_LvgselectorController extends AuthenticatedController
         }
 
         $this->ajax_url = $this->url_for('course/lvgselector/ajax');
-        $this->url = $this->url_for('/index');
+        $this->url = $this->action_url('index');
     }
 
     /**
@@ -190,7 +190,7 @@ class Course_LvgselectorController extends AuthenticatedController
         if (Request::get('from')) {
             $url = URLHelper::getURL('dispatch.php/'.Request::get('from'));
         } else {
-            $url = $this->url_for('/index');
+            $url = $this->action_url('index');
         }
 
 

@@ -1,7 +1,7 @@
 <h1><?= htmlReady($version->getDisplayName()) ?></h1>
 <div>
     <h4><?= _('Vergleich mit folgender Version:') ?></h4>
-    <form data-dialog="size=auto" class="mvv-new-tab" action="<?= $controller->link_for('/diff') ?>" method="post">
+    <form data-dialog="size=auto" class="mvv-new-tab" action="<?= $controller->action_link('diff') ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
         <div>
             <?= $search_version->render(); ?>

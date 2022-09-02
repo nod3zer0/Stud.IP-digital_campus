@@ -13,7 +13,7 @@
                     <td class="toggle-indicator">
                         <? if ($fachbereich['stgteile']) : ?>
                             <a class="mvv-load-in-new-row"
-                               href="<?= $controller->url_for('/details_fachbereich/' . $fachbereich['institut_id']) ?>">
+                               href="<?= $controller->action_link('details_fachbereich/' . $fachbereich['institut_id']) ?>">
                                 <?= htmlReady($fachbereich['name']) ?>
                             </a>
                         <? else: ?>
@@ -22,7 +22,7 @@
                     </td>
                     <td class="actions dont-hide" style="white-space: nowrap;">
                         <? if (MvvPerm::havePermCreate('StudiengangTeil')) : ?>
-                            <a href="<?= $controller->url_for('/stgteil_fachbereich/' . $fachbereich['institut_id']) ?>">
+                            <a href="<?= $controller->action_link('stgteil_fachbereich/' . $fachbereich['institut_id']) ?>">
                                 <?= Icon::create('file', Icon::ROLE_CLICKABLE , ['title' => _('Neuen Studiengangteil in diesem Fachbereich anlegen')])->asImg(); ?>
                             </a>
                         <? endif; ?>

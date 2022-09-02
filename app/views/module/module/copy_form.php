@@ -8,7 +8,7 @@
         <? if ($perm->havePermRead()) : ?>
             <section>
                 <p>
-                    <a href="<?= $controller->url_for('/modul/' . $modul->id) ?>">
+                    <a href="<?= $controller->action_link('modul/' . $modul->id) ?>">
                         <?= Icon::create('edit', Icon::ROLE_CLICKABLE ,['title' => _('Modul bearbeiten')]) ?>
                         <strong><?= _('Aktuellste Version bearbeiten') ?></strong>
                     </a>
@@ -78,7 +78,7 @@
                         <?= _('Zuordnungen zu Studiengängen mit übernehmen') ?>
                     </label>
                     <a title="<?= _('Verwendet in Studiengängen') ?>"
-                       href="<?= $controller->url_for('/assignments/' . $modul->id) ?>"
+                       href="<?= $controller->action_link('assignments/' . $modul->id) ?>"
                        onclick="STUDIP.Dialog.fromURL(this.href, {title: this.title, resizable: true, id: 'stgteil_assignments'}); return false;">
                         <?= Icon::create('info-circle', Icon::ROLE_CLICKABLE , ['title' => _('Zuordnungen anzeigen')]) ?>
                     </a>

@@ -28,7 +28,7 @@ $buttonLabels = [
 </div>
 
 <? /*if ($filesystemplugin && $filesystemplugin->hasSearch()) : ?>
-    <form action="<?= $controller->url_for('/choose_file/' . $top_folder->parent_id) ?>" method="get" class="default" style="margin-bottom: 50px;">
+    <form action="<?= $controller->action_link('choose_file/' . $top_folder->parent_id) ?>" method="get" class="default" style="margin-bottom: 50px;">
         <? foreach ($options as $key => $value) : ?>
             <input type="hidden" name="<?= htmlReady($key) ?>" value="<?= htmlReady($value) ?>">
         <? endforeach ?>
@@ -79,7 +79,7 @@ $buttonLabels = [
             <tr>
                 <td colspan="2">
                     <!-- neu -->
-                    <button formaction="<?= $controller->link_for('/choose_folder/' . $top_folder->parent_id) ?>" class="undecorated" data-dialog>
+                    <button formaction="<?= $controller->action_link('choose_folder/' . $top_folder->parent_id) ?>" class="undecorated" data-dialog>
                         <small><?= _('Ein Verzeichnis nach oben wechseln') ?></small>
                     </button>
                 </td>
@@ -98,7 +98,7 @@ $buttonLabels = [
             <tr>
                 <td class="document-icon" data-sort-value="0">
                     <!-- neu -->
-                    <button formaction="<?= $controller->link_for('/choose_folder/' . $subfolder->getId()) ?>" class="undecorated" data-dialog>
+                    <button formaction="<?= $controller->action_link('choose_folder/' . $subfolder->getId()) ?>" class="undecorated" data-dialog>
                     <? if ($subfolder->is_empty): ?>
                         <?= Icon::create('folder-empty')->asImg(24) ?>
                     <? else: ?>
@@ -108,7 +108,7 @@ $buttonLabels = [
                 </td>
                 <td>
                     <!-- neu -->
-                    <button formaction="<?= $controller->link_for('/choose_folder/' . $subfolder->getId()) ?>" class="undecorated" data-dialog>
+                    <button formaction="<?= $controller->action_link('choose_folder/' . $subfolder->getId()) ?>" class="undecorated" data-dialog>
                         <?= htmlReady($subfolder->name) ?>
                     </button>
 
@@ -192,19 +192,19 @@ switch ($top_folder->range_type) {
 <? if (Request::get('direct_parent')): ?>
     <!-- neu -->
     <?= Studip\Button::create(_('Zurück'), [
-        'formaction'  => $controller->url_for('/choose_destination/' . $options['copymode']),
+        'formaction'  => $controller->action_url('choose_destination/' . $options['copymode']),
         'data-dialog' => 'size=auto',
     ]) ?>
 <? elseif ($top_folder->range_type === 'course') : ?>
     <!-- neu -->
     <?= Studip\Button::create(_('Zurück'), [
-        'formaction'  => $controller->url_for('/choose_folder_from_course'),
+        'formaction'  => $controller->action_url('choose_folder_from_course'),
         'data-dialog' => '',
     ]) ?>
 <? elseif($top_folder->range_type === 'institute'): ?>
     <!-- neu -->
     <?= Studip\Button::create(_('Zurück'), [
-        'formaction'  => $controller->url_for('/choose_folder_from_institute'),
+        'formaction'  => $controller->action_url('choose_folder_from_institute'),
         'data-dialog' => '',
     ]) ?>
 <? endif; ?>

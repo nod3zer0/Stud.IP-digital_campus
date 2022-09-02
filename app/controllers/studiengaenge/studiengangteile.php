@@ -105,7 +105,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
                 } else {
                     PageLayout::postInfo(_('Es wurden keine Änderungen vorgenommen.'));
                 }
-                $this->redirect($this->url_for('/index'));
+                $this->redirect($this->action_url('index'));
                 return;
             }
         }
@@ -118,7 +118,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
                 ->fireJSFunctionOnSelect('STUDIP.MVV.Search.addSelected')
                 ->noSelectbox();
 
-        $this->cancel_url = $this->url_for('/index');
+        $this->cancel_url = $this->action_url('index');
 
         $this->setSidebar();
         if (!$this->stgteil->isNew()) {
@@ -169,7 +169,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
             $this->sessDelete();
         }
 
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     public function details_action($stgteil_id)
@@ -187,7 +187,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
                 $this->set_status(404, 'Not Found');
                 $this->render_nothing();
             } else {
-                $this->redirect($this->url_for('/index'));
+                $this->redirect($this->action_url('index'));
             }
         }
     }
@@ -214,7 +214,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
                 trim(Request::get('stgteil_suche_parameter')),
                 Request::option('stgteil_suche'), $filter);
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -224,7 +224,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
     {
         $this->reset_search('StudiengangTeil');
         $this->reset_page();
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     protected function setSidebar()
@@ -250,7 +250,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
         if (MvvPerm::havePermCreate('StudiengangTeil')) {
             $widget->addLink(
                 _('Neuen Studiengangteil anlegen'),
-                $this->url_for('/stgteil'),
+                $this->action_url('stgteil'),
                 Icon::create('add')
             );
         }
@@ -285,7 +285,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
         $search_term = $this->search_term ? $this->search_term : _('Studiengangteil suchen');
 
         $sidebar = Sidebar::get();
-        $widget = new SearchWidget($this->url_for('/search'));
+        $widget = new SearchWidget($this->action_url('search'));
         $widget->addNeedle(
             _('Studiengangteil suchen'),
             'stgteil_suche',

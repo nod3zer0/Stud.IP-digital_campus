@@ -18,13 +18,13 @@
                 <td class="toggle-indicator">
                     <? if (is_null($fachbereich->name) && $fachbereich->count_objects) : ?>
                         <a class="mvv-load-in-new-row"
-                           href="<?= $controller->url_for('/details/' . $fachbereich->id) ?>">
+                           href="<?= $controller->action_link('details/' . $fachbereich->id) ?>">
                             <?= _('Keinem Fachbereich zugeordnet') ?>
                         </a>
                     <? else : ?>
                         <? if ($fachbereich->count_objects) : ?>
                             <a class="mvv-load-in-new-row"
-                               href="<?= $controller->url_for('/details/' . $fachbereich->id) ?>">
+                               href="<?= $controller->action_link('details/' . $fachbereich->id) ?>">
                                 <?= htmlReady($fachbereich->getDisplayName()) ?>
                             </a>
                         <? else : ?>

@@ -82,7 +82,7 @@
                     $pagination->set_attribute('perPage', MVVController::$items_per_page);
                     $pagination->set_attribute('num_postings', $count);
                     $pagination->set_attribute('page', $page);
-                    $page_link = reset(explode('?', $controller->url_for('/index'))) . '?page_contacts=%s';
+                    $page_link = reset(explode('?', $controller->action_url('index'))) . '?page_contacts=%s';
                     $pagination->set_attribute('pagelink', $page_link);
                     echo $pagination->render('shared/pagechooser');
                     ?>

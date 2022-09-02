@@ -1,4 +1,4 @@
-<form data-dialog="reload-on-close" name="approve" action="<?= $controller->url_for('/approve', $studiengang_id) ?>"
+<form data-dialog="reload-on-close" name="approve" action="<?= $controller->action_link('approve', $studiengang_id) ?>"
       method="post" style="margin-left: auto; margin-right: auto;">
     <?= $this->render_partial('shared/studiengang/_studiengang', ['studiengang' => $studiengang, 'institut' => $institut]); ?>
     <? if (count($studiengang->stgteil_assignments)) : ?>

@@ -193,7 +193,7 @@ class Course_AdmissionController extends AuthenticatedController
             }
         }
         if (!$question) {
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
         } else {
             $this->button_yes = 'change_admission_prelim_yes';
             $this->button_no = 'change_admission_prelim_no';
@@ -234,7 +234,7 @@ class Course_AdmissionController extends AuthenticatedController
                 PageLayout::postSuccess(_("Zugriff für externe Nutzer wurde geändert."));
             }
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     function change_admission_turnout_action()
@@ -295,7 +295,7 @@ class Course_AdmissionController extends AuthenticatedController
             }
         }
         if (!$question) {
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
         } else {
             $this->request = $request;
             $this->button_yes = 'change_admission_turnout_yes';
@@ -319,7 +319,7 @@ class Course_AdmissionController extends AuthenticatedController
                 PageLayout::postSuccess(_('Die zugelassenen Nutzerdomänen wurden geändert.'));
             }
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     function change_course_set_action()
@@ -377,7 +377,7 @@ class Course_AdmissionController extends AuthenticatedController
             }
         }
         if (!$question) {
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
         } else {
             $this->request = ['change_course_set_unassign' => 1];
             $this->button_yes = 'change_course_set_unassign_yes';
@@ -415,7 +415,7 @@ class Course_AdmissionController extends AuthenticatedController
                     $course_set_id = CourseSet::getGlobalLockedAdmissionSetId();
                     CourseSet::addCourseToSet($course_set_id, $this->course_id);
                     PageLayout::postMessage(MessageBox::success(_("Die Veranstaltung wurde gesperrt.")));
-                    $this->redirect($this->url_for('/index'));
+                    $this->redirect($this->action_url('index'));
                     return;
                 } else {
                     CSRFProtection::verifyUnsafeRequest();
@@ -448,7 +448,7 @@ class Course_AdmissionController extends AuthenticatedController
                         }
                         $course_set->store();
                         PageLayout::postMessage(MessageBox::success(_("Die Anmelderegel wurde erzeugt und der Veranstaltung zugewiesen.")));
-                        $this->redirect($this->url_for('/index'));
+                        $this->redirect($this->action_url('index'));
                         return;
                     }
                 }

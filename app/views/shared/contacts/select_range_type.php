@@ -1,4 +1,4 @@
-<form class="default" action="<?= $controller->url_for('/select_range_type', $mvvcontact_id) ?>" method="post" data-dialog="size=auto">
+<form class="default" action="<?= $controller->action_link('select_range_type', $mvvcontact_id) ?>" method="post" data-dialog="size=auto">
 
     <label>
         <select id="mvv-contacts-range_types" name="range_type">

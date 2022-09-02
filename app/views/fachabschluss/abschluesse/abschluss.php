@@ -1,6 +1,6 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 <? $perm = MvvPerm::get($abschluss) ?>
-<form class="default" action="<?= $controller->url_for('/abschluss/' . $abschluss->getId()) ?>" method="post">
+<form class="default" action="<?= $controller->action_link('abschluss/' . $abschluss->getId()) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Grunddaten') ?></legend>
@@ -42,6 +42,6 @@
                 <?= Button::createAccept(_('Übernehmen'), 'store', ['title' => _('Änderungen übernehmen')]) ?>
             <? endif; ?>
         <? endif; ?>
-        <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('/index'), ['title' => _('zurück zur Übersicht')]) ?>
+        <?= LinkButton::createCancel(_('Abbrechen'), $controller->action_url('index'), ['title' => _('zurück zur Übersicht')]) ?>
     </footer>
 </form>

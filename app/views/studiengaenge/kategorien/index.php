@@ -18,13 +18,13 @@
                 <td class="toggle-indicator">
                     <? if (is_null($kategorie->name) && $kategorie->count_studiengaenge) : ?>
                         <a class="mvv-load-in-new-row"
-                           href="<?= $controller->url_for('/details/' . $kategorie->id) ?>">
+                           href="<?= $controller->action_link('details/' . $kategorie->id) ?>">
                             <?= _('Keiner Abschluss-Kategorie zugeordnet') ?>
                         </a>
                     <? else : ?>
                         <? if ($kategorie->count_studiengaenge) : ?>
                             <a class="mvv-load-in-new-row"
-                               href="<?= $controller->url_for('/details/' . $kategorie->id) ?>">
+                               href="<?= $controller->action_link('details/' . $kategorie->id) ?>">
                                 <?= htmlReady($kategorie->getDisplayName()) ?>
                             </a>
                         <? else : ?>

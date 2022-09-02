@@ -1,4 +1,4 @@
-<form action="<?= $list['stop'] ? $controller->url_for('/index') : $controller->url_for('/chooser'); ?>" style="width: 100%;" id="<?= htmlReady($name) ?>">
+<form action="<?= $list['stop'] ? $controller->action_link('index') : $controller->action_link('chooser'); ?>" style="width: 100%;" id="<?= htmlReady($name) ?>">
     <? if (is_array($list['elements']) && sizeof($list['elements'])) : ?>
     <input type="hidden" name="step" value="<?= htmlReady($name) ?>">
     <? if ($list['stop']) : ?>

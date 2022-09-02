@@ -35,7 +35,7 @@
         <a href="<?= $controller->url_for('studiengaenge/versionen/version') ?>">
             <?= Studip\LinkButton::create(
                     _('Eine neue Version anlegen.'),
-                    $controller->url_for('/version/' .  $stgteil->id),
+                    $controller->action_url('version/' .  $stgteil->id),
                     ['title' => _('Eine neue Version anlegen')]
             ) ?>
         </a>

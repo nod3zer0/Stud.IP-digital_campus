@@ -22,7 +22,7 @@
                     <tr class="header-row sort_item">
                         <td class="toggle-indicator">
                             <a class="mvv-load-in-new-row"
-                               href="<?= $controller->url_for('/details/' . $stgteilbezeichnung->id) ?>">
+                               href="<?= $controller->action_link('details/' . $stgteilbezeichnung->id) ?>">
                                 <?= htmlReady($stgteilbezeichnung->name) ?>
                             </a>
                         </td>
@@ -35,14 +35,14 @@
                         <td class="dont-hide actions">
                             <? if ($perm->havePermWrite()) : ?>
                                 <a data-dialog
-                                   href="<?= $controller->url_for('/stgteilbezeichnung/' . $stgteilbezeichnung->id) ?>">
+                                   href="<?= $controller->action_link('stgteilbezeichnung/' . $stgteilbezeichnung->id) ?>">
                                     <?= Icon::create('edit',  Icon::ROLE_CLICKABLE ,['title' => _('Studiengangteil-Bezeichnung bearbeiten')])->asImg(); ?>
                                 </a>
                             <? endif; ?>
                             <? if ($perm->havePermCreate() && $stgteilbezeichnung->count_stgteile < 1) : ?>
                                 <?= Icon::create('trash', Icon::ROLE_CLICKABLE , ['title' => _('Studiengangteil-Bezeichnung löschen')])
                                     ->asInput([
-                                        'formaction'   => $controller->url_for('/delete/' . $stgteilbezeichnung->id),
+                                        'formaction'   => $controller->action_url('delete/' . $stgteilbezeichnung->id),
                                         'data-confirm' => sprintf(_('Wollen Sie wirklich die Studiengangteil-Bezeichnung "%s" löschen?'), htmlReady($stgteilbezeichnung->name)),]) ?>
                             <? endif; ?>
                         </td>

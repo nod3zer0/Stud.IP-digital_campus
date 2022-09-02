@@ -27,7 +27,7 @@ jQuery(function ($) {
 });
 </script>
 
-<form class="default" action="<?= $controller->url_for('/add_ansprechpartner',$origin, $range_type, $range_id, $user_id, $ansp_kat) ?>" method="post" data-dialog="size=auto">
+<form class="default" action="<?= $controller->action_link('add_ansprechpartner',$origin, $range_type, $range_id, $user_id, $ansp_kat) ?>" method="post" data-dialog="size=auto">
     <input type="hidden" name="user_id" id="user_id" value="<?= htmlReady($user_id) ?>">
     <input type="hidden" name="range_id" id="range_id" value="<?= htmlReady($range_id) ?>">
     <input type="hidden" name="range_type" id="range_type" value="<?= htmlReady($range_type) ?>">

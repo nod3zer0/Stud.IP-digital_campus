@@ -83,12 +83,12 @@ class Fachabschluss_KategorienController extends MVVController
                 PageLayout::postSuccess(sprintf(
                     $success_message, htmlReady($this->abschluss_kategorie->name)
                 ));
-                $this->redirect($this->url_for('/index'));
+                $this->redirect($this->action_url('index'));
                 return;
             }
         }
 
-        $this->cancel_url = $this->url_for('/index');
+        $this->cancel_url = $this->action_url('index');
 
         $this->setSidebar();
         if (!$this->abschluss_kategorie->isNew()) {
@@ -130,7 +130,7 @@ class Fachabschluss_KategorienController extends MVVController
                 }
             }
         }
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     /**
@@ -224,7 +224,7 @@ class Fachabschluss_KategorienController extends MVVController
             $widget = new ActionsWidget();
             $widget->addLink(
                 _('Neue Abschluss-Kategorie anlegen'),
-                $this->url_for('/kategorie'),
+                $this->action_url('kategorie'),
                 Icon::create('add')
             );
             $sidebar->addWidget($widget);

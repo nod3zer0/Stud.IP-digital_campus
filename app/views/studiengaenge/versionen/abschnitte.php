@@ -10,7 +10,7 @@
                 <tr class="header-row sort_item" id="abschnittt_<?= $abschnitt->id ?>">
                     <td class="toggle-indicator">
                         <a class="mvv-load-in-new-row"
-                           href="<?= $controller->url_for('/details_abschnitt/' . $abschnitt->id) ?>">
+                           href="<?= $controller->action_link('details_abschnitt/' . $abschnitt->id) ?>">
                             <?= htmlReady($abschnitt->name) ?>
                         </a>
                     </td>
@@ -20,7 +20,7 @@
                             <? $actionMenu = ActionMenu::get()->setContext($abschnitt->name) ?>
                             <? if (MvvPerm::havePermWrite($version)) : ?>
                                 <? $actionMenu->addLink(
-                                    $controller->url_for('/abschnitt/' . $abschnitt->id),
+                                    $controller->action_url('abschnitt/' . $abschnitt->id),
                                     _('Studiengangteil-Abschnitt bearbeiten'),
                                     Icon::create('edit', Icon::ROLE_CLICKABLE, tooltip2(_('Studiengangteil-Abschnitt bearbeiten'))),
                                     ['data-dialog' => true])
@@ -33,7 +33,7 @@
                                         _('Studiengangteil-Abschnitt löschen'),
                                         Icon::create('trash', Icon::ROLE_CLICKABLE, tooltip2(_('Studiengangteil-Abschnitt löschen'))),
                                         [
-                                            'formaction'   => $controller->url_for('/delete_abschnitt/' . $abschnitt->id),
+                                            'formaction'   => $controller->action_url('delete_abschnitt/' . $abschnitt->id),
                                             'data-confirm' => sprintf(_('Wollen Sie den Studiengangteil-Abschnitt "%s" wirklich löschen?'), htmlReady($abschnitt->getDisplayName()))
                                         ]
                                     ) ?>
@@ -56,7 +56,7 @@
             <tbody>
                 <tr>
                     <td colspan="3">
-                        <form class="mvv-qsform" action="<?= $controller->link_for('/add_modul/' . $version->id) ?>"
+                        <form class="mvv-qsform" action="<?= $controller->action_link('add_modul/' . $version->id) ?>"
                               method="post">
                             <?= _('Modul hinzufügen') ?>
                             <?= CSRFProtection::tokenTag() ?>

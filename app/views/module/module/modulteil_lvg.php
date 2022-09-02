@@ -15,7 +15,7 @@
                             <? $actionMenu = ActionMenu::get()->setContext($lvgruppe->getDisplayName()) ?>
                             <? if (MvvPerm::haveFieldPermLvgruppen($modulteil, MvvPerm::PERM_WRITE)) : ?>
                                 <? $actionMenu->addLink(
-                                    $controller->url_for('/lvgruppe/' . $modulteil->id . '/' . $lvgruppe->id),
+                                    $controller->action_url('lvgruppe/' . $modulteil->id . '/' . $lvgruppe->id),
                                     _('LV-Gruppe bearbeiten'),
                                     Icon::create('edit', Icon::ROLE_CLICKABLE ,['title' => _('LV-Gruppe bearbeiten')]),
                                     [
@@ -30,7 +30,7 @@
                                     _('Zuordnung der LV-Gruppe löschen'),
                                     Icon::create('trash', Icon::ROLE_CLICKABLE , ['title' => _('Zuordnung der LV-Gruppe löschen')]),
                                     [
-                                        'formaction'   => $controller->url_for('/delete_lvgruppe/' . $modulteil->id . '/' . $lvgruppe->id),
+                                        'formaction'   => $controller->action_url('delete_lvgruppe/' . $modulteil->id . '/' . $lvgruppe->id),
                                         'data-confirm' => sprintf(
                                             _('Wollen Sie wirklich die Lehrveranstaltungsgruppe "%s" vom Modulteil "%s" entfernen?'),
                                             htmlReady($lvgruppe->getDisplayName()),
@@ -49,7 +49,7 @@
             <tbody>
                 <tr>
                     <td colspan="2">
-                        <form action="<?= $controller->url_for('/add_lvgruppe/' . $modulteil->id) ?>" method="post">
+                        <form action="<?= $controller->action_link('add_lvgruppe/' . $modulteil->id) ?>" method="post">
                             <?= CSRFProtection::tokenTag(); ?>
                             <input type="hidden" name="security_token" value="<?= $security_token ?>">
                             <div style="float: left; padding-right: 10px;"><?= _('LV-Gruppe hinzufügen:') ?></div>

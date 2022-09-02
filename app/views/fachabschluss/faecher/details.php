@@ -12,7 +12,7 @@
                 <td><?= htmlReady($abschluss->category->getDisplayName()) ?></td>
                 <td class="actions">
                     <? if (MvvPerm::havePermWrite($abschluss)) : ?>
-                        <a data-dialog href="<?= $controller->url_for('/abschluss/' . $abschluss->id) ?>">
+                        <a data-dialog href="<?= $controller->action_link('abschluss/' . $abschluss->id) ?>">
                             <?= Icon::create('edit', Icon::ROLE_CLICKABLE, ['title' => _('Abschluss bearbeiten')])->asImg(); ?>
                         </a>
                     <? endif; ?>

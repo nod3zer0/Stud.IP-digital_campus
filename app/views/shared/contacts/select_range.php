@@ -1,4 +1,4 @@
-<form class="default" action="<?= $controller->url_for('/select_range', $range_type) ?>" method="post" data-dialog="size=auto">
+<form class="default" action="<?= $controller->action_link('select_range', $range_type) ?>" method="post" data-dialog="size=auto">
     <?= CSRFProtection::tokenTag(); ?>
 
     <label>

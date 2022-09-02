@@ -1,6 +1,6 @@
 <? use Studip\Button; ?>
 
-<form action="<?= $controller->url_for('/admin/smileys/delete/bulk', $view) ?>" method="post">
+<form action="<?= $controller->action_link('admin/smileys/delete/bulk', $view) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
     <table class="default">

@@ -13,14 +13,14 @@
                         <? $actionMenu = ActionMenu::get()->setContext($stgteil->fach_name) ?>
                         <? if (MvvPerm::havePermWrite($stgteil)) : ?>
                             <? $actionMenu->addLink(
-                                $controller->url_for('/stgteil/' . $stgteil->id),
+                                $controller->action_url('stgteil/' . $stgteil->id),
                                 _('Studiengangteil bearbeiten'),
                                 Icon::create('edit', Icon::ROLE_CLICKABLE , ['title' => _('Studiengangteil bearbeiten')]))
                             ?>
                         <? endif; ?>
                         <? if (MvvPerm::havePermCreate($stgteil)) : ?>
                             <? $actionMenu->addLink(
-                                $controller->url_for('/copy/' . $stgteil->id),
+                                $controller->action_url('copy/' . $stgteil->id),
                                 _('Studiengangteil kopieren'),
                                 Icon::create('files', Icon::ROLE_CLICKABLE , ['title' => _('Studiengangteil kopieren')]))
                             ?>
@@ -33,7 +33,7 @@
                                     'trash',
                                     Icon::ROLE_CLICKABLE ,
                                     ['title'        => _('Studiengangteil löschen'),
-                                     'formaction'   => $controller->url_for('/delete/' . $stgteil->getId()),
+                                     'formaction'   => $controller->action_url('delete/' . $stgteil->getId()),
                                      'data-confirm' => sprintf(_('Wollen Sie wirklich den Studiengangteil "%s" löschen?'), htmlReady($stgteil->getDisplayName()))]
                                 ))
                             ?>

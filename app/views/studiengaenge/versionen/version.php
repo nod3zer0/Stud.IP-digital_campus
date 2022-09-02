@@ -2,7 +2,7 @@
 <?= $controller->jsUrl() ?>
 <? $perm = MvvPerm::get($version) ?>
 
-<form class="default" action="<?= $controller->url_for('/version', $stgteil->id, $version->id) ?>" method="post">
+<form class="default" action="<?= $controller->action_link('version', $stgteil->id, $version->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
     <fieldset class="collapsable">
@@ -94,9 +94,6 @@
         <?= MvvI18N::textarea('beschreibung', $version->beschreibung, ['class' => 'add_toolbar ui-resizable wysiwyg', 'id' => 'beschreibung'])->checkPermission($version) ?>
     </fieldset>
 
-    <? $url = $controller->url_for('/dokumente_properties'); ?>
-    <? $perm_dokumente = $perm->haveFieldPerm('document_assignments', MvvPerm::PERM_CREATE) ?>
-    <?//= $this->render_partial('shared/form_dokumente', compact('search_dokumente', 'dokumente', 'url', 'perm_dokumente')) ?>
     <fieldset class="collapsable collapsed">
         <legend>
             <?= _('Dokumente'); ?>

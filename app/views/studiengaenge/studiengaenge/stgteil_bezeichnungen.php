@@ -11,7 +11,7 @@
                     <td class="toggle-indicator">
                         <? if ($bez_stgteil->count_stgteile) : ?>
                             <a class="mvv-load-in-new-row"
-                               href="<?= $controller->url_for('/details_studiengang', $studiengang->id, $bez_stgteil->id) ?>">
+                               href="<?= $controller->action_link('details_studiengang', $studiengang->id, $bez_stgteil->id) ?>">
                                 <?= htmlReady($bez_stgteil->name) ?>
                             </a>
                         <? else : ?>
@@ -32,7 +32,7 @@
                 <tr>
                     <td colspan="3">
                         <form style="width: 100%;"
-                              action="<?= $controller->url_for('/add_stgteil/' .  $studiengang->id) ?>" method="post">
+                              action="<?= $controller->action_link('add_stgteil/' .  $studiengang->id) ?>" method="post">
                             <?= CSRFProtection::tokenTag() ?>
                             <div style="float: left; padding-right: 10px;"><?= _('Studiengangteil hinzufügen') ?></div>
                             <div style="float: left; padding-right: 10px;">

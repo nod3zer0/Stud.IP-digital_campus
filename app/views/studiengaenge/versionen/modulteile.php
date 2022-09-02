@@ -11,7 +11,7 @@
             <td class="actions">
                 <? $perm = MvvPerm::get($assignment->abschnitt) ?>
                 <? if ($perm->haveFieldPerm('modulteil_abschnitte')) : ?>
-                <a data-dialog="" href="<?= $controller->url_for('/modulteil_semester', $assignment->id, $modulteil->id) ?>">
+                <a data-dialog="" href="<?= $controller->action_link('modulteil_semester', $assignment->id, $modulteil->id) ?>">
                     <?= Icon::create('edit', Icon::ROLE_CLICKABLE , ['title' => _('Semesterzuordnung bearbeiten')])->asImg(); ?>
                 </a>
                 <? endif; ?>

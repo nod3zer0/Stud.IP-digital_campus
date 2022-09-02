@@ -1,4 +1,4 @@
-<form action="<?= $controller->link_for('/add_url/' . $top_folder->id) ?>" method="post" data-dialog class="default">
+<form action="<?= $controller->action_link('add_url/' . $top_folder->id) ?>" method="post" data-dialog class="default">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Datei aus dem Internet verlinken') ?></legend>
@@ -36,7 +36,7 @@
         <?= Studip\Button::createAccept(_('Speichern'), 'store') ?>
         <?= Studip\LinkButton::createCancel(
             _('Zurück'),
-            $controller->url_for('/add_files_window/' . Request::option('to_folder_id'), $options),
+            $controller->action_url('add_files_window/' . Request::option('to_folder_id'), $options),
             ['data-dialog' => '']
         ) ?>
     </footer>

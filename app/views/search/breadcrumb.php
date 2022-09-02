@@ -4,7 +4,7 @@
 <? $index = 0; ?>
 <? foreach($bc_points as $type => $point):?>
     <? $id2 = reset(array_values((array) $point['add'])); ?>
-    <? $link = $controller->link_for('/' . $point['actn'], $point['id'], $id2); ?>
+    <? $link = $controller->action_link('' . $point['actn'], $point['id'], $id2); ?>
     <? if (is_array($point['add'])) : ?>
         <? $mvv_object = $type::find($point['id']); ?>
         <? if ($mvv_object && $type == 'Fach' && $additional_object = Abschluss::find($point['add']['Abschluss'])) : ?>

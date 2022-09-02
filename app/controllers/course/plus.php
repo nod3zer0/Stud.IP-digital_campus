@@ -153,7 +153,7 @@ class Course_PlusController extends AuthenticatedController
             if ($this->tool->store()) {
                 PageLayout::postSuccess(_('Die Einstellungen wurden gespeichert.'));
             }
-            $this->redirect($this->url_for('/index'));
+            $this->redirect($this->action_url('index'));
         }
     }
 
@@ -304,7 +304,7 @@ class Course_PlusController extends AuthenticatedController
         $actions = new ActionsWidget();
         $actions->addLink(
             _('Werkzeugreihenfolge ändern'),
-            $this->url_for('/sorttools'),
+            $this->action_url('sorttools'),
             Icon::create('arr_2down')
         )->asDialog('size=500;reload-on-close');
 

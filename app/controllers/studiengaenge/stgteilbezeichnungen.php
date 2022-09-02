@@ -161,7 +161,7 @@ class Studiengaenge_StgteilbezeichnungenController extends MVVController
             $widget = new ActionsWidget();
             $widget->addLink(
                 _('Neue Studiengangteil-Bezeichnung'),
-                $this->url_for('/stgteilbezeichnung'),
+                $this->action_url('stgteilbezeichnung'),
                 Icon::create('add')
             )->asDialog();
             $sidebar->addWidget($widget);

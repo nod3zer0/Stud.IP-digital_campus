@@ -1,4 +1,4 @@
-<form class="default" action="<?= $controller->url_for('/new_dokument') ?>" method="post" data-dialog="size=auto">
+<form class="default" action="<?= $controller->action_link('new_dokument') ?>" method="post" data-dialog="size=auto">
 
     <label>
         <select id="mvv-contacts-range_types" name="range_type">

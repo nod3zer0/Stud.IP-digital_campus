@@ -1,4 +1,4 @@
-<section class="contentbox course-statusgroups" data-sortable="<?=$controller->url_for('/sorttools', ['order' => 1]) ?>">
+<section class="contentbox course-statusgroups" data-sortable="<?=$controller->action_link('sorttools', ['order' => 1]) ?>">
 <? if ($sem->tools): ?>
     <? foreach ($sem->tools as $tool): ?>
     <?php if (!$tool->getStudipModule()) continue; ?>

@@ -1,4 +1,4 @@
-<form class="default" action="<?= $controller->link_for('/change_course_set') ?>" method="post">
+<form class="default" action="<?= $controller->action_link('change_course_set') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Anmelderegeln') ?></legend>
@@ -17,7 +17,7 @@
                             <?= Studip\Button::create(_("Zuordnung aufheben"), 'change_course_set_unassign', ['data-dialog' => '']) ?>
                         <? endif ?>
                         <? if ($current_courseset->isUserAllowedToEdit($user_id)) : ?>
-                            <?= Studip\LinkButton::create(_("Anmeldeset bearbeiten"), $controller->url_for('/edit_courseset/' . $current_courseset->getId()), ['data-dialog' => '']); ?>
+                            <?= Studip\LinkButton::create(_("Anmeldeset bearbeiten"), $controller->action_url('edit_courseset/' . $current_courseset->getId()), ['data-dialog' => '']); ?>
                         <? endif ?>
                     <? endif ?>
                 </div>
@@ -25,20 +25,20 @@
         <? else : ?>
             <div>
                 <? if (!$is_locked['passwort'] && isset($activated_admission_rules['PasswordAdmission'])) : ?>
-                    <?= Studip\LinkButton::create(_("Anmeldung mit Passwort"), $controller->url_for('/instant_course_set', ['type' => 'PasswordAdmission']), ['data-dialog' => '']) ?>
+                    <?= Studip\LinkButton::create(_("Anmeldung mit Passwort"), $controller->action_url('instant_course_set', ['type' => 'PasswordAdmission']), ['data-dialog' => '']) ?>
                 <? endif ?>
                 <? if (!$is_locked['admission_type']) : ?>
                     <? if (isset($activated_admission_rules['LockedAdmission'])) : ?>
-                        <?= Studip\LinkButton::create(_("Anmeldung gesperrt"), $controller->url_for('/instant_course_set', ['type' => 'LockedAdmission']), ['data-dialog' => '']) ?>
+                        <?= Studip\LinkButton::create(_("Anmeldung gesperrt"), $controller->action_url('instant_course_set', ['type' => 'LockedAdmission']), ['data-dialog' => '']) ?>
                     <? endif ?>
                     <? if (isset($activated_admission_rules['TimedAdmission'])) : ?>
-                        <?= Studip\LinkButton::create(_("Zeitgesteuerte Anmeldung"), $controller->url_for('/instant_course_set', ['type' => 'TimedAdmission']), ['data-dialog' => '']) ?>
+                        <?= Studip\LinkButton::create(_("Zeitgesteuerte Anmeldung"), $controller->action_url('instant_course_set', ['type' => 'TimedAdmission']), ['data-dialog' => '']) ?>
                     <? endif ?>
                     <br>
                     <? if (isset($activated_admission_rules['ParticipantRestrictedAdmission'])) : ?>
-                        <?= Studip\LinkButton::create(_("Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', ['type' => 'ParticipantRestrictedAdmission']), ['data-dialog' => '']) ?>
+                        <?= Studip\LinkButton::create(_("Teilnahmebeschränkte Anmeldung"), $controller->action_url('instant_course_set', ['type' => 'ParticipantRestrictedAdmission']), ['data-dialog' => '']) ?>
                         <? if (isset($activated_admission_rules['TimedAdmission'])) : ?>
-                            <?= Studip\LinkButton::create(_("Zeitgesteuerte und Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', ['type' => 'ParticipantRestrictedAdmission_TimedAdmission']), ['data-dialog' => '']) ?>
+                            <?= Studip\LinkButton::create(_("Zeitgesteuerte und Teilnahmebeschränkte Anmeldung"), $controller->action_url('instant_course_set', ['type' => 'ParticipantRestrictedAdmission_TimedAdmission']), ['data-dialog' => '']) ?>
                         <? endif ?>
                     <? endif ?>
                 <? endif ?>
@@ -51,7 +51,7 @@
                     </summary>
 
                     <select name="course_set_assign" style="display: inline-block;"
-                            onChange="$('#course_set_assign_explain').load('<?= $controller->link_for('/explain_course_set') ?>&set_id=' + $(this).val(), function () { $(this).show(); });">
+                            onChange="$('#course_set_assign_explain').load('<?= $controller->action_link('explain_course_set') ?>&set_id=' + $(this).val(), function () { $(this).show(); });">
                         <option></option>
                         <? $my_own_sets = $available_coursesets->findBy('my_own', true); ?>
                         <? $other_sets = $available_coursesets->findBy('my_own', false); ?>
@@ -85,7 +85,7 @@
 <br>
 
 <? if ($current_courseset && $current_courseset->isSeatDistributionEnabled()) : ?>
-    <form class="default" action="<?= $controller->link_for('/change_admission_turnout') ?>" method="post">
+    <form class="default" action="<?= $controller->action_link('change_admission_turnout') ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
         <fieldset>
             <legend><?= _('Beschränkte Teilnehmendenanzahl') ?></legend>
@@ -135,7 +135,7 @@
     <br>
 <? endif ?>
 
-<form class="default" action="<?= $controller->link_for('/change_admission_prelim') ?>" method="post">
+<form class="default" action="<?= $controller->action_link('change_admission_prelim') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Anmeldemodus') ?></legend>
@@ -175,7 +175,7 @@
 <br>
 
 <? if (Config::get()->ENABLE_FREE_ACCESS && !$current_courseset) : ?>
-    <form class="default" action="<?= $controller->link_for('/change_free_access') ?>" method="post">
+    <form class="default" action="<?= $controller->action_link('change_free_access') ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
         <fieldset>
             <legend><?= _('Zugriff für externe Nutzer') ?></legend>
@@ -209,7 +209,7 @@
 <? endif ?>
 
 <? if (count($all_domains)) : ?>
-    <form class="default" action="<?= $controller->link_for('/change_domains') ?>" method="post">
+    <form class="default" action="<?= $controller->action_link('change_domains') ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
         <fieldset>
             <legend><?= _('Zugelassenene Nutzerdomänen') ?></legend>

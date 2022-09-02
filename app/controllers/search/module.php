@@ -311,7 +311,7 @@ class Search_ModuleController extends MVVController
         $this->initPageParams();
         $this->drilldown();
         $this->page = 1;
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     private function drilldown()
@@ -331,7 +331,7 @@ class Search_ModuleController extends MVVController
         $this->initPageParams();
         $this->page = 1;
         $this->reset_drilldown();
-        $this->redirect($this->url_for('/index'));
+        $this->redirect($this->action_url('index'));
     }
 
     private function reset_drilldown()

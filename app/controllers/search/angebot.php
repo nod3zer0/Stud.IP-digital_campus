@@ -118,7 +118,7 @@ class Search_AngebotController extends MVVController
         $this->abschluesse = $abschluss_kategorie;
         $this->faecher = $result;
         $this->name = $name;
-        $this->url = $this->url_for('fach/detail/');
+        $this->url = 'fach/detail';
     }
 
     public function detail_action($fach_id, $abschluss_id, $studiengang_id = null)

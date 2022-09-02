@@ -28,7 +28,7 @@
                                 <?= htmlReady($kategorie->name) ?>
                             <? else: ?>
                                 <a class="mvv-load-in-new-row"
-                                   href="<?= $controller->url_for('/details/' . $kategorie->id) ?>"><?= htmlReady($kategorie->name) ?> </a>
+                                   href="<?= $controller->action_link('details/' . $kategorie->id) ?>"><?= htmlReady($kategorie->name) ?> </a>
                             <? endif; ?>
                         </td>
                         <td class="dont-hide" style="text-align: center;">
@@ -39,7 +39,7 @@
                         </td>
                         <td style="white-space: nowrap;" class="dont-hide actions">
                             <? if ($perm->havePermWrite()) : ?>
-                                <a href="<?= $controller->url_for('/kategorie/' . $kategorie->id) ?>">
+                                <a href="<?= $controller->action_link('kategorie/' . $kategorie->id) ?>">
                                     <?= Icon::create('edit', Icon::ROLE_CLICKABLE, tooltip2(_('Abschluss-Kategorie bearbeiten')))->asImg(); ?>
                                 </a>
                             <? endif; ?>
@@ -47,7 +47,7 @@
                                 <? if (count($abschluesse) < 1) : ?>
                                     <?= Icon::create('trash', Icon::ROLE_CLICKABLE, tooltip2(_('Abschluss-Kategorie löschen')))->asInput(
                                         [
-                                            'formaction'   => $controller->url_for('/delete', $kategorie->id),
+                                            'formaction'   => $controller->action_url('delete', $kategorie->id),
                                             'data-confirm' => sprintf(_('Wollen Sie wirklich die Abschluss-Kategorie "%s" löschen?'), htmlReady($kategorie->name)),
                                             'name'         => 'delete'
                                         ]); ?>

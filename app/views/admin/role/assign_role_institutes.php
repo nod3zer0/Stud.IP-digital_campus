@@ -2,7 +2,7 @@
     <?= $pm ?>
 <? endforeach; ?>
 
-<form action="<?= $controller->link_for('/assign_role_institutes/' . $role->getRoleid() . '/' . $user->id) ?>" method="post" class="default" data-dialog="size=auto;reload-on-close">
+<form action="<?= $controller->action_link('assign_role_institutes/' . $role->getRoleid() . '/' . $user->id) ?>" method="post" class="default" data-dialog="size=auto;reload-on-close">
     <fieldset>
         <legend>
             <?= _('Einrichtungszuordnung anpassen') ?>
@@ -21,7 +21,7 @@
         <? foreach ($institutes as $institute): ?>
             <li>
                   <?= htmlReady($institute->name) ?>
-                  <a href="<?= $controller->link_for("/assign_role_institutes/{$role->getRoleid()}/{$user->id}", ['remove_institute' => $institute->id]) ?>" data-dialog="size=auto;reload-on-close">
+                  <a href="<?= $controller->action_link("assign_role_institutes/{$role->getRoleid()}/{$user->id}", ['remove_institute' => $institute->id]) ?>" data-dialog="size=auto;reload-on-close">
                       <?= Icon::create('trash') ?>
                   </a>
             </li>
@@ -31,7 +31,7 @@
 
     <footer data-dialog-button>
         <?= Studip\Button::create(_('Einrichtung hinzufügen'), "add_institute", ["rel" => "lightbox"]) ?>
-        <?= Studip\LinkButton::createCancel(_('Schließen'), $controller->url_for('/assign_role/' . $user->id), [
+        <?= Studip\LinkButton::createCancel(_('Schließen'), $controller->action_url('assign_role/' . $user->id), [
             'data-dialog-button' => '',
             'data-dialog' => 'size=auto;reload-on-close'
         ]) ?>
