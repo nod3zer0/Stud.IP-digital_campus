@@ -2,22 +2,22 @@
     .badge {
         position: relative;
     }
+
     .badge:after {
         content: attr(data-badge-number);
         position: absolute;
-        top: 0px;
+        top: 0;
         right: 15px;
         display: inline-block;
         max-width: 30px;
         width: auto;
         overflow: hidden;
 
-        margin: 0px;
+        margin: 0;
         padding: 1px 5px;
-        /* border: 2px solid white; */
 
-        background-color: #D60000;
-        color: white;
+        background-color: $red;
+        color: $white;
 
         font-size: 10px;
         font-weight: bold;
@@ -28,6 +28,6 @@
         text-shadow: rgba(0, 0, 0, 0.496094) 0px -1px 0px;
 
         border-radius: 9px;
-        box-shadow: black 0px 1px 3px;
-    }    
+        box-shadow: $black 0 1px 3px;
+    }
 }
