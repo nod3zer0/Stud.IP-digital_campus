@@ -103,6 +103,15 @@
                             <?= implode('<br>', $dates) ?>
                         <? endif ?>
                     </dd>
+                    <? if ($request->preparation_time) : ?>
+                        <dt><?= _('Rüstzeit') ?></dt>
+                        <dd>
+                            <?= htmlReady(sprintf(
+                                ngettext('%d Minute', '%d Minuten', $request->preparation_time / 60),
+                                $request->preparation_time / 60
+                            )) ?>
+                        </dd>
+                    <? endif ?>
 
                     <? if ($room_request->preparation_time): ?>
                         <? $preparation_time_minutes = intval($room_request->preparation_time / 60) ?>
@@ -250,10 +259,10 @@
                                 <? if ($data['metadate'] instanceof SeminarCycleDate) : ?>
                                     <?php
                                     $date_string1 = getWeekday($data['metadate']->weekday);
+                                    $real_begin = mktime($data['metadate']->start_hour, $data['metadate']->start_minute - $request->preparation_time / 60);
                                     $date_string2 = sprintf(
-                                        '%02s:%02s - %02s:%02s',
-                                        $data['metadate']->start_hour,
-                                        $data['metadate']->start_minute,
+                                        '%s - %02s:%02s',
+                                        date('H:i', $real_begin),
                                         $data['metadate']->end_hour,
                                         $data['metadate']->end_minute
                                     );
