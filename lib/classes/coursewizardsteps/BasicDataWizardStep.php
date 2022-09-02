@@ -404,6 +404,7 @@ class BasicDataWizardStep implements CourseWizardStep
         $course->name = new I18NString($values['name'], $values['name_i18n'] ?? []);
         $course->veranstaltungsnummer = $values['number'];
         $course->beschreibung = new I18NString($values['description'], $values['description_i18n'] ?? []);
+        $course->start_semester = Semester::findByTimestamp($values['start_time']);
         $course->institut_id = $values['institute'];
 
         $semclass = $seminar->getSemClass();
@@ -437,7 +438,6 @@ class BasicDataWizardStep implements CourseWizardStep
                 $institutes = array_merge($institutes, array_keys($values['participating']));
             }
             $seminar->setInstitutes($institutes);
-            $course->start_semester = Semester::findByTimestamp($values['start_time']);
             if (isset($values['lecturers']) && is_array($values['lecturers'])) {
                 foreach (array_keys($values['lecturers']) as $user_id) {
                     $seminar->addMember($user_id, 'dozent');
