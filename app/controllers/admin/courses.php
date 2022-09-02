@@ -1070,7 +1070,6 @@ class Admin_CoursesController extends AuthenticatedController
                 'attributes' => ['data-dialog' => 'size=big'],
             ];
         }
-
         ksort($actions);
 
         foreach (PluginManager::getInstance()->getPlugins('AdminCourseAction') as $plugin) {

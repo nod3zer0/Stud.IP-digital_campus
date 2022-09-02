@@ -187,23 +187,7 @@ class Course_TimesroomsController extends AuthenticatedController
 
         $dates = $this->course->getDatesWithExdates();
 
-        $this->current_user = User::findCurrent();
-        $this->user_has_permissions = ResourceManager::userHasGlobalPermission($this->current_user, 'admin');
-
         $check_room_requests = Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS;
-        $this->room_requests = RoomRequest::findBySQL(
-            'course_id = :course_id
-            ORDER BY course_id, metadate_id, termin_id',
-            [
-                'course_id' => $this->course->id
-            ]
-        );
-
-        $this->global_requests = $this->course->room_requests->filter(function (RoomRequest $request) {
-            return $request->closed < 2 && !$request->termin_id;
-        });
-
-
         $single_dates  = [];
         $this->single_date_room_request_c = 0;
         foreach ($dates as $val) {

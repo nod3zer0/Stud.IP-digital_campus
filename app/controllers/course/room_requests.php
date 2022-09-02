@@ -48,10 +48,6 @@ class Course_RoomRequestsController extends AuthenticatedController
         $pagetitle .= Course::find($this->course_id)->getFullname() . ' - ';
         $pagetitle .= _('Verwalten von Raumanfragen');
         PageLayout::setTitle($pagetitle);
-
-
-        $this->available_room_categories = ResourceCategory::findByClass_name('Room');
-        $this->step = 0;
     }
 
     /**
@@ -249,240 +245,6 @@ class Course_RoomRequestsController extends AuthenticatedController
     }
 
 
-    /*
-     * Start point to creating a new request
-     */
-    public function new_request_action($request_id = '')
-    {
-        if (!Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) {
-            throw new AccessDeniedException(
-                _('Das Erstellen von Raumanfragen ist nicht erlaubt!')
-            );
-        }
-        Helpbar::get()->addPlainText(
-            _('Information'),
-            _('Hier können Sie Angaben zu gewünschten Raumeigenschaften machen.')
-        );
-
-        // create a new request
-        $this->request_id = $request_id;
-        if (Request::submitted('request_id')) {
-            $this->request_id = Request::get('request_id');
-        }
-        if (!$this->request_id) {
-            $this->request_id = md5(uniqid('RoomRequest'));
-        }
-
-        $this->request = null;
-        $this->request = RoomRequest::find(Request::get('request_id')) ? RoomRequest::find(Request::get('request_id')) :  new RoomRequest($this->request_id);
-
-        // time ranges (start date, end date)
-        $this->request->setRangeFields('course', [Context::getId()]);
-        $this->request_time_intervals = $this->request->getTimeIntervals();
-
-
-
-
-    }
-
-    /*
-     * Step 1: Either selecting a room category or searching for a room name
-     */
-    public function request_first_step_action($request_id)
-    {
-        $this->request_id = $request_id;
-        $this->step = 1;
-        $_SESSION[$request_id]['search_by'] = '';
-
-        if (Request::isPost()) {
-            CSRFProtection::verifyUnsafeRequest();
-
-            // either search by room name or room category, then go to next step
-            $this->room_name = Request::get('room_name');
-            $_SESSION[$request_id]['room_name'] = $this->room_name;
-            $this->search_by_roomname = Request::submitted('search_by_name');
-            $this->category_id = Request::get('category_id');
-            $_SESSION[$request_id]['room_category'] = $this->category_id;
-            $this->search_by_category = Request::submitted('search_by_category');
-
-            // user looks for a special room OR for room within a selected category
-            if ($this->room_name != null && $this->search_by_roomname != null) {
-                $_SESSION[$request_id]['search_by'] = 'roomname';
-                $this->redirect(
-                    'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
-                );
-            } else if ($this->category_id != null && $this->search_by_category != null ) {
-                $_SESSION[$request_id]['search_by'] = 'category';
-
-                $this->redirect(
-                    'course/room_requests/find_by_category/' . $this->request_id . '/' . $this->step
-                );
-            } else {
-                $this->redirect(
-                    'course/room_requests/new_request/' . $this->request_id
-                );
-            }
-        }
-
-    }
-
-    public function find_by_roomname_action($request_id, $step)
-    {
-        $this->request_id = $request_id;
-        $this->step = $step;
-        $this->room_name = $_SESSION[$request_id]['room_name'];
-
-        $this->available_rooms = RoomManager::findRooms(
-            $this->room_name,
-            null,
-            null,
-            null,
-            [],
-            'name ASC, mkdate ASC'
-        );
-
-        // small icons before room name to show whether they are bookable or not
-        $this->available_room_icons = $this->getRoomBookingIcons($this->available_rooms, $this->request_id);
-        $this->selected_room = Resource::find($_SESSION[$request_id]['room_id']);
-        $this->selected_room_category_id = $this->selected_room->category_id;
-        $_SESSION[$request_id]['room_category'] = $this->selected_room_category_id;
-
-        // for step 2 after choosing a room
-        if ($step == 2) {
-            $this->category = ResourceCategory::find($this->selected_room_category_id);
-            $this->available_properties = $this->category->getRequestableProperties();
-        }
-
-
-        // after selecting a room, go to next step
-        if ((Request::submitted('request_second_step'))) {
-            $this->selected_room_id = Request::get('selected_room_id');
-            $_SESSION[$request_id]['room_id'] = $this->selected_room_id;
-
-            $this->redirect(
-                'course/room_requests/request_second_step/' . $this->request_id
-            );
-
-        }
-
-        // we might also search for new rooms and stay within step 1
-        if (Request::get('room_name') && Request::submitted('search_by_name')) {
-            $_SESSION[$request_id]['room_name'] = Request::get('room_name');
-            $this->redirect(
-                'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
-            );
-        }
-        $this->selected_properties = Request::getArray('selected_properties');
-        $_SESSION[$request_id]['seats'] = $this->selected_properties['seats'];
-
-        if (Request::submitted('save_request')) {
-            // we need the seats property with at least one seat, else we get an error
-            if ($_SESSION[$request_id]['seats'] < 1) {
-                PageLayout::postError(
-                    _('Es wurde keine Anzahl an gewünschten Sitzplätzen angegeben!')
-                );
-                $this->redirect(
-                    'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
-                );
-            } else {
-                // TODO actually save the request
-                PageLayout::postSuccess(_('Die Anfrage wurde gespeichert!'));
-                $this->relocate('course/timesrooms/');
-            }
-
-        }
-
-
-    }
-
-    public function find_by_category_action($request_id, $step)
-    {
-        $this->request_id = $request_id;
-        $this->step = $step;
-
-        $this->room_category_id = $_SESSION[$request_id]['room_category'];
-        $this->category = ResourceCategory::find($this->room_category_id);
-        $this->request = RoomRequest::find($this->request_id) ? RoomRequest::find($this->request_id) :  new RoomRequest($this->request_id);
-
-        RoomManager::findRoomsByRequest($this->request);
-        $this->available_properties = $this->category->getRequestableProperties();
-
-    }
-
-    /*
-     * Step 2: After choosing a category or a room, check the properties
-     */
-    public function request_second_step_action($request_id)
-    {
-        $this->request_id = $request_id;
-        $this->step = 2;
-
-        $this->redirect(
-            'course/room_requests/find_by_roomname/' . $this->request_id . '/' . $this->step
-        );
-
-    }
-
-    public function save_request_action($request_id) {
-        $this->request_id = $request_id;
-
-
-
-    }
-
-    private function getRoomBookingIcons($available_rooms, $request_id)
-    {
-        $this->request_id = $request_id;
-
-        $this->available_room_icons = [];
-        $this->request = RoomRequest::find($this->request_id) ? RoomRequest::find($this->request_id) :  new RoomRequest($this->request_id);
-
-        // TODO set range fields for other
-        $this->request->setRangeFields('course', [Context::getId()]);
-        $request_time_intervals = $this->request->getTimeIntervals();
-
-        foreach ($available_rooms as $room) {
-            $request_dates_booked = 0;
-            foreach ($request_time_intervals as $interval) {
-                $booked = ResourceBookingInterval::countBySql(
-                        'resource_id = :room_id AND begin < :end AND end > :begin',
-                        [
-                            'room_id' => $room->id,
-                            'begin' => $interval['begin'],
-                            'end' => $interval['end']
-                        ]
-                    ) > 0;
-                if ($booked) {
-                    $request_dates_booked++;
-                }
-            }
-            if ($request_dates_booked == 0) {
-                $this->available_room_icons[$room->id] =
-                    Icon::create('check-circle', Icon::ROLE_STATUS_GREEN)->asImg(
-                        [
-                            'class' => 'text-bottom',
-                            'title' => _('freier Raum')
-                        ]
-                    );
-                $available_rooms[] = $room;
-            } elseif ($request_dates_booked < $request_time_intervals) {
-                $this->available_room_icons[$room->id] =
-                    Icon::create('exclaim-circle', Icon::ROLE_STATUS_YELLOW)->asImg(
-                        [
-                            'class' => 'text-bottom',
-                            'title' => _('teilweise belegter Raum')
-                        ]
-                    );
-                $available_rooms[] = $room;
-            }
-        }
-        return $this->available_room_icons;
-    }
-
-
-
-
-    /************ OLD STUFF *******/
     /**
      * This action is the entry point for adding properties to a room request.
      */
@@ -573,6 +335,7 @@ class Course_RoomRequestsController extends AuthenticatedController
             );
             return;
         }
+
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
             $this->room_name = Request::get('room_name');
@@ -861,7 +624,6 @@ class Course_RoomRequestsController extends AuthenticatedController
             );
         }
         $this->available_room_icons = [];
-
         $request_time_intervals = $this->request->getTimeIntervals();
         $request_date_amount = count($request_time_intervals);
         foreach ($this->matching_rooms as $room) {
