@@ -66,6 +66,9 @@ class CourseDateFolder extends PermissionEnabledFolder implements FolderType
             }
             if ($this->date) {
                 $this->folderdata['name'] = self::formatDate($this->date);
+                if (count($this->date->topics)) {
+                    $this->folderdata['name'] .= ' (' . join(', ', $this->date->topics->pluck('title')) . ')';
+                }
             } else {
                 $this->folderdata['name'] = _('(Termin gelöscht)') . ' ' . $this->folderdata['name'];
             }
