@@ -2,7 +2,7 @@
 #ajax_notification {
     background-color: #7387ac;
     bottom: 0;
-    color: #fff;
+    color: $white;
     display: none;
     font-size: 1.3em;
     font-weight: bold;
@@ -20,7 +20,7 @@
     position: relative;
 
     .notification {
-        background: rgba(255, 255, 255, 0.5) url("@{image-path}/ajax_indicator_small.gif") center center no-repeat;
+        background: rgba(255, 255, 255, 0.5) url("#{$image-path}/ajax_indicator_small.gif") center center no-repeat;
         border: 1px solid #ccc;
         border-radius: 8px;
         display: inline-block;
@@ -33,11 +33,10 @@
 }
 
 .ajaxing {
-    background: url("@{image-path}/ajax_indicator_small.gif") center no-repeat;
+    background: url("#{$image-path}/ajax_indicator_small.gif") center no-repeat;
     display: inline-block;
-    .size(16px, 16px);
-    .hide-text;
+    @include size(16px, 16px);
+    @include hide-text();
 
     img, image, svg { display: none; }
 }
-

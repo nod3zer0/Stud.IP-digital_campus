@@ -1,5 +1,5 @@
 article.studip {
-    border-color: @content-color-40;
+    border-color: $content-color-40;
     border-style: solid;
     border-width: 1px;
     margin-bottom: 10px;
@@ -17,7 +17,7 @@ article.studip {
         flex-wrap: wrap;
 
         padding: 2px;
-        background-color: @content-color-20;
+        background-color: $content-color-20;
         margin: -10px;
         margin-bottom: 10px;
 
@@ -34,13 +34,13 @@ article.studip {
         h1 {
             padding: 5px;
             margin: 0;
-            color: @base-color;
+            color: $base-color;
             border-bottom: none;
             font-size: medium;
 
             > a {
                 display: flex;
-                align-items: top;
+                align-items: flex-start;
             }
 
             &,
@@ -59,7 +59,7 @@ article.studip {
             padding: 2px;
 
             > * {
-                border-right: 1px solid @content-color;
+                border-right: 1px solid $content-color;
                 padding-right: 4px;
                 margin-right: 4px;
 
@@ -80,11 +80,10 @@ article.studip {
     &.toggle {
         > header {
             h1 > a {
-                .icon('before', 'arr_1right', 'clickable');
+                @include icon(before, arr_1right, clickable);
                 &::before {
                     flex: 0 0 auto;
                     margin-right: 5px;
-//                    margin-top: 2px;
                     transition: all 200ms ease 0s;
                 }
                 width: 100%;
@@ -113,7 +112,7 @@ article.studip {
 
     > footer {
         text-align: center;
-        border-color: @content-color-40;
+        border-color: $content-color-40;
         border-top-style: solid;
         border-width: 1px;
         margin: -10px;
@@ -142,7 +141,7 @@ article.new {
     &.toggle {
         > header {
             h1 > a {
-                .icon('before', 'arr_1right', 'new');
+                @include icon(before, arr_1right, new);
                 &::before {
                     margin-right: 5px;
                 }

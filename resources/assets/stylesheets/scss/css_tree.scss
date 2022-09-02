@@ -1,6 +1,6 @@
-@css-tree-delay: 300ms;
-@css-tree-distance: 8px;
-@css-tree-border: 1px solid @light-gray-color-80;
+$css-tree-delay: 300ms;
+$css-tree-distance: 8px;
+$css-tree-border: 1px solid $light-gray-color-80;
 
 .css-tree {
     &, ul {
@@ -9,11 +9,11 @@
         padding: 0;
     }
     ul {
-        margin-left: @css-tree-distance;
+        margin-left: $css-tree-distance;
         position: relative;
 
         &:before {
-            border-left: @css-tree-border;
+            border-left: $css-tree-border;
             content: '';
             display: block;
             position: absolute;
@@ -25,7 +25,7 @@
     }
     li {
         overflow: hidden;
-        padding-left: (@css-tree-distance + 2px);
+        padding-left: ($css-tree-distance + 2px);
         position: relative;
 
         &.css-tree-hidden {
@@ -36,14 +36,14 @@
         content: '';
         display: block;
         height: 0;
-        width: @css-tree-distance;
+        width: $css-tree-distance;
         position: absolute;
-        border-top: @css-tree-border;
+        border-top: $css-tree-border;
         left: 0;
-        top: @css-tree-distance;
+        top: $css-tree-distance;
     }
     ul li:last-child:before {
-        background: #fff;
+        background: $white;
         height: auto;
         top: 10px;
         bottom: 0;
@@ -53,11 +53,11 @@
     input[type=checkbox] {
         display: none;
         + label {
-            .icon('before', 'arr_1right', 'clickable');
+            @include icon(before, arr_1right, clickable);
             cursor: pointer;
 
             &:before {
-                transition: transform @css-tree-delay;
+                transition: transform $css-tree-delay;
                 vertical-align: baseline;
             }
         }
@@ -65,7 +65,7 @@
             max-height: 0;
             opacity: 0;
 
-            transition: all @css-tree-delay;
+            transition: all $css-tree-delay;
         }
         ~ input[type=radio] + label {
             margin-left: 0;
@@ -85,7 +85,7 @@
 .css-tree.selectable {
     input[type=checkbox] {
         + label {
-            .hide-text();
+            @include hide-text();
         }
         ~ input[type=radio] + label {
             margin-left: 0;
@@ -96,7 +96,7 @@
         display: none;
 
         + label {
-            color: @brand-color-dark;
+            color: $brand-color-dark;
             border-radius: 2px;
             cursor: pointer;
             padding: 0 3px;
@@ -105,11 +105,11 @@
 
         &:checked + label {
             font-weight: bold;
-            background: @content-color-40;
+            background: $content-color-40;
         }
 
         &[disabled] + label {
-            color: #888;
+            color: $dark-gray-color-20;
         }
     }
 }

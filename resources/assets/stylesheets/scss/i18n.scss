@@ -1,11 +1,11 @@
 div.i18n_group {
-    @max-width: 28px;
+    $max-width: 28px;
     position: relative;
 
     > select.i18n {
         border: 0;
-        border-right: 1px solid @light-gray-color-40;
-        border-bottom: 1px solid @light-gray-color-40;
+        border-right: 1px solid $light-gray-color-40;
+        border-bottom: 1px solid $light-gray-color-40;
         border-radius: 0;
         box-sizing: border-box;
         margin: 0 !important;
@@ -14,15 +14,15 @@ div.i18n_group {
         left: 1px;
         height: 31px;
         overflow: hidden;
-        max-width: @max-width;
-        z-index: 2;     // stay above ckeditor toolbar
+        max-width: $max-width;
+        z-index: 2;
 
         appearance: none;
 
         background-position: left 4px center;
         background-repeat: no-repeat;
         background-size: 20px auto;
-        padding: 0px 2px 0px 28px !important;
+        padding: 0 2px 0 28px !important;
 
         > option {
             background-position: left 1px center;
@@ -33,7 +33,7 @@ div.i18n_group {
 
     > div.i18n {
         input[type=text], > textarea, .editor_toolbar .buttons, .ck-toolbar {
-            padding-left: (@max-width + 6px) !important;
+            padding-left: ($max-width + 6px) !important;
         }
     }
 }

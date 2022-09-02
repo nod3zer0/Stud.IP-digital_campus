@@ -1,9 +1,4 @@
 .plus {
-
-    td.element {
-        padding-bottom: 2em;
-    }
-
     .element_header {
         display: inline-block;
         width: 250px;
@@ -54,9 +49,9 @@
     .thumb_holder {
         width: 250px;
         text-align: center;
-        background-color: @content-color-20;
-        border-top: 1px solid fadeout(@brand-color-lighter, 80%);
-        border-bottom: 1px solid fadeout(@brand-color-lighter, 80%);
+        background-color: $content-color-20;
+        border-top: 1px solid mix($brand-color-lighter, $white, 80%);
+        border-bottom: 1px solid mix($brand-color-lighter, $white, 80%);
     }
 
     .descriptionbox {
@@ -79,6 +74,6 @@
     }
 
     article.studip > section:not(:last-child) {
-        border-bottom: 1px solid @table-header-color;
+        border-bottom: 1px solid $table-header-color;
     }
 }

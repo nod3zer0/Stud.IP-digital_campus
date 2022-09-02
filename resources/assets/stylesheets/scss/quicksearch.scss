@@ -5,9 +5,9 @@ form#search_sem_quick_search_frame {
 }
 
 input.quicksearchbox {
-    background-color: @dark-gray-color-10;
-    border: 1px solid @dark-gray-color-40;
-    color: @base-color;
+    background-color: $dark-gray-color-10;
+    border: 1px solid $dark-gray-color-40;
+    color: $base-color;
     font-size: 14px;
     width: 250px;
     height: 19px;
@@ -21,14 +21,14 @@ div.quicksearch_frame {
         box-sizing: border-box;
         border-width: 1px 30px 1px 1px;
         border-style: solid;
-        border-color: @base-color-60;
+        border-color: $base-color-60;
         border-image: none;
         display: inline-block !important;
     }
 
     input[name=course_search_button] {
         margin-left: -34px !important;
-        margin-top: 0px !important;
+        margin-top: 0 !important;
     }
 
     input[type=submit] {
@@ -39,7 +39,7 @@ div.quicksearch_frame {
         border: 0;
         width: 29px;
         height: 24px;
-        .background-icon('search', 'info_alt');
+        @include background-icon(search, info_alt);
         background-position: center;
         background-repeat: no-repeat;
         vertical-align: middle;
@@ -83,9 +83,9 @@ div.quicksearch_frame {
 
     + input[type=submit] {
         float: none;
-        margin-left: 0px;
+        margin-left: 0;
         height: 30px;
-        background-color: #7E92B0;
+        background-color: $base-color-60;
         background-position: center center;
     }
 }
@@ -96,8 +96,8 @@ div.quicksearch_frame {
     width: 100%;
 
     .dropdownmenu {
-        max-width: 0px;
-        max-height: 0px;
+        max-width: 0;
+        max-height: 0;
         overflow: visible;
         position: relative;
         top: 31px;
@@ -105,10 +105,9 @@ div.quicksearch_frame {
         .autocomplete__results {
             list-style-type: none;
             padding: 1px;
-            border: 1px solid @light-gray-color-40;
-            background-color: white;
+            border: 1px solid $light-gray-color-40;
+            background-color: $white;
             z-index: 99999;
-            width: 200px;
             max-height: 275px;
             width: 600px;
             overflow-x: auto;
@@ -121,8 +120,8 @@ div.quicksearch_frame {
                 align-items: flex-start;
 
                 &:hover, &.autocomplete__result--selected {
-                    background-color: @base-color;
-                    color: white;
+                    background-color: $base-color;
+                    color: $white;
                 }
 
                 img {
