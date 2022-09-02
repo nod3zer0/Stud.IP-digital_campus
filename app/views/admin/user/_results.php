@@ -131,7 +131,13 @@
                                 $controller->url_for('admin/user/activities/' . $user->user_id, ['from_index' => 1]),
                                 _('Datei- und Aktivitätsübersicht'),
                                 Icon::create('vcard'),
-                                ['data-dialog' => 'size=50%']
+                                ['data-dialog' => 'size=auto']
+                            );
+                            $actionMenu->addLink(
+                                $controller->show_user_coursesURL($user, ['from_index' => 1]),
+                                _('Veranstaltungsübersicht'),
+                                Icon::create('seminar'),
+                                ['data-dialog' => 'size=auto']
                             );
                             if (Config::get()->LOG_ENABLE) {
                                 $actionMenu->addLink(

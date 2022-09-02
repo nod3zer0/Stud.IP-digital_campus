@@ -25,6 +25,7 @@ require_once 'lib/statusgruppe.inc.php';
  */
 class Admin_UserController extends AuthenticatedController
 {
+    protected $_autobind = true;
     /**
      * Common tasks for all actions.
      */
@@ -1513,6 +1514,88 @@ class Admin_UserController extends AuthenticatedController
         );
 
         $this->redirect($archive_download_link);
+    }
+
+    /**
+     * Course overview of a user
+     */
+    public function show_user_courses_action(User $user)
+    {
+        PageLayout::setTitle(sprintf(
+            _('Veranstaltungsübersicht von %s'),
+            $user->getFullName()
+        ));
+        $sem_courses = [];
+        $courses = Course::findByUser($this->user->id);
+        array_walk($courses,
+            function (Course $course) use (&$sem_courses) {
+                $semester_name = (string) $course->start_semester->name;
+                if (!isset($sem_courses[$semester_name])) {
+                    $sem_courses[$semester_name] = [];
+                }
+                $sem_courses[$semester_name][] = $course;
+            }
+        );
+
+        $this->sem_courses = $sem_courses;
+    }
+
+    /**
+     * Delete user from courses
+     * @throws InvalidSecurityTokenException
+     * @throws MethodNotAllowedException
+     */
+    public function delete_course_assignment_action(User $user)
+    {
+        CSRFProtection::verifyUnsafeRequest();
+
+        if (Request::get('course_id')) {
+            $courses = [Request::get('course_id')];
+        } else {
+            $courses = Request::getArray('courses');
+        }
+
+        if (empty($courses)) {
+            PageLayout::postError(_('Sie haben keine Veranstaltungen ausgewählt.'));
+        } else {
+            $courses = array_map('Seminar::GetInstance', $courses);
+            $successes = 0;
+            $fails = 0;
+
+            foreach ($courses as $course) {
+                if ($course->deleteMember($user->id)) {
+                    $successes++;
+                } else {
+                    $fails++;
+                }
+            }
+
+            if ($successes) {
+                PageLayout::postSuccess(sprintf(
+                    ngettext(
+                        '%s wurde aus %u Veranstaltung ausgetragen.',
+                        '%s wurde aus %u Veranstaltungen ausgetragen.',
+                        $successes
+                    ),
+                    htmlReady($user->getFullName()),
+                    $successes
+                ));
+            }
+
+            if ($fails) {
+                PageLayout::postError(sprintf(
+                    ngettext(
+                        '%s konnte aus %u Veranstaltung nicht ausgetragen werden.',
+                        '%s konnte aus %u Veranstaltungen nicht ausgetragen werden.',
+                        $fails
+                    ),
+                    htmlReady($user->getFullName()),
+                    $fails
+                ));
+            }
+        }
+
+        $this->redirect($this->show_user_coursesURL($user));
     }
 
     /**
