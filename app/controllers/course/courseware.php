@@ -229,7 +229,7 @@ class Course_CoursewareController extends AuthenticatedController
         foreach ($blks as $blk) {
             $progresses = $userProgresses[$blk];
             $usersProgress = $progresses['count'] ? (float) $progresses['grade'] : 0;
-            $data['progress'] += $usersProgress / $usersCounter;
+            $data['progress'] += $usersCounter ? $usersProgress / $usersCounter : 0;
         }
 
         return $data;
