@@ -218,7 +218,7 @@ export default {
             return null;
         },
         updateContent(blockAdder) {
-            if(blockAdder.container.id === this.container.id) {
+            if(blockAdder.hasOwnProperty('container') && blockAdder.container.id === this.container.id) {
                 this.initCurrentData();
             }
         }
