@@ -19,8 +19,8 @@ section.course-statusgroups {
         }
 
         section {
-            border-left: 1px solid @content-color-20;
-            border-right: 1px solid @content-color-20;
+            border-left: 1px solid $content-color-20;
+            border-right: 1px solid $content-color-20;
 
             table {
                 td.memberactions {
@@ -29,7 +29,7 @@ section.course-statusgroups {
 
                 thead {
                     tr th {
-                        background-color: @content-color-20;
+                        background-color: $content-color-20;
                     }
                 }
 
@@ -37,14 +37,14 @@ section.course-statusgroups {
                     tr td {
                         span.member-invisible {
                             font-style: italic;
-                            color: @light-gray-color;
+                            color: $light-gray-color;
                         }
                     }
                 }
 
                 tfoot {
                     tr td {
-                        background-color: @content-color-20;
+                        background-color: $content-color-20;
                         padding-left: 5px;
                         padding-right: 0;
                     }
@@ -58,14 +58,14 @@ section.course-statusgroups {
         }
 
         &.draggable.open {
-            background-color: @white;
+            background-color: $white;
         }
 
     }
 
     footer {
-        background-color: @content-color-20;
-        border-top: 1px solid @black;
+        background-color: $content-color-20;
+        border-top: 1px solid $black;
         font-size: medium;
         padding: 5px;
         padding-left: 18px;
@@ -79,7 +79,7 @@ section.course-statusgroups {
 
         .sg-sortable-handle {
             cursor: move;
-            background-image: url("@{image-path}/anfasser_24.png");
+            background-image: url("#{$image-path}/anfasser_24.png");
             background-position: 3px center;
             background-repeat: no-repeat;
             width: 12px;

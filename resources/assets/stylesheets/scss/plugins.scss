@@ -1,0 +1,56 @@
+.plugin_image {
+    text-align: center;
+    width: 88px;
+    vertical-align: top;
+}
+
+.plugin_score {
+    white-space: nowrap;
+}
+
+.plugin_install {
+    text-align: center;
+}
+
+.plugin_description {
+    a.read_more_link {
+        display: none;
+    }
+}
+
+.plugin_description.short {
+    div {
+        max-height: 15em;
+        overflow: hidden;
+        position: relative;
+
+        p.read_more {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4em;
+            margin: 0;
+            background-image: linear-gradient(to bottom, rgba(255,0,0,0), $white)
+        }
+    }
+
+    .read_more_link {
+        @include icon(before, add, clickable);
+
+        span {
+            vertical-align: middle;
+            padding-top: 3px;
+        }
+    }
+
+    a {
+        display: inline-block;
+    }
+}
+
+
+img.plugin_preview {
+    height: 60px;
+    width: 80px;
+}

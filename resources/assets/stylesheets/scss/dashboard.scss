@@ -8,7 +8,7 @@
     }
 
     > li:nth-child(n+2) {
-        border-top: 1px solid #d4dbe5;
+        border-top: 1px solid $content-color-40;
     }
 }
 
@@ -23,7 +23,7 @@
     flex-wrap: wrap;
 
     span {
-        border-right: 1px solid #d4dbe5;
+        border-right: 1px solid $content-color-40;
         margin-right: 0.3em;
         padding-right: 0.4em;
     }

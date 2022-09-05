@@ -1,4 +1,5 @@
-@helpbar-width: 250px;
+$helpbar-width: 250px;
+$border-width: 4px;
 
 .helpbar-toggler {
     width: 24px;
@@ -14,24 +15,25 @@
     position: relative;
     top: 1px;
     min-width: 32px;
-    /*width: 100%;*/
     right: 12px;
 
     float: right;
 
     h2, h3 {
         border-bottom: 0;
-        color: @white;
+        color: $white;
         font-size: 1em;
         font-weight: normal;
         margin: 0;
         padding: 0;
     }
+
     h2 {
         font-size: 1.2em;
     }
+
     h3 {
-        border-bottom: 1px dotted @base-color-80;
+        border-bottom: 1px dotted $base-color-80;
         font-size: 1.1em;
         margin-bottom: 2px;
         padding-bottom: 2px;
@@ -43,23 +45,20 @@
 }
 
 .helpbar {
-    background-color: @base-color;
+    background-color: $base-color;
     padding: 8px;
     box-sizing: border-box;
-
-    @border-width: 4px;
-
     position: absolute;
     right: -2px;
-    top: 0px;
+    top: 0;
 
-    width: @helpbar-width;
+    width: $helpbar-width;
     z-index: 1000;
 
     &::before {
-        border-bottom: 2px solid @base-color-80;
-        border-left: @border-width solid transparent;
-        border-right: @border-width solid transparent;
+        border-bottom: 2px solid $base-color-80;
+        border-left: $border-width solid transparent;
+        border-right: $border-width solid transparent;
         content: '';
         display: none;
         position: absolute;
@@ -79,55 +78,64 @@
     }
 
     .helpbar-widgets {
-        color: @white;
+        color: $white;
         list-style: none;
         padding: 0;
 
         a {
             vertical-align: text-bottom;
         }
+
         a:link, a:visited {
-            color: @white;
+            color: $white;
         }
+
         a:hover, a:active {
+            color: $white;
             text-decoration: underline;
         }
+
         > li {
-            border-top: 1px solid @content-color;
-            padding: 3px 0px;
+            border-top: 1px solid $content-color;
+            padding: 3px 0;
             margin: 0 .25em;
         }
     }
+
     .help-tours {
         list-style: none;
         margin: 0;
         padding: 0;
+
         a {
-            .background-icon('play', 'info_alt');
+            @include background-icon(play, info_alt);
             background-position: left 2px;
             background-repeat: no-repeat;
             display: block;
             padding-left: 20px;
+
             &.tour-paused {
-                .background-icon('pause', 'info_alt');
+                @include background-icon(pause, info_alt);
             }
+
             &.tour-completed {
-                .background-icon('accept', 'info_alt');
+                @include background-icon(accept, info_alt);
             }
         }
     }
 
     a.link-extern {
-        .icon('before', 'link-extern', 'info_alt');
+        @include icon(before, link-extern, info_alt);
     }
+
     a.link-intern {
-        .icon('before', 'link-intern', 'info_alt');
+        @include icon(before, link-intern, info_alt);
     }
 }
 
 section.big-help-box {
-    background-color: #d4dbe5;
-    border: 1px solid #7e92b0;
+    background-color: $content-color-40;
+    border: 1px solid $content-color-80;
     padding: 0.5em;
     margin-top: 0.5em;
     text-align: center;
@@ -142,4 +150,3 @@ section.big-help-box {
         flex-grow: 5;
     }
 }
-

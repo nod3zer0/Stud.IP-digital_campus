@@ -79,6 +79,15 @@
     }
 }
 
+@mixin retina-background-image($image0, $image1, $width: 100%, $height: $width) {
+    background-image: url("#{$image-path}/#{$image0}");
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
+    {
+        background-image: url("#{$image-path}/#{$image1}");
+        background-size: $width;
+    }
+}
+
 @mixin icon($position, $icon, $role, $size: 16px, $padding: 0) {
     $position: unquote($position);
 
@@ -103,6 +112,21 @@
                 margin-left: $padding;
             }
         }
+    }
+}
+
+// Mixin that replaces the navigation icon tags with css images
+@mixin navigation-icon($default-icon-name, $toggled-icon-name) {
+    img { display: none; }
+
+    display: inline-block;
+
+    @include background-icon($default-icon-name, clickable);
+    @include hide-text();
+    @include square(16px);
+
+    &.toggled {
+        @include background-icon($toggled-icon-name, clickable);
     }
 }
 

@@ -2,15 +2,15 @@
 .eval_title {
     font-size: 1.2em;
     font-weight: bold;
-    color: #24437c;
+    color: $base-color;
 }
 
 .eval_error {
-    color: #E00000;
+    color: $red;
 }
 
 .eval_success {
-    color: #008000;
+    color: $green;
 }
 
 .eval_info {
@@ -35,6 +35,6 @@
 
 h3.eval {
     font-size: 1.3em;
-    color: #000000;
+    color: $black;
     font-weight: bold;
 }

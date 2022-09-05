@@ -12,7 +12,7 @@
         z-index: 1;
     
         > a, ul {
-            background-color: #fff;
+            background-color: $white;
             padding: 5px;
         }
         > a {
@@ -21,7 +21,7 @@
 
         &.extendable:hover {
             > a, > ul {
-                box-shadow: 0 4px 3px #aaa;
+                box-shadow: 0 4px 3px $base-gray;
             }
             ul {
                 display: flex;
@@ -40,31 +40,31 @@
             line-height: 1.5em;
 
             a {
-                .background-icon('folder-parent', 'clickable', 24);
+                @include background-icon(folder-parent, clickable, 24);
                 background-position: left center;
                 background-repeat: no-repeat;
                 padding-left: 30px;
             }
             &:first-child a {
-                .background-icon('folder-empty', 'clickable', 24);
+                @include background-icon(folder-empty, clickable, 24);
             }
         }
     }
 }
 
 .document-dialog {
-    @info-width: 150px;
-    .clearfix;
+    $info-width: 150px;
+    @include clearfix();
     > aside {
         float: left;
-        width: @info-width;
+        width: $info-width;
     }
     .document-dialog-icon {
         text-align: center;
     }
     > div {
-        border-left: 1px dashed #888;
-        margin-left: @info-width;
+        border-left: 1px dashed $dark-gray-color;
+        margin-left: $info-width;
         min-height: 100%;
         max-height: 100%;
         overflow-y: auto;
@@ -85,18 +85,18 @@
 
 .documents.dragging {
     [data-file]:not([data-folder]) {
-        background-color: @light-gray-color-40;
+        background-color: $light-gray-color-40;
         opacity: 0.6;
     }
 }
 .documents {
     [data-folder].dropping {
-        background-color: @red-40;
+        background-color: $red-40;
     }
 }
 
 .document-draggable-helper {
-    background-color: @activity-color-40 !important;
+    background-color: $activity-color-40 !important;
     opacity: 1 !important;
     td {
         border-bottom: 0 !important;

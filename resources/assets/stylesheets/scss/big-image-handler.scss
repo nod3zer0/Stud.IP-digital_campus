@@ -1,6 +1,9 @@
+$bg-big-image-handler: mix($black, $white, 30%);
+
 .oversized-image {
     cursor: zoom-in;
 }
+
 .oversized-image-zoom {
     position: fixed;
     top: 0;
@@ -12,29 +15,29 @@
     width: 100%;
     z-index: 10000;
 
-    background: fadeout(#000, 30%);  
+    background: $bg-big-image-handler;
     cursor: zoom-out;
 
     display: flex;
     justify-content: center;
     align-items: center;
-  
+
     // The actual oversized image is loaded as a background image so we can
     // use the background-size option "contain" which will ensure that the
     // image will be visible even on small displays.
     span {
-        background-color: fadeout(#000, 30%);
+        background-color: $bg-big-image-handler;
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
-        border: 1px solid #fff;
-        box-shadow: 0 0 20px fadeout(#fff, 50%);
+        border: 1px solid $white;
+        box-shadow: 0 0 20px mix($black, $white, 50%);
         display: block;
         max-width: 98%;
         max-height: 98%;
-        
+
         img {
             opacity: 0;
         }
-  }
+    }
 }

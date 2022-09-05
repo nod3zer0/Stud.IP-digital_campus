@@ -1,14 +1,14 @@
 /* --- header.css ----------------------------------------------------------- */
 #layout_wrapper {
     box-sizing: border-box;
-    padding-top: @bar-bottom-container-height;
+    padding-top: $bar-bottom-container-height;
 }
 #barBottomContainer {
-    background-color: @base-color;
-    border: 1px @brand-color-darker;
-    color: @contrast-content-white;
+    background-color: $base-color;
+    border: 1px $brand-color-darker;
+    color: $contrast-content-white;
     border-bottom-style: solid;
-    height: @bar-bottom-container-height;
+    height: $bar-bottom-container-height;
     width: 100%;
 
     display: flex;
@@ -18,27 +18,27 @@
 
     transform: translate(0, 0) !important; // We need !important due to the horizontal scroll handler
     position: fixed;
-    top: 0px;
+    top: 0;
     z-index: 10000;
 
 }
 #barBottomLeft,
 #barTopFont {
     flex: 0 0 auto;
-    padding: 0px 15px;
+    padding: 0 15px;
     z-index: 2;
 }
 
 // Fix header covering relevant other areas
-// @see https://gitlab.studip.de/studip/studip/-/issues/1019
+// $see https://gitlab.studip.de/studip/studip/-/issues/1019
 html {
-    scroll-padding-top: calc(@bar-bottom-container-height + 1em);
+    scroll-padding-top: calc($bar-bottom-container-height + 1em);
 }
 
 #layout_footer,
 #barBottomright {
     > ul > li > a {
-        color: @contrast-content-white;
+        color: $contrast-content-white;
         margin: 0 6px;
         text-decoration: none;
         &:hover {
@@ -55,7 +55,7 @@ html {
         justify-content: space-between;
         list-style-type: none;
         min-height: 30px;
-        padding: 0px;
+        padding: 0;
         > li {
             margin-left: 2px;
             margin-right: 2px;
@@ -72,10 +72,10 @@ html {
         justify-content: space-between;
         list-style-type: none;
         height: 40px;
-        padding: 0px;
+        padding: 0;
         > li {
             margin: 2px;
-            padding: 0px 10px;
+            padding: 0 10px;
         }
     }
 }
@@ -91,10 +91,10 @@ html {
     z-index: 1003;
 
     .action-menu-icon {
-        border: 1px solid @dark-gray-color-40;
-        background-color: @dark-gray-color-5;
+        border: 1px solid $dark-gray-color-40;
+        background-color: $dark-gray-color-5;
         height: 28px;
-        margin: 0;
+        margin: 0 32px 0 0;
         position: relative;
         width: 28px;
         z-index: 1;
@@ -105,8 +105,7 @@ html {
         }
 
         // Add arrow on the right
-        margin-right: 32px;
-        .icon('after', 'arr_1down', 'info_alt');
+        @include icon(after, arr_1down, info_alt);
 
         &::after {
             background-position: center;
@@ -122,7 +121,7 @@ html {
     z-index: 1002;
 
     .action-menu-title{
-        margin: 0em 0 0.3em;
+        margin: 0 0 0.3em;
     }
 
     .action-menu-content {
@@ -131,22 +130,22 @@ html {
         right: 0;
 
         /*padding: 4px 28px 4px 8px;*/
-        background: #fff;
-        box-shadow: 1px 1px 1px @dark-gray-color-60;
+        background: $white;
+        box-shadow: 1px 1px 1px $dark-gray-color-60;
         text-align: left;
         white-space: nowrap;
 
         a:link,
         a:visited {
-            color: @base-color;
+            color: $base-color;
         }
         a:hover,
         a:active {
-            color: @active-color;
+            color: $active-color;
         }
 
         div {
-            color: #000;
+            color: $black;
         }
     }
 }
@@ -157,19 +156,19 @@ html {
 
 #barTopFont {
     flex: 1;
-    color: @white;
-    margin-left: 0px;
+    color: $white;
+    margin-left: 0;
     z-index: 1002;
-    line-height: @bar-bottom-container-height;
+    line-height: $bar-bottom-container-height;
     white-space: nowrap;
 }
 
 .studip-logo {
-    .hide-text();
+   @include hide-text();
     background-repeat: no-repeat;
 
-    .retina-background-image('logos/studip4-logo.png', 'logos/studip4-logo@2x.png', 130px, 92px);
-    background-image: none, url("@{image-path}/logos/studip4-logo.svg");
+    @include retina-background-image('logos/studip4-logo.png', 'logos/studip4-logo$2x.png', 130px, 92px);
+    background-image: none, url("#{$image-path}/logos/studip4-logo.svg");
 
     background-size: 130px 92px;
     display: block;
@@ -191,8 +190,8 @@ html {
 
 
 #flex-header {
-    height: @header-height;
-    background-color: @dark-gray-color-5;
+    height: $header-height;
+    background-color: $dark-gray-color-5;
 
     position: relative;
     z-index: 3;
@@ -205,7 +204,7 @@ html {
     padding: 0;
     text-indent: -150px;
 
-    @media not (prefers-reduced-motion) {
+    @media not prefers-reduced-motion {
         transition: all 500ms;
     }
 }

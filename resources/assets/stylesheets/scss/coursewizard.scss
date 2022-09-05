@@ -18,13 +18,13 @@ div {
   &#assigned {
     float:left;
     padding-right: 10px;
-    width: ~"calc(50% - 10px)";
+    width: calc(50% - 10px);
   }
   &#studyareas {
-    border-left: 1px solid #666666;
+    border-left: 1px solid $base-gray;
     float: left;
     padding-left: 10px;
-    width: ~"calc(50% - 20px)";
+    width: calc(50% - 20px);
   }
 }
 

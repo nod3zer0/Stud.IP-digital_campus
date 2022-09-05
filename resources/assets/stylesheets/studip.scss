@@ -9,6 +9,7 @@
 @import "scss/visibility";
 
 @import "scss/actionmenu";
+@import "scss/activityfeed";
 @import "scss/admin";
 @import "scss/admin-courses";
 @import "scss/admission";
@@ -16,21 +17,32 @@
 @import "scss/ajax";
 @import "scss/avatar";
 @import "scss/badges";
+@import "scss/big-image-handler";
 @import "scss/blubber";
 @import "scss/buttons";
+@import "scss/consultation";
 @import "scss/contentbar";
 @import "scss/contents";
+@import "scss/content";
 @import "scss/comments";
 @import "scss/courseware";
+@import "scss/coursewizard";
 @import "scss/css_tree";
 @import "scss/dates";
 @import "scss/dashboard";
+@import "scss/dialog";
+@import "scss/documents";
 @import "scss/enrolment";
+@import "scss/evaluation";
 @import "scss/files";
 @import "scss/feedback";
 @import "scss/forum";
 @import "scss/grid";
+@import "scss/header";
+@import "scss/headings";
+@import "scss/helpbar";
 @import "scss/i18n";
+@import "scss/ilias-interface";
 @import "scss/index";
 @import "scss/fullscreen";
 @import "scss/links";
@@ -45,6 +57,7 @@
 @import "scss/quicksearch";
 @import "scss/oauth2";
 @import "scss/pagination";
+@import "scss/plugins";
 @import "scss/plus";
 @import "scss/progress_indicator.scss";
 @import "scss/profile";
@@ -57,11 +70,15 @@
 @import "scss/skiplinks";
 @import "scss/start";
 @import "scss/scroll-to-top";
+@import "scss/statusgroups";
 @import "scss/studygroup";
+@import "scss/studip-overlay";
+@import "scss/studip-selection";
 @import "scss/table_of_contents";
 @import "scss/tooltip";
 @import "scss/tfa";
 @import "scss/tour";
+@import "scss/user-administration";
 @import "scss/wiki";
 
 
@@ -84,3 +101,19 @@
 [v-cloak] {
     display: none;
 }
+
+blockquote {
+    border-left: 3px solid $brand-color-lighter;
+    padding: 5px 5px 5px 8px;
+    margin: 8px 8px 8px 0;
+
+    background-color: rgba(0,0,0,0.05);
+    > .author {
+        background-color: $brand-color-lighter;
+        color: $white;
+        padding: 4px 4px 4px 15px;
+        margin: -5px -5px 5px -10px;
+    }
+}
+
+div.indent { margin-left: 2em; }
