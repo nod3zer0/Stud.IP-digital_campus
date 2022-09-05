@@ -263,10 +263,10 @@ abstract class StudipController extends Trails_Controller
 
         // Try to create route if none given
         if ($to === '') {
-            $to = $this->parent_controller
+            $args[0] = $this->parent_controller
                 ? $this->parent_controller->current_action
                 : $this->current_action;
-            return $this->action_url($to);
+            return $this->action_url(...$args);
         }
 
         // Create url for a specific action

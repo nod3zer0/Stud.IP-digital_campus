@@ -243,6 +243,7 @@ final class StudipControllerTest extends Codeception\Test\Unit
     {
         return [
             '0-action'                 => ['dispatch.php/studip_controller_test/foo'],
+            '0-action-and-parameter'   => ['dispatch.php/studip_controller_test/foo?bar=42', '', ['bar' => 42]],
             '1-action'                 => ['dispatch.php/foo', 'foo'],
             '1-action-and-parameter'   => ['dispatch.php/foo?bar=42', 'foo', ['bar' => 42]],
             '1-action-and-parameters'  => ['dispatch.php/foo?bar=42&baz=23', 'foo', ['bar' => 42, 'baz' => 23]],
