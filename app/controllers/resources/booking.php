@@ -1550,13 +1550,19 @@ class Resources_BookingController extends AuthenticatedController
 
         $this->show_form = false;
 
-        $this->available_resources = ResourceManager::getUserResources(
+        $unfiltered_available_resources = ResourceManager::getUserResources(
             $current_user,
             'autor',
             null,
             [$this->booking->resource->class_name],
             true
         );
+        //Filter out the resource of the booking since we only want to allow copying the
+        //booking into other resources:
+        $booking_resource_id = $this->booking->resource_id;
+        $this->available_resources = array_filter($unfiltered_available_resources, function ($item) use ($booking_resource_id) {
+            return $item->id !== $booking_resource_id;
+        });
 
         $this->show_form = true;
 
