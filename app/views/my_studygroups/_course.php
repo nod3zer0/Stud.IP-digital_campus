@@ -22,21 +22,26 @@
                 <?= tooltipicon($infotext) ?>
             <? endif ?>
         </td>
-        <td style="text-align: left">
+        <td style="text-align: left; white-space: nowrap;">
             <? if (!empty($group['navigation'])) : ?>
+                <ul class="my-courses-navigation" style="flex-wrap: nowrap">
                 <? foreach (MyRealmModel::array_rtrim($group['navigation']) as $key => $nav)  : ?>
                     <? if (isset($nav) && $nav->isVisible(true)) : ?>
-                        <a href="<?=
-                        URLHelper::getLink('seminar_main.php',
-                            ['auswahl'     => $group['seminar_id'],
-                                  'redirect_to' => strtr($nav->getURL(), '?', '&')]) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
-                            <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
-                        </a>
+                        <li class="my-courses-navigation-item <? if ($nav->getImage()->signalsAttention()) echo 'my-courses-navigation-important'; ?>">
+                            <a href="<?=
+                            URLHelper::getLink('seminar_main.php',
+                                ['auswahl'     => $group['seminar_id'],
+                                      'redirect_to' => $nav->getURL()]) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
+                                <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
+                            </a>
+                        </li>
                     <? elseif (is_string($key)) : ?>
-                        <?= Assets::img('blank.gif', ['width' => 20, 'height' => 20]); ?>
+                        <li class="my-courses-navigation-item">
+                            <span class="empty-slot" style="width: 20px"></span>
+                        </li>
                     <? endif ?>
-                    <? echo ' ' ?>
                 <? endforeach ?>
+                </ul>
             <? endif ?>
         </td>
         <td style="text-align: right">

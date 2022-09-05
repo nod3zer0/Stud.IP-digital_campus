@@ -42,17 +42,6 @@ class Institute_OverviewController extends AuthenticatedController
             object_set_visit($this->institute_id, 0);
         }
 
-        //gibt es eine Anweisung zur Umleitung?
-        if (Request::get('redirect_to')) {
-            $query_parts = explode('&', mb_stristr(urldecode($_SERVER['QUERY_STRING']), 'redirect_to'));
-            list( , $where_to) = explode('=', array_shift($query_parts));
-            $new_query = $where_to . '?' . join('&', $query_parts);
-            page_close();
-            $new_query = preg_replace('/[^:0-9a-z+_.#?&=\/-]/i', '', $new_query);
-            header('Location: '.URLHelper::getURL($new_query, ['cid' => $this->institute_id]));
-            die;
-        }
-
         PageLayout::setHelpKeyword("Basis.Einrichtungen");
         PageLayout::setTitle($this->institute->getFullName() . " - " ._("Kurzinfo"));
         Navigation::activateItem('/course/main/info');
@@ -66,6 +55,17 @@ class Institute_OverviewController extends AuthenticatedController
      */
     function index_action()
     {
+        //gibt es eine Anweisung zur Umleitung?
+        $redirect_to = Request::get('redirect_to');
+        if ($redirect_to) {
+            if (!is_internal_url($redirect_to)) {
+                throw new Exception('Invalid redirection');
+            }
+
+            $this->redirect(URLHelper::getURL($redirect_to, ['cid' => $this->institute_id]));
+            return;
+        }
+
         $this->sidebar = Sidebar::get();
 
         if (Config::get()->NEWS_RSS_EXPORT_ENABLE && $this->institute_id){
