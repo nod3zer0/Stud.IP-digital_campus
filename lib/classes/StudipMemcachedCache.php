@@ -46,7 +46,7 @@ class StudipMemcachedCache implements StudipSystemCache
 
         if (count($this->memcache->getServerList()) === 0) {
             foreach ($servers as $server) {
-                $status = $this->memcache->addServer($server['hostname'], $server['port']);
+                $status = $this->memcache->addServer($server['hostname'], (int) $server['port']);
 
                 if (!$status) {
                     throw new Exception("Could not add server: {$server['hostname']} @ port {$server['port']}");

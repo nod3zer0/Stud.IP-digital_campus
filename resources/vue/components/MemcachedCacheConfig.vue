@@ -46,13 +46,17 @@ export default {
     },
     methods: {
         addServer () {
-            this.serverConfig.push({ server: '', port: null })
+            this.serverConfig.push({ hostname: 'localhost', port: 11211 })
         },
         removeServer (event, index) {
             this.serverConfig.splice(index, 1)
         },
         isValid () {
-            return this.serverConfig.length > 0;
+            return this.serverConfig.length > 0
+                && this.serverConfig.every(server => {
+                    return server.hostname.length > 0
+                        && server.port > 0;
+                });
         }
     },
     watch: {

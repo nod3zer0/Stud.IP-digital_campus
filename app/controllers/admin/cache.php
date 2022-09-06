@@ -112,8 +112,6 @@ class Admin_CacheController extends AuthenticatedController
         if (Config::get()->store('SYSTEMCACHE', $settings)) {
             PageLayout::postSuccess(_('Die Einstellungen wurden gespeichert.'));
             StudipCacheFactory::unconfigure();
-        } else {
-            PageLayout::postError(_('Die Einstellungen konnten nicht gespeichert werden.'));
         }
 
         $this->relocate('admin/cache/settings');
