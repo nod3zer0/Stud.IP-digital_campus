@@ -337,8 +337,8 @@ class MvvPerm {
             }
             if (count($institut_ids)) {
                 $institutes_assigned_role = RolePersistence::getAssignedRoleInstitutes($user_id, $role->roleid);
-                // count($institutes_assigned_role) === 1 means global role...
-                if (count($institutes_assigned_role) === 1
+                // count($institutes_assigned_role) === 0 means global role.
+                if (count($institutes_assigned_role) === 0
                         || count(array_intersect($institut_ids, $institutes_assigned_role))) {
                     if (!$status) {
                         $priv = intval(self::$privileges[$mvv_table]['default_table'][$role->rolename]);
@@ -457,8 +457,8 @@ class MvvPerm {
             }
             if (count($institut_ids)) {
                 $institutes_assigned_role = RolePersistence::getAssignedRoleInstitutes($user_id, $role->roleid);
-                // count($institutes_assigned_role) === 1 means global role...
-                if (count($institutes_assigned_role) === 1
+                // count($institutes_assigned_role) === 0 means global role.
+                if (count($institutes_assigned_role) === 0
                         || count(array_intersect($institut_ids, $institutes_assigned_role))) {
                     $priv = is_array($field)
                             ? self::$privileges[$mvv_table]['fields'][$field[0]][$field[1]][$status][$role->rolename]
@@ -617,7 +617,7 @@ class MvvPerm {
                     break;
                 }
                 $institutes_assigned_role = RolePersistence::getAssignedRoleInstitutes($user_id, $role->roleid);
-                if (count($institutes_assigned_role) === 1) {
+                if (count($institutes_assigned_role) === 0) {
                     // this role is globally defined for this user
                     $institutes = [];
                     break;
