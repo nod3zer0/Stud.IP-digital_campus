@@ -53,7 +53,6 @@ import Mathematics from 'ckeditor5-math/src/math';
 import StudipA11YDialog, { updateVoiceLabel } from '../cke/studip-a11y-dialog/a11y-dialog.js';
 import StudipBlockQuote from '../cke/studip-quote/StudipBlockQuote.js';
 import StudipUpload from '../cke/StudipUpload.js';
-import { StudipSettings } from '../cke/StudipSettings.js';
 import StudipWikiLink from '../cke/wiki-link/wiki-link.js';
 import SpecialCharactersEmojiFood from '../cke/special_characters/SpecialCharactersEmojiFood.js';
 import SpecialCharactersEmojiNature from '../cke/special_characters/SpecialCharactersEmojiNature.js';
@@ -124,7 +123,6 @@ ClassicEditor.builtinPlugins = [
     Underline,
     FileRepository,
     StudipA11YDialog,
-    StudipSettings,
     StudipWikiLink,
 ];
 
@@ -198,7 +196,6 @@ ClassicEditor.defaultConfig = {
             'outdent',
             'indent',
             '|',
-            'studipSettings',
             'open-a11y-dialog',
         ],
         shouldNotGroupWhenFull: true,
