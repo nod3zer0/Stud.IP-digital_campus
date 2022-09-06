@@ -22,7 +22,7 @@ class ConsultationEvent extends SimpleORMap
             'class_name'  => ConsultationSlot::class,
             'foreign_key' => 'slot_id',
         ];
-        $config['belongs_to']['event'] = [
+        $config['has_one']['event'] = [
             'class_name'        => EventData::class,
             'foreign_key'       => 'event_id',
             'assoc_foreign_key' => 'event_id',

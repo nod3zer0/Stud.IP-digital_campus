@@ -193,6 +193,10 @@ class ConsultationSlot extends SimpleORMap
      */
     public function updateEvents()
     {
+        if ($this->isNew()) {
+            return;
+        }
+
         // If no range is associated, remove the event
         if (!$this->block->range) {
             $this->events->delete();

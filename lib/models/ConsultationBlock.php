@@ -24,7 +24,7 @@
  * @property bool has_bookings computed column
  * @property Range range computed column
  * @property SimpleORMapCollection slots has_many ConsultationSlot
- * @property ConsultationResponsibility[] responsibilities has_many ConsultationResponsibility
+ * @property ConsultationResponsibility[]|SimpleCollection responsibilities has_many ConsultationResponsibility
  * @property User[] responsible_persons
  */
 class ConsultationBlock extends SimpleORMap implements PrivacyObject
