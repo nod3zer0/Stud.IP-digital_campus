@@ -534,20 +534,20 @@ class MvvPerm {
     /**
      *
      *
-     * @param type $user_id
+     * @param string $user_id
      * @return
      */
     public static function getRoles($user_id)
     {
-        if (!self::$roles[$user_id]) {
-            $assigned = RolePersistence::getAssignedRoles($user_id);
-            foreach (RolePersistence::getAssignedRoles($user_id) as $role_id => $role) {
-                if (substr_compare($role->rolename, 'MVV', 1, 3, true)) {
-                    self::$roles[$user_id][] = $role;
+        if (!isset(self::$roles[$user_id])) {
+            self::$roles[$user_id] = array_filter(
+                RolePersistence::getAssignedRoles($user_id),
+                function ($role) {
+                    return stripos($role->rolename, 'mvv') === 0;
                 }
-            }
+            );
         }
-        return (self::$roles[$user_id] ?: []);
+        return self::$roles[$user_id];
     }
 
     /**
