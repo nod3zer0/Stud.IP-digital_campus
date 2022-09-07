@@ -51,7 +51,7 @@ const Blubber = {
                 });
             });
 
-            jQuery("form.sidebar-search").on("submit", function (event) {
+            $(document).on('submit', 'form.sidebar-search', function (event) {
                 this.waiting = true;
                 let search = jQuery("form.sidebar-search input[name=search]").val();
                 if ($('#messenger-course').length === 0) {
