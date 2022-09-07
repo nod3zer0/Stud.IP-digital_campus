@@ -50,7 +50,7 @@ const ActivityFeed = {
 
         STUDIP.api.GET(['user', STUDIP.ActivityFeed.user_id, 'activitystream'], {
             data: {
-                filtertype: filtertype,
+                filtertype: JSON.stringify(filtertype),
                 scrollfrom: STUDIP.ActivityFeed.scrolledfrom
             }
         }).done(function (activities) {

@@ -169,15 +169,15 @@ class Activity extends \SimpleORMap
     /**
      * Returns the oldest existing activity
      *
-     * @return Array
+     * @return Activity|false
      */
     public static function getOldestActivity()
     {
         $cache = \StudipCacheFactory::getCache();
-        $cache_key = 'activity/oldest_activity';
+        $cache_key = 'activity/oldest-activity';
 
         if (!$activity = unserialize($cache->read($cache_key))) {
-            $activity = self::findBySQL('1 ORDER BY mkdate ASC LIMIT 1');
+            $activity = self::findOneBySQL('1 ORDER BY mkdate ASC LIMIT 1');
 
             if (!empty($activity)) {
                 $cache->write($cache_key, serialize($activity));

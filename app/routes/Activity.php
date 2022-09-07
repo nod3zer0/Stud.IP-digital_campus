@@ -18,7 +18,7 @@ class Activity extends \RESTAPI\RouteMap
      *
      * @param string  $user_id   the user to get the activities for
      *
-     * @return Array   the activities as array('collection' => array(...), 'pagination' => array())
+     * @return array   the activities as array('collection' => array(...), 'pagination' => array())
      */
     public function getActivities($user_id)
     {
@@ -29,11 +29,8 @@ class Activity extends \RESTAPI\RouteMap
 
         // failsafe einbauen - falls es keine älteren Aktivitäten mehr im System gibt, Abbruch!
 
-        if ($oldest_activity = \Studip\Activity\Activity::getOldestActivity()) {
-            $max_age = array_pop($oldest_activity)->mkdate;
-        } else {
-            $max_age = time();
-        }
+        $oldest_activity = \Studip\Activity\Activity::getOldestActivity();
+        $max_age = $oldest_activity ? $oldest_activity->mkdate : time();
 
 
         $contexts = [];
@@ -70,16 +67,16 @@ class Activity extends \RESTAPI\RouteMap
         $scrollfrom = \Request::int('scrollfrom', false);
         $filtertype = \Request::get('filtertype', '');
 
-        $objectType = \Request::get('object_type', '');
+        $objectType = \Request::get('object_type');
         $filter->setObjectType($objectType);
-        
-        $objectId = \Request::get('object_id', '');
+
+        $objectId = \Request::get('object_id');
         $filter->setObjectId($objectId);
 
-        $context = \Request::get('context_type', '');
+        $context = \Request::get('context_type');
         $filter->setContext($context);
 
-        $contextId = \Request::get('context_id', '');
+        $contextId = \Request::get('context_id');
         $filter->setContextId($contextId);
 
         if (!empty($filtertype)) {
