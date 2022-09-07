@@ -212,12 +212,9 @@
                               ) ?>">
             </label>
        </div>
-        <!--<div>
-       <?= \Studip\Button::create(
-                _('Speichern'),
-                'bulk_save'
-            ) ?>
-            </div>-->
+       <div>
+           <?= \Studip\Button::create(_('Ändern'),'bulk_save') ?>
+       </div>
    </fieldset>
 
 <? if (!$single_user_mode): ?>
