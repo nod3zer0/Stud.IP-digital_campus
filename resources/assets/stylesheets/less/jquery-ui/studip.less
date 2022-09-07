@@ -80,7 +80,7 @@
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-    background-color: @brand-color-lighter;
+    background-color: @brand-color-light;
     color: white;
 }
 
@@ -153,16 +153,23 @@ textarea.ui-resizable-handle.ui-resizable-s {
 }
 
 // Date picker
+.ui-datepicker-header {
+    background-color: @brand-color-light;
+}
+
 .ui-datepicker-header .ui-icon {
     background-image: url(../images/vendor/jquery-ui/ui-icons_ffffff_256x240.png);
 }
 
 .ui-datepicker-calendar .ui-state-active {
-    color: @brand-color-light;
+    background-color: @white;
+    color: @brand-color-darker;
+    border: 1px solid @base-gray;
 }
 
 .ui-datepicker-calendar .ui-state-active.ui-state-hover {
-    color: white;
+    background-color: @brand-color-light;
+    color: @white;
 }
 
 .hasDatepicker,
