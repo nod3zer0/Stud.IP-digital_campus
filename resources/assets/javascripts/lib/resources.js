@@ -165,9 +165,11 @@ class Resources
         STUDIP.api.GET(
             `course/${course_id}/members`,
             {
-                //The limit '0' results in a division by zero.
-                //Hopefully, the limit is set to a value high enough:
-                limit: 1000000
+                data: {
+                    //The limit '0' results in a division by zero.
+                    //Hopefully, the limit is set to a value high enough:
+                    limit: 1000000
+                }
             }
         ).done(function(data) {
             for (var attribute in data.collection) {
