@@ -125,7 +125,6 @@ class PageLayout
         self::addStylesheet('print.css?v=' . $v, ['media' => 'print']);
 
         if (Config::get()->WYSIWYG) {
-            self::addStylesheet('studip-wysiwyg.css?v=' . $v);
             self::addScript('studip-wysiwyg.js?v=' . $v);
         }
     }
@@ -678,7 +677,7 @@ class PageLayout
     public static function addSqueezePackage($package)
     {
         $oldPackages = ["admission", "base", "statusgroups", "wysiwyg"];
-        $oldCssPackages = ["base", "statusgroups", "wysiwyg"];
+        $oldCssPackages = ["base", "statusgroups"];
 
         // tablesorter loads on demand
 
