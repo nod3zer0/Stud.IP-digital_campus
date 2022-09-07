@@ -364,12 +364,14 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 .ck-source-editing-area,
 .ck-editor__editable_inline {
     min-height: 8em;
-    max-height: 12em;
 }
 
 form.default label:not(.undecorated):not(.ck-voice-label) .ck-source-editing-area textarea {
-    max-width: unset;
     margin-top: 0;
+}
+
+form.default .ck-source-editing-area textarea {
+    max-width: unset;
 }
 
 /* forum fixes */
