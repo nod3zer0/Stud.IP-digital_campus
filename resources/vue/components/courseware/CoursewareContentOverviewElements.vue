@@ -466,6 +466,10 @@ export default {
             this.initNewElement();
         },
         async createElement() {
+            if (this.newElement.attributes.title == null ) {
+                this.companionInfo({ info: this.$gettext('Bitte geben Sie einen Titel für das Lernmaterial ein') });
+                return false;
+            }
             this.setShowOverviewElementAddDialog(false);
             const file = this.$refs?.upload_image?.files[0];
             this.newElement.attributes.purpose = this.newElementPurpose;
