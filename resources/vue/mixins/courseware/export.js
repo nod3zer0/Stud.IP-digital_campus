@@ -318,9 +318,13 @@ export default {
                 }
 
                 if (folder) {
+                    let folderName = 'Unnamed Folder';
+                    if (folder?.attributes?.name) {
+                        folderName =  folder.attributes.name;
+                    }
                     fileref.folder = {
                         id: folder.id,
-                        name: folder.attributes.name,
+                        name: folderName,
                         type: folder.attributes['folder-type']
                     }
                 } else {
