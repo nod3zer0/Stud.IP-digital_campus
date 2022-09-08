@@ -12,51 +12,53 @@ interface JsonApiPlugin
      * In dieser Methode können Plugins eigene autorisierte Routen
      * eintragen lassen.
      *
-     * Dazu müssen am übergebenen \Slim\App-Objekt die Methoden
-     * \Slim\App::get, \Slim\App::post, \Slim\App::put,
-     * \Slim\App::delete oder \Slim\App::patch aufgerufen werden.
+     * Dazu müssen am übergebenen \Slim\Routing\RouteCollectorProxy-Objekt die Methoden
+     * \Slim\Routing\RouteCollectorProxy::get, \Slim\Routing\RouteCollectorProxy::post,
+     * \Slim\Routing\RouteCollectorProxy::put, \Slim\Routing\RouteCollectorProxy::delete
+     * oder \Slim\Routing\RouteCollectorProxy::patch aufgerufen werden.
      *
      * Beispiel:
      *     class Blubber ... implements JsonApiPlugin
      *     {
-     *         public function registerAuthenticatedRoutes(\Slim\App $app)
+     *         public function registerAuthenticatedRoutes(\Slim\Routing\RouteCollectorProxy $group)
      *         {
-     *             $app->get('/blubbers', BlubbersIndex::class);
+     *             $group->get('/blubbers', BlubbersIndex::class);
      *         }
      *         [...]
      *     }
      *
-     * @param \Slim\App $app die Slim-Applikation, in der das Plugin
+     * @param \Slim\Routing\RouteCollectorProxy $group die Slim-Applikation, in der das Plugin
      *                       Routen eintragen möchte
      *
      * @return void
      */
-    public function registerAuthenticatedRoutes(\Slim\App $app);
+    public function registerAuthenticatedRoutes(\Slim\Routing\RouteCollectorProxy $group);
 
     /**
      * In dieser Methode können Plugins eigene Routen ohne Autorisierung
      * eintragen lassen.
      *
-     * Dazu müssen am übergebenen \Slim\App-Objekt die Methoden
-     * \Slim\App::get, \Slim\App::post, \Slim\App::put,
-     * \Slim\App::delete oder \Slim\App::patch aufgerufen werden.
+     * Dazu müssen am übergebenen \Slim\Routing\RouteCollectorProxy-Objekt die Methoden
+     * \Slim\Routing\RouteCollectorProxy::get, \Slim\Routing\RouteCollectorProxy::post,
+     * \Slim\Routing\RouteCollectorProxy::put, \Slim\Routing\RouteCollectorProxy::delete
+     * oder \Slim\Routing\RouteCollectorProxy::patch aufgerufen werden.
      *
      * Beispiel:
      *     class Blubber ... implements JsonApiPlugin
      *     {
-     *         public function registerUnauthenticatedRoutes(\Slim\App $app)
+     *         public function registerUnauthenticatedRoutes(\Slim\Routing\RouteCollectorProxy $group)
      *         {
-     *             $app->get('/blubbers', BlubbersIndex::class);
+     *             $group->get('/blubbers', BlubbersIndex::class);
      *         }
      *         [...]
      *     }
      *
-     * @param \Slim\App $app die Slim-Applikation, in der das Plugin
+     * @param \Slim\Routing\RouteCollectorProxy $group die Slim-Applikation, in der das Plugin
      *                       Routen eintragen möchte
      *
      * @return void
      */
-    public function registerUnauthenticatedRoutes(\Slim\App $app);
+    public function registerUnauthenticatedRoutes(\Slim\Routing\RouteCollectorProxy $group);
 
     /**
      * In dieser Methode können Plugins Schemata den verwendeten
