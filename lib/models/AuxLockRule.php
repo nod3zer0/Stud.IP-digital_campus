@@ -19,7 +19,7 @@
  * @property string description database column
  * @property string attributes database column
  * @property string sorting database column
- * @property string datafields computed column
+ * @property array datafields computed column
  * @property string order computed column
  * @property Course course belongs_to Course
  */
@@ -143,7 +143,9 @@ class AuxLockRule extends SimpleORMap
     public function getMemberData($member)
     {
         $datafields = SimpleCollection::createFromArray(DatafieldEntryModel::findByModel($member));
-        foreach ($this->datafields as $field => $useless_value_pls_refactor) {
+
+        $result = [];
+        foreach (array_keys($this->datafields) as $field) {
             // since we have no only datafields we have to filter!
             if ($new = $datafields->findOneBy('datafield_id', $field)) {
                 $result[] = $new;
