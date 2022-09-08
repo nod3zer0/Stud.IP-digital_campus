@@ -797,20 +797,20 @@ class Consultation_AdminController extends ConsultationController
         $options->addCheckbox(
             _('Benachrichtungen über Buchungen'),
             $this->getUserConfig()->getValue('CONSULTATION_SEND_MESSAGES'),
-            $this->toggleURL('messages/1', $action === 'expired'),
-            $this->toggleURL('messages/0', $action === 'expired')
+            $this->toggleURL('messages', 1, $action === 'expired'),
+            $this->toggleURL('messages', 0, $action === 'expired')
         );
         $options->addCheckbox(
             _('Abgelaufene Terminblöcke automatisch löschen'),
             $config->CONSULTATION_GARBAGE_COLLECT,
-            $this->toggleURL('garbage/1', $action === 'expired'),
-            $this->toggleURL('garbage/0', $action === 'expired')
+            $this->toggleURL('garbage', 1, $action === 'expired'),
+            $this->toggleURL('garbage', 0, $action === 'expired')
         );
         $options->addCheckbox(
             _('Termine gruppiert anzeigen'),
             $this->getUserConfig()->getValue('CONSULTATION_SHOW_GROUPED'),
-            $this->toggleURL('grouped/1', $action === 'expired'),
-            $this->toggleURL('grouped/0', $action === 'expired')
+            $this->toggleURL('grouped', 1, $action === 'expired'),
+            $this->toggleURL('grouped', 0, $action === 'expired')
         );
 
         $export = $sidebar->addWidget(new ExportWidget());
