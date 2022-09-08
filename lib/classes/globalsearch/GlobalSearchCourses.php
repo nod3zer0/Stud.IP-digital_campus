@@ -47,7 +47,16 @@ class GlobalSearchCourses extends GlobalSearchModule implements GlobalSearchFull
         $search = str_replace(' ', '% ', $search);
         $query = DBManager::get()->quote("%{$search}%");
 
-        $language = DBManager::get()->quote($_SESSION['_language']);
+        $language_name = 'courses.`Name`';
+        $language_join = '';
+        if ($_SESSION['_language'] !== Config::get()->DEFAULT_LANGUAGE) {
+            $language_name = 'IFNULL(`i18n`.`value`, courses.`Name`)';
+            $language_join = "LEFT JOIN `i18n`
+                                ON `i18n`.`object_id` = courses.`Seminar_id`
+                                  AND `i18n`.`table` = 'seminare'
+                                  AND `i18n`.`field` = 'name'
+                                  AND `lang` = " . DBManager::get()->quote($_SESSION['_language']);
+        }
 
         // visibility
         if (!$GLOBALS['perm']->have_perm('admin')) {
@@ -87,25 +96,18 @@ class GlobalSearchCourses extends GlobalSearchModule implements GlobalSearchFull
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS courses.`Seminar_id`, courses.`start_time`,
-                       IFNULL(`i18n`.`value`, courses.`Name`) AS `Name`,
+                       {$language_name} AS `Name`,
                        courses.`VeranstaltungsNummer`, courses.`status`
                 FROM `seminare` AS courses
-                LEFT JOIN `i18n`
-                  ON `i18n`.`object_id` = courses.`Seminar_id`
-                      AND `i18n`.`table` = 'seminare'
-                      AND `i18n`.`field` = 'name'
-                      AND `lang` = {$language}
-                JOIN `sem_types` ON (courses.`status` = `sem_types`.`id`)
+                {$language_join}
                 JOIN `seminar_user` u ON (u.`Seminar_id` = courses.`Seminar_id` AND u.`status` = 'dozent')
                 JOIN `auth_user_md5` a ON (a.`user_id` = u.`user_id`)
                 {$semester_join}
                 WHERE {$visibility}
                     (
-                        IFNULL(`i18n`.`value`, courses.`Name`) LIKE {$query}
+                        {$language_name} LIKE {$query}
                         OR courses.`VeranstaltungsNummer` LIKE {$query}
-                        OR CONCAT_WS(' ', `sem_types`.`name`, IFNULL(`i18n`.`value`, courses.`Name`), `sem_types`.`name`) LIKE {$query}
-                        OR CONCAT_WS(', ', a.`Nachname`, a.`Vorname`) LIKE {$query}
-                        OR CONCAT_WS(' ', a.`Nachname`, a.`Vorname`, a.`Nachname`) LIKE {$query}
+                        OR CONCAT(a.`Nachname`, ', ', a.`Vorname`, ' ', a.`Nachname`) LIKE {$query}
                     )
                 {$seminaruser}
                 {$institute_condition}
@@ -118,7 +120,7 @@ class GlobalSearchCourses extends GlobalSearchModule implements GlobalSearchFull
             $sql .= ", courses.`VeranstaltungsNummer`";
         }
 
-        $sql .= ", IFNULL(`i18n`.`value`, courses.`Name`)";
+        $sql .= ", {$language_name}";
         $sql .= " LIMIT " . $limit;
 
         return $sql;
