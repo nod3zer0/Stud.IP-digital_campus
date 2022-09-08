@@ -1,5 +1,5 @@
 <template>
-    <focus-trap v-model="trap" :initial-focus="() => initialFocusElement" :clickOutsideDeactivates="true">
+    <focus-trap v-model="trap" :initial-focus="() => initialFocusElement" :clickOutsideDeactivates="true" :fallbackFocus ="() => fallbackFocusElement">
         <div
             class="cw-ribbon-tools"
             :class="{ unfold: toolsActive, 'cw-ribbon-tools-consume': consumeMode }"
@@ -137,6 +137,9 @@ export default {
         isTeacher() {
             return this.userIsTeacher;
         },
+        fallbackFocusElement(){
+            return this.$refs.tabs.getTabButtonByAlias(this.selectedToolbarItem);
+        }
     },
     methods: {
         ...mapActions({
