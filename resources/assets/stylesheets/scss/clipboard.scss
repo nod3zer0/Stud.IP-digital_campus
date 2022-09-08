@@ -18,12 +18,12 @@
 
 .dragged-clipboard-item {
     position: fixed;
-    z-index: @drag_and_drop_z_index;
-    border: @drag_and_drop_border;
-    color: @base-color;
+    z-index: $drag_and_drop_z_index;
+    border: $drag_and_drop_border;
+    color: $base-color;
     font-weight: bold;
-    font-size: @font-size-large;
-    background-color: @white;
+    font-size: $font-size-large;
+    background-color: $white;
 }
 
 div.clipboard-area-container {
@@ -34,7 +34,7 @@ div.clipboard-area-container {
 
 table.clipboard-area {
     width: 100%;
-    border: 1px solid @content-color-40;
+    border: 1px solid $content-color-40;
     height: 8em;
     padding: 0.25em;
 }
@@ -66,10 +66,10 @@ table.clipboard-area tr.empty-clipboard-message > td {
 
 @keyframes drop-animation {
     0% {
-        background-color: @yellow-60;
+        background-color: $yellow-60;
     }
 
     100% {
-        background-color: @white;
+        background-color: $white;
     }
 }

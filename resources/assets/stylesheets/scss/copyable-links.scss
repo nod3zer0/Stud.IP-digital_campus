@@ -1,0 +1,69 @@
+.copyable-link-animation {
+    $animation-name: copyable-links-confirmation;
+    $animation-duration: 2s;
+
+    // Position confirmation message above the link
+    position: relative;
+
+    div {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        text-align: center;
+
+        @include icon(before, check-circle, status-green, 16px, 5px);
+    }
+
+    // Flip the link and confirmation message along the x axis
+    a, div {
+        backface-visibility: hidden;
+        pointer-events: none;
+    }
+
+    a {
+        @keyframes copyable-links-confirmation-front {
+            0% {
+                opacity: 1;
+                transform: rotateX(0);
+            }
+            33% {
+                opacity: 0;
+                transform: rotateX(180deg);
+            }
+            66% {
+                opacity: 0;
+                transform: rotateX(180deg);
+            }
+            100% {
+                opacity: 1;
+                transform: rotateX(0);
+            }
+        }
+        animation: copyable-links-confirmation-front $animation-duration linear;
+    }
+
+    div {
+        @keyframes copyable-links-confirmation-back {
+            0% {
+                opacity: 0;
+                transform: rotateX(180deg);
+            }
+            33% {
+                opacity: 1;
+                transform: rotateX(0);
+            }
+            66% {
+                opacity: 1;
+                transform: rotateX(0);
+            }
+            100% {
+                opacity: 0;
+                transform: rotateX(180deg);
+            }
+        }
+        animation: copyable-links-confirmation-back $animation-duration linear;
+    }
+}

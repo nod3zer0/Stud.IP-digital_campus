@@ -2,9 +2,9 @@
     align-self: flex-start;
 }
 #globalsearch-searchbar {
-    @width: 423px;
-    @hidden-width: 215px;
-    @transition-duration: 300ms;
+    $width: 423px;
+    $hidden-width: 215px;
+    $transition-duration: 300ms;
 
     position: relative;
     top: 4px;
@@ -17,12 +17,12 @@
 
     // Defines the clear icon for the input
     #globalsearch-clear {
-        .square(16px);
+        @include square(16px);
         margin-left: -22px;
         vertical-align: middle;
 
         opacity: 0;
-        transition: opacity @transition-duration;
+        transition: opacity $transition-duration;
     }
     &.has-value #globalsearch-clear {
         opacity: 1;
@@ -32,11 +32,11 @@
     #globalsearch-input {
         height: 29px;
         padding-left: 5px;
-        width: @hidden-width;
-        transition: width @transition-duration;
+        width: $hidden-width;
+        transition: width $transition-duration;
     }
     &.is-visible #globalsearch-input {
-        width: @width;
+        width: $width;
     }
 
     // Search icon
@@ -48,10 +48,10 @@
 
     // Hint toggle text
     #globalsearch-togglehints {
-        font-size: @font-size-small;
+        font-size: $font-size-small;
         margin: 0;
 
-        .icon('before', 'arr_1right', 'clickable', @font-size-small, 2px);
+       @include icon('before', 'arr_1right', 'clickable', $font-size-small, 2px);
 
         // This is only neccessary to remove the whitespace in front of the text
         // Otherwise, the text would jump when getting replaced
@@ -76,29 +76,29 @@
 
     // List display
     #globalsearch-list {
-        background-color: @white;
-        box-shadow: 1px 1px 1px @light-gray-color-80;
-        color: @text-color;
+        background-color: $white;
+        box-shadow: 1px 1px 1px $light-gray-color-80;
+        color: $text-color;
         display: none;
         max-height: 90vh;
         overflow: auto;
         padding: 5px;
         position: absolute;
-        width: @width;
+        width: $width;
 
         a {
-            color: @base-color;
+            color: $base-color;
 
             &:hover {
-                color: @active-color;
+                color: $active-color;
             }
         }
 
         section {
-            color: @text-color;
+            color: $text-color;
 
             header {
-                color: @base-color;
+                color: $base-color;
                 margin: 5px;
                 margin-bottom: 0;
             }
@@ -116,18 +116,18 @@
 
     // "Searching..." info
     #globalsearch-searching {
-        @icon-size: 32px;
+        $icon-size: 32px;
 
-        color: @dark-gray-color-45;
+        color: $dark-gray-color-45;
         display: none;
         text-align: center;
 
-        background-image: url("@{image-path}/ajax-indicator-black.svg");
+        background-image: url("#{$image-path}/ajax-indicator-black.svg");
         background-position: center bottom;
         background-repeat: no-repeat;
-        background-size: @icon-size;
+        background-size: $icon-size;
         margin-bottom: 10px;
-        padding-bottom: (@icon-size + 5px);
+        padding-bottom: ($icon-size + 5px);
     }
     &.is-searching {
         #globalsearch-searching {
@@ -144,14 +144,14 @@
         }
 
         article {
-            border: 1px solid @content-color-40;
+            border: 1px solid $content-color-40;
             margin: 3px;
             margin-bottom: 8px;
             margin-top: 8px;
 
             > header {
-                background-color: @content-color-20;
-                color: @base-color;
+                background-color: $content-color-20;
+                color: $base-color;
 
                 display: flex;
                 flex-direction: row;
@@ -165,9 +165,9 @@
                 }
 
                 div.globalsearch-more-results {
-                    font-size: @font-size-small;
+                    font-size: $font-size-small;
                     font-weight: normal;
-                    line-height: @font-size-h3;
+                    line-height: $font-size-h3;
                     margin-bottom: auto;
                     margin-top: auto;
                     text-align: right;
@@ -182,11 +182,11 @@
 
                 padding: 6px 6px 6px 0;
 
-                border-top: 1px solid @content-color-40;
-                transition: background-color @transition-duration;
+                border-top: 1px solid $content-color-40;
+                transition: background-color $transition-duration;
 
                 &:hover {
-                    background-color: fadeout(@light-gray-color, 80%);
+                    background-color: $dark-gray-color-20;
                 }
 
                 &.globalsearch-extended-result {
@@ -207,7 +207,7 @@
                     margin-right: 6px;
 
                     img {
-                        .square(36px);
+                        @include square(36px);
                     }
                 }
 
@@ -218,22 +218,22 @@
                     white-space: nowrap;
 
                     .globalsearch-result-title {
-                        font-size: @font-size-base;
+                        font-size: $font-size-base;
                         font-weight: bold;
                         overflow: hidden;
                         text-overflow: ellipsis;
                     }
 
                     .globalsearch-result-details {
-                        color: @dark-gray-color-80;
-                        font-size: @font-size-small;
+                        color: $dark-gray-color-80;
+                        font-size: $font-size-small;
                     }
                 }
 
                 .globalsearch-result-time {
-                    color: @dark-gray-color-80;
+                    color: $dark-gray-color-80;
                     flex: 0;
-                    font-size: @font-size-small;
+                    font-size: $font-size-small;
                     text-align: right;
                     white-space: nowrap;
                 }
@@ -243,8 +243,8 @@
                     margin: 20px 0 0 -32px;
 
                     a {
-                        .background-icon('arr_1right', 'clickable', 24);
-                        .square(24px);
+                        @include background-icon(arr_1right, clickable, 24);
+                        @include square(24px);
                         display: inline-block;
                     }
                 }
@@ -277,12 +277,12 @@ html.responsive-display {
             margin-left: 0;
         }
         #globalsearch-list {
-            @padding: 5px;
+            $padding: 5px;
 
             position: absolute;
-            left: @padding;
-            top: calc(@bar-bottom-container-height + @padding);
-            width: calc(100vw - (2 * @padding));
+            left: $padding;
+            top: calc($bar-bottom-container-height + $padding);
+            width: calc(100vw - (2 * $padding));
         }
 
         #globalsearch-clear {
@@ -325,7 +325,7 @@ html:not(.size-large) {
                 right: -1px;
                 bottom: -1px;
                 left: -1px;
-                background: fadeout(@base-color, 50%);
+                background: mix($base-color, rgba(255,0,0,0), 50%);
                 z-index: 1;
             }
         }

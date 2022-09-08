@@ -9,9 +9,8 @@
         list-style: none;
         padding: 0;
     }
-    li {
-        &:extend(#tabs li all);
 
+    li {
         flex-grow: 1;
         display: inline-block;
         float: none;
@@ -19,37 +18,49 @@
         white-space: nowrap;
 
         &.favorites a {
-            .icon('before', 'smiley', 'info_alt');
+            @include icon(before, smiley, info_alt);
         }
+
         &.favorites.current a {
-            .icon('before', 'smiley', 'info');
+            @include icon(before, smiley, info);
+        }
+        &.current {
+            padding-top: 0;
+            a, span.quiet {
+                color: $base-color;
+            }
         }
     }
-    a {
-        &:extend(#tabs a all);
 
+    a {
         display: block;
         padding-left: 0;
         padding-right: 0;
         text-align: center;
+        color: $black
     }
 }
 
 .smiley-container {
     border-collapse: collapse;
     width: 100%;
+
     > tbody > tr > td {
         padding: 0 1em 0 0;
+
         &:last-child {
             padding-right: 0;
         }
     }
 }
+
 .smiley-container, .smiley-column {
     table-layout: fixed;
 }
+
 .smiley-column {
     margin-right: 1em;
+
     &:last-child {
         margin-right: 0;
     }
@@ -64,19 +75,20 @@
 }
 
 .smiley-toggle {
-    .square(16px);
-    .hide-text;
-    .background-icon('checkbox-unchecked', 'clickable');
+    @include square(16px);
+    @include hide-text();
+    @include background-icon(checkbox-unchecked, clickable);
     background-position: center;
     background-repeat: no-repeat;
     display: inline-block;
     vertical-align: middle;
 
     &.favorite {
-        .background-icon('checkbox-checked', 'clickable');
+        @include background-icon(checkbox-checked, clickable);
     }
+
     &.ajax {
-        background-image: url("@{image-path}/ajax_indicator_small.gif");
+        background-image: url("#{$image-path}/ajax_indicator_small.gif");
     }
 }
 
@@ -93,6 +105,7 @@
             content: ':';
         }
     }
+
     dd {
         font-weight: 700;
         margin: 0;
@@ -102,6 +115,7 @@
 
 .smiley-picker {
     width: 420px;
+
     .smileys {
         text-align: center;
         width: 100%;
@@ -114,6 +128,7 @@
         vertical-align: middle;
         width: 80px;
     }
+
     .smiley {
         box-sizing: border-box;
         cursor: pointer;
@@ -129,6 +144,7 @@
             vertical-align: middle;
             margin-right: -0.25em;
         }
+
         img {
             vertical-align: middle;
             max-height: 76px;
@@ -137,25 +153,39 @@
         }
 
         &:hover {
-            background-color: fade(@active-color, 10%);
+            background-color: fade($active-color, 10%);
             border-radius: 20px;
-            box-shadow:0 -1px 4px fade(@active-color, 10%), 0 2px 5px #888;
+            box-shadow: 0 -1px 4px fade($active-color, 10%), 0 2px 5px #888;
         }
     }
 
     .navigation {
         border-collapse: collapse;
         width: 100%;
-        img { vertical-align: text-top; }
-        td { padding: 2px; }
-        &.top td { border-bottom: 1px solid @brand-color-dark; }
-        &.bottom td { border-top: 1px solid @brand-color-dark; }
+
+        img {
+            vertical-align: text-top;
+        }
+
+        td {
+            padding: 2px;
+        }
+
+        &.top td {
+            border-bottom: 1px solid $brand-color-dark;
+        }
+
+        &.bottom td {
+            border-top: 1px solid $brand-color-dark;
+        }
+
         .active a {
-            color: @active-color;
+            color: $active-color;
             font-weight: bold;
         }
     }
 }
+
 .smiley-picker-dialog {
     .ui-dialog-content {
         padding: 0;

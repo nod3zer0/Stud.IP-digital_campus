@@ -19,46 +19,41 @@ div.clear
     }
     li { float: left; }
     a {
-        color: #000;
+        color: $black;
     }
 }
 
 // Main tab set with the tabs sitting on top of the main content
 #tabs {
-    padding-left: 0px;
+    padding-left: 0;
 
     span { padding: 0; }
     .quiet img { opacity: 0.25; }
 
     li {
-        background-color: @dark-gray-color-10;
+        background-color: $dark-gray-color-10;
 
         &:last-child {
             border-right: none;
         }
         &.current {
-            color: @base-color;
+            color: $base-color;
         }
         &:hover {
-            //background-color: #fff;
-            border-bottom: 3px solid @dark-gray-color-30;
-            color: @base-color;
-            padding-top: 0px;
-            padding-bottom: 1px;
+            color: $base-color;
+            padding-top: 0;
         }
 
         &.current {
-            border-bottom: 3px solid @dark-gray-color-80;
-            padding-top: 0px;
-            padding-bottom: 1px;
+            padding-top: 0;
             line-height: 25px;
             a, span.quiet {
-                color: @base-color;
+                color: $base-color;
             }
         }
     }
     a, span.quiet {
-        color: #000;
+        color: $black;
         float: left;
         display: block;
 
@@ -71,7 +66,7 @@ div.clear
 .tab-icon {
     float: left;
     margin: 4px 5px 0 -0.5em;
-    .size(16px, 16px);
+    @include size(16px, 16px);
     display: none;
 }
 
@@ -95,10 +90,10 @@ div.clear
         position: absolute;
         top: inherit;
         right: inherit;
-        padding: 0px 0px 10px 0px;
+        padding: 0 0 10px 0;
         margin-top: 10px;
-        background: @content-color-20;
-        box-shadow: 1px 1px 1px @dark-gray-color-60;
+        background: $content-color-20;
+        box-shadow: 1px 1px 1px $dark-gray-color-60;
         text-align: left;
         white-space: nowrap;
 
@@ -108,7 +103,7 @@ div.clear
         }
 
         a:hover {
-            color: @red !important;
+            color: $red !important;
         }
 
     }
@@ -127,16 +122,14 @@ div.clear
 
     .action-menu-content:before {
         border-color: rgba(194, 225, 245, 0);
-        border-bottom-color: @dark-gray-color-60;
+        border-bottom-color: $dark-gray-color-60;
         border-width: 9px;
         margin-left: -8px;
     }
     .action-menu-content:after {
         border-color: rgba(194, 225, 245, 0);
-        border-bottom-color: @content-color-20;
+        border-bottom-color: $content-color-20;
         border-width: 8px;
         margin-left: -8px;
     }
 }
-
-

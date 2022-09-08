@@ -41,7 +41,7 @@ table.contact-header {
             &:hover { background-color: #b7c2e2; }
 
             a {
-                color: #f00;
+                color: $red;
                 font-weight: bold;
             }
         }

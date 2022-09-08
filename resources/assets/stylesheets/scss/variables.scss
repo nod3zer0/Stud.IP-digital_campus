@@ -35,6 +35,8 @@ $avatar-small:  25px;
 $avatar-medium: 100px;
 $avatar-normal: 250px;
 
+$drag_and_drop_z_index: 1000;
+$drag_and_drop_border: 1px solid $base-color;
 
 :root {
     // The special handling for -- as #{"--"} seems to be neccessary to make

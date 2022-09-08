@@ -1,22 +1,22 @@
-@select-border: 1px solid @light-gray-color-40;
-@select-border-focus: 1px solid @brand-color-dark;
-@select-border-radius: 0;
-@select-height-default: 30px;
-@select-arrow-size: 10;
+$select-border: 1px solid $light-gray-color-40;
+$select-border-focus: 1px solid $brand-color-dark;
+$select-border-radius: 0;
+$select-height-default: 30px;
+$select-arrow-size: 10;
 
 select {
     // Reset appearance
     box-sizing: border-box;
     appearance: none;
-    background-color: #fff;
+    background-color: $white;
     font-size: 1em;
     vertical-align: baseline;
     &::-ms-expand {
         display: none;
     }
 
-    border: @select-border;
-    border-radius: @select-border-radius;
+    border: $select-border;
+    border-radius: $select-border-radius;
     padding: 1px 8px 1px 8px;
     position: relative;
     white-space: nowrap;
@@ -26,22 +26,22 @@ select {
         // to ensure the icon is always clearly visible
         padding-right: 20px;
 
-        .background-icon('arr_1down', 'clickable', @select-arrow-size);
+        @include background-icon(arr_1down, clickable, $select-arrow-size);
         background-position: right 4px center;
         background-repeat: no-repeat;
 
-        height: @select-height-default;
+        height: $select-height-default;
         line-height: 1;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
     &:focus {
-        border: @select-border-focus;
+        border: $select-border-focus;
     }
 }
 
-@import (inline) "~select2/dist/css/select2.css";
+@import "~select2/dist/css/select2";
 
 // The wrapper is neccessary for the validation error messages to appear
 // at the correct position
@@ -74,9 +74,9 @@ select {
 .select2-container--default {
     .select2-selection--single,
     .select2-selection--multiple {
-        border: @select-border;
-        border-radius: @select-border-radius;
-        min-height: @select-height-default;
+        border: $select-border;
+        border-radius: $select-border-radius;
+        min-height: $select-height-default;
 
         .select2-selection__content {
             font-weight: normal; // Reset due to form.default label = bold
@@ -84,7 +84,7 @@ select {
             text-overflow: ellipsis;
         }
         .select2-selection__choice {
-            border-radius: 0px;
+            border-radius: 0;
             padding-top: 5px;
             padding-bottom: 5px;
         }
@@ -92,13 +92,13 @@ select {
 
     .select2-selection--single {
         .select2-selection__clear {
-            .background-icon('decline', 'clickable', @select-arrow-size);
+            @include background-icon(decline, clickable, $select-arrow-size);
             background-position: right center;
             background-repeat: no-repeat;
             color: transparent;
             display: inline-block;
             float: none;
-            width: unit((@select-arrow-size + 5), px);
+            width: unit(($select-arrow-size + 5px));
         }
 
         .select2-selection__rendered {
@@ -118,19 +118,20 @@ select {
     }
 
     .select2-selection--multiple {
-        padding-right: unit((@select-arrow-size + 5), px);
-        .background-icon('arr_1down', 'clickable', @select-arrow-size);
-        background-position: right 4px top unit((@select-height-default / 2 - 4), px);
+        padding-right: unit(($select-arrow-size + 5px));
+        @include background-icon('arr_1down', 'clickable', $select-arrow-size);
+        $backgroundPosition: unit(calc($select-height-default / 2) - 4px);
+        background-position: right 4px top $backgroundPosition;
         background-repeat: no-repeat;
 
         .select2-selection__choice__remove {
-            .background-icon('decline', 'clickable', @select-arrow-size);
+            @include background-icon('decline', 'clickable', $select-arrow-size);
             background-position: right center;
             background-repeat: no-repeat;
             color: transparent !important;
             display: inline-block;
             float: none;
-            width: unit((@select-arrow-size + 5), px);
+            width: unit(($select-arrow-size + 5px));
         }
 
         .select2-selection__choice {
@@ -150,7 +151,7 @@ select {
     }
 
     .select2-selection__arrow {
-        .background-icon('arr_1down', 'clickable', @select-arrow-size);
+        @include background-icon('arr_1down', 'clickable', $select-arrow-size);
         background-position: right 4px center;
         background-repeat: no-repeat;
 
@@ -173,7 +174,7 @@ select {
     &.select2-container--open {
         .select2-selection--single,
         .select2-selection--multiple {
-            border: @select-border-focus;
+            border: $select-border-focus;
         }
     }
 

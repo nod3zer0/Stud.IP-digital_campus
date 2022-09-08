@@ -1,0 +1,75 @@
+$transition-duration: 300ms;
+
+@mixin border-beneath($color, $margin: 2px, $height: 3px) {
+    border-bottom: 0;
+    padding-bottom: 0;
+    position: relative;
+
+    &::after {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        opacity: 1;
+        content: '';
+        display: block;
+        background-color: $color;
+        height: $height;
+        margin-top: $margin;
+
+        @media not prefers-reduced-motion {
+            transition: left $transition-duration,
+                        right $transition-duration,
+                        opacity $transition-duration;
+        }
+    }
+}
+@mixin border-shrink() {
+    left: 50%;
+    right: 50%;
+    opacity: 0;
+}
+
+body:not(.fixed) #barTopMenu {
+    > li.active {
+        @include border-beneath($dark-gray-color-80);
+    }
+    > li:not(.active) {
+        @include border-beneath($dark-gray-color-40);
+        &:not(:hover)::after {
+            @include border-shrink();
+        }
+    }
+
+    &:hover > li:not(:hover)::after {
+        @include border-shrink();
+    }
+
+    .action-menu-icon {
+        transform: rotate(-90deg);
+    }
+
+    .overflow li:hover {
+        @include border-beneath($dark-gray-color-40, 2px, 3px);
+        &::after {
+            transform: translate(0, -4px);
+        }
+    }
+}
+
+#tabs {
+    > li {
+        &, &.current, &:hover {
+            line-height: 25px;
+        }
+        &.current {
+            @include border-beneath($dark-gray-color-80, -2px, 3px);
+        }
+        &:not(.current) {
+            @include border-beneath($dark-gray-color-40, -2px, 3px);
+            &:not(:hover)::after {
+                @include border-shrink();
+            }
+        }
+    }
+}

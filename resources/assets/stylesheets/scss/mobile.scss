@@ -1,4 +1,4 @@
-.media-breakpoint-small-down({
+@include media-breakpoint-small-down(){
   #layout_wrapper { min-width: 0 !important; }
   #login div.index_container .messagebox,
   #index div.index_container .messagebox,
@@ -8,9 +8,9 @@
     margin-left: auto;
     margin-right: auto;
   }
-});
+}
 
-.media-breakpoint-tiny-down({
+@include media-breakpoint-tiny-down(){
     #barTopStudip img {
         height: 33px;
         margin-top: 5px;
@@ -47,7 +47,7 @@
                 padding-left: 20px;
                 padding-right: 20px;
                 position: relative;
-                width: ~"calc(100% - 40px)";
+                width: calc(100% - 40px);
 
                 nav {
                     display: inline;
@@ -55,4 +55,4 @@
             }
         }
     }
-});
+}

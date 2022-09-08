@@ -1,20 +1,23 @@
-.gradebook-student .progress {
-    display: flex;
-    height: 20px;
-    overflow: hidden;
-    font-size: 15px;
-    background-color: @light-gray-color-20;
-    margin: 0.5em 0;
-}
+.gradebook-student {
 
-.gradebook-student .progress-bar {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: white;
-    text-align: center;
-    white-space: nowrap;
-    background-color: @base-color;
+    .progress {
+        display: flex;
+        height: 20px;
+        overflow: hidden;
+        font-size: 15px;
+        background-color: $light-gray-color-20;
+        margin: 0.5em 0;
+    }
+
+    .progress-bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: $white;
+        text-align: center;
+        white-space: nowrap;
+        background-color: $base-color;
+    }
 }
 
 .gradebook-lecturer-overview-definition {
@@ -23,7 +26,7 @@
 
 .gradebook-lecturer-overview .gradebook-column-total,
 .gradebook-lecturer-overview .gradebook-column-category {
-    border-left: 1px solid @light-gray-color-20;
+    border-left: 1px solid $light-gray-color-20;
 }
 
 .gradebook-lecturer-overview .gradebook-column-category {
@@ -47,14 +50,15 @@ form.gradebook-lecturer-weights label.gradebook-weight {
     }
 
     output {
-        color: @light-gray-color;
+        color: $light-gray-color;
     }
 
     output:before {
         content: "~";
     }
+
     output:after {
-        content: " %";
+        content: " %";
     }
 }
 
@@ -70,35 +74,38 @@ form.gradebook-lecturer-weights input[type="number"] {
     font-weight: bold;
 }
 
-article.gradebook-student h1,
-article.gradebook-student h2
-{
-    border-bottom: none;
-}
+article.gradebook-student {
+    h1, h2 {
+        border-bottom: none;
+    }
 
-article.gradebook-student > header {
-    margin-bottom: 2.5em;
+    > header {
+        margin-bottom: 2.5em;
+    }
+
 }
 
 section.gradebook-student-category {
+    > header {
+        display: flex;
+        align-items: baseline;
+        margin-bottom: 0.5em;
+    }
+
+    header {
+        &.progress {
+            flex: 1;
+            margin-left: 1em;
+        }
+    }
+
     margin-bottom: 3em;
-}
-
-section.gradebook-student-category > header {
-    display: flex;
-    align-items: baseline;
-    margin-bottom: 0.5em;
-}
-
-section.gradebook-student-category header .progress {
-    flex: 1;
-    margin-left: 1em;
 }
 
 .gradebook-lecturer-custom-definitions .gradebook-lecturer-blank-slate {
     text-align: center;
-    // border-left: 1px solid @dark-gray-color-15;
-    // border-bottom: 1px solid @brand-color-darker;
+    // border-left: 1px solid $dark-gray-color-15;
+    // border-bottom: 1px solid $brand-color-darker;
 }
 
 table.default .gradebook-grade-input,
@@ -111,14 +118,16 @@ table.default .gradebook-inline-actions {
     white-space: nowrap;
 }
 
-.gradebook-grade-input label {
-    margin-left: 1em;
-    margin-right: 1em;
-    display: block;
-}
+.gradebook-grade-input {
+    label {
+        margin-left: 1em;
+        margin-right: 1em;
+        display: block;
+    }
 
-.gradebook-grade-input input {
-    min-width: 5em;
+    input {
+        min-width: 5em;
+    }
 }
 
 .gradebook-inline-actions .action-menu-icon {

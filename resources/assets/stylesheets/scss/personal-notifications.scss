@@ -1,35 +1,35 @@
 #notification_marker {
     width: 48px;
-    margin-left: 0px;
-    padding-left: 0px;
-    margin-right: 0px;
-    padding-right: 0px;
+    margin-left: 0;
+    padding-left: 0;
+    margin-right: 0;
+    padding-right: 0;
     height: 28px;
     font-size: 0.8em;
-    color: @base-color;
+    color: $base-color;
     text-align: center;
     line-height: 28px;
     vertical-align: text-bottom;
-    background-color: @dark-gray-color-10;
-    border: 1px solid @dark-gray-color-40;
+    background-color: $dark-gray-color-10;
+    border: 1px solid $dark-gray-color-40;
 
     &.alert {
-        background-color: @red;
-        color: @white;
+        background-color: $red;
+        color: $white;
     }
 }
 
 #notification_container {
-    @arrow-height: 10px;
+    $arrow-height: 10px;
 
-    @list-width: 400px;
+    $list-width: 400px;
 
     width: 49px;
     height: 30px;
-    /*border: thin solid @dark-gray-color-20;*/
-    color: @base-color;
+    /*border: thin solid $dark-gray-color-20;*/
+    color: $base-color;
     vertical-align: text-bottom;
-    background-color: @base-color;
+    background-color: $base-color;
     position: relative;
 
     // Insert invisible padding on top of the arrow in order to try to
@@ -39,10 +39,10 @@
         content: "";
         display: block;
         position: absolute;
-        bottom: -@arrow-height;
-        left: (-@list-width);
+        bottom: -$arrow-height;
+        left: (-$list-width);
         right: 0;
-        height: @arrow-height;
+        height: $arrow-height;
     }
     &:hover::after {
         content: "";
@@ -54,7 +54,15 @@
         width: 25px;
     }
 
-    .list, li&:hover .list { display: none; }
+    .list {
+        display:none;
+    }
+    li {
+        &:hover {
+            display: none;
+        }
+    }
+
     &.hoverable:hover {
         .list { display: block; }
     }
@@ -72,62 +80,62 @@
     }
     .list {
         // Creates an arrow pointing from the list to the triggering element
-        #arrow > .top-border(10px, @white, 1px, @light-gray-color-80);
+        @include arrow-top-border(10px, $white, 1px, $light-gray-color-80);
 
-        background-color: @white;
-        border-left: thin solid @light-gray-color-60;
-        border-top: thin solid @light-gray-color-60;
+        background-color: $white;
+        border-left: thin solid $light-gray-color-60;
+        border-top: thin solid $light-gray-color-60;
         border-collapse: collapse;
-        color: @black;
+        color: $black;
         display: none;
         font-size: 1em;
         position: absolute;
-        width: @list-width;
-        max-width: @list-width;
-        box-shadow: 1px 1px 1px @light-gray-color-80;
+        width: $list-width;
+        max-width: $list-width;
+        box-shadow: 1px 1px 1px $light-gray-color-80;
 
         // Without this, buttons or message boxes would appear on top of the list
         z-index: 2;
         &::before,
         &::after {
-            left: (@list-width - 20px);
+            left: ($list-width - 30px);
         }
 
         // Positions: below or left'ish or right'ish to the triggering element
         &.below {
-            left: (-@list-width + 44px);
+            left: (-$list-width + 44px);
         }
         &.left {
-            right: 0px;
+            right: 0;
             &:before {
                 left: auto;
                 right: 4px;
             }
         }
         &.right {
-            left: 0px;
+            left: 0;
             &:before { left: 4px; }
         }
 
         // List item
         .item {
-            @padding: 5px;
-            border-top: thin solid @light-gray-color-60;
+            $padding: 5px;
+            border-top: thin solid $light-gray-color-60;
             line-height: 20px;
             display: block;
             height: auto;
-            padding: @padding;
+            padding: $padding;
             white-space: normal;
 
             &:hover {
-                background-color: fadeout(@light-gray-color, 80%);
+                background-color: $light-gray-color-20
             }
 
             &:only-child:hover {
-                #arrow > .top(10px, fadeout(@light-gray-color, 80%));
+                @include arrow-top(10px, $light-gray-color-20);
                 margin-top: 0;
                 &::before {
-                    left: (@list-width - 20px);
+                    left: ($list-width - 30px);
                     z-index: 2;
                 }
             }
@@ -142,24 +150,24 @@
                 flex-wrap: nowrap;
 
                 .avatar {
-                    @avatar-size: 40px;
+                    $avatar-size: 40px;
                     margin-right: 10px;
-                    margin-left: 0px;
+                    margin-left: 0;
                     background-position: center center;
                     background-size: 100%;
                     background-repeat: no-repeat;
-                    width: @avatar-size;
-                    height: @avatar-size;
-                    min-width: @avatar-size;
+                    width: $avatar-size;
+                    height: $avatar-size;
+                    min-width: $avatar-size;
                 }
             }
         }
 
         a {
-            color: @brand-color-dark;
+            color: $brand-color-dark;
             display: block;
-            padding: 0px;
-            &:hover { color: @active-color; }
+            padding: 0;
+            &:hover { color: $active-color; }
         }
 
         .options {
@@ -177,8 +185,8 @@
 
     a.mark-all-as-read,
     a.enable-desktop-notifications {
-        background-color: @dark-gray-color-15;
-        border-bottom: thin solid @dark-gray-color-45;
+        background-color: $dark-gray-color-15;
+        border-bottom: thin solid $dark-gray-color-45;
         max-height: 31px;
         padding: 5px 5px 5px 14px;
         z-index: 3;
@@ -186,19 +194,19 @@
 
     a.mark-all-as-read {
         // Creates an arrow pointing from the list to the triggering element
-        #arrow > .top-border(10px, @light-gray-color-20, 1px, @light-gray-color-80);
+        @include arrow-top-border(10px, $light-gray-color-20, 1px, $light-gray-color-80);
         &::before,
         &::after {
-            left: (@list-width - 20px);
+            left: ($list-width - 30px);
             z-index: 2;
         }
 
-        .background-icon('accept', 'clickable');
+        @include background-icon('accept', 'clickable');
         background-repeat: no-repeat;
         background-position: right 8px center;
 
         &:hover {
-            .background-icon('accept', 'attention');
+            @include background-icon('accept', 'attention');
         }
 
         margin: 0;
@@ -216,10 +224,10 @@
 
             + .enable-desktop-notifications {
                 // Creates an arrow pointing from the list to the triggering element
-                #arrow > .top-border(10px, @light-gray-color-20, 1px, @light-gray-color-80);
+                @include arrow-top-border(10px, $light-gray-color-20, 1px, $light-gray-color-80);
                 &::before,
                 &::after {
-                    left: (@list-width - 20px);
+                    left: ($list-width - 30px);
                     z-index: 2;
                 }
                 margin: 0;
@@ -227,12 +235,12 @@
         }
     }
     a.enable-desktop-notifications {
-        .background-icon('notification', 'clickable');
+        @include background-icon('notification', 'clickable');
         background-repeat: no-repeat;
         background-position: right 8px center;
 
         &:hover {
-            .background-icon('notification', 'attention');
+            @include background-icon('notification', 'attention');
         }
     }
 }

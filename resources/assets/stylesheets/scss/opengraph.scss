@@ -7,20 +7,20 @@
         text-align: right;
 
         li {
-            border-top: thin solid @dark-gray-color-20;
+            border-top: thin solid $dark-gray-color-20;
             display: inline-block;
             padding: 5px;
 
             &:first-child {
-                border-left: thin solid @dark-gray-color-20;
+                border-left: thin solid $dark-gray-color-20;
             }
             &:last-child {
-                border-right: thin solid @dark-gray-color-20;
+                border-right: thin solid $dark-gray-color-20;
             }
         }
         .switch-left, .switch-right {
-            .hide-text();
-            .square(20px);
+            @include hide-text();
+            @include square(20px);
             background-position: center;
             background-repeat: no-repeat;
             padding: 0;
@@ -30,15 +30,15 @@
             }
         }
         .switch-left {
-            .background-icon('arr_1left', 'clickable');
+            @include background-icon('arr_1left', 'clickable');
             &[disabled] {
-                .background-icon('arr_1left', 'inactive');
+                @include background-icon('arr_1left', 'inactive');
             }
         }
         .switch-right {
-            .background-icon('arr_1right', 'clickable');
+            @include background-icon('arr_1right', 'clickable');
             &[disabled] {
-                .background-icon('arr_1right', 'inactive');
+                @include background-icon('arr_1right', 'inactive');
             }
         }
     }
@@ -52,15 +52,15 @@
 }
 
 .opengraph {
-    @padding: 10px;
-    @height: 120px;
+    $padding: 10px;
+    $height: 120px;
 
-    .clearfix;
+    @include clearfix();
 
     font-size: 0.8em;
-    border: 1px solid @dark-gray-color-20;
-    padding: @padding;
-    min-height: @height;
+    border: 1px solid $dark-gray-color-20;
+    padding: $padding;
+    min-height: $height;
 
     .flash-embedder {
         display: flex;
@@ -87,20 +87,20 @@
 
     a.info {
         box-sizing: border-box;
-        color: black;
+        color: $black;
         display: block;
         word-break: normal !important;
         &:hover {
-            color: black;
+            color: $black;
         }
     }
     .image {
-        .square(@height);
+        @include square($height);
         background-size: contain;
         background-position: left center;
         background-repeat: no-repeat;
         display: inline-block;
         float: left;
-        margin-right: @padding;
+        margin-right: $padding;
     }
 }

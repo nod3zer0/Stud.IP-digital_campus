@@ -1,38 +1,38 @@
+$gap: 1.5ex;
+
+$max-width-s: 8em;
+$max-width-m: 48em;
+$max-width-l: 100%;
+
 form.default {
-    @gap: 1.5ex;
-
-    @max-width-s: 8em;
-    @max-width-m: 48em;
-    @max-width-l: 100%;
-
     div.select2-wrapper {
         display: block ! important;
     }
 
     section {
         &:not(.contentbox) {
-            padding-top: @gap;
+            padding-top: $gap;
 
             label:first-of-type {
-                margin-top: 0px;
+                margin-top: 0;
             }
         }
     }
 
     fieldset > section:last-child {
-        margin-bottom: @gap;
+        margin-bottom: $gap;
     }
 
     ol.default {
         padding-left: 20px;
 
         li {
-            padding: 2px 0px;
+            padding: 2px 0;
         }
     }
 
     span.empty {
-        color: @light-gray-color-40;
+        color: $light-gray-color-40;
         font-style: italic;
     }
 
@@ -41,40 +41,40 @@ form.default {
     textarea, select {
         box-sizing: border-box;
 
-        border: 1px solid @light-gray-color-40;
-        color: @dark-gray-color;
-        max-width: @max-width-m;
+        border: 1px solid $light-gray-color-40;
+        color: $dark-gray-color;
+        max-width: $max-width-m;
         padding: 5px;
         vertical-align: middle;
         width: 100%;
         transition: all 0.3s ease-out;
 
         &:focus {
-            border-color: @brand-color-dark;
+            border-color: $brand-color-dark;
         }
 
         &.size-s {
-            max-width: @max-width-s;
+            max-width: $max-width-s;
         }
 
         &.size-m {
         }
 
         &.size-l {
-            max-width: @max-width-l;
+            max-width: $max-width-l;
         }
 
         &[readonly] {
-            background-color: @light-gray-color-20;
+            background-color: $light-gray-color-20;
         }
     }
 
     .quicksearch_container {
-        max-width: @max-width-m;
+        max-width: $max-width-m;
     }
 
     input[type=date], input[type=number], input[type=time], input[type=tel]:not(.size-m)  {
-        max-width: @max-width-s;
+        max-width: $max-width-s;
     }
 
     textarea {
@@ -83,7 +83,7 @@ form.default {
 
     label:not(.undecorated, .ck-voice-label) {
         display: block;
-        margin-bottom: @gap;
+        margin-bottom: $gap;
         max-width: 100%;
         text-indent: 0.25ex;
         vertical-align: top;
@@ -97,7 +97,7 @@ form.default {
     }
 
     .formpart {
-        margin-bottom: @gap;
+        margin-bottom: $gap;
 
         output.calculator_result {
             display: block;
@@ -105,11 +105,11 @@ form.default {
         }
     }
     .editablelist {
-        margin-bottom: @gap;
+        margin-bottom: $gap;
         > li {
             margin-bottom: 10px;
             &:last-child {
-                margin-bottom: 0px;
+                margin-bottom: 0;
             }
         }
     }
@@ -161,17 +161,16 @@ form.default {
 
     fieldset {
         box-sizing: border-box;
-        border: solid 1px @content-color-40;
+        border: solid 1px $content-color-40;
         margin: 0 0 10px;
-        padding: 10px;
-        padding-top: @gap;
+        padding: $gap 10px 10px;
 
         > legend {
             box-sizing: border-box;
-            background-color: @fieldset-header;
-            border: 1px solid @content-color-40;
+            background-color: $fieldset-header;
+            border: 1px solid $content-color-40;
             border-bottom: 0;
-            color: @brand-color-dark;
+            color: $brand-color-dark;
             font-size: 12pt;
             font-weight: bold;
             line-height: 2em;
@@ -186,7 +185,7 @@ form.default {
         &:not(.collapsed) > label:last-child::after {
             content: '';
             display: block;
-            margin-top: -@gap;
+            margin-top: -$gap;
         }
     }
 
@@ -196,9 +195,9 @@ form.default {
         overflow:auto;
 
         > fieldset {
-            border:none;
-            margin:0px;
-            padding:0px;
+            border: none;
+            margin: 0;
+            padding: 0;
         }
     }
 
@@ -206,13 +205,13 @@ form.default {
         font-weight: bold;
         &::after {
             content: "*";
-            color: red;
+            color: $red;
         }
     }
     .studiprequired {
         font-weight: bold;
         .asterisk {
-            color: red;
+            color: $red;
         }
     }
 
@@ -221,7 +220,7 @@ form.default {
     }
 
     select[disabled] {
-        background-color: @dark-gray-color-15;
+        background-color: $dark-gray-color-15;
     }
 
     .tooltip.tooltip-icon::before {
@@ -229,13 +228,11 @@ form.default {
     }
 
     footer {
-        background-color: @content-color-20;
-        border-top: 1px solid @brand-color-darker;
+        background-color: $content-color-20;
+        border-top: 1px solid $brand-color-darker;
         clear: both;
         margin-left: 0;
-        padding: 10px;
-        padding-top: 5px;
-        padding-bottom: 5px;
+        padding: 5px 10px;
 
         .button {
             margin-bottom: 0;
@@ -246,21 +243,21 @@ form.default {
     //Special inputs
 
     label.file-upload {
-        .background-icon('upload', 'clickable');
+        @include background-icon(upload, clickable);
 
         background-repeat: no-repeat;
         background-position: top left;
         background-size: 20px 20px;
         cursor: pointer;
         padding-left: 30px;
-        color: @base-color;
+        color: $base-color;
 
         input[type=file] {
             display: none;
         }
         .filename {
             padding-left: 0.5em;
-            color: @light-gray-color-80;
+            color: $light-gray-color-80;
         }
     }
 
@@ -277,25 +274,25 @@ form.default {
         input[type=date], input[type=email], input[type=number],
         input[type=password], input[type=text], input[type=time], input[type=url], input[type=tel],
         textarea, select {
-            max-width: calc(@max-width-m - 2em);
+            max-width: calc($max-width-m - 2em);
             width: calc(100% - 2em);
             display: inline-block;
 
             transition: all 0.3s ease-out;
 
             &:focus {
-                border-color: @brand-color-dark;
+                border-color: $brand-color-dark;
             }
 
             &.size-s {
-                max-width: calc(@max-width-s - 2em);
+                max-width: calc($max-width-s - 2em);
             }
 
             &.size-m {
             }
 
             &.size-l {
-                max-width: calc(@max-width-l - 2em);
+                max-width: calc($max-width-l - 2em);
             }
         }
     }
@@ -304,16 +301,15 @@ form.default {
     .hgroup,
     .hgroup-btn {
         display: flex;
-        align-items: center;
         flex-wrap: wrap;
         align-items: flex-start;
-        max-width: @max-width-m;
+        max-width: $max-width-m;
 
         &.size-s {
-            max-width: @max-width-s;
+            max-width: $max-width-s;
         }
         &.size-l {
-            max-width: @max-width-l;
+            max-width: $max-width-l;
         }
 
         > * {
@@ -365,7 +361,7 @@ form.default {
     .js &.collapsable fieldset, fieldset.collapsable {
         legend {
             box-sizing: border-box;
-            .background-icon('arr_1down', 'clickable', 20);
+            @include background-icon(arr_1down, clickable, 20);
             background-position: 6px center;
             background-repeat: no-repeat;
             cursor: pointer;
@@ -374,7 +370,7 @@ form.default {
 
         &.collapsed {
             legend {
-                .background-icon('arr_1right', 'clickable', 20);
+                @include background-icon(arr_1right, clickable, 20);
                 margin-bottom: 0;
             }
             padding-bottom: 0;
@@ -395,7 +391,7 @@ form.default {
         bottom: 100%;
         right: 0;
 
-        color: @light-gray-color;
+        color: $light-gray-color;
         font-size: 0.8em;
     }
 
@@ -426,13 +422,13 @@ form.default {
     }
 
     .invalid {
-        border: 2px dotted red ! important;
+        border: 2px dotted $red ! important;
     } // an invalid form entry
 
     .invalid_message {
         display: none;
         font-weight: bold;
-        color: red;
+        color: $red;
     }
 
     .select2-container {
@@ -479,20 +475,20 @@ form.default {
 
     &.show_validation_hints {
         :invalid, .invalid {
-            .icon('before', 'exclaim-circle', 'attention', 16, 5px);
+           @include icon(before, exclaim-circle, attention, 16px, 5px);
             display: inline-block;
         }
         textarea:invalid, input[type=text]:invalid {
-            border-left: 4px solid @red;
+            border-left: 4px solid $red;
         }
     }
 
     //designing vue-select in studipform:
     .vs__dropdown-toggle {
-        border-radius: 0px;
+        border-radius: 0;
     }
     .vs__selected {
-        border-radius: 0px;
+        border-radius: 0;
         padding: 5px;
     }
 
@@ -502,20 +498,20 @@ form.default {
         input[type=range] {
             &::-moz-range-track {
                 height: 11px;
-                border: 1px solid @content-color;
+                border: 1px solid $content-color;
                 background-color: transparent;
             }
             &::-moz-range-progress {
-                background-color: @base-color;
+                background-color: $base-color;
                 height: 11px;
             }
             &::-moz-range-thumb {
-                border-radius: 0px;
+                border-radius: 0;
                 width: 1.2em;
                 height: 1.2em;
             }
             &::-moz-range-thumb:hover {
-                background-color: @content-color;
+                background-color: $content-color;
             }
         }
         output {
@@ -529,12 +525,12 @@ form.narrow {
     div.col-1, div.col-2, div.col-3, div.col-4, div.col-5,
     section.col-1, section.col-2, section.col-3, section.col-4, section.col-5
     {
-        padding-right: 0px;
+        padding-right: 0;
     }
 }
 
 // give forms some optimized styling for very narrow screen sizes
-.media-breakpoint-tiny-down({
+@include media-breakpoint-tiny-down(){
     form.default {
         label.col-1, div.col-1, section.col-1,
         label.col-2, div.col-2, section.col-2,
@@ -544,7 +540,7 @@ form.narrow {
             min-width: 100%;
         }
     }
-});
+}
 
 table.hide_datafield_title {
     .datafield_title {
@@ -554,8 +550,8 @@ table.hide_datafield_title {
 
 .content-title {
     background-color: transparent;
-    padding-top: 0px;
-    color: @base-gray;
+    padding-top: 0;
+    color: $base-gray;
     font-size: 1.4em;
     text-align: left;
 }

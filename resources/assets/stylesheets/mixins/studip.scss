@@ -205,7 +205,7 @@
     background-attachment: local, local, scroll, scroll;
 }
 
-%scrollbox-horizontal {
+@mixin scrollbox-horizontal {
     overflow: auto;
 
     background:

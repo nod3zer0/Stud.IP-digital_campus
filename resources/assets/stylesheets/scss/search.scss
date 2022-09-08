@@ -89,7 +89,7 @@ label.inactive-settings-category {
                 }
 
                 &:hover {
-                    background-color: mix($light-gray-color, $white, 80%);
+                    background-color: $light-gray-color-20;
                 }
 
                 &.search-extended-result {

@@ -1,16 +1,16 @@
 // TODO: LESSify
 
-@page-margin: 15px;
+$page-margin: 15px;
 
-@sidebar-width: 250px;
-@sidebar-padding: 12px;
-@sidebar-border-width: 1px;
+$sidebar-width: 250px;
+$sidebar-padding: 12px;
+$sidebar-border-width: 1px;
 
-@content-width: 400px;
-@content-margin: 12px;
+$content-width: 400px;
+$content-margin: 12px;
 
-@site-width: (@page-margin * 2 + @sidebar-width + @sidebar-padding * 2 + @sidebar-border-width * 2 + @content-width + @content-margin * 2);
-@page-width: (@sidebar-width + @sidebar-padding * 2 + @sidebar-border-width * 2 + @content-width + @content-margin * 2);
+$site-width: ($page-margin * 2 + $sidebar-width + $sidebar-padding * 2 + $sidebar-border-width * 2 + $content-width + $content-margin * 2);
+$page-width: ($sidebar-width + $sidebar-padding * 2 + $sidebar-border-width * 2 + $content-width + $content-margin * 2);
 
 
 /* --- Layouts -------------------------------------------------------------- */
@@ -18,15 +18,14 @@
     border-radius: 0 0 2px 2px;
     box-sizing: border-box;
     clear: both;
-    margin: @page-margin;
-    background-color: #fff;
-    margin: 0px;
+    margin: 0;
+    background-color: $white;
 }
 
 // for old pages without template layout
 #layout_table {
-    background-color: @light-gray-color-60;
-    border: 20px solid #fff;
+    background-color: $light-gray-color-60;
+    border: 20px solid $white;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -35,7 +34,7 @@
 }
 
 #layout_container {
-    background-color: white;
+    background-color: $white;
     border-radius: 0 0 2px 2px;
     /*margin: 0;*/
     padding-top: 15px;
@@ -43,7 +42,7 @@
 
 #page_title_container {
     float: left;
-    background-color: #fff;
+    background-color: $white;
     line-height: 20px;
     margin-left: 15px;
     margin-right: 15px;
@@ -57,17 +56,17 @@
         top: 0;
         bottom: 0;
         left: 0;
-        width: @page-margin;
+        width: $page-margin;
     }
 
     #layout_context_title {
         font-size: 1.1em;
         height: 30px;
-        padding-left: @page-margin;
+        padding-left: $page-margin;
         max-height: 30px;
         overflow: hidden;
 
-        background: linear-gradient(to bottom, @dark-gray-color-5, @dark-gray-color-10);
+        background: linear-gradient(to bottom, $dark-gray-color-5, $dark-gray-color-10);
 
         > .context_icon {
             margin: 7px 1px 0 9px;
@@ -81,12 +80,12 @@
 
     .contextless & {
         .colorblock {
-            width: 0px;
+            width: 0;
         }
 
         #layout_context_title {
             color: rgba(0, 0, 0, 0);
-            height: 0px;
+            height: 0;
             max-height: 35px;
             // text-indent: -100%;
             //
@@ -96,7 +95,7 @@
         }
 
         .tabs_wrapper {
-            padding-left: 0px;
+            padding-left: 0;
         }
     }
 }
@@ -114,10 +113,10 @@
 
 #layout_content {
     box-sizing: border-box;
-    .scrollbox-horizontal();
-    padding: 0 @content-margin 47px @content-margin;
+    @include scrollbox-horizontal();
+    padding: 0 $content-margin 47px $content-margin;
     vertical-align: top;
-    min-width: @content-width;
+    min-width: $content-width;
 
     .oversized & {
         overflow: visible;
@@ -126,30 +125,29 @@
 
 #layout_sidebar {
     background: inherit;
-    border-left: 1px dashed @brand-color-darker;
-    max-width: @sidebar-width;
-    width: @sidebar-width;
-    min-width: @sidebar-width;
-    padding: @sidebar-padding;
+    border-left: 1px dashed $brand-color-darker;
+    max-width: $sidebar-width;
+    width: $sidebar-width;
+    min-width: $sidebar-width;
+    padding: $sidebar-padding;
 }
 
 #layout_wrapper {
-    .clearfix;
+    @include clearfix();
     clear: both;
     min-width: 800px; // 800px breite ist minimum
     min-height: 100%;
     width: 100%;
     height: auto !important;
-    height: 100%;
     margin: 0 auto;
 }
 
 #layout_footer {
-    background-color: @base-color;
-    color: @contrast-content-white;
+    background-color: $base-color;
+    color: $contrast-content-white;
     display: flex;
-    padding: 2px 0px;
-    min-width: @site-width;
+    padding: 2px 0;
+    min-width: $site-width;
     width: 100%;
 }
 #footer {
@@ -167,7 +165,7 @@
     align-items: stretch;
     justify-content: flex-start;
 
-    min-width: @site-width;
+    min-width: $site-width;
 
     #flex-header {              // first row of flex-main
         display: flex;
@@ -178,13 +176,13 @@
         justify-content: space-between;
 
         width: 100%;
-        min-width: @site-width;
+        min-width: $site-width;
 
-        border-bottom: 1px solid @light-gray-color-40;
+        border-bottom: 1px solid $light-gray-color-40;
     }
 
     #barBottomContainer {       // second row of flex-main
-        min-width: @site-width;
+        min-width: $site-width;
         z-index: 1001; // High enough so it will be above the sidebar
     }
 
@@ -198,20 +196,20 @@
 
         flex-grow: 1;
 
-        min-width: @page-width;
+        min-width: $page-width;
 
         .tabs_wrapper {
             display: flex;
             flex-direction: row;
             align-items: stretch;
             justify-content: space-between;
-            background-color: @dark-gray-color-10;
+            background-color: $dark-gray-color-10;
             font-size: 0.9em;
-            border-bottom: 1px solid @dark-gray-color-40;
+            border-bottom: 1px solid $dark-gray-color-40;
         }
 
         #tabs { // row 1 of layout_page
-            padding-left: @page-margin;
+            padding-left: $page-margin;
             transition: margin-left;
             transition-duration: 300ms;
             transition-delay: 500ms;
@@ -226,20 +224,11 @@
             justify-content: flex-start;
 
             flex-grow: 1;
-            min-width: @page-width;
+            min-width: $page-width;
 
             #layout_content {           // column 1 of layout_container
                 flex-grow: 1;
             }
         }
     }
-
-}
-
-@-moz-document url-prefix() {
-    .flex-container {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
 }
