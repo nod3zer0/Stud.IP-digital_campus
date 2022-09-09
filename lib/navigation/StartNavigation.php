@@ -234,7 +234,11 @@ class StartNavigation extends Navigation
 
         // contents
         $navigation = new Navigation(_('Mein Arbeitsplatz'), 'dispatch.php/contents/overview');
-        $navigation->addSubNavigation('courseware', new Navigation(_('Courseware'), 'dispatch.php/contents/courseware'));
+
+        if (PluginManager::getInstance()->getPlugin('CoursewareModule')) {
+            $navigation->addSubNavigation('courseware',
+                new Navigation(_('Courseware'), 'dispatch.php/contents/courseware'));
+        }
         $navigation->addSubNavigation('files', new Navigation(_('Dateien'), 'dispatch.php/files/overview'));
 
         if (Config::get()->VOTE_ENABLE) {

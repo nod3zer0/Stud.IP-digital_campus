@@ -132,13 +132,17 @@ class AdminNavigation extends Navigation
             if (Config::get()->BANNER_ADS_ENABLE) {
                 $navigation->addSubNavigation('banner', new Navigation(_('Werbebanner'), 'dispatch.php/admin/banner'));
             }
-            $navigation->addSubNavigation(
-                'courseware',
-                new Navigation(
-                    _('Courseware'),
-                    'dispatch.php/admin/courseware/index'
-                )
-            );
+
+            if (PluginManager::getInstance()->getPlugin('CoursewareModule')) {
+                $navigation->addSubNavigation(
+                    'courseware',
+                    new Navigation(
+                        _('Courseware'),
+                        'dispatch.php/admin/courseware/index'
+                    )
+                );
+            }
+
             if (Config::get()->OERCAMPUS_ENABLED) {
                 $navigation->addSubNavigation(
                     'oer',

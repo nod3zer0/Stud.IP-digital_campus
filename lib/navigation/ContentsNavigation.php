@@ -42,38 +42,38 @@ class ContentsNavigation extends Navigation
 
         $this->addSubNavigation('overview', $overview);
 
+        if (PluginManager::getInstance()->getPlugin('CoursewareModule')) {
+            $courseware = new Navigation(_('Courseware'));
+            $courseware->setDescription(_('Erstellen und Sammeln von Lernmaterialien'));
+            $courseware->setImage(Icon::create('courseware'));
 
-        $courseware = new Navigation(_('Courseware'));
-        $courseware->setDescription(_('Erstellen und Sammeln von Lernmaterialien'));
-        $courseware->setImage(Icon::create('courseware'));
+            $courseware->addSubNavigation(
+                'overview',
+                new Navigation(_('Übersicht'), 'dispatch.php/contents/courseware/index')
+            );
+            $courseware->addSubNavigation(
+                'courseware',
+                new Navigation(_('Persönliche Lernmaterialien'), 'dispatch.php/contents/courseware/courseware')
+            );
+            $courseware->addSubNavigation(
+                'courseware_manager',
+                new Navigation(_('Verwaltung persönlicher Lernmaterialien'), 'dispatch.php/contents/courseware/courseware_manager')
+            );
+            $courseware->addSubNavigation(
+                'releases',
+                new Navigation(_('Freigaben'), 'dispatch.php/contents/courseware/releases')
+            );
+            $courseware->addSubNavigation(
+                'bookmarks',
+                new Navigation(_('Lesezeichen'), 'dispatch.php/contents/courseware/bookmarks')
+            );
+            $courseware->addSubNavigation(
+                'courses_overview',
+                new Navigation(_('Meine Veranstaltungen'), 'dispatch.php/contents/courseware/courses_overview')
+            );
 
-        $courseware->addSubNavigation(
-            'overview',
-            new Navigation(_('Übersicht'), 'dispatch.php/contents/courseware/index')
-        );
-        $courseware->addSubNavigation(
-            'courseware',
-            new Navigation(_('Persönliche Lernmaterialien'), 'dispatch.php/contents/courseware/courseware')
-        );
-        $courseware->addSubNavigation(
-            'courseware_manager',
-            new Navigation(_('Verwaltung persönlicher Lernmaterialien'), 'dispatch.php/contents/courseware/courseware_manager')
-        );
-        $courseware->addSubNavigation(
-            'releases',
-            new Navigation(_('Freigaben'), 'dispatch.php/contents/courseware/releases')
-        );
-        $courseware->addSubNavigation(
-            'bookmarks',
-            new Navigation(_('Lesezeichen'), 'dispatch.php/contents/courseware/bookmarks')
-        );
-        $courseware->addSubNavigation(
-            'courses_overview',
-            new Navigation(_('Meine Veranstaltungen'), 'dispatch.php/contents/courseware/courses_overview')
-        );
-
-        $this->addSubNavigation('courseware', $courseware);
-
+            $this->addSubNavigation('courseware', $courseware);
+        }
 
         $files = new Navigation(_('Dateien'));
         $files->setDescription(_('Überblick über alle Dokumente'));

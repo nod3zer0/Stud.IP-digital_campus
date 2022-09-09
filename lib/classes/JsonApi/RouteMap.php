@@ -118,7 +118,11 @@ class RouteMap
         $this->addAuthenticatedConsultationRoutes($group);
         $this->addAuthenticatedContactsRoutes($group);
         $this->addAuthenticatedCoursesRoutes($group);
-        $this->addAuthenticatedCoursewareRoutes($group);
+
+        if (PluginManager::getInstance()->getPlugin('CoursewareModule')) {
+            $this->addAuthenticatedCoursewareRoutes($group);
+        }
+
         $this->addAuthenticatedEventsRoutes($group);
         $this->addAuthenticatedFeedbackRoutes($group);
         $this->addAuthenticatedFilesRoutes($group);
@@ -144,8 +148,10 @@ class RouteMap
 
         $group->get('/studip/properties', Routes\Studip\PropertiesIndex::class);
 
-        $group->get('/public/courseware/{link_id}/courseware-structural-elements/{id}', Routes\Courseware\PublicStructuralElementsShow::class);
-        $group->get('/public/courseware/{link_id}/courseware-structural-elements', Routes\Courseware\PublicStructuralElementsIndex::class);
+        if (PluginManager::getInstance()->getPlugin('CoursewareModule')) {
+            $group->get('/public/courseware/{link_id}/courseware-structural-elements/{id}', Routes\Courseware\PublicStructuralElementsShow::class);
+            $group->get('/public/courseware/{link_id}/courseware-structural-elements', Routes\Courseware\PublicStructuralElementsIndex::class);
+        }
     }
 
     private function getAuthenticator(): callable
