@@ -208,29 +208,41 @@
             <section class="fieldset-row inner-row">
                 <fieldset id="BookingTypeFieldset">
                     <legend><?= _('Art des Termins') ?></legend>
-                    <div class="booking-type-item">
-                        <label>
-                            <input type="radio" name="booking_style" value="single"
-                                <?= empty($block_booking) || $booking_style == 'single'
-                                    ? 'checked="checked"'
-                                    : '' ?>
-                                   class="booking-type-item">
+                    <? if ($mode == 'add'): ?>
+                        <div class="booking-type-item">
+                            <label>
+                                <input type="radio" name="booking_style" value="single"
+                                    <?= empty($block_booking) || $booking_style == 'single'
+                                        ? 'checked="checked"'
+                                        : '' ?>
+                                       class="booking-type-item">
+                                <?= _('Einzeltermin') ?>
+                            </label>
+                            <label title="<?= _('Konvolut'); ?>">
+                                <input type="radio" name="booking_style" value="block"
+                                    <?= !empty($block_booking) || $booking_style == 'block' ? 'checked="checked"' : '' ?>
+                                       class="booking-type-item">
+                                <?= _('Terminblock') ?>
+                            </label>
+                            <label>
+                                <input type="radio" name="booking_style" value="repeat"
+                                    <?= $booking_style == 'repeat' ? 'checked="checked"' : '' ?>
+                                       class="booking-type-item">
+                                <?= _('Wiederholungstermine') ?>
+                            </label>
+                        </div>
+                    <? else: ?>
+                        <? if ($booking_style == 'single'): ?>
+                            <input type="hidden" name="booking_style" value="single">
                             <?= _('Einzeltermin') ?>
-                        </label>
-                        <label title="<?= _('Konvolut'); ?>">
-                            <input type="radio" name="booking_style" value="block"
-                                <?= !empty($block_booking) || $booking_style == 'block' ? 'checked="checked"' : '' ?>
-                                   class="booking-type-item">
+                        <? elseif ($booking_style == 'block'): ?>
+                            <input type="hidden" name="booking_style" value="block">
                             <?= _('Terminblock') ?>
-                        </label>
-                        <label>
-                            <input type="radio" name="booking_style" value="repeat"
-                                <?= $booking_style == 'repeat' ? 'checked="checked"' : '' ?>
-                                   class="booking-type-item">
+                        <? elseif ($booking_style == 'repeat'): ?>
+                            <input type="hidden" name="booking_style" value="repeat">
                             <?= _('Wiederholungstermine') ?>
-                        </label>
-
-                    </div>
+                        <? endif ?>
+                    <? endif ?>
                 </fieldset>
 
                 <fieldset id="BlockBookingFieldset"

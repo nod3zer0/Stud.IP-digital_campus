@@ -54,8 +54,12 @@ STUDIP.ready(function () {
 
     //Dialog for adding/editing bookings:
 
-    if (jQuery('form.create-booking-form').length) {
-        STUDIP.Resources.moveTimeOptions(jQuery('input[name="booking_style"]:checked').val());
+    if (jQuery('form.create-booking-form')) {
+        let time_option = jQuery('input[name="booking_style"]:checked').val();
+        if (!time_option) {
+            time_option = jQuery('input[name="booking_style"]').val();
+        }
+        STUDIP.Resources.moveTimeOptions(time_option);
     }
 
     //Set the date selector in the sidebar to the date from the session,
