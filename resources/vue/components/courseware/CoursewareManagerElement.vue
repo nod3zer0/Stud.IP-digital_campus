@@ -17,14 +17,13 @@
                     </a>
                 </nav>
                 <header>
-                    <a
+                    <button class="cw-insert-element"
                         v-if="elementInserterActive && moveSelfPossible && canEdit"
-                        href="#"
                         :title="elementTitle"
                         @click="insertElement({element: currentElement, source: type})"
                     >
                         <studip-icon shape="arr_2left" size="24" role="clickable" />
-                    </a>
+                    </button>
                     {{ elementName }}
                 </header>
             </div>
