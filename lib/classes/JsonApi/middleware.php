@@ -26,6 +26,9 @@ return function (App $app) {
     // Add Routing Middleware
     $app->addRoutingMiddleware();
 
+    // Add language middleware
+    $app->add(new Middlewares\Language());
+
     /** @var array|null */
     $corsOrigin = \Config::get()->getValue('JSONAPI_CORS_ORIGIN');
     if (is_array($corsOrigin) && count($corsOrigin)) {
