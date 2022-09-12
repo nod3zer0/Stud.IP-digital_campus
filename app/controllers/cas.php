@@ -12,7 +12,6 @@
  * @category    Stud.IP
  */
 
-require_once 'composer/jasig/phpcas/CAS.php';
 require_once 'lib/classes/cas/CAS_PGTStorage_Cache.php';
 
 class CasController extends StudipController
@@ -25,7 +24,7 @@ class CasController extends StudipController
         $pgt = Request::get('pgtId');
         $pgt_iou = Request::get('pgtIou');
         $cas_config = $GLOBALS['STUDIP_AUTH_CONFIG_CAS'];
-        $cas = new CAS_Client(CAS_VERSION_2_0, true, $cas_config['host'], $cas_config['port'], $cas_config['uri'], false);
+        $cas = phpCAS::proxy(CAS_VERSION_2_0, $cas_config['host'], $cas_config['port'], $cas_config['uri'], false);
         $pgt_storage = new CAS_PGTStorage_Cache($cas);
         $pgt_storage->write($pgt, $pgt_iou);
         $this->render_nothing();
