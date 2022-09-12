@@ -5,7 +5,6 @@
             <tr>
                 <th><?= _('Name') ?></th>
                 <th><?= _('Sitzplätze') ?></th>
-                <th class="actions"><?= _('Aktionen') ?></th>
             </tr>
         </thead>
         <tbody>
