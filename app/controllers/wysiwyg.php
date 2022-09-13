@@ -120,4 +120,13 @@ class WysiwygController extends AuthenticatedController
         }
         $this->render_json($response); // send HTTP response to client
     }
+
+    /**
+     * Display the WYSIWYG editor's help window.
+     */
+    public function a11yhelp_action()
+    {
+        // nothing to do
+        PageLayout::setTitle(_('Hilfe zur Bedienung des Editors'));
+    }
 }
