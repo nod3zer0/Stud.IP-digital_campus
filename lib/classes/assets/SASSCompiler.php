@@ -6,7 +6,7 @@ use StudipCacheFactory;
 use Studip;
 
 use ScssPhp\ScssPhp\Compiler as ScssCompiler;
-use ScssPhp\ScssPhp\Formatter;
+use ScssPhp\ScssPhp\OutputStyle;
 
 /**
  * SCSS Compiler for assets.
@@ -48,7 +48,7 @@ class SASSCompiler implements Compiler
      * core system can be used. This includes colors and icons.
      *
      * @param String $input      Scss content to compile
-     * @param Array  $variables Additional variables for the LESS compilation
+     * @param array  $variables Additional variables for the LESS compilation
      * @return String containing the generated CSS
      */
     public function compile($input, array $variables = [])
@@ -59,14 +59,14 @@ class SASSCompiler implements Compiler
 
         $compiler = new ScssCompiler();
         $compiler->addImportPath("{$GLOBALS['STUDIP_BASE_PATH']}/resources/");
-        $compiler->setVariables($variables);
+        $compiler->addVariables($variables);
         if (Studip\ENV === 'production') {
-            $compiler->setFormatter(Formatter\Crunched::class);
+            $compiler->setOutputStyle(OutputStyle::COMPRESSED);
         } else {
-            $compiler->setFormatter(Formatter\Expanded::class);
-            $compiler->setLineNumberStyle(ScssCompiler::LINE_COMMENTS);
+            $compiler->setOutputStyle(OutputStyle::EXPANDED);
+            $compiler->setSourceMap(ScssCompiler::SOURCE_MAP_INLINE);
         }
-        $css = $compiler->compile($scss);
+        $css = $compiler->compileString($scss)->getCss();
         $css = preg_replace('~/\*.*?\*/~s', '', $css);
         $css = trim($css);
         return $css;
