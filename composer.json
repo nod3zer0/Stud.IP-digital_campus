@@ -2,7 +2,10 @@
     "name": "studip/core",
     "description": "Stud.IP ist ein Campus- und Lernmanagementsystem für Hochschulen, Schulen, Unternehmen, Verbände und Behörden.",
     "config": {
-        "vendor-dir": "composer"
+        "vendor-dir": "composer",
+        "platform": {
+            "php": "7.2"
+        }
     },
     "require-dev": {
         "adlawson/vfs": "~0.12.1",
