@@ -11,3 +11,4 @@
         </div>
     </div>
 </div>
+<?= $this->render_partial('blubber/disable-notifications', compact('thread', 'unfollowed')) ?>

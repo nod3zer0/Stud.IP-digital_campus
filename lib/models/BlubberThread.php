@@ -520,6 +520,7 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
             $template = $GLOBALS['template_factory']->open('blubber/institute_context');
             $template->thread = $this;
             $template->institute = Institute::find($this['context_id']);
+            $template->unfollowed = !$this->isFollowedByUser();
             return $template;
         }
     }
@@ -848,7 +849,7 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
                 $this->getLastVisit() ?: object_get_visit_threshold(),
                 $user_id
             ]),
-            'notifications' => $this->id === 'global' || ($this->context_type === 'course' && !$GLOBALS['perm']->have_perm('admin')),
+            'notifications' => $this->mayDisableNotifications(),
             'followed' => $this->isFollowedByUser(),
         ];
         $context_info = $this->getContextTemplate();
@@ -1040,5 +1041,27 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
             }
         }
         return $institut_ids;
+    }
+
+    /**
+     * Returns whether the notifications for this thread may be disabled.
+     *
+     * @return bool
+     */
+    public function mayDisableNotifications(): bool
+    {
+        // Notifications may always be disabled for global blubber stream
+        if ($this->id === 'global') {
+            return true;
+        }
+
+        // Notifications may not be disabled outside of course and institute
+        // streams
+        if (!in_array($this->context_type, ['course', 'institute'])) {
+            return false;
+        }
+
+        // Only users with permission below admin may disable the notifications.
+        return !$GLOBALS['perm']->have_perm('admin');
     }
 }

@@ -10,7 +10,7 @@
                :class="{unfollowed: !thread_data.followed}"
                :title="$gettext('Benachrichtigungen für diese Konversation abstellen.')"
                :data-thread_id="thread_data.thread_posting.thread_id">
-                <StudipIcon shape="remove/notification2" :size="20" class="follow text-bottom"></StudipIcon>
+                <StudipIcon shape="decline" :size="20" class="follow text-bottom"></StudipIcon>
                 <StudipIcon shape="notification2" :size="20" class="unfollow text-bottom"></StudipIcon>
                 {{ $gettext('Benachrichtigungen aktiviert') }}
             </a>
