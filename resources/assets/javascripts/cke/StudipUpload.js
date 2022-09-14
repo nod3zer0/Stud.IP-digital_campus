@@ -35,7 +35,9 @@ class StudipUploadAdapter {
 }
 
 export default function StudipUpload(editor) {
-    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-        return new StudipUploadAdapter(loader);
-    };
+    if (editor.plugins.has('FileRepository')) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            return new StudipUploadAdapter(loader);
+        };
+    }
 }

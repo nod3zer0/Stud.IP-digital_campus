@@ -2,6 +2,7 @@
  * wysiwyg.js - Replace HTML textareas with WYSIWYG editor.
  */
 import parseOptions from './parse_options.js';
+import WikiLink from '../cke/wiki-link/wiki-link.js';
 
 const wysiwyg = {
     // NOTE keep this function in sync with Markup class
@@ -59,8 +60,24 @@ function replaceTextarea(textarea) {
     setEditor(textarea, {});
     const $textarea = textarea instanceof jQuery ? textarea : $(textarea);
 
-    // fetch ckeditor configuration
-    const options = $textarea.attr('data-editor') ? parseOptions($textarea.attr('data-editor')) : null;
+    let options = {};
+    if ($textarea.attr('data-editor')) {
+        const parsed = parseOptions($textarea.attr('data-editor'));
+
+        if (parsed.removePlugins) {
+            options.removePlugins = parsed.removePlugins.split(",")
+        }
+
+        if (parsed.extraPlugins) {
+            const pluginMap = { WikiLink };
+            options.extraPlugins = parsed.extraPlugins.split(",").reduce((memo, plugin) => {
+                if (plugin in pluginMap) {
+                    memo.push(pluginMap[plugin]);
+                }
+                return memo;
+            }, []);
+        }
+    }
 
     return STUDIP.loadChunk('wysiwyg')
         .then(loadMathJax)
@@ -70,10 +87,7 @@ function replaceTextarea(textarea) {
         .then(emitLoadEvent);
 
     function createEditor(ClassicEditor) {
-        // TODO: Das ist einfach nur gehackt.
-        const config = { removePlugins: options?.extraPlugins === 'studip-wiki' ? [] : ['WikiLink'] };
-
-        return ClassicEditor.create(textarea, config);
+        return ClassicEditor.create(textarea, options);
     }
 
     function setEditorInstance(ckeditor) {

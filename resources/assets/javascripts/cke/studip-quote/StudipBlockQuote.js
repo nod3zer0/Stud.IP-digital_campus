@@ -134,4 +134,8 @@ class RemoveStudipQuoteCommand extends Command {
             });
         }
     }
+
+    static get pluginName() {
+        return 'StudipBlockQuote';
+    }
 }
