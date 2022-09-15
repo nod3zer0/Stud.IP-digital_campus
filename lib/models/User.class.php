@@ -296,12 +296,12 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
     public static function findByDatafield($datafield_id, $value)
     {
         return User::findMany(
-            SimpleCollection::createFromArray(
+            array_column(
                 DatafieldEntryModel::findBySQL(
                     'datafield_id = :datafield_id AND content = :value',
                     compact('datafield_id', 'value')
-                )
-            )->pluck('range_id')
+                ),
+                'range_id')
         );
     }
 

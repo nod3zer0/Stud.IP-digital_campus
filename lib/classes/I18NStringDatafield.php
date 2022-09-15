@@ -59,8 +59,8 @@ class I18NStringDatafield extends I18NString
                 [$object_id[0], $object_id[1], $object_id[2]]
             );
             foreach ($this->lang as $lang => $value) {
-                if (mb_strlen($value)) {
-                    DataField::create(
+                if (strlen($value)) {
+                    DatafieldEntryModel::create(
                         [
                             'datafield_id' => $object_id[0],
                             'range_id' => $object_id[1],
@@ -87,14 +87,15 @@ class I18NStringDatafield extends I18NString
     public static function load($object_id, $table = '', $field = '', $base = null)
     {
         if (is_null($base)) {
-            $base = DataField::findOneBySQL(
+            $df = DatafieldEntryModel::findOneBySQL(
                 "`datafield_id` = ? AND `range_id` = ? AND `sec_range_id` = ? AND `lang` = ''",
                 $object_id
             );
+            $base = $df->content;
         }
         $table = null;
         $field = null;
-        return new self($base->content, self::fetchDataForField($object_id, $table, $field),
+        return new self($base, self::fetchDataForField($object_id, $table, $field),
                 compact('object_id', 'table', 'field'));
     }
 
