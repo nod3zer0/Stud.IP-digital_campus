@@ -286,7 +286,7 @@ class Course_Forum_IndexController extends ForumController
     function search_action($page = null)
     {
         if (Request::submitted('reset-search')) {
-            $this->redirect('index');
+            $this->redirect('course/forum/index/index');
             return;
         }
 
