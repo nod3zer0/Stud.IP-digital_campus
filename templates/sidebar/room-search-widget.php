@@ -1,5 +1,6 @@
 <form class="default room-search-form" action="<?= $action_link ?>"
       method="get">
+    <button hidden name="room_search"></button>
 
     <ul class="criteria-list">
         <?= $this->render_partial(
