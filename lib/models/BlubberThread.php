@@ -722,12 +722,17 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
 
         // Institute context: Notify all members of the institute
         if ($this->context_type === 'institute') {
-            $query = "SELECT user_id
+            $query = "SELECT user_inst.user_id
                       FROM user_inst
+                      LEFT JOIN blubber_threads_followstates ON (
+                          user_inst.user_id = blubber_threads_followstates.user_id
+                          AND blubber_threads_followstates.thread_id = :thread_id
+                          AND blubber_threads_followstates.state = 'unfollowed'
+                      )
                       WHERE Institut_id = :context_id
-                          AND user_id != :user_id";
+                          AND user_inst.user_id != :user_id
+                          AND blubber_threads_followstates.user_id IS NULL";
 
-            unset($parameters[':thread_id']);
             $parameters[':context_id'] = $this->context_id;
 
             return compact('query', 'parameters');
