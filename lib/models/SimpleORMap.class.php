@@ -2142,7 +2142,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             if ($options['type'] === 'has_many') {
                 $records = function($record) use ($to_call, $params, $options) {
                     $p = (array)$params($record);
-                    return call_user_func_array($to_call, array_merge(count($p) ? $p : [null], [$options['order_by'] ?? '']));
+                    return call_user_func_array($to_call, array_merge(count($p) ? $p : [null], [$options['order_by'] ?? null]));
                 };
                 $this->relations[$relation] = new SimpleORMapCollection($records, $options, $this);
             } elseif ($options['type'] === 'has_and_belongs_to_many') {
