@@ -106,6 +106,8 @@ class CourseDate extends SimpleORMap implements PrivacyObject
             'on_delete'         => 'delete',
         ];
         $config['default_values']['date_typ'] = 1;
+        $config['registered_callbacks']['before_store'][] = 'cbStudipLog';
+        $config['registered_callbacks']['after_create'][] = 'cbStudipLog';
         parent::configure($config);
     }
 
@@ -183,12 +185,6 @@ class CourseDate extends SimpleORMap implements PrivacyObject
             ORDER BY `date` ASC",
             [$group_id]
         );
-    }
-
-    public function __construct($id = null)
-    {
-        parent::__construct($id);
-        $this->registerCallback('before_store after_create', 'cbStudipLog');
     }
 
     /**

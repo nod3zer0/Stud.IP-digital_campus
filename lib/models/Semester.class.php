@@ -461,7 +461,7 @@ class Semester extends SimpleORMap
     public function toArray($only_these_fields = null)
     {
         if (!isset($only_these_fields)) {
-            $fields = array_flip(array_diff($this->known_slots, array_keys($this->relations)));
+            $fields = array_flip(array_diff($this->known_slots(), array_keys($this->relations)));
             unset($fields['absolute_seminars_count']);
             unset($fields['duration_seminars_count']);
             unset($fields['continuous_seminars_count']);
@@ -505,7 +505,7 @@ class Semester extends SimpleORMap
                 continue;
             }
 
-            if (in_array('sem_wechsel', $semester->known_slots) && $semester['sem_wechsel']) {
+            if ($semester['sem_wechsel']) {
                 $timestamp = $semester['sem_wechsel'];
             } else {
                 $timestamp = $semester['beginn'] - (int)Config::get()->SEMESTER_TIME_SWITCH * 7 * 24 * 60 * 60;

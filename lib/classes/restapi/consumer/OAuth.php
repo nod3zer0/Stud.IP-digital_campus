@@ -24,6 +24,8 @@ class OAuth extends Base
     {
         $config['default_values']['consumer_type'] = 'oauth';
 
+        $config['registered_callbacks']['before_store'][] = 'before_store';
+
         parent::configure($config);
     }
 
@@ -104,16 +106,6 @@ class OAuth extends Base
             ]);
         }
         return $server;
-    }
-
-    /**
-     * SimpleORMap constructor, registers neccessary callbacks.
-     */
-    public function __construct($id = null)
-    {
-        parent::__construct($id);
-
-        $this->registerCallback('before_store', 'before_store');
     }
 
     /**

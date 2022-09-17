@@ -38,7 +38,7 @@ class auth_user_md5 extends SimpleORMap
         return $this->content['perms'] = mb_strtolower($perm);
     }
 
-    public function registerCallback($types, $cb)
+    public static function registerCallback($types, $cb)
     {
         return parent::registerCallback($types, $cb);
     }
@@ -273,5 +273,19 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
         $this->assertFalse($stored);
         $this->assertEquals(3, $a->id);
         $this->assertEquals('auth_user_md5WillStore', $callback_was_here);
+    }
+
+
+    /**
+     * @depends testConstruct
+     */
+    public function testSerialization($a)
+    {
+        $serialized = serialize($a);
+        $this->assertIsString($serialized);
+
+        $unserialized = unserialize($serialized);
+
+        $this->assertEquals($a->toArray(), $unserialized->toArray());
     }
 }

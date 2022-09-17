@@ -51,12 +51,6 @@ class StudiengangStgteil extends ModuleManagementModel
     private $stgbez_name;
     private $stgbez_id;
 
-    function __construct($id = null)
-    {
-        $this->default_values['position'] = 10000;
-        parent::__construct($id);
-    }
-
     /**
      * Retrieves the StudiengangStgteil and all related data and some
      * additional fields.

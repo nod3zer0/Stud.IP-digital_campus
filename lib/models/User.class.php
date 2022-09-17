@@ -232,7 +232,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         $user->info = new UserInfo();
         $user->setData($data);
         $user->setNew($is_new);
-        foreach (array_keys($user->db_fields) as $field) {
+        foreach (array_keys($user->db_fields()) as $field) {
             $user->content_db[$field] = $user->content[$field];
         }
         $user->info = UserInfo::build($data, $is_new);
@@ -303,29 +303,6 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 ),
                 'range_id')
         );
-    }
-
-    public static function findDozentenByTermin_id($termin_id)
-    {
-        $record = new User();
-        $db = DBManager::get();
-        $sql = "SELECT `{$record->db_table}`.*
-                FROM `{$record->db_table}`
-                INNER JOIN `termin_related_persons` USING (user_id)
-                WHERE `termin_related_persons`.`range_id` = ?
-                ORDER BY Nachname, Vorname ASC";
-        $statement = $db->prepare($sql);
-        $statement->execute([$termin_id]);
-
-        $ret = [];
-        while($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $item = new User();
-            $item->setData($row, true);
-            $item->setNew(false);
-
-            $ret[] = $item;
-        }
-        return $ret;
     }
 
     /**

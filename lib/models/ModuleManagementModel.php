@@ -170,10 +170,10 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
 
         // check the permissions for every single db field except primary keys
         if ($this->isNew()) {
-            $fields = array_diff(array_keys($this->db_fields),
-                    array_values($this->pk));
+            $fields = array_diff(array_keys($this->db_fields()),
+                    array_values($this->pk()));
         } else {
-            $fields = array_keys($this->db_fields);
+            $fields = array_keys($this->db_fields());
         }
         foreach ($fields as $field) {
             if ($this->isFieldDirty($field)
@@ -307,7 +307,7 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
      */
     protected function logChanges ($action = null) {
 
-        switch ($this->db_table) {
+        switch ($this->db_table()) {
             case 'abschluss' :
                 $logging = 'MVV_ABSCHLUSS';
                 $num_index = 1;
@@ -467,11 +467,11 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
                     }
                     if ($this->isFieldDirty($name)) {
                         $info = ($num_index == 3) ? $debuginfo.';'.$value : $value;
-                        StudipLog::log($logging, $aff, $coaff, $this->db_table.'.'.$name, $info);
+                        StudipLog::log($logging, $aff, $coaff, $this->db_table().'.'.$name, $info);
                     }
                 }
             } else {
-                StudipLog::log($logging, $aff, $coaff, $this->db_table, $debuginfo);
+                StudipLog::log($logging, $aff, $coaff, $this->db_table(), $debuginfo);
             }
 
             return true;
@@ -519,12 +519,12 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
             $model_object = new static();
             foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $data) {
                 $pkey = [];
-                foreach ($model_object->pk as $pk) {
-                    $pkey[]= $data[$model_object->db_fields[$pk]['name']];
+                foreach (static::pk() as $pk) {
+                    $pkey[]= $data[static::db_fields()[$pk]['name']];
                 }
                 $data_object = clone $model_object;
                 foreach ($data as $key => $value) {
-                    if (isset($data_object->db_fields[$key])) {
+                    if (isset($data_object->db_fields()[$key])) {
                         $data_object->setValue($key, $value);
                     } else {
                         $data_object->content[mb_strtolower($key)] = $value;
@@ -661,9 +661,8 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
         if (!is_array($sort)) {
             $sort = explode(',', $sort);
         }
-        $sorm = new static();
         if (sizeof(array_intersect(
-                array_merge(array_keys($sorm->db_fields), $additional_fields),
+                array_merge(array_keys(static::db_fields()), $additional_fields),
                 $sort))) {
             return implode(',', $sort);
         }
@@ -687,12 +686,10 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
             $sort = explode(',', $sort);
         }
         $sort = array_map('trim', $sort);
-        $sorm_name = static::class;
-        $sorm = new $sorm_name();
         $allowed_fields = array_intersect(
             $sort,
             array_merge(
-                array_keys($sorm->db_fields),
+                array_keys(static::db_fields()),
                 $additional_fields
             )
         );
@@ -731,9 +728,8 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
         } else {
             $filter_sql = '';
         }
-        $sorm = new static();
         $db = DBManager::get()->query('SELECT COUNT(*) FROM '
-                . $sorm->db_table . $filter_sql);
+                . static::db_table() . $filter_sql);
         return $db->fetchColumn(0);
     }
 
@@ -795,7 +791,7 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
         $stmt = DBManager::get()->prepare('SELECT DISTINCT `lang` '
                 . 'FROM i18n '
                 . 'WHERE `object_id` = ? AND `table` = ?');
-        $stmt->execute([$this->id, $this->db_table]);
+        $stmt->execute([$this->id, $this->db_table()]);
         foreach ($stmt->fetchAll() as $locale) {
             $language = mb_strtoupper(mb_strstr($locale['lang'], '_', true));
             if (is_array($GLOBALS['MVV_LANGUAGES']['values'][$language])) {

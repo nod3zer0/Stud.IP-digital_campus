@@ -199,7 +199,7 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
         $this->downloads += 1;
         if (!$this->isNew()) {
             $where_query = join(' AND ' , $this->getWhereQuery());
-            $query = "UPDATE `{$this->db_table}`
+            $query = "UPDATE `{$this->db_table()}`
                       SET `downloads` = `downloads` + 1
                       WHERE {$where_query}";
             return DBManager::get()->exec($query);
