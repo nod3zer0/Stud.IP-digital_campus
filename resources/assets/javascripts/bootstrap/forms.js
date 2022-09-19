@@ -361,7 +361,7 @@ STUDIP.ready(function () {
     //
     // Thus, we need to handle the visible elements first and apply
     // select2 directly.
-    $('select.nested-select:not(:has(optgroup)):visible').each(function() {
+    $('select.nested-select:visible').each(function() {
         createSelect2(this);
     });
 
@@ -370,7 +370,7 @@ STUDIP.ready(function () {
     // visible element from the requested select element and observe style,
     // class and attribute changes in order to detect when the select
     // element itself will become visible. Pretty straight forward, huh?
-    $('select.nested-select:not(:has(optgroup)):hidden:not(.select2-awaiting)').each(function() {
+    $('select.nested-select:hidden:not(.select2-awaiting)').each(function() {
         var observer = new window.MutationObserver(onDomChange);
         observer.observe($(this).closest(':visible')[0], {
             attributeOldValue: true,
@@ -413,7 +413,7 @@ $(document)
         $(this).toggleClass('has-no-value', this.value === '');
     })
     .on('dialog-close', function(event, data) {
-        $('select.nested-select:not(:has(optgroup))', data.dialog).each(function() {
+        $('select.nested-select', data.dialog).each(function() {
             if (!$(this).data('select2')) {
                 return;
             }
