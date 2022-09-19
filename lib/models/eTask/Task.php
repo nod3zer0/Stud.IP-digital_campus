@@ -39,7 +39,13 @@ class Task extends \SimpleORMap implements \PrivacyObject
             'foreign_key' => 'user_id'
         ];
 
-        $config['additional_fields']['tests']['get'] = 'getTests';
+        $config['has_and_belongs_to_many']['tests'] = [
+            'class_name' => $config['relationTypes']['Test'],
+            'assoc_foreign_key' => 'id',
+            'thru_table' => 'etask_test_tasks',
+            'thru_key' => 'task_id',
+            'thru_assoc_key' => 'test_id'
+        ];
 
         $config['has_many']['test_tasks'] = [
             'class_name' => $config['relationTypes']['TestTask'],
@@ -63,25 +69,14 @@ class Task extends \SimpleORMap implements \PrivacyObject
 
     /**
      * Retrieve the tests associated to this task.
+     * @deprecated - use $this->tests instead.
      *
      * @return SimpleORMapCollection the associated tests
      */
     public function getTests()
     {
-        $klass = $this->relationTypes['Test'];
-
-        return \SimpleORMapCollection::createFromArray(
-            $klass::findThru(
-                $this->id,
-                [
-                    'thru_table' => 'etask_test_tasks',
-                    'thru_key' => 'task_id',
-                    'thru_assoc_key' => 'test_id',
-                    'assoc_foreign_key' => 'id',
-                    'order_by' => 'ORDER BY etask_tests.chdate ASC'
-                ]
-            )
-        );
+        $this->initRelation('tests');
+        return $this->relations['tests'];
     }
 
     /**

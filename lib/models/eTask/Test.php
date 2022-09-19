@@ -31,7 +31,14 @@ class Test extends \SimpleORMap implements \PrivacyObject
 
         $config['relationTypes'] = self::configureClassNames($config);
 
-        $config['additional_fields']['tasks']['get'] = 'getTasks';
+        $config['has_and_belongs_to_many']['tasks'] = [
+            'class_name' => $config['relationTypes']['Task'],
+            'assoc_foreign_key' => 'id',
+            'thru_table' => 'etask_test_tasks',
+            'thru_key' => 'test_id',
+            'thru_assoc_key' => 'task_id',
+            'order_by' => 'ORDER BY position'
+        ];
 
         $config['has_many']['testtasks'] = [
             'class_name' => $config['relationTypes']['TestTask'],
@@ -59,25 +66,14 @@ class Test extends \SimpleORMap implements \PrivacyObject
 
     /**
      * Retrieve the tasks associated to this test.
+     * @deprecated - use $this->tasks instead.
      *
      * @return SimpleORMapCollection the associated tasks
      */
     public function getTasks()
     {
-        $klass = $this->relationTypes['Task'];
-
-        return \SimpleORMapCollection::createFromArray(
-            $klass::findThru(
-                $this->id,
-                [
-                    'thru_table' => 'etask_test_tasks',
-                    'thru_key' => 'test_id',
-                    'thru_assoc_key' => 'task_id',
-                    'assoc_foreign_key' => 'id',
-                    'order_by' => 'ORDER BY etask_test_tasks.position ASC'
-                ]
-            )
-        );
+        $this->initRelation('tasks');
+        return $this->relations['tasks'];
     }
 
     /**
@@ -87,9 +83,7 @@ class Test extends \SimpleORMap implements \PrivacyObject
      */
     public function countTasks()
     {
-        $klass = $this->relationTypes['TestTask'];
-
-        return $klass::countBySql('test_id = ?', [$this->id]);
+        return count($this->testtasks);
     }
 
     /**
@@ -102,9 +96,9 @@ class Test extends \SimpleORMap implements \PrivacyObject
      */
     public function addTask($task)
     {
-        $klass = $this->relationTypes['TestTask'];
+        $class = static::config('relationTypes')['TestTask'];
 
-        $testTask = $klass::create(
+        $testTask = $class::create(
             [
                 'test_id' => $this->id,
                 'task_id' => $task->id,
@@ -113,6 +107,7 @@ class Test extends \SimpleORMap implements \PrivacyObject
             ]
         );
 
+        $this->resetRelation('tasks');
         $this->resetRelation('testtasks');
 
         return $testTask;
