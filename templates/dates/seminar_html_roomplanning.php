@@ -8,10 +8,16 @@ if (!isset($show_room)) :
     endif;
 endif;
 
+$now = time();
+
 if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
   $output = [];
   if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
     $first_date = sprintf(_("ab %s"), strftime('%x', $cycle['first_date']['date']));
+    $last_date = $cycle['last_date']['date'];
+    if (empty($with_past_intervals) && $last_date < $now) {
+        continue;
+    }
     if ($cycle['cycle'] == 1) :
         $cycle_output = $cycle['tostring_short'] . ' (' . sprintf(_("zweiwöchentlich, %s"), $first_date) . ')';
     elseif ($cycle['cycle'] == 2) :
@@ -41,6 +47,9 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
 
   if (is_array($dates['irregular'])):
     foreach ($dates['irregular'] as $date) :
+        if (empty($with_past_intervals) && $date->end_time < $now) {
+            continue;
+        }
         $irregular[] = $date;
         $irregular_strings[] = $date['tostring'];
         if ($date['resource_id']) :
@@ -57,6 +66,9 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
     if (is_array($irregular) && count($irregular)) :
         if (isset($shrink) && !$shrink && count($irregular) < 20) :
             foreach ($irregular as $date) :
+                if (empty($with_past_intervals) && $date->end_time < $now) {
+                    continue;
+                }
                 echo $date['tostring'];
 
                 if ($show_room && $date['resource_id']) :

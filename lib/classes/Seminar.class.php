@@ -330,6 +330,7 @@ class Seminar
                 }
 
                 $cycles[$id]['first_date'] = CycleDataDB::getFirstDate($id);
+                $cycles[$id]['last_date'] = CycleDataDB::getLastDate($id);
                 if (!empty($cycles[$id]['assigned_rooms'])) {
                     foreach ($cycles[$id]['assigned_rooms'] as $room_id => $count) {
                         $rooms[$room_id] += $count;

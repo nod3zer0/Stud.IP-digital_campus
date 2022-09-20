@@ -98,9 +98,11 @@
                     <? endif ?>
                     <dt><?= _('Angeforderte Belegungszeiten') ?></dt>
                     <dd>
-                        <? $dates = $request->getDateString(true) ?>
+                        <? $dates = $request->getDateString(true, false) ?>
                         <? if ($dates) : ?>
                             <?= implode('<br>', $dates) ?>
+                        <? else : ?>
+                            <?= _('Keine') ?>
                         <? endif ?>
                     </dd>
                     <? if ($request->preparation_time) : ?>

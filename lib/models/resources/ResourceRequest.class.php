@@ -896,8 +896,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
      *           'range_id' => The ID of the single date or ResourceRequestAppointment.
      *       ]
      */
-    public function getGroupedTimeIntervals($with_preparation_time = false)
+    public function getGroupedTimeIntervals($with_preparation_time = false, $with_past_intervals = true)
     {
+        $now = time();
         if (count($this->appointments)) {
             $time_intervals = [
                 '' => [
@@ -906,6 +907,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 ]
             ];
             foreach ($this->appointments as $appointment) {
+                if (!$with_past_intervals && $appointment->appointment->end_time < $now) {
+                    continue;
+                }
                 if ($with_preparation_time) {
                     $interval = [
                         'begin' => $appointment->appointment->date - $this->preparation_time,
@@ -932,6 +936,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 return $time_intervals;
             }
         } elseif ($this->termin_id) {
+            if (!$with_past_intervals && $this->date->end_time < $now) {
+                return [];
+            }
             if ($with_preparation_time) {
                 $interval = [
                     'begin' => $this->date->date - $this->preparation_time,
@@ -968,6 +975,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 ]
             ];
             foreach ($this->cycle->dates as $date) {
+                if (!$with_past_intervals && $date->end_time < $now) {
+                    continue;
+                }
                 if ($with_preparation_time) {
                     $interval = [
                         'begin' => $date->date - $this->preparation_time,
@@ -996,6 +1006,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                     ];
                     if ($cycle->dates) {
                         foreach ($cycle->dates as $date) {
+                            if (!$with_past_intervals && $date->end_time < $now) {
+                                continue;
+                            }
                             if ($with_preparation_time) {
                                 $interval = [
                                     'begin' => $date->date - $this->preparation_time,
@@ -1022,6 +1035,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                     'intervals' => []
                 ];
                 foreach ($this->course->dates as $date) {
+                    if (!$with_past_intervals && $date->end_time < $now) {
+                        continue;
+                    }
                     if ($date->cycle instanceof SeminarCycleDate) {
                         //Metadates are already handled above.
                         continue;
@@ -1050,6 +1066,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             }
             return $time_intervals;
         } elseif ($this->begin && $this->end) {
+            if (!$with_past_intervals && $this->end < $now) {
+                return [];
+            }
             if ($with_preparation_time) {
                 $interval = [
                     'begin' => $this->begin - $this->preparation_time,
@@ -1087,6 +1106,10 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
      *     and its corresponding ID to the request (true) or not (false).
      *     Defaults to false.
      *
+     * @param bool $with_past_intervals Whether to include past intervals (true)
+     *     or only include intervals from the current time and the future (false).
+     *     Defaults to true.
+     *
      * @return string[][] A two-dimensional array of unix timestamps.
      *     The first dimension contains one entry for each date,
      *     the second dimension contains the start and end timestamp
@@ -1102,11 +1125,15 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
      *     that are not bound to a course. The range "CourseDate"
      *     can only occur on course-bound requests.
      */
-    public function getTimeIntervals($with_preparation_time = false, $with_range = false)
+    public function getTimeIntervals($with_preparation_time = false, $with_range = false, $with_past_intervals = true)
     {
+        $now = time();
         if (count($this->appointments)) {
             $time_intervals = [];
             foreach ($this->appointments as $appointment) {
+                if (!$with_past_intervals && $appointment->appointment->end_time < $now) {
+                    continue;
+                }
                 if ($with_preparation_time) {
                     $interval = [
                         'begin' => $appointment->appointment->date - $this->preparation_time,
@@ -1131,6 +1158,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             }
             return $time_intervals;
         } elseif ($this->termin_id) {
+            if (!$with_past_intervals && $this->date->end_time < $now) {
+                return [];
+            }
             if ($with_preparation_time) {
                 $interval = [
                     'begin' => $this->date->date - $this->preparation_time,
@@ -1152,6 +1182,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         } elseif ($this->metadate_id) {
             $time_intervals = [];
             foreach ($this->cycle->dates as $date) {
+                if (!$with_past_intervals && $date->end_time < $now) {
+                    continue;
+                }
                 if ($with_preparation_time) {
                     $interval = [
                         'begin' => $date->date - $this->preparation_time,
@@ -1176,6 +1209,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             $time_intervals = [];
             if ($this->course->dates) {
                 foreach ($this->course->dates as $date) {
+                    if (!$with_past_intervals && $date->end_time < $now) {
+                        continue;
+                    }
                     if ($with_preparation_time) {
                         $interval = [
                             'begin' => $date->date - $this->preparation_time,
@@ -1198,6 +1234,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             }
             return $time_intervals;
         } elseif ($this->begin && $this->end) {
+            if (!$with_past_intervals && $this->end < $now) {
+                return [];
+            }
             if ($with_preparation_time) {
                 $interval = [
                     'begin' => $this->begin - $this->preparation_time,
@@ -1357,12 +1396,16 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
      *     is returned as one string or as an array of strings for each date
      *     (single or cycle date).
      */
-    public function getDateString($as_array = false)
+    public function getDateString($as_array = false, $with_past_intervals = true)
     {
+        $now = time();
         $strings = [];
         if (count($this->appointments)) {
             $parts  = [];
             foreach ($this->appointments as $rra) {
+                if (!$with_past_intervals && $rra->appointment->end_time < $now) {
+                    continue;
+                }
                 if ($rra->appointment) {
                     $parts[] = $rra->appointment->getFullname('include-room');
                 }
@@ -1370,11 +1413,15 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             $strings[] = implode('; ', $parts);
         } elseif ($this->termin_id) {
             if ($this->date) {
-                $strings[] = $this->date->getFullname('include-room');
+                if ($with_past_intervals || $this->date->end_time >= $now) {
+                    $strings[] = $this->date->getFullname('include-room');
+                }
             }
         } elseif ($this->metadate_id) {
             if ($this->cycle) {
-                $this->cycle->dates->map(function($date) use(&$strings){
+                $this->cycle->dates->filter(function($date) use($with_past_intervals, $now) {
+                    return $with_past_intervals || $date->end_time >= $now;
+                })->map(function($date) use(&$strings) {
                     $strings[] = $date->getFullname('include-room');
                 });
             }
@@ -1384,7 +1431,8 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
                 $strings[] = $course->getDatesTemplate('dates/seminar_html_roomplanning',
                     [
                         'shrink'    => false,
-                        'show_room' => true
+                        'show_room' => true,
+                        'with_past_intervals' => $with_past_intervals
                     ]
                 );
             }

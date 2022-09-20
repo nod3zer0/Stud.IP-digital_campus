@@ -300,23 +300,21 @@ class Resources_RoomRequestController extends AuthenticatedController
                     $sql .= ' AND ';
                 }
                 $sql .= "(
-                (resource_requests.termin_id <> '' AND EXISTS (SELECT * FROM termine WHERE termine.termin_id=resource_requests.termin_id AND termine.date BETWEEN :semester_begin AND :semester_end))
+                (resource_requests.termin_id <> '' AND EXISTS (SELECT * FROM termine WHERE termine.termin_id=resource_requests.termin_id AND termine.date BETWEEN :begin AND :semester_end))
                     OR
-                    (resource_requests.metadate_id <> '' AND EXISTS (SELECT * FROM termine WHERE termine.metadate_id=resource_requests.metadate_id AND termine.date BETWEEN :semester_begin AND :semester_end))
+                    (resource_requests.metadate_id <> '' AND EXISTS (SELECT * FROM termine WHERE termine.metadate_id=resource_requests.metadate_id AND termine.date BETWEEN :begin AND :semester_end))
                     OR
-                    (resource_requests.termin_id = '' AND resource_requests.metadate_id = '' AND EXISTS (SELECT * FROM termine WHERE termine.range_id=resource_requests.course_id AND termine.date BETWEEN :semester_begin AND :semester_end))
+                    (resource_requests.termin_id = '' AND resource_requests.metadate_id = '' AND EXISTS (SELECT * FROM termine WHERE termine.range_id=resource_requests.course_id AND termine.date BETWEEN :begin AND :semester_end))
                      ";
 
                 if (!$this->filter['request_periods']) {
                     $sql .= ' OR (
-                            ((CAST(resource_requests.begin AS SIGNED) - resource_requests.preparation_time)
-                             BETWEEN :semester_begin AND :semester_end)
-                            OR
-                            (resource_requests.end BETWEEN :semester_begin AND :semester_end)
+                        CAST(resource_requests.begin AS SIGNED) - resource_requests.preparation_time < :semester_end
+                        AND resource_requests.end > :begin
                         )';
                 }
                 $sql .= ') ';
-                $sql_params['semester_begin'] = $semester->beginn;
+                $sql_params['begin'] = max($semester->beginn, time());
                 $sql_params['semester_end'] = $semester->ende;
             }
         }
@@ -577,6 +575,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             'get'
         );
         $semester_selector->setSelection($this->filter['semester']);
+        $semester_selector->setRange(time(), PHP_INT_MAX);
         $sidebar->addWidget($semester_selector);
 
         $request_status_selector = new SelectWidget(
@@ -1471,12 +1470,12 @@ class Resources_RoomRequestController extends AuthenticatedController
             $this->request_time_intervals = [
                 '' => [
                     'metadate'  => null,
-                    'intervals' => $this->request->getTimeIntervals(true, true)
+                    'intervals' => $this->request->getTimeIntervals(true, true, false)
                 ]
             ];
         } else {
             //Get dates grouped by metadates.
-            $this->request_time_intervals = $this->request->getGroupedTimeIntervals(true);
+            $this->request_time_intervals = $this->request->getGroupedTimeIntervals(true, false);
         }
 
         $this->request_semester_string = '';

@@ -249,4 +249,24 @@ class CycleDataDB
         $statement->execute([$metadate_id]);
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
+
+
+    /**
+     * returns the last date for a given metadate_id as array
+     *
+     * @param string $metadate_id
+     *
+     * @return array
+     */
+    public static function getLastDate($metadate_id)
+    {
+        $query = "SELECT *
+                  FROM termine
+                  WHERE metadate_id = ?
+                  ORDER BY `date` DESC
+                  LIMIT 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute([$metadate_id]);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
 }
