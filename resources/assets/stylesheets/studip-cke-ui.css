@@ -376,7 +376,7 @@ form.default .ck-source-editing-area textarea {
 
 /* forum fixes */
 #forum .ck-source-editing-area textarea {
-    height: unset;
+    height: 100%;
     min-height: 8em;
 }
 
