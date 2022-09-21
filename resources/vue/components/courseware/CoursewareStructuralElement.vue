@@ -231,10 +231,10 @@
                                         </studip-select>
                                     </label>
                                     <label>
-                                        <translate>Zweck</translate>
+                                        <translate>Art des Lernmaterials</translate>
                                         <select v-model="currentElement.attributes.purpose">
                                             <option value="content"><translate>Inhalt</translate></option>
-                                            <option value="template"><translate>Vorlage</translate></option>
+                                            <option v-if="!inCourse"  value="template"><translate>Aufgabenvorlage</translate></option>
                                             <option value="oer"><translate>OER-Material</translate></option>
                                             <option value="portfolio"><translate>ePortfolio</translate></option>
                                             <option value="draft"><translate>Entwurf</translate></option>
