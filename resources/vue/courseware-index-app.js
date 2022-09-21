@@ -9,7 +9,7 @@ import Vuex from 'vuex';
 import axios from 'axios';
 import { mapResourceModules } from '@elan-ev/reststate-vuex';
 
-const mountApp = (STUDIP, createApp, element) => {
+const mountApp = async (STUDIP, createApp, element) => {
     const getHttpClient = () =>
         axios.create({
             baseURL: STUDIP.URLHelper.getURL(`jsonapi.php/v1`, {}, true),
@@ -105,6 +105,7 @@ const mountApp = (STUDIP, createApp, element) => {
                     'status-groups',
                     'users',
                     'institutes',
+                    'institute-memberships',
                     'semesters',
                     'sem-classes',
                     'sem-types',
@@ -117,7 +118,7 @@ const mountApp = (STUDIP, createApp, element) => {
 
     store.dispatch('setUrlHelper', STUDIP.URLHelper);
     store.dispatch('setUserId', STUDIP.USER_ID);
-    store.dispatch('users/loadById', {id: STUDIP.USER_ID});
+    await store.dispatch('users/loadById', {id: STUDIP.USER_ID});
     store.dispatch('setHttpClient', httpClient);
 
     store.dispatch('coursewareContext', {
