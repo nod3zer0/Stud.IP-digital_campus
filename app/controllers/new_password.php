@@ -13,9 +13,7 @@ class NewPasswordController extends StudipController
     {
         parent::before_filter($action, $args);
 
-        if (!(Config::get()->ENABLE_REQUEST_NEW_PASSWORD_BY_USER
-            && in_array('Standard', $GLOBALS['STUDIP_AUTH_PLUGIN'])
-        )) {
+        if (!in_array('Standard', $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
             PageLayout::postError(_("Das Anfordern eines neuen Passwortes durch den Benutzer ist in dieser Stud.IP-Installation nicht möglich."));
             $this->redirect('start');
             return;
@@ -97,7 +95,7 @@ class NewPasswordController extends StudipController
             $user_id = $token->user_id;
         } else {
             PageLayout::postError('Der Link ist abgelaufen oder wurde bereits verwendet. Fordern sie eine neue Mail an!');
-            $this->redirect('start');
+            $this->redirect('new_password');
             return;
         }
 
