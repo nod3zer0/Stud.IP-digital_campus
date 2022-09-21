@@ -286,8 +286,12 @@ export const actions = {
     },
 
     async createFile(context, { file, filedata, folder }) {
+        const termId = file.relationships['terms-of-use'].data.id;
         const formData = new FormData();
         formData.append('file', filedata, file.attributes.name);
+        if (termId) {
+            formData.append('term-id', termId);
+        }
 
         const url = `folders/${folder.id}/file-refs`;
         let request = await state.httpClient.post(url, formData, {
@@ -295,10 +299,16 @@ export const actions = {
                 'Content-Type': 'multipart/form-data',
             },
         });
+        let response = null;
+        try {
+            response = await state.httpClient.get(request.headers.location);
+        }
+        catch(e) {
+            console.debug(e);
+            response = null;
+        }
 
-        return state.httpClient.get(request.headers.location).then((response) => {
-            return response.data.data;
-        });
+        return response ? response.data.data : response;
     },
 
     async createRootFolder({ dispatch, rootGetters }, { context, folder }) {

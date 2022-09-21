@@ -19,11 +19,16 @@
                         {{ currentSuccess }}
                     </div>
                     <div class="cw-block-download-file-item">
-                        <a target="_blank" :download="currentFile.name" :href="currentFile.download_url" @click="handleDownload">
+                        <a
+                            target="_blank"
+                            :download="currentFile.name"
+                            :title="$gettext('Datei herunterladen')"
+                            :href="currentFile.download_url"
+                            @click="handleDownload"
+                        >
                             <span class="cw-block-file-info" :class="['cw-block-file-icon-' + currentFile.icon]">
                                 {{ currentFile.name }}
                             </span>
-                            <span class="cw-block-download-download-icon"></span>
                         </a>
                     </div>
                 </div>

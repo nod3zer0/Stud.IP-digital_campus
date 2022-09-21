@@ -574,23 +574,19 @@ export default {
                 file.attributes.name = (user.attributes["formatted-name"]).replace(/\s+/g, '_') + '_' + this.block.attributes.title + '_' + this.block.id;
             }
 
-            let img = false;
-            try {
-                 img = await this.createFile({
-                    file: file,
-                    filedata: imageBlob,
-                    folder: {id: this.currentUploadFolderId}
-                });
-            }
-            catch(e) {
-                this.companionError({
-                    info: this.$gettext('Es ist ein Fehler aufgetretten! Das Bild konnte nicht gespeichert werden.')
-                });
-                console.log(e);
-            }
+            let img = await this.createFile({
+                file: file,
+                filedata: imageBlob,
+                folder: {id: this.currentUploadFolderId}
+            });
+
             if(img && img.type === 'file-refs') {
                 this.companionSuccess({
                     info: this.$gettext('Das Bild wurde erfolgreich im Dateibereich abgelegt.')
+                });
+            } else {
+                this.companionError({
+                    info: this.$gettext('Es ist ein Fehler aufgetretten! Das Bild konnte nicht gespeichert werden.')
                 });
             }
         },

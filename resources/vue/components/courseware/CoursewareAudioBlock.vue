@@ -587,27 +587,31 @@ export default {
         async storeRecording() {
             let view = this;
             let user = this.usersById({id: this.userId});
-            let file = {};
             let blob = new Blob(view.chunks, {type: 'audio/webm; codecs:vp9' });
-            file.attributes = {};
-            file.attributes.name = (user.attributes["formatted-name"]).replace(/\s+/g, '_') + '.webm';
-            let fileObj = false;
-            try {
-                 fileObj = await this.createFile({
-                    file: file,
-                    filedata: blob,
-                    folder: {id: this.currentFolderId}
-                });
-            }
-            catch(e) {
-                this.companionError({
-                    info: this.$gettext('Es ist ein Fehler aufgetreten! Die Aufnahme konnte nicht gespeichert werden.')
-                });
-                console.debug(e);
-            }
+            let file = {
+                attributes: {
+                    name: (user.attributes["formatted-name"]).replace(/\s+/g, '_') + '.webm'
+                },
+                relationships: {
+                    'terms-of-use': {
+                        data: {
+                            id: 'SELFMADE_NONPUB'
+                        }
+                    }
+                }
+            };
+            let fileObj = await this.createFile({
+                file: file,
+                filedata: blob,
+                folder: {id: this.currentFolderId}
+            });
             if(fileObj && fileObj.type === 'file-refs') {
                 this.companionSuccess({
                     info: this.$gettext('Die Aufnahme wurde erfolgreich im Dateibereich abgelegt.')
+                });
+            } else {
+                this.companionError({
+                    info: this.$gettext('Es ist ein Fehler aufgetreten! Die Aufnahme konnte nicht gespeichert werden.')
                 });
             }
             this.newRecording = false;

@@ -19,6 +19,7 @@ class ContentTermsOfUse extends SchemaProvider
             'name' => (string) $resource['name'],
             'description' => mb_strlen($resource['description']) ? (string) $resource['description'] : null,
             'icon' => $resource['icon'],
+            'is-default' => (bool) $resource['is_default'],
             'download-condition' => (int) $resource['download_condition'],
             'mkdate' => date('c', $resource['mkdate']),
             'chdate' => date('c', $resource['chdate']),
