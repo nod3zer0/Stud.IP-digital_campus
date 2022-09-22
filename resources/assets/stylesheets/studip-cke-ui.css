@@ -124,7 +124,7 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 }
 
 .ck.ck-button.ck-on.ck-button_with-text:not(.ck-disabled):not(.ck-switchbutton):not(.ck-dropdown__button) .ck.ck-button__label,
-.ck.ck-button.ck-off.ck-button_with-text:not(.ck-disabled):not(.ck-dropdown__button):hover .ck.ck-button__label {
+.ck.ck-button.ck-off.ck-button_with-text:not(.ck-disabled):not(.ck-dropdown__button):not(.ck-character-grid__tile):hover .ck.ck-button__label {
     color: #fff;
 }
 

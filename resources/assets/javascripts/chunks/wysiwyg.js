@@ -53,13 +53,8 @@ import Mathematics from 'ckeditor5-math/src/math';
 import StudipA11YDialog, { updateVoiceLabel } from '../cke/studip-a11y-dialog/a11y-dialog.js';
 import StudipBlockQuote from '../cke/studip-quote/StudipBlockQuote.js';
 import StudipUpload from '../cke/StudipUpload.js';
-import SpecialCharactersEmojiFood from '../cke/special_characters/SpecialCharactersEmojiFood.js';
-import SpecialCharactersEmojiNature from '../cke/special_characters/SpecialCharactersEmojiNature.js';
-import SpecialCharactersEmojiObjects from '../cke/special_characters/SpecialCharactersEmojiObjects.js';
-import SpecialCharactersEmojiPeople from '../cke/special_characters/SpecialCharactersEmojiPeople.js';
-import SpecialCharactersEmojiSport from '../cke/special_characters/SpecialCharactersEmojiSport.js';
-import SpecialCharactersEmojiSymbols from '../cke/special_characters/SpecialCharactersEmojiSymbols.js';
-import SpecialCharactersEmojiTraffic from '../cke/special_characters/SpecialCharactersEmojiTraffic.js';
+import StudipWikiLink from '../cke/wiki-link/wiki-link.js';
+import SpecialCharactersSmiley from '../cke/special_characters/SpecialCharactersSmiley.js';
 import SpecialCharactersGreek from '../cke/special_characters/SpecialCharactersGreek.js';
 import '../../stylesheets/studip-cke-ui.css';
 
@@ -96,13 +91,7 @@ ClassicEditor.builtinPlugins = [
     SourceEditing,
     SpecialCharacters,
     SpecialCharactersCurrency,
-    SpecialCharactersEmojiPeople,
-    SpecialCharactersEmojiNature,
-    SpecialCharactersEmojiFood,
-    SpecialCharactersEmojiSport,
-    SpecialCharactersEmojiTraffic,
-    SpecialCharactersEmojiObjects,
-    SpecialCharactersEmojiSymbols,
+    SpecialCharactersSmiley,
     SpecialCharactersEssentials,
     SpecialCharactersGreek,
     SpecialCharactersLatin,
