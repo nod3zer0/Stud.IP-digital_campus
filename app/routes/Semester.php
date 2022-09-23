@@ -46,6 +46,7 @@ class Semester extends \RESTAPI\RouteMap
      * Returns the semester week as string for a given string
      *
      * @get /semester/:timestamp/week
+     * @allow_nobody
      */
     public function getSemesterWeek(int $timestamp)
     {
