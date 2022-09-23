@@ -1,8 +1,10 @@
 <template>
-    <section class="cw-block-edit" @click="deactivateToolbar">
+    <section class="cw-block-edit">
         <header><translate>Bearbeiten</translate></header>
         <div class="cw-block-features-content">
-            <slot name="edit" />
+            <div @click="deactivateToolbar(); exitHandler = true;">
+                <slot name="edit" />
+            </div>
             <div class="cw-button-box">
                 <button class="button accept" @click="$emit('store'); exitHandler = false;"><translate>Speichern</translate></button>
                 <button class="button cancel" @click="$emit('close'); exitHandler = false;"><translate>Abbrechen</translate></button>
@@ -20,7 +22,7 @@ export default {
     data() {
         return {
             originalBlock: Object,
-            exitHandler: true
+            exitHandler: false
         };
     },
     beforeMount() {

@@ -66,7 +66,7 @@
         </template>
         <template v-slot:containerEditDialog>
             <form class="default cw-container-dialog-edit-form" @submit.prevent="">
-                <fieldset v-for="(section, index) in currentContainer.attributes.payload.sections" :key="index">
+                <fieldset v-for="(section, index) in currentContainer.attributes.payload.sectionsfilter(section => !section.locked)" :key="index">
                     <label>
                         <translate>Title</translate>
                         <input type="text" v-model="section.name" />
@@ -131,6 +131,7 @@ export default {
         return {
             currentContainer: null,
             currentSections: [],
+            unallocatedBlocks: [],
             textDeleteSection: this.$gettext('Sektion entfernen'),
             selectAttributes: {'ref': 'openIndicator', 'role': 'presentation', 'class': 'vs__open-indicator'},
             sortMode: false,
@@ -175,9 +176,24 @@ export default {
 
             let view = this;
             let sections = this.currentContainer.attributes.payload.sections;
+
+            const unallocated = new Set(this.blocks.map(({ id }) => id));
+
             sections.forEach(section => {
+                section.locked = false;
                 section.blocks = section.blocks.map((id) =>  view.blockById({id})).filter((a) => a);
+                section.blocks.forEach(({ id }) => unallocated.delete(id));
             });
+
+            if (unallocated.size > 0) {
+                this.unallocatedBlocks = [...unallocated].map((id) => view.blockById({ id }));
+                sections.push({
+                    blocks: this.unallocatedBlocks,
+                    name: this.$gettext('nicht zugewiesene Inhalte'),
+                    icon: 'decline',
+                    locked: true
+                });
+            }
 
             this.currentSections = sections;
         },
@@ -206,8 +222,10 @@ export default {
             this.currentContainer.attributes.payload.sections.splice(index, 1);
         },
         async storeContainer() {
+            this.currentContainer.attributes.payload.sections = this.currentContainer.attributes.payload.sections.filter(section => !section.locked);
             this.currentContainer.attributes.payload.sections.forEach(section => {
                 section.blocks = section.blocks.map((block) => {return block.id;});
+                delete section.locked;
             });
 
             await this.updateContainer({

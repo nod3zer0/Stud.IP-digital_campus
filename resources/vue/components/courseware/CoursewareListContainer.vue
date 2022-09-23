@@ -29,7 +29,7 @@
                         <component :is="component(block)" :block="block" :canEdit="canEdit" :isTeacher="isTeacher" />
                     </li>
                 </transition-group>
-            
+
             </draggable>
             <div v-if="sortMode && canEdit">
                 <button class="button accept" @click="storeSort"><translate>Sortierung speichern</translate></button>
@@ -80,7 +80,7 @@ export default {
                 return [];
             }
 
-            return this.container.attributes.payload.sections[0].blocks.map((id) => this.blockById({ id })).filter((a) => a);
+            return this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id })).filter(Boolean);
         },
         showEditMode() {
             return this.$store.getters.viewMode === 'edit';
