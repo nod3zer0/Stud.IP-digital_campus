@@ -26,10 +26,18 @@ class ConfigValue extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'config_values';
+
         $config['belongs_to']['entry'] = [
             'class_name' => \ConfigEntry::class,
             'foreign_key' => 'field',
         ];
+
+        $config['registered_callbacks']['after_delete'][] = function (ConfigValue $value) {
+            if ($value->entry->type === 'i18n') {
+                $value->getTypedValue()->removeTranslations();
+            }
+        };
+
         parent::configure($config);
     }
 
