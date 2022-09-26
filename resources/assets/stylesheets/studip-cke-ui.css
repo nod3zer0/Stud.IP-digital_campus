@@ -383,3 +383,8 @@ form.default .ck-source-editing-area textarea {
 #forum .ck form {
     display: inherit;
 }
+
+/* toolbar fix for dialogs */
+.ck.ck-toolbar > .ck-toolbar__items {
+    max-width: calc(100% - 20px);
+}
