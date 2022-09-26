@@ -94,6 +94,12 @@ c o n t e n t s
 * * * * * * * * */
 .cw-content-overview {
     max-width: 1100px;
+    h2 {
+        margin: 0;
+        font-weight: 400;
+        padding: 5px 0;
+        font-size: 1.4em;
+    }
 }
 
 .cw-contents-overview-teaser {
@@ -193,6 +199,22 @@ c o n t e n t s
     }
 }
 
+.cw-content-courses {
+    h2 {
+        margin: 0;
+        font-weight: 400;
+        padding: 5px 0;
+        font-size: 1.4em;
+    }
+    ul.cw-tiles {
+        margin-bottom: 20px;
+    }
+}
+
+.cw-contents-overview-personal {
+    margin-bottom: 2em;
+}
+
 /* * * * * * * * * * *
 c o n t e n t s  e n d
 * * * * * * * * * * */
@@ -202,7 +224,8 @@ r i b b o n
 * * * * * */
 $consum_ribbon_width: calc(100% - 58px);
 #course-courseware-index,
-#contents-courseware-courseware {
+#contents-courseware-courseware,
+#contents-courseware-shared_content_courseware  {
     &.consume {
         overflow: hidden;
     }
@@ -725,6 +748,23 @@ ribbon end
             padding: 0;
             font-size: 1.25em;
         }
+        td.perm {
+            input.right, input.date {
+                cursor: pointer !important;
+            }
+        }
+    }
+    button.cw-add-persons {
+        margin-left: 4px;
+    }
+    button.cw-permission-delete {
+        width: 24px;
+        height: 24px;
+        border: none;
+        background-color: transparent;
+        @include background-icon(trash, clickable);
+        background-repeat: no-repeat;
+        cursor: pointer;
     }
 }
 
@@ -3117,6 +3157,26 @@ a u d i o  b l o c k
 a u d i o  b l o c k  e n d
 * * * * * * * * * * * * * */
 
+/* * * * * * * * * * * * * * * * * * * *
+f o r  m u l t i m e d i a  b l o c k s
+* * * * * * * * * * * * * * * * * * * */
+.cw-file-empty {
+    @include background-icon(file, info, 96);
+    border: solid thin $content-color-40;
+    background-position: center 1em;
+    background-repeat: no-repeat;
+    min-height: 140px;
+    padding: 1em;
+    p {
+        text-align: center;
+        padding-top: 106px;
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * *
+f o r  m u l t i m e d i a  b l o c k s  e n d
+* * * * * * * * * * * * * * * * * * * * * * * */
+
 /* * * * * * * * * *
 v i d e o  b l o c k
 * * * * * * * * * * */
@@ -4807,17 +4867,6 @@ cw tiles end
     }
 }
 /* courseware template preview end*/
-
-/* contents courseware courses */
-.cw-content-courses {
-    h2 {
-        margin-top: 0;
-    }
-    ul.cw-tiles {
-        margin-bottom: 20px;
-    }
-}
-/* contents courseware courses end*/
 
 /* * * * * * * * * *
  i n p u t  f i l e

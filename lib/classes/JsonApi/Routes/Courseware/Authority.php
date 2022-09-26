@@ -59,7 +59,23 @@ class Authority
     public static function canUpdateBlock(User $user, Block $resource)
     {
         if ($resource->isBlocked()) {
-            return $resource->getBlockerUserId() == $user->id;
+            $structural_element = $resource->container->structural_element;
+
+            if ($structural_element->range_type === 'user') {
+                if ($structural_element->range_id === $user->id) {
+                    return true;
+                }
+
+                return $structural_element->canEdit($user);
+            }
+
+            $perm = $GLOBALS['perm']->have_studip_perm(
+                $structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
+                $structural_element->course->id,
+                $user->id
+            );
+
+            return $resource->getBlockerUserId() === $user->id || $perm;
         }
 
         return self::canUpdateContainer($user, $resource->container);
@@ -72,7 +88,36 @@ class Authority
 
     public static function canUpdateEditBlocker(User $user, $resource)
     {
-        return $resource->edit_blocker_id == '' || $resource->edit_blocker_id === $user->id;
+        $structural_element = null;
+        if ($resource instanceof Block) {
+            $structural_element = $resource->container->structural_element;
+        }
+        if ($resource instanceof Container) {
+            $structural_element = $resource->structural_element;
+        }
+        if ($resource instanceof StructuralElement) {
+            $structural_element = $resource;
+        }
+
+        if ($structural_element === null) {
+            return false;
+        }
+
+        if ($structural_element->range_type === 'user') {
+            if ($structural_element->range_id === $user->id) {
+                return true;
+            }
+
+            return $structural_element->canEdit($user);
+        }
+
+        $perm = $GLOBALS['perm']->have_studip_perm(
+            $structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
+            $structural_element->course->id,
+            $user->id
+        );
+
+        return $resource->edit_blocker_id == '' || $resource->edit_blocker_id === $user->id || $perm;
     }
 
     public static function canShowContainer(User $user, Container $resource)
@@ -161,6 +206,18 @@ class Authority
     public static function canIndexStructuralElements(User $user)
     {
         return $GLOBALS['perm']->have_perm('root', $user->id);
+    }
+
+    public static function canIndexStructuralElementsShared(User $user)
+    {
+        //TODO ?
+        return true;
+    }
+
+    public static function canIndexStructuralElementsReleased(User $user)
+    {
+        //TODO ?
+        return true;
     }
 
     public static function canReorderStructuralElements(User $user, $resource)

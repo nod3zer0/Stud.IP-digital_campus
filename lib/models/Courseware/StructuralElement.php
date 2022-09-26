@@ -169,14 +169,22 @@ class StructuralElement extends \SimpleORMap
         return self::getCourseware($courseId, 'course');
     }
 
-    private static function getCourseware(string $rangeId, string $rangeType): ?StructuralElement
+    public static function getSharedCoursewareUser(string $root_id): ?StructuralElement
     {
-        /** @var ?StructuralElement $result */
-        $result = self::findOneBySQL(
-            'range_id = ?
-            AND range_type = ? AND parent_id IS NULL',
-            [$rangeId, $rangeType]
-        );
+        return self::getCourseware('', '', $root_id);
+    }
+
+    private static function getCourseware(string $rangeId, string $rangeType, string $root_id = null): ?StructuralElement
+    {
+        if ($root_id) {
+            $result = self::find($root_id);
+        } else {
+            $result = self::findOneBySQL(
+                'range_id = ?
+                AND range_type = ? AND parent_id IS NULL',
+                [$rangeId, $rangeType]
+            );
+        }
 
         return $result;
     }
@@ -222,7 +230,11 @@ class StructuralElement extends \SimpleORMap
 
         switch ($this->range_type) {
             case 'user':
-                return $this->range_id === $user->id;
+                if ($this->range_id === $user->id) {
+                    return true;
+                }
+
+                return $this->hasWriteApproval($user);
 
             case 'course':
                 $hasEditingPermission = $this->hasEditingPermission($user);
@@ -273,10 +285,11 @@ class StructuralElement extends \SimpleORMap
 
         switch ($this->range_type) {
             case 'user':
-                // Kontext "user": Nutzende können nur ihre eigenen Strukturknoten sehen.
-                if  ($this->range_id === $user->id) {
+                if ($this->range_id === $user->id) {
                     return true;
                 }
+
+                return $this->hasReadApproval($user);
 
                 $link = StructuralElement::findOneBySQL('target_id = ?', [$this->id]);
                 if ($link) {
@@ -313,8 +326,11 @@ class StructuralElement extends \SimpleORMap
 
         switch ($this->range_type) {
             case 'user':
-                // Kontext "user": Nutzende können nur ihre eigenen Strukturknoten sehen.
-                return $this->range_id === $user->id;
+                if ($this->range_id === $user->id) {
+                    return true;
+                }
+
+                return $this->hasReadApproval($user);
 
             case 'course':
                 if (!$GLOBALS['perm']->have_studip_perm('user', $this->range_id, $user->id)) {
@@ -367,59 +383,133 @@ class StructuralElement extends \SimpleORMap
 
     private function hasReadApproval($user): bool
     {
-        if (!count($this->read_approval)) {
-            return true;
-        }
-
+        // this property is shared between all range types.
         if ($this->read_approval['all']) {
             return true;
         }
 
-        // find user in users
-        $users = $this->read_approval['users'];
-        foreach ($users as $approvedUserId) {
-            if ($approvedUserId == $user->id) {
+        // now we also check against the perms for contents.
+        if ($this->range_type === 'user') {
+            return $this->hasUserReadApproval($user);
+        } else {
+            if (!count($this->read_approval)) {
                 return true;
             }
-        }
 
-        // find user in groups
-        $groups = $this->read_approval['groups'];
-        foreach ($groups as $groupId) {
-            /** @var ?\Statusgruppen $group */
-            $group = \Statusgruppen::find($groupId);
-            if ($group && $group->isMember($user->id)) {
-                return true;
+            // find user in users
+            $users = $this->read_approval['users'];
+            foreach ($users as $approvedUserId) {
+                if ($approvedUserId === $user->id) {
+                    return true;
+                }
+            }
+
+            // find user in groups
+            $groups = $this->read_approval['groups'];
+            foreach ($groups as $groupId) {
+                /** @var ?\Statusgruppen $group */
+                $group = \Statusgruppen::find($groupId);
+                if ($group && $group->isMember($user->id)) {
+                    return true;
+                }
             }
         }
 
         return false;
     }
 
-    private function hasWriteApproval($user): bool
+    private function hasUserReadApproval($user): bool
     {
-        if (!count($this->write_approval)) {
-            return false;
+        if (!count($this->read_approval)) {
+            if ($this->isRootNode()) {
+                return false;
+            }
+            return $this->parent->hasUserReadApproval($user);
         }
 
+        // find user in users
+        $users = $this->read_approval['users'];
+        foreach ($users as $listedUserPerm) {
+            // now for contents, there is an expiry date defined.
+            if (!empty($listedUserPerm['expiry']) && strtotime($listedUserPerm['expiry']) < strtotime('today')) {
+                if ($this->isRootNode()) {
+                    return false;
+                }
+                return $this->parent->hasUserReadApproval($user);
+            }
+            // In order to have a record of the users in the perms list of contents,
+            // we keep a full perm record in read_approval column, and set read property to true or false,
+            // this won't apply to write_approval column.
+            if ($listedUserPerm['id'] == $user->id && $listedUserPerm['read'] == true) {
+                return true;
+            }
+        }
+    }
+
+    private function hasWriteApproval($user): bool
+    {
+        // this property is shared between all range types.
         if ($this->write_approval['all']) {
             return true;
         }
 
-        // find user in users
-        $users = $this->write_approval['users']->getArrayCopy();
-        if (in_array($user->id, $users)) {
-            return true;
-        }
+        // now we also check against the perms for contents.
+        if ($this->range_type === 'user') {
+            return $this->hasUserWriteApproval($user);
+        } else {
+            if (!count($this->write_approval)) {
+                return false;
+            }
 
-        // find user in groups
-        foreach (\Statusgruppen::findMany($this->write_approval['groups']->getArrayCopy()) as $group) {
-            if ($group->isMember($user->id)) {
+            if ($this->write_approval['all']) {
                 return true;
+            }
+
+            // find user in users
+            $users = $this->write_approval['users']->getArrayCopy();
+            if (in_array($user->id, $users)) {
+                return true;
+            }
+
+            // find user in groups
+            foreach (\Statusgruppen::findMany($this->write_approval['groups']->getArrayCopy()) as $group) {
+                if ($group->isMember($user->id)) {
+                    return true;
+                }
             }
         }
 
         return false;
+    }
+
+    private function hasUserWriteApproval($user): bool
+    {
+        if (!count($this->write_approval)) {
+            if ($this->isRootNode()) {
+                return false;
+            }
+            return $this->parent->hasUserWriteApproval($user);
+        }
+
+        // find user in users
+        $users = $this->write_approval['users'];
+        foreach ($users as $listedUserPerm) {
+            // now for contents, there is an expiry date defined.
+            if (!empty($listedUserPerm['expiry']) && strtotime($listedUserPerm['expiry']) < strtotime('today')) {
+                if ($this->isRootNode()) {
+                    return false;
+                }
+                return $this->parent->hasUserWriteApproval($user);
+            }
+            if ($listedUserPerm['id'] == $user->id) {
+                return true;
+            }
+        }
+
+        if ($this->isRootNode()) {
+            return false;
+        }
+        return $this->parent->hasUserWriteApproval($user);
     }
 
     /**

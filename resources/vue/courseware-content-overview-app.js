@@ -37,6 +37,7 @@ const mountApp = (STUDIP, createApp, element) => {
                     'courseware-containers',
                     'courseware-instances',
                     'courseware-structural-elements',
+                    'courseware-structural-elements-shared',
                     'courseware-templates',
                     'courseware-user-data-fields',
                     'courseware-user-progresses',
@@ -83,6 +84,8 @@ const mountApp = (STUDIP, createApp, element) => {
         id: entry_id,
         type: entry_type,
     });
+
+    store.dispatch('courseware-structural-elements-shared/loadAll', { options: { include: 'owner' } });
 
     const app = createApp({
         render: (h) => h(ContentOverviewApp),

@@ -19,6 +19,7 @@ import StudipProxyCheckbox from './components/StudipProxyCheckbox.vue';
 import StudipProxiedCheckbox from './components/StudipProxiedCheckbox.vue';
 import StudipTooltipIcon from './components/StudipTooltipIcon.vue';
 import StudipSelect from './components/StudipSelect.vue';
+import StudipMultiPersonSearch from './components/StudipMultiPersonSearch.vue';
 
 const BaseComponents = {
     Multiselect,
@@ -41,7 +42,8 @@ const BaseComponents = {
     StudipProxiedCheckbox,
     StudipTooltipIcon,
     StudipSelect,
-    TextareaWithToolbar
+    TextareaWithToolbar,
+    StudipMultiPersonSearch
 };
 
 export default BaseComponents;

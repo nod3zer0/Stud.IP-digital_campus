@@ -432,4 +432,41 @@ class Contents_CoursewareController extends AuthenticatedController
 
         $this->render_pdf($element->pdfExport($this->user, $with_children), trim($element->title).'.pdf');
     }
+
+    /**
+     * To display the shared courseware
+     *
+     * @param string $entry_element_id the shared struct element id
+     */
+    public function shared_content_courseware_action($entry_element_id)
+    {
+        global $perm, $user;
+
+        $navigation = new Navigation(_('Geteiltes Lernmaterial'), 'dispatch.php/contents/courseware/shared_content_courseware/' . $entry_element_id);
+        Navigation::addItem('/contents/courseware/shared_content_courseware', $navigation);
+        Navigation::activateItem('/contents/courseware/shared_content_courseware');
+
+        $this->entry_element_id = $entry_element_id;
+
+        $struct = \Courseware\StructuralElement::findOneBySQL(
+            "id = ? AND range_type = 'user'",
+            [$this->entry_element_id]
+        );
+
+        if (!$struct) {
+            throw new Trails_Exception(404, _('Der geteilte Inhalt kann nicht gefunden werden.'));
+        }
+
+        if (!$struct->canRead($user) && !$struct->canEdit($user)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->user_id = $struct->owner_id;
+
+        $this->licenses = $this->getLicences();
+
+        $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS);
+
+        $this->setCoursewareSidebar();
+    }
 }

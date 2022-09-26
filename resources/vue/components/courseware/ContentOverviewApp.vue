@@ -1,10 +1,10 @@
 <template>
   <div class="cw-content-overview">
         <courseware-content-overview-elements />
-        <MountingPortal mountTo="#courseware-content-overview-action-widget" name="sidebar-views">
+        <MountingPortal mountTo="#courseware-content-overview-action-widget" name="sidebar-actions">
             <courseware-content-overview-action-widget />
         </MountingPortal>
-        <MountingPortal mountTo="#courseware-content-overview-filter-widget" name="sidebar-views">
+        <MountingPortal mountTo="#courseware-content-overview-filter-widget" name="sidebar-filters">
             <courseware-content-overview-filter-widget />
         </MountingPortal>
   </div>

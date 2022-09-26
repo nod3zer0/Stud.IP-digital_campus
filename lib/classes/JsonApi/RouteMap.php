@@ -308,7 +308,7 @@ class RouteMap
 
     private function addAuthenticatedCoursewareRoutes(RouteCollectorProxy $group): void
     {
-        $group->get('/{type:courses|users}/{id}/courseware', Routes\Courseware\CoursewareInstancesShow::class);
+        $group->get('/{type:courses|users|sharedusers}/{id}/courseware', Routes\Courseware\CoursewareInstancesShow::class);
         $group->patch('/courseware-instances/{id}', Routes\Courseware\CoursewareInstancesUpdate::class);
         $this->addRelationship(
             $group,
@@ -419,6 +419,10 @@ class RouteMap
         $group->get('/courseware-structural-element-feedback/{id}', Routes\Courseware\StructuralElementFeedbackShow::class);
         $group->patch('/courseware-structural-element-feedback/{id}', Routes\Courseware\StructuralElementFeedbackUpdate::class);
         $group->delete('/courseware-structural-element-feedback/{id}', Routes\Courseware\StructuralElementFeedbackDelete::class);
+
+        $group->get('/courseware-structural-elements-shared', Routes\Courseware\StructuralElementsSharedIndex::class);
+        $group->get('/courseware-structural-elements-released', Routes\Courseware\StructuralElementsReleasedIndex::class);
+
 
         $group->get('/courseware-blocks/{id}/user-data-field', Routes\Courseware\UserDataFieldOfBlocksShow::class);
         $group->get('/courseware-user-data-fields/{id}', Routes\Courseware\UserDataFieldsShow::class);

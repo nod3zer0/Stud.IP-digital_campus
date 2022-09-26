@@ -179,7 +179,7 @@
                     :closeText="textEdit.close"
                     closeClass="cancel"
                     height="500"
-                    width="500"
+                    :width="inContent ? '720' : '500'"
                     class="studip-dialog-with-tab"
                     @close="closeEditDialog"
                     @confirm="storeCurrentElement"
@@ -301,6 +301,12 @@
                             <courseware-tab :name="textEdit.approval" :index="3">
                                 <courseware-structural-element-permissions
                                     v-if="inCourse"
+                                    :element="currentElement"
+                                    @updateReadApproval="updateReadApproval"
+                                    @updateWriteApproval="updateWriteApproval"
+                                />
+                                <courseware-content-permissions
+                                    v-if="inContent"
                                     :element="currentElement"
                                     @updateReadApproval="updateReadApproval"
                                     @updateWriteApproval="updateWriteApproval"
@@ -599,6 +605,7 @@
 import ContainerComponents from './container-components.js';
 import CoursewarePluginComponents from './plugin-components.js';
 import CoursewareStructuralElementPermissions from './CoursewareStructuralElementPermissions.vue';
+import CoursewareContentPermissions from './CoursewareContentPermissions.vue';
 import CoursewareStructuralElementDiscussion from './CoursewareStructuralElementDiscussion.vue';
 import CoursewareAccordionContainer from './CoursewareAccordionContainer.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
@@ -623,6 +630,7 @@ export default {
     components: {
         CoursewareStructuralElementDiscussion,
         CoursewareStructuralElementPermissions,
+        CoursewareContentPermissions,
         CoursewareRibbon,
         CoursewareListContainer,
         CoursewareAccordionContainer,
@@ -758,6 +766,11 @@ export default {
             return this.$store.getters.context.type === 'courses';
         },
 
+        inContent() {
+            // The rights tab in contents will be only visible to the owner.
+            return this.$store.getters.context.type === 'users' && this.userId === this.currentElement.relationships.user.data.id;
+        },
+
         textDelete() {
             let textDelete = {};
             textDelete.title = this.$gettext('Seite unwiderruflich löschen');
@@ -787,6 +800,11 @@ export default {
                     this.currentElement.relationships.user &&
                     context.id === this.currentElement.relationships.user.data.id
                 ) {
+                    valid = true;
+                }
+            }
+            if (context.type === 'sharedusers') {
+                if (context.id === this.courseware.relationships.root.data.id) {
                     valid = true;
                 }
             }
@@ -925,11 +943,11 @@ export default {
                 menu.push({ id: 3, label: this.$gettext('Seite hinzufügen'), icon: 'add', emit: 'addElement' });
             }
             if (this.context.type === 'users') {
-                menu.push({ id: 6, label: this.$gettext('Öffentlichen Link erzeugen'), icon: 'group', emit: 'linkElement' });
+                menu.push({ id: 7, label: this.$gettext('Öffentlichen Link erzeugen'), icon: 'group', emit: 'linkElement' });
             }
             if (!this.isRoot && this.canEdit && !this.isTask) {
                 menu.push({
-                    id: 9,
+                    id: 8,
                     label: this.$gettext('Seite löschen'),
                     icon: 'trash',
                     emit: 'deleteCurrentElement',

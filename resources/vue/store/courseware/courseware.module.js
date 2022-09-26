@@ -50,7 +50,9 @@ const getDefaultState = () => {
         exportState: '',
         exportProgress: 0,
 
+        permissionFilter: 'read',
         purposeFilter: 'all',
+        sourceFilter: 'all',
         showOverviewElementAddDialog: false,
 
         bookmarkFilter: 'all',
@@ -201,8 +203,14 @@ const getters = {
     exportProgress(state) {
         return state.exportProgress;
     },
+    permissionFilter(state) {
+        return state.permissionFilter;
+    },
     purposeFilter(state) {
         return state.purposeFilter;
+    },
+    sourceFilter(state) {
+        return state.sourceFilter;
     },
     bookmarkFilter(state) {
         return state.bookmarkFilter;
@@ -1226,8 +1234,14 @@ export const actions = {
         await dispatch('courseware-task-feedback/delete', data, { root: true });
     },
 
+    setPermissionFilter({ commit }, permission) {
+        commit('setPermissionFilter', permission);
+    },
     setPurposeFilter({ commit }, purpose) {
         commit('setPurposeFilter', purpose);
+    },
+    setSourceFilter({ commit }, source) {
+        commit('setSourceFilter', source);
     },
     setBookmarkFilter({ commit }, course) {
         commit('setBookmarkFilter', course);
@@ -1413,8 +1427,14 @@ export const mutations = {
     setExportProgress(state, exportProgress) {
         state.exportProgress = exportProgress;
     },
+    setPermissionFilter(state, permission) {
+        state.permissionFilter = permission;
+    },
     setPurposeFilter(state, purpose) {
         state.purposeFilter = purpose;
+    },
+    setSourceFilter(state, source) {
+        state.sourceFilter = source;
     },
     setBookmarkFilter(state, course) {
         state.bookmarkFilter = course;

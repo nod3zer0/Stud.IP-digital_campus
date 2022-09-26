@@ -112,6 +112,9 @@ export default {
             return writeApproval.all || writeApproval.groups.length > 0 || writeApproval.users.length > 0;
         },
         hasNoReadApproval() {
+            if (this.context.type === 'users') {
+                return false;
+            }
             const readApproval = this.element.attributes['read-approval'];
 
             if (Object.keys(readApproval).length === 0 || this.hasWriteApproval) {

@@ -26,6 +26,7 @@ trait CoursewareInstancesHelper
             'courses' => 'getCoursewareCourse',
             'user' => 'getCoursewareUser',
             'users' => 'getCoursewareUser',
+            'sharedusers' => 'getSharedCoursewareUser',
         ];
         if (!($method = $methods[$rangeType])) {
             throw new BadRequestException('Invalid range type: "' . $rangeType . '".');

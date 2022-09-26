@@ -79,7 +79,7 @@ STUDIP.domReady(() => {
     if (document.getElementById('courseware-content-releases-app')) {
         STUDIP.Vue.load().then(({ createApp }) => {
             import(
-                /* webpackChunkName: "courseware-content-links-app" */
+                /* webpackChunkName: "courseware-content-releases-app" */
                 '@/vue/courseware-content-releases-app.js'
             ).then(({ default: mountApp }) => {
                 return mountApp(STUDIP, createApp, '#courseware-content-releases-app');

@@ -23,6 +23,7 @@ const mountApp = (STUDIP, createApp, element) => {
                     'courseware-containers',
                     'courseware-public-links',
                     'courseware-structural-elements',
+                    'courseware-structural-elements-released',
                     'file-refs',
                     'users',
                 ],
@@ -46,6 +47,7 @@ const mountApp = (STUDIP, createApp, element) => {
         }
     }
 
+    store.dispatch('setUserId', STUDIP.USER_ID);
     store.dispatch('coursewareContext', {
         id: entry_id,
         type: entry_type,
@@ -56,6 +58,7 @@ const mountApp = (STUDIP, createApp, element) => {
             include: 'structural-element',
         },
     });
+    store.dispatch('courseware-structural-elements-released/loadAll', {});
 
     const app = createApp({
         render: (h) => h(ContentReleasesApp),

@@ -110,7 +110,8 @@ class MultipersonsearchController extends AuthenticatedController
      * This needs to be done in one single action to provider a similar
      * usability for no-JavaScript users as for JavaScript users.
      */
-    public function no_js_form_action() {
+    public function no_js_form_action()
+    {
 
         if (!empty($_POST)) {
             CSRFProtection::verifyUnsafeRequest();
@@ -242,5 +243,42 @@ class MultipersonsearchController extends AuthenticatedController
         }
 
     }
+
+
+    public function ajax_search_vue_action($name)
+    {
+        $searchterm = Request::get('s');
+        $searchterm = str_replace(',', ' ', $searchterm);
+        $searchterm = preg_replace('/\s+/u', ' ', $searchterm);
+
+        $result = [];
+        // execute searchobject if searchterm is at least 3 chars long
+        if (mb_strlen($searchterm) >= 3) {
+            $mp = MultiPersonSearch::load($name);
+            $mp->setSearchObject(new StandardSearch('user_id'));
+            $searchObject = $mp->getSearchObject();
+            $result = array_map(function ($r) {
+                return $r['user_id'];
+            }, $searchObject->getResults($searchterm, [], 50));
+            $result = User::findFullMany($result, 'ORDER BY Nachname ASC, Vorname ASC');
+            $alreadyMember = $mp->getDefaultSelectedUsersIDs();
+        }
+
+        $output = [];
+        foreach ($result as $user) {
+            $output[] = [
+                'id' => $user->id,
+                'avatar'  => Avatar::getAvatar($user->id)->getURL(Avatar::SMALL),
+                'text'    => "{$user->nachname}, {$user->vorname} -- {$user->perms} ({$user->username})",
+                'selected'  => $alreadyMember === null ? false : in_array($user->id, $alreadyMember),
+                'nachname' => $user->nachname,
+                'vorname' => $user->vorname,
+                'username' => $user->username,
+                'formatted-name' => trim($user->getFullName())
+            ];
+        }
+        $this->render_json($output);
+    }
+
 
 }
