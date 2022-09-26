@@ -46,7 +46,7 @@
                         </a>
                         <span v-else>{{ element.attributes.title }}</span>
                     </td>
-                    <td>{{ task.attributes.progress }}%</td>
+                    <td>{{ task.attributes.progress.toFixed(2) }}%</td>
                     <td>{{ getReadableDate(task.attributes['submission-date']) }}</td>
                     <td>
                         <studip-icon v-if="task.attributes.submitted" shape="accept" role="status-green" />

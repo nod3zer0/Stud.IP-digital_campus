@@ -2322,6 +2322,11 @@ d a s h b o a r d
         display: unset;
         max-width: unset;
         flex-wrap: unset;
+
+        .cw-dashboard-tasks-wrapper,
+        .cw-dashboard-students-wrapper {
+            max-height: unset;
+        }
     }
     &.cw-dashboard-activity-view {
         .cw-dashboard-activities {

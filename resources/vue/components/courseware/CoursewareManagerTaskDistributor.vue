@@ -30,7 +30,7 @@
                     </select>
                 </label>
                 <label>
-                    <translate>Type</translate>
+                    <translate>Typ</translate>
                     <select v-model="taskSolverType">
                         <option value="autor"><translate>für Studierende</translate></option>
                         <option value="group"><translate>für Gruppen</translate></option>
@@ -38,7 +38,7 @@
                 </label>
             </fieldset>
             <fieldset v-show="taskSolverType === 'autor'" class="cw-manager-task-distributor-task-solvers">
-                <legend><translate>Studierende</translate></legend>
+                <legend><translate>Aufgabe Studierenden zuweisen</translate></legend>
                 <courseware-companion-box
                     v-show="autor_members.length === 0"
                     :msgCompanion="$gettext('Es wurden keine Studierenden in dieser Veranstaltung gefunden.')"
@@ -47,20 +47,20 @@
                 <table v-show="autor_members.length > 0" class="default">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" v-model="bulkSelectAutors"/></th>
                             <th><translate>Name</translate></th>
-                            <th><translate>Aufgabe zuweisen</translate></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="user in autor_members" :key="user.user_id">
-                            <td>{{ user.formattedname }}</td>
                             <td><input type="checkbox" v-model="selectedAutors" :value="user.user_id" /></td>
+                            <td>{{ user.formattedname }}</td>
                         </tr>
                     </tbody>
                 </table>
             </fieldset>
             <fieldset v-show="taskSolverType === 'group'" class="cw-manager-task-distributor-task-solvers">
-                <legend><translate>Gruppen</translate></legend>
+                <legend><translate>Aufgabe Gruppen zuweisen</translate></legend>
                 <courseware-companion-box
                     v-show="groups.length === 0"
                     :msgCompanion="$gettext('Es wurden keine Gruppen in dieser Veranstaltung gefunden.')"
@@ -69,14 +69,14 @@
                 <table v-show="groups.length > 0" class="default">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" v-model="bulkSelectGroups"/></th>
                             <th><translate>Gruppenname</translate></th>
-                            <th><translate>Aufgabe zuweisen</translate></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="group in groups" :key="group.id">
-                            <td>{{ group.name }}</td>
                             <td><input type="checkbox" v-model="selectedGroups" :value="group.id" /></td>
+                            <td>{{ group.name }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -85,6 +85,14 @@
                 <button class="button" name="create_task" :disabled="!targetSelected" @click="createTask">
                     <translate>Aufgabe verteilen</translate>
                 </button>
+                <span 
+                    v-if="!targetSelected"
+                    class="tooltip tooltip-icon "
+                    :data-tooltip="$gettext('Bitte wählen aus, an welcher Stelle die Aufgabe eingefügt werden soll.')"
+                    tabindex="0"
+                    title=""
+                >
+                </span>
             </footer>
         </form>
     </div>
@@ -106,7 +114,9 @@ export default {
             taskSolverType: 'autor',
             selectedElementId: '',
             selectedAutors: [],
+            bulkSelectAutors: false,
             selectedGroups: [],
+            bulkSelectGroups: false,
             taskTitle: '',
             submissionDate: '',
             solverMayAddBlocks: true,
@@ -301,16 +311,45 @@ export default {
 
             await this.createTaskGroup({ taskGroup });
 
+            this.resetTask();
+
             this.companionSuccess({
-                info: this.$gettext('Aufgaben wurden verteilt.'),
+                info: this.$gettext('Aufgabe wurde verteilt.'),
             });
         },
+        resetTask() {
+            this.taskTitle = '';
+            this.taskSolverType = 'autor';
+            this.selectedElementId = '';
+            this.submissionDate = '';
+            this.solverMayAddBlocks = true;
+            this.bulkSelectAutors = false;
+            this.selectedAutors = [];
+            this.bulkSelectGroups = false;
+            this.selectedGroups = [];
+        }
     },
     mounted() {
         const parent = { type: 'courses', id: this.context.id };
-        this.loadCourseMemberships({ parent, relationship: 'memberships', options: { include: 'user' } });
+        this.loadCourseMemberships({ parent, relationship: 'memberships', options: { include: 'user', 'page[offset]': 0, 'page[limit]': 10000, 'filter[permission]': 'autor' } });
         this.loadCourseStatusGroups({ parent, relationship: 'status-groups' });
         this.loadOwnCourseware();
     },
+    watch: {
+        bulkSelectAutors(newState) {
+            if (newState) {
+                this.selectedAutors = this.autor_members.map( autor => autor.user_id);
+            } else {
+                this.selectedAutors = [];
+            }
+        },
+        bulkSelectGroups(newState) {
+            if (newState) {
+                this.selectedGroups = this.groups.map( group => group.id);
+            } else {
+                this.selectedGroups = [];
+            }
+        }
+    }
 };
 </script>
