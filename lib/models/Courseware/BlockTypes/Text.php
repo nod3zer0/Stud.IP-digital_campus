@@ -70,7 +70,9 @@ class Text extends BlockType
         $files = [];
 
         if ($payload['text']) {
+            $old_libxml_error = libxml_use_internal_errors(true);
             $document->loadHTML($payload['text']);
+            libxml_use_internal_errors($old_libxml_error);
             $imageElements = $document->getElementsByTagName('img');
             foreach ($imageElements as $element) {
                 if (!$element instanceof \DOMElement || !$element->hasAttribute('src')) {
@@ -82,6 +84,7 @@ class Text extends BlockType
                 }
             }
         }
+
         return $files;
     }
 

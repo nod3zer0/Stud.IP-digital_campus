@@ -285,6 +285,8 @@ class Markup
             code
             div[class|style]
             em
+            figure[class|style]
+            figcaption
             h1
             h2
             h3
@@ -305,7 +307,7 @@ class Markup
             small
             sub
             sup
-            table[class]
+            table[class|style]
             tbody
             td[colspan|rowspan|style]
             thead
@@ -340,7 +342,9 @@ class Markup
             'height',
             'color',
             'background-color', // needed by span, td
-            'float'
+            'border-style',
+            'float',
+            'border'
         ]);
 
         if ($autoformat) {
@@ -374,6 +378,9 @@ class Markup
               'height' => 'Length',
               'controls' => 'Text',     // Bool triggers bug in HTMLPurifier
         ]);
+
+        $def->addElement('figcaption', 'Inline', 'Flow', 'Common');
+        $def->addElement('figure', 'Block', 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow', 'Common');
 
         return new \HTMLPurifier($config);
     }
