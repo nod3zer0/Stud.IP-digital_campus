@@ -23,8 +23,14 @@ import CoursewareKeyPointBlock from './CoursewareKeyPointBlock.vue';
 import CoursewareLinkBlock from './CoursewareLinkBlock.vue';
 import CoursewareTableOfContentsBlock from './CoursewareTableOfContentsBlock.vue';
 import CoursewareTextBlock from './CoursewareTextBlock.vue';
+import CoursewareTimelineBlock from './CoursewareTimelineBlock.vue';
 import CoursewareTypewriterBlock from './CoursewareTypewriterBlock.vue';
 import CoursewareVideoBlock from './CoursewareVideoBlock.vue';
+import CoursewareBiographyAchievementsBlock from './CoursewareBiographyAchievementsBlock.vue';
+import CoursewareBiographyCareerBlock from './CoursewareBiographyCareerBlock.vue';
+import CoursewareBiographyGoalsBlock from './CoursewareBiographyGoalsBlock.vue';
+import CoursewareBiographyPersonalInformationBlock from './CoursewareBiographyPersonalInformationBlock.vue';
+
 
 const ContainerComponents = {
     CoursewareDefaultBlock,
@@ -52,8 +58,13 @@ const ContainerComponents = {
     CoursewareLinkBlock,
     CoursewareTableOfContentsBlock,
     CoursewareTextBlock,
+    CoursewareTimelineBlock,
     CoursewareTypewriterBlock,
     CoursewareVideoBlock,
+    CoursewareBiographyAchievementsBlock,
+    CoursewareBiographyCareerBlock,
+    CoursewareBiographyGoalsBlock,
+    CoursewareBiographyPersonalInformationBlock,
 };
 
 export default ContainerComponents;

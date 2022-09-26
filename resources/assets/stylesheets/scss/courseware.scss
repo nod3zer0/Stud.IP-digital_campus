@@ -74,11 +74,32 @@ $blockadder-items: (
     link: link-extern,
     table-of-contents: table-of-contents,
     text: edit,
+    timeline: date-cycle,
     typewriter: block-typewriter,
     video: video2,
     accordion: block-accordion,
     list: view-list,
-    tabs: block-tabs
+    tabs: block-tabs,
+    biography-achievements: medal,
+    biography-career: ranking,
+    biography-personal-information: own-license,
+    biography-goals: radar 
+);
+
+$achievement-types: (
+    certificate: file-text,
+    accreditation: vcard,
+    award: medal,
+    book: literature,
+    publication: news,
+    membership: group3,
+);
+
+$goals-types: (
+    personal: person2,
+    school: doctoral-cap,
+    academic: doctoral-cap,
+    professional: tools,
 );
 
 $media-buttons: (
@@ -1689,6 +1710,10 @@ $icons: (
         &.cw-tab-active {
             display: block;
             height: unset;
+        }
+
+        form.default {
+            padding-left: 10px;
         }
     }
     &.cw-course-manager-tabs {
@@ -4030,6 +4055,104 @@ i m a g e  m a p  b l o c k
 i m a g e  m a p  b l o c k  e n d
 * * * * * * * * * * * * * * * * */
 
+/* * * * * * * * * * * * * * 
+b i o g r a p h y  b l o c k
+* * * * * * * * * * * * * */
+
+.cw-block-biography {
+    .cw-block-biography-content {
+        display: flex;
+        min-height: 200px;
+        flex-direction: row;
+        padding: 2em 2em 2em 1em;
+        border: 2px solid $base-color;
+
+        .cw-block-biography-type {
+            margin: auto 1em auto 0;
+            padding-top: 96px;
+            min-width: 192px;
+            max-width: 192px;
+            text-align: center;
+            background-repeat: no-repeat;
+            background-position: center top;
+        }
+
+        .cw-block-biography-details {
+            h2, h3 {
+                margin-top: 0;
+            }
+        }
+        
+    }
+}
+
+/* * * * * * * * * * * * * * * * * *
+b i o g r a p h y  b l o c k  e n d
+* * * * * * * * * * * * * * * * * */
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+b i o g r a p h y  a c h i e v e m e n t s  b l o c k
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+.cw-block-biography-achievements {
+    @each $type, $icon in $achievement-types {
+        .cw-block-biography-achievements-type-#{$type} {
+            @include background-icon($icon, clickable, 96);
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+b i o g r a p h y  a c h i e v e m e n t s  b l o c k  e n d
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/* * * * * * * * * * * * ** * * * * * *
+b i o g r a p h y  g o a l s  b l o c k
+* * * * * * * * * * * * * * * * * * * */
+
+.cw-block-biography-goals {
+    @each $type, $icon in $goals-types {
+        .cw-block-biography-goals-type-#{$type} {
+            @include background-icon($icon, clickable, 96);
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * *
+b i o g r a p h y  g o a l s  b l o c k  e n d
+* * * * * * * * * * * * * * * * * * * * * * */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+b i o g r a p h y  p e r s o n a l  i n f o r m a t i o n  b l o c k
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+.cw-block-biography-personal-information {
+    .cw-block-biography-content {
+        min-height: 140px;
+
+        .cw-block-biography-personal-information-type {
+            @include background-icon(person2, clickable, 96);
+        }
+
+        .cw-block-biography-personal-information-details {
+            display: grid;
+            max-height: 7em;
+            grid-template-columns: max-content 1fr;
+            grid-gap: 5px 10px;
+
+            .preface {
+                grid-column-start: 1;
+                grid-column-end: 3;
+            }
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+b i o g r a p h y  p e r s o n a l  i n f o r m a t i o n  b l o c k  e n d
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 /* * * * * * * * * *
 l i n k  b l o c k
 * * * * * * * * * */
@@ -4688,6 +4811,257 @@ text block
 /*
 text block end
 */
+
+/* * * * * * * *
+ t i m e l i n e
+* * * * * * * */
+// Mixins and Placeholders
+%clearfix {
+    &:after, &:before {
+        content: '';
+        display: block;
+        width: 100%;
+        clear: both;
+    }
+}
+
+// Timeline
+.cw-timeline {
+    list-style: none;
+    width: 100%;
+    margin: 30px auto;
+    position: relative;
+    padding: 0;
+    transition: all 0.4s ease;
+
+    &:before {
+        content:"";
+        width: 3px;
+        height: 100%;
+        background: $content-color-40;
+        left: 50%;
+        top: 0;
+        position: absolute;
+    }
+
+    &:after {
+        content: "";
+        clear: both;
+        display: table;
+        width: 100%;
+    }
+    
+    .cw-timeline-item {
+        margin-bottom: 50px;
+        position: relative;
+        @extend %clearfix;
+
+        .cw-timeline-item-icon {
+            background: $white;
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            overflow: hidden;
+            margin-left: -25px;
+            @each $name, $color in $tile-colors {
+                &.cw-timeline-item-icon-color-#{"" + $name} {
+                    border: solid 2px $color;
+                }
+            }
+            
+            border-radius: 50%;
+
+            img {
+                position: relative;
+                top: 9px;
+                left: 9px;
+
+                &.charcoal {
+                    filter: brightness(0) saturate(100%) invert(22%) sepia(29%) saturate(364%) hue-rotate(168deg) brightness(87%) contrast(79%);
+                }
+                &.royal-purple {
+                    filter: brightness(0) saturate(100%) invert(35%) sepia(43%) saturate(658%) hue-rotate(234deg) brightness(100%) contrast(87%);
+                }
+                &.iguana-green {
+                    filter: brightness(0) saturate(100%) invert(74%) sepia(9%) saturate(1885%) hue-rotate(76deg) brightness(86%) contrast(88%);
+                }
+                &.queen-blue {
+                    filter: brightness(0) saturate(100%) invert(44%) sepia(10%) saturate(2086%) hue-rotate(178deg) brightness(88%) contrast(80%);
+                }
+                &.verdigris {
+                    filter: brightness(0) saturate(100%) invert(64%) sepia(11%) saturate(4959%) hue-rotate(131deg) brightness(103%) contrast(49%);
+                }
+                &.mulberry {
+                    filter: brightness(0) saturate(100%) invert(49%) sepia(16%) saturate(1665%) hue-rotate(271deg) brightness(88%) contrast(95%);
+                }
+                &.pumpkin {
+                    filter: brightness(0) saturate(100%) invert(38%) sepia(86%) saturate(1993%) hue-rotate(13deg) brightness(104%) contrast(108%);
+                }
+                &.sunglow {
+                    filter: brightness(0) saturate(100%) invert(93%) sepia(69%) saturate(6824%) hue-rotate(313deg) brightness(102%) contrast(100%);
+                }
+                &.apple-green {
+                    filter: brightness(0) saturate(100%) invert(69%) sepia(5%) saturate(5203%) hue-rotate(42deg) brightness(100%) contrast(84%);
+                }
+                &.studip-blue {
+                    filter: brightness(0) saturate(100%) invert(26%) sepia(19%) saturate(1783%) hue-rotate(177deg) brightness(96%) contrast(93%);
+                }
+                &.studip-lightblue {
+                    filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(190%) hue-rotate(190deg) brightness(104%) contrast(89%);
+                }
+                &.studip-red {
+                    filter: brightness(0) saturate(100%) invert(8%) sepia(95%) saturate(6904%) hue-rotate(1deg) brightness(95%) contrast(109%);
+                }
+                &.studip-green {
+                    filter: brightness(0) saturate(100%) invert(27%) sepia(85%) saturate(1531%) hue-rotate(109deg) brightness(95%) contrast(101%);
+                }
+                &.studip-yellow {
+                    filter: brightness(0) saturate(100%) invert(94%) sepia(14%) saturate(7314%) hue-rotate(330deg) brightness(103%) contrast(101%);
+                }
+                &.studip-gray {
+                    filter: brightness(0) saturate(100%) invert(46%) sepia(1%) saturate(2621%) hue-rotate(169deg) brightness(87%) contrast(87%);
+                }
+            }
+        }
+
+        .cw-timeline-item-content {
+            width: 40%;
+            background: $white;
+            padding: 20px;
+            transition: all 0.3s ease;
+
+            h3 {
+                padding: 15px;
+                color: #fff;
+                margin: -20px -20px 0 -20px;
+                font-weight: 700;
+                min-height: 1.1em;
+            }
+
+            article {
+                min-height: 2em;
+                border: solid thin $content-color-20;
+                border-top: none;
+                margin: 0 -20px;
+                padding: 15px;
+
+                header {
+                    font-weight: 700;
+                    font-size: 1.1em;
+                    margin: 0.5em 0;
+                }
+            }
+
+            &:before {
+                content: '';
+                position: absolute;
+                left: calc(40% + 40px);
+                top: 18px;
+                width: 0; 
+                height: 0; 
+                border-top: 7px solid transparent;
+                border-bottom: 7px solid transparent;
+            }
+            &.left {
+                h3 {
+                    text-align: right;
+                }
+            }
+            &.right {
+                float: right;
+
+                h3 {
+                    text-align: left;
+                }
+
+                &:before {
+                    content: '';
+                    right: calc(40% + 40px);
+                    left: inherit;
+                    border-left: 0;
+                }
+            }
+
+            @each $name, $color in $tile-colors {
+                &.cw-timeline-item-content-color-#{"" + $name} {
+                    border-color: $color;
+                    h3 {
+                        background-color: $color;
+                    }
+                    &.left {
+                        &:before {
+                            border-left: 7px solid $color;
+                        }
+                    }
+                    &.right {
+                        &:before {
+                            border-right: 7px solid $color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@mixin oneSidedTimeline() {
+    .cw-timeline {
+        &:before {
+            left: 25px;
+        }
+        .cw-timeline-item {
+            .cw-timeline-item-icon {
+                left: 25px;
+            }
+            .cw-timeline-item-content {
+                width: stretch;
+                margin-left: 70px;
+                &.left {
+                    float: unset;
+
+                    h3 {
+                        text-align: left;
+                    }
+
+                    &:before {
+                        content: '';
+                        right: calc(100% - 70px);
+                        left: inherit;
+                        border-left: 0;
+                    }
+                }
+                &.right {
+                    float: unset;
+                    &:before {
+                        right: calc(100% - 70px);
+                    }
+                }
+
+                @each $name, $color in $tile-colors {
+                    &.cw-timeline-item-content-color-#{"" + $name} {
+                        &.left {
+                            &:before {
+                                border-right: 7px solid $color;
+                                border-left: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.cw-container-colspan-half {
+    @include oneSidedTimeline();
+}
+
+@media only screen and (max-width: 1070px) {
+    @include oneSidedTimeline();
+}
+/* * * * * * * * * * * *
+ t i m e l i n e  e n d
+* * * * * * * * * * * */
 
 /*
 cw tiles

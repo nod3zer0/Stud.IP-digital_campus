@@ -1,0 +1,14 @@
+{
+    "title": "Payload schema of Courseware\\BlockType\\BiographyCareer",
+    "type": "object",
+    "properties": {
+        "sort": {
+            "type": "string"
+        },
+        "items": {
+            "type": "array"
+        }
+    },
+    "required": [],
+    "additionalProperties": false
+}

@@ -20,5 +20,13 @@ export const blockMixin = {
         ...mapActions({
             updateUserProgress: 'courseware-user-progresses/update',
         }),
+        getReadableDate(date) {
+            let locale = navigator.language ? navigator.language : 'de-DE';
+            return new Date(date).toLocaleDateString(locale, {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            });
+        },
     },
 };

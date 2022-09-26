@@ -169,6 +169,7 @@ export default {
                 { title: this.$gettext('Gestaltung'), type: 'layout' },
                 { title: this.$gettext('Dateien'), type: 'files' },
                 { title: this.$gettext('Externe Inhalte'), type: 'external' },
+                { title: this.$gettext('Biografie'), type: 'biography' },
             ];
         },
         maxHeight() {

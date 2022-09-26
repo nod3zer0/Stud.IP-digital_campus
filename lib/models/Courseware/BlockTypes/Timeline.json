@@ -1,0 +1,17 @@
+{
+    "title": "Payload schema of Courseware\\BlockType\\Timeline",
+    "type": "object",
+    "properties": {
+        "sort": {
+            "type": "string"
+        },
+        "dateformat": {
+            "type": "string"
+        },
+        "items": {
+            "type": "array"
+        }
+    },
+    "required": [],
+    "additionalProperties": false
+}

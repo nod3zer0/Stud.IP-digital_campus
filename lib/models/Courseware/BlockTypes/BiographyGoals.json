@@ -1,0 +1,14 @@
+{
+    "title": "Payload schema of Courseware\\BlockType\\BiographyGoals",
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        }
+    },
+    "required": ["type"],
+    "additionalProperties": false
+}

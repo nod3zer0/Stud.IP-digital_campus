@@ -1,0 +1,24 @@
+{
+    "title": "Payload schema of Courseware\\BlockType\\BiographyPersonalInformation",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "birthplace": {
+            "type": "string"
+        },
+        "birthday": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "gender": {
+            "type": "string"
+        },
+        "status": {
+            "type": "string"
+        }
+    },
+    "required": [],
+    "additionalProperties": false
+}

@@ -88,6 +88,10 @@ abstract class BlockType
         $blockTypes = [
             Audio::class,
             BeforeAfter::class,
+            BiographyAchievements::class,
+            BiographyCareer::class,
+            BiographyGoals::class,
+            BiographyPersonalInformation::class,
             Canvas::class,
             Chart::class,
             Code::class,
@@ -106,6 +110,7 @@ abstract class BlockType
             Link::class,
             TableOfContents::class,
             Text::class,
+            Timeline::class,
             Typewriter::class,
             Video::class,
         ];
