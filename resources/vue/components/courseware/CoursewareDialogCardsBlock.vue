@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -115,12 +116,13 @@ import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
 import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
-
+import { blockMixin } from './block-mixin.js';
 import { mapActions } from 'vuex';
 import StudipIcon from '../StudipIcon.vue';
 
 export default {
     name: 'courseware-dialog-cards-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         CoursewareFileChooser,

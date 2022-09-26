@@ -5,8 +5,9 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeText"
-            @closeEdit="closeEdit"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div v-if="currentStyle !== 'tiles' && currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
@@ -88,10 +89,12 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
+import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-table-of-contents-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
     },
@@ -167,9 +170,6 @@ export default {
         initCurrentData() {
             this.currentTitle = this.title;
             this.currentStyle = this.style;
-        },
-        closeEdit() {
-            this.initCurrentData();
         },
         storeText() {
             let attributes = {};

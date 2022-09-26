@@ -5,11 +5,12 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
             <template #content>
-                <TwentyTwenty :before="currentBeforeUrl" :after="currentAfterUrl" />
+                <TwentyTwenty v-if="!isEmpty" :before="currentBeforeUrl" :after="currentAfterUrl" />
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
@@ -61,12 +62,14 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
+import { blockMixin } from './block-mixin.js';
 import TwentyTwenty from 'vue-twentytwenty';
 import 'vue-twentytwenty/dist/vue-twentytwenty.css';
 import { mapActions } from 'vuex';
 
 export default {
     name: 'courseware-before-after-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         CoursewareFileChooser,
@@ -145,6 +148,7 @@ export default {
             this.currentAfterFile  = this.afterFile;
         });
 
+        this.loadImages();
         this.initCurrentData();
     },
     methods: {
@@ -153,6 +157,23 @@ export default {
             loadFileRefs: 'loadFileRefs',
             companionWarning: 'companionWarning',
         }),
+        loadImages() {
+            this.loadFileRefs(this.block.id).then((response) => {
+                for (let i = 0; i < response.length; i++) {
+                    if (response[i].id === this.beforeFileId) {
+                        this.beforeFile = response[i];
+                    }
+
+                    if (response[i].id === this.afterFileId) {
+                        this.afterFile = response[i];
+                    }
+                }
+
+                this.currentBeforeFile = this.beforeFile;
+                this.currentAfterFile  = this.afterFile;
+            });
+        },
+
         initCurrentData() {
             this.currentBeforeSource = this.beforeSource;
             this.currentBeforeFileId = this.beforeFileId;

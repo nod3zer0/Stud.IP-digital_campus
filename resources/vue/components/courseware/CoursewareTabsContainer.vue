@@ -4,6 +4,7 @@
         containerClass="cw-container-tabs"
         :canEdit="canEdit"
         :isTeacher="isTeacher"
+        @showEdit="setShowEdit"
         @storeContainer="storeContainer"
         @closeEdit="initCurrentData"
         @sortBlocks="enableSort"
@@ -129,6 +130,7 @@ export default {
     },
     data() {
         return {
+            showEdit: false,
             currentContainer: null,
             currentSections: [],
             unallocatedBlocks: [],
@@ -197,6 +199,9 @@ export default {
 
             this.currentSections = sections;
         },
+        setShowEdit(state) {
+            this.showEdit = state;
+        },
         addSection() {
             this.currentContainer.attributes.payload.sections.push({ name: '', icon: '', blocks: [] });
         },
@@ -261,7 +266,9 @@ export default {
     },
     watch: {
         blocks() {
-            this.initCurrentData();
+            if (!this.showEdit) {
+                this.initCurrentData();
+            }
         }
     }
 };

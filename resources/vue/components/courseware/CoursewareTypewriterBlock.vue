@@ -5,8 +5,9 @@
         :canEdit="canEdit"
         :isTeacher="isTeacher"
         :preview="true"
+        @showEdit="initCurrentData"
         @storeEdit="storeText"
-        @closeEdit="closeEdit"
+        @closeEdit="initCurrentData"
         >
             <template #content>
                 <div class="cw-typewriter-content">
@@ -67,11 +68,13 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
+import { blockMixin } from './block-mixin.js';
 import { VueTyper } from 'vue-typer';
 import { mapActions } from 'vuex';
 
 export default {
     name: 'courseware-typewriter-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         VueTyper,
@@ -133,9 +136,6 @@ export default {
             this.$nextTick(()=> {
                 this.currentText = text;
             });
-        },
-        closeEdit() {
-            this.initCurrentData();
         },
         storeText() {
             let attributes = {};

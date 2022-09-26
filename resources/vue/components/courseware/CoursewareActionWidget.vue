@@ -9,37 +9,42 @@
                 </li>
                 <li class="cw-action-widget-show-consume-mode">
                     <button @click="showConsumeMode">
-                        <translate>Vollbild einschalten</translate>
+                        {{ $gettext('Vollbild einschalten') }}
                     </button>
                 </li>
-                <li v-if="canEdit" class="cw-action-widget-edit">
+                <li v-if="canEdit && !blockedByAnotherUser" class="cw-action-widget-edit">
                     <button @click="editElement">
-                        <translate>Seite bearbeiten</translate>
+                        {{ $gettext('Seite bearbeiten') }}
                     </button>
                 </li>
-                <li v-if="canEdit" class="cw-action-widget-sort">
+                <li v-if="canEdit && blockedByAnotherUser" class="cw-action-widget-remove-lock">
+                    <button @click="removeElementLock">
+                        {{ $gettext('Sperre aufheben') }}
+                    </button>
+                </li>
+                <li v-if="canEdit && !blockedByAnotherUser" class="cw-action-widget-sort">
                     <button @click="sortContainers">
-                        <translate>Abschnitte sortieren</translate>
+                        {{ $gettext('Abschnitte sortieren') }}
                     </button>
                 </li>
                 <li v-if="canEdit" class="cw-action-widget-add">
                     <button @click="addElement">
-                        <translate>Seite hinzufügen</translate>
+                        {{ $gettext('Seite hinzufügen') }}
                     </button>
                 </li>
                 <li class="cw-action-widget-info">
                     <button @click="showElementInfo">
-                        <translate>Informationen anzeigen</translate>
+                        {{ $gettext('Informationen anzeigen') }}
                     </button>
                 </li>
                 <li class="cw-action-widget-star">
                     <button @click="createBookmark">
-                        <translate>Lesezeichen setzen</translate>
+                        {{ $gettext('Lesezeichen setzen') }}
                     </button>
                 </li>
                 <li v-if="context.type === 'users'" class="cw-action-widget-link">
                     <button @click="linkElement">
-                        <translate>Öffentlichen Link erzeugen</translate>
+                        {{ $gettext('Öffentlichen Link erzeugen') }}
                     </button>
                 </li>
                 <li v-if="!isOwner" class="cw-action-widget-oer">
@@ -47,9 +52,9 @@
                         <translate>Material für den OER Campus vorschlagen</translate>
                     </button>
                 </li>
-                <li v-if="!isRoot && canEdit" class="cw-action-widget-trash">
+                <li v-if="!isRoot && canEdit && !blockedByAnotherUser" class="cw-action-widget-trash">
                     <button @click="deleteElement">
-                        <translate>Seite löschen</translate>
+                        {{ $gettext('Seite löschen') }}
                     </button>
                 </li>
             </ul>
@@ -77,6 +82,11 @@ export default {
             consumeMode: 'consumeMode',
             showToolbar: 'showToolbar',
             context: 'context',
+
+            blocked: 'currentElementBlocked',
+            blockerId: 'currentElementBlockerId',
+            blockedByThisUser: 'currentElementBlockedByThisUser',
+            blockedByAnotherUser: 'currentElementBlockedByAnotherUser',
         }),
         isRoot() {
             if (!this.structuralElement) {
@@ -93,18 +103,6 @@ export default {
         },
         currentId() {
             return this.structuralElement?.id;
-        },
-        blocked() {
-            return this.structuralElement?.relationships['edit-blocker'].data !== null;
-        },
-        blockerId() {
-            return this.blocked ? this.structuralElement?.relationships['edit-blocker'].data?.id : null;
-        },
-        blockedByThisUser() {
-            return this.blocked && this.userId === this.blockerId;
-        },
-        blockedByAnotherUser() {
-            return this.blocked && this.userId !== this.blockerId;
         },
         tocText() {
             return this.showToolbar ? this.$gettext('Inhaltsverzeichnis ausblenden') : this.$gettext('Inhaltsverzeichnis anzeigen');
@@ -123,6 +121,7 @@ export default {
             showElementDeleteDialog: 'showElementDeleteDialog',
             showElementInfoDialog: 'showElementInfoDialog',
             showElementLinkDialog: 'showElementLinkDialog',
+            showElementRemoveLockDialog: 'showElementRemoveLockDialog',
             updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
             setStructuralElementSortMode: 'setStructuralElementSortMode',
             companionInfo: 'companionInfo',
@@ -131,9 +130,11 @@ export default {
             setConsumeMode: 'coursewareConsumeMode',
             setViewMode: 'coursewareViewMode',
             setShowToolbar: 'coursewareShowToolbar',
-            setSelectedToolbarItem: 'coursewareSelectedToolbarItem'
+            setSelectedToolbarItem: 'coursewareSelectedToolbarItem',
+            loadStructuralElement: 'loadStructuralElement',
         }),
         async editElement() {
+            await this.loadStructuralElement(this.currentId);
             if (this.blockedByAnotherUser) {
                 this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
 
@@ -152,10 +153,36 @@ export default {
             }
             this.showElementEditDialog(true);
         },
-        sortContainers() {
+        async removeElementLock() {
+            this.showElementRemoveLockDialog(true);
+        },
+        async sortContainers() {
+            await this.loadStructuralElement(this.currentId);
+            if (this.blockedByAnotherUser) {
+                this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+
+                return false;
+            }
+            try {
+                await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+            } catch (error) {
+                if (error.status === 409) {
+                    this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+                } else {
+                    console.log(error);
+                }
+
+                return false;
+            }
             this.setStructuralElementSortMode(true);
         },
         async deleteElement() {
+            await this.loadStructuralElement(this.currentId);
+            if (this.blockedByAnotherUser) {
+                this.companionInfo({ info: this.$gettextInterpolate('Löschen nicht möglich, da %{blockingUserName} die Seite bearbeitet.', {blockingUserName: this.blockingUserName}) });
+
+                return false;
+            }
             await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
             this.showElementDeleteDialog(true);
         },

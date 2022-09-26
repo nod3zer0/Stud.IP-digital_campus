@@ -5,8 +5,9 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeText"
-            @closeEdit="closeEdit"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div
@@ -166,11 +167,13 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
+import { blockMixin } from './block-mixin.js';
 import { mapGetters, mapActions } from 'vuex';
 import contentIcons from './content-icons.js';
 
 export default {
     name: 'courseware-headline-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         CoursewareFileChooser,
@@ -341,9 +344,6 @@ export default {
             this.currentBackgroundImage = file;
             this.currentBackgroundImageId = file.id;
             this.currentBackgroundURL = file.download_url;
-        },
-        closeEdit() {
-            this.initCurrentData();
         },
         storeText() {
             let attributes = {};

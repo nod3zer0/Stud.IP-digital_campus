@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -62,10 +63,12 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
+import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-link-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
     },

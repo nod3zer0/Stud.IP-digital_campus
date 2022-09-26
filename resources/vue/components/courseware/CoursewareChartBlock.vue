@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -84,12 +85,14 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
+import { blockMixin } from './block-mixin.js';
 import Chart from 'chart.js';
 import { mapActions } from 'vuex';
 import StudipIcon from '../StudipIcon.vue';
 
 export default {
     name: 'courseware-chart-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         StudipIcon,

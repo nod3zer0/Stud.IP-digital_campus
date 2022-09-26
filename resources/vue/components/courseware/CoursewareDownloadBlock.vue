@@ -6,6 +6,7 @@
             :isTeacher="isTeacher"
             :preview="true"
             :defaultGrade="false"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -77,11 +78,12 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
-
+import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-download-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         CoursewareFileChooser,

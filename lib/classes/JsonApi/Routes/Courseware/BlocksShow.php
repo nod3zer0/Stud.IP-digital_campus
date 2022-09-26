@@ -18,7 +18,7 @@ class BlocksShow extends JsonApiController
         'container',
         'owner',
         'editor',
-        'edit_blocker',
+        'edit-blocker',
         'user-data-field',
         'user-progress',
     ];

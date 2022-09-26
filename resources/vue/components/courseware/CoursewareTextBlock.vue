@@ -6,8 +6,9 @@
             :isTeacher="isTeacher"
             :preview="false"
             ref="defaultBlock"
+            @showEdit="initCurrent"
             @storeEdit="storeText"
-            @closeEdit="closeEdit"
+            @closeEdit="initCurrent"
         >
             <template #content>
                 <section class="cw-block-content formatted-content" v-html="currentText" ref="content"></section>
@@ -22,11 +23,13 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
+import { blockMixin } from './block-mixin.js';
 import ClassicEditor from '../../../assets/javascripts/chunks/wysiwyg.js'
 import { mapActions } from 'vuex';
 
 export default {
     name: 'courseware-text-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
     },
@@ -45,19 +48,18 @@ export default {
         };
     },
     computed: {
-        text() {
+        text() {    
             return this.block?.attributes?.payload?.text;
         },
     },
     mounted() {
-        this.currentText = this.text;
-        this.loadMathjax();
+        this.initCurrent();
     },
     methods: {
         ...mapActions({
             updateBlock: 'updateBlockInContainer',
         }),
-        closeEdit() {
+        initCurrent() {
             this.currentText = this.text;
             this.loadMathjax();
         },

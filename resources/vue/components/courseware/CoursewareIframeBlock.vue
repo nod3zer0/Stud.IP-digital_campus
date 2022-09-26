@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -104,12 +105,13 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
-
+import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 import md5 from 'md5';
 
 export default {
     name: 'courseware-iframe-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
     },

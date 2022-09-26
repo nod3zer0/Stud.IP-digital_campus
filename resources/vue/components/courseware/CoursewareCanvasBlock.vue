@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -147,11 +148,12 @@
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
 import CoursewareFolderChooser from './CoursewareFolderChooser.vue';
-
+import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-canvas-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         CoursewareFileChooser,
@@ -261,6 +263,7 @@ export default {
             this.initCurrentData();
             this.buildCanvas();
         });
+        this.loadImageFile();
     },
     methods: {
         ...mapActions({
@@ -285,6 +288,14 @@ export default {
                 this.clickTool = JSON.parse(this.canvasDraw.clickTool);
                 this.Text = JSON.parse(this.canvasDraw.Text);
             }
+        },
+        loadImageFile() {
+            this.loadFileRefs(this.block.id).then((response) => {
+                this.file = response[0];
+                this.currentFile = this.file;
+                this.initCurrentData();
+                this.buildCanvas();
+            });
         },
         updateCurrentFile(file) {
             this.currentFile = file;

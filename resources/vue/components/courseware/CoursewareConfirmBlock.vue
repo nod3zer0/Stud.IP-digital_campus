@@ -6,6 +6,7 @@
             :isTeacher="isTeacher"
             :preview="true"
             :defaultGrade="false"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >

@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="false"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -69,6 +70,7 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
+import { blockMixin } from './block-mixin.js';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 
@@ -76,6 +78,7 @@ import { mapActions } from 'vuex';
 
 export default {
     name: 'courseware-document-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         CoursewareFileChooser,
@@ -256,7 +259,6 @@ export default {
                     containerId: this.block.relationships.container.data.id,
                 });
             }
-
         },
     },
 };

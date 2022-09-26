@@ -28,5 +28,8 @@ export const blockMixin = {
                 day: "2-digit",
             });
         },
+        setShowEdit(state) {
+            this.showEdit = state;
+        },
     },
 };

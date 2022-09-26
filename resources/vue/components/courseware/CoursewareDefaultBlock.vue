@@ -3,12 +3,15 @@
         <div class="cw-content-wrapper" :class="[showEditMode ? 'cw-content-wrapper-active' : '']">
             <header v-if="showEditMode" class="cw-block-header">
                 <span class="cw-sortable-handle"></span>
-                <span v-if="!block.attributes.visible" class="cw-default-block-invisible-info">
-                    <studip-icon shape="visibility-invisible" />
-                </span>
+                <studip-icon v-if="!block.attributes.visible" shape="visibility-invisible" />
+                <studip-icon v-if="blockedByAnotherUser" shape="lock-locked" />
                 <span>{{ blockTitle }}</span>
+                <span v-if="blockedByAnotherUser" class="cw-default-block-blocker-warning">
+                    | {{ $gettextInterpolate('wird im Moment von %{ userName } bearbeitet', { userName: this.blockingUserName }) }}
+                </span>
+
                 <span v-if="!block.attributes.visible" class="cw-default-block-invisible-info">
-                    (<translate>unsichtbar für Nutzende ohne Schreibrecht</translate>)
+                    | {{ $gettext('unsichtbar für Nutzende ohne Schreibrecht') }}
                 </span>
                 <courseware-block-actions
                     :block="block"
@@ -18,6 +21,7 @@
                     @showInfo="displayFeature('Info')"
                     @showExportOptions="displayFeature('ExportOptions')"
                     @deleteBlock="displayDeleteDialog()"
+                    @removeLock="displayRemoveLockDialog()"
                 />
             </header>
             <div v-if="showContent" class="cw-block-content">
@@ -59,8 +63,18 @@
             height="180"
             width="360"
             @confirm="executeDelete"
-            @close="showDeleteDialog = false"
+            @close="closeDeleteDialog"
         ></studip-dialog>
+        <studip-dialog
+            v-if="showRemoveLockDialog"
+            :title="textRemoveLockTitle"
+            :question="textRemoveLockAlert"
+            height="200"
+            width="450"
+            @confirm="executeRemoveLock"
+            @close="showRemoveLockDialog = false"
+        ></studip-dialog>
+
     </div>
 </template>
 
@@ -118,9 +132,12 @@ export default {
             showContent: true,
             showEditModeShortcut: false,
             showDeleteDialog: false,
+            showRemoveLockDialog: false,
             currentComments: [],
             textDeleteTitle: this.$gettext('Block unwiderruflich löschen'),
             textDeleteAlert: this.$gettext('Möchten Sie diesen Block wirklich löschen?'),
+            textRemoveLockTitle: this.$gettext('Sperre aufheben'),
+            textRemoveLockAlert: this.$gettext('Möchten Sie die Sperre dieses Blocks wirklich aufheben?'),
         };
     },
     computed: {
@@ -129,6 +146,7 @@ export default {
             containerById: 'courseware-containers/byId',
             context: 'context',
             userId: 'userId',
+            userById: 'users/byId',
             viewMode: 'viewMode',
         }),
         showEditMode() {
@@ -142,16 +160,26 @@ export default {
             return this.viewMode === 'discuss';
         },
         blocked() {
-            return this.block?.relationships['edit-blocker'].data !== null;
+            return this.block?.relationships?.['edit-blocker']?.data !== null;
         },
         blockerId() {
-            return this.blocked ? this.block?.relationships['edit-blocker'].data?.id : null;
+            return this.blocked ? this.block?.relationships?.['edit-blocker']?.data?.id : null;
         },
         blockedByThisUser() {
             return this.blocked && this.userId === this.blockerId;
         },
         blockedByAnotherUser() {
             return this.blocked && this.userId !== this.blockerId;
+        },
+        blockingUser() {
+            if (this.blockedByAnotherUser) {
+                return this.userById({id: this.blockerId});
+            }
+
+            return null;
+        },
+        blockingUserName() {
+            return this.blockingUser ? this.blockingUser.attributes['formatted-name'] : '';
         },
         blockTitle() {
             const type = this.block.attributes['block-type'];
@@ -175,10 +203,12 @@ export default {
     methods: {
         ...mapActions({
             companionInfo: 'companionInfo',
+            companionWarning: 'companionWarning',
             deleteBlock: 'deleteBlockInContainer',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
             loadContainer: 'loadContainer',
+            loadBlock: 'courseware-blocks/loadById',
             updateContainer: 'updateContainer',
         }),
         async displayFeature(element) {
@@ -192,26 +222,16 @@ export default {
             this.showContent = true;
             if (element) {
                 if (element === 'Edit') {
-                    await this.loadContainer(this.block.relationships.container.data.id);
+                    await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
                     if (!this.blocked) {
-                        try {
-                            await this.lockObject({ id: this.block.id, type: 'courseware-blocks' });
-                        } catch(error) {
-                            if (error.status === 403) {
-                                this.companionInfo({ info: this.$gettext('Dieser Block wird bereits bearbeitet.') });
-                            } else {
-                                console.log(error);
-                            }
-
-                            return false;
-                        }
+                        await this.lockObject({ id: this.block.id, type: 'courseware-blocks' });
                         if (!this.preview) {
                             this.showContent = false;
                         }
                         this['show' + element] = true;
                         this.showFeatures = true;
                     } else {
-                        if (this.userId === this.blockerId) {
+                        if (this.blockedByThisUser) {
                             if (!this.preview) {
                                 this.showContent = false;
                             }
@@ -227,25 +247,64 @@ export default {
                 }
             }
         },
+        prepareStoreEdit() {
+            // storeEdit is only emitted when the block is not in deleting process.
+            if (!this.showDeleteDialog) {
+                this.storeBlock();
+            }
+        },
+        async storeBlock() {
+            await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
+
+            if (this.blockedByThisUser) {
+                this.$emit('storeEdit');
+            }
+
+            if (this.blockedByAnotherUser) {
+                this.companionWarning({ info: this.$gettextInterpolate('Ihre Änderungen konnten nicht gespeichert werden, da %{blockingUserName} die Bearbeitung übernommen hat.', {blockingUserName: this.blockingUserName}) });
+                this.displayFeature(false);
+                this.$emit('closeEdit');
+            }
+            if (this.blockerId === null) {
+                await this.lockObject({ id: this.block.id, type: 'courseware-blocks' });
+                this.$emit('storeEdit');
+            }
+        },
         async closeEdit() {
+            await this.loadBlock({ id: this.block.id , options: { include: 'edit-blocker' } }); // has block editor lock changed?
             this.displayFeature(false);
             this.$emit('closeEdit');
-            await this.unlockObject({ id: this.block.id, type: 'courseware-blocks' });
-            this.loadContainer(this.block.relationships.container.data.id); // to update block editor lock
+            if (this.blockedByThisUser) {
+                await this.unlockObject({ id: this.block.id, type: 'courseware-blocks' });
+            }
+            this.loadBlock({ id: this.block.id , options: { include: 'edit-blocker' } }); // to update block editor lock
         },
         async displayDeleteDialog() {
+            await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
             if (!this.blocked) {
                 await this.lockObject({ id: this.block.id, type: 'courseware-blocks' });
                 this.showDeleteDialog = true;
             } else {
-                if (this.userId === this.blockerId) {
+                if (this.blockedByThisUser) {
                     this.showDeleteDialog = true;
                 } else {
-                    this.companionInfo({ info: 'Dieser Block wird bereits bearbeitet.' });
+                    this.companionInfo({ info: this.$gettextInterpolate('Löschen nicht möglich, da %{blockingUserName} den Block bearbeitet.', {blockingUserName: this.blockingUserName}) });
                 }
             }
         },
+        async closeDeleteDialog() {
+            await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
+            if (this.blockedByThisUser) {
+                await this.unlockObject({ id: this.block.id, type: 'courseware-blocks' });
+            }
+            this.showDeleteDialog = false;
+        },
         async executeDelete() {
+            await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
+            if (this.blockedByAnotherUser) {
+                this.companionInfo({ info: this.$gettextInterpolate('Löschen nicht möglich, da %{blockingUserName} die Bearbeitung übernommen hat.', {blockingUserName: this.blockingUserName}) });
+                return false;
+            }
             const containerId = this.block.relationships.container.data.id;
             await this.loadContainer(containerId);
             let container = this.containerById({id: containerId});
@@ -277,13 +336,20 @@ export default {
                 containerId: containerId,
             });
         },
-
-        prepareStoreEdit() {
-            // storeEdit is only emitted when the block is not in deleting process.
-            if (!this.showDeleteDialog) {
-                this.$emit('storeEdit');
-            }
+        displayRemoveLockDialog() {
+            this.showRemoveLockDialog = true;
+        },
+        async executeRemoveLock() {
+            await this.unlockObject({ id: this.block.id , type: 'courseware-blocks' });
+            await this.loadBlock({ id: this.block.id });
+            this.showRemoveLockDialog = false;
         }
+
     },
+    watch: {
+        showEdit(state) {
+            this.$emit('showEdit', state);
+        }
+    }
 };
 </script>

@@ -5,8 +5,9 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
-            @closeEdit="closeEdit"
+            @closeEdit="initCurrentData"
         >
             <template #content>
                 <div class="cw-keypoint-content" :class="['cw-keypoint-' + currentColor]">
@@ -79,11 +80,13 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
+import { blockMixin } from './block-mixin.js';
 import { mapActions } from 'vuex';
 import contentIcons from './content-icons.js';
 
 export default {
     name: 'courseware-key-point-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
     },
@@ -193,9 +196,6 @@ export default {
                 blockId: this.block.id,
                 containerId: this.block.relationships.container.data.id,
             });
-        },
-        closeEdit() {
-            this.initCurrentData();
         },
     },
     mounted() {

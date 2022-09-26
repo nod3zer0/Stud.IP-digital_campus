@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -141,10 +142,12 @@ import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFolderChooser from './CoursewareFolderChooser.vue';
 import StudipDialog from '../StudipDialog.vue';
 
+import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-folder-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
         CoursewareFolderChooser,

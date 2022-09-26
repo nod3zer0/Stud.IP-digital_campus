@@ -36,6 +36,7 @@ const getDefaultState = () => {
         showStructuralElementDeleteDialog: false,
         showStructuralElementOerDialog: false,
         showStructuralElementLinkDialog: false,
+        showStructuralElementRemoveLockDialog: false,
 
         showSuggestOerDialog: false,
 
@@ -76,6 +77,22 @@ const getters = {
     },
     currentElement(state) {
         return state.currentElement;
+    },
+    currentStructuralElement(state, getters, rootState, rootGetters) {
+        const id = getters.currentElement;
+        return rootGetters['courseware-structural-elements/byId']({ id });
+    },
+    currentElementBlocked(state, getters, rootState, rootGetters) {
+        return getters.currentStructuralElement?.relationships?.['edit-blocker']?.data !== null;
+    },
+    currentElementBlockerId(state, getters) {
+        return getters.currentElementBlocked ? getters.currentStructuralElement?.relationships?.['edit-blocker']?.data?.id : null;
+    },
+    currentElementBlockedByThisUser(state, getters) {
+        return getters.currentElementBlocked && getters.userId === getters.currentElementBlockerId;
+    },
+    currentElementBlockedByAnotherUser(state, getters) {
+        return getters.currentElementBlocked && getters.userId !== getters.currentElementBlockerId;
     },
     oerEnabled(state) {
         return state.oerEnabled;
@@ -173,6 +190,9 @@ const getters = {
     showStructuralElementLinkDialog(state) {
         return state.showStructuralElementLinkDialog;
     },
+    showStructuralElementRemoveLockDialog(state) {
+        return state.showStructuralElementRemoveLockDialog;
+    },
     showOverviewElementAddDialog(state) {
         return state.showOverviewElementAddDialog;
     },
@@ -228,7 +248,7 @@ export const state = { ...initialState };
 export const actions = {
     loadContainer({ dispatch }, containerId) {
         const options = {
-            include: 'blocks',
+            include: 'blocks,blocks.edit-blocker','fields[users]': 'formatted-name',
         };
 
         return dispatch('courseware-containers/loadById', { id: containerId, options }, { root: true });
@@ -237,7 +257,7 @@ export const actions = {
     loadStructuralElement({ dispatch }, structuralElementId) {
         const options = {
             include:
-                'containers,containers.blocks,containers.blocks.editor,containers.blocks.owner,containers.blocks.user-data-field,containers.blocks.user-progress,editor,owner',
+                'containers,containers.edit-blocker,containers.blocks,containers.blocks.editor,containers.blocks.owner,containers.blocks.user-data-field,containers.blocks.user-progress,containers.blocks.edit-blocker,editor,edit-blocker,owner',
             'fields[users]': 'formatted-name',
         };
 
@@ -840,6 +860,10 @@ export const actions = {
         context.commit('setShowStructuralElementLinkDialog', bool);
     },
 
+    showElementRemoveLockDialog(context, bool) {
+        context.commit('setShowStructuralElementRemoveLockDialog', bool);
+    },
+
     setShowOverviewElementAddDialog(context, bool) {
         context.commit('setShowOverviewElementAddDialog', bool);
     },
@@ -1396,6 +1420,10 @@ export const mutations = {
 
     setShowStructuralElementLinkDialog(state, showLink) {
         state.showStructuralElementLinkDialog = showLink;
+    },
+
+    setShowStructuralElementRemoveLockDialog(state, showRemoveLock) {
+        state.showStructuralElementRemoveLockDialog = showRemoveLock;
     },
 
     setStructuralElementSortMode(state, mode) {

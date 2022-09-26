@@ -19,6 +19,7 @@ class StructuralElementsShow extends JsonApiController
         'ancestors',
         'children',
         'containers',
+        'containers.edit-blocker',
         'containers.blocks',
         'containers.blocks.edit-blocker',
         'containers.blocks.editor',
@@ -27,6 +28,7 @@ class StructuralElementsShow extends JsonApiController
         'containers.blocks.user-progress',
         'course',
         'editor',
+        'edit-blocker',
         'owner',
         'parent',
         'target'

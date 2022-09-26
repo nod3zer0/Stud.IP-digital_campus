@@ -5,6 +5,7 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
+            @showEdit="initCurrentData"
             @storeEdit="storeBlock"
             @closeEdit="initCurrentData"
         >
@@ -84,9 +85,10 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import { mapActions } from 'vuex';
-
+import { blockMixin } from './block-mixin.js';
 export default {
     name: 'courseware-date-block',
+    mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
     },
@@ -196,8 +198,6 @@ export default {
                     containerId: this.block.relationships.container.data.id,
                 });
             }
-
-
         },
     },
 };
