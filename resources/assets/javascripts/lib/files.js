@@ -30,6 +30,9 @@ const Files = {
                         }
                     },
                     components: { FilesTable, },
+                    mounted () {
+                        $(document).trigger('files-vue-app-loaded');
+                    }
                 });
             });
         }

@@ -49,6 +49,10 @@ STUDIP.domReady(() => {
     });
 });
 
+$(document).on('files-vue-app-loaded', () => {
+    const lightboxImages = $('.lightbox-image');
+    $('#sidebar-actions a[onclick*="Files.openGallery"]').attr('disabled', lightboxImages.length === 0);
+});
 
 jQuery(document).on('ajaxComplete', (event, xhr) => {
     if (!xhr.getResponseHeader('X-Filesystem-Changes')) {
