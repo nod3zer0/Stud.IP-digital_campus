@@ -30,6 +30,6 @@
 }
 
 // https://codepen.io/kennyglenn/pen/kxqWjP
-@function contrast($color, $dark, $light, $threshold: 50%) {
+@function text-contrast($color, $dark, $light, $threshold: 50%) {
     @return if(lightness($color) > $threshold, $light, $dark)
 }
