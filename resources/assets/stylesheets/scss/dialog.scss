@@ -145,7 +145,7 @@
 
     .ui-dialog-titlebar {
         background-color: $yellow;
-        color: $contrast-content-white;
+        color: text-contrast($yellow, $black, $white);
         text-align: left;
     }
     .ui-dialog-titlebar-close {

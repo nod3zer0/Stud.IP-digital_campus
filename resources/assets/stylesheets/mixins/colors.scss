@@ -124,8 +124,8 @@ $fieldset-header: $content-color-20;
 $fieldset-border: $base-color-20;
 
 // contrast colors
-$contrast-content-white: text-contrast($content-color, #ffffff, #000000, 67%);
-$contrast-content-gray: text-contrast($content-color, $dark-gray-color, #000000 , 67%);
+$contrast-content-white: text-contrast($content-color, #ffffff, #000000);
+$contrast-content-gray: text-contrast($content-color, $dark-gray-color, #000000 , 67);
 $contrast-content-hovergray: text-contrast($content-color, $dark-gray-color-10, $dark-gray-color);
 
 $public-course-bgcolor: $red;
