@@ -76,8 +76,11 @@ jQuery(document).on('ajaxComplete', (event, xhr) => {
                 console.log('Error parsing payload', e);
             }
         }
-
-        handler(values);
+        let options = {};
+        if (key === 'redirect') {
+            options.size = 'default';
+        }
+        handler(values, options);
     }
 
     process('added_files', STUDIP.Files.addFileDisplay);
