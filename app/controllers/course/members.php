@@ -483,22 +483,20 @@ class Course_MembersController extends AuthenticatedController
             if (!empty($this->flash['users']) || Request::getArray('users')) {
                 $users = $this->flash['users'] ?: Request::getArray('users');
                 // create a usable array
-                foreach ($this->flash['users'] as $user => $val) {
+                foreach ($users as $user => $val) {
                     if ($val) {
                         $this->users[] = $user;
                     }
                 }
 
                 PageLayout::setTitle( _('Zielveranstaltung auswählen'));
+            } elseif (Request::isXhr()) {
+                $this->response->add_header('X-Dialog-Close', '1');
+                $this->render_nothing();
             } else {
-                if (Request::isXhr()) {
-                    $this->response->add_header('X-Dialog-Close', '1');
-                    $this->render_nothing();
-                } else {
                 $this->redirect('course/members/index');
             }
         }
-    }
     }
 
     /**

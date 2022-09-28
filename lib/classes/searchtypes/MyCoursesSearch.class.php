@@ -16,8 +16,6 @@
 
 class MyCoursesSearch extends StandardSearch
 {
-    public $search;
-
     private $perm_level;
     private $parameters;
     protected $additional_sql_conditions;
@@ -34,18 +32,13 @@ class MyCoursesSearch extends StandardSearch
      *
      * @return void
      */
-    public function __construct(
-        $search,
-        $perm_level = 'dozent',
-        $parameters = [],
-        $additional_sql_conditions = ''
-    )
+    public function __construct($search, $perm_level = 'dozent', $parameters = [], $additional_sql_conditions = '')
     {
-        $this->avatarLike = $this->search = $search;
+        parent::__construct($search);
+
         $this->perm_level = $perm_level;
         $this->parameters = $parameters;
-        $this->additional_sql_conditions = $additional_sql_conditions;
-        $this->sql = $this->getSQL();
+        $this->additional_sql_conditions = trim($additional_sql_conditions);
     }
 
 
@@ -64,15 +57,14 @@ class MyCoursesSearch extends StandardSearch
      * Use the contextual_data variable to send more variables than just the input
      * to the SQL. QuickSearch for example sends all other variables of the same
      * <form>-tag here.
-     * @param input string: the search-word(s)
-     * @param contextual_data array: an associative array with more variables
-     * @param limit int: maximum number of results (default: all)
-     * @param offset int: return results starting from this row (default: 0)
+     * @param string $input the search-word(s)
+     * @param array $contextual_data an associative array with more variables
+     * @param int $limit maximum number of results (default: all)
+     * @param int $offset return results starting from this row (default: 0)
      * @return array: array(array(), ...)
      */
     public function getResults($input, $contextual_data = [], $limit = PHP_INT_MAX, $offset = 0)
     {
-        $db = DBManager::get();
         $sql = $this->getSQL();
         if (!$sql) {
             return [];
@@ -80,23 +72,13 @@ class MyCoursesSearch extends StandardSearch
         if ($offset || $limit != PHP_INT_MAX) {
             $sql .= sprintf(' LIMIT %d, %d', $offset, $limit);
         }
-        foreach ($this->parameters + $contextual_data as $name => $value) {
-            if ($name !== "input" && mb_strpos($sql, ":".$name) !== false) {
-                if (is_array($value)) {
-                    if (count($value)) {
-                        $sql = str_replace(":".$name, implode(',', array_map([$db, 'quote'], $value)), $sql);
-                    } else {
-                        $sql = str_replace(":".$name, "''", $sql);
-                    }
-                } else {
-                    $sql = str_replace(":".$name, $db->quote($value), $sql);
-                }
-            }
-        }
-        $statement = $db->prepare($sql, [PDO::FETCH_NUM]);
-        $data = [];
-        $data[":input"] = "%".$input."%";
-        $statement->execute($data);
+
+        $statement = DBManager::get()->prepare($sql, [PDO::FETCH_NUM]);
+        $statement->execute(array_merge(
+            $this->parameters,
+            $contextual_data,
+            [':input' => "%{$input}%"]
+        ));
         $results = $statement->fetchAll();
         return $results;
     }
@@ -116,47 +98,38 @@ class MyCoursesSearch extends StandardSearch
             ')'
         )";
 
+        $conditions = implode(' AND ', $this->getConditions());
+
         switch ($this->perm_level) {
             // Roots see everything, everywhere.
             case 'root':
-                $query = "SELECT DISTINCT s.`Seminar_id`, CONCAT_WS(' ', s.`VeranstaltungsNummer`, s.`Name`, " . $semester_text . ")
-                    FROM `seminare` s
-                        LEFT JOIN semester_courses ON (s.Seminar_id = semester_courses.course_id)
-                        LEFT JOIN `semester_data` ON (semester_data.semester_id = semester_courses.semester_id)
-                    WHERE (s.`VeranstaltungsNummer` LIKE :input
-                            OR s.`Name` LIKE :input)
-                        AND s.`status` NOT IN (:semtypes)
-                        AND s.`Seminar_id` NOT IN (:exclude)
-                        AND semester_data.`semester_id` IN (:semesters)
-                    ";
-                if ($this->additional_sql_conditions) {
-                    $query .= ' AND ' . $this->additional_sql_conditions . ' ';
-                }
-                $query .= " GROUP BY s.Seminar_id ";
+                $query = "SELECT DISTINCT
+                            s.`Seminar_id`,
+                            CONCAT_WS(' ', s.`VeranstaltungsNummer`, s.`Name`, {$semester_text})
+                          FROM `seminare` s
+                          LEFT JOIN semester_courses ON (s.Seminar_id = semester_courses.course_id)
+                          LEFT JOIN `semester_data` ON (semester_data.semester_id = semester_courses.semester_id)
+                          WHERE {$conditions}
+                          GROUP BY s.Seminar_id ";
                 if ($semnumber) {
                     $query .= " ORDER BY MAX(semester_data.`beginn`) DESC, s.`VeranstaltungsNummer`, s.`Name`";
                 } else {
-                    $query .= " ORDER BY MAX(semester_data.beginn) DESC, s.`VeranstaltungsNummer`, s.`Name`";
+                    $query .= " ORDER BY MAX(semester_data.beginn) DESC, s.`Name`";
                 }
                 return $query;
             // Admins see everything at their assigned institutes.
             case 'admin':
                 $sem_inst = Config::get()->ALLOW_ADMIN_RELATED_INST ? 'si' : 's';
-                $query = "SELECT DISTINCT s.`Seminar_id`, CONCAT_WS(' ', s.`VeranstaltungsNummer`, s.`Name`, " . $semester_text . ")
-                    FROM `seminare` s
-                        JOIN `seminar_inst` si USING (Seminar_id)
-                        LEFT JOIN semester_courses ON (s.Seminar_id = semester_courses.course_id)
-                        LEFT JOIN `semester_data` ON (semester_data.semester_id = semester_courses.semester_id)
-                    WHERE (s.`VeranstaltungsNummer` LIKE :input
-                            OR s.`Name` LIKE :input)
-                        AND s.`status` NOT IN (:semtypes)
-                        AND $sem_inst.`institut_id` IN (:institutes)
-                        AND s.`Seminar_id` NOT IN (:exclude)
-                        AND semester_data.`semester_id` IN (:semesters)";
-                if ($this->additional_sql_conditions) {
-                    $query .= ' AND ' . $this->additional_sql_conditions . ' ';
-                }
-                $query .= " GROUP BY s.Seminar_id ";
+                $query = "SELECT DISTINCT
+                            s.`Seminar_id`,
+                            CONCAT_WS(' ', s.`VeranstaltungsNummer`, s.`Name`, {$semester_text})
+                          FROM `seminare` s
+                          JOIN `seminar_inst` si USING (Seminar_id)
+                          LEFT JOIN semester_courses ON (s.Seminar_id = semester_courses.course_id)
+                          LEFT JOIN `semester_data` ON (semester_data.semester_id = semester_courses.semester_id)
+                          WHERE {$conditions}
+                            AND {$sem_inst}.`institut_id` IN (:institutes)
+                          GROUP BY s.Seminar_id ";
                 if ($semnumber) {
                     $query .= " ORDER BY MAX(semester_data.`beginn`) DESC, s.`VeranstaltungsNummer`, s.`Name`";
                 } else {
@@ -165,37 +138,38 @@ class MyCoursesSearch extends StandardSearch
                 return $query;
             // non-admins search all their administrable courses.
             default:
-                $query = "SELECT DISTINCT s.`Seminar_id`, CONCAT_WS(' ', s.`VeranstaltungsNummer`, s.`Name`, " . $semester_text . "),
-                        s.`VeranstaltungsNummer` AS num, s.`Name`, MAX(semester_data.beginn) as beginn
-                    FROM `seminare` s
-                        JOIN `seminar_user` su ON (s.`Seminar_id`=su.`Seminar_id`)
-                        LEFT JOIN semester_courses ON (s.Seminar_id = semester_courses.course_id)
-                        LEFT JOIN `semester_data` ON (semester_data.semester_id = semester_courses.semester_id)
-                    WHERE (s.`VeranstaltungsNummer` LIKE :input
-                            OR s.`Name` LIKE :input)
-                        AND su.`user_id` = :userid
-                        AND su.`status` IN ('dozent','tutor')
-                        AND s.`status` NOT IN (:semtypes)
-                        AND s.`Seminar_id` NOT IN (:exclude)
-                        AND semester_data.`semester_id` IN (:semesters)";
+                $query = "SELECT DISTINCT
+                            s.`Seminar_id`,
+                            CONCAT_WS(' ', s.`VeranstaltungsNummer`, s.`Name`, {$semester_text}),
+                            s.`VeranstaltungsNummer` AS num,
+                            s.`Name`,
+                            MAX(semester_data.beginn) AS beginn
+                          FROM `seminare` s
+                          JOIN `seminar_user` su ON (s.`Seminar_id` = su.`Seminar_id`)
+                          LEFT JOIN semester_courses ON (s.Seminar_id = semester_courses.course_id)
+                          LEFT JOIN `semester_data` ON (semester_data.semester_id = semester_courses.semester_id)
+                          WHERE {$conditions}
+                            AND su.`user_id` = :userid
+                            AND su.`status` IN ('dozent','tutor')
+                          GROUP BY s.Seminar_id ";
+
                 if (Config::get()->DEPUTIES_ENABLE) {
-                    $query .= " UNION
-                        SELECT DISTINCT s.`Seminar_id`, CONCAT_WS(' ', s.`VeranstaltungsNummer`, ' ', s.`Name`, " . $semester_text . "),
-                            s.`VeranstaltungsNummer` AS num, s.`Name`, MAX(semester_data.beginn) AS beginn
-                        FROM `seminare` s
-                            JOIN `deputies` d ON (s.`Seminar_id` = d.`range_id`)
-                            LEFT JOIN semester_courses ON (s.Seminar_id = semester_courses.course_id)
-                            LEFT JOIN `semester_data` ON (semester_data.semester_id = semester_courses.semester_id)
-                        WHERE (s.`VeranstaltungsNummer` LIKE :input
-                                OR s.`Name` LIKE :input)
-                            AND d.`user_id` = :userid
-                            AND s.`Seminar_id` NOT IN (:exclude)
-                            AND semester_data.`semester_id` IN (:semesters)";
+                    $query .= " UNION ";
+                    $query .= "SELECT DISTINCT
+                                 s.`Seminar_id`,
+                                 CONCAT_WS(' ', s.`VeranstaltungsNummer`, ' ', s.`Name`, {$semester_text}),
+                                 s.`VeranstaltungsNummer` AS num,
+                                 s.`Name`,
+                                 MAX(semester_data.beginn) AS beginn
+                               FROM `seminare` s
+                               JOIN `deputies` d ON (s.`Seminar_id` = d.`range_id`)
+                               LEFT JOIN semester_courses ON (s.Seminar_id = semester_courses.course_id)
+                               LEFT JOIN `semester_data` ON (semester_data.semester_id = semester_courses.semester_id)
+                               WHERE {$conditions}
+                                 AND d.`user_id` = :userid
+                               GROUP BY s.Seminar_id";
                 }
-                if ($this->additional_sql_conditions) {
-                    $query .= ' AND ' . $this->additional_sql_conditions . ' ';
-                }
-                $query .= " GROUP BY s.Seminar_id";
+
                 if ($semnumber) {
                     $query .= " ORDER BY beginn DESC, num, `Name`";
                 } else {
@@ -204,6 +178,27 @@ class MyCoursesSearch extends StandardSearch
 
                 return $query;
         }
+    }
+
+    /**
+     * Returns the default conditions use by all searches as a list.
+     *
+     * @return array
+     */
+    private function getConditions(): array
+    {
+        $conditions = [
+            '(s.`VeranstaltungsNummer` LIKE :input OR s.`Name` LIKE :input)',
+            's.`status` NOT IN (:semtypes)',
+            's.`Seminar_id` NOT IN (:exclude)',
+            'semester_data.`semester_id` IN (:semesters)'
+        ];
+
+        if ($this->additional_sql_conditions) {
+            $conditions[] = $this->additional_sql_conditions;
+        }
+
+        return $conditions;
     }
 
     /**
