@@ -65,16 +65,6 @@ stages:
       - .caches/eslint-cache
       - .caches/stylelint-cache
 
-.only:
-  php-changes: &php-changes
-    changes:
-      - composer.json
-      - app/controllers/**/*controller.php
-      - db/**/*
-      - lib/**/*
-      - tests/**/*
-      - vendor/**/*
-
 lint-php:
   stage: checks
   needs: []
@@ -103,10 +93,6 @@ lint-js:
     - make npm
   script:
     - npm run lint -- --cache --cache-location .caches/eslint-cache --format ./node_modules/eslint-junit/index.js
-  only:
-    changes:
-      - resources/assets/javascripts/**/*
-      - resources/vue/**/*
   artifacts:
     <<: *common-artifacts
     paths:
@@ -124,9 +110,6 @@ lint-css:
     - make npm
   script:
     - npm run css-lint -s -- --cache --cache-location .caches/stylelint-cache --custom-formatter node_modules/stylelint-junit-formatter --output-file .reports/stylelint-report.xml
-  only:
-    changes:
-      - resources/assets/stylesheets/**/*
   artifacts:
     <<: *common-artifacts
     paths:
@@ -157,7 +140,6 @@ phpstan:
 test-unit:
   stage: tests
   needs: [lint-php]
-  only: *php-changes
   cache:
     <<: *composer-cache
     policy: pull
@@ -174,7 +156,6 @@ test-unit:
 test-functional:
   stage: tests
   needs: [lint-php]
-  only: *php-changes
   cache:
     <<: *composer-cache
     policy: pull
@@ -193,7 +174,6 @@ test-functional:
 test-jsonapi:
   stage: tests
   needs: [lint-php]
-  only: *php-changes
   cache:
     <<: *composer-cache
     policy: pull
