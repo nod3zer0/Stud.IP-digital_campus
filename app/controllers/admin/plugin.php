@@ -142,6 +142,7 @@ class Admin_PluginController extends AuthenticatedController
         $this->plugin_types  = $this->plugin_admin->getPluginTypes();
         $this->update_info   = $this->get_update_info($this->plugins);
         $this->migrations    = $this->plugin_admin->getMigrationInfo();
+        $this->num_updates   = 0;
 
         foreach ($this->update_info as $id => $info) {
             if (isset($info['update']) && !$this->plugins[$id]['depends']) {

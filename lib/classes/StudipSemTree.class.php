@@ -110,7 +110,7 @@ class StudipSemTree extends TreeAbstract
 
     public function isHiddenItem($item_id)
     {
-        return (bool) $GLOBALS['SEM_TREE_TYPES'][$this->getValue($item_id, 'type')]['hidden'];
+        return !empty($GLOBALS['SEM_TREE_TYPES'][$this->getValue($item_id, 'type')]['hidden']);
     }
 
     public function getSemIds($item_id,$ids_from_kids = false)
@@ -173,11 +173,11 @@ class StudipSemTree extends TreeAbstract
 
     public function getNumEntries($item_id, $num_entries_from_kids = false)
     {
-        if (!$this->tree_data[$item_id]) {
+        if (empty($this->tree_data[$item_id])) {
             return false;
         }
 
-        if (!$this->entries_init_done) {
+        if (empty($this->entries_init_done)) {
             $this->initEntries();
         }
 

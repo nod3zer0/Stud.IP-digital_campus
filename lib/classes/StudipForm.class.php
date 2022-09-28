@@ -182,7 +182,7 @@ class StudipForm {
             $attributes['required'] = 'required';
         }
 
-        if (!isset($attributes['id'])) {
+        if (empty($attributes['id'])) {
             $attributes['id'] = $this->form_name . '_' . $name;
         }
 
@@ -282,7 +282,7 @@ class StudipForm {
 
     function getFormFieldSelect($name, $attributes, $default){
         $ret = "\n<select name=\"{$this->form_name}_{$name}";
-        if (!empty($this->form_fields[$name]['multiple'])){
+        if (!empty($this->form_fields[$name]['multiple'])) {
             $ret .= "[]\" multiple ";
         } else {
             $ret .= "\" ";
@@ -292,9 +292,9 @@ class StudipForm {
         if ($default === false){
             $default = $this->form_fields[$name]['default_value'];
         }
-        if (!empty($this->form_fields[$name]['options']) && is_array($this->form_fields[$name]['options'])){
+        if (!empty($this->form_fields[$name]['options']) && is_array($this->form_fields[$name]['options'])) {
             $options = $this->form_fields[$name]['options'];
-        } else if ($this->form_fields[$name]['options_callback']){
+        } else if (!empty($this->form_fields[$name]['options_callback'])) {
             $options = call_user_func($this->form_fields[$name]['options_callback'],$this,$name);
         }
         for ($i = 0; $i < count($options); ++$i){

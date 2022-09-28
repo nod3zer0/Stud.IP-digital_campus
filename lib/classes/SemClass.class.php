@@ -305,7 +305,7 @@ class SemClass implements ArrayAccess
      */
     public function isModuleActivated($modulename)
     {
-        return !$this->data['modules'][$modulename]
+        return empty($this->data['modules'][$modulename])
             ||  $this->data['modules'][$modulename]['activated'];
     }
 
@@ -316,7 +316,7 @@ class SemClass implements ArrayAccess
      */
     public function isModuleAllowed($modulename)
     {
-        return !$this->data['modules'][$modulename]
+        return empty($this->data['modules'][$modulename])
             || !$this->data['modules'][$modulename]['sticky']
             ||  $this->data['modules'][$modulename]['activated'];
     }

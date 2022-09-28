@@ -116,7 +116,7 @@ class PluginRepository
      */
     protected function registerPlugin($name, $meta_data)
     {
-        $old_data = $this->plugins[$name];
+        $old_data = $this->plugins[$name] ?? null;
 
         if (!isset($old_data) ||
             version_compare($meta_data['version'], $old_data['version']) > 0) {
@@ -132,7 +132,7 @@ class PluginRepository
      */
     public function getPlugin($name)
     {
-        return $this->plugins[$name];
+        return $this->plugins[$name] ?? null;
     }
 
     /**

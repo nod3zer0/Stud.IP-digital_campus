@@ -96,7 +96,7 @@
                     <td><?= htmlReady($user->nachname) ?></td>
                     <td><?= htmlReady($user->email) ?></td>
                     <td>
-                        <? if ($user->online->last_lifesign) :
+                        <? if (!empty($user->online->last_lifesign)) :
                             $inactive = time() - $user->online->last_lifesign;
                             if ($inactive < 3600 * 24) {
                                 $inactive = gmdate('H:i:s', $inactive);
@@ -188,7 +188,7 @@
 
                         }
 
-                        if (Privacy::isVisible($user_id)) {
+                        if (Privacy::isVisible($user->id)) {
                             $actionMenu->addLink(
                                 $controller->url_for("privacy/landing/{$user->id}"),
                                 _('Anzeige Personendaten'),

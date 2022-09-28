@@ -77,7 +77,7 @@ class ExternConfigDb extends ExternConfig
         if (!parent::insertConfiguration()) {
             return false;
         }
-         $serialized_config = json_encode($this->config);
+         $serialized_config = json_encode($this->config ?? null);
          $time = time();
          $query = "INSERT INTO extern_config VALUES (?, ?, ?, ?, 0, ?, ?, ?)";
          $statement = DBManager::get()->prepare($query);

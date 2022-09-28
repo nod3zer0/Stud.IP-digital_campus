@@ -69,7 +69,7 @@ class Admin_UserController extends AuthenticatedController
         }
 
         //Suchparameter und Ergebnisse vorhanden
-        if (isset($_SESSION['admin']['user']) && $_SESSION['admin']['user']['results']) {
+        if (!empty($_SESSION['admin']['user']['results'])) {
             $request = $_SESSION['admin']['user'];
         }
 
@@ -80,6 +80,9 @@ class Admin_UserController extends AuthenticatedController
                 $inaktiv = null;
             }
         }
+
+        $this->request = [];
+        $this->users = [];
 
         //Datafields
         $this->datafields = [];
@@ -96,6 +99,7 @@ class Admin_UserController extends AuthenticatedController
         });
 
         //wenn suche durchgeführt
+        $search_datafields = [];
         if (!empty($request)) {
             //suche mit datafields
             foreach ($this->datafields as $datafield) {
@@ -113,8 +117,8 @@ class Admin_UserController extends AuthenticatedController
                 $this->order = $this->order == 'desc' ? 'asc' : 'desc';
             }
 
-            $request['vorname']    = $request['vorname'] ?: null;
-            $request['nachname']   = $request['nachname'] ?: null;
+            $request['vorname']    = $request['vorname'] ?? null;
+            $request['nachname']   = $request['nachname'] ?? null;
             $request['inaktiv']    = $inaktiv;
             $request['datafields'] = $search_datafields;
             $request['sort']       = $this->sortby;
@@ -207,7 +211,8 @@ class Admin_UserController extends AuthenticatedController
         if ($advanced
             || !empty($search_datafields)
             || (!empty($request)
-                && ($request['auth_plugins'] || $request['userdomains'] || $request['degree'] || $request['institute'] || $request['studycourse'] || $request['show_only_not_lectures'] || !empty($request['roles']))
+                && (!empty($request['auth_plugins']) || !empty($request['userdomains']) || !empty($request['degree']) ||
+                    !empty($request['institute']) || !empty($request['studycourse']) || !empty($request['show_only_not_lectures']) || !empty($request['roles']))
             )
         ) {
             $this->advanced = true;
@@ -1621,7 +1626,7 @@ class Admin_UserController extends AuthenticatedController
         )->asDialog();
         $actions->addLink(
             _('Konten zusammenführen'),
-            $this->url_for('admin/user/migrate/' . (($this->user && is_array($this->user)) ? $this->user['user_id'] : '')),
+            $this->url_for('admin/user/migrate/' . ((!empty($this->user) && is_array($this->user)) ? $this->user['user_id'] : '')),
             Icon::create('community')
         );
 
@@ -1641,7 +1646,7 @@ class Admin_UserController extends AuthenticatedController
             );
         }
 
-        if (!is_object($this->user)) {
+        if (empty($this->user) || !is_object($this->user)) {
             return;
         }
 

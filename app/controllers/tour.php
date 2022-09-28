@@ -180,6 +180,10 @@ class TourController extends AuthenticatedController
             throw new AccessDeniedException();
         }
 
+        $this->tour_searchterm = '';
+        $this->delete_question = '';
+        $this->filter_text = '';
+
         // initialize
         PageLayout::setTitle(_('Verwalten von Touren'));
         PageLayout::setHelpKeyword('Basis.TourAdmin');
@@ -443,6 +447,9 @@ class TourController extends AuthenticatedController
             $this->render_nothing();
             return;
         }
+
+        $this->force_route = '';
+
         // Output as dialog (Ajax-Request) or as Stud.IP page?
         PageLayout::setTitle(_('Schritt bearbeiten'));
         // save step position
@@ -613,6 +620,9 @@ class TourController extends AuthenticatedController
         if (!$this->help_admin) {
             throw new AccessDeniedException();
         }
+
+        $this->delete_question = '';
+
         // initialize
         PageLayout::setTitle(_('Verwalten von Touren'));
         PageLayout::setHelpKeyword('Basis.TourAdmin');

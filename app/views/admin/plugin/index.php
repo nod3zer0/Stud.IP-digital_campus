@@ -65,7 +65,7 @@ use Studip\Button, Studip\LinkButton;
                             <?= join(', ', $plugin['type']) ?>
                         </td>
                         <td <? if (!$plugin['enabled']) echo 'class="quiet"'; ?>>
-                            <?= htmlReady($update_info[$pluginid]['version']) ?>
+                            <?= htmlReady($update_info[$pluginid]['version'] ?? '') ?>
                         <? if ($plugin['automatic_update_url']): ?>
                             <?= Icon::create('install', Icon::ROLE_STATUS_RED)->asImg([
                                 'title' => _('Automatische Updates sind eingerichtet'),
@@ -75,8 +75,9 @@ use Studip\Button, Studip\LinkButton;
                         </td>
                         <td <? if (!$plugin['enabled']) echo 'class="quiet"'; ?>>
                         <? if (!$plugin['depends']) : ?>
-                            <?= htmlReady($migrations[$pluginid]['schema_version']) ?>
-                            <? if ($migrations[$pluginid]['schema_version'] < $migrations[$pluginid]['migration_top_version']): ?>
+                            <?= htmlReady($migrations[$pluginid]['schema_version'] ?? '') ?>
+                            <? if (!empty($migrations[$pluginid]['schema_version']) && !empty($migrations[$pluginid]['migration_top_version'])
+                                && ($migrations[$pluginid]['schema_version'] < $migrations[$pluginid]['migration_top_version'])): ?>
                                 <a href="<?= $controller->url_for('admin/plugin/migrate/' . $pluginid) ?>"
                                    title="<?= sprintf(_('Update auf Version %d verfügbar'), $migrations[$pluginid]['migration_top_version']) ?>">
                                     <?= Icon::create('plugin', Icon::ROLE_STATUS_RED) ?>

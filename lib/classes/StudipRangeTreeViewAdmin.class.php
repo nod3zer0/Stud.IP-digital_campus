@@ -576,7 +576,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             return $content;
         }
         $range_object = RangeTreeObject::GetInstance($item_id);
-        $name = ($range_object->item_data['type']) ? $range_object->item_data['type'] . ": " : "";
+        $name = !empty($range_object->item_data['type']) ? $range_object->item_data['type'] . ": " : "";
         $name .= $range_object->item_data['name'];
         $content .= "\n<tr><td class=\"table_header_bold\" align=\"left\" style=\"font-size:10pt\">" . htmlReady($name) ." </td></tr>";
         if (is_array($range_object->item_data_mapping)){
@@ -728,7 +728,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         </div>
 
         <?
-        $content .= ob_get_clean();
+        $content = ob_get_clean();
         return $content;
     }
 
@@ -787,7 +787,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             </footer>
         </form>
 
-        <? $content .= ob_get_clean() . '</td></tr>';
+        <? $content = ob_get_clean() . '</td></tr>';
 
         return $content;
     }
@@ -795,7 +795,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     function getItemMessage($item_id, $colspan = 1)
     {
         $content = "";
-        if ($this->msg[$item_id]){
+        if (!empty($this->msg[$item_id])) {
             $msg = explode("§", $this->msg[$item_id]);
             $pics = [
                 'error' => Icon::create('decline', 'attention'),

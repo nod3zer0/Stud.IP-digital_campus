@@ -12,7 +12,7 @@ use Studip\Button, Studip\LinkButton;
 <? endif; ?>
     <form class="default" action="<?= $controller->index() ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
-        <?= $this->render_partial("admin/autoinsert/_search.php", ['semester_data' => $semester_data]) ?>
+        <?= $this->render_partial('admin/autoinsert/_search.php') ?>
     </form>
 
 <? if (is_array($seminar_search) && count($seminar_search) > 0): ?>

@@ -36,6 +36,10 @@ class Admin_AutoinsertController extends AuthenticatedController
      */
     public function index_action()
     {
+        $this->sem_search = '';
+        $this->sem_select = '';
+        $this->seminar_search = [];
+
         // search seminars
         if (Request::submitted('suchen')) {
             if (Request::get('sem_search')) {
@@ -142,6 +146,8 @@ class Admin_AutoinsertController extends AuthenticatedController
      */
     public function manual_action()
     {
+        $this->seminar_search = [];
+
         PageLayout::setTitle(_('Manuelles Eintragen von Nutzergruppen in Veranstaltungen'));
         if (Request::submitted('submit')) {
             $filters = array_filter(Request::getArray('filter'));

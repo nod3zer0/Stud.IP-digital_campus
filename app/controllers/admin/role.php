@@ -152,18 +152,21 @@ class Admin_RoleController extends AuthenticatedController
             return;
         }
 
+        $this->username = Request::get('username');
+        $this->currentuser = null;
+        $this->assignedroles = [];
+        $this->all_userroles = [];
+
         // user search was started
         if (Request::submitted('search')) {
-            $username = Request::get('username');
 
-            if ($username == '') {
+            if ($this->username == '') {
                 $this->error = _('Es wurde kein Suchwort eingegeben.');
             } else {
-                $this->users = $this->search_user($username);
+                $this->users = $this->search_user($this->username);
 
                 if (count($this->users) === 0) {
                     $this->error = _('Es wurde keine Person gefunden.');
-                    $this->username = $username;
                 }
             }
         }
@@ -282,6 +285,7 @@ class Admin_RoleController extends AuthenticatedController
         $roleid = Request::int('role', $roleid);
 
         $this->roles = RolePersistence::getAllRoles();
+        $this->roleid = '';
 
         if ($roleid) {
             $sql = "SELECT DISTINCT Vorname,Nachname,user_id,username,perms

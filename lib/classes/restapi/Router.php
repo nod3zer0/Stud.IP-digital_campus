@@ -322,8 +322,8 @@ class Router
                 }
                 if ($describe) {
                     $result[$uri][$method] = [
-                        'description' => $this->descriptions[$uri][$method] ?: null,
-                        'source'      => $route['source'] ?: 'unknown',
+                        'description' => $this->descriptions[$uri][$method] ?? null,
+                        'source'      => $route['source'] ?? 'unknown',
                     ];
                 } else {
                     $result[$uri][] = $method;

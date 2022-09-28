@@ -1,3 +1,4 @@
+<? $attributes = ''; ?>
 <? foreach ($select_attributes as $key => $value) : ?>
     <? $attributes .= sprintf('%s = "%s"', $key, $value) ?>
 <? endforeach ?>

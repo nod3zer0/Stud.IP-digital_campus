@@ -13,22 +13,22 @@ use Studip\Button, Studip\LinkButton;
 
         <label class="col-3">
             <?= _('Benutzername') ?>
-            <input name="username" type="text" value="<?= htmlReady($request['username']) ?>">
+            <input name="username" type="text" value="<?= htmlReady($request['username'] ?? '') ?>">
         </label>
 
         <label class="col-3">
             <?= _('E-Mail') ?>
-            <input name="email" type="text" value="<?= htmlReady($request['email']) ?>">
+            <input name="email" type="text" value="<?= htmlReady($request['email'] ?? '') ?>">
         </label>
 
         <label class="col-3">
             <?= _('Vorname') ?>
-            <input name="vorname" type="text" value="<?= htmlReady($request['vorname']) ?>">
+            <input name="vorname" type="text" value="<?= htmlReady($request['vorname'] ?? '') ?>">
         </label>
 
         <label class="col-3">
             <?= _('Nachname') ?>
-            <input name="nachname" type="text" value="<?= htmlReady($request['nachname']) ?>">
+            <input name="nachname" type="text" value="<?= htmlReady($request['nachname'] ?? '') ?>">
         </label>
 
         <label class="col-2">
@@ -36,7 +36,7 @@ use Studip\Button, Studip\LinkButton;
 
             <select name="perm">
             <? foreach(words('alle user autor tutor dozent admin root') as $one): ?>
-                <option value="<?= $one ?>" <?= ($request['perm'] === $one) ? 'selected' : '' ?>>
+                <option value="<?= $one ?>" <?= (!empty($request['perm']) && $request['perm'] === $one) ? 'selected' : '' ?>>
                     <?= ($one === 'alle') ? _('alle') : $one ?>
                 </option>
             <? endforeach; ?>
@@ -49,20 +49,20 @@ use Studip\Button, Studip\LinkButton;
             <div class="hgroup">
                 <select name="inaktiv" class="size-s">
                 <? foreach(['<=' => '>=', '=' => '=', '>' => '<', 'nie' =>_('nie')] as $i => $one): ?>
-                    <option value="<?= htmlready($i) ?>" <?= ($request['inaktiv'][0] === $i) ? 'selected' : '' ?>>
+                    <option value="<?= htmlready($i) ?>" <?= (!empty($request['inaktiv'][0]) && $request['inaktiv'][0] === $i) ? 'selected' : '' ?>>
                         <?= htmlReady($one) ?>
                     </option>
                 <? endforeach; ?>
                 </select>
 
                 <input name="inaktiv_tage" type="number" id="inactive"
-                       value="<?= htmlReady($request['inaktiv'][1]) ?>">
+                       value="<?= htmlReady($request['inaktiv'][1] ?? '') ?>">
                 <?= _('Tage') ?>
             </div>
         </label>
 
         <label class="col-2" style="padding-top: 1.8em;">
-            <input type="checkbox" name="locked" value="1" <?=  ($request['locked']) ?  'checked' : '' ?>>
+            <input type="checkbox" name="locked" value="1" <?= !empty($request['locked']) ? 'checked' : '' ?>>
             <?= _('nur gesperrt') ?>
         </label>
     </fieldset>
@@ -123,7 +123,7 @@ use Studip\Button, Studip\LinkButton;
                 <? endforeach ?>
             </select>
         </label>
-        
+
         <label class="col-3">
             <?= _('Fachsemester') ?>
             <select name="fachsem">
@@ -180,7 +180,7 @@ use Studip\Button, Studip\LinkButton;
             <? endforeach ?>
             </select>
         <? else : ?>
-            <input type="text" name="<?= $datafield->id ?>" value="<?= htmlReady($request[$datafield->id]) ?>">
+            <input type="text" name="<?= htmlReady($datafield->id) ?>" value="<?= htmlReady($request[$datafield->id] ?? '') ?>">
         <? endif ?>
         </label>
     <? endforeach; ?>
@@ -199,7 +199,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif?>
         <label>
             <input type="checkbox" name="show_only_not_lectures" value="1"
-                   <? if ($request['show_only_not_lectures']) echo 'checked'; ?>>
+                   <?= (!empty($request['show_only_not_lectures'])) ? 'checked' : '' ?>>
             <?= _('Nur Personen anzeigen, die in keiner Veranstaltung Lehrende sind')?>
         </label>
     </fieldset>

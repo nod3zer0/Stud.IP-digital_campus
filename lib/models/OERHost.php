@@ -15,7 +15,7 @@ class OERHost extends OERIdentity
     {
         $host = self::findOneBySQL("`private_key` IS NOT NULL AND `sorm_class` = 'OERHost' LIMIT 1");
         if ($host) {
-            $host['url'] = $GLOBALS['oer_PREFERRED_URI'] ?: $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/";
+            $host['url'] = $GLOBALS['oer_PREFERRED_URI'] ?? $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/";
             if ($host->isFieldDirty("url")) {
                 $host->store();
             }
@@ -23,7 +23,7 @@ class OERHost extends OERIdentity
         } else {
             $host = new self();
             $host['name'] = Config::get()->UNI_NAME_CLEAN;
-            $host['url'] = $GLOBALS['oer_PREFERRED_URI'] ?: $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/";
+            $host['url'] = $GLOBALS['oer_PREFERRED_URI'] ?? $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/";
             $host['last_updated'] = time();
             $host->store();
             return $host;

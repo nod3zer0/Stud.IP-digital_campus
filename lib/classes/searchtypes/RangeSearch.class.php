@@ -10,6 +10,7 @@ class RangeSearch extends SQLSearch
 
     public function __construct()
     {
+        $this->avatarLike = $this->search = '';
         $this->sql = $this->getSQL();
     }
 

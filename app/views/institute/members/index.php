@@ -5,15 +5,15 @@
             <col width="32">
         <? foreach ($structure as $key => $field): ?>
             <? if ($key !== 'statusgruppe'): ?>
-                <col <? if ($field['width']): ?> width="<?= $field['width'] ?>"<? endif; ?>>
+                <col <? if (!empty($field['width'])): ?> width="<?= htmlReady($field['width']) ?>"<? endif; ?>>
             <? endif; ?>
         <? endforeach; ?>
         </colgroup>
         <thead>
             <tr>
             <? foreach ($structure as $key => $field): ?>
-                <th <? if ($key === 'actions') echo 'class="actions"'; ?> <? if ($field['colspan']): ?>colspan="<?= $field['colspan'] ?>"<? endif; ?>>
-                <? if ($field['link']): ?>
+                <th <? if ($key === 'actions') echo 'class="actions"'; ?> <? if (!empty($field['colspan'])): ?>colspan="<?= $field['colspan'] ?>"<? endif; ?>>
+                <? if (!empty($field['link'])): ?>
                     <a href="<?= URLHelper::getLink($field['link']) ?>">
                         <?= htmlReady($field['name']) ?>
                     </a>

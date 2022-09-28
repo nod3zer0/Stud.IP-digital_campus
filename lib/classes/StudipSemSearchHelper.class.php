@@ -103,7 +103,7 @@ class StudipSemSearchHelper {
         if (isset($this->params['type']) && $this->params['type'] != 'all'){
             $sem_types = [$this->params['type']];
         }
-        if ($sem_types) {
+        if (!empty($sem_types) && is_array($sem_types)) {
             $clause = " AND c.status IN('" . join("','",$sem_types) . "') " . $clause;
         }
 

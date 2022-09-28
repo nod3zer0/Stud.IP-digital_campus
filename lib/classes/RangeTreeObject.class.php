@@ -7,8 +7,8 @@
 // This file is part of Stud.IP
 // RangeTreeObject.class.php
 // Class to handle items in the "range tree"
-// 
-// Copyright (c) 2002 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2002 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -28,18 +28,18 @@
 /**
 * base class for items in the "range tree"
 *
-* This class is used for items 
+* This class is used for items
 *
 * @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 */
 class RangeTreeObject {
-    
+
     /**
     * item_id in range_tree
     *
-    * 
+    *
     * @access   public
     * @var      string $tree_item_id
     */
@@ -47,7 +47,7 @@ class RangeTreeObject {
     /**
     * References the tree object
     *
-    * 
+    *
     * @access   private
     * @var      object StudipRangeTree $tree
     */
@@ -55,25 +55,25 @@ class RangeTreeObject {
     /**
     * associative array with data from database fields
     *
-    * 
+    *
     * @access   public
     * @var      array $item_data
     */
     var $item_data = null;
-    
+
     /**
     * associative array with mapping for database fields
     *
-    * 
+    *
     * @access   public
     * @var      array $item_data_mapping
     */
     var $item_data_mapping = null;
-    
+
     /**
     * Factory method
     *
-    * 
+    *
     * @access public
     * @static
     * @param    string  $item_id
@@ -84,7 +84,7 @@ class RangeTreeObject {
         $class_name = "RangeTreeObject" . ucfirst($tree->tree_data[$item_id]['studip_object']);
         return new $class_name($item_id);
     }
-    
+
     /**
     * Constructor
     *
@@ -97,11 +97,11 @@ class RangeTreeObject {
         $this->tree_item_id = $item_id;
         $this->item_data = $this->tree->tree_data[$item_id];
     }
-    
+
     /**
     * Returns all tree items which are kids of this object
     *
-    * 
+    *
     * @access public
     * @param    boolean $as_value_list
     * @return   mixed   returns numeric array if param is false, else comma separated string
@@ -109,11 +109,11 @@ class RangeTreeObject {
     function getAllItemKids($as_value_list = false){
         return ($as_value_list) ? $this->getValueList($this->tree->getKidsKids($this->tree_item_id)) : $this->tree->getKidsKids($this->tree_item_id);
     }
-    
+
     /**
     * Returns all tree items which are kids of this object and are "real" Stud.IP objects
     *
-    * 
+    *
     * @access public
     * @param    boolean $as_value_list
     * @return   mixed   returns numeric array if param is false, else comma separated string
@@ -122,11 +122,11 @@ class RangeTreeObject {
         $all_object_kids = array_merge((array)$this->getInstKids(), (array)$this->getFakKids());
         return ($as_value_list) ? $this->getValueList($all_object_kids) : $all_object_kids;
     }
-    
+
     /**
     * Returns all tree items which are kids of this object and are Stud.IP "Einrichtungen"
     *
-    * 
+    *
     * @access public
     * @param    boolean $as_value_list
     * @return   mixed   returns numeric array if param is false, else comma separated string
@@ -141,11 +141,11 @@ class RangeTreeObject {
         }
         return ($as_value_list) ? $this->getValueList($inst_kids) : $inst_kids;
     }
-    
+
     /**
     * Returns all tree items which are kids of this object and are Stud.IP "Fakultaeten"
     *
-    * 
+    *
     * @access public
     * @param    boolean $as_value_list
     * @return   mixed   returns numeric array if param is false, else comma separated string
@@ -160,19 +160,19 @@ class RangeTreeObject {
         }
         return ($as_value_list) ? $this->getValueList($fak_kids) : $fak_kids;
     }
-    
+
     /**
     * Returns array of Stud.IP range_ids of "real" objects
     *
     * This function is a wrapper for the according function in StudipRangeTree
     * @see StudipRangeTree::getAdminRange()
     * @access   public
-    * @return   array   of primary keys from table "institute" 
+    * @return   array   of primary keys from table "institute"
     */
     function getAdminRange(){
         return $this->tree->getAdminRange($this->tree_item_id);
     }
-    
+
     /**
     * Only useful in RangeTreeObjectInst ,all other items are always in the correct branch
     *
@@ -182,24 +182,24 @@ class RangeTreeObject {
     function isInCorrectBranch(){
         return true;
     }
-    
+
     /**
     * Returns tree path of the current object
     *
     * This function is a wrapper for the according function in StudipRangeTree
     * @see StudipRangeTree::getItemPath()
     * @access public
-    * @return   string  
+    * @return   string
     */
     function getItemPath(){
         return $this->tree->getItemPath($this->tree_item_id);
     }
-    
+
     /**
     * extends the $item_data array
     *
     * This function fills the $item_data array with fields from the according database table (is of no use in the base class)
-    * @abstract 
+    * @abstract
     * @access private
     */
     function initItemDetail(){
@@ -220,7 +220,7 @@ class RangeTreeObject {
         }
     return false;
     }
-    
+
     /**
     * fetch categories of this object from database
     *
@@ -238,21 +238,21 @@ class RangeTreeObject {
         }
     return false;
     }
-    
+
     /**
     * getter method for categories of this object
     *
-    * 
+    *
     * @access public
     * @return   object DbSnapshot
     */
     function &getCategories(){
-        if (!is_object($this->item_data['categories'])){
+        if (empty($this->item_data['categories']) || !is_object($this->item_data['categories'])){
             $this->fetchCategories();
         }
         return $this->item_data['categories'];
     }
-    
+
     function fetchNumStaff(){
         $view = DbView::getView('range_tree');
         if (!($view->params[0] = $this->item_data['studip_object_id']))
@@ -264,15 +264,15 @@ class RangeTreeObject {
         }
         return false;
     }
-    
+
     function getNumStaff(){
         if(!isset($this->item_data['num_staff'])){
             $this->fetchNumStaff();
         }
         return $this->item_data['num_staff'];
     }
-    
-    
+
+
     /**
     * transform numerical array into a comma separated string
     *
@@ -281,12 +281,12 @@ class RangeTreeObject {
     * @param    array   $list
     * @return   string
     */
-    
+
     function getValueList($list){
         $value_list = false;
-        if (count($list) == 1) 
+        if (count($list) == 1)
             $value_list = "'$list[0]'";
-        else 
+        else
             $value_list = "'".join("','",$list)."'";
         return $value_list;
     }

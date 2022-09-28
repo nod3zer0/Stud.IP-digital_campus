@@ -168,7 +168,7 @@ class TreeView {
 
         $toggle_item = Request::option('close_item') ?: Request::option('open_item');
         if ($toggle_item){
-            if ($this->open_items[$toggle_item]) {
+            if (!empty($this->open_items[$toggle_item])) {
                 unset($this->open_items[$toggle_item]);
             } else {
                 $this->openItem($toggle_item);
@@ -216,7 +216,7 @@ class TreeView {
     for ($j = 0; $j < $num_items; ++$j){
         $this->printLevelOutput($items[$j]);
         $this->printItemOutput($items[$j]);
-        if ($this->tree->hasKids($items[$j]) && $this->open_ranges[$items[$j]]) {
+        if ($this->tree->hasKids($items[$j]) && !empty($this->open_ranges[$items[$j]])) {
             $this->showTree($this->tree->tree_childs[$items[$j]]);
         }
     }
@@ -276,7 +276,7 @@ class TreeView {
         echo "\n</td><td class=\"printhead\" align=\"left\" width=\"99%\" nowrap valign=\"bottom\">";
         echo $this->getItemHead($item_id);
         echo "</td></tr></table>";
-        if ($this->open_items[$item_id]) {
+        if (!empty($this->open_items[$item_id])) {
             $this->printItemDetails($item_id);
         }
         return;
@@ -318,7 +318,7 @@ class TreeView {
                 else
                     $level_output = "<td class=\"blank\" background=\"" . Assets::image_path('forumstrich.gif') . "\">"
                                   . Assets::img('forumleer.gif', ['size' => '10@20'])
-                                  . "</td>" . $level_output; //vertical line
+                                  . "</td>" . ($level_output ?? ''); //vertical line
             }
         }
         //$level_output = "<td class=\"blank\" background=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"20\" height=\"20\" border=\"0\" ></td>" . $level_output;
@@ -342,9 +342,11 @@ class TreeView {
         $head .= "\n<td  class=\"printhead\" nowrap align=\"left\" valign=\"bottom\">";
         if ($this->tree->hasKids($item_id)){
             $head .= "<a href=\"";
-            $head .= ($this->open_ranges[$item_id]) ? URLHelper::getLink($this->getSelf("close_range={$item_id}")) : URLHelper::getLink($this->getSelf("open_range={$item_id}"));
+            $head .= !empty($this->open_ranges[$item_id])
+                ? URLHelper::getLink($this->getSelf("close_range={$item_id}"))
+                : URLHelper::getLink($this->getSelf("open_range={$item_id}"));
             $head .= "\">";
-            $head .= Icon::create('folder-full', 'clickable', ['title' => $this->open_ranges[$item_id]?_('Alle Unterelemente schließen'):_('Alle Unterelemente öffnen')])->asImg(16, ['class' => 'text-top']);
+            $head .= Icon::create('folder-full', 'clickable', ['title' => !empty($this->open_ranges[$item_id]) ? _('Alle Unterelemente schließen') : _('Alle Unterelemente öffnen')])->asImg(16, ['class' => 'text-top']);
             $head .= "</a>";
         } else {
             $head .= Icon::create('folder-empty', 'clickable', ['title' => _('Dieses Element hat keine Unterelemente')])->asImg();
@@ -362,9 +364,10 @@ class TreeView {
             $head = "<td class=\"printhead\" nowrap align=\"left\" valign=\"bottom\">";
         }
         $head .= "<a href=\"";
-        $head .= ($this->open_items[$item_id])? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
-                                            : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
-        $head .= Assets::img($this->open_items[$item_id] ? $this->pic_open : $this->pic_close);
+        $head .= !empty($this->open_items[$item_id])
+            ? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
+            : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
+        $head .= Assets::img(!empty($this->open_items[$item_id]) ? $this->pic_open : $this->pic_close);
         #$head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";
         $head .= "</a>";
         $head .= '</td>';
@@ -381,10 +384,11 @@ class TreeView {
     function getItemHead($item_id){
         $head = "";
         $head .= "&nbsp;<a class=\"tree\" href=\"";
-        $head .= ($this->open_items[$item_id])? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . "><b>"
-                                            : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
+        $head .= !empty($this->open_items[$item_id])
+            ? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . "><b>"
+            : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
         $head .= htmlReady(my_substr($this->tree->tree_data[$item_id]['name'],0,$this->max_cols));
-        $head .= ($this->open_items[$item_id]) ? "</b></a>" : "</a>";
+        $head .= (!empty($this->open_items[$item_id])) ? "</b></a>" : "</a>";
         return $head;
     }
 

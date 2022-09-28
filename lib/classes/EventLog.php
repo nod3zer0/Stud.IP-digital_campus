@@ -89,6 +89,7 @@ class EventLog
         $filter  = $this->sql_event_filter($action_id, $object_id, $parameters) ?: '1';
         $filter .= " ORDER BY mkdate DESC, event_id DESC LIMIT {$offset}, 50";
         $log_events = LogEvent::findBySQL($filter, $parameters);
+        $events = [];
 
         foreach ($log_events as $log_event) {
             $events[] = [
@@ -113,7 +114,7 @@ class EventLog
         foreach ($actions as $action) {
             $log_actions[$action->getId()] = $action->toArray();
             $log_actions[$action->getId()]['log_count']
-                    = (int) $log_count[$action->getId()];
+                    = (int) ($log_count[$action->getId()] ?? 0);
         }
 
         return $log_actions;

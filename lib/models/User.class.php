@@ -365,7 +365,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         }
 
         //locked user
-        if ((int)$attributes['locked'] == 1) {
+        if (!empty($attributes['locked'])) {
             $where[] = "au.`locked` = 1";
         }
 

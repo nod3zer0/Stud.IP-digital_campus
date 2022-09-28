@@ -52,6 +52,7 @@ class Admin_CourseWizardStepsController extends AuthenticatedController
      */
     public function edit_action($id='')
     {
+        $this->availableClasses = [];
         if ($id) {
             $title = _('Schritt bearbeiten');
             $this->step = CourseWizardStepRegistry::find($id);
@@ -63,7 +64,6 @@ class Admin_CourseWizardStepsController extends AuthenticatedController
             $this->step->number = 0;
             $this->step->enabled = false;
 
-            $this->availableClasses = [];
             foreach (get_declared_classes() as $className) {
                 if (is_a($className, "CourseWizardStep", true)
                         && $className !== "CourseWizardStep") {

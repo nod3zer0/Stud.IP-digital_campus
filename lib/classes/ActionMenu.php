@@ -111,7 +111,8 @@ class ActionMenu
                     'link'       => $url->link,
                     'icon'       => $url->icon,
                     'label'      => $url->label,
-                    'attributes' => $url->attributes
+                    'attributes' => $url->attributes,
+                    'index'      => $index
                 ];
             } else {
                 $action = [
@@ -120,6 +121,7 @@ class ActionMenu
                     'icon'       => $icon,
                     'label'      => $label,
                     'attributes' => $attributes,
+                    'index'      => $index
                 ];
             }
             $index = $index ?: md5($action['link'].json_encode($action['attributes']));
@@ -180,6 +182,7 @@ class ActionMenu
                 'icon'       => $icon,
                 'label'      => $label,
                 'attributes' => $attributes,
+                'index'      => ''
             ];
         }
 
@@ -198,6 +201,7 @@ class ActionMenu
             $this->actions[] = [
                 'type'   => 'multi-person-search',
                 'object' => $mp,
+                'index'  => ''
             ];
         }
 

@@ -69,7 +69,7 @@ class URLHelper
 
         if ($url[0] === '/') {
             preg_match('%^[a-z]+://[\w:.-]+%', $base_url, $host);
-            $base_url = isset($host) ? $host[0] : '';
+            $base_url = $host[0] ?? '';
         }
 
         return $base_url.$url;

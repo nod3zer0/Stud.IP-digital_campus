@@ -4,7 +4,7 @@
         <th colspan="<?= 1 + count($structure) - ($structure['actions'] ? 1 : 0) ?>">
             <?= htmlReady($th_title) ?>
         </th>
-    <? if ($structure['actions']): ?>
+    <? if (!empty($structure['actions'])): ?>
         <th class="actions">
         <?= ActionMenu::get()
             ->setContext($th_title)
@@ -36,7 +36,7 @@
 <? foreach ($members as $member):
         $default_entries = DataFieldEntry::getDataFieldEntries([$member->user_id, $institute->id]);
 
-        if ($group) {
+        if (!empty($group)) {
             $role_entries = DataFieldEntry::getDataFieldEntries([$member->user_id, $group->id]);
         }
 ?>
@@ -57,25 +57,25 @@
             </a>
         <? endif; ?>
         </td>
-    <? if ($structure['status']): ?>
+    <? if (!empty($structure['status'])): ?>
         <td><?= htmlReady($member->inst_perms) ?></td>
     <? endif; ?>
-    <? if ($structure['statusgruppe']): ?>
+    <? if (!empty($structure['statusgruppe'])): ?>
         <td></td>
     <? endif; ?>
-    <? if ($structure['raum']): ?>
+    <? if (!empty($structure['raum'])): ?>
         <td><?= htmlReady($member->raum) ?></td>
     <? endif; ?>
-    <? if ($structure['sprechzeiten']): ?>
+    <? if (!empty($structure['sprechzeiten'])): ?>
         <td><?= htmlReady($member->sprechzeiten) ?></td>
     <? endif; ?>
-    <? if ($structure['telefon']): ?>
+    <? if (!empty($structure['telefon'])): ?>
         <td><?= htmlReady($member->Telefon) ?></td>
     <? endif; ?>
-    <? if ($structure['email']): ?>
+    <? if (!empty($structure['email'])): ?>
         <td><?= htmlReady(get_visible_email($member->user_id)) ?></td>
     <? endif; ?>
-    <? if ($structure['homepage']): ?>
+    <? if (!empty($structure['homepage'])): ?>
         <td><?= htmlReady($member->user_info->Home) ?></td>
     <? endif; ?>
     <? foreach (array_filter($datafields_list, function ($e) use ($structure) { return isset($structure[$e->getId()]); }) as $entry): ?>
@@ -87,7 +87,7 @@
         <? endif; ?>
         </td>
     <? endforeach; ?>
-    <? if ($structure['actions']): ?>
+    <? if (!empty($structure['actions'])): ?>
         <td class="actions">
         <?= ActionMenu::get()
             ->setContext($member->user)
@@ -120,7 +120,7 @@
         </td>
     <? endif; ?>
     </tr>
-<? if ($structure['statusgruppe']): ?>
+<? if (!empty($structure['statusgruppe'])): ?>
     <?
     $my_groups = $groups->filter(function ($group) use ($member) {
         return $group->isMember($member->user_id);
@@ -148,7 +148,7 @@
             <? endif; ?>
             </td>
         <? endforeach; ?>
-        <? if ($structure['actions']): ?>
+        <? if (!empty($structure['actions'])): ?>
             <td class="actions">
             <?= ActionMenu::get()
                 ->conditionAll($admin_view && !LockRules::Check($institute->id, 'participants'))

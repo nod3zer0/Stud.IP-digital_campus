@@ -4,7 +4,7 @@ $order  = Request::getArray('order');
 ?>
 
 <section>
-    <? if ($required) : ?>
+    <? if (!empty($required)) : ?>
     <span class="required">
         <?= htmlReady($name) ?>
     </span>
@@ -28,7 +28,7 @@ $order  = Request::getArray('order');
             <?= _('Aktivieren') ?>
         </label>
         <label class="col-1">
-            <? if ($institution) : ?>
+            <? if (!empty($institution)) : ?>
                 <?= htmlReady($institution->name)?>
             <? endif; ?>
         </label>

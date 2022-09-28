@@ -107,7 +107,7 @@ class Institute_MembersController extends AuthenticatedController
 
         // Show lock rule information
         $lockrule = LockRules::getObjectRule($this->institute->id);
-        if ($this->admin_view && $lockrule->description
+        if ($this->admin_view && !empty($lockrule->description)
                 && LockRules::Check($this->institute->id, 'participants')) {
             PageLayout::postInfo(formatLinks($lockrule->description));
         }

@@ -43,6 +43,7 @@ class HelpContentController extends AuthenticatedController
      */
     public function admin_overview_action()
     {
+        $this->help_content_searchterm = '';
         // initialize
         PageLayout::setTitle(_('Verwalten von Hilfe-Texten'));
         PageLayout::setHelpKeyword('Basis.HelpContentAdmin');

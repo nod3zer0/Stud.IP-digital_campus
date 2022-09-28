@@ -1094,14 +1094,14 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         if ($type === 'has_and_belongs_to_many') {
             $thru_table = $options['thru_table'];
-            if (!$options['thru_key']) {
+            if (empty($options['thru_key'])) {
                 $options['thru_key'] = $this->pk()[0];
             }
             if (empty($options['thru_assoc_key']) || empty($options['assoc_foreign_key'])) {
                 $class = $options['class_name'];
                 $record = new $class();
                 $meta = $record->getTableMetadata();
-                if (!$options['thru_assoc_key'] ) {
+                if (empty($options['thru_assoc_key'])) {
                     $options['thru_assoc_key'] = $meta['pk'][0];
                 }
                 if (empty($options['assoc_foreign_key'])) {

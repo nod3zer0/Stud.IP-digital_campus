@@ -9,7 +9,7 @@ $cronify = function ($n) {
     return $n;
 }
 ?>
-<? if ($display === 'table-cells'): ?>
+<? if (isset($display) && $display === 'table-cells'): ?>
     <td><?= $cronify($minute) ?></td>
     <td><?= $cronify($hour) ?></td>
     <td><?= $cronify($day) ?></td>

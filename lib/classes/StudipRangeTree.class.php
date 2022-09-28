@@ -61,7 +61,7 @@ class StudipRangeTree extends TreeAbstract
         if (isset($args['sem_status']) ){
             $this->sem_status = array_map('intval', $args['sem_status']);
         }
-        $this->visible_only = (int)$args['visible_only'];
+        $this->visible_only = (int)($args['visible_only'] ?? 0);
         parent::__construct(); //calling the baseclass constructor
         $this->sem_dates = Semester::findAllVisible();
     }

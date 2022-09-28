@@ -145,7 +145,7 @@ if (Request::option('com') == 'store') {
 }
 
 
-if (!$edit_open[$edit]) {
+if (empty($edit_open[$edit])) {
     echo  LinkButton::create("<< " . _("Zurück"), URLHelper::getURL('?list=TRUE'));;
 }
 

@@ -21,7 +21,7 @@ class Course_StudygroupController extends AuthenticatedController
         ) {
 
             // args at position zero is always the studygroup-id
-            if ($args[0] && $action == 'details') {
+            if (!empty($args[0]) && $action == 'details') {
                 if (SeminarCategories::GetBySeminarId($args[0])->studygroup_mode == false) {
                     throw new Exception(_('Dieses Seminar ist keine Studiengruppe!'));
                 }

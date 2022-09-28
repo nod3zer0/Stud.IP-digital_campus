@@ -657,9 +657,9 @@ class PluginManager
         }
 
         foreach ($manifest as $line) {
-            list($key, $value) = explode('=', $line);
-            $key = trim($key);
-            $value = trim($value);
+            $key_and_value = explode('=', $line);
+            $key = trim($key_and_value[0]);
+            $value = trim($key_and_value[1] ?? '');
 
             // skip empty lines and comments
             if ($key === '' || $key[0] === '#') {

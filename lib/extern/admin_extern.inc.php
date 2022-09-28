@@ -315,7 +315,7 @@ else {
 }
 
 
-if (!$have_config) {
+if (empty($have_config)) {
     echo "<blockquote>\n";
     echo _("Es wurden noch keine Konfigurationen angelegt.");
     echo "</blockquote>";

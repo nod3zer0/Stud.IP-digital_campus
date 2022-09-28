@@ -24,13 +24,13 @@ use Studip\Button, Studip\LinkButton;
             <span class="required">
                 <?= _('Name der Regel:') ?>
             </span>
-            <input type="text" name="rulename" value="<?= htmlReady(Request::get('rulename', $rule['name'])) ?>"
+            <input type="text" name="rulename" value="<?= htmlReady(Request::get('rulename', $rule ? $rule['name'] : '')) ?>"
                    required="required">
         </label>
         <label>
             <?= _('Beschreibung') ?>
             <textarea cols="60" rows="5"
-                      name="description"><?= htmlReady(Request::get('description', $rule['description'])) ?></textarea>
+                      name="description"><?= htmlReady(Request::get('description', $rule ? $rule['description'] : '')) ?></textarea>
         </label>
     </fieldset>
     <? if (count($entries_semdata) > 0) : ?>

@@ -327,6 +327,10 @@ class PluginAdministration
             $plugindir = Config::get()->PLUGINS_PATH . '/' . $plugin['path'];
             $manifest = $plugin_manager->getPluginManifest($plugindir);
 
+            if (!$manifest) {
+                continue;
+            }
+
             if (isset($manifest['updateURL'])) {
                 $repository = new PluginRepository($manifest['updateURL']);
             }

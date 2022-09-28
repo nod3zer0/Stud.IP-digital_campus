@@ -65,7 +65,7 @@
                         <td>
                             <input type="checkbox" id="active[<?= htmlReady(get_class($module)) ?>]"
                                    name="modules[<?= htmlReady(get_class($module)) ?>][active]" value="1"
-                                <?= $config[get_class($module)]['active'] && !$resourcesInactive ? ' checked' : '' ?>
+                                <?= !empty($config[get_class($module)]['active']) && !$resourcesInactive ? ' checked' : '' ?>
                                 <?= $resourcesInactive ? ' disabled' : '' ?>>
                         </td>
                         <td>

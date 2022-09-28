@@ -10,7 +10,7 @@
 
 <form class="default" action="<?= $controller->manual() ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <?= $this->render_partial("admin/autoinsert/_search.php", compact('semester_data', 'sem_search', 'sem_select')) ?>
+    <?= $this->render_partial('admin/autoinsert/_search.php', compact('sem_search', 'sem_select')) ?>
 </form>
 
 
