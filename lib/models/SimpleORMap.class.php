@@ -1465,7 +1465,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $field = strtolower($field);
         $options = $this->getRelationOptions($relation);
         if ($options['type'] === 'has_one' || $options['type'] === 'belongs_to') {
-            return $this->{$relation}->{$field};
+            return $this->{$relation}->{$field} ?? null;
         } else {
             throw new InvalidArgumentException('Relation ' . $relation . ' not found or not applicable.');
         }

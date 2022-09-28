@@ -62,6 +62,9 @@ class Resources_ExportController extends AuthenticatedController
             throw new AccessDeniedException();
         }
 
+        $this->available_rooms = [];
+        $this->available_clipboards = [];
+
         PageLayout::setTitle(_('Quellen für den Export von Buchungen auswählen'));
 
         $this->select_rooms = Request::get('select_rooms');

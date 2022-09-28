@@ -116,6 +116,9 @@ class Resources_PrintController extends AuthenticatedController
         }
         PageLayout::setTitle(_('Belegungsplan-Seriendruck'));
 
+        $this->selected_clipboard = null;
+        $this->selected_schedule = null;
+
         $this->clipboard_selected = false;
         $this->print_schedules = false;
         if (Request::submitted('select_clipboard')) {

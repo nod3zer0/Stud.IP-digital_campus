@@ -39,11 +39,11 @@
             </label>
             <label>
                 <?= _('Raumtyp') ?>
-                <input type="text" name="room_type" value="<?= htmlReady($room_type) ?>">
+                <input type="text" name="room_type" value="<?= htmlReady($room_type ?? '') ?>">
             </label>
             <label>
                 <?= _('Sitzplätze') ?>
-                <input type="number" name="seats" value="<?= htmlReady($seats) ?>">
+                <input type="number" name="seats" value="<?= htmlReady($seats ?? '0') ?>">
             </label>
             <label>
                 <input type="checkbox" name="booking_plan_is_public" value="1"

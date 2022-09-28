@@ -48,6 +48,11 @@ class Resources_CategoryController extends AuthenticatedController
         $this->mode = 'add';
         $this->previously_set_properties = [];
         $this->show_form = false;
+        $this->set_properties = [];
+        $this->name = '';
+        $this->description = '';
+        $this->class_name = '';
+        $this->iconnr = '';
 
         $this->class_names = ResourceManager::getAllResourceClassNames();
         $this->available_properties = ResourcePropertyDefinition::findBySql(
@@ -85,7 +90,6 @@ class Resources_CategoryController extends AuthenticatedController
             $properties_requestable = Request::getArray('prop_requestable');
             $properties_protected = Request::getArray('prop_protected');
 
-            $this->set_properties = [];
             foreach (array_keys($set_properties) as $key) {
                 $this->set_properties[$key] = [
                     'id' => $key,
@@ -205,6 +209,7 @@ class Resources_CategoryController extends AuthenticatedController
         $this->mode = 'edit';
         $this->previously_set_properties = [];
         $this->show_form = false;
+        $this->set_properties = [];
 
         $this->category = ResourceCategory::find($category_id);
         if (!$this->category) {
@@ -249,12 +254,11 @@ class Resources_CategoryController extends AuthenticatedController
             $properties_requestable = Request::getArray('prop_requestable');
             $properties_protected = Request::getArray('prop_protected');
 
-            $this->set_properties = [];
             foreach (array_keys($set_properties) as $key) {
                 $this->set_properties[$key] = [
                     'id' => $key,
-                    'requestable' => $properties_requestable[$key],
-                    'protected' => $properties_protected[$key]
+                    'requestable' => $properties_requestable[$key] ?? false,
+                    'protected' => $properties_protected[$key] ?? false
                 ];
             }
 

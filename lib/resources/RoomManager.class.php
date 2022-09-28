@@ -838,13 +838,13 @@ class RoomManager
                 //Invalid room
                 continue;
             }
-            if (!is_array($grouped_rooms[$location->id])) {
+            if (empty($grouped_rooms[$location->id])) {
                 $grouped_rooms[$location->id] = [
                     'location' => $location,
                     'buildings' => []
                 ];
             }
-            if (!is_array($grouped_rooms[$location->id]['buildings'][$building->id])) {
+            if (empty($grouped_rooms[$location->id]['buildings'][$building->id])) {
                 $grouped_rooms[$location->id]['buildings'][$building->id] = [
                     'building' => $building,
                     'rooms' => []

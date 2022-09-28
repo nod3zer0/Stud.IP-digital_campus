@@ -117,7 +117,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             }
 
             $this->selected_room_ids = [];
-            if ($this->filter['room_id']) {
+            if (!empty($this->filter['room_id'])) {
                 $room = Resource::find($this->filter['room_id']);
                 if (!($room instanceof Resource)) {
                     PageLayout::postError(
@@ -142,7 +142,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                     return;
                 }
                 $this->selected_room_ids = [$room->id];
-            } elseif ($this->filter['group']) {
+            } elseif (!empty($this->filter['group'])) {
                 //Filter rooms by the selected room group:
                 $clipboard = Clipboard::find($this->filter['group']);
                 if (!($clipboard instanceof Clipboard)) {
@@ -197,9 +197,9 @@ class Resources_RoomRequestController extends AuthenticatedController
     protected function getFilteredRoomRequests()
     {
         $sql = '';
-        if ($this->filter['request_status'] == 'closed') {
+        if (!empty($this->filter['request_status']) && $this->filter['request_status'] == 'closed') {
             $sql .= "resource_requests.closed IN ('1', '2') ";
-        } elseif ($this->filter['request_status'] == 'denied') {
+        } elseif (!empty($this->filter['request_status']) && $this->filter['request_status'] == 'denied') {
             $sql .= "resource_requests.closed = '3' ";
         } else {
             $sql .= "resource_requests.closed < '1' ";
@@ -208,7 +208,7 @@ class Resources_RoomRequestController extends AuthenticatedController
         $sql_params = [
             'room_ids' => $this->selected_room_ids
         ];
-        if (!$this->filter['specific_requests']) {
+        if (empty($this->filter['specific_requests'])) {
             $sql .= "OR resource_id IS NULL or resource_id = ''";
         }
         $sql .= ") ";
@@ -217,7 +217,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             $sql_params['current_user_id'] = User::findCurrent()->id;
         }
 
-        if ($this->filter['request_periods'] == 'periodic') {
+        if (!empty($this->filter['request_periods']) && $this->filter['request_periods'] == 'periodic') {
             // get rid of requests for single dates AND requests for multiple single dates
             // also check if there exists cycle dates in case it is a request for the whole seminar
             $sql .= " AND resource_requests.termin_id = ''
@@ -231,7 +231,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                 WHERE seminar_cycle_dates.seminar_id = resource_requests.course_id
             )";
         }
-        if ($this->filter['request_periods'] == 'aperiodic') {
+        if (!empty($this->filter['request_periods']) && $this->filter['request_periods'] == 'aperiodic') {
             $sql .= " AND (
                 resource_requests.termin_id <> ''
                 OR EXISTS
@@ -307,7 +307,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                     (resource_requests.termin_id = '' AND resource_requests.metadate_id = '' AND EXISTS (SELECT * FROM termine WHERE termine.range_id=resource_requests.course_id AND termine.date BETWEEN :begin AND :semester_end))
                      ";
 
-                if (!$this->filter['request_periods']) {
+                if (empty($this->filter['request_periods'])) {
                     $sql .= ' OR (
                         CAST(resource_requests.begin AS SIGNED) - resource_requests.preparation_time < :semester_end
                         AND resource_requests.end > :begin
@@ -614,7 +614,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             $element = new SelectElement(
                 $class_id,
                 $class['name'],
-                $this->filter['course_type'] === (string)$class_id
+                !empty($this->filter['course_type']) && $this->filter['course_type'] === (string)$class_id
             );
             $list->addElement(
                 $element->setAsHeader(),
@@ -625,7 +625,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                 $element = new SelectElement(
                     $class_id . '_' . $id,
                     $result['name'],
-                    $this->filter['course_type'] === $class_id . '_' . $id
+                    !empty($this->filter['course_type']) && $this->filter['course_type'] === $class_id . '_' . $id
                 );
                 $list->addElement(
                     $element->setIndentLevel(1),
@@ -653,7 +653,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                 new SelectElement(
                     $clip->id,
                     $clip->name,
-                    $this->filter['group'] == $clip->id
+                    !empty($this->filter['group']) && $this->filter['group'] == $clip->id
                 ),
                 'clip-' . $clip->id
             );
@@ -669,7 +669,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             new SelectElement(
                 '',
                 _('bitte wählen'),
-                !$this->filter['room_id']
+                empty($this->filter['room_id'])
             )
         );
         foreach ($this->available_rooms as $room) {
@@ -677,7 +677,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                 new SelectElement(
                     $room->id,
                     $room->name,
-                    $room->id == $this->filter['room_id']
+                    !empty($this->filter['room_id']) && $room->id == $this->filter['room_id']
                 )
             );
         }
@@ -704,22 +704,22 @@ class Resources_RoomRequestController extends AuthenticatedController
         $widget->addRadioButton(
             _('Alle Termine'),
             $this->overviewURL(['request_periods' => '0']),
-            !$this->filter['request_periods']
+            empty($this->filter['request_periods'])
         );
         $widget->addRadioButton(
             _('Nur regelmäßige Termine'),
             $this->overviewURL(['request_periods' => 'periodic']),
-            $this->filter['request_periods'] == 'periodic'
+            !empty($this->filter['request_periods']) && $this->filter['request_periods'] == 'periodic'
         );
         $widget->addRadioButton(
             _('Nur unregelmäßige Termine'),
             $this->overviewURL(['request_periods' => 'aperiodic']),
-            $this->filter['request_periods'] == 'aperiodic'
+            !empty($this->filter['request_periods']) && $this->filter['request_periods'] == 'aperiodic'
         );
         $widget->addElement(new WidgetElement('<br>'));
         $widget->addCheckbox(
             _('Nur mit Raumangabe'),
-            $this->filter['specific_requests'],
+            !empty($this->filter['specific_requests']),
             $this->overviewURL(['toggle_specific_requests' => 1])
         );
         $widget->addCheckbox(
@@ -740,9 +740,14 @@ class Resources_RoomRequestController extends AuthenticatedController
             'dow-all'
         );
         foreach (range(1, 7) as $day) {
-            $dow_selector->addElement(new SelectElement(
-                $day, strftime('%A', strtotime('this monday +' . ($day - 1) . ' day')), $this->filter['dow'] == $day
-            ), 'dow-' . $day);
+            $dow_selector->addElement(
+                new SelectElement(
+                    $day,
+                    strftime('%A', strtotime('this monday +' . ($day - 1) . ' day')),
+                    !empty($this->filter['dow']) && $this->filter['dow'] == $day
+                ),
+                'dow-' . $day
+            );
         }
         $sidebar->addWidget($dow_selector, 'filter-dow');
 
@@ -796,7 +801,7 @@ class Resources_RoomRequestController extends AuthenticatedController
         $this->sort_order = $this->filter['sort_order'];
         $this->sort_var = $this->filter['sorting'];
 
-        $this->request_status = $this->filter['request_status'];
+        $this->request_status = $this->filter['request_status'] ?? '';
     }
 
     public function index_action($request_id = null)

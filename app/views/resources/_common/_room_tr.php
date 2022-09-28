@@ -52,10 +52,10 @@ if ($room->requestable && $show_autor_actions) {
 <?= $this->render_partial(
     'resources/_common/_resource_tr.php',
     [
-        'checkbox_data' => $checkbox_data,
+        'checkbox_data' => $checkbox_data ?? '',
         'resource' => $room,
         'booking_plan_link_on_name' => true,
-        'resource_tooltip' => $room_tooltip,
+        'resource_tooltip' => $room_tooltip ?? '',
         'show_global_admin_actions' => $show_global_admin_actions,
         'show_admin_actions' => $show_admin_actions,
         'show_tutor_actions' => $show_tutor_actions,
@@ -67,7 +67,7 @@ if ($room->requestable && $show_autor_actions) {
         'additional_properties' => ['seats'],
         'clipboard_range_type' => 'Room',
         'additional_actions' => (
-            is_array($additional_actions)
+        (!empty($additional_actions) && is_array($additional_actions))
             ? array_merge(
                 $room_actions,
                 $additional_actions

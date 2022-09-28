@@ -12,7 +12,7 @@
  */
 ?>
 <? if ($grouped_rooms) : ?>
-    <? if ($title) : ?>
+    <? if (!empty($title)) : ?>
         <h1><?= htmlReady($title) ?></h1>
     <? endif ?>
     <? foreach ($grouped_rooms as $group) : ?>
@@ -56,7 +56,7 @@
                                         <tr>
                                             <td>
                                                 <a href="<?= $room_link ?>"
-                                                    <?= $show_in_dialog ? 'data-dialog="size=big"' : '' ?>>
+                                                    <?= !empty($show_in_dialog) ? 'data-dialog="size=big"' : '' ?>>
                                                     <?= htmlReady($resource->name) ?>
                                                 </a>
                                             </td>

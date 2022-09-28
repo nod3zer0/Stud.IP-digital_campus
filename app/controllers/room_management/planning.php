@@ -31,6 +31,10 @@ class RoomManagement_PlanningController extends AuthenticatedController
             Navigation::activateItem('/resources/planning/index');
         }
         $selected_clipboard_id = Request::get('clipboard_id', $selected_clipboard_id);
+
+        $this->no_clipboard = false;
+        $this->no_rooms = false;
+
         if ($selected_clipboard_id) {
             $_SESSION['selected_clipboard_id'] = $selected_clipboard_id;
         } else {
@@ -259,6 +263,10 @@ class RoomManagement_PlanningController extends AuthenticatedController
         }
 
         $selected_clipboard_id = Request::get('clipboard_id', $selected_clipboard_id);
+
+        $this->no_clipboard = false;
+        $this->no_rooms = false;
+
         if ($selected_clipboard_id) {
             $_SESSION['selected_clipboard_id'] = $selected_clipboard_id;
         } else {
@@ -359,7 +367,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
         }
         $semester_selector = new SemesterSelectorWidget(
             URLHelper::getURL(
-                'dispatch.php/room_management/planning/semester_plan/' . $this->resource->id,
+                'dispatch.php/room_management/planning/semester_plan/' . (!empty($this->resource) ? $this->resource->id : ''),
                 [
                     'allday' => Request::get('allday', false)
                 ]
@@ -1042,6 +1050,8 @@ class RoomManagement_PlanningController extends AuthenticatedController
         }
 
         $selected_clipboard_id = Request::get('clipboard_id', $selected_clipboard_id);
+        $this->standalone = false;
+
         if ($selected_clipboard_id) {
             $_SESSION['selected_clipboard_id'] = $selected_clipboard_id;
         } else {

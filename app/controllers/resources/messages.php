@@ -38,6 +38,10 @@ class Resources_MessagesController extends AuthenticatedController
 
         $this->room_selection = 'search';
         $this->recipient_selection = 'permission';
+        $this->clipboard_id = '';
+        $this->min_permission = '';
+        $this->selected_rooms = [];
+
         $this->room_search = new QuickSearch(
             'room_name',
             new RoomSearch()
@@ -65,7 +69,6 @@ class Resources_MessagesController extends AuthenticatedController
             $this->room_ids = Request::getArray('room_ids');
             $this->selected_rooms = Room::findMany($this->room_ids);
             $this->clipboard_id = Request::get('clipboard_id');
-            $this->min_permission = '';
 
             //First validation:
 

@@ -597,7 +597,7 @@ class Resources_ResourceController extends AuthenticatedController
             );
             return;
         }
-        $this->resource = $this->resources[0];
+        $this->resource = $this->resources[0] ?? null;
 
         $this->getUserAndCheckPermissions('admin');
 

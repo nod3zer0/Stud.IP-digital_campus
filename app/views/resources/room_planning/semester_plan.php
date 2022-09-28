@@ -1,4 +1,4 @@
-<? if ($resource) : ?>
+<? if (!empty($resource)) : ?>
     <? if (Request::get("allday")) {
         $min_time = '00:00:00';
         $max_time = '24:00:00';

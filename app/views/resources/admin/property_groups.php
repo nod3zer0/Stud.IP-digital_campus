@@ -140,12 +140,12 @@
                             <? if ($property_groups): ?>
                                 <select name="property_move[<?= htmlReady($property->id)?>]">
                                     <option value=""
-                                            <?= $property_move[$property->id] == ''
+                                            <?= empty($property_move[$property->id])
                                               ? 'selected="selected"'
                                               : '' ?>></option>
                                     <? foreach ($property_groups as $group): ?>
                                         <option value="<?= htmlReady($group->id) ?>"
-                                                <?= $property_move[$property->id] == $group->id
+                                                <?= (!empty($property_move[$property->id]) && $property_move[$property->id] == $group->id)
                                                   ? 'selected="selected"'
                                                   : '' ?>>
                                             <?= htmlReady($group->name) ?>

@@ -23,7 +23,7 @@
               : 'data-dialog'
           )
           : '') ?>>
-    <? if ($custom_hidden_fields): ?>
+    <? if (!empty($custom_hidden_fields)): ?>
         <? foreach ($custom_hidden_fields as $name => $content): ?>
             <? if (is_array($content)): ?>
                 <? foreach ($content as $item): ?>
@@ -41,7 +41,7 @@
         'resources/_common/_permission_table.php',
         [
             'permissions'               => $permissions,
-            'custom_empty_list_message' => $custom_empty_list_message,
+            'custom_empty_list_message' => $custom_empty_list_message ?? '',
             'table_id'                  => $table_id,
             'single_user'               => $user
         ]
@@ -53,7 +53,7 @@
                 <?= $user_search->render() ?>
             </label>
         </p>
-        <? if ($course_search): ?>
+        <? if (!empty($course_search)): ?>
             <p>
                 <label>
                     <?= _('Teilnehmende aus Veranstaltung hinzufügen') ?>
@@ -65,7 +65,7 @@
 
     <div data-dialog-button>
         <?= \Studip\Button::create(
-            ($custom_save_button_text ? $custom_save_button_text : _('Speichern')),
+            $custom_save_button_text ?? _('Speichern'),
             'save'
         ) ?>
     </div>

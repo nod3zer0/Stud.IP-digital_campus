@@ -43,14 +43,14 @@ if (!isset($show_delete_action)) {
 <table class="default sortable-table resource-permissions-table"
        data-sortlist="[[1, 0]]"
        <?= $table_id ? 'id="' . htmlReady($table_id) . '"' : '' ?>>
-    <? if ($table_caption): ?>
+    <? if (!empty($table_caption)): ?>
         <caption><?= htmlReady($table_caption) ?></caption>
     <? endif ?>
     <colgroup>
         <col class="checkbox">
         <col>
         <col>
-        <? if ($custom_columns): ?>
+        <? if (!empty($custom_columns)): ?>
             <? foreach ($custom_columns as $column_name): ?>
                 <col>
             <? endforeach ?>
@@ -65,7 +65,7 @@ if (!isset($show_delete_action)) {
             </th>
             <th data-sort="text"><?= _('Name') ?></th>
             <th data-sort="htmldata"><?= _('Rechtestufe') ?></th>
-            <? if ($custom_columns): ?>
+            <? if (!empty($custom_columns)): ?>
                 <? foreach (array_keys($custom_columns) as $column_name): ?>
                     <th><?= htmlReady($column_name) ?></th>
                 <? endforeach ?>
@@ -82,7 +82,7 @@ if (!isset($show_delete_action)) {
                     'data-activates-condition' => 'table.resource-permissions-table :checkbox:checked'
                 ];
                 ?>
-                
+
                     <?= \Studip\Button::create(_('Löschen'), 'bulk_delete', $button_attrs) ?>
             </td>
         </tr>
@@ -158,7 +158,7 @@ if (!isset($show_delete_action)) {
                             </option>
                         </select>
                     </td>
-                    <? if ($custom_columns): ?>
+                    <? if (!empty($custom_columns)): ?>
                         <? foreach ($custom_columns as $column_content): ?>
                             <td>
                                 <?= htmlReady($column_content[$permission->id]) ?>
@@ -205,7 +205,7 @@ if (!isset($show_delete_action)) {
                     </option>
                 </select>
             </td>
-            <? if ($custom_columns): ?>
+            <? if (!empty($custom_columns)): ?>
                 <? foreach (array_keys($custom_columns) as $column_name): ?>
                     <td><?= htmlReady($custom_columns[$column_name]) ?></td>
                 <? endforeach ?>

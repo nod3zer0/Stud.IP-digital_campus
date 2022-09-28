@@ -18,7 +18,7 @@
             <section>
                 <? foreach ($properties as $property): ?>
                     <?= $property->toHtmlInput(
-                        $property_data[$property->id],
+                        $property_data[$property->id] ?? '',
                         '',
                         true,
                         true

@@ -75,7 +75,7 @@
  */
 ?>
 <tr>
-    <? if ($checkbox_data && $checkbox_data['name']): ?>
+    <? if (!empty($checkbox_data) && $checkbox_data['name']): ?>
         <?
         if ($checkbox_data['checked']) {
             $checkbox_data['checked'] = 'checked';
@@ -93,7 +93,7 @@
             ? $resource->getActionLink('booking_plan')
             : $resource->getActionLink('show')
         ) ?>"
-            <?= $user_has_booking_rights ? '' : 'data-dialog' ?>
+            <?= !empty($user_has_booking_rights) ? '' : 'data-dialog' ?>
            data-id="<?= htmlReady($resource->id) ?>"
            data-range_type="<?= $clipboard_range_type
                ? htmlReady($clipboard_range_type)
@@ -120,7 +120,7 @@
                 <?= Icon::create('link-intern')->asImg(['class' => 'text-bottom']) ?>
             <? endif ?>
         </a>
-        <? if ($resource_tooltip): ?>
+        <? if (!empty($resource_tooltip)): ?>
             <span class="text-bottom">
                 <?= tooltipIcon($resource_tooltip) ?>
             </span>
@@ -142,7 +142,7 @@
             </td>
         <? endforeach ?>
     <? endif ?>
-    <? if ($additional_columns): ?>
+    <? if (!empty($additional_columns)): ?>
         <? foreach ($additional_columns as $column): ?>
             <td>
                 <?= htmlReady($column) ?>

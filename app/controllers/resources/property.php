@@ -42,9 +42,14 @@ class Resources_PropertyController extends AuthenticatedController
         $this->write_permission_level = 'autor';
         $this->type = 'bool';
 
-        $property = new ResourcePropertyDefinition();
-        $this->description = $property->description;
-        $this->display_name = $property->display_name;
+        $this->property = new ResourcePropertyDefinition();
+        $this->name = '';
+        $this->description = $this->property->description;
+        $this->display_name = $this->property->display_name;
+        $this->options = '';
+        $this->searchable = false;
+        $this->info_label = false;
+        $this->range_search = false;
 
         $this->show_form = true;
         if (Request::submitted('save')) {
@@ -80,25 +85,25 @@ class Resources_PropertyController extends AuthenticatedController
                 return;
             }
 
-            $property->name = $this->name;
-            $property->description = $this->description;
-            $property->type = $this->type;
-            $property->searchable = ($this->searchable ? '1' : '0');
-            $property->options = $this->options;
-            $property->display_name = $this->display_name;
-            $property->range_search = (
+            $this->property->name = $this->name;
+            $this->property->description = $this->description;
+            $this->property->type = $this->type;
+            $this->property->searchable = ($this->searchable ? '1' : '0');
+            $this->property->options = $this->options;
+            $this->property->display_name = $this->display_name;
+            $this->property->range_search = (
                 $this->range_search
                 ? '1'
                 : '0'
             );
-            $property->write_permission_level = $this->write_permission_level;
-            $property->info_label = (
+            $this->property->write_permission_level = $this->write_permission_level;
+            $this->property->info_label = (
                 $this->info_label
                 ? '1'
                 : '0'
             );
 
-            if ($property->store()) {
+            if ($this->property->store()) {
                 $this->show_form = false;
                 PageLayout::postSuccess(
                     _('Die Eigenschaft wurde gespeichert!')

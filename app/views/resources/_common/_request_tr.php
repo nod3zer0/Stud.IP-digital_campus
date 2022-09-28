@@ -131,7 +131,7 @@
             $edit_url            = $controller->link_for('resources/room_request/edit/' . $request->id);
             $edit_url_attributes = ['data-dialog' => 'size=auto'];
         }
-        if ($edit_url && $edit_urL_attributes) {
+        if ($edit_url && $edit_url_attributes) {
             $action_menu->addLink(
                 $edit_url,
                 _('Anfrage bearbeiten'),

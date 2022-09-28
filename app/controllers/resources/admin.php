@@ -365,6 +365,9 @@ class Resources_AdminController extends AuthenticatedController
 
         PageLayout::setTitle(_('Eigenschaftsgruppen verwalten'));
 
+        $this->new_group_name = '';
+        $this->property_move = [];
+
         if (Request::submitted('save')) {
             CSRFProtection::verifyUnsafeRequest();
 
@@ -748,6 +751,8 @@ class Resources_AdminController extends AuthenticatedController
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
         }
+
+        $this->separable_room_name = '';
 
         $db = DBManager::get();
 

@@ -1365,10 +1365,10 @@ class Resource extends SimpleORMap implements StudipItem
                 continue;
             }
             $group_name = '';
-            if ($property->definition->group->name) {
+            if (!empty($property->definition->group->name)) {
                 $group_name = $property->definition->group->name;
             }
-            if (!is_array($property_groups[$group_name])) {
+            if (empty($property_groups[$group_name]) || !is_array($property_groups[$group_name])) {
                 $property_groups[$group_name] = [];
             }
             $property_groups[$group_name][] = $property;

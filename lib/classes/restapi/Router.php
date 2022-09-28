@@ -364,7 +364,10 @@ class Router
 
         $content_renderer = $this->negotiateContent($uri);
 
-        [$route, $parameters, $allow_nobody] = $this->matchRoute($uri, $method, $content_renderer);
+        $match_result = $this->matchRoute($uri, $method, $content_renderer);
+        $route = $match_result[0];
+        $parameters = $match_result[1];
+        $allow_nobody = $match_result[2] ?? false;
         if (!$route) {
             //No route found for the combination of URI and method.
             //We return the allowed methods for the route in the HTTP header:
@@ -483,7 +486,7 @@ class Router
 
         $result = call_user_func_array($handler, $parameters);
 
-        if (method_exists($result, 'toArray')) {
+        if (is_object($result) && method_exists($result, 'toArray')) {
             $result = $result->toArray();
         }
 

@@ -90,6 +90,8 @@ class Resources_RoomPlanningController extends AuthenticatedController
 
         $this->user = User::findCurrent();
 
+        $this->resource = null;
+
         $new_resource_id = Request::get('new_resource_id');
         if ($new_resource_id) {
             $this->redirect(
