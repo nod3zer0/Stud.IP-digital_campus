@@ -68,9 +68,23 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
                 ORDER BY b . `mkdate` DESC
             ) LIMIT {$limit}";
         } else {
+            $user_id = DBManager::get()->quote($GLOBALS['user']->id);
+            $mycourses = "SELECT `Seminar_id`
+            FROM `seminar_user`
+            WHERE `user_id` = {$user_id}";
+
+            if (Config::get()->DEPUTIES_ENABLE) {
+            $mycourses .= "
+                UNION
+                SELECT `range_id` AS Seminar_id
+                FROM `deputies`
+                WHERE `user_id` = {$user_id}";
+            }
+
             $sql = "(SELECT `cw_structural_elements` . `id` AS id, CONCAT('', 'cw_structural_elements') AS type
             FROM `cw_structural_elements`
             WHERE (`title` LIKE {$query} OR `payload` LIKE {$query})
+                AND (`range_id` IN ({$mycourses}) OR `range_id` = {$user_id})
             ORDER BY `cw_structural_elements`.`mkdate` DESC)
             UNION (
                 SELECT se . `id` AS id, CONCAT('', 'cw_containers') AS type
@@ -79,6 +93,7 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
                 ON se . `id` = c . `structural_element_id`
                 WHERE c. `payload` LIKE {$query}
                     AND `container_type` != 'list'
+                    AND (se . `range_id` IN ({$mycourses}) OR se .`range_id` = {$user_id})
                 ORDER BY c . `mkdate` DESC)
             UNION (
                 SELECT se . `id` AS id, CONCAT('', 'cw_blocks') AS type
@@ -88,6 +103,7 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
                 JOIN cw_structural_elements se
                 ON se . `id` = c . `structural_element_id`
                 WHERE b.payload LIKE {$query}
+                    AND (se . `range_id` IN ({$mycourses}) OR se .`range_id` = {$user_id})
                 ORDER BY b . `mkdate` DESC
             ) LIMIT {$limit}";
         }
@@ -120,7 +136,8 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
                 'img' => $structural_element->image ? $structural_element->getImageUrl() : Icon::create('courseware')->asImagePath(),
                 'additional' => '<a href="' . $pageData['originUrl'] . '" title="' . $pageData['originName'] . '">' . $pageData['originName'] . '</a>',
                 'date' => $date->format('d.m.Y H:i'),
-                'structural-element-id' => $structural_element->id
+                'structural-element-id' => $structural_element->id,
+                'expand' => null
             ];
         }
         return [];
