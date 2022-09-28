@@ -257,7 +257,7 @@ class Search_StudiengaengeController extends MVVController
 
                     $start_sem = Semester::find($abschnitt_modul->modul->start);
                     $end_sem = Semester::find($abschnitt_modul->modul->end);
-                    if ($start_sem->beginn > $this->active_sem->beginn || ($this->active_sem->ende > $end_sem->ende && $end_sem != null)) {
+                    if (($start_sem && $start_sem->beginn > $this->active_sem->beginn) || ($end_sem && $this->active_sem->ende > $end_sem->ende)) {
                        continue;
                     }
 

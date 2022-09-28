@@ -37,6 +37,7 @@ class GlobalSearchUsers extends GlobalSearchModule implements GlobalSearchFullte
         }
 
         // if you're no admin respect visibilty
+        $visQuery = '';
         if (!$GLOBALS['perm']->have_perm('admin')) {
             $visQuery = get_vis_query('user', 'search') . " AND ";
         }

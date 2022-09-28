@@ -347,7 +347,7 @@ class OLEwriter
             for($i=0;$i<strlen($name);$i++)
             {
                 // Simulate a Unicode string
-                $rawname .= pack("H*",dechex(ord($name{$i}))).pack("C",0);
+                $rawname .= pack("H*",dechex(ord($name[$i]))).pack("C",0);
             }
             $length = strlen($name) * 2;
         }

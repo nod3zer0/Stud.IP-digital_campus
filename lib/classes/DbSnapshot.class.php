@@ -300,6 +300,9 @@ class DbSnapshot
         for ($i = 0; $i < $this->numRows; ++$i) {
             for ($j = 0; $j < $num_fields; ++$j) {
                 if ($fieldlist[$j] != $group_by_field) {
+                    if (empty($ret[$this->result[$i][$group_by_field]][$fieldlist[$j]][$this->result[$i][$fieldlist[$j]]])) {
+                        $ret[$this->result[$i][$group_by_field]][$fieldlist[$j]][$this->result[$i][$fieldlist[$j]]] = 0;
+                    }
                     ++$ret[$this->result[$i][$group_by_field]][$fieldlist[$j]][$this->result[$i][$fieldlist[$j]]];
                 }
             }

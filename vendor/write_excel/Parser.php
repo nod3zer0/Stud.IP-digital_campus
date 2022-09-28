@@ -642,7 +642,7 @@ class Parser
     $col    = 0;
     for($i=0; $i < strlen($col_ref); $i++)
     {
-        $col += (ord($col_ref{$i}) - ord('A') + 1) * pow(26, $expn);
+        $col += (ord($col_ref[$i]) - ord('A') + 1) * pow(26, $expn);
         $expn--;
     }
 
@@ -662,30 +662,30 @@ class Parser
     // eat up white spaces
     if($i < strlen($this->_formula))
         {
-        while($this->_formula{$i} == " ")
+        while($this->_formula[$i] == " ")
             {
             $i++;
             }
         if($i < strlen($this->_formula) - 1)
             {
-            $this->_lookahead = $this->_formula{$i+1};
+            $this->_lookahead = $this->_formula[$i+1];
             }
         $token = "";
         }
     while($i < strlen($this->_formula))
         {
-        $token .= $this->_formula{$i};
+        $token .= $this->_formula[$i];
         if($this->_match($token) != '')
             {
             if($i < strlen($this->_formula) - 1)
                 {
-                $this->_lookahead = $this->_formula{$i+1};
+                $this->_lookahead = $this->_formula[$i+1];
                 }
             $this->_current_char = $i + 1;
             $this->_current_token = $token;
             return(1);
             }
-        $this->_lookahead = $this->_formula{$i+2};
+        $this->_lookahead = $this->_formula[$i+2];
         $i++;
         }
     //die("Lexical error ".$this->_current_char);
@@ -765,7 +765,7 @@ class Parser
     {
     $this->_current_char = 0;
     $this->_formula      = $formula;
-    $this->_lookahead    = $formula{1};
+    $this->_lookahead    = $formula[1];
     $this->_advance();
     $this->_parse_tree   = $this->_expression();
     }

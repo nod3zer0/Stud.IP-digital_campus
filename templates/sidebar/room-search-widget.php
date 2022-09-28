@@ -8,7 +8,7 @@
             [
                 'criteria' => (
                 $selected_criteria['special__room_name']
-                    ?: $criteria['special__room_name']
+                    ?? $criteria['special__room_name']
                 ),
                 'removable' => false
             ]
@@ -30,7 +30,8 @@
             [
                 'criteria' => (
                 $selected_criteria['room_category_id']
-                    ?: $criteria['room_category_id']
+                    ?? $criteria['room_category_id']
+                    ?? []
                 ),
                 'removable' => false
             ]
@@ -40,18 +41,19 @@
             [
                 'criteria' => (
                     $selected_criteria['special__building_location']
-                    ?: $criteria['special__building_location']
+                    ?? $criteria['special__building_location']
+                    ?? []
                     ),
                 'removable' => false
             ]
         ) ?>
-        <? if ($selected_criteria['special__building_location_label'] || $criteria['special__building_location_label']): ?>
+        <? if (!empty($selected_criteria['special__building_location_label']) || !empty($criteria['special__building_location_label'])): ?>
             <?= $this->render_partial(
                 'sidebar/room-search-criteria.php',
                 [
                     'criteria' => (
                         $selected_criteria['special__building_location_label']
-                        ?: $criteria['special__building_location_label']
+                        ?? $criteria['special__building_location_label']
                         ),
                     'removable' => false
                 ]
@@ -60,16 +62,15 @@
         <?= $this->render_partial(
             'sidebar/room-search-criteria-seats.php',
             [
-                'criteria' =>
-                    $selected_criteria['special__seats']
-                    ?: $criteria['special__seats']
+                'criteria'  => $selected_criteria['special__seats'] ?? $criteria['special__seats'],
+                'removable' => false
             ]
         ) ?>
         <?= $this->render_partial(
             'sidebar/room-search-criteria-available-range.php',
             [
                 'criteria' => $selected_criteria['special__time_range']
-                          ?: $criteria['special__time_range']
+                          ?? $criteria['special__time_range']
             ]
         ) ?>
 
@@ -108,10 +109,13 @@
                         data-type="<?= htmlReady($c['type']) ?>"
                         data-range-search="<?= htmlReady($c['range_search']) ?>"
                         data-select_options="<?= htmlReady(
-                                             is_array($c['options'])
-                                             ? implode(';;', $c['options'])
-                                             : $c['options']
-                                             ) ?>"
+                            !empty($c['options'])
+                                ? (is_array($c['options'])
+                                  ? implode(';;', $c['options'])
+                                  : $c['options']
+                                )
+                                : ''
+                        ) ?>"
                         <?= in_array($c['name'], array_keys($selected_criteria))
                           ? 'class="invisible"'
                           : ''?>>

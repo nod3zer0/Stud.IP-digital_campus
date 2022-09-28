@@ -46,8 +46,12 @@ class GlobalSearchMyCourses extends GlobalSearchModule
         }
 
         // generate SQL for the given sidebar filter (semester, institute, seminar_type)
+        $semester_join = '';
+        $institute_condition = '';
+        $seminar_type_condition = '';
+        $semester_condition = '';
         if ($filter['category'] === self::class || $filter['category'] == 'show_all_categories') {
-            if ($filter['semester']) {
+            if (!empty($filter['semester'])) {
                 if ($filter['semester'] === 'future') {
                     $semester = Semester::findCurrent();
                     $next_semester = Semester::findNext();
@@ -62,11 +66,11 @@ class GlobalSearchMyCourses extends GlobalSearchModule
                         semester_courses.semester_id IS NULL OR semester_courses.semester_id IN (" . join(',', array_map([DBManager::get(), 'quote'], $semester_ids)) . ")
                     ) ";
             }
-            if ($filter['institute']) {
+            if (!empty($filter['institute'])) {
                 $institutes = self::getInstituteIdsForSQL($filter['institute']);
                 $institute_condition = " AND `courses`.`Institut_id` IN (" .DBManager::get()->quote($institutes). ") ";
             }
-            if ($filter['seminar_type']) {
+            if (!empty($filter['seminar_type'])) {
                 $seminar_types = self::getSeminarTypesForSQL($filter['seminar_type']);
                 $seminar_type_condition = " AND `courses`.`status` IN (" .DBManager::get()->quote($seminar_types). ") ";
             }

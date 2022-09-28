@@ -92,10 +92,11 @@ class StudipSemSearchHelper {
         }
 
         $sem_types = [];
-        if (isset($this->params['category']) && $this->params['category'] !== 'all'){
-            foreach ($GLOBALS['SEM_TYPE'] as $type_key => $type_value){
-                if ($type_value['class'] == $this->params['category'])
+        if (isset($this->params['category']) && $this->params['category'] !== 'all') {
+            foreach ($GLOBALS['SEM_TYPE'] as $type_key => $type_value) {
+                if ($type_value['class'] == $this->params['category']) {
                     $sem_types[] = $type_key;
+                }
             }
         }
 
@@ -176,8 +177,10 @@ class StudipSemSearchHelper {
 
             $toFilter = explode(" ", $this->params['title']);
             $search_for = "(Name LIKE '%" . implode("%' AND Name LIKE '%", $toFilter) . "%')";
-            $view->params[0] = $this->params['title'] ? $search_for . " " : " ";
-
+            if (!array_key_exists(0, $view->params)) {
+                $view->params[0] = '';
+            }
+            $view->params[0] .= ($this->params['title']) ? $search_for . " " : " ";
             $view->params[0] .= ($this->params['title'] && $this->params['sub_title']) ? $combination : " ";
             $view->params[0] .= ($this->params['sub_title']) ? " Untertitel LIKE '%" . $this->trim($this->params['sub_title']) . "%' " : " ";
             $view->params[0] .= (($this->params['title'] || $this->params['sub_title']) && $this->params['comment']) ? $combination : " ";

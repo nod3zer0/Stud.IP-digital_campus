@@ -37,6 +37,7 @@ class BreadCrumb
     public function append($object, $action)
     {
         $trail = $this->getTrail();
+        $id = '';
         if (is_object($object)) {
             $type = get_class($object);
             $id = $object->id;

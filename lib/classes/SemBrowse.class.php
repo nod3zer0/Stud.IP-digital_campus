@@ -107,10 +107,10 @@ class SemBrowse {
             $this->sem_number = false;
         }
 
-        $sem_status = (is_array($this->sem_browse_data['sem_status'])) ? $this->sem_browse_data['sem_status'] : false;
+        $sem_status = (!empty($this->sem_browse_data['sem_status']) && is_array($this->sem_browse_data['sem_status'])) ? $this->sem_browse_data['sem_status'] : false;
 
         if ($this->sem_browse_data['level'] == 'vv') {
-            if (!$this->sem_browse_data['start_item_id']){
+            if (empty($this->sem_browse_data['start_item_id'])) {
                 $this->sem_browse_data['start_item_id'] = 'root';
             }
             $this->sem_tree = new StudipSemTreeViewSimple(
@@ -282,7 +282,7 @@ class SemBrowse {
         $db_view = DbView::getView('sem_tree');
         $db_view->params[0] = $inst_ids;
         $db_view->params[1] = (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)) ? '' : ' AND c.visible=1';
-        $db_view->params[1] .= is_array($this->sem_browse_data['sem_status'])
+        $db_view->params[1] .= !empty($this->sem_browse_data['sem_status']) && is_array($this->sem_browse_data['sem_status'])
                 ? " AND c.status IN('" . join("','", $this->sem_browse_data['sem_status']) ."')"
                 : '';
         $db_view->params[2] = is_array($this->sem_number)
@@ -378,13 +378,13 @@ class SemBrowse {
         if ($this->sem_browse_data['level'] == 'vv') {
             echo "\n" . '<caption class="legend">'._('Studienbereiche').'<caption>';
             echo "\n" . '<tr><td style="text-align: center">';
-            $this->sem_tree->show_entries = $this->sem_browse_data['show_entries'];
+            $this->sem_tree->show_entries = $this->sem_browse_data['show_entries'] ?? false;
             $this->sem_tree->showSemTree($start_id);
         }
         if ($this->sem_browse_data['level'] == 'ev') {
             echo "\n" . '<caption class="legend">'._('Einrichtungen').'<caption>';
             echo "\n" . '<tr><td style="text-align: center">';
-            $this->range_tree->show_entries = $this->sem_browse_data['show_entries'];
+            $this->range_tree->show_entries = $this->sem_browse_data['show_entries'] ?? false;
             $this->range_tree->showSemRangeTree($start_id);
         }
 
@@ -407,7 +407,7 @@ class SemBrowse {
                 $this->sem_tree = new StudipSemTreeViewSimple(
                         $this->sem_browse_data['start_item_id'],
                         $this->sem_number,
-                        is_array($this->sem_browse_data['sem_status'])
+                        !empty($this->sem_browse_data['sem_status']) && is_array($this->sem_browse_data['sem_status'])
                             ? $this->sem_browse_data['sem_status'] : false,
                         !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)));
             }
@@ -464,6 +464,7 @@ class SemBrowse {
             echo '</table>';
         } elseif ($this->search_obj->search_button_clicked
                 && !$this->search_obj->new_search_button_clicked) {
+            $details = [];
             if ($this->search_obj->found_rows === false) {
                 $details = [_('Der Suchbegriff fehlt oder ist zu kurz')];
             }
@@ -721,7 +722,7 @@ class SemBrowse {
         $snap = new DbSnapshot($db);
         $group_field = $this->group_by_fields[$this->sem_browse_data['group_by']]['group_field'];
         $data_fields[0] = 'Seminar_id';
-        if ($this->group_by_fields[$this->sem_browse_data['group_by']]['unique_field']) {
+        if (!empty($this->group_by_fields[$this->sem_browse_data['group_by']]['unique_field'])) {
             $data_fields[1] = $this->group_by_fields[$this->sem_browse_data['group_by']]['unique_field'];
         }
         if($user->id == 'nobody' && $snap->numRows == 0){
@@ -768,7 +769,7 @@ class SemBrowse {
                     }
                 }
             }
-            if (is_array($tmp_group_by_data)) {
+            if (!empty($tmp_group_by_data) && is_array($tmp_group_by_data)) {
                 if ($this->sem_number !== false) {
                     unset($group_by_data);
                 }
@@ -845,7 +846,7 @@ class SemBrowse {
          */
         if (($GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)
                 || key($sem_data[$seminar_id]['visible']) == 1)
-                && (!$sem_data[key($sem_data[$seminar_id]['parent_course'])]
+                && (empty($sem_data[key($sem_data[$seminar_id]['parent_course'])])
                         || $child)) {
             // create instance of seminar-object
             $seminar_obj = new Seminar($seminar_id);
@@ -934,10 +935,13 @@ class SemBrowse {
                         . htmlReady(mb_substr($seminar_obj->description, 0, 100))
                         . '</div>';
             } else {
-                $temp_turnus_string = $seminar_obj->getDatesExport([
-                    'short' => true,
-                    'shrink' => true,
-                ]);
+                $temp_turnus_string = $seminar_obj->getDatesExport(
+                    [
+                        'short' => true,
+                        'shrink' => true,
+                        'semester_id' => ''
+                    ]
+                );
                 //Shorten, if string too long (add link for details.php)
                 if (mb_strlen($temp_turnus_string) > 70) {
                     $temp_turnus_string = htmlReady(mb_substr($temp_turnus_string, 0, mb_strpos(mb_substr($temp_turnus_string, 70, mb_strlen($temp_turnus_string)), ',') + 71));
@@ -1241,16 +1245,16 @@ class SemBrowse {
      */
     public static function transferSessionData()
     {
-        if (Request::option('reset_all')) {
-            $_SESSION['sem_browse_data'] = null;
+        if (empty($_SESSION['sem_browse_data']) || Request::option('reset_all')) {
+            $_SESSION['sem_browse_data'] = [];
         }
 
         $_SESSION['sem_browse_data']['qs_choose'] = Request::get('search_sem_qs_choose',
-                $_SESSION['sem_browse_data']['qs_choose']);
+                $_SESSION['sem_browse_data']['qs_choose'] ?? null);
 
         // simulate button clicked if semester was changed
-        if (Request::option('search_sem_sem', $_SESSION['sem_browse_data']['default_sem'])
-                != $_SESSION['sem_browse_data']['default_sem']) {
+        $old_default_sem = $_SESSION['sem_browse_data']['default_sem'] ?? null;
+        if (Request::option('search_sem_sem', $old_default_sem) != $old_default_sem) {
             $_SESSION['sem_browse_data']['default_sem'] = Request::option('search_sem_sem');
             if ($_SESSION['sem_browse_data']['sset']) {
                 Request::set('search_sem_quick_search_parameter', $_SESSION['sem_browse_data']['sset']);
@@ -1267,8 +1271,8 @@ class SemBrowse {
         }
 
         // simulate button clicked if class was changed
-        if (Request::option('show_class', $_SESSION['sem_browse_data']['show_class'])
-                != $_SESSION['sem_browse_data']['show_class']) {
+        $old_show_class = $_SESSION['sem_browse_data']['show_class'] ?? null;
+        if (Request::option('show_class', $old_show_class) != $old_show_class) {
             $_SESSION['sem_browse_data']['show_class'] = Request::option('show_class');
 
             if ($_SESSION['sem_browse_data']['show_class']
@@ -1300,9 +1304,9 @@ class SemBrowse {
                         ?: 'all';
         }
         $_SESSION['sem_browse_data']['show_class'] =
-                $_SESSION['sem_browse_data']['show_class'] ?: 'all';
+                $_SESSION['sem_browse_data']['show_class'] ?? 'all';
         $_SESSION['sem_browse_data']['group_by'] =
-                $_SESSION['sem_browse_data']['group_by'] ?: '0';
+                $_SESSION['sem_browse_data']['group_by'] ?? '0';
     }
 
     /**
@@ -1386,7 +1390,7 @@ class SemBrowse {
 	    $stmt->execute([$seminar_id]);
 	    $result = $stmt->fetch();
 
-        if ($result['types']) {
+        if (!empty($result['types'])) {
             if ($result['type_locked']) {
                 return 2;
             }

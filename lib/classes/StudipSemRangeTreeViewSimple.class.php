@@ -61,7 +61,7 @@ class StudipSemRangeTreeViewSimple {
         }
         $args['visible_only'] = $visible_only;
         $this->tree = TreeAbstract::GetInstance("StudipRangeTree",$args);
-        if (!$this->tree->tree_data[$this->start_item_id]){
+        if (empty($this->tree->tree_data[$this->start_item_id])) {
             $this->start_item_id = "root";
         }
     }
@@ -156,6 +156,7 @@ class StudipSemRangeTreeViewSimple {
         if ($item_id == "root"){
             $ret = ($this->root_content) ? $this->root_content : _("Keine weitere Info vorhanden");
         } else {
+            $info = '';
             $range_object = RangeTreeObject::GetInstance($item_id);
             if (is_array($range_object->item_data_mapping)){
                 foreach ($range_object->item_data_mapping as $key => $value){
@@ -165,7 +166,7 @@ class StudipSemRangeTreeViewSimple {
                     }
                 }
             }
-            $ret = ($info) ? $info :  _("Keine weitere Info vorhanden");
+            $ret = $info ?:  _("Keine weitere Info vorhanden");
         }
         return $ret;
     }
@@ -211,6 +212,7 @@ class StudipSemRangeTreeViewSimple {
     public function getSemPath($start_id = null)
     {
         $parents = $this->tree->getParents($this->start_item_id);
+        $ret = '';
         if ($parents) {
             $add_item = false;
             $start_id = $start_id === null ? 'root' : $start_id;

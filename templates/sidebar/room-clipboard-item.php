@@ -29,10 +29,10 @@ if (!$item) {
 }
 ?>
 <tr class="<?= htmlReady($classes) ?>"
-    data-range_id="<?= htmlReady($item['range_id']) ?>">
+    data-range_id="<?= htmlReady($item['range_id'] ?? '') ?>">
     <td class="item-name"><?= htmlReady($item['name']) ?></td>
     <td class="actions">
-        <a href="<?= Room::getLinkForAction('show', ($item ? $item['range_id'] : 'RANGE_ID')) ?>" data-dialog>
+        <a href="<?= Room::getLinkForAction('show', (!empty($item) ? $item['range_id'] : 'RANGE_ID')) ?>" data-dialog>
             <?= Icon::create(
                     'info-circle',
                     Icon::ROLE_CLICKABLE,
@@ -41,7 +41,7 @@ if (!$item) {
                         'class' => 'text-bottom'
                     ])?>
         </a>
-        <a href="<?= Room::getLinkForAction('semester_plan', ($item ? $item['range_id'] : 'RANGE_ID')) ?>" target="_blank">
+        <a href="<?= Room::getLinkForAction('semester_plan', (!empty($item) ? $item['range_id'] : 'RANGE_ID')) ?>" target="_blank">
             <?= Icon::create(
                     'timetable',
                     Icon::ROLE_CLICKABLE,

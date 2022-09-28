@@ -60,7 +60,7 @@ class StudipSemTreeViewSimple
         $args['visible_only'] = $visible_only;
         $this->tree = TreeAbstract::GetInstance("StudipSemTree",$args);
         $this->tree->enable_lonely_sem = false;
-        if (!$this->tree->tree_data[$this->start_item_id]){
+        if (empty($this->tree->tree_data[$this->start_item_id])) {
             $this->start_item_id = "root";
         }
     }
@@ -145,8 +145,9 @@ class StudipSemTreeViewSimple
                 <td class="table_row_even kids-tree-row" align="left" valign="top">
                     <ul class="semtree">';
         for ($i = 0; $i < $num_kids; ++$i){
+            $num_entries = 0;
             if ($this->start_item_id != 'root') {
-            $num_entries = $this->tree->getNumEntries($kids[$i],true);
+                $num_entries = $this->tree->getNumEntries($kids[$i],true);
                 $num_all_entries += $num_entries;
             }
             $kids_table .= "<li><a " . ($num_entries ? tooltip(sprintf(_("%s Einträge in allen Unterebenen vorhanden"), $num_entries), false) : '') . " href=\"" .URLHelper::getLink($this->getSelf("start_item_id={$kids[$i]}", false)) . "\">";
@@ -212,6 +213,7 @@ class StudipSemTreeViewSimple
 
     public function getSemPath($start_id = null)
     {
+        $ret = '';
         $parents = $this->tree->getParents($this->start_item_id);
         if ($parents) {
             $add_item = false;

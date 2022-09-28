@@ -141,9 +141,7 @@ class Modulteil extends ModuleManagementModelTreeItem
         } else if ($this->nummer) {
             $name .= $this->nummer . ': ';
         }
-        $name .= $GLOBALS['MVV_MODULTEIL']['LERNLEHRFORM']['values'][$this->lernlehrform]
-                ? $GLOBALS['MVV_MODULTEIL']['LERNLEHRFORM']['values'][$this->lernlehrform]['name']
-                : '';
+        $name .= $GLOBALS['MVV_MODULTEIL']['LERNLEHRFORM']['values'][$this->lernlehrform]['name'] ?? '';
         $deskriptor = $this->getDeskriptor(self::getLanguage());
         if (strlen(trim($deskriptor->bezeichnung))) {
             $name .= $name == '' ? $deskriptor->bezeichnung

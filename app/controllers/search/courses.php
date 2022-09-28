@@ -30,12 +30,12 @@ class Search_CoursesController extends AuthenticatedController
         // activate navigation item
         $nav_options = Config::get()->COURSE_SEARCH_NAVIGATION_OPTIONS;
         URLHelper::bindLinkParam('option', $this->nav_option);
-        if ($nav_options[$this->nav_option]
+        if (!empty($nav_options[$this->nav_option])
                 && Navigation::hasItem('/search/courses/' . $this->nav_option)) {
             Navigation::activateItem('/search/courses/' . $this->nav_option);
         } else {
             URLHelper::removeLinkParam('option');
-            $level = Request::get('level', $_SESSION['sem_browse_data']['level']);
+            $level = Request::get('level', $_SESSION['sem_browse_data']['level'] ?? '');
             $default_option = SemBrowse::getSearchOptionNavigation('sidebar');
             if (!$level) {
                 PageLayout::setTitle(_($default_option->getTitle()));
@@ -74,7 +74,7 @@ class Search_CoursesController extends AuthenticatedController
         $sidebar = Sidebar::get();
 
         // add search options to sidebar
-        $level = Request::get('level', $_SESSION['sem_browse_data']['level']);
+        $level = Request::get('level', $_SESSION['sem_browse_data']['level'] ?? '');
 
         $widget = new OptionsWidget();
         $widget->setTitle(_('Suche'));
@@ -114,7 +114,7 @@ class Search_CoursesController extends AuthenticatedController
         }
 
         // show information about course class if class was changed
-        $class = $GLOBALS['SEM_CLASS'][$_SESSION['sem_browse_data']['show_class']];
+        $class = $GLOBALS['SEM_CLASS'][$_SESSION['sem_browse_data']['show_class']] ?? null;
         if (is_object($class) && $class->countSeminars() > 0) {
             if (trim($GLOBALS['SEM_CLASS'][$_SESSION['sem_browse_data']['show_class']]['description'])) {
                 PageLayout::postInfo(sprintf(_('Gewählte Veranstaltungsklasse <i>%1s</i>: %2s'),

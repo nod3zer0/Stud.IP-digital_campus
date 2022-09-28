@@ -203,9 +203,9 @@ class QuickSearch
         if (isset($design['width'])) {
             $this->box_width = $design['width'];
         }
-        $this->box_align = $design['align'] ? $design['align'] : "right";
-        $this->search_button_name = $design['search_button_name'];
-        $this->reset_button_name = $design['reset_button_name'];
+        $this->box_align = $design['align'] ?? "right";
+        $this->search_button_name = $design['search_button_name'] ?? '';
+        $this->reset_button_name = $design['reset_button_name'] ?? '';
         return $this;
     }
 
@@ -373,6 +373,7 @@ class QuickSearch
             $template->set_attribute('withButton', $this->withButton);
             $template->set_attribute('box_align', $this->box_align);
             $template->set_attribute('box_width', $this->box_width);
+            $template->set_attribute('inputStyle', $this->inputStyle ?? '');
             $template->set_attribute('beschriftung', $this->beschriftung());
             $template->set_attribute('name', $this->name);
             $template->set_attribute('defaultID', $this->defaultID);

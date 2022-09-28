@@ -69,7 +69,8 @@ class ClipboardWidget extends SidebarWidget
         $this->clipboard_widget_id = md5(uniqid('clipboard_widget_id'));
 
         $this->updateSessionVariables();
-        $this->current_clipboard_id = $_SESSION['selected_clipboard_id'];
+        $this->current_clipboard_id = $_SESSION['selected_clipboard_id'] ?? '';
+
         $this->setId("ClipboardWidget_{$this->clipboard_widget_id}");
         $this->setAdditionalAttribute('data-widget_id', $this->clipboard_widget_id);
         $this->addLayoutCSSClass('clipboard-widget');

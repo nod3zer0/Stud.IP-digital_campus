@@ -1,7 +1,7 @@
 <form class="default" onsubmit="return false;" autocomplete="off">
     <div id="div-search-input" class="input-group files-search">
         <input type="text" autofocus name="searchtext" id="search-input"
-            value="<?= htmlReady($_SESSION['search_text']) ?>"
+            value="<?= htmlReady($_SESSION['search_text'] ?? '') ?>"
             placeholder="<?= _('Was suchen Sie?') ?>">
 
         <span class="input-group-append">

@@ -147,14 +147,14 @@ class Search_ModuleController extends MVVController
         $sidebar->addWidget($widget, 'sem_filter');
 
         $this->input_search = $this->sterm;
-        $this->result_count = is_array($this->search_result['Modul']) ? count($this->search_result['Modul']) : 0;
+        $this->result_count = (!empty($this->search_result['Modul']) && is_array($this->search_result['Modul'])) ? count($this->search_result['Modul']) : 0;
 
         $drill_down['studiengaenge']['objects'] =
-                $this->drilldown_studiengaenge($this->search_result['Modul']);
+                $this->drilldown_studiengaenge($this->search_result['Modul'] ?? []);
         $drill_down['faecher']['objects'] =
-                $this->drilldown_faecher($this->search_result['Modul']);
+                $this->drilldown_faecher($this->search_result['Modul'] ?? []);
         $drill_down['institutes']['objects'] =
-                $this->drilldown_institutes($this->search_result['Modul']);
+                $this->drilldown_institutes($this->search_result['Modul'] ?? []);
         if (count($drill_down['institutes']['objects'])
                 || count($drill_down['studiengaenge']['objects'])
                 || count($drill_down['faecher']['objects'])) {
@@ -214,7 +214,8 @@ class Search_ModuleController extends MVVController
         }
 
         $this->module = [];
-        if (is_array($this->search_result['Modul'])
+        $this->count = 0;
+        if (!empty($this->search_result['Modul']) && is_array($this->search_result['Modul'])
                 && count($this->search_result['Modul'])) {
             if (!empty($this->drill_down_type) && !empty($this->drill_down_id)) {
                 $this->search_result['Modul'] = $this->filter_modules(

@@ -684,7 +684,9 @@ class SimpleCollection extends StudipArrayObject
 
         $func = function ($d1, $d2) use ($sorter, $sort_func, $sort_locale) {
             do {
-                list($field, $dir) = current($sorter);
+                $field = current($sorter);
+                $dir = $field[1] ?? '';
+                $field = $field[0] ?? '';
                 if (!$sort_locale) {
                     $value1 = $d1[$field];
                     $value2 = $d2[$field];

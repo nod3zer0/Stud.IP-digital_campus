@@ -45,6 +45,7 @@ class GlobalSearchForum extends GlobalSearchModule implements GlobalSearchFullte
         $query = DBManager::get()->quote("%$search%");
 
         // visibility
+        $seminaruser = '';
         if (!$GLOBALS['perm']->have_perm('admin')) {
             $seminaruser = " AND EXISTS (
                 SELECT 1 FROM `seminar_user`
@@ -54,8 +55,9 @@ class GlobalSearchForum extends GlobalSearchModule implements GlobalSearchFullte
         }
 
         // generate SQL condition for the semester filter in the sidebar
+        $semester_condition = '';
         if ($filter['category'] == self::class || $filter['category'] == "show_all_categories") {
-            if ($filter['semester'] != "") {
+            if (!empty($filter['semester'])) {
                 if ($filter['semester'] === 'future') {
                     $semester = Semester::findCurrent();
                     $next_semester = Semester::findNext();

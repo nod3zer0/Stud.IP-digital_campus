@@ -6,7 +6,7 @@
     <table class="mvv-modul-details default nohover">
         <caption>
             <?= htmlReady($studiengangTeilName) ?>
-    <? if ($studiengang && $stgTeilBez) : ?>
+    <? if ($studiengang && !empty($stgTeilBez)) : ?>
         <h3>
             <?= sprintf(_('%s im Studiengang %s'), htmlReady($stgTeilBez->getDisplayName()), htmlReady($studiengang->getDisplayName(ModuleManagementModel::DISPLAY_ABSCHLUSS))) ?>
             <? if (Config::get()->ENABLE_STUDYCOURSE_INFO_PAGE) : ?>

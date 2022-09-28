@@ -112,7 +112,7 @@ class TreeAbstract {
         } else {
             $class_hash = $class_name;
         }
-        if (!is_object($tree_instance[$class_hash]) || $invalidate_cache){
+        if (empty($tree_instance[$class_hash]) || $invalidate_cache){
             $tree_instance[$class_hash] = new $class_name($args);
         }
 
@@ -162,7 +162,10 @@ class TreeAbstract {
         $this->tree_data[$item_id]["priority"] = $priority;
         $this->tree_data[$item_id]["name"] = $name;
         $this->tree_childs[$parent_id][] = $item_id;
-        ++$this->tree_num_childs[$parent_id];
+        if (empty($this->tree_num_childs[$parent_id])) {
+            $this->tree_num_childs[$parent_id] = 0;
+        }
+        $this->tree_num_childs[$parent_id]++;
         return;
     }
 
@@ -213,7 +216,7 @@ class TreeAbstract {
     public function getNumKids($item_id)
     {
         if(!isset($this->tree_num_childs[$item_id])){
-            $this->tree_num_childs[$item_id] = (is_array($this->tree_childs[$item_id])) ? count($this->tree_childs[$item_id]) : 0;
+            $this->tree_num_childs[$item_id] = (!empty($this->tree_childs[$item_id]) && is_array($this->tree_childs[$item_id])) ? count($this->tree_childs[$item_id]) : 0;
         }
         return $this->tree_num_childs[$item_id];
     }

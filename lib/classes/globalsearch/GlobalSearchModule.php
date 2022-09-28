@@ -127,7 +127,7 @@ abstract class GlobalSearchModule
 
         // Replace camelcase
         $i = 1;
-        $replacement = "${$i}";
+        $replacement = '$1';
         foreach (preg_split('//u', mb_strtoupper($query), -1, PREG_SPLIT_NO_EMPTY) as $letter) {
             $quoted = preg_quote($letter, '/');
             $queryletter[] = "({$quoted})";

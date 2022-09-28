@@ -87,7 +87,7 @@ class StudipForm {
         }
         if ($this->isSended()){
             foreach ($this->form_fields as $name => $foo){
-                if (!$foo['disabled']){
+                if (empty($foo['disabled'])) {
                     if ( ($field_value = Request::get($this->form_name . "_" . $name)) !== null) {
                             $new_form_values[$name] = trim($field_value);
                     } elseif ( is_array($field_value = Request::getArray($this->form_name . "_" . $name))) {
@@ -100,7 +100,7 @@ class StudipForm {
                 }
             }
             foreach ($this->form_fields as $name => $value){
-                if (!$value['disabled']){
+                if (empty($value['disabled'])) {
                     if ($value['type'] == 'combo'){
                         if ($this->form_values[$name] != $new_form_values[$value['text']]){ //textfeld wurde verändert
                             $new_form_values[$name] = $new_form_values[$value['text']];
@@ -129,7 +129,8 @@ class StudipForm {
                         $new_form_values[$name] = Request::int($this->form_name . "_" . $name, 0);
                     }
                     if ( (isset($this->form_values[$name]) && $this->form_values[$name] != $new_form_values[$name])
-                        || (!isset($this->form_values[$name]) && $new_form_values[$name] != $this->form_fields[$name]['default_value']) ){
+                        || (!isset($this->form_values[$name]) && !empty($new_form_values[$name]) && !empty($this->form_fields[$name]['default_value'])
+                            && $new_form_values[$name] != $this->form_fields[$name]['default_value']) ){
                         $this->value_changed[$name] = true;
                     }
                 }
@@ -162,22 +163,22 @@ class StudipForm {
         if (!$attributes){
             $attributes = $this->field_attributes_default;
         }
-        if (!$default){
-            if (isset($this->form_values[$name])){
+        if (empty($default)) {
+            if (isset($this->form_values[$name])) {
                 $default = $this->form_values[$name];
             } else {
-                $default = $this->form_fields[$name]['default_value'];
+                $default = $this->form_fields[$name]['default_value'] ?? '';
             }
         }
-        if (is_array($this->form_fields[$name]['attributes'])){
+        if (!empty($this->form_fields[$name]['attributes']) && is_array($this->form_fields[$name]['attributes'])) {
             $attributes = array_merge((array)$attributes, (array)$this->form_fields[$name]['attributes']);
         }
 
-        if ($this->form_fields[$name]['disabled']){
+        if (!empty($this->form_fields[$name]['disabled'])) {
             $attributes['disabled'] = 'disabled';
         }
 
-        if ($this->form_fields[$name]['required']){
+        if (!empty($this->form_fields[$name]['required'])) {
             $attributes['required'] = 'required';
         }
 
@@ -281,7 +282,7 @@ class StudipForm {
 
     function getFormFieldSelect($name, $attributes, $default){
         $ret = "\n<select name=\"{$this->form_name}_{$name}";
-        if ($this->form_fields[$name]['multiple']){
+        if (!empty($this->form_fields[$name]['multiple'])){
             $ret .= "[]\" multiple ";
         } else {
             $ret .= "\" ";
@@ -291,7 +292,7 @@ class StudipForm {
         if ($default === false){
             $default = $this->form_fields[$name]['default_value'];
         }
-        if (is_array($this->form_fields[$name]['options'])){
+        if (!empty($this->form_fields[$name]['options']) && is_array($this->form_fields[$name]['options'])){
             $options = $this->form_fields[$name]['options'];
         } else if ($this->form_fields[$name]['options_callback']){
             $options = call_user_func($this->form_fields[$name]['options_callback'],$this,$name);
@@ -299,13 +300,13 @@ class StudipForm {
         for ($i = 0; $i < count($options); ++$i){
             $options_name = (is_array($options[$i])) ? $options[$i]['name'] : $options[$i];
             $options_value = (is_array($options[$i])) ? $options[$i]['value'] : $options[$i];
-            $options_attributes = (is_array($options[$i])) ? $options[$i]['attributes'] : [];
+            $options_attributes = $options[$i]['attributes'] ?? [];
             $selected = false;
             if ((is_array($default) && in_array("" . $options_value, $default))
             || (!is_array($default) && ($default == "" . $options_value))){
                 $selected = true;
             }
-            if ($this->form_fields[$name]['max_length']){
+            if (!empty($this->form_fields[$name]['max_length'])) {
                 $options_name = my_substr($options_name,0, $this->form_fields[$name]['max_length']);
             }
             $ret .= "\n<option value=\"".htmlReady($options_value)."\" " . (($selected) ? " selected " : "");
@@ -387,15 +388,15 @@ class StudipForm {
     }
 
     function getFormButton($name, $attributes = []){
-        if (is_array($this->form_buttons[$name]['attributes'])) {
+        if (!empty($this->form_buttons[$name]['attributes']) && is_array($this->form_buttons[$name]['attributes'])) {
             $attributes = array_merge((array)$attributes, (array)$this->form_buttons[$name]['attributes']);
         }
-        if (!$this->form_buttons[$name]['is_picture']) {
+        if (empty($this->form_buttons[$name]['is_picture'])) {
             if (isset($this->form_buttons[$name]['info']) && !isset($attributes['title'])) {
                 $attributes['title'] = $this->form_buttons[$name]['info'];
             }
             $caption = $this->form_buttons[$name]['caption'] ? $this->form_buttons[$name]['caption'] : $this->form_buttons[$name]['type'];
-            if (in_array($this->form_buttons[$name]['type'], words('cancel accept'))) {
+            if (!empty($this->form_buttons[$name]['type']) && in_array($this->form_buttons[$name]['type'], ['cancel', 'accept'])) {
                 $create = 'create' . $this->form_buttons[$name]['type'];
             } else {
                 $create = 'create';
@@ -457,7 +458,7 @@ class StudipForm {
         if (isset($this->form_values[$name])){
             $value = $this->form_values[$name];
         } else {
-            $value = $this->form_fields[$name]['default_value'];
+            $value = $this->form_fields[$name]['default_value'] ?? '';
         }
         return $value;
     }
@@ -465,7 +466,7 @@ class StudipForm {
     function getFormFieldsByName($only_editable = false){
         $ret = [];
         foreach ($this->form_fields as $name => $detail){
-            if( !($only_editable && ($detail['type'] == 'noform' || $detail['disabled'])) ){
+            if( !($only_editable && ($detail['type'] == 'noform' || !empty($detail['disabled']))) ){
                 $ret[] = $name;
             }
         }

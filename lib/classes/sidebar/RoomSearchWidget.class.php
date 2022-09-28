@@ -301,7 +301,7 @@ class RoomSearchWidget extends SidebarWidget
 
     protected function restoreSearchFromSession()
     {
-        if (is_array($_SESSION['room_search_criteria']['room_search'])) {
+        if (!empty($_SESSION['room_search_criteria']['room_search']) && is_array($_SESSION['room_search_criteria']['room_search'])) {
             $this->selected_criteria =
                 $_SESSION['room_search_criteria']['room_search'];
         } else {

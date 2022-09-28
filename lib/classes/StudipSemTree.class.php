@@ -38,7 +38,7 @@ class StudipSemTree extends TreeAbstract
         if (isset($args['sem_number']) ){
             $this->sem_number = array_map('intval', $args['sem_number']);
         }
-        if ($args['sem_status']){
+        if (!empty($args['sem_status'])) {
             $this->sem_status = array_map('intval', $args['sem_status']);
         } else {
             foreach ($GLOBALS['SEM_CLASS'] as $key => $value){
@@ -115,8 +115,9 @@ class StudipSemTree extends TreeAbstract
 
     public function getSemIds($item_id,$ids_from_kids = false)
     {
-        if (!$this->tree_data[$item_id])
+        if (empty($this->tree_data[$item_id])) {
             return false;
+        }
         $this->view->params[0] = $this->sem_status;
         $this->view->params[1] = $this->visible_only ? "visible=1" : "1";
         if ($ids_from_kids && $item_id != 'root'){

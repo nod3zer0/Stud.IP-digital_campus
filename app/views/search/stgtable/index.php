@@ -18,7 +18,7 @@
             <tr>
                 <td><?= htmlReady($name) ?></td>
                 <? foreach ($kategorien as $kat_id => $kategorie): ?>
-                    <? if ($stg[$kat_id]) : ?>
+                    <? if (!empty($stg[$kat_id])) : ?>
                 <td style="text-align: center;">
                     <a href="<?= $controller->action_link('studiengang', $stg[$kat_id]) ?>"><?= Icon::create('info-circle-full', 'clickable', ['title' => _('Studiengang anzeigen')])->asImg(); ?></a>
                 </td>
