@@ -331,7 +331,7 @@ class DbSnapshot
             } elseif ($m_snap->numRows) {
                 $result = $this->getDistinctRows($key_field);
                 for ($i = 0; $i < $m_snap->numRows; ++$i) {
-                    if (!$result[$m_snap->result[$i][$key_field]]) {
+                    if (empty($result[$m_snap->result[$i][$key_field]])) {
                         $this->result[] = $m_snap->result[$i];
                     }
                 }

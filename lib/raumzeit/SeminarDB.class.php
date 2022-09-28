@@ -88,6 +88,7 @@ class SeminarDB
     public static function getStatOfNotBookedRooms($cycle_id, $seminar_id, $filterStart = 0, $filterEnd = 0)
     {
         $stat = [
+            'all'            => 0,
             'booked'         => 0,
             'open'           => 0,
             'open_rooms'     => [],

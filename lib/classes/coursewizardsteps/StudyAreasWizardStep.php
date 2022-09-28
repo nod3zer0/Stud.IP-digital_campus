@@ -57,7 +57,7 @@ class StudyAreasWizardStep implements CourseWizardStep
          * Someone works without JS activated, load all ancestors and
          * children of open node.
          */
-        if ($values['open_node']) {
+        if (!empty($values['open_node'])) {
             $tpl->set_attribute('open_nodes',
                 $this->buildPartialSemTree(
                     StudipStudyArea::backwards(
@@ -68,7 +68,7 @@ class StudyAreasWizardStep implements CourseWizardStep
          * Someone works without JS and has entered a search term:
          * build the partial tree with search results.
          */
-        if ($values['searchterm']) {
+        if (!empty($values['searchterm'])) {
             $search = $this->searchSemTree($values['searchterm'], true);
             if ($search) {
                 $tpl->set_attribute('open_nodes', $search);

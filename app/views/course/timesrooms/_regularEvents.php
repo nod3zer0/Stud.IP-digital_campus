@@ -38,7 +38,7 @@
                     </h1>
                     <section>
                         <span>
-                            <? if ($cycle_room_names[$cycle['cycle']->id]): ?>
+                            <? if (isset($cycle_room_names[$cycle['cycle']->id])): ?>
                                 <strong><?= _('Raum') ?>:</strong>
                                 <?= htmlReady($cycle_room_names[$cycle['cycle']->id])?>
                             <? elseif (Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) : ?>

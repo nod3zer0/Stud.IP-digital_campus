@@ -32,10 +32,10 @@ $message_types = ['msg' => "success", 'error' => "error", 'info' => "info"];
 <? else: ?>
     <? foreach ($attributes as $attribute): ?>
         <label>
-            <span <?= $attribute['must'] ? 'class="required"' : '' ?>>
+            <span <?= !empty($attribute['must']) ? 'class="required"' : '' ?>>
                 <?= htmlReady($attribute['title']) ?>
             </span>
-            <?= $attribute['description'] ? tooltipIcon($attribute['description']) : '' ?>
+            <?= !empty($attribute['description']) ? tooltipIcon($attribute['description']) : '' ?>
 
             <?= $this->render_partial("course/basicdata/_input", ['input' => $attribute]) ?>
         </label>
@@ -63,7 +63,7 @@ $message_types = ['msg' => "success", 'error' => "error", 'info' => "info"];
 <? else: ?>
     <? foreach ($institutional as $inst): ?>
         <label>
-            <span <?= $inst['must'] ? 'class="required"' : '' ?>>
+            <span <?= !empty($inst['must']) ? 'class="required"' : '' ?>>
                 <?= htmlReady($inst['title']) ?>
             </span>
 
@@ -304,7 +304,7 @@ $message_types = ['msg' => "success", 'error' => "error", 'info' => "info"];
             <?= $this->render_partial('course/basicdata/_input', ['input' => $description]) ?>
         <? else : ?>
         <label>
-            <span <?= $description['must'] ? 'class="required"' : '' ?>>
+            <span <?= !empty($description['must']) ? 'class="required"' : '' ?>>
                 <?= $description['title'] ?>
             </span>
 

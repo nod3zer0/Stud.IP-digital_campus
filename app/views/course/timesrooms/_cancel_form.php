@@ -1,7 +1,7 @@
 <?php
 // In den Controller
 $content = '';
-if ($termin instanceof CourseExDate && isset($termin->content)) {
+if (isset($termin) && $termin instanceof CourseExDate) {
     $content = $termin->content;
 }
 ?>

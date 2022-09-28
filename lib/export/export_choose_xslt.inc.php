@@ -61,7 +61,7 @@ function CheckParamXSLT()
     if ($page === 1) {
         reset($xslt_files);
         foreach ($xslt_files as $val) {
-            if ($val[$ex_type] && $val[$format]) {
+            if (!empty($val[$ex_type]) && !empty($val[$format])) {
                 $mod_counter++;
             }
         }
@@ -89,6 +89,7 @@ function CheckParamXSLT()
 }
 
 $export_pagename = _("Konvertierung der Daten: ");
+$export_pagecontent = '';
 $xslt_filename   = mb_strlen(Request::get('xslt_filename')) ? basename(stripslashes(Request::get('xslt_filename'))) : $xslt_filename_default;
 
 if (!CheckParamXSLT()) {
@@ -162,9 +163,9 @@ if ($format === "xml" && $page === 1) {
     
     $opt_num = 0;
     foreach ($xslt_files as $key => $val) {
-        if ($val[$ex_type] && $val[$format]) {
+        if (!empty($val[$ex_type]) && !empty($val[$format])) {
             $export_pagecontent .= "<label><input type=\"radio\" name=\"choose\" value=\"" . $key . "\"";
-            if ($key == $choose || !$choose && $opt_num == 0) {
+            if (empty($choose) && $opt_num == 0 || (!empty($choose) && $key == $choose)) {
                 $export_pagecontent .= " checked";
             }
             $export_pagecontent .= ">" . $val["name"];

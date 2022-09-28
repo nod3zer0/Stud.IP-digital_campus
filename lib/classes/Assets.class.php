@@ -143,8 +143,6 @@ class Assets
             return '';
         }
 
-        $parts = explode('/', $source);
-
         $size = $opt['size'] ?? null;
 
         $opt = Assets::parse_attributes($opt);
@@ -156,7 +154,10 @@ class Assets
         }
 
         if (isset($size) && !isset($opt['width'])) {
-            list($opt['width'], $opt['height']) = explode('@', $size, 2);
+            $size = explode('@', $size, 2);
+            $opt['width'] = $size[0];
+            $opt['height'] = $size[1] ?? null;
+
             unset($opt['size']);
         }
 
@@ -195,7 +196,7 @@ class Assets
         $opt['type'] = 'image';
 
         if (isset($size) && !isset($opt['width'])) {
-            list($opt['width'], $opt['height']) = explode('@', $size, 2);
+            [$opt['width'], $opt['height']] = explode('@', $size, 2);
             unset($opt['size']);
         }
 
@@ -360,8 +361,10 @@ class Assets
      */
     private static function tag($name, $options = [], $open = FALSE)
     {
-        if (!$name)
+        if (!$name) {
             return '';
+        }
+
         ksort($options);
         return '<' . $name . ' ' . arrayToHtmlAttributes($options) . ($open ? '>' : '>');
     }
@@ -413,4 +416,3 @@ class Assets
         return $attributes;
     }
 }
-

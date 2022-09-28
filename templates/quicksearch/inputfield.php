@@ -12,7 +12,7 @@
         foreach ($withAttributes as $attr_name => $attr_value) {
             print ' '.$attr_name.'="'.htmlReady($attr_value).'"';
         }
-        ?> id="<?= $id ?>"<?= $clear_input ?: '' ?>
+        ?> id="<?= $id ?>"
            type="text"
            value="<?= htmlReady($defaultName) ?>"
            name="<?= strpos($name, "[") === false ? $name."_parameter" : substr($name, 0, strpos($name, "["))."_parameter".substr($name, strpos($name, "[")) ?>"

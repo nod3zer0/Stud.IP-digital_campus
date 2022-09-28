@@ -66,6 +66,10 @@ ob_start();
 if (Config::get()->EXPORT_ENABLE)
 {
     $ex_sem_class = Request::intArray('ex_sem_class');
+    $export_error_num = 0;
+    $xslt_process_done = false;
+    $start_done = false;
+    $xml_output_done = false;
 
     // Zurueckbutton benutzt?
     if (Request::submitted('back'))
@@ -114,7 +118,7 @@ if (Config::get()->EXPORT_ENABLE)
             $xml_output_done = true;
     }
 
-    if ( ($choose != "") AND ($format != "") AND ($format != "xml") AND (Config::get()->XSLT_ENABLE) AND ($export_error_num==0) AND
+    if ( (!empty($choose)) AND ($format != "") AND ($format != "xml") AND (Config::get()->XSLT_ENABLE) AND ($export_error_num==0) AND
         ( ($o_mode == "processor") OR ($o_mode == "passthrough") OR ($page == 3) ) )
     {
         include("lib/export/export_run_xslt.inc.php");

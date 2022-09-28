@@ -13,7 +13,7 @@
             <?= htmlReady(Config::get()->UNI_NAME_CLEAN) ?>
             <ul>
             <?php foreach ($assigned as $element) : ?>
-            <?= $element->name ?>
+            <?= htmlReady($element['name']) ?>
             <?= $this->render_partial('studyareas/_assigned_node',
                     ['element' => $element, 'studyareas' => $values['studyareas']]) ?>
             <?php endforeach ?>
@@ -31,13 +31,12 @@
         data-forward-url="<?= $no_js_url ?>" data-no-search-result="<?=_('Es wurde kein Suchergebnis gefunden.') ?>">
         <h2><?= _('Alle Studienbereiche') ?></h2>
         <div>
-            <input style="width:auto" type="text" size="40" name="search" id="sem-tree-search"
-                   value="<?= $values['searchterm'] ?>"/>
+            <input style="width:auto" type="text" size="40" name="search" id="sem-tree-search">
             <span id="sem-tree-search-start">
-                <?= Icon::create('search', 'clickable')->asInput(["name" => 'start_search', "onclick" => "return STUDIP.CourseWizard.searchTree()", "class" => $search_result?'hidden-no-js':'']) ?>
-            </span>
-            <span id="sem-tree-search-reset" class="hidden-js">
-                <?= Icon::create('refresh', 'clickable')->asInput(["name" => 'reset_search', "onclick" => "return STUDIP.CourseWizard.resetSearch()", "class" => $search_result?'':' hidden-no-js']) ?>
+                <?= Icon::create('search')->asInput([
+                    'name'    => 'start_search',
+                    'onclick' => 'return STUDIP.CourseWizard.searchTree()',
+                ]) ?>
             </span>
         </div>
         <div id="sem-tree-assign-all" class="hidden-js hidden-no-js">
@@ -54,21 +53,20 @@
                 </label>
                 <ul>
                 <?php foreach ($tree as $node) : ?>
-                <?= $this->render_partial('studyareas/_node',
-                        ['node' => $node, 'stepnumber' => $stepnumber,
-                            'temp_id' => $temp_id, 'values' => $values,
-                            'open_nodes' => $open_nodes ?: [],
-                            'search_result' => $search_result ?: []]) ?>
+                <?= $this->render_partial('studyareas/_node',[
+                    'node'       => $node,
+                    'stepnumber' => $stepnumber,
+                    'temp_id'    => $temp_id,
+                    'values'     => $values,
+                    'open_nodes' => $open_nodes ?? [],
+                ]) ?>
                 <?php endforeach ?>
                 </ul>
             </li>
         </ul>
     </div>
-    <?php if ($values['open_node']) : ?>
+    <?php if (!empty($values['open_node'])) : ?>
     <input type="hidden" name="open_node" value="<?= $values['open_node'] ?>"/>
-    <?php endif ?>
-    <?php if ($values['searchterm']) : ?>
-    <input type="hidden" name="searchterm" value="<?= $values['searchterm'] ?>"/>
     <?php endif ?>
     <script>
     //<!--

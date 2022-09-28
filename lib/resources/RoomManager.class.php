@@ -510,7 +510,7 @@ class RoomManager
             $sql_array['room_name'] = $room_name;
         }
 
-        if ($properties['room_category_id']) {
+        if (!empty($properties['room_category_id'])) {
             $sql .= "AND rc.id = :room_category_id ";
             $sql_array['room_category_id'] = $properties['room_category_id'];
         }

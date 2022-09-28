@@ -1,5 +1,5 @@
 <? if (!$locked) : ?>
-    <form action="<?= $controller->url_for('course/lvgselector/index/' . $course_id, $url_params) ?>" method="post">
+    <form action="<?= $controller->link_for('course/lvgselector/index/' . $course_id, $url_params ?? []) ?>" method="post">
 <? endif ?>
 <h1><?= _('Lehrveranstaltungsgruppen') ?></h1>
 <div id="assigned" data-ajax-url="<?= $ajax_url ?>" data-forward-url="<?= $no_js_url ?>">
@@ -26,20 +26,19 @@
 <? if (!$locked) : ?>
     <div id="lvgroup-tree-open-nodes">
     <? foreach ($open_lvg_nodes as $opennode): ?>
-            <input type="hidden" name="open_lvg_nodes[]" value="<?= $opennode; ?>">
+            <input type="hidden" name="open_lvg_nodes[]" value="<?= htmlReady($opennode) ?>">
     <? endforeach; ?>
     </div>
     <div id="studyareas" data-ajax-url="<?= $ajax_url ?>"
         data-forward-url="<?= $no_js_url ?>" data-no-search-result="<?=_('Es wurde kein Suchergebnis gefunden.') ?>">
         <h2><?= _('Lehrveranstaltungsgruppen Suche') ?></h2>
         <div>
-            <input type="text" style="width: auto;" size="40" name="search" id="lvgroup-tree-search"
-                   value="<?= $searchterm ?>">
+            <input type="text" style="width: auto;" size="40" name="search" id="lvgroup-tree-search">
             <span id="lvgroup-tree-search-start">
-                <?= Icon::create('search', 'clickable')->asInput(["name" => 'start_search', "onclick" => "return STUDIP.MVV.CourseWizard.searchTree()", "class" => $search_result?'hidden-no-js':'']) ?>
-            </span>
-            <span id="lvgroup-tree-search-reset" class="hidden-js">
-                <?= Icon::create('refresh', 'clickable')->asInput(["name" => 'reset_search', "onclick" => "return STUDIP.MVV.CourseWizard.resetSearch()", "class" => $search_result?'':' hidden-no-js']) ?>
+                <?= Icon::create('search')->asInput([
+                    'name'    => 'start_search',
+                    'onclick' => 'return STUDIP.MVV.CourseWizard.searchTree()',
+                ]) ?>
             </span>
         </div>
 
@@ -61,11 +60,11 @@
                 <? foreach ((array) $tree as $node) : ?>
                     <? $children = $node->getChildren(); ?>
                     <? if (count($children) || $node->isAssignable()) : ?>
-                    <?= $this->render_partial('course/wizard/steps/lvgroups/_node',
-                        ['node' => $node, 'pos_id' => $pos_id++,
-                            'open_nodes' => $open_lvg_nodes ?: [],
-                            'search_result' => $search_result ?: [],
-                            'children' => $children]) ?>
+                    <?= $this->render_partial('course/wizard/steps/lvgroups/_node', [
+                        'node'       => $node, 'pos_id' => $pos_id++,
+                        'open_nodes' => $open_lvg_nodes ?? [],
+                        'children'   => $children,
+                    ]) ?>
                     <? endif; ?>
                 <? endforeach; ?>
                 </ul>
@@ -74,9 +73,6 @@
     </div>
     <? if ($open_lvg_nodes) : ?>
     <input type="hidden" name="open_nodes" value="<?= json_encode($open_lvg_nodes) ?>">
-    <? endif ?>
-    <? if ($searchterm) : ?>
-    <input type="hidden" name="searchterm" value="<?= $searchterm ?>">
     <? endif ?>
     <script>
     //<!--

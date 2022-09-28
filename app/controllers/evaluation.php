@@ -38,9 +38,7 @@ class EvaluationController extends AuthenticatedController
                 $this->evaluations = array_merge($this->evaluations, StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_STOPPED)));
             }
         }
-
-        // Special case: from widget and no data -> no output
-        if (count($this->evaluations) === 0) {
+        if (!empty($this->suppress_empty_output) && count($this->evaluations) === 0) {
             $this->render_nothing();
         } else {
             $this->visit();

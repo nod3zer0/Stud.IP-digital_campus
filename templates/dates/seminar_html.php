@@ -58,6 +58,7 @@ if (!$dates['regular']['turnus_data'] && empty($dates['irregular'])) {
                 $freetext_rooms['(' . htmlReady($date['raum']) . ')']++;
             }
         }
+        // Remove invalid entry if present
         unset($irregular_rooms['']);
 
         if (is_array($irregular) && sizeof($irregular)) {

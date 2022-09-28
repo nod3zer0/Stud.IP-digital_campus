@@ -120,7 +120,7 @@ if ($o_mode === 'file' || $o_mode === 'choose') {
     if ($object_counter<1) {
         $xml_export_text = _("Es wurden keine Daten gefunden!");
         $export_error = _("Es wurden keine Daten gefunden! Die übergebene ID ist mit keinen Veranstaltungs- / Personendaten verbunden.");
-        $export_pagecontent .= "<form class=\"default\"><footer>"
+        $export_pagecontent = "<form class=\"default\"><footer>"
                             . LinkButton::create('<< ' .  _('Zurück'), URLHelper::getURL("", ['range_id' => $range_id, 'ex_type' => $ex_type, 'ex_sem' => $ex_sem, 'o_mode' => 'start']))
                             . "</footer></form>";
         $export_error_num ++;
@@ -133,7 +133,7 @@ if ($o_mode === 'file' || $o_mode === 'choose') {
             $export_msg = sprintf(_("%s Objekte wurden verarbeitet.") . " ", $object_counter);
         }
 
-        $export_pagecontent .= "<form class=\"default\" method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
+        $export_pagecontent  = "<form class=\"default\" method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
         $export_pagecontent .= CSRFProtection::tokenTag();
         $export_pagecontent .= "<input type=\"hidden\" name=\"page\" value=\"2\">";
         $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";

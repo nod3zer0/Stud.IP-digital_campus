@@ -5,11 +5,11 @@
            name="questions[<?= $vote->getId() ?>][task][correct][]"
            value="<?= $index + 1 ?>"
            title="<?= _('Ist diese Antwort korrekt?') ?>"
-           <?= $forcecorrect || $answer['score'] > 0 ? 'checked' : '' ?>>
+           <?= !empty($forcecorrect) || (!empty($answer['score']) && ($answer['score'] > 0)) ? 'checked' : '' ?>>
 
     <input type="text"
            name="questions[<?= $vote->getId() ?>][task][answers][]"
-           value="<?= htmlReady($answer['text']) ?>"
+           value="<?= htmlReady($answer['text'] ?? '') ?>"
            placeholder="<?= _('Antwort ...') ?>"
            aria-label="<?= _('Geben Sie eine Antwortmöglichkeit zu der von Ihnen gestellten Frage ein.') ?>">
 

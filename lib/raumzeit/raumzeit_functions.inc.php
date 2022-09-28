@@ -59,7 +59,7 @@ function raumzeit_send_cancel_message($comment, $dates)
         $message = sprintf(_("In der Veranstaltung %s fällt der/die folgende(n) Termine aus:"),
                  $course->name . ' ('. join(',', $lecturers) .') ' . $course->start_semester->name);
         $message .= "\n\n- ";
-        $message .= join("\n- " , array_map(function($a) {return $a->toString();}, $dates));
+        $message .= join("\n- " , array_map(function($a) {return (string)$a; }, $dates));
         if ($comment) {
             $message .= "\n\n" . $comment;
         }

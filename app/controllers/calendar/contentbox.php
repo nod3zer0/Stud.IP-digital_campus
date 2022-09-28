@@ -12,17 +12,22 @@
  * @category    Stud.IP
  * @package     calender
  */
-class Calendar_ContentboxController extends StudipController {
-
+class Calendar_ContentboxController extends StudipController
+{
     /**
      * Widget controller to produce the formally known show_dates()
      *
      * @param String $range_id range id (or array of range ids) of the news to get displayed
      */
-     public function display_action($range_id, $timespan = 604800, $start = null)
-     {
+    public function display_action($range_id, $timespan = 604800, $start = null)
+    {
+        $this->admin = false;
+        $this->single = false;
+        $this->userRange = false;
+        $this->termine = [];
+
         // Fetch time if needed
-        $this->start = $start ? : strtotime('today');
+        $this->start = $start ?: strtotime('today');
         $this->timespan = $timespan;
 
         // To array fallback of $range_id
@@ -55,7 +60,7 @@ class Calendar_ContentboxController extends StudipController {
         }
 
         // Forge title
-        if ($this->termine) {
+        if (!empty($this->termine)) {
             $this->title = sprintf(
                 _('Termine für die Zeit vom %s bis zum %s'),
                 strftime('%d. %B %Y', $this->start),
@@ -75,6 +80,7 @@ class Calendar_ContentboxController extends StudipController {
     {
         $course = Course::find($id);
         $dates = $course->getDatesWithExdates()->findBy('end_time', [$this->start, $this->start + $this->timespan], '><');
+
         foreach ($dates as $courseDate) {
             // Build info
             $info = [];
@@ -116,8 +122,6 @@ class Calendar_ContentboxController extends StudipController {
         );
 
         // Prepare termine
-        $this->termine = [];
-
         foreach ($events as $termin) {
             // Exclude events that begin after the given time range
             if ($termin->getStart() > $this->start + $this->timespan) {

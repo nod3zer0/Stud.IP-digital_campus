@@ -44,7 +44,7 @@ $export_pagename = _("Datenexport - Startseite");
 
 $export_info = null;
 
-$export_pagecontent .= "<form class=\"default\" method=\"POST\" action=\"" . URLHelper::getURL() . "\">";
+$export_pagecontent = "<form class=\"default\" method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
 
 $export_pagecontent .= CSRFProtection::tokenTag();
 $export_pagecontent .= "<fieldset><legend>"._("Bitte wählen Sie Datenart und Einrichtung.")."</legend>";

@@ -427,12 +427,10 @@ class StudipStudyArea extends SimpleORMap
             foreach ($nodes as $node) {
 
                 // if we know the node already place there
-                if ($hashmap[$node->parent_id]) {
-
+                if (isset($hashmap[$node->parent_id])) {
                     $cached = $hashmap[$node->parent_id];
                     $cached->required_children[$node->id] = $node;
                 } else {
-
                     // if we have a node that is directly under root
                     if ($node->parent_id == $root->id) {
                         $root->required_children[$node->id] = $node;

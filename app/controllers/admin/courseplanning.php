@@ -38,6 +38,7 @@ class Admin_CourseplanningController extends AuthenticatedController
         if (in_array($action, ['index', 'weekday'])) {
             PageLayout::allowFullscreenMode();
         }
+        $this->selected_weekday = '';
     }
 
     private function getPlanTitle()

@@ -75,7 +75,7 @@ class Trails_Response {
    */
   function set_status($status, $reason = NULL) {
     $this->status = $status;
-    $this->reason = isset($reason) ? $reason : $this->get_reason($status);
+    $this->reason = isset($reason) ? $reason : self::get_reason($status);
     return $this;
   }
 
@@ -87,7 +87,7 @@ class Trails_Response {
    *
    * @return string  the reason phrase for this response's status
    */
-  function get_reason($status) {
+  public static function get_reason($status) {
     $reason = array(
       100 => 'Continue', 'Switching Protocols',
       200 => 'OK', 'Created', 'Accepted', 'Non-Authoritative Information',

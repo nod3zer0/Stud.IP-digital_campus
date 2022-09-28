@@ -178,6 +178,7 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
 // Prime autoloader if cache is enabled (this cannot be in autoloader's
 // bootstrap because the stud.ip cache needs to have a db conenction)
 if ($GLOBALS['CACHING_ENABLE']) {
+    $lookup_hash = null;
     $cached = StudipCacheFactory::getCache()->read('STUDIP#autoloader-classes');
     if ($cached) {
         $class_lookup = json_decode($cached, true);

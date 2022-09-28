@@ -16,8 +16,6 @@ class Course_OverviewController extends AuthenticatedController
 
     public function before_filter(&$action, &$args)
     {
-        global $SEM_TYPE, $SEM_CLASS;
-
         parent::before_filter($action, $args);
 
         checkObject();
@@ -74,16 +72,16 @@ class Course_OverviewController extends AuthenticatedController
             $this->dates       = $response->body;
             $this->next_date   = $this->sem->getNextDate();
             $this->first_date  = $this->sem->getFirstDate();
-            $show_link         = ($GLOBALS["perm"]->have_studip_perm('autor', $this->course_id) && $this->modules['schedule']);
+            $show_link         = $GLOBALS["perm"]->have_studip_perm('autor', $this->course_id) && $this->course->isToolActive('schedule');
             $this->times_rooms = $this->sem->getDatesTemplate('dates/seminar_html', ['link_to_dates' => $show_link, 'show_room' => true]);
 
             // Fettch teachers
             $dozenten      = $this->sem->getMembers('dozent');
-            $num_dozenten  = count($dozenten);
+            $this->num_dozenten  = count($dozenten);
             $show_dozenten = [];
             foreach ($dozenten as $dozent) {
                 $show_dozenten[] = '<a href="' . URLHelper::getLink('dispatch.php/profile', ['username' => $dozent['username']]) . '">'
-                    . htmlready($num_dozenten > 10 ? get_fullname($dozent['user_id'], 'no_title_short') : $dozent['fullname'])
+                    . htmlready($this->num_dozenten > 10 ? get_fullname($dozent['user_id'], 'no_title_short') : $dozent['fullname'])
                     . '</a>';
             }
             $this->show_dozenten = $show_dozenten;

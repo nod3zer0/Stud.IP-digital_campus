@@ -399,6 +399,9 @@ class QuestionnaireController extends AuthenticatedController
         if (!$this->questionnaire->isEditable()) {
             throw new AccessDeniedException(_('Der Fragebogen ist nicht bearbeitbar.'));
         }
+        $this->profile = null;
+        $this->public = null;
+        $this->start = null;
         foreach ($this->questionnaire->assignments as $relation) {
             if ($relation['range_type'] === "user") {
                 $this->profile = $relation;

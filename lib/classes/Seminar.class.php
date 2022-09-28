@@ -366,6 +366,9 @@ class Seminar
                 ];
 
                 if ($val->getResourceID()) {
+                    if (!isset($rooms[$val->getResourceID()])) {
+                        $rooms[$val->getResourceID()] = 0;
+                    }
                     $rooms[$val->getResourceID()]++;
                 }
 
@@ -1755,7 +1758,7 @@ class Seminar
             $template = $GLOBALS['template_factory']->open($template);
         }
 
-        if ($params['semester_id']) {
+        if (!empty($params['semester_id'])) {
             $semester = Semester::find($params['semester_id']);
             if ($semester) {
                 // apply filter

@@ -46,6 +46,7 @@ class Course_LvgselectorController extends AuthenticatedController
      */
     public function index_action()
     {
+        $this->url_params = [];
         if (Request::get('from')) {
             $this->url_params['from'] = Request::get('from');
         }
@@ -117,6 +118,7 @@ class Course_LvgselectorController extends AuthenticatedController
         }
 
         $this->ajax_url = $this->url_for('course/lvgselector/ajax');
+        $this->no_js_url = '';
         $this->url = $this->action_url('index');
     }
 
@@ -132,7 +134,8 @@ class Course_LvgselectorController extends AuthenticatedController
         $stepNumber = Request::int('step');
         $method = Request::get('method');
         $parameters = Request::getArray('parameter');
-        $result = call_user_func_array(['LVGroupsWizardStep', $method], $parameters);
+        $wizard_step = new LVGroupsWizardStep();
+        $result = call_user_func_array([$wizard_step, $method], $parameters);
         if (is_array($result) || is_object($result)) {
             $this->render_json($result);
         } else {

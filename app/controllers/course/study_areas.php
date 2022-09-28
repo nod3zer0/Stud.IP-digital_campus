@@ -130,7 +130,7 @@ class Course_StudyAreasController extends AuthenticatedController
         }
 
         $params = [];
-        if(Request::get('open_node')) {
+        if (Request::get('open_node')) {
             $params['open_node'] = Request::get('open_node');
         }
         if (Request::get('from')) {

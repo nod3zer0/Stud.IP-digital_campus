@@ -2240,7 +2240,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             } else {
                 $p = (array)$params($this);
                 $records = call_user_func_array($to_call, count($p) ? $p : [null]);
-                $result = is_array($records) ? $records[0] : $records;
+                $result = is_array($records) ? ($records[0] ?? null) : $records;
                 $this->relations[$relation] = $result;
             }
         }

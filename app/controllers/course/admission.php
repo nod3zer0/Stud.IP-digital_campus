@@ -24,7 +24,7 @@ class Course_AdmissionController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
-        $course_id = $args[0];
+        $course_id = $args[0] ?? '';
 
         $this->course_id = Request::option('cid', $course_id);
 
@@ -111,7 +111,7 @@ class Course_AdmissionController extends AuthenticatedController
             }
         }
         $lockdata = LockRules::getObjectRule($this->course_id);
-        if ($lockdata['description'] && LockRules::CheckLockRulePermission($this->course_id, $lockdata['permission'])) {
+        if (!empty($lockdata['description']) && LockRules::CheckLockRulePermission($this->course_id)) {
             PageLayout::postMessage(MessageBox::info(formatLinks($lockdata['description'])));
         }
     }
@@ -400,8 +400,14 @@ class Course_AdmissionController extends AuthenticatedController
     {
         PageLayout::setTitle(_('Neue Anmelderegel'));
 
-        list($type, $another_type) = explode('_', Request::option('type'));
-        list($rule_id, $another_rule_id) = explode('_', Request::option('rule_id'));
+        $types = explode('_', Request::option('type'));
+        $type = $types[0] ?? '';
+        $another_type = $types[1] ?? null;
+
+        $rule_ids = explode('_', Request::option('rule_id'));
+        $rule_id = $rule_ids[0] ?? '';
+        $another_rule_id = $rule_ids[1] ?? null;
+
         $rule_types = AdmissionRule::getAvailableAdmissionRules(true);
         if (isset($rule_types[$type])) {
             $rule = new $type($rule_id);

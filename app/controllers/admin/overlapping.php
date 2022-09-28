@@ -69,7 +69,7 @@ class Admin_OverlappingController extends AuthenticatedController
         }
         $this->conflicts = MvvOverlappingSelection::getConflictsBySelection(
             $this->selection_id,
-            !$_SESSION['MVV_OVL_HIDDEN']
+            empty($_SESSION['MVV_OVL_HIDDEN'])
         );
     }
 

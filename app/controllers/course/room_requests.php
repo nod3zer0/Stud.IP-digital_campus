@@ -28,9 +28,8 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
-        $course_id = $args[0];
         $this->current_user = User::findCurrent();
-        $this->course_id = Request::option('cid', $course_id);
+        $this->course_id = Request::option('cid', $args[0] ?? null);
         $pagetitle = '';
         //Navigation in der Veranstaltung:
         if (Navigation::hasItem('/course/admin/room_requests')) {
@@ -206,6 +205,17 @@ class Course_RoomRequestsController extends AuthenticatedController
      */
     protected function loadData($session_data, $step = 1)
     {
+        $this->available_room_categories = [];
+        $this->room_name = '';
+        $this->category_id = '';
+        $this->category = null;
+        $this->available_properties = [];
+        $this->selected_properties = [];
+        $this->seats = '';
+        $this->comment = '';
+        $this->reply_lecturers = false;
+        $this->preparation_time = 0;
+
         $this->course_id = Context::getId();
         $this->user_is_global_resource_admin = ResourceManager::userHasGlobalPermission(
             $this->current_user,
@@ -220,19 +230,19 @@ class Course_RoomRequestsController extends AuthenticatedController
             );
         }
         if ($step >= 2) {
-            if ($session_data['category_id']) {
+            if (!empty($session_data['category_id'])) {
                 $this->category = ResourceCategory::find($session_data['category_id']);
-                if ($this->category instanceof ResourceCategory) {
+                if ($this->category) {
                     //Get all available properties for the category:
                     $this->available_properties = $this->category->getRequestableProperties();
                 }
             }
-            $this->room_name = $session_data['room_name'];
-            $this->category_id = $session_data['category_id'];
-            $this->preparation_time = $session_data['preparation_time'] ?: '0';
+            $this->room_name = $session_data['room_name'] ?? '';
+            $this->category_id = $session_data['category_id'] ?? '';
+            $this->preparation_time = $session_data['preparation_time'] ?? '0';
         }
         if ($step >= 3) {
-            if ($this->category instanceof ResourceCategory) {
+            if ($this->category) {
                 $this->selected_properties = $session_data['selected_properties'];
             }
         }
@@ -442,7 +452,7 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         $this->available_properties = $this->category->getRequestableProperties();
 
-        if (!$session_data['selected_properties']['seats']) {
+        if (empty($session_data['selected_properties']['seats'])) {
             $this->course = Course::find($this->course_id);
             $admission_turnout = $this->course->admission_turnout;
             $this->selected_properties['seats'] = $admission_turnout
@@ -590,11 +600,11 @@ class Course_RoomRequestsController extends AuthenticatedController
             $this->reply_lecturers = $this->request->reply_recipients == 'lecturer';
         }
 
-        $search_properties = $this->selected_properties;
-        if ($session_data['category_id']) {
+        $search_properties = $this->selected_properties ?? [];
+        if (!empty($session_data['category_id'])) {
             $search_properties['room_category_id'] = $session_data['category_id'];
         }
-        if ($search_properties['seats']) {
+        if (!empty($search_properties['seats'])) {
             //The seats property value is a minimum.
             $search_properties['seats'] = [
                 $search_properties['seats'],
@@ -625,7 +635,6 @@ class Course_RoomRequestsController extends AuthenticatedController
         }
         $this->available_room_icons = [];
         $request_time_intervals = $this->request->getTimeIntervals();
-        $request_date_amount = count($request_time_intervals);
         foreach ($this->matching_rooms as $room) {
             $request_dates_booked = 0;
             foreach ($request_time_intervals as $interval) {

@@ -955,7 +955,7 @@ class MyCoursesController extends AuthenticatedController
                 $extra_navigation = [
                     'url'   => URLHelper::getURL($adminnavigation->getURL(), ['cid' => $course['seminar_id']]),
                     'icon'  => $adminnavigation->getImage()->getShape(),
-                    'label' => $adminnavigation->getLinkAttributes()['title'] ?: _('Verwaltung'),
+                    'label' => $adminnavigation->getLinkAttributes()['title'] ?? _('Verwaltung'),
                 ];
             }
         }

@@ -168,9 +168,8 @@ class Course_TimesroomsController extends AuthenticatedController
                         if (($val->room_booking instanceof ResourceBooking)
                             && !$cycle_has_multiple_rooms) {
                             $date_room = $val->room_booking->resource->name;
-                            if ($this->cycle_room_names[$cycle->id]) {
-                                if ($date_room
-                                    && ($date_room != $this->cycle_room_names[$cycle->id])) {
+                            if (isset($this->cycle_room_names[$cycle->id])) {
+                                if ($date_room && $date_room != $this->cycle_room_names[$cycle->id]) {
                                     $cycle_has_multiple_rooms = true;
                                 }
                             } elseif ($date_room) {
@@ -225,8 +224,11 @@ class Course_TimesroomsController extends AuthenticatedController
         }
 
         $this->single_dates  = $single_dates;
-        $this->checked_dates = $_SESSION['_checked_dates'];
-        unset($_SESSION['_checked_dates']);
+        $this->checked_dates = [];
+        if (!empty($_SESSION['_checked_dates'])) {
+            $this->checked_dates = $_SESSION['_checked_dates'];
+            unset($_SESSION['_checked_dates']);
+        }
     }
 
     /**
@@ -1115,6 +1117,8 @@ class Course_TimesroomsController extends AuthenticatedController
             words('day start_time end_time description cycle startWeek teacher_sws fromDialog course_type')
         );
 
+        $this->linkAttributes   = ['fromDialog' => Request::isXhr() ? 1 : 0];
+
         $this->cycle = new SeminarCycleDate($cycle_id);
 
         if ($this->cycle->isNew()) {
@@ -1604,6 +1608,8 @@ class Course_TimesroomsController extends AuthenticatedController
 
     protected function setAvailableRooms($dates, $date_booking_ids = [], $only_bookable_rooms = false)
     {
+        $this->room_search = null;
+        $this->selectable_rooms = [];
         if (Config::get()->RESOURCES_ENABLE) {
             //Check for how many rooms the user has booking permissions.
             //In case these permissions exist for more than 50 rooms
@@ -1629,7 +1635,6 @@ class Course_TimesroomsController extends AuthenticatedController
                     ];
                 }
             }
-            $this->selectable_rooms = [];
             $rooms_with_booking_permissions = 0;
             if ($current_user_is_resource_admin) {
                 $rooms_with_booking_permissions = Room::countAll();

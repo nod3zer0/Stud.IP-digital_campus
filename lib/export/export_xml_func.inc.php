@@ -72,15 +72,10 @@ global $SOFTWARE_VERSION, $ex_type, $ex_sem, $range_name, $range_id;
 * @param        string  value for optional attribute "key"
 * @return       string  xml open tag
 */
-function xml_open_tag($tag_name, $tag_key = "")
+function xml_open_tag($tag_name, $tag_key = null)
 {
-    $xml_tag_string = '';
-
-    if ($tag_key) {
-        $xml_tag_string .= " key=\"" . xml_escape ($tag_key ) ."\"" ;
-    }
-
-    $xml_tag_string = "<" . $tag_name . $xml_tag_string .  ">\n";
+    $xml_tag_string = rtrim(' ' . xml_attributes_to_string(compact('tag_key')));
+    $xml_tag_string = "<{$tag_name}{$xml_tag_string}>\n";
     return $xml_tag_string;
 }
 
@@ -115,12 +110,8 @@ function xml_close_tag($tag_name)
 */
 function xml_tag($tag_name, $tag_content, $tag_attributes = null)
 {
-    if (is_array($tag_attributes)){
-        foreach($tag_attributes as $key => $value){
-            $xml_tag_string .= " $key=\"".xml_escape($value)."\" ";
-        }
-    }
-    $xml_tag_string = "<" . $tag_name . $xml_tag_string .  ">"
+    $xml_tag_string = xml_attributes_to_string($tag_attributes ?? []);
+    $xml_tag_string = "<{$tag_name}{$xml_tag_string}>"
         . xml_escape ( $tag_content )
         . "</" . $tag_name .  ">\n";
     return $xml_tag_string;
@@ -151,4 +142,21 @@ function xml_escape($string)
 {
     $string = preg_replace('/[\x00-\x08\x0b\x0c\x0e-\x1f]/', '', $string);
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+}
+
+function xml_attributes_to_string(array $attributes): string
+{
+    $attributes = array_filter($attributes, function ($attribute) {
+        return $attribute !== null;
+    });
+
+    if (count($attributes) === 0) {
+        return '';
+    }
+
+    $result = ['']; // Empty item for a leading whitespace
+    foreach ($attributes as $key => $value) {
+        $result[] = sprintf('%s="%s"', $key, xml_escape($value));
+    }
+    return implode(' ', $result);
 }

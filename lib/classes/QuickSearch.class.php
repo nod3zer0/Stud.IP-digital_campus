@@ -95,6 +95,7 @@ class QuickSearch
     private $inputStyle = null;
     private $specialQuery = null;
 
+
     /**
      * Deletes all older requests that have not been used for three hours
      * from the session
@@ -333,7 +334,7 @@ class QuickSearch
      */
     public function hasExtendedLayout()
     {
-        return $this->search->extendedLayout;
+        return !empty($this->search->extendedLayout);
     }
 
     /**
@@ -359,39 +360,23 @@ class QuickSearch
             $template->set_attribute('withAttributes', $this->withAttributes);
             $template->set_attribute('searchresults', $searchresults);
             $template->set_attribute('name', $this->name);
-            $template->set_attribute('inputClass', $this->inputClass);
             $template->set_attribute('search_button_name', $this->search_button_name);
             $template->set_attribute('reset_button_name', $this->reset_button_name);
             $template->set_attribute('extendedLayout', $this->hasExtendedLayout());
             return $template->render();
 
         } else {
-            //Abfrage in der Session speichern:
-            $query_id = md5(serialize($this->search));
-            if ($this->specialQuery) {
-                $_SESSION['QuickSearches'][$query_id]['query'] = $this->specialQuery;
-            } elseif ($this->search instanceof SearchType) {
-                $_SESSION['QuickSearches'][$query_id]['object'] = serialize($this->search);
-                if ($this->search instanceof SearchType) {
-                    $_SESSION['QuickSearches'][$query_id]['includePath'] = $this->search->includePath();
-                }
-                $_SESSION['QuickSearches'][$query_id]['time'] = time();
-            } else {
-                $_SESSION['QuickSearches'][$query_id]['query'] = $this->search;
-            }
-            $_SESSION['QuickSearches'][$query_id]['time'] = time();
-            //var_dump($_SESSION['QuickSearches'][$query_id]);
+            $query_id = $this->storeSearchInSession();
+
             //Ausgabe:
             $template = $GLOBALS['template_factory']->open('quicksearch/inputfield.php');
             $template->set_attribute('withButton', $this->withButton);
             $template->set_attribute('box_align', $this->box_align);
             $template->set_attribute('box_width', $this->box_width);
-            $template->set_attribute('inputStyle', $this->inputStyle ? $this->inputStyle : "");
             $template->set_attribute('beschriftung', $this->beschriftung());
             $template->set_attribute('name', $this->name);
             $template->set_attribute('defaultID', $this->defaultID);
             $template->set_attribute('defaultName', $this->defaultName);
-            $template->set_attribute('inputClass', $this->inputClass);
             $template->set_attribute('withAttributes', $this->withAttributes ? $this->withAttributes : []);
             $template->set_attribute('jsfunction', $this->jsfunction);
             $template->set_attribute('autocomplete_disabled', Config::get()->getValue("AJAX_AUTOCOMPLETE_DISABLED") || $this->autocomplete_disabled);
@@ -465,5 +450,37 @@ class QuickSearch
         } else {
             return "";
         }
+    }
+
+    /**
+     * Abfrage in der Session speichern
+     *
+     * @return string
+     */
+    protected function storeSearchInSession(): string
+    {
+        $query_id = md5(serialize($this->search));
+
+        // Prepare object
+        $item = [
+            'time' => time(),
+        ];
+
+        if ($this->search instanceof SearchType) {
+            $item['object'] = serialize($this->search);
+            if ($this->search instanceof SearchType) {
+                $item['includePath'] = $this->search->includePath();
+            }
+        } else {
+            $item['query'] = $this->search;
+        }
+
+        // Actually storing in session
+        if (!isset($_SESSION['QuickSearches'])) {
+            $_SESSION['QuickSearches'] = [];
+        }
+        $_SESSION['QuickSearches'][$query_id] = $item;
+
+        return $query_id;
     }
 }

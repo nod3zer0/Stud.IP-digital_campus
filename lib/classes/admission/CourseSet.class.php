@@ -381,19 +381,19 @@ class CourseSet
             $query .= " AND (c.`private`=0 OR c.`user_id`=?)";
             $parameters[] = $GLOBALS['user']->id;
         }
-        if ($filter['course_set_name']) {
+        if (!empty($filter['course_set_name'])) {
             $query .= " AND c.name LIKE ?";
             $parameters[] = $filter['course_set_name'] . '%';
         }
-        if (is_array($filter['rule_types']) && count($filter['rule_types'])) {
+        if (!empty($filter['rule_types']) && is_array($filter['rule_types']) && count($filter['rule_types'])) {
             $query .= " AND cr.type IN (?)";
             $parameters[] = $filter['rule_types'];
         }
-        if ($filter['semester_id']) {
+        if (!empty($filter['semester_id'])) {
             $query .= " AND s.start_time = ?";
             $parameters[] = Semester::find($filter['semester_id'])->beginn;
         }
-        if ($filter['course_set_chdate']) {
+        if (!empty($filter['course_set_chdate'])) {
             $query .= " AND c.chdate < ?";
             $parameters[] = $filter['chdate'];
         }
@@ -420,19 +420,19 @@ class CourseSet
         $parameters = [];
         $query .= " AND (c.`private`=0 OR c.`user_id`=?)";
         $parameters[] = $GLOBALS['user']->id;
-        if ($filter['course_set_name']) {
+        if (!empty($filter['course_set_name'])) {
             $query .= " AND c.name LIKE ?";
             $parameters[] = $filter['course_set_name'] . '%';
         }
-        if (is_array($filter['rule_types']) && count($filter['rule_types'])) {
+        if (!empty($filter['rule_types']) && is_array($filter['rule_types']) && count($filter['rule_types'])) {
             $query .= " AND cr.type IN (?)";
             $parameters[] = $filter['rule_types'];
         }
-        if ($filter['semester_id']) {
+        if (!empty($filter['semester_id'])) {
             $query .= " AND s.start_time = ?";
             $parameters[] = Semester::find($filter['semester_id'])->beginn;
         }
-        if ($filter['course_set_chdate']) {
+        if (!empty($filter['course_set_chdate'])) {
             $query .= " AND c.chdate < ?";
             $parameters[] = $filter['chdate'];
         }
@@ -1019,6 +1019,7 @@ class CourseSet
     public function toString($short=false) {
         $tpl = $GLOBALS['template_factory']->open('admission/courseset/info');
         $tpl->set_attribute('courseset', $this);
+        $tpl->set_attribute('is_limited', false);
         $institutes = [];
         if (!$short) {
             $institutes = Institute::findAndMapMany(function($i) {return $i->name;}, array_keys($this->institutes), 'ORDER BY Name');

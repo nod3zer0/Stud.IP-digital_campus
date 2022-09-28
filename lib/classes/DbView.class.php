@@ -305,10 +305,12 @@ class DbView
 
     public function get_view($name)
     {
-        if (self::$dbviews[$name]["pk"])
+        if (!empty(self::$dbviews[$name]["pk"])) {
             $this->pk = self::$dbviews[$name]["pk"];
-        if (self::$dbviews[$name]["temp_table_type"])
+        }
+        if (!empty(self::$dbviews[$name]["temp_table_type"])) {
             $this->temp_table_type = self::$dbviews[$name]["temp_table_type"];
+        }
         if (!$query_list = self::$dbviews[$name]["query"])
             $this->halt("View not found: $name");
         (is_array($query_list)) ? $query = $query_list[0] : $query = $query_list;

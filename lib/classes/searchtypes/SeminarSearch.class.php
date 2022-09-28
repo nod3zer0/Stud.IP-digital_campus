@@ -48,11 +48,12 @@ class SeminarSearch extends SearchType
          $search_helper->setParams(
              [
                  'quick_search' => $keyword,
-                 'qs_choose' => $contextual_data['search_sem_qs_choose'] ?: 'all',
+                 'qs_choose' => $contextual_data['search_sem_qs_choose'] ?? 'all',
                  'sem' => $contextual_data['search_sem_sem'] ?? 'all',
-                 'category' => $contextual_data['search_sem_category'],
-                 'scope_choose' => $contextual_data['search_sem_scope_choose'],
-                 'range_choose' => $contextual_data['search_sem_range_choose']],
+                 'category' => $contextual_data['search_sem_category'] ?? null,
+                 'scope_choose' => $contextual_data['search_sem_scope_choose'] ?? null,
+                 'range_choose' => $contextual_data['search_sem_range_choose'] ?? null,
+             ],
              !(is_object($GLOBALS['perm'])
                  && $GLOBALS['perm']->have_perm(
                      Config::Get()->SEM_VISIBILITY_PERM)));

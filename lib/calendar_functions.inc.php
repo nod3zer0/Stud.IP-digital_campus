@@ -57,6 +57,7 @@ function holiday ($tmstamp, $mod = "") {
     else
         $easterday = date("z", mktime(0, 0, 0, 4, $q - 31, $year)) + 1;
 
+    $name = '';
     // Differenz in Tagen zu Ostertag berechnen
     $doy = date("z", $tmstamp) + 1;
     $dif = $doy - $easterday;

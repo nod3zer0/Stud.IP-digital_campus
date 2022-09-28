@@ -306,7 +306,7 @@ class LVGroupsWizardStep implements CourseWizardStep
         $area = Lvgruppe::find($mvvid[0]);
 
         $factory = new Flexi_TemplateFactory($GLOBALS['STUDIP_BASE_PATH'] . '/app/views');
-        $html = $factory->render('course/wizard/steps/lvgroups/lvgroup_entry', compact('area'));
+        $html = $factory->render('course/wizard/steps/lvgroups/lvgroup_entry', ['area' => $area, 'locked' => false, 'course_id' => '']);
 
         $data = [
             'id' => $area->id,

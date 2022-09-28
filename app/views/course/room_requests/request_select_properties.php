@@ -1,4 +1,4 @@
-<? if (!$embedded) : ?>
+<? if (empty($embedded)) : ?>
     <?= $this->render_partial(
         'course/room_requests/_request_form_header',
         [
@@ -19,7 +19,7 @@
 <? if ($available_properties) : ?>
         <? foreach ($available_properties as $property) : ?>
             <?= $property->toHtmlInput(
-                $selected_properties[$property->name],
+                $selected_properties[$property->name] ?? '',
                 'selected_properties[' . htmlReady($property->name) . ']',
                 true,
                 false
@@ -50,14 +50,16 @@
               placeholder="<?= _('Weitere Wünsche oder Bemerkungen zur angefragten Raumbelegung') ?>"><?= htmlReady($comment) ?></textarea>
     </label>
 
-<? if (!$embedded) : ?>
+<? if (empty($embedded)) : ?>
     </div>
     </section>
     <?= $this->render_partial(
         'course/room_requests/_request_form_footer',
         [
-            'room_search_button' => true,
-            'save_buttons'       => true
+            'room_search_button'       => true,
+            'save_buttons'             => true,
+            'room_select_button'       => false,
+            'select_properties_button' => false
         ]
     ) ?>
 <? endif ?>

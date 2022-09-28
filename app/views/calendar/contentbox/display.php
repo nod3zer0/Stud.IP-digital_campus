@@ -19,14 +19,13 @@
     <? endif; ?>
         </nav>
     </header>
-  <? if($termine): ?>
-
+  <? if ($termine): ?>
     <? foreach ($termine as $termin): ?>
         <?= $this->render_partial('calendar/contentbox/_termin.php', ['termin' => $termin]); ?>
     <? endforeach; ?>
 <? else: ?>
     <section>
-    <? if($isProfile): ?>
+    <? if ($isProfile): ?>
         <?= _('Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf das Plus.') ?>
     <? else: ?>
         <?= _('Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.') ?>

@@ -58,7 +58,7 @@
         <label>
             <input type="checkbox"
                    name="show_hidden"
-                   value="1" <?= $_SESSION['MVV_OVL_HIDDEN'] ? ' checked' : '' ?>>
+                   value="1" <?= !empty($_SESSION['MVV_OVL_HIDDEN']) ? ' checked' : '' ?>>
             <?= _('ausgeblendete Veranstaltungen anzeigen') ?>
         </label>
     </fieldset>

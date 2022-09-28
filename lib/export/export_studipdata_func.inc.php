@@ -130,10 +130,10 @@ function export_range($range_id)
     //  Ist die Range-ID ein Range-Tree-Item?
     if ($range_id != 'root') {
         $tree_object = new RangeTreeObject($range_id);
-        $range_name  = $tree_object->item_data["name"];
+        $range_name  = $tree_object->item_data["name"] ?? '';
 
         // Tree-Item ist ein Institut:
-        if ($tree_object->item_data['studip_object'] == 'inst') {
+        if (!empty($tree_object->item_data['studip_object']) && $tree_object->item_data['studip_object'] === 'inst') {
             if (!$output_startet) {
                 output_data(xml_header(), $o_mode);
                 $output_startet = true;

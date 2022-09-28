@@ -1,4 +1,4 @@
-<? if (!$embedded) : ?>
+<? if (empty($embedded)) : ?>
     <?= $this->render_partial(
         'course/room_requests/_request_form_header',
         [
@@ -53,7 +53,7 @@
     <? endif ?>
     </div>
 </section>
-<? if (!$embedded) : ?>
+<? if (empty($embedded)) : ?>
     <?= $this->render_partial(
         'course/room_requests/_request_form_footer',
         [

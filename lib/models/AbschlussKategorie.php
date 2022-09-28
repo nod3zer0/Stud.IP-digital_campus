@@ -308,8 +308,8 @@ class AbschlussKategorie extends ModuleManagementModelTreeItem
         $_SESSION['MVV/StgteilVersion/trail_parent_id'] =  $this->getId();
         $trail_parent_id = $_SESSION['MVV/AbschlussKategorie/trail_parent_id'];
 
-        $start_sem = self::$object_filter['StgteilVersion']['start_semester'];
-        $end_sem = self::$object_filter['StgteilVersion']['end_semester'];
+        $start_sem = self::$object_filter['StgteilVersion']['start_semester'] ?? null;
+        $end_sem = self::$object_filter['StgteilVersion']['end_semester'] ?? null;
         return StgteilVersion::getEnrichedByQuery("
             SELECT msv.*
             FROM mvv_abschl_zuord maz

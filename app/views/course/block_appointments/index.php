@@ -4,7 +4,7 @@
 
 <form <?= Request::isXhr() ? 'data-dialog="size=big"' : '' ?>
     class="default collapsable"
-    action="<?= $controller->url_for('course/block_appointments/save/' . $course_id, $editParams) ?>"
+    action="<?= $controller->link_for('course/block_appointments/save/' . $course_id) ?>"
     method="post">
 
 <? if ($confirm_many): ?>
@@ -27,24 +27,24 @@
         <label for="block_appointments_start_day" class="col-3">
             <?= _('Startdatum') ?>
             <input type="text" class="size-s has-date-picker" data-date-picker id="block_appointments_start_day"
-                   name="block_appointments_start_day" value="<?= $request['block_appointments_start_day'] ?>">
+                   name="block_appointments_start_day" value="<?= $request['block_appointments_start_day'] ?? '' ?>">
         </label>
         <label for="block_appointments_end_day" class="col-3">
             <?= _('Enddatum') ?>
             <input type="text" class="size-s has-date-picker" data-date-picker='{">=":"#block_appointments_start_day"}' id="block_appointments_end_day"
-                   name="block_appointments_end_day" value="<?= $request['block_appointments_end_day'] ?>">
+                   name="block_appointments_end_day" value="<?= $request['block_appointments_end_day'] ?? '' ?>">
         </label>
         <label for="block_appointments_start_time" class="col-3">
             <?= _('Startzeit') ?>
             <input type="text" class="size-s studip-timepicker" id="block_appointments_start_time"
-                   name="block_appointments_start_time" value="<?= $request['block_appointments_start_time'] ?>"
+                   name="block_appointments_start_time" value="<?= $request['block_appointments_start_time'] ?? '' ?>"
                    placeholder="HH:mm">
         </label>
 
         <label for="block_appointments_end_time" class="col-3">
             <?= _('Endzeit') ?>
             <input type="text" class="size-s studip-timepicker" id="block_appointments_end_time"
-                   name="block_appointments_end_time" value="<?= $request['block_appointments_end_time'] ?>"
+                   name="block_appointments_end_time" value="<?= $request['block_appointments_end_time'] ?? '' ?>"
                    placeholder="HH:mm">
         </label>
 
@@ -58,7 +58,7 @@
             </label>
 
             <label for="block_appointments_days_1" class="col-2">
-                <input <?= in_array('weekdays', (array) $request['block_appointments_days']) ? 'checked ' : '' ?>
+                <input <?= in_array('weekdays', (array) ($request['block_appointments_days'] ?? [])) ? 'checked ' : '' ?>
                     class="block_appointments_days"
                     name="block_appointments_days[]" id="block_appointments_days_1" type="checkbox" value="weekdays">
                 <?= _('Mo-Fr') ?>
@@ -66,7 +66,7 @@
             <? foreach (range(0, 6) as $d) : ?>
                 <? $id = 2 + $d ?>
                 <label for="block_appointments_days_<?= $id ?>" class="col-2">
-                    <input <?= in_array($d+1, (array) $request['block_appointments_days']) ? 'checked ' : '' ?>
+                    <input <?= in_array($d + 1, (array) ($request['block_appointments_days'] ?? [])) ? 'checked ' : '' ?>
                         class="block_appointments_days"
                         name="block_appointments_days[]" id="block_appointments_days_<?= $id ?>" type="checkbox"
                         value="<?= $d + 1 ?>">
@@ -84,7 +84,7 @@
             <select clas="size-l" name="block_appointments_termin_typ" id="block_appointments_termin_typ">
                 <? foreach ($GLOBALS['TERMIN_TYP'] as $key => $value) : ?>
                     <option
-                        value="<?= $key ?>" <?= $request['block_appointments_termin_typ'] == $key ? 'selected' : '' ?>>
+                        value="<?= $key ?>" <?= ($request['block_appointments_termin_typ'] ?? '') == $key ? 'selected' : '' ?>>
                         <?= htmlReady($value['name']) ?>
                     </option>
                 <? endforeach ?>
@@ -115,7 +115,7 @@
         <label for="block_appointments_room_text">
             <?= _('Freie Ortsangabe') ?>
             <input type="text" name="block_appointments_room_text" id="block_appointments_room_text"
-                   value="<?= $request['block_appointments_room_text'] ?>">
+                   value="<?= htmlReady($request['block_appointments_room_text'] ?? '') ?>">
         </label>
 
      <? if (count($lecturers)): ?>
@@ -141,7 +141,7 @@
 
         <label for="block_appointments_date_count">
             <?= _('Anzahl der Termine') ?>
-            <input type="text" name="block_appointments_date_count" id="block_appointments_date_count" class="size-s" value="<?= $request['block_appointments_date_count'] ?: 1 ?>">
+            <input type="text" name="block_appointments_date_count" id="block_appointments_date_count" class="size-s" value="<?= $request['block_appointments_date_count'] ?? 1 ?>">
         </label>
 
     </fieldset>

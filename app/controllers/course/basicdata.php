@@ -230,22 +230,23 @@ class Course_BasicdataController extends AuthenticatedController
     private function instituteChoices($institutes)
     {
         $faculty_id = null;
-        $result = [];
 
+        $result = [];
         foreach ($institutes as $inst) {
+            $key = $inst['fakultaets_id'] ?? $faculty_id;
             if ($inst['is_fak']) {
                 $result[$inst['Institut_id']] = [
                     'label'    => $inst['Name'],
                     'children' => [],
                 ];
                 $faculty_id = $inst['Institut_id'];
-            } elseif (!isset($result[$inst['fakultaets_id'] ?: $faculty_id])) {
+            } elseif (!isset($result[$key])) {
                 $result[] = [
                     'label'    => false,
                     'children' => [$inst['Institut_id'] => $inst['Name']],
                 ];
             } else {
-                $result[$inst['fakultaets_id'] ?: $faculty_id]['children'][$inst['Institut_id']] = $inst['Name'];
+                $result[$key]['children'][$inst['Institut_id']] = $inst['Name'];
             }
         }
 
@@ -257,7 +258,7 @@ class Course_BasicdataController extends AuthenticatedController
      * Action wie Set ausgeführt wurde, von der hierher weitergeleitet worden ist.
      * Wichtige Daten dazu wurden dann über $this->flash übertragen.
      *
-     * @param md5 $course_id
+     * @param string $course_id
      */
     public function view_action($course_id = null)
     {
@@ -356,27 +357,37 @@ class Course_BasicdataController extends AuthenticatedController
         $this->mkstring = $data['mkdate'] ? date("d.m.Y, H:i", $data['mkdate']) : _("unbekannt");
         $this->chstring = $data['chdate'] ? date("d.m.Y, H:i", $data['chdate']) : _("unbekannt");
         $lockdata = LockRules::getObjectRule($this->course_id);
-        if ($lockdata['description'] && LockRules::CheckLockRulePermission($this->course_id, $lockdata['permission'])){
+        if (!empty($lockdata['description']) && LockRules::CheckLockRulePermission($this->course_id, $lockdata['permission'])){
             $this->flash['msg'] = array_merge((array)$this->flash['msg'], [["info", formatLinks($lockdata['description'])]]);
         }
         $this->flash->discard(); //schmeißt ab jetzt unnötige Variablen aus der Session.
         $sidebar = Sidebar::get();
 
         $widget = new ActionsWidget();
-        $widget->addLink(_('Bild ändern'),
-                         $this->url_for('avatar/update/course', $course_id),
-                         Icon::create('edit', 'clickable'));
+        $widget->addLink(
+            _('Bild ändern'),
+            $this->url_for('avatar/update/course', $course_id),
+            Icon::create('edit')
+        );
         if ($this->deputies_enabled) {
+            $newstatus = null;
+            $text = null;
+
             if (Deputy::isDeputy($user->id, $this->course_id)) {
                 $newstatus = 'dozent';
                 $text = _('Lehrende werden');
-            } else if (in_array($user->id, array_keys($this->dozenten)) && sizeof($this->dozenten) > 1) {
+            } else if (in_array($user->id, array_keys($this->dozenten)) && count($this->dozenten) > 1) {
                 $newstatus = 'deputy';
                 $text = _('Vertretung werden');
             }
-            $widget->addLink($text,
-                             $this->url_for('course/basicdata/switchdeputy', $this->course_id, $newstatus),
-                             Icon::create('persons', 'clickable'));
+
+            if ($text) {
+                $widget->addLink(
+                    $text,
+                    $this->url_for('course/basicdata/switchdeputy', $this->course_id, $newstatus),
+                    Icon::create('persons')
+                );
+            }
         }
         $sidebar->addWidget($widget);
         // Entry list for admin upwards.

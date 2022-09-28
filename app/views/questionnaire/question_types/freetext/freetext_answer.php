@@ -15,5 +15,5 @@
     </div>
     <textarea name="answers[<?= $vote->getId() ?>][answerdata][text]"
               <?= isset($etask->options['mandatory']) && $etask->options['mandatory'] ? "required" : "" ?>
-              ><?= htmlReady($answerdata['text']) ?></textarea>
+              ><?= htmlReady($answerdata['text'] ?? '') ?></textarea>
 </label>

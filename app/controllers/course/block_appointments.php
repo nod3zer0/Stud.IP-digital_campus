@@ -42,6 +42,8 @@ class Course_BlockAppointmentsController extends AuthenticatedController
 
     protected function setAvailableRooms()
     {
+        $this->room_search = null;
+        $this->selectable_rooms = [];
         if (Config::get()->RESOURCES_ENABLE) {
             //Check for how many rooms the user has booking permissions.
             //In case these permissions exist for more than 50 rooms
@@ -54,7 +56,6 @@ class Course_BlockAppointmentsController extends AuthenticatedController
                 'admin'
             );
 
-            $this->selectable_rooms = [];
             $rooms_with_booking_permissions = 0;
             if ($current_user_is_resource_admin) {
                 $rooms_with_booking_permissions = Room::countAll();
@@ -99,7 +100,7 @@ class Course_BlockAppointmentsController extends AuthenticatedController
         }
         $this->linkAttributes   = ['fromDialog' => Request::int('fromDialog') ? 1 : 0];
         $this->start_ts         = strtotime('this monday');
-        $this->request          = $this->flash['request'] ?: $_SESSION['block_appointments'];
+        $this->request          = $this->flash['request'] ?? $_SESSION['block_appointments'] ?? [];
         $this->confirm_many     = isset($this->flash['confirm_many']) ? $this->flash['confirm_many'] : false;
         $this->lecturers = CourseMember::findByCourseAndStatus(
             $this->course_id,

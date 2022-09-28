@@ -20,7 +20,7 @@
             'vote' => $vote,
             'answer' => [],
             'index' => $index + 1,
-            'forcecorrect' => !isset($etask->task['answers']) || empty($etask->task['answers'])
+            'forcecorrect' => empty($etask->task['answers'])
         ]
     ); ?>
 </ol>

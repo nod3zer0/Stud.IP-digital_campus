@@ -73,8 +73,11 @@ class StudipSemSearchHelper {
         $this->visible_only = $visible_only;
     }
 
-    public function doSearch(){
-        if(!count($this->params)) return false;
+    public function doSearch()
+    {
+        if (count($this->params) === 0) {
+            return false;
+        }
         $this->params = array_map('addslashes', $this->params);
         $clause = "";
         $and_clause = "";
@@ -83,25 +86,27 @@ class StudipSemSearchHelper {
 
         $view = DbView::getView('sem_tree');
 
-        if (isset($this->params['sem']) && $this->params['sem'] != 'all'){
+        if (isset($this->params['sem']) && $this->params['sem'] !== 'all'){
             $sem_number = (int)$this->params['sem'];
             $clause = " HAVING (sem_number <= $sem_number AND (sem_number_end >= $sem_number OR sem_number_end = -1)) ";
         }
 
-        if (isset($this->params['category']) && $this->params['category'] != 'all'){
-            foreach($GLOBALS['SEM_TYPE'] as $type_key => $type_value){
-                if($type_value['class'] == $this->params['category'])
+        $sem_types = [];
+        if (isset($this->params['category']) && $this->params['category'] !== 'all'){
+            foreach ($GLOBALS['SEM_TYPE'] as $type_key => $type_value){
+                if ($type_value['class'] == $this->params['category'])
                     $sem_types[] = $type_key;
             }
         }
 
         if (isset($this->params['type']) && $this->params['type'] != 'all'){
-            unset($sem_types);
-            $sem_types[0] = $this->params['type'];
+            $sem_types = [$this->params['type']];
         }
-        if (is_array($sem_types)){
+        if ($sem_types) {
             $clause = " AND c.status IN('" . join("','",$sem_types) . "') " . $clause;
         }
+
+        $view->params = [];
 
         if ($this->params['scope_choose'] && $this->params['scope_choose'] != 'root'){
             $sem_tree = TreeAbstract::GetInstance("StudipSemTree", false);
@@ -171,7 +176,7 @@ class StudipSemSearchHelper {
 
             $toFilter = explode(" ", $this->params['title']);
             $search_for = "(Name LIKE '%" . implode("%' AND Name LIKE '%", $toFilter) . "%')";
-            $view->params[0] .= ($this->params['title']) ? $search_for . " " : " ";
+            $view->params[0] = $this->params['title'] ? $search_for . " " : " ";
 
             $view->params[0] .= ($this->params['title'] && $this->params['sub_title']) ? $combination : " ";
             $view->params[0] .= ($this->params['sub_title']) ? " Untertitel LIKE '%" . $this->trim($this->params['sub_title']) . "%' " : " ";

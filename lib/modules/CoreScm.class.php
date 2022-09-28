@@ -94,7 +94,7 @@ class CoreScm extends CorePlugin implements StudipModule
 
         $link = 'dispatch.php/course/scm';
 
-        $navigation = new Navigation($scms->first()->tab_name ?: _('Informationen'), $link);
+        $navigation = new Navigation($scms->first()->tab_name ?? _('Informationen'), $link);
         $navigation->setImage(Icon::create('infopage', Icon::ROLE_INFO_ALT));
         $navigation->setActiveImage(Icon::create('infopage', Icon::ROLE_INFO));
 

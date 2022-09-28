@@ -11,7 +11,7 @@
         <li class="lvgroup-tree-assigned-root keep-node" data-id="root">
             <ul id="lvgroup-tree-assigned-selected">
               <? foreach ($selection->getAreas() as $area) : ?>
-                    <?= $this->render_partial('lvgroups/lvgroup_entry', compact('area')) ?>
+                    <?= $this->render_partial('lvgroups/lvgroup_entry', ['area' => $area, 'locked' => false, 'course_id' => '']) ?>
               <? endforeach; ?>
             </ul>
         </li>

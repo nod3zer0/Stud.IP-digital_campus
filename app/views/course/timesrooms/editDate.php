@@ -1,4 +1,4 @@
-<form action="<?= $controller->url_for('course/timesrooms/saveDate/' . $date->termin_id) ?>"
+<form action="<?= $controller->link_for('course/timesrooms/saveDate/' . $date->termin_id) ?>"
       method="post" class="default collapsable" <?= Request::int('fromDialog') ? 'data-dialog="size=big"' : '' ?>>
     <?= CSRFProtection::tokenTag() ?>
     <fieldset style="margin-top: 1ex">
@@ -36,7 +36,7 @@
                && ($selectable_rooms || $room_search)): ?>
             <label>
                 <input style="display: inline;" type="radio" name="room" value="room"
-                       id="room" <?= $date->room_booking->resource_id ? 'checked' : '' ?>
+                       id="room" <? if ($date->room_booking) echo 'checked'; ?>
                        data-activates="input.preparation-time[name='preparation_time']">
                 <?= _('Raum direkt buchen') ?>
                 <span class="flex-row">
@@ -45,7 +45,7 @@
                             ->setAttributes(['onFocus' => "jQuery('input[type=radio][name=room][value=room]').prop('checked', 'checked')"])
                             ->render() ?>
                     <? else: ?>
-                        <? $selected_room_id = $date->room_booking->resource_id ?>
+                        <? $selected_room_id = $date->room_booking->resource_id ?? ''; ?>
                         <select name="room_id" onFocus="jQuery('input[type=radio][name=room][value=room]').prop('checked', 'checked')">
                             <? foreach ($selectable_rooms as $room): ?>
                                 <option value="<?= htmlReady($room->id) ?>"
