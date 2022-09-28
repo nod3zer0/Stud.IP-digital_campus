@@ -195,6 +195,17 @@ test-jsonapi:
     reports:
       junit: tests/_output/report.xml
 
+test-assets:
+  stage: tests
+  needs: []
+  cache: *npm-cache
+  allow_failure: false
+  interruptible: true
+  before_script:
+    - make npm
+  script:
+    - make webpack-dev
+
 packaging:
   stage: packaging
   cache: []
