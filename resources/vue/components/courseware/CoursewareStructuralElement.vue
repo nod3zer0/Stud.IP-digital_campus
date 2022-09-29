@@ -76,7 +76,7 @@
                         }"
                     >
                         <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
-                            <courseware-companion-box 
+                            <courseware-companion-box
                                 v-if="blockedByAnotherUser"
                                 :msgCompanion="$gettextInterpolate('Die Einstellungen dieser Seite werden im Moment von %{blockingUserName} bearbeitet', {blockingUserName: blockingUserName})"
                                 mood="pointing"
@@ -397,7 +397,7 @@
                             </tr>
                             <tr>
                                 <td><translate>Zuletzt bearbeitet von</translate>:</td>
-                                <td>{{ editor }}</td>
+                                <td>{{ editorName }}</td>
                             </tr>
                             <tr>
                                 <td><translate>Zuletzt bearbeitet am</translate>:</td>
@@ -948,8 +948,13 @@ export default {
                 relationship: 'editor',
             });
 
-            return editor?.attributes['formatted-name'] ?? '';
+            return editor ?? null;
         },
+
+        editorName() {
+            return this.editor?.attributes['formatted-name'] ?? '?';
+        },
+
         menuItems() {
             let menu = [
                 { id: 4, label: this.$gettext('Informationen anzeigen'), icon: 'info', emit: 'showInfo' },
@@ -971,7 +976,7 @@ export default {
                         icon: 'arr_1sort',
                         emit: 'sortContainers',
                     });
-                } 
+                }
                 if (this.blocked && this.blockedByAnotherUser && this.userIsTeacher) {
                     menu.push({
                         id: 1,
@@ -1278,10 +1283,10 @@ export default {
                 parent: { type: this.structuralElement.type, id: this.structuralElement.id },
                 relationship: 'owner'
             });
-            return user ? user : null;
+            return user ?? null;
         },
         ownerName() {
-            return this.owner ? this.owner.attributes['formatted-name'] : '?';
+            return this.owner?.attributes['formatted-name'] ?? '?';
         },
     },
 
