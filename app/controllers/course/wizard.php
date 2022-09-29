@@ -177,34 +177,37 @@ class Course_WizardController extends AuthenticatedController
                     $this->redirect(URLHelper::getURL('dispatch.php/course/grouping/children',
                         ['cid' => $batch['parent']]));
                 } else {
-                    if ($this->course = $this->createCourse()) {
+                    $this->course = $this->createCourse();
+                    if ($this->course) {
                         // A studygroup has been created.
-                        if (in_array($this->course->status, studygroup_sem_types() ?: [])) {
-                            $message = MessageBox::success(
-                                sprintf(_('Die Studien-/Arbeitsgruppe "%s" wurde angelegt. ' .
-                                    'Sie können sie direkt hier weiter verwalten.'),
-                                    htmlReady($this->course->name)));
-                            $target = $this->url_for('course/studygroup/edit/?cid=' . $this->course->id);
+                        if (in_array($this->course->status, studygroup_sem_types())) {
+                            $message = MessageBox::success(sprintf(
+                                _('Die Studien-/Arbeitsgruppe "%s" wurde angelegt. '
+                                . 'Sie können sie direkt hier weiter verwalten.'),
+                                htmlReady($this->course->name)
+                            ));
+                            $target = $this->url_for('course/studygroup/edit', ['cid' => $this->course->id]);
+
                             // "Normal" course.
+                        } elseif (Request::int('dialog') && $GLOBALS['perm']->have_perm('admin')) {
+                            $message = MessageBox::success(sprintf(
+                                _('Die Veranstaltung <a class="link-intern" href="%s">"%s"</a> wurde angelegt.'),
+                                $this->link_for('course/management?cid=' . $this->course->id),
+                                htmlReady($this->course->getFullname())
+                            ));
+                            $target = $this->url_for('admin/courses');
                         } else {
-                            if (Request::int('dialog')) {
-                                $message = MessageBox::success(
-                                    sprintf(_('Die Veranstaltung <a class="link-intern" href="%s">"%s"</a> wurde angelegt.'),
-                                        $this->link_for('course/management?cid=' . $this->course->id),
-                                        htmlReady($this->course->getFullname())));
-                                $target = $this->url_for('admin/courses');
-                            } else {
-                                $message = MessageBox::success(
-                                    sprintf(_('Die Veranstaltung "%s" wurde angelegt. Sie können sie direkt hier weiter verwalten.'),
-                                        htmlReady($this->course->getFullname())));
-                                $target = $this->url_for('course/management?cid=' . $this->course->id);
-                            }
+                            $message = MessageBox::success(sprintf(
+                                _('Die Veranstaltung "%s" wurde angelegt. Sie können sie direkt hier weiter verwalten.'),
+                                htmlReady($this->course->getFullname())
+                            ));
+                            $target = $this->url_for('course/management', ['cid' => $this->course->id]);
                         }
+
                         PageLayout::postMessage($message);
                         $this->redirect($target);
                     } else {
-                        PageLayout::postMessage(MessageBox::error(
-                            _('Die Veranstaltung konnte nicht angelegt werden.')));
+                        PageLayout::postError(_('Die Veranstaltung konnte nicht angelegt werden.'));
                         $this->redirect('course/wizard');
                     }
                 }
