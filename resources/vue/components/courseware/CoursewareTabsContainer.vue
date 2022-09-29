@@ -67,7 +67,7 @@
         </template>
         <template v-slot:containerEditDialog>
             <form class="default cw-container-dialog-edit-form" @submit.prevent="">
-                <fieldset v-for="(section, index) in currentContainer.attributes.payload.sectionsfilter(section => !section.locked)" :key="index">
+                <fieldset v-for="(section, index) in currentContainer.attributes.payload.sections.filter(section => !section.locked)" :key="index">
                     <label>
                         <translate>Title</translate>
                         <input type="text" v-model="section.name" />
