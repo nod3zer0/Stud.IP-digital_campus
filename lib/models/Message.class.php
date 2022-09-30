@@ -229,7 +229,9 @@ class Message extends SimpleORMap implements PrivacyObject
 
     public static function send($sender, $recipients, $subject, $message)
     {
-
+        if ($sender === 'cli') {
+            $sender = '____%system%____';
+        }
         $messaging = new \messaging();
         $result = $messaging->insert_message($message,
                                              $recipients,
