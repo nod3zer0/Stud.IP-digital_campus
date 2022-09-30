@@ -32,7 +32,8 @@ class RoomManager
             $request->getTimeIntervals(true),
             'name ASC, mkdate ASC',
             true,
-            $excluded_room_ids
+            $excluded_room_ids,
+            false
         );
     }
 
@@ -480,6 +481,13 @@ class RoomManager
      * @param bool $only_requestable_rooms Whether the search shall be limited
      *     to requestable rooms only (true) or not (false).
      * @param array $excluded_room_ids
+     *
+     * @param bool $only_fully_available Whether only rooms shall be added to
+     *     the result set that are fully available in the requested time
+     *     ranges (true) or whether rooms shall be added that are only
+     *     partially available in those time ranges (false).
+     *     Defaults to true.
+     *
      * @return array
      */
     public static function findRooms(
@@ -490,7 +498,8 @@ class RoomManager
         $time_ranges = [],
         $order_by = null,
         $only_requestable_rooms = true,
-        $excluded_room_ids = []
+        $excluded_room_ids = [],
+        $only_fully_available = true
     )
     {
         $sql = "INNER JOIN resource_categories rc
@@ -582,29 +591,34 @@ class RoomManager
         if (!empty($time_ranges)) {
             //We must check if the room is available:
             foreach ($filtered_rooms as $room) {
-                $room_is_available = true;
+                $room_is_available = $only_fully_available;
                 foreach ($time_ranges as $time_range) {
                     if (!$time_range['begin'] || !$time_range['end']) {
                         //Invalid format.
                         continue;
                     }
-                    $begin = null;
                     if ($time_range['begin'] instanceof DateTime) {
                         $begin = $time_range['begin'];
                     } else {
                         $begin = new DateTime();
                         $begin->setTimestamp($time_range['begin']);
                     }
-                    $end = null;
                     if ($time_range['end'] instanceof DateTime) {
                         $end = $time_range['end'];
                     } else {
                         $end = new DateTime();
                         $end->setTimestamp($time_range['end']);
                     }
-                    if (!$room->isAvailable($begin, $end)) {
-                        $room_is_available = false;
-                        continue 2;
+                    if ($room->isAvailable($begin, $end)) {
+                        if (!$only_fully_available) {
+                            $room_is_available = true;
+                            break;
+                        }
+                    } else {
+                        if ($only_fully_available) {
+                            $room_is_available = false;
+                            break;
+                        }
                     }
                 }
                 if ($room_is_available) {
