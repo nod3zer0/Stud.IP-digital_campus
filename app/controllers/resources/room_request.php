@@ -1765,6 +1765,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             }
 
             $errors = [];
+            $warnings = [];
             $bookings = [];
 
             foreach ($this->selected_rooms as $range_str => $room_id) {
@@ -1863,6 +1864,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                         return;
                     }
                     if ($metadate->dates) {
+                        $overlap_messages = [];
                         foreach ($metadate->dates as $date) {
                             if ($date->room_booking->resource_id != $room_id) {
                                 try {
@@ -1883,11 +1885,19 @@ class Resources_RoomRequestController extends AuthenticatedController
                                     if ($booking instanceof ResourceBooking) {
                                         $bookings[] = $booking;
                                     }
+                                } catch (ResourceBookingException $e) {
+                                    $overlap_messages[] = $e->getMessage();
                                 } catch (Exception $e) {
                                     $errors[] = $e->getMessage();
                                     continue;
                                 }
                             }
+                        }
+                        if (count($overlap_messages) == count($metadate->dates)) {
+                            //The booking could not be saved at all.
+                            $errors = array_merge($errors, $overlap_messages);
+                        } else {
+                            $warnings = array_merge($warnings, $overlap_messages);
                         }
                     }
                 } elseif ($range_data[0] == 'User') {
@@ -1943,6 +1953,12 @@ class Resources_RoomRequestController extends AuthenticatedController
                     _('Es traten Fehler beim Auflösen der Anfrage auf!'),
                     $errors
                 );
+            } else if ($warnings && !$force_resolve && !$save_only) {
+                PageLayout::postWarning(
+                    _('Es wurden nicht für alle Termine der Anfrage Räume ausgewählt! Soll die Anfrage wirklich aufgelöst werden?'),
+                    $warnings
+                );
+                $this->show_force_resolve_button = true;
             } else if (!$save_only) {
                 //No errors: We can close the request.
 
