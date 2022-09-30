@@ -1834,6 +1834,8 @@ class Course_MembersController extends AuthenticatedController
         $this->tutor_name = get_title_for_status('tutor', 0, $sem->status);
         $this->dozent_name = get_title_for_status('dozent', 0, $sem->status);
 
+        $this->default_subject = Request::get('default_subject');
+
         if ($this->is_tutor) {
             $this->awaiting_count = AdmissionApplication::countBySql(
                 "seminar_id = :course_id AND status = 'awaiting'",
@@ -1875,7 +1877,7 @@ class Course_MembersController extends AuthenticatedController
                     'dispatch.php/messages/write',
                     [
                         'course_id' => $this->course_id,
-                        'default_subject' => $this->subject,
+                        'default_subject' => $this->default_subject,
                         'filter' => 'all',
                         'emailrequest' => 1
                     ]
@@ -1885,7 +1887,7 @@ class Course_MembersController extends AuthenticatedController
                     'dispatch.php/messages/write',
                     [
                         'course_id' => $this->course_id,
-                        'default_subject' => $this->subject,
+                        'default_subject' => $this->default_subject,
                         'filter' => 'really_all',
                         'emailrequest' => 1
                     ]
@@ -1924,7 +1926,7 @@ class Course_MembersController extends AuthenticatedController
 
                 $url_params = [
                     'course_id' => $this->course_id,
-                    'default_subject' => $this->subject,
+                    'default_subject' => $this->default_subject,
                     'filter' => implode(',', array_unique($filters)),
                     'emailrequest' => 1
                 ];
