@@ -1267,9 +1267,12 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         // Consultations
         $query = "UPDATE IGNORE consultation_blocks SET range_id = ? WHERE range_id = ? AND range_type = 'user'";
         DBManager::get()->execute($query, [$new_id, $old_id]);
-        $query = "UPDATE IGNORE consultation_blocks SET teacher_id = ? WHERE teacher_id = ?";
-        DBManager::get()->execute($query, [$new_id, $old_id]);
         $query = "UPDATE IGNORE consultation_bookings SET user_id = ? WHERE user_id = ?";
+        DBManager::get()->execute($query, [$new_id, $old_id]);
+        $query = "UPDATE IGNORE consultation_events SET user_id = ? WHERE user_id = ?";
+        DBManager::get()->execute($query, [$new_id, $old_id]);
+        $query = "UPDATE IGNORE consultation_responsibilities SET range_id = ? WHERE range_id = ?
+                                                               AND range_type = 'user'";
         DBManager::get()->execute($query, [$new_id, $old_id]);
 
         NotificationCenter::postNotification('UserDidMigrate', $old_id, $new_id);
