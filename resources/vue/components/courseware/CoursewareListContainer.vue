@@ -79,8 +79,13 @@ export default {
             if (!this.container) {
                 return [];
             }
+            let containerBlocks = this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id })).filter(Boolean);
+            let unallocated = new Set(containerBlocks.map(({ id }) => id));
+            let sortedBlocks = this.container.attributes.payload.sections[0].blocks.map((id) => this.blockById({ id })).filter(Boolean);
+            sortedBlocks.forEach(({ id }) => unallocated.delete(id));
+            let unallocatedBlocks = [...unallocated].map((id) => this.blockById({ id }));
 
-            return this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id })).filter(Boolean);
+            return sortedBlocks.concat(unallocatedBlocks);
         },
         showEditMode() {
             return this.$store.getters.viewMode === 'edit';
