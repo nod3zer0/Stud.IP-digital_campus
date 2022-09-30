@@ -158,7 +158,7 @@ class AdminCourseFilter
     /**
      * Adds a filter for all courses of the given semester.
      * @param string $semester_id : ID of the given semester.
-     * @return $this
+     * @return AdminCourseFilter
      * @throws Exception if semester_id does not exist
      */
     public function filterBySemester($semester_id)
@@ -180,7 +180,7 @@ class AdminCourseFilter
     /**
      * Adds a filter for a sem_type or many sem_types if the parameter is an array.
      * @param array|integer $type : id or ids of sem_types
-     * @return $this
+     * @return AdminCourseFilter
      */
     public function filterByType($type)
     {
@@ -197,7 +197,7 @@ class AdminCourseFilter
     /**
      * Adds a filter for an institut_id or many institut_ids if the parameter is an array.
      * @param array|integer $institut_ids : id or ids of institutes
-     * @return $this
+     * @return AdminCourseFilter
      */
     public function filterByInstitute($institut_ids)
     {
@@ -220,7 +220,7 @@ class AdminCourseFilter
     /**
      * Adds a filter for an stgteil_id or many stgteil_ids if the parameter is an array.
      * @param array|integer $stgteil_ids : id or ids of stgteile
-     * @return $this
+     * @return AdminCourseFilter
      */
     public function filterByStgTeil($stgteil_ids)
     {
@@ -265,6 +265,10 @@ class AdminCourseFilter
         return $this;
     }
 
+    /**
+     * @param array|string $user_ids
+     * @return AdminCourseFilter
+     */
     public function filterByDozent($user_ids)
     {
         $this->settings['query']['joins']['dozenten'] = [
@@ -285,8 +289,8 @@ class AdminCourseFilter
     /**
      * Adds a filter for a textstring, that can be the coursenumber, the name of the course
      * or the last name of one of the dozenten.
-     * @param string $text : the searchstring
-     * @return $this
+     * @param string $text the searchstring
+     * @return AdminCourseFilter
      */
     public function filterBySearchstring($text)
     {
@@ -314,7 +318,7 @@ class AdminCourseFilter
     /**
      * @param string $attribute : column, name of the column, yb whcih we should order the results
      * @param string $flag : "ASC" or "DESC for ascending order or descending order,
-     * @return $this
+     * @return AdminCourseFilter
      * @throws Exception if $flag does not exist
      */
     public function orderBy($attribute, $flag = 'ASC')
@@ -331,12 +335,12 @@ class AdminCourseFilter
 
     /**
      * Adds a where filter.
-     * @param string $where : any where condition like "sem_classes.overview = 'CoreOverview'"
-     * @param array $parameter : an array of parameter that appear in the $where query.
-     * @param null|string $id : an id of the where-query. Use this to possibly
+     * @param string $where any where condition like "sem_classes.overview = 'CoreOverview'"
+     * @param array $parameter an array of parameter that appear in the $where query.
+     * @param null|string $id an id of the where-query. Use this to possibly
      *                          avoid double where conditions or allow deleting the condition
      *                          by plugins if necessary. Can be omitted.
-     * @return $this
+     * @return AdminCourseFilter
      */
     public function where($where, $parameter = [], $id = null)
     {
@@ -353,7 +357,7 @@ class AdminCourseFilter
      * Also saves the settings in the session.
      * Note that a notification AdminCourseFilterWillQuery will be posted, before the result is computed.
      * Plugins may register at this event to fully alter this AdminCourseFilter-object and so the resultset.
-     * @return array : associative array with seminar_ids as keys and seminar-data-arrays as values.
+     * @return array associative array with seminar_ids as keys and seminar-data-arrays as values.
      */
     public function getCourses($grouped = true)
     {
@@ -368,7 +372,7 @@ class AdminCourseFilter
     }
 
     /**
-     * @return number of courses that this filter would return
+     * @return integer number of courses that this filter would return
      */
     public function countCourses()
     {
@@ -376,23 +380,29 @@ class AdminCourseFilter
         if (empty($this->settings['query']['where'])) {
             return 0;
         }
-        return DBManager::get()->fetchColumn($this->createQuery(true), $this->settings['parameter']);
+        return (int)DBManager::get()->fetchColumn($this->createQuery(true), $this->settings['parameter']);
     }
 
     /**
      * Returns the data of the resultset of the AdminCourseFilter.
      *
+     * @param string $order_by possible values name or number
+     *
      * Note that a notification AdminCourseFilterWillQuery will be posted, before the result is computed.
      * Plugins may register at this event to fully alter this AdminCourseFilter-object and so the resultset.
-     * @return array : associative array with seminar_ids as keys and seminar-data-arrays as values.
+     * @return array associative array with seminar_ids as keys and seminar-data-arrays as values.
      */
-    public function getCoursesForAdminWidget()
+    public function getCoursesForAdminWidget(string $order_by = 'name')
     {
         $count_courses = $this->countCourses();
+        $order = 'seminare.name';
+        if ($order_by === 'number') {
+            $order = 'seminare.veranstaltungsnummer, seminare.name';
+        }
         if ($count_courses && $count_courses <= $this->max_show_courses) {
             $settings = $this->settings;
             $this->settings['query']['select'] = [];
-            $this->settings['query']['orderby'] = 'seminare.name';
+            $this->settings['query']['orderby'] = $order;
             $ret = $this->getCourses(false);
             $this->settings = $settings;
             return $ret;
@@ -402,8 +412,8 @@ class AdminCourseFilter
 
     /**
      * Creates the sql-query from the $this->settings['query']
-     * @only_count : boolean
-     * @return string : the big query
+     * @param boolean $only_count : boolean
+     * @return string the big query
      */
     public function createQuery($only_count = false)
     {

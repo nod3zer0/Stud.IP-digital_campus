@@ -18,10 +18,8 @@ class Course_AdmissionController extends AuthenticatedController
     /**
      * common tasks for all actions
      */
-    function before_filter (&$action, &$args)
+    public function before_filter (&$action, &$args)
     {
-        global $perm;
-
         parent::before_filter($action, $args);
 
         $course_id = $args[0] ?? '';
@@ -32,7 +30,7 @@ class Course_AdmissionController extends AuthenticatedController
 
         if (!get_object_type($this->course_id, ['sem']) ||
             SeminarCategories::GetBySeminarId($this->course_id)->studygroup_mode ||
-            !$perm->have_studip_perm("tutor", $this->course_id)) {
+            !$GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)) {
             throw new Trails_Exception(403);
         }
 
@@ -56,24 +54,14 @@ class Course_AdmissionController extends AuthenticatedController
     /**
      * Shows the current restrictions for course participation.
      */
-    function index_action()
+    public function index_action()
     {
         URLHelper::addLinkParam('return_to_dialog', Request::isDialog());
         $this->sidebar = Sidebar::get();
 
-        if ($GLOBALS['perm']->have_perm('admin')) {
-            $list = new SelectWidget(_('Veranstaltungen'), '?#admin_top_links', 'cid');
-
-            foreach (AdminCourseFilter::get()->getCoursesForAdminWidget() as $seminar) {
-                $list->addElement(new SelectElement(
-                    $seminar['Seminar_id'],
-                    $seminar['Name'],
-                    $seminar['Seminar_id'] === Context::getId(),
-                    $seminar['VeranstaltungsNummer'] . ' ' . $seminar['Name']
-                ));
-            }
-            $list->size = 8;
-            $this->sidebar->addWidget($list);
+        if ($GLOBALS['perm']->have_studip_perm('admin', $this->course_id)) {
+            $widget = new CourseManagementSelectWidget();
+            $this->sidebar->addWidget($widget);
         }
 
         $this->all_domains = UserDomain::getUserDomains();
@@ -85,41 +73,49 @@ class Course_AdmissionController extends AuthenticatedController
             foreach (CourseSet::getCoursesetsByInstituteId($this->course->institut_id) as $cs) {
                 $cs = new CourseSet($cs['set_id']);
                 if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
-                    $available_coursesets[] = ['id' => $cs->getId(),
-                                                    'name' => $cs->getName(),
-                                                    'chdate' => $cs->getChdate(),
-                                                    'my_own' => $cs->getUserId() === $GLOBALS['user']->id];
+                    $available_coursesets[] = [
+                        'id' => $cs->getId(),
+                        'name' => $cs->getName(),
+                        'chdate' => $cs->getChdate(),
+                        'my_own' => $cs->getUserId() === $GLOBALS['user']->id
+                    ];
                 }
             }
             foreach (CourseSet::getglobalCoursesets() as $cs) {
                 $cs = new CourseSet($cs['set_id']);
                 if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
-                    $available_coursesets[] = ['id' => $cs->getId(),
-                                                    'name' => $cs->getName(),
-                                                    'chdate' => $cs->getChdate(),
-                                                    'my_own' => $cs->getUserId() === $GLOBALS['user']->id];
+                    $available_coursesets[] = [
+                        'id' => $cs->getId(),
+                        'name' => $cs->getName(),
+                        'chdate' => $cs->getChdate(),
+                        'my_own' => $cs->getUserId() === $GLOBALS['user']->id
+                    ];
                 }
             }
             $available_coursesets = $available_coursesets->findBy('chdate', strtotime('-1 year'), '>');
             $available_coursesets->orderBy('name');
             $this->available_coursesets = $available_coursesets;
 
-            PageLayout::postMessage(MessageBox::info(_("Für diese Veranstaltung sind keine Anmelderegeln festgelegt. Die Veranstaltung ist damit für alle Nutzer zugänglich.")));
+            PageLayout::postInfo(
+                _('Für diese Veranstaltung sind keine Anmelderegeln festgelegt. Die Veranstaltung ist damit für alle Nutzer zugänglich.')
+            );
         } else {
             if ($this->current_courseset->isSeatDistributionEnabled() && !$this->course->admission_turnout) {
-                PageLayout::postMessage(MessageBox::info(_("Diese Veranstaltung ist teilnahmebeschränkt, aber die maximale Teilnehmendenanzahl ist nicht gesetzt.")));
+                PageLayout::postInfo(
+                    _('Diese Veranstaltung ist teilnahmebeschränkt, aber die maximale Teilnehmendenanzahl ist nicht gesetzt.')
+                );
             }
         }
         $lockdata = LockRules::getObjectRule($this->course_id);
-        if (!empty($lockdata['description']) && LockRules::CheckLockRulePermission($this->course_id)) {
-            PageLayout::postMessage(MessageBox::info(formatLinks($lockdata['description'])));
+        if ($lockdata['description'] && LockRules::CheckLockRulePermission($this->course_id)) {
+            PageLayout::postInfo(formatLinks($lockdata['description']));
         }
     }
 
     /**
      * Change preliminary admission settings.
      */
-    function change_admission_prelim_action()
+    public function change_admission_prelim_action()
     {
         CSRFProtection::verifyUnsafeRequest();
         PageLayout::setTitle(_('Anmeldemodus ändern'));
@@ -151,7 +147,10 @@ class Course_AdmissionController extends AuthenticatedController
                         restoreLanguage();
                     }
                     if ($num_moved) {
-                        PageLayout::postMessage(MessageBox::success(sprintf(_("%s Teilnehmende wurden auf vorläufigen Eintrag gesetzt."), $num_moved)));
+                        PageLayout::postSuccess(sprintf(
+                            _('%s Teilnehmende wurden auf vorläufigen Eintrag gesetzt.'),
+                            $num_moved
+                        ));
                     }
                 }
                 if ($this->course->admission_prelim == 0 && $this->course->getNumPrelimParticipants()) {
@@ -167,7 +166,10 @@ class Course_AdmissionController extends AuthenticatedController
                             restoreLanguage();
                         }
                         if ($num_moved) {
-                            PageLayout::postMessage(MessageBox::success(sprintf(_("%s Teilnehmende wurden in die Veranstaltung übernommen."), $num_moved)));
+                            PageLayout::postSuccess(sprintf(
+                                _('%s Teilnehmende wurden in die Veranstaltung übernommen.'),
+                                $num_moved
+                            ));
                         }
                     }
                     if (Request::submitted('change_admission_prelim_no')) {
@@ -181,13 +183,16 @@ class Course_AdmissionController extends AuthenticatedController
                             $num_moved += $applicant->delete();
                         }
                         if ($num_moved) {
-                            PageLayout::postMessage(MessageBox::success(sprintf(_("%s vorläufige Teilnehmende wurden entfernt."), $num_moved)));
+                            PageLayout::postSuccess(sprintf(
+                                _('%s vorläufige Teilnehmende wurden entfernt.'),
+                                $num_moved
+                            ));
                             $this->course->resetRelation('admission_applicants');
                         }
                     }
                 }
                 if ($this->course->store()) {
-                    PageLayout::postMessage(MessageBox::success(_("Der Anmeldemodus wurde geändert.")));
+                    PageLayout::postSuccess(_("Der Anmeldemodus wurde geändert."));
                 }
                 unset($question);
             }
@@ -206,7 +211,7 @@ class Course_AdmissionController extends AuthenticatedController
     /**
      * Change free access settings.
      */
-    function change_free_access_action()
+    public function change_free_access_action()
     {
         CSRFProtection::verifyUnsafeRequest();
         if (Request::submitted('change_free_access')) {
@@ -284,12 +289,15 @@ class Course_AdmissionController extends AuthenticatedController
                     }
                     if ($num_moved) {
                         $this->course->resetRelation('admission_applicants');
-                        PageLayout::postMessage(MessageBox::success(sprintf(_("%s Wartende wurden entfernt."), $num_moved)));
+                        PageLayout::postSuccess(sprintf(
+                            _('%s Wartende wurden entfernt.'),
+                            $num_moved
+                        ));
                     }
                 }
 
                 if ($this->course->store()) {
-                    PageLayout::postMessage(MessageBox::success(_("Die Teilnehmendenanzahl wurde geändert.")));
+                    PageLayout::postSuccess(_('Die Teilnehmendenanzahl wurde geändert.'));
                 }
                 unset($question);
             }
@@ -299,12 +307,12 @@ class Course_AdmissionController extends AuthenticatedController
         } else {
             $this->request = $request;
             $this->button_yes = 'change_admission_turnout_yes';
-            PageLayout::postMessage(MessageBox::info($question));
+            PageLayout::postInfo($question);
             $this->render_template('course/admission/_change_admission.php');
         }
     }
 
-    function change_domains_action()
+    public function change_domains_action()
     {
         CSRFProtection::verifyUnsafeRequest();
         if (Request::submitted('change_domains') && !LockRules::Check($this->course_id, 'user_domain')) {
@@ -331,7 +339,10 @@ class Course_AdmissionController extends AuthenticatedController
                 CourseSet::addCourseToSet($cs->getId(), $this->course_id);
                 $cs->load();
                 if (in_array($this->course_id, $cs->getCourses())) {
-                    PageLayout::postMessage(MessageBox::success(sprintf(_("Die Zuordnung zum Anmeldeset %s wurde durchgeführt."), htmlReady($cs->getName()))));
+                    PageLayout::postSuccess(sprintf(
+                        _('Die Zuordnung zum Anmeldeset %s wurde durchgeführt.'),
+                        htmlReady($cs->getName())
+                    ));
                 }
             }
         }
@@ -352,11 +363,12 @@ class Course_AdmissionController extends AuthenticatedController
                 CourseSet::removeCourseFromSet($cs->getId(), $this->course_id);
                 $cs->load();
                 if (!in_array($this->course_id, $cs->getCourses())) {
-                    PageLayout::postMessage(MessageBox::success(sprintf(_("Die Zuordnung zum Anmeldeset %s wurde aufgehoben."), htmlReady($cs->getName()))));
+                    PageLayout::postSuccess(sprintf(
+                        _('Die Zuordnung zum Anmeldeset %s wurde aufgehoben.'),
+                        htmlReady($cs->getName())
+                    ));
                 }
-                if (!count($cs->getCourses())
-                    && $cs->isGlobal()
-                    && $cs->getUserid() != '') {
+                if (!count($cs->getCourses()) && $cs->isGlobal() && $cs->getUserid() != '') {
                     $cs->delete();
                 }
                 if ($this->course->getNumWaiting()) {
@@ -371,7 +383,9 @@ class Course_AdmissionController extends AuthenticatedController
                     }
                     if ($num_moved) {
                         $this->course->resetRelation('admission_applicants');
-                        PageLayout::postMessage(MessageBox::success(sprintf(_("%s Wartende wurden entfernt."), $num_moved)));
+                        PageLayout::postSuccess(sprintf(
+                            _('%s Wartende wurden entfernt.'), $num_moved
+                        ));
                     }
                 }
             }
@@ -381,12 +395,12 @@ class Course_AdmissionController extends AuthenticatedController
         } else {
             $this->request = ['change_course_set_unassign' => 1];
             $this->button_yes = 'change_course_set_unassign_yes';
-            PageLayout::postMessage(MessageBox::info($question));
+            PageLayout::postInfo($question);
             $this->render_template('course/admission/_change_admission.php');
         }
     }
 
-    function explain_course_set_action()
+    public function explain_course_set_action()
     {
         $cs = new CourseSet(Request::option('set_id'));
         if ($cs->getId()) {
@@ -420,7 +434,7 @@ class Course_AdmissionController extends AuthenticatedController
                 if ($rule instanceof LockedAdmission) {
                     $course_set_id = CourseSet::getGlobalLockedAdmissionSetId();
                     CourseSet::addCourseToSet($course_set_id, $this->course_id);
-                    PageLayout::postMessage(MessageBox::success(_("Die Veranstaltung wurde gesperrt.")));
+                    PageLayout::postSuccess(_('Die Veranstaltung wurde gesperrt.'));
                     $this->redirect($this->action_url('index'));
                     return;
                 } else {
@@ -442,7 +456,7 @@ class Course_AdmissionController extends AuthenticatedController
                         $course_set->setName(trim(Request::get('instant_course_set_name')));
                     }
                     if (count($errors)) {
-                        PageLayout::postMessage(MessageBox::error(_("Speichern fehlgeschlagen"), array_map('htmlready', $errors)));
+                        PageLayout::postError(_('Speichern fehlgeschlagen'), array_map('htmlready', $errors));
                     } else {
                         $rule->store();
                         $course_set->setPrivate(true);
@@ -453,7 +467,7 @@ class Course_AdmissionController extends AuthenticatedController
                             $course_set->addAdmissionRule($another_rule);
                         }
                         $course_set->store();
-                        PageLayout::postMessage(MessageBox::success(_("Die Anmelderegel wurde erzeugt und der Veranstaltung zugewiesen.")));
+                        PageLayout::postSuccess(_("Die Anmelderegel wurde erzeugt und der Veranstaltung zugewiesen."));
                         $this->redirect($this->action_url('index'));
                         return;
                     }
@@ -476,7 +490,7 @@ class Course_AdmissionController extends AuthenticatedController
         }
     }
 
-    function edit_courseset_action($cs_id)
+    public function edit_courseset_action($cs_id)
     {
         $cs = new CourseSet($cs_id);
         if ($cs->isUserAllowedToEdit($this->user_id)) {
@@ -491,7 +505,7 @@ class Course_AdmissionController extends AuthenticatedController
         }
     }
 
-    function save_courseset_action($cs_id)
+    public function save_courseset_action($cs_id)
     {
         $cs = new CourseSet($cs_id);
         if ($cs->isUserAllowedToEdit($this->user_id)) {
@@ -506,7 +520,7 @@ class Course_AdmissionController extends AuthenticatedController
         }
     }
 
-    function after_filter($action, $args)
+    public function after_filter($action, $args)
     {
         if (Request::isXhr() && !Request::get('return_to_dialog')) {
             foreach ($this->response->headers as $k => $v) {

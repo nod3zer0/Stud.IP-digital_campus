@@ -14,6 +14,7 @@
  * @category    Stud.IP
  * @package     admin
  */
+
 class Course_RoomRequestsController extends AuthenticatedController
 {
     /**
@@ -81,19 +82,9 @@ class Course_RoomRequestsController extends AuthenticatedController
         );
         Sidebar::get()->addWidget($actions);
 
-        if ($GLOBALS['perm']->have_perm('admin')) {
-            $list = new SelectWidget(_('Veranstaltungen'), '?#admin_top_links', 'cid');
-
-            foreach (AdminCourseFilter::get()->getCoursesForAdminWidget() as $seminar) {
-                $list->addElement(new SelectElement(
-                    $seminar['Seminar_id'],
-                    $seminar['Name'],
-                    $seminar['Seminar_id'] === Context::getId(),
-                    $seminar['VeranstaltungsNummer'] . ' ' . $seminar['Name']
-                ));
-            }
-            $list->size = 8;
-            Sidebar::get()->addWidget($list);
+        if ($GLOBALS['perm']->have_studip_perm('admin', $this->course_id)) {
+            $widget = new CourseManagementSelectWidget();
+            Sidebar::Get()->addWidget($widget);
         }
     }
 
@@ -121,28 +112,29 @@ class Course_RoomRequestsController extends AuthenticatedController
                 _('Das Erstellen von Raumanfragen ist nicht erlaubt!')
             );
         }
-        $options = array();
-        $this->url_params = array();
+        $options = [];
+        $this->url_params = [];
         if (Request::get('origin') !== null) {
             $this->url_params['origin'] = Request::get('origin');
         }
         if (!RoomRequest::existsByCourse($this->course_id)) {
-            $options[] = array('value' => 'course',
-                               'name'  => _('alle regelmäßigen und unregelmäßigen Termine der Veranstaltung')
-            );
+            $options[] = [
+                'value' => 'course',
+                'name'  => _('alle regelmäßigen und unregelmäßigen Termine der Veranstaltung')
+            ];
         }
         foreach (SeminarCycleDate::findBySeminar($this->course_id) as $cycle) {
             if (!RoomRequest::existsByMetadate($cycle->getId())) {
                 $name = _("alle Termine einer regelmäßigen Zeit");
                 $name .= ' (' . $cycle->toString('full') . ')';
-                $options[] = array('value' => 'cycle_' . $cycle->getId(), 'name' => $name);
+                $options[] = ['value' => 'cycle_' . $cycle->getId(), 'name' => $name];
             }
         }
         foreach (CourseDate::findBySeminar_id($this->course_id) as $date) {
             if (!RoomRequest::existsByDate($date['termin_id'])) {
                 $name = _("Einzeltermin der Veranstaltung");
                 $name .= ' (' . $date->getFullname() . ')';
-                $options[] = array('value' => 'date_' . $date['termin_id'], 'name' => $name);
+                $options[] = ['value' => 'date_' . $date['termin_id'], 'name' => $name];
             }
         }
         $this->options = $options;
@@ -455,9 +447,8 @@ class Course_RoomRequestsController extends AuthenticatedController
         if (empty($session_data['selected_properties']['seats'])) {
             $this->course = Course::find($this->course_id);
             $admission_turnout = $this->course->admission_turnout;
-            $this->selected_properties['seats'] = $admission_turnout
-                                                ? $admission_turnout
-                                                : Config::get()->RESOURCES_ROOM_REQUEST_DEFAULT_SEATS;
+            $this->selected_properties['seats'] =
+                $admission_turnout ?: Config::get()->RESOURCES_ROOM_REQUEST_DEFAULT_SEATS;
         }
 
         if (Request::isPost()) {
@@ -537,7 +528,6 @@ class Course_RoomRequestsController extends AuthenticatedController
                     $this->request->reply_recipients = 'requester';
                 }
 
-                $storing_successful = false;
                 if ($this->request->isDirty()) {
                     $storing_successful = $this->request->store();
                 } else {
@@ -756,9 +746,7 @@ class Course_RoomRequestsController extends AuthenticatedController
                 $this->request->category_id = $session_data['category_id'];
                 $this->request->updateProperties($session_data['selected_properties']);
                 $this->request->resource_id = (
-                    $this->selected_room_id
-                    ? $this->selected_room_id
-                    : ''
+                    $this->selected_room_id ?: ''
                 );
                 $this->request->comment = Request::get('comment');
                 if (Request::get('reply_lecturers')) {
@@ -772,7 +760,6 @@ class Course_RoomRequestsController extends AuthenticatedController
                     $this->request->user_id = $this->current_user->id;
                 }
 
-                $storing_successful = false;
                 if ($this->request->isDirty()) {
                     $storing_successful = $this->request->store();
                 } else {
@@ -859,9 +846,7 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         if (!$this->seats) {
             $admission_turnout = $this->course->admission_turnout;
-            $this->seats = $admission_turnout
-                         ? $admission_turnout
-                         : Config::get()->RESOURCES_ROOM_REQUEST_DEFAULT_SEATS;
+            $this->seats = $admission_turnout ?: Config::get()->RESOURCES_ROOM_REQUEST_DEFAULT_SEATS;
         }
 
         if (Request::isPost()) {
@@ -947,7 +932,6 @@ class Course_RoomRequestsController extends AuthenticatedController
                     $this->request->closed = 0;
                 }
 
-                $storing_successful = false;
                 if ($this->request->isDirty()) {
                     $storing_successful = $this->request->store();
                 } else {

@@ -15,18 +15,12 @@
  */
 
 require_once 'lib/webservices/api/studip_lecture_tree.php';
-//require_once 'lib/classes/coursewizardsteps/StudyAreasWizardStep.php';
 
 class Course_StudyAreasController extends AuthenticatedController
 {
-
-
     // see Trails_Controller#before_filter
-    function before_filter(&$action, &$args)
+    public function before_filter(&$action, &$args)
     {
-
-        global $perm;
-
         parent::before_filter($action, $args);
 
         // Search for course object
@@ -34,11 +28,9 @@ class Course_StudyAreasController extends AuthenticatedController
         $this->locked = LockRules::Check($this->course->id, 'sem_tree');
 
         // check course object and perms
-        if (!is_null($this->course)
-            && !$perm->have_studip_perm("tutor", $this->course->id)
-        ) {
+        if (isset($this->course) && !$GLOBALS['perm']->have_studip_perm('tutor', $this->course->id)) {
             $this->set_status(403);
-            return FALSE;
+            return false;
         }
 
         // Init Studyareas-Step for
@@ -59,8 +51,9 @@ class Course_StudyAreasController extends AuthenticatedController
     }
 
 
-    function show_action()
+    public function show_action()
     {
+        Navigation::activateItem('course/admin/study_areas');
         $this->url_params = [];
         if (Request::get('from')) {
             $this->url_params['from'] = Request::get('from');
@@ -68,27 +61,11 @@ class Course_StudyAreasController extends AuthenticatedController
         if (Request::get('open_node')) {
             $this->url_params['open_node'] = Request::get('open_node');
         }
-        if (!Request::isXhr()) {
 
-            Navigation::activateItem('course/admin/study_areas');
-            $sidebar = Sidebar::get();
-
-            if ($this->course) {
-                // Entry list for admin upwards.
-                if ($GLOBALS['perm']->have_studip_perm('admin', $GLOBALS['SessionSeminar'])) {
-                    $list = new SelectWidget(_('Veranstaltungen'), '?#admin_top_links', 'cid');
-
-                    foreach (AdminCourseFilter::get()->getCoursesForAdminWidget() as $seminar) {
-                        $list->addElement(new SelectElement(
-                            $seminar['Seminar_id'],
-                            $seminar['Name'],
-                            $seminar['Seminar_id'] === Context::getId(),
-                            $seminar['VeranstaltungsNummer'] . ' ' . $seminar['Name']
-                        ));
-                    }
-                    $list->size = 8;
-                    $sidebar->addWidget($list);
-                }
+        if ($this->course) {
+            if ($GLOBALS['perm']->have_studip_perm('admin', $this->course->id)) {
+                $widget = new CourseManagementSelectWidget();
+                Sidebar::Get()->addWidget($widget);
             }
         }
         if (Request::get('open_node')) {
@@ -100,7 +77,7 @@ class Course_StudyAreasController extends AuthenticatedController
         $this->tree                                     = $this->step->getStepTemplate($this->values, 0, 0);
     }
 
-    function ajax_action()
+    public function ajax_action()
     {
         $parameter = Request::getArray('parameter');
         $method = Request::get('method');
@@ -112,9 +89,6 @@ class Course_StudyAreasController extends AuthenticatedController
             case 'getSemTreeLevel':
                 $json = $this->step->getSemTreeLevel($parameter[0]);
                 break;
-            case 'getAncestorTree':
-                $json = $this->step->getAncestorTree($parameter[0]);
-                break;
             default:
                 $json = $this->step->getAncestorTree($parameter[0]);
                 break;
@@ -123,7 +97,7 @@ class Course_StudyAreasController extends AuthenticatedController
         $this->render_json($json);
     }
 
-    function save_action()
+    public function save_action()
     {
         if($this->locked) {
             throw new Trails_Exception(403);
@@ -153,12 +127,12 @@ class Course_StudyAreasController extends AuthenticatedController
             $studyareas = Request::getArray('studyareas');
 
             if (empty($studyareas) && $this->is_required()) {
-                PageLayout::postMessage(MessageBox::error(_('Sie müssen mindestens einen Studienbereich auswählen')));
+                PageLayout::postError(_('Sie müssen mindestens einen Studienbereich auswählen'));
                 $this->redirect($url);
                 return;
             }
             if (!empty($studyareas) && !$this->is_required()) {
-                PageLayout::postMessage(MessageBox::error(_('Sie dürfen keine Studienbereiche zuweisen.')));
+                PageLayout::postError(_('Sie dürfen keine Studienbereiche zuweisen.'));
                 $this->redirect($url);
                 return;
             }
@@ -172,9 +146,9 @@ class Course_StudyAreasController extends AuthenticatedController
         }
 
         if (!$msg) {
-            PageLayout::postMessage(MessageBox::success(_('Die Studienbereichszuordnung wurde übernommen.')));
+            PageLayout::postSuccess(_('Die Studienbereichszuordnung wurde übernommen.'));
         } else {
-            PageLayout::postMessage(MessageBox::error($msg));
+            PageLayout::postError($msg);
         }
         $this->redirect($url);
     }

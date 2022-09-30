@@ -175,7 +175,7 @@ function createSelect2(element) {
         return;
     }
 
-    var select_classes = $(element)
+    let select_classes = $(element)
             .removeClass('select2-awaiting')
             .attr('class'),
         option = $('<option>'),
@@ -185,7 +185,9 @@ function createSelect2(element) {
             .css('opacity', 0)
             .appendTo('body'),
         wrapper = $('<div class="select2-wrapper">').css('display', cloned.css('display')),
-        placeholder;
+        placeholder,
+        dropdownAutoWidth = $(element).data('dropdown-auto-width')
+    ;
 
     cloned.remove();
     $(wrapper)
@@ -208,10 +210,11 @@ function createSelect2(element) {
         allowClear: placeholder !== undefined,
         minimumResultsForSearch: $(element).closest('.sidebar').length > 0 ? 15 : 10,
         placeholder: placeholder,
+        dropdownAutoWidth: dropdownAutoWidth,
         dropdownParent: $(element).closest('.ui-dialog,.sidebar,body'),
         templateResult: function(data, container) {
             if (data.element) {
-                var option_classes = $(data.element).attr('class'),
+                let option_classes = $(data.element).attr('class'),
                     element_data = $(data.element).data();
                 $(container).addClass(option_classes);
 
@@ -223,7 +226,7 @@ function createSelect2(element) {
             return data.text;
         },
         templateSelection: function(data, container) {
-            var result = $('<span class="select2-selection__content">').text(data.text),
+            let result = $('<span class="select2-selection__content">').text(data.text),
                 element_data = $(data.element).data();
             if (element_data && element_data.textColor) {
                 result.css('color', element_data.textColor);

@@ -19,7 +19,7 @@ class SidebarWidget extends Widget
     /**
      * Sets the ID of the HTML element that represents the widget.
      *
-     * @param $id The element-ID to be used for the widget.
+     * @param string $id The element-ID to be used for the widget.
      *
      */
     public function setId(string $id)
@@ -40,7 +40,7 @@ class SidebarWidget extends Widget
     /**
      * Sets the title of the widget.
      *
-     * @param String $title The title of the widget
+     * @param string $title The title of the widget
      */
     public function setTitle($title)
     {
@@ -50,7 +50,7 @@ class SidebarWidget extends Widget
     /**
      * Returns the title of the widget
      *
-     * @return mixed The title of the widget of false if no title has been set
+     * @return string The title of the widget of false if no title has been set
      */
     public function getTitle()
     {
@@ -101,7 +101,7 @@ class SidebarWidget extends Widget
      * Renders the widget.
      * The widget will only be rendered if it contains at least one element.
      *
-     * @return String The THML code of the rendered sidebar widget
+     * @return string The THML code of the rendered sidebar widget
      */
     public function render($variables = [])
     {

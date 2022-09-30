@@ -14,6 +14,7 @@
  * @since       2.0
  */
 
+
 class Course_BasicdataController extends AuthenticatedController
 {
     public $msg = [];
@@ -262,8 +263,6 @@ class Course_BasicdataController extends AuthenticatedController
      */
     public function view_action($course_id = null)
     {
-        global $user, $perm, $_fullname_sql;
-
         $deputies_enabled = Config::get()->DEPUTIES_ENABLE;
 
         //damit QuickSearch funktioniert:
@@ -278,7 +277,7 @@ class Course_BasicdataController extends AuthenticatedController
         Navigation::activateItem('/course/admin/details');
 
         //Berechtigungscheck:
-        if (!$perm->have_studip_perm("tutor",$this->course_id)) {
+        if (!$GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)) {
             throw new AccessDeniedException(_("Sie haben keine Berechtigung diese " .
                     "Veranstaltung zu verändern."));
         }
@@ -313,47 +312,48 @@ class Course_BasicdataController extends AuthenticatedController
         }
 
         $this->dozentUserSearch = new PermissionSearch(
-                            $search_template,
-                            sprintf(_("%s suchen"), get_title_for_status('dozent', 1, $sem->status)),
-                            "user_id",
-                            ['permission' => 'dozent',
-                                  'seminar_id' => $this->course_id,
-                                  'sem_perm' => 'dozent',
-                                  'institute' => $sem_institutes
-                                 ]
-                            );
+            $search_template,
+            sprintf(_("%s suchen"), get_title_for_status('dozent', 1, $sem->status)),
+            "user_id",
+            [
+                'permission' => 'dozent',
+                'seminar_id' => $this->course_id,
+                'sem_perm' => 'dozent',
+                'institute' => $sem_institutes
+            ]
+        );
         $this->dozenten_title = get_title_for_status('dozent', 1, $sem->status);
         $this->deputies_enabled = $deputies_enabled;
 
         if ($this->deputies_enabled) {
             $this->deputies = Deputy::findDeputies($this->course_id);
             $this->deputySearch = new PermissionSearch(
-                    "user_not_already_in_sem_or_deputy",
-                    sprintf(_("%s suchen"), get_title_for_status('deputy', 1, $sem->status)),
-                    "user_id",
-                    ['permission' => Deputy::getValidPerms(), 'seminar_id' => $this->course_id]
-                );
+                "user_not_already_in_sem_or_deputy",
+                sprintf(_("%s suchen"), get_title_for_status('deputy', 1, $sem->status)),
+                "user_id",
+                ['permission' => Deputy::getValidPerms(), 'seminar_id' => $this->course_id]
+            );
 
             $this->deputy_title = get_title_for_status('deputy', 1, $sem->status);
         }
         $this->tutoren = $sem->getMembers('tutor');
 
         $this->tutorUserSearch = new PermissionSearch(
-                            $search_template,
-                            sprintf(_("%s suchen"), get_title_for_status('tutor', 1, $sem->status)),
-                            "user_id",
-                            ['permission' => ['dozent','tutor'],
-                                  'seminar_id' => $this->course_id,
-                                  'sem_perm' => ['dozent','tutor'],
-                                  'institute' => $sem_institutes
-                                 ]
-                            );
+            $search_template,
+            sprintf(_("%s suchen"), get_title_for_status('tutor', 1, $sem->status)),
+            "user_id",
+            ['permission' => ['dozent','tutor'],
+                  'seminar_id' => $this->course_id,
+                  'sem_perm' => ['dozent','tutor'],
+                  'institute' => $sem_institutes
+                 ]
+        );
         $this->tutor_title = get_title_for_status('tutor', 1, $sem->status);
         $instUsers = new SimpleCollection(InstituteMember::findByInstituteAndStatus($sem->getInstitutId(), 'tutor'));
         $this->tutorsOfInstitute = $instUsers->pluck('user_id');
         unset($instUsers);
 
-        $this->perm_dozent = $perm->have_studip_perm("dozent", $this->course_id);
+        $this->perm_dozent = $GLOBALS['perm']->have_studip_perm("dozent", $this->course_id);
         $this->mkstring = $data['mkdate'] ? date("d.m.Y, H:i", $data['mkdate']) : _("unbekannt");
         $this->chstring = $data['chdate'] ? date("d.m.Y, H:i", $data['chdate']) : _("unbekannt");
         $lockdata = LockRules::getObjectRule($this->course_id);
@@ -364,46 +364,28 @@ class Course_BasicdataController extends AuthenticatedController
         $sidebar = Sidebar::get();
 
         $widget = new ActionsWidget();
-        $widget->addLink(
-            _('Bild ändern'),
-            $this->url_for('avatar/update/course', $course_id),
-            Icon::create('edit')
+
+        $widget->addLink(_('Bild ändern'),
+             $this->url_for('avatar/update/course', $course_id),
+             Icon::create('edit')
         );
         if ($this->deputies_enabled) {
-            $newstatus = null;
-            $text = null;
-
-            if (Deputy::isDeputy($user->id, $this->course_id)) {
+            if (Deputy::isDeputy($GLOBALS['user']->id, $this->course_id)) {
                 $newstatus = 'dozent';
                 $text = _('Lehrende werden');
-            } else if (in_array($user->id, array_keys($this->dozenten)) && count($this->dozenten) > 1) {
+            } else if (in_array($GLOBALS['user']->id, array_keys($this->dozenten)) && count($this->dozenten) > 1) {
                 $newstatus = 'deputy';
                 $text = _('Vertretung werden');
             }
-
-            if ($text) {
-                $widget->addLink(
-                    $text,
-                    $this->url_for('course/basicdata/switchdeputy', $this->course_id, $newstatus),
-                    Icon::create('persons')
-                );
-            }
+            $widget->addLink($text,
+                 $this->url_for('course/basicdata/switchdeputy', $this->course_id, $newstatus),
+                 Icon::create('persons')
+            );
         }
         $sidebar->addWidget($widget);
-        // Entry list for admin upwards.
-        if ($perm->have_studip_perm('admin', $this->course_id)) {
-            $list = new SelectWidget(_('Veranstaltungen'), '?#admin_top_links', 'cid');
-
-            foreach (AdminCourseFilter::get()->getCoursesForAdminWidget() as $seminar) {
-                $list->addElement(new SelectElement(
-                    $seminar['Seminar_id'],
-                    $seminar['Name'],
-                    $seminar['Seminar_id'] === Context::getId(),
-                    $seminar['VeranstaltungsNummer'] . ' ' . $seminar['Name']
-                ));
-            }
-            $list->size = 8;
-            $sidebar->addWidget($list);
+        if ($GLOBALS['perm']->have_studip_perm('admin', $this->course->id)) {
+            $widget = new CourseManagementSelectWidget();
+            $sidebar->addWidget($widget);
         }
     }
 

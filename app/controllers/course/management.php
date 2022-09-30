@@ -27,6 +27,7 @@ class Course_ManagementController extends AuthenticatedController
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $GLOBALS['SessionSeminar'])) {
             throw new AccessDeniedException();
         }
+
         if (Context::isCourse()) {
             $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][Context::get()->status]['class']] ?: SemClass::getDefaultSemClass();
         } else {
@@ -35,7 +36,6 @@ class Course_ManagementController extends AuthenticatedController
         if (!$sem_class->isModuleAllowed("CoreAdmin")) {
             throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
         }
-
         PageLayout::setTitle(sprintf(_("%s - Verwaltung"), Context::getHeaderLine()));
         PageLayout::setHelpKeyword('Basis.InVeranstaltungVerwaltung');
     }
@@ -45,7 +45,7 @@ class Course_ManagementController extends AuthenticatedController
      *
      * @return void
      */
-    function index_action()
+    public function index_action()
     {
         Navigation::activateItem('course/admin/main');
 
@@ -89,7 +89,7 @@ class Course_ManagementController extends AuthenticatedController
                     }
                 }
                 if ($GLOBALS['perm']->have_perm('admin')) {
-                    $is_locked =$course->lock_rule;
+                    $is_locked = $course->lock_rule;
                     $actions->addLink(
                         _('Sperrebene ändern') . ' (' .  ($is_locked ? _('gesperrt') : _('nicht gesperrt')) . ')',
                         URLHelper::getURL($this->url_for('course/management/lock'), ['studip_ticket' => Seminar_Session::get_ticket()]),
@@ -103,25 +103,29 @@ class Course_ManagementController extends AuthenticatedController
                 URLHelper::getURL('dispatch.php/course/change_view/set_changed_view'),
                 Icon::create('visibility-invisible')
             );
-
             $sidebar->addWidget($actions);
 
-            // Entry list for admin upwards.
             if ($GLOBALS['perm']->have_studip_perm('admin', $course->id)) {
-                $list = new SelectWidget(_('Veranstaltungen'), '?#admin_top_links', 'cid');
-                $seminars = AdminCourseFilter::get()->getCoursesForAdminWidget();
-                foreach ($seminars as $seminar) {
-                    $list->addElement(new SelectElement(
-                        $seminar['Seminar_id'],
-                        $seminar['Name'],
-                        $seminar['Seminar_id'] === $course->id,
-                        $seminar['VeranstaltungsNummer'] . ' ' . $seminar['Name']
-                    ));
-                }
-                $list->size = min(8, count($seminars));
-                $sidebar->addWidget($list);
+                $widget = new CourseManagementSelectWidget();
+                $sidebar->addWidget($widget);
             }
         }
+    }
+
+    public function order_settings_action()
+    {
+        PageLayout::setTitle(_('Sortiereinstellungen'));
+        $this->order_by_field = UserConfig::get($GLOBALS['user']->id)->COURSE_MANAGEMENT_SELECTOR_ORDER_BY ?? 'name';
+        $this->render_template('course/shared/order_settings');
+    }
+
+    public function store_order_settings_action()
+    {
+        CSRFProtection::verifyUnsafeRequest();
+        UserConfig::get($GLOBALS['user']->id)->store('COURSE_MANAGEMENT_SELECTOR_ORDER_BY', Request::get('order_by', 'name'));
+        PageLayout::postSuccess(_('Die Sortiereinstellungen wurden erfolgreich gespeichert.'));
+
+        $this->redirect(URLHelper::getURL(Request::get('from')));
     }
 
     /**
@@ -129,7 +133,7 @@ class Course_ManagementController extends AuthenticatedController
      *
      * @return void
      */
-    function change_visibility_action()
+    public function change_visibility_action()
     {
         if ((Config::get()->ALLOW_DOZENT_VISIBILITY || $GLOBALS['perm']->have_perm('admin'))
             && !LockRules::Check($GLOBALS['SessionSeminar'], 'seminar_visibility')
@@ -198,7 +202,7 @@ class Course_ManagementController extends AuthenticatedController
                 } else {
                     $msg = _('Die Sperrebene wurde erfolgreich zurückgesetzt!');
                 }
-                PageLayout::postMessage(MessageBox::success($msg));
+                PageLayout::postSuccess($msg);
             }
         }
         $this->relocate($this->action_url('index'));

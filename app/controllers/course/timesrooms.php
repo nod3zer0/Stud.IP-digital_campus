@@ -5,6 +5,7 @@
  * @license GPL2 or any later version
  * @since   3.4
  */
+
 class Course_TimesroomsController extends AuthenticatedController
 {
     /**
@@ -304,8 +305,7 @@ class Course_TimesroomsController extends AuthenticatedController
     /**
      * Primary function to edit date-informations
      *
-     * @param      $termin_id
-     * @param null $metadate_id
+     * @param string $termin_id
      */
     public function editDate_action($termin_id)
     {
@@ -1431,23 +1431,9 @@ class Course_TimesroomsController extends AuthenticatedController
         }
         Sidebar::Get()->addWidget($widget);
 
-        if ($GLOBALS['perm']->have_perm('admin')) {
-            $list = new SelectWidget(
-                _('Veranstaltungen'),
-                $this->url_for('course/timesrooms/index'),
-                'cid'
-            );
-
-            foreach (AdminCourseFilter::get()->getCoursesForAdminWidget() as $seminar) {
-                $list->addElement(new SelectElement(
-                    $seminar['Seminar_id'],
-                    $seminar['Name'],
-                    $seminar['Seminar_id'] === Context::getId(),
-                    $seminar['VeranstaltungsNummer'] . ' ' . $seminar['Name']
-                ));
-            }
-            $list->size = 8;
-            Sidebar::Get()->addWidget($list);
+        if ($GLOBALS['perm']->have_studip_perm('admin', $this->course->id)) {
+            $widget = new CourseManagementSelectWidget();
+            Sidebar::Get()->addWidget($widget);
         }
     }
 

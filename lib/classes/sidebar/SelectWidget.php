@@ -19,15 +19,15 @@ class SelectWidget extends SidebarWidget
      */
     public function __construct($title, $url, $name, $method = 'get', $multiple = false)
     {
+        parent::__construct();
         $this->template = 'sidebar/select-widget';
-
         $this->setTitle($title);
         $this->setUrl($url);
         $this->setSelectParameterName($name);
         $this->setRequestMethod($method);
         $this->setMultiple($multiple);
-
         $this->template_variables['max_length'] = 30;
+        $this->template_variables['dropdownAutoWidth'] = false;
     }
 
     /**
@@ -85,6 +85,16 @@ class SelectWidget extends SidebarWidget
     public function setRequestMethod($method)
     {
         $this->template_variables['method'] = $method;
+    }
+
+    /**
+     * set the dropdown auto width (default: false)
+     * @param $dropdownAutoWidth
+     * @return void
+     */
+    public function setDropdownAutoWidth($dropdownAutoWidth)
+    {
+        $this->template_variables['dropdownAutoWidth'] = $dropdownAutoWidth;
     }
 
     /**
