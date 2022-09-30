@@ -100,9 +100,6 @@ class CoreOverview extends CorePlugin implements StudipModule
             if (!$sem_class['studygroup_mode']) {
                 $navigation->addSubNavigation('details', new Navigation(_('Details'), 'dispatch.php/course/details/'));
             }
-            if ($GLOBALS['perm']->have_studip_perm('admin', $course_id)) {
-                $navigation->addSubNavigation('history', new Navigation(_('Änderungsverlauf'), 'dispatch.php/course/history'));
-            }
         }
         return ['main' => $navigation];
     }
