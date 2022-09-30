@@ -240,7 +240,7 @@ class LogEvent extends SimpleORMap implements PrivacyObject
             return $this->$field;
         }
 
-        return '<em>' . $study_area->getPath(' &gt ') . '</em>';
+        return '<em>' . htmlReady($study_area->getPath(' > ')) . '</em>';
     }
 
     /**
@@ -265,8 +265,7 @@ class LogEvent extends SimpleORMap implements PrivacyObject
         $plugin_manager = PluginManager::getInstance();
         $plugin_info = $plugin_manager->getPluginInfoById($this->$field);
 
-        return $plugin_info ? '<em>'
-                . $plugin_info['name'] . '</em>' : $this->$field;
+        return $plugin_info ? '<em>' . htmlReady($plugin_info['name']) . '</em>' : $this->$field;
     }
 
     /**
@@ -280,10 +279,10 @@ class LogEvent extends SimpleORMap implements PrivacyObject
         $all_semester = Semester::findAllVisible(false);
         foreach ($all_semester as $val) {
             if (!empty($val['beginn']) && ($val['beginn'] == $this->$field)) {
-                return '<em>' . $val['name'] . '</em>';
+                return '<em>' . htmlReady($val['name']) . '</em>';
             }
         }
-        return $this->$field;
+        return htmlReady($this->$field);
     }
 
     /**
