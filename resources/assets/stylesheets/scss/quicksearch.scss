@@ -101,13 +101,13 @@ div.quicksearch_frame {
         overflow: visible;
         position: relative;
         top: 31px;
+        z-index: 99999;
 
         .autocomplete__results {
             list-style-type: none;
             padding: 1px;
             border: 1px solid $light-gray-color-40;
             background-color: $white;
-            z-index: 99999;
             max-height: 275px;
             width: 600px;
             overflow-x: auto;
