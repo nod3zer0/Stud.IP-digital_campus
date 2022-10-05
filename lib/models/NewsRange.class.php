@@ -45,7 +45,7 @@ class NewsRange extends SimpleORMap
 
     function getType()
     {
-        return get_object_type($this->range_id, ['sem','inst','user']);
+        return get_object_type($this->range_id, ['sem','inst','user','fak']);
     }
 
     function getName()
