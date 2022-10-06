@@ -167,7 +167,7 @@ html {
    @include hide-text();
     background-repeat: no-repeat;
 
-    @include retina-background-image('logos/studip4-logo.png', 'logos/studip4-logo$2x.png', 130px, 92px);
+    @include retina-background-image('logos/studip4-logo.png', 'logos/studip4-logo@2x.png', 130px, 92px);
     background-image: none, url("#{$image-path}/logos/studip4-logo.svg");
 
     background-size: 130px 92px;
