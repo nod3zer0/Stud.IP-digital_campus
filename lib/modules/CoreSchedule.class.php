@@ -18,21 +18,12 @@ class CoreSchedule extends CorePlugin implements StudipModule
     {
         $query = "SELECT COUNT(termin_id) AS count,
                          COUNT(IF((chdate > IFNULL(ouv.visitdate, :threshold) AND autor_id != :user_id), termin_id, NULL)) AS neue
-                  FROM (
-                      SELECT termin_id, chdate, autor_id
-                      FROM termine
-                      WHERE range_id = :course_id
-
-                      UNION ALL
-
-                      SELECT termin_id, chdate, autor_id
-                      FROM ex_termine
-                      WHERE range_id = :course_id
-                  ) AS tmp
+                  FROM termine
                   LEFT JOIN object_user_visits AS ouv
-                    ON ouv.object_id = :course_id
+                    ON ouv.object_id = range_id
                        AND ouv.user_id = :user_id
-                       AND ouv.plugin_id = :plugin_id";
+                       AND ouv.plugin_id = :plugin_id
+                  WHERE range_id = :course_id";
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':user_id', $user_id);
         $statement->bindValue(':course_id', $course_id);
