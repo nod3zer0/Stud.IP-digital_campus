@@ -80,7 +80,7 @@ const Files = {
         if (file.size > Files.uploadConstraints.file_size) {
             return false;
         }
-        var ending = file.name.lastIndexOf('.') !== -1 ? file.name.substr(file.name.lastIndexOf('.') + 1) : '';
+        var ending = file.name.lastIndexOf('.') !== -1 ? file.name.substr(file.name.lastIndexOf('.') + 1).toLowerCase() : '';
 
         if (Files.uploadConstraints.type === 'allow') {
             return $.inArray(ending, Files.uploadConstraints.file_types) === -1;
