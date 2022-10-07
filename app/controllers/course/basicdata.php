@@ -383,7 +383,7 @@ class Course_BasicdataController extends AuthenticatedController
             );
         }
         $sidebar->addWidget($widget);
-        if ($GLOBALS['perm']->have_studip_perm('admin', $this->course->id)) {
+        if ($GLOBALS['perm']->have_studip_perm('admin', $this->course_id)) {
             $widget = new CourseManagementSelectWidget();
             $sidebar->addWidget($widget);
         }
