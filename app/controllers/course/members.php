@@ -451,26 +451,23 @@ class Course_MembersController extends AuthenticatedController
             global $perm;
             if ($perm->have_perm('root')) {
                 $parameters = [
-                    'semtypes' => studygroup_sem_types() ?: [],
+                    'semtypes' => studygroup_sem_types() ?: null,
                     'exclude' => [Context::getId()],
-                    'semesters' => array_map(function ($s) { return $s->semester_id; }, Semester::getAll())
                 ];
             } else if ($perm->have_perm('admin')) {
                 $parameters = [
-                    'semtypes' => studygroup_sem_types() ?: [],
+                    'semtypes' => studygroup_sem_types() ?: null,
                     'institutes' => array_map(function ($i) {
                         return $i['Institut_id'];
                     }, Institute::getMyInstitutes()),
                     'exclude' => [Context::getId()],
-                    'semesters' => array_map(function ($s) { return $s->semester_id; }, Semester::getAll())
                 ];
 
             } else {
                 $parameters = [
                     'userid' => $GLOBALS['user']->id,
-                    'semtypes' => studygroup_sem_types() ?: [],
+                    'semtypes' => studygroup_sem_types() ?: null,
                     'exclude' => [Context::getId()],
-                    'semesters' => array_map(function ($s) { return $s->semester_id; }, Semester::getAll())
                 ];
             }
             $coursesearch = MyCoursesSearch::get('Seminar_id', $GLOBALS['perm']->get_perm(), $parameters);

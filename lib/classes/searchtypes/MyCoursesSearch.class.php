@@ -189,10 +189,16 @@ class MyCoursesSearch extends StandardSearch
     {
         $conditions = [
             '(s.`VeranstaltungsNummer` LIKE :input OR s.`Name` LIKE :input)',
-            's.`status` NOT IN (:semtypes)',
             's.`Seminar_id` NOT IN (:exclude)',
-            'semester_data.`semester_id` IN (:semesters)'
         ];
+
+        if (isset($this->parameters['semtypes'])) {
+            $conditions[] = 's.`status` NOT IN (:semtypes)';
+        }
+
+        if (isset($this->parameters['semesters'])) {
+            $conditions[] = 'semester_data.`semester_id` IN (:semesters)';
+        }
 
         if ($this->additional_sql_conditions) {
             $conditions[] = $this->additional_sql_conditions;

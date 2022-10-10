@@ -269,12 +269,6 @@ class WikiController extends AuthenticatedController
             );
         }
 
-        $all_semesters = Semester::getAll();
-        $all_semester_ids = [];
-        foreach ($all_semesters as $semester) {
-            $all_semester_ids[] = $semester->id;
-        }
-
         $this->course_search = new QuickSearch(
             'selected_course_id',
             new MyCoursesSearch(
@@ -282,9 +276,7 @@ class WikiController extends AuthenticatedController
                 $GLOBALS['perm']->get_perm(),
                 [
                     'userid'    => $GLOBALS['user']->id,
-                    'semtypes'  => [],
                     'exclude'   => [$course_id],
-                    'semesters' => $all_semester_ids,
                 ],
                 's.`Seminar_id` IN (
                     SELECT range_id FROM wiki
