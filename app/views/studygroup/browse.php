@@ -1,3 +1,19 @@
+<?php
+/**
+ * @var StudygroupController $controller
+ * @var int $anzahl
+ * @var string $sort_type
+ * @var string $sort_order
+ * @var string $q
+ * @var string $closed
+ * @var array $groups
+ * @var User $user
+ * @var int $entries_per_page
+ * @var int $page
+ * @var string $sort
+ */
+?>
+
 <?= $this->render_partial("course/studygroup/_feedback") ?>
 
 <?php
@@ -51,7 +67,7 @@ $headers = [
                             <?= htmlready($group['Name']) ?>
                             <?= $group['visible'] ? '' : "[" . _('versteckt') . "]" ?>
                             <? if ($group['admission_prelim'] == 1) { ?>
-                                <?= Icon::create('lock-locked', 'inactive', ['title' => _('Mitgliedschaft muss beantragt werden')]) ?>
+                                <?= Icon::create('lock-locked', Icon::ROLE_INACTIVE, ['title' => _('Mitgliedschaft muss beantragt werden')]) ?>
                             <? } ?>
                         </a>
                 </td>
@@ -74,7 +90,7 @@ $headers = [
                 </td>
                 <td align="center">
                     <? if ($is_member) : ?>
-                        <?= Icon::create('person', 'inactive', ['title' => _('Sie sind Mitglied in dieser Gruppe')])->asImg() ?>
+                        <?= Icon::create('person', Icon::ROLE_INACTIVE, ['title' => _('Sie sind Mitglied in dieser Gruppe')])->asImg() ?>
                     <? endif; ?>
                 </td>
             </tr>

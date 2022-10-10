@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var StartController $controller
+ * @var string $email
+ * @var bool $restricted
+ */
+?>
 <form method="post" class="default" action="<?=$controller->url_for('start/change_mail_address')?>" data-dialog="size=auto">
     <?= CSRFProtection::tokenTag()?>
     <fieldset>

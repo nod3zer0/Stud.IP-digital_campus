@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var WikiController $controller
+ * @var WikiPageConfig $config
+ * @var array $validKeywords
+ * @var string $keyword
+ */
+?>
 <form action="<?= $controller->link_for('wiki/store_page_config', compact('keyword')) ?>" method="post" class="default" id="wiki-config">
     <?= CSRFProtection::tokenTag() ?>
 

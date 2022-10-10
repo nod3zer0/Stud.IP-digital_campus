@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var TfaController $controller
+ */
+?>
 <form class="default" action="<?= $controller->create() ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 

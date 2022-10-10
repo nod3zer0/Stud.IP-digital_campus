@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var TermsController $controller
+ * @var string $return_to
+ * @var string $redirect_token
+ * @var string $denial_message
+ * @var string $compulsory
+ */
+?>
 <form action="<?= $controller->link_for('terms', compact('return_to', 'redirect_token')) ?>" method="post">
     <?= CSRFProtection::tokenTag()?>
     <? if ($denial_message): ?>

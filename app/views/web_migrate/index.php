@@ -1,3 +1,15 @@
+<?php
+/**
+ * @var Migration[] $migrations
+ * @var WebMigrateController $controller
+ * @var string $target
+ * @var string $branch
+ * @var Migrator $migrator
+ * @var int $offset
+ * @var array $backlinks
+ * @var array $descendants
+ */
+?>
 <? if (count($migrations) === 0): ?>
     <?= MessageBox::info(_('Ihr System befindet sich auf dem aktuellen Stand.'))->hideClose() ?>
 <? else: ?>

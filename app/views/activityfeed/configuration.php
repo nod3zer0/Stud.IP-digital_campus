@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var ActivityfeedController $controller
+ * @var array $modules
+ * @var array $context_translations
+ */
+?>
 <div id="activityEdit">
     <form id="configure_activity" action="<?= $controller->link_for('activityfeed/save') ?>" method="post" class="default" data-dialog>
         <h1><?= _("Anzuzeigende Bereiche:") ?></h1>

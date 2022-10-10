@@ -1,18 +1,24 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var TourController $controller
+ * @var string $tour_id
+ * @var HelpTourStep $step
+ * @var string $mode
+ * @var string $force_route
+ * @var bool $via_ajax
+ */
+
+use Studip\Button, Studip\LinkButton;
+?>
 
 <div id="edit_tour_step" class="edit_tour_step">
-    <? if (Request::isXhr()) : ?>
-        <? foreach (PageLayout::getMessages() as $msg) : ?>
-            <?= $msg ?>
-        <? endforeach ?>
-    <? endif ?>
     <form id="edit_tour_form" class="default"
           action="<?= $controller->url_for('tour/edit_step/' . $tour_id . '/' . $step->step . '/save') ?>"
           method="post">
         <?= CSRFProtection::tokenTag(); ?>
         <fieldset>
             <input type="hidden" name="tour_step_nr" value="<?= $step->step ?>">
-            <input type="hidden" name="tour_step_editmode" value="<?= $mode ?>">
+            <input type="hidden" name="tour_step_editmode" value="<?= htmlReady($mode) ?>">
             <legend><?= sprintf(_('Schritt %s'), $step->step) ?></legend>
             <label>
                 <?= _('Titel') ?>

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $left
+ * @var array $right
+ */
+?>
 <h1 class="sr-only">
     <? if ($GLOBALS['perm']->have_perm('root')) :?>
         <?= _("Startseite für Root bei Stud.IP")?>

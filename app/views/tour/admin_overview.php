@@ -1,4 +1,14 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var string $delete_question
+ * @var TourController $controller
+ * @var string $tour_searchterm
+ * @var string $filter_text
+ * @var HelpTour[] $tours
+ */
+
+use Studip\Button;
+?>
 <?= $delete_question ?>
 
 <form action="<?= $controller->url_for('tour/admin_overview') ?>" id="admin_tour_form" method="post" class="default">

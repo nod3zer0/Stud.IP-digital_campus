@@ -1,4 +1,16 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var string $delete_question
+ * @var TourController $controller
+ * @var HelpTour $tour
+ * @var HelpTourAudience $audience
+ * @var string $tour_startpage
+ * @var string $tour_id
+ */
+
+use Studip\Button, Studip\LinkButton;
+?>
+
 <?= $delete_question ?>
 
 <form class="default" action="<?= $controller->url_for('tour/save/' . $tour->tour_id) ?>" method="post">
@@ -182,7 +194,7 @@ if (count($tour->steps)) {
     $widget->addLink(
         _('Schritt hinzufügen'),
         $controller->url_for('tour/edit_step/' . $tour->tour_id . '/' . (count($tour->steps) + 1) . '/new'),
-        Icon::create('add', 'clickable'),
+        Icon::create('add'),
         ['data-dialog' => 'size=auto;reload-on-close']
     );
     $sidebar->addWidget($widget);

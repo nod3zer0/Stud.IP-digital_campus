@@ -1,5 +1,13 @@
-<? use Studip\LinkButton; ?>
+<?php
+/**
+ * @var TourController $controller
+ * @var array $conflicts
+ * @var array $diff_fields
+ * @var array $diff_step_fields
+ */
 
+use Studip\LinkButton;
+?>
 <h1><?= _('Versions-Konflikte der Touren') ?></h1>
 <form action="<?= $controller->url_for('tour/admin_conflicts') ?>" id="admin_tour_form" method="post">
     <?= CSRFProtection::tokenTag(); ?>

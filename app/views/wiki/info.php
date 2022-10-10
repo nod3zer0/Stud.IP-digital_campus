@@ -1,3 +1,14 @@
+<?php
+/**
+ * @var string $keyword
+ * @var WikiPage $last_page
+ * @var WikiPage $first_page
+ * @var User $first_user
+ * @var User $last_user
+ * @var array $backlinks
+ * @var WikiPage[] $descendants
+ */
+?>
 <h1>
     <?= $keyword === 'WikiWikiWeb' ? _("Wiki-Startseite") : htmlReady($keyword) ?>
 </h1>

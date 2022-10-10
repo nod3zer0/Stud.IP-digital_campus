@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var string $keyword
+ * @var string[] $wiki_page_names
+ */
+?>
 <p>
     <?= _('Hier können Sie eine neue Wiki-Seite erstellen.') ?>
     <br />

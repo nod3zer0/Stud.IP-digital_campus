@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var TFASecret $secret
+ * @var TfaController $controller
+ */
+?>
 <p>
     <?= _('Zwei-Faktor-Authentifizierung ist aktiviert') ?>:
     <?= $secret->type == 'app' ? _('Authenticator-App') : _('E-Mail') ?>

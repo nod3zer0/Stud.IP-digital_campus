@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var WikiController $controller
+ * @var bool $restricted
+ * @var string $keyword
+ */
+?>
 <form action="<?= $controller->link_for('wiki/store_courseperms', compact('keyword')) ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
 

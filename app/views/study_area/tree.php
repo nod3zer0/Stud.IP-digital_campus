@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var StudipStudyArea $node
+ * @var string $open
+ * @var int $layer
+ * @var array $dont_open
+ * @var string $compulsory
+ */
+?>
 <li>
 <? if ($node->id !== 'root' && $node->required_children): ?>
     <input id='<?= htmlReady($node->id) ?>' type='checkbox' <?= $open && !in_array($layer, $dont_open) ? 'checked' : ''?>>
@@ -15,7 +24,7 @@
 <? if ($node->required_children): ?>
     <ul>
     <? foreach ($node->required_children as $child): ?>
-        <?= $this->render_partial('study_area/tree.php', ['node' => $child, 'open' => $open, 'layer' => $layer + 1]) ?>
+        <?= $this->render_partial('study_area/tree.php', ['node' => $child, 'open' => $open, 'layer' => ((int)$layer + 1)]) ?>
     <? endforeach; ?>
     </ul>
 <? endif; ?>

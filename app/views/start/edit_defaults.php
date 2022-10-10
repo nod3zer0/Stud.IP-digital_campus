@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var array $initial_widgets
+ * @var StudIPPlugin[] $widgets
+ * @var bool $restricted
+ * @var string $permission
+ */
+?>
 <div class="edit-widgetcontainer">
     <div class="start-widgetcontainer">
         <ul class="portal-widget-list">

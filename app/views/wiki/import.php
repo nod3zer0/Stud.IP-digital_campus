@@ -1,3 +1,15 @@
+<?php
+/**
+ * @var bool $show_wiki_page_form
+ * @var WikiController $controller
+ * @var Course $course
+ * @var bool $success
+ * @var bool $bad_course_search
+ * @var QuickSearch $course_search
+ * @var Course $selected_course
+ * @var array $wiki_pages
+ */
+?>
 <form class="default" method="post"
       name="wiki_import_form"
       data-dialog="size=auto;<?= $show_wiki_page_form ? 'reload-on-close' : '' ?>"

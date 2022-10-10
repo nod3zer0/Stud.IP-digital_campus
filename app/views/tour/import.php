@@ -1,4 +1,10 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var TourController $controller
+ * @var array $tourdata
+ * @var array $metadata
+ */
+?>
 <form class="default" enctype="multipart/form-data" action="<?= $controller->link_for('tour/import') ?>" method="post">
     <?= CSRFProtection::tokenTag(); ?>
 

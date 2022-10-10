@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var StartController $controller
+ * @var StudIPPlugin[] $widgets
+ */
+?>
 <form action="<?= $controller->url_for('start/add') ?>" method="post" class="default">
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
     <input type="hidden" name="position" value="0">
