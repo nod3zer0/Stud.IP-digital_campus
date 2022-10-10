@@ -1092,6 +1092,10 @@ class RoomManagement_PlanningController extends AuthenticatedController
         //Add clipboard widget:
         $clipboards = Clipboard::getClipboardsForUser($GLOBALS['user']->id);
         if (!empty($clipboards)) {
+            if (!$selected_clipboard_id) {
+                //Select the first clipboard so that the user doesn't have to select one first:
+                $selected_clipboard_id = $clipboards[0]->id;
+            }
             $clipboard_widget = new SelectWidget(
                 _('Individuelle Raumgruppen'),
                 $this->booking_commentsURL(),
