@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var Consultation_AdminController $controller
+ * @var int $page
+ * @var int $count
+ * @var int $limit
+ * @var string $current_action
+ * @var array<int, array{block: ConsultationBlock, slots: ConsultationSlot[]> $blocks
+ */
+?>
 <? if (count($blocks) === 0): ?>
 
 <?= MessageBox::info(sprintf(
@@ -163,12 +173,12 @@
             <td colspan="5">
                 <?= Studip\Button::create(_('Nachricht schreiben'), 'mail', [
                     'data-dialog'              => 'size=50%',
-                    'data-activates-condition' => '.consultation-overview tbody tr.is-occupied:has(:checkbox:checked)',
+                    'data-activates-condition' => '.consultation-overview tbody tr.is-occupied :checkbox:checked',
                     'formaction'               => $controller->mailURL('bulk'),
                 ]) ?>
                 <?= Studip\Button::create(_('Absagen'), 'cancel', [
                     'data-dialog'              => 'size=auto',
-                    'data-activates-condition' => '.consultation-overview tbody tr.is-occupied:has(:checkbox:checked)',
+                    'data-activates-condition' => '.consultation-overview tbody tr.is-occupied :checkbox:checked',
                     ]) ?>
                 <?= Studip\Button::create(_('Löschen'), 'delete', [
                     'class'        => 'consultation-delete-check',

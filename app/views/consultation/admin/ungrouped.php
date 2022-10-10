@@ -1,3 +1,14 @@
+<?php
+/**
+ * @var Consultation_AdminController $controller
+ * @var int $page
+ * @var int $count
+ * @var int $limit
+ * @var string $current_action
+ * @var ConsultationBlock[] $blocks
+ * @var ConsultationSlot[] $slots
+ */
+?>
 <? if (count($blocks) === 0): ?>
 
 <?= MessageBox::info(sprintf(
@@ -249,12 +260,16 @@
             <td colspan="8">
                 <?= Studip\Button::create(_('Nachricht schreiben'), 'mail', [
                     'data-dialog'              => 'size=50%',
-                    'data-activates-condition' => '.slot-overview tbody tr.is-occupied:has(:checkbox:checked)',
+                    'data-activates-condition' => '.slot-overview tbody tr.is-occupied :checkbox:checked',
                     'formaction'               => $controller->mailURL('bulk'),
                 ]) ?>
+                <?= Studip\Button::create(_('Absagen'), 'cancel', [
+                    'data-dialog'              => 'size=auto',
+                    'data-activates-condition' => '.slot-overview tbody tr.is-occupied :checkbox:checked',
+                ]) ?>
                 <?= Studip\Button::create(_('Löschen'), 'delete', [
-                    'data-confirm'             => _('Wollen Sie diese Termine wirklich löschen?'),
-                    'data-activates-condition' => '.slot-overview tbody tr:not(.is-occupied):has(:checkbox:checked)',
+                    'class'        => 'consultation-delete-check',
+                    'data-dialog'  => 'size=auto',
                 ]) ?>
 
                 <div class="actions">
