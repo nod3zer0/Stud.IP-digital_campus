@@ -9,16 +9,17 @@ $(document).on('click', '.consultation-delete-check:not(.ignore)', event => {
         return false;
     }
 
-    STUDIP.api.GET('consultations/slots/bulk', {data: {ids: ids}}).done(slots => {
-        let bookings = 0;
-        slots.forEach(slot => bookings += slot.booking_count);
-        if (bookings === 0) {
+    let requests = ids.map(id => {
+        return STUDIP.jsonapi.GET(`consultation-slots/${id}/bookings`).then(result => result.data.length);
+    });
+    $.when(...requests).done((...results) => {
+        if (results.some(result => result > 0)) {
+            $(event.target).addClass('ignore').click().removeClass('ignore');
+        } else {
             STUDIP.Dialog.confirm($gettext('Wollen Sie diese Termine wirklich löschen?')).done(() => {
                 $('<input type="hidden" name="delete" value="1"/>').appendTo(form);
                 form.submit();
             });
-        } else {
-            $(event.target).addClass('ignore').click().removeClass('ignore');
         }
     });
 
