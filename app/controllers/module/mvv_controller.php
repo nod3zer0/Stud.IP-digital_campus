@@ -67,6 +67,9 @@ abstract class MVVController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
+        $this->sortby = '';
+        $this->page_params_suffix = '';
+
         if (!static::IsVisible()) {
             throw new AccessDeniedException();
         }
@@ -204,7 +207,7 @@ abstract class MVVController extends AuthenticatedController
                     0, -10)) . '/';
         }
         $to = $this->url_for($to);
-        list($url, $query) = explode('?', $to);
+        $url = explode('?', $to)[0];
         $url      = URLHelper::getUrl($url, $params, true);
         $template = $this->get_template_factory()->open('shared/js_url');
         $template->set_attributes(['url' => $url]);
@@ -308,7 +311,7 @@ abstract class MVVController extends AuthenticatedController
                 }
             } else {
                 $search_term = $search_term ?: $this->search_term;
-                $filter      = $filter ?: $this->filter;
+                $filter      = $filter ?? [];
                 if ($search_term) {
                     $this->search_result =
                         $class_name::findBySearchTerm($search_term, $filter)->pluck('id');

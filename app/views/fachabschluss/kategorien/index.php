@@ -57,9 +57,6 @@
                             <? endif; ?>
                         </td>
                     </tr>
-                    <? if ($kategorie_id === $kategorie->id) : ?>
-                        <?= $this->render_partial('fachabschluss/kategorien/details', compact('kategorie')) ?>
-                    <? endif; ?>
                 </tbody>
             <? endforeach; ?>
         <? else : ?>

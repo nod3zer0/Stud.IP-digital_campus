@@ -53,7 +53,7 @@
                     <? endif; ?>
                     </td>
                 </tr>
-                <? if ($modul_id == $assignment->modul->id) : ?>
+                <? if (!empty($modul_id) && ($modul_id == $assignment->modul->id)) : ?>
                 <tr class="loaded-details nohover">
                     <?= $this->render_partial('studiengaenge/versionen/modulteile', ['modul' => $assignment->modul, 'abschnitt_id' => $assignment->abschnitt_id, 'assignment' => $assignment]) ?>
                 </tr>

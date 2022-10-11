@@ -86,7 +86,7 @@ class MvvPerm {
         } else {
             $index = $mvv_object;
         }
-        if (!$perm_objects[$index]) {
+        if (empty($perm_objects[$index])) {
             if (!is_object($mvv_object)) {
                 $mvv_class_name = (string) $mvv_object;
                 $mvv_object = new $mvv_class_name;
@@ -158,8 +158,10 @@ class MvvPerm {
         if (mb_strpos($name, 'haveperm') === 0) {
             $perm = 'PERM_' . mb_strtoupper(mb_substr($name, 8));
             if (defined('self::' . $perm)) {
-                return self::get($arguments[0])->havePerm(constant('self::' . $perm),
-                        $arguments[1], $arguments[2], $arguments[3]);
+                return self::get($arguments[0])->havePerm(
+                    constant('self::' . $perm),
+                    ...array_slice($arguments, 1)
+                );
             } else {
                 throw new InvalidArgumentException('Undefined Permission.');
             }
@@ -167,14 +169,18 @@ class MvvPerm {
 
         if (mb_strpos($name, 'getfieldperm') === 0) {
             $field = mb_strtolower(mb_substr($name, 12));
-            return self::get($arguments[0])->getFieldPerm($field,
-                    $arguments[1], $arguments[2]);
+            return self::get($arguments[0])->getFieldPerm(
+                $field,
+                ...array_slice($arguments, 1)
+            );
         }
 
         if (mb_strpos($name, 'havefieldperm') === 0) {
             $field = mb_strtolower(mb_substr($name, 13));
-            return self::get($arguments[0])->haveFieldPerm($field, $arguments[1],
-                    $arguments[2], $arguments[3]);
+            return self::get($arguments[0])->haveFieldPerm(
+                $field,
+                ...array_slice($arguments, 1)
+            );
         }
 
         throw new BadMethodCallException('Method '
@@ -235,8 +241,10 @@ class MvvPerm {
         if (mb_strpos($name, 'haveperm') === 0) {
             $perm = 'PERM_' . mb_strtoupper(mb_substr($name, 8));
             if (defined('self::' . $perm)) {
-                return $this->havePerm(constant('self::' . $perm),
-                        $arguments[0], $arguments[1], $arguments[2]);
+                return $this->havePerm(
+                    constant('self::' . $perm),
+                    ...$arguments
+                );
             } else {
                 throw new InvalidArgumentException('Undefined Permission.');
             }
@@ -250,8 +258,7 @@ class MvvPerm {
 
         if (mb_strpos($name, 'havefieldperm') === 0) {
             $field = mb_strtolower(mb_substr($name, 13));
-            return $this->haveFieldPerm($field, $arguments[0],
-                    $arguments[1], $arguments[2]);
+            return $this->haveFieldPerm($field, ...$arguments);
         }
 
         throw new BadMethodCallException('Method '
@@ -605,7 +612,7 @@ class MvvPerm {
             }
         }
 
-        if (self::$user_role_institutes[$user_id] === null) {
+        if (!isset(self::$user_role_institutes[$user_id])) {
             $institutes = [];
             foreach ($roles as $role) {
 

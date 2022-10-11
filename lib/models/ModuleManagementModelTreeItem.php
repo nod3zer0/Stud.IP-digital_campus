@@ -95,7 +95,7 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
      */
     private function checkFilter(MvvTreeItem $item)
     {
-        $filter = self::$object_filter[get_class($item)];
+        $filter = self::$object_filter[get_class($item)] ?? null;
         if ($filter && is_callable($filter)) {
             $checked = $filter($item);
             if (!$checked) {

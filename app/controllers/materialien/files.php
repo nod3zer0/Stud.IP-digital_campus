@@ -58,6 +58,7 @@ class Materialien_FilesController extends MVVController
             }
         }
 
+        $this->range_id = '';
         if (Request::option('range_id')) {
             $this->filter = ['mvv_files.range_id' => Request::option('range_id')];
             $this->sortby = 'position';
@@ -66,7 +67,7 @@ class Materialien_FilesController extends MVVController
 
         // show only files assigned to objects where the responsible institute is
         // in the list of users own institutes
-        if (!$this->filter['mvv_studiengang.institut_id']) {
+        if (empty($this->filter['mvv_studiengang.institut_id'])) {
             $this->filter['mvv_studiengang.institut_id'] = MvvPerm::getOwnInstitutes();
         }
 
@@ -655,16 +656,16 @@ class Materialien_FilesController extends MVVController
         $semesters = new SimpleCollection(array_reverse(Semester::getAll()));
         $filter_template = $template_factory->render('shared/filter', [
             'name_search'        => true,
-            'selected_name'      => $this->filter['searchnames'],
+            'selected_name'      => $this->filter['searchnames'] ?? '',
             'name_caption'       => _('Name, Kategorie, Schlagwort'),
             'semester'           => $semesters,
             'selected_semester'  => $semesters->findOneBy('beginn', $this->filter['start_sem.beginn'])->id,
             'default_semester'   => Semester::findCurrent()->id,
             'institute'          => MvvFile::getAllAssignedInstitutes('name', 'ASC', $institute_filter),
             'institute_count'    => 'count_objects',
-            'selected_institut'  => $this->filter['mvv_studiengang.institut_id'],
-            'zuordnungen'        => MvvFile::getAllRelations($this->search_result['MvvFile']),
-            'selected_zuordnung' => $this->filter['mvv_files_ranges.range_type'],
+            'selected_institut'  => $this->filter['mvv_studiengang.institut_id'] ?? '',
+            'zuordnungen'        => !empty($this->search_result['MvvFile']) ? MvvFile::getAllRelations($this->search_result['MvvFile']) : [],
+            'selected_zuordnung' => $this->filter['mvv_files_ranges.range_type'] ?? '',
             'action'             => $this->action_url('set_filter'),
             'action_reset'       => $this->action_url('reset_filter')]
         );

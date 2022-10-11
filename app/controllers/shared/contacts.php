@@ -61,7 +61,7 @@ class Shared_ContactsController extends MVVController
 
         // Nur Module von verantwortlichen Einrichtungen an denen der User
         // eine Rolle hat
-        if (!$this->filter['mvv_modul_inst.institut_id']) {
+        if (empty($this->filter['mvv_modul_inst.institut_id'])) {
             unset($this->filter['mvv_modul_inst.institut_id']);
         }
         if ($search_result) {
@@ -69,7 +69,7 @@ class Shared_ContactsController extends MVVController
         }
 
         $own_institutes = MvvPerm::getOwnInstitutes();
-        if ($this->filter['mvv_modul_inst.institut_id']) {
+        if (!empty($this->filter['mvv_modul_inst.institut_id'])) {
             if ($own_institutes) {
                 $this->filter['mvv_modul_inst.institut_id']  = array_intersect(
                         $this->filter['mvv_modul_inst.institut_id'],
@@ -353,13 +353,17 @@ class Shared_ContactsController extends MVVController
             'default_semester'   => Semester::findCurrent()->id,
             'institute'          => MvvContact::getAllAssignedInstitutes('name', 'ASC', $institute_filter),
             'institute_count'    => 'count_objects',
-            'selected_institut'  => $this->filter['mvv_modul_inst.institut_id'],
-            'zuordnungen'        => MvvContact::getAllRelations($this->search_result['MvvContact']),
-            'selected_zuordnung' => $this->filter['mvv_contacts_ranges.range_type'],
+            'selected_institut'  => $this->filter['mvv_modul_inst.institut_id'] ?? '',
+            'zuordnungen'        => !empty($this->search_result['MvvContact']) ? MvvContact::getAllRelations($this->search_result['MvvContact']) : [],
+            'selected_zuordnung' => $this->filter['mvv_contacts_ranges.range_type'] ?? '',
             'kategorien'         => $this->findCategoriesByIds(),
-            'selected_kategorie' => "{$this->filter['mvv_contacts_ranges.category']}__@type__{$this->filter['mvv_contacts_ranges.range_type']}",
+            'selected_kategorie' => sprintf(
+                "%s__@type__%s",
+                $this->filter['mvv_contacts_ranges.category'] ?? '',
+                $this->filter['mvv_contacts_ranges.range_type'] ?? ''
+            ),
             'status'             => $this->findStatusByIds(),
-            'selected_status'    => $this->filter['mvv_contacts.contact_status'],
+            'selected_status'    => $this->filter['mvv_contacts.contact_status'] ?? '',
             'status_array'       => ['intern' => ['name' => _('Intern')], 'extern' => ['name' =>_('Extern')]],
             'action'             => $this->action_url('set_filter'),
             'action_reset'       => $this->action_url('reset_filter')

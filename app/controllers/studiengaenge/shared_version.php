@@ -308,8 +308,7 @@ abstract class SharedVersionController extends MVVController
         $this->version = StgteilVersion::find($version_id);
 
         // search for modules so status of version doesn't matter
-        $filter = $this->filter;
-        unset($filter['mvv_stgteilversion.stat']);
+        $filter = [];
 
         $condition = ModuleManagementModel::getFilterSql($filter);
         $query = "SELECT mvv_modul.modul_id,
@@ -681,18 +680,17 @@ abstract class SharedVersionController extends MVVController
             return;
         }
         $this->abschnitt_id = $this->abschnitt->id;
-        if(!$this->version) {
+        if(empty($this->version)) {
             $this->version = $this->abschnitt->getVersion();
         }
         $this->version_id = $this->version->getId();
         $this->assignments = StgteilabschnittModul::findByStgteilAbschnitt(
             $this->abschnitt->getId(),
-            $this->filter
+            []
         );
 
         // search for modules so status of version doesn't matter
-        $filter = $this->filter;
-        unset($filter['mvv_stgteilversion.stat']);
+        $filter = [];
         $query = "
             SELECT mvv_modul.modul_id, CONCAT(mvv_modul_deskriptor.bezeichnung, ', ',
                 IF(ISNULL(mvv_modul.code), '', mvv_modul.code),

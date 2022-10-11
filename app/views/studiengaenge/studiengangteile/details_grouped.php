@@ -12,13 +12,13 @@
             <? foreach ($stgteile as $stgteil) : ?>
                 <tr>
                     <td>
-                        <? if ($ampel_icon) : ?>
+                        <? if (!empty($ampel_icon)) : ?>
                             <?= $ampel_icon->asImg(['title' => htmlReady($ampelstatus), 'style' => 'vertical-align: text-top;']) ?>
                         <? endif; ?>
                         <?= htmlReady($stgteil->getDisplayName()) ?>
                     </td>
                     <td class="actions" style="white-space: nowrap; width: 1%;">
-                        <? $actionMenu = ActionMenu::get()->setContext($stgteil->fach_name) ?>
+                        <? $actionMenu = ActionMenu::get()->setContext($stgteil->getDisplayName()) ?>
                         <? if (MvvPerm::havePermWrite($stgteil)) : ?>
                             <? $actionMenu->addLink(
                                 $controller->action_url('stgteil/' . $stgteil->id),

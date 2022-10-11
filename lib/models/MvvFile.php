@@ -178,7 +178,7 @@ class MvvFile extends ModuleManagementModel
         $parameters = [];
 
         $name_filter_sql = '';
-        if ($filter['searchnames']) {
+        if (!empty($filter['searchnames'])) {
             $name_filter_sql = " AND CONCAT_WS(' ', `file_refs`.`name`, `mvv_files_filerefs`.`name`, `mvv_files`.`category`,`mvv_files`.`tags`) LIKE :needle";
             $parameters[':needle'] = "%{$filter['searchnames']}%";
         }
@@ -297,7 +297,7 @@ class MvvFile extends ModuleManagementModel
         if (empty($filter)) {
             return parent::getCount();
         }
-        $searchnames = $filter['searchnames'];
+        $searchnames = $filter['searchnames'] ?? '';
         $name_filter_sql = '';
         if ($searchnames) {
             $name_filter_sql = " AND CONCAT_WS(' ', `file_refs`.`name`, `mvv_files_filerefs`.`name`, `mvv_files`.`category`,`mvv_files`.`tags`) LIKE ". DBManager::get()->quote('%' . $searchnames . '%');

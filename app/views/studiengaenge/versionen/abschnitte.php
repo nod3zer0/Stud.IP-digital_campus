@@ -53,7 +53,7 @@
                         </form>
                     </td>
                 </tr>
-                <? if ($abschnitt_id === $abschnitt->id) : ?>
+                <? if (!empty($abschnitt_id) && ($abschnitt_id === $abschnitt->id)) : ?>
                     <tr class="loaded-details nohover">
                         <?= $this->render_partial('studiengaenge/versionen/details_abschnitt', compact('abschnitt')) ?>
                     </tr>

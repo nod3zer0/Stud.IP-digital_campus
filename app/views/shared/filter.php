@@ -1,4 +1,4 @@
-<? if ($selected_status || $selected_kategorie || $selected_abschluss || $selected_fachbereich || $selected_zuordnung || $selected_institut || $selected_name || $selected_semester != $default_semester) : ?>
+<? if (!empty($selected_status) || !empty($selected_kategorie) || !empty($selected_abschluss) || !empty($selected_fachbereich) || !empty($selected_zuordnung) || !empty($selected_institut) || !empty($selected_name) || (!empty($selected_semester) && !empty($default_semester) && $selected_semester != $default_semester)) : ?>
 <div style="width: 100%; text-align: right;">
     <a href="<?= $action_reset ?>">
         <?= Icon::create('refresh', 'clickable', ['title' => _('Filter zurücksetzen')])->asImg(); ?>
@@ -7,16 +7,16 @@
 </div>
 <? endif; ?>
 <form id="index_filter" action="<?= $action ?>" method="post">
-    <? if ($name_search) : ?>
+    <? if (!empty($name_search)) : ?>
         <label class="mvv-name-search">
             <?= $name_caption ?: _('Name') ?>:
             <input type="text" name="name_filter" value="<?= htmlReady($selected_name) ?>">
             <input type="submit" value="<?= _('Suchen') ?>">
         </label>
     <? endif ?>
-    <? if (isset($semester)) : ?>
+    <? if (!empty($semester)) : ?>
     <label>
-        <?= $semester_caption ?: _('Semester') . ':' ?><br>
+        <?= $semester_caption ?? _('Semester') . ':' ?><br>
         <select name="semester_filter" class="sidebar-selectlist submit-upon-select">
             <option value="all"<?= (!$selected_semester ? ' selected' : '') ?>><?= _('Alle Semester') ?></option>
             <? foreach ($semester as $sem) : ?>
@@ -25,7 +25,7 @@
         </select>
     </label>
     <? endif; ?>
-    <? if (isset($zuordnungen)) : ?>
+    <? if (!empty($zuordnungen)) : ?>
     <label>
         <?= _('Zugeordnet zu Objekten') ?>:
         <select name="zuordnung_filter" class="sidebar-selectlist submit-upon-select">
@@ -37,7 +37,7 @@
         </select>
     </label>
     <? endif; ?>
-    <? if (isset($status)) : ?>
+    <? if (!empty($status)) : ?>
     <label>
         <?= _('Status') ?>:<br>
         <select name="status_filter" class="sidebar-selectlist submit-upon-select">
@@ -49,12 +49,12 @@
             <? endif; ?>
             <? endforeach; ?>
             <? if ($status['__undefined__']) : ?>
-                <option value="__undefined__"<?= $selected_status == '__undefined__' ? ' selected' : '' ?>><?= _('nicht angegeben')  . ' (' . ($stat['count_objects'] ?: '0') . ')' ?></option>
+                <option value="__undefined__"<?= $selected_status == '__undefined__' ? ' selected' : '' ?>><?= _('nicht angegeben')  . ' (' . ($stat['count_objects'] ?? '0') . ')' ?></option>
             <? endif; ?>
         </select>
     </label>
     <? endif; ?>
-    <? if (isset($kategorien)) : ?>
+    <? if (!empty($kategorien)) : ?>
     <label>
         <?= _('Kategorie') ?>:<br>
         <select name="kategorie_filter" class="sidebar-selectlist submit-upon-select">
@@ -68,7 +68,7 @@
         </select>
     </label>
     <? endif; ?>
-    <? if (isset($abschluesse)) : ?>
+    <? if (!empty($abschluesse)) : ?>
     <label>
         <?= _('Abschluss') ?>:<br>
         <select name="abschluss_filter" class="sidebar-selectlist submit-upon-select">
@@ -79,7 +79,7 @@
         </select>
     </label>
     <? endif; ?>
-    <? if (isset($institute)) : ?>
+    <? if (!empty($institute)) : ?>
         <? $perm_institutes = MvvPerm::getOwnInstitutes() ?>
         <? if ($perm_institutes !== false) : ?>
         <label>
@@ -104,7 +104,7 @@
         </label>
         <? endif ?>
     <? endif; ?>
-    <? if (isset($fachbereiche)) : ?>
+    <? if (!empty($fachbereiche)) : ?>
         <? $perm_institutes = MvvPerm::getOwnInstitutes() ?>
         <? if ($perm_institutes !== false) : ?>
         <label>

@@ -36,7 +36,7 @@
             </tfoot>
         <? endif; ?>
     </table>
-    <? if ($stgteil && !$count) : ?>
+    <? if (!empty($stgteil) && !$count) : ?>
         <div>
             <?= sprintf(_('Für den Studiengangteil <strong>%s</strong> wurden noch keine Versionen angelegt. '), htmlReady($stgteil->getDisplayName())) ?>
         </div>

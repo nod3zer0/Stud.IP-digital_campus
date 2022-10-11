@@ -82,7 +82,7 @@
                 </form>
             </td>
         </tr>
-        <? if ($version_id === $version->id) : ?>
+        <? if (!empty($version_id) && ($version_id === $version->id)) : ?>
             <tr class="loaded-details nohover">
                 <?= $this->render_partial('studiengaenge/versionen/abschnitte', compact('version', 'abschnitte')) ?>
             </tr>

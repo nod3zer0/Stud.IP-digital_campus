@@ -84,7 +84,7 @@
                             <?= $actionMenu->render() ?>
                         </td>
                     </tr>
-                    <? if ($stgteil_id == $stgteil->getId()) : ?>
+                    <? if (!empty($stgteil_id) && ($stgteil_id == $stgteil->getId())) : ?>
                         <? $versionen = StgteilVersion::findByStgteil($stgteil->getId()); ?>
                         <tr class="loaded-details nohover">
                             <?= $this->render_partial('studiengaenge/studiengangteile/details', compact('stgteil_id', 'versionen')) ?>

@@ -11,12 +11,13 @@ class Studiengaenge_FaecherController extends Studiengaenge_StudiengangteileCont
 {
     public function index_action()
     {
+        $this->details_id = null;
         PageLayout::setTitle(_('Verwaltung der Studiengangteile - Studiengangteile gruppiert nach Fächern'));
         $this->initPageParams();
         $this->initSearchParams();
-        
+
         $search_result = $this->getSearchResult('StudiengangTeil');
-        
+
         // Nur Studiengangteile mit zugeordnetem Fach an dessen verantwortlicher
         // Einrichtung der User eine Rolle hat
         $filter['mvv_fach_inst.institut_id'] = MvvPerm::getOwnInstitutes();
@@ -51,10 +52,10 @@ class Studiengaenge_FaecherController extends Studiengaenge_StudiengangteileCont
         $this->show_sidebar_search = true;
         $this->setSidebar();
     }
-    
+
     /**
      * Shows the studiengangteile of a Fach.
-     * 
+     *
      * @param string $fach_id the id of the Fach
      */
     public function details_fach_action($fach_id)
@@ -77,7 +78,7 @@ class Studiengaenge_FaecherController extends Studiengaenge_StudiengangteileCont
             $this->perform_relayed('index');
         }
     }
-    
+
     public function stgteil_fach_action($fach_id)
     {
         $fach = Fach::find($fach_id);

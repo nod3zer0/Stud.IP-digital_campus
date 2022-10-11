@@ -20,6 +20,9 @@ class Module_ModuleController extends MVVController
         Navigation::activateItem($this->me . '/module/module');
         $this->filter = $this->sessGet('filter', []);
         $this->action = $action;
+        $this->modul_id = '';
+        $this->details_url = '';
+        $this->modulteil_id = '';
 
         PageLayout::addSqueezePackage('statusgroups');
     }
@@ -44,7 +47,7 @@ class Module_ModuleController extends MVVController
 
         // Nur Module von verantwortlichen Einrichtungen an denen der User
         // eine Rolle hat
-        if (!$this->filter['mvv_modul_inst.institut_id']) {
+        if (empty($this->filter['mvv_modul_inst.institut_id'])) {
             unset($this->filter['mvv_modul_inst.institut_id']);
         }
         $this->filter = array_merge(
@@ -1343,7 +1346,7 @@ class Module_ModuleController extends MVVController
     {
         // Nur Module von verantwortlichen Einrichtungen an denen der User
         // eine Rolle hat
-        if (!$this->filter['mvv_modul_inst.institut_id']) {
+        if (empty($this->filter['mvv_modul_inst.institut_id'])) {
             unset($this->filter['mvv_modul_inst.institut_id']);
         }
         $modul_filter = array_merge(
@@ -1360,22 +1363,25 @@ class Module_ModuleController extends MVVController
         // Status
         $modul_ids = Modul::findByFilter($modul_filter);
         $template->set_attribute('status', Modul::findStatusByIds($modul_ids));
-        $template->set_attribute('selected_status', $this->filter['mvv_modul.stat']);
+        $template->set_attribute('selected_status', $this->filter['mvv_modul.stat'] ?? '');
         $template->set_attribute('status_array', $GLOBALS['MVV_MODUL']['STATUS']['values']);
 
         // Institutes
         $template->set_attribute('institute', Modul::getAllAssignedInstitutes('name', 'ASC', $modul_filter));
         $template->set_attribute('institute_count', 'count_objects');
-        $template->set_attribute('selected_institut', $this->filter['mvv_modul_inst.institut_id']);
+        $template->set_attribute('selected_institut', $this->filter['mvv_modul_inst.institut_id'] ?? '');
 
         // Semesters
         $semesters = new SimpleCollection(Semester::getAll());
         $semesters = $semesters->orderBy('beginn desc');
-        $selected_semester = $semesters->findOneBy('beginn', $this->filter['start_sem.beginn']);
+        $selected_semester = null;
+        if (!empty($this->filter['start_sem.beginn'])) {
+            $selected_semester = $semesters->findOneBy('beginn', $this->filter['start_sem.beginn']);
+        }
 
 
         $template->set_attribute('semester', $semesters);
-        $template->set_attribute('selected_semester', $selected_semester->id);
+        $template->set_attribute('selected_semester', $selected_semester->id ?? '');
         $template->set_attribute('default_semester', Semester::findCurrent()->id);
 
         $template->set_attribute('action', $this->set_filterURL());

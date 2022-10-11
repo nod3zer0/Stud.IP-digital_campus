@@ -65,7 +65,7 @@ if ($GLOBALS['MVV_MODUL']['SPRACHE']['default'] != $display_language) {
                 <? endif; ?>
                 <ul id="modul_target" class="mvv-assigned-items mvv-assign-single mvv-modul">
                     <li class="mvv-item-list-placeholder"<?= ($modul->modul_variante ? ' style="display: none;"' : '') ?>><?= _('Dieses Modul ist nicht die Variante eines anderen Moduls.') ?></li>
-                    <? if ($modul->modul_variante->id) : ?>
+                    <? if (!empty($modul->modul_variante->id)) : ?>
                         <li id="modul_<?= $modul->modul_variante->id ?>">
                             <div class="mvv-item-list-text">
                                 <?= htmlReady($modul->modul_variante->getDisplayName()) ?>

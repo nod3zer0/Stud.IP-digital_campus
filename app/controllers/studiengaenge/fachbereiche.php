@@ -17,10 +17,12 @@ class Studiengaenge_FachbereicheController extends Studiengaenge_StudiengaengeCo
     public function index_action($studiengang_id = null)
     {
         PageLayout::setTitle(_('Studiengänge gruppiert nach Fachbereichen'));
-        
+
         // Nur Fachbereiche an denen der User eine Rolle hat
         $perm_institutes = MvvPerm::getOwnInstitutes();
-        
+
+        $this->fachbereich_id = '';
+
         $this->initPageParams('fachbereiche');
         $this->sortby = $this->sortby ?: 'name';
         $this->order = $this->order ?: 'ASC';
@@ -29,7 +31,7 @@ class Studiengaenge_FachbereicheController extends Studiengaenge_StudiengaengeCo
             $this->order,
             ['Institute.Institut_id' => $perm_institutes]
         );
-        
+
         if ($studiengang_id) {
             $studiengang = Studiengang::find($studiengang_id);
             $this->details_action($studiengang->institut_id, $studiengang->id);
@@ -37,10 +39,10 @@ class Studiengaenge_FachbereicheController extends Studiengaenge_StudiengaengeCo
 
         $this->setSidebar();
     }
-    
+
     /**
      * shows the studiengaenge of a fachbereich
-     * 
+     *
      * @param string $fachbereich_id the id of the fachbereich
      */
     public function details_action($fachbereich_id, $studiengang_id = null, $stgteil_bez_id = null)
@@ -52,16 +54,16 @@ class Studiengaenge_FachbereicheController extends Studiengaenge_StudiengaengeCo
                 throw new Trails_Exception(403);
             }
         }
-        
+
         $this->parent_id = $this->fachbereich_id;
         $this->studiengaenge = Studiengang::findByFachbereich($this->fachbereich_id);
         if ($studiengang_id) {
             $this->studiengang_id = $studiengang_id;
             $this->set_studiengangteile($studiengang_id, $stgteil_bez_id);
         }
-        
+
         if (Request::isXhr()) {
-            if ($this->studiengang) {
+            if (!empty($this->studiengang)) {
                 if ($this->studiengang->typ == 'einfach') {
                     $this->render_template('studiengaenge/studiengaenge/studiengangteile');
                 } else {

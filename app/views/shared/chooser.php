@@ -4,7 +4,7 @@
     <?= $this->render_partial('shared/chooser_form', compact('name', 'list')); ?>
 <? endforeach; ?>
 </div>
-<? if ($last) : ?>
+<? if (!empty($last)) : ?>
 <script>
     <? if (sizeof($filter)) : ?>
         jQuery('#mvv-chooser-toggle').addClass('mvv-chooser-hidden');

@@ -6,7 +6,7 @@
         <tr class="header-row" id="modul_<?= $modul->getId() ?>">
             <? if ($modul->count_modulteile) : ?>
                 <td style="white-space:nowrap;" class="toggle-indicator">
-                    <? $details_action = $details_action ?: 'details'; ?>
+                    <? $details_action = $details_action ?? 'details'; ?>
                     <a class="mvv-load-in-new-row" href="<?= $controller->action_link($details_action, $modul->getId()) ?>">
                         <? if ($ampel_icon) : ?>
                             <?= $ampel_icon->asImg(['title' => $ampelstatus, 'style' => 'vertical-align: text-top;']) ?>

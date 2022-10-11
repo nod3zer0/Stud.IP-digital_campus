@@ -167,6 +167,8 @@ class Lvgruppe extends ModuleManagementModelTreeItem
             $filter_sql = '';
         }
         $num_args = func_num_args();
+        $semester_join = '';
+        $params = [];
         // get result filtered by a given semester
         if ($num_args == 2) {
             $semester_id = func_get_arg(1);

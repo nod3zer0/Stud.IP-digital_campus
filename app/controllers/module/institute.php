@@ -16,6 +16,8 @@ class Module_InstituteController extends Module_ModuleController
         parent::before_filter($action, $args);
         URLHelper::bindLinkParam('institut_id', $this->institut_id);
 
+        $this->inst_id = '';
+
         if (Request::isXhr()) {
             $this->set_layout(null);
         }

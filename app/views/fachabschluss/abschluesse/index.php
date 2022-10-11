@@ -48,9 +48,6 @@
             <? endif; ?>
             </td>
         </tr>
-        <? if ($abschluss_id === $abschluss->id) : ?>
-            <?= $this->render_partial('fachabschluss/abschluesse/details', compact('abschluss')) ?>
-        <? endif; ?>
         </tbody>
         <? endforeach; ?>
         <? if ($count > MVVController::$items_per_page) : ?>
@@ -67,7 +64,7 @@
                         $pagination->set_attribute('pagelink', $page_link);
                         echo $pagination->render('shared/pagechooser');
                     ?>
-                    
+
                     </td>
                 </tr>
             </tfoot>

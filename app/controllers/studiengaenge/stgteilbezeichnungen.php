@@ -16,6 +16,7 @@ class Studiengaenge_StgteilbezeichnungenController extends MVVController
 
     public function index_action()
     {
+        $this->bezeichnung_id = '';
         PageLayout::setTitle(_('Alle Studiengangteil-Bezeichnungen'));
         $this->stgteilbezeichnungen = StgteilBezeichnung::getAllEnriched();
         $this->setSidebar();

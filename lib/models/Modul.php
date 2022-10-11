@@ -397,7 +397,7 @@ class Modul extends ModuleManagementModelTreeItem
         if (!$institute) {
             return false;
         }
-        if ($this->responsible_institute->institut_id != $institut_id) {
+        if ($this->responsible_institute && $this->responsible_institute->institut_id != $institut_id) {
             $this->responsible_institute && $this->responsible_institute->delete();
             $resp_institute = new ModulInst();
             $resp_institute->institut_id = $institute->id;

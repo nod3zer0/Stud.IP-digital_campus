@@ -32,14 +32,14 @@ class Studiengaenge_VersionenController extends SharedVersionController
         switch ($step) {
             case 'index' :
                 $this->chooser_filter['fachbereich'] =
-                    Request::option('id', $this->chooser_filter['fachbereich']);
+                    Request::option('id', !empty($this->chooser_filter['fachbereich']));
                 $this->chooser_filter['stgteile'] = null;
                 $this->chooser_faecher_fachbereich();
                 $list = 'faecher_fachbereich';
                 break;
             case 'faecher_fachbereich' :
                 $this->chooser_filter['fach'] =
-                    Request::option('id', $this->chooser_filter['fach']);
+                    Request::option('id', !empty($this->chooser_filter['fach']));
                 $this->chooser_filter['stgteile'] = null;
                 $this->chooser_stgteile_fach();
                 $list = 'stgteile_fach';
@@ -53,11 +53,13 @@ class Studiengaenge_VersionenController extends SharedVersionController
                 throw new Trails_Exception(400);
         }
         $this->name = $list;
-        foreach ((array) $this->lists[$list]['elements'] as $key => $element) {
-            $this->list['elements'][$key]['name'] = htmlReady($element['name']);
+        if (!empty($this->lists[$list]['elements'])) {
+            foreach ((array)$this->lists[$list]['elements'] as $key => $element) {
+                $this->list['elements'][$key]['name'] = htmlReady($element['name']);
+            }
         }
         $this->list['headline'] = $this->lists[$list]['headline'];
-        if ($this->lists[$list]['stop']) {
+        if (!empty($this->lists[$list]['stop'])) {
             $this->list['stop'] = 1;
         }
         $this->sessSet('chooser_filter', $this->chooser_filter);
@@ -82,12 +84,15 @@ class Studiengaenge_VersionenController extends SharedVersionController
 
     protected function chooser_faecher_fachbereich()
     {
-        $faecher = Fach::findByFachbereich($this->chooser_filter['fachbereich'], true);
+        $faecher = [];
+        if (!empty($this->chooser_filter['fachbereich'])) {
+            $faecher = Fach::findByFachbereich($this->chooser_filter['fachbereich'], true);
+        }
         foreach ($faecher as $fach) {
             $this->lists['faecher_fachbereich']['elements'][$fach->id] = ['name' => $fach->name];
         }
         $this->lists['faecher_fachbereich']['headline'] = _('Fach');
-        $this->lists['faecher_fachbereich']['selected'] = $this->chooser_filter['fach'];
+        $this->lists['faecher_fachbereich']['selected'] = $this->chooser_filter['fach'] ?? '';
     }
 
     protected function chooser_studiengaenge_kategorie()
@@ -148,9 +153,12 @@ class Studiengaenge_VersionenController extends SharedVersionController
 
     protected function chooser_stgteile_fach()
     {
-        $stgteile = StudiengangTeil::findByFach(
-            $this->chooser_filter['fach'], null, 'zusatz,kp', 'ASC'
-        );
+        $stgteile = [];
+        if (!empty($this->chooser_filter['fach'])) {
+            $stgteile = StudiengangTeil::findByFach(
+                $this->chooser_filter['fach'], null, 'zusatz,kp', 'ASC'
+            );
+        }
         foreach ($stgteile as $stgteil) {
             $this->lists['stgteile_fach']['elements'][$stgteil->id] = [
                 'name' => $stgteil->getDisplayName()
@@ -158,7 +166,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
         }
         $this->lists['stgteile_fach']['headline'] = _('Studiengangteil');
         $this->lists['stgteile_fach']['stop'] = 1;
-        $this->lists['stgteile_fach']['selected'] = $this->chooser_filter['stgteil'];
+        $this->lists['stgteile_fach']['selected'] = $this->chooser_filter['stgteil'] ?? '';
     }
 
     protected function chooser_index()
@@ -169,7 +177,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
             $this->lists['index']['elements'][$key] = ['name' => $fachbereich['name']];
         }
         $this->lists['index']['headline'] = _('Fachbereich');
-        $this->lists['index']['selected'] = $this->chooser_filter['fachbereich'];
+        $this->lists['index']['selected'] = $this->chooser_filter['fachbereich'] ?? '';
     }
 
     /**
@@ -203,7 +211,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
 
     public function index_action($stgteil_id = null)
     {
-        $stgteil_id = Request::option('id', $stgteil_id ?: $this->chooser_filter['stgteil']);
+        $stgteil_id = Request::option('id', $stgteil_id ?? $this->chooser_filter['stgteil'] ?? '');
         PageLayout::setTitle(_('Versionen des gewählten Studiengangteils'));
         if ($stgteil_id) {
             $this->stgteil = StudiengangTeil::find($stgteil_id);
@@ -275,7 +283,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
             $this->action_url('reset'),
             Icon::create('refresh')
         );
-        if ($this->chooser_filter['stgteil']) {
+        if (!empty($this->chooser_filter['stgteil'])) {
             $stgteil = StudiengangTeil::find($this->chooser_filter['stgteil']);
             if ($stgteil && MvvPerm::haveFieldPermVersionen($stgteil, MvvPerm::PERM_CREATE)) {
                 $widget->addLink(
@@ -332,7 +340,7 @@ class Studiengaenge_VersionenController extends SharedVersionController
                 'semester'          => $semesters,
                 'selected_semester' => $semesters->findOneBy('beginn', $this->filter['start_sem.beginn'])->id,
                 'status'            => $status_results,
-                'selected_status'   => $this->filter['mvv_stgteilversion.stat'],
+                'selected_status'   => $this->filter['mvv_stgteilversion.stat'] ?? '',
                 'status_array'      => $GLOBALS['MVV_STGTEILVERSION']['STATUS']['values'],
                 'action'            => $this->action_url('set_filter'),
                 'action_reset'      => $this->action_url('reset_filter')

@@ -15,6 +15,9 @@ class Lvgruppen_LvgruppenController extends MVVController
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
+
+        $this->lvgruppe_id = '';
+
         // set navigation
         Navigation::activateItem($this->me . '/lvgruppen/lvgruppen');
         $this->filter = $this->sessGet('filter', []);
@@ -41,7 +44,7 @@ class Lvgruppen_LvgruppenController extends MVVController
         // Nur LvGruppen an Modulen von verantwortlichen Einrichtungen an denen der User
         // eine Rolle hat
         $own_institutes = MvvPerm::getOwnInstitutes();
-        if (!$this->filter['mvv_modul_inst.institut_id']) {
+        if (empty($this->filter['mvv_modul_inst.institut_id'])) {
             $this->filter['mvv_modul_inst.institut_id'] = $own_institutes;
         } else if (count($own_institutes)) {
             $this->filter['mvv_modul_inst.institut_id'] = array_intersect(

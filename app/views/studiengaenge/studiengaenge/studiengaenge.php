@@ -85,7 +85,7 @@
                 </form>
             </td>
         </tr>
-        <? if ($studiengang_id === $studiengang->id) : ?>
+        <? if (!empty($studiengang_id) && ($studiengang_id === $studiengang->id)) : ?>
             <? if ($studiengang->typ == 'mehrfach') : ?>
                 <tr class="loaded-details nohover">
                     <?= $this->render_partial('studiengaenge/studiengaenge/stgteil_bezeichnungen', compact('studiengang_id', 'studiengang', 'bez_stgteile', 'stgteile', 'stg_stgbez_id', 'search_stgteil', 'search')) ?>

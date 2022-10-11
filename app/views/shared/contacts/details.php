@@ -4,7 +4,7 @@
     <? else : ?>
         <? $object_types = ['Studiengang', 'StudiengangTeil', 'Modul'] ?>
         <? foreach ($object_types as $object_type) : ?>
-            <? $object_relations = $relations[$object_type] ?>
+            <? $object_relations = $relations[$object_type] ?? [] ?>
             <? if (!is_array($object_relations) || count($object_relations) === 0) : continue; endif; ?>
             <table class="default sortable-table" style="margin-top: 10px;" data-sortlist="[[0, 0]]">
                 <colgroup>
