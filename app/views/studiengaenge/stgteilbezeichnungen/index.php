@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Studiengaenge_StgteilbezeichnungenController $controller
+ * @var StgteilBezeichnung[] $stgteilbezeichnungen
+ * @var string $bezeichnung_id
+ */
+?>
+
 <?= $controller->jsUrl() ?>
 <form method="post">
     <?= CSRFProtection::tokenTag() ?>

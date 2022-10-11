@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var ProfileModulesController $controller
+ * @var string $username
+ * @var array $list
+ * @var array $config
+ */
+?>
 <form action="<?= $controller->url_for('profilemodules/update', compact('username')) ?>" method="post" class="default plus">
     <?= CSRFProtection::tokenTag() ?>
 

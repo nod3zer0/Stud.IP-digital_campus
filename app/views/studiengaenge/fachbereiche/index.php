@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Studiengaenge_FachbereicheController $controller
+ * @var Fachbereich[] $fachbereiche
+ * @var string $fachbereich_id
+ */
+?>
 <table class="default collapsable" style="width: 100%;">
     <thead>
         <tr class="sortable">

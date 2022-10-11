@@ -1,4 +1,10 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var StgteilabschnittModul $zuordnung
+ */
+use Studip\Button, Studip\LinkButton;
+?>
 <? $perm = new MvvPerm($zuordnung) ?>
 <form class="default" action="<?= $controller->action_link('modul_zuordnung/' . $zuordnung->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>

@@ -1,5 +1,12 @@
-<? use Studip\Button, Studip\LinkButton; ?>
-<? $perm_abschnitt = MvvPerm::getFieldPermModulteil_abschnitte($abschnitt_modul->abschnitt); ?>
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var StgteilabschnittModul $abschnitt_modul
+ */
+use Studip\Button, Studip\LinkButton;
+$perm_abschnitt = MvvPerm::getFieldPermModulteil_abschnitte($abschnitt_modul->abschnitt);
+?>
+
 <h3>
     <?= _('Zuordnung der Modulteile zu Fachsemestern') ?>
 </h3>

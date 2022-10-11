@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var PrivacyController $controller
+ * @var array $plugin_data
+ * @var string $section
+ * @var string $user_id
+ */
+?>
 <? if (empty($plugin_data) || empty(reset($plugin_data))): ?>
     <?= MessageBox::info(_('In dieser Kategorie sind keine Daten vorhanden.')) ?>
 <? endif; ?>

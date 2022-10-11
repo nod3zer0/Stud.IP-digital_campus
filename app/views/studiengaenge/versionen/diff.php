@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var StgteilVersion $old_version
+ * @var StgteilVersion $new_version
+ */
+?>
 <style>
     del.diffmod {
         color: red;

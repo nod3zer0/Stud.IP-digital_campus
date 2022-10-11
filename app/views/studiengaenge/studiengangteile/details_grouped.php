@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Studiengaenge_StudiengangteileController $controller
+ * @var StudiengangTeil[] $stgteile
+ * @var Icon $ampel_icon
+ * @var string $ampelstatus
+ */
+?>
 <td colspan="3">
     <table class="default">
         <tbody>
@@ -5,7 +13,7 @@
                 <tr>
                     <td>
                         <? if ($ampel_icon) : ?>
-                            <?= $ampel_icon->asImg(['title' => $ampelstatus, 'style' => 'vertical-align: text-top;']) ?>
+                            <?= $ampel_icon->asImg(['title' => htmlReady($ampelstatus), 'style' => 'vertical-align: text-top;']) ?>
                         <? endif; ?>
                         <?= htmlReady($stgteil->getDisplayName()) ?>
                     </td>

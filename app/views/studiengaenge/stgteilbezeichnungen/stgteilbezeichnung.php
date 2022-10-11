@@ -1,5 +1,13 @@
-<? use Studip\Button, Studip\LinkButton; ?>
-<? $perm = MvvPerm::get($stgteilbezeichnung) ?>
+<?php
+/**
+ * @var Studiengaenge_StgteilbezeichnungenController $controller
+ * @var StgteilBezeichnung $stgteilbezeichnung
+ * @var string $bezeichnung_id
+ */
+use Studip\Button, Studip\LinkButton;
+$perm = MvvPerm::get($stgteilbezeichnung)
+?>
+
 <form class="mvv-form default"
       action="<?= $controller->url_for('studiengaenge/stgteilbezeichnungen/store' . ($stgteilbezeichnung->getId() ? '/' . $stgteilbezeichnung->getId() : '')) ?>"
       method="post"<?= Request::isXhr() ? ' data-dialog' : '' ?>>

@@ -1,4 +1,10 @@
-<? $perm = MvvPerm::get($grund_stg) ?>
+<?php
+/**
+ * @var Studiengaenge_StudiengaengeController $controller
+ * @var Studiengang $grundstg
+ */
+$perm = MvvPerm::get($grund_stg);
+?>
 <div id="mvv-aufbaustg-table">
     <table class="default sortable-table" data-sortlist="[[0, 1]]">
         <colgroup>

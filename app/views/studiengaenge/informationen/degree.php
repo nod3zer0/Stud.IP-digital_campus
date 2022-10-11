@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Studiengaenge_InformationenController $controller
+ * @var Degree[] $degree
+ */
+?>
 <table class="default collapsable">
     <colgroup>
         <col width="70%">

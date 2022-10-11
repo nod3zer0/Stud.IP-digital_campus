@@ -1,4 +1,20 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Studiengaenge_StudiengaengeController $controller
+ * @var Studiengang $studiengang
+ * @var QuickSearch $search
+ * @var QuickSearch $search_institutes
+ * @var Abschluss[] $abschluesse
+ * @var Semester[] $semester
+ * @var string $search_institutes_id
+ * @var Institute $institut
+ * @var string $plugin_hook_content
+ * @var string $cancel_url
+ * @var MvvContactRange[] $contacts
+ */
+use Studip\Button, Studip\LinkButton;
+?>
+
 <?= $controller->jsUrl() ?>
 <? $perm = MvvPerm::get($studiengang) ?>
 <form class="default" action="<?= $controller->action_link('studiengang', $studiengang->id) ?>" method="post">

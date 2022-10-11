@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var StgteilVersion $version
+ * @var string $version_id
+ */
+?>
 <form name="approve" action="<?= $controller->action_link('approve/' . $version_id) ?>" method="post"
       style="margin-left: auto; margin-right: auto;">
     <? echo $this->render_partial('shared/studiengang/_stgteilversion', ['version' => $version]); ?>

@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Studiengaenge_FachbereichestgteileController $controller
+ * @var StudiengangTeil[] $fachbereiche
+ * @var array $stgteil_ids
+ * @var string $details_id
+ */
+?>
 <form method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable">

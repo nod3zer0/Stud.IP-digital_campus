@@ -1,4 +1,9 @@
-<?
+<?php
+/**
+ * @var MvvCourse[] $mvv_pathes
+ * @var Seminar_DetailsController $controller
+ */
+
 if (count($mvv_pathes)) {
 ?>
 <font size="-1">

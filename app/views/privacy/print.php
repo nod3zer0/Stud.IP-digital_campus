@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var string $user_fullname
+ * @var array $plugin_data
+ */
+?>
 <h1><?= sprintf(_('Personenbezogene Daten von %s'), htmlReady($user_fullname)); ?></h1>
 <? foreach ($plugin_data as $label => $tabledata) : ?>
     <? if ($tabledata['table_content']) : ?>

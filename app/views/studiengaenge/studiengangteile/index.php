@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Studiengaenge_StudiengangteileController $controller
+ * @var StudiengangTeil[] $stgteile
+ * @var int $count
+ * @var int $page
+ * @var string $stgteil_id
+ */
+?>
 <?= $controller->jsUrl() ?>
 <form method="post">
     <?= CSRFProtection::tokenTag() ?>
@@ -88,7 +97,8 @@
                     <tr>
                         <td colspan="5" style="text-align: right;">
                             <?
-                            $page_link = reset(explode('?', $controller->action_url('index'))) . '?page_studiengangteile=%s';
+                            $parts = explode('?', $controller->action_url('index'));
+                            $page_link = reset($parts) . '?page_studiengangteile=%s';
 
                             $pagination = $GLOBALS['template_factory']->open('shared/pagechooser');
                             $pagination->clear_attributes();

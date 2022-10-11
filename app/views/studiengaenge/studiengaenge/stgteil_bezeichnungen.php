@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Studiengaenge_StudiengaengeController $controller
+ * @var Studiengang $studiengang
+ * @var string $stg_stgbez_id
+ * @var QuickSearch $search_stgteil
+ * @var string $qs_search_stgteil_id
+ */
+?>
 <td colspan="5">
     <table class="default collapsable">
         <colgroup>

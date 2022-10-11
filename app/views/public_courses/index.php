@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $seminars
+ */
+?>
 <blockquote>
     <p>
         <?= _('Die folgenden Veranstaltungen können Sie betreten, ohne '

@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Studiengaenge_StudiengangteileController $controller
+ * @var string $stgteil_id
+ * @var string $version_id
+ * @var StudiengangTeil $version
+ */
+?>
 <form name="approve"
       action="<?= $controller->url_for('studiengaenge/studiengangteile/approve/' . $stgteil_id . '/' . $version_id) ?>"
       method="post" style="margin-left: auto; margin-right: auto;">

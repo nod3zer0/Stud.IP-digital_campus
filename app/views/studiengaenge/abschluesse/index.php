@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Studiengaenge_AbschluesseController $controller
+ * @var Abschluss[] $abschluesse
+ * @var string $abschluss_id
+ */
+?>
 <table class="default collapsable"">
 <thead>
     <tr class="sortable">

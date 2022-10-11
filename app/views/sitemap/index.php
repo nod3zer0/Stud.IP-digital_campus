@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Navigation[] $navigation
+ * @var Navigation[] $footer
+ * @var Navigation[] $quicklinks
+ */
+?>
 <h2><?= _('Hauptnavigation') ?></h2>
 <?= $this->render_partial('sitemap/navigation', ['navigation' => $navigation, 'needs_image' => true, 'style' => 'bold'])
 ?>

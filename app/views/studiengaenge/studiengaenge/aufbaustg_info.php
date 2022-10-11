@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var Aufbaustudiengang $aufbaustg
+ */
+?>
 <article class="studip">
     <header>
         <h1>

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Studiengaenge_InformationenController $controller
+ * @var Fach $studycourse
+ */
+?>
 <td colspan="3">
     <table class="default">
         <colgroup>

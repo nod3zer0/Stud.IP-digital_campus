@@ -1,3 +1,14 @@
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var StgteilAbschnitt $abschnitt
+ * @var StgteilVersion $version
+ * @var string $modul_id
+ * @var string $qs_search_modul_abschnitt_id
+ * @var StgteilabschnittModul[] $assignments
+ * @var QuickSearch $search_modul_abschnitt
+ */
+?>
 <td colspan="2">
     <form method="post">
         <?= CSRFProtection::tokenTag(); ?>

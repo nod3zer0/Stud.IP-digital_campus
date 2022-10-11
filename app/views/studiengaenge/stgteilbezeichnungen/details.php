@@ -1,5 +1,14 @@
-<? $languages = Config::get()->CONTENT_LANGUAGES; ?>
-<? $def_lang = reset(array_keys($languages)); ?>
+<?php
+/**
+ * @var Studiengaenge_StgteilbezeichnungenController $controller
+ * @var StgteilBezeichnung $stgteilbezeichnung
+ */
+
+$languages = Config::get()->CONTENT_LANGUAGES;
+$def_lang = array_keys($languages);
+$def_lang = reset($def_lang);
+?>
+
 <td colspan="4">
     <table class="default nohover">
         <tbody>

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var StgteilVersion $stgversion
+ */
+?>
+
 <html lang="de" xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
     <head>
        <meta charset="UTF-8">

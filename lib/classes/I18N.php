@@ -19,7 +19,7 @@ class I18N
      * @param string $name HTML name of the Inputfild
      * @param I18NString $value (Needs to be an i18n input string)
      * @param array $attributes Additional attributes of the input
-     * @return string Crafted input
+     * @return I18N Crafted input
      */
     public static function input($name, $value, array $attributes = [])
     {
@@ -33,7 +33,7 @@ class I18N
      * @param string $name HTML name of the Textarea
      * @param I18NString $value (Needs to be an i18n input string)
      * @param array $attributes Additional attributes of the input
-     * @return string Crafted textarea
+     * @return I18N Crafted textarea
      */
     public static function textarea($name, $value, array $attributes = [])
     {
@@ -63,7 +63,7 @@ class I18N
      * @param string|Flexi_Template $template   Template to use
      * @param string                $name       Name of the element
      * @param string|I18NString     $value      Value of the element
-     * @param array_merge           $attributes Additional variables for the
+     * @param array           $attributes Additional variables for the
      *                                          element
      */
     final protected function __construct($template, $name, $value, array $attributes)

@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var PrivacyController $controller
+ * @var array $sections
+ * @var string $user_id
+ */
+?>
 <ul class="boxed-grid">
 <? foreach ($sections as $key => $row): ?>
     <li>

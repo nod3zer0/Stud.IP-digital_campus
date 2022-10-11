@@ -1,4 +1,12 @@
-    <? $count = isset($versionen) ? count($versionen) : 0; ?>
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var StudiengangStgteil $stgteil
+ * @var StgteilVersion[] $versionen
+ * @var int $page
+ */
+?>
+<? $count = isset($versionen) ? count($versionen) : 0; ?>
 <div class="mvv-version-content">
     <table class="default collapsable">
         <thead>

@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Studiengaenge_StudiengaengeController $controller
+ * @var int $count
+ * @var int $page
+ * @var string $msg
+ */
+?>
 <?= $controller->jsUrl() ?>
 <table class="default collapsable">
     <caption>
@@ -31,7 +39,8 @@
                         $pagination->set_attribute('perPage', MVVController::$items_per_page);
                         $pagination->set_attribute('num_postings', $count);
                         $pagination->set_attribute('page', $page);
-                        $page_link = reset(explode('?', $controller->action_url('index'))) . '?page_studiengaenge=%s';
+                        $parts = explode('?', $controller->action_url('index'));
+                        $page_link = reset($parts) . '?page_studiengaenge=%s';
                         $pagination->set_attribute('pagelink', $page_link);
                         echo $pagination->render('shared/pagechooser');
                         ?>

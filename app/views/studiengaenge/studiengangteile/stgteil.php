@@ -1,4 +1,16 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Studiengaenge_StudiengangteileController $controller
+ * @var StudiengangTeil $stgteil
+ * @var Fachbereich $fachbereich
+ * @var Fach[] $faecher
+ * @var QuickSearch $search_fach
+ * @var string $search_fach_id
+ * @var MvvContactRange[] $contacts
+ * @var string $cancel_url
+ */
+use Studip\Button, Studip\LinkButton;
+?>
 <?= $controller->jsUrl() ?>
 <? $perm = MvvPerm::get($stgteil) ?>
 

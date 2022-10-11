@@ -1,3 +1,14 @@
+<?php
+/**
+ * @var Studiengaenge_StudiengaengeController $controller
+ * @var string $stg_stgbez_id
+ * @var Studiengang $studiengang
+ * @var StudiengangTeil[] $stgteile
+ * @var StgteilBezeichnung $stg_bez
+ * @var QuickSearch $search
+ * @var string $qs_search_id
+ */
+?>
 <td colspan="5">
     <table id="stgteilbez_<?= $stg_stgbez_id ?>" class="default sortable">
         <colgroup>
@@ -84,4 +95,3 @@
         <? endif; ?>
     </table>
 </td>
-

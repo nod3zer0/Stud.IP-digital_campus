@@ -1,6 +1,17 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var StgteilVersion $version
+ * @var StudiengangTeil $stgteil
+ * @var Semester[] $semester
+ * @var string $cancel_url
+ */
+
+use Studip\Button, Studip\LinkButton;
+$perm = MvvPerm::get($version)
+?>
+
 <?= $controller->jsUrl() ?>
-<? $perm = MvvPerm::get($version) ?>
 
 <form class="default" action="<?= $controller->action_link('version', $stgteil->id, $version->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>

@@ -1,9 +1,21 @@
+<?php
+/**
+ * @var ScoreController $controller
+ * @var int $current_user_score
+ * @var User $current_user
+ * @var array $persons
+ * @var int $offset
+ * @var int $page
+ * @var int $numberOfPersons
+ * @var int $max_per_page
+ */
+?>
 <table class="default">
     <caption>
         <span class="actions" style="font-size: 0.9em;">
             <?= _('Ihre Punkte:') ?>
-            <strong><?= number_format($this->current_user_score, 0, ',', '.') ?></strong>
-            <div class="hidden-small-down">(<?= Score::getTitel($this->current_user_score, $this->current_user->geschlecht) ?>)</div>
+            <strong><?= number_format($current_user_score, 0, ',', '.') ?></strong>
+            <div class="hidden-small-down">(<?= Score::getTitel($current_user_score, $current_user->geschlecht) ?>)</div>
         </span>
         <?= _('Stud.IP-Rangliste')?>
     </caption>

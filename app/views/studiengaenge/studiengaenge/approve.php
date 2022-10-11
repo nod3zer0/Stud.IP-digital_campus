@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Studiengaenge_StudiengaengeController $controller
+ * @var Studiengang $studiengang
+ * @var string $studiengang_id
+ * @var Institute $institut
+ */
+?>
+
 <form data-dialog="reload-on-close" name="approve" action="<?= $controller->action_link('approve', $studiengang_id) ?>"
       method="post" style="margin-left: auto; margin-right: auto;">
     <?= $this->render_partial('shared/studiengang/_studiengang', ['studiengang' => $studiengang, 'institut' => $institut]); ?>

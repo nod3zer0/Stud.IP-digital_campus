@@ -1,3 +1,15 @@
+<?php
+/**
+ * @var ContactController $controller
+ * @var array $users
+ * @var bool $showGroups
+ * @var int $contact_count
+ * @var int $page
+ * @var int $limit
+ * @var bool $showOnlyBuddies
+ */
+$dimension = Avatar::getDimension(Avatar::SMALL);
+?>
 <div class="online-list">
     <div id="online_contacts">
         <table class="default">
@@ -5,7 +17,7 @@
                 <?= _('Kontakte') ?>
             </caption>
             <colgroup>
-                <col width="<?= reset(Avatar::getDimension(Avatar::SMALL)) ?>px">
+                <col width="<?= reset($dimension) ?>px">
                 <col>
                 <col>
                 <col width="1%">
@@ -80,7 +92,7 @@
                     <? endif; ?>
                 </caption>
                 <colgroup>
-                    <col width="<?= reset(Avatar::getDimension(Avatar::SMALL)) ?>px">
+                    <col width="<?= reset($dimension) ?>px">
                     <col>
                     <col>
                     <col width="1%">

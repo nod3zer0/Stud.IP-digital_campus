@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var StgteilAbschnitt[] $abschnitte
+ * @var StgteilVersion $version
+ * @var string $abschnitt_id
+ * @var string $qs_search_modul_version_id
+ * @var QuickSearch $search_modul_version
+ */
+?>
 <td colspan="3">
     <table id="abschnitte_<?= $version->id ?>" class="default collapsable sortable">
         <colgroup>

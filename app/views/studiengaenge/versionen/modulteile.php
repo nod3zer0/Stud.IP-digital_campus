@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var Modul $modul
+ * @var StgteilabschnittModul $assignment
+ */
+?>
 <td colspan="2">
     <table id="modulteile_<?= $modul->id ?>" class="default">
         <colgroup>

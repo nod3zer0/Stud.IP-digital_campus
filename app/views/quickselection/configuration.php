@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var QuickselectionController $controller
+ * @var Navigation[] $links
+ * @var array $config
+ */
+?>
 <div id="quickSelectionEdit">
     <form id="configure_quickselection" action="<?= $controller->link_for('quickselection/save') ?>" method="post" class="default" data-dialog>
         <fieldset>

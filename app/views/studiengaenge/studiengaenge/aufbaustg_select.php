@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Studiengaenge_StudiengaengeController $controller
+ * @var Studiengang $grundstg
+ * @var Studiengang[] $aufbaustgs
+ * @var array $aufbaustg_assigmnents
+ */
+?>
 <form data-dialog action="<?= $controller->url_for('studiengaenge/studiengaenge/aufbaustg_assign') ?>" class="default" id="mvv-aufbaustg-new" method="post">
     <input type="hidden" name="grundstg_id" value="<?= htmlReady($grundstg->id) ?>">
 

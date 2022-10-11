@@ -1,5 +1,9 @@
-<?
-# Lifter010: TODO
+<?php
+/**
+ * @var Navigation[] $navigation
+ * @var bool $needs_image
+ * @var string $style
+ */
 ?>
 <ul>
     <? foreach ($navigation as $nav) : ?>

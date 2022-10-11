@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Studiengaenge_InformationenController $controller
+ * @var Fach[] $studycourses
+ */
+?>
 <table class="default collapsable">
     <colgroup>
         <col style="width: 70%">

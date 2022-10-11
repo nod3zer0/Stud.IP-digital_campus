@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var StgteilVersion $version
+ * @var QuickSearch $search_version
+ * @var string $qs_id_version
+ */
+?>
 <h1><?= htmlReady($version->getDisplayName()) ?></h1>
 <div>
     <h4><?= _('Vergleich mit folgender Version:') ?></h4>

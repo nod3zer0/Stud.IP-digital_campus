@@ -1,3 +1,17 @@
+<?php
+/**
+ * @var Studiengaenge_StudiengaengeController $controller
+ * @var Studiengang[] $studiengaenge
+ * @var string $studiengang_id
+ * @var StgteilBezeichnung $bez_stgteile
+ * @var StudiengangTeil[] $stgteile
+ * @var string $stg_stgbez_id
+ * @var string $stg_stgbez_id
+ * @var QuickSearch $search_stgteil
+ * @var QuickSearch $search
+ */
+?>
+
 <? foreach ($studiengaenge as $studiengang) : ?>
     <? $perm = new MvvPerm($studiengang) ?>
     <tbody class="<?= ($studiengang_id === $studiengang->id ? 'not-collapsed' : 'collapsed') ?>">

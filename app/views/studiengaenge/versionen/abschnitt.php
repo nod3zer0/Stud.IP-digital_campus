@@ -1,5 +1,13 @@
-<? use Studip\Button, Studip\LinkButton; ?>
-<? $perm = MvvPerm::get($abschnitt) ?>
+<?php
+/**
+ * @var Studiengaenge_VersionenController $controller
+ * @var StgteilAbschnitt $abschnitt
+ * @var string $cancel_url
+ */
+
+use Studip\Button, Studip\LinkButton;
+$perm = MvvPerm::get($abschnitt)
+?>
 
 <form class="default" action="<?= $controller->action_link('abschnitt/' . $abschnitt->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
