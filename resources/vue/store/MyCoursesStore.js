@@ -1,9 +1,4 @@
 const configMapping = {
-    allow_tiled_display: value => {
-        return {
-            MY_COURSES_ALLOW_TILED_DISPLAY: value,
-        }
-    },
     display_type: value => {
         return {
             MY_COURSES_TILED_DISPLAY: value === 'tiles',

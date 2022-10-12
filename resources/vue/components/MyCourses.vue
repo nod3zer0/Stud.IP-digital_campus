@@ -21,7 +21,7 @@
         </studip-message-box>
         <component v-else :is="displayComponent" :icon-size="iconSize"></component>
 
-        <MountingPortal v-if="allowTiled" mount-to="#tiled-courses-sidebar-switch .sidebar-widget-content .widget-list" name="sidebar-switch">
+        <MountingPortal mount-to="#tiled-courses-sidebar-switch .sidebar-widget-content .widget-list" name="sidebar-switch">
             <my-courses-sidebar-switch></my-courses-sidebar-switch>
         </MountingPortal>
 
@@ -49,9 +49,6 @@ export default {
         MyCoursesNewContentToggle,
     },
     computed: {
-        allowTiled () {
-            return this.getConfig('allow_tiled_display');
-        },
         displayComponent () {
             return this.displayedType === 'tiles'
                  ? MyCoursesTiles

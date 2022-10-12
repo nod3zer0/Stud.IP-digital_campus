@@ -192,9 +192,8 @@ class MyCoursesController extends AuthenticatedController
                 'allow_dozent_visibility'  => Config::get()->ALLOW_DOZENT_VISIBILITY,
                 'open_groups'              => $GLOBALS['user']->cfg->MY_COURSES_OPEN_GROUPS,
                 'sem_number'               => Config::get()->IMPORTANT_SEMNUMBER,
-                'allow_tiled_display'      => Config::get()->MY_COURSES_ALLOW_TILED_DISPLAY,
-                'display_type'             => Config::get()->MY_COURSES_ALLOW_TILED_DISPLAY && $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY ? 'tiles' : 'tables',
-                'responsive_type'          => Config::get()->MY_COURSES_ALLOW_TILED_DISPLAY && $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY_RESPONSIVE ? 'tiles' : 'tables',
+                'display_type'             => $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY ? 'tiles' : 'tables',
+                'responsive_type'          => $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY_RESPONSIVE ? 'tiles' : 'tables',
                 'navigation_show_only_new' => $GLOBALS['user']->cfg->MY_COURSES_SHOW_NEW_ICONS_ONLY,
                 'group_by'                 => $this->getGroupField(),
             ],
@@ -904,19 +903,16 @@ class MyCoursesController extends AuthenticatedController
 
         $this->setGroupingSelector($group_field);
 
-        if (Config::get()->MY_COURSES_ALLOW_TILED_DISPLAY) {
-            $views = $sidebar->addWidget(new ViewsWidget());
-            $views->id = 'tiled-courses-sidebar-switch';
-            $views->addLink(
-                _('Tabellarische Ansicht'),
-                '#'
-            )->setActive(!$GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY);
-            $views->addLink(
-                _('Kachelansicht'),
-                '#'
-            )->setActive($GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY);
-
-        }
+        $views = $sidebar->addWidget(new ViewsWidget());
+        $views->id = 'tiled-courses-sidebar-switch';
+        $views->addLink(
+            _('Tabellarische Ansicht'),
+            '#tabular'
+        )->setActive(!$GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY);
+        $views->addLink(
+            _('Kachelansicht'),
+            '#tiles'
+        )->setActive($GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY);
 
         $options = $sidebar->addWidget(new OptionsWidget());
         $options->id = 'tiled-courses-new-contents-toggle';
