@@ -35,6 +35,7 @@ class ErrorHandler
         }
 
         $response = $this->app->getResponseFactory()->createResponse();
+        $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write($this->determinePayload($exception, $displayErrorDetails));
 
         $code = $this->determineStatusCode($exception, $request->getMethod());
