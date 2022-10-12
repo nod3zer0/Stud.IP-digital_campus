@@ -291,10 +291,6 @@ class Admin_CoursesController extends AuthenticatedController
             PageLayout::postError(_('Sie wurden noch keiner Einrichtung zugeordnet'));
         }
 
-        if (!$GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT) {
-            $GLOBALS['user']->cfg->store('MY_INSTITUTES_DEFAULT', $this->insts[0]['Institut_id']);
-        }
-
         // Semester selection
         if ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE) {
             $this->semester = Semester::find($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE);
