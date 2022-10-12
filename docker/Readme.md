@@ -6,4 +6,3 @@ You can trigger an automated push to the studip docker repository by providing t
 `./build_images.sh push`
 
 All images are automatically built for linux/amd64
-\ No newline at end of file

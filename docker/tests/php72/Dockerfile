@@ -15,7 +15,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr/include/ \
 RUN docker-php-ext-install pdo gettext curl gd mbstring zip pdo pdo_mysql mysqli intl json
 
 # Install npm using nvm
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt update && apt install -y --no-install-recommends nodejs \
         curl apt-transport-https ca-certificates gnupg unzip git \
     && rm -rf /var/lib/apt/lists/*
