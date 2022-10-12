@@ -42,9 +42,6 @@ webpack-prod: .webpack.prod
 webpack-watch: npm
 	npm run webpack-watch
 
-wds: npm
-	npm run wds
-
 .webpack.dev: node_modules/.package-lock.json $(RESOURCES)
 	@rm -f .webpack.prod
 	npm run webpack-dev

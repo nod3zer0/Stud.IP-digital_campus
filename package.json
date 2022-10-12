@@ -6,7 +6,6 @@
     "scripts": {
         "lint": "eslint resources/assets/javascripts resources/vue",
         "css-lint": "stylelint resources/assets/stylesheets",
-        "wds": "webpack serve --progress --config webpack.dev-server.js",
         "webpack-dev": "webpack --config webpack.dev.js --mode development",
         "webpack-prod": "webpack --config webpack.prod.js --mode production",
         "webpack-watch": "webpack --config webpack.dev.js --mode development --watch"
@@ -133,7 +132,6 @@
         "vuex": "^3.6.2",
         "webpack": "^5.70.0",
         "webpack-cli": "^4.10.0",
-        "webpack-dev-server": "^4.4.0",
         "webpack-merge": "5.4.0",
         "webpack-notifier": "^1.15.0"
     },
