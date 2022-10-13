@@ -16,10 +16,10 @@ class NewsRangesInput extends Input
             }
         }
         if ($GLOBALS['perm']->have_perm('root')) {
-            $sql .= "UNION SELECT * FROM (SELECT BINARY 'studip__home' AS `range_id`, '"._('Stud.IP-Startseite')."' AS `name`) as tmp_global_table WHERE `name` LIKE :input ";
+            $sql .= "UNION SELECT * FROM (SELECT CAST('studip__home' AS BINARY) AS `range_id`, '"._('Stud.IP-Startseite')."' AS `name`) as tmp_global_table WHERE `name` LIKE :input ";
             $sql .= "UNION SELECT CONCAT(`user_id`, '__person') AS `range_id`, CONCAT(`Vorname`, ' ', `Nachname`) AS `name` FROM `auth_user_md5` WHERE CONCAT(`Vorname`, ' ', `Nachname`) LIKE :input ";
         } else {
-            $sql .= "UNION SELECT * FROM (SELECT '".\User::findCurrent()->id."__person' AS `range_id`, '".\addslashes(\User::findCurrent()->getFullName()." - "._('Profilseite'))."' AS `name`) as tmp_user_table WHERE `name` LIKE :input ";
+            $sql .= "UNION SELECT * FROM (SELECT CAST('".\User::findCurrent()->id."__person' AS BINARY) AS `range_id`, '".\addslashes(\User::findCurrent()->getFullName()." - "._('Profilseite'))."' AS `name`) as tmp_user_table WHERE `name` LIKE :input ";
         }
         $searchtype = new \SQLSearch($sql, _('Bereich suchen'));
         $items = [];
