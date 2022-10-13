@@ -47,15 +47,15 @@ class BlubberController extends AuthenticatedController
             $this->thread = array_pop($threads);
         }
 
+        $this->thread_data = [];
         if ($this->thread) {
             $this->thread->markAsRead();
+            $this->thread_data = $this->thread->getJSONData(
+                50,
+                null,
+                Request::get("search")
+            );
         }
-
-        $this->thread_data = $this->thread->getJSONData(
-            50,
-            null,
-            Request::get("search")
-        );
 
         if (!Avatar::getAvatar($GLOBALS['user']->id)->is_customized() && !$_SESSION['already_asked_for_avatar']) {
             $_SESSION['already_asked_for_avatar'] = true;
