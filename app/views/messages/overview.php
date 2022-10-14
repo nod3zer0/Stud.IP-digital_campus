@@ -57,7 +57,7 @@
                 </noscript>
                 <? endif ?>
                 <? foreach ($messages as $message) : ?>
-                <?= $this->render_partial("messages/_message_row.php", compact("message", "received". "settings")) ?>
+                <?= $this->render_partial("messages/_message_row.php", compact("message", "received")) ?>
                 <? endforeach ?>
                 <? if ($more || (Request::int("offset") > 0)) : ?>
                 <noscript>
