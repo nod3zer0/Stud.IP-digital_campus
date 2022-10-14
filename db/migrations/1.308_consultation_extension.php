@@ -1,13 +1,6 @@
 <?php
 class ConsultationExtension extends Migration
 {
-    public function __construct($verbose = false)
-    {
-        parent::__construct($verbose);
-
-        require_once __DIR__ . '/../../app/routes/Consultations.php';
-    }
-
     public function description()
     {
         return 'Extends consultations as described in TIC #9614';
@@ -103,10 +96,6 @@ class ConsultationExtension extends Migration
                 FROM `consultation_blocks`
                 WHERE range_type = 'course'";
         DBManager::get()->execute($sql, [$plugin_id]);
-
-        RESTAPI\ConsumerPermissions::get('global')->activateRouteMap(
-            new RESTAPI\Routes\Consultations()
-        );
     }
 
     public function down()
@@ -162,10 +151,5 @@ class ConsultationExtension extends Migration
                   LEFT JOIN `roles_plugins` USING (`pluginid`)
                   WHERE `pluginclassname` = 'ConsultationModule'";
         DBManager::get()->exec($query);
-
-        // Deactivate routemap
-        RESTAPI\ConsumerPermissions::get('global')->deactivateRouteMap(
-            new RESTAPI\Routes\Consultations()
-        );
     }
 }
