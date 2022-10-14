@@ -33,8 +33,8 @@ class StudipAuthCAS extends StudipAuthSSO
         if (Request::get('sso') === $this->plugin_name) {
             if ($this->proxy) {
                 URLHelper::setBaseUrl($GLOBALS['ABSOLUTE_URI_STUDIP']);
-                $cas = phpCAS::proxy(CAS_VERSION_2_0, $this->host, $this->port, $this->uri, false);
-                phpCAS::setPGTStorage(new CAS_PGTStorage_Cache($cas));
+                phpCAS::proxy(CAS_VERSION_2_0, $this->host, $this->port, $this->uri, false);
+                phpCAS::setPGTStorage(new CAS_PGTStorage_Cache(phpCAS::getCasClient()));
                 phpCAS::setFixedCallbackURL(URLHelper::getURL('dispatch.php/cas/proxy'));
             } else {
                 phpCAS::client(CAS_VERSION_2_0, $this->host, $this->port, $this->uri, false);

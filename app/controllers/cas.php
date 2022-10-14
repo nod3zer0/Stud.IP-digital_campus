@@ -24,9 +24,11 @@ class CasController extends StudipController
         $pgt = Request::get('pgtId');
         $pgt_iou = Request::get('pgtIou');
         $cas_config = $GLOBALS['STUDIP_AUTH_CONFIG_CAS'];
-        $cas = phpCAS::proxy(CAS_VERSION_2_0, $cas_config['host'], $cas_config['port'], $cas_config['uri'], false);
-        $pgt_storage = new CAS_PGTStorage_Cache($cas);
+        phpCAS::proxy(CAS_VERSION_2_0, $cas_config['host'], $cas_config['port'], $cas_config['uri'], false);
+
+        $pgt_storage = new CAS_PGTStorage_Cache(phpCAS::getCasClient());
         $pgt_storage->write($pgt, $pgt_iou);
+
         $this->render_nothing();
     }
 }
