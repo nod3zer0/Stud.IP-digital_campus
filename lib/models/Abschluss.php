@@ -339,7 +339,7 @@ class Abschluss extends ModuleManagementModelTreeItem implements PrivacyObject
 
     public function getDisplayName($options = self::DISPLAY_DEFAULT)
     {
-        if ($this->name_kurz) {
+        if ($this->name_kurz != '') {
             return sprintf('%s (%s)', $this->name, $this->name_kurz);
         } else {
             return $this->name;
