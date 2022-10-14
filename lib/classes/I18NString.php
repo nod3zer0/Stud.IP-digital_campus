@@ -3,9 +3,8 @@
 /**
  * I18NString class
  */
-class I18NString
+class I18NString implements JsonSerializable
 {
-
     /**
      * Text in default content language.
      *
@@ -75,6 +74,16 @@ class I18NString
         }
 
         return (string) $this->base;
+    }
+
+    /**
+     * Return the JSON representation of this i18n field in selected language.
+     *
+     * @return string
+     */
+    public function jsonSerialize()
+    {
+        return (string) $this;
     }
 
     /**
