@@ -420,7 +420,7 @@
                 >
                     <template v-slot:dialogContent>
                         <div v-show="!exportRunning">
-                            <translate> Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als ZIP-Datei.</translate>
+                            <span v-translate>Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als ZIP-Datei.</span>
                             <div class="cw-element-export">
                                 <label>
                                     <input type="checkbox" v-model="exportChildren" />
@@ -464,7 +464,7 @@
                     @confirm="pdfExportCurrentElement"
                 >
                     <template v-slot:dialogContent>
-                        <translate> Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als PDF-Datei.</translate>
+                        <span v-translate>Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als PDF-Datei.</span>
                             <div class="cw-element-export">
                                 <label>
                                     <input type="checkbox" v-model="pdfExportChildren" />
