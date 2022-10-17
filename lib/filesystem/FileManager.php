@@ -1518,7 +1518,7 @@ class FileManager
             $documentpath .= '?' . $url_parts['query'];
         }
         $host = $url_parts['host'];
-        $port = $url_parts['port'];
+        $port = $url_parts['port'] ?? null;
         $scheme = mb_strtolower($url_parts['scheme']);
         if (!in_array($scheme, ['http', 'https']) || !$host) {
             return ['response' => 'HTTP/1.0 400 Bad Request', 'response_code' => 400];
@@ -1564,7 +1564,7 @@ class FileManager
         }
 
         $urlString = "GET {$documentpath} HTTP/1.0\r\nHost: {$host}\r\n";
-        if ($url_parts['user'] && $url_parts['pass']) {
+        if (isset($url_parts['user'], $url_parts['pass'])) {
             $pass = $url_parts['pass'];
             $user = $url_parts['user'];
             $urlString .= "Authorization: Basic " . base64_encode("{$user}:{$pass}") . "\r\n";
@@ -1606,7 +1606,7 @@ class FileManager
         }
 
         // Anderer Dateiname?
-        $disposition_header = $header['Content-Disposition'] ?: $header['content-disposition'];
+        $disposition_header = $header['Content-Disposition'] ?? $header['content-disposition'] ?? null;
         if ($disposition_header) {
             $header_parts = explode(';', $disposition_header);
             foreach ($header_parts as $part) {
@@ -1621,7 +1621,7 @@ class FileManager
         }
 
         // Weg über einen Locationheader:
-        $location_header = $header['Location'] ?: $header['location'];
+        $location_header = $header['Location'] ?? $header['location'] ?? null;
         if (in_array($header['response_code'], [300, 301, 302, 303, 305, 307]) && $location_header) {
             if (mb_strpos($location_header, 'http') !== 0) {
                 $location_header = $url_parts['scheme'] . '://' . $url_parts['host'] . '/' . $location_header;
@@ -1909,7 +1909,7 @@ class FileManager
             $range_ids[] = $course->id;
         }
         foreach ($institutes as $institute) {
-            $range_ids[] = $institute->id;
+            $range_ids[] = $institute['Institut_id'];
         }
 
         if ($with_personal_file_area) {

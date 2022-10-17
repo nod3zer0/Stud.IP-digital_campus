@@ -435,7 +435,7 @@ class NewsController extends StudipController
         } else {
             $this->news_startdate = time();
         }
-        if (is_array($this->area_structure[$area_type])) {
+        if (isset($this->area_structure[$area_type]) && is_array($this->area_structure[$area_type])) {
             $this->area_type = $area_type;
         }
         PageLayout::setTitle(_('Meine Ankündigungen'));
@@ -523,7 +523,7 @@ class NewsController extends StudipController
         $counter = 0;
         // check for delete-buttons and news limit
         foreach ($this->area_structure as $type => $area_data) {
-            if (is_array($this->news_items[$type])) {
+            if (isset($this->news_items[$type]) && is_array($this->news_items[$type])) {
                 foreach($this->news_items[$type] as $key => $news) {
                     // has trash icon been clicked?
                     if (Request::submitted('news_remove_' . $news['object']->news_id . '_' . $news['range_id']) && Request::isPost()) {

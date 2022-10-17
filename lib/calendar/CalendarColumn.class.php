@@ -324,7 +324,7 @@ class CalendarColumn
         $group_matrix = [];
         foreach ($this->getGroupedEntries() as $groups) {
             foreach ($groups as $group) {
-                if (is_array($group[0])) {
+                if (isset($group[0]) && is_array($group[0])) {
                     $data = $group[0];
                 } else {
                     $data = $group;

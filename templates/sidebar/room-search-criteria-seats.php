@@ -17,7 +17,7 @@
         <input type="checkbox" class="special-item-switch" value="1"
                title="<?= _('Kriterium ausgewählt'); ?>"
                name="<?= htmlReady($criteria['name'] . '_enabled')?>"
-               <?= $criteria['enabled'] ? 'checked' : ''?>>
+               <?= !empty($criteria['enabled']) ? 'checked' : ''?>>
         <?= htmlReady($criteria['title']) ?>
     </label>
     <div class="hgroup special-item-content">

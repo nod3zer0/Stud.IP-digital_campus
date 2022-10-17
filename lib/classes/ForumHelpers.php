@@ -194,7 +194,7 @@ class ForumHelpers {
             }
         }
 
-        return $online_status[$user_id] ?: 'offline';
+        return $online_status[$user_id] ?? 'offline';
     }
 
     /**

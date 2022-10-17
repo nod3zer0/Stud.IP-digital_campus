@@ -22,8 +22,8 @@
                 <? else: ?>
                     <?= htmlReady($consumer->title) ?>
                 <? endif; ?>
-                <? if ($type = $types[$consumer->type]): ?>
-                    <small>(<?= htmlReady($type) ?>)</small>
+                <? if (isset($types[$consumer->type])): ?>
+                    <small>(<?= htmlReady($types[$consumer->type]) ?>)</small>
                 <? endif; ?>
                 </h3>
             <? if ($consumer->description): ?>

@@ -17,7 +17,7 @@ if ($file->isDownloadable($GLOBALS['user']->id)) {
                 <input type="checkbox"
                        name="ids[]"
                        value="<?= htmlReady($file->getId()) ?>"
-                       <?= in_array($file->getId(), (array) $marked_element_ids) ? 'checked' : '' ?>>
+                       <?= in_array($file->getId(), (array) ($marked_element_ids ?? [])) ? 'checked' : '' ?>>
             <? endif ?>
         </td>
     <? endif ?>
@@ -40,7 +40,7 @@ if ($file->isDownloadable($GLOBALS['user']->id)) {
         <? endif ?>
 
         <?php $terms = $file->getTermsOfUse() ?>
-        <? if ($terms && !$terms->isDownloadable($topFolder->range_id, $topFolder->range_type, false)) : ?>
+        <? if ($terms && !empty($topFolder) && !$terms->isDownloadable($topFolder->range_id, $topFolder->range_type, false)) : ?>
             <?= Icon::create('lock-locked', Icon::ROLE_INFO)->asImg(['title' => _('Das Herunterladen dieser Datei ist nur eingeschränkt möglich.')]) ?>
         <? endif ?>
     </td>

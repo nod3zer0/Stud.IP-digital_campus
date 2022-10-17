@@ -328,7 +328,8 @@ class SemClass implements ArrayAccess
      */
     public function isModuleMandatory($module)
     {
-        return $this->data['modules'][$module]['sticky']
+        return isset($this->data['modules'][$module])
+            && $this->data['modules'][$module]['sticky']
             && $this->data['modules'][$module]['activated'];
     }
 

@@ -88,11 +88,13 @@ function get_object_name($range_id, $object_type)
         $statement->execute([$range_id]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $type = $INST_TYPE[$row['type']]['name'];
-        if (!$type) {
+        if (!$row) {
+            $name = _('Unbekannt');
             $type = _('Einrichtung');
+        } else {
+            $name = $row['Name'];
+            $type = $INST_TYPE[$row['type']]['name'] ?? _('Einrichtung');
         }
-        $name = $row['Name'];
     }
 
     return compact('name', 'type');

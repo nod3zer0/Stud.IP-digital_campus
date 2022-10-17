@@ -102,6 +102,6 @@
     </div>
 <? endif ?>
 
-<? if ($no_files) : ?>
+<? if (!empty($no_files)) : ?>
     <?= MessageBox::info(_('Es sind keine Dateien vorhanden, die für Sie zugänglich sind!')) ?>
 <? endif ?>

@@ -282,24 +282,24 @@ class ProfileModulesController extends AuthenticatedController
             if ($config['displaystyle'] !== 'category'){
                 $cat = 'Funktionen von A-Z';
             } else {
-                $cat = $metadata['category'] ?: 'Sonstiges';
+                $cat = !empty($metadata['category']) ? $metadata['category'] : 'Sonstiges';
             }
 
-            $icon = $metadata['icon'];
+            $icon = $metadata['icon'] ?? false;
             if ($icon && !$icon instanceof Icon) {
                 $icon = Icon::create("{$plugin->getPluginURL()}/{$metadata['icon']}");
             }
 
             $item = [
                 'id'          => $plugin->getPluginId(),
-                'name'        => $metadata['displayname'] ?: $plugin->getPluginname(),
+                'name'        => !empty($metadata['displayname']) ? $metadata['displayname'] : $plugin->getPluginname(),
                 'url'         => $plugin->getPluginURL(),
                 'activated'   => $manager->isPluginActivatedForUser($plugin->getPluginId(), $this->user->id),
                 'icon'        => $icon,
-                'abstract'    => str_replace('\n', ' ', $metadata['descriptionshort'] ?? $metadata['summary']),
-                'description' => str_replace('\n', ' ', $metadata['descriptionlong'] ?? $metadata['description']),
+                'abstract'    => str_replace('\n', ' ', $metadata['descriptionshort'] ?? $metadata['summary'] ?? ''),
+                'description' => str_replace('\n', ' ', $metadata['descriptionlong'] ?? $metadata['description'] ?? ''),
                 'screenshots' => [],
-                'keywords'    => $metadata['keywords'] ? explode(';', $metadata['keywords']) : [],
+                'keywords'    => isset($metadata['keywords']) ? explode(';', $metadata['keywords']) : [],
                 'homepage'    => $metadata['homepage'] ?? '',
                 'helplink'    => $metadata['helplink'] ?? '',
             ];

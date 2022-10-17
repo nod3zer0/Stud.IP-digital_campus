@@ -138,7 +138,7 @@
             <? endif ?>
             </td>
         </tr>
-    <? elseif ($children) : ?>
+    <? elseif (!empty($children)) : ?>
         <tr>
             <td><strong><?= _('Unterveranstaltungen') ?></strong></td>
             <td>
@@ -343,7 +343,7 @@
     </article>
 <? endif ?>
 
-<? if ($studyAreaTree && $studyAreaTree->required_children) : ?>
+<? if (isset($studyAreaTree) && $studyAreaTree->required_children) : ?>
     <article class="studip">
         <header>
             <h1><?= _('Studienbereiche') ?></h1>
@@ -384,7 +384,7 @@
 
 <?
 // Ausgabe der Modulzuordnung MVV
-if ($mvv_tree) : ?>
+if (!empty($mvv_tree)) : ?>
     <article class="studip">
         <header>
             <h1><?= _('Modulzuordnungen') ?></h1>
@@ -400,7 +400,7 @@ if ($mvv_tree) : ?>
     </article>
 <? endif; ?>
 
-<? if ($mvv_pathes) : ?>
+<? if (!empty($mvv_pathes)) : ?>
     <article class="studip">
         <header>
             <h1><?= _('Modulzuordnungen') ?></h1>

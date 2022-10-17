@@ -2340,7 +2340,7 @@ class Resource extends SimpleORMap implements StudipItem
         } else {
             //No temporary permission exist or has been retrieved.
             //Check for a "normal" permission.
-            $cached_perms = self::$permission_cache[$this->id][$user->id];
+            $cached_perms = self::$permission_cache[$this->id][$user->id] ?? null;
             if ($cached_perms === null) {
                 //The permission of the specified user is not in the
                 //permission cache. Load it from the database and store

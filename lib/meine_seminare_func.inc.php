@@ -195,17 +195,26 @@ function add_sem_name(&$my_obj)
 
 /**
  *
- * @param unknown_type $groups
- * @param unknown_type $group_key
- * @param unknown_type $group_entry
+ * @param array $groups
+ * @param string $group_key
+ * @param array $group_entry
  */
 function fill_groups(&$groups, $group_key, $group_entry)
 {
     if (is_null($group_key)){
         $group_key = 'not_grouped';
     }
-    $group_entry['name'] = str_replace(["ä","ö","ü"], ["ae","oe","ue"], mb_strtolower($group_entry['name']));
-    if (!is_array($groups[$group_key]) || (is_array($groups[$group_key]) && !in_array($group_entry, $groups[$group_key]))){
+
+    if (!isset($groups[$group_key]) || !is_array($groups[$group_key])) {
+        $groups[$group_key] = [];
+    }
+
+    $group_entry['name'] = str_replace(
+        ["ä","ö","ü"],
+        ["ae","oe","ue"],
+        mb_strtolower($group_entry['name'])
+    );
+    if (!in_array($group_entry, $groups[$group_key])) {
         $groups[$group_key][$group_entry['seminar_id']] = $group_entry;
         return true;
     } else {

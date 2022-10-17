@@ -45,6 +45,7 @@ class Settings_StatusgruppenController extends Settings_SettingsController
     public function index_action($verify_action = null, $verify_id = null)
     {
         $all_rights = false;
+        $admin_insts = [];
         if ($this->user->username != $GLOBALS['user']->username) {
             $query = "SELECT Institut_id
                       FROM Institute
@@ -79,7 +80,6 @@ class Settings_StatusgruppenController extends Settings_SettingsController
             $statement->execute($parameters);
             $institutes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-            $admin_insts = [];
             foreach ($institutes as $institute) {
                 $institute['groups'] = GetAllStatusgruppen($institute['Institut_id'], $this->user->id) ?: [];
 

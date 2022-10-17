@@ -72,7 +72,7 @@ $sidebar->addWidget($options, 'calendar/schedule/options');
     <?= htmlReady($current_semester['name']) ?>
 </div>
 
-<? if ($show_entry) : ?>
+<? if (!empty($show_entry)) : ?>
     <div class="ui-widget-overlay" style="width: 100%; height: 100%; z-index: 1001;"></div>
     <?= $this->render_partial('calendar/schedule/_dialog', [
         'content_for_layout' => $this->render_partial('calendar/schedule/entry', [

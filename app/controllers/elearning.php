@@ -40,7 +40,7 @@ class ElearningController extends AuthenticatedController
         $this->cms_select = Request::quoted('cms_select');
         $GLOBALS['cms_select'] = $this->cms_select;
         $this->cms_list = [];
-        if ($_SESSION['elearning_open_close']["type"] != "user") {
+        if (isset($_SESSION['elearning_open_close']) && $_SESSION['elearning_open_close']["type"] != "user") {
             unset($_SESSION['elearning_open_close']);
         }
         $_SESSION['elearning_open_close']["type"] = "user";
@@ -140,6 +140,7 @@ class ElearningController extends AuthenticatedController
         $sidebar = Sidebar::get();
         $widget = new ActionsWidget();
 
+        $link_count = 0;
         if ($GLOBALS['perm']->have_perm('autor') AND count($this->cms_list)) {
             foreach($this->cms_list as $cms_key => $cms_data) {
                 if ($connected_cms[$cms_key]->user->isConnected()) {
@@ -153,13 +154,16 @@ class ElearningController extends AuthenticatedController
                 }
             }
         }
-        if ($link_count)
+        if ($link_count) {
             $sidebar->addWidget($widget);
+        }
 
         // terminate objects
-        if (is_array($connected_cms))
-            foreach($connected_cms as $system)
+        if (is_array($connected_cms)) {
+            foreach ($connected_cms as $system) {
                 $system->terminate();
+            }
+        }
 
        if (is_array($messages)) {
            foreach ($messages as $mtype => $mtext) {

@@ -303,7 +303,7 @@ function get_local_visibility_by_id($user_id, $context, $return_user_perm=false)
         }
     }
 
-    if ($data[$context] === null) {
+    if (!isset($data[$context])) {
         $data[$context] = Config::get()->getValue(mb_strtoupper($context) . '_VISIBILITY_DEFAULT');
     }
 

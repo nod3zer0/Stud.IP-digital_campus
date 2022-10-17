@@ -63,8 +63,8 @@
             $content = Assets::img('blank.gif', ['width' => 16]) . ' ';
 
             // News
-            if ($news = $person['newscount']) {
-                $tmp = sprintf(ngettext('Eine persönliche Ankündigung', '%s persönliche Ankündigungen', $news), $news);
+            if (!empty($person['newscount'])) {
+                $tmp = sprintf(ngettext('Eine persönliche Ankündigung', '%s persönliche Ankündigungen', $person['newscount']), $person['newscount']);
                 $content .= sprintf(
                     '<a href="%s">%s</a> ',
                     URLHelper::getLink('dispatch.php/profile?username=' . $person['username']),
@@ -75,8 +75,8 @@
             }
 
             // Votes
-            if ($vote = $person['votecount']) {
-                $tmp = sprintf(ngettext('Eine Umfrage', '%s Umfragen', $vote), $vote);
+            if (!empty($person['votecount'])) {
+                $tmp = sprintf(ngettext('Eine Umfrage', '%s Umfragen', $person['votecount']), $person['votecount']);
                 $content .= sprintf(
                     '<a href="%s">%s</a> ',
                     URLHelper::getLink('dispatch.php/profile?username=' . $person['username'] . '#questionnaire_area'),
@@ -87,8 +87,8 @@
             }
 
             // Termine
-            if ($termin = $person['eventcount']) {
-                $tmp = sprintf(ngettext('Ein Termin', '%s Termine', $termin), $termin);
+            if (!empty($person['eventcount'])) {
+                $tmp = sprintf(ngettext('Ein Termin', '%s Termine', $person['eventcount']), $person['eventcount']);
                 $content .= sprintf(
                     '<a href="%s">%s</a> ',
                     URLHelper::getLink('dispatch.php/profile?username=' . $person['username'] . '#a'),

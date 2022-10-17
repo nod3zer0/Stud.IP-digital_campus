@@ -63,6 +63,7 @@ class Calendar_ScheduleController extends AuthenticatedController
     {
         $schedule_settings = CalendarScheduleModel::getScheduleSettings();
         $inst_mode = false;
+        $institute_id = null;
         if ($GLOBALS['perm']->have_perm('admin')) {
             $inst_mode = true;
         }

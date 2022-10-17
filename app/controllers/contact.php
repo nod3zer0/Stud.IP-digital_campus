@@ -76,6 +76,7 @@ class ContactController extends AuthenticatedController
             $selected = $this->group;
             $contacts = SimpleCollection::createFromArray(User::findMany($selected->members->pluck('user_id')));
         } else {
+            $selected = false;
             $contacts = User::findCurrent()->contacts;
         }
         $contacts = $contacts->filter(function($u) {
@@ -206,7 +207,7 @@ class ContactController extends AuthenticatedController
         $letterlist = new SidebarWidget();
         $html       = '';
         foreach (range('A', 'Z') as $letter) {
-            if ($this->contacts[$letter]) {
+            if (!empty($this->contacts[$letter])) {
                 $html .= "<a href=\"#letter_{$letter}\">{$letter}</a>";
             } else {
                 $html .= "<span>{$letter}</span>";

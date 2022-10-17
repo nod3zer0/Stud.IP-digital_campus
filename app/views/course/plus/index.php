@@ -25,7 +25,7 @@ use Studip\Button;
                 if ($_SESSION['plus']['displaystyle'] != 'category' && $category != 'Funktionen von A-Z') {
                     $visibility = 'invisible';
                 }
-                if (isset($_SESSION['plus']) && !$_SESSION['plus']['Kategorie'][$category] && $category != 'Funktionen von A-Z') {
+                if (isset($_SESSION['plus']) && empty($_SESSION['plus']['Kategorie'][$category]) && $category != 'Funktionen von A-Z') {
                     $visibility = 'invisible';
                 }
                 ?>
@@ -61,7 +61,7 @@ use Studip\Button;
                                        id="<?= $key ?>"
                                        name="<?= $key ?>"
                                        data-moduleclass="<?= htmlReady($val['moduleclass']) ?>"
-                                       data-key="<?= htmlReady($val['modulkey']) ?>"
+                                       data-key="<?= htmlReady($val['modulkey'] ?? '') ?>"
                                        value="TRUE" <?= $cb_disabled ?> <?= $cb_checked ?>
                                        onClick="STUDIP.Plus.setModule.call(this);">
                                 <div class="element_header">

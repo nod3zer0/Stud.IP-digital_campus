@@ -39,6 +39,7 @@ class Search_ArchiveController extends AuthenticatedController
         $this->teacher   = trim(Request::get('teacher'));
         $this->semester  = Request::get('semester');
         $this->institute = Request::get('institute');
+        $this->courses   = [];
 
         // the optional parameter my_courses_only says that only the courses of
         // the current user shall be searched with the search criteria

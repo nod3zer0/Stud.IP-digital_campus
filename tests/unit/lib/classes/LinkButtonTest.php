@@ -20,49 +20,65 @@ class LinkButtonTestCase extends \Codeception\Test\Unit
 
     function testCreateWithLabel()
     {
-        $this->assertEquals('<a class="button" href="?">yes</a>',
-                            '' . LinkButton::create('yes'));
+        $this->assertXmlStringEqualsXmlString(
+            '<a class="button" href="?">yes</a>',
+            (string) LinkButton::create('yes')
+        );
     }
 
     function testCreateWithLabelAndUrl()
     {
-        $this->assertEquals('<a class="button" href="http://example.net">yes</a>',
-                            '' . LinkButton::create('yes', 'http://example.net'));
+        $this->assertXmlStringEqualsXmlString(
+            '<a class="button" href="http://example.net">yes</a>',
+            (string) LinkButton::create('yes', 'http://example.net')
+        );
     }
 
     function testCreateWithLabelAndArray()
     {
-        $this->assertEquals('<a a="1" b="2" class="button" href="?">yes</a>',
-                            '' . LinkButton::create('yes', ['a' => 1, 'b' => 2]));
+        $this->assertXmlStringEqualsXmlString(
+            '<a a="1" b="2" class="button" href="?">yes</a>',
+            (string) LinkButton::create('yes', ['a' => 1, 'b' => 2])
+        );
     }
 
     function testCreateWithLabelUrlAndArray()
     {
-        $this->assertEquals('<a a="1" b="2" class="button" href="http://example.net">yes</a>',
-                            '' . LinkButton::create('yes', 'http://example.net', ['a' => 1, 'b' => 2]));
+        $this->assertXmlStringEqualsXmlString(
+            '<a a="1" b="2" class="button" href="http://example.net">yes</a>',
+            (string) LinkButton::create('yes', 'http://example.net', ['a' => 1, 'b' => 2])
+        );
     }
 
     function testCreateAccept()
     {
-        $this->assertEquals('<a class="accept button" href="?" name="accept">Übernehmen</a>',
-                            '' . LinkButton::createAccept());
+        $this->assertXmlStringEqualsXmlString(
+            '<a class="accept button" href="?" name="accept">Übernehmen</a>',
+            (string) LinkButton::createAccept()
+        );
     }
 
     function testCreateCancel()
     {
-        $this->assertEquals('<a class="cancel button" href="?" name="cancel">Abbrechen</a>',
-                            '' . LinkButton::createCancel());
+        $this->assertXmlStringEqualsXmlString(
+            '<a class="cancel button" href="?" name="cancel">Abbrechen</a>',
+            (string) LinkButton::createCancel()
+        );
     }
 
     function testCreatePreOrder()
     {
-        $this->assertEquals('<a class="pre-order button" href="?" name="pre-order">ok</a>',
-                            '' . LinkButton::createPreOrder());
+        $this->assertXmlStringEqualsXmlString(
+            '<a class="pre-order button" href="?" name="pre-order">ok</a>',
+            (string) LinkButton::createPreOrder()
+        );
     }
 
     function testCreateWithInsaneArguments()
     {
-        $this->assertEquals('<a class="button" href="http://example.net?m=&amp;m=" mad="&lt;S&gt;tu&quot;ff">&gt;ok&lt;</a>',
-                            '' . LinkButton::create('>ok<', 'http://example.net?m=&m=', ['mad' => '<S>tu"ff']));
+        $this->assertXmlStringEqualsXmlString(
+            '<a class="button" href="http://example.net?m=&amp;m=" mad="&lt;S&gt;tu&quot;ff">&gt;ok&lt;</a>',
+            (string) LinkButton::create('>ok<', 'http://example.net?m=&m=', ['mad' => '<S>tu"ff'])
+        );
     }
 }

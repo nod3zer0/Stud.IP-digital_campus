@@ -1,6 +1,9 @@
 <?
 if (!isset($link)) $link = true;
 
+$output = [];
+$output_dates = [];
+
 // condense regular dates by room
 if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
     $first_date   = sprintf(_("ab %s"), strftime('%x', $cycle['first_date']['date']));
@@ -41,18 +44,20 @@ endforeach;
 
 
 // condense irregular dates by room
-if (is_array($dates['irregular'])) foreach ($dates['irregular'] as $date) :
-    if (isset($date['resource_id'])) :
-        $output_dates[$date['resource_id']][] = $date;
-    elseif (!empty($date['raum'])) :
-        $output_dates[$date['raum']][] = $date;
-    else :
-        $output_dates[_('k.A.')][]  = $date['tostring'];
-    endif;
-endforeach;
+if (isset($dates['irregular']) && is_array($dates['irregular'])) {
+    foreach ($dates['irregular'] as $date) :
+        if (isset($date['resource_id'])) :
+            $output_dates[$date['resource_id']][] = $date;
+        elseif (!empty($date['raum'])) :
+            $output_dates[$date['raum']][] = $date;
+        else :
+            $output_dates[_('k.A.')][]  = $date['tostring'];
+        endif;
+    endforeach;
+}
 
 // now shrink the dates for each room/freetext and add them to the output
-if (is_array($output_dates)) foreach ($output_dates as $dates) :
+foreach ($output_dates as $dates) :
     if (isset($dates[0]['resource_id'])) :
         $room_obj = Room::find($dates[0]['resource_id']);
         if ($link) {
@@ -72,7 +77,7 @@ endforeach;
 ?>
 
 
-<? if (!is_array($output) || count($output) === 0) : ?>
+<? if (count($output) === 0) : ?>
     <?= htmlReady($ort) ?: _("nicht angegeben") ?>
 <? else: ?>
     <table class="default">

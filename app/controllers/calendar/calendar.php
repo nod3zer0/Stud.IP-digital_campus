@@ -109,12 +109,12 @@ class Calendar_CalendarController extends AuthenticatedController
             $tmpl->action_url = $this->url_for('calendar/group/switch');
             $tmpl->view = $this->action;
             $filters->addElement(new WidgetElement($tmpl->render()));
-            $filters->addCheckbox(_('Abgelehnte Termine anzeigen'),
-                    $this->settings['show_declined'],
-                    $this->url_for($this->base . 'show_declined',
-                            ['show_declined' => 1]),
-                    $this->url_for($this->base . 'show_declined',
-                            ['show_declined' => 0]));
+            $filters->addCheckbox(
+                _('Abgelehnte Termine anzeigen'),
+                $this->settings['show_declined'] ?? false,
+                $this->url_for($this->base . 'show_declined', ['show_declined' => 1]),
+                $this->url_for($this->base . 'show_declined', ['show_declined' => 0])
+            );
         }
         Sidebar::get()->addWidget($filters);
     }

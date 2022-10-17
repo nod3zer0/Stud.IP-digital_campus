@@ -36,17 +36,16 @@ class LinkButton extends Interactable
     public function __toString()
     {
         // add "button" to attribute @class
+        if (!isset($this->attributes['class'])) {
+            $this->attributes['class'] = '';
+        }
         $this->attributes['class'] .= ' button';
 
-        $attributes = [];
-        ksort($this->attributes);
-        foreach ($this->attributes as $k => $v) {
-            $attributes[] = sprintf(' %s="%s"', $k, htmlReady($v));
-        }
-
         // TODO: URLHelper...?!
-        return sprintf('<a%s>%s</a>',
-                       join('', $attributes),
-                       htmlReady($this->label));
+        return sprintf(
+            '<a %s>%s</a>',
+            arrayToHtmlAttributes($this->attributes),
+            htmlReady($this->label)
+        );
     }
 }

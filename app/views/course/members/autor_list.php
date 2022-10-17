@@ -81,7 +81,7 @@
             </tr>
         </thead>
         <tbody>
-        <? $nr = $autor_nr?>
+        <? $nr = $autor_nr ?? 0; ?>
         <? foreach ($autoren as $autor) : ?>
             <? $fullname = $autor['fullname']?>
             <tr>
@@ -175,7 +175,7 @@
                 </td>
             </tr>
         <? endforeach ?>
-        <? if ($invisibles > 0) : ?>
+        <? if (!empty($invisibles)) : ?>
             <tr>
                 <td colspan="<?= $cols ?>" class="blank"></td>
             </tr>

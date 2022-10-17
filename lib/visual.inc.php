@@ -132,13 +132,13 @@ function formatLinks($text, $nl2br = true) {
     $markup->addMarkup(
         'links',
         $link_markup_rule['start'],
-        $link_markup_rule['end'],
+        $link_markup_rule['end'] ?? '',
         $link_markup_rule['callback']
     );
     $markup->addMarkup(
         'emails',
         $email_markup_rule['start'],
-        $email_markup_rule['end'],
+        $email_markup_rule['end'] ?? '',
         $email_markup_rule['callback']
     );
     return $markup->format(htmlReady($text, true, $nl2br));

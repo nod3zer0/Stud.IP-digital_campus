@@ -961,6 +961,9 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
             }
 
             foreach ($matches[1] as $tag) {
+                if (!isset($hashtags[mb_strtolower($tag)])) {
+                    $hashtags[mb_strtolower($tag)] = 0;
+                }
                 $hashtags[mb_strtolower($tag)] += 1;
             }
         }

@@ -1298,7 +1298,7 @@ class SemBrowse {
         }
 
         // set default values
-        if (!$_SESSION['sem_browse_data']['default_sem']) {
+        if (empty($_SESSION['sem_browse_data']['default_sem'])) {
             $_SESSION['sem_browse_data']['default_sem'] =
                 Semester::getIndexById(self::getDefaultSemester(), true, true)
                         ?: 'all';

@@ -142,7 +142,7 @@ class DataField extends SimpleORMap implements PrivacyObject
      */
     public static function permMask($perm)
     {
-        return self::$permission_masks[$perm];
+        return self::$permission_masks[$perm] ?? 0;
     }
 
     /**

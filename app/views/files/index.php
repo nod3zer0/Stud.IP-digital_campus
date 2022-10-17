@@ -1,6 +1,6 @@
 <? if ($topFolder): ?>
     <?php
-    if (!$controllerpath) {
+    if (empty($controllerpath)) {
         $controllerpath = 'files/index';
         if ($topFolder->range_type !== 'user') {
             $controllerpath = $topFolder->range_type . '/' . $controllerpath;
@@ -81,7 +81,7 @@
     }
     ?>
 
-    <? if ($show_file_search) : ?>
+    <? if (!empty($show_file_search)) : ?>
         <form class="default" method="get" action="<?= $controller->link_for('files_dashboard/search') ?>">
             <?= $this->render_partial('files_dashboard/_input-group-search') ?>
         </form>

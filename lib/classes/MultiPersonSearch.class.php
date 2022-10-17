@@ -83,7 +83,7 @@ class MultiPersonSearch {
      * @return array containing all new persons
      */
     public function getAddedUsers() {
-        return $_SESSION['multipersonsearch'][$this->name]['added'] ? : [];
+        return $_SESSION['multipersonsearch'][$this->name]['added'] ?? [];
     }
 
     /**
@@ -490,17 +490,19 @@ class MultiPersonSearch {
      * restores the internal data from a session.
      */
     public function restoreFromSession() {
-        $this->title = $_SESSION['multipersonsearch'][$this->name]['title'];
-        $this->description = $_SESSION['multipersonsearch'][$this->name]['description'];
-        $this->quickfilterIds = $_SESSION['multipersonsearch'][$this->name]['quickfilterIds'];
-        $this->additionalHMTL = $_SESSION['multipersonsearch'][$this->name]['additionalHMTL'];
-        $this->executeURL = html_entity_decode($_SESSION['multipersonsearch'][$this->name]['executeURL']);
-        $this->jsFunction = $_SESSION['multipersonsearch'][$this->name]['jsFunction'];
-        $this->defaultSelectableUsersIDs = $_SESSION['multipersonsearch'][$this->name]['defaultSelectableUsersIDs'];
-        $this->defaultSelectedUsersIDs = $_SESSION['multipersonsearch'][$this->name]['defaultSelectedUsersIDs'];
-        $this->searchObject = unserialize($_SESSION['multipersonsearch'][$this->name]['searchObject']);
-        $this->navigationItem = $_SESSION['multipersonsearch'][$this->name]['navigationItem'];
-        $this->dataDialogStatus = $_SESSION['multipersonsearch'][$this->name]['dataDialogStatus'];
+        if (isset($_SESSION['multipersonsearch'][$this->name])) {
+            $this->title = $_SESSION['multipersonsearch'][$this->name]['title'];
+            $this->description = $_SESSION['multipersonsearch'][$this->name]['description'];
+            $this->quickfilterIds = $_SESSION['multipersonsearch'][$this->name]['quickfilterIds'];
+            $this->additionalHMTL = $_SESSION['multipersonsearch'][$this->name]['additionalHMTL'];
+            $this->executeURL = html_entity_decode($_SESSION['multipersonsearch'][$this->name]['executeURL']);
+            $this->jsFunction = $_SESSION['multipersonsearch'][$this->name]['jsFunction'];
+            $this->defaultSelectableUsersIDs = $_SESSION['multipersonsearch'][$this->name]['defaultSelectableUsersIDs'];
+            $this->defaultSelectedUsersIDs = $_SESSION['multipersonsearch'][$this->name]['defaultSelectedUsersIDs'];
+            $this->searchObject = unserialize($_SESSION['multipersonsearch'][$this->name]['searchObject']);
+            $this->navigationItem = $_SESSION['multipersonsearch'][$this->name]['navigationItem'];
+            $this->dataDialogStatus = $_SESSION['multipersonsearch'][$this->name]['dataDialogStatus'];
+        }
     }
 
     /**

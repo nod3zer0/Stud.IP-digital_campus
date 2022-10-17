@@ -41,13 +41,18 @@ class ModulesNotification
     public $registered_notification_modules = [];
     public $subject;
 
-    function __construct ()
+    public function __construct ()
     {
         foreach (MyRealmModel::getDefaultModules() as $id => $module) {
-            if (!is_object($module)) continue;
+            if (!is_object($module)) {
+                continue;
+            }
+
+            $metadata = $module->getMetadata();
+
             $this->registered_notification_modules[$id] = [
-                'icon' => $module->getMetadata()['icon'],
-                'name' => $module->getMetadata()['displayname'] ?: $module->getPluginName()
+                'icon' => $metadata['icon'],
+                'name' => !empty($metadata['displayname'])  ? $metadata['displayname'] : $module->getPluginName(),
             ];
             if ($module instanceof CoreOverview) {
                 $this->registered_notification_modules[$id]['name'] = _("Ankündigungen");

@@ -51,7 +51,7 @@ class SmileyFormat extends TextFormat
         $smileys = Smiley::getShort();
         $name    = $smileys[$matches[2]] ?? '';
         return $name
-            ? $matches[1] . Smiley::getByName($name)->getImageTag() . $matches[3]
+            ? $matches[1] . Smiley::getByName($name)->getImageTag() . ($matches[3] ?? '')
             : $matches[0];
     }
 }

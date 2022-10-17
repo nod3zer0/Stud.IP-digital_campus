@@ -115,6 +115,8 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
         }
         if ($datafield_id !== null) {
             $one_datafield = ' AND a.datafield_id = ' . DBManager::get()->quote($datafield_id);
+        } else {
+            $one_datafield = '';
         }
 
         $query = "SELECT a.*, b.*,a.datafield_id,b.datafield_id as isset_content ";
@@ -142,7 +144,7 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
             $query .= "AND ((object_class & :object_class) OR object_class IS NULL) $one_datafield ORDER BY priority";
             $params = array_merge($params, [
                 ':range_id' => (string) $range_id,
-                ':sec_range_id' => (string) $sec_range_id,
+                ':sec_range_id' => (string) ($sec_range_id ?? ''),
                 ':object_type' => $object_type,
                 ':object_class' => (int) $object_class]);
         }

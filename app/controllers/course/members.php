@@ -145,6 +145,7 @@ class Course_MembersController extends AuthenticatedController
         $this->studipticket = Seminar_Session::get_ticket();
         $this->subject = $this->getSubject();
         $this->groups = $this->status_groups;
+        $this->semAdmissionEnabled = false;
         // Check Seminar
         $this->waitingTitle = _('Warteliste (nicht aktiv)');
         $this->waiting_type = 'awaiting';

@@ -8,7 +8,7 @@
         <? if($create_perm) : ?>
         <nav>
             <a href="<?= $controller->link_for('course/feedback/create_form/' . $range_id . '/' . $range_type) ?>"
-                title="<?= _('Neues Feedback-Element') ?>" class="feedback-add" data-id="<?= $feedback->id ?>"
+                title="<?= _('Neues Feedback-Element') ?>" class="feedback-add" data-id="<?= $feedback ? $feedback->id : '' ?>"
                 data-dialog="">
                 <?= Icon::create('add'); ?>
             </a>

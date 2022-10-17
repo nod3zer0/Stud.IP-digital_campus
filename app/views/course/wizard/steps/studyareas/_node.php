@@ -1,4 +1,4 @@
-<?php if (!$search_result || in_array($node->id, $search_result)) : ?>
+<?php if (empty($search_result) || in_array($node->id, $search_result)) : ?>
 <li class="sem-tree-<?= htmlReady($node->id) ?> keep-node" data-id="<?= $node->id ?>">
     <?php if ($node->isAssignable()) : ?>
     <?= Icon::create('arr_2left', 'sort')->asInput(["name" => 'assign['.$node->id.']', "onclick" => "return STUDIP.CourseWizard.assignNode('".$node->id."')", "class" => in_array($node->id,$values['studyareas']?:[])?'hidden-no-js':'', "style" => in_array($node->id,$values['studyareas']?:[])?'display:none':false]) ?>

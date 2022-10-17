@@ -24,7 +24,7 @@ class Course_DetailsController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        $course_id = Request::option('sem_id', $args[0]);
+        $course_id = Request::option('sem_id', $args[0] ?? null);
         if (empty($course_id)) {
             checkObject(); //wirft Exception, wenn Context::get() leer ist
             $course_id = $GLOBALS['SessionSeminar'];
@@ -217,7 +217,7 @@ class Course_DetailsController extends AuthenticatedController
                 Icon::create('print'),
                 ['class' => 'print_action', 'target' => '_blank']
             );
-            if ($enrolment_info['enrolment_allowed'] && $sidebarlink) {
+            if (isset($enrolment_info) && $enrolment_info['enrolment_allowed'] && $sidebarlink) {
                 if (in_array($enrolment_info['cause'], ['member', 'root', 'courseadmin'])) {
                     $abo_msg = _('direkt zur Veranstaltung');
                 } else {
@@ -291,7 +291,7 @@ class Course_DetailsController extends AuthenticatedController
             );
             $sidebar->addWidget($share);
 
-            if ($enrolment_info['description']) {
+            if (isset($enrolment_info) && $enrolment_info['description']) {
                 PageLayout::postInfo($enrolment_info['description']);
             }
         }
