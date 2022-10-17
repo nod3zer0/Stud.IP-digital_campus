@@ -514,8 +514,11 @@ class Navigation implements IteratorAggregate
      */
     public function insertSubNavigation($name, Navigation $navigation, $where)
     {
+        $subnav = [];
+
+        $done = false;
         foreach ($this->getSubNavigation() as $key => $nav) {
-            if ($key == $where) {
+            if ($key === $where) {
                 $subnav[$name] = $navigation;
                 $done = true;
             }

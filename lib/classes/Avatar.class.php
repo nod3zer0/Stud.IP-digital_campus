@@ -118,7 +118,9 @@ class Avatar {
 
     public function getCustomAvatarUrl($size, $ext = 'png')
     {
-        $retina = $GLOBALS['auth']->auth['devicePixelRatio'] > 1.2;
+        $retina = isset($GLOBALS['auth']->auth['devicePixelRatio'])
+                ? $GLOBALS['auth']->auth['devicePixelRatio'] > 1.2
+                : false;
         $size = $retina && file_exists($this->getCustomAvatarPath($size, 'png', true))
               ? $size."@2x"
               : $size;

@@ -308,8 +308,8 @@ class MyRealmModel
         foreach ($courses as $index => $course) {
             // export object to array for simple handling
             $_course = $course->toArray($param_array);
-            $_course['start_semester'] = $course->start_semester->name;
-            $_course['end_semester']   = $course->end_semester->name;
+            $_course['start_semester'] = $course->start_semester ? $course->start_semester->name : null;
+            $_course['end_semester']   = $course->end_semester ? $course->end_semester->name : null;
             $_course['sem_class']      = $course->getSemClass();
             $_course['obj_type']       = 'sem';
 
