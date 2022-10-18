@@ -49,6 +49,30 @@ class UserDomain extends SimpleORMap
     }
 
     /**
+     * Count the number of courses associated with this user domain.
+     *
+     * @return int number of courses
+     */
+    public function countCourses(): int
+    {
+        $query = 'SELECT COUNT(*) FROM seminar_userdomains WHERE userdomain_id = ?';
+
+        return (int) DBManager::get()->fetchColumn($query, [$this->id]);
+    }
+
+    /**
+     * Count the number of courses associated with this user domain.
+     *
+     * @return int number of users
+     */
+    public function countUsers(): int
+    {
+        $query = 'SELECT COUNT(*) FROM user_userdomains WHERE userdomain_id = ?';
+
+        return (int) DBManager::get()->fetchColumn($query, [$this->id]);
+    }
+
+    /**
      * Add a user to this user domain.
      */
     public function addUser ($user_id)

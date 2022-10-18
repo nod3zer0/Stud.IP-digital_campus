@@ -28,13 +28,13 @@
                 <tr>
                     <td><?= htmlReady($domain->name) ?></td>
                     <td><?= htmlReady($domain->id) ?></td>
-                    <td><?= count($domain->users) ?></td>
-                    <td><?= count($domain->courses) ?></td>
+                    <td><?= $domain->countUsers() ?></td>
+                    <td><?= $domain->countCourses() ?></td>
                     <td class="actions">
                         <a href="<?= $controller->link_for("admin/domain/edit/{$domain->id}") ?>" data-dialog="size=auto">
                             <?= Icon::create('edit')->asImg(tooltip2(_('bearbeiten'))) ?>
                         </a>
-                    <? if (count($domain->users) === 0): ?>
+                    <? if ($domain->countUsers() === 0): ?>
                         <?= Icon::create('trash')->asInput(tooltip2(_('löschen')) + [
                             'class'        => 'text-top',
                             'formaction'   => $controller->url_for("admin/domain/delete/{$domain->id}"),
