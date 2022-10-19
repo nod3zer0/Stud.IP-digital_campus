@@ -211,14 +211,14 @@ export default {
         initSize() {
             this.currentWidth = parseInt(this.width, 10);
             this.currentHeight = parseInt(this.height, 10);
-            if (window.outerWidth > this.currentWidth) {
-                this.left = (window.outerWidth - this.currentWidth) / 2;
+            if (window.innerWidth > this.currentWidth) {
+                this.left = (window.innerWidth - this.currentWidth) / 2;
             } else {
                 this.left = 5;
-                this.currentWidth = window.outerWidth - 16;
+                this.currentWidth = window.innerWidth - 16;
             }
             
-            this.top = (window.outerHeight - this.currentHeight) / 2;
+            this.top = (window.innerHeight - this.currentHeight) / 2;
             this.footerHeight = this.$refs.footer.offsetHeight;
         },
         resizeHandler(data) {
