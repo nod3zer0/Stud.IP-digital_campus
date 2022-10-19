@@ -35,7 +35,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
-
+use Negotiation\AcceptHeader;
 
 /**
 * This function tries to find the preferred language
@@ -47,22 +47,38 @@
 * @return       string  preferred user language, given in "en_GB"-style
 *
 */
-function get_accepted_languages() {
-    global $INSTALLED_LANGUAGES;
-
-    $_language = Config::get()->DEFAULT_LANGUAGE;
-    $accepted_languages = explode(",", getenv("HTTP_ACCEPT_LANGUAGE"));
-    if (is_array($accepted_languages) && count($accepted_languages)) {
-        foreach ($accepted_languages as $temp_accepted_language) {
-            foreach ($INSTALLED_LANGUAGES as $temp_language => $temp_language_settings) {
-                if (mb_substr(trim($temp_accepted_language), 0, 2) == mb_substr($temp_language, 0, 2)) {
-                    $_language = $temp_language;
-                    break 2;
-                }
-            }
-        }
+function get_accepted_languages(Psr\Http\Message\RequestInterface $request = null) {
+    $accepted_languages = null;
+    if ($request === null) {
+        $accepted_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    } elseif ($request->hasHeader('Accept-Language')) {
+        $accepted_languages = $request->getHeaderLine('Accept-Language');
     }
-    return $_language;
+
+    // No languages found from http header, set default
+    if (!$accepted_languages) {
+        return Config::get()->DEFAULT_LANGUAGE;
+    }
+
+    // Use negotiator to identify best match
+    $negotiator = new Negotiation\LanguageNegotiator();
+    $best_language = $negotiator->getBest(
+        $accepted_languages,
+        array_map(
+            function ($language) {
+                return str_replace('_', '-', $language);
+            },
+            array_keys($GLOBALS['INSTALLED_LANGUAGES'])
+        )
+    );
+
+    // No best match, set default
+    if (!$best_language) {
+        return Config::get()->DEFAULT_LANGUAGE;
+    }
+
+    // Normalize language definition for stud.ip
+    return $best_language->getBasePart() . '_' . strtoupper($best_language->getSubPart());
 }
 
 
@@ -192,7 +208,7 @@ function restoreLanguage() {
 * @access   public
 */
 function setLocaleEnv($language, $language_domain = ''){
-    putenv('LANGUAGE'); //unset language preference 
+    putenv('LANGUAGE'); //unset language preference
     $ret = setlocale(LC_ALL, $language . '.UTF-8');
     setlocale(LC_NUMERIC, 'C');
     if ($language_domain) {
