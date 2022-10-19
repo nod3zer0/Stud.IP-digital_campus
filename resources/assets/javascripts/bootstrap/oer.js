@@ -57,14 +57,16 @@ STUDIP.ready(() => {
         STUDIP.Vue.load().then(({createApp}) => {
             STUDIP.OER.EditApp = createApp({
                 el: '.oercampus_editmaterial',
-                data: {
-                    name: $('.oercampus_editmaterial input.oername').val(),
-                    logo_url: $('.oercampus_editmaterial .logo_file').data("oldurl"),
-                    customlogo: $('.oercampus_editmaterial .logo_file').data("customlogo"),
-                    filename: $('.oercampus_editmaterial .file.drag-and-drop').data("filename"),
-                    filesize: $('.oercampus_editmaterial .file.drag-and-drop').data("filesize"),
-                    tags: $('.oercampus_editmaterial .oer_tags').data("defaulttags"),
-                    minimumTags: 5
+                data() {
+                    return {
+                        name: $('.oercampus_editmaterial input.oername').val(),
+                        logo_url: $('.oercampus_editmaterial .logo_file').data("oldurl"),
+                        customlogo: $('.oercampus_editmaterial .logo_file').data("customlogo"),
+                        filename: $('.oercampus_editmaterial .file.drag-and-drop').data("filename"),
+                        filesize: $('.oercampus_editmaterial .file.drag-and-drop').data("filesize"),
+                        tags: $('.oercampus_editmaterial .oer_tags').data("defaulttags"),
+                        minimumTags: 5
+                    };
                 },
                 mounted: function () {
                     jQuery("#difficulty_slider_edit").slider({

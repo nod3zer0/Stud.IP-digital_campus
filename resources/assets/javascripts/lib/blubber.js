@@ -19,13 +19,15 @@ const Blubber = {
             STUDIP.Vue.load().then(({createApp}) => {
                 STUDIP.Blubber.App = createApp({
                     el: '#layout_container',
-                    data: {
-                        threads: $('.blubber_threads_widget').data('threads_data'),
-                        thread_data: panel_data.thread_data,
-                        active_thread: panel_data.active_thread,
-                        threads_more_down: panel_data.threads_more_down,
-                        waiting: false,
-                        display_context_posting: 0
+                    data() {
+                        return {
+                            threads: $('.blubber_threads_widget').data('threads_data'),
+                            thread_data: panel_data.thread_data,
+                            active_thread: panel_data.active_thread,
+                            threads_more_down: panel_data.threads_more_down,
+                            waiting: false,
+                            display_context_posting: 0
+                        };
                     },
                     methods: {
                         changeActiveThread: function (thread_id) {
@@ -96,13 +98,15 @@ const Blubber = {
                 STUDIP.Vue.load().then(({createApp}) => {
                     createApp({
                         el: this,
-                        data: {
-                            threads: panel_data.threads_data,
-                            thread_data: panel_data.thread_data,
-                            active_thread: panel_data.active_thread,
-                            threads_more_down: panel_data.threads_more_down,
-                            waiting: false,
-                            display_context_posting: 0
+                        data () {
+                            return {
+                                threads: panel_data.threads_data,
+                                thread_data: panel_data.thread_data,
+                                active_thread: panel_data.active_thread,
+                                threads_more_down: panel_data.threads_more_down,
+                                waiting: false,
+                                display_context_posting: 0
+                            };
                         },
                         components,
                     });
@@ -186,8 +190,10 @@ const Blubber = {
                 let components = STUDIP.Blubber.components;
                 return createApp({
                     el: '#blubber_contact_ids',
-                    data: {
-                        users: []
+                    data () {
+                        return {
+                            users: []
+                        };
                     },
                     methods: {
                         addUser: function (user_id, name) {

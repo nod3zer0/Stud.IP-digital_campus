@@ -85,6 +85,8 @@ export default {
                 case 'professional':
                     return this.$gettext('Berufliches Ziel');
             }
+
+            throw new Error('Undefined data type ' + this.currentData.type);
         },
     },
     mounted() {

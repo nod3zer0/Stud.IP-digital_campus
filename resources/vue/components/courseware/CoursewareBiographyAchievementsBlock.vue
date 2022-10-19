@@ -81,7 +81,6 @@
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import { mapActions } from 'vuex';
 import { blockMixin } from './block-mixin.js';
-import StudipIcon from '../StudipIcon.vue';
 import StudipWysiwyg from '../StudipWysiwyg.vue';
 
 export default {
@@ -89,7 +88,6 @@ export default {
     mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
-        StudipIcon,
         StudipWysiwyg,
     },
     props: {

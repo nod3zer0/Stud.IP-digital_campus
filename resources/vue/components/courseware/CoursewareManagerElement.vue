@@ -471,6 +471,9 @@ export default {
             if(!this.insertingInProgress) {
                 this.insertingInProgress = true;
                 if (source === 'self') {
+                    block.relationships.container.data.id = this.filingData.parentItem.id;
+                    block.attributes.position = this.filingData.parentItem.relationships.blocks.data.length + 1;
+
                     let sourceContainer = await this.containerById({id: block.relationships.container.data.id});
                     sourceContainer.attributes.payload.sections.forEach(section => {
                         let index = section.blocks.indexOf(block.id);
@@ -494,8 +497,6 @@ export default {
                     });
                     await this.unlockObject({id: destinationContainer.id, type: 'courseware-containers'});
 
-                    block.relationships.container.data.id = this.filingData.parentItem.id;
-                    block.attributes.position = this.filingData.parentItem.relationships.blocks.data.length + 1;
                     await this.lockObject({id: block.id, type: 'courseware-blocks'});
                     await this.updateBlock({
                         block: block,

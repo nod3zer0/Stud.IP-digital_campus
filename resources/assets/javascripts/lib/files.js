@@ -10,11 +10,13 @@ const Files = {
             STUDIP.Vue.load().then(({createApp}) => {
                 this.filesapp = createApp({
                     el: "#layout_content",
-                    data: {
-                        "files":       jQuery("#files_table_form").data("files") || [],
-                        "folders":     jQuery("#files_table_form").data("folders") || [],
-                        "topfolder":   jQuery("#files_table_form").data("topfolder"),
-                        "breadcrumbs": jQuery("#files_table_form").data("breadcrumbs") || []
+                    data() {
+                        return {
+                            files: jQuery("#files_table_form").data("files") || [],
+                            folders: jQuery("#files_table_form").data("folders") || [],
+                            topfolder: jQuery("#files_table_form").data("topfolder"),
+                            breadcrumbs: jQuery("#files_table_form").data("breadcrumbs") || []
+                        };
                     },
                     methods: {
                         hasFilesOfType (type) {
@@ -45,11 +47,13 @@ const Files = {
                 STUDIP.Vue.load().then(({createApp}) => {
                     createApp({
                         el: table,
-                        data: {
-                            "files":       jQuery(table).data("files") || [],
-                            "folders":     jQuery(table).data("folders") || [],
-                            "topfolder":   jQuery(table).data("topfolder"),
-                            "breadcrumbs": jQuery(table).data("breadcrumbs") || []
+                        data() {
+                            return {
+                                files: jQuery(table).data("files") || [],
+                                folders: jQuery(table).data("folders") || [],
+                                topfolder: jQuery(table).data("topfolder"),
+                                breadcrumbs: jQuery(table).data("breadcrumbs") || []
+                            };
                         },
                         components: { FilesTable, },
                     });

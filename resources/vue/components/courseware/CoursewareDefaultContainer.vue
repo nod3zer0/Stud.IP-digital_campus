@@ -137,7 +137,6 @@ export default {
             deleteContainer: 'deleteContainer',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
-            companionInfo: 'companionInfo',
         }),
         async displayEditDialog() {
             await this.loadContainer({ id: this.container.id, options: { include: 'edit-blocker' } });

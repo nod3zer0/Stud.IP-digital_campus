@@ -1,7 +1,7 @@
 <template>
     <div class="my-courses my-courses--tiles">
-        <template v-for="group in groups">
-            <div class="group-label">{{ group.name }}</div>
+        <template v-for="(group, index) in groups">
+            <div class="group-label" :key="index">{{ group.name }}</div>
             <article class="studip" v-for="subgroup in group.data" :key="subgroup.id" :class="getGroupCssClasses(subgroup)">
                 <header v-if="subgroup.label">
                     <h1>
@@ -10,11 +10,11 @@
                 </header>
                 <section class="studip-grid">
                     <template v-for="course in getOrderedCourses(subgroup.ids)">
-                        <div class="course-group-label" v-if="isParent(course)">
+                        <div class="course-group-label" v-if="isParent(course)" :key="course.id">
                             {{ getCourseName(course, getConfig('sem_number')) }}
                         </div>
 
-                        <article class="studip-grid-element" :data-course-id="course.id" :class="getCourseCssClasses(course)">
+                        <article class="studip-grid-element" :data-course-id="course.id" :class="getCourseCssClasses(course)" :key="course.id">
                             <header class="tiles-grid-element-header">
                                 <span class="tiles-grid-element-options">
                                     <studip-action-menu :items="getActionMenuForCourse(course, true)"

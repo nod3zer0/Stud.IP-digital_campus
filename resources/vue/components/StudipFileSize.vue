@@ -31,6 +31,8 @@
                     let rel = (this.size / 1024 / 1024 / 1024 / 1024).toFixed(1);
                     return rel + " TB";
                 }
+
+                return this.size;
             }
         }
     }

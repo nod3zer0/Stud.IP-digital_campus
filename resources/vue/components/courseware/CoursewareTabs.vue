@@ -39,8 +39,8 @@ export default {
     },
     computed: {
         sortedTabs() {
-            return this.tabs.sort((a, b) => {
-                return a.index > b.index ? 1 : a.index < b.index ? -1 : 0;
+            return [...this.tabs].sort((a, b) => {
+                return a.index - b.index;
             });
         }
     },
@@ -106,7 +106,7 @@ export default {
         },
         getTabButtonByName(name) {
             let selectorId = null;
-            this.tabs.forEach((tab) => { 
+            this.tabs.forEach((tab) => {
                 if (tab.name === name) {
                     selectorId = tab.selectorId;
                 }
@@ -118,7 +118,7 @@ export default {
         },
         getTabButtonByAlias(alias) {
             let selectorId = null;
-            this.tabs.forEach((tab) => { 
+            this.tabs.forEach((tab) => {
                 if (tab.alias === alias) {
                     selectorId = tab.selectorId;
                 }

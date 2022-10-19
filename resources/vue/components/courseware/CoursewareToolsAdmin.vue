@@ -57,7 +57,6 @@ export default {
                 permission: this.currentPermissionLevel,
                 progression: this.currentProgression,
             });
-;
         },
     },
     mounted() {

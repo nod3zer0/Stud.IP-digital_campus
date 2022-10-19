@@ -36,7 +36,7 @@
                     </th>
                     <th v-if="!responsiveDisplay" class="dont-hide" colspan="2"></th>
                 </tr>
-                <tr v-for="course in getOrderedCourses(subgroup.ids)" :data-course-id="course.id" :class="getCourseClasses(course)">
+                <tr v-for="course in getOrderedCourses(subgroup.ids)" :data-course-id="course.id" :class="getCourseClasses(course)" :key="course.id">
                     <td :class="`gruppe${course.group}`"></td>
                     <td :class="{'subcourse-indented': isChild(course)}">
                         <span :style="{backgroundImage: `url(${course.avatar}`}" class="my-courses-avatar course-avatar-small" :title="course.name" alt=""></span>

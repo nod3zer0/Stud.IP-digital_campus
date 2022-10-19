@@ -79,14 +79,10 @@
 </template>
 
 <script>
-import CoursewareBlockComments from './CoursewareBlockComments.vue';
 import CoursewareBlockEdit from './CoursewareBlockEdit.vue';
 import CoursewareBlockExportOptions from './CoursewareBlockExportOptions.vue';
-import CoursewareBlockFeedback from './CoursewareBlockFeedback.vue';
 import CoursewareBlockInfo from './CoursewareBlockInfo.vue';
 import CoursewareBlockActions from './CoursewareBlockActions.vue';
-import CoursewareTabs from './CoursewareTabs.vue';
-import CoursewareTab from './CoursewareTab.vue';
 import StudipDialog from '../StudipDialog.vue';
 import StudipIcon from '../StudipIcon.vue';
 import { blockMixin } from './block-mixin.js';
@@ -97,14 +93,10 @@ export default {
     name: 'courseware-default-block',
     mixins: [blockMixin],
     components: {
-        CoursewareBlockComments,
         CoursewareBlockEdit,
         CoursewareBlockExportOptions,
-        CoursewareBlockFeedback,
         CoursewareBlockActions,
         CoursewareBlockInfo,
-        CoursewareTabs,
-        CoursewareTab,
         StudipDialog,
         StudipIcon,
         CoursewareBlockDiscussion,

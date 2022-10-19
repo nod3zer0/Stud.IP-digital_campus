@@ -55,9 +55,11 @@ export default {
         },
         currentConfig: {
             type: Object,
-            default: {
-                component: null,
-                props: []
+            default() {
+                return {
+                    component: null,
+                    props: []
+                };
             }
         }
     },

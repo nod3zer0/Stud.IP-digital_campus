@@ -1,13 +1,13 @@
 <template>
     <div class="blubber_thread" :class="{dragover: dragging}"
-         :id="'blubberthread_' + thread_data.thread_posting.thread_id"
+         :id="'blubberthread_' + threadData.thread_posting.thread_id"
          @dragover.prevent="dragover" @dragleave.prevent="dragleave"
          @drop.prevent="upload">
-        <div class="responsive-visible context_info" v-if="thread_data.notifications">
+        <div class="responsive-visible context_info" v-if="threadData.notifications">
             <a href="#"
                @click.prevent="toggleFollow()"
                class="followunfollow"
-               :class="{unfollowed: !thread_data.followed}"
+               :class="{unfollowed: !threadData.followed}"
                :title="$gettext('Benachrichtigungen für diese Konversation abstellen.')"
                :data-thread_id="thread_data.thread_posting.thread_id">
                 <StudipIcon shape="decline" :size="20" class="follow text-bottom"></StudipIcon>
@@ -17,23 +17,23 @@
         </div>
         <div class="scrollable_area" v-scroll>
             <div class="all_content">
-                <div class="thread_posting" v-if="hasContent(thread_data.thread_posting.content)">
+                <div class="thread_posting" v-if="hasContent(threadData.thread_posting.content)">
                     <div class="contextinfo">
-                        <studip-date-time :timestamp="thread_data.thread_posting.mkdate" :relative="true"></studip-date-time>
-                        <a :href="getUserProfileURL(thread_data.thread_posting.user_id, thread_data.thread_posting.user_username)">{{ thread_data.thread_posting.user_name }}</a>
-                        <a :href="getUserProfileURL(thread_data.thread_posting.user_id, thread_data.thread_posting.user_username)" class="avatar" :style="{ backgroundImage: 'url(' + thread_data.thread_posting.avatar + ')' }"></a>
+                        <studip-date-time :timestamp="threadData.thread_posting.mkdate" :relative="true"></studip-date-time>
+                        <a :href="getUserProfileURL(threadData.thread_posting.user_id, threadData.thread_posting.user_username)">{{ threadData.thread_posting.user_name }}</a>
+                        <a :href="getUserProfileURL(threadData.thread_posting.user_id, threadData.thread_posting.user_username)" class="avatar" :style="{ backgroundImage: 'url(' + threadData.thread_posting.avatar + ')' }"></a>
                     </div>
-                    <div class="content" v-html="thread_data.thread_posting.html"></div>
+                    <div class="content" v-html="threadData.thread_posting.html"></div>
                     <div class="link_to_comments"></div>
                 </div>
 
-                <div v-if="!hasContent(thread_data.thread_posting.content) && !thread_data.comments.length" class="empty_blubber_background">
+                <div v-if="!hasContent(threadData.thread_posting.content) && !threadData.comments.length" class="empty_blubber_background">
                     <div v-translate>Starte die Konversation jetzt!</div>
                 </div>
 
                 <ol class="comments" aria-live="polite">
 
-                    <li class="more" v-if="thread_data.more_up">
+                    <li class="more" v-if="threadData.more_up">
                         <studip-asset-img file="ajax-indicator-black.svg" width="20"></studip-asset-img>
                     </li>
 
@@ -61,14 +61,14 @@
                         </div>
                     </li>
 
-                    <li class="more" v-if="thread_data.more_down">
+                    <li class="more" v-if="threadData.more_down">
                         <studip-asset-img file="ajax-indicator-black.svg" width="20"></studip-asset-img>
                     </li>
 
                 </ol>
             </div>
         </div>
-        <div class="writer" v-if="thread_data.thread_posting.commentable">
+        <div class="writer" v-if="threadData.thread_posting.commentable">
             <studip-icon shape="blubber" size="30" role="info"></studip-icon>
             <textarea :placeholder="writerTextareaPlaceholder"
                       @keyup.enter.exact="submit"
@@ -93,7 +93,8 @@
             return {
                 already_loading_up: 0,
                 already_loading_down: 0,
-                dragging: false
+                dragging: false,
+                threadData: this.thread_data
             };
         },
         props: ['thread_data'],
@@ -102,9 +103,9 @@
                 if (!text || typeof text !== "string") {
                     text = $(this.$el).find(".writer textarea").val();
                     $(this.$el).find(".writer textarea").val("");
-                    if (this.thread_data.thread_posting.thread_id) {
+                    if (this.threadData.thread_posting.thread_id) {
                         sessionStorage.removeItem(
-                            'BlubberMemory-Writer-' + this.thread_data.thread_posting.thread_id
+                            'BlubberMemory-Writer-' + this.threadData.thread_posting.thread_id
                         );
                     }
                 }
@@ -126,14 +127,14 @@
                 let thread = this;
 
                 //AJAX-Request ...
-                STUDIP.api.POST(`blubber/threads/${this.thread_data.thread_posting.thread_id}/comments`, {
+                STUDIP.api.POST(`blubber/threads/${this.threadData.thread_posting.thread_id}/comments`, {
                     data: {
                         content: text
                     }
                 }).then(data => {
                     // Check following state
-                    if (this.thread_data.notifications) {
-                        STUDIP.api.GET(`blubber/threads/${this.thread_data.thread_posting.thread_id}/follow`).then(followed => {
+                    if (this.threadData.notifications) {
+                        STUDIP.api.GET(`blubber/threads/${this.threadData.thread_posting.thread_id}/follow`).then(followed => {
                             jQuery('.followunfollow').toggleClass('unfollowed', !followed);
                         });
                     }
@@ -158,9 +159,9 @@
             },
             saveCommentToSession (event) {
                 let value = event.target.value;
-                if (this.thread_data.thread_posting.thread_id) {
+                if (this.threadData.thread_posting.thread_id) {
                     sessionStorage.setItem(
-                        `BlubberMemory-Writer-${this.thread_data.thread_posting.thread_id}`,
+                        `BlubberMemory-Writer-${this.threadData.thread_posting.thread_id}`,
                         value
                     );
                 }
@@ -195,19 +196,19 @@
                 this.$nextTick(() => {
                     STUDIP.Markup.element($(this.$el).find(`.comments > li[data-comment_id="${comment.comment_id}"]`));
                 });
-                for (let i in this.thread_data.comments) {
-                    if (this.thread_data.comments[i].comment_id === comment.comment_id) {
-                        this.thread_data.comments[i].content = comment.content;
-                        this.thread_data.comments[i].html = comment.html;
+                for (let i in this.threadData.comments) {
+                    if (this.threadData.comments[i].comment_id === comment.comment_id) {
+                        this.threadData.comments[i].content = comment.content;
+                        this.threadData.comments[i].html = comment.html;
                         return;
                     }
                 }
-                this.thread_data.comments.push(comment);
+                this.threadData.comments.push(comment);
             },
             removeComment (comment_id) {
-                this.thread_data.comments.forEach((comment, i) => {
+                this.threadData.comments.forEach((comment, i) => {
                     if (comment.comment_id === comment_id) {
-                        this.$delete(this.thread_data.comments, i);
+                        this.$delete(this.threadData.comments, i);
                     }
                 });
             },
@@ -295,7 +296,7 @@
                 }
                 let comment_id = $(li).data('comment_id');
                 let comment_data = null;
-                this.thread_data.comments.forEach((comment, i) => {
+                this.threadData.comments.forEach((comment, i) => {
                     if (comment.comment_id === comment_id) {
                         comment_data = comment;
                     }
@@ -314,7 +315,7 @@
                 let comment_id = li.data('comment_id');
                 let content = li.find('textarea').val();
 
-                thread.thread_data.comments.forEach((comment) => {
+                thread.threadData.comments.forEach((comment) => {
                     if (comment.comment_id === comment_id) {
                         comment.html = content;
                     }
@@ -322,13 +323,13 @@
 
                 li.find('.content').removeClass('editing');
 
-                STUDIP.api.PUT(`blubber/threads/${this.thread_data.thread_posting.thread_id}/comments/${comment_id}`, {
+                STUDIP.api.PUT(`blubber/threads/${this.threadData.thread_posting.thread_id}/comments/${comment_id}`, {
                     data: {
                         content: content
                     },
                 }).done((output) => {
                     if (this.hasContent(output.content)) {
-                        thread.thread_data.comments.forEach((comment) => {
+                        thread.threadData.comments.forEach((comment) => {
                             if (comment.comment_id === comment_id) {
                                 comment.html = output.html;
                                 comment.content = output.content;
@@ -359,10 +360,10 @@
             },
             toggleFollow () {
                 STUDIP.Blubber.followunfollow(
-                    this.thread_data.thread_posting.thread_id,
-                    !this.thread_data.followed
+                    this.threadData.thread_posting.thread_id,
+                    !this.threadData.followed
                 ).done(state => {
-                    this.thread_data.followed = state;
+                    this.threadData.followed = state;
                 });
             },
             hasContent (input) {
@@ -390,15 +391,15 @@
                         thread.$root.display_context_posting = top >= $(el).find('.all_content .thread_posting').height()
                             ? 1
                             : 0;
-                        if (thread.thread_data.more_up && top < 1000 && !thread.already_loading_up) {
+                        if (thread.threadData.more_up && top < 1000 && !thread.already_loading_up) {
                             thread.already_loading_up = 1;
 
-                            let earliest_mkdate = thread.thread_data.comments.reduce((min, comment) => {
+                            let earliest_mkdate = thread.threadData.comments.reduce((min, comment) => {
                                 return min === null ? comment.mkdate : Math.min(min, comment.mkdate);
                             }, null);
 
                             //load older comments
-                            STUDIP.api.GET(`blubber/threads/${thread.thread_data.thread_posting.thread_id}/comments`, {
+                            STUDIP.api.GET(`blubber/threads/${thread.threadData.thread_posting.thread_id}/comments`, {
                                 data: {
                                     modifier: 'olderthan',
                                     timestamp: earliest_mkdate,
@@ -407,7 +408,7 @@
                             }).done((data) => {
                                 top = $(el).scrollTop();
                                 thread.addComments(data.comments, false);
-                                thread.thread_data.more_up = data.more_up;
+                                thread.threadData.more_up = data.more_up;
                                 thread.$nextTick(function () {
                                     //scroll to the position where we were:
                                     let new_height = $(el).find(".all_content").height();
@@ -421,15 +422,15 @@
                             });
                         }
 
-                        if (thread.thread_data.more_down && (top > $(thread).find(".scrollable_area .all_content").height() - 1000) && !thread.already_loading_down) {
+                        if (thread.threadData.more_down && (top > $(thread).find(".scrollable_area .all_content").height() - 1000) && !thread.already_loading_down) {
                             thread.already_loading_down = 1;
 
-                            let latest_mkdate = thread.thread_data.comments.reduce((max, comment) => {
+                            let latest_mkdate = thread.threadData.comments.reduce((max, comment) => {
                                 return Math.max(max, comment.mkdate);
                             }, null);
 
                             //load newer comments
-                            STUDIP.api.GET(`blubber/threads/${thread.thread_data.thread_posting.thread_id}/comments`, {
+                            STUDIP.api.GET(`blubber/threads/${thread.threadData.thread_posting.thread_id}/comments`, {
                                 data: {
                                     modifier: 'newerthan',
                                     timestamp: latest_mkdate,
@@ -437,7 +438,7 @@
                                 }
                             }).done((data) => {
                                 thread.addComments(data.comments, false);
-                                thread.thread_data.more_down = data.more_down;
+                                thread.threadData.more_down = data.more_down;
                             }).always(() => {
                                 thread.already_loading_down = 0;
                             });
@@ -448,7 +449,7 @@
         },
         mounted () { //when everything is initialized
             this.$nextTick(function () {
-                if (this.thread_data.comments.length > 0) {
+                if (this.threadData.comments.length > 0) {
                     this.scrollDown();
                 }
 
@@ -462,8 +463,8 @@
                     STUDIP.Markup.element(this);
                 });
 
-                if (this.thread_data.thread_posting.thread_id) {
-                    let memory = sessionStorage.getItem(`BlubberMemory-Writer-${this.thread_data.thread_posting.thread_id}`);
+                if (this.threadData.thread_posting.thread_id) {
+                    let memory = sessionStorage.getItem(`BlubberMemory-Writer-${this.threadData.thread_posting.thread_id}`);
                     if (memory) {
                         $(this.$el)
                             .find('.writer').addClass('filled')
@@ -474,24 +475,24 @@
         },
         computed: {
             sortedComments () {
-                return this.thread_data.comments.sort((a, b) => a.mkdate - b.mkdate);
+                return [...this.threadData.comments].sort((a, b) => a.mkdate - b.mkdate);
             },
             writerTextareaPlaceholder() {
-                return this.hasContent(this.thread_data.thread_posting.content)
+                return this.hasContent(this.threadData.thread_posting.content)
                     ? this.$gettext('Kommentar schreiben. Enter zum Abschicken.')
                     : this.$gettext('Nachricht schreiben. Enter zum Abschicken.');
             }
         },
         updated () {
             this.$nextTick(function () {
-                if (this.thread_data.thread_posting.thread_id) {
-                    let memory = sessionStorage.getItem('BlubberMemory-Writer-' + this.thread_data.thread_posting.thread_id);
+                if (this.threadData.thread_posting.thread_id) {
+                    let memory = sessionStorage.getItem('BlubberMemory-Writer-' + this.threadData.thread_posting.thread_id);
                     $(this.$el).find('.writer textarea').val(memory);
                 }
             });
         },
         watch: {
-            thread_data (new_data, old_data) {
+            threadData (new_data, old_data) {
                 if (new_data.thread_posting.thread_id !== old_data.thread_posting.thread_id) {
                     //if the thread got reloaded by a new thread
                     //markup contents

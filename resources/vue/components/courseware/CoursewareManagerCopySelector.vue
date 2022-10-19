@@ -28,7 +28,7 @@
                         </ul>
                     </li>
                 </ul>
-                <courseware-companion-box 
+                <courseware-companion-box
                     v-if="!hasRemoteCid && semesterMap.length === 0"
                     :msgCompanion="$gettext('Es wurden keine Veranstaltung mit Courseware-Inhalten gefunden.')"
                     mood="sad"
@@ -113,7 +113,7 @@ export default {
             return this.remoteCid !== '';
         },
         loadedCourses() {
-            return this.courses.sort((a, b) => a.attributes.title > b.attributes.title);
+            return [...this.courses].sort((a, b) => a.attributes.title > b.attributes.title);
         }
     },
     methods: {
@@ -218,7 +218,7 @@ export default {
                     elementId: elementId,
                     migrate: true
                 });
-            } catch(error) { 
+            } catch(error) {
                 console.debug(error);
                 this.copyAllInProgressText = this.$gettext('Beim Kopiervorgang sind Fehler aufgetreten.');
             }

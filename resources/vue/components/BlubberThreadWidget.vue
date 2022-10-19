@@ -34,7 +34,8 @@
         data () {
             return {
                 display_more_down: this.more_down,
-                already_loading_down: 0
+                already_loading_down: 0,
+                allThreads: this.threads
             };
         },
         methods: {
@@ -50,11 +51,11 @@
                 return STUDIP.URLHelper.getURL(`dispatch.php/blubber/index/${thread_id}`);
             },
             addThread (thread) {
-                let thread_ids = this.threads.map((t) => t.thread_id);
+                let thread_ids = this.allThreads.map((t) => t.thread_id);
                 if (thread_ids.indexOf(thread.thread_id) !== -1) {
                     return;
                 }
-                this.threads.push(thread);
+                this.allThreads.push(thread);
             }
         },
         directives: {
@@ -104,7 +105,7 @@
         },
         computed: {
             sortedThreads () {
-                return this.threads.sort((a, b) => {
+                return [...this.allThreads].sort((a, b) => {
                     return b.timestamp - a.timestamp
                         || b.mkdate - a.mkdate
                         || b.name.localeCompare(a.name);

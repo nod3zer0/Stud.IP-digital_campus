@@ -72,7 +72,7 @@
                                     <template #open-indicator="selectAttributes">
                                         <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                                     </template>
-                                    <template #no-options="{ search, searching, loading }">
+                                    <template #no-options>
                                         <translate>Es steht keine Auswahl zur Verfügung.</translate>
                                     </template>
                                     <template #selected-option="{name, rgba}">
@@ -417,6 +417,9 @@ export default {
             this.currentShapes.forEach((value, key) => {
                 let shape = value;
                 let area = {};
+                let coords = '';
+                let x = 0;
+                let y = 0;
                 area.id = 'shape-' + key;
 
                 switch (shape.type) {
@@ -425,9 +428,6 @@ export default {
                         area.coords = shape.data.centerX + ', ' + shape.data.centerY + ', ' + shape.data.radius;
                         break;
                     case 'ellipse':
-                        let coords = '';
-                        let x = 0;
-                        let y = 0;
                         for (let theta = 0; theta < 2 * Math.PI; theta += (2 * Math.PI) / 20) {
                             x = parseInt(shape.data.X) + Math.round(parseInt(shape.data.radiusX) * Math.cos(theta));
                             y = parseInt(shape.data.Y) + Math.round(parseInt(shape.data.radiusY) * Math.sin(theta));
@@ -438,10 +438,10 @@ export default {
                         break;
                     case 'rect':
                     case 'text':
-                        let x2 = parseInt(shape.data.X) + parseInt(shape.data.width);
-                        let y2 = parseInt(shape.data.Y) + parseInt(shape.data.height);
+                        x = parseInt(shape.data.X) + parseInt(shape.data.width);
+                        y = parseInt(shape.data.Y) + parseInt(shape.data.height);
                         area.shape = 'rect';
-                        area.coords = shape.data.X + ', ' + shape.data.Y + ', ' + x2 + ', ' + y2;
+                        area.coords = shape.data.X + ', ' + shape.data.Y + ', ' + x + ', ' + y;
                         break;
                 }
                 area.title = shape.title;

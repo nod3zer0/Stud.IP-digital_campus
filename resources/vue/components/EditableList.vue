@@ -18,11 +18,15 @@
             <translate>Oder aus Liste auswählen:</translate>
             <select @change="quickselect" @keydown="navigate_or_select">
                 <option value=""><translate>Direkt auswählen ...</translate></option>
-                <template v-for="opt in selectable">
-                    <optgroup v-if="opt.label && opt.options" :label="opt.label">
-                        <option v-for="option in opt.options" :disabled="isSelected(option.value)" :value="JSON.stringify({value: option.value, name: option.name})">{{ option.name + (isSelected(option.value) ? ' ✓' : '') }}</option>
+                <template v-for="(opt, idx) in selectable">
+                    <optgroup v-if="opt.label && opt.options" :label="opt.label" :key="idx">
+                        <option v-for="(option, index) in opt.options" :disabled="isSelected(option.value)" :value="JSON.stringify({value: option.value, name: option.name})" :key="index">
+                            {{ option.name + (isSelected(option.value) ? ' ✓' : '') }}
+                        </option>
                     </optgroup>
-                    <option v-else :disabled="isSelected(opt.value)" @click="quicksearch" :value="JSON.stringify({value: opt.value, name: opt.name})">{{ opt.name + (isSelected(option.value) ? ' ✓' : '') }}</option>
+                    <option v-else :disabled="isSelected(opt.value)" @click="quicksearch" :value="JSON.stringify({value: opt.value, name: opt.name})" :key="idx">
+                        {{ opt.name + (isSelected(option.value) ? ' ✓' : '') }}
+                    </option>
                 </template>
             </select>
 
@@ -52,13 +56,14 @@ export default {
         category_order: {
             type: Array,
             required: false,
-            default: []
+            default: () => [],
         }
     },
     data () {
         return {
             resort: false, //this is just for triggering the computed property sortedItems to be sorted again
-            preventChangeOfQuickselect: false
+            preventChangeOfQuickselect: false,
+            allItems: this.items
         };
     },
     methods: {
@@ -68,16 +73,8 @@ export default {
                 icon = id.split('__')[1];
                 id = id.split('__')[0];
             }
-            let insert = true;
-            for (let i in this.items) {
-                if (this.items[i].value === id) {
-                    insert = false;
-                    break;
-                }
-            }
-
-            if (insert) {
-                this.items.push({
+            if (!this.allItems.find(item => item.value === id)) {
+                this.allItems.push({
                     value: id,
                     name: name,
                     icon: icon,
@@ -143,22 +140,19 @@ export default {
     },
     computed: {
         sortedItems () {
-            let v = this;
-            let i = this.resort;
-            let items = this.items.sort(function (a, b) {
+            return [...this.items].sort((a, b) => {
                 if (a.icon === b.icon) {
                     return a.name.localeCompare(b.name);
                 } else {
                     let a_icon = a.icon || '';
                     let b_icon = b.icon || '';
-                    if (v.category_order.indexOf(a_icon) > -1 && v.category_order.indexOf(b_icon) > -1) {
-                        return v.category_order.indexOf(a_icon) < v.category_order.indexOf(b_icon) ? -1 : 1;
+                    if (this.category_order.indexOf(a_icon) > -1 && this.category_order.indexOf(b_icon) > -1) {
+                        return this.category_order.indexOf(a_icon) < this.category_order.indexOf(b_icon) ? -1 : 1;
                     } else {
                         return a_icon.localeCompare(b_icon);
                     }
                 }
             });
-            return items;
         }
     },
     mounted () {

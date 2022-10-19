@@ -67,7 +67,7 @@
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                             </template>
-                            <template #no-options="{ search, searching, loading }">
+                            <template #no-options>
                                 <translate>Es steht keine Auswahl zur Verfügung.</translate>
                             </template>
                             <template #selected-option="option">
@@ -241,7 +241,7 @@ export default {
             return null;
         },
         updateContent(blockAdder) {
-            if(blockAdder.hasOwnProperty('container') && blockAdder.container.id === this.container.id) {
+            if (blockAdder.container !== undefined && blockAdder.container.id === this.container.id) {
                 this.initCurrentData();
             }
         }

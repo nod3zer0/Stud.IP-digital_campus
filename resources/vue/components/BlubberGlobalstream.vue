@@ -3,7 +3,7 @@
         <div class="scrollable_area" v-scroll>
             <blubber-public-composer></blubber-public-composer>
             <ol class="postings" aria-live="polite">
-                <li class="more" v-if="stream_data.more_up">
+                <li class="more" v-if="streamData.more_up">
                     <studip-asset-img file="ajax-indicator-black.svg" width="20"></studip-asset-img>
                 </li>
 
@@ -37,7 +37,8 @@
         name: 'blubber-globalstream',
         data: function () {
             return {
-                already_loading_down: 0
+                already_loading_down: 0,
+                streamData: this.stream_data,
             };
         },
         props: ['stream_data', 'more_down'],
@@ -52,14 +53,14 @@
             addPosting: function (posting) {
                 let exists = false;
                 for (let i in this.stream_data) {
-                    if (this.stream_data[i].thread_id === posting.thread_id) {
+                    if (this.streamData[i].thread_id === posting.thread_id) {
                         exists = true;
                         return;
                     }
                 }
                 if (!exists) {
                     posting.class = posting.class + " new";
-                    this.stream_data.push(posting);
+                    this.streamData.push(posting);
                     this.$nextTick(() => {
                         STUDIP.Markup.element($(this.$el).find(`.postings > li[data-thread_id="${posting.thread_id}"]`));
                     });
@@ -74,8 +75,8 @@
             });
         },
         computed: {
-            sortedPostings: function () {
-                return this.stream_data.sort((a, b) => b.mkdate - a.mkdate);
+            sortedPostings() {
+                return [...this.streamData].sort((a, b) => b.mkdate - a.mkdate);
             }
         },
         directives: {
@@ -94,9 +95,9 @@
                             stream.already_loading_down = 1;
 
                             let earliest_mkdate = null;
-                            for (let i in stream.stream_data) {
-                                if ((earliest_mkdate === null) || stream.stream_data[i].mkdate < earliest_mkdate) {
-                                    earliest_mkdate = stream.stream_data[i].mkdate;
+                            for (let i in stream.streamData) {
+                                if ((earliest_mkdate === null) || stream.streamData[i].mkdate < earliest_mkdate) {
+                                    earliest_mkdate = stream.streamData[i].mkdate;
                                 }
                             }
                             //load older comments

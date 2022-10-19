@@ -1,6 +1,6 @@
 <template>
     <ul class="my-courses-color-picker">
-        <li v-for="(i, index) in color_count" :id="i" :class="getCSSClasses(index)">
+        <li v-for="(i, index) in color_count" :id="i" :class="getCSSClasses(index)" :key="index">
             <a @click="selectColor(index)" :title="getTitle(i, index)">
                 {{ getTitle(i) }}
             </a>

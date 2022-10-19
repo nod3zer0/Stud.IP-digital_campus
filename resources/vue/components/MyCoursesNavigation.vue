@@ -1,6 +1,6 @@
 <template>
     <ul class="my-courses-navigation" v-if="navigationLength > 0">
-        <li v-for="nav in navigation" class="my-courses-navigation-item" :class="nav.class">
+        <li v-for="(nav, index) in navigation" class="my-courses-navigation-item" :class="nav.class" :key="index">
             <a v-if="nav" :href="nav.url" v-bind="nav.attr">
                 <studip-icon :shape="nav.icon.shape" :role="nav.icon.role" :size="iconSize"></studip-icon>
             </a>

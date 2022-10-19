@@ -38,7 +38,7 @@ export default {
         }
     },
     mounted () {
-        let value = parseInt(this.value, 10) !== NaN ? parseInt(this.value, 10) : this.value;
+        let value = !isNaN(parseInt(this.value, 10)) ? parseInt(this.value, 10) : this.value;
         if (Number.isInteger(value)) {
             let date = new Date(value * 1000);
             let formatted_date =

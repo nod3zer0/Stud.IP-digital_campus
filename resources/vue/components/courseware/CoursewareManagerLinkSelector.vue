@@ -13,15 +13,11 @@
 
 <script>
 import CoursewareManagerElement from './CoursewareManagerElement.vue';
-import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-manager-link-selector',
-    components: {
-        CoursewareManagerElement,
-        CoursewareCompanionBox,
-    },
+    components: { CoursewareManagerElement },
 
     data() {
         return {

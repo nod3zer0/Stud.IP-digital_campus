@@ -75,14 +75,12 @@
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import { mapActions } from 'vuex';
 import { blockMixin } from './block-mixin.js';
-import StudipIcon from '../StudipIcon.vue';
 
 export default {
     name: 'courseware-biography-personal-information-block',
     mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
-        StudipIcon,
     },
     props: {
         block: Object,

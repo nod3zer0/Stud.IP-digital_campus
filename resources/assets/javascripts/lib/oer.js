@@ -37,16 +37,18 @@ const OER = {
         STUDIP.Vue.load().then(({createApp}) => {
             STUDIP.OER.Search = createApp({
                 el: ".oer_search",
-                data: {
-                    browseMode: false,
-                    tags: $(".oer_search").data("tags"),
-                    tagHistory: [],
-                    searchtext: "",
-                    activeFilterPanel: false,
-                    difficulty: [1, 12],
-                    category: null,
-                    results: false,
-                    material_select_url_template: $(".oer_search").data("material_select_url_template")
+                data() {
+                    return {
+                        browseMode: false,
+                        tags: $(".oer_search").data("tags"),
+                        tagHistory: [],
+                        searchtext: "",
+                        activeFilterPanel: false,
+                        difficulty: [1, 12],
+                        category: null,
+                        results: false,
+                        material_select_url_template: $(".oer_search").data("material_select_url_template")
+                    };
                 },
                 methods: {
                     sync_search_text: function () {

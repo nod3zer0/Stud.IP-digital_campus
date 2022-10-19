@@ -233,6 +233,7 @@ export default {
                 this.userPermsWriteUsers = this.element.attributes['write-approval'].users;
             }
 
+            /* eslint-disable no-await-in-loop */
             for (const user_perm_obj of this.userPermsReadUsers) {
                 let userObj = await this.getUser(user_perm_obj.id);
                 let writePerm = this.userPermsWriteUsers.some(user_write_perm => user_write_perm.id === user_perm_obj.id) ? true : false;

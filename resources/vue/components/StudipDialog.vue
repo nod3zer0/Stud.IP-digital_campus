@@ -190,6 +190,7 @@ export default {
             if (this.message) {
                 return this.$gettext('Information');
             }
+            return '';
         },
         dialogWidth() {
             return this.currentWidth ? (this.currentWidth - dialogPadding * 4) + 'px' : 'unset';
@@ -217,7 +218,7 @@ export default {
                 this.left = 5;
                 this.currentWidth = window.innerWidth - 16;
             }
-            
+
             this.top = (window.innerHeight - this.currentHeight) / 2;
             this.footerHeight = this.$refs.footer.offsetHeight;
         },

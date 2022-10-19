@@ -11,7 +11,7 @@
         >
             <template #content>
                 <div class="cw-block-dialog-cards-content">
-                    <button 
+                    <button
                         class="cw-dialogcards-prev cw-dialogcards-navbutton"
                         :class="{'cw-dialogcards-prev-disabled': hasNoPerv}"
                         @click="prevCard"
@@ -69,7 +69,7 @@
                         :name="$gettext('Karte') +  ' ' + (index + 1).toString()"
                         :selected="index === 0"
                         canBeEmpty
-                    > 
+                    >
                         <form class="default" @submit.prevent="">
                             <label>
                                 <translate>Bild Vorderseite</translate>:
@@ -118,7 +118,6 @@ import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
 import { blockMixin } from './block-mixin.js';
 import { mapActions } from 'vuex';
-import StudipIcon from '../StudipIcon.vue';
 
 export default {
     name: 'courseware-dialog-cards-block',
@@ -128,7 +127,6 @@ export default {
         CoursewareFileChooser,
         CoursewareTabs,
         CoursewareTab,
-        StudipIcon,
     },
     props: {
         block: Object,

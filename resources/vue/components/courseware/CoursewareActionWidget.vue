@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import StudipIcon from './../StudipIcon.vue';
 import SidebarWidget from '../SidebarWidget.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import { mapActions, mapGetters } from 'vuex';
@@ -72,7 +71,6 @@ export default {
     name: 'courseware-action-widget',
     props: ['structuralElement', 'canVisit'],
     components: {
-        StudipIcon,
         SidebarWidget,
     },
     mixins: [CoursewareExport],

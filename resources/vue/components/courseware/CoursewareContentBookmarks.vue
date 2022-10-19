@@ -62,6 +62,7 @@ export default {
                     return bookmark.relationships.course.data.id === this.bookmarkFilter;
                 });
             }
+            return [];
         }
     },
     methods: {

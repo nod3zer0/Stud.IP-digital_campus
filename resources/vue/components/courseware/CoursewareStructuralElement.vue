@@ -229,7 +229,7 @@
                                                     ><studip-icon shape="arr_1down" size="10"
                                                 /></span>
                                             </template>
-                                            <template #no-options="{ search, searching, loading }">
+                                            <template #no-options>
                                                 <translate>Es steht keine Auswahl zur Verfügung</translate>.
                                             </template>
                                             <template #selected-option="{ name, hex }">
@@ -1278,13 +1278,15 @@ export default {
 
             return containers;
         },
+
         owner() {
-            const user = this.$store.getters['users/related']({
-                parent: { type: this.structuralElement.type, id: this.structuralElement.id },
-                relationship: 'owner'
+            const owner = this.relatedUsers({
+                parent: this.structuralElement,
+                relationship: 'owner',
             });
-            return user ?? null;
+            return owner ?? null;
         },
+
         ownerName() {
             return this.owner?.attributes['formatted-name'] ?? '?';
         },
@@ -1574,7 +1576,9 @@ export default {
         async createElement() {
             let title = this.newChapterName; // this is the title of the new element
             let parent_id = this.currentId; // new page is descandant as default
-            if (this.errorEmptyChapterName = title.trim() === '') {
+
+            this.errorEmptyChapterName = title.trim();
+            if (this.errorEmptyChapterName === '') {
                 return;
             }
             if (this.newChapterParent === 'sibling') {

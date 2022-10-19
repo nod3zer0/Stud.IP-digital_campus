@@ -193,7 +193,7 @@
                                             ><studip-icon shape="arr_1down" size="10"
                                         /></span>
                                     </template>
-                                    <template #no-options="{ search, searching, loading }">
+                                    <template #no-options>
                                         <translate>Es steht keine Auswahl zur Verfügung.</translate>
                                     </template>
                                     <template #selected-option="{ name, hex }">
@@ -540,7 +540,7 @@ export default {
             const ownerId = element.relationships.owner.data.id;
             const owner = this.userById({ id: ownerId });
 
-            return owner.attributes['formatted-name']; 
+            return owner.attributes['formatted-name'];
         },
         addElement() {
             this.setShowOverviewElementAddDialog(true);

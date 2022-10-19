@@ -15,9 +15,7 @@
                                 {{ breadcrumbs[0].name }}
                             </span>
                         </a>
-                        <span v-for="(breadcrumb, index) in breadcrumbs"
-                                  :key="breadcrumb.folder_id"
-                                  v-if="index > 0">
+                        <span v-for="breadcrumb in breadcrumbs.slice(1)" :key="breadcrumb.folder_id">
                             /<a :href="breadcrumb.url">
                                 {{ breadcrumb.name }}
                             </a>
@@ -36,8 +34,7 @@
                 <col v-if="showdownloads" style="width: 100px" class="responsive-hidden">
                 <col style="width: 150px" class="responsive-hidden">
                 <col style="width: 120px" class="responsive-hidden">
-                <col v-if="topfolder.additionalColumns"
-                     v-for="(name, index) in topfolder.additionalColumns"
+                <col v-for="(name, index) in additionalColumns"
                      :key="index"
                      data-filter-ignore
                      class="responsive-hidden">
@@ -81,8 +78,7 @@
                             {{ $gettext('Datum') }}
                         </a>
                     </th>
-                    <th v-if="topfolder.additionalColumns"
-                        v-for="(name, index) in topfolder.additionalColumns"
+                    <th v-for="(name, index) in additionalColumns"
                         :key="index"
                         @click="sort(index)"
                         class="responsive-hidden"
@@ -112,7 +108,8 @@
             <tbody class="subfolders" v-if="displayedFolders.length > 0">
                 <tr v-for="folder in displayedFolders"
                     :id="'row_folder_' + folder.id "
-                    :data-permissions="folder.permissions">
+                    :data-permissions="folder.permissions"
+                    :key="folder.id">
                     <td v-if="show_bulk_actions">
                         <studip-proxied-checkbox
                             name="ids[]"
@@ -146,12 +143,12 @@
                     <td class="responsive-hidden" style="white-space: nowrap;">
                         <studip-date-time :timestamp="folder.chdate" :relative="true"></studip-date-time>
                     </td>
-                    <template v-if="topfolder.additionalColumns"
-                              v-for="(name, index)  in topfolder.additionalColumns">
+                    <template v-for="(name, index) in additionalColumns">
                         <td v-if="folder.additionalColumns && folder.additionalColumns[index] && folder.additionalColumns[index].html"
                             class="responsive-hidden"
-                            v-html="folder.additionalColumns[index].html"></td>
-                        <td v-else class="responsive-hidden"></td>
+                            v-html="folder.additionalColumns[index].html"
+                            :key="index"></td>
+                        <td v-else class="responsive-hidden" :key="index"></td>
                     </template>
                     <td class="actions" v-html="folder.actions">
                     </td>
@@ -162,7 +159,8 @@
                     :class="file.new ? 'new' : ''"
                     :id="'fileref_' + file.id"
                     role="row"
-                    :data-permissions="getPermissions(file)">
+                    :data-permissions="getPermissions(file)"
+                    :key="file.id">
                     <td v-if="show_bulk_actions">
                         <studip-proxied-checkbox
                             name="ids[]"
@@ -209,12 +207,12 @@
                     <td data-sort-value="file.chdate" class="responsive-hidden" style="white-space: nowrap;">
                         <studip-date-time :timestamp="file.chdate" :relative="true"></studip-date-time>
                     </td>
-                    <template v-if="topfolder.additionalColumns"
-                              v-for="(name, index)  in topfolder.additionalColumns">
+                    <template v-for="(name, index)  in additionalColumns">
                         <td v-if="file.additionalColumns && file.additionalColumns[index] && file.additionalColumns[index].html"
                             class="responsive-hidden"
-                            v-html="file.additionalColumns[index].html"></td>
-                        <td v-else class="responsive-hidden"></td>
+                            v-html="file.additionalColumns[index].html"
+                            :key="index"></td>
+                        <td v-else class="responsive-hidden" :key="index"></td>
                     </template>
                     <td class="actions" v-html="file.actions">
                     </td>
@@ -299,6 +297,8 @@ export default {
             selectedIds: [undefined], // Includes invalid value to trigger watch on mounted
             sortedBy: this.initial_sort.sortedBy,
             sortDirection: this.initial_sort.sortDirection,
+            allFiles: this.files,
+            allFolders: this.folders,
             filter: ''
         };
     },
@@ -318,10 +318,10 @@ export default {
             return classes;
         },
         removeFile (id) {
-            this.files = this.files.filter(file => file.id != id)
+            this.allFiles = this.allFiles.filter(file => file.id != id)
         },
         removeFolder (id) {
-            this.folders = this.folders.filter(folder => folder.id != id)
+            this.allFolders = this.allFolders.filter(folder => folder.id != id)
         },
         sortArray (array) {
             if (!array.length) {
@@ -344,7 +344,7 @@ export default {
             }
 
             // Additional sorting
-            if (this.topfolder.additionalColumns.hasOwnProperty(this.sortedBy) && arrayHasKey) {
+            if (this.topfolder.additionalColumns[this.sortedBy] !== undefined && arrayHasKey) {
                 const is_string = array.some(item => {
                     return typeof item.additionalColumns[this.sortedBy].order === "string"
                         && !isNaN(parseFloat(item.additionalColumns[this.sortedBy].order));
@@ -379,7 +379,7 @@ export default {
             let highlighted = sanitizeHTML(string);
             if (this.needleForFilter.length > 0) {
                 // Escape needle for regexp, see https://stackoverflow.com/a/3561711
-                const pattern = this.needleForFilter.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+                const pattern = this.needleForFilter.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
                 const regExp = new RegExp(pattern, 'gi');
                 highlighted = highlighted.replace(regExp, '<span class="filter-match">$&</span>');
             }
@@ -392,6 +392,9 @@ export default {
                 + (this.showdownloads ? 1 : 0)
                 + Object.keys(this.topfolder.additionalColumns).length;
         },
+        additionalColumns () {
+            return this.topfolder.additionalColumns || [];
+        },
         sortedFiles () {
             return this.sortArray(this.files);
         },
@@ -402,7 +405,7 @@ export default {
             return [].concat(this.files.map(file => file.id)).concat(this.folders.map(folder => folder.id));
         },
         displayedFiles () {
-            let files = [].concat(this.files);
+            let files = [...this.allFiles];
             if (this.needleForFilter.length > 0) {
                 files = files.filter(file => {
                     return this.valueMatchesFilter(file.name)
@@ -412,7 +415,7 @@ export default {
             return this.sortArray(files);
         },
         displayedFolders () {
-            let folders = [].concat(this.folders);
+            let folders = [...this.allFolders];
             if (this.needleForFilter.length > 0) {
                 folders = folders.filter(folder => {
                     return this.valueMatchesFilter(folder.name)

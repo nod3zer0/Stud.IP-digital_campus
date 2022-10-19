@@ -5,14 +5,14 @@
                 <span>{{ $gettext('Detailanzeige umschalten') }}</span>
             </a>
             <a v-if="!hideClose" class="close" href="" :title="$gettext('Nachrichtenbox schließen')" @click.prevent="closed = true">
-                <span>{{ $gettext('Nachrichtenbox schließen') }}</span>
+                <span>{{ $gettext('Nachrichtenbox schließen') }}</span>
             </a>
         </div>
         <slot></slot>
         <div v-if="showDetails" class="messagebox_details">
             <slot name="details">
                 <ul>
-                    <li v-for="detail in details" v-html="detail"></li>
+                    <li v-for="(detail, index) in details" v-html="detail" :key="index"></li>
                 </ul>
             </slot>
         </div>
@@ -32,7 +32,7 @@ export default {
         },
         details: {
             type: Array,
-            default: [],
+            default: () => [],
         },
         hideDetails: {
             type: Boolean,
