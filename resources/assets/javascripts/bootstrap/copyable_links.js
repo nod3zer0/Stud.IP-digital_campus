@@ -6,7 +6,7 @@ $(document).on('click', 'a.copyable-link', function (event) {
     // Create dummy element and position it off screen
     // This element must be "visible" (as in "not hidden") or otherwise
     // the copy command will fail
-    var dummy = $('<textarea>').val(this.href).css({
+    let dummy = $('<textarea>').val(this.href).css({
         position: 'absolute',
         left: '-9999px'
     }).appendTo('body');
@@ -19,15 +19,13 @@ $(document).on('click', 'a.copyable-link', function (event) {
     // Show visual hint using a deferred (this way we don't need to
     // duplicate the functionality in the done() handler)
     (new Promise((resolve, reject) => {
-        var confirmation = $('<div class="copyable-link-confirmation">');
+        let confirmation = $('<div class="copyable-link-confirmation copyable-link-success">');
         confirmation.text($gettext('Link wurde kopiert'));
-        confirmation.insertBefore(this);
-
-        $(this).parent().addClass('copyable-link-animation');
+        confirmation.insertBefore('#layout_container');
 
         // Resolve deferred when animation has ended or after 2 seconds as a
         // fail safe
-        var timeout = setTimeout(() => {
+        let timeout = setTimeout(() => {
             $(this).parent().off('animationend');
             resolve(confirmation);
         }, 1500);
@@ -37,6 +35,5 @@ $(document).on('click', 'a.copyable-link', function (event) {
         });
     })).then((confirmation, parent) => {
         confirmation.remove();
-        $(this).parent().removeClass('copyable-link-animation');
     });
 });
