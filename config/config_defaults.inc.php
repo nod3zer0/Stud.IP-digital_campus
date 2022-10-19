@@ -14,7 +14,7 @@ $DB_STUDIP_HOST = "localhost";
 $DB_STUDIP_USER = "";
 $DB_STUDIP_PASSWORD = "";
 $DB_STUDIP_DATABASE = "studip";
-
+$DEBUG_ALL_DB_QUERIES_WITH_TRACE = false;
 /*
 // optional Stud.IP slave database
 $DB_STUDIP_SLAVE_HOST = "localhost";
