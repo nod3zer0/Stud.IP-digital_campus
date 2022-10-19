@@ -356,7 +356,7 @@ class Seminar_Auth
 
         if ($check_auth['uid']) {
             $uid = $check_auth['uid'];
-            if ($check_auth['need_email_activation'] == $uid) {
+            if (isset($check_auth['need_email_activation']) && $check_auth['need_email_activation'] == $uid) {
                 $this->need_email_activation = $uid;
                 $_SESSION['semi_logged_in'] = $uid;
                 return false;

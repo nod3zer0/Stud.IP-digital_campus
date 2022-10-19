@@ -32,12 +32,16 @@ StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . '/lib/plugins/db');
 StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . '/lib/plugins/engine');
 
 // load config-variables
+$added_configs = [];
 StudipFileloader::load(
     'config_defaults.inc.php config_local.inc.php',
-    $GLOBALS,
+    $added_configs,
     compact('STUDIP_BASE_PATH', 'ABSOLUTE_URI_STUDIP', 'ASSETS_URL', 'CANONICAL_RELATIVE_PATH_STUDIP'),
     true
 );
+foreach($added_configs as $key => $value) {
+    $GLOBALS[$key] = $value;
+}
 require 'config/config.inc.php';
 
 // Do not send mails of any kind during tests

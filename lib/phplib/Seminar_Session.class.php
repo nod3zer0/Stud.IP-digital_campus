@@ -314,7 +314,7 @@ class Seminar_Session
         $this->delete();
         $this->start();
         foreach ($keep_session_vars as $k) {
-            $_SESSION[$k] = $keep[$k];
+            $_SESSION[$k] = $keep[$k] ?? null;
         }
     }
 

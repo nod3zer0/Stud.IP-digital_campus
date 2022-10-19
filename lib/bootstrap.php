@@ -65,7 +65,14 @@ if (isset($_SERVER['SERVER_NAME'])) {
 $GLOBALS['ASSETS_URL'] = $ABSOLUTE_URI_STUDIP . 'assets/';
 
 require __DIR__ . '/classes/StudipFileloader.php';
-$added = StudipFileloader::load('config_defaults.inc.php config_local.inc.php', $GLOBALS, compact('STUDIP_BASE_PATH', 'ABSOLUTE_URI_STUDIP', 'ASSETS_URL', 'CANONICAL_RELATIVE_PATH_STUDIP'), true);
+
+$added_configs = [];
+
+StudipFileloader::load('config_defaults.inc.php config_local.inc.php', $added_configs, compact('STUDIP_BASE_PATH', 'ABSOLUTE_URI_STUDIP', 'ASSETS_URL', 'CANONICAL_RELATIVE_PATH_STUDIP'), true);
+
+foreach($added_configs as $key => $value) {
+    $GLOBALS[$key] = $value;
+}
 
 // If no ENV setting was found in the config files, assume ENV=production
 if (!defined('Studip\ENV')) {
