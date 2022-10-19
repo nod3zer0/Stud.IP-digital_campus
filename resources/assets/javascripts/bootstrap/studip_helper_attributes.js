@@ -262,9 +262,19 @@ $(document).on('keydown', '.enter-accessible', function(event) {
     }
 });
 
-$(document).on('click', '[data-toggles]', function (event) {
-    const target = event.currentTarget.dataset.toggles;
-    $(target).toggle();
+$(document).on('click keydown', '[data-toggles]', function (event) {
+    if ((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
+        const target = event.currentTarget.dataset.toggles;
+        //Check if the target is a checkbox. These have to be toggled differently than
+        //other elements:
+        if ($(target).is(':checkbox')) {
+            //Toggle the checked state of the checkbox:
+            $(target).prop('checked', !$(target).prop('checked'));
+        } else {
+            //Do the normal toggle operation:
+            $(target).toggle();
+        }
 
-    event.preventDefault();
+        event.preventDefault();
+    }
 });

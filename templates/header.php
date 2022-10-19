@@ -85,11 +85,17 @@ if (isset($_COOKIE['navigation-length'])) {
                             $alert = true;
                         }
                     } ?>
-                    <div id="notification_marker"<?= !empty($alert) ? ' class="alert"' : "" ?> title="<?= _("Benachrichtigungen") ?>" data-lastvisit="<?= $lastvisit ?>">
-                        <?= count($notifications) ?>
-                    </div>
+                    <button id="notification_marker" data-toggles="#notification_checkbox" <?= !empty($alert) ? ' class="alert"' : "" ?>
+                            title="<?= sprintf(
+                                ngettext('%u Benachrichtigung', '%u Benachrichtigungen', count($notifications)),
+                                count($notifications)
+                            ) ?>" data-lastvisit="<?= $lastvisit ?>"
+                            <?= count($notifications) == 0 ? 'disabled' : '' ?>>
+                        <span class="count" aria-hidden="true"><?= count($notifications) ?></span>
+                    </button>
+                    <input type="checkbox" id="notification_checkbox">
                     <div class="list below" id="notification_list">
-                        <a class="mark-all-as-read <? if (count($notifications) < 2) echo 'notification_hidden'; ?>" href="<?= URLHelper::getLink('dispatch.php/jsupdater/mark_notification_read/all', ['return_to' => $_SERVER['REQUEST_URI']]) ?>">
+                        <a class="mark-all-as-read <? if (count($notifications) < 2) echo 'invisible'; ?>" href="<?= URLHelper::getLink('dispatch.php/jsupdater/mark_notification_read/all', ['return_to' => $_SERVER['REQUEST_URI']]) ?>">
                             <?= _('Alle Benachrichtigungen als gelesen markieren') ?>
                         </a>
                         <a class="enable-desktop-notifications" href="#" style="display: none;">

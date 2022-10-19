@@ -1,6 +1,7 @@
 import Favico from 'favico.js';
 import Cache from './cache.js';
 import PageLayout from './page_layout.js';
+import { $gettextInterpolate, $ngettext } from './gettext';
 
 var stack = {};
 var audio_notification = false;
@@ -91,7 +92,7 @@ function process_notifications({ notifications }) {
 
 const PersonalNotifications = {
     initialize () {
-        if ($('#notification_marker').length > 0) {
+        if ($('#notification_marker .count').length > 0) {
             $('#notification_list .notification').map(function() {
                 var data = $(this).data();
                 stack[data.id] = data;
@@ -154,7 +155,7 @@ const PersonalNotifications = {
     },
     update () {
         var count = _.values(stack).length;
-        var old_count = parseInt($('#notification_marker').text(), 10);
+        var old_count = parseInt($('#notification_marker .count').text(), 10);
         var really_new = 0;
         $('#notification_list > ul > li').each(function() {
             if (parseInt($(this).data('timestamp'), 10) > parseInt($('#notification_marker').data('lastvisit'), 10)) {
@@ -172,16 +173,20 @@ const PersonalNotifications = {
         }
         if (count) {
             $('#notification_container').addClass('hoverable');
+            $('#notification_marker').prop('disabled', false);
             if (count > old_count && audio_notification !== false) {
                 audio_notification.play();
             }
         } else {
             $('#notification_container').removeClass('hoverable');
+            $('#notification_marker').prop('disabled', true);
         }
         if (old_count !== count) {
-            $('#notification_marker').text(count);
+            $('#notification_marker .count').text(count);
+            let notification_text = $ngettext('%{ count } Benachrichtigung', '%{ count } Benachrichtigungen', count);
+            $('#notification_marker').attr('title', $gettextInterpolate(notification_text, {count: count}));
             updateFavicon(count);
-            $('#notification_container .mark-all-as-read').toggleClass('notification_hidden', count < 2);
+            $('#notification_container .mark-all-as-read').toggleClass('invisible', count < 2);
         }
     },
     isVisited () {
