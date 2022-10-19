@@ -2,19 +2,25 @@
   <form class="sidebar-search" @submit.prevent="">
       <ul class="needles">
           <li>
-              <form @submit.prevent="">
-                <input
-                    type="text"
-                    v-model="searchTerm"
-                    :aria-label="$gettext('Geben Sie einen Suchbegriff mit mindestens 3 Zeichen ein.')"
-                />
-                <input
-                    type="submit"
-                    :value="$gettext('Suchen')"
-                    aria-controls="search"
-                    @click="loadResults"
-                />
-              </form>
+              <div class="input-group files-search">
+                  <input
+                      type="text"
+                      v-model="searchTerm"
+                      :aria-label="$gettext('Geben Sie einen Suchbegriff mit mindestens 3 Zeichen ein.')"
+                  />
+                  <a v-if="searched" @click.prevent="setShowSearchResults(false)" class="reset-search">
+                      <studip-icon shape="decline" size="20"></studip-icon>
+                  </a>
+                  <button
+                      type="submit"
+                      :value="$gettext('Suchen')"
+                      aria-controls="search"
+                      class="submit-search"
+                      @click="loadResults"
+                  >
+                      <studip-icon shape="search" size="20"></studip-icon>
+                  </button>
+              </div>
           </li>
       </ul>
   </form>
@@ -23,12 +29,14 @@
 <script>
 import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
+import StudipIcon from '../StudipIcon.vue';
 
 export default {
     name: 'courseware-search-widget',
+    components: { StudipIcon },
     data() {
         return {
-            searchTerm: '',
+            searchTerm: ''
         }
     },
     computed: {
@@ -36,6 +44,9 @@ export default {
             courseware: 'courseware',
             context: 'context',
         }),
+        searched() {
+            return this.$store.state.courseware.showSearchResults
+        }
     },
     methods: {
         ...mapActions({
@@ -70,7 +81,7 @@ export default {
             });
         }
     }
-    
+
 
 }
 </script>

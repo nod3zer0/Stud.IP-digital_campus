@@ -1,8 +1,3 @@
-<? if ($reset_search): ?>
-<div style="text-align: right;">
-    <?= $reset_search ?>
-</div>
-<? endif; ?>
 <form action="<?= URLHelper::getLink($url) ?>" method="<?= $method ?>" <? if (isset($id)) printf('id="%s"', htmlReady($id)); ?> class="sidebar-search">
 <? foreach ($url_params as $key => $value): ?>
     <?=addHiddenFields($key,$value)?>
@@ -10,19 +5,29 @@
     <ul class="needles">
     <? foreach ($needles as $needle): ?>
         <li <? if ($needle['quick_search'] && $needle['quick_search']->hasExtendedLayout()) echo 'class="extendedLayout" id="' . $needle['quick_search']->getId() . '_frame"'; ?>>
-            <label for="needle-<?= $hash = md5($url . '|' . $needle['name']) ?>" <? if ($needle['placeholder']) echo 'style="display:none;"'; ?>>
-                <?= htmlReady($needle['label']) ?>
-            </label>
-        <? if ($needle['quick_search']): ?>
-            <?= $needle['quick_search']->render() ?>
-        <? else: ?>
-            <input type="text" id="needle-<?= $hash ?>"
-                   name="<?= htmlReady($needle['name']) ?>"
-                   value="<?= htmlReady($needle['value']) ?>"
-                   <? if ($needle['placeholder']) printf('placeholder="%s"', htmlReady($needle['label'])); ?>
-                   <?= arrayToHtmlAttributes($needle['attributes']) ?>>
-        <? endif; ?>
-            <input type="submit" value="<?= _('Suchen') ?>">
+            <div class="input-group files-search">
+                <label for="needle-<?= $hash = md5($url . '|' . $needle['name']) ?>" <? if ($needle['placeholder']) echo 'style="display:none;"'; ?>>
+                    <?= htmlReady($needle['label']) ?>
+                </label>
+                <? if ($needle['quick_search']): ?>
+                    <?= $needle['quick_search']->render() ?>
+                <? else: ?>
+                <input type="text" id="needle-<?= $hash ?>"
+                       name="<?= htmlReady($needle['name']) ?>"
+                       value="<?= htmlReady($needle['value']) ?>"
+                       <? if ($needle['placeholder']) printf('placeholder="%s"', htmlReady($needle['label'])); ?>
+                       <?= arrayToHtmlAttributes($needle['attributes']) ?>>
+                <? endif; ?>
+                <? if ($reset_link): ?>
+                    <a class="reset-search" href="<?= $reset_link ?>" tabindex="0"
+                       title="<?= _('Suche zurücksetzen') ?>">
+                        <?= Icon::create('decline')->asImg(20) ?>
+                    </a>
+                <? endif; ?>
+                <button type="submit" class="submit-search<?= $reset_link ? ' is-executed' : '' ?>"
+                        title="<?= _('Suche ausführen') ?>">
+                    <?= Icon::create('search')->asImg(20) ?>
+                </button>
         </li>
     <? endforeach; ?>
     </ul>

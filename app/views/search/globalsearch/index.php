@@ -5,12 +5,12 @@
             placeholder="<?= _('Was suchen Sie?') ?>">
 
         <span class="input-group-append">
-            <button type="submit" class="button" id="search-btn">
-                <?= Icon::create('search')->asImg(['title' => _('Suche starten')]) ?>
-            </button>
-
             <button type="submit" class="button" id="reset-search">
                 <?= Icon::create('decline')->asImg(['title' => _('Suche zurücksetzen')]) ?>
+            </button>
+
+            <button type="submit" class="button" id="search-btn">
+                <?= Icon::create('search')->asImg(['title' => _('Suche starten')]) ?>
             </button>
 
         </span>

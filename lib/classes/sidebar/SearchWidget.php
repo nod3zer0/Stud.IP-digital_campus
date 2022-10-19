@@ -145,15 +145,20 @@ class SearchWidget extends SidebarWidget
             $reset_params = $query_params;
             foreach ($this->needles as $needle) {
                 unset($reset_params[$needle['name']]);
+
+                // Search view in Wiki must be cleared.
+                if ($reset_params['view'] == 'search') {
+                    $reset_params['view'] = 'show';
+                }
+                // Search view in Forum must be cleared.
+                if ($reset_params['backend'] == 'search') {
+                    unset($reset_params['backend']);
+                    $this->url = str_replace('index/search', 'index', $this->url);
+                }
             }
 
-            $reset_link = sprintf(
-                '<a href="%s">%s %s</a>',
-                URLHelper::getLink($this->url, array_merge($reset_params, ['reset-search' => 1])),
-                Icon::create('decline')->asImg(['class' => 'text-top']),
-                _('Zurücksetzen')
-            );
-            $this->template_variables['reset_search'] = $reset_link;
+            $reset_link = URLHelper::getLink($this->url, array_merge($reset_params, ['reset-search' => 1]));
+            $this->template_variables['reset_link'] = $reset_link;
         }
 
         $this->template_variables['needles'] = $this->needles;
