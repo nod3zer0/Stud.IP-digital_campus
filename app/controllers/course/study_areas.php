@@ -71,7 +71,8 @@ class Course_StudyAreasController extends AuthenticatedController
         if (Request::get('open_node')) {
             $this->values[get_class($this->step)]['open_node'] = Request::get('open_node');
         }
-        $this->must_have_studyareas = $this->is_required();
+        $this->is_activated = $this->is_activated();
+        $this->is_required  = $this->is_required();
 
         $this->values[get_class($this->step)]['locked'] = $this->locked;
         $this->tree                                     = $this->step->getStepTemplate($this->values, 0, 0);
@@ -122,7 +123,6 @@ class Course_StudyAreasController extends AuthenticatedController
                 $msg = $this->unassign();
             }
 
-
         } else {
             $studyareas = Request::getArray('studyareas');
 
@@ -131,12 +131,11 @@ class Course_StudyAreasController extends AuthenticatedController
                 $this->redirect($url);
                 return;
             }
-            if (!empty($studyareas) && !$this->is_required()) {
+            if (!empty($studyareas) && !$this->is_activated()) {
                 PageLayout::postError(_('Sie dürfen keine Studienbereiche zuweisen.'));
                 $this->redirect($url);
                 return;
             }
-
 
             try {
                 $this->course->setStudyAreas($studyareas);
@@ -200,6 +199,21 @@ class Course_StudyAreasController extends AuthenticatedController
      * @return boolean True if required.
      */
     private function is_required()
+    {
+        $sem_class = $this->course->getSemClass();
+        if (get_class($this->step) === 'StudyAreasLVGroupsCombinedWizardStep') {
+            if ($sem_class['module']) {
+                $lv_gruppen = Lvgruppe::findBySeminar($this->course->id);
+                if (count($lv_gruppen)) {
+                    return false;
+                }
+            }
+        }
+
+        return (bool) $sem_class['bereiche'];
+    }
+
+    private function is_activated()
     {
         $sem_class = $this->course->getSemClass();
         return (bool) $sem_class['bereiche'];

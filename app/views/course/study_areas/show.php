@@ -3,8 +3,10 @@
 <? endif?>
     <?= $tree ?>
     <div style="text-align: center;">
-    <? if ($must_have_studyareas) : ?>
-        <?= _("Die Veranstaltung muss <b>mindestens einen</b> Studienbereich haben.") ?>
+    <? if ($is_activated) : ?>
+        <? if ($is_required) : ?>
+            <?= _("Die Veranstaltung muss <b>mindestens einen</b> Studienbereich haben.") ?>
+        <? endif ?>
     <? else : ?>
         <?= _("Die Veranstaltung darf <b>keine</b> Studienbereiche haben.") ?>
     <? endif ?>
