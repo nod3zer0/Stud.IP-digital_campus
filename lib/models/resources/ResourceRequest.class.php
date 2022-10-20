@@ -297,7 +297,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             . str_replace(
                 ['BEGIN', 'END'],
                 [
-                    '(termine.date - resource_requests.preparation_time)',
+                    '(CAST(termine.date AS SIGNED) - resource_requests.preparation_time)',
                     'termine.end_time'
                 ],
                 $time_sql
@@ -313,7 +313,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             . str_replace(
                 ['BEGIN', 'END'],
                 [
-                    '(termine.date - resource_requests.preparation_time)',
+                    '(CAST(termine.date AS SIGNED) - resource_requests.preparation_time)',
                     'termine.end_time'
                 ],
                 $time_sql
@@ -330,7 +330,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             . str_replace(
                 ['BEGIN', 'END'],
                 [
-                    '(termine.date - resource_requests.preparation_time)',
+                    '(CAST(termine.date AS SIGNED) - resource_requests.preparation_time)',
                     'termine.end_time'
                 ],
                 $time_sql
