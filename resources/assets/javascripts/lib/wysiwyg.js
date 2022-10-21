@@ -113,6 +113,11 @@ function replaceTextarea(textarea) {
             }
         });
 
+        const button = ckeditor.ui.view.toolbar.items.find( item => item.class === "ck-source-editing-button");
+        if (button) {
+            button.withText = false;
+        }
+
         // TODO: Kein updateSourceElement im SourceEditing-Modus
         //     $(ckeditor.container.$).on('blur', '.CodeMirror', function (event) {
         //         ckeditor.updateElement(); // also update in source mode

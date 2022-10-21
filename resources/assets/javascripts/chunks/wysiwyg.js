@@ -4,7 +4,6 @@ import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import ClassicEditorBase from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
 import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
 import EasyImagePlugin from '@ckeditor/ckeditor5-easy-image/src/easyimage';
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
@@ -29,7 +28,6 @@ import List from '@ckeditor/ckeditor5-list/src/list';
 import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js';
-import SelectAll from '@ckeditor/ckeditor5-select-all/src/selectall';
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
 import SpecialCharacters from '@ckeditor/ckeditor5-special-characters/src/specialcharacters.js';
 import SpecialCharactersCurrency from '@ckeditor/ckeditor5-special-characters/src/specialcharacterscurrency.js';
@@ -66,7 +64,6 @@ ClassicEditor.builtinPlugins = [
     Autoformat,
     BlockQuote,
     BoldPlugin,
-    Code,
     CodeBlock,
     EssentialsPlugin,
     FindAndReplace,
@@ -87,7 +84,6 @@ ClassicEditor.builtinPlugins = [
     Mathematics,
     Paragraph,
     RemoveFormat,
-    SelectAll,
     SourceEditing,
     SpecialCharacters,
     SpecialCharactersCurrency,
@@ -138,25 +134,7 @@ ClassicEditor.defaultConfig = {
         items: [
             'undo',
             'redo',
-            '|',
             'findAndReplace',
-            'selectAll',
-            '|',
-            'specialCharacters',
-            'horizontalLine',
-            '|',
-            'insertBlockQuote',
-            'splitBlockQuote',
-            'removeBlockQuote',
-            '|',
-            'link',
-            'insertTable',
-            'uploadImage',
-            'codeBlock',
-            'math',
-            'studip-wiki',
-            '-',
-            'heading',
             '|',
             'bold',
             'italic',
@@ -164,16 +142,8 @@ ClassicEditor.defaultConfig = {
             'strikethrough',
             'subscript',
             'superscript',
-            'code',
+            '|',
             'removeFormat',
-            '|',
-            'fontColor',
-            'fontBackgroundColor',
-            '|',
-            'alignment:left',
-            'alignment:right',
-            'alignment:center',
-            'alignment:justify',
             '|',
             'bulletedList',
             'numberedList',
@@ -181,7 +151,27 @@ ClassicEditor.defaultConfig = {
             'outdent',
             'indent',
             '|',
-            'open-a11y-dialog',
+            'alignment:left',
+            'alignment:right',
+            'alignment:center',
+            'alignment:justify',
+            '-',
+            'heading',
+            'fontColor',
+            'fontBackgroundColor',
+            '|',
+            'link',
+            'insertTable',
+            'uploadImage',
+            'codeBlock',
+            'math',
+            'studip-wiki',
+            'specialCharacters',
+            'horizontalLine',
+            '|',
+            'insertBlockQuote',
+            'splitBlockQuote',
+            'removeBlockQuote',
             '|',
             'sourceEditing',
         ],

@@ -74,6 +74,9 @@
 }
 
 /* buttons */
+.ck.ck-button, a.ck.ck-button {
+    font-size: 12px;
+}
 
 .ck.ck-button:hover {
     cursor: pointer;
@@ -209,6 +212,10 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 }
 
 .ck .ck-button .ck-disabled .ck-off .ck-button_with-text, .ck .ck-button .ck-disabled .ck-off .ck-button_with-text:hover {
+    display: none;
+}
+
+.ck.ck-button.ck-source-editing-button .ck.ck-button__label {
     display: none;
 }
 
