@@ -67,14 +67,16 @@ class Block extends SchemaProvider
             self::RELATIONSHIP_DATA => $resource->container,
         ];
 
-        $relationships[self::REL_OWNER] = [
+        $relationships[self::REL_OWNER] = $resource->owner
+        ? [
             self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->createLinkToResource($resource->owner),
             ],
             self::RELATIONSHIP_DATA => $resource->owner,
-        ];
+        ]
+        : [self::RELATIONSHIP_DATA => null];
 
-        $relationships[self::REL_EDITOR] = $resource['editor_id']
+        $relationships[self::REL_EDITOR] = $resource->editor
             ? [
                 self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $this->createLinkToResource($resource->editor),
@@ -84,7 +86,7 @@ class Block extends SchemaProvider
             : [self::RELATIONSHIP_DATA => null];
 
 
-        $relationships[self::REL_EDITBLOCKER] = $resource['edit_blocker_id']
+        $relationships[self::REL_EDITBLOCKER] = $resource->edit_blocker
             ? [
                 self::RELATIONSHIP_LINKS_SELF => true,
                 self::RELATIONSHIP_LINKS => [
