@@ -82,7 +82,7 @@
                                 mood="pointing"
                             >
                                 <template #companionActions>
-                                    <button class="button" @click="menuAction('removeLock')">
+                                    <button v-if="userIsTeacher" class="button" @click="menuAction('removeLock')">
                                         {{ textRemoveLock.title }}
                                     </button>
                                 </template>
@@ -963,7 +963,7 @@ export default {
 
             ];
             if (this.canEdit) {
-                if (!this.blocked) {
+                if (!this.blockedByAnotherUser) {
                     menu.push({
                         id: 1,
                         label: this.$gettext('Seite bearbeiten'),
@@ -977,7 +977,7 @@ export default {
                         emit: 'sortContainers',
                     });
                 }
-                if (this.blocked && this.blockedByAnotherUser && this.userIsTeacher) {
+                if (this.blockedByAnotherUser && this.userIsTeacher) {
                     menu.push({
                         id: 1,
                         label: this.textRemoveLock.title,
