@@ -13,7 +13,6 @@
             <?= htmlReady(Config::get()->UNI_NAME_CLEAN) ?>
             <ul>
             <?php foreach ($assigned as $element) : ?>
-            <?= htmlReady($element['name']) ?>
             <?= $this->render_partial('studyareas/_assigned_node',
                     ['element' => $element, 'studyareas' => $values['studyareas']]) ?>
             <?php endforeach ?>
