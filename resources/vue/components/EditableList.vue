@@ -6,7 +6,7 @@
                     <studip-icon v-if="item.icon" :shape="item.icon" role="info" size="20" class="text-bottom" alt=""></studip-icon>
                     <input v-if="name" type="hidden" :name="name + '[]'" :value="item.value">
                     <span>{{item.name}}</span>
-                    <button v-if="item.deletable" @click.prevent="deleteItem(item)" :title="$gettextInterpolate('%{ name } löschen', {name: item.name})" class="undecorated">
+                    <button v-if="item.deletable" @click.prevent="deleteItem(item)" :title="$gettextInterpolate($gettext('%{ name } löschen'), {name: item.name})" class="undecorated">
                         <studip-icon shape="trash" role="clickable" size="20" class="text-bottom"></studip-icon>
                     </button>
                 </li>

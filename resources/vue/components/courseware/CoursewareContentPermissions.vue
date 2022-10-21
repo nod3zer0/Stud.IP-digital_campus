@@ -42,7 +42,7 @@
                     <td class="perm">
                         <input
                             class="right"
-                            :title="$gettextInterpolate('Leserechte für %{ userName }', { userName: user_perm.username })"
+                            :title="$gettextInterpolate($gettext('Leserechte für %{ userName }'), { userName: user_perm.username })"
                             type="radio"
                             :name="`${user_perm.id}_right`"
                             value="read"
@@ -53,7 +53,7 @@
                     <td class="perm">
                         <input
                             class="right"
-                            :title="$gettextInterpolate('Lese- und Schreibrechte für %{ userName }', { userName: user_perm.username })"
+                            :title="$gettextInterpolate($gettext('Lese- und Schreibrechte für %{ userName }'), { userName: user_perm.username })"
                             type="radio"
                             :name="`${user_perm.id}_right`"
                             value="write"
@@ -75,7 +75,7 @@
                     <td class="actions">
                         <button
                             class="cw-permission-delete"
-                            :title="$gettextInterpolate('Entfernen der Rechte von %{ userName }', { userName: user_perm.username })"
+                            :title="$gettextInterpolate($gettext('Entfernen der Rechte von %{ userName }'), { userName: user_perm.username })"
                             @click.prevent="confirmDeleteUserPerm(index)"
                         >
                         </button>
@@ -211,9 +211,15 @@ export default {
 
         getExpiryTitle(userName, date) {
             if (date) {
-                return this.$gettextInterpolate('Die Berechtigungen für %{ userName } laufen am folgendem Datum ab: %{ dateStr }', { userName: userName, dateStr: new Date(date).toLocaleDateString() })
+                return this.$gettextInterpolate(
+                    this.$gettext('Die Berechtigungen für %{ userName } laufen am folgendem Datum ab: %{ dateStr }'),
+                    { userName: userName, dateStr: new Date(date).toLocaleDateString() }
+                );
             } else {
-                return this.$gettextInterpolate('Das Ablaufdatum der Berechtigungen für %{ userName }', { userName: userName });
+                return this.$gettextInterpolate(
+                    this.$gettext('Das Ablaufdatum der Berechtigungen für %{ userName }'),
+                    { userName: userName }
+                );
             }
         },
 

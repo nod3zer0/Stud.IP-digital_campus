@@ -178,7 +178,12 @@ export default {
         async deleteElement() {
             await this.loadStructuralElement(this.currentId);
             if (this.blockedByAnotherUser) {
-                this.companionInfo({ info: this.$gettextInterpolate('Löschen nicht möglich, da %{blockingUserName} die Seite bearbeitet.', {blockingUserName: this.blockingUserName}) });
+                this.companionInfo({
+                    info: this.$gettextInterpolate(
+                        this.$gettext('Löschen nicht möglich, da %{blockingUserName} die Seite bearbeitet.'),
+                        {blockingUserName: this.blockingUserName}
+                    )
+                });
 
                 return false;
             }

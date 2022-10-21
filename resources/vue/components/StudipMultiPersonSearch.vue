@@ -71,7 +71,10 @@ export default {
             });
             let selection_header = document.createElement('div');
             selection_header.setAttribute('id', this.count_text_id);
-            selection_header.innerText = this.$gettextInterpolate('Sie haben %{ count } Personen ausgewählt', {count: this.count});
+            selection_header.innerText = this.$gettextInterpolate(
+                this.$gettext('Sie haben %{ count } Personen ausgewählt'),
+                {count: this.count}
+            );
 
             $('#' + this.select_box_id).multiSelect({
                 selectableHeader: '<div>' + this.$gettext('Suchergebnisse') + '</div>',
@@ -105,7 +108,10 @@ export default {
                     if (searchcount === 0) {
                         view.append(
                             '--',
-                            view.$gettextInterpolate('Es wurden keine neuen Ergebnisse für "%{ needle }" gefunden.', {needle: view.searchTerm}),
+                            view.$gettextInterpolate(
+                                view.$gettext('Es wurden keine neuen Ergebnisse für "%{ needle }" gefunden.'),
+                                {needle: view.searchTerm}
+                            ),
                             true
                         );
                         view.refresh();
@@ -158,7 +164,10 @@ export default {
 
         updateCount(){
             this.count = $('#' + this.select_box_id + ' option:enabled:selected').length;
-            $('#' + this.count_text_id).text(this.$gettextInterpolate('Sie haben %{ count } Personen ausgewählt', {count: this.count}));
+            $('#' + this.count_text_id).text(this.$gettextInterpolate(
+                this.$gettext('Sie haben %{ count } Personen ausgewählt'),
+                {count: this.count}
+            ));
         },
 
         async updateSelection() {

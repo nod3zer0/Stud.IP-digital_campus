@@ -74,7 +74,7 @@
         <studip-dialog
             v-if="showClearReleases"
             :title="$gettext('Löschen der Freigabe')"
-            :question="$gettextInterpolate('Möchten Sie die Freigabe für %{ pageTitle} wirklich löschen?', {pageTitle: this.selectedElement.attributes.title})"
+            :question="$gettextInterpolate($gettext('Möchten Sie die Freigabe für %{ pageTitle} wirklich löschen?'), {pageTitle: this.selectedElement.attributes.title})"
             height="220"
             @confirm="clearReleases"
             @close="closeClearReleases"

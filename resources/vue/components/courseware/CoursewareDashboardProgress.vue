@@ -19,7 +19,7 @@
             </a>
         </nav>
         <div v-if="selected" class="cw-dashboard-progress-chapter">
-            <a :href="chapterUrl" :title="$gettextInterpolate('%{ pageTitle } öffnen', {pageTitle: selected.name})">
+            <a :href="chapterUrl" :title="$gettextInterpolate($gettext('%{ pageTitle } öffnen'), {pageTitle: selected.name})">
                 <h1>{{ selected.name }}</h1>
             </a>
             <courseware-progress-circle
@@ -42,7 +42,7 @@
                 @selectChapter="selectChapter"
             />
             <div v-if="!children.length" class="cw-dashboard-empty-info">
-                <courseware-companion-box 
+                <courseware-companion-box
                     mood="sad"
                     :msgCompanion="$gettext('Diese Seite enthält keine darunter liegenden Seiten.')"
                 />

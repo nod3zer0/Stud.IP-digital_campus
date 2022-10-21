@@ -13,9 +13,8 @@ export default {
                 data: {
                     text: text,
                 },
-
             }).then( () => {
-                this.companionInfo({ info: this.$gettextInterpolate('Der Vorschlag wurde verschickt.') });
+                this.companionInfo({ info: this.$gettext('Der Vorschlag wurde verschickt.') });
             });
 
         }

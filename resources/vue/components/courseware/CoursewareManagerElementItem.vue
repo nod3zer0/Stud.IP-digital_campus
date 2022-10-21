@@ -10,7 +10,7 @@
                 {{ element.attributes.title }}
                 <span v-if="task" class="cw-manager-element-item-solver-name">| {{ solverName }}</span>
         </a>
-        <div 
+        <div
             v-else
             class="cw-manager-element-item cw-manager-element-item-sorting"
         >
@@ -87,9 +87,15 @@ export default {
             let title = this.element.attributes.title;
             if (this.inserter) {
                 if (this.type === 'remote' || this.type === 'own') {
-                    title = this.$gettextInterpolate('%{ elementTitle } kopieren', {elementTitle: this.element.attributes.title});
+                    title = this.$gettextInterpolate(
+                        this.$gettext('%{ elementTitle } kopieren'),
+                        {elementTitle: this.element.attributes.title}
+                    );
                 } else {
-                    title = this.$gettextInterpolate('%{ elementTitle } verschieben', {elementTitle: this.element.attributes.title});
+                    title = this.$gettextInterpolate(
+                        this.$gettext('%{ elementTitle } verschieben'),
+                        {elementTitle: this.element.attributes.title}
+                    );
                 }
             }
 

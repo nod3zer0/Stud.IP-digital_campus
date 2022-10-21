@@ -7,7 +7,7 @@
                 <studip-icon v-if="blockedByAnotherUser" shape="lock-locked" />
                 <span>{{ blockTitle }}</span>
                 <span v-if="blockedByAnotherUser" class="cw-default-block-blocker-warning">
-                    | {{ $gettextInterpolate('wird im Moment von %{ userName } bearbeitet', { userName: this.blockingUserName }) }}
+                    | {{ $gettextInterpolate($gettext('wird im Moment von %{ userName } bearbeitet'), { userName: this.blockingUserName }) }}
                 </span>
 
                 <span v-if="!block.attributes.visible" class="cw-default-block-invisible-info">
@@ -253,7 +253,12 @@ export default {
             }
 
             if (this.blockedByAnotherUser) {
-                this.companionWarning({ info: this.$gettextInterpolate('Ihre Änderungen konnten nicht gespeichert werden, da %{blockingUserName} die Bearbeitung übernommen hat.', {blockingUserName: this.blockingUserName}) });
+                this.companionWarning({
+                    info: this.$gettextInterpolate(
+                        this.$gettext('Ihre Änderungen konnten nicht gespeichert werden, da %{blockingUserName} die Bearbeitung übernommen hat.'),
+                        {blockingUserName: this.blockingUserName}
+                    )
+                });
                 this.displayFeature(false);
                 this.$emit('closeEdit');
             }
@@ -280,7 +285,12 @@ export default {
                 if (this.blockedByThisUser) {
                     this.showDeleteDialog = true;
                 } else {
-                    this.companionInfo({ info: this.$gettextInterpolate('Löschen nicht möglich, da %{blockingUserName} den Block bearbeitet.', {blockingUserName: this.blockingUserName}) });
+                    this.companionInfo({
+                        info: this.$gettextInterpolate(
+                            this.$gettext('Löschen nicht möglich, da %{blockingUserName} den Block bearbeitet.'),
+                            {blockingUserName: this.blockingUserName}
+                        )
+                    });
                 }
             }
         },
@@ -294,7 +304,12 @@ export default {
         async executeDelete() {
             await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
             if (this.blockedByAnotherUser) {
-                this.companionInfo({ info: this.$gettextInterpolate('Löschen nicht möglich, da %{blockingUserName} die Bearbeitung übernommen hat.', {blockingUserName: this.blockingUserName}) });
+                this.companionInfo({
+                    info: this.$gettextInterpolate(
+                        this.$gettext('Löschen nicht möglich, da %{blockingUserName} die Bearbeitung übernommen hat.'),
+                        {blockingUserName: this.blockingUserName}
+                    )
+                });
                 return false;
             }
             const containerId = this.block.relationships.container.data.id;
