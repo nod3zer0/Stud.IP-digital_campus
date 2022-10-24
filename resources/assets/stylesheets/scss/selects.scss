@@ -98,7 +98,7 @@ select {
             color: transparent;
             display: inline-block;
             float: none;
-            width: unit(($select-arrow-size + 5px));
+            width: ($select-arrow-size + 5px);
         }
 
         .select2-selection__rendered {
@@ -118,9 +118,9 @@ select {
     }
 
     .select2-selection--multiple {
-        padding-right: unit(($select-arrow-size + 5px));
+        padding-right: ($select-arrow-size + 5px);
         @include background-icon('arr_1down', 'clickable', $select-arrow-size);
-        $backgroundPosition: unit(calc($select-height-default / 2) - 4px);
+        $backgroundPosition: calc($select-height-default / 2 - 4px);
         background-position: right 4px top $backgroundPosition;
         background-repeat: no-repeat;
 
@@ -131,7 +131,7 @@ select {
             color: transparent !important;
             display: inline-block;
             float: none;
-            width: unit(($select-arrow-size + 5px));
+            width: ($select-arrow-size + 5px);
         }
 
         .select2-selection__choice {
