@@ -372,6 +372,11 @@ class Consultation_AdminController extends ConsultationController
         $this->block = $this->loadBlock($block_id);
         $this->block->room = trim(Request::get('room'));
         $this->block->note = trim(Request::get('note'));
+        $this->block->size = Request::int('size');
+        $this->block->calendar_events = Request::bool('calender-events', false);
+        $this->block->show_participants = Request::bool('show-participants', false);
+        $this->block->require_reason = Request::option('require-reason');
+        $this->block->confirmation_text = trim(Request::get('confirmation-text'));
 
         foreach ($this->block->slots as $slot) {
             $slot->note = '';

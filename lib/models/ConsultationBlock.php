@@ -10,22 +10,28 @@
  *       method when the dev board finally fully supports PHP7 since that
  *       required "yield from".
  *
- * @property string block_id database column
- * @property string id alias column for block_id
- * @property string range_id database column
- * @property string range_type database column
- * @property string teacher_id database column
- * @property string start database column
- * @property string end database column
- * @property string room database column
- * @property string calendar_events database column
- * @property string note database column
- * @property string size database column
- * @property bool has_bookings computed column
- * @property Range range computed column
- * @property SimpleORMapCollection slots has_many ConsultationSlot
- * @property ConsultationResponsibility[]|SimpleCollection responsibilities has_many ConsultationResponsibility
- * @property User[] responsible_persons
+ * @property string $id alias column for block_id
+ * @property string $block_id database column
+ * @property string $range_id database column
+ * @property string $range_type database column
+ * @property string $teacher_id database column
+ * @property int $start database column
+ * @property int $end database column
+ * @property string $room database column
+ * @property bool $calendar_events database column
+ * @property bool $show_participants database column
+ * @property bool $require_reason database column
+ * @property string $confirmation_text database column
+ * @property string $note database column
+ * @property string $size database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ *
+ * @property bool $has_bookings computed column
+ * @property Range $range computed column
+ * @property ConsultationSlot[]|SimpleORMapCollection $slots has_many ConsultationSlot
+ * @property ConsultationResponsibility[]|SimpleCollection $responsibilities has_many ConsultationResponsibility
+ * @property User[] $responsible_persons
  */
 class ConsultationBlock extends SimpleORMap implements PrivacyObject
 {
