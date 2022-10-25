@@ -1,50 +1,51 @@
 <template>
     <div class="i18n_group" v-if="languages.length > 1">
         <div class="i18n"
-             :data-lang="primaryLanguage.name"
-             :data-icon="'url(' + assetsURL + 'images/languages/' + primaryLanguage.picture + ')'">
+             v-if="selectedLanguage !== null"
+             :data-lang="selectedLanguage.name"
+             :data-icon="'url(' + assetsURL + 'images/languages/' + selectedLanguage.picture + ')'">
             <input type=text
                    ref="inputfield"
-                   :name="nameOfInput(language.id)"
-                   v-model="values[primaryLanguage.id]"
-                   :required="required && defaultLanguage === primaryLanguage.id"
+                   :name="nameOfInput(selectedLanguage.id)"
+                   v-model="values[selectedLanguage.id]"
+                   :required="required && defaultLanguage === selectedLanguage.id"
                    v-bind="$attrs"
                    v-on="$listeners"
                    v-if="type === 'text'">
-            <textarea :name="nameOfInput(language.id)"
+            <textarea :name="nameOfInput(selectedLanguage.id)"
                       ref="inputfield"
                       v-bind="$attrs"
                       v-on="$listeners"
-                      v-model="values[language.id]"
+                      v-model="values[selectedLanguage.id]"
                       :required="required && defaultLanguage === language.id"
                       v-else-if="type === 'textarea'"></textarea>
-            <studip-wysiwyg :name="nameOfInput(language.id)"
+            <studip-wysiwyg :name="nameOfInput(selectedLanguage.id)"
                             ref="inputfield"
                             v-model="values[selectedLanguage.id]"
                             v-bind="$attrs"
                             v-on="$listeners"
-                            :required="required && defaultLanguage === primaryLanguage.id"
+                            :required="required && defaultLanguage === selectedLanguage.id"
                             v-else-if="type === 'wysiwyg' && !wysiwyg_disabled"></studip-wysiwyg>
-            <textarea-with-toolbar :name="nameOfInput(language.id)"
-                      ref="inputfield"
-                      v-else
-                      v-model="values[primaryLanguage.id]"
-                      v-bind="$attrs"
-                      :required="required && defaultLanguage === primaryLanguage.id"
-                      v-on="$listeners"></textarea-with-toolbar>
+            <textarea-with-toolbar :name="nameOfInput(selectedLanguage.id)"
+                                   ref="inputfield"
+                                   v-else
+                                   v-model="values[selectedLanguage.id]"
+                                   v-bind="$attrs"
+                                   :required="required && defaultLanguage === selectedLanguage.id"
+                                   v-on="$listeners"></textarea-with-toolbar>
         </div>
         <input type="hidden"
-               v-for="language in secondaryLanguages"
+               v-for="language in otherLanguages"
+               :key="`hidden-${language.id}`"
                v-model="values[language.id]"
                :required="required && defaultLanguage === language.id"
-               :name="nameOfInput(language.id)"
-               :key="language.id">
+               :name="nameOfInput(language.id)">
         <select class="i18n"
                 tabindex="0"
                 @change="selectLanguage"
                 :aria-label="$gettext('Sprache des Textfeldes auswählen.')"
                 :style="'background-image: url(' + assetsURL + 'images/languages/' + selectedLanguage.picture + ')'">
-            <option v-for="language in languages" :value="language.id" :key="language.id">
+            <option v-for="language in languages" :value="language.id" :key="`option-${language.id}`">
                 {{language.name}}
             </option>
         </select>
@@ -73,12 +74,12 @@
                         :required="required"
                         v-else-if="type === 'wysiwyg' && !wysiwyg_disabled"></studip-wysiwyg>
         <textarea-with-toolbar :name="name"
-                  ref="inputfield"
-                  v-else
-                  v-model="values[selectedLanguage.id]"
-                  v-bind="$attrs"
-                  :required="required"
-                  v-on="$listeners"></textarea-with-toolbar>
+                               ref="inputfield"
+                               v-else
+                               v-model="values[selectedLanguage.id]"
+                               v-bind="$attrs"
+                               :required="required"
+                               v-on="$listeners"></textarea-with-toolbar>
     </div>
 </template>
 
@@ -130,11 +131,11 @@ export default {
             this.selectedLanguage = this.languages[i];
             break;
         }
-        let jsonvalue;
+        let jsonvalue = false;
         try {
             jsonvalue = JSON.parse(this.value);
         } catch (except) {
-            jsonvalue = false;
+            // No fallback
         }
         if (jsonvalue !== false) {
             this.values = jsonvalue;
@@ -150,8 +151,10 @@ export default {
                 if (e.target.value === this.languages[i].id) {
                     this.selectedLanguage = this.languages[i];
                     this.$nextTick(() => {
-                        if (typeof this.$refs.inputfield[0].focus === "function") {
-                            this.$refs.inputfield[0].focus();
+                        if (typeof this.$refs.inputfield.focus === "function") {
+                            this.$refs.inputfield.focus();
+                        } else if (typeof this.$refs.inputfield.prefill === 'function') {
+                            this.$refs.inputfield.prefill();
                         }
                     });
                     break;
@@ -181,10 +184,7 @@ export default {
             }
             return languages;
         },
-        primaryLanguage () {
-            return this.languages.find(language => language.id === this.selectedLanguage.id);
-        },
-        secondaryLanguages () {
+        otherLanguages () {
             return this.languages.filter(language => language.id !== this.selectedLanguage.id);
         }
     },
