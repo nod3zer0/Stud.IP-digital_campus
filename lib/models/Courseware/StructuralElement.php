@@ -444,6 +444,8 @@ class StructuralElement extends \SimpleORMap
                 return true;
             }
         }
+        //User not found.
+        return false;
     }
 
     private function hasWriteApproval($user): bool

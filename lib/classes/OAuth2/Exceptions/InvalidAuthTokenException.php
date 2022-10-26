@@ -7,10 +7,10 @@ class InvalidAuthTokenException extends \AccessDeniedException
     /**
      * Create a new InvalidAuthTokenException for different auth tokens.
      *
-     * @return static
+     * @return InvalidAuthTokenException
      */
     public static function different()
     {
-        return new static('The provided auth token for the request is different from the session auth token.');
+        return new InvalidAuthTokenException('The provided auth token for the request is different from the session auth token.');
     }
 }

@@ -544,7 +544,7 @@ function printhead($breite, $left, $link, $open, $new, $icon, $titel, $zusatz,
 }
 
 //Ausgabe des Contents einer aufgeklappten Kopfzeile
-function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE, $addon="", $noTdTag = false) {
+function printcontent ($breite, $write, $inhalt, $edit, $printout = true, $addon = '', $noTdTag = false) {
 
     $print = "";
     if ($noTdTag == false)

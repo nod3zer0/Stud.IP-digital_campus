@@ -95,8 +95,8 @@ class Resources_BookingController extends AuthenticatedController
         if ($this->booking->getAssignedUserType() === 'course') {
             $course = $this->booking->assigned_course_date->course;
             if ($course instanceof Course) {
-                $has_perms = $GLOBALS['perm']->have_studip_perm('user', $course->id, $user->id);
-                $vis_perms = $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM, $user->id);
+                $has_perms = $GLOBALS['perm']->have_studip_perm('user', $course->id, $this->current_user->id);
+                $vis_perms = $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM, $this->current_user->id);
                 if ($has_perms || $vis_perms || $course->visible) {
                     $this->user_may_see_course_data = true;
                 }

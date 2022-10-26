@@ -1,0 +1,26 @@
+parameters:
+    level: 0
+    phpVersion: 80000 # PHP 8.0
+    paths:
+        - app/controllers
+        - app/routes
+        - lib
+        - tests/functional
+        - tests/jsonapi
+        - tests/unit
+    scanFiles:
+        - composer/phpxmlrpc/phpxmlrpc/lib/xmlrpc.inc
+    scanDirectories:
+        - app/controllers
+        - lib
+        - vendor
+    excludePaths:
+        - lib/classes/ZipArchiveLegacyTrait.php
+        - lib/elearning/studip_referrer.php
+        - lib/soap/StudipSoapClient_PHP5.class.php
+    tmpDir: .caches
+    earlyTerminatingMethodCalls:
+        RESTAPI\RouteMap:
+            - error
+            - halt
+            - notFound

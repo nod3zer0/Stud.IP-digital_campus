@@ -384,7 +384,7 @@ abstract class RouteMap
 
         foreach ($input as $part) {
             $part = ltrim($part, "\r\n");
-            list($head, $body) = explode("\r\n\r\n", $part, 2);
+            [$head, $body] = explode("\r\n\r\n", $part, 2);
 
             $tmpheaders = $headers = [];
             foreach (explode("\r\n", $head) as $headline) {
@@ -621,7 +621,7 @@ abstract class RouteMap
         $this->response['ETag'] = $value;
 
         if ($this->response->isSuccess() || $this->response->status === 304) {
-            if ($this->etagMatches($_SERVER['HTTP_IF_NONE_MATCH'], $new_resource)) {
+            if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $this->etagMatches($_SERVER['HTTP_IF_NONE_MATCH'], $new_resource)) {
                 $this->halt($this->isRequestSafe() ? 304 : 412);
             }
             if (isset($_SERVER['HTTP_IF_MATCH'])
@@ -1036,7 +1036,7 @@ abstract class RouteMap
     protected function extractConditions($docblock, $conditions = [])
     {
         foreach ($docblock->getTags('condition') as $condition) {
-            list($var, $pattern) = explode(' ', $condition->getDescription(), 2);
+            [$var, $pattern] = explode(' ', $condition->getDescription(), 2);
             $conditions[$var] = $pattern;
         }
 

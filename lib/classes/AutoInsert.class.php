@@ -240,7 +240,7 @@ class AutoInsert
      * @param string $status     Status for autoinsertion
      * @param bool $remove       Whether the record should be added or removed
      */
-    public static function updateSeminar($seminar_id, $domain = '', $status, $remove = false)
+    public static function updateSeminar($seminar_id, $domain, $status, $remove = false)
     {
         $query     = $remove ? "DELETE FROM auto_insert_sem WHERE seminar_id = ? AND status= ? AND domain_id = ?" : "INSERT IGNORE INTO auto_insert_sem (seminar_id, status,domain_id) VALUES (?, ?, ?)";
         $statement = DBManager::get()->prepare($query);

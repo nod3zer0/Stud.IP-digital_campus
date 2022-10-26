@@ -224,7 +224,7 @@ class CourseDate extends SimpleORMap implements PrivacyObject
      */
     public function getRoomName()
     {
-        if (Config::get()->RESOURCES_ENABLE && $this->room_booking->resource) {
+        if (Config::get()->RESOURCES_ENABLE && !empty($this->room_booking->resource)) {
             return $this->room_booking->resource->name;
         }
         return $this['raum'];
@@ -237,7 +237,7 @@ class CourseDate extends SimpleORMap implements PrivacyObject
      */
     public function getRoom()
     {
-        if (Config::get()->RESOURCES_ENABLE && $this->room_booking->resource) {
+        if (Config::get()->RESOURCES_ENABLE && !empty($this->room_booking->resource)) {
            return $this->room_booking->resource->getDerivedClassInstance();
         }
         return null;

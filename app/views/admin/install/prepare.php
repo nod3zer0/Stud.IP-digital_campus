@@ -32,7 +32,7 @@
         <?= _('Name der Stud.IP-Installation') ?>
     </label>
     <input required type="text" id="system-name" name="system_name"
-           value="<?= htmlReady(Request::get('system_name', $_SESSION['STUDIP_INSTALLATION']['system']['UNI_NAME_CLEAN'])) ?>">
+           value="<?= htmlReady(Request::get('system_name', $_SESSION['STUDIP_INSTALLATION']['system']['UNI_NAME_CLEAN'] ?? '')) ?>">
 </div>
 
 <div class="type-text required">
@@ -40,7 +40,7 @@
         <?= _('Id der Stud.IP-Installation') ?>
     </label>
     <input required type="text" id="system-id" name="system_id"
-           value="<?= htmlReady(Request::get('system_id', $_SESSION['STUDIP_INSTALLATION']['system']['STUDIP_INSTALLATION_ID'])) ?>"
+           value="<?= htmlReady(Request::get('system_id', $_SESSION['STUDIP_INSTALLATION']['system']['STUDIP_INSTALLATION_ID'] ?? '')) ?>"
            placeholder="<?= _('Eindeutiges, gängiges Kürzel Ihrer Einrichtung') ?>">
 </div>
 
@@ -49,7 +49,7 @@
         <?= _('E-Mail-Adresse für Kontakt') ?>
     </label>
     <input required type="email" id="system-email" name="system_email"
-           value="<?= htmlReady(Request::get('system_email', $_SESSION['STUDIP_INSTALLATION']['system']['UNI_CONTACT'])) ?>">
+           value="<?= htmlReady(Request::get('system_email', $_SESSION['STUDIP_INSTALLATION']['system']['UNI_CONTACT'] ?? '')) ?>">
 </div>
 
 <div class="type-text required">
@@ -57,7 +57,7 @@
         <?= _('URL der Stud.IP-Installation') ?>
     </label>
     <input required type="url" id="system-url" name="system_url"
-           value="<?= htmlReady(Request::get('system_url', $_SESSION['STUDIP_INSTALLATION']['system']['ABSOLUTE_URI_STUDIP'] ?: $defaults['system_url'])) ?>"
+           value="<?= htmlReady(Request::get('system_url', $_SESSION['STUDIP_INSTALLATION']['system']['ABSOLUTE_URI_STUDIP'] ?? $defaults['system_url'])) ?>"
            placeholder="https://">
 </div>
 
@@ -66,7 +66,7 @@
         <?= _('URL der betreibenden Einrichtung') ?>
     </label>
     <input type="url" id="system-host-url" name="system_host_url"
-           value="<?= htmlReady(Request::get('system_host_url', $_SESSION['STUDIP_INSTALLATION']['system']['UNI_URL'])) ?>"
+           value="<?= htmlReady(Request::get('system_host_url', $_SESSION['STUDIP_INSTALLATION']['system']['UNI_URL'] ?? '')) ?>"
            placeholder="https://">
 </div>
 

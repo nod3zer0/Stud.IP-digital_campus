@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="ui-dialog-content ui-widget-content">
-        <?php if ($error): ?>
+        <?php if (!empty($error)): ?>
             <?= MessageBox::error($error, (array) @$error_details) ?>
         <?php endif; ?>
             <?= $content_for_layout ?>
@@ -47,7 +47,7 @@
             <?php elseif (!$valid): ?>
                 <?= Studip\Button::create(_('Erneut prüfen'), 'check') ?>
             <?php elseif ($next_step): ?>
-                <?= Studip\Button::create($button_label ?: (_('Weiter') . ' >>'), 'continue') ?>
+                <?= Studip\Button::create($button_label ?? (_('Weiter') . ' >>'), 'continue') ?>
             <?php else: ?>
                 <?= Studip\Button::create($button_label, 'continue', ['style' => 'visibility: hidden;']) ?>
             <?php endif; ?>

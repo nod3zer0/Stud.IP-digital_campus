@@ -40,14 +40,14 @@
 
         <tbody aria-relevant="additions" aria-live="polite" data-shiftcheck>
             <? if (count($messages) > 0) : ?>
-                <? if ($more || (Request::int("offset") > 0)) : ?>
+                <? if (!empty($more) || (Request::int("offset") > 0)) : ?>
                 <noscript>
                 <tr>
                     <td colspan="8">
                         <? if (Request::int("offset") > 0) : ?>
                         <a title="<?= _("zurück") ?>" href="<?= URLHelper::getLink("?", ['offset' => Request::int("offset") - $messageBufferCount > 0 ? Request::int("offset") - $messageBufferCount : null]) ?>"><?= Icon::create('arr_1left', 'clickable')->asImg(["class" => "text-bottom"]) ?></a>
                         <? endif ?>
-                        <? if ($more) : ?>
+                        <? if (!empty($more)) : ?>
                         <div style="float:right">
                             <a title="<?= _("weiter") ?>" href="<?= URLHelper::getLink("?", ['offset' => Request::int("offset") + $messageBufferCount]) ?>"><?= Icon::create('arr_1right', 'clickable')->asImg(["class" => "text-bottom"]) ?></a>
                         </div>
@@ -57,16 +57,16 @@
                 </noscript>
                 <? endif ?>
                 <? foreach ($messages as $message) : ?>
-                <?= $this->render_partial("messages/_message_row.php", compact("message", "received")) ?>
+                <?= $this->render_partial('messages/_message_row.php', ['message' => $message, 'received' => $received, 'settings' => $settings]) ?>
                 <? endforeach ?>
-                <? if ($more || (Request::int("offset") > 0)) : ?>
+                <? if (!empty($more) || (Request::int("offset") > 0)) : ?>
                 <noscript>
                 <tr>
                     <td colspan="7">
                         <? if (Request::int("offset") > 0) : ?>
                             <a title="<?= _("zurück") ?>" href="<?= URLHelper::getLink("?", ['offset' => Request::int("offset") - $messageBufferCount > 0 ? Request::int("offset") - $messageBufferCount : null]) ?>"><?= Icon::create('arr_1left', 'clickable')->asImg(["class" => "text-bottom"]) ?></a>
                         <? endif ?>
-                        <? if ($more) : ?>
+                        <? if (!empty($more)) : ?>
                             <div style="float:right">
                                 <a title="<?= _("weiter") ?>" href="<?= URLHelper::getLink("?", ['offset' => Request::int("offset") + $messageBufferCount]) ?>"><?= Icon::create('arr_1right', 'clickable')->asImg(["class" => "text-bottom"]) ?></a>
                             </div>

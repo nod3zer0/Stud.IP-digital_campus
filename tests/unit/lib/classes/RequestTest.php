@@ -29,11 +29,6 @@ class RequestTest extends \Codeception\Test\Unit
         $_GET['v3']  = ['root@studip', 'hotte.testfreund', 42, '!"$%&/()'];
         $_POST['v4'] = ['0', '1', '', 'foo'];
 
-        if (get_magic_quotes_gpc()) {
-            $_GET  = Request::addslashes($_GET);
-            $_POST = Request::addslashes($_POST);
-        }
-
         $testconfig = new Config([
             'USERNAME_REGULAR_EXPRESSION' => '/^([a-zA-Z0-9_@.-]{4,})$/',
         ]);

@@ -8,7 +8,7 @@
 <div class="type-text required">
     <label for="username" class="vertical"><?= _('Nutzername') ?></label>
     <input required type="text" id="username" name="username" minlength="4"
-           value="<?= htmlReady(Request::get('username', $_SESSION['STUDIP_INSTALLATION']['root']['username'])) ?>">
+           value="<?= htmlReady(Request::get('username', $_SESSION['STUDIP_INSTALLATION']['root']['username'] ?? '')) ?>">
 </div>
 
 <div class="type-text required">
@@ -24,18 +24,18 @@
 <div class="type-text required">
     <label for="first_name" class="vertical"><?= _('Vorname') ?></label>
     <input required type="text" id="first_name" name="first_name"
-           value="<?= htmlReady(Request::get('first_name', $_SESSION['STUDIP_INSTALLATION']['root']['first_name'])) ?>">
+           value="<?= htmlReady(Request::get('first_name', $_SESSION['STUDIP_INSTALLATION']['root']['first_name'] ?? '')) ?>">
 </div>
 
 <div class="type-text required">
     <label for="last_name" class="vertical"><?= _('Nachname') ?></label>
     <input required type="text" id="last_name" name="last_name"
-           value="<?= htmlReady(Request::get('last_name', $_SESSION['STUDIP_INSTALLATION']['root']['last_name'])) ?>">
+           value="<?= htmlReady(Request::get('last_name', $_SESSION['STUDIP_INSTALLATION']['root']['last_name'] ?? '')) ?>">
 </div>
 
 <div class="type-text required">
     <label for="email" class="vertical"><?= _('E-Mail-Adresse') ?></label>
-    <input required type="email" id="email" name="email" value="<?= htmlReady(Request::get('user', $_SESSION['STUDIP_INSTALLATION']['root']['email'])) ?>">
+    <input required type="email" id="email" name="email" value="<?= htmlReady(Request::get('user', $_SESSION['STUDIP_INSTALLATION']['root']['email'] ?? '')) ?>">
 </div>
 
 <p style="margin-top: 1em;">

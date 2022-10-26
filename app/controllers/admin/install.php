@@ -71,6 +71,8 @@ class Admin_InstallController extends Trails_Controller
 
         $this->valid = true;
         $this->hide_back_button = false;
+
+        return true;
     }
 
     public function index_action()

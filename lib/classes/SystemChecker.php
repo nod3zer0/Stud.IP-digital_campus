@@ -170,7 +170,7 @@ final class SystemChecker
                 $required['value'] = $this->parseSize($required['value']);
             }
 
-            $cmp = $required['cmp'];
+            $cmp = $required['cmp'] ?? '';
 
             if (is_bool($required['value'])) {
                 $valid = $present == $required['value'];

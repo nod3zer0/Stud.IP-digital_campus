@@ -67,7 +67,7 @@ class Oer_AddfileController extends AuthenticatedController
 
 
         //Load the folder by its ID.
-        $folder = new Folder($folder_id);
+        $folder = new Folder();
         $folder_type = $folder->folder_type;
         //Check if the specified folder type is a FolderType implementation.
         if (is_a($folder_type, 'FolderType', true)) {

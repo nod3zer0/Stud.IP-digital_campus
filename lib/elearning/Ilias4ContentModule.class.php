@@ -28,7 +28,7 @@ class Ilias4ContentModule extends Ilias3ContentModule
      * @param string $module_type module-type
      * @param string $cms_type system-type
      */
-    function __construct($module_id = "", $module_type, $cms_type)
+    function __construct($module_id, $module_type, $cms_type)
     {
         parent::__construct($module_id, $module_type, $cms_type);
     }

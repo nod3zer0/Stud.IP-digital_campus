@@ -412,7 +412,7 @@ class MessagesController extends AuthenticatedController {
             ], 'MessageUser::build');
         }
 
-        if (!$this->default_message->receivers->count() && is_array($_SESSION['sms_data']['p_rec'])) {
+        if (!$this->default_message->receivers->count() && !empty($_SESSION['sms_data']['p_rec'])) {
             $this->default_message->receivers = DBManager::get()->fetchAll("SELECT user_id,'rec' as snd_rec FROM auth_user_md5 WHERE username IN(?) ORDER BY Nachname,Vorname", [$_SESSION['sms_data']['p_rec']], 'MessageUser::build');
             unset($_SESSION['sms_data']);
         }
@@ -566,8 +566,8 @@ class MessagesController extends AuthenticatedController {
             $this->default_message['subject'] = Request::get("default_subject");
         }
         $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
-        $this->mailforwarding = Request::get('emailrequest') ? true : $settings['request_mail_forward'];
-        $this->show_adressees = Request::get('show_adressees') ? true : $settings['show_adressees'];;
+        $this->mailforwarding = Request::bool('emailrequest', $settings['request_mail_forward'] ?? false);
+        $this->show_adressees = Request::bool('show_adressees', $settings['show_adressees'] ?? false);
         if (Request::get('inst_id') || Request::get('course_id') || Request::option('group_id') || !Config::get()->SHOW_ADRESSEES_LIMIT) {
             $this->show_adressees = null;
         }

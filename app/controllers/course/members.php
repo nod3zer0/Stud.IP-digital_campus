@@ -755,7 +755,6 @@ class Course_MembersController extends AuthenticatedController
 
     /**
      * Change the visibilty of an autor
-     * @return Boolean
      */
     public function change_visibility_action($cmd, $mode)
     {

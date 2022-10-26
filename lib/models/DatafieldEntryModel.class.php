@@ -111,6 +111,7 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
         if (!$object_type) {
             throw new InvalidArgumentException('Wrong type of model: ' . get_class($model));
         }
+        $one_datafield = '';
         if ($datafield_id !== null) {
             $one_datafield = ' AND a.datafield_id = ' . DBManager::get()->quote($datafield_id);
         } else {

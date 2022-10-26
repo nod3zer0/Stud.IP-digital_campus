@@ -145,7 +145,7 @@
                    name="message_tags"
                    style="width: 100%"
                    placeholder="<?= _("z.B. klausur termin statistik etc.") ?>"
-                   value="<?= htmlReady($default_tags) ?>">
+                   value="<?= htmlReady($default_tags ?? '') ?>">
         </label>
     </div>
     <div id="settings" style="display: none;">
