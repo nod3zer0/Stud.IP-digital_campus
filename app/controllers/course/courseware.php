@@ -103,8 +103,8 @@ class Course_CoursewareController extends AuthenticatedController
     public function pdf_export_action($element_id, $with_children)
     {
         $element = \Courseware\StructuralElement::findOneById($element_id);
-
-        $this->render_pdf($element->pdfExport($this->user, $with_children), trim($element->title).'.pdf');
+        $user = User::find($GLOBALS['user']->id);
+        $this->render_pdf($element->pdfExport($user, $with_children), trim($element->title).'.pdf');
     }
 
     private function setIndexSidebar(): void

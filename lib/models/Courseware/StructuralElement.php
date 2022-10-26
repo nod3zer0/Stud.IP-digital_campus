@@ -918,7 +918,7 @@ SQL;
             $doc->setHeaderTitle(sprintf(_('Courseware von %s'), $this->user->getFullname()));
         }
 
-        if (!self::canRead($user)) {
+        if (!self::canVisit($user)) {
             $doc->addPage();
             $doc->addContent(_('Diese Seite steht Ihnen nicht zur Verfügung!'));
 
@@ -943,7 +943,7 @@ SQL;
 
     private function getElementPdfExport(int $depth, bool $with_children, $user, $doc)
     {
-        if (!$this->canRead($user)) {
+        if (!$this->canVisit($user)) {
             return '';
         }
         $doc->addPage();
