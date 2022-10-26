@@ -109,7 +109,7 @@ export default {
             if (Object.keys(writeApproval).length === 0) {
                 return false;
             }
-            return writeApproval.all || writeApproval.groups.length > 0 || writeApproval.users.length > 0;
+            return (writeApproval.all || writeApproval.groups.length > 0 || writeApproval.users.length > 0) && this.element.attributes['can-edit'];
         },
         hasNoReadApproval() {
             if (this.context.type === 'users') {
