@@ -159,6 +159,8 @@ class SearchWidget extends SidebarWidget
 
             $reset_link = URLHelper::getLink($this->url, array_merge($reset_params, ['reset-search' => 1]));
             $this->template_variables['reset_link'] = $reset_link;
+        } else {
+            $this->template_variables['reset_link'] = false;
         }
 
         $this->template_variables['needles'] = $this->needles;

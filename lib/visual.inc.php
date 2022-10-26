@@ -285,8 +285,9 @@ function kill_format ($text) {
         $text = explode("[nop] [/nop]", $text);
         $i = 0;
         $all = '';
-        foreach ($text as $w)
-            $all .= $w . $matches[1][$i++];
+        foreach ($text as $w) {
+            $all .= $w . ($matches[1][$i++] ?? '');
+        }
 
         return $all;
     }

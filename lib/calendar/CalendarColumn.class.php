@@ -333,7 +333,10 @@ class CalendarColumn
                 for ($i = floor($data['start'] / 100); $i <= floor($data['end'] / 100); $i++) {
                     for ($j = 0; $j < 60; $j++) {
                         if (($i * 100) + $j >= $data['start'] && ($i * 100) + $j < $data['end']) {
-                            $group_matrix[($i * 100) + $j]++;
+                            if (!isset($group_matrix[$i * 100 + $j])) {
+                                $group_matrix[$i * 100 + $j] = 0;
+                            }
+                            $group_matrix[$i * 100 + $j]++;
                         }
                     }
                 }
