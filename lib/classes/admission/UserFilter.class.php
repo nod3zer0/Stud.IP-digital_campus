@@ -200,7 +200,9 @@ class UserFilter
                  * been removed since saving data to DB.
                  */
                 //try {
-                    list($type, $param) = explode('_', $data['type']);
+                    $chunks = explode('_', $data['type']);
+                    $type = $chunks[0];
+                    $param = $chunks[1] ?? null;
                     if ($param) {
                         $field = new $type($param, $data['field_id']);
                     } else {

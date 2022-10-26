@@ -338,22 +338,22 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                   LEFT JOIN `user_online` uo ON (au.`user_id` = uo.`user_id`)
                   LEFT JOIN `user_info` ui ON (au.`user_id` = ui.`user_id`)";
 
-        if ($attributes['username']) {
+        if (!empty($attributes['username'])) {
             $where[] =  "au.`username` like :username";
             $params[':username'] = self::searchParam($attributes['username']);
         }
 
-        if ($attributes['vorname']) {
+        if (!empty($attributes['vorname'])) {
             $where[] = "au.`Vorname` LIKE :vorname";
             $params[':vorname'] = self::searchParam($attributes['vorname']);
         }
 
-        if ($attributes['nachname']) {
+        if (!empty($attributes['nachname'])) {
             $where[] = "au.`Nachname` LIKE :nachname";
             $params[':nachname'] = self::searchParam($attributes['nachname']);
         }
 
-        if ($attributes['email']) {
+        if (!empty($attributes['email'])) {
             $where[] = "au.`Email` LIKE :email";
             $params[':email'] = self::searchParam($attributes['email']);
         }
@@ -370,11 +370,11 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         }
 
         // show only users who are not lecturers
-        if ($attributes['show_only_not_lectures']) {
+        if (!empty($attributes['show_only_not_lectures'])) {
             $where[] = "au.`user_id` NOT IN (SELECT `user_id` FROM `seminar_user` WHERE `status` = 'dozent') ";
         }
 
-        if ($attributes['auth_plugins']) {
+        if (!empty($attributes['auth_plugins'])) {
             $where[] = "IFNULL(`auth_plugin`, 'preliminary') = :auth_plugins ";
             $params[':auth_plugins'] = $attributes['auth_plugins'];
         }
@@ -407,7 +407,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         }
 
         // userdomains
-        if ($attributes['userdomains']) {
+        if (!empty($attributes['userdomains'])) {
             $joins[] = "LEFT JOIN `user_userdomains` uud ON (au.`user_id` = uud.`user_id`)";
             $joins[] = "LEFT JOIN `userdomains` uds USING (`userdomain_id`)";
             if ($attributes['userdomains'] === 'null-domain') {

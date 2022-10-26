@@ -92,8 +92,8 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
                 $row[] = (int)$course['count_prelim'];
                 $row[] = (int)$course['count_waiting'];
                 $row[] = $course['distribution_time'] ? strftime('%x %R', $course['distribution_time']) : '';
-                $row[] = $course['start_time'] ? strftime('%x %R', $course['start_time']) : '';
-                $row[] = $course['end_time'] ? strftime('%x %R', $course['end_time']) : '';
+                $row[] = isset($course['start_time']) ? strftime('%x %R', $course['start_time']) : '';
+                $row[] = isset($course['end_time']) ? strftime('%x %R', $course['end_time']) : '';
                 $data[] = $row;
             }
 
@@ -119,7 +119,9 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
     {
         global $perm, $user;
 
-        list($institut_id, $all) = explode('_', $this->current_institut_id);
+        $chunks = explode('_', $this->current_institut_id);
+        $institut_id = $chunks[0];
+        $all = $chunks[1] ?? null;
         // Prepare count statements
         $query = "SELECT count(*)
                   FROM seminar_user
@@ -172,9 +174,9 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             $count1_statement->execute([$seminar_id]);
             $counts = $count1_statement->fetch(PDO::FETCH_ASSOC);
 
-            $ret[$seminar_id]['count_prelim'] = (int)$counts['count2'];
-            $ret[$seminar_id]['count_waiting']  = (int)$counts['count3'];
-            if (!$csets[$row['set_id']]) {
+            $ret[$seminar_id]['count_prelim'] = (int) ($counts['count2'] ?? 0);
+            $ret[$seminar_id]['count_waiting']  = (int) ($counts['count3'] ?? 0);
+            if (!isset($csets[$row['set_id']])) {
                 $csets[$row['set_id']] = new CourseSet($row['set_id']);
             }
             $cs = $csets[$row['set_id']];
@@ -199,7 +201,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
         global $perm, $user;
 
         // Prepare institute statement
-        $query = "SELECT a.Institut_id, a.Name, COUNT(courseset_rule.type) AS num_sem
+        $query = "SELECT a.Institut_id, a.Name, COUNT(courseset_rule.type) AS count
         FROM Institute AS a
         LEFT JOIN seminare ON (seminare.Institut_id = a.Institut_id)
         LEFT JOIN semester_courses ON (seminare.Seminar_id = semester_courses.course_id)
@@ -209,7 +211,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             AND a.Institut_id != fakultaets_id
             {$seminare_condition}
         GROUP BY a.Institut_id
-        ORDER BY a.Name, num_sem DESC";
+        ORDER BY a.Name, count DESC";
         $institute_statement = DBManager::get()->prepare($query);
 
         $parameters = [];
@@ -226,9 +228,9 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             $_my_inst['all'] = [
                 'name'    => _('alle'),
                 'is_fak'  => true,
-                'num_sem' => $num_sem,
+                'count' => $num_sem,
             ];
-            $query = "SELECT a.Institut_id, a.Name, 1 AS is_fak, COUNT(courseset_rule.type) AS num_sem
+            $query = "SELECT a.Institut_id, a.Name, 1 AS is_fak, COUNT(courseset_rule.type) AS count
             FROM Institute AS a
             LEFT JOIN seminare ON (seminare.Institut_id = a.Institut_id)
             LEFT JOIN semester_courses ON (seminare.Seminar_id = semester_courses.course_id)
@@ -237,9 +239,9 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             WHERE a.Institut_id = fakultaets_id
                 {$seminare_condition}
             GROUP BY a.Institut_id
-            ORDER BY is_fak, Name, num_sem DESC";
+            ORDER BY is_fak, Name, count DESC";
         } else {
-            $query = "SELECT s.inst_perms,b.Institut_id, b.Name, b.Institut_id = b.fakultaets_id AS is_fak, COUNT( courseset_rule.type ) AS num_sem
+            $query = "SELECT s.inst_perms,b.Institut_id, b.Name, b.Institut_id = b.fakultaets_id AS is_fak, COUNT( courseset_rule.type ) AS count
             FROM user_inst AS s
             LEFT JOIN Institute AS b USING ( Institut_id )
             LEFT JOIN seminare ON ( seminare.Institut_id = b.Institut_id)
@@ -250,7 +252,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
                 AND s.inst_perms IN ('admin', 'dozent')
                 {$seminare_condition}
             GROUP BY b.Institut_id
-            ORDER BY is_fak, Name, num_sem DESC";
+            ORDER BY is_fak, Name, count DESC";
             $parameters[] = $user->id;
         }
         $statement = DBManager::get()->prepare($query);
@@ -259,38 +261,37 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
 
         foreach ($temp as $row) {
             $_my_inst[$row['Institut_id']] = [
-                    'name'    => $row['Name'],
-                    'is_fak'  => $row['is_fak'],
-                    'num_sem' => $row['num_sem']
+                'name'   => $row['Name'],
+                'is_fak' => $row['is_fak'],
+                'count'  => $row['count'],
             ];
-            if ($row["is_fak"] && $row["inst_perms"] != 'dozent') {
+            if ($row["is_fak"] && (!isset($row['inst_perms']) || $row['inst_perms'] !== 'dozent')) {
                 $institute_statement->execute([$row['Institut_id']]);
                 $alle = $institute_statement->fetchAll();
                 if (count($alle)) {
                     $_my_inst[$row['Institut_id'] . '_all'] = [
-                            'name'    => sprintf(_('[Alle unter %s]'), $row['Name']),
-                            'is_fak'  => 'all',
-                            'num_sem' => $row['num_sem']
+                        'name'   => sprintf(_('[Alle unter %s]'), $row['Name']),
+                        'is_fak' => 'all',
+                        'count'  => $row['count']
                     ];
 
                     $num_inst = 0;
-                    $num_sem_alle = $row['num_sem'];
-
+                    $num_sem_alle = $row['count'];
 
                     foreach ($alle as $institute) {
-                        if(!$_my_inst[$institute['Institut_id']]) {
+                        if(empty($_my_inst[$institute['Institut_id']])) {
                             $num_inst += 1;
-                            $num_sem_alle += $institute['num_sem'];
+                            $num_sem_alle += $institute['count'];
                         }
                         $_my_inst[$institute['Institut_id']] = [
-                                'name'    => $institute['Name'],
-                                'is_fak'  => 0,
-                                'num_sem' => $institute["num_sem"]
+                            'name'   => $institute['Name'],
+                            'is_fak' => 0,
+                            'count'  => $institute['count']
                         ];
                     }
                     $_my_inst[$row['Institut_id']]['num_inst']          = $num_inst;
                     $_my_inst[$row['Institut_id'] . '_all']['num_inst'] = $num_inst;
-                    $_my_inst[$row['Institut_id'] . '_all']['num_sem']  = $num_sem_alle;
+                    $_my_inst[$row['Institut_id'] . '_all']['count']    = $num_sem_alle;
                 }
             }
         }

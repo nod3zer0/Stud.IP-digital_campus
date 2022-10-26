@@ -12,7 +12,7 @@ Helpbar::get()->addPlainText(_('Info'), "Stellen Sie hier ein, wie die Chancen b
                                         "bevorzugt.");
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
-<?= $error ? $error : '' ?>
+<?= $error ?? '' ?>
 <form class="default" action="<?= $controller->url_for('admission/userlist/save', $userlist_id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 

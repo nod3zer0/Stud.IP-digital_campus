@@ -163,6 +163,8 @@ class CoursesetModel
      * admission rules
      *
      * @return Array Found institutes.
+     *
+     * @todo this is a really messed up construct and should be refactored
      */
     public static function getInstitutes($filter = [])
     {
@@ -197,9 +199,9 @@ class CoursesetModel
             $num_sets = $cs_count_all_statement->fetchColumn();
 
             $my_inst['all'] = [
-                'name'     => _('alle'),
-                'is_fak'   => true,
-                'num_sets' => $num_sets
+                'name'   => _('alle'),
+                'is_fak' => true,
+                'count'  => $num_sets
             ];
             $top_insts = Institute::findBySQL('Institut_id = fakultaets_id ORDER BY Name');
         } else {
@@ -209,7 +211,7 @@ class CoursesetModel
             $my_inst[$inst->id] = $inst->toArray('name is_fak');
             $parameters[0] = $inst->id;
             $cs_count_statement->execute($parameters);
-            $my_inst[$inst->id]['num_sets'] = $cs_count_statement->fetchColumn();
+            $my_inst[$inst->id]['count'] = $cs_count_statement->fetchColumn();
             if ($inst->is_fak && ($perm->have_perm('root') || $inst->members->findBy('user_id', $user->id)->val('inst_perms') == 'admin')) {
                 $alle = $inst->sub_institutes;
                 if (count($alle)) {
@@ -219,18 +221,18 @@ class CoursesetModel
                     ];
 
                     $num_inst = 0;
-                    $num_sets_alle = $my_inst[$inst->id]['num_sets'];
+                    $num_sets_alle = $my_inst[$inst->id]['count'];
 
                     foreach ($alle as $institute) {
                        $num_inst += 1;
                        $my_inst[$institute->id] = $institute->toArray('name is_fak');
                        $parameters[0] = $institute->id;
                        $cs_count_statement->execute($parameters);
-                       $my_inst[$institute->id]['num_sets'] = $cs_count_statement->fetchColumn();
-                       $num_sets_alle += $my_inst[$institute->id]['num_sets'];
+                       $my_inst[$institute->id]['count'] = $cs_count_statement->fetchColumn();
+                       $num_sets_alle += $my_inst[$institute->id]['count'];
                     }
                     $my_inst[$inst->id . '_all']['num_inst'] = $num_inst;
-                    $my_inst[$inst->id . '_all']['num_sets']  = $num_sets_alle;
+                    $my_inst[$inst->id . '_all']['count']  = $num_sets_alle;
                 }
             }
         }

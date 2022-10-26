@@ -119,6 +119,8 @@ function get_vis_query($table_alias = 'auth_user_md5', $context = '') {
         $context_default = (int) Config::get()->getValue(mb_strtoupper($context) . '_VISIBILITY_DEFAULT');
         $contextQuery = " AND (IFNULL(user_visibility.{$context}, {$context_default}) = 1
                                OR {$table_alias}.visible = 'always')";
+    } else {
+        $contextQuery = '';
     }
 
     $my_domains = UserDomain::getUserDomainsForUser($GLOBALS['user']->id);

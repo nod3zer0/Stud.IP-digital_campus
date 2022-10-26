@@ -183,9 +183,9 @@ class MediaProxy
         }
 
         $type = $response['content-type'];
-        $length = $response['content-length'];
-        $chdate = $response['last-modified'];
-        $expires = $response['expires'];
+        $length = $response['content-length'] ?? null;
+        $chdate = $response['last-modified'] ?? null;
+        $expires = $response['expires'] ?? null;
 
         $chdate = isset($chdate) ? strtotime($chdate) : time();
         $expires = isset($expires) ? strtotime($expires) : time() + $this->cache_lifetime;

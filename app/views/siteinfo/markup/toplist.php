@@ -9,7 +9,7 @@
             case "seminar":
                 $link = URLHelper::getLink('dispatch.php/course/details/', ['sem_id' => $line["seminar_id"],
                                                                 'send_from_search' => 'true',
-                                                                'send_from_search_page' => $view]);
+                                                                'send_from_search_page' => $view ?? null]);
                 break;
             case "user":
                 $link = URLHelper::getLink('dispatch.php/profile', ['username' => $line["username"]]);

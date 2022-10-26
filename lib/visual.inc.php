@@ -311,10 +311,10 @@ function isLinkIntern($url) {
         return true;
     }
 
-    return in_array($pum['scheme'], ['https', 'http', NULL], true)
-        && in_array($pum['host'], [$_SERVER['SERVER_NAME'], NULL], true)
-        && in_array($pum['port'], [$_SERVER['SERVER_PORT'], NULL], true)
-        && mb_strpos($pum['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0;
+    return in_array($pum['scheme'] ?? null, ['https', 'http', NULL], true)
+        && in_array($pum['host'] ?? null, [$_SERVER['SERVER_NAME'], NULL], true)
+        && in_array($pum['port'] ?? null, [$_SERVER['SERVER_PORT'], NULL], true)
+        && mb_strpos($pum['path'] ?? '', $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0;
 }
 
 /**

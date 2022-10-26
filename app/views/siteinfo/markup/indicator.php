@@ -1,7 +1,4 @@
-<?
-# Lifter010: TODO
-?>
-<? if($detail != '') : ?>
+<? if (!empty($detail)) : ?>
     <span title="<?= $detail ?>">
 <? else : ?>
     <span>

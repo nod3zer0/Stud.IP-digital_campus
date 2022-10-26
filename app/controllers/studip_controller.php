@@ -172,18 +172,18 @@ abstract class StudipController extends Trails_Controller
             $reflection = new ReflectionMethod($this, $this->current_action . '_action');
             $parameters = $reflection->getParameters();
             foreach ($parameters as $i => $parameter) {
-                $class_type = $parameter->getClass();
+                $class_type = $parameter->getType();
 
                 if (!$class_type
-                    || !class_exists($class_type->name)
-                    || !is_a($class_type->name, SimpleORMap::class, true))
+                    || !class_exists($class_type->getName())
+                    || !is_a($class_type->getName(), SimpleORMap::class, true))
                 {
                     continue;
                 }
 
                 $types[$i] = 'sorm';
                 $class_infos[$i] = [
-                    'model'    => $class_type->name,
+                    'model'    => $class_type->getName(),
                     'var'      => $parameter->getName(),
                     'optional' => $parameter->isOptional(),
                 ];

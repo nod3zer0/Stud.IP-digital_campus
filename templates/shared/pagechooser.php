@@ -13,7 +13,7 @@
     $last_page = reset($items) - 1;
     $random_id = mb_substr(md5(uniqid('pagination', true)), -8);
 
-    $pageparams = $pageparams ?: [];
+    $pageparams = $pageparams ?? [];
 ?>
 <p id="pagination-label-<?= $random_id ?>" class="audible">
     <?= _('Blättern') ?>

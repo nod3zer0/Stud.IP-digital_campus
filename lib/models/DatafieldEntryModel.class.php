@@ -50,6 +50,7 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
     {
         $mask = ["user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8, "admin" => 16, "root" => 32];
 
+        $sec_range_id = null;
         if (is_a($model, "Course")) {
             $params[':institution_ids'] = $model->institutes->pluck('institut_id');
             $object_class = SeminarCategories::GetByTypeId($model->status)->id;
@@ -85,13 +86,11 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
             $object_class = $model->getVariant();
             $object_type = 'moduldeskriptor';
             $range_id = $model->deskriptor_id;
-            $sec_range_id = null;
         } elseif (is_a($model, 'ModulteilDeskriptor')) {
             $params[':institution_ids'] = [$model->modulteil->modul->responsible_institute->institut_id];
             $object_class = $model->getVariant();
             $object_type = 'modulteildeskriptor';
             $range_id = $model->deskriptor_id;
-            $sec_range_id = null;
         } elseif ($model instanceof StatusgruppeUser) {
             if (isset($model->group->institute)) {
                 $params[':institution_ids'] = [$model->group->institute->id];
@@ -107,7 +106,6 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
             $object_class = $model->getVariant();
             $object_type = 'studycourse';
             $range_id = $model->studiengang_id;
-            $sec_range_id = null;
         }
 
         if (!$object_type) {
@@ -144,7 +142,7 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
             $query .= "AND ((object_class & :object_class) OR object_class IS NULL) $one_datafield ORDER BY priority";
             $params = array_merge($params, [
                 ':range_id' => (string) $range_id,
-                ':sec_range_id' => (string) ($sec_range_id ?? ''),
+                ':sec_range_id' => (string) $sec_range_id,
                 ':object_type' => $object_type,
                 ':object_class' => (int) $object_class]);
         }
@@ -161,12 +159,11 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
                 $ret[$c] = clone $df_entry;
             } else {
                 $ret[$c] = clone $df_entry_i18n;
-                $row['content'] = I18NStringDatafield::load(
-                        [
-                            $row['datafield_id'],
-                            $range_id,
-                            (string) $sec_range_id
-                        ]);
+                $row['content'] = I18NStringDatafield::load([
+                    $row['datafield_id'],
+                    $range_id,
+                    (string) $sec_range_id
+                ]);
             }
             $ret[$c]->setData($row, true);
             if (!$row['isset_content']) {

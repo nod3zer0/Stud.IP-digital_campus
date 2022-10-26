@@ -1,7 +1,7 @@
 <?
 # Lifter010: TODO
 ?>
-<? if ($error) : ?>
+<? if (!empty($error)) : ?>
     <em><?= _("keine. Na sowas. Das kann ja eigentlich gar nicht sein...") ?></em>
 <? else : ?>
     <? $current_head = "" ?>

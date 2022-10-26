@@ -3,24 +3,10 @@
     <fieldset>
         <legend><?= _('Anmeldesets auflisten') ?></legend>
 
-        <label>
-            <?=_("Einrichtung:")?>
-            <select name="choose_institut_id" class="nested-select">
-            <? while (list($institut_id,$institute) = each($my_inst)) : ?>
-                <option value="<?= $institut_id?>" <?=($current_institut_id == $institut_id ? 'selected' : '')?> class="<?= $institute['is_fak'] ? 'nested-item-header' : 'nested-item' ?>">
-                    <?= htmlReady(my_substr($institute["name"] . ' (' . $institute["num_sem"] . ')',0,100));?>
-                </option>
-                <? if ($institute["is_fak"] == 'all') : ?>
-                    <? $num_inst = $institute["num_inst"]; for ($i = 0; $i < $num_inst; ++$i) : ?>
-                        <? list($institut_id,$institute) = each($my_inst);?>
-                        <option value="<?= $institut_id?>" <?=($current_institut_id == $institut_id ? 'selected' : '')?> class="nested-item">
-                            <?= htmlReady(my_substr($institute["name"] . ' (' . $institute["num_sem"] . ')',0,100));?>
-                        </option>
-                    <? endfor ?>
-                <? endif ?>
-            <? endwhile ?>
-            </select>
-        </label>
+        <?= $this->render_partial('admission/institute-select.php', [
+            'institutes' => $my_inst,
+            'current_institut_id' => $current_institut_id,
+        ]) ?>
 
         <label>
             <?=_("Präfix des Veranstaltungsnamens / Nummer:")?>

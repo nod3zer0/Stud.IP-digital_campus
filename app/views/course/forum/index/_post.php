@@ -70,7 +70,7 @@
 
             <span data-show-topic="<?= $post['topic_id'] ?>">
                 <a href="<?= $controller->link_for('course/forum/index/index/' . $post['topic_id'] .'?'. http_build_query(['highlight' => $highlight]) ) ?>#<?= $post['topic_id'] ?>">
-                <? if ($show_full_path) : ?>
+                <? if (!empty($show_full_path)) : ?>
                     <?= ForumHelpers::highlight(htmlReady(implode(' >> ', ForumEntry::getFlatPathToPosting($post['topic_id']))), $highlight) ?>
                 <? elseif ($post['depth'] < 3) : ?>
                 <span data-topic-name="<?= $post['topic_id'] ?>">

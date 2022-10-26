@@ -531,8 +531,13 @@ class StudipCoreFormat extends TextFormat
         $tag = $matches[1];
         $params = explode(":",$matches[2]);
         $url = $matches[3];
-        $whitespace = $matches[4];
+        $whitespace = $matches[4] ?? null;
 
+        $title = null;
+        $link = null;
+        $position = null;
+        $width = null;
+        $virtual_url = null;
         foreach ($params as $key => $param) {
             if ($param) {
                 if (is_numeric($param)) {
@@ -558,9 +563,16 @@ class StudipCoreFormat extends TextFormat
 
         $url = TransformInternalLinks($url);
         $pu = @parse_url($url);
-        if (($pu['scheme'] == 'http' || $pu['scheme'] == 'https')
-                && ($pu['host'] == $_SERVER['HTTP_HOST'] || $pu['host'].':'.$pu['port'] == $_SERVER['HTTP_HOST'])
-                && mb_strpos($pu['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0) {
+
+        $intern = false;
+        if (
+            in_array($pu['scheme'], ['http', 'https'])
+            && (
+                $pu['host'] === $_SERVER['HTTP_HOST']
+                || (isset($pu['port']) && $pu['host'] . ':' . $pu['port'] === $_SERVER['HTTP_HOST'])
+            )
+            && mb_strpos($pu['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0
+        ) {
             $intern = true;
             $checkpath = urldecode(mb_substr($pu['path'], mb_strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])));
             if (mb_strpos($checkpath, '../') === false) {

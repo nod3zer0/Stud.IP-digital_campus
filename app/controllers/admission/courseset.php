@@ -86,15 +86,15 @@ class Admission_CoursesetController extends AuthenticatedController
         $filter['rule_types'] = array_keys($this->current_rule_types);
         $this->myInstitutes = CoursesetModel::getInstitutes($filter);
         if (!$this->current_institut_id) {
-            if ($this->myInstitutes['all']['num_sets'] < 100) {
+            if ($this->myInstitutes['all']['count'] < 100) {
                 $this->current_institut_id = 'all';
             } else {
-                next($this->myInstitutes);
-                $this->current_institut_id = key($this->myInstitutes);
-                reset($this->myInstitutes);
+                list($this->current_institut_id) = reset($this->myInstitutes);
             }
         }
-        list($institut_id, $all) = explode('_', $this->current_institut_id);
+        $chunks = explode('_', $this->current_institut_id);
+        $institut_id = $chunks[0];
+        $all = $chunks[1] ?? null;
         if ($institut_id == 'all') {
             $institutes = array_keys($this->myInstitutes);
         } else if ($all == 'all') {
@@ -105,7 +105,7 @@ class Admission_CoursesetController extends AuthenticatedController
         }
 
         foreach ($institutes as $one) {
-            if ($this->myInstitutes[$one]['num_sets']) {
+            if ($this->myInstitutes[$one]['count']) {
                 $sets = CourseSet::getCoursesetsByInstituteId($one, $filter);
                 foreach ($sets as $set) {
                     $courseset = new CourseSet($set['set_id']);

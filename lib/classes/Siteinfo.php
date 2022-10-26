@@ -535,7 +535,7 @@ class SiteinfoMarkupEngine {
             // iterate over the other indicators
             if (in_array($key,array_keys($indicator))) {
                 if (!isset($indicator[$key]['constraint']) || $indicator[$key]['constraint']) {
-                    if ($indicator[$key]['query']) {
+                    if (isset($indicator[$key]['query'])) {
                         $result = $this->db->query($indicator[$key]['query']);
                         $rows = $result->fetch(PDO::FETCH_NUM);
                         $template->count = $rows[0];

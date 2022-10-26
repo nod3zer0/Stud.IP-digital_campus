@@ -141,7 +141,7 @@ $pagechooser = null;
             .'/%s/?searchfor=' . $searchfor . (!empty($options) ? '&'. http_build_query($options) : '' ))))
     ]); ?>
     <? endif ?>
-    <?= $link  ?>
+    <?= $link ?? ''  ?>
 </div>
 <? endif ?>
 

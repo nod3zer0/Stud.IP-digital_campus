@@ -67,7 +67,7 @@ use Studip\Button, Studip\LinkButton;
         </label>
     </fieldset>
 
-    <fieldset class="collapsable <?= (!$advanced) ?  'collapsed' : '' ?>">
+    <fieldset class="collapsable <? if (empty($advanced)) echo 'collapsed'; ?>">
         <legend><?= _('Erweiterte Suche') ?></legend>
 
         <label for="institute" class="col-3">
