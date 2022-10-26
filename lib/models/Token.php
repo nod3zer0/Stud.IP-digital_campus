@@ -5,6 +5,13 @@
  * @author    Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @author    Marco Diedrich <mdiedric@uos.de>
  * @license   GPL2 or any later version
+ *
+ * @property string $id
+ * @property string $token
+ * @property string $user_id
+ * @property int $expiration
+ * @property int $mkdate
+ * @property User $user
  */
 class Token extends SimpleORMap
 {
@@ -44,18 +51,19 @@ class Token extends SimpleORMap
     /**
      * Creates a new token.
      *
-     * @param  integer $duration Lifetime of the token
-     * @param  mixed   $user_id  Optional id of the user (defaults to current user)
-     * @return string the token
+     * @param integer $duration       Lifetime of the token
+     * @param mixed   $user_id        Optional id of the user (defaults to current user)
+     * @param bool     $return_object Return the actual token object if true, only the token otherwise (default)
+     * @return string|Token the token
      */
-    public static function create($duration = 30, $user_id = null)
+    public static function create($duration = 30, $user_id = null, bool $return_object = false)
     {
         $token = new self();
         $token->user_id    = $user_id ?? $GLOBALS['user']->id;
         $token->expiration = strtotime("+{$duration} seconds");
         $token->store();
 
-        return $token->token;
+        return $return_object ? $token : $token->token;
     }
 
     /**

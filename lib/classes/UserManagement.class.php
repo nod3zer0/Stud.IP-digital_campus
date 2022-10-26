@@ -679,7 +679,14 @@ class UserManagement
         setTempLanguage($user->user_id);
 
         // always generate a token, so root, admin and all other users profit from the abuse protection
-        $id = Token::create(24 * 60 * 60, $user->id);
+        if ($new) {
+            $expiration_in_hours = 24;
+            $spoken_expiration = _('24 Stunden');
+        } else {
+            $expiration_in_hours = 7 * 24;
+            $spoken_expiration = _('eine Woche');
+        }
+        $token = Token::create($expiration_in_hours * 60 * 60, $user->id, true);
 
         // new users alawys receive a link to generate a password
         if ($new) {
@@ -690,20 +697,23 @@ class UserManagement
 
             $mailbody = sprintf(
                 _("Dies ist eine Bestätigungsmail des Stud.IP-Systems\n"
-                    ."(Studienbegleitender Internetsupport von Präsenzlehre)\n- %s -\n\n"
+                    ."(Studienbegleitender Internetsupport von Präsenzlehre)\n- %1\$s -\n\n"
                     ."Es wurde für sie ein Zugang zum System erstellt, Ihr Nutzername lautet:\n\n"
-                    ."%s\n\n"
+                    ."%2\$s\n\n"
                     ."Um den Zugang nutzen zu können, müssen sie ein Passwort setzen.\n"
                     ."Öffnen Sie dafür bitte folgenden Link\n\n"
-                    ."%s\n\n"
+                    ."%3\$s\n\n"
                     ."in Ihrem Browser.\n\n"
+                    ."Der Link ist %4\$s (bis %5\$s) gültig.\n\n"
                     ."Wahrscheinlich unterstützt Ihr E-Mail-Programm ein einfaches Anklicken des Links.\n"
                     ."Ansonsten müssen Sie Ihren Browser öffnen und den Link komplett in die Zeile\n"
                     ."\"Location\" oder \"URL\" kopieren.\n\n"
                 ),
                 Config::get()->UNI_NAME_CLEAN,
                 $user->username,
-                $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/new_password/set/'. $id .'?cancel_login=1'
+                $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/new_password/set/'. $token->token .'?cancel_login=1',
+                $spoken_expiration,
+                strftime('%x %X', $token->expiration)
             );
         } else
 
@@ -738,14 +748,15 @@ class UserManagement
 
             $mailbody = sprintf(
                 _("Dies ist eine Bestätigungsmail des Stud.IP-Systems\n"
-                    ."(Studienbegleitender Internetsupport von Präsenzlehre)\n- %s -\n\n"
+                    ."(Studienbegleitender Internetsupport von Präsenzlehre)\n- %1\$s -\n\n"
                     ."Sie haben um die Zurücksetzung Ihres Passwortes gebeten.\n\n"
                     ."Diese E-Mail wurde Ihnen zugesandt um sicherzustellen,\n"
                     ."dass die angegebene E-Mail-Adresse tatsächlich Ihnen gehört.\n\n"
                     ."Wenn Sie um die Zurücksetzung Ihres Passwortes gebeten haben,\n"
                     ."dann öffnen Sie bitte folgenden Link\n\n"
-                    ."%s\n\n"
+                    ."%2\$s\n\n"
                     ."in Ihrem Browser. Auf der Seite können Sie ein neues Passwort setzen.\n\n"
+                    ."Der Link ist %3\$s (bis %4\$s) gültig.\n\n"
                     ."Wahrscheinlich unterstützt Ihr E-Mail-Programm ein einfaches Anklicken des Links.\n"
                     ."Ansonsten müssen Sie Ihren Browser öffnen und den Link komplett in die Zeile\n"
                     ."\"Location\" oder \"URL\" kopieren.\n\n"
@@ -756,7 +767,9 @@ class UserManagement
                     ."Änderungen an Ihren Zugangsdaten vorgenommen.\n\n"
                 ),
                 Config::get()->UNI_NAME_CLEAN,
-                $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/new_password/set/'. $id .'?cancel_login=1'
+                $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/new_password/set/'. $token->token .'?cancel_login=1',
+                $spoken_expiration,
+                strftime('%x %X', $token->expiration)
             );
         }
 
