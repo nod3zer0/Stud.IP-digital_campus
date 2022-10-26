@@ -76,6 +76,7 @@
                                 <courseware-file-chooser
                                     v-model="card.front_file_id"
                                     :isImage="true"
+                                    :canBeEmpty="true"
                                     @selectFile="updateFile(index, 'front', $event)"
                                 />
                             </label>
@@ -88,6 +89,7 @@
                                 <courseware-file-chooser
                                     v-model="card.back_file_id"
                                     :isImage="true"
+                                    :canBeEmpty="true"
                                     @selectFile="updateFile(index, 'back', $event)"
                                 />
                             </label>
@@ -154,8 +156,8 @@ export default {
             }
         },
         hasNoNext() {
-            if(this.currentCards[this.currentCards.length -1] !== undefined) {
-                return this.currentCards[this.currentCards.length -1].active;
+            if (this.currentCards[this.currentCards.length - 1] !== undefined) {
+                return this.currentCards[this.currentCards.length - 1].active;
             } else {
                 return true;
             }
@@ -170,7 +172,14 @@ export default {
         }),
         initCurrentData() {
             if (this.cards !== '') {
-                this.currentCards = JSON.parse(JSON.stringify(this.cards));
+                let cards = JSON.parse(JSON.stringify(this.cards));
+                cards.forEach((card, index) => {
+                    card.active = false;
+                    if (index === 0) {
+                        card.active = true;
+                    }
+                });
+                this.currentCards = cards;
             }
             this.setCardTab = 0;
         },
@@ -180,6 +189,7 @@ export default {
             cards.forEach((card) => {
                 delete card.front_file;
                 delete card.back_file;
+                delete card.active;
             });
             let attributes = {};
             attributes.payload = {};
@@ -193,12 +203,23 @@ export default {
         },
         updateFile(cardIndex, side, file) {
             if (side === 'front') {
-                this.currentCards[cardIndex].front_file_id = file.id;
-                this.currentCards[cardIndex].front_file = file;
+                if (file) {
+                    this.currentCards[cardIndex].front_file_id = file.id;
+                    this.currentCards[cardIndex].front_file = file;
+                }
+                else {
+                    this.currentCards[cardIndex].front_file_id = '';
+                    this.currentCards[cardIndex].front_file = [];
+                }
             }
             if (side === 'back') {
-                this.currentCards[cardIndex].back_file_id = file.id;
-                this.currentCards[cardIndex].back_file = file;
+                if (file) {
+                    this.currentCards[cardIndex].back_file_id = file.id;
+                    this.currentCards[cardIndex].back_file = file;
+                } else {
+                    this.currentCards[cardIndex].back_file_id = '';
+                    this.currentCards[cardIndex].back_file = [];
+                }
             }
         },
         addCard() {
@@ -209,8 +230,12 @@ export default {
                 front_text: '',
                 back_file_id: '',
                 back_text: '',
-                back_file: []
+                back_file: [],
+                active: false
             });
+            const index = this.currentCards.length - 1;
+            this.activateCard(index);
+            this.$nextTick(() => { this.setCardTab = index; });
         },
         removeCard(cardIndex){
             this.currentCards = this.currentCards.filter((val, index) => {
