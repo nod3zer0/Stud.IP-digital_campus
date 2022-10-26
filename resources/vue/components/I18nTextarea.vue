@@ -193,15 +193,17 @@ export default {
         values: {
             handler(newValue, oldValue) {
                 this.$emit('input', newValue[this.defaultLanguage]);
-                let exportValue = {};
                 let input_all = {};
-                let name = null;
                 for (let i in this.languages) {
-                    exportValue[this.languages[i].id] = newValue[this.languages[i].id];
-                    name = this.nameOfInput(this.languages[i].id);
-                    input_all[name] = newValue[this.languages[i].id];
+                    let name = this.nameOfInput(this.languages[i].id);
+                    let value = newValue[this.languages[i].id];
+
+                    if (this.type === 'wysiwyg' && STUDIP.editor_enabled && value !== null) {
+                        value = STUDIP.wysiwyg.markAsHtml(value);
+                    }
+
+                    input_all[name] = value;
                 }
-                this.$emit('input_all_languages', exportValue);
                 this.$emit('allinputs', input_all);
             },
             deep: true
