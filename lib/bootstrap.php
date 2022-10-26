@@ -105,14 +105,6 @@ require_once 'lib/functions.php';
 require_once 'lib/language.inc.php';
 require_once 'lib/visual.inc.php';
 
-//setup default logger
-Log::get()->setHandler($GLOBALS['TMP_PATH'] . '/studip.log');
-if (Studip\ENV == 'development') {
-    Log::get()->setLogLevel(Log::DEBUG);
-} else {
-    Log::get()->setLogLevel(Log::ERROR);
-}
-
 // set assets url
 Assets::set_assets_url($GLOBALS['ASSETS_URL']);
 

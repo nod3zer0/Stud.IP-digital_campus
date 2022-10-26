@@ -1,4 +1,8 @@
 <?php
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 /**
 * check_admission.class.php
 *
@@ -64,16 +68,19 @@ class CheckAdmissionJob extends CronJob
         if (count($sets) > 0) {
             if ($verbose) {
                 echo date('r') . ' - Starting seat distribution ' . chr(10);
-                $old_logger = Log::get()->getHandler();
-                $old_log_level = Log::get()->getLogLevel();
-                @mkdir($GLOBALS['TMP_PATH'] . '/seat_distribution_logs');
-                $logfile = $GLOBALS['TMP_PATH'] . '/seat_distribution_logs/' .  date('Y-m-d-H-i') . '_seat_distribution.log';
-                if (is_dir($GLOBALS['TMP_PATH'] . '/seat_distribution_logs')) {
-                    Log::get()->setHandler($logfile);
-                    Log::get()->setLogLevel(Log::DEBUG);
+
+                $oldLogger = Log::getInstance();
+                $logdir = $GLOBALS['TMP_PATH'] . '/seat_distribution_logs';
+                @mkdir($logdir);
+                $logfile = $logdir . '/' .  date('Y-m-d-H-i') . '_seat_distribution.log';
+
+                if (is_dir($logdir)) {
+                    Log::setInstance(
+                        new Logger('seat-distributions', [new StreamHandler($logfile, Logger::DEBUG)])
+                    );
                     echo 'logging to ' . $logfile . chr(10);
                 } else {
-                    echo 'could not create directory ' . $GLOBALS['TMP_PATH'] . '/seat_distribution_logs' . chr(10);
+                    echo 'could not create directory ' . $logdir . chr(10);
                 }
             }
             $i = 0;
@@ -129,8 +136,7 @@ class CheckAdmissionJob extends CronJob
                 }
             }
             if ($verbose) {
-                Log::get()->setHandler($old_logger);
-                Log::get()->setLogLevel($old_log_level);
+                Log::setInstance($oldLogger);
             }
         } else {
             if ($verbose) {

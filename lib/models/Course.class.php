@@ -521,7 +521,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
             return $semTypes[$this->status];
         }
 
-        Log::ERROR(sprintf('SemType not found id:%s status:%s', $this->id, $this->status));
+        Log::error(sprintf('SemType not found id:%s status:%s', $this->id, $this->status));
         return new SemType(['name' => 'Fehlerhafter Veranstaltungstyp']);
     }
 

@@ -70,7 +70,7 @@ class StudipAuthCAS extends StudipAuthSSO
     {
         $userdataclassname = $this->user_data_mapping_class;
         if (!class_exists($userdataclassname)) {
-            Log::ERROR($this->plugin_name . ': no userdataclassname specified or found.');
+            Log::error($this->plugin_name . ': no userdataclassname specified or found.');
             return;
         }
         // get the userdata

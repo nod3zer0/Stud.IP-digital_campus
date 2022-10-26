@@ -4,6 +4,8 @@ namespace FilesSearch;
 
 use DBManager;
 use Log;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 use PDOException;
 
 /**
@@ -222,10 +224,10 @@ class FilesIndexManager
      */
     private static function createLogger()
     {
-        @unlink($GLOBALS['TMP_PATH'].'/files_index.log');
-        Log::set('filesindexlog', $GLOBALS['TMP_PATH'].'/files_index.log');
+        $logfile = $GLOBALS['TMP_PATH'] . '/files_index.log';
+        @unlink($logfile);
 
-        return Log::get('filesindexlog');
+        return new Logger('filesindexlog', [new StreamHandler($logfile, Logger::DEBUG)]);
     }
 
     /**
