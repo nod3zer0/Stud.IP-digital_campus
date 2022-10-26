@@ -99,6 +99,7 @@ if ($GLOBALS['ASSETS_URL'][0] === '/') {
 
 require 'config.inc.php';
 
+require 'lib/helpers.php';
 require 'lib/phplib/page_open.php';
 require_once 'lib/functions.php';
 require_once 'lib/language.inc.php';
