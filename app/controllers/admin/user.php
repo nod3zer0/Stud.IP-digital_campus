@@ -172,11 +172,14 @@ class Admin_UserController extends AuthenticatedController
                              'domänen',
                              'registriert seit',
                              'inaktiv seit'];
+                foreach ($this->datafields as $datafield) {
+                    $captions[] = $datafield->name;
+                }
                 $mapper   = function ($u) {
                     $userdomains = array_map(function ($ud) {
                         return $ud->name;
                     }, UserDomain::getUserDomainsForUser($u->id));
-                    return [
+                    $data = [
                         $u['username'],
                         $u['Vorname'],
                         $u['Nachname'],
@@ -187,6 +190,17 @@ class Admin_UserController extends AuthenticatedController
                         $u['mkdate'] ? strftime('%x', $u['mkdate']) : '',
                         $u->online->last_lifesign ? strftime('%x', $u->online->last_lifesign) : ''
                     ];
+                    foreach ($this->datafields as $datafield) {
+                        $df = new DatafieldEntryModel(
+                            [
+                                $datafield->id,
+                                $u['user_id'],
+                                '',
+                                ''
+                            ]);
+                        $data[] = $df->getTypedDatafield()->getDisplayValue(false);
+                    }
+                    return $data;
                 };
                 if (array_to_csv(array_map($mapper, $this->users), $GLOBALS['TMP_PATH'] . '/' . $tmpname, $captions)) {
                     $this->redirect(
