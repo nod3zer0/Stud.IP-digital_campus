@@ -13,4 +13,10 @@ return [
             ),
         ]);
     }),
+    StudipCache::class => DI\factory(function () {
+        return StudipCacheFactory::getCache();
+    }),
+    StudipPDO::class => DI\factory(function () {
+        return DBManager::get();
+    }),
 ];
