@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_StatusgroupsController $controller
+ * @var Statusgruppen $group
+ * @var Statusgruppen[] $groups
+ * @var array $type
+ */
+?>
 <form class="default" action="<?= $controller->url_for('admin/statusgroups/editGroup/' . $group->id) ?>#group-<?= $group->id ?>" method="post">
     <fieldset>
         <legend>

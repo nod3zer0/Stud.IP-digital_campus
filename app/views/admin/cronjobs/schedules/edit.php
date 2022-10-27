@@ -1,17 +1,23 @@
-<? use Studip\Button, Studip\LinkButton; ?>
-
 <?php
-    $days_of_week = [
-        1 => _('Montag'),
-        2 => _('Dienstag'),
-        3 => _('Mittwoch'),
-        4 => _('Donnerstag'),
-        5 => _('Freitag'),
-        6 => _('Samstag'),
-        7 => _('Sonntag'),
-    ];
-?>
+/**
+ * @var CronjobSchedule $schedule
+ * @var Admin_Cronjobs_SchedulesController $controller
+ * @var int $page
+ * @var CronjobTask[] $tasks
+ */
 
+use Studip\Button, Studip\LinkButton;
+
+$days_of_week = [
+    1 => _('Montag'),
+    2 => _('Dienstag'),
+    3 => _('Mittwoch'),
+    4 => _('Donnerstag'),
+    5 => _('Freitag'),
+    6 => _('Samstag'),
+    7 => _('Sonntag'),
+];
+?>
 <form action="<?= $controller->edit($schedule, $page) ?>" method="post" class="cronjobs-edit default">
     <?= CSRFProtection::tokenTag() ?>
 

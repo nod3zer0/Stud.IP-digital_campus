@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Admin_OverlappingController $controller
+ * @var SimpleORMapCollection $conflicts
+ * @var Modul $modul
+ * @var Semester $selected_semester
+ * @var Modulteil $modulteil
+ */
+?>
 <? foreach ($modulteil->lvgruppen as $lvgruppe) : ?>
     <? foreach ($lvgruppe->getAssignedCoursesBySemester($selected_semester->id, false) as $course) : ?>
         <? $course_obj = Course::find($course['seminar_id']) ?>

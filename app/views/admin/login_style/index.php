@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var LoginBackground[] $pictures
+ * @var Admin_LoginStyleController $controller
+ */
+?>
 <? if (count($pictures) > 0) : ?>
     <table class="default">
         <caption>
@@ -60,5 +66,5 @@
         <? endforeach ?>
     </table>
 <? else : ?>
-    <?= PageLayout::postInfo(_('In Ihrem System sind leider keine Bilder für den Startbildschirm hinterlegt.')) ?>
+    <?= MessageBox::info(_('In Ihrem System sind leider keine Bilder für den Startbildschirm hinterlegt.')) ?>
 <? endif ?>

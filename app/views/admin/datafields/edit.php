@@ -1,5 +1,13 @@
-<?
+<?php
 # Lifter010: TODO
+/**
+ * @var Admin_DatafieldsController $controller
+ * @var DataField $item
+ * @var string $datafield_id
+ * @var DataFieldEntry $datafield_entry
+ * @var array $institutes
+ */
+
 use Studip\Button, Studip\LinkButton;
 ?>
 

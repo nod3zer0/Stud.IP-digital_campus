@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $userSelectedElements
+ * @var DatafieldEntryModel[] $datafields
+ */
+?>
 <form class="default" method="post"
     action="<?= URLHelper::getLink('dispatch.php/admin/courses/sidebar'); ?>" >
     <input type="hidden" name="updateConfig" value="1">

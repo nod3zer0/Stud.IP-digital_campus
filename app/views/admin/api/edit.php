@@ -1,4 +1,11 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Admin_ApiController $controller
+ * @var RESTAPI\Consumer\Base $consumer
+ * @var array $types
+ */
+use Studip\Button, Studip\LinkButton;
+?>
 
 <? if ($consumer->id): ?>
     <h1>

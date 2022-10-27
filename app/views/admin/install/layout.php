@@ -1,3 +1,20 @@
+<?php
+/**
+ * @var array $steps
+ * @var Admin_InstallController $controller
+ * @var int $current_step
+ * @var int $total_steps
+ * @var string $error
+ * @var string $content_for_layout
+ * @var string $button_label
+ * @var array $error_details
+ * @var bool $hide_back_button
+ * @var bool $valid
+ * @var int $previous_step
+ * @var int $next_step
+ * @var int $step
+ */
+?>
 <!DOCTYPE html>
 <html>
 <head>

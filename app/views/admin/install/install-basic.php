@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var string $local_inc
+ * @var string $config_inc
+ */
+?>
 <h3><?= _('Installation') ?></h3>
 <dl>
     <dt><?= _('Datenbank') ?></dt>

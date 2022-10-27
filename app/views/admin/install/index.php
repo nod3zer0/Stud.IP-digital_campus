@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $steps
+ */
+?>
 <h2><?= _('Willkommen beim Installationsassistenten für Stud.IP!') ?></h2>
 
 <p>

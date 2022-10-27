@@ -1,5 +1,9 @@
+<?php
+/**
+ * @var string $value
+ */
+?>
 <? if ($type === 'boolean') : ?>
-
     <input type="hidden" name="value" value="0">
     <label>
         <input type="checkbox" name="value" value="1" <? if ($value) echo 'checked'; ?>>

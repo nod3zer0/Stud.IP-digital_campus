@@ -1,7 +1,12 @@
-<? foreach(PageLayout::getMessages() as $pm) : ?>
-    <?= $pm ?>
-<? endforeach; ?>
-
+<?php
+/**
+ * @var Admin_RoleController $controller
+ * @var Role $role
+ * @var User $user
+ * @var QuickSearch $qsearch
+ * @var Institute[] $institutes
+ */
+?>
 <form action="<?= $controller->action_link('assign_role_institutes/' . $role->getRoleid() . '/' . $user->id) ?>" method="post" class="default" data-dialog="size=auto;reload-on-close">
     <fieldset>
         <legend>

@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_CourseplanningController $controller
+ * @var string $column_id
+ * @var array $columns
+ * @var string $institute_id
+ */
+?>
 <form class="default" method="POST" action="<?= $controller->url_for('admin/courseplanning/viewcolumns/' . $week_day) ?>" data-dialog="size=auto">
 
     <table class="default">

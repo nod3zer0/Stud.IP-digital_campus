@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Admin_OverlappingController $controller
+ * @var array $fachsems
+ * @var array $semtypes
+ * @var StgteilVersion $base_version
+ * @var StgteilVersion[] $comp_versions
+ */
+?>
 <form method="post" class="default collapsable mvv-ovl-selection" action="<?= $controller->url_for('admin/overlapping/check') ?>">
     <fieldset>
         <legend>

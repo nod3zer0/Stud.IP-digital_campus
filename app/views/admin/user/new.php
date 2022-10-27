@@ -1,7 +1,14 @@
-<?
+<?php
 # Lifter010: TODO
-use Studip\Button, Studip\LinkButton;
+/**
+ * @var Admin_UserController $controller
+ * @var User $user
+ * @var string $prelim
+ * @var array $faks
+ * @var UserDomain[] $domains
+ */
 
+use Studip\Button, Studip\LinkButton;
 ?>
 
 <form method="post" action="<?= $controller->url_for('admin/user/new/' . $prelim) ?>" class="default" data-secure="true">
@@ -29,7 +36,7 @@ use Studip\Button, Studip\LinkButton;
                 <?= _("Globaler Status") ?>
             </span>
 
-            <select class="user_form" name="perm" id="perm" onchange="jQuery('#admin_special').toggle( jQuery('#institut').val() != '0' && jQuery('#perm').val() == 'admin' )">
+            <select class="user_form" name="perm" id="perm" onchange="jQuery('#admin_special').toggle( jQuery('#institut').val() !== '0' && jQuery('#perm').val() === 'admin' )">
                 <option <? if ($user['perm'] == 'user') echo 'selected'; ?>>user</option>
                 <option <? if (!$user['perm'] || $user['perm'] == 'autor') echo 'selected'; ?>>autor</option>
                 <option <? if ($user['perm'] == 'tutor') echo 'selected'; ?>>tutor</option>
@@ -160,7 +167,7 @@ use Studip\Button, Studip\LinkButton;
         <label>
             <?= _("Einrichtung") ?>
 
-            <select multiple id="institut" class="user_form nested-select" name="institutes[]" onchange="jQuery('#admin_special').toggle( jQuery('#institut').val() != '0' && jQuery('#perm').val() == 'admin')">
+            <select multiple id="institut" class="user_form nested-select" name="institutes[]" onchange="jQuery('#admin_special').toggle( jQuery('#institut').val() !== '0' && jQuery('#perm').val() === 'admin')">
                 <option value="" class="is-placeholder">
                     <?= _('-- Bitte Einrichtung auswählen --') ?>
                 </option>

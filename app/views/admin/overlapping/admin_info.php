@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Course $course
+ * @var InstituteMember[] $admins
+ * @var ProfileController $controller
+ */
+?>
 <section class="contentbox">
     <header>
         <h1>

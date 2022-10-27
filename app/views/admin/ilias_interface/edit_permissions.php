@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_IliasInterfaceController $controller
+ * @var string $ilias_index
+ * @var array $ilias_config
+ */
+?>
 <form class="default" action="<?= $controller->url_for('admin/ilias_interface/save/'.$ilias_index) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <label>

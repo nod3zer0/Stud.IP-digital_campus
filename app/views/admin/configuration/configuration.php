@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var string $needle
+ * @var array $sections
+ * @var array $open_section
+ * @var array $only_section
+ */
+?>
 <section class="contentbox">
     <header>
         <h1>

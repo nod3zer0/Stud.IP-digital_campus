@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_DomainController $controller
+ * @var UserDomain[] $domains
+ */
+?>
 <? if (count($domains) == 0) : ?>
     <?= MessageBox::info(_('Es sind keine Nutzerdomänen vorhanden.')) ?>
 <? else : ?>

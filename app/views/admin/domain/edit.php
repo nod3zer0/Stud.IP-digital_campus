@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_DomainController $controller
+ * @var UserDomain $domain
+ */
+?>
 <form action="<?= $controller->link_for("admin/domain/save/{$domain->id}") ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
 

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_ContentTermsOfUseController $controller
+ * @var ContentTermsOfUse $entry
+ */
+?>
 <form class="default" method="post" action="<?= $controller->link_for('admin/content_terms_of_use/store?id=' . $entry->id) ?>">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>

@@ -1,4 +1,10 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Admin_ApiController $controller
+ * @var array $config
+ */
+use Studip\Button, Studip\LinkButton;
+?>
 
 <form class="default" action="<?= $controller->url_for('admin/api/config') ?>" method="post">
     <fieldset>

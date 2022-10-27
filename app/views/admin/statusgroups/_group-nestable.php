@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var Statusgruppen[] $groups
+ */
+?>
 <? if ($groups): ?>
     <ol class="dd-list">
     <? foreach ($groups as $group): ?>

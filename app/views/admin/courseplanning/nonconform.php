@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $non_conform_dates
+ * @var Course_DetailsController $controller
+ */
+?>
 <table class="default">
     <caption>
         <?= _('Folgende regelmäßige Termine von Veranstaltungen passen nicht in das vorgegebene Zeitraster:') ?>

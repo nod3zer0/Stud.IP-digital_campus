@@ -1,6 +1,12 @@
 <?php
-    $selected   = !$schedule->isNew() && $schedule->task_id === $task->task_id;
-    $parameters = $schedule->parameters;
+/**
+ * @var CronjobSchedule $schedule
+ * @var CronjobTask $task
+ * @var Admin_Cronjobs_SchedulesController $controller
+ */
+
+$selected   = !$schedule->isNew() && $schedule->task_id === $task->task_id;
+$parameters = $schedule->parameters;
 ?>
 
 <h3><?= _('Parameter') ?></h3>

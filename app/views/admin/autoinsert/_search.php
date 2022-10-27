@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var string $sem_select
+ * @var string $sem_search
+ */
+?>
 <fieldset>
     <legend>
         <?= _('Suche nach Veranstaltungen')?>

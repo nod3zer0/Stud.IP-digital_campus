@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_LtiController $controller
+ * @var LtiTool[] $tools
+ */
+?>
 <form action="" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">
@@ -14,13 +20,15 @@
         </colgroup>
 
         <thead>
-            <th><?= _('Name der Anwendung') ?></th>
-            <th><?= _('URL der Anwendung') ?></th>
-            <th><?= _('Consumer-Key') ?></th>
-            <th><?= _('Links') ?></th>
-            <th class="actions">
-                <?= _('Aktionen') ?>
-            </th>
+            <tr>
+                <th><?= _('Name der Anwendung') ?></th>
+                <th><?= _('URL der Anwendung') ?></th>
+                <th><?= _('Consumer-Key') ?></th>
+                <th><?= _('Links') ?></th>
+                <th class="actions">
+                    <?= _('Aktionen') ?>
+                </th>
+            </tr>
         </thead>
 
         <tbody>

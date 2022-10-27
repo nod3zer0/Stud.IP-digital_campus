@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_RoleController $controller
+ * @var Role[] $roles
+ * @var array $stats
+ */
+?>
 <table class="default">
     <caption>
         <?= _('Vorhandene Rollen') ?>

@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var int $valid
+ */
+?>
 <p>
     <?= _('In diesem Schritt verbinden Sie Ihre Stud.IP-Installation mit Ihrer '
         . 'bestehenden Datenbank.') ?>

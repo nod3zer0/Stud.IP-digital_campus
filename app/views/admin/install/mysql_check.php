@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $result
+ */
+?>
 <p>
     <?= _('In diesem Schritt wird geprüft, ob die Konfiguration der Datenbank '
         . 'korrekt ist.') ?>

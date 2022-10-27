@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_StatusgroupsController $controller
+ * @var Statusgruppen $group
+ * @var string $tutor
+ */
+?>
 <? foreach ($group->members as $user): ?>
     <tr data-userid="<?= $user->user_id ?>">
         <td <?= ($tutor ? 'class="dragHandle"' : '') ?>></td>

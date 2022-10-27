@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_StatusgroupsController $controller
+ * @var Statusgruppen $group
+ */
+?>
 <form method="post" action="<?= $controller->url_for("admin/statusgroups/sortAlphabetic/{$group->id}") ?>" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>

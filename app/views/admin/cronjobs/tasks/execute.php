@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_Cronjobs_TasksController $controller
+ * @var CronjobTask $task
+ */
+?>
 <h2><?= sprintf(_('Cronjob-Aufgabe "%s" ausführen'), htmlReady($task->name)) ?></h2>
 <? if (isset($result)): ?>
     <pre><code><?= htmlReady($result ?: _('- Keine Ausgabe -')) ?></code></pre>

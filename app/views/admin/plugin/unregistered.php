@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_PluginController $controller
+ * @var array $unknown_plugins
+ */
+?>
 <table class="default">
     <caption>
         <?= _('Im Pluginverzeichnis vorhandene Plugins registrieren') ?>

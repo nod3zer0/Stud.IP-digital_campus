@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $plugin
+ * @var array $manifest
+ */
+?>
 <dl>
     <dt><?= _('Name') ?></dt>
     <dd><?= htmlReady($plugin['name']) ?></dd>

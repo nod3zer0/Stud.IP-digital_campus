@@ -1,12 +1,17 @@
-<?
-    $sidebar = Sidebar::get();
-    $actions = new ActionsWidget();
-    $actions->addLink(
-        _('OAuth2-Client hinzufügen'),
-        $controller->url_for('api/oauth2/clients/add'),
-        Icon::create('add')
-    );
-    $sidebar->addWidget($actions);
+<?php
+/**
+ * @var Admin_Oauth2Controller $controller
+ * @var Studip\OAuth2\Models\Client[] $clients
+ */
+
+$sidebar = Sidebar::get();
+$actions = new ActionsWidget();
+$actions->addLink(
+    _('OAuth2-Client hinzufügen'),
+    $controller->url_for('api/oauth2/clients/add'),
+    Icon::create('add')
+);
+$sidebar->addWidget($actions);
 ?>
 
 <? if (isset($clients) && count($clients)) { ?>

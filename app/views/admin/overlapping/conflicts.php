@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var Admin_OverlappingController $controller
+ * @var SimpleORMapCollection $conflicts
+ * @var SeminarCycleDate $cycle
+ * @var Modul $base_modul
+ * @var Semester $selected_semester
+ * @var Modulteil $modulteil
+ */
+?>
 <? $comp_abs = $conflicts->findBy('base_metadate_id', $cycle->id)->pluck('comp_abschnitt_id') ?>
 <? $comp_versions = StgteilVersion::findBySQL('INNER JOIN `mvv_stgteilabschnitt` USING (`version_id`) WHERE `abschnitt_id` IN (?) GROUP BY `version_id`', [$comp_abs]); ?>
 <? foreach ($comp_versions as $comp_version) : ?>

@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Admin_ApiController $controller
+ * @var RESTAPI\ConsumerPermissions $permissions
+ * @var string $consumer_id
+ * @var array $routes
+ * @var bool $global
+ */
+?>
 <form action="<?= $controller->url_for('admin/api/permissions', $consumer_id) ?>" method="post" class="default">
 <table class="default">
     <thead>

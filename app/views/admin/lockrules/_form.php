@@ -1,6 +1,15 @@
-<?
+<?php
 # Lifter010:
-use Studip\Button, Studip\LinkButton;
+
+/**
+ * @var string $action
+ * @var string $lock_rule_type
+ * @var LockRule $lock_rule
+ * @var array $rule_type_names
+ * @var array $lock_rule_permissions
+ * @var array $lock_config
+ */
+use Studip\Button;
 
 ?>
 <form action="<?= $action ?>" method="post" class="default">
@@ -57,9 +66,9 @@ use Studip\Button, Studip\LinkButton;
                     <?= htmlready($group_title) ?>
                 </caption>
                 <colgroup>
-                    <col width="70%">
-                    <col width="15%">
-                    <col width="15%">
+                    <col style="width: 70%">
+                    <col style="width: 15%">
+                    <col style="width: 15%">
                 </colgroup>
                 <thead>
                 <tr>

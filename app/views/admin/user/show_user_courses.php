@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_UserController $controller
+ * @var User $user
+ */
+?>
 <? if (!empty($sem_courses)) : ?>
     <form method="post" action="<?= $controller->delete_course_assignment($user) ?>" class="default collapsable"
           data-dialog="size=auto">
@@ -8,12 +14,12 @@
                     <?= htmlReady($sem_name) ?>
                 </legend>
                 <table class="default ">
+                    <colgroup>
+                        <col style="width: 20px">
+                        <col>
+                        <col>
+                    </colgroup>
                     <thead>
-                        <colgroup>
-                            <col style="width: 20px">
-                            <col>
-                            <col>
-                        </colgroup>
                         <tr>
                             <th>
                                 <input type="checkbox" name="all" value="1"

@@ -47,7 +47,7 @@ class Admin_SpecificationController extends AuthenticatedController
     /**
      * Edit or create a rule
      *
-     * @param md5 $edit_id
+     * @param string $edit_id
      */
     public function edit_action($id = null)
     {
@@ -108,7 +108,7 @@ class Admin_SpecificationController extends AuthenticatedController
     /**
      * Delete a rule, using a modal dialog
      *
-     * @param md5 $rule_id
+     * @param string $rule_id
      */
     public function delete_action($rule_id)
     {

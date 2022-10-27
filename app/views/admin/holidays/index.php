@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_HolidaysController $controller
+ * @var SemesterHoliday[] $holidays
+ * @var string $filter
+ */
+?>
 <form action="<?= $controller->url_for('admin/holidays/delete/bulk') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 

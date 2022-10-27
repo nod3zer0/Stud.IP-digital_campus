@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $values
+ * @var SimpleCollection $all_lock_rules
+ * @var Course $course
+ */
+?>
 <? $current_lock_rule = $all_lock_rules->findOneBy('lock_id', $values['lock_rule']); ?>
 <? if (!$GLOBALS['perm']->have_perm('root') && ($current_lock_rule['permission'] == 'admin' || $current_lock_rule['permission'] == 'root')) : ?>
     <?= htmlReady($current_lock_rule['name'])?>

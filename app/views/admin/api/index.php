@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_ApiController $controller
+ * @var RESTAPI\Consumer\Base[] $consumers
+ * @var array $types
+ */
+?>
 <? if (!empty($consumers)): ?>
 <form action="#" method="post" class="default">
 <table class="default">

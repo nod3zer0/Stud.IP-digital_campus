@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_LicensesController $controller
+ * @var License $licenses
+ */
+?>
 <form action="<?= $controller->link_for("admin/licenses/store", ['identifier' => $license->getId()]) ?>"
       method="post"
       enctype="multipart/form-data"

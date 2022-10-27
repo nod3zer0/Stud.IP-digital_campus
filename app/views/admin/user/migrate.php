@@ -1,8 +1,11 @@
-<?
+<?php
 # Lifter010: TODO - Quicksearches still lack a label
+/**
+ * @var Admin_UserController $controller
+ * @var User $user
+ */
 
 use Studip\Button, Studip\LinkButton;
-
 ?>
 <form action="<?= $controller->url_for('admin/user/migrate') ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>

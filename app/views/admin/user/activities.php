@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Admin_UserController $controller
+ * @var array $queries
+ * @var array $user
+ * @var array $params
+ * @var array $sections
+ */
+?>
 <h1 class="hide-in-dialog">
     <?= htmlReady(PageLayout::getTitle()) ?>
 </h1>

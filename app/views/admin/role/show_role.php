@@ -1,6 +1,15 @@
-<?
+<?php
 # Lifter010: TODO
-use Studip\Button, Studip\LinkButton;
+/**
+ * @var Admin_RoleController $controller
+ * @var string $roleid
+ * @var Role[] $roles
+ * @var QuickSearch $mps
+ * @var array $users
+ * @var array $plugins
+ * @var int $implicit_count
+ */
+use Studip\Button;
 ?>
 
 <form action="<?= $controller->url_for('admin/role/show_role') ?>" method="get" class="default inline">
@@ -38,12 +47,12 @@ use Studip\Button, Studip\LinkButton;
 
     <table class="default" id="role-users">
         <colgroup>
-            <col width="20px">
-            <col width="3%">
-            <col width="33%">
-            <col width="5%">
+            <col style="width: 20px">
+            <col style="width: 3%">
+            <col style="width: 33%">
+            <col style="width: 5%">
             <col>
-            <col width="24px">
+            <col style="width: 24px">
         </colgroup>
         <caption>
             <?= sprintf(
@@ -150,11 +159,11 @@ use Studip\Button, Studip\LinkButton;
             </div>
         </caption>
         <colgroup>
-            <col width="20px">
-            <col width="3%">
-            <col width="38%">
+            <col style="width: 20px">
+            <col style="width: 3%">
+            <col style="width: 38%">
             <col>
-            <col width="24px">
+            <col style="width: 24px">
         </colgroup>
         <thead>
             <tr>

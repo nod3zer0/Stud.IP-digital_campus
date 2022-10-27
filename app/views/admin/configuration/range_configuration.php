@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var string $title
+ * @var array $configs
+ */
+?>
 <table class="default">
     <caption>
         <?= htmlReady($title) ?>

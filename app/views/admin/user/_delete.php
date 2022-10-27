@@ -1,13 +1,20 @@
+<?php
+/**
+ * @var Admin_UserController $controller
+ * @var array $users
+ */
+?>
 <form action="<?= $controller->link_for('admin/user/delete') ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
-<? if ($users) : ?>
-    <? $details = [] ?>
-    <? foreach ($users as $user) : ?>
-        <? $details[] = htmlReady(sprintf('%s (%s)', $user->getFullName(), $user->username)) ?>
-        <input type="hidden" name="user_ids[]" value="<?= $user['user_id'] ?>">
-    <? endforeach ?>
-<? endif ?>
-    <?= MessageBox::warning(_('Wollen Sie die folgenden Nutzer wirklich löschen?'), $details) ?>
+    <? if ($users) : ?>
+        <? $details = [] ?>
+        <? foreach ($users as $user) : ?>
+            <? $details[] = htmlReady(sprintf('%s (%s)', $user->getFullName(), $user->username)) ?>
+            <input type="hidden" name="user_ids[]" value="<?= $user['user_id'] ?>">
+        <? endforeach ?>
+        <?= MessageBox::warning(_('Wollen Sie die folgenden Nutzer wirklich löschen?'), $details) ?>
+    <? endif ?>
+
 
     <fieldset>
         <legend><?= _('Personenbezogene Daten') ?></legend>

@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_CoursesController $controller
+ * @var Course $course
+ * @var string $notice
+ */
+?>
 <form action="<?= $controller->notice($course) ?>" method="post" data-dialog class="default">
     <fieldset>
         <legend>

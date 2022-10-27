@@ -1,17 +1,23 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Admin_SmileysController $controller
+ * @var string $view
+ */
 
+use Studip\Button, Studip\LinkButton;
+?>
 <form action="<?= $controller->url_for('admin/smileys/upload', $view) ?>"
       method="post" enctype="multipart/form-data">
     <?= CSRFProtection::tokenTag() ?>
 
-    <table align="center" cellpadding="2" cellspacing="0">
+    <table class="default">
         <thead class="hide-in-dialog">
             <tr>
                 <th colspan="2"><b><?= _('Neues Smiley hochladen') ?></b></th>
             </tr>
         </thead>
         <tbody>
-            <tr class="table_row_odd">
+            <tr>
                 <td>
                     <label for="replace"><?= _('existierende Datei überschreiben') ?></label>
                 </td>
@@ -19,7 +25,7 @@
                     <input type="checkbox" id="replace" name="replace" value="1">
                 </td>
             </tr>
-            <tr class="table_row_even">
+            <tr>
                 <td>
                     <label for="file"><?= _('Bilddatei auswählen') ?></label>
                 </td>

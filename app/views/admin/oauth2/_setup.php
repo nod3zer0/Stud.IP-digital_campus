@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var  Studip\OAuth2\SetupInformation $setup
+ */
+?>
 <ul>
     <li>
         <? $privateKey = $setup->privateKey(); ?>

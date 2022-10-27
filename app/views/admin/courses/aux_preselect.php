@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $values
+ * @var array $aux_lock_rules
+ */
+?>
 <label><?= _('Für alle Veranstaltungen') ?>
     <select name="lock_sem_all" style="max-width: 200px">
         <? foreach ($aux_lock_rules as $id => $rule) : ?>

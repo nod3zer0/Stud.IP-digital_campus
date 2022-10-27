@@ -1,4 +1,11 @@
 <?php
+/**
+ * @var Admin_PluginController $controller
+ * @var array $memory
+ * @var array $errors
+ */
+?>
+<?php
 $aggregated = array_sum($memory);
 if (!$aggregated) {
     $question = _('Markierte Plugins dennoch deaktivieren');

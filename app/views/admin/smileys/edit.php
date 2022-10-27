@@ -1,21 +1,28 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Admin_SmileysController $controller
+ * @var Smiley $smiley
+ * @var string $view
+ */
+use Studip\Button, Studip\LinkButton;
+?>
 
 <form action="<?= $controller->url_for('admin/smileys/edit', $smiley->id, $view) ?>"
       method="post" enctype="multipart/form-data">
     <?= CSRFProtection::tokenTag() ?>
 
-    <table align="center" cellpadding="2" cellspacing="0">
+    <table class="default">
         <thead class="hide-in-dialog">
             <tr>
                 <th colspan="2"><b><?= _('Smiley bearbeiten') ?></b></th>
             </tr>
         </thead>
         <tbody>
-            <tr class="table_row_even">
+            <tr>
                 <td><?= _('Smiley:')?></td>
                 <td align="center"><?= $smiley->getImageTag() ?></td>
             </tr>
-            <tr class="table_row_odd">
+            <tr>
                 <td>
                     <label for="name"><?= _('Name')?></label>
                 </td>
@@ -26,7 +33,7 @@
                     <small><?= _('Erlaubte Zeichen:') ?> a-z 0-9 &ndash; _</small>
                 </td>
             </tr>
-            <tr class="table_row_even">
+            <tr>
                 <td>
                     <label for="short"><?= _('Kürzel')?></label>
                 </td>
@@ -35,11 +42,11 @@
                            value="<?= Request::option('short', $smiley->short) ?>">
                 </td>
             </tr>
-            <tr class="table_row_odd">
+            <tr>
                 <td><?= _('Erstellt') ?></td>
                 <td><?= date('d.m.Y H:i:s', $smiley->mkdate) ?></td>
             </tr>
-            <tr class="table_row_even">
+            <tr>
                 <td><?= _('Geändert') ?></td>
                 <td><?= date('d.m.Y H:i:s', $smiley->chdate) ?></td>
             </tr>
@@ -53,6 +60,4 @@
             </tr>
         </tfoot>
     </table>
-
-    <br>
 </form>

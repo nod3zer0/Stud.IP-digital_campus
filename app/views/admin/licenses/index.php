@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_LicensesController $controller
+ * @var License[] $licenses
+ */
+?>
 <table class="default">
     <caption>
         <?= _("Lizenzen") ?>
@@ -14,7 +20,7 @@
         <? foreach ($licenses as $license) : ?>
         <tr>
             <td>
-                <?= LicenseAvatar::getAvatar($license['identifier'])->getImageTag(Avatar::MEDIUM) ?>
+                <?= LicenseAvatar::getAvatar($license['identifier'])->getImageTag() ?>
             </td>
             <td><?= htmlReady($license['identifier']) ?></td>
             <td>
@@ -28,13 +34,13 @@
             </td>
             <td class="actions">
                 <a href="<?= $controller->link_for("admin/licenses/edit", ['identifier' => $license['identifier']]) ?>" data-dialog>
-                    <?= Icon::create("edit", "clickable")->asImg(20, ['class' => "text-bottom"]) ?>
+                    <?= Icon::create("edit")->asImg(20, ['class' => "text-bottom"]) ?>
                 </a>
                 <form action="<?= $controller->link_for("admin/licenses/delete", ['identifier' => $license->getId()]) ?>"
                       method="post"
                       data-confirm="<?= _("Wirklich löschen?") ?>"
                       class="inline">
-                    <?= Icon::create("trash", "clickable")->asInput(20) ?>
+                    <?= Icon::create("trash")->asInput(20) ?>
                 </form>
             </td>
         </tr>

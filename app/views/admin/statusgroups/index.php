@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var Statusgruppen[] $groups
+ */
+?>
 <? if (!$groups): ?>
     <?= MessageBox::info(_('Es wurden noch keine Gruppen angelegt')) ?>
 <? endif; ?>

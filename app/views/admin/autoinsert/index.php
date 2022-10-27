@@ -1,7 +1,9 @@
-<?
-# Lifter010: TODO
-use Studip\Button, Studip\LinkButton;
-
+<?php
+/**
+ * @var Admin_AutoinsertController $controller
+ * @var array $seminar_search
+ * @var array $userdomains
+ */
 ?>
 <? if (isset($flash['delete'])): ?>
     <?= (string)QuestionBox::create(

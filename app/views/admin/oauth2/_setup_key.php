@@ -1,5 +1,11 @@
 <?php
-    $checkmark = function (bool $checked): Icon {
+/**
+ * @var  Studip\OAuth2\KeyInformation $key
+ */
+
+?>
+<?php
+$checkmark = function (bool $checked): Icon {
         return $checked
              ? Icon::create('accept', Icon::ROLE_STATUS_GREEN)
              : Icon::create('decline', Icon::ROLE_STATUS_RED);

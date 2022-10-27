@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $priorities
+ */
+?>
 <section class="contentbox">
     <header>
         <h1>

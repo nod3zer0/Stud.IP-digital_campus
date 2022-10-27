@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_LtiController $controller
+ * @var LtiTool $tool
+ */
+?>
 <form class="default" action="<?= $controller->link_for('admin/lti/save/' . $tool->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>

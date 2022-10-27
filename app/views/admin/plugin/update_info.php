@@ -1,6 +1,10 @@
-<?
+<?php
 # Lifter010: TODO
-use Studip\Button, Studip\LinkButton;
+/**
+ * @var Admin_PluginController $controller
+ * @var array $plugins
+ */
+use Studip\Button;
 
 ?>
 <?= sprintf(ngettext('Es ist ein Update für ein Plugin verfügbar', 'Es sind Updates für %d Plugins verfügbar', $num_updates), $num_updates) ?>

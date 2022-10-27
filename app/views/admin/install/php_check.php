@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $result
+ */
+?>
 <p>
     <?= _('In diesem Schritt wird geprüft, ob die PHP-Konfiguration auf dem '
         . 'Server den Anforderungen von Stud.IP entspricht.') ?>

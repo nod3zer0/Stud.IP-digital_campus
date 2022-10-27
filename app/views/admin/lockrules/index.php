@@ -1,5 +1,12 @@
 <?php
 # Lifter010: TODO
+
+/**
+ * @var Admin_LockrulesController $controller
+ * @var array $rule_type_names
+ * @var string $lock_rule_type
+ * @var LockRule[] $lock_rules
+ */
 ?>
 
 <form method="post" class="default">
@@ -9,9 +16,9 @@
             <?= _('Sperrebenen für den Bereich:') ?> <?= $rule_type_names[$lock_rule_type]; ?>
         </caption>
         <colgroup>
-            <col width="30%">
-            <col width="50%">
-            <col width="20%">
+            <col style="width: 30%">
+            <col style="width: 50%">
+            <col style="width: 20%">
         </colgroup>
         <thead>
         <tr>
@@ -36,7 +43,7 @@
                     </td>
                     <td class="actions">
                         <a href="<?= $controller->url_for('admin/lockrules/edit/' . $rule->lock_id) ?>">
-                            <?= Icon::create('edit', 'clickable', ['title' => _('Diese Regel bearbeiten')])->asImg() ?>
+                            <?= Icon::create('edit', Icon::ROLE_CLICKABLE, ['title' => _('Diese Regel bearbeiten')])->asImg() ?>
                         </a>
 
                         <?
@@ -46,7 +53,7 @@
                         <? else : ?>
                             <? $msg = sprintf(_('Möchten Sie die Ebene %s löschen?'), $rule->name) ?>
                         <? endif ?>
-                        <?= Icon::create('trash', 'clickable', [
+                        <?= Icon::create('trash', Icon::ROLE_CLICKABLE, [
                                 'title' => _('Diese Regel löschen'),
                                 'style' => 'vertical-align: middle'
                             ])->asInput(['data-confirm'=>$msg,'formaction'=>$controller->url_for('admin/lockrules/delete/'.$rule->lock_id)]) ?>

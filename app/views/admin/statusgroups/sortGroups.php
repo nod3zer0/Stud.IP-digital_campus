@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_StatusgroupsController $controller
+ * @var Statusgruppen[] $groups
+ */
+?>
 <noscript>
     <?= MessageBox::info(_('Leider ist es aus technischen Gründen nicht möglich ein vernünftiges Interface '
                          . 'ohne Javascript zu liefern. Nutzen sie bitte die Gruppierung unter den '

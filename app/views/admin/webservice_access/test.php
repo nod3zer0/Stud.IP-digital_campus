@@ -1,4 +1,10 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Admin_WebserviceAccessController $controller
+ */
+
+use Studip\Button, Studip\LinkButton;
+?>
 <form action="<?=$controller->url_for('admin/webservice_access/test')?>" method="post" class="default">
     <?=CSRFProtection::tokenTag()?>
     <fieldset>

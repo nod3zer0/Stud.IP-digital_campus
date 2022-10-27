@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_UserController $controller
+ * @var Institute[] $institutes
+ * @var User $user
+ * @var array $params
+ */
+?>
 <section class="contentbox">
     <header>
         <h1>
@@ -39,11 +47,11 @@
                                 $actionMenu = ActionMenu::get()->setContext($institute['name']);
                                 $actionMenu->addLink($controller->url_for('admin/user/list_files/' . $user['user_id'] . '/' . $institute['Institut_id'] , $params),
                                     _('Dateien auflisten'),
-                                    Icon::create('folder-full', 'clickable'),
+                                    Icon::create('folder-full'),
                                     ['data-dialog' => 'size=50%']);
                                 $actionMenu->addLink($controller->url_for('admin/user/download_user_files/' . $user['user_id'] . '/' . $institute['Institut_id']),
                                     _('Dateien als ZIP herunterladen'),
-                                    Icon::create('download', 'clickable'));
+                                    Icon::create('download'));
 
                                 ?>
                                 <?= $actionMenu->render() ?>
@@ -55,4 +63,3 @@
         </table>
     </section>
 </section>
-

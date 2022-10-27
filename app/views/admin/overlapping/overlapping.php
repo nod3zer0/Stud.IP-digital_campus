@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var SimpleORMapCollection $conflicts
+ * @var StgteilVersion $base_version
+ */
+?>
 <h1>
     <?= Icon::create('category', Icon::ROLE_INFO)->asImg() ?>
     <?= htmlReady($base_version->getDisplayName()); ?>

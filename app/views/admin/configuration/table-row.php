@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Admin_ConfigurationController $controller
+ * @var string $field
+ * @var string $linkchunk
+ * @var string $type
+ * @var string $value
+ */
+?>
 <tr id="field-<?= htmlReady($field) ?>">
     <td>
         <a data-dialog href="<?= $controller->link_for($linkchunk, compact('field')) ?>">

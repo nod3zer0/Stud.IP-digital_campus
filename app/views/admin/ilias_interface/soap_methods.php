@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var Admin_IliasInterfaceController $controller
+ * @var string $ilias_index
+ * @var string $ilias_soap_method
+ * @var array $soap_methods
+ * @var array $params
+ * @var array|string $result
+ */
+?>
 <form class="default" action="<?= $controller->url_for('admin/ilias_interface/soap_methods/'.$ilias_index) ?>" method="post">
     <? if ($result) : ?>
     <article class="studip">

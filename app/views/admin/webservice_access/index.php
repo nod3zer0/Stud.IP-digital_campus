@@ -1,5 +1,10 @@
-<?
+<?php
 # Lifter010: TODO
+
+/**
+ * @var Admin_WebserviceAccessController $controller
+ * @var WebserviceAccessRule[] $ws_rules
+ */
 ?>
 <h3><?=_("Liste der Zugriffsregeln")?></h3>
 <form action="<?=$controller->url_for('admin/webservice_access/update#edit')?>" method="post" class="default">

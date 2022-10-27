@@ -1,3 +1,8 @@
+<?php
+/**
+* @var array $stats
+ */
+?>
 <section class="contentbox">
     <header>
         <h1><?= _('Cache-Statistiken') ?></h1>

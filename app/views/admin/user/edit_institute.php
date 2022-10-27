@@ -1,4 +1,13 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Admin_UserController $controller
+ * @var User $user
+ * @var Institute $institute
+ * @var array $perms
+ * @var DataField[] $datafields
+ */
+use Studip\Button, Studip\LinkButton;
+?>
 
 <form action="<?= $controller->url_for('admin/user/store_user_institute/' . $institute->user_id . '/' . $institute->institut_id) ?>"
       method="post" class="default">

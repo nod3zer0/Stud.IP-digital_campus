@@ -1,5 +1,13 @@
-<?
+<?php
 # Lifter010: TODO
+/**
+ * @var Admin_PluginController $controller
+ * @var array $num_updates
+ * @var array $plugins
+ * @var array $plugin_types
+ * @var string $plugin_filter
+ * @var string $core_filter
+ */
 use Studip\Button, Studip\LinkButton;
 
 ?>

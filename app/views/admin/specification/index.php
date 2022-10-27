@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_SpecificationController $controller
+ * @var AuxLockRules[] $allrules
+ */
+?>
 <form method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">
@@ -5,9 +11,9 @@
             <?= _('Verwaltung von Zusatzangaben') ?>
         </caption>
         <colgroup>
-            <col width="45%">
-            <col width="45%">
-            <col width="10%">
+            <col style="width: 45%">
+            <col style="width: 45%">
+            <col style="width: 10%">
         </colgroup>
         <thead>
             <tr>

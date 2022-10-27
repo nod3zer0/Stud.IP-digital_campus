@@ -1,8 +1,17 @@
 <?php
-/*
+/**
  * Show course only if it has no parent course or the parent course is not
  * part of the current view. Otherwise the current course will be listed
  * as subcourse under its parent.
+ *
+ * @var array $values
+ * @var array $courses
+ * @var string $semid
+ * @var string $parent
+ * @var Admin_CoursesController $controller
+ * @var array $view_filter
+ * @var Semester $semester
+ * @var string $selected_action
  */
 if (!$values['parent_course'] || !in_array($values['parent_course'], array_keys($courses))) : ?>
     <?php

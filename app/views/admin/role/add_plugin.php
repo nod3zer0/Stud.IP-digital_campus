@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var Admin_RoleController $controller
+ * @var string $role_id
+ * @var array $plugins
+ */
 use Studip\Button;
 use Studip\LinkButton;
 ?>

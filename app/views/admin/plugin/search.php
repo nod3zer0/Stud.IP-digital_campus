@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_PluginController $controller
+ * @var array $search_results
+ * @var string $search
+ * @var array $errors
+ */
+?>
 <? if (!$search_results): ?>
     <?= MessageBox::info(_('Es wurden keine Plugins gefunden.')) ?>
 <? else: ?>

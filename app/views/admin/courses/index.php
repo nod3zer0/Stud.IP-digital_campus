@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_CoursesController $controller
+ * @var int $count_courses
+ */
+?>
 <? if (empty($insts)): ?>
     <?= MessageBox::info(sprintf(_('Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zuständigen %sAdministratoren%s.'), '<a href="' . URLHelper::getLink('dispatch.php/siteinfo/show') . '">', '</a>')) ?>
 <? elseif (!empty($courses)): ?>

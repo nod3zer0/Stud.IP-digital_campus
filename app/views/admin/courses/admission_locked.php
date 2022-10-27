@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Course $course
+ * @var array $values
+ */
+?>
 <input type="hidden" name="all_sem[]" value="<?= htmlReady($course->id) ?>">
 <label>
     <input type="checkbox" <?= $values['admission_locked'] == 'disable' ? 'disabled' : '' ?>

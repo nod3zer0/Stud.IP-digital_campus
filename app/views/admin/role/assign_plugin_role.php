@@ -1,6 +1,13 @@
-<?
+<?php
 # Lifter010: TODO
-use Studip\Button, Studip\LinkButton;
+/**
+ * @var Admin_RoleController $controller
+ * @var string $pluginid
+ * @var array $plugins
+ * @var Role[] $roles
+ * @var Role[] $assigned
+ */
+use Studip\Button;
 ?>
 
 <form action="<?= $controller->url_for('admin/role/assign_plugin_role') ?>" method="POST" class="default">

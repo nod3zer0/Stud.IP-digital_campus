@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_ConfigurationController $controller
+ * @var array $config
+ * @var array $allconfigs
+ */
+?>
 <form action="<?= $controller->link_for('admin/configuration/edit_configuration', ['field' => $config['field']]) ?>"
       method="post" data-dialog="size=auto" class="default">
     <?= CSRFProtection::tokenTag() ?>

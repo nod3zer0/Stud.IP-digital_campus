@@ -1,6 +1,15 @@
-<?
-    $min_time = Config::get()->INSTITUTE_COURSE_PLAN_START_HOUR . ':00';
-    $max_time = Config::get()->INSTITUTE_COURSE_PLAN_END_HOUR . ':00';
+<?php
+/**
+ * @var Admin_CourseplanningController $controller
+ * @var DateTime $cal_date
+ * @var string $plan_title
+ * @var array $events
+ * @var array $columns
+ * @var array $eventless_courses
+ */
+
+$min_time = Config::get()->INSTITUTE_COURSE_PLAN_START_HOUR . ':00';
+$max_time = Config::get()->INSTITUTE_COURSE_PLAN_END_HOUR . ':00';
 ?>
 
 <? $days = ['Sonntag', 'Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag']; ?>
@@ -12,7 +21,6 @@
 </div>
 
 <?= Studip\Fullcalendar::create($plan_title, [
-    'editable' => true,
     'minTime' => $min_time,
     'maxTime' => $max_time,
     'allDaySlot' => false,

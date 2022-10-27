@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var bool $has_enabled
+ * @var Admin_CourseWizardStepsController $controller
+ * @var CourseWizardStep[] $steps
+ */
+?>
 <? if (!$has_enabled) : ?>
     <?= MessageBox::info(_('Es gibt keine aktiven Schritte für den Anlegeassistenten!')) ?>
 <? endif ?>

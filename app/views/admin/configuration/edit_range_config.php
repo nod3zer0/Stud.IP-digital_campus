@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Admin_ConfigurationController $controller
+ * @var string $range_type
+ * @var string $field
+ * @var User|Institute|Course $range
+ * @var array $config
+ */
+?>
 <form action="<?= $controller->link_for("admin/configuration/edit_{$range_type}_config", $range, compact('field')) ?>"
       method="post" data-dialo="size=auto" class="default">
     <?= CSRFProtection::tokenTag() ?>

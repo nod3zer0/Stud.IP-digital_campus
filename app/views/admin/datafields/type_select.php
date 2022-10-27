@@ -1,4 +1,10 @@
 <?php
+/**
+ * @var Admin_DatafieldsController $controller
+ * @var array $allclasses
+ * @var string $class_filter
+ */
+
 use Studip\Button, Studip\LinkButton;
 ?>
 

@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_UserController $controller
+ * @var array $params
+ * @var User $user
+ */
+?>
 <form action="<?=$controller->url_for('admin/user/lock/' . $user->id, $params)?>" method="post" class="default">
     <?= CSRFProtection::tokenTag()?>
 

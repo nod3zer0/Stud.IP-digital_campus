@@ -1,7 +1,14 @@
-<?
+<?php
 # Lifter010: TODO
-use Studip\Button, Studip\LinkButton;
 
+/**
+ * @var Admin_SpecificationController $controller
+ * @var AuxLockRules $rule
+ * @var array $semFields
+ * @var DataField[] $entries_semdata
+ * @var DataField[] $entries_user
+ */
+use Studip\Button, Studip\LinkButton;
 ?>
 <? if (isset($flash['error'])) : ?>
     <?= MessageBox::error($flash['error'], $flash['error_detail']) ?>

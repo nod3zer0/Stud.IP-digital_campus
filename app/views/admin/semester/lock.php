@@ -1,4 +1,12 @@
-<form class="default" action="<?= $controller->link_for("admin/semester/lock/{$id}") ?>" method="post" data-dialog="size=auto" class="default">
+<?php
+/**
+ * @var Admin_SemesterController $controller
+ * @var Semester[] $semesters
+ * @var string $id
+ * @var LockRule[] $all_lock_rules
+ */
+?>
+<form class="default" action="<?= $controller->link_for("admin/semester/lock/{$id}") ?>" method="post" data-dialog="size=auto">
 
     <fieldset>
         <legend><?= _('Berechtigungen') ?></legend>

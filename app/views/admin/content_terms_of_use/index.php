@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_ContentTermsOfUseController $controller
+ * @var ContentTermsOfUse[] $entries
+ */
+?>
 <table class="default">
     <caption><?= _('Inhalts-Nutzungsbedingungen') ?></caption>
     <thead>

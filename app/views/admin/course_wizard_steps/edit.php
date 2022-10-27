@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $availableClasses
+ * @var Admin_CourseWizardStepsController $controller
+ * @var CourseWizardStep $step
+ */
+?>
 <form class="default" action="<?= $controller->url_for('admin/coursewizardsteps/save', $step->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>

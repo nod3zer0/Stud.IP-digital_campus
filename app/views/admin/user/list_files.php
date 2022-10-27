@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_UserController $controller
+ * @var array $params
+ * @var FolderType $folders
+ * @var User $user
+ */
+?>
 <section class="contentbox">
     <header>
         <h1><?= _('Dateiübersicht') ?></h1>

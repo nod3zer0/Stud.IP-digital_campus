@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_DatafieldsController $controller
+ * @var DataField $struct
+ * @var DataFieldEntry $preview
+ */
+?>
 <form action="<?= $controller->url_for('admin/datafields/config/' . $struct->id) ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
 

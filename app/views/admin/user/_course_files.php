@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_UserController $controller
+ * @var array $course_files
+ * @var array $params
+ * @var User $user
+ */
+?>
 <section class="contentbox">
     <header>
         <h1>

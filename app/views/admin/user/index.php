@@ -1,7 +1,17 @@
 <?
 # Lifter010: TODO
-use Studip\Button, Studip\LinkButton;
-
+/**
+ * @var Admin_UserController $controller
+ * @var array $request
+ * @var array $datafields
+ * @var array $available_auth_plugins
+ * @var Institute[] $institutes
+ * @var UserDomain[] $userdomains
+ * @var Fach[] $studycourses
+ * @var Abschluss[] $degrees
+ * @var bool $advanced
+ */
+use Studip\Button;
 ?>
 
 

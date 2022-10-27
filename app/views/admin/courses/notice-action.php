@@ -1,4 +1,11 @@
 <?php
+/**
+ * @var array $action
+ * @var Course $course
+ * @var string $action
+ */
+?>
+<?php
     $notice = $course->config->COURSE_ADMIN_NOTICE;
     $method = $notice ? 'createHasNotice' : 'createHasNoNotice';
 ?>

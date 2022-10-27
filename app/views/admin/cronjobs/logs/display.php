@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var CronjobLog $log
+ */
+?>
 <dl class="cronlog">
     <dt><?= _('Cronjob') ?></dt>
     <dd><?= htmlReady($log->schedule->title) ?></dd>

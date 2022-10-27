@@ -1,5 +1,12 @@
-
-
+<?php
+/**
+ * @var Admin_ContentTermsOfUseController $controller
+ * @var string $entry_id
+ * @var int $dependent_files_count
+ * @var ContentTermsOfUse[] $other_entries
+ * @var string $other_entry_id
+ */
+?>
 <form class="default" method="post" action="<?= $controller->link_for('admin/content_terms_of_use/delete') ?>">
     <input type="hidden" name="entry_id" value="<?= htmlReady($entry_id) ?>">
     <fieldset>

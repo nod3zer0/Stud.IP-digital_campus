@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_IliasInterfaceController $controller
+ * @var string $ilias_index
+ * @var array $ilias_config
+ * @var array $modules_available
+ */
+?>
 <form class="default" action="<?= $controller->url_for('admin/ilias_interface/save/'.$ilias_index) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="ilias_content_settings" size="50" maxlength="255" value="1">

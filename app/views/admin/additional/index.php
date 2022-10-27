@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Course $course
+ * @var AuxLockRule[] $list
+ * @var int $count
+ * @var array $config
+ */
+?>
 <? if ($list): ?>
     <form class='default' method='post'>
         <fieldset>
@@ -34,5 +42,5 @@
         </footer>
     </form>
 <? else: ?>
-    <? _('Keine Zusatzangaben vorhanden') ?>
+    <?= _('Keine Zusatzangaben vorhanden') ?>
 <? endif; ?>

@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Admin_DatafieldsController $controller
+ * @var array $datafields_list
+ * @var array $allclasses
+ * @var string $current_class
+ * @var string $class_filter
+ */
+?>
 <!-- Alle Datenfelder  -->
 <table class="collapsable default">
     <colgroup>
@@ -20,7 +29,7 @@
         <tr>
             <th rowspan="2"><?= _('Name') ?></th>
             <th rowspan="2"><?= _('Feldtyp') ?></th>
-            <th rowspan="2" style="word-wrap: nowrap">
+            <th rowspan="2" style="white-space: nowrap">
                 <?= _('Typ') ?>
                 <?= tooltipIcon(_('Veranstaltungskategorie, Einrichtungstyp, Sprache bzw. Nutzerstatus')) ?>
             </th>

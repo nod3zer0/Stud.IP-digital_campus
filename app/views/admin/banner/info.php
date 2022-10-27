@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Admin_BannerController $controller
+ * @var array $banner
+ * @var array $target_types
+ * @var array $priorities
+ * @var array $assigned
+ */
+?>
 <table class="default">
     <tbody>
         <tr>
@@ -14,7 +23,7 @@
             <td>
                 <input type="text" readonly
                        value="<?= htmlReady($banner['description']) ?>"
-                       size="40" maxlen="254">
+                       size="40" maxlength="254">
             </td>
         </tr>
         <tr>
@@ -22,7 +31,7 @@
             <td>
                 <input type="text" readonly
                        value="<?= htmlReady($banner['alttext']) ?>"
-                       size="40" maxlen="254">
+                       size="40" maxlength="254">
             </td>
         </tr>
         <tr>
@@ -42,7 +51,7 @@
             <td>
                 <input type="text" readonly
                        value="<?= htmlReady($banner['target']) ?>"
-                       size="40" maxlen="254" disabled>
+                       size="40" maxlength="254" disabled>
             </td>
         </tr>
         <tr>
@@ -86,4 +95,3 @@
         </tr>
     </tbody>
 </table>
-

@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_AutoinsertController $controller
+ * @var array $domains
+ * @var array $auto_sems
+ * @var string $status
+ */
+?>
 <td>
     <? foreach ($domains as $domain) : ?>
         <div>

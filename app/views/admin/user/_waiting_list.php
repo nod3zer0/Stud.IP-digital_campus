@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $memberships
+ */
+?>
 <section class="contentbox">
     <header>
         <h1>

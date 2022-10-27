@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_Oauth2Controller $controller
+ * @var Studip\OAuth2\Models\Client[] $clients
+ */
+?>
 <? if (!isset($clients) || !count($clients)) { ?>
     <?= MessageBox::info(
         _('Es wurde noch kein OAuth2-Client erstellt.') .

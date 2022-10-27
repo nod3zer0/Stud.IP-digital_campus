@@ -1,16 +1,23 @@
+<?php
+/**
+ * @var Admin_SemesterController $controller
+ * @var Semester[] $semesters
+ * @var string $filter
+ */
+?>
 <form action="<?= $controller->url_for('admin/semester/delete/bulk') ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
 
 <table class="default" id="semesters">
     <caption><?= _('Semester') ?></caption>
     <colgroup>
-        <col width="20px">
+        <col style="width: 20px">
         <col>
-        <col width="10%">
-        <col width="15%">
-        <col width="15%">
-        <col width="20%">
-        <col width="48px">
+        <col style="width: 10%">
+        <col style="width: 15%">
+        <col style="width: 15%">
+        <col style="width: 20%">
+        <col style="width: 48px">
     </colgroup>
     <thead>
         <tr>

@@ -1,4 +1,13 @@
 <?php
+/**
+ * @var string $minute
+ * @var string $hour
+ * @var string $day
+ * @var string $month
+ * @var string $day_of_week
+ */
+?>
+<?php
 $cronify = function ($n) {
     if ($n === null) {
         return '*';

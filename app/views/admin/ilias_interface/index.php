@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_IliasInterfaceController $controller
+ * @var array $ilias_configs
+ */
+?>
  <form method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">

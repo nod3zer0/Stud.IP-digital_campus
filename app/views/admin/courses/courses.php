@@ -1,14 +1,28 @@
-<? $colspan = 2 ?>
+<?php
+/**
+ * @var string $selected_action
+ * @var array $view_filter
+ * @var Semester $semester
+ * @var int $count_courses
+ * @var string $sortby
+ * @var string $sortFlag
+ * @var int $nav_elements
+ * @var array $courses
+ */
+
+$colspan = 2
+?>
+
 <? if (!empty($actions[$selected_action]['multimode'])) : ?>
     <form action="<?= URLHelper::getLink($actions[$selected_action]['url']) ?>" method="post">
 <? endif ?>
 <?= CSRFProtection::tokenTag() ?>
 <table class="default course-admin">
     <colgroup>
-        <col width="2%">
+        <col style="width: 2%">
     <? if (in_array('number', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="8%">
+        <col style="width: 8%">
     <? endif ?>
     <? if (in_array('name', $view_filter)) : ?>
         <? $colspan++ ?>
@@ -16,57 +30,57 @@
     <? endif ?>
     <? if (in_array('type', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="10%">
+        <col style="width: 10%">
     <? endif ?>
     <? if (in_array('room_time', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="30%">
+        <col style="width: 30%">
     <? endif ?>
         <? if (in_array('semester', $view_filter)) : ?>
             <? $colspan++ ?>
-            <col width="10%">
+            <col style="width: 10%">
         <? endif ?>
         <? if (in_array('institute', $view_filter)) : ?>
             <? $colspan++ ?>
-            <col width="10%">
+            <col style="width: 10%">
         <? endif ?>
         <? if (in_array('requests', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="5%">
+        <col style="width: 5%">
     <? endif ?>
     <? if (in_array('teachers', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="10%">
+        <col style="width: 10%">
     <? endif ?>
     <? if (in_array('members', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="3%">
+        <col style="width: 3%">
     <? endif ?>
     <? if (in_array('waiting', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="5%">
+        <col style="width: 5%">
     <? endif ?>
     <? if (in_array('preliminary', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="5%">
+        <col style="width: 5%">
     <? endif ?>
     <? if (in_array('contents', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="8%">
+        <col style="width: 8%">
     <? endif ?>
     <? if (in_array('last_activity', $view_filter)) : ?>
         <? $colspan++ ?>
-        <col width="8%">
+        <col style="width: 8%">
     <? endif ?>
         <? foreach (PluginManager::getInstance()->getPlugins("AdminCourseContents") as $plugin) : ?>
             <? foreach ($plugin->adminAvailableContents() as $index => $label) : ?>
                 <? if (in_array($plugin->getPluginId()."_".$index, $view_filter)) : ?>
                     <? $colspan++ ?>
-                    <col width="8%">
+                    <col style="width: 8%">
                 <? endif ?>
             <? endforeach ?>
         <? endforeach ?>
-        <col width="15%">
+        <col style="width: 15%">
 
     </colgroup>
     <caption>
@@ -152,8 +166,7 @@
         <? endif ?>
         <? if (in_array('members', $view_filter)) : ?>
             <th <?= ($sortby == 'teilnehmer') ? sprintf('class="sort%s"', mb_strtolower($sortFlag)) : '' ?>>
-                <a href="<?=
-                URLHelper::getLink('', ['sortby'   => 'teilnehmer',
+                <a href="<?= URLHelper::getLink('', ['sortby'   => 'teilnehmer',
                                              'sortFlag' => mb_strtolower($sortFlag)]) ?>">
                     <abbr title="<?= _('Teilnehmende') ?>">
                         <?= _('TN') ?>

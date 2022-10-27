@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_BannerController $controller
+ * @var Banner[] $banners
+ */
+?>
 <? if (isset($flash['delete'])): ?>
     <?= QuestionBox::create(
         _('Wollen Sie das Banner wirklich löschen?'),
@@ -22,6 +28,10 @@
     </thead>
     <tbody>
     <? foreach ($banners as $banner): ?>
+        <?
+            $object_name_sem = get_object_name($banner->target, 'sem');
+            $object_name_inst = get_object_name($banner->target, 'inst');
+        ?>
         <tr id="banner-<?= htmlReady($banner->id) ?>">
             <td style="text-align: center;">
                 <?= $banner->toImg(['style' => 'max-width: 80px']) ?>
@@ -30,9 +40,9 @@
             <td><?= htmlReady($banner->target_type) ?></td>
             <td>
             <? if ($banner['target_type'] === 'seminar'): ?>
-                <?= mila(reset(get_object_name($banner->target, 'sem')), 30) ?>
+                <?= mila(reset($object_name_sem), 30) ?>
             <? elseif ($banner['target_type'] === 'inst') :?>
-                <?= mila(reset(get_object_name($banner->target, 'inst')), 30) ?>
+                <?= mila(reset($object_name_inst), 30) ?>
             <? else: ?>
                 <?= htmlReady($banner->target) ?>
             <? endif; ?>

@@ -1,3 +1,17 @@
+<?php
+/**
+ * @var Admin_AutoinsertController $controller
+ * @var string $sem_search
+ * @var string $sem_select
+ * @var array $seminar_search
+ * @var array $filtertype
+ * @var string $sem_id
+ * @var array $available_filtertypes
+ * @var array $values
+ * @var array $filter
+ */
+?>
+
 <style type="text/css">
     .filter_selection select {
         width: 100%;
@@ -14,7 +28,7 @@
 </form>
 
 
-<? if ($seminar_search > 0 && $sem_search && $sem_select): ?>
+<? if ((is_array($seminar_search) && count($seminar_search) > 0) && $sem_search && $sem_select): ?>
     <form class="default" action="<?= $controller->manual() ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
         <input type="hidden" name="sem_search" value="<?= htmlReady($sem_search) ?>">

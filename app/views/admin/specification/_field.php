@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var string $name
+ * @var string $id
+ * @var array $rule
+ */
 $fields = Request::getArray('fields');
 $order  = Request::getArray('order');
 ?>

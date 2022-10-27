@@ -1,5 +1,15 @@
-<?
+<?php
 # Lifter010: TODO
+/**
+ * @var Admin_RoleController $controller
+ * @var string $username
+ * @var User $currentuser
+ * @var User[] $users
+ * @var Role[] $assignedroles
+ * @var Role[] $roles
+ * @var Role[] $all_userroles
+ * @var array $assignedroles_institutes
+ */
 use Studip\Button, Studip\LinkButton;
 ?>
 

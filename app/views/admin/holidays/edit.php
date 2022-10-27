@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_HolidaysController $controller
+ * @var SemesterHoliday $holiday
+ */
+?>
 <form method="post" class="default" action="<?= $controller->url_for('admin/holidays/edit/' . $holiday->id) ?>" data-dialog="size=auto">
     <?= CSRFProtection::tokenTag() ?>
 

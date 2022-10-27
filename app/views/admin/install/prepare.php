@@ -1,3 +1,11 @@
+
+<?php
+/**
+ * @var array $files
+ * @var array $required
+ * @var array $defaults
+ */
+?>
 <p>
     <?= _('In diesem Schritt wählen Sie aus, welche Beispieldaten in Ihre '
         . 'Datenbank eingespielt werden und geben einige Grunddaten zur '

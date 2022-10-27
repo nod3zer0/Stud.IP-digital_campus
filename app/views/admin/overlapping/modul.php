@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var SimpleORMapCollection $conflicts
+ * @var Modul $modul
+ * @var StgteilAbschnitt $abschnitt
+ */
+?>
 <?= Icon::create('log', Icon::ROLE_INFO); ?> <?= htmlReady($modul->getDisplayName()); ?>
 <ul>
     <? foreach ($modul->modul->modulteile->findBy('id', $conflicts->pluck('base_modulteil_id')) as $modulteil) : ?>

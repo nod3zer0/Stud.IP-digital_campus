@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_StatusgroupsController $controller
+ * @var Statusgruppen $group
+ * @var User $user
+ */
+?>
 <form method="post" action="<?= $controller->url_for("admin/statusgroups/delete/{$group->id}/{$user->user_id}") ?>" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>

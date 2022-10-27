@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_StatusgroupsController $controller
+ * @var int $level
+ * @var string $preset
+ * @var Statusgruppen[] $groups
+ */
+?>
 <? foreach ($groups as $group): ?>
     <? if ($selected->id == $group->id) continue; ?>
     <option value="<?= $group->id ?>" <? if ($group->id == $selected->range_id) echo 'selected'; ?> <? if ($level > 0): ?> class="nested-item nested-item-level-<?= $level ?>"<? endif; ?>>

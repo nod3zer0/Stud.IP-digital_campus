@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_SemesterController $controller
+ * @var Semester $semester
+ */
+?>
 <form method="post" action="<?= $controller->url_for('admin/semester/edit/' . $semester->id) ?>" data-dialog="size=auto" class="default">
     <?= CSRFProtection::tokenTag() ?>
 

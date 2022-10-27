@@ -1,20 +1,26 @@
-<? use Studip\Button; ?>
-
+<?php
+/**
+ * @var Admin_SmileysController $controller
+ * @var bool $favorites_enabled
+ * @var string $view
+ * @var Smiley[] $smileys
+ */
+?>
 <form action="<?= $controller->action_link('admin/smileys/delete/bulk', $view) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
     <table class="default">
         <colgroup>
-            <col width="20px">
+            <col style="width: 20px">
             <col>
             <col>
-            <col width="50px">
+            <col style="width: 50px">
             <col>
-            <col width="50px">
+            <col style="width: 50px">
         <? if ($favorites_enabled): ?>
-            <col width="50px">
+            <col style="width: 50px">
         <? endif; ?>
-            <col width="50px">
+            <col style="width: 50px">
         </colgroup>
         <thead>
             <tr>
@@ -33,7 +39,7 @@
     <? if (empty($smileys)): ?>
         <tbody>
             <tr>
-                <td align="center" class="blank" colspan="<?= $favorites_enabled ? 8 : 7 ?>">
+                <td class="blank" colspan="<?= $favorites_enabled ? 8 : 7 ?>">
                     <?= _('Keine Smileys vorhanden.') ?>
                 </td>
             </tr>
@@ -50,7 +56,7 @@
                 <td class="separator"><?= htmlReady($smiley->short) ?></td>
                 <td><?= $smiley->short_count ?></td>
             <? else: ?>
-                <td class="separator" colspan="2" align="center">-</td>
+                <td class="separator" colspan="2">-</td>
             <? endif; ?>
             <? if ($favorites_enabled): ?>
                 <td class="separator"><?= $smiley->fav_count ?></td>
@@ -59,11 +65,11 @@
                     <a href="<?= $controller->url_for('admin/smileys/edit', $smiley->id, $view) ?>"
                        title="<?= htmlReady(sprintf(_('Smiley "%s" bearbeiten'), $smiley->name)) ?>"
                        data-dialog="size=auto">
-                        <?= Icon::create('edit', 'clickable')->asImg() ?>
+                        <?= Icon::create('edit') ?>
                     </a>
                     <a href="<?= $controller->url_for('admin/smileys/delete', $smiley->id, $view) ?>"
                        title="<?= htmlReady(sprintf(_('Smiley "%s" löschen'), $smiley->name)) ?>">
-                        <?= Icon::create('trash', 'clickable')->asImg() ?>
+                        <?= Icon::create('trash') ?>
                     </a>
                 </td>
             </tr>

@@ -1,3 +1,16 @@
+<?php
+/**
+ * @var Admin_IliasInterfaceController $controller
+ * @var string $ilias_index
+ * @var string $valid_url
+ * @var string $ilias_version
+ * @var string $ilias_version_date
+ * @var string $ldap_options
+ * @var array $existing_indices
+ * @var array $ilias_config
+ * @var array $ilias_clients
+ */
+?>
 <? if (!$valid_url) : ?>
 <form class="default" action="<?= $controller->url_for('admin/ilias_interface/edit_server/'.$ilias_index) ?>" method="post">
 <? else : ?>

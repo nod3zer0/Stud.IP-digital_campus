@@ -1,4 +1,17 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Admin_BannerController $controller
+ * @var Banner $banner
+ * @var array $target_types
+ * @var Course $seminar
+ * @var Institute $institut
+ * @var User $user
+ * @var array $priorities
+ * @var array $assigned
+ * @var array $rolesStats
+ * @var Role $roles
+ */
+?>
 <form action="<?= $controller->url_for('admin/banner/edit', $banner->id) ?>" method="post" enctype="multipart/form-data" class="default">
     <?= CSRFProtection::tokenTag() ?>
 
@@ -20,13 +33,13 @@
 
         <label>
             <?= _('Beschreibung:') ?>
-            <input type="text" id="description" name="description" value="<?= htmlReady($banner['description']) ?>" size="40" maxlen="254">
+            <input type="text" id="description" name="description" value="<?= htmlReady($banner['description']) ?>" size="40" maxlength="254">
         </label>
 
         <label>
             <?= _('Alternativtext:') ?>
 
-            <input type="text" id="alttext" name="alttext" value="<?= htmlReady($banner['alttext']) ?>" size="40" maxlen="254">
+            <input type="text" id="alttext" name="alttext" value="<?= htmlReady($banner['alttext']) ?>" size="40" maxlength="254">
         </label>
 
         <label>

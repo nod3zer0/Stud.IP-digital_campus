@@ -1,4 +1,12 @@
-<? use Studip\Button; ?>
+<?php
+/**
+ * @var Admin_Cronjobs_TasksController $controller
+ * @var Pagination $pagination
+ * @var CronjobTask[] $tasks
+ */
+
+use Studip\Button;
+?>
 
 <form action="<?= $controller->bulk($pagination->getCurrentPage()) ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>

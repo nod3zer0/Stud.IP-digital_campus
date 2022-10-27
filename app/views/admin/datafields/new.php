@@ -1,4 +1,14 @@
 <?php
+/**
+ * @var Admin_DatafieldsController $controller
+ * @var string $object_typ
+ * @var string $type_name
+ * @var string $object_type
+ * @var array $institutes
+ * @var Institute $item
+ * @var DataField $datafield
+ */
+
 use Studip\Button, Studip\LinkButton;
 ?>
 

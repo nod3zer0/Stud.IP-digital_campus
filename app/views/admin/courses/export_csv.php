@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admin_CoursesController $controller
+ * @var array $fields
+ * @var array $selection
+ */
+?>
 <form action="<?= $controller->link_for('admin/courses/export_csv') ?>" method="get" class="default">
     <fieldset>
     <? foreach ($fields as $index => $name) : ?>

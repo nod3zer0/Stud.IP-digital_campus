@@ -1,4 +1,15 @@
-<? use Studip\Button, Studip\LinkButton; ?>
+<?php
+/**
+ * @var Admin_Cronjobs_LogsController $controller
+ * @var Pagination $pagination
+ * @var int $total
+ * @var array $filter
+ * @var CronjobSchedule[] $schedules
+ * @var CronjobTask[] $tasks
+ * @var CronjobLog[] $logs
+ */
+use Studip\Button, Studip\LinkButton;
+?>
 
 <form action="<?= $controller->filter() ?>" method="post" class="cronjob-filters default">
     <fieldset>

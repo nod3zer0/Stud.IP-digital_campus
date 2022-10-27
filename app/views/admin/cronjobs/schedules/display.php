@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var CronjobSchedule $schedule
+ * @var Admin_Cronjobs_SchedulesController $controller
+ */
+?>
 <dl class="cronjob">
     <dt><?= _('Titel') ?></dt>
     <dd><?= htmlReady($schedule->title) ?></dd>

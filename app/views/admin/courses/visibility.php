@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var Course $course
+ */
+?>
 <? if ($GLOBALS['perm']->have_perm("admin") || !LockRules::Check($course->id, "seminar_visibility")) : ?>
     <label>
         <input type="hidden" name="all_sem[]" value="<?= htmlReady($course->id) ?>">

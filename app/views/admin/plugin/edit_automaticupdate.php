@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admin_PluginController $controller
+ * @var array $plugin
+ */
+?>
 <?
 if (mb_strpos($_SERVER['SERVER_NAME'], ':') !== false) {
     list($_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']) =

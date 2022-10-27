@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $values
+ * @var SimpleCollection $all_lock_rules
+ */
+?>
 <label><?= _('Für alle Veranstaltungen') ?>
     <select name="lock_sem_all" style="max-width: 200px">
         <? for ($i = 0; $i < count($all_lock_rules); $i++) : ?>

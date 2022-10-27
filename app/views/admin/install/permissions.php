@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $writable
+ * @var array $requirements
+ * @var bool $valid
+ */
+?>
 <p>
     <?= _('In diesem Schritt wird geprüft, ob ausgewählte Datenverzeichnisse '
         . 'beschreibbar sind.') ?>

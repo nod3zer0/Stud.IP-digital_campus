@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var int $count_all
+ * @var int $count_used
+ * @var int $sum
+ * @var int $last_change
+ */
+?>
 <dl class="smiley-statistics">
     <dt><?= _('Vorhanden') ?></dt>
     <dd><?= $count_all ?></dd>

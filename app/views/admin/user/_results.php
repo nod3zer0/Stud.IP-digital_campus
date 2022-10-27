@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var Admin_UserController $controller
+ * @var array $users
+ * @var string $sortby
+ * @var string $order
+ */
+?>
 <br>
 
 <form action="<?= $controller->link_for('admin/user/bulk') ?>" method="post" data-dialog="size=auto" class="default">
@@ -227,7 +235,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="11" align="right">
+                <td colspan="11">
                         <input style="vertical-align: middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>"
                                data-proxyfor=".check_all" data-activates=".bulkAction">
                         <select name="method" class="bulkAction size-s" required>

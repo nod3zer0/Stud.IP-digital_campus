@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var Admin_RoleController $controller
+ */
+?>
 <form action="<?= $controller->url_for('admin/role/add') ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">

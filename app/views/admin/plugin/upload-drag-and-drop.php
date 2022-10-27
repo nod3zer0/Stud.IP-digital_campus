@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var Admin_PluginController $controller
+ */
+?>
 <form action="<?= $controller->url_for('admin/plugin/install') ?>"
       method="post" enctype="multipart/form-data" class="drag-and-drop">
     <?= CSRFProtection::tokenTag() ?>

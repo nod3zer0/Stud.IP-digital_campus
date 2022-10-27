@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Course $course
+ * @var array $aux_lock_rules
+ */
+?>
 <select name="lock_sem[<?= htmlReady($course->id) ?>]" style="max-width: 200px">
 <? foreach ($aux_lock_rules as $id => $rule) : ?>
     <option value="<?= $id ?>" <?= $values['aux_lock_rule'] == $id ?  'selected' : '' ?>>

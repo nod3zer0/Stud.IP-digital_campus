@@ -1,5 +1,18 @@
-<?
+<?php
 # Lifter010: TODO
+
+/**
+ * @var Admin_UserController $controller
+ * @var array $flash
+ * @var User $user
+ * @var string $prelim
+ * @var array $available_auth_plugins
+ * @var array $available_institutes
+ * @var Fach[] $faecher
+ * @var Abschluss[] $abschluesse
+ * @var UserDomain[] $userdomains
+ * @var array $userfields
+ */
 use Studip\Button, Studip\LinkButton;
 
 ?>

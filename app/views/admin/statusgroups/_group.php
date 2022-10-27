@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var Admin_StatusgroupsController $controller
+ * @var Statusgruppen $group
+ * @var array $membersOfInstitute
+ * @var array $not_assigned
+ * @var string $tutor
+ * @var string $searchType
+ */
+?>
 <a name="group-<?= $group->id ?>"></a>
 <table id="<?= $group->id ?>" class="default movable">
     <colgroup>

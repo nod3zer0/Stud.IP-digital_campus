@@ -1,4 +1,8 @@
-<? if (is_array($entry)) : ?>
+<?php
+/**
+ * @var array $entry
+ */
+?><? if (is_array($entry)) : ?>
     <dl class="default">
         <? foreach ($entry as $index => $data) : ?>
             <dt><?= htmlReady($index) ?></dt>

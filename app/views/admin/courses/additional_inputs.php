@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var string $colspan
+ * @var string $selected_action
+ * @var string $selected_action
+ * @var array $values
+ */
+?>
 <tr>
     <th colspan="<?= $colspan ?>" style="text-align: right">
         <? switch ($selected_action) {

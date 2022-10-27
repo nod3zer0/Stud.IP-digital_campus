@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var Admin_InstallController $controller
+ */
+?>
 <h3><?= _('Installation') ?></h3>
 <dl class="requests">
     <dt data-request-url="<?= $controller->link_for('install/sql') ?>" data-event-source="1">

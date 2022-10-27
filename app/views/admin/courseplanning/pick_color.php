@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var Admin_CourseplanningController $controller
+ * @var string $metadate_id
+ * @var string $from_action
+ * @var string $weekday
+ * @var string $semtype
+ * @var string $color
+ */
+?>
 <form class="default" method="post" action="<?= $controller->pick_color($metadate_id, $from_action, $weekday) ?>" data-dialog="size=auto">
     <input type="hidden" id="selected-color" name="selected-color" value="<?= $color ?>">
 

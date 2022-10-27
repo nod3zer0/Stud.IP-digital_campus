@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var string $headline
+ * @var array $memberships
+ */
+?>
 <section class="contentbox">
     <header>
         <h1><?= $headline ?></h1>
