@@ -294,6 +294,7 @@ class Markup
             h5
             h6
             hr
+            i
             img[alt|src|height|width|style]
             li
             ol
