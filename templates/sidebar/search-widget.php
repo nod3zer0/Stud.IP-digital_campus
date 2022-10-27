@@ -19,7 +19,7 @@
                        <?= arrayToHtmlAttributes($needle['attributes']) ?>>
                 <? endif; ?>
                 <? if ($reset_link): ?>
-                    <a class="reset-search" href="<?= $reset_link ?>" tabindex="0"
+                    <a class="reset-search" href="<?= $reset_link ?>" tabindex="0" role="button"
                        title="<?= _('Suche zurücksetzen') ?>">
                         <?= Icon::create('decline')->asImg(20) ?>
                     </a>
