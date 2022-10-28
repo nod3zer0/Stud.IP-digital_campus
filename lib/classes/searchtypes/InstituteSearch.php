@@ -56,7 +56,7 @@ class InstituteSearch extends SearchType
                       ORDER BY `Name` ASC";
         } else {
             $query = "SELECT `Institut_id`, `Name`
-                      FROM `Institute_id`
+                      FROM `Institute`
                       JOIN `user_inst` USING (`Institut_id`)
                       WHERE `user_id` = :user_id
                         AND `Name` LIKE CONCAT('%', :input, '%')
