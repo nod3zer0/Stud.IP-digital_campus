@@ -8,10 +8,10 @@
                       v-model="searchTerm"
                       :aria-label="$gettext('Geben Sie einen Suchbegriff mit mindestens 3 Zeichen ein.')"
                   />
-                  <a v-if="searched" @click.prevent="setShowSearchResults(false)"
-                     class="reset-search">
+                  <button v-if="searched" @click.prevent="setShowSearchResults(false)"
+                          class="reset-search" :title="$gettext('Suche zurücksetzen')">
                       <studip-icon shape="decline" size="20"></studip-icon>
-                  </a>
+                  </button>
                   <button
                       type="submit"
                       :value="$gettext('Suchen')"
