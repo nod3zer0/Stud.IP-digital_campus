@@ -122,9 +122,13 @@ try {
             $GLOBALS['DB_STUDIP_USER'],
             $GLOBALS['DB_STUDIP_PASSWORD']);
 } catch (PDOException $exception) {
-    header('HTTP/1.1 500 Internal Server Error');
-    die(sprintf('database connection %s failed', 'mysql:host=' . $GLOBALS['DB_STUDIP_HOST'] .
-    ';dbname=' . $GLOBALS['DB_STUDIP_DATABASE']));
+    if (Studip\ENV === 'development') {
+        throw $exception;
+    } else {
+        header('HTTP/1.1 500 Internal Server Error');
+        die(sprintf('database connection %s failed', 'mysql:host=' . $GLOBALS['DB_STUDIP_HOST'] .
+            ';dbname=' . $GLOBALS['DB_STUDIP_DATABASE']));
+    }
 }
 // set slave connection
 if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
