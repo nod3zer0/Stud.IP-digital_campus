@@ -1051,7 +1051,7 @@ export const actions = {
         });
 
         const otherMemberships = memberships.filter(({ attributes, relationships }) => {
-            return ['dozent', 'tutor'].includes(attributes.permission) && state.context.id !== relationships.course.data.id;
+            return ['dozent', 'tutor'].includes(attributes.permission);
         });
 
         if (!withCourseware) {
