@@ -55,6 +55,10 @@ if (Request::get('to_folder_id')) {
 
 <? if ($top_folder): ?>
 <table class="default">
+    <colgroup>
+        <col style="width: 36px;">
+        <col>
+    </colgroup>
     <thead>
         <tr>
             <th><?= _('Typ') ?></th>

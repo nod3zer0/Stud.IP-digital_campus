@@ -28,7 +28,7 @@
 
             <colgroup>
                 <col v-if="show_bulk_actions" style="width: 30px">
-                <col style="width: 60px">
+                <col style="width: 36px">
                 <col>
                 <col style="width: 100px" class="responsive-hidden">
                 <col v-if="showdownloads" style="width: 100px" class="responsive-hidden">
@@ -38,7 +38,7 @@
                      :key="index"
                      data-filter-ignore
                      class="responsive-hidden">
-                <col style="width: 80px">
+                <col style="width: 64px">
             </colgroup>
             <thead>
                 <tr class="sortable">
@@ -88,7 +88,7 @@
                         </a>
 
                     </th>
-                    <th data-sort="false">{{ $gettext('Aktionen') }}</th>
+                    <th class="actions" data-sort="false">{{ $gettext('Aktionen') }}</th>
                 </tr>
             </thead>
             <tbody v-if="!hasData">

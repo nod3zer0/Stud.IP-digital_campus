@@ -68,9 +68,13 @@ $buttonLabels = [
 
 <? if ($top_folder) : ?>
     <table class="default">
+        <colgroup>
+            <col style="width: 36px;">
+            <col>
+        </colgroup>
         <thead>
             <tr>
-                <th width="25px"><?= _('Typ') ?></th>
+                <th><?= _('Typ') ?></th>
                 <th><?= _('Name') ?></th>
             </tr>
         </thead>
