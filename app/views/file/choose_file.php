@@ -85,39 +85,41 @@ if (Request::get('to_folder_id')) {
         </tr>
     </tbody>
 <? else : ?>
-    <tbody>
-    <? foreach ($top_folder->getSubfolders() as $subfolder) : ?>
-    <? if (!$subfolder->isVisible($GLOBALS['user']->id)) continue; ?>
-        <tr>
-            <td class="document-icon" data-sort-value="0">
-            <? if ($subfolder->isReadable($GLOBALS['user']->id)) : ?>
-                <a href="<?= $controller->link_for('file/choose_file/' . $subfolder->id, $options) ?>" data-dialog>
-            <? endif ?>
-            <? if ($is_empty): ?>
-                <?= Icon::create('folder-empty')->asImg(24) ?>
-            <? else: ?>
-                <?= Icon::create('folder-full')->asImg(24) ?>
-            <? endif; ?>
-            <? if ($subfolder->isReadable($GLOBALS['user']->id)) : ?>
-                </a>
-            <? endif ?>
-            </td>
-            <td>
-            <? if ($subfolder->isReadable($GLOBALS['user']->id)) : ?>
-                <a href="<?= $controller->link_for('file/choose_file/' . $subfolder->id, $options) ?>" data-dialog>
+    <? if (count($top_folder->getSubfolders()) > 0) : ?>
+        <tbody>
+        <? foreach ($top_folder->getSubfolders() as $subfolder) : ?>
+            <? if (!$subfolder->isVisible($GLOBALS['user']->id)) continue; ?>
+            <tr>
+                <td class="document-icon" data-sort-value="0">
+                <? if ($subfolder->isReadable($GLOBALS['user']->id)) : ?>
+                    <a href="<?= $controller->link_for('file/choose_file/' . $subfolder->id, $options) ?>" data-dialog>
+                <? endif ?>
+                <? if ($is_empty): ?>
+                    <?= Icon::create('folder-empty')->asImg(24) ?>
+                <? else: ?>
+                    <?= Icon::create('folder-full')->asImg(24) ?>
+                <? endif; ?>
+                <? if ($subfolder->isReadable($GLOBALS['user']->id)) : ?>
+                    </a>
+                <? endif ?>
+                </td>
+                <td>
+                <? if ($subfolder->isReadable($GLOBALS['user']->id)) : ?>
+                    <a href="<?= $controller->link_for('file/choose_file/' . $subfolder->id, $options) ?>" data-dialog>
+                        <?= htmlReady($subfolder->name) ?>
+                    </a>
+                <? else: ?>
                     <?= htmlReady($subfolder->name) ?>
-                </a>
-            <? else: ?>
-                <?= htmlReady($subfolder->name) ?>
-            <? endif ?>
-            <? if ($subfolder->description): ?>
-                <small class="responsive-hidden"><?= htmlReady($subfolder->description) ?></small>
-            <? endif; ?>
-            </td>
-        </tr>
-    <? endforeach; ?>
-    </tbody>
-    <? if (count($top_folder->getFiles())) : ?>
+                <? endif ?>
+                <? if ($subfolder->description): ?>
+                    <small class="responsive-hidden"><?= htmlReady($subfolder->description) ?></small>
+                <? endif; ?>
+                </td>
+            </tr>
+        <? endforeach; ?>
+        </tbody>
+    <? endif ?>
+    <? if (count($top_folder->getFiles()) > 0) : ?>
         <tbody>
         <? foreach ($top_folder->getFiles() as $file) : ?>
             <tr>
