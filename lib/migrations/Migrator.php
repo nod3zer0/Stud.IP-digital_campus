@@ -431,7 +431,7 @@ class Migrator
     {
         $matches = [];
         preg_match('/\b([0-9.]+)_([_a-z0-9]*)\.php$/', $migration_file, $matches);
-        return [$matches[1], $matches[2]];
+        return [$matches[1]?? null, $matches[2]?? null];
     }
 
     /**

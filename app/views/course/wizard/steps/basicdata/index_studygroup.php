@@ -23,7 +23,7 @@
         </select>
     </label>
 <? else : ?>
-    <? $type = array_shift(array_values($types)) ?>
+    <? $type = array_values($types)[0]; ?>
     <input type="hidden" name="coursetype" value="<?= htmlReady($type[0]['id']) ?>">
 <? endif ?>
 
@@ -40,16 +40,16 @@
 
     <select name="access" id="wizard-access">
         <option value="all"
-                <?= $values['access'] == 'all' ? 'selected' : ''?>>
+                <? if (isset($values['access']) && $values['access'] === 'all') echo 'selected'; ?>>
             <?= _('offen für alle') ?>
         </option>
         <option value="invite"
-                <?= $values['access'] == 'invite' ? 'selected' : ''?>>
+                <? if (isset($values['access']) && $values['access'] === 'invite') echo 'selected'; ?>>
             <?= _('auf Anfrage') ?>
         </option>
         <?php if (Config::get()->STUDYGROUPS_INVISIBLE_ALLOWED) : ?>
             <option value="invisible"
-                    <?= $values['access'] == 'invisible' ? 'selected' : ''?>>
+                    <? if (isset($values['access']) && $values['access'] === 'invisible') echo 'selected'; ?>>
                 <?= _('unsichtbar') ?>
             </option>
         <?php endif ?>

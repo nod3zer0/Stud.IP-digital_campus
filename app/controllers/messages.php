@@ -184,6 +184,7 @@ class MessagesController extends AuthenticatedController {
         PageLayout::setTitle(_('Neue Nachricht schreiben'));
 
         $this->to = [];
+        $this->answer_to = null;
         $this->default_message = new Message();
         $this->default_attachments = [];
 

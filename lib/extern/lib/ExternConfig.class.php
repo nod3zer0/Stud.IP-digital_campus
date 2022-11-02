@@ -155,7 +155,10 @@ class ExternConfig
 
     public function getValue ($element_name, $attribute)
     {
-        return $this->config[$element_name][$attribute];
+        if (!isset($this->config[$element_name])) {
+            return null;
+        }
+        return $this->config[$element_name][$attribute]?? null;
     }
 
     public function setValue ($element_name, $attribute, $value)
@@ -280,7 +283,7 @@ class ExternConfig
         $config_name = $config_name_prefix . $config_name_suffix;
         $all_config_names = "";
 
-        if (is_array($configurations[$this->module_name]) && count($configurations[$this->module_name])) {
+        if (!empty($configurations[$this->module_name]) && count($configurations[$this->module_name])) {
             foreach ($configurations[$this->module_name] as $configuration) {
                 $all_config_names .= $configuration['name'];
             }

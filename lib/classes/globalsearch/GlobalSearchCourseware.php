@@ -40,7 +40,7 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
         }
 
         $query = DBManager::get()->quote("%{$search}%");
-        if ($filter['rangeId']) {
+        if (!empty($filter['rangeId'])) {
             $range_id = $filter['rangeId'];
             $sql = "(SELECT `cw_structural_elements` . `id` AS id, CONCAT('', 'cw_structural_elements') AS type
             FROM `cw_structural_elements`

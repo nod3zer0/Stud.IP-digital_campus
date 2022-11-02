@@ -137,13 +137,16 @@ class Course_StatusgroupsController extends AuthenticatedController
                     }
                 }
                 $groupdata['load'] = true;
+            } else {
+                $groupdata['load'] = false;
             }
 
             if (!$this->is_tutor && $g->userMayJoin($GLOBALS['user']->id)) {
-                $groupdata['joinable'] = true;
                 $joinable = true;
+            } else {
+                $joinable = false;
             }
-
+            $groupdata['joinable'] = $joinable;
             $this->groups[] = $groupdata;
         }
 
@@ -161,8 +164,8 @@ class Course_StatusgroupsController extends AuthenticatedController
                     "SELECT `statusgruppe_id` FROM `statusgruppen` WHERE `range_id` = ?",
                     [$this->course_id])
             ]);
-        $ungrouped_count = $ungrouped_count[0];
-        if ($ungrouped_count > 0) {
+        $this->ungrouped_count = $ungrouped_count[0];
+        if ($this->ungrouped_count > 0) {
             // Create dummy entry for "no group" users.
             $no_group = new StdClass();
             $no_group->id = 'nogroup';
@@ -172,7 +175,7 @@ class Course_StatusgroupsController extends AuthenticatedController
 
             $groupdata = [
                 'group' => $no_group,
-                'membercount' => $ungrouped_count,
+                'membercount' => $this->ungrouped_count,
                 'joinable' => false,
                 'invisible_users' => 0,
                 'members' => []
@@ -214,6 +217,8 @@ class Course_StatusgroupsController extends AuthenticatedController
                 }
             }
             $this->groups[] = $groupdata;
+        } else {
+            $this->nogroupmembers = [];
         }
 
         // Prepare search object for MultiPersonSearch.
@@ -300,6 +305,7 @@ class Course_StatusgroupsController extends AuthenticatedController
      */
     public function getgroup_action($group_id)
     {
+        $this->sort_by = '';
         if ($group_id != 'nogroup') {
             $this->group = Statusgruppen::find($group_id);
             $this->members = [];

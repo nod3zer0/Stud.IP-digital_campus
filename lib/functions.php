@@ -375,8 +375,8 @@ function get_username($user_id = "")
     static $cache = [];
     global $auth;
 
-    if (!$user_id || $user_id == $auth->auth['uid']) {
-        return $auth->auth['uname'];
+    if (!$user_id || $user_id === $auth->auth['uid']) {
+        return $auth->auth['uname'] ?? '';
     }
 
     if (!isset($cache[$user_id])) {

@@ -1617,7 +1617,7 @@ class FileManager
                 }
             }
         } else {
-            $header['filename'] = basename($url_parts['path']);
+            $header['filename'] = basename($url_parts['path'] ?? '');
         }
 
         // Weg über einen Locationheader:

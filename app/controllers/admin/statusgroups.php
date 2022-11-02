@@ -61,7 +61,7 @@ class Admin_StatusgroupsController extends AuthenticatedController
     {
         $lockrule = LockRules::getObjectRule(Context::getId());
         $this->is_locked = LockRules::Check(Context::getId(), 'groups');
-        if ($lockrule->description && $this->is_locked) {
+        if ($lockrule && $lockrule->description && $this->is_locked) {
             PageLayout::postMessage(MessageBox::info(formatLinks($lockrule->description)));
         }
         // Setup sidebar.

@@ -98,8 +98,9 @@
 
                     <td class="actions">
                         <?= ActionMenu::get()
+                            ->condition(isset($entry['last_posting']))
                             ->addLink(
-                                $controller->url_for("course/forum/index/index/{$entry['last_posting']['topic_id']}#{$entry['last_posting']['topic_id']}"),
+                                isset($entry['last_posting']) ? $controller->url_for("course/forum/index/index/{$entry['last_posting']['topic_id']}#{$entry['last_posting']['topic_id']}") : '#no_posting',
                                 _('Zur letzten Antwort'),
                                 Icon::create('forum'),
                                 ['class' => 'hidden-small-up']

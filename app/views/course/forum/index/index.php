@@ -138,7 +138,7 @@ $pagechooser = null;
         'num_postings' => $number_of_entries,
         'perPage'      => ForumEntry::POSTINGS_PER_PAGE,
         'pagelink'     => str_replace('%%s', '%s', str_replace('%', '%%', $controller->url_for('course/forum/index/goto_page/'. $topic_id .'/'. $section
-            .'/%s/?searchfor=' . $searchfor . (!empty($options) ? '&'. http_build_query($options) : '' ))))
+            .'/%s/?searchfor=' . ($searchfor ?? '') . (!empty($options) ? '&'. http_build_query($options) : '' ))))
     ]); ?>
     <? endif ?>
     <?= $link ?? ''  ?>

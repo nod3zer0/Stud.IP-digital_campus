@@ -1648,6 +1648,7 @@ function showDiffs($keyword, $versions_since)
     $lastversion = $version['version'];
     $zusatz      = getZusatz($version);
 
+    $content = '';
     foreach ($versions as $version) {
         $content .= '<tr>';
         $current        = $version['body'];

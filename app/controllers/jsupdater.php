@@ -125,15 +125,15 @@ class JsupdaterController extends AuthenticatedController
     private function getBlubberUpdates($pageInfo)
     {
         $data = [];
-        if (is_array($pageInfo['blubber']['threads']) && count($pageInfo['blubber']['threads'])) {
-            $blubber_data = array();
+        if (isset($pageInfo['blubber']['threads']) && is_array($pageInfo['blubber']['threads'])) {
+            $blubber_data = [];
             foreach ($pageInfo['blubber']['threads'] as $thread_id) {
                 $thread = new BlubberThread($thread_id);
                 if ($thread->isReadable()) {
-                    $comments = BlubberComment::findBySQL("thread_id = :thread_id AND chdate >= :time ORDER BY mkdate ASC", array(
-                                                              'thread_id' => $thread_id,
-                                                              'time' => UpdateInformation::getTimestamp()
-                                                          ));
+                    $comments = BlubberComment::findBySQL(
+                        "thread_id = :thread_id AND chdate >= :time ORDER BY mkdate ASC",
+                        ['thread_id' => $thread_id, 'time' => UpdateInformation::getTimestamp()]
+                    );
                     foreach ($comments as $comment) {
                         $blubber_data[$thread_id][] = $comment->getJSONdata();
                     }
@@ -161,14 +161,14 @@ class JsupdaterController extends AuthenticatedController
         if (mb_stripos(Request::get("page"), "dispatch.php/blubber") !== false) {
             //collect updated threads for the widget
             $threads = BlubberThread::findMyGlobalThreads(30, UpdateInformation::getTimestamp());
-            $thread_widget_data = array();
+            $thread_widget_data = [];
             foreach ($threads as $thread) {
-                $thread_widget_data[] = array(
+                $thread_widget_data[] = [
                     'thread_id' => $thread->getId(),
                     'avatar' => $thread->getAvatar(),
                     'name' => $thread->getName(),
                     'timestamp' => (int) $thread->getLatestActivity()
-                );
+                ];
             }
             if (count($thread_widget_data)) {
                 $data['updateThreadWidget'] = $thread_widget_data;
@@ -233,20 +233,27 @@ class JsupdaterController extends AuthenticatedController
 
     private function getQuestionnaireUpdates($pageInfo)
     {
+        if (
+            !isset($pageInfo['questionnaire']['questionnaire_ids'])
+            || !is_array($pageInfo['questionnaire']['questionnaire_ids'])
+        ) {
+            return [];
+        }
+
         $data = [];
-        if (is_array($pageInfo['questionnaire']['questionnaire_ids'])) {
-            foreach ($pageInfo['questionnaire']['questionnaire_ids'] as $questionnaireId) {
-                $questionnaire = new Questionnaire($questionnaireId);
+        Questionnaire::findEachMany(
+            function (Questionnaire $questionnaire) use ($pageInfo, &$data) {
                 if ($questionnaire->latestAnswerTimestamp() > $pageInfo['questionnaire']['last_update']) {
                     $template = $this->get_template_factory()->open("questionnaire/evaluate");
                     $template->set_layout(null);
                     $template->set_attribute("questionnaire", $questionnaire);
-                    $data[$questionnaire->getId()] = [
+                    $data[$questionnaire->id] = [
                         'html' => $template->render()
                     ];
                 }
-            }
-        }
+            },
+            $pageInfo['questionnaire']['questionnaire_ids']
+        );
 
         return $data;
     }

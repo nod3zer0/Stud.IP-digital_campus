@@ -22,10 +22,10 @@ class ForumActivity
      */
     public static function newEntry($event, $topic_id, $post)
     {
-        $verb = $post['depth'] == 3 ? 'answered' : 'created';
+        $verb = $post['depth'] === 3 ? 'answered' : 'created';
 
-        if ($verb == 'created') {
-            if ($post['depth'] == 1) {
+        if ($verb === 'created') {
+            if (isset($post['depth']) && (int)$post['depth'] === 1) {
                 $summary = _('%s hat im Forum der Veranstaltung "%s" einen Bereich erstellt.');
             } else {
                 $summary = _('%s hat im Forum der Veranstaltung "%s" ein Thema erstellt.');

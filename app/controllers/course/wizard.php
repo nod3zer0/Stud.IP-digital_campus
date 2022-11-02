@@ -419,9 +419,9 @@ class Course_WizardController extends AuthenticatedController
     private function getValues($classname='')
     {
         if ($classname) {
-            return $_SESSION['coursewizard'][$this->temp_id][$classname] ?: [];
+            return $_SESSION['coursewizard'][$this->temp_id][$classname] ?? [];
         } else {
-            return $_SESSION['coursewizard'][$this->temp_id] ?: [];
+            return $_SESSION['coursewizard'][$this->temp_id] ?? [];
         }
     }
 

@@ -43,12 +43,12 @@
         <select name="status_filter" class="sidebar-selectlist submit-upon-select">
             <option value=""><?= _('Alle') ?></option>
             <? foreach ($status_array as $key => $stat) : ?>
-            <? if ($status[$key]['count_objects']) : ?>
+            <? if (isset($status[$key]['count_objects'])) : ?>
             <option value="<?= $key ?>"
-                <?= ($key == $selected_status ? ' selected' : '') ?>><?= htmlReady($stat['name']) . ' (' . ($status[$key] ? $status[$key]['count_objects'] : '0') . ')' ?></option>
+                <?= ($key === $selected_status ? ' selected' : '') ?>><?= htmlReady($stat['name']) . ' (' . ($status[$key] ? $status[$key]['count_objects'] : '0') . ')' ?></option>
             <? endif; ?>
             <? endforeach; ?>
-            <? if ($status['__undefined__']) : ?>
+            <? if (isset($status['__undefined__'])) : ?>
                 <option value="__undefined__"<?= $selected_status == '__undefined__' ? ' selected' : '' ?>><?= _('nicht angegeben')  . ' (' . ($stat['count_objects'] ?? '0') . ')' ?></option>
             <? endif; ?>
         </select>
@@ -61,7 +61,7 @@
             <option value=""><?= _('Alle') ?></option>
             <? foreach ($kategorien as $kategorie) : ?>
                 <option value="<?= $kategorie->id ?>"
-                    <? if ($kategorie->id === $selected_kategorie || (isset($abschluesse) && $abschluesse[$selected_abschluss]->kategorie_id == $kategorie->id)) : ?> selected<? endif; ?>>
+                    <? if ($kategorie->id === $selected_kategorie || (isset($abschluesse) && isset($abschluesse[$selected_abschluss]) && $abschluesse[$selected_abschluss]->kategorie_id == $kategorie->id)) : ?> selected<? endif; ?>>
                     <?= htmlReady($kategorie->name) . ' (' . $kategorie->count_objects . ')'  ?>
                 </option>
             <? endforeach; ?>
@@ -108,7 +108,7 @@
         <? $perm_institutes = MvvPerm::getOwnInstitutes() ?>
         <? if ($perm_institutes !== false) : ?>
         <label>
-            <?= $fachbereich_caption ?: _('Fachbereiche') ?>:<br>
+            <?= _('Fachbereiche') ?>:<br>
             <select name="fachbereich_filter" class="sidebar-selectlist nested-select institute-list submit-upon-select">
                 <option value=""><?= _('Alle') ?></option>
                 <? foreach ($fachbereiche as $fachbereich) : ?>

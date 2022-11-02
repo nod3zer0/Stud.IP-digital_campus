@@ -17,7 +17,7 @@
                 'title' => $user_fullname,
             ]) ?>
             <?= htmlReady($user_fullname) ?>
-            <?php if ($user_id == $m->user_id && $m->visible == 'no') : ?>
+            <?php if ($GLOBALS['user']->id !== $m->user_id && $m->visible == 'no') : ?>
                 (<?= _('unsichtbar') ?>)
             <?php endif ?>
         </a>

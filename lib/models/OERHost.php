@@ -120,9 +120,9 @@ class OERHost extends OERIdentity
     public function askKnownHosts()
     {
         $endpoint_url = $this['url']."fetch_known_hosts"
-            ."?from=".urlencode($GLOBALS['oer_PREFERRED_URI'] ?: $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/");
+            ."?from=".urlencode(!empty($GLOBALS['oer_PREFERRED_URI']) ?: $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/");
         $output = @file_get_contents($endpoint_url);
-        if ($output) {
+        if (!empty($output)) {
             $output = json_decode($output, true);
             foreach ((array) $output['hosts'] as $host_data) {
                 $host = OERHost::findOneByUrl($host_data['url']);

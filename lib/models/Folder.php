@@ -194,15 +194,18 @@ class Folder extends SimpleORMap implements FeedbackRange
      */
     public static function findByTopic_id($topic_id)
     {
-        $seminar_id    = CourseTopic::find($topic_id)->seminar_id;
-        $topic_folders = self::findBySQL(
-            "folder_type = 'CourseTopicFolder' AND range_id = ? AND range_type = 'course'",
-            [$seminar_id]
-        );
+        $course_topic = CourseTopic::find($topic_id);
         $ret = [];
-        foreach ($topic_folders as $key => $folder) {
-            if ($folder['data_content']['topic_id'] === $topic_id) {
-                $ret[] = $folder;
+        if ($course_topic) {
+            $topic_folders = self::findBySQL(
+                "folder_type = 'CourseTopicFolder' AND range_id = ? AND range_type = 'course'",
+                [$course_topic->seminar_id]
+            );
+
+            foreach ($topic_folders as $folder) {
+                if ($folder['data_content']['topic_id'] === $topic_id) {
+                    $ret[] = $folder;
+                }
             }
         }
         return $ret;
@@ -218,15 +221,18 @@ class Folder extends SimpleORMap implements FeedbackRange
      */
     public static function findByTermin_id($termin_id)
     {
-        $seminar_id   = CourseDate::find($termin_id)->range_id;
-        $date_folders = self::findBySQL(
-            "folder_type = 'CourseDateFolder' AND range_id = ? AND range_type = 'course'",
-            [$seminar_id]
-        );
+        $course_date   = CourseDate::find($termin_id);
         $ret = [];
-        foreach ($date_folders as $key => $folder) {
-            if ($folder['data_content']['termin_id'] === $termin_id) {
-                $ret[] = $folder;
+        if ($course_date) {
+            $date_folders = self::findBySQL(
+                "folder_type = 'CourseDateFolder' AND range_id = ? AND range_type = 'course'",
+                [$course_date->range_id]
+            );
+
+            foreach ($date_folders as $folder) {
+                if ($folder['data_content']['termin_id'] === $termin_id) {
+                    $ret[] = $folder;
+                }
             }
         }
         return $ret;

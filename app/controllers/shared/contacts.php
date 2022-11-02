@@ -432,7 +432,7 @@ class Shared_ContactsController extends MVVController
     public function add_ansprechpartner_action($origin = 'index', $range_type = null, $range_id = null, $user_id = null, $category = null)
     {
         PageLayout::setTitle(_('Ansprechpartner zuordnen'));
-
+        $contact_range = null;
         $this->extcontact_search_obj = new SQLSearch("SELECT extern_contact_id, mvv_extern_contacts.name "
                 . "FROM mvv_extern_contacts "
                 . "WHERE mvv_extern_contacts.name LIKE :input "
@@ -528,6 +528,10 @@ class Shared_ContactsController extends MVVController
             $this->ansp_kat = $contact_range->category;
             $this->ansp_name = $contact_range->contact->getContactName();
         } else {
+            $this->ansp_status = '';
+            $this->ansp_altmail = '';
+            $this->ansp_typ = '';
+            $this->ansp_kat = '';
             $this->ansp_name = '';
         }
 

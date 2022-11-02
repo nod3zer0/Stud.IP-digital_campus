@@ -177,7 +177,7 @@ class Course_MembersController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::info(formatLinks($lockdata['description'])));
             }
         }
-
+        $this->to_waitlist_actions = false;
         // Check for waitlist availability (influences available actions)
         // People can be moved to waitlist if waitlist available and no automatic moving up.
         if (!$sem->admission_disable_waitlist && $sem->admission_disable_waitlist_move

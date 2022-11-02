@@ -854,7 +854,7 @@ class Module_ModuleController extends MVVController
             $this->modulteil_id = $this->modulteil->getId();
             $this->search_lvgruppe($this->modulteil->getId());
             if (Request::isXhr()) {
-                $this->render_template('module/module/modulteil_lvg', null);
+                $this->render_template('module/module/modulteil_lvg');
             } else {
                 $this->modul = Modul::get($this->modulteil->modul_id);
                 $this->modul_id = $this->modul->getId();
@@ -1037,6 +1037,7 @@ class Module_ModuleController extends MVVController
 
     public function details_action($modul_id, $modulteil_id = null)
     {
+        $this->institut_id = null;
         $this->modul = Modul::get($modul_id);
         $this->modul_id = $this->modul->isNew() ? null : $this->modul->getId();
         if ($modulteil_id) {

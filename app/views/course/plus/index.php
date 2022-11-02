@@ -13,7 +13,7 @@ use Studip\Button;
 
 ?>
 
-<form action="<?= URLHelper::getLink($save_url) ?>" method="post" class="default">
+<form action="<?= URLHelper::getLink() ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <input name="uebernehmen" value="1" type="hidden">
     <table class="default nohover plus">
@@ -53,7 +53,7 @@ use Studip\Button;
                     ?>
 
                     <tr id="<?= htmlReady($anchor); ?>"
-                        class="<?= $visibility; ?> <?= $pre_check != null ? ' quiet' : '' ?>">
+                        class="<?= $visibility; ?>">
                         <td class="element" colspan=3>
 
                             <div class="plus_basic">
@@ -137,7 +137,7 @@ use Studip\Button;
                                     <div class="screenshot_holder">
                                         <? if (isset($info['screenshot']) || isset($info['screenshots'])) :
                                             if (isset($info['screenshots'])) {
-                                                $title  = $info['screenshots']['pictures'][0]['title'];
+                                                $title  = $info['screenshots']['pictures'][0]['title']??'';
                                                 $source = $info['screenshots']['path'] . '/' . $info['screenshots']['pictures'][0]['source'];
                                             } else {
                                                 $fileext = pathinfo($info['screenshot'], PATHINFO_EXTENSION);
@@ -169,7 +169,7 @@ use Studip\Button;
                                                     <? for ($i = $cstart; $i < $counter; $i++) :?>
                                                         <?
                                                             if (isset($info['screenshots'])) {
-                                                                $title  = $info['screenshots']['pictures'][$i]['title'];
+                                                                $title  = $info['screenshots']['pictures'][$i]['title']?? '';
                                                                 $source = $info['screenshots']['path'] . '/' . $info['screenshots']['pictures'][$i]['source'];
                                                             } else {
                                                                 $fileext = pathinfo($info['additionalscreenshots'][$i], PATHINFO_EXTENSION);

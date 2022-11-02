@@ -50,7 +50,7 @@ if ($file->isDownloadable($GLOBALS['user']->id)) {
         <?= relSize($size, false) ?>
     <? endif ?>
     </td>
-    <? if ($show_downloads) : ?>
+    <? if (!empty($show_downloads)) : ?>
         <? $downloads = $file->getDownloads() ?>
         <td data-sort-value="<?= htmlReady($downloads) ?>" class="responsive-hidden">
             <?= htmlReady($downloads) ?>

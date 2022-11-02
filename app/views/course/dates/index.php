@@ -48,6 +48,7 @@
     <tbody>
     <?php
         // print dates
+        $is_next_date = null;
         foreach ($dates as $key => $date) {
             $dateSemester = Semester::findByTimestamp($date['date']);
             if ($dateSemester && $semester->getId() === $dateSemester->getId()) {

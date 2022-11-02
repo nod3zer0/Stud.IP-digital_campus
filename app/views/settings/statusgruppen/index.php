@@ -87,11 +87,13 @@
                             <? endif; ?>
                         </nav>
                     </header>
+
                     <section>
                         <?= $this->render_partial('settings/statusgruppen/modify', [
                             'followers'  => $role_count < $max_roles,
                             'inst_id'    => $inst_id,
                             'role_id'    => $role_id,
+                            'institute'  => Institute::find($inst_id),
                             'datafields' => $institute['datafields'][$role_id],
                             'role'       => $role['role'],
                         ]) ?>
@@ -104,7 +106,7 @@
     </section>
 
     <? if ($GLOBALS['perm']->have_perm('admin') && !$locked): ?>
-        <?= $this->render_partial('settings/statusgruppen/assign', compact('subview_id', 'admin_insts', 'sub_admin_insts')) ?>
+        <?= $this->render_partial('settings/statusgruppen/assign', compact('admin_insts')) ?>
     <? endif; ?>
 
 <? endif; ?>

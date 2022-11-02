@@ -373,9 +373,11 @@ class ExternModule {
             $datafields_config = [];
         }
         $datafields = get_generic_datafields($object_type);
-        foreach ((array) $datafields['ids'] as $df) {
-            if (!in_array($df, $datafields_config)) {
-                $datafields_config[] = $df;
+        if (!empty($datafields['ids'])) {
+            foreach ((array) $datafields['ids'] as $df) {
+                if (!in_array($df, $datafields_config)) {
+                    $datafields_config[] = $df;
+                }
             }
         }
         $this->config->setValue($element_name, 'genericdatafields', $datafields_config);

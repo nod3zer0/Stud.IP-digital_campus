@@ -240,7 +240,7 @@ class ProfileController extends AuthenticatedController
         //The profile avatar, profile visits and profile score
         //shall be visible in the sidebar. Therefore we must construct
         //a generic WidgetElement object and its HTML in here.
-
+        $kings = [];
         if (Config::Get()->SCORE_ENABLE) {
             if ($this->current_user->user_id === $GLOBALS['user']->id || $this->current_user->score) {
                 $kings = $this->current_user->getStudipKingIcon();

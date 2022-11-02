@@ -35,10 +35,11 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
         $search_result = $this->getSearchResult('StudiengangTeil');
         $this->sortby = $this->sortby ?: 'fach_name,zusatz,kp';
         $this->order = $this->order ?: 'ASC';
-
+        $this->stgteil_id = null;
         //get data
         if (count($search_result)) {
             $filter['stgteil_id'] = $search_result;
+            $this->stgteil_id = $search_result;
             $this->stgteile = StudiengangTeil::getAllEnriched(
                 $this->sortby, $this->order,
                 $filter, self::$items_per_page,
@@ -176,7 +177,7 @@ class Studiengaenge_StudiengangteileController extends SharedVersionController
     {
         $this->stgteil = StudiengangTeil::find($stgteil_id);
         $this->versionen = StgteilVersion::findByStgteil($stgteil_id);
-
+        $this->version_id = null;
         if (count($this->versionen)) {
             $this->stgteil_id = $stgteil_id;
             if (!Request::isXhr()) {

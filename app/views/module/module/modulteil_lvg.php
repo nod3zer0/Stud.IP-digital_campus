@@ -51,7 +51,6 @@
                     <td colspan="2">
                         <form action="<?= $controller->action_link('add_lvgruppe/' . $modulteil->id) ?>" method="post">
                             <?= CSRFProtection::tokenTag(); ?>
-                            <input type="hidden" name="security_token" value="<?= $security_token ?>">
                             <div style="float: left; padding-right: 10px;"><?= _('LV-Gruppe hinzufügen:') ?></div>
                             <?= $search->render(); ?>
                             <?= Icon::create('search', Icon::ROLE_CLICKABLE , ['title' => _('LV-Gruppe suchen'), 'name' => 'search_stgteil', 'data-qs_name' => $search->getId(), 'data-qs_id' => $qs_search_id, 'data-qs_submit' => 'no', 'class' => 'mvv-qs-button'])->asInput(); ?>

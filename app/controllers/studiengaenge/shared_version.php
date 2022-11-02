@@ -355,6 +355,7 @@ abstract class SharedVersionController extends MVVController
 
     public function abschnitte_action($version_id)
     {
+        $this->abschnitt_id = null;
         $this->abschnitte($version_id);
         if (Request::isXhr()) {
             $this->render_template('studiengaenge/versionen/abschnitte');
@@ -673,6 +674,7 @@ abstract class SharedVersionController extends MVVController
 
     public function details_abschnitt_action($abschnitt_id, $modul_id = null)
     {
+        $this->modul_id = $modul_id;
         $this->abschnitt = StgteilAbschnitt::find($abschnitt_id);
         if (!$this->abschnitt) {
             PageLayout::postError(_('Unbekannter Abschnitt'));

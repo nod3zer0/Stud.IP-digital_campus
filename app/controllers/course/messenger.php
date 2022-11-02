@@ -39,7 +39,7 @@ class Course_MessengerController extends AuthenticatedController
         $this->thread->markAsRead();
 
         $this->thread_data = $this->thread->getJSONData();
-
+        $_SESSION['already_asked_for_avatar'] = false;
         if (!Avatar::getAvatar($GLOBALS['user']->id)->is_customized() && !$_SESSION['already_asked_for_avatar']) {
             $_SESSION['already_asked_for_avatar'] = true;
             PageLayout::postInfo(sprintf(_("Wollen Sie ein Avatar-Bild nutzen? %sLaden Sie jetzt ein Bild hoch%s."), '<a href="'.URLHelper::getURL("dispatch.php/avatar/update/user/".$GLOBALS['user']->id).'" data-dialog>', '</a>'));

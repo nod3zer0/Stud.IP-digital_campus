@@ -67,11 +67,11 @@
             </tr>
         </thead>
         <tbody>
-            <? $i = 1; foreach ($members as $m) : ?>
-                <?= $this->render_partial(
-                    'course/statusgroups/_member',
-                    ['m' => $m, 'i' => $i++, 'is_tutor' => $is_tutor, 'is_locked' => $is_locked]) ?>
-            <? endforeach ?>
+        <? $i = 1; foreach ($members as $m) : ?>
+            <?= $this->render_partial(
+                'course/statusgroups/_member',
+                ['m' => $m, 'i' => $i++, 'is_tutor' => $is_tutor, 'is_locked' => $is_locked]) ?>
+        <? endforeach ?>
         </tbody>
         <tfoot>
         <tr>

@@ -67,7 +67,7 @@ class BasicDataWizardStep implements CourseWizardStep
         }
         $tpl->set_attribute('types', $typestruct);
         // Select a default type if none is given.
-        if (!$values['coursetype']) {
+        if (empty($values['coursetype'])) {
             if ($GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER && Request::isXhr()) {
                 $values['coursetype'] = $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER;
             } else {
@@ -90,7 +90,7 @@ class BasicDataWizardStep implements CourseWizardStep
                 $semesters[] = $s;
             }
         }
-        if (!$values['start_time']) {
+        if (empty($values['start_time'])) {
             $values['start_time'] = Semester::findDefault()->beginn;
         }
         if ($values['studygroup'] && (!count($typestruct) || !$values['institute']) ) {
@@ -123,7 +123,7 @@ class BasicDataWizardStep implements CourseWizardStep
 
         // Get all allowed home institutes (my own).
         $institutes = Institute::getMyInstitutes();
-        if ($values['studygroup'] || count($institutes) > 0) {
+        if (!empty($values['studygroup']) || count($institutes) > 0) {
             $tpl->set_attribute('institutes', $institutes);
             if (!$values['institute']) {
                 if ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT && Request::isXhr()) {
@@ -151,10 +151,10 @@ class BasicDataWizardStep implements CourseWizardStep
 
         // QuickSearch for participating institutes.
         // No JS: Keep search value and results for displaying in search select box.
-        if ($values['part_inst_id']) {
+        if (!empty($values['part_inst_id'])) {
             Request::getInstance()->offsetSet('part_inst_id', $values['part_inst_id']);
         }
-        if ($values['part_inst_id_parameter']) {
+        if (!empty($values['part_inst_id_parameter'])) {
             Request::getInstance()->offsetSet('part_inst_id_parameter', $values['part_inst_id_parameter']);
         }
         $instsearch = new StandardSearch('Institut_id',
@@ -165,16 +165,16 @@ class BasicDataWizardStep implements CourseWizardStep
             ->withButton(['search_button_name' => 'search_part_inst', 'reset_button_name' => 'reset_instsearch'])
             ->fireJSFunctionOnSelect('STUDIP.CourseWizard.addParticipatingInst')
             ->render());
-        if (!$values['participating']) {
+        if (empty($values['participating'])) {
             $values['participating'] = [];
         }
 
         // Quicksearch for lecturers.
         // No JS: Keep search value and results for displaying in search select box.
-        if ($values['lecturer_id']) {
+        if (!empty($values['lecturer_id'])) {
             Request::getInstance()->offsetSet('lecturer_id', $values['lecturer_id']);
         }
-        if ($values['lecturer_id_parameter']) {
+        if (!empty($values['lecturer_id_parameter'])) {
             Request::getInstance()->offsetSet('lecturer_id_parameter', $values['lecturer_id_parameter']);
         }
 
@@ -206,22 +206,20 @@ class BasicDataWizardStep implements CourseWizardStep
                     array_flip(Deputy::findDeputies($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER)->pluck('user_id')));
             }
         }
-        if (!$values['lecturers']) {
+        if (empty($values['lecturers'])) {
             $values['lecturers'] = [];
         }
-        if ($deputies && !$values['deputies']) {
+        if ($deputies && empty($values['deputies'])) {
             $values['deputies'] = [];
         }
-
-
 
         // Quicksearch for deputies if applicable.
         if ($deputies) {
             // No JS: Keep search value and results for displaying in search select box.
-            if ($values['deputy_id']) {
+            if (!empty($values['deputy_id'])) {
                 Request::getInstance()->offsetSet('deputy_id', $values['deputy_id']);
             }
-            if ($values['deputy_id_parameter']) {
+            if (!empty($values['deputy_id_parameter'])) {
                 Request::getInstance()->offsetSet('deputy_id_parameter', $values['deputy_id_parameter']);
             }
             $deputysearch = new PermissionSearch('user',
@@ -236,7 +234,7 @@ class BasicDataWizardStep implements CourseWizardStep
                 ->render());
         }
 
-        if (!$values['tutors']) {
+        if (empty($values['tutors'])) {
             $values['tutors'] = [];
         }
 
@@ -248,7 +246,7 @@ class BasicDataWizardStep implements CourseWizardStep
         $tpl->set_attribute('tsearch', $tsearch);
         $tpl->set_attribute('values', $values);
         // AJAX URL needed for default deputy checking.
-        $tpl->set_attribute('ajax_url', $values['ajax_url'] ?: URLHelper::getLink('dispatch.php/course/wizard/ajax'));
+        $tpl->set_attribute('ajax_url', $values['ajax_url'] ?? URLHelper::getLink('dispatch.php/course/wizard/ajax'));
         $tpl->set_attribute('default_deputies_enabled',
             ($deputies && Config::get()->DEPUTIES_DEFAULTENTRY_ENABLE) ? 1 : 0);
 
@@ -594,9 +592,9 @@ class BasicDataWizardStep implements CourseWizardStep
 
             foreach ($indices as $index) {
                 // There are values given => create an I18NString
-                if ($values[$index]) {
+                if (!empty($values[$index])) {
 
-                    $values[$index] = new I18NString($values[$index], $values[$index . '_i18n']);
+                    $values[$index] = new I18NString($values[$index], $values[$index . '_i18n'] ?? []);
 
                 // Current index is not set (yet), create an empty I18NString
                 } else {

@@ -32,7 +32,7 @@
                 <td class="plugin_image">
                 <? if ($plugin['image']): ?>
                     <a href="<?= htmlReady($plugin['image']) ?>"
-                       data-lightbox="<?= htmlReady($plugin['displayname']) ?>"
+                       data-lightbox="<?= htmlReady($plugin['displayname']?? '') ?>"
                        data-title="<?= htmlReady($name) ?>">
                         <img src="<?= htmlReady($plugin['image']) ?>" class="plugin_preview">
                     </a>

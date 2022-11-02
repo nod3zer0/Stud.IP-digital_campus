@@ -71,7 +71,7 @@ class SemesterSelectorWidget extends SelectWidget
     {
         $current_id = Request::get($this->template_variables['name']);
         if (!$current_id) {
-            if ($this->template_variables['value']) {
+            if (!empty($this->template_variables['value'])) {
                 $current_id = $this->template_variables['value'];
             } elseif (!$this->include_all) {
                 $current_id = Semester::findCurrent()->id;
@@ -83,7 +83,6 @@ class SemesterSelectorWidget extends SelectWidget
             $this->addElement($element);
         }
 
-        $semesters = [];
         if ($this->semester_range_begin && $this->semester_range_end) {
             $semesters = Semester::findBySql(
                 '`beginn` BETWEEN :begin AND :end

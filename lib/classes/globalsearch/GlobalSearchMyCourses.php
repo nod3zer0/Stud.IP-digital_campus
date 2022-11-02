@@ -55,7 +55,11 @@ class GlobalSearchMyCourses extends GlobalSearchModule
                 if ($filter['semester'] === 'future') {
                     $semester = Semester::findCurrent();
                     $next_semester = Semester::findNext();
-                    $semester_ids = array_filter([$semester->id, $next_semester->id]);
+
+                    $semester_ids = [$semester->id];
+                    if ($next_semester) {
+                        $semester_ids[] = $next_semester->id;
+                    }
                 } else {
                     $semester = Semester::findByTimestamp($filter['semester']);
                     $semester_ids = [$semester->id];
