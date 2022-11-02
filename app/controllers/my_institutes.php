@@ -61,9 +61,15 @@ class MyInstitutesController extends AuthenticatedController
     public function tabularasa_action($timestamp = null)
     {
         $institutes = MyRealmModel::getMyInstitutes();
-        foreach ($institutes as $index => $institut) {
-            MyRealmModel::setObjectVisits($institutes[$index], $institut['institut_id'], $this->user_id, $timestamp);
-        }
+
+        // This is ugly but since the above does not return object, we need to
+        // load the institutes again
+        Institute::findEachMany(
+            function (Institute $institute) use ($timestamp) {
+                MyRealmModel::setObjectVisits($institute, $this->user_id, $timestamp);
+            },
+            array_column($institutes, 'institut_id')
+        );
 
         PageLayout::postSuccess(_('Alles als gelesen markiert!'));
         $this->redirect('my_institutes/index');
