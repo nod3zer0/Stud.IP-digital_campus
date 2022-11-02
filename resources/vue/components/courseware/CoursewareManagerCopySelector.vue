@@ -123,6 +123,8 @@ export default {
             loadStructuralElement: 'loadStructuralElement',
             loadSemester: 'semesters/loadById',
             copyStructuralElement: 'copyStructuralElement',
+            loadElement: 'courseware-structural-elements/loadById',
+
         }),
         selectSource(source) {
             this.source = source;
@@ -222,8 +224,9 @@ export default {
                 console.debug(error);
                 this.copyAllInProgressText = this.$gettext('Beim Kopiervorgang sind Fehler aufgetreten.');
             }
+            await this.loadElement({id: parentId, options: {include: 'children'}})
             this.copyAllInProgressText = this.$gettext('Kopiervorgang abgeschlossen.');
-            this.reloadElement();
+            
         }
     },
     async mounted() {
