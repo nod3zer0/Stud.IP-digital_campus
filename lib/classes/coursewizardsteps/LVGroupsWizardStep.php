@@ -396,12 +396,14 @@ class LVGroupsWizardStep implements CourseWizardStep
         $category = SeminarCategories::GetByTypeId($coursetype);
 
         if ($category->bereiche) {
-            if (isset($values['StudyAreasLVGroupsCombinedWizardStep'])
-                    && !count($values['StudyAreasLVGroupsCombinedWizardStep']['studyareas'])
-                    && !count($values[__CLASS__]['lvgruppe_selection']['areas'])
-                    && $values[__CLASS__]['step'] > $values['StudyAreasLVGroupsCombinedWizardStep']['step']) {
-                    $ok = false;
-                    $errors[] = _('Die Veranstaltung muss mindestens einem Studienbereich oder einer LV-Gruppe zugeordnet sein.');
+            if (
+                isset($values['StudyAreasLVGroupsCombinedWizardStep'])
+                && empty($values['StudyAreasLVGroupsCombinedWizardStep']['studyareas'])
+                && empty($values[__CLASS__]['lvgruppe_selection']['areas'])
+                && $values[__CLASS__]['step'] > $values['StudyAreasLVGroupsCombinedWizardStep']['step']
+            ) {
+                $ok = false;
+                $errors[] = _('Die Veranstaltung muss mindestens einem Studienbereich oder einer LV-Gruppe zugeordnet sein.');
             }
         } else {
             // optional step if study areas step is activated and at least one area is assigned
