@@ -258,7 +258,7 @@ class ConsultationSlot extends SimpleORMap
 
                     $event->event->summary = sprintf(
                         _('Termin mit %s'),
-                        $booking->user->getFullName()
+                        $booking->user ? $booking->user->getFullName() : _('unbekannt')
                     );
                     $event->event->description = $booking->reason;
                 } else {
@@ -267,7 +267,8 @@ class ConsultationSlot extends SimpleORMap
                         count($bookings)
                     );
                     $event->event->description = implode("\n\n----\n\n", $bookings->map(function ($booking) {
-                        return "- {$booking->user->getFullName()}:\n{$booking->reason}";
+                        $name = $booking->user ? $booking->user->getFullName() : _('unbekannt');
+                        return "- {$name}:\n{$booking->reason}";
                     }));
                 }
             } else {
