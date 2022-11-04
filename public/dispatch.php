@@ -23,5 +23,5 @@ URLHelper::setBaseUrl($GLOBALS['ABSOLUTE_URI_STUDIP']);
 
 $request_uri = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
-$dispatcher = new StudipDispatcher();
+$dispatcher = app(\Trails_Dispatcher::class);
 $dispatcher->dispatch($request_uri);

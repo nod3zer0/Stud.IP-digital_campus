@@ -10,8 +10,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/calendar/contentbox.php';
-
 class TerminWidget extends CorePlugin implements PortalPlugin
 {
     public function getPluginName()
@@ -28,8 +26,7 @@ class TerminWidget extends CorePlugin implements PortalPlugin
 
     public function getPortalTemplate()
     {
-        $dispatcher = new StudipDispatcher();
-        $controller = new Calendar_ContentboxController($dispatcher);
+        $controller = app(\Trails_Dispatcher::class)->load_controller('calendar/contentbox');
         $response = $controller->relay('calendar/contentbox/display/'.$GLOBALS['user']->id);
         $template = $GLOBALS['template_factory']->open('shared/string');
         $template->content = $response->body;

@@ -2,6 +2,7 @@
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 return [
@@ -18,5 +19,8 @@ return [
     }),
     StudipPDO::class => DI\factory(function () {
         return DBManager::get();
+    }),
+    Trails_Dispatcher::class => DI\factory(function (ContainerInterface $container) {
+        return new \StudipDispatcher($container);
     }),
 ];

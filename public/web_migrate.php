@@ -36,5 +36,6 @@ $GLOBALS['template_factory'] = new Flexi_TemplateFactory('../templates/');
 # get plugin class from request
 $dispatch_to = $_SERVER['PATH_INFO'] ?: '';
 
-$dispatcher = new Trails_Dispatcher( '../app', $_SERVER['SCRIPT_NAME'], 'web_migrate');
+$dispatcher = app(\Trails_Dispatcher::class);
+$dispatcher->trails_uri = $_SERVER['SCRIPT_NAME'];
 $dispatcher->dispatch("web_migrate/{$dispatch_to}");

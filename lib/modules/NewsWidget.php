@@ -9,8 +9,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/news.php';
-
 class NewsWidget extends CorePlugin implements PortalPlugin
 {
     public function getPluginName()
@@ -27,8 +25,7 @@ class NewsWidget extends CorePlugin implements PortalPlugin
 
     function getPortalTemplate()
     {
-        $dispatcher = new StudipDispatcher();
-        $controller = new NewsController($dispatcher);
+        $controller = app(\Trails_Dispatcher::class)->load_controller('news');
         $response = $controller->relayWithRedirect('news/display/studip');
         $template = $GLOBALS['template_factory']->open('shared/string');
         $template->content = $response->body;

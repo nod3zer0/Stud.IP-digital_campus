@@ -43,7 +43,7 @@ class EvaluationsWidget extends CorePlugin implements PortalPlugin
         }
 
         // include and show votes and tests
-        $controller = new AuthenticatedController(new StudipDispatcher());
+        $controller = app(AuthenticatedController::class, ['dispatcher' => app(\Trails_Dispatcher::class)]);
         $controller->suppress_empty_output = true;
 
         $response = $controller->relay('evaluation/display/studip')->body;

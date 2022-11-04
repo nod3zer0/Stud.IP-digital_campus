@@ -1425,7 +1425,7 @@ function get_route($route = '')
         $route = 'plugins.php/' . $pieces[0] . (!empty($pieces[1]) ? '/' . $pieces[1] : '') . (!empty($pieces[2]) ? '/' . $pieces[2] : '');
     } elseif (mb_strpos($route, 'dispatch.php/') !== false) {
         $trails = explode('dispatch.php/', $route);
-        $dispatcher = new StudipDispatcher();
+        $dispatcher = app(\Trails_Dispatcher::class);
         $pieces = explode('/', $trails[1]);
         $trail = '';
         foreach ($pieces as $index => $piece) {
