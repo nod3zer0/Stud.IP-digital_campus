@@ -8,17 +8,11 @@
                 'who'             => 'dozent',
                 'course_id'       => $course_id,
                 'default_subject' => $subject
-            ]) ?>" data-dialog>
-                <?= Icon::create(
-                    'inbox',
-                    Icon::ROLE_CLICKABLE,
-                    [
-                        'title' => sprintf(
-                            _('Nachricht mit Mailweiterleitung an alle %s versenden'),
-                            htmlReady($status_groups['dozent'])
-                        )
-                    ]
-                )->asImg() ?>
+            ]) ?>" data-dialog title="<?= sprintf(
+                _('Nachricht mit Mailweiterleitung an alle %s versenden'),
+                htmlReady($status_groups['dozent'])
+            ) ?>">
+                <?= Icon::create('inbox') ?>
             </a>
         </span>
     <? endif ?>

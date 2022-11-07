@@ -11,10 +11,8 @@
                     'emailrequest'         => 1,
                     'course_id'            => $course_id,
                     'default_subject'      => $subject,
-                ])?>" data-dialog>
-                    <?= Icon::create('inbox')->asImg([
-                        'title' =>  _('Nachricht mit Mailweiterleitung an alle Wartenden versenden'),
-                    ]) ?>
+                ])?>" data-dialog title="<?= _('Nachricht mit Mailweiterleitung an alle Wartenden versenden') ?>">
+                    <?= Icon::create('inbox') ?>
                 </a>
             </span>
         </caption>

@@ -26,17 +26,11 @@
                     'who'             => 'user',
                     'course_id'       => $course_id,
                     'default_subject' => $subject,
-                ]) ?>" data-dialog>
-                   <?= Icon::create(
-                       'inbox',
-                       Icon::ROLE_CLICKABLE,
-                       [
-                           'title' => sprintf(
-                               _('Nachricht mit Mailweiterleitung an alle %s versenden'),
-                               htmlReady($status_groups['user'])
-                           )
-                       ]
-                   ) ?>
+                ]) ?>" data-dialog title="<?= sprintf(
+                    _('Nachricht mit Mailweiterleitung an alle %s versenden'),
+                    htmlReady($status_groups['user'])
+                ) ?>">
+                   <?= Icon::create('inbox') ?>
                 </a>
             </span>
         <? endif ?>

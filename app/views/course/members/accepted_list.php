@@ -12,17 +12,11 @@
                     'emailrequest'     => 1,
                     'course_id'        => $course_id,
                     'default_subject'  => $subject,
-                ]) ?>" data-dialog>
-                    <?= Icon::create(
-                        'inbox',
-                        Icon::ROLE_CLICKABLE,
-                        [
-                            'title' => sprintf(
-                                _('Nachricht mit Mailweiterleitung an alle %s versenden'),
-                                _('vorläufig akzeptierten Nutzer/-innen')
-                            )
-                        ]
-                    ) ?>
+                ]) ?>" data-dialog title="<?= sprintf(
+                    _('Nachricht mit Mailweiterleitung an alle %s versenden'),
+                    _('vorläufig akzeptierten Nutzer/-innen')
+                ) ?>">
+                    <?= Icon::create('inbox') ?>
                 </a>
             </span>
             <?= _('Vorläufig akzeptierte Teilnehmende') ?>
