@@ -45,7 +45,7 @@ if (!$dates['regular']['turnus_data'] && empty($dates['irregular'])) {
     $freetext_rooms = [];
     $irregular_rooms = [];
 
-    if (is_array($dates['irregular'])) {
+    if (isset($dates['irregular']) && is_array($dates['irregular'])) {
         foreach ($dates['irregular'] as $date) {
             if (!isset($irregular_rooms[$date['resource_id']])) {
                 $irregular_rooms[$date['resource_id']] = 0;

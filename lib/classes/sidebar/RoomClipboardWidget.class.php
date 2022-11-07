@@ -14,7 +14,7 @@ class RoomClipboardWidget extends ClipboardWidget
     public function __construct()
     {
         parent::__construct(['Room']);
-
+        $this->allowed_item_class = '';
         $this->setTitle(_('Individuelle Raumgruppen'));
         $this->template = 'sidebar/room-clipboard-widget';
 

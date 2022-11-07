@@ -82,8 +82,7 @@ class ToolActivation extends SimpleORMap
         $module = $this->getStudipModule();
         if ($module) {
             $metadata = $module->getMetadata();
-            $name = $metadata['displayname'] ?: $module->getPluginName();
-            return $name;
+            return $metadata['displayname'] ?? $module->getPluginName();
         }
     }
 

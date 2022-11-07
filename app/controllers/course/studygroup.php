@@ -48,7 +48,7 @@ class Course_StudygroupController extends AuthenticatedController
         }
 
         // Obtain default view
-        $default_view = $user_cfg[$course_id] ?: 'gallery';
+        $default_view = $user_cfg[$course_id] ?? 'gallery';
         $view = Request::option('view', $default_view);
         if (!in_array($view, words('gallery list'))) {
             $view = 'gallery';
@@ -91,7 +91,11 @@ class Course_StudygroupController extends AuthenticatedController
             $stmt->execute([$GLOBALS['user']->id, $id]);
             $data = $stmt->fetch();
 
-            $membership_requested = $data['status'] === 'accepted';
+            if (isset($data['status'])) {
+                $membership_requested = $data['status'] === 'accepted';
+            } else {
+                $membership_requested = false;
+            }
             $invited = StudygroupModel::isInvited($GLOBALS['user']->id, $id);
 
             if (!preg_match('/^(' . preg_quote($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'], '/') . ')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', Request::get('send_from_search_page'))) {
@@ -510,7 +514,7 @@ class Course_StudygroupController extends AuthenticatedController
         $this->sem_class        = $sem->getSemClass();
         $this->invitedMembers   = StudygroupModel::getInvitations($id);
         $this->rechte           = $GLOBALS['perm']->have_studip_perm('tutor', $id);
-
+        $this->page = null;
         $this->setupMembersSidebar($sem);
     }
 

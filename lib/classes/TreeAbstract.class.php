@@ -203,7 +203,7 @@ class TreeAbstract {
     */
     public function getKids($item_id)
     {
-        return (is_array($this->tree_childs[$item_id])) ? $this->tree_childs[$item_id] : null;
+        return (isset($this->tree_childs[$item_id]) && is_array($this->tree_childs[$item_id])) ? $this->tree_childs[$item_id] : null;
     }
 
     /**

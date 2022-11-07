@@ -874,7 +874,7 @@ class FileController extends AuthenticatedController
                 $this->to_folder_type = new StandardFolder($folder);
             }
         }
-
+        $this->filesystemplugin = null;
         if (Request::get('to_plugin')) {
             $folder_id = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], "dispatch.php/file/choose_folder") + strlen("dispatch.php/file/choose_folder"));
             if (strpos($folder_id, "?") !== false) {
@@ -1333,6 +1333,7 @@ class FileController extends AuthenticatedController
 
     public function choose_file_action($folder_id = null)
     {
+        $this->filesystemplugin = null;
         if (Request::get('to_plugin')) {
             $to_plugin = PluginManager::getInstance()->getPlugin(Request::get('to_plugin'));
             $this->to_folder_type = $to_plugin->getFolder(Request::get('to_folder_id', ''));
@@ -1673,6 +1674,7 @@ class FileController extends AuthenticatedController
     public function add_url_action($folder_id)
     {
         $this->content_terms_of_use_entries = ContentTermsOfUse::findAll();
+        $this->content_terms_of_use_id = Request::get('content_terms_of_use_id');
         if (Request::get("to_plugin")) {
             $folder_id = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], "dispatch.php/file/add_url/") + strlen("dispatch.php/file/add_url/"));
             if (strpos($folder_id, "?") !== false) {
@@ -1780,6 +1782,7 @@ class FileController extends AuthenticatedController
             ];
         }
 
+        $new_folder = null;
         if (Request::submitted('create') || Request::submitted('force_creation')) {
             CSRFProtection::verifyUnsafeRequest();
 

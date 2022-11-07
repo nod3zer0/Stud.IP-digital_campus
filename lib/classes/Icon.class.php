@@ -368,7 +368,9 @@ class Icon
     {
         $size = $size ?: Icon::DEFAULT_SIZE;
         if (isset($this->attributes['size'])) {
-            list($size, $temp) = explode('@', $this->attributes['size'], 2);
+            $parts =  explode('@', $this->attributes['size'], 2);
+            $size = $parts[0];
+            $temp = $parts[1] ?? null;
             unset($this->attributes['size']);
         }
         return (int)$size;

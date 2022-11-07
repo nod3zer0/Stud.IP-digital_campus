@@ -7,7 +7,7 @@
           ?>"
           data-dialog="<?= $no_reload ? 'size=auto' : 'reload-on-close' ?>">
         <input type="hidden" name="origin_url"
-               value="<?= htmlReady($origin_url) ?>">
+               value="<?= htmlReady($origin_url??'') ?>">
         <? if ($resources) : ?>
             <? foreach ($resources as $resource): ?>
                 <input type="hidden" name="resource_ids[]"
@@ -434,7 +434,7 @@
         <div class="fieldset-row">
             <fieldset>
                 <legend><?= _('Personen') ?></legend>
-                <? if ($booking->assigned_user instanceof User): ?>
+                <? if ($booking && $booking->assigned_user instanceof User): ?>
                     <p>
                         <a href="<?= $controller->link_for(
                             'profile',
@@ -474,7 +474,7 @@
                         </div>
                     </label>
                 <? endif ?>
-                <? if ($booking->booking_user): ?>
+                <? if ($booking && $booking->booking_user): ?>
                     <p style="margin-top:1em;margin-bottom:0;">
                         <?= htmlReady(
                             _('Gebucht von:')
@@ -508,7 +508,7 @@
             <fieldset class="description">
                 <legend><?= _('Buchungstext') ?></legend>
                 <label>
-                    <textarea name="description" <?= !$show_booking_type_selection ? 'autofocus' : ''?>><?= htmlReady($description) ?></textarea>
+                    <textarea name="description" <?= !$show_booking_type_selection ? 'autofocus' : ''?>><?= htmlReady($description ?? '') ?></textarea>
                 </label>
             </fieldset>
         </div>

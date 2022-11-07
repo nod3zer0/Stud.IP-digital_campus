@@ -369,6 +369,7 @@ class Course_BasicdataController extends AuthenticatedController
              $this->url_for('avatar/update/course', $course_id),
              Icon::create('edit')
         );
+
         if ($this->deputies_enabled) {
             if (Deputy::isDeputy($GLOBALS['user']->id, $this->course_id)) {
                 $newstatus = 'dozent';
@@ -376,11 +377,16 @@ class Course_BasicdataController extends AuthenticatedController
             } else if (in_array($GLOBALS['user']->id, array_keys($this->dozenten)) && count($this->dozenten) > 1) {
                 $newstatus = 'deputy';
                 $text = _('Vertretung werden');
+            } else {
+                $newstatus = '';
+                $text = '';
             }
-            $widget->addLink($text,
-                 $this->url_for('course/basicdata/switchdeputy', $this->course_id, $newstatus),
-                 Icon::create('persons')
-            );
+            if ($newstatus !== '' && $text !== '') {
+                $widget->addLink($text,
+                    $this->url_for('course/basicdata/switchdeputy', $this->course_id, $newstatus),
+                    Icon::create('persons')
+                );
+            }
         }
         $sidebar->addWidget($widget);
         if ($GLOBALS['perm']->have_studip_perm('admin', $this->course_id)) {

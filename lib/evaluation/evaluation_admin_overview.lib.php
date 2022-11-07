@@ -2210,14 +2210,15 @@ class EvalOverview
      */
     function getPageCommand()
     {
-        if (Request::option("evalAction"))
-            return Request::option("evalAction");
-
+        if (Request::option('evalAction')) {
+            return Request::option('evalAction');
+        }
+        $command = [];
         foreach ($_REQUEST as $key => $value) {
             if (preg_match("/(.*)_button(_x)?/", $key, $command))
                 break;
         }
-        return $command[1];
+        return $command[1] ?? '';
     }
 
 # ===================================================== end: public functions #

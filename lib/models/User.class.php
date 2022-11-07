@@ -718,6 +718,8 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         // Non-private dates.
         if (Config::get()->CALENDAR_ENABLE) {
             $dates = CalendarEvent::countBySql('range_id = ?', [$this->id]);
+        } else {
+            $dates = [];
         }
 
         // Votes
@@ -737,7 +739,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         if (Avatar::getAvatar($this->id)->is_customized() && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['picture'])) {
             $homepage_elements['picture'] = [
                 'name'        => _('Eigenes Bild'),
-                'visibility'  => $homepage_visibility['picture'] ?: get_default_homepage_visibility($this->id),
+                'visibility'  => $homepage_visibility['picture'] ?? get_default_homepage_visibility($this->id),
                 'extern'      => true,
                 'identifier'  => 'commondata'
             ];
@@ -746,7 +748,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         if ($this->info->motto && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['motto'])) {
             $homepage_elements['motto'] = [
                 'name'       => _('Motto'),
-                'visibility' => $homepage_visibility['motto'] ?: get_default_homepage_visibility($this->id),
+                'visibility' => $homepage_visibility['motto']?? get_default_homepage_visibility($this->id),
                 'identifier' => 'privatedata'
             ];
         }
@@ -754,7 +756,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             if ($GLOBALS['user']->cfg->getValue('SKYPE_NAME') && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['skype_name'])) {
                 $homepage_elements['skype_name'] = [
                     'name'       => _('Skype Name'),
-                    'visibility' => $homepage_visibility['skype_name'] ?: get_default_homepage_visibility($this->id),
+                    'visibility' => $homepage_visibility['skype_name']?? get_default_homepage_visibility($this->id),
                     'identifier' => 'privatedata'
                 ];
             }
@@ -762,28 +764,28 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         if ($this->info->privatnr && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['Private Daten_phone'])) {
             $homepage_elements['private_phone'] = [
                 'name'       => _('Private Telefonnummer'),
-                'visibility' => $homepage_visibility['private_phone'] ?: get_default_homepage_visibility($this->id),
+                'visibility' => $homepage_visibility['private_phone']?? get_default_homepage_visibility($this->id),
                 'identifier' => 'privatedata'
             ];
         }
         if ($this->info->privatcell && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['private_cell'])) {
             $homepage_elements['private_cell'] = [
                 'name'       => _('Private Handynummer'),
-                'visibility' => $homepage_visibility['private_cell'] ?: get_default_homepage_visibility($this->id),
+                'visibility' => $homepage_visibility['private_cell']?? get_default_homepage_visibility($this->id),
                 'identifier' => 'privatedata'
             ];
         }
         if ($this->info->privadr && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['privadr'])) {
             $homepage_elements['privadr'] = [
                 'name'         => _('Private Adresse'),
-                'visibility'   => $homepage_visibility['privadr'] ?: get_default_homepage_visibility($this->id),
+                'visibility'   => $homepage_visibility['privadr']?? get_default_homepage_visibility($this->id),
                 'identifier'   => 'privatedata'
             ];
         }
         if ($this->info->home && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['homepage'])) {
             $homepage_elements['homepage'] = [
                 'name'        => _('Homepage-Adresse'),
-                'visibility'  => $homepage_visibility['homepage'] ?: get_default_homepage_visibility($this->id),
+                'visibility'  => $homepage_visibility['homepage']?? get_default_homepage_visibility($this->id),
                 'extern'      => true,
                 'identifier'  => 'privatedata'
             ];
@@ -791,7 +793,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         if ($news && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['news'])) {
             $homepage_elements['news'] = [
                 'name'       => _('Ankündigungen'),
-                'visibility' => $homepage_visibility['news'] ?: get_default_homepage_visibility($this->id),
+                'visibility' => $homepage_visibility['news']?? get_default_homepage_visibility($this->id),
                 'extern'     => true,
                 'identifier' => 'commondata'
             ];
@@ -799,7 +801,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         if (Config::get()->CALENDAR_ENABLE && $dates && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['dates'])) {
             $homepage_elements['termine'] = [
                 'name'       => _('Termine'),
-                'visibility' => $homepage_visibility['termine'] ?: get_default_homepage_visibility($this->id),
+                'visibility' => $homepage_visibility['termine']?? get_default_homepage_visibility($this->id),
                 'extern'     => true,
                 'identifier' => 'commondata'
             ];
@@ -807,7 +809,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         if (Config::get()->VOTE_ENABLE && ($activeVotes || $stoppedVotes || $activeEvals) && empty($GLOBALS['NOT_HIDEABLE_FIELDS'][$this->perms]['votes'])) {
             $homepage_elements['votes'] = [
                 'name'       => _('Fragebögen'),
-                'visibility' => $homepage_visibility['votes'] ?: get_default_homepage_visibility($this->id),
+                'visibility' => $homepage_visibility['votes']?? get_default_homepage_visibility($this->id),
                 'identifier' => 'commondata'
             ];
         }

@@ -175,7 +175,7 @@ while (ob_get_level()) {
     ob_end_clean();
 }
 
-if (isset($file_ref, $file_ref->file) && $file_ref->file->metadata['access_type'] === 'redirect') {
+if (isset($file_ref, $file_ref->file, $file_ref->file->metadata['access_type']) && $file_ref->file->metadata['access_type'] === 'redirect') {
     $file_ref->incrementDownloadCounter();
     header('Location: ' . $file_ref->file->metadata['url']);
     die();

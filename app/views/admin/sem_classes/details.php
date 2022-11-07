@@ -220,8 +220,8 @@
                             'plugin' => $module_info,
                             'sem_class' => $sem_class,
                             'plugin_id' => $module_name,
-                            'activated' => $sem_class['modules'][$module_name]['activated'],
-                            'sticky' => $sem_class['modules'][$module_name]['sticky']
+                            'activated' => $sem_class['modules'][$module_name]['activated'] ?? false,
+                            'sticky' => $sem_class['modules'][$module_name]['sticky'] ?? false,
                         ]
                     )?>
                 <? endforeach ?>

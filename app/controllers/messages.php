@@ -141,6 +141,8 @@ class MessagesController extends AuthenticatedController {
         $attachment_folder = Folder::findOneByRange_id($this->message->id);
         if ($attachment_folder) {
             $this->attachment_folder = $attachment_folder->getTypedFolder();
+        } else {
+            $this->attachment_folder = null;
         }
 
 

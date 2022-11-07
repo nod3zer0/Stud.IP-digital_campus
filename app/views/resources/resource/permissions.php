@@ -1,7 +1,6 @@
 <form class="default" method="post"
-      action="<?= ($custom_form_action_link
-          ? $custom_form_action_link
-          : ($single_user_mode
+      action="<?= (!empty($custom_form_action_link)
+          ? $custom_form_action_link : ($single_user_mode
               ? $resource->getActionLink(
                   'permissions',
                   [

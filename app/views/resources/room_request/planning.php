@@ -5,14 +5,14 @@
         <select name="room_id" aria-labelledby="<?= _('Bitte wählen Sie einen Raum aus') ?>" onchange="this.form.submit()">
             <option value=""><?= _('Bitte wählen') ?></option>
             <? foreach ($this->available_rooms as $room) : ?>
-                <option value="<?= $room->id ?>" <?= $resource && $resource->id === $room->id ? 'selected' : '' ?>>
+                <option value="<?= $room->id ?>" <?= !empty($resource) && $resource->id === $room->id ? 'selected' : '' ?>>
                     <?= htmlReady($room->name) ?>
                 </option>
             <? endforeach ?>
         </select>
     </fieldset>
 </form>
-<? if ($resource): ?>
+<? if (!empty($resource)): ?>
     <?
     $min_time = Config::get()->INSTITUTE_COURSE_PLAN_START_HOUR . ':00';
     $max_time = Config::get()->INSTITUTE_COURSE_PLAN_END_HOUR . ':00';
@@ -64,7 +64,7 @@
         _('Semesterplan'),
         [
             'editable'           => true,
-            'selectable'         => ($fullcalendar_studip_urls['add'] != null),
+            'selectable'         => isset($fullcalendar_studip_urls['add']),
             'studip_urls'        => $fullcalendar_studip_urls,
             'minTime'            => ($min_time),
             'maxTime'            => ($max_time),
@@ -300,6 +300,6 @@
     </form>
 <? endif ?>
 
-<? if (!$requests && $resource) : ?>
+<? if (!$requests && !empty($resource)) : ?>
     <?= MessageBox::info(_('Es sind keine Anfragen vorhanden!')) ?>
 <? endif ?>

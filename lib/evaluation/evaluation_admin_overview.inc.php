@@ -51,7 +51,7 @@ define("DISCARD_OPENID", "discard_openid");
 
 /* Create objects ---------------------------------------------------------- */
 $db = new EvaluationObjectDB ();
-if ($db->isError) {
+if ($db->getErrors()) {
     return MessageBox::error(_("Datenbankfehler"));
 }
 $lib = new EvalOverview ($db, $GLOBALS['perm'], $GLOBALS['user']);
@@ -59,10 +59,10 @@ $lib = new EvalOverview ($db, $GLOBALS['perm'], $GLOBALS['user']);
 
 
 /* Set variables ----------------------------------------------------------- */
-if ($_SESSION['evalID'])  {
+if (isset($_SESSION['evalID']))  {
     unset($_SESSION['evalID']);
 }
-if ($_SESSION['rangeID']) {
+if (isset($_SESSION['rangeID'])) {
     unset($_SESSION['rangeID']);
 }
 
@@ -70,7 +70,7 @@ if (!empty($the_range)) {
     $rangeID = $the_range;
 }
 
-$rangeID = ($rangeID) ? $rangeID : Context::getId();
+$rangeID = $rangeID ?? Context::getId();
 
 if (empty ($rangeID) || ($rangeID == $GLOBALS['user']->username)) {
     $rangeID = $GLOBALS['user']->id;
@@ -101,9 +101,10 @@ if (!$GLOBALS['perm']->have_studip_perm("tutor", $rangeID) && $GLOBALS['user']->
     return;
 }
 
-$safeguard = $lib->callSafeguard($evalAction, $evalID, $rangeID, $search, $referer);
+$safeguard = $lib->callSafeguard($evalAction, $evalID, $rangeID, $search, null);
 /* ---------------------------------------------------------- end: safeguard */
 
+$foundTable = '';
 /* found public templates -------------------------------------------------- */
 if ($templates_search) {
     $search = trim($search);

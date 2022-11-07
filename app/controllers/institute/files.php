@@ -148,6 +148,8 @@ class Institute_FilesController extends AuthenticatedController
         //find all files in all subdirectories:
         list($this->files, $this->folders) = array_values(FileManager::getFolderFilesRecursive($this->topFolder, $GLOBALS['user']->id));
 
+        $this->table_title = '';
+        $this->pagination_html = '';
         $this->range_type = 'institute';
         $this->show_default_sidebar = true;
         $this->enable_table_filter = true;

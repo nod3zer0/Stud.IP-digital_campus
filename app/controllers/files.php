@@ -627,7 +627,8 @@ class FilesController extends AuthenticatedController
         if (!$folder) {
             throw new Exception(_('Fehler beim Laden des Hauptordners!'));
         }
-
+        $this->table_title = '';
+        $this->pagination_html = '';
         $this->topFolder = $folder->getTypedFolder();
         $this->form_action = $this->link_for('file/bulk/' . $this->topFolder->getId());
         $this->show_default_sidebar = true;

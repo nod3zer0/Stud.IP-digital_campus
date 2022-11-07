@@ -14,7 +14,7 @@ if ($folder_id) {
 }
 
 ?>
-<div class="files_source_selector" data-folder_id="<?= htmlReady($folder_id) ?>" <? if ($hidden) echo ' style="display: none;"'; ?>>
+<div class="files_source_selector" data-folder_id="<?= htmlReady($folder_id) ?>" <? if (!empty($hidden)) echo ' style="display: none;"'; ?>>
     <h2 class="dialog-subtitle"><?= _('Quelle auswählen') ?></h2>
     <div class="file_select_possibilities">
         <? if ($range instanceof Course && !$range->getSemClass()['studygroup_mode'] && $GLOBALS['perm']->have_studip_perm('tutor', $range->id)

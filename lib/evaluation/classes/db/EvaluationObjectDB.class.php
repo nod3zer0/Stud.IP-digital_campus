@@ -200,7 +200,7 @@ class EvaluationObjectDB extends DatabaseObject
     {
         $no_permisson = 0;
         $rangeIDs = $eval->getRangeIDs();
-
+        $no_permisson_ranges = [];
         if (!is_array($rangeIDs)) {
             $rangeIDs = [$rangeIDs];
         }

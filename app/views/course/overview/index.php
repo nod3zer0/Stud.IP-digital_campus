@@ -55,15 +55,23 @@
 <?php
 
 // Anzeige von News
-echo $news;
+if (!empty($news)) {
+    echo $news;
+}
 
 // Anzeige von Terminen
-echo $dates;
+if (!empty($dates)) {
+    echo $dates;
+}
 
 // Anzeige von Umfragen
-echo $evaluations;
+if (!empty($evaluations)) {
+    echo $evaluations;
+}
 
-echo $questionnaires;
+if (!empty($questionnaires)) {
+    echo $questionnaires;
+}
 
 // display plugins
 

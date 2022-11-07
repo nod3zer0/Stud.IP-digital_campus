@@ -54,6 +54,7 @@ class Resources_BookingController extends AuthenticatedController
                 'autor'
             );
         }
+        $this->no_reload = Request::submitted('no_reload');
     }
 
 
@@ -922,16 +923,14 @@ class Resources_BookingController extends AuthenticatedController
         foreach ($this->resources as $resource) {
             //Check if the resource is a room and if the room is part of a
             //separable room.
+            //We must display a warning.
 
             if ($resource instanceof Room) {
                 $other_room_parts = Room::findOtherRoomParts($resource);
-
+                $simple_message = true;
                 if ($other_room_parts) {
                     $this->other_room_parts[$resource->id] = $other_room_parts;
                     $this->separable_rooms_selected = true;
-
-                    //We must display a warning.
-                    $simple_message = true;
 
                     if ($only_one_room and $other_room_parts) {
                         //If there is only one room we can be informative.

@@ -339,17 +339,19 @@ class Resources_RoomRequestController extends AuthenticatedController
         $sql .= " GROUP BY resource_requests.id ";
 
         // if table should be sorted by marking state
-        switch ($this->filter['sorting']) {
-            case 1:
-                $sql .= " ORDER BY resource_requests.marked ";
-                break;
-            case 10:
-                $sql .= " ORDER BY resource_requests.chdate ";
-                break;
-            default:
-                $sql .= " ORDER BY mkdate ";
+        if (isset($this->filter['sorting'])) {
+            switch ($this->filter['sorting']) {
+                case 1:
+                    $sql .= " ORDER BY resource_requests.marked ";
+                    break;
+                case 10:
+                    $sql .= " ORDER BY resource_requests.chdate ";
+                    break;
+                default:
+                    $sql .= " ORDER BY mkdate ";
+            }
+            $sql .= $this->filter['sort_order'] === 'desc' ? 'DESC' : 'ASC';
         }
-        $sql .= $this->filter['sort_order'] === 'desc' ? 'DESC' : 'ASC';
 
         $requests = RoomRequest::findBySql($sql, $sql_params);
         $result = [];
@@ -2657,7 +2659,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             $element = new SelectElement(
                 $class_id,
                 $class['name'],
-                $this->filter['course_type'] === (string)$class_id
+                isset($this->filter['course_type']) && ($this->filter['course_type'] === (string)$class_id)
             );
             $list->addElement(
                 $element->setAsHeader(),
@@ -2668,7 +2670,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                 $element = new SelectElement(
                     $class_id . '_' . $id,
                     $result['name'],
-                    $this->filter['course_type'] === $class_id . '_' . $id
+                    isset($this->filter['course_type']) && ($this->filter['course_type'] === $class_id . '_' . $id)
                 );
                 $list->addElement(
                     $element->setIndentLevel(1),
@@ -2698,7 +2700,7 @@ class Resources_RoomRequestController extends AuthenticatedController
         $widget->addElement(new WidgetElement('<br>'));
         $widget->addCheckbox(
             _('Nur mit Raumangabe'),
-            $this->filter['specific_requests'],
+            !empty($this->filter['specific_requests']),
             $this->planningURL(['toggle_specific_requests' => 1])
         );
         $widget->addCheckbox(
@@ -2710,7 +2712,7 @@ class Resources_RoomRequestController extends AuthenticatedController
 
         $this->requests = $this->getFilteredRoomRequests();
 
-        if ($this->filter['room_id']) {
+        if (!empty($this->filter['room_id'])) {
             $this->resource = Resource::find($this->filter['room_id']);
             if (!$this->resource) {
                 PageLayout::postError(

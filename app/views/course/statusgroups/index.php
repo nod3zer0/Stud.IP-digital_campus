@@ -10,7 +10,7 @@
             'members'     => $group['members'],
             'joinable'    => $group['joinable'],
             'invisible'   => $group['invisible_users'],
-            'load'        => $open_groups ? true : $group['load'],
+            'load'        => $open_groups ? true : $group['load'] ?? true,
             'order'       => $order,
             'sort_by'     => $sort_by,
             'open_group'  => $open_groups,

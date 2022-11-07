@@ -71,7 +71,7 @@ class UserPrivacy
                             }
                         }
 
-                        $child = $idmap[$key] ?: new User_Visibility_Settings();
+                        $child = $idmap[$key] ?? new User_Visibility_Settings();
                         $child->setData([
                             'user_id'    => $this->user->id,
                             'parent_id'  => $vis->id,

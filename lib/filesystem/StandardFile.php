@@ -65,11 +65,11 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
 
         $fileref = new FileRef();
         $fileref['name']                    = $filename;
-        $fileref['description']             = $data['description'] ?: "";
+        $fileref['description']             = $data['description'] ?? "";
         $fileref['downloads']               = 0;
         $fileref['user_id']                 = $user_id;
         $fileref['file_id']                 = $file->getId();
-        $fileref['content_terms_of_use_id'] = $data['content_terms_of_use_id'] ?: ContentTermsOfUse::findDefault()->id;
+        $fileref['content_terms_of_use_id'] = $data['content_terms_of_use_id'] ?? ContentTermsOfUse::findDefault()->id;
 
         return new static($fileref, $file);
     }
