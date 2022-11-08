@@ -117,8 +117,10 @@ class Admin_UserController extends AuthenticatedController
                 $this->order = $this->order == 'desc' ? 'asc' : 'desc';
             }
 
-            $request['vorname']    = $request['vorname'] ?? null;
-            $request['nachname']   = $request['nachname'] ?? null;
+            $request['username']   = $this->getStringValueFromRequest($request, 'username');
+            $request['email']      = $this->getStringValueFromRequest($request, 'email');
+            $request['vorname']    = $this->getStringValueFromRequest($request, 'vorname');
+            $request['nachname']   = $this->getStringValueFromRequest($request, 'nachname');
             $request['inaktiv']    = $inaktiv;
             $request['datafields'] = $search_datafields;
             $request['sort']       = $this->sortby;
@@ -231,6 +233,15 @@ class Admin_UserController extends AuthenticatedController
         ) {
             $this->advanced = true;
         }
+    }
+
+    private function getStringValueFromRequest(array $request, string $key): ?string
+    {
+        if (!isset($request[$key])) {
+            return null;
+        }
+
+        return trim($request[$key]) ?: null;
     }
 
     /**
