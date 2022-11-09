@@ -151,7 +151,9 @@ $cell_steps = $cell_height / 60;
                             $max = 0;
                             $current_matrix = $column->getMatrix();
                             for ($i = ($calc_entry['start'] + 1 + ($start_hour * 100)); $i < $calc_entry['end'] + ($start_hour * 100); $i++) {
-                                $max = max($max, $current_matrix[$i]);
+                                if (isset($current_matrix[$i])) {
+                                    $max = max($max, $current_matrix[$i]);
+                                }
                             }
 
                             // set height and width

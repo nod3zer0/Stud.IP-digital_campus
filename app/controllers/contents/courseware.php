@@ -78,7 +78,7 @@ class Contents_CoursewareController extends AuthenticatedController
 
         $last = UserConfig::get($this->user_id)->getValue('COURSEWARE_LAST_ELEMENT');
 
-        if ($last[$this->user_id]) {
+        if (!empty($last[$this->user_id])) {
             $this->entry_element_id = $last['global'];
             $struct = \Courseware\StructuralElement::findOneBySQL(
                 "id = ? AND range_id = ? AND range_type = 'user'",

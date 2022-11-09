@@ -112,7 +112,11 @@ class StudipRangeTreeViewAdmin extends TreeView{
                         }
                     }
 
-                    $tmp = $this->tree->getAdminRange($this->tree->tree_data[$key]['parent_id']);
+                    if (isset($this->tree->tree_data[$key])) {
+                        $tmp = $this->tree->getAdminRange($this->tree->tree_data[$key]['parent_id']);
+                    } else {
+                        $tmp = [];
+                    }
 
                     if(!empty($tmp)) {
                         foreach($tmp as $i) {

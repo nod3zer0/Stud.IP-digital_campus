@@ -32,8 +32,7 @@ class StudyAreasWizardStep implements CourseWizardStep
         // Load template from step template directory.
         $factory = new Flexi_TemplateFactory($GLOBALS['STUDIP_BASE_PATH'].'/app/views/course/wizard/steps');
         $tpl = $factory->open('studyareas/index');
-        if ($values['studyareas'])
-        {
+        if (!empty($values['studyareas'])) {
             $tree = $this->buildPartialSemTree(StudipStudyArea::backwards(StudipStudyArea::findMany($values['studyareas'])));
             $tpl->set_attribute('assigned', $tree);
         } else {
@@ -80,8 +79,8 @@ class StudyAreasWizardStep implements CourseWizardStep
             }
         }
         $tpl->set_attribute('tree', $tree);
-        $tpl->set_attribute('ajax_url', $values['ajax_url'] ?: URLHelper::getLink('dispatch.php/course/wizard/ajax'));
-        $tpl->set_attribute('no_js_url', $values['no_js_url'] ? : 'dispatch.php/course/wizard/forward/'.$stepnumber.'/'.$temp_id);
+        $tpl->set_attribute('ajax_url', $values['ajax_url'] ?? URLHelper::getLink('dispatch.php/course/wizard/ajax'));
+        $tpl->set_attribute('no_js_url', $values['no_js_url'] ?? 'dispatch.php/course/wizard/forward/'.$stepnumber.'/'.$temp_id);
         $tpl->set_attribute('stepnumber', $stepnumber);
         $tpl->set_attribute('temp_id', $temp_id);
         return $tpl->render();

@@ -181,7 +181,7 @@ class Admin_DatafieldsController extends AuthenticatedController
 
         $type = $type ?: Request::get('datafield_typ');
 
-        $this->type_name  = $this->allclasses[$type];
+        $this->type_name  = $this->allclasses[$type] ?? '';
         $this->object_typ = $type;
         $this->institutes = Institute::getMyInstitutes();
         if (!$this->object_typ) {

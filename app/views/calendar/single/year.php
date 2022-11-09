@@ -46,7 +46,10 @@
             </thead>
 
             <tbody>
-                <? $now = date('Ymd'); ?>
+                <?
+                $now = date('Ymd');
+                $count = 0;
+                ?>
                 <? for ($i = 1; $i < 32; $i++) : ?>
                     <tr>
                         <? for ($month = 1; $month < 13; $month++) : ?>

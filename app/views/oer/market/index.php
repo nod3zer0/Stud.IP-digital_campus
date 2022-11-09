@@ -1,6 +1,6 @@
 <?
+$tags = [];
 if ($best_nine_tags && count($best_nine_tags) > 0) {
-    $tags = [];
     foreach ($best_nine_tags as $tag) {
         $tags[] = [
             'tag_hash' => $tag['tag_hash'],
@@ -8,8 +8,8 @@ if ($best_nine_tags && count($best_nine_tags) > 0) {
         ];
     }
 }
-if ($materialien !== null) {
-    $material_data = [];
+$material_data = [];
+if (!empty($materialien)) {
     foreach ($materialien as $material) {
         $data = $material->toRawArray();
 

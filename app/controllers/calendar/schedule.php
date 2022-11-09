@@ -91,7 +91,7 @@ class Calendar_ScheduleController extends AuthenticatedController
             UserConfig::get($GLOBALS['user']->id)->store('SCHEDULE_SETTINGS',
                 $schedule_settings);
         } else {
-            $this->current_semester = $schedule_settings['semester_id'] ?
+            $this->current_semester = !empty(schedule_settings['semester_id']) ?
                 Semester::find($schedule_settings['semester_id']) :
                 Semester::findCurrent();
         }

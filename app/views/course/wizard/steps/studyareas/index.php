@@ -19,13 +19,13 @@
             </ul>
         </li>
     </ul>
-    <? if (!$stepnumber && !$values['locked']) : ?>
+    <? if (!$stepnumber && !empty($values['locked'])) : ?>
         <div data-dialog-button class="hidden-no-js">
             <?= Studip\Button::createAccept(_('Speichern'), 'save') ?>
         </div>
     <? endif ?>
 </div>
-<? if (!$values['locked']) : ?>
+<? if (!empty($values['locked'])) : ?>
     <div id="studyareas" data-ajax-url="<?= $ajax_url ?>"
         data-forward-url="<?= $no_js_url ?>" data-no-search-result="<?=_('Es wurde kein Suchergebnis gefunden.') ?>">
         <h2><?= _('Alle Studienbereiche') ?></h2>

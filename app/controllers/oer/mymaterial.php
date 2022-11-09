@@ -39,7 +39,7 @@ class Oer_MymaterialController extends AuthenticatedController
             $material->setData(Request::getArray('data'));
             $material['host_id'] = null;
             $material['license_identifier'] = Request::get('license', 'CC-BY-SA-4.0');
-            if ($_FILES['file']['tmp_name']) {
+            if (!empty($_FILES['file']['tmp_name'])) {
                 $material['content_type'] = $_FILES['file']['type'];
                 if (in_array($material['content_type'], $content_types)) {
                     mkdir($tmp_folder);
@@ -51,7 +51,7 @@ class Oer_MymaterialController extends AuthenticatedController
                 }
                 $material['filename'] = $_FILES['file']['name'];
                 move_uploaded_file($_FILES['file']['tmp_name'], $material->getFilePath());
-            } elseif($_SESSION['NEW_OER']['tmp_name']) {
+            } elseif (!empty($_SESSION['NEW_OER']['tmp_name'])) {
                 $material['content_type'] = $_SESSION['NEW_OER']['content_type'] ?: get_mime_type($_SESSION['NEW_OER']['tmp_name']);
                 if (in_array($material['content_type'], $content_types)) {
                     mkdir($tmp_folder);
@@ -66,10 +66,10 @@ class Oer_MymaterialController extends AuthenticatedController
             }
 
 
-            if ($_FILES['image']['tmp_name']) {
+            if (!empty($_FILES['image']['tmp_name'])) {
                 $material['front_image_content_type'] = $_FILES['image']['type'];
                 move_uploaded_file($_FILES['image']['tmp_name'], $material->getFrontImageFilePath());
-            } elseif($_SESSION['NEW_OER']['image_tmp_name']) {
+            } elseif (!empty($_SESSION['NEW_OER']['image_tmp_name'])) {
                 $material['front_image_content_type'] = get_mime_type($_SESSION['NEW_OER']['image_tmp_name']);
                 copy($_SESSION['NEW_OER']['image_tmp_name'], $material->getFrontImageFilePath());
             }

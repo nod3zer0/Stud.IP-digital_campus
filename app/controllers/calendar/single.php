@@ -502,6 +502,8 @@ class Calendar_SingleController extends Calendar_CalendarController
             Request::set('sem_select', $sem);
         }
         $this->group_field = 'sem_number';
+        $this->order_by = $order_by;
+        $this->config_sem_number = Config::get()->IMPORTANT_SEMNUMBER;
         // Needed parameters for selecting courses
         $params = [
             'group_field'         => $this->group_field,
@@ -512,7 +514,6 @@ class Calendar_SingleController extends Calendar_CalendarController
         ];
 
         $this->sem_courses  = MyRealmModel::getPreparedCourses($sem, $params);
-
         $semesters       = new SimpleCollection(Semester::getAll());
         $this->sem       = $sem;
         $this->semesters = $semesters->orderBy('beginn desc');

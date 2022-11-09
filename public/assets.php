@@ -34,7 +34,7 @@ if (!$type || !$id) {
 } else {
     // Load asset
     $model = PluginAsset::find($id);
-    if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] && $model->chdate <= strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+    if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $model->chdate <= strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
         // Cached and still valid
         $response->set_status(304);
     } else {

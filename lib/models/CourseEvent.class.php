@@ -210,7 +210,7 @@ class CourseEvent extends CourseDate implements Event
     {
         $title = _('Keine Berechtigung.');
         if ($this->havePermission(Event::PERMISSION_READABLE)) {
-            $description = trim($this->cycle->description) ?: '';
+            $description = $this->cycle ? trim($this->cycle->description) : '';
             if (sizeof($this->topics)) {
                 $title = $this->course->name.": ".implode(', ', $this->topics->pluck('title'));
             } else {

@@ -1,6 +1,6 @@
 <?php
 # Lifter010: TODO
-$zoom = $my_schedule_settings['zoom'];
+$zoom = $my_schedule_settings['zoom'] ?? 0;
 
 $sidebar = Sidebar::get();
 

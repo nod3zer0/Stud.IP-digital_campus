@@ -222,7 +222,7 @@ class RoomSearchWidget extends SidebarWidget
                         Request::get($name . '_semester_id');
                 }
             } else {
-                if ($data['switch']) {
+                if (!empty($data['switch'])) {
                     if (Request::get($name . '_enabled')) {
                         $data['enabled'] = true;
                     } else {
@@ -399,7 +399,7 @@ class RoomSearchWidget extends SidebarWidget
         //since its begin and end date are set on the client side in
         //the special__available_range property when a semester is selected.
         $time_intervals = [];
-        if ($this->selected_criteria['special__time_range']) {
+        if (!empty($this->selected_criteria['special__time_range'])) {
             $time_range_criteria = $this->selected_criteria['special__time_range'];
 
             //Get and check day of week:

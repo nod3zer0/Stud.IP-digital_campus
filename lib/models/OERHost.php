@@ -63,10 +63,13 @@ class OERHost extends OERIdentity
     public static function find($id)
     {
         $host = parent::find($id);
-        $class = $host['sorm_class'];
-        if ($class && ($class !== 'OERHost') && is_subclass_of($class, 'OERHost')) {
-            $data = $host->toRawArray();
-            $host = $class::buildExisting($data);
+
+        if ($host) {
+            $class = $host['sorm_class'];
+            if ($class && ($class !== 'OERHost') && is_subclass_of($class, 'OERHost')) {
+                $data = $host->toRawArray();
+                $host = $class::buildExisting($data);
+            }
         }
         return $host;
     }

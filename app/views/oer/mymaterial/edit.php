@@ -15,7 +15,7 @@
                        name="data[name]"
                        class="oername"
                        required
-                       value="<?= htmlReady($material['name'] ?: $template['name']) ?>"
+                       value="<?= htmlReady($material['name'] ?: $template['name'] ?? '') ?>"
                        @keyup="editName"
                        maxlength="64">
             </label>
@@ -44,8 +44,8 @@
 
                 <div>
                     <label class="file-upload logo_file"
-                           data-oldurl="<?= htmlReady($_SESSION['NEW_OER']['image_tmp_name'] ? URLHelper::getURL("dispatch.php/oer/mymaterial/show_tmp_image") : $material->getLogoURL()) ?>"
-                           data-customlogo="<?= $_SESSION['NEW_OER']['image_tmp_name'] || $material['front_image_content_type'] ? 1 : 0 ?>">
+                           data-oldurl="<?= htmlReady(!empty($_SESSION['NEW_OER']['image_tmp_name']) ? URLHelper::getURL("dispatch.php/oer/mymaterial/show_tmp_image") : $material->getLogoURL()) ?>"
+                           data-customlogo="<?= !empty($_SESSION['NEW_OER']['image_tmp_name']) || $material['front_image_content_type'] ? 1 : 0 ?>">
                         <?= _('Vorschau-Bilddatei (optional)') ?>
                         <input type="file"
                                name="image"
@@ -67,7 +67,7 @@
 
 
 
-            <? if (!$_SESSION['NEW_OER']['tmp_name']) : ?>
+            <? if (!empty($_SESSION['NEW_OER']['tmp_name'])) : ?>
                 <label class="file drag-and-drop"
                        data-filename="<?= htmlReady($material['filename']) ?>"
                        data-filesize="<?= htmlReady(!$material->isNew() ? filesize($material->getFilePath()) : "") ?>"
@@ -84,7 +84,7 @@
             <label>
                 <?= _('Beschreibung') ?>
                 <textarea
-                        name="data[description]"><?= htmlReady($material['description'] ?: $template['description']) ?></textarea>
+                        name="data[description]"><?= htmlReady($material['description'] ?: $template['description'] ?? '') ?></textarea>
             </label>
 
             <label>
@@ -121,7 +121,7 @@
             <label>
                 <?= _('Vorschau-URL (optional)') ?>
                 <input type="text" name="data[player_url]"
-                       value="<?= htmlReady($material['player_url'] ?: $template['player_url']) ?>">
+                       value="<?= htmlReady($material['player_url'] ?: $template['player_url'] ?? '') ?>">
             </label>
 
             <? if (!$material->isNew()) : ?>
@@ -144,7 +144,7 @@
                                             <?= htmlReady($user['name']) ?>
                                         </span>
                                             <? if (count($material->users) > 1) : ?>
-                                                <?= Icon::create('trash')->asImg(16, ['class' => "text-bottom", 'title' => _('Person als Autor entfernen.')]) ?>
+                                                <?= Icon::create('trash')->asImg(['class' => "text-bottom", 'title' => _('Person als Autor entfernen.')]) ?>
                                             <? endif ?>
                                         </div>
                                     </label>
@@ -186,8 +186,10 @@
                 foreach ($material->getTopics() as $tag) {
                     $tags[] = $tag['name'];
                 }
-                foreach ((array) $template['tags'] as $tag) {
-                    $tags[] = $tag;
+                if (!empty($template['tags'])) {
+                    foreach ((array)$template['tags'] as $tag) {
+                        $tags[] = $tag;
+                    }
                 }
                 ?>
 
@@ -233,7 +235,7 @@
                 <div id="difficulty_slider_edit" style="margin-left: 5px; margin-right: 9px;"></div>
             </div>
 
-            <? if ($template['module_id']) : ?>
+            <? if (!empty($template['module_id'])) : ?>
                 <input type="hidden"
                        name="module_id"
                        value="<?= htmlReady($template['module_id']) ?>">
@@ -273,7 +275,7 @@
             </fieldset>
 
         <? endif ?>
-        <? if ($template['redirect_url']) : ?>
+        <? if (!empty($template['redirect_url'])) : ?>
             <input type="hidden"
                    name="redirect_url"
                    value="<?= htmlReady($template['redirect_url']) ?>">

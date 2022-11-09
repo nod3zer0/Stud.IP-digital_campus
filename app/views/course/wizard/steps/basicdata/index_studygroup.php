@@ -4,7 +4,7 @@
 
 <label class="col-3">
     <span class="required"><?= _('Name') ?></span>
-    <input type="text" name="name" id="wizard-name" maxlength="254" value="<?= $values['name'] ?>" required/>
+    <input type="text" name="name" id="wizard-name" maxlength="254" value="<?= htmlReady($values['name'] ?? '') ?>" required/>
 </label>
 
 <? if(count($types) > 1) : ?>
@@ -31,7 +31,7 @@
 <label class="col-3">
     <?= _('Beschreibung') ?>
     <textarea name="description" id="wizard-description"
-              rows="4"><?= htmlReady($values['description'])?></textarea>
+              rows="4"><?= htmlReady($values['description'] ?? '') ?></textarea>
 </label>
 
 

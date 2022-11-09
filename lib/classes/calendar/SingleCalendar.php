@@ -1234,10 +1234,10 @@ class SingleCalendar
         $properties = $event->getProperties();
         if (is_array($restrictions)) {
             foreach ($restrictions as $property_name => $restriction) {
-                if (is_array($restriction)) {
+                if (is_array($restriction) && isset($properties[mb_strtoupper($property_name)])) {
                     return in_array($properties[mb_strtoupper($property_name)], $restriction);
                 } else if ($restriction != '') {
-                    return $properties[mb_strtoupper($property_name)] == $restriction;
+                    return isset($properties[mb_strtoupper($property_name)]) && $properties[mb_strtoupper($property_name)] === $restriction;
                 }
             }
             return true;

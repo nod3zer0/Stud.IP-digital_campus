@@ -136,6 +136,8 @@ class Admin_SemClassesController extends AuthenticatedController
         }
         if (!count($sem_class->getSemTypes())) {
             $notice = "<br>"._("Beachten Sie, dass es noch keine Veranstaltungstypen gibt!");
+        } else {
+            $notice = '';
         }
         $output = [
             'html' => (string) MessageBox::success(_("Änderungen wurden gespeichert."." ".'<a href="'.URLHelper::getLink("dispatch.php/admin/sem_classes/overview").'">'._("Zurück zur Übersichtsseite.").'</a>').$notice)

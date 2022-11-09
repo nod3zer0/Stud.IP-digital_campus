@@ -111,10 +111,10 @@ class StudipRangeTree extends TreeAbstract
     * useful for the user rights management
     * @access   public
     * @param    string  $item_id
-    * @return   array   of primary keys from table "institute"
+    * @return  bool|array   of primary keys from table "institute"
     */
     function getAdminRange($item_id) {
-        if (!$this->tree_data[$item_id]) {
+        if (empty($this->tree_data[$item_id])) {
             return false;
         }
 

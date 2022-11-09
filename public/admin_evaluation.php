@@ -76,6 +76,7 @@ if ((Context::getId()) && ($view == "eval_sem") || ($view == "eval_inst")) {
     $the_range = Request::option('rangeID');
 }
 
+$isUserrange = null;
 if ($the_range) {
     if (get_Username($the_range)) {
         $the_range = get_Username($the_range);
