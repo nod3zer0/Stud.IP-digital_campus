@@ -1468,7 +1468,7 @@ class Resource extends SimpleORMap implements StudipItem
      *
      * @return SimpleCollection
      */
-    public function getInfolabelPrperties()
+    public function getInfolabelProperties()
     {
         return SimpleCollection::createFromArray(
             ResourceProperty::findBySQL('INNER JOIN `resource_property_definitions` USING (`property_id`)

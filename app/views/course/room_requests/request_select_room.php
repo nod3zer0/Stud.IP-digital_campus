@@ -38,7 +38,7 @@
                                    value="<?= htmlReady($room->id) ?>">
                             <?= htmlReady(mb_substr($room->name, 0, 50)); ?>
                             <? if ($room->properties): ?>
-                                <? $property_names = $room->getInfolabelPrperties()
+                                <? $property_names = $room->getInfolabelProperties()
                                     ->pluck('fullname') ?>
                                 <?= tooltipIcon(implode("\n", $property_names)) ?>
                             <? endif ?>
