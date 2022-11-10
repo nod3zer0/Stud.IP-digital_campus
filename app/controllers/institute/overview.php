@@ -62,7 +62,8 @@ class Institute_OverviewController extends AuthenticatedController
                 throw new Exception('Invalid redirection');
             }
 
-            $this->redirect(URLHelper::getURL($redirect_to, ['cid' => $this->institute_id]));
+            $this->response->add_header('Location', URLHelper::getURL($redirect_to, ['cid' => $this->institute_id]));
+            $this->render_nothing();
             return;
         }
 
