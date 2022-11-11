@@ -169,12 +169,15 @@ class MyRealmModel
 
         $sem_data = Semester::getAllAsArray();
 
-        $semester_ids      = [];
-        for ($i = $min_sem_key; $i <= $max_sem_key; $i++) {
-            if (!empty($sem_data[$i]['semester_id'])) {
-                $semester_ids[] = $sem_data[$i]['semester_id'];
+        $semester_ids = [];
+        if (is_numeric($min_sem_key) && is_numeric($max_sem_key)) {
+            foreach ($sem_data as $index => $data) {
+                if ($index >= $min_sem_key && $index <= $max_sem_key) {
+                    $semester_ids[] = $data['semester_id'];
+                }
             }
         }
+
         $semesters = Semester::findMany($semester_ids);
         $studygroup_filter = !$params['studygroups_enabled'] ? false : true;
         $ordering          = '';

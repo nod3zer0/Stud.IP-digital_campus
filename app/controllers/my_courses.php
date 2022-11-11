@@ -805,12 +805,8 @@ class MyCoursesController extends AuthenticatedController
 
         $widget = new SelectWidget(_('Semesterfilter'), $this->url_for('my_courses/set_semester'), 'sem_select');
         $widget->setMaxLength(50);
-        $widget->addElement(new SelectElement('current', _('Aktuelles Semester'), $sem === 'current'));
-        $widget->addElement(new SelectElement('future', _('Aktuelles und nächstes Semester'), $sem === 'future'));
-        $widget->addElement(new SelectElement('last', _('Aktuelles und letztes Semester'), $sem === 'last'));
-        $widget->addElement(new SelectElement('lastandnext', _('Letztes, aktuelles, nächstes Semester'), $sem === 'lastandnext'));
-        if (Config::get()->MY_COURSES_ENABLE_ALL_SEMESTERS) {
-            $widget->addElement(new SelectElement('all', _('Alle Semester'), $sem === 'all'));
+        foreach ($this->getTextualSemesterEntries() as $key => $label) {
+            $widget->addElement(new SelectElement($key, $label, $sem === $key));
         }
 
         $query = "SELECT semester_data.semester_id
@@ -848,7 +844,7 @@ class MyCoursesController extends AuthenticatedController
         }
 
         // create settings url depended on selected cycle
-        if (isset($sem) && !in_array($sem, words('future all last current'))) {
+        if (isset($sem) && !$this->isValidTextualSemesterEntry($sem)) {
             $this->settings_url = "dispatch.php/my_courses/groups/{$sem}";
         } else {
             $this->settings_url = 'dispatch.php/my_courses/groups';
@@ -1073,12 +1069,21 @@ class MyCoursesController extends AuthenticatedController
             $config_sem = 'future';
         }
 
+        if (
+            $config_sem
+            && !$this->isValidTextualSemesterEntry($config_sem)
+            && !Semester::exists($config_sem)
+        ) {
+            $config_sem = null;
+        }
+
         $sem = Request::get(
             'sem_select',
             $config_sem ?: Config::get()->MY_COURSES_DEFAULT_CYCLE
         );
 
-        if ($sem && !in_array($sem, ['future', 'all', 'last', 'current'])) {
+
+        if ($sem && !$this->isValidTextualSemesterEntry($sem)) {
             Request::set('sem_select', $sem);
         }
 
@@ -1106,5 +1111,37 @@ class MyCoursesController extends AuthenticatedController
         }
 
         return $group_field === 'not_grouped' ? 'sem_number' : $group_field;
+    }
+
+    /**
+     * Returns all valid textual semester entries like 'last', 'future' etc
+     *
+     * @return array<string, string>
+     */
+    private function getTextualSemesterEntries(): array
+    {
+        $entries = [
+            'current'     => _('Aktuelles Semester'),
+            'future'      => _('Aktuelles und nächstes Semester'),
+            'last'        => _('Aktuelles und letztes Semester'),
+            'lastandnext' => _('Letztes, aktuelles, nächstes Semester'),
+        ];
+
+        if (Config::get()->MY_COURSES_ENABLE_ALL_SEMESTERS) {
+            $entries['all'] = _('Alle Semester');
+        }
+
+        return $entries;
+    }
+
+    /**
+     * Returns whether the given entry is a valid textual semester entry.
+     *
+     * @see getTextualSemesterEntries()
+     * @return bool
+     */
+    private function isValidTextualSemesterEntry(string $entry): bool
+    {
+        return array_key_exists($entry, $this->getTextualSemesterEntries());
     }
 }
