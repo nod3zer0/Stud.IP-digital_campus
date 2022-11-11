@@ -22,10 +22,6 @@ class Admin_CourseplanningController extends AuthenticatedController
             PageLayout::postError(_('Sie wurden noch keiner Einrichtung zugeordnet'));
         }
 
-        if (!$GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT) {
-            $GLOBALS['user']->cfg->store('MY_INSTITUTES_DEFAULT', $this->insts[0]['Institut_id']);
-        }
-
         // Semester selection
         if ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE) {
             $this->semester = Semester::find($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE);
@@ -632,13 +628,8 @@ class Admin_CourseplanningController extends AuthenticatedController
         $stgteile = StudiengangTeil::getAllEnriched('fach_name','ASC', ['mvv_fach_inst.institut_id' => $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT]);
         $sidebar = Sidebar::Get();
         $list = new SelectWidget(_('Studiengangteil'), $this->url_for('admin/courseplanning/set_selection/' . $this->selected_weekday), 'stgteil_select');
-        if ($this->selected_weekday) {
-            $list->addElement(new SelectElement('all', _('Alle')), 'stgteil_select-all');
-        }
+        $list->addElement(new SelectElement('all', _('Alle')), 'stgteil_select-all');
         foreach ($stgteile as $stgteil) {
-            if (!$GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL || ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL == 'all' && !$this->selected_weekday)) {
-                $GLOBALS['user']->cfg->store('MY_COURSES_SELECTED_STGTEIL', $stgteil->id);
-            }
             $list->addElement(new SelectElement(
                 $stgteil->id,
                 $stgteil->getDisplayName(),
