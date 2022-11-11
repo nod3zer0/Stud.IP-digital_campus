@@ -265,7 +265,7 @@ class MessagesController extends AuthenticatedController {
 
                         $user = new MessageUser();
                         $user->setData(['user_id' => $member['user_id'], 'snd_rec' => 'rec']);
-                        $this->default_message->receivers[] = $user;
+                        $this->default_message->receivers->append($user);
                     }
                 }
             }
