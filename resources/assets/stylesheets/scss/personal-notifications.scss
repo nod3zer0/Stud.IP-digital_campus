@@ -56,11 +56,6 @@
     .list {
         display:none;
     }
-    li {
-        &:hover {
-            display: none;
-        }
-    }
 
     &.hoverable:hover {
         .list { display: block; }
