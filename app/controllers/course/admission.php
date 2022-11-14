@@ -70,7 +70,8 @@ class Course_AdmissionController extends AuthenticatedController
         $this->activated_admission_rules = AdmissionRule::getAvailableAdmissionRules();
         if (!$this->current_courseset) {
             $available_coursesets = new SimpleCollection();
-            foreach (CourseSet::getCoursesetsByInstituteId($this->course->institut_id) as $cs) {
+            $filter = ['course_set_chdate' => strtotime('-1 year')];
+            foreach (CourseSet::getCoursesetsByInstituteId($this->course->institut_id, $filter) as $cs) {
                 $cs = new CourseSet($cs['set_id']);
                 if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
                     $available_coursesets[] = [
@@ -81,7 +82,7 @@ class Course_AdmissionController extends AuthenticatedController
                     ];
                 }
             }
-            foreach (CourseSet::getglobalCoursesets() as $cs) {
+            foreach (CourseSet::getglobalCoursesets($filter) as $cs) {
                 $cs = new CourseSet($cs['set_id']);
                 if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
                     $available_coursesets[] = [
@@ -92,7 +93,6 @@ class Course_AdmissionController extends AuthenticatedController
                     ];
                 }
             }
-            $available_coursesets = $available_coursesets->findBy('chdate', strtotime('-1 year'), '>');
             $available_coursesets->orderBy('name');
             $this->available_coursesets = $available_coursesets;
 

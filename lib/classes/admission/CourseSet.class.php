@@ -394,8 +394,8 @@ class CourseSet
             $parameters[] = Semester::find($filter['semester_id'])->beginn;
         }
         if (!empty($filter['course_set_chdate'])) {
-            $query .= " AND c.chdate < ?";
-            $parameters[] = $filter['chdate'];
+            $query .= " AND c.chdate > ?";
+            $parameters[] = $filter['course_set_chdate'];
         }
         $query .= " ORDER BY c.name";
         $stmt = DBManager::get()->prepare($query);
@@ -433,8 +433,8 @@ class CourseSet
             $parameters[] = Semester::find($filter['semester_id'])->beginn;
         }
         if (!empty($filter['course_set_chdate'])) {
-            $query .= " AND c.chdate < ?";
-            $parameters[] = $filter['chdate'];
+            $query .= " AND c.chdate > ?";
+            $parameters[] = $filter['course_set_chdate'];
         }
         $query .= " ORDER BY c.name";
         $stmt = DBManager::get()->prepare($query);
