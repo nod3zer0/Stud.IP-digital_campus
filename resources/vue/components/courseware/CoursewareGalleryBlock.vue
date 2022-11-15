@@ -5,9 +5,9 @@
             :canEdit="canEdit"
             :isTeacher="isTeacher"
             :preview="true"
-            @showEdit="initCurrentData"
+            @showEdit="showEdit"
             @storeEdit="storeBlock"
-            @closeEdit="initCurrentData"
+            @closeEdit="closeEdit"
         >
             <template #content>
                 <div v-if="files.length !== 0" class="cw-block-gallery-content" :style="{ 'max-height': currentHeight + 'px' }">
@@ -19,7 +19,7 @@
                     >
                         <div class="cw-block-gallery-number-text">{{ index + 1 }} / {{ files.length }}</div>
                         <img
-                            :src="image.download_url"
+                            :src="image.meta['download-url']"
                             :style="{ 'max-height': currentHeight + 'px' }"
                             @load="
                                 if (files.length - 1 === index) {
@@ -28,7 +28,7 @@
                             "
                         />
                         <div v-if="currentShowFileNames === 'true'" class="cw-block-gallery-file-name">
-                            <span>{{ image.name }}</span>
+                            <span>{{ image.attributes.name }}</span>
                         </div>
                     </div>
                     <div v-if="currentNav === 'true'">
@@ -107,8 +107,9 @@ export default {
             currentHeight: '',
             currentShowFileNames: '',
             currentAutoplayTimer: '',
-            files: [],
+            editModeFiles: [],
             slideIndex: 0,
+            editMode: false,
         };
     },
     computed: {
@@ -135,6 +136,12 @@ export default {
         showFileNames() {
             return this.block?.attributes?.payload?.show_filenames;
         },
+        files() {
+            if (!this.editMode) {
+                return this.block?.attributes?.payload?.files;
+            }
+            return this.editModeFiles;
+        }
     },
     mounted() {
         this.initCurrentData();
@@ -169,7 +176,7 @@ export default {
             this.processFiles(files);
         },
         processFiles(files) {
-            this.files = files
+            this.editModeFiles = files
                 .filter((file) => {
                     if (this.relatedTermOfUse({parent: file, relationship: 'terms-of-use'}).attributes['download-condition'] !== 0) {
                         return false;
@@ -182,13 +189,25 @@ export default {
                 })
                 .map((file) => ({
                     id: file.id,
-                    name: file.attributes.name,
-                    download_url: this.urlHelper.getURL(
-                        'sendfile.php',
-                        { type: 0, file_id: file.id, file_name: file.attributes.name },
-                        true
-                    ),
+                    attributes: {
+                        name: file.attributes.name
+                    },
+                    meta: {
+                        'download-url': this.urlHelper.getURL(
+                            'sendfile.php',
+                            { type: 0, file_id: file.id, file_name: file.attributes.name },
+                            true
+                        ),
+                    },
                 }));
+        },
+        showEdit() {
+            this.editMode = true;
+            this.initCurrentData();
+        },
+        closeEdit() {
+            this.editMode = false;
+            this.initCurrentData();
         },
         storeBlock() {
             let attributes = {};
@@ -206,10 +225,10 @@ export default {
                 containerId: this.block.relationships.container.data.id,
             });
         },
-        plusSlides: function (n) {
+        plusSlides(n) {
             this.showSlides((this.slideIndex += n));
         },
-        showSlides: function (n) {
+        showSlides(n) {
             let slides = this.$refs.images;
             if (slides === undefined) {
                 return false;
@@ -225,7 +244,7 @@ export default {
             });
             slides[this.slideIndex].style.display = 'block';
         },
-        playSlides: function () {
+        playSlides() {
             let slides = this.$refs.images;
             slides.forEach((slide) => {
                 slide.style.display = 'none';

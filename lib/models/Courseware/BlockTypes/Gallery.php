@@ -29,6 +29,62 @@ class Gallery extends BlockType
         return _('Bilder aus einem Ordner im Dateibereich zeigen.');
     }
 
+        /**
+     * Returns the decoded payload of the block associated with this instance.
+     *
+     * @return mixed the decoded payload
+     */
+    public function getPayload()
+    {
+        $user = \User::findCurrent();
+        $payload = $this->decodePayloadString($this->block['payload']);
+
+        $folder = \Folder::find($payload['folder_id']);
+        $payload['folder-type'] = null;
+        $payload['files'] = [];
+
+        if ($folder) {
+            $typedFolder = $folder->getTypedFolder();
+            if ($typedFolder->folder_type === 'HiddenFolder' && !$typedFolder->download_allowed) {
+                return $payload;
+            }
+
+            $payload['folder-type'] = $typedFolder->folder_type;
+
+            foreach ($typedFolder->getFiles() as $folderFile) {
+                $fileRef = $folderFile->getFileRef();
+                $file = [];
+                $file['id'] = $folderFile->id;
+                $file['attributes'] = [
+                    'name'          => $folderFile->name,
+                    'mime-type'     => $folderFile->mime_type,
+                    'filesize'      => (int) $folderFile->size,
+                    'mkdate'        => date('c', $folderFile->mkdate),
+                ];
+                $file['relationships'] = [
+                    'owner' => [
+                        'data' => ['type' => 'users', 'id' => $folderFile->user_id],
+                        'meta' => ['name' => $fileRef->getAuthorName()]
+                        ]
+                ];
+                $file['meta'] = [
+                    'download-url'  => $folderFile->getDownloadURL(),
+                ];
+    
+                if ($this->filePermission($typedFolder, $file, $user) && $fileRef->isImage()) {
+                    array_push($payload['files'], $file);
+                }
+            }
+        }
+
+        return $payload;
+    }
+
+    private function filePermission($typedFolder, $file, $user): bool
+    {
+        return $typedFolder->folder_type !== 'HomeworkFolder' || $user->id === $file['relationships']['owner']['data']['id'] || $typedFolder->isReadable($user->id);
+    }
+
     public function initialPayload(): array
     {
         return [
