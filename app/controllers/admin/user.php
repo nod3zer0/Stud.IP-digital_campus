@@ -123,6 +123,9 @@ class Admin_UserController extends AuthenticatedController
                 $this->order = $this->order == 'desc' ? 'asc' : 'desc';
             }
 
+            $request['sortby'] = $this->sortby;
+            $request['order'] = $this->order;
+
             $empty_search          = $request['perm'] === 'alle';
 
             $values = [

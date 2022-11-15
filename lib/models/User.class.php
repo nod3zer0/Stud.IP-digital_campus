@@ -448,31 +448,33 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         $query .= implode(' AND ', $where);
         $query .= " GROUP BY au.`user_id` ";
 
-        //sortieren
-        switch ($attributes['sort']) {
-            case "perms":
-                $query .= "ORDER BY au.`perms` {$attributes['order']}, au.`username`";
-                break;
-            case "Vorname":
-                $query .= "ORDER BY au.`Vorname` {$attributes['order']}, au.`Nachname`";
-                break;
-            case "Nachname":
-                $query .= "ORDER BY au.`Nachname` {$attributes['order']}, au.`Vorname`";
-                break;
-            case "Email":
-                $query .= "ORDER BY au.`Email` {$attributes['order']}, au.`username`";
-                break;
-            case "changed":
-                $query .= "ORDER BY uo.`last_lifesign` {$attributes['order']}, au.`username`";
-                break;
-            case "mkdate":
-                $query .= "ORDER BY ui.`mkdate` {$attributes['order']}, au.`username`";
-                break;
-            case "auth_plugin":
-                $query .= "ORDER BY `auth_plugin` {$attributes['order']}, au.`username`";
-                break;
-            default:
-                $query .= " ORDER BY au.`username` {$attributes['order']}";
+        if (!empty($attributes['sortby'])) {
+            //sortieren
+            switch ($attributes['sortby']) {
+                case "perms":
+                    $query .= "ORDER BY au.`perms` {$attributes['order']}, au.`username`";
+                    break;
+                case "Vorname":
+                    $query .= "ORDER BY au.`Vorname` {$attributes['order']}, au.`Nachname`";
+                    break;
+                case "Nachname":
+                    $query .= "ORDER BY au.`Nachname` {$attributes['order']}, au.`Vorname`";
+                    break;
+                case "Email":
+                    $query .= "ORDER BY au.`Email` {$attributes['order']}, au.`username`";
+                    break;
+                case "changed":
+                    $query .= "ORDER BY uo.`last_lifesign` {$attributes['order']}, au.`username`";
+                    break;
+                case "mkdate":
+                    $query .= "ORDER BY ui.`mkdate` {$attributes['order']}, au.`username`";
+                    break;
+                case "auth_plugin":
+                    $query .= "ORDER BY `auth_plugin` {$attributes['order']}, au.`username`";
+                    break;
+                default:
+                    $query .= " ORDER BY au.`username` {$attributes['order']}";
+            }
         }
 
         return DBManager::get()->fetchAll($query, $params, __CLASS__ . '::buildExisting');
