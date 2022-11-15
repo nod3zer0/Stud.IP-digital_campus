@@ -147,6 +147,17 @@ class ConsultationSlot extends SimpleORMap
     }
 
     /**
+     * Returns whether the slot is locked for bookings.
+     *
+     * @return bool
+     */
+    public function isLocked(): bool
+    {
+        return $this->block->lock_time
+            && strtotime("-{$this->block->lock_time} hours", $this->block->start) < time();
+    }
+
+    /**
      * Creates a Stud.IP calendar event relating to the slot.
      *
      * @param  User $user User object to create the event for
@@ -282,6 +293,18 @@ class ConsultationSlot extends SimpleORMap
             restoreLanguage();
 
         }
+    }
+
+    /**
+     * Returns whether the given user may create a booking for this slot.
+     */
+    public function userMayCreateBookingForSlot(\User $user = null): bool
+    {
+        $user = $user ?? User::findCurrent();
+
+        return ConsultationBooking::userMayCreateBookingForRange($this->block->range, $user)
+            && !$this->isOccupied()
+            && !$this->isLocked();
     }
 
 

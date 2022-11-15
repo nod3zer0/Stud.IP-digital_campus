@@ -7,6 +7,7 @@ use WoohooLabs\Yang\JsonApi\Response\JsonApiResponse;
 
 require_once __DIR__ . '/ConsultationHelper.php';
 
+// TODO: Test locked blocks
 class ConsultationsBookingCreateTest extends Codeception\Test\Unit
 {
     use ConsultationHelper;
@@ -25,6 +26,24 @@ class ConsultationsBookingCreateTest extends Codeception\Test\Unit
             $this->tester->getCredentialsForTestAutor()['id'],
             [201]
         );
+    }
+
+    public function testAutorMayCreateNotCreateBookingDueToLock(): void
+    {
+        $credentials = $this->tester->getCredentialsForTestDozent();
+        $range = User::find($credentials['id']);
+
+        $block = $this->createBlockWithSlotsForRange($range, ['lock_time' => 2]);
+        $slot = $this->getSlotFromBlock($block);
+
+        $response = $this->createBooking(
+            $credentials,
+            $slot,
+            $this->tester->getCredentialsForTestAutor()['id'],
+            null
+        );
+
+        $this->assertEquals(409, $response->getStatusCode());
     }
 
     public function testSlotIsOccupied(): void

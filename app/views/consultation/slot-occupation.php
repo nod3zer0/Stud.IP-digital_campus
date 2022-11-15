@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var ConsultationSlot $slot
+ */
+?>
 <? if ($slot->isOccupied()): ?>
     <span class="consultation-occupied">
     <? if ($slot->block->size > 1): ?>
@@ -11,6 +16,10 @@
     <? else: ?>
         <?= _('belegt') ?>
     <? endif; ?>
+    </span>
+<? elseif ($slot->isLocked()): ?>
+    <span class="consultation-slot-not-bookable">
+        <?= _('nicht buchbar') ?>
     </span>
 <? else: ?>
     <span class="consultation-free">

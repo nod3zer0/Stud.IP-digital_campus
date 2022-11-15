@@ -1,3 +1,14 @@
+<?php
+/**
+ * @var ConsultationBlock[] $blocks
+ * @var Consultation_OverviewController $controller
+ * @var int $count
+ * @var int $limit
+ * @var int $page
+ *
+ * @var callable $displayNote
+ */
+?>
 <? if (count($blocks) === 0): ?>
 
 <?= MessageBox::info(_('Aktuell werden keine Termine angeboten.'))->hideClose() ?>
@@ -6,10 +17,10 @@
 
 <table class="default">
     <colgroup>
-        <col width="10%">
-        <col width="10%">
+        <col style="width: 10%">
+        <col style="width: 10%">
         <col>
-        <col width="24px">
+        <col style="width: 24px">
     </colgroup>
     <thead>
         <tr>
@@ -45,10 +56,12 @@
                 <a href="<?= $controller->cancel($block, $slot) ?>" data-dialog="size=auto">
                     <?= Icon::create('trash')->asImg(tooltip2(_('Termin absagen'))) ?>
                 </a>
-            <? elseif (!$slot->isOccupied()): ?>
+            <? elseif ($slot->userMayCreateBookingForSlot()): ?>
                 <a href="<?= $controller->book($block, $slot) ?>" data-dialog="size=auto">
                     <?= Icon::create('add')->asImg(tooltip2(_('Termin reservieren'))) ?>
                 </a>
+            <? else: ?>
+                <?= Icon::create('add', Icon::ROLE_INACTIVE)->asImg(tooltip2(_('Dieser Termin ist für Buchungen gesperrt.'))) ?>
             <? endif; ?>
             </td>
         </tr>

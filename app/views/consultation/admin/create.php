@@ -140,6 +140,18 @@ $intervals = [
                    value="<?= Request::int('pause_duration', 15) ?>"
                    min="1">
         </label>
+
+        <label>
+            <input type="checkbox" name="lock" value="1" data-shows=".lock-inputs" data-activates=".lock-inputs input">
+            <?= _('Termine für Buchungen sperren?') ?>
+        </label>
+
+        <label class="lock-inputs">
+            <?= _('Wieviele Stunden vor Beginn des Blocks sollen die Termine für Buchungen gesperrt werden?') ?>
+            <input type="number" name="lock_time"
+                   value="<?= htmlReady(Request::int('lock_time', 24)) ?>"
+                   min="1">
+        </label>
     </fieldset>
 
 <? if ($responsible): ?>

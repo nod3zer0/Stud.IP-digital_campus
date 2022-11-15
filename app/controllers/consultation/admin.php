@@ -199,6 +199,7 @@ class Consultation_AdminController extends ConsultationController
                 $block->confirmation_text = trim(Request::get('confirmation-text')) ?: null;
                 $block->note              = Request::get('note');
                 $block->size              = Request::int('size', 1);
+                $block->lock_time         = Request::int('lock_time');
 
                 $slots = $block->createSlots(Request::int('duration'), $pause_time, $pause_duration);
                 if (count($slots) === 0) {
@@ -387,6 +388,7 @@ class Consultation_AdminController extends ConsultationController
         $this->block->show_participants = Request::bool('show-participants', false);
         $this->block->require_reason = Request::option('require-reason');
         $this->block->confirmation_text = trim(Request::get('confirmation-text'));
+        $this->block->lock_time = Request::int('lock_time');
 
         foreach ($this->block->slots as $slot) {
             $slot->note = '';

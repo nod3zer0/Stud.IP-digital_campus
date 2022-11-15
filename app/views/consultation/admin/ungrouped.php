@@ -62,6 +62,7 @@
                     date('H:i', $block->start),
                     date('H:i', $block->end)
                 ) ?>
+                <?= $this->render_partial('consultation/block-locked.php', compact('block')) ?>
             </td>
             <td>
             <? if (count($block->responsibilities) > 0): ?>
@@ -83,7 +84,7 @@
             <td class="actions">
                 <?= ActionMenu::get()->setContext(strval($block))->addLink(
                     $controller->editURL($block, 0, $page),
-                    _('Information bearbeiten'),
+                    _('Block bearbeiten'),
                     Icon::create('edit'),
                     ['data-dialog' => 'size=auto']
                 )->addLink(

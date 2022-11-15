@@ -23,10 +23,13 @@
  * @property string $confirmation_text database column
  * @property string $note database column
  * @property string $size database column
+ * @property int $lock_time
  * @property int $mkdate database column
  * @property int $chdate database column
  *
  * @property bool $has_bookings computed column
+ * @property string $range_display
+ * @property bool $is_expired
  * @property Range $range computed column
  * @property ConsultationSlot[]|SimpleORMapCollection $slots has_many ConsultationSlot
  * @property ConsultationResponsibility[]|SimpleCollection $responsibilities has_many ConsultationResponsibility

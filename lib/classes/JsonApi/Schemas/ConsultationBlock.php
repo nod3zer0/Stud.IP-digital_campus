@@ -26,6 +26,8 @@ class ConsultationBlock extends SchemaProvider
             'start' => date('c', $resource->start),
             'end'   => date('c', $resource->end),
 
+            'lock-time' => $resource->lock_time,
+
             'size'              => (int) $resource->size,
             'show-participants' => (bool) $resource->show_participants,
             'require-reason'    => $resource->require_reason,

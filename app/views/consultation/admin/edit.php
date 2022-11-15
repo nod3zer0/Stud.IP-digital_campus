@@ -27,7 +27,20 @@
             <textarea name="note"><?= htmlReady($block->note ) ?></textarea>
         </label>
 
-    <? if ($responsible): ?>
+        <label>
+            <input type="checkbox" name="lock" value="1" data-shows=".lock-inputs" data-activates=".lock-inputs input"
+                   <? if ($block->lock_time) echo 'checked'; ?>>
+            <?= _('Termine für Buchungen sperren?') ?>
+        </label>
+
+        <label class="lock-inputs">
+            <?= _('Wieviele Stunden vor Beginn des Blocks sollen die Termine für Buchungen gesperrt werden?') ?>
+            <input type="number" name="lock_time"
+                   value="<?= htmlReady($block->lock_time) ?>"
+                   min="1">
+        </label>
+
+        <? if ($responsible): ?>
         <?= $this->render_partial('consultation/admin/block-responsibilities.php', compact('responsible', 'block')) ?>
     <? endif; ?>
 

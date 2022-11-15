@@ -23,10 +23,13 @@
     }
 }
 .consultation-free {
-    color: $green;
+    color: var(--green);
 }
 .consultation-occupied {
-    color: $red;
+    color: var(--red);
+}
+.consultation-slot-not-bookable {
+    color: var(--light-gray-color);
 }
 
 .consultation-overview {

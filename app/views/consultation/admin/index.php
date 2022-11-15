@@ -24,11 +24,11 @@
 <form action="<?= $controller->bulk($page, $current_action === 'expired') ?>" method="post">
 <table class="default consultation-overview">
     <colgroup>
-        <col width="24px">
-        <col width="10%">
-        <col width="12%">
+        <col style="width: 24px">
+        <col style="width: 10%">
+        <col style="width: 12%">
         <col>
-        <col width="48px">
+        <col style="width: 48px">
     </colgroup>
     <thead>
         <tr>
@@ -56,7 +56,7 @@
             <th class="actions">
                 <?= ActionMenu::get()->setContext(strval($block['block']))->addLink(
                     $controller->editURL($block['block'], 0, $page),
-                    _('Bearbeiten'),
+                    _('Block bearbeiten'),
                     Icon::create('edit'),
                     ['data-dialog' => 'size=auto']
                 )->addLink(

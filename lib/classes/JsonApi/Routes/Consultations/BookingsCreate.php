@@ -29,6 +29,10 @@ class BookingsCreate extends JsonApiController
             throw new ConflictException('The slot is already occupied');
         }
 
+        if (!$slot->userMayCreateBookingForSlot($booking_user)) {
+            throw new ConflictException('The slot is locked for bookings');
+        }
+
         $booking = \ConsultationBooking::create([
             'slot_id' => $slot->id,
             'user_id' => $booking_user->id,

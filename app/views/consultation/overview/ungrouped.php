@@ -73,12 +73,14 @@
             <td class="actions">
             <? if ($slot->isOccupied($GLOBALS['user']->id)): ?>
                 <a href="<?= $controller->cancel($block, $slot) ?>" data-dialog="size=auto">
-                    <?= Icon::create('remove/consultation')->asImg(tooltip2(_('Termin absagen'))) ?>
+                    <?= Icon::create('trash')->asImg(tooltip2(_('Termin absagen'))) ?>
                 </a>
-            <? elseif (!$slot->isOccupied()): ?>
+            <? elseif ($slot->userMayCreateBookingForSlot()): ?>
                 <a href="<?= $controller->book($block, $slot) ?>" data-dialog="size=auto">
-                    <?= Icon::create('add/consultation')->asImg(tooltip2(_('Termin reservieren'))) ?>
+                    <?= Icon::create('add')->asImg(tooltip2(_('Termin reservieren'))) ?>
                 </a>
+            <? else: ?>
+                <?= Icon::create('add', Icon::ROLE_INACTIVE)->asImg(tooltip2(_('Dieser Termin ist für Buchungen gesperrt.'))) ?>
             <? endif; ?>
             </td>
         </tr>

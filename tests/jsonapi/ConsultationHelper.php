@@ -41,19 +41,23 @@ trait ConsultationHelper
         return User::find($credentials['id']);
     }
 
-    protected function createBlockWithSlotsForRange(Range $range): ConsultationBlock
+    protected function createBlockWithSlotsForRange(Range $range, array $additional_data = []): ConsultationBlock
     {
+        $hour = date('H');
+        $begin = strtotime("today {$hour}:00:00");
+        $end = strtotime('+2 hours', $begin);
+
         $blocks = ConsultationBlock::generateBlocks(
             $range,
-            strtotime('today 8:00'),
-            strtotime('today 10:00'),
+            $begin,
+            $end,
             date('w'),
             1
         );
         $blocks = iterator_to_array($blocks);
 
         $block = reset($blocks);
-        $block->setData(self::$BLOCK_DATA);
+        $block->setData(array_merge(self::$BLOCK_DATA, $additional_data));
 
         $block->slots->exchangeArray($block->createSlots(15));
         foreach ($block->slots as $slot) {

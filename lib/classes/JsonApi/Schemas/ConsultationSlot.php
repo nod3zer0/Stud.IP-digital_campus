@@ -17,6 +17,12 @@ class ConsultationSlot extends SchemaProvider
         return $resource->id;
     }
 
+    /**
+     * @param \ConsultationSlot  $resource
+     * @param ContextInterface $context
+     *
+     * @return iterable
+     */
     public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
@@ -25,6 +31,9 @@ class ConsultationSlot extends SchemaProvider
 
             'start_time' => date('c', $resource->start_time),
             'end_time'   => date('c', $resource->end_time),
+
+            'is-bookable' => !$resource->isOccupied() && !$resource->isLocked(),
+            'is-locked'   => $resource->isLocked(),
 
             'mkdate' => date('c', $resource->mkdate),
             'chdate' => date('c', $resource->chdate),

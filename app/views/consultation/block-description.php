@@ -6,6 +6,8 @@
     date('H:i', $block->end)
 ) ?>
 
+<?= $this->render_partial('consultation/block-locked.php', compact('block')) ?>
+
 (<?= formatLinks($block->room) ?>)
 
 <? if ($block->show_participants): ?>
