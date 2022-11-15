@@ -55,7 +55,7 @@ trait ConsultationHelper
         $block = reset($blocks);
         $block->setData(self::$BLOCK_DATA);
 
-        $block->createSlots(15);
+        $block->slots->exchangeArray($block->createSlots(15));
         foreach ($block->slots as $slot) {
             $slot->setData(self::$SLOT_DATA['note']);
         }

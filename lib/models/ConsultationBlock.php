@@ -14,7 +14,6 @@
  * @property string $block_id database column
  * @property string $range_id database column
  * @property string $range_type database column
- * @property string $teacher_id database column
  * @property int $start database column
  * @property int $end database column
  * @property string $room database column
@@ -134,50 +133,12 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
      * @param int|null $pause_time     Create a pause after $pause_time minutes
      * @param int|null $pause_duration Duration of the pause
      */
-    public static function countBlocks($start, $end, $week_day, $interval, $duration, $pause_time = null, $pause_duration = null)
+    public static function countSlots($start, $end, $week_day, $interval, $duration, $pause_time = null, $pause_duration = null)
     {
         $count = 0;
-
-        $start_time = date('H:i', $start);
-        $end_time   = date('H:i', $end);
-
-        // Adjust current date to match week of day
-        $current = $start;
-        while (date('w', $current) != $week_day) {
-            $current = strtotime('+1 day', $current);
+        foreach (self::generateBlocks(new User(), $start, $end, $week_day, $interval, true) as $block) {
+            $count += count($block->createSlots($duration, $pause_time, $pause_duration));
         }
-
-        while ($current <= $end) {
-            $temp    = holiday($current);
-            $holiday = is_array($temp) && $temp['col'] === 3;
-
-            if (!$holiday) {
-                $block_start = strtotime("today {$start_time}", $current);
-                $block_end   = strtotime("today {$end_time}", $current);
-
-                $now = $block_start;
-                while ($now < $block_end) {
-                    $is_in_pause = false;
-                    if ($pause_time !== null) {
-                        $is_in_pause = self::checkIfSlotIsInPause(
-                            $now,
-                            strtotime("+{$duration} minutes", $now),
-                            $block_start,
-                            $block_end,
-                            $pause_time,
-                            $pause_duration
-                        );
-                    }
-                    if (!$is_in_pause) {
-                        $count += 1;
-                    }
-                    $now = strtotime("+{$duration} minutes", $now);
-                }
-            }
-
-            $current = strtotime("+{$interval} weeks", $current);
-        }
-
         return $count;
     }
 
@@ -196,7 +157,7 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
      * @param  int    $interval   Week interval (skip $interval weeks between
      *                            blocks)
      */
-    public static function generateBlocks(Range $range, $start, $end, $week_day, $interval)
+    public static function generateBlocks(Range $range, $start, $end, $week_day, $interval, bool $fail_silent = false)
     {
         $start_time = date('H:i', $start);
         $end_time   = date('H:i', $end);
@@ -212,7 +173,16 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
             $holiday = is_array($temp) && $temp['col'] === 3;
 
             if (!$holiday) {
-                if ($overlaps = self::checkOverlaps($range, $start, $end)) {
+                $overlaps = self::checkOverlaps($range, $start, $end);
+                if (!$overlaps) {
+                    $block = new self();
+                    $block->range_id   = $range->getRangeId();
+                    $block->range_type = $range->getRangeType();
+                    $block->start      = strtotime("today {$start_time}", $current);
+                    $block->end        = strtotime("today {$end_time}", $current);
+
+                    yield $block;
+                } elseif (!$fail_silent) {
                     $details = [];
                     foreach ($overlaps as $overlap) {
                         $details[] = sprintf(
@@ -229,14 +199,6 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
                         $details
                     );
                 }
-
-                $block = new self();
-                $block->range_id   = $range->getRangeId();
-                $block->range_type = $range->getRangeType();
-                $block->start      = strtotime("today {$start_time}", $current);
-                $block->end        = strtotime("today {$end_time}", $current);
-
-                yield $block;
             }
 
             $current = strtotime("+{$interval} weeks", $current);
@@ -279,33 +241,33 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
      * @param int      $duration       Duration of a slot in minutes
      * @param int|null $pause_time     Create a pause after $pause_time minutes
      * @param int|null $pause_duration Duration of the pause
+     * @return ConsultationSlot[]
      */
-    public function createSlots($duration, int $pause_time = null, int $pause_duration = null)
+    public function createSlots($duration, int $pause_time = null, int $pause_duration = null): array
     {
+        $slots = [];
+        $accumulated_durations = 0;
+
         $now = $this->start;
         while ($now < $this->end) {
-            $is_in_pause = false;
-            if ($pause_time !== null) {
-                $is_in_pause = self::checkIfSlotIsInPause(
-                    $now,
-                    strtotime("+{$duration} minutes", $now),
-                    $this->start,
-                    $this->end,
-                    $pause_time,
-                    $pause_duration
-                );
-            }
-            if (!$is_in_pause) {
-                $slot = new ConsultationSlot();
-                $slot->block_id   = $this->id;
-                $slot->start_time = $now;
-                $slot->end_time   = strtotime("+{$duration} minutes", $now);
+            $accumulated_durations += $duration;
 
-                $this->slots[] = $slot;
+            if ($pause_time && $accumulated_durations > $pause_time) {
+                $accumulated_durations = 0;
+                $now = strtotime("+{$pause_duration} minutes", $now);
+                continue;
             }
+
+            $slots[] = ConsultationSlot::build([
+                'block_id'   => $this->id,
+                'start_time' => $now,
+                'end_time'   => strtotime("+{$duration} minutes", $now),
+            ]);
 
             $now = strtotime("+{$duration} minutes", $now);
         }
+
+        return $slots;
     }
 
     /**

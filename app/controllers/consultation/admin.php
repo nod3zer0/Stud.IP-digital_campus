@@ -160,14 +160,22 @@ class Consultation_AdminController extends ConsultationController
                 throw new InvalidArgumentException(_('Die Endzeit liegt vor der Startzeit!'));
             }
 
-            $slot_count = ConsultationBlock::countBlocks(
+            // Determine duration of a slot and pause times
+            $duration = Request::int('duration');
+            $pause_time = Request::bool('pause') ? Request::int('pause_time') : null;
+            $pause_duration = Request::bool('pause') ? Request::int('pause_duration') : null;
+            if ($pause_time && $pause_time < $duration) {
+                throw new InvalidArgumentException(_('Die definierte Zeit bis zur Pause ist kleiner als die Dauer eines Termins.'));
+            }
+
+            $slot_count = ConsultationBlock::countSlots(
                 $start,
                 $end,
                 Request::int('day-of-week'),
                 Request::int('interval'),
                 Request::int('duration'),
-                Request::bool('pause') ? Request::int('pause_time') : null,
-                Request::bool('pause') ? Request::int('pause_duration') : null
+                $pause_time,
+                $pause_duration
             );
             if ($slot_count >= self::SLOT_COUNT_THRESHOLD && !Request::int('confirmed')) {
                 $this->flash['confirm-many'] = $slot_count;
@@ -192,11 +200,13 @@ class Consultation_AdminController extends ConsultationController
                 $block->note              = Request::get('note');
                 $block->size              = Request::int('size', 1);
 
-                $block->createSlots(
-                    Request::int('duration'),
-                    Request::bool('pause') ? Request::int('pause_time') : null,
-                    Request::bool('pause') ? Request::int('pause_duration') : null
-                );
+                $slots = $block->createSlots(Request::int('duration'), $pause_time, $pause_duration);
+                if (count($slots) === 0) {
+                    continue;
+                }
+
+                $block->slots->exchangeArray($slots);
+
                 $stored += $block->store();
 
                 // Store block responsibilites

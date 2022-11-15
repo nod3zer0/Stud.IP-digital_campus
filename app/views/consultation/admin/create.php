@@ -121,7 +121,9 @@ $intervals = [
         </label>
 
         <label>
-            <input type="checkbox" name="pause" value="1" data-shows=".pause-inputs" data-activates=".pause-inputs input">
+            <input type="checkbox" name="pause" value="1"
+                   data-shows=".pause-inputs" data-activates=".pause-inputs input"
+                    <? if (Request::bool('pause')) echo 'checked'; ?>>
             <?= _('Pausen zwischen den Terminen einfügen?') ?>
         </label>
 
