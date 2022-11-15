@@ -35,11 +35,11 @@ if (!empty($materialien)) {
 </form>
 
 
-<? if ($new_ones) : ?>
+<? if (!empty($new_ones)) : ?>
     <div id="new_ones">
         <h2><?= _('Neuste Materialien') ?></h2>
         <ul class="oer_material_overview">
-            <?= $this->render_partial("oer/market/_materials.php", ['materialien' => $new_ones]) ?>
+            <?= $this->render_partial('oer/market/_materials.php', ['materialien' => $new_ones]) ?>
         </ul>
     </div>
 <? endif ?>
