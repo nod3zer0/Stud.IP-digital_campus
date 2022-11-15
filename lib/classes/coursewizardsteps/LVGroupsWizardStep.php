@@ -407,7 +407,11 @@ class LVGroupsWizardStep implements CourseWizardStep
             }
         } else {
             // optional step if study areas step is activated and at least one area is assigned
-            if (!count($values[__CLASS__]['lvgruppe_selection']['areas'])) {
+            if (
+                !isset($values[__CLASS__]['lvgruppe_selection']['areas'])
+                || !is_array($values[__CLASS__]['lvgruppe_selection']['areas'])
+                || count($values[__CLASS__]['lvgruppe_selection']['areas']) === 0
+            ) {
                 $ok = false;
                 $errors[] = _('Der Veranstaltung muss mindestens eine Lehrveranstaltungsgruppe zugeordnet sein.');
             }
