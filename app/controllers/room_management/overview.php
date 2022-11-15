@@ -37,33 +37,22 @@ class RoomManagement_OverviewController extends AuthenticatedController
         }
         parent::before_filter($action, $args);
         $this->user = User::findCurrent();
+        $this->user_is_root = $GLOBALS['perm']->have_perm('root');
+        $this->user_is_global_resource_user = ResourceManager::userHasGlobalPermission($this->user);
+        $this->user_is_global_resource_admin = ResourceManager::userHasGlobalPermission($this->user, 'admin');
 
-        if ($this->user) {
-            $this->show_resource_actions = (
-                ResourceManager::userHasGlobalPermission($this->user, 'autor')
-                ||
-                ResourceManager::userHasResourcePermissions($this->user, 'autor')
-            );
+        $this->show_resource_actions = (
+            ResourceManager::userHasGlobalPermission($this->user, 'autor')
+            ||
+            ResourceManager::userHasResourcePermissions($this->user, 'autor')
+        );
+        $this->show_admin_actions = (
+            $this->user_is_global_resource_admin
+            ||
+            ResourceManager::userHasResourcePermissions($this->user)
+        );
+        $this->show_global_admin_actions = $this->user_is_global_resource_admin;
 
-            $this->show_admin_actions = (
-                $this->user_is_global_resource_admin
-                ||
-                ResourceManager::userHasResourcePermissions($this->user)
-                ||
-                $GLOBALS['perm']->have_perm('root')
-            );
-            $this->user_is_global_resource_user = ResourceManager::userHasGlobalPermission($this->user);
-            $this->user_is_root = $GLOBALS['perm']->have_perm('root');
-            $this->user_is_global_resource_admin = ResourceManager::userHasGlobalPermission(
-                    $this->user,
-                    'admin'
-                ) || $this->user_is_root;
-            $this->show_global_admin_actions = $this->user_is_global_resource_admin
-                && ResourceManager::userHasGlobalPermission(
-                    $this->user,
-                    'admin'
-                );
-        }
     }
 
     public function index_action()

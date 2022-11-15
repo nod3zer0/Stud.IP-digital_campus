@@ -153,17 +153,7 @@
         || $show_tutor_actions || $show_admin_actions
         || $show_global_admin_actions || $additional_actions): ?>
         <td class="actions">
-            <?= $this->render_partial('resources/_common/_action_menu.php',
-                compact(
-                    'show_user_actions',
-                    'show_autor_actions',
-                    'show_autor_actions',
-                    'show_admin_actions',
-                    'show_global_admin_actions',
-                    'additional_actions',
-                    'resource'
-                )
-            );?>
+            <?= $this->render_partial('resources/_common/_action_menu.php') ?>
         </td>
     <? endif ?>
 </tr>
