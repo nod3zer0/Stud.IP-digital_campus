@@ -117,21 +117,8 @@ class BlubberComment extends SimpleORMap implements PrivacyObject
 
     public function transformMentions()
     {
-        BlubberThread::$mention_thread_id = $this->thread_id;
-        StudipTransformFormat::addStudipMarkup(
-            'mention1',
-            '(?:^|\W)(@\"[^\n\"]*\")',
-            '',
-            'BlubberThread::mention'
-        );
-        StudipTransformFormat::addStudipMarkup(
-            'mention2',
-            '(?:^|\W)(@[^\s]*[\d\w_]+)',
-            '',
-            'BlubberThread::mention'
-        );
-        $this['content'] = \Studip\Markup::purifyHtml($this['content']);
-        $this['content'] = transformBeforeSave($this['content']);
+        $callback = [$this->thread, 'mention'];
+        $this['content'] = preg_replace_callback('/\B@("[^\n"]+"|\S+)/', $callback, $this['content']);
     }
 
     /**

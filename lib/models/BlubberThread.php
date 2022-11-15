@@ -47,22 +47,18 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
         parent::configure($config);
     }
 
-    public static $mention_thread_id = null;
     protected $last_visit = null;
 
     /**
-     * Pre-Markup rule. Recognizes mentions in blubber as @username or @"Firstname lastname"
+     * Recognizes mentions in blubber as @username or @"Firstname lastname"
      * and turns them into usual studip-links. The mentioned person is notified by
      * sending a message to him/her as a side-effect.
-     * @param StudipTransformFormat $markup
      * @param array $matches
      * @return string
      */
-    public static function mention($markup, $matches)
+    public function mention($matches)
     {
-        $mention = $matches[1];
-        $thread = self::find(self::$mention_thread_id);
-        $username = stripslashes(mb_substr($mention, 1));
+        $username = stripslashes(mb_substr($matches[0], 1));
         if ($username[0] !== '"') {
             $user = User::findByUsername($username);
         } else {
@@ -70,21 +66,21 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
             $user = User::findOneBySQL("CONCAT(Vorname, ' ', Nachname) = ?", [$name]);
         }
         if ($user
-            && !$thread->isNew()
+            && !$this->isNew()
             && $user->getId()
             && $user->getId() !== $GLOBALS['user']->id
         ) {
-            if ($thread['context_type'] === 'private') {
+            if ($this['context_type'] === 'private') {
                 $mention = new BlubberMention();
-                $mention['thread_id'] = $thread->getId();
+                $mention['thread_id'] = $this->getId();
                 $mention['user_id'] = $user->getId();
                 $mention->store();
-            } elseif ($thread['context_type'] === 'public') {
+            } elseif ($this['context_type'] === 'public') {
                 PersonalNotifications::add(
                     $user->getId(),
-                    $thread->getURL(),
+                    $this->getURL(),
                     sprintf(_('%s hat Sie in einem Blubber erwähnt.'), get_fullname()),
-                    'blubberthread_' . $thread->getId(),
+                    'blubberthread_' . $this->getId(),
                     Icon::create('blubber'),
                     true
                 );
@@ -93,14 +89,10 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
             $url = URLHelper::getLink('dispatch.php/profile', ['username' => $user->username]);
             URLHelper::setBaseURL($oldbase);
 
-            return str_replace(
-                $matches[1],
-                '[' . $user->getFullName() . ']' . $url . ' ',
-                $matches[0]
-            );
+            return '[' . $user->getFullName() . ']' . $url . ' ';
         }
 
-        return $markup->quote($matches[0]);
+        return $matches[0];
     }
 
     public static function findBySQL($sql, $params = [])

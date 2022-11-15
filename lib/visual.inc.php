@@ -173,14 +173,14 @@ function blubberReady($text, $trim=TRUE) {
 }
 
 /**
- * Apply StudipTransformFormat rules to marked-up text.
+ * Obsolete function for compatibility, returns text unchanged.
  *
  * @param  string $text  Marked-up text.
- * @return string        HTML code computed by applying markup-rules.
+ * @return string        Marked-up text.
+ * @deprecated since Stud.IP 5.3
  */
 function transformBeforeSave($text){
-    $markup = new StudipTransformFormat();
-    return $markup->format($text);
+    return $text;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -12,6 +12,7 @@
 
 /**
  * Format class to transform text before it is saved into the database.
+ * @deprecated since Stud.IP 5.3
  */
 class StudipTransformFormat extends TextFormat
 {

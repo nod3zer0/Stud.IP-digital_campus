@@ -341,14 +341,9 @@ class Course_Forum_IndexController extends ForumController
      */
     function preview_action() {
         if (Request::isXhr()) {
-            $this->set_content_type('text/html; charset=UTF-8');
-            $this->render_text(formatReady(transformBeforeSave(Request::get('posting'))));
+            $this->render_text(formatReady(Request::get('posting')));
         } else {
-            $this->render_text(
-                ForumEntry::getContentAsHtml(
-                    transformBeforeSave(Request::get('posting'))
-                )
-            );
+            $this->render_text(ForumEntry::getContentAsHtml(Request::get('posting')));
         }
     }
 

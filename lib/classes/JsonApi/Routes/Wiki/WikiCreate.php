@@ -54,10 +54,7 @@ class WikiCreate extends JsonApiController
     {
         $keyword = self::arrayGet($json, 'data.attributes.keyword');
         $content = self::arrayGet($json, 'data.attributes.content');
-
-        if (method_exists(\Studip\Markup::class, 'purifyHtml')) {
-            $content = transformBeforeSave(\Studip\Markup::purifyHtml($content));
-        }
+        $content = \Studip\Markup::purifyHtml($content);
 
         $wiki = new \WikiPage();
         $wiki->keyword = $keyword;

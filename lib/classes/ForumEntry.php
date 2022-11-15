@@ -948,7 +948,7 @@ class ForumEntry  implements PrivacyObject
                 chdate, author, author_host, lft, rgt, depth, anonymous)
             VALUES (? ,?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$data['topic_id'], $data['seminar_id'], $data['user_id'],
-            $data['name'], transformBeforeSave($data['content']), $data['author'], $data['author_host'],
+            $data['name'], $data['content'], $data['author'], $data['author_host'],
             $constraint['rgt'], $constraint['rgt'] + 1, $constraint['depth'] + 1, $data['anonymous'] ?? 0]);
 
         // update "latest_chdate" for easier sorting of actual threads
@@ -979,7 +979,7 @@ class ForumEntry  implements PrivacyObject
         $stmt = DBManager::get()->prepare("UPDATE forum_entries
             SET name = ?, content = ?, chdate = UNIX_TIMESTAMP(), latest_chdate = UNIX_TIMESTAMP()
             WHERE topic_id = ?");
-        $stmt->execute([$name, transformBeforeSave($content), $topic_id]);
+        $stmt->execute([$name, $content, $topic_id]);
 
         // update "latest_chdate" for easier sorting of actual threads
         $parent_id = ForumEntry::getParentTopicId($topic_id);

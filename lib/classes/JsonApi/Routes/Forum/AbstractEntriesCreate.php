@@ -24,9 +24,7 @@ abstract class AbstractEntriesCreate extends JsonApiController
         //Check whether the parent is category or entry of first or seccond depth
         $title = self::arrayGet($json, 'data.attributes.title');
         $content = self::arrayGet($json, 'data.attributes.content');
-        if (method_exists(\Studip\Markup::class, 'purifyHtml')) {
-            $content = transformBeforeSave(\Studip\Markup::purifyHtml($content));
-        }
+        $content = \Studip\Markup::purifyHtml($content);
         $parent = $this->getParentObject($parentId);
 
         return $this->createEntry($title, $content, $parent, $user);

@@ -69,8 +69,7 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id, $ancesto
         $wp = WikiPage::find([$range_id, $keyword, $version]);
         if ($wp) {
             if ($wp->isEditableBy($GLOBALS['user'])) {
-                // apply replace-before-save transformations
-                $wp->body = transformBeforeSave($body);
+                $wp->body = $body;
                 if ($wp->isValidAncestor($ancestor)) {
                     $wp->setAncestorForAllVersions($ancestor);
                 } else {
@@ -88,8 +87,6 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id, $ancesto
             $version = $latestVersion['version'] + 1;
         }
 
-        // apply replace-before-save transformations
-        $body = transformBeforeSave($body);
         WikiPage::create(compact('range_id', 'user_id', 'keyword', 'body', 'ancestor', 'version'));
     }
     StudipTransformFormat::removeStudipMarkup('wiki-comments');

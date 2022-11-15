@@ -50,9 +50,7 @@ class ForumEntriesUpdate extends JsonApiController
             $entry->name = $title;
         }
         if (!empty($content)) {
-            if (method_exists(\Studip\Markup::class, 'purifyHtml')) {
-                $content = transformBeforeSave(\Studip\Markup::purifyHtml($content));
-            }
+            $content = \Studip\Markup::purifyHtml($content);
             $entry->content = $content;
         }
         if ($entry->isDirty()) {
