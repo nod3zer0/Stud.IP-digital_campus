@@ -1,5 +1,5 @@
-<?
-/*
+<?php
+/**
  * Kategorie model
  *
  * This program is free software; you can redistribute it and/or
@@ -12,14 +12,16 @@
  * @category    Stud.IP
  * @since       2.4
  *
- * @property string kategorie_id database column
- * @property string id alias column for kategorie_id
- * @property string range_id database column
- * @property string name database column
- * @property string content database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string priority database column
+ * @property string $kategorie_id database column
+ * @property string $id alias column for kategorie_id
+ * @property string $range_id database column
+ * @property string|I18NString $name database column
+ * @property string|I18NString $content database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $priority database column
+ *
+ * @property User $user
  */
 
 class Kategorie extends SimpleORMap
@@ -32,6 +34,19 @@ class Kategorie extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'kategorien';
+
+        $config['belongs_to'] = [
+            'user' => [
+                'class_name'  => User::class,
+                'foreign_key' => 'range_id',
+            ],
+        ];
+
+        $config['i18n_fields'] = [
+            'name' => true,
+            'content' => true,
+        ];
+
         parent::configure($config);
     }
 
@@ -39,9 +54,9 @@ class Kategorie extends SimpleORMap
      * Finds all categories of a specific user
      *
      * @param string $user_id Id of the user
-     * @return array of category objects
+     * @return Kategorie[] of category objects
      */
-    public static function findByUserId($user_id)
+    public static function findByUserId(string $user_id): array
     {
         return self::findByRange_id($user_id, 'ORDER BY priority');
     }
@@ -50,9 +65,9 @@ class Kategorie extends SimpleORMap
      * Increases all category priorities of a user
      *
      * @param string $user_id Id of the user
-     * @return number of changed records
+     * @return bool indicating if anything has changed
      */
-    public static function increasePrioritiesByUserId($user_id)
+    public static function increasePrioritiesByUserId(string $user_id): bool
     {
         $query = "UPDATE kategorien SET priority = priority + 1 WHERE range_id = ?";
         $statement = DBManager::get()->prepare($query);

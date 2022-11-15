@@ -67,6 +67,7 @@
  * @property SimpleORMapCollection contacts has_many Contact
  * @property UserInfo   info   has_one UserInfo
  * @property UserOnline online has_one UserOnline
+ * @property Kategorie[]|SimpleORMapCollection $profile_categories has_many Kategorie
  */
 class User extends AuthUserMd5 implements Range, PrivacyObject
 {
@@ -158,11 +159,18 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             'class_name' => ConsultationBooking::class,
             'on_delete'  => 'delete',
         ];
+        $config['has_many']['profile_categories'] = [
+            'class_name'        => Kategorie::class,
+            'assoc_foreign_key' => 'range_id',
+            'on_delete'         => 'delete',
+        ];
+
 
         $config['has_many']['mvv_assignments'] = [
             'class_name'        => MvvContact::class,
             'assoc_foreign_key' => 'contact_id',
             'on_delete'         => 'delete',
+            'order_by'          => 'ORDER BY priority',
         ];
 
         $config['has_and_belongs_to_many']['domains'] = [
@@ -874,7 +882,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             }
         }
 
-        foreach (Kategorie::findByUserId($this->id) as $category) {
+        foreach ($this->profile_categories as $category) {
             $homepage_elements['kat_' . $category->id] = [
                 'name'       => $category->name,
                 'visibility' => $homepage_visibility['kat_' . $category->id] ?: get_default_homepage_visibility($this->id),

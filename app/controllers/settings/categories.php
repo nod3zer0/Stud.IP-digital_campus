@@ -135,23 +135,26 @@ class Settings_CategoriesController extends Settings_SettingsController
      */
     public function store_action()
     {
-        $request = Request::getInstance();
         $changed = false;
 
-        $categories = $request['categories'];
-        foreach ($categories as $id => $data) {
-            if (empty($data['name'])) {
-                PageLayout::postError(_('Kategorien ohne Namen können nicht gespeichert werden!'));
-                continue;
-            }
-            $category = Kategorie::find($id);
-            $category->name    = $data['name'];
-            $category->content = Studip\Markup::purifyHtml($data['content']);
-            if ($category->isDirty() && $category->store()) {
-                $changed = true;
-                Visibility::renamePrivacySetting('kat_' . $category->id, $category->name);
-            }
-        }
+        Kategorie::findEachMany(
+            function (Kategorie $category)  use (&$changed) {
+                $category->name    = Request::i18n("category-name-{$category->id}");
+                $category->content = Request::i18n(
+                    "category-content-{$category->id}",
+                    null,
+                    function ($input) {
+                        return Studip\Markup::purifyHtml($input);
+                    }
+                );
+
+                if ($category->store()) {
+                    $changed = true;
+                    Visibility::renamePrivacySetting("kat_{$category->id}", $category->name->original());
+                }
+            },
+            Request::optionArray('ids')
+        );
 
         if ($changed) {
             PageLayout::postSuccess(_('Kategorien geändert!'));

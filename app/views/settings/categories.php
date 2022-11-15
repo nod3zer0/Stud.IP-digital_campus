@@ -8,61 +8,57 @@
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
 
     <? foreach ($categories as $index => $category): ?>
+        <input type="hidden" name="ids[]" value="<?= htmlReady($category->id) ?>">
+
         <fieldset>
-            <legend><?= htmlReady($category->name) ?></legend>
+            <legend style="display: flex; flex-wrap: nowrap; justify-content: space-between">
+                <span><?= htmlReady($category->name) ?></span>
+                <span>
+                <? if ($index > 0): ?>
+                    <a href="<?= $controller->url_for('settings/categories/swap', $category->id, $last->id) ?>">
+                        <?= Icon::create('arr_2up', 'sort')->asImg(['class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben')]) ?>
+                    </a>
+                <? else: ?>
+                    <?= Icon::create('arr_2up', 'inactive')->asImg(['class' => 'text-top']) ?>
+                <? endif; ?>
 
-            <table style="width: 100%">
-                <colgroup>
-                    <col>
-                    <col width="100px">
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div>
-                                (<?= $visibilities[$category->id] ?>)
-                            </div>
-
-                            <label>
-                                <?= _('Name') ?>
-                                <input required type="text" name="categories[<?= $category->id ?>][name]" id="name<?= $index ?>"
-                                       aria-label="<?= _('Name der Kategorie') ?>" style="width: 100%"
-                                       value="<?= htmlReady($category->name) ?>">
-                            </label>
-
-                            <label>
-                                <?= _('Inhalt') ?>
-
-                                <textarea id="content<?= $index ?>" name="categories[<?= $category->id ?>][content]"
-                                          class="resizable add_toolbar wysiwyg size-l" style="width: 100%; height: 200px;"
-                                          aria-label="<?= _('Inhalt der Kategorie:') ?>"
-                                ><?= wysiwygReady($category->content) ?></textarea>
-                            </label>
-                        </td>
-                        <td style="vertical-align: top">
-                            <? if ($index > 0): ?>
-                                <a href="<?= $controller->url_for('settings/categories/swap', $category->id, $last->id) ?>">
-                                    <?= Icon::create('arr_2up', 'sort')->asImg(['class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben')]) ?>
-                                </a>
-                            <? else: ?>
-                                <?= Icon::create('arr_2up', 'inactive')->asImg(['class' => 'text-top']) ?>
-                            <? endif; ?>
-
-                            <? if ($index < $count - 1): ?>
-                                <a href="<?= $controller->url_for('settings/categories/swap', $category->id, $categories[$index + 1]->id) ?>">
-                                    <?= Icon::create('arr_2down', 'sort')->asImg(['class' => 'text-top', 'title' =>_('Kategorie nach unten verschieben')]) ?>
-                                </a>
-                            <? else: ?>
-                                <?= Icon::create('arr_2down', 'inactive')->asImg(['class' => 'text-top']) ?>
-                            <? endif; ?>
-
-                            <a href="<?= $controller->url_for('settings/categories/delete', $category->id) ?>">
-                                <?= Icon::create('trash')->asImg(['class' => 'text-top', 'title' => _('Kategorie löschen')]) ?>
+                <? if ($index < $count - 1): ?>
+                    <a href="<?= $controller->url_for('settings/categories/swap', $category->id, $categories[$index + 1]->id) ?>">
+                                <?= Icon::create('arr_2down', 'sort')->asImg(['class' => 'text-top', 'title' =>_('Kategorie nach unten verschieben')]) ?>
                             </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                <? else: ?>
+                    <?= Icon::create('arr_2down', 'inactive')->asImg(['class' => 'text-top']) ?>
+                <? endif; ?>
+
+                    <a href="<?= $controller->url_for('settings/categories/delete', $category->id) ?>">
+                        <?= Icon::create('trash')->asImg(['class' => 'text-top', 'title' => _('Kategorie löschen')]) ?>
+                    </a>
+                </span>
+            </legend>
+
+            <p>
+                (<?= $visibilities[$category->id] ?>)
+            </p>
+
+            <label>
+                <?= _('Name') ?>
+                <?= I18N::input("category-name-{$category->id}", $category->name, [
+                    'aria-label' => _('Name der Kategorie'),
+                    'class'      => 'size-l',
+                    'id'         => "name{$index}",
+                    'required'   => '',
+                ]) ?>
+            </label>
+
+            <label>
+                <?= _('Inhalt') ?>
+
+                <?= I18n::textarea("category-content-{$category->id}", $category->content, [
+                    'aria-label' => _('Inhalt der Kategorie:'),
+                    'class'      => 'resizable add_toolbar wysiwyg size-l',
+                    'id'         => "content{$index}",
+                ]) ?>
+            </label>
         </fieldset>
     <? $last = $category;
        endforeach; ?>
