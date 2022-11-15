@@ -134,7 +134,7 @@ class Consultations extends Migration
 
         if ($statement->rowCount() !== 2) {
             $this->announce('Unable to migrate SprechstundenPlugin data due to incompatible database format');
-            return false;
+            return;
         }
 
 
@@ -280,29 +280,53 @@ class Consultations extends Migration
                   FROM `SprechstundenAnmeldung`";
         DBManager::get()->exec($query);
 
-        // Activate consultations if plugin was enabled
-        $query = "SELECT `enabled` = 'yes'
+        // Get old plugin info
+        $query = "SELECT `pluginid`, `enabled` = 'yes' AS is_active, `pluginpath`
                   FROM `plugins`
                   WHERE `pluginclassname` = 'SprechstundenPlugin'";
-        $enabled = (bool) DBManager::get()->query($query)->fetchColumn();
+        $info = DBManager::get()->query($query)->fetch(PDO::FETCH_ASSOC);
 
-        if (!$enabled) {
+        if (!$info) {
             return;
         }
 
-        $query = "INSERT INTO `config_values` (
+        // Active consultations if plugin was activated
+        if ($info['is_active']) {
+            $query = "INSERT INTO `config_values` (
                     `field`, `range_id`, `value`,
                     `mkdate`, `chdate`, `comment`
                   ) VALUES (
                     'CONSULTATION_ENABLED', 'studip', '1',
                     UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ''
                   )";
+            DBManager::get()->exec($query);
+        }
+
+        // Remove plugin from database
+        $query = "DELETE FROM `plugins`
+                  WHERE `pluginclassname` = 'SprechstundenPlugin'";
         DBManager::get()->exec($query);
 
-        // Deactivate plugin
-        $query = "UPDATE `plugins`
-                  SET `enabled` = 'no'
-                  WHERE `pluginclassname` = 'SprechstundenPlugin'";
+        DBManager::get()->execute("DELETE FROM plugins_activated WHERE pluginid = ?", [$info['pluginid']]);
+        DBManager::get()->execute("DELETE FROM roles_plugins WHERE pluginid = ?", [$info['pluginid']]);
+
+        // Delete plugin files
+        $plugin_path = "{$GLOBALS['PLUGINS_PATH']}/{$info['pluginpath']}";
+        if (file_exists($plugin_path)) {
+            @rmdirr($plugin_path);
+        }
+
+        // Delete old plugin tables
+        $query = "DROP TABLE IF EXISTS `SprechstundenAnmeldung`";
+        DBManager::get()->exec($query);
+
+        $query = "DROP TABLE IF EXISTS `SprechstundenTermin`";
+        DBManager::get()->exec($query);
+
+        $query = "DROP TABLE IF EXISTS `SprechstundenTerminDesc`";
+        DBManager::get()->exec($query);
+
+        $query = "DROP TABLE IF EXISTS `SprechstundenZeitSlot`";
         DBManager::get()->exec($query);
     }
 
