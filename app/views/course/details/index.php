@@ -315,7 +315,7 @@
     <section>
         <?= $sem->getDatesTemplate(
             'dates/seminar_html_location',
-            ['ort' => $course->ort, 'disable_list_shrinking' => true]
+            ['ort' => $course->ort, 'disable_list_shrinking' => true, 'show_room' => false]
         ) ?>
     </section>
 </article>

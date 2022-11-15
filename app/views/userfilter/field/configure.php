@@ -1,4 +1,4 @@
-<?php if ($className) { ?>
+<?php if (!empty($className)) { ?>
     <? if (count($field->getValidCompareOperators()) > 1) : ?>
         <select name="compare_operator[]" size="1" class="conditionfield_compare_op">
             <?php foreach ($field->getValidCompareOperators() as $op => $text) { ?>
@@ -20,7 +20,7 @@
         <input type="text" name="value[]" class="conditionfield_value" value="">
     <? endif ?>
 <?php } else { ?>
-    <?= (!$is_first ? '<strong>' . _("und") . '</strong>' : '')?>
+    <?= (empty($is_first) ? '<strong>' . _("und") . '</strong>' : '')?>
     <div class="conditionfield">
     <select name="field[]" class="conditionfield_class" size="1" onchange="STUDIP.UserFilter.getConditionFieldConfiguration(this, '<?= $controller->url_for('userfilter/field/configure') ?>')">
         <option value="">-- <?= _('bitte auswählen') ?> --</option>

@@ -55,14 +55,14 @@ class ConditionalAdmission extends AdmissionRule
     /**
      * Standard constructor.
      *
-     * @param  String ruleId If this rule has been saved previously, it
+     * @param  String $ruleId If this rule has been saved previously, it
      *      will be loaded from database.
-     * @return AdmissionRule the current object (this).
+     * @return ConditionalAdmission the current object (this).
      */
     public function __construct($ruleId='', $courseSetId = '')
     {
         parent::__construct($ruleId, $courseSetId);
-        $this->default_message = _("Sie erfüllen nicht die Bedingung: %s");
+        $this->default_message = _('Sie erfüllen nicht die Bedingung: %s');
         if ($ruleId) {
             $this->load();
         } else {
@@ -74,9 +74,9 @@ class ConditionalAdmission extends AdmissionRule
     /**
      * Adds a new UserFilter to this rule.
      *
-     * @param  UserFilter condition
-     * @param  String group
-     * @param  Int quota
+     * @param  UserFilter $condition
+     * @param  String $group
+     * @param  Int $quota
      * @return ConditionalAdmission
      */
     public function addCondition($condition, $group = '', $quota = 0)
@@ -282,7 +282,7 @@ class ConditionalAdmission extends AdmissionRule
     /**
      * Removes the condition with the given ID from the rule.
      *
-     * @param  String conditionId
+     * @param  String $conditionId
      * @return ConditionalAdmission
      */
     public function removeCondition($conditionId)
@@ -336,8 +336,6 @@ class ConditionalAdmission extends AdmissionRule
                     }
                 }
             }
-        } else {
-            $failed = [];
         }
         return $failed;
     }
@@ -360,7 +358,7 @@ class ConditionalAdmission extends AdmissionRule
         $this->quota = [];
         foreach ($data['conditions'] as $ser_con) {
             $condition = ObjectBuilder::build($ser_con, 'UserFilter');
-            $this->addCondition($condition, $data['conditiongroup_'.$condition->getId()], $data['quota_'.$data['conditiongroup_'.$condition->getId()]]);
+            $this->addCondition($condition, $data['conditiongroup_'.$condition->getId()], $data['quota_'.$data['conditiongroup_'.$condition->getId()]] ?? 0);
         }
         foreach ($this->getConditiongroups() as $conditiongroup_id => $conditions) {
             if (mb_strlen($conditiongroup_id) < 32) {
@@ -483,7 +481,7 @@ class ConditionalAdmission extends AdmissionRule
      * Validates if the given request data is sufficient to configure this rule
      * (e.g. if required values are present).
      *
-     * @param  Array Request data
+     * @param  Array $data Request data
      * @return Array Error messages.
      */
     public function validate($data)
@@ -505,12 +503,12 @@ class ConditionalAdmission extends AdmissionRule
             } else {
                 $ungrouped++;
             }
-            $quota[$data['conditiongroup_' . $condition->getId()]] = $data['quota_' . $data['conditiongroup_' . $condition->getId()]];
+            $quota[$data['conditiongroup_' . $condition->getId()]] = $data['quota_' . $data['conditiongroup_' . $condition->getId()]] ?? 0;
             if (!$quota[$data['conditiongroup_' . $condition->getId()]]) {
                 $no_quota++;
             }
         }
-        foreach ($quota as $id => $part) {
+        foreach ($quota as $part) {
             $quota_total += $part;
         }
         if ($grouped && $ungrouped) {
@@ -562,6 +560,4 @@ class ConditionalAdmission extends AdmissionRule
         parent::setSiblings($siblings);
         $this->conditiongroups_allowed = null;
     }
-
-} /* end of class ConditionalAdmission */
-
+}

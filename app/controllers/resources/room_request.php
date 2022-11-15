@@ -382,7 +382,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                             }
                         }
                     }
-                    array_unique($interval_weekdays);
+                    $interval_weekdays = array_unique($interval_weekdays);
                     //We have all relevant weekdays and can now check
                     //if the time interval lies in one of the relevant weekdays:
                     foreach ($interval_weekdays as $iwd) {
@@ -397,12 +397,12 @@ class Resources_RoomRequestController extends AuthenticatedController
                     }
                 }
             }
-            if ($this->filter['get_only_request_ids']) {
+            if (!empty($this->filter['get_only_request_ids'])) {
                 return array_keys($result);
             }
         } else {
             $result = $requests;
-            if ($this->filter['get_only_request_ids']) {
+            if (!empty($this->filter['get_only_request_ids'])) {
                 return SimpleCollection::createFromArray($requests)->pluck('id');
             }
         }
@@ -800,8 +800,8 @@ class Resources_RoomRequestController extends AuthenticatedController
         );
         $this->requests = $requests;
         $this->page = $page;
-        $this->sort_order = $this->filter['sort_order'];
-        $this->sort_var = $this->filter['sorting'];
+        $this->sort_order = $this->filter['sort_order'] ?? '';
+        $this->sort_var = $this->filter['sorting']?? '';
 
         $this->request_status = $this->filter['request_status'] ?? '';
     }

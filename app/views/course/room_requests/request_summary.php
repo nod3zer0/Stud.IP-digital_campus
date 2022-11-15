@@ -10,7 +10,7 @@
         <div>
             <fieldset>
                 <legend><?= _('Ausgewählter Raum') ?></legend>
-                <? if ($selected_room): ?>
+                <? if (!empty($selected_room)): ?>
                     <input type="hidden" name="selected_room_id"
                            value="<?= htmlReady($selected_room->id) ?>">
                     <input type="hidden" name="confirmed_selected_room_id"

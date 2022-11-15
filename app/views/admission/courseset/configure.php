@@ -109,8 +109,12 @@ if ($flash['error']) {
             </label>
             <label>
                 <?= _('Filter auf Name/Nummer/Lehrperson') ?><br>
-                <input style="display:inline-block" type="text" onKeypress="if (event.which==13) return STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')" value="<?= htmlReady($current_course_filter) ?>" name="course_filter" >
-                <?=Icon::create('search', 'clickable', ['title' => _("Veranstaltungen anzeigen"),'onClick' => "return STUDIP.Admission.getCourses('" . $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ."')"])->asImg()?>
+                <input style="display:inline-block" type="text" onKeypress="if (event.which==13) return STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')"
+                       value="<?= htmlReady($current_course_filter ?? '') ?>" name="course_filter" >
+                <?= Icon::create('search')->asImg([
+                    'title' => _("Veranstaltungen anzeigen"),
+                    'onClick' => "return STUDIP.Admission.getCourses('" . $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ."')"
+                ]) ?>
             </label>
             <div id="instcourses">
             <?= $coursesTpl; ?>

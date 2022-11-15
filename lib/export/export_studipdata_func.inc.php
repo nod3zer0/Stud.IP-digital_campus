@@ -300,10 +300,11 @@ function export_inst($inst_id, $ex_sem_id = "all")
  */
 function export_sem($inst_id, $ex_sem_id = 'all')
 {
-    global $range_id, $xml_file, $o_mode, $xml_names_lecture, $xml_groupnames_lecture, $object_counter, $SEM_TYPE, $SEM_CLASS, $filter, $ex_sem, $ex_sem_class, $ex_person_details, $persons;
+    global $o_mode, $xml_names_lecture, $xml_groupnames_lecture, $object_counter, $SEM_TYPE, $SEM_CLASS, $filter, $ex_sem, $ex_sem_class, $ex_person_details, $persons;
 
     $ex_only_homeinst = Request::int('ex_only_homeinst', 0);
-
+    $addquery = '';
+    $addjoin = '';
     // Prepare user count statement
     $query           = "SELECT COUNT(user_id)
               FROM seminar_user
@@ -320,7 +321,9 @@ function export_sem($inst_id, $ex_sem_id = 'all')
               WHERE seminar_user.status = 'dozent' AND seminar_user.Seminar_id = ?
               ORDER BY seminar_user.position";
     $inner_statement = DBManager::get()->prepare($query);
-
+    $do_group = false;
+    $group = null;
+    $group_tab_zelle = null;
     // Prepare (build) and execute outmost query
     switch ($filter) {
         case "seminar":
@@ -476,7 +479,7 @@ function export_sem($inst_id, $ex_sem_id = 'all')
                 }
                 $data_object .= xml_close_tag($xml_groupnames_lecture['childgroup3a']);
             } elseif ($key === 'admission_turnout') {
-                $data_object .= xml_open_tag($val, $row['admission_type'] ? _('max.') : _('erw.'));
+                $data_object .= xml_open_tag($val, !empty($row['admission_type']) ? _('max.') : _('erw.'));
                 $data_object .= $row[$key];
                 $data_object .= xml_close_tag($val);
             } elseif ($key === 'teilnehmer_anzahl_aktuell') {
@@ -488,7 +491,7 @@ function export_sem($inst_id, $ex_sem_id = 'all')
             } elseif ($key === 'metadata_dates') {
                 $data_object .= xml_open_tag($xml_groupnames_lecture['childgroup1']);
                 $vorb        = vorbesprechung($row['seminar_id'], 'export');
-                if ($vorb != false) {
+                if ($vorb) {
                     $data_object .= xml_tag($val[0], $vorb);
                 }
                 if (($first_date = SeminarDB::getFirstDate($row['seminar_id']))
@@ -500,7 +503,7 @@ function export_sem($inst_id, $ex_sem_id = 'all')
                 $data_object .= xml_close_tag($xml_groupnames_lecture["childgroup1"]);
             } elseif ($key === 'Institut_id') {
                 $data_object .= xml_tag($val, $row['heimateinrichtung'], ['key' => $row[$key]]);
-            } elseif ($row[$key] !== '')
+            } elseif (isset($row[$key]) && $row[$key] !== '')
                 $data_object .= xml_tag($val, $row[$key]);
         }
 

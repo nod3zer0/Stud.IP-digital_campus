@@ -147,11 +147,11 @@ class SearchWidget extends SidebarWidget
                 unset($reset_params[$needle['name']]);
 
                 // Search view in Wiki must be cleared.
-                if ($reset_params['view'] == 'search') {
+                if (isset($reset_params['view']) && $reset_params['view'] === 'search') {
                     $reset_params['view'] = 'show';
                 }
                 // Search view in Forum must be cleared.
-                if ($reset_params['backend'] == 'search') {
+                if (isset($reset_params['backend']) && $reset_params['backend'] === 'search') {
                     unset($reset_params['backend']);
                     $this->url = str_replace('index/search', 'index', $this->url);
                 }

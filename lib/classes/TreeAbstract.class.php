@@ -95,7 +95,7 @@ class TreeAbstract {
     public static function GetInstance($class_name, $args = null, $invalidate_cache = false)
     {
         static $tree_instance;
-
+        $class_hash = '';
         if ($args){
             $class_hash = $class_name . "_" . md5(serialize($args));
         } elseif ($args === false && is_array($tree_instance)){

@@ -2,20 +2,20 @@
     <table class="default">
         <thead>
             <tr>
-                <th><?= _("Name")?></th>
-                <th><?= _("Lehrende")?></th>
-                <th><?= _("versteckt")?></th>
-                <th><?= _("vorläufige Anmeldung")?></th>
-                <th><?= _("verbindliche Anmeldung")?></th>
+                <th><?= _('Name')?></th>
+                <th><?= _('Lehrende')?></th>
+                <th><?= _('versteckt')?></th>
+                <th><?= _('vorläufige Anmeldung')?></th>
+                <th><?= _('verbindliche Anmeldung')?></th>
                 <? if ($participant_restriction) : ?>
-                <th><?= _("max. Teilnehmende")?></th>
+                <th><?= _('max. Teilnehmende')?></th>
                 <? endif ?>
-                <th><?= _("Teilnehmende aktuell")?></th>
-                <th><?= _("Anmeldungen")?></th>
+                <th><?= _('Teilnehmende aktuell')?></th>
+                <th><?= _('Anmeldungen')?></th>
                 <? if ($participant_restriction) : ?>
-                <th><?= _("Warteliste")?></th>
-                <th><?= _("Plätze")?></th>
-                <th><?= _("Nachrücken")?></th>
+                <th><?= _('Warteliste')?></th>
+                <th><?= _('Plätze')?></th>
+                <th><?= _('Nachrücken')?></th>
                 <? endif ?>
             </tr>
         </thead>
@@ -34,7 +34,7 @@
             <td><input <?=$editable?> type="text" size="2" name="configure_courses_turnout[<?= $course->id?>]" value="<?= (int)$course->admission_turnout ?>"></td>
             <? endif ?>
             <td><?= $course->getNumParticipants() ?></td>
-            <td><?= sprintf("%d / %d", $applications[$course->id]['c'],$applications[$course->id]['h']) ?></td>
+            <td><?= sprintf("%d / %d", $applications[$course->id]['c'] ?? 0 , $applications[$course->id]['h'] ?? 0) ?></td>
             <? if ($participant_restriction) : ?>
             <td style="white-space:nowrap">
                 <input <?=$editable?> type="checkbox" name="configure_courses_disable_waitlist[<?= $course->id?>]" value="1" <?= $course->admission_disable_waitlist ? '' : 'checked' ?>
@@ -64,7 +64,7 @@
     <?=_("Anzahl aller Teilnehmenden:")?> <?=$count_distinct_members?>
     <?  if ($count_distinct_members) : ?>
         <a href="<?= $controller->link_for('admission/courseset/configure_courses/' . $set_id .'/download_all_members')?>" title="<?= _("Download")?>">
-            <?= Icon::create('file-office', 'clickable')->asImg()?>
+            <?= Icon::create('file-office') ?>
         </a>
     <? endif ?>
 </div>
@@ -72,13 +72,13 @@
     <?=_("Mehrfachteilnahmen:")?> <?=$count_multi_members?>
     <?  if ($count_multi_members) : ?>
         <a href="<?= $controller->link_for('admission/courseset/configure_courses/' . $set_id .'/download_multi_members')?>" title="<?= _("Download")?>">
-            <?= Icon::create('file-office', 'clickable')->asImg()?>
+            <?= Icon::create('file-office') ?>
         </a>
     <? endif ?>
 </div>
 <div data-dialog-button>
-    <?= Studip\Button::create(_("Speichern"), 'configure_courses_save') ?>
-    <?= Studip\LinkButton::create(_("Download"), $controller->url_for('admission/courseset/configure_courses/' . $set_id .'/csv')) ?>
+    <?= Studip\Button::create(_('Speichern'), 'configure_courses_save') ?>
+    <?= Studip\LinkButton::create(_('Download'), $controller->url_for('admission/courseset/configure_courses/' . $set_id .'/csv')) ?>
 </div>
 <?= CSRFProtection::tokenTag()?>
 </form>

@@ -42,13 +42,14 @@
                     <input type="text" name="sort_position" value="<?= htmlReady($sort_position) ?>">
                 </label>
             <? endif ?>
+
             <?= $this->render_partial(
                 '../../templates/resources/position_attribute_form_part.php',
                 [
                     'property_name' => 'geo_coordinates',
-                    'latitude'      => $latitude,
-                    'longitude'     => $longitude,
-                    'altitude'      => $altitude
+                    'latitude'      => $latitude ?? null,
+                    'longitude'     => $longitude ?? null,
+                    'altitude'      => $altitude ?? null
                 ]
             ) ?>
         </fieldset>

@@ -41,7 +41,7 @@ if ($section == 'index') {
             $abo_url = $controller->url_for('course/forum/index/abo/' . $constraint['topic_id']);
         endif;
 
-        $actions->addLink($abo_text, $abo_url, Icon::create('link-intern', 'clickable'));
+        $actions->addLink($abo_text, $abo_url, Icon::create('link-intern'));
     }
 
     if (ForumPerm::has('close_thread', $seminar_id) && $constraint['depth'] > 1) {
@@ -51,7 +51,7 @@ if ($section == 'index') {
             $close = new LinkElement(
                 _('Thema schließen'),
                 $close_url,
-                Icon::create('lock-locked', 'clickable'),
+                Icon::create('lock-locked'),
                 [
                     'onclick' => 'STUDIP.Forum.closeThreadFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',
@@ -65,7 +65,7 @@ if ($section == 'index') {
             $open = new LinkElement(
                 _('Thema öffnen'),
                 $open_url,
-                Icon::create('lock-unlocked', 'clickable'),
+                Icon::create('lock-unlocked'),
                 [
                     'onclick' => 'STUDIP.Forum.openThreadFromThread(\'' . $constraint['topic_id'] . '\', '
                                 . ForumHelpers::getPage() . '); return false;',
@@ -83,7 +83,7 @@ if ($section == 'index') {
             $emphasize = new LinkElement(
                 _('Thema hervorheben'),
                 $emphasize_url,
-                Icon::create('staple', 'clickable'),
+                Icon::create('staple'),
                 [
                     'onclick' => 'STUDIP.Forum.makeThreadStickyFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',
@@ -97,7 +97,7 @@ if ($section == 'index') {
             $emphasize = new LinkElement(
                 _('Hervorhebung aufheben'),
                 $unemphasize_url,
-                Icon::create('staple', 'clickable'),
+                Icon::create('staple'),
                 [
                     'onclick' => 'STUDIP.Forum.makeThreadUnstickyFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',
@@ -109,7 +109,7 @@ if ($section == 'index') {
     }
 
     if ($constraint['depth'] == 0 && ForumPerm::has('add_category', $seminar_id)) {
-        $actions->addLink(_('Neue Kategorie erstellen'), "#create", Icon::create('link-intern', 'clickable'));
+        $actions->addLink(_('Neue Kategorie erstellen'), "#create", Icon::create('link-intern'));
     }
 }
 
@@ -119,7 +119,7 @@ if ($section === 'index' && ForumPerm::has('pdfexport', $seminar_id)) {
     $export = new ExportWidget();
     $export->addLink(_('Beiträge als PDF exportieren'),
                      $controller->url_for('course/forum/index/pdfexport/' . $constraint['topic_id']),
-                     Icon::create('file-pdf', 'clickable'));
+                     Icon::create('file-pdf'));
     $sidebar->addWidget($export);
 }
 
@@ -243,7 +243,7 @@ $pagechooser = null;
 <? endif ?>
 
 <? if ( (ForumPerm::has('add_area', $this->seminar_id))
-    || ($constraint['depth'] >= 1 && ForumPerm::has('add_entry', $seminar_id)) ): ?>
+    || (isset($constraint['depth']) && $constraint['depth'] >= 1 && ForumPerm::has('add_entry', $seminar_id)) ): ?>
         <?= $this->render_partial('course/forum/index/_new_entry') ?>
     <? endif ?>
 </div>

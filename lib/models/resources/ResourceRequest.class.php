@@ -1175,8 +1175,8 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             if ($with_range) {
                 $interval['range']       = 'CourseDate';
                 $interval['range_id']    = $this->termin_id;
-                $interval['booked_room'] = $this->date->room_booking->resource_id;
-                $interval['booking_id']  = $this->date->room_booking->id;
+                $interval['booked_room'] = $this->date->room_booking ? $this->date->room_booking->resource_id: null;
+                $interval['booking_id']  = $this->date->room_booking ? $this->date->room_booking->id : null;
             }
             return [$interval];
         } elseif ($this->metadate_id) {
@@ -1271,8 +1271,11 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
 
             if ($interval['range'] == 'CourseDate') {
                 $date = call_user_func([$interval['range'], 'find'], $interval['range_id']);
-                if ($room_obj = Room::find($date->room_booking->resource_id)) {
-                    $room = $room_obj->name;
+                if ($date->room_booking) {
+                    $room_obj = Room::find($date->room_booking->resource_id);
+                    if ($room_obj) {
+                        $room = $room_obj->name;
+                    }
                 }
             }
 

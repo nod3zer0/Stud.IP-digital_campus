@@ -89,7 +89,7 @@ class TourController extends AuthenticatedController
         }
         $data['route_step_nr'] = $first_step;
         $next_first_step       = $first_step;
-        while ($this->route === $this->tour->steps[$next_first_step - 1]->route) {
+        while (isset($this->tour->steps[$next_first_step - 1]) && $this->route === $this->tour->steps[$next_first_step - 1]->route) {
             $data['data'][] = [
                 'step_nr'     => $this->tour->steps[$next_first_step - 1]->step,
                 'element'     => $this->tour->steps[$next_first_step - 1]->css_selector,

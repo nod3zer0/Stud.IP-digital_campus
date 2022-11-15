@@ -52,7 +52,8 @@ class StudipSemSearchHelper {
         $this->setParams($params, $visible_only);
     }
 
-    public function setParams($params, $visible_only = null){
+    public function setParams($params, $visible_only = null)
+    {
         if(isset($params['quick_search']) && isset($params['qs_choose'])){
             if($params['qs_choose'] == 'all'){
                 foreach (self::GetQuickSearchFields() as $key => $value){
@@ -181,11 +182,11 @@ class StudipSemSearchHelper {
                 $view->params[0] = '';
             }
             $view->params[0] .= ($this->params['title']) ? $search_for . " " : " ";
-            $view->params[0] .= ($this->params['title'] && $this->params['sub_title']) ? $combination : " ";
-            $view->params[0] .= ($this->params['sub_title']) ? " Untertitel LIKE '%" . $this->trim($this->params['sub_title']) . "%' " : " ";
-            $view->params[0] .= (($this->params['title'] || $this->params['sub_title']) && $this->params['comment']) ? $combination : " ";
-            $view->params[0] .= ($this->params['comment']) ? " Beschreibung LIKE '%" . $this->trim($this->params['comment']) . "%' " : " ";
-            $view->params[0] .= (($this->params['title'] || $this->params['sub_title'] || $this->params['comment']) && $this->params['number']) ? $combination : " ";
+            $view->params[0] .= ($this->params['title'] && !empty($this->params['sub_title'])) ? $combination : " ";
+            $view->params[0] .= (!empty($this->params['sub_title'])) ? " Untertitel LIKE '%" . $this->trim($this->params['sub_title']) . "%' " : " ";
+            $view->params[0] .= (($this->params['title'] || !empty($this->params['sub_title'])) && !empty($this->params['comment'])) ? $combination : " ";
+            $view->params[0] .= (!empty($this->params['comment'])) ? " Beschreibung LIKE '%" . $this->trim($this->params['comment']) . "%' " : " ";
+            $view->params[0] .= (($this->params['title'] || !empty($this->params['sub_title']) || empty($this->params['comment'])) && $this->params['number']) ? $combination : " ";
             $view->params[0] .= ($this->params['number']) ? " VeranstaltungsNummer LIKE '%" . $this->trim($this->params['number']) . "%' " : " ";
             $view->params[0] = ($this->visible_only ? " c.visible=1 AND " : "") . "(" . $view->params[0] .")";
             $view->params[1] =  $and_clause . $clause;

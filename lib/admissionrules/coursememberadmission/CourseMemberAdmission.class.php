@@ -32,7 +32,8 @@ class CourseMemberAdmission extends AdmissionRule
     /**
      * Standard constructor
      *
-     * @param  String ruleId
+     * @param  String $ruleId
+     * @param  String e
      */
     public function __construct($ruleId = '', $courseSetId = '')
     {
@@ -115,8 +116,8 @@ class CourseMemberAdmission extends AdmissionRule
     /**
      * Is admission allowed according to the defined time frame?
      *
-     * @param  String userId
-     * @param  String courseId
+     * @param  String $userId
+     * @param  String $courseId
      * @return Array
      */
     public function ruleApplies($userId, $courseId)
@@ -193,7 +194,7 @@ class CourseMemberAdmission extends AdmissionRule
      * Validates if the given request data is sufficient to configure this rule
      * (e.g. if required values are present).
      *
-     * @param  Array Request data
+     * @param  Array $data Request data
      * @return Array Error messages.
      */
     public function validate($data)

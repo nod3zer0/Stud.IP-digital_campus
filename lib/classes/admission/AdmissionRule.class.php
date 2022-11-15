@@ -84,7 +84,7 @@ abstract class AdmissionRule
     /**
      * Checks if we are in the rule validity time frame.
      *
-     * @return True if the rule is valid because the time frame applies,
+     * @return bool True if the rule is valid because the time frame applies,
      *         otherwise false.
      */
     public function checkTimeFrame()
@@ -115,7 +115,7 @@ abstract class AdmissionRule
     /**
      * Generate a new unique ID.
      *
-     * @param  String tableName
+     * @param  String $tableName
      */
     public function generateId($tableName)
     {
@@ -273,7 +273,7 @@ abstract class AdmissionRule
      * Hook that can be called when the seat distribution on the courseset
      * starts.
      *
-     * @param CourseSet The courseset this rule belongs to.
+     * @param CourseSet $courseset The courseset this rule belongs to.
      */
     public function beforeSeatDistribution($courseset)
     {
@@ -284,8 +284,8 @@ abstract class AdmissionRule
      * Does the current rule allow the given user to register as participant
      * in the given course?
      *
-     * @param  String userId
-     * @param  String courseId
+     * @param  String $userId
+     * @param  String $courseId
      * @return Array
      */
     public function ruleApplies($userId, $courseId)
@@ -303,23 +303,23 @@ abstract class AdmissionRule
      */
     public function setAllData($data)
     {
-        if ($data['start_date'] && !$data['start_time']) {
+        if (!empty($data['start_date']) && empty($data['start_time'])) {
             $data['start_time'] = strtotime($data['start_date']);
         }
-        if ($data['end_date'] && !$data['end_time']) {
+        if (!empty($data['end_date']) && empty($data['end_time'])) {
             $data['end_time'] = strtotime($data['end_date'] . ' 23:59:59');
         }
-        $this->message = $data['message'];
-        $this->startTime = $data['start_time'];
-        $this->endTime = $data['end_time'];
+        $this->message = $data['message'] ?? '';
+        $this->startTime = $data['start_time'] ?? null;
+        $this->endTime = $data['end_time'] ?? null;
         return $this;
     }
 
     /**
      * Sets a new end time for condition validity.
      *
-     * @param  Integer newEndTime
-     * @return UserFilter
+     * @param  Integer $newEndTime
+     * @return AdmissionRule
      */
     public function setEndTime($newEndTime)
     {
@@ -330,7 +330,7 @@ abstract class AdmissionRule
     /**
      * Sets a new message to show to users.
      *
-     * @param  String newMessage A new message text.
+     * @param  String $newMessage A new message text.
      * @return AdmissionRule This object
      */
     public function setMessage($newMessage)
@@ -342,8 +342,8 @@ abstract class AdmissionRule
     /**
      * Sets a new start time for condition validity.
      *
-     * @param  Integer newStartTime
-     * @return UserFilter
+     * @param  Integer $newStartTime
+     * @return AdmissionRule
      */
     public function setStartTime($newStartTime)
     {
@@ -372,13 +372,13 @@ abstract class AdmissionRule
      * Validates if the given request data is sufficient to configure this rule
      * (e.g. if required values are present).
      *
-     * @param  Array Request data
+     * @param  Array $data Request data
      * @return Array Error messages.
      */
     public function validate($data)
     {
         $errors = [];
-        if ($data['start_date'] && $data['end_date'] && strtotime($data['end_date']) < strtotime($data['start_date'])) {
+        if (!empty($data['start_date']) && !empty($data['end_date']) && strtotime($data['end_date']) < strtotime($data['start_date'])) {
             $errors[] = _('Das Enddatum darf nicht vor dem Startdatum liegen.');
         }
         return $errors;
@@ -389,7 +389,8 @@ abstract class AdmissionRule
      *
      * @return String
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->toString();
     }
 
@@ -452,4 +453,4 @@ abstract class AdmissionRule
         $this->id = md5(uniqid(get_class($this)));
         $this->courseSetId = null;
     }
-} /* end of abstract class AdmissionRule */
+}

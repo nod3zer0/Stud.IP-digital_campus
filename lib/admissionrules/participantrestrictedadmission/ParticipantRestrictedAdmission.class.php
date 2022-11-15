@@ -36,9 +36,10 @@ class ParticipantRestrictedAdmission extends AdmissionRule
     /**
      * Standard constructor
      *
-     * @param  String ruleId
+     * @param  String $ruleId
+     * @param  String $courseSetId
      */
-    public function __construct($ruleId='', $courseSetId = '')
+    public function __construct($ruleId = '', $courseSetId = '')
     {
         parent::__construct($ruleId, $courseSetId);
         $this->first_come_first_served_allowed = (bool)Config::get()->ENABLE_COURSESET_FCFS;
@@ -58,7 +59,8 @@ class ParticipantRestrictedAdmission extends AdmissionRule
     /**
      * Deletes the admission rule and all associated data.
      */
-    public function delete() {
+    public function delete()
+    {
         if ($this->prio_exists) {
             $set_id = DBManager::get()->fetchColumn("SELECT set_id FROM courseset_rule WHERE rule_id = ? LIMIT 1", [$this->id]);
             //Delete priorities
@@ -75,7 +77,8 @@ class ParticipantRestrictedAdmission extends AdmissionRule
      * Gets some text that describes what this AdmissionRule (or respective
      * subclass) does.
      */
-    public static function getDescription() {
+    public static function getDescription()
+    {
         return _("Anmelderegeln dieses Typs legen fest, ob die zugeordneten Veranstaltungen eine maximale Teilnehmendenanzahl haben. Die Platzverteilung erfolgt automatisiert.");
     }
 
@@ -92,7 +95,8 @@ class ParticipantRestrictedAdmission extends AdmissionRule
     /**
      * Return this rule's name.
      */
-    public static function getName() {
+    public static function getName()
+    {
         return _("Beschränkte Teilnehmendenanzahl");
     }
 
@@ -101,7 +105,8 @@ class ParticipantRestrictedAdmission extends AdmissionRule
      *
      * @return String
      */
-    public function getTemplate() {
+    public function getTemplate()
+    {
         $factory = new Flexi_TemplateFactory(dirname(__FILE__).'/templates/');
         // Open specific template for this rule and insert base template.
         $tpl = $factory->open('configure');
@@ -112,7 +117,8 @@ class ParticipantRestrictedAdmission extends AdmissionRule
     /**
      * Helper function for loading rule definition from database.
      */
-    public function load() {
+    public function load()
+    {
         // Load data.
         $stmt = DBManager::get()->prepare("SELECT *
             FROM `participantrestrictedadmissions` WHERE `rule_id`=? LIMIT 1");
@@ -134,19 +140,20 @@ class ParticipantRestrictedAdmission extends AdmissionRule
      * @param Array $data
      * @return AdmissionRule This object.
      */
-    public function setAllData($data) {
+    public function setAllData($data)
+    {
         parent::setAllData($data);
-        if ($data['distributiondate']) {
+        if (!empty($data['distributiondate'])) {
             if (!$data['distributiontime']) {
                 $data['distributiontime'] = '23:59';
             }
             $ddate = strtotime($data['distributiondate'] . ' ' . $data['distributiontime']);
             $this->setDistributionTime($ddate);
         }
-        if ($data['enable_FCFS']) {
+        if (!empty($data['enable_FCFS'])) {
             $this->setDistributionTime(0);
         }
-        if ($data['startdate']) {
+        if (!empty($data['startdate'])) {
              $starttime = strtotime($data['startdate'] . ' ' . $data['starttime']);
              if ($starttime > time()) {
                  $this->minimum_timespan_to_distribution_time = $this->minimum_timespan_to_distribution_time + (($starttime - time()) / 60);
@@ -159,8 +166,8 @@ class ParticipantRestrictedAdmission extends AdmissionRule
     /**
      * Sets a new timestamp for seat distribution algorithm execution.
      *
-     * @param  int newDistributionTime
-     * @return TimedAdmission
+     * @param  int $newDistributionTime
+     * @return ParticipantRestrictedAdmission
      */
     public function setDistributionTime($newDistributionTime)
     {
@@ -172,7 +179,8 @@ class ParticipantRestrictedAdmission extends AdmissionRule
     /**
      * Store rule definition to database.
      */
-    public function store() {
+    public function store()
+    {
         // Store data.
         $stmt = DBManager::get()->prepare("INSERT INTO `participantrestrictedadmissions`
             (`rule_id`, `message`, `distribution_time`,
@@ -201,7 +209,7 @@ class ParticipantRestrictedAdmission extends AdmissionRule
      * Validates if the given request data is sufficient to configure this rule
      * (e.g. if required values are present).
      *
-     * @param  Array Request data
+     * @param  Array $data Request data
      * @return Array Error messages.
      */
     public function validate($data)
@@ -211,15 +219,12 @@ class ParticipantRestrictedAdmission extends AdmissionRule
             $data['distributiontime'] = '23:59';
         }
         $ddate = strtotime($data['distributiondate'] . ' ' . $data['distributiontime']);
-        if (!$data['enable_FCFS'] && (!$data['distributiondate'] || $ddate < (time() + $this->minimum_timespan_to_distribution_time*60))) {
+        if (empty($data['enable_FCFS']) && (empty($data['distributiondate']) || $ddate < (time() + $this->minimum_timespan_to_distribution_time * 60))) {
             $errors[] = sprintf(_('Bitte geben Sie für die Platzverteilung ein Datum an, das weiter in der Zukunft liegt. Das frühestmögliche Datum ist %s.'), strftime('%x %R', time() + $this->minimum_timespan_to_distribution_time*60));
         }
-        if ($data['enable_FCFS'] && $data['distributiondate']) {
+        if (!empty($data['enable_FCFS']) && $data['distributiondate']) {
             $errors[] = _('Sie können kein Datum für die automatische Platzverteilung einstellen und gleichzeitig die automatische Platzverteilung ausschalten.');
         }
         return $errors;
     }
-
 }
-
-?>

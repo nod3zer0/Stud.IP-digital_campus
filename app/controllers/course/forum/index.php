@@ -121,6 +121,9 @@ class Course_Forum_IndexController extends ForumController
 
                 if (!empty($list['list'])) {
                     // append the remaining entries to the standard category
+                    if (!isset($new_list[$this->getId()])) {
+                        $new_list[$this->getId()] = [];
+                    }
                     $new_list[$this->getId()] = array_merge((array)$new_list[$this->getId()], $list['list']);
                 }
 

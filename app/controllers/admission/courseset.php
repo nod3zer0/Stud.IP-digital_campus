@@ -42,11 +42,13 @@ class Admission_CoursesetController extends AuthenticatedController
         $views = new ActionsWidget();
         $views->addLink(
             _('Anmeldeset anlegen'),
-            $this->url_for('admission/courseset/configure'),
-            Icon::create('add', 'clickable')
-        )->setActive($action == 'configure');
+            $this->configureURL(),
+            Icon::create('add')
+        )->setActive($action === 'configure');
         Sidebar::Get()->addWidget($views);
-
+        if (!isset($this->instant_course_set_view)) {
+            $this->instant_course_set_view = false;
+        }
     }
 
     /**
@@ -129,16 +131,18 @@ class Admission_CoursesetController extends AuthenticatedController
                         : null;
         }, $this->coursesets));
         if (count($not_distributed_coursesets)) {
-            PageLayout::postMessage(MessageBox::info(
-                _("Es existieren Anmeldesets, die zum Zeitpunkt der Platzverteilung nicht gelost wurden. Stellen Sie sicher, dass der Cronjob \"Losverfahren überprüfen\" ausgeführt wird."),
-                array_unique($not_distributed_coursesets)));
+            PageLayout::postInfo(
+                _('"Es existieren Anmeldesets, die zum Zeitpunkt der Platzverteilung nicht gelost wurden. Stellen Sie sicher, dass der Cronjob "Losverfahren überprüfen" ausgeführt wird."'),
+                array_unique($not_distributed_coursesets));
         }
     }
 
     /**
      * Configure a new or existing course set.
      */
-    public function configure_action($coursesetId='') {
+    public function configure_action($coursesetId = '')
+    {
+        $this->courseset = null;
         if ($GLOBALS['perm']->have_perm('root')) {
             if ($coursesetId) {
                 // Load course set data.
@@ -162,7 +166,7 @@ class Admission_CoursesetController extends AuthenticatedController
                 $this->selectedSemester = $_SESSION['_default_sem'] ?: Semester::findCurrent()->semester_id;
             }
             Config::get()->AJAX_AUTOCOMPLETE_DISABLED = false;
-            $this->instSearch = QuickSearch::get("institute_id", new StandardSearch("Institut_id"))
+            $this->instSearch = QuickSearch::get('institute_id', new StandardSearch('Institut_id'))
                 ->withoutButton()
                 ->render();
         } else {
@@ -264,7 +268,8 @@ class Admission_CoursesetController extends AuthenticatedController
      * @param String $coursesetId the course set to save or empty if it is a
      * new course set
      */
-    public function save_action($coursesetId='') {
+    public function save_action($coursesetId = '')
+    {
         if (!Request::submitted('submit') || !Request::get('name') || !$this->instant_course_set_view && !Request::getArray('institutes')) {
             $this->flash['name'] = Request::get('name');
             $this->flash['institutes'] = Request::getArray('institutes');
@@ -310,7 +315,7 @@ class Admission_CoursesetController extends AuthenticatedController
             if (Request::option('semester')) {
                 $_SESSION['_default_sem'] = Request::option('semester');
             }
-            PageLayout::postMessage(MessageBox::success(sprintf(_("Das Anmeldeset: %s wurde gespeichert"), htmlReady($courseset->getName()))));
+            PageLayout::postSuccess(sprintf(_('Das Anmeldeset: %s wurde gespeichert'), htmlReady($courseset->getName())));
             if ($this->instant_course_set_view) {
                 $this->redirect($this->url_for('course/admission'));
             } else {
@@ -343,11 +348,11 @@ class Admission_CoursesetController extends AuthenticatedController
      * from
      * @see CoursesetModel::getInstCourses
      */
-    public function instcourses_action($coursesetId='') {
+    public function instcourses_action($coursesetId = '')
+    {
         CSRFProtection::verifyUnsafeRequest();
         $this->selectedCourses = [];
         //autoload
-        $courseset = new CourseSet();
         if ($coursesetId && !Request::getArray('courses')) {
             $courseset = new CourseSet($coursesetId);
             $this->selectedCourses = $courseset->getCourses();
@@ -361,7 +366,8 @@ class Admission_CoursesetController extends AuthenticatedController
     /**
      * Fetches available institutes for the current user.
      */
-    public function institutes_action() {
+    public function institutes_action()
+    {
         CSRFProtection::verifyUnsafeRequest();
         $this->myInstitutes = Institute::getMyInstitutes();
         $this->selectedInstitutes = [];
@@ -369,7 +375,7 @@ class Admission_CoursesetController extends AuthenticatedController
             $this->selectedInstitutes[$institute] = new Institute($institute);
         }
         Config::get()->AJAX_AUTOCOMPLETE_DISABLED = false;
-        $this->instSearch = QuickSearch::get("institute_id", new StandardSearch("Institut_id"))
+        $this->instSearch = QuickSearch::get('institute_id', new StandardSearch('Institut_id'))
             ->withOutButton()
             ->render();
     }
@@ -398,6 +404,9 @@ class Admission_CoursesetController extends AuthenticatedController
             $all_members = array_merge($all_members, $course->admission_applicants->findBy('status', words('accepted awaiting'))->pluck('user_id'));
             $all_members = array_unique($all_members);
             foreach ($all_members as $one) {
+                if (!isset($multi_members[$one])) {
+                    $multi_members[$one] = 0;
+                }
                 $multi_members[$one]++;
             }
             $distinct_members = array_unique(array_merge($distinct_members, $all_members));
@@ -456,12 +465,12 @@ class Admission_CoursesetController extends AuthenticatedController
                 foreach (array_keys($participants) as $one) {
                     $multi_members[$one][] = $course->name . ($course->veranstaltungsnummer ? '|'. $course->veranstaltungsnummer : '');
                 }
-                foreach ($participants as $user_id => $part) {
+                foreach ($participants as $part) {
                     $liste[] = [$part['username'], $part['vorname'], $part['nachname'], $part['email'], $course->name . ($course->veranstaltungsnummer ? '|'. $course->veranstaltungsnummer : '') , $part['status']];
                 }
             }
             if ($csv == 'download_all_members') {
-                $captions = [_("Username"), _("Vorname"), _("Nachname"), _("E-Mail"), _("Veranstaltung"), _("Status")];
+                $captions = [_('Username'), _('Vorname'), _('Nachname'), _('E-Mail'), _('Veranstaltung'), _('Status')];
                 if (count($liste)) {
                     $tmpname = md5(uniqid('tmp'));
                     if (array_to_csv($liste, $GLOBALS['TMP_PATH'].'/'.$tmpname, $captions)) {
@@ -488,9 +497,9 @@ class Admission_CoursesetController extends AuthenticatedController
                     $max_count[] = count($courses);
                     $c++;
                 }
-                $captions = [_("Nutzername"), _("Vorname"), _("Nachname"), _("E-Mail")];
+                $captions = [_('Nutzername'), _('Vorname'), _('Nachname'), _('E-Mail')];
                 foreach (range(1,max($max_count)) as $num) {
-                    $captions[] = _("Veranstaltung") . ' ' . $num;
+                    $captions[] = _('Veranstaltung') . ' ' . $num;
                 }
             if (count($liste)) {
                     $tmpname = md5(uniqid('tmp'));
@@ -535,7 +544,7 @@ class Admission_CoursesetController extends AuthenticatedController
                 }
             }
             if ($ok) {
-                PageLayout::postMessage(MessageBox::success(_("Die zugeordneten Veranstaltungen wurden konfiguriert.")));
+                PageLayout::postSuccess(_('Die zugeordneten Veranstaltungen wurden konfiguriert.'));
             }
             $this->redirect($this->url_for('admission/courseset/configure/' . $courseset->getId()));
             return;
@@ -586,7 +595,6 @@ class Admission_CoursesetController extends AuthenticatedController
             );
         };
         foreach ($users as $user) {
-            $row = [];
             $app_courses = $applicants[$user->id];
             asort($app_courses);
 
@@ -638,7 +646,7 @@ class Admission_CoursesetController extends AuthenticatedController
         ));
     }
 
-    function copy_action($set_id)
+    public function copy_action($set_id)
     {
         $courseset = new CourseSet($set_id);
         $cloned_courseset = clone $courseset;
@@ -650,10 +658,16 @@ class Admission_CoursesetController extends AuthenticatedController
                     $rule->setDistributionTime(strtotime('+1 month 23:59'));
                     $rule->store();
                     $cloned_courseset->setAlgorithmRun(false);
-                    PageLayout::postMessage(MessageBox::info(sprintf(_("Bitte passen Sie das Datum der automatischen Platzverteilung an, es wurde automatisch auf %s festgelegt!"), strftime('%x %X', $rule->getDistributiontime()))));
+                    PageLayout::postInfo(sprintf(
+                        _('Bitte passen Sie das Datum der automatischen Platzverteilung an, es wurde automatisch auf %s festgelegt!'),
+                        strftime('%x %X', $rule->getDistributiontime())
+                    ));
                 }
             } else if ($rule->getEndTime() && $rule->getEndTime() < time()) {
-                PageLayout::postMessage(MessageBox::info(sprintf(_("Der Gültigkeitszeitraum der Regel %s endet in der Vergangenheit!"), htmlReady($rule->getName()))));
+                PageLayout::postInfo(sprintf(
+                    _('Der Gültigkeitszeitraum der Regel %s endet in der Vergangenheit!'),
+                    htmlReady($rule->getName())
+                ));
             }
         }
         $this->redirect(URLHelper::getURL('dispatch.php/admission/courseset/configure/' .
@@ -665,10 +679,8 @@ class Admission_CoursesetController extends AuthenticatedController
      *
      * @param String $seminare_condition SQL condition
      */
-    function get_courses($seminare_condition)
+    public function get_courses($seminare_condition)
     {
-        global $perm, $user;
-
         list($institut_id, $all) = explode('_', $this->current_institut_id);
         // Prepare count statements
         $query = "SELECT count(*)
@@ -691,7 +703,7 @@ class Admission_CoursesetController extends AuthenticatedController
                 INNER JOIN courseset_rule csr ON csr.set_id=seminar_courseset.set_id AND csr.type='ParticipantRestrictedAdmission'
                 INNER JOIN seminare ON seminar_courseset.seminar_id=seminare.seminar_id
                 ";
-        if ($institut_id == 'all'  && $perm->have_perm('root')) {
+        if ($institut_id === 'all'  && $GLOBALS['perm']->have_perm('root')) {
             $sql .= "WHERE 1 {$seminare_condition} ";
         } elseif ($all == 'all') {
             $sql .= "INNER JOIN Institute USING (Institut_id)
@@ -707,7 +719,7 @@ class Admission_CoursesetController extends AuthenticatedController
 
         $statement = DBManager::get()->prepare($sql);
         $statement->execute($parameters);
-
+        $ret = [];
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $seminar_id = $row['seminar_id'];
             $ret[$seminar_id] = $row;

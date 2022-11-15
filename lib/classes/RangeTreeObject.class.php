@@ -95,7 +95,7 @@ class RangeTreeObject {
     function __construct($item_id) {
         $this->tree = TreeAbstract::GetInstance("StudipRangeTree", false);
         $this->tree_item_id = $item_id;
-        $this->item_data = $this->tree->tree_data[$item_id];
+        $this->item_data = $this->tree->tree_data[$item_id] ?? null;
     }
 
     /**

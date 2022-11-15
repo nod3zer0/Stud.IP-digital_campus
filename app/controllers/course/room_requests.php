@@ -151,10 +151,10 @@ class Course_RoomRequestsController extends AuthenticatedController
     {
         $result = null;
         if ($request_id) {
-            if (!$_SESSION['course_room_request']) {
+            if (!isset($_SESSION['course_room_request'])) {
                 $_SESSION['course_room_request'] = [];
             }
-            if (!$_SESSION['course_room_request'][$request_id]) {
+            if (!isset($_SESSION['course_room_request'][$request_id])) {
                 $_SESSION['course_room_request'][$request_id] = [];
             }
             $result =& $_SESSION['course_room_request'][$request_id];
@@ -235,14 +235,14 @@ class Course_RoomRequestsController extends AuthenticatedController
         }
         if ($step >= 3) {
             if ($this->category) {
-                $this->selected_properties = $session_data['selected_properties'];
+                $this->selected_properties = $session_data['selected_properties'] ?? [];
             }
         }
         if ($step >= 4) {
-            $this->seats = $session_data['selected_properties']['seats'];
-            $this->comment = $session_data['comment'];
-            $this->reply_lecturers = $session_data['reply_lecturers'];
-            $this->preparation_time = $session_data['preparation_time'];
+            $this->seats = $session_data['selected_properties']['seats'] ?? '0';
+            $this->comment = $session_data['comment']?? '';
+            $this->reply_lecturers = $session_data['reply_lecturers'] ?? '';
+            $this->preparation_time = $session_data['preparation_time'] ?? '';
         }
     }
 
@@ -814,7 +814,7 @@ class Course_RoomRequestsController extends AuthenticatedController
         $this->request = RoomRequest::find($this->request_id);
         $selected_room = null;
         $this->seats = null;
-        if (($this->request instanceof RoomRequest) && !$session_data['request_id']) {
+        if (($this->request instanceof RoomRequest) && !isset($session_data['request_id'])) {
             //It is an existing request that hasn't been modified yet.
             //Load its data directly.
             if ($this->request->resource_id) {
