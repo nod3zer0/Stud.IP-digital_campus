@@ -61,28 +61,6 @@ class Admin_UserController extends AuthenticatedController
 
         $this->perm = $perm;
         $request    = '';
-        //Daten annehmen
-        if (Request::submitted('reset')) {
-            unset($_SESSION['admin']['user']);
-        } elseif (Request::submitted('search')) {
-            $request = $_SESSION['admin']['user'] = iterator_to_array(Request::getInstance());
-        }
-
-        //Suchparameter und Ergebnisse vorhanden
-        if (!empty($_SESSION['admin']['user']['results'])) {
-            $request = $_SESSION['admin']['user'];
-        }
-
-        if (!empty($request)) {
-            // Inaktivität für die suche anpassen
-            $inaktiv = [$request['inaktiv'], $request['inaktiv_tage']];
-            if (empty($request['inaktiv_tage']) && $request['inaktiv'] != 'nie') {
-                $inaktiv = null;
-            }
-        }
-
-        $this->request = [];
-        $this->users = [];
 
         //Datafields
         $this->datafields = [];
@@ -98,18 +76,46 @@ class Admin_UserController extends AuthenticatedController
             return !$role->systemtype;
         });
 
-        //wenn suche durchgeführt
-        $search_datafields = [];
-        if (!empty($request)) {
+        //Daten annehmen
+        if (Request::submitted('reset')) {
+            unset($_SESSION['admin']['user']);
+        } elseif (Request::submitted('search')) {
+            $request = iterator_to_array(Request::getInstance());
+
+            // Inaktivität für die suche anpassen
+            $inaktiv = [$request['inaktiv'], $request['inaktiv_tage']];
+            if (empty($request['inaktiv_tage']) && $request['inaktiv'] != 'nie') {
+                $inaktiv = null;
+            }
+
             //suche mit datafields
+            $search_datafields = [];
             foreach ($this->datafields as $datafield) {
                 if (mb_strlen($request[$datafield->id]) > 0
                     && !(in_array($datafield->type, words('selectbox radio')) && $request[$datafield->id] === '---ignore---')
                 ) {
-                    $search_datafields[$datafield->id] = $request[$datafield->id];
+                    $search_datafields[$datafield->id] = trim($request[$datafield->id]);
                 }
             }
 
+            $request['username']   = trim($request['username']);
+            $request['email']      = trim($request['email']);
+            $request['vorname']    = trim($request['vorname']);
+            $request['nachname']   = trim($request['nachname']);
+            $request['inaktiv']    = $inaktiv;
+            $request['datafields'] = $search_datafields;
+
+            $_SESSION['admin']['user'] = $request;
+        } elseif (!empty($_SESSION['admin']['user']['results'])) {
+            //Suchparameter und Ergebnisse vorhanden
+            $request = $_SESSION['admin']['user'];
+        }
+
+        $this->request = [];
+        $this->users = [];
+
+        //wenn suche durchgeführt
+        if (!empty($request)) {
             //Suchparameter
             $this->sortby = Request::option('sortby', 'username');
             $this->order  = Request::option('order', 'asc');
@@ -117,14 +123,6 @@ class Admin_UserController extends AuthenticatedController
                 $this->order = $this->order == 'desc' ? 'asc' : 'desc';
             }
 
-            $request['username']   = $this->getStringValueFromRequest($request, 'username');
-            $request['email']      = $this->getStringValueFromRequest($request, 'email');
-            $request['vorname']    = $this->getStringValueFromRequest($request, 'vorname');
-            $request['nachname']   = $this->getStringValueFromRequest($request, 'nachname');
-            $request['inaktiv']    = $inaktiv;
-            $request['datafields'] = $search_datafields;
-            $request['sort']       = $this->sortby;
-            $request['order']      = $this->order;
             $empty_search          = $request['perm'] === 'alle';
 
             $values = [
@@ -233,15 +231,6 @@ class Admin_UserController extends AuthenticatedController
         ) {
             $this->advanced = true;
         }
-    }
-
-    private function getStringValueFromRequest(array $request, string $key): ?string
-    {
-        if (!isset($request[$key])) {
-            return null;
-        }
-
-        return trim($request[$key]) ?: null;
     }
 
     /**
