@@ -392,7 +392,8 @@ ul.reviews, ol.reviews {
         width: 840px;
         max-width: 100%;
         box-sizing: border-box;
-        min-height: 200px;
+        height: 200px;
+        max-height: 200px;
         overflow: hidden;
         .intro {
             display: flex;

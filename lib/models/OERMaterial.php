@@ -322,6 +322,21 @@ class OERMaterial extends SimpleORMap
         return $this['content_type'] === "application/pdf";
     }
 
+    public function isPDFInlineDisplayable()
+    {
+        if (!$this->isPDF()) {
+            return false;
+        }
+        $url = $this->getDownloadUrl();
+        $headers = get_headers($url, true);
+        if ($headers['Content-Disposition']
+            && substr($headers['Content-Disposition'], 0, strlen('attachment')) === 'attachment') {
+            //in this case the server forces to download the document and we cannot display it in an iframe:
+            return false;
+        }
+        return true;
+    }
+
     protected function getFileEnding()
     {
         return pathinfo($this["filename"], PATHINFO_EXTENSION);
