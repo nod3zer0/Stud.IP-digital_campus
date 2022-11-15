@@ -934,7 +934,6 @@ class RoomManagement_PlanningController extends AuthenticatedController
                 $copy->preparation_time = $booking->preparation_time;
                 $copy->booking_type = $booking->booking_type;
                 $copy->repeat_end = $target_repeat_end->getTimestamp();
-                $copy->repeat_quantity = $booking->repeat_quantity;
                 $copy->repetition_interval = $booking->repetition_interval;
                 $copy->internal_comment = $booking->internal_comment;
                 if ($this->step == 3) {

@@ -645,7 +645,6 @@ class SingleDate
             $changeAssign->begin = $this->date;
             $changeAssign->end = $this->end_time;
             $changeAssign->repeat_end = $this->end_time;
-            $changeAssign->repeat_quantity = 0;
             $changeAssign->repetition_interval = '';
             if ($preparation_time > 0) {
                 $changeAssign->preparation_time = $preparation_time * 60;

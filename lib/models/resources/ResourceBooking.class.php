@@ -41,7 +41,6 @@
  *     3 = planned booking (reservation from external tools)
  *
  * @property int repeat_end database column
- * @property int repeat_quantity database column
  * @property string repetition_interval database column
  *     The repetition_interval column contains a date interval string in a
  *     format that is accepted by the DateInterval class constructor.
@@ -469,12 +468,12 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         }
 
         if ($this->repetition_interval) {
-            if (!($this->repeat_quantity || $this->repeat_end)) {
+            if (!$this->repeat_end) {
                 throw new InvalidArgumentException(
                     _('Es wurde ein Wiederholungsintervall ohne Begrenzung angegeben!')
                 );
             }
-            if ((!$this->repeat_quantity) && ($this->real_begin > $this->repeat_end)) {
+            if ($this->real_begin > $this->repeat_end) {
                 throw new InvalidArgumentException(
                     _('Der Startzeitpunkt darf nicht hinter dem Ende der Wiederholungen liegen!')
                 );
@@ -717,12 +716,12 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         if ($this->repetition_interval) {
             $repetition_interval = $this->getRepetitionInterval();
 
-            if (!($this->repeat_quantity || $this->repeat_end)) {
+            if (!$this->repeat_end) {
                 throw new InvalidArgumentException(
                     _('Es wurde ein Wiederholungsintervall ohne Begrenzung angegeben!')
                 );
             }
-            if ((!$this->repeat_quantity) && ($this->real_begin > $this->repeat_end)) {
+            if ($this->real_begin > $this->repeat_end) {
                 throw new InvalidArgumentException(
                     _('Der Startzeitpunkt darf nicht hinter dem Ende der Wiederholungen liegen!')
                 );
@@ -1208,7 +1207,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
             )
         ];
 
-        if (($this->repeat_quantity > 0) || $this->repeat_end) {
+        if ($this->repeat_end) {
             //Repetition: we must check which repetition interval has been
             //selected and then create entries for each repetition.
             //Repetition starts with the begin date and ends with the

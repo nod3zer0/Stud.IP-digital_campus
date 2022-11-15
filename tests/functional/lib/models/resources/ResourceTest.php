@@ -254,11 +254,6 @@ class ResourceTest extends \Codeception\Test\Unit
         );
 
         $this->assertEquals(
-            null,
-            $this->booking->repeat_quantity
-        );
-
-        $this->assertEquals(
             'P00Y00M02D',
             $this->booking->repetition_interval
         );

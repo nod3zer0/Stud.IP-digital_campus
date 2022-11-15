@@ -645,7 +645,7 @@ class Resource extends SimpleORMap implements StudipItem
      *     DateInterval object.
      *     In case repetitions are specified by their amount set this
      *     parameter to null.
-     * @param int $repetition_amount
+     * @param int $repetition_amount (obsolete, has no effect)
      * @param int $preparation_time The preparation time which is needed before
      *     the real start time. This will be substracted
      *     from the begin timestamp and stored in an extra column of the
@@ -841,8 +841,6 @@ class Resource extends SimpleORMap implements StudipItem
                 } else {
                     $booking->repeat_end = $repetition_end_date;
                 }
-            } elseif ($repetition_amount) {
-                $booking->repeat_quantity = $repetition_amount;
             }
 
             $booking->repetition_interval = $repetition_interval->format('P%YY%MM%DD');

@@ -1598,7 +1598,7 @@ class Resources_BookingController extends AuthenticatedController
                             ]
                         ],
                         $this->booking->getRepetitionInterval(),
-                        $this->booking->repeat_quantity,
+                        0,
                         $this->booking->repeat_end,
                         $this->booking->preparation_time,
                         $this->booking->description,
