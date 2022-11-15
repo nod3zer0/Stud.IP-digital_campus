@@ -19,6 +19,46 @@
                        value="<?= $end->format('H:i')?>">
             </label>
         </fieldset>
+        <fieldset>
+            <legend><?= _('Wochentage auswählen') ?></legend>
+            <div class="hgroup">
+                <label>
+                    <input type="checkbox" name="weekdays[]" value="1"
+                        <?= in_array('1', $weekdays) ? 'checked' : '' ?>>
+                    <?= _('Montag') ?>
+                </label>
+                <label>
+                    <input type="checkbox" name="weekdays[]" value="2"
+                        <?= in_array('2', $weekdays) ? 'checked' : '' ?>>
+                    <?= _('Dienstag') ?>
+                </label>
+                <label>
+                    <input type="checkbox" name="weekdays[]" value="3"
+                        <?= in_array('3', $weekdays) ? 'checked' : '' ?>>
+                    <?= _('Mittwoch') ?>
+                </label>
+                <label>
+                    <input type="checkbox" name="weekdays[]" value="4"
+                        <?= in_array('4', $weekdays) ? 'checked' : '' ?>>
+                    <?= _('Donnerstag') ?>
+                </label>
+                <label>
+                    <input type="checkbox" name="weekdays[]" value="5"
+                        <?= in_array('5', $weekdays) ? 'checked' : '' ?>>
+                    <?= _('Freitag') ?>
+                </label>
+                <label>
+                    <input type="checkbox" name="weekdays[]" value="6"
+                        <?= in_array('6', $weekdays) ? 'checked' : '' ?>>
+                    <?= _('Samstag') ?>
+                </label>
+                <label>
+                    <input type="checkbox" name="weekdays[]" value="7"
+                        <?= in_array('7', $weekdays) ? 'checked' : '' ?>>
+                    <?= _('Sonntag') ?>
+                </label>
+            </div>
+        </fieldset>
         <? if ($available_rooms): ?>
             <table class="default">
                 <caption>

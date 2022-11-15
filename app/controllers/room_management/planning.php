@@ -46,6 +46,14 @@ class RoomManagement_PlanningController extends AuthenticatedController
         //Build sidebar:
         $sidebar = Sidebar::get();
 
+        $actions = new ActionsWidget();
+        $actions->addLink(
+            _('Drucken'),
+            'javascript:void(window.print());',
+            Icon::create('print')
+        );
+        $sidebar->addWidget($actions);
+
         $views = new ViewsWidget();
         if ($GLOBALS['user']->id && ($GLOBALS['user']->id !== 'nobody')) {
             $views->addLink(
@@ -291,6 +299,11 @@ class RoomManagement_PlanningController extends AuthenticatedController
         }
 
         $actions = new ActionsWidget();
+        $actions->addLink(
+            _('Drucken'),
+            'javascript:void(window.print());',
+            Icon::create('print')
+        );
         $actions->addLink(
             _('Buchungen kopieren'),
             $this->url_for('room_management/planning/copy_bookings'),

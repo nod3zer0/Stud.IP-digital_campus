@@ -67,6 +67,7 @@ class Resources_ExportController extends AuthenticatedController
 
         PageLayout::setTitle(_('Quellen für den Export von Buchungen auswählen'));
 
+        $this->weekdays = ['1', '2', '3', '4', '5'];
         $this->select_rooms = Request::get('select_rooms');
 
         if ($this->select_rooms) {
@@ -265,9 +266,18 @@ class Resources_ExportController extends AuthenticatedController
             'H:i'
         );
 
+        //Get the selected weekdays:
+        $this->weekdays = Request::getArray('weekdays');
+
         if ($this->begin >= $this->end) {
             PageLayout::postError(
                 _('Der Startzeitpunkt darf nicht hinter dem Endzeitpunkt liegen!')
+            );
+            return;
+        }
+        if (!$this->weekdays) {
+            PageLayout::postError(
+                _('Bitte mindestens einen Wochentag auswählen.')
             );
             return;
         }
@@ -342,6 +352,13 @@ class Resources_ExportController extends AuthenticatedController
             //Prepare data for export:
 
             foreach ($intervals as $interval) {
+                //Check the weekday of the interval first to avoid any other computation
+                //if the weekday is not one of the selected weekdays.
+                $interval_weekday = date('N', $interval->begin);
+                if (!in_array($interval_weekday, $this->weekdays)) {
+                    //The interval is not on one of the selected weekdays.
+                    continue;
+                }
                 $booking = $interval->booking;
                 if (!$booking instanceof ResourceBooking || !in_array($booking->booking_type, $types)) {
                     continue;
