@@ -239,7 +239,7 @@ export default {
             if (fileId) {
                 await this.$store.dispatch('file-refs/loadById', {id: fileId});
                 let fileRef = this.$store.getters['file-refs/byId']({id: fileId});
-                
+
                 let fileRefData = {};
                 fileRefData.id = fileRef.id;
                 fileRefData.attributes = fileRef.attributes;
@@ -309,6 +309,19 @@ export default {
                 fileref.attributes = refs[ref_id].attributes;
                 fileref.related_block_id = block_id;
                 fileref.id = refs[ref_id].id;
+
+                // Create an empty relationships object to pick and hold selected relationships of the fileref. Because not all of
+                // them are necessary.
+                let relationships = {};
+                // Get terms-of-use id from relationships.
+                if (refs[ref_id].relationships?.['terms-of-use']?.data?.id) {
+                    let terms = {'data' : refs[ref_id].relationships['terms-of-use'].data};
+                    relationships['terms-of-use'] = terms;
+                }
+                // Add relationships to the fileref object if it has some values.
+                if (Object.keys(relationships).length > 0) {
+                    fileref.relationships = relationships;
+                }
 
                 try {
                     await this.loadFolder(folderId);

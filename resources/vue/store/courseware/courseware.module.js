@@ -314,7 +314,7 @@ export const actions = {
     },
 
     async createFile(context, { file, filedata, folder }) {
-        const termId = file?.relationships['terms-of-use']?.data?.id ?? null;
+        const termId = file?.relationships?.['terms-of-use']?.data?.id ?? null;
         const formData = new FormData();
         formData.append('file', filedata, file.attributes.name);
         if (termId) {
