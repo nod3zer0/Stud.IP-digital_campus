@@ -79,11 +79,6 @@ STUDIP.domReady(function () {
 
     STUDIP.study_area_selection.initialize();
 
-    // autofocus for all browsers
-    if (!("autofocus" in document.createElement("input"))) {
-        jQuery('[autofocus]').first().focus();
-    }
-
     if (document.createElement('textarea').style.resize === undefined) {
         jQuery('textarea.resizable').resizable({
             handles: 's',
