@@ -1,5 +1,5 @@
 <template>
-    <div class="cw-block cw-block-image-map">
+    <div class="cw-block cw-block-image-map" @mousedown="selectShape">
         <courseware-default-block
             :block="block"
             :canEdit="canEdit"
@@ -28,13 +28,45 @@
                         :title="area.title"
                         :href="area.external_target"
                         :target="area.link_target"
-                        @click="
+                        @click=" 
                             if (area.target_type === 'internal') {
                                 areaLink(area.internal_target);
                             }
                         "
                     />
                 </map>
+                <div v-if="showEditMode && viewMode === 'edit' && currentShapes.length > 0"
+                    ref="draggableShapeWrapper" class="cw-draggable-shapes-wrapper">
+                    <vue-resizeable
+                            v-for="(shape, index) in currentShapes"
+                            :key="index"
+                            :index="index"
+                            style="position: absolute"
+                            ref="resizableAreaComponents"
+                            :fitParent="true"
+                            :dragSelector="dragSelector"
+                            :active="handlers"
+                            :left="getShapeOffsetLeft(shape)"
+                            :top="getShapeOffsetTop(shape)"
+                            :width="getShapeWidth(shape)"
+                            :height="getShapeHeight(shape)"
+                            @resize:start="dragStartHandler"
+                            @resize:end="endDraggingShape"
+                            @drag:start="dragStartHandler"
+                            @drag:end="endDraggingShape">
+                        <div class="cw-draggable-area"
+                            :style="{
+                                backgroundColor: getColorRGBA(shape.data.color),
+                                color: shape.data.textcolor ? getColorRGBA(shape.data.textcolor) : '',
+                                borderRadius: getShapeBorderRadius(shape),
+                                border: getShapeBorder(shape),
+                                cursor: selectedShapeIndex !== false ? 'grabbing' : '',
+                            }"
+                            @click="followLink(index)">
+                            {{ shape.data.text }}
+                        </div>
+                    </vue-resizeable>
+                </div>
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
@@ -56,7 +88,7 @@
                             v-for="(shape, index) in currentShapes"
                             :key="index"
                             :index="index"
-                            :name="shape.title"
+                            :name="shape.title ? shape.title : ''"
                             :icon="shape.title === '' ? 'link-extern' : ''"
                             :selected="index === 0"
                         >
@@ -68,6 +100,7 @@
                                     :reduce="color => color.class"
                                     :clearable="false"
                                     v-model="shape.data.color"
+                                    @input="drawScreen"
                                 >
                                     <template #open-indicator="selectAttributes">
                                         <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
@@ -112,6 +145,30 @@
                             <label>
                                 <translate>Beschriftung</translate>
                                 <input type="text" v-model="shape.data.text" @change="drawScreen" />
+                            </label>
+                            <label>
+                                <translate>Textfarbe</translate>
+                                <studip-select
+                                    :options="colors"
+                                    label="name"
+                                    :reduce="color => color.class"
+                                    :clearable="false"
+                                    v-model="shape.data.textcolor"
+                                    @input="drawScreen"
+                                >
+                                    <template #open-indicator="selectAttributes">
+                                        <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
+                                    </template>
+                                    <template #no-options>
+                                        <translate>Es steht keine Auswahl zur Verfügung.</translate>
+                                    </template>
+                                    <template #selected-option="{name, rgba}">
+                                        <span class="vs__option-color" :style="{'background-color': rgba}"></span><span>{{name}}</span>
+                                    </template>
+                                    <template #option="{name, rgba}">
+                                        <span class="vs__option-color" :style="{'background-color': rgba}"></span><span>{{name}}</span>
+                                    </template>
+                                </studip-select>
                             </label>
                             <label>
                                 <translate>Art des Links</translate>
@@ -161,6 +218,7 @@ import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
 import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
+import VueResizeable from 'vrp-vue-resizable';
 import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -172,6 +230,7 @@ export default {
         CoursewareFileChooser,
         CoursewareTabs,
         CoursewareTab,
+        VueResizeable,
     },
     props: {
         block: Object,
@@ -201,7 +260,14 @@ export default {
                 { name: this.$gettext('Dunkelgrau'), class: 'darkgrey', rgba: 'rgba(52,73,94,1)' },
                 { name: this.$gettext('Schwarz'), class: 'black', rgba: 'rgba(0,0,0,1)' }
             ],
-            file: null
+            file: null,
+            dragSelector: ".cw-draggable-area",
+            handlers: ["r", "rb", "b", "lb", "l", "lt", "t", "rt"],
+            draggedShapeWidth: 50,
+            draggedShapeHeight: 50,
+            selectedShapeIndex: false,
+            draggingActive: false,
+            showEditMode: false,
         };
     },
     computed: {
@@ -209,6 +275,7 @@ export default {
             courseware: 'courseware-structural-elements/all',
             fileRefById: 'file-refs/byId',
             urlHelper: 'urlHelper',
+            viewMode: 'viewMode',
         }),
         fileId() {
             return this.block?.attributes?.payload?.file_id;
@@ -232,7 +299,8 @@ export default {
             updateBlock: 'updateBlockInContainer',
             loadFileRef: 'file-refs/loadById',
         }),
-        async initCurrentData() {
+        async initCurrentData(event) {
+            this.showEditMode = Boolean(event);
             this.currentFileId = this.fileId;
             this.currentShapes = JSON.parse(JSON.stringify(this.shapes));
             await this.loadFile();
@@ -307,71 +375,78 @@ export default {
         drawShapes() {
             let context = this.context;
             let view = this;
-            this.currentShapes.forEach((value) => {
-                let shape = value;
-                let text = shape.data.text;
-                let shape_width = 0;
-                let shape_height = 0;
-                let text_X = 0;
-                let text_Y = 0;
+            this.currentShapes.forEach((value, index) => {
+                // skip the selected shape when redrawing so it disappears while dragging the shape
+                if (this.selectedShapeIndex !== index) {
+                    let shape = value;
+                    let text = shape.data.text;
+                    let shape_width = 0;
+                    let shape_height = 0;
+                    let text_X = 0;
+                    let text_Y = 0;
 
-                context.beginPath();
-                switch (shape.type) {
-                    case 'arc':
-                        shape_width = Math.round((2 * shape.data.radius) / Math.sqrt(2)) * 0.85;
-                        shape_height = shape_width / 0.85;
-                        text_X = shape.data.centerX;
-                        text_Y = shape.data.centerY - shape.data.radius * 0.75;
-                        context.arc(shape.data.centerX, shape.data.centerY, shape.data.radius, 0, 2 * Math.PI); // x, y, r, startAngle, endAngle ... Angle in radians!
-                        context.fillStyle = view.colors.filter((color) => {return color.class === shape.data.color})[0].rgba;
-                        context.fill();
-                        break;
-                    case 'ellipse':
-                        shape_width = shape.data.radiusX;
-                        shape_height = shape.data.radiusY * 1.75;
-                        text_X = shape.data.X;
-                        text_Y = shape.data.Y - shape.data.radiusY * 0.8;
-                        context.ellipse(
-                            shape.data.X,
-                            shape.data.Y,
-                            shape.data.radiusX,
-                            shape.data.radiusY,
-                            0,
-                            0,
-                            2 * Math.PI
-                        );
-                        context.fillStyle = view.colors.filter((color) => {return color.class === shape.data.color})[0].rgba;
-                        context.fill();
-                        break;
-                    case 'rect':
-                        shape_width = shape.data.width;
-                        shape_height = shape.data.height;
-                        text_X = shape.data.X + shape.data.width / 2;
-                        text_Y = shape.data.Y;
-                        context.rect(shape.data.X, shape.data.Y, shape.data.width, shape.data.height);
-                        context.fillStyle = view.colors.filter((color) => {return color.class === shape.data.color})[0].rgba;
-                        context.fill();
-                        break;
-                    default:
-                        return;
-                }
-
-                if (text && shape.data.color !== 'transparent') {
-                    text = view.fitTextToShape(context, text, shape_width);
-                    context.textAlign = 'center';
-                    context.font = '14px Arial';
-                    if (view.darkColors.indexOf(shape.data.color) > -1) {
-                        context.fillStyle = '#ffffff';
-                    } else {
-                        context.fillStyle = '#000000';
+                    context.beginPath();
+                    switch (shape.type) {
+                        case 'arc':
+                            shape_width = Math.round((2 * shape.data.radius) / Math.sqrt(2)) * 0.85;
+                            shape_height = shape_width / 0.85;
+                            text_X = shape.data.centerX;
+                            text_Y = shape.data.centerY - shape.data.radius * 0.75;
+                            context.arc(shape.data.centerX, shape.data.centerY, shape.data.radius, 0, 2 * Math.PI); // x, y, r, startAngle, endAngle ... Angle in radians!
+                            context.fillStyle = view.colors.filter((color) => {return color.class === shape.data.color})[0].rgba;
+                            context.fill();
+                            break;
+                        case 'ellipse':
+                            shape_width = shape.data.radiusX;
+                            shape_height = shape.data.radiusY * 1.75;
+                            text_X = shape.data.X;
+                            text_Y = shape.data.Y - shape.data.radiusY * 0.8;
+                            context.ellipse(
+                                shape.data.X,
+                                shape.data.Y,
+                                shape.data.radiusX,
+                                shape.data.radiusY,
+                                0,
+                                0,
+                                2 * Math.PI
+                            );
+                            context.fillStyle = view.colors.filter((color) => {return color.class === shape.data.color})[0].rgba;
+                            context.fill();
+                            break;
+                        case 'rect':
+                            shape_width = shape.data.width;
+                            shape_height = shape.data.height;
+                            text_X = shape.data.X + shape.data.width / 2;
+                            text_Y = shape.data.Y;
+                            context.rect(shape.data.X, shape.data.Y, shape.data.width, shape.data.height);
+                            context.fillStyle = view.colors.filter((color) => {return color.class === shape.data.color})[0].rgba;
+                            context.fill();
+                            break;
+                        default:
+                            return;
                     }
-                    let lineHeight = shape_height / (text.length + 1);
-                    text.forEach((value, key) => {
-                        context.fillText(value, text_X, text_Y + lineHeight * (key + 1));
-                    });
-                }
 
-                context.closePath();
+                    if (text && shape.data.color !== 'transparent') {
+                        text = view.fitTextToShape(context, text, shape_width);
+                        context.textAlign = 'center';
+                        context.font = '14px Arial';
+                        if (shape.data.textcolor) {
+                            context.fillStyle = this.getColorRGBA(shape.data.textcolor);
+                        } else {
+                            if (view.darkColors.indexOf(shape.data.color) > -1) {
+                                context.fillStyle = '#ffffff';
+                            } else {
+                                context.fillStyle = '#000000';
+                            }
+                        }
+                        let lineHeight = shape_height / (text.length + 1);
+                        text.forEach((value, key) => {
+                            context.fillText(value, text_X, text_Y + lineHeight * (key + 1));
+                        });
+                    }
+
+                    context.closePath();
+                }
             });
         },
         fitTextToShape( context , text, shapeWidth) {
@@ -512,6 +587,7 @@ export default {
         },
         removeShape(index) {
             this.currentShapes.splice(index, 1);
+            this.drawScreen();
         },
         fixUrl(index) {
             let url = this.currentShapes[index].target_external;
@@ -520,6 +596,162 @@ export default {
             }
             this.currentShapes[index].target_external = url;
         },
-    },
+        dragStartHandler(data) {
+            // redraw screen now that a shape was selected so that it disappears while dragging or resizing
+            this.drawScreen();
+        },
+        selectShape(data) {
+            // set current draggable div shape to canvas shape coordinates
+            let canvas = this.$refs.image_from_canvas;
+            let canvasSpecs = canvas.getBoundingClientRect();
+            let mouseX = (data.clientX - canvasSpecs.left) * (canvas.width/canvasSpecs.width);
+            let mouseY = (data.clientY - canvasSpecs.top) * (canvas.height/canvasSpecs.height);
+            this.currentShapes.forEach((value, key) => {
+                let shape = value;
+                // if the event target is the draggable area, check for the shape area normally
+                // else check if the click was on a resizable area that belongs to a shape since 
+                // resizable areas are partly outside the shape
+                if (data.target.classList.contains('cw-draggable-area')) {
+                    if (this.mouseHit(mouseX, mouseY, shape)) {
+                        this.selectedShapeIndex = key;
+                    }
+                } else {
+                    mouseX = data.target.parentElement.offsetLeft;
+                    mouseY = data.target.parentElement.offsetTop;
+                    if (shape.type == 'arc') {
+                        mouseX += shape.data.radius;
+                        mouseY += shape.data.radius;
+                    }
+                    if (shape.type == 'rect') {
+                        mouseX += shape.data.width / 2;
+                        mouseY += shape.data.height / 2;
+                    }
+                    if (shape.type == 'ellipse') {
+                        mouseX += shape.data.radiusX;
+                        mouseY += shape.data.radiusY;
+                    }
+                    if (this.mouseHit(mouseX, mouseY, shape)) {
+                        this.selectedShapeIndex = key;
+                    }
+                }
+            });
+        },
+        endDraggingShape(data) {
+            this.draggingActive = true;
+            // transfer div shape data to canvas according to shape
+            let shape = this.currentShapes[this.selectedShapeIndex];
+            if (shape.type == 'arc') {
+                let circle_width = data.width != shape.data.radius * 2? data.width : data.height;
+                // if the shape was clicked and not dragged, set the dragging status to false to follow the link
+                if (shape.data.centerX == data.left + shape.data.radius || shape.data.centerY == data.top + shape.data.radius) {
+                    this.draggingActive = false;
+                }
+                shape.data.radius = circle_width / 2;
+                shape.data.centerX = data.left + shape.data.radius;
+                shape.data.centerY = data.top + shape.data.radius;
+            }
+            if (shape.type == 'rect') {
+                if (shape.data.X == data.left || shape.data.Y == data.top) {
+                    this.draggingActive = false;
+                }
+                shape.data.X = data.left;
+                shape.data.Y = data.top;
+                shape.data.width = data.width;
+                shape.data.height = data.height;
+            }
+            if (shape.type == 'ellipse') {
+                if (shape.data.X == data.left + shape.data.radiusX || shape.data.Y == data.top + shape.data.radiusY) {
+                    this.draggingActive = false;
+                }
+                shape.data.radiusX = data.width / 2;
+                shape.data.radiusY = data.height / 2;
+                shape.data.X = data.left + shape.data.radiusX;
+                shape.data.Y = data.top + shape.data.radiusY;
+            }
+            // unselect shape to stop skipping the selected shape when drawing the canvas
+            this.selectedShapeIndex = false;
+            this.drawScreen();
+        },
+        mouseHit(mouseX, mouseY, shape) {
+            // check if the mouseclick was on a shape and return true if it was
+            if (shape.type == 'arc') {
+                let dx = shape.data.centerX - mouseX;
+                let dy = shape.data.centerY - mouseY;
+                return (dx*dx + dy*dy < shape.data.radius*shape.data.radius);
+            }
+            if ((shape.type == 'rect') || (shape.type == 'text')) {
+                let dx = mouseX - shape.data.X;
+                let dy = mouseY - shape.data.Y;
+                return ((dx <= shape.data.width) && (dy <= shape.data.height) && (dx >= 0) && (dy >= 0));
+            }
+            if (shape.type == 'ellipse') {
+                let dx = shape.data.X - mouseX;
+                let dy = shape.data.Y - mouseY;
+                return ((Math.abs(dx) < shape.data.radiusX) && (Math.abs(dy) < shape.data.radiusY));
+            }
+        },
+        getColorRGBA(color) {
+            return this.colors.filter((col) => {return col.class === color})[0].rgba;
+        },
+        getShapeBorder(shape) {
+            return shape.data.color === 'transparent' ? 'dashed thin #000' : 'none';
+        },
+        getShapeBorderRadius(shape) {
+            if (shape.type == 'rect') {
+                return 0;
+            } else {
+                return '50%';
+            }
+        },
+        getShapeOffsetLeft(shape) {
+            if (shape.type == 'arc') {
+                return parseInt(shape.data.centerX - shape.data.radius);
+            }
+            if (shape.type == 'rect') {
+                return parseInt(shape.data.X);
+            }
+            if (shape.type == 'ellipse') {
+                return parseInt(shape.data.X) - shape.data.radiusX;
+            }
+        },
+        getShapeOffsetTop(shape) {
+            if (shape.type == 'arc') {
+                return parseInt(shape.data.centerY - shape.data.radius);
+            }
+            if (shape.type == 'rect') {
+                return parseInt(shape.data.Y);
+            }
+            if (shape.type == 'ellipse') {
+                return parseInt(shape.data.Y) - shape.data.radiusY;
+            }
+        },
+        getShapeWidth(shape) {
+            if (shape.type == 'arc') {
+                return parseInt(shape.data.radius * 2);
+            }
+            if (shape.type == 'rect') {
+                return parseInt(shape.data.width);
+            }
+            if (shape.type == 'ellipse') {
+                return parseInt(shape.data.radiusX * 2);
+            }
+        },
+        getShapeHeight(shape) {
+            if (shape.type == 'arc') {
+                return parseInt(shape.data.radius * 2);
+            }
+            if (shape.type == 'rect') {
+                return parseInt(shape.data.height);
+            }
+            if (shape.type == 'ellipse') {
+                return parseInt(shape.data.radiusY * 2);
+            }
+        },
+        followLink(index) {
+            if (!this.draggingActive) {
+                this.$refs.map.areas[index].click();
+            }
+        },
+    }
 };
 </script>
