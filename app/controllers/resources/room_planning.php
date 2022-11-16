@@ -98,7 +98,8 @@ class Resources_RoomPlanningController extends AuthenticatedController
                 'resources/room_planning/booking_plan/' . $new_resource_id
             );
         }
-
+        $this->user_is_global_resource_admin = ResourceManager::userHasGlobalPermission($this->user, 'admin');
+        $this->show_global_admin_actions = $this->user_is_global_resource_admin;
         if (!$resource_id) {
             $resource_id = Request::get('resource_id');
         }
@@ -146,7 +147,6 @@ class Resources_RoomPlanningController extends AuthenticatedController
         //and the user has at least 'user' permissions on the resource.
         //The booking plan is also visible when the resource is a room
         //and its booking plan is publicly available.
-        $plan_is_visible      = false;
         $this->anonymous_view = true;
         $this->booking_types  = [0, 1, 2];
         if ($this->user instanceof User) {
@@ -450,11 +450,12 @@ class Resources_RoomPlanningController extends AuthenticatedController
 
     public function semester_plan_action($resource_id = null)
     {
-        $current_user = User::findCurrent();
-        if (!($current_user instanceof User)) {
+        $this->user = User::findCurrent();
+        if (!($this->user instanceof User)) {
             throw new AccessDeniedException();
         }
-        $this->rooms = RoomManager::getUserRooms($current_user);
+
+        $this->rooms = RoomManager::getUserRooms($this->user);
         $sidebar = Sidebar::get();
         if (Request::get('semester_id')) {
             $this->semester = Semester::find(Request::get('semester_id'));
@@ -539,7 +540,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
         //The booking plan is also visible when the resource is a room
         //and its booking plan is publicly available.
         $plan_is_visible =
-            $this->resource->bookingPlanVisibleForUser($current_user);
+            $this->resource->bookingPlanVisibleForUser($this->user);
 
         if (!$plan_is_visible) {
             throw new AccessDeniedException(
@@ -547,12 +548,11 @@ class Resources_RoomPlanningController extends AuthenticatedController
             );
         }
 
-
-        $this->user_has_booking_permissions = $this->resource->userHasBookingRights(
-            $current_user
-        );
-        $this->booking_types                = [0, 1, 2];
-        if ($this->resource->userHasPermission($current_user, 'admin')) {
+        $this->user_is_global_resource_admin = ResourceManager::userHasGlobalPermission($this->user, 'admin');
+        $this->show_global_admin_actions     = $this->user_is_global_resource_admin;
+        $this->user_has_booking_permissions  = $this->resource->userHasBookingRights($this->user);
+        $this->booking_types                 = [0, 1, 2];
+        if ($this->resource->userHasPermission($this->user, 'admin')) {
             $this->booking_types[] = 3;
         }
         if ($this->user_has_booking_permissions) {
@@ -737,7 +737,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
                 'text'   => _('Reservierung')
             ],
         ];
-        if ($this->resource->userHasPermission($current_user, 'admin')) {
+        if ($this->resource->userHasPermission($this->user, 'admin')) {
             $planned_booking_colour = ColourValue::find('Resources.BookingPlan.PlannedBooking.Bg');
             $this->table_keys[]     = [
                 'colour' => (string)$planned_booking_colour,

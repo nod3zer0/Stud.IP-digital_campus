@@ -122,7 +122,8 @@
             [
                 'grouped_rooms' => RoomManager::groupRooms($rooms),
                 'link_template' => $selection_link_template,
-                'show_in_dialog' => false
+                'show_in_dialog' => false,
+                'show_global_admin_actions' => $show_global_admin_actions,
             ]
         ) ?>
     <? else: ?>

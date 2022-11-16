@@ -350,7 +350,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
         $search = new SearchWidget($this->roomsURL());
         $search->setTitle(_('Raumsuche'));
         $search->addNeedle(_('Gebäude oder Raum'), 'building_room_name', true);
-        
+
         $sidebar->addWidget($search);
 
         // search for all rooms
@@ -360,7 +360,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
                       ON resources.parent_id = pr.id
                       WHERE rc.class_name IN ( :room_class_names )";
         // narrow down rooms according to search parameter (room or building name)
-        $rooms_sql_with_request = $rooms_sql . 
+        $rooms_sql_with_request = $rooms_sql .
                      "AND (resources.name LIKE CONCAT('%', :room_name, '%')
                       OR pr.name LIKE CONCAT('%', :building_name, '%'))";
 
@@ -380,7 +380,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
             //the user has at least user permissions:
             $rooms_parameter['user_id'] = $this->user->id;
             $rooms_parameter['now']     = time();
-            
+
             // did the user search for a specific room or building name?
             $rooms_sql = Request::get('building_room_name') ? $rooms_sql_with_request : $rooms_sql;
 
