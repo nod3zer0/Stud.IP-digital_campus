@@ -103,18 +103,18 @@ class Consultation_AdminController extends ConsultationController
         if ($GLOBALS['user']->cfg->CONSULTATION_SHOW_GROUPED) {
             $this->blocks = $this->groupSlots(ConsultationSlot::findByRange(
                 $this->range,
-                "ORDER BY start ASC LIMIT " . ($this->page * $this->limit) . ", {$this->limit}",
+                "ORDER BY start DESC LIMIT " . ($this->page * $this->limit) . ", {$this->limit}",
                 true
             ));
         } else {
             $this->blocks = ConsultationBlock::findByRange(
                 $this->range,
-                'ORDER BY start ASC',
+                'ORDER BY start DESC',
                 true
             );
             $this->slots = ConsultationSlot::findByRange(
                 $this->range,
-                "ORDER BY start ASC LIMIT " . ($this->page * $this->limit) . ", {$this->limit}",
+                "ORDER BY start DESC LIMIT " . ($this->page * $this->limit) . ", {$this->limit}",
                 true
             );
         }
