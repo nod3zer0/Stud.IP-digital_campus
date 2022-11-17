@@ -1139,9 +1139,8 @@ class Seminar
     {
         $stat = $this->getStatOfNotBookedRooms($cycle_id);
         $pattern = '%s , %s, %s-%s <br />';
-        if (($stat['open'] > 0) && ($stat['open'] == $stat['all'])) {
-            $return = '';
-        } else if ($stat['open'] > 0) {
+        $return = '';
+        if ($stat['open'] > 0 && $stat['open'] !== $stat['all']) {
             $return = _('Folgende Termine haben keine Raumbuchung:') . '<br />';
 
             foreach ($stat['open_rooms'] as $aSingleDate) {

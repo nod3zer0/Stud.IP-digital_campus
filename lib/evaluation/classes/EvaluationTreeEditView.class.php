@@ -61,19 +61,6 @@ define('NO_QUESTION_GROUP_TITLE', _('*Fragenblock*'));
  * @access private
  */
 define('NO_TEMPLATE', _('*unbekannt*'));
-
-/**
- * @const NEW_EVALUATION_TITLE  title of a new question block
- * @access public
- */
-define('NEW_EVALUATION_TITLE', _('Neue Evaluation'));
-
-/**
- * @const FIRST_ARRANGMENT_BLOCK_TITLE  title of a new arrangment block
- * @access public
- */
-define('FIRST_ARRANGMENT_BLOCK_TITLE', _('Erster Gruppierungsblock'));
-
 /**
  * @const NEW_ARRANGMENT_BLOCK_TITLE  title of a new arrangment block
  * @access private
@@ -453,7 +440,7 @@ class EvaluationTreeEditView
                     $parentID = $group->getParentID();
 
                     $mode = $this->getInstance($parentID);
-
+                    $items2 = [];
                     if ($mode == ROOT_BLOCK) {
 
                         $eval = new Evaluation ($this->evalID, NULL, EVAL_LOAD_FIRST_CHILDREN);
@@ -947,10 +934,11 @@ class EvaluationTreeEditView
                     $this->tree->tree_data[$itemID]['name'], 0, 60));
             $head .= "</a>";
 
-            if ($template)
+            if (!empty($template))
                 $head .= $template;
         }
-
+        $moveItem = [];
+        $moveItemIsParent = 0;
         if ($itemID == ROOT_BLOCK)
             $itemID2 = $this->evalID;
         else
@@ -1032,9 +1020,9 @@ class EvaluationTreeEditView
      */
     function getItemMessage($itemID, $colspan = 1)
     {
-        if ($this->msg[$itemID]) {
+        if (!empty($this->msg[$itemID])) {
             $msg = explode("§", $this->msg[$itemID]);
-
+            $details = [];
             if ($msg[0] == 'msg') {
                 $msg[0] = 'success';
             }
@@ -1102,7 +1090,7 @@ class EvaluationTreeEditView
      */
     function parseCommand()
     {
-
+        $exec_func = '';
         if (Request::option('cmd') || Request::optionArray('cmd')) {
             # extract the command from Request (array) =========================== #
 
@@ -1112,7 +1100,7 @@ class EvaluationTreeEditView
                 $exec_func = "execCommand" . Request::option('cmd');
 
         } else {
-
+            $found = 0;
             # extract the command from the template-site ========================= #
             foreach ($_REQUEST as $key => $value) {
                 if (preg_match("/template_(.*)_#(.*)_button?/", $key, $command)) {
@@ -1129,10 +1117,12 @@ class EvaluationTreeEditView
             }
 
 
-            if ($command[1] == "create_question_answers")
-                $exec_func = "execCommandQuestionAnswersCreate";
-            else
-                $exec_func = "execCommand" . $command[1];
+            if (isset($command[1])) {
+                if ($command[1] == "create_question_answers")
+                    $exec_func = "execCommandQuestionAnswersCreate";
+                else
+                    $exec_func = "execCommand" . $command[1];
+            }
             # ==================== END: extract the command from the template-site #
         }
 
@@ -1191,7 +1181,7 @@ class EvaluationTreeEditView
 
                 $this->tree->eval->save();
 
-                if ($this->tree->eval->isError) {
+                if (!empty($this->tree->eval->isError)) {
                     return MessageBox::error(_("Fehler beim Einlesen (root-item)"));
                 }
                 $this->msg[$this->itemID] = "msg§"
@@ -1205,7 +1195,7 @@ class EvaluationTreeEditView
                 $group->setTitle($title);
                 $group->setText($text);
                 $group->save();
-                if ($group->isError) {
+                if (!empty($group->isError)) {
                     return MessageBox::error(_("Fehler beim Einlesen (Block)"));
                 }
                 $this->msg[$this->itemID] = "msg§"
@@ -1245,16 +1235,22 @@ class EvaluationTreeEditView
 
                 }
 
-                if ($group->isError) {
+                if (!empty($group->isError)) {
                     return MessageBox::error("Fehler beim Einlesen (Fragenblock)");
-        }
-                if ($this->msg[$this->itemID])
+                }
+                if (!isset($this->msg[$this->itemID])) {
+                    $this->msg[$this->itemID] = '';
+                }
+                if (!empty($this->msg[$this->itemID]))
                     $this->msg[$this->itemID] .= "<br>" . _("Veränderungen wurden gespeichert.");
                 else
                     $this->msg[$this->itemID] .= "msg§"
                         . _("Veränderungen wurden gespeichert.");
 
-                if ($msg) {
+                if (!empty($msg)) {
+                    if (!isset($this->msg[$this->itemID])) {
+                        $this->msg[$this->itemID] = '';
+                    }
                     $this->msg[$this->itemID] = $this->msg[$this->itemID] . "<br>" . $msg;
                 }
                 break;
@@ -1278,8 +1274,6 @@ class EvaluationTreeEditView
      */
     function execCommandAssertDeleteItem()
     {
-
-
         $group = &$this->tree->getGroupObject($this->itemID);
         if ($group->getChildType() == "EvaluationQuestion")
             $numberofchildren = $group->getNumberChildren();
@@ -1354,7 +1348,7 @@ class EvaluationTreeEditView
 
         $group->delete();
 
-        if ($group->isError) {
+        if (!empty($group->isError)) {
             return MessageBox::error(_("Fehler beim Löschen eines Block."));
         }
 
@@ -1399,7 +1393,7 @@ class EvaluationTreeEditView
         if ($mode == ROOT_BLOCK) {
             $this->tree->eval->addChild($group);
             $this->tree->eval->save();
-            if ($this->tree->eval->isError) {
+            if (!empty($this->tree->eval->isError)) {
                 return MessageBox::error(_("Fehler beim Anlegen eines neuen Blocks."));
             }
             $this->msg[$this->itemID] = "msg§"
@@ -1408,7 +1402,7 @@ class EvaluationTreeEditView
             $parentgroup = &$this->tree->getGroupObject($this->itemID);
             $parentgroup->addChild($group);
             $parentgroup->save();
-            if ($parentgroup->isError) {
+            if (!empty($parentgroup->isError)) {
                 return MessageBox::error(_("Fehler beim Anlegen eines neuen Blocks."));
             }
             $this->msg[$this->itemID] = "msg§"
@@ -1443,7 +1437,7 @@ class EvaluationTreeEditView
         if ($mode == ROOT_BLOCK) {
             $this->tree->eval->addChild($group);
             $this->tree->eval->save();
-            if ($this->tree->eval->isError) {
+            if (!empty($this->tree->eval->isError)) {
                 return MessageBox::error(_("Fehler beim Anlegen eines neuen Blocks."));
             }
             $this->msg[$this->itemID] = "msg§"
@@ -1453,7 +1447,7 @@ class EvaluationTreeEditView
             $parentgroup =& $this->tree->getGroupObject($this->itemID);
             $parentgroup->addChild($group);
             $parentgroup->save();
-            if ($parentgroup->isError) {
+            if (!empty($parentgroup->isError)) {
                 return MessageBox::error(_("Fehler beim Anlegen eines neuen Blocks."));
             }
             if (Request::option("templateID") != "")
@@ -1486,7 +1480,7 @@ class EvaluationTreeEditView
         $group->setTemplateID(Request::option("templateID"));
         $group->save();
 
-        if ($group->isError) {
+        if (!empty($group->isError)) {
             return MessageBox::error(_("Fehler beim Zuordnen eines Templates."));
         }
 
@@ -1578,7 +1572,7 @@ class EvaluationTreeEditView
             $newquestion->setText("");
             $qgroup->addChild($newquestion);
             $qgroup->save();
-            if ($qgroup->isError) {
+            if (!empty($qgroup->isError)) {
                 return MessageBox::error(_("Fehler beim Anlegen neuer Fragen."));
             }
         }
@@ -1847,7 +1841,7 @@ class EvaluationTreeEditView
                     $grouptodelete = $this->tree->eval->getChild($move_group->getObjectID());
                     $grouptodelete->delete();
                     $this->tree->eval->save();
-                    if ($this->tree->eval->isError)
+                    if (!empty($this->tree->eval->isError))
                         return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
                 } else {
 
@@ -1857,13 +1851,13 @@ class EvaluationTreeEditView
                     $oldparentgroup->save();
                 }
 
-                if ($this->tree->eval->isError)
+                if (!empty($this->tree->eval->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($move_group->isError)
+                if (!empty($move_group->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($newgroup->isError)
+                if (!empty($newgroup->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($grouptodelete->isError)
+                if (!empty($grouptodelete->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
 
                 $this->msg[$this->itemID] = "msg§"
@@ -1885,7 +1879,7 @@ class EvaluationTreeEditView
                     $grouptodelete = $this->tree->eval->getChild($move_group->getObjectID());
                     $grouptodelete->delete();
                     $this->tree->eval->save();
-                    if ($this->tree->eval->isError)
+                    if (!empty($this->tree->eval->isError))
                         return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
                 } else {
 
@@ -1893,7 +1887,7 @@ class EvaluationTreeEditView
                     $grouptodelete = $oldparentgroup->getChild($move_group->getObjectID());
                     $grouptodelete->delete();
                     $oldparentgroup->save();
-                    if ($oldparentgroup->isError)
+                    if (!empty($oldparentgroup->isError))
                         return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
                 }
                 $newgroup = $move_group->duplicate();
@@ -1902,13 +1896,13 @@ class EvaluationTreeEditView
                 $group->save();
 
 
-                if ($group->isError)
+                if (!empty($group->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($move_group->isError)
+                if (!empty($move_group->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($newgroup->isError)
+                if (!empty($newgroup->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($grouptodelete->isError)
+                if (!empty($grouptodelete->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
 
 
@@ -1955,15 +1949,15 @@ class EvaluationTreeEditView
                 $oldparent->save();
 
 
-                if ($group->isError)
+                if (!empty($group->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($move_group->isError)
+                if (!empty($move_group->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($newgroup->isError)
+                if (!empty($newgroup->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($grouptodelete->isError)
+                if (!empty($grouptodelete->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
-                if ($oldparent->isError)
+                if (!empty($oldparent->isError))
                     return MessageBox::error(_("Fehler beim Verschieben eines Blocks."));
 
                 $this->msg[$this->itemID] = "msg§"
@@ -2117,7 +2111,7 @@ class EvaluationTreeEditView
             $child &&
             $child->getTitle() == FIRST_ARRANGMENT_BLOCK_TITLE &&
             $child->getChildren() == NULL &&
-            $child->getText == "") {
+            isset($child->getText) && $child->getText == "") {
 
             $a_content = LinkButton::createCancel(_('Abbrechen'),
                 URLHelper::getURL(EVAL_FILE_ADMIN . "?evalID=") . $this->tree->eval->getObjectID() . "&abort_creation_button=1",
@@ -2655,7 +2649,7 @@ class EvaluationTreeEditView
                 if (preg_match("/template_(.*)_button?/", $key, $command))
                     break;
             }
-            if (preg_match("/(.*)_#(.*)/", $command[1], $command_parts))
+            if (isset($command[1]) && preg_match("/(.*)_#(.*)/", $command[1], $command_parts))
                 $questionID = $command_parts[2];
             else
                 $questionID = Request::submitted('template_save2_button') ? "" : Request::get("template_id");
@@ -3253,10 +3247,10 @@ class EvaluationTreeEditView
         $object->setPosition($newposition);
         $object->save();
 
-        if ($swapitem->isError) {
+        if (!empty($swapitem->isError)) {
             return MessageBox::error(_("Fehler beim verschieben."));
         }
-        if ($object->isError) {
+        if (!empty($object->isError)) {
             return MessageBox::error(_("Fehler beim verschieben."));
         }
     }

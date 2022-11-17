@@ -44,6 +44,8 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
   echo implode(", <br>", $output);
 
   $freetext_rooms = [];
+  $irregular_rooms = [];
+  $irregular = [];
 
   if (is_array($dates['irregular'])):
     foreach ($dates['irregular'] as $date) :
@@ -52,9 +54,15 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
         }
         $irregular[] = $date;
         $irregular_strings[] = $date['tostring'];
-        if ($date['resource_id']) :
+        if (!empty($date['resource_id'])) :
+            if (!isset($irregular_rooms[$date['resource_id']])) :
+                $irregular_rooms[$date['resource_id']] = 0;
+            endif;
             $irregular_rooms[$date['resource_id']]++;
-        elseif ($date['raum']) :
+        elseif (!empty($date['raum'])) :
+            if (!isset($freetext_rooms['('. $date['raum'] .')'])) :
+                $freetext_rooms['('. $date['raum'] .')'] = 0;
+            endif;
             $freetext_rooms['('. $date['raum'] .')']++;
         endif;
     endforeach;
@@ -69,9 +77,9 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
                 if (empty($with_past_intervals) && $date->end_time < $now) {
                     continue;
                 }
-                echo $date['tostring'];
+                echo $date['tostring'] ?? '';
 
-                if ($show_room && $date['resource_id']) :
+                if ($show_room && !empty($date['resource_id'])) :
                     echo ', '. _('Ort:') . ' ';
                     $room_obj = Room::find($date['resource_id']);
                     echo '<a href="' . $room_obj->getActionLink('show') . '" target="_blank">'
@@ -81,7 +89,7 @@ if (!empty($dates['regular']['turnus_data']) || !empty($dates['irregular'])) :
             endforeach;
         else :
             echo _("Termine am") . implode(', ', shrink_dates($irregular));
-            if (is_array($rooms) && count($rooms) > 0) :
+            if (count($rooms) > 0) :
                 if (count($rooms) > 3) :
                     $rooms = array_slice($rooms, count($rooms) - 3, count($rooms));
                 endif;

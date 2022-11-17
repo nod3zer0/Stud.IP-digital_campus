@@ -49,6 +49,9 @@ define ("QUOTED", 1);
 define ("UNQUOTED", 0);
 define ("EVAL_MIN_SEARCHLEN", 3);
 define ("EVAL_MAX_TEMPLATENAMELEN", 22);
+define("NEW_EVALUATION_TITLE", _("Neue Evaluation"));
+define('FIRST_ARRANGMENT_BLOCK_TITLE', _('Erster Gruppierungsblock'));
+define('EVAL_ROOT_TAG', "[R]");
 /* -------------------------------------------------- end: general constants */
 
 /* Path constants ---------------------------------------------------------- */

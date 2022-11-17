@@ -6,7 +6,7 @@
     <textarea name="questions[<?= $vote->getId() ?>][description]"
               class="size-l wysiwyg"
               placeholder="<?= _('Erzählen Sie uns ...') ?>"
-    ><?= wysiwygReady($etask->description) ?></textarea>
+    ><?= wysiwygReady($etask ? $etask->description : '') ?></textarea>
 </label>
 
 <input type="hidden" name="questions[<?= $vote->getId() ?>][options][mandatory]" value="0">

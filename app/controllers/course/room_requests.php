@@ -577,7 +577,7 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         $this->request_id = $request_id;
         $session_data = &$this->getRequestSessionData($this->request_id);
-
+        $this->max_preparation_time = Config::get()->RESOURCES_MAX_PREPARATION_TIME;
         $this->loadData($session_data, 3);
 
         $this->request = RoomRequest::find($this->request_id);

@@ -318,11 +318,13 @@ class EvaluationObject extends StudipObject {
             $this->childNum = 0;
             return $child;
          }
-         return NULL;
+         $ret = null;
+         return $ret;
       } else {
          if ($this->numberChildren > 0)
             $this->numberChildren--;
-         return array_pop ($this->childObjects);
+         $ret = array_pop ($this->childObjects);
+         return $ret;
       }
    }
 
@@ -334,7 +336,8 @@ class EvaluationObject extends StudipObject {
    function &getNextChild () {
       if ($this->childNum >= $this->numberChildren) {
          $this->childNum = 0;
-         return NULL;
+         $ret = null;
+         return $ret;
       }
       return $this->childObjects[$this->childNum++];
    }
@@ -510,6 +513,7 @@ class EvaluationObject extends StudipObject {
      echo "Position: ".$this->getPosition ()."<br>";
      echo "Untergruppen: ".$this->getNumberChildren ()."<br>";
      echo "</td></tr>";
+     $i = 0;
      while ($child = $this->getNextChild ()) {
        echo "<tr><td>";
        $i++;

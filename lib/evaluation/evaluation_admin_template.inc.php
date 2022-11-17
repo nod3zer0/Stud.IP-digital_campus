@@ -58,7 +58,7 @@ $lib = new EvalTemplateGUI();
 #error_reporting( E_ALL );
 
 /* Set variables ----------------------------------------------------------- */
-$rangeID = ($rangeID) ? $rangeID : Context::getId();
+$rangeID = $rangeID ?? Context::getId();
 
 if (empty ($rangeID)) {
     $rangeID = $user->id;
@@ -71,14 +71,14 @@ if (EvaluationObjectDB::getGlobalPerm() === 'root') {
     $myuserid = $user->id;
 
 }
-if (!$parentID) {
+if (empty($parentID)) {
     $parentID = Request::option('parentID');
 }
-$template_name = Request::get('template_name', $template_name);
-$template_type = Request::get('template_type') ? Request::get('template_type') : $template_type;
-$template_multiple = Request::get('template_multiple', $template_multiple);
+$template_name = Request::get('template_name', $template_name ?? null);
+$template_type = Request::get('template_type', $template_type ?? null);
+$template_multiple = Request::get('template_multiple', $template_multiple ?? null);
 $template_answers = Request::getArray('template_answers');
-$template_add_num_answers = Request::get('template_add_num_answers') ? Request::get('template_add_num_answers') : $template_add_num_answers;
+$template_add_num_answers = Request::int('template_add_num_answers', $template_add_num_answers ?? 0);
 if (empty($template_answers)) {
     if (mb_strstr($command, "edit"))
         for ($i = 0; $i < 5; $i++)
@@ -86,7 +86,7 @@ if (empty($template_answers)) {
     else
         $template_answers = [];
 }
-if (!$template_id) {
+if (empty($template_id)) {
     $template_id = Request::option('template_id');
 }
 
@@ -100,7 +100,7 @@ if (Request::option('onthefly') && ($command == "delete" || $command == "add_ans
     $question->setText(trim($template_name), YES);
     $question->setType($template_type);
     $question->setParentID($parentID);
-    $question->setPosition($template_position);
+    $question->setPosition($template_position ?? '');
     while ($answerrem = $question->getChild()) {
         $id = $answerrem->getObjectID();
         $answerrem->delete();
@@ -254,7 +254,7 @@ switch ($command) {
                 break;
             }
         }
-        if ($template_residual && empty ($template_residual_text)) {
+        if (!empty($template_residual) && empty($template_residual_text)) {
             $report = MessageBox::error(_("Geben Sie eine Ausweichantwort ein oder deaktivieren Sie diese."));
             $command = "continue_edit";
             break;
@@ -272,9 +272,11 @@ switch ($command) {
         $template_answers = "";
         break;
     case "save2":
-        $question->save();
-        if ($question->isError()) {
-            $report = MessageBox::error(_("Fehler beim Speichern."));
+        if ($question) {
+            $question->save();
+            if ($question->isError()) {
+                $report = MessageBox::error(_("Fehler beim Speichern."));
+            }
         }
         $command = "";
         $template_answers = "";
@@ -340,20 +342,16 @@ if (!$command || $command == "back") {
         switch ($typ) {
 
             case EVALQUESTION_TYPE_POL:
-                array_push($arrayOfPolTemplates,
-                    [$questionload->getObjectID(), $text]);
+                $arrayOfPolTemplates[] = [$questionload->getObjectID(), $text];
                 break;
             case EVALQUESTION_TYPE_LIKERT:
-                array_push($arrayOfSkalaTemplates,
-                    [$questionload->getObjectID(), $text]);
+                $arrayOfSkalaTemplates[] = [$questionload->getObjectID(), $text];
                 break;
             case EVALQUESTION_TYPE_MC:
                 if ($answer->isFreetext()) {
-                    array_push($arrayOfFreeTemplates,
-                        [$questionload->getObjectID(), $text]);
+                    $arrayOfFreeTemplates[] = [$questionload->getObjectID(), $text];
                 } else {
-                    array_push($arrayOfNormalTemplates,
-                        [$questionload->getObjectID(), $text]);
+                    $arrayOfNormalTemplates[] = [$questionload->getObjectID(), $text];
                 }
                 break;
         }
@@ -361,7 +359,7 @@ if (!$command || $command == "back") {
     }
 
     /* report messages ---------------------------------------------------- */
-    $td->cont($report);
+    $td->cont($report ?? '');
 
     $td->cont($lib->createSelections($arrayOfPolTemplates,
         $arrayOfSkalaTemplates,
@@ -371,12 +369,12 @@ if (!$command || $command == "back") {
 
 } else {
     $form = new HTM("form");
-    $form->attr("action", URLHelper::getLink("?page=edit&evalID=" . $evalID));
+    $form->attr("action", URLHelper::getLink("?page=edit&evalID=" . $evalID ?? ''));
     $form->attr("method", "post");
     $form->html(CSRFProtection::tokenTag());
     $form->cont(Button::create(_('zurück'), 'template_back_button', ['title' => _('Zurück zur Auswahl')]));
     $td->cont($form);
-
+    $report = '';
     /* on the fly info message -------------------------------------------- */
     if ($command == "create_question_answers" || Request::option('onthefly')) {
         $report = MessageBox::info(sprintf(_("Weisen Sie der links %sausgewählten%s Frage hier Antworten zu:"),
@@ -481,10 +479,8 @@ if ($command) {
             /*$template_type überprüfen------------------------------------------*/
             switch (Request::option('template_type')) {
                 /* --------------------------------------------------------------- */
-                case EVALQUESTION_TYPE_POL:
-                    $td->cont($lib->createTemplateForm($question));
-                    break;
                 case EVALQUESTION_TYPE_LIKERT:
+                case EVALQUESTION_TYPE_POL:
                     $td->cont($lib->createTemplateForm($question));
                     break;
                 case EVALQUESTION_TYPE_MC:
@@ -502,8 +498,7 @@ if ($command) {
             }
             if (preg_match("/(.*)_#(.*)/", $command[1], $command_parts))
                 $questionID = $command_parts[2];
-            $question = new EvaluationQuestion ($questionID,
-                NULL, EVAL_LOAD_ALL_CHILDREN);
+            $question = new EvaluationQuestion ($questionID ?? '', NULL, EVAL_LOAD_ALL_CHILDREN);
 
             if ($question->getNumberChildren() == 0) {
                 $question->setType(EVALQUESTION_TYPE_MC);
@@ -563,7 +558,7 @@ function save1($myuserid)
     $mineexists = 0;
     /*Existiert Question/Template schon?*/
     $qdb = new EvaluationQuestionDB();
-    if (!$template_id) {
+    if (empty($template_id)) {
         $template_id = Request::option("template_id");
     }
     if ($qdb->exists($template_id)) {
@@ -611,7 +606,7 @@ function save1($myuserid)
         $text = $template_answers[$i]['text'];
         $answerID = $template_answers[$i]['answer_id'];
         $answer = new EvaluationAnswer();
-        if (!$foreign)
+        if (empty($foreign))
             $answer->setObjectID($answerID);
         $answer->setText(trim($text), YES);
         $question->addChild($answer);
@@ -646,7 +641,7 @@ function save1($myuserid)
         $question->addChild($answer);
     }
 
-    if (!$overwrite) {
+    if (empty($overwrite)) {
         $db = new EvaluationQuestionDB();
         $lib = new EvalTemplateGUI();
         $lib->setUniqueName($question, $db, $myuserid, YES);
@@ -658,14 +653,3 @@ function save1($myuserid)
     return $question;
 
 }
-
-# Define constants ========================================================== #
-/**
- * @const EVAL_ROOT_TAG Specifies the string for taging root templates
- * @access public
- */
-define('EVAL_ROOT_TAG', "[R]");
-# ===================================================== end: define constants #
-
-
-?>

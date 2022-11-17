@@ -179,6 +179,7 @@ class EvaluationTreeShowUser
 
             echo "<td align=\"left\" width=\"100%\" valign=\"bottom\" class=\"content_body\" style=\"padding:1px;\">\n";
             $parent_id = $group_id;
+            $chapter_num = '';
             while ($parent_id != "root") {
                 $chapter_num = ($this->tree->tree_data[$parent_id]['priority'] + 1) . "." . $chapter_num;
                 $parent_id = $this->tree->tree_data[$parent_id]['parent_id'];
@@ -217,6 +218,7 @@ class EvaluationTreeShowUser
         $group_id = $group->getObjectID();
 
         $parent_id = $group_id;
+        $level_output = '';
         while ($this->tree->tree_data[$parent_id]['parent_id'] != $this->start_item_id) {
             $parent_id = $this->tree->tree_data[$parent_id]['parent_id'];
 
@@ -328,7 +330,7 @@ class EvaluationTreeShowUser
             : "";
 
         $html = '';
-
+        $cellWidth = null;
         /* Skala (one row question) ---------------------------------------- */
         if ($question->getType() == EVALQUESTION_TYPE_LIKERT || $question->getType() == EVALQUESTION_TYPE_POL) {
 
@@ -411,7 +413,7 @@ class EvaluationTreeShowUser
                         ? " border-bottom: $answerBorder;"
                         : "");
                     $answers = Request::getArray('answers');
-                    $checked = $answers[$question->getObjectID()] == $answer->getObjectID() ? "checked" : "";
+                    $checked = isset($answers[$question->getObjectID()]) && $answers[$question->getObjectID()] == $answer->getObjectID() ? "checked" : "";
 
                     $html .= "  <td align=\"center\" style=\"border-left: $answerBorder; $extraStyle;\" " .
                         "width=\"" . $cellWidth . "%\">";
@@ -483,7 +485,7 @@ class EvaluationTreeShowUser
                                     "<td colspan=\"2\">" .
                                     "<input type=\"text\"" .
                                     " name=\"freetexts[" . $question->getObjectID() . "]\"" .
-                                    " value=\"" . htmlReady($freetexts[$question->getObjectID()]) . "\" size=\"60\">" .
+                                    " value=\"" . htmlReady(isset($freetexts[$question->getObjectID()]) ? $freetexts[$question->getObjectID()] : '') . "\" size=\"60\">" .
                                     "</td>\n";
 
                             /* multiple row input field (textarea) */
@@ -493,7 +495,7 @@ class EvaluationTreeShowUser
                                     "<textarea" .
                                     " name=\"freetexts[" . $question->getObjectID() . "]\"" .
                                     " cols=\"60\" rows=\"" . $answer->getRows() . "\">" .
-                                    htmlReady($freetexts[$question->getObjectID()]) .
+                                    htmlReady(isset($freetexts[$question->getObjectID()]) ? $freetexts[$question->getObjectID()] : '') .
                                     "</textarea>" .
                                     "</td>\n";
                         } /* show normal answer ------------- */
@@ -501,7 +503,7 @@ class EvaluationTreeShowUser
                             $answers = Request::getArray('answers');
                             /* see if it must be checked  */
                             if ($type == "radio")
-                                $checked = $answers[$question->getObjectID()] == $answer->getObjectID()
+                                $checked = isset($answers[$question->getObjectID()]) && $answers[$question->getObjectID()] == $answer->getObjectID()
                                     ? "checked"
                                     : "";
                             else

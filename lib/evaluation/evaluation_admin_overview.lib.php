@@ -205,7 +205,7 @@ class EvalOverview
         $numberOfVotes = EvaluationDB::getNumberOfVotes($evalID);
 
         $no_permissons = EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval);
-
+        $no_buttons = 0;
         if ($eval->getAuthor() != $GLOBALS['user']->id && $no_permissons)
             $no_buttons = 1;
 
@@ -409,7 +409,7 @@ class EvalOverview
             $td->addAttr("nowrap", "nowrap");
             $td->addAttr("style", "white-space:nowrap");
             #if (is_object($content[$i]))
-            $td->addContent(($content[$i] ? $content[$i] : " "));
+            $td->addContent(($content[$i] ?? " "));
             #$td->addHTMLContent ( ($content[$i] ? $content[$i] : "-") );
             # filter out not needed datacells
             if ($state == "user_template" &&
@@ -444,22 +444,6 @@ class EvalOverview
         $evalID = $eval->getObjectID();
 
         $style = ($number % 2) ? "table_row_odd" : "table_row_even";
-
-        $startDate = $eval->getStartdate() == NULL ? " " : date("d.m.Y", $eval->getStartdate());
-
-        $stopDate = $eval->getRealStopdate() == NULL ? " " : date("d.m.Y", $eval->getRealStopdate());
-
-        switch ($state) {
-
-            case EVAL_STATE_NEW:
-                break;
-
-            case EVAL_STATE_ACTIVE:
-                break;
-
-            case EVAL_STATE_STOPPED:
-                break;
-        }
 
         $form = new HTML("form");
         $form->addAttr("name", "settingsForm");
@@ -789,14 +773,16 @@ class EvalOverview
         }
 
         if (!($GLOBALS['perm']->have_studip_perm("tutor", $showrangeID)) && $GLOBALS['user']->id != $showrangeID &&
-            !(Deputy::isEditActivated()() && Deputy::isDeputy($GLOBALS['user']->id, $showrangeID, true))) {
-            return $this->createSafeguard("ausruf", sprintf(_("Sie haben keinen Zugriff auf diesen Bereich.")));
+            !(Deputy::isEditActivated() && Deputy::isDeputy($GLOBALS['user']->id, $showrangeID, true))) {
+            return $this->createSafeguard("ausruf", _("Sie haben keinen Zugriff auf diesen Bereich."));
         }
 
         $evalDB = new EvaluationDB;
         $evalChanged = NULL;
         $safeguard = " ";
-
+        $startDate = NULL;
+        $stopDate  = NULL;
+        $timeSpan  = NULL;
         /* Actions without any permissions ---------------------------------- */
         switch ($evalAction) {
             case "search_template":
@@ -1297,8 +1283,7 @@ class EvalOverview
                             $return["option"] = DISCARD_OPENID;
                             $eval->save();
                             if ($eval->isError()) {
-                                $safeguard = $this->createSafeguard("ausruf", _("Fehler beim Aushängen einer Evaluationen aus allen Bereichen auf die Sie Zugriff haben.") . EvalCommon::createErrorReport($newEval));
-                                return $safeguard;
+                                return $this->createSafeguard("ausruf", _("Fehler beim Aushängen einer Evaluationen aus allen Bereichen auf die Sie Zugriff haben.") . EvalCommon::createErrorReport($newEval));
                             }
                             return $return;
                         }
@@ -1331,7 +1316,7 @@ class EvalOverview
                         $eval->setTimeSpan($timeSpan);
 
                         if (($stopDate != NULL && $stopDate <= time() - 1) ||
-                            ($timeSpan != NULL && $eval->getStartdate() != NULL && $eval->getStartdate() + $timeSpan <= time() - 1)) {
+                            ($timeSpan != NULL && $eval->getStartdate() != NULL && ((int)$eval->getStartdate() + (int)$timeSpan) <= time() - 1)) {
                             $message .= $message ? "<br>" : " ";
                             $message .= _("Die Evaluation wurde beendet.");
                         }
@@ -1368,8 +1353,7 @@ class EvalOverview
                 $search = Request::get("search");
 
                 if (EvaluationObjectDB::getGlobalPerm(YES) < 31) {
-                    $safeguard = $this->createSafeguard("ausruf", _("Sie besitzen keine Berechtigung eine Suche durchzuführen."));
-                    return $safeguard;
+                    return $this->createSafeguard("ausruf", _("Sie besitzen keine Berechtigung eine Suche durchzuführen."));
                 }
 
                 $results = $evalDB->search_range($search);
@@ -1401,7 +1385,7 @@ class EvalOverview
                     }
                 }
 
-                if ($abort_creation != true)
+                if (!$abort_creation)
                     break;
             # continue abort_creation
 
@@ -1433,7 +1417,7 @@ class EvalOverview
         /* ------------------------------------------------------ end: send SMS */
 
         // the current range has been removed from the eval
-        if ($current_range_removed) {
+        if (!empty($current_range_removed)) {
             $return["msg"] = $safeguard;
             $return["option"] = DISCARD_OPENID;
             return $return;
@@ -1475,7 +1459,9 @@ class EvalOverview
         if ($referer) {
             $linkreferer = "&referer=" . $referer;
         }
-
+        $request = NO;
+        $value1 = '';
+        $value2 = '';
         if ($mode == "delete_request") {
             $value1 = "delete_confirmed";
             $value2 = "delete_aborted";
@@ -1879,12 +1865,14 @@ class EvalOverview
         // display search_results
         if ($results) {
             foreach ($results as $k => $v) {
-                foreach ($range_types as $type_key => $type_value) {
-                    if ($v["type"] == $type_key) {
-                        $ranges["$type_key"][] = ["id" => $k, "name" => $v["name"]];
+                if (!empty($range_types)) {
+                    foreach ($range_types as $type_key => $type_value) {
+                        if ($v["type"] == $type_key) {
+                            $ranges["$type_key"][] = ["id" => $k, "name" => $v["name"]];
+                        }
                     }
+                    reset($range_types);
                 }
-                reset($range_types);
             }
 
             $table_s = new HTML("table");
@@ -1894,119 +1882,121 @@ class EvalOverview
             $table_s->addAttr("cellpadding", "0");
             $table_s->addAttr("width", "100%");
 
-            foreach ($range_types as $type_key => $type_value) {
+            if (!empty($range_types)) {
+                foreach ($range_types as $type_key => $type_value) {
 
-                // Überschriften
-                $tr_s = new HTML("tr");
+                    // Überschriften
+                    $tr_s = new HTML("tr");
 
-                // Typ
-                $td_s = new HTML("td");
-                $td_s->addAttr("colspan", "1");
-                $td_s->addAttr("class", "$style");
-                $td_s->addAttr("height", "22");
-                $td_s->addAttr("style", "vertical-align:bottom;");
-                $b_s = new HTML("b");
-                $b_s->addHTMLContent("&nbsp;");
-                $b_s->addContent($type_value . ":");
-                $td_s->addContent($b_s);
-                $tr_s->addContent($td_s);
+                    // Typ
+                    $td_s = new HTML("td");
+                    $td_s->addAttr("colspan", "1");
+                    $td_s->addAttr("class", "$style");
+                    $td_s->addAttr("height", "22");
+                    $td_s->addAttr("style", "vertical-align:bottom;");
+                    $b_s = new HTML("b");
+                    $b_s->addHTMLContent("&nbsp;");
+                    $b_s->addContent($type_value . ":");
+                    $td_s->addContent($b_s);
+                    $tr_s->addContent($td_s);
 
-                // link
-                $td_s = new HTML("td");
-                $td_s->addAttr("class", "$style");
-                $td_s->addAttr("height", "22");
-                $td_s->addAttr("align", "center");
-                $td_s->addAttr("style", "vertical-align:bottom;");
-                $b_s = new HTML("b");
-                $b_s->addContent(_("einhängen"));
-                $td_s->addContent($b_s);
-                $tr_s->addContent($td_s);
+                    // link
+                    $td_s = new HTML("td");
+                    $td_s->addAttr("class", "$style");
+                    $td_s->addAttr("height", "22");
+                    $td_s->addAttr("align", "center");
+                    $td_s->addAttr("style", "vertical-align:bottom;");
+                    $b_s = new HTML("b");
+                    $b_s->addContent(_("einhängen"));
+                    $td_s->addContent($b_s);
+                    $tr_s->addContent($td_s);
 
-                // kopie
-                $td_s = new HTML("td");
-                $td_s->addAttr("class", "$style");
-                $td_s->addAttr("height", "22");
-                $td_s->addAttr("align", "center");
-                $td_s->addAttr("style", "vertical-align:bottom;");
-                $b_s = new HTML("b");
-                $b_s->addContent(_("kopieren"));
-                $td_s->addContent($b_s);
-                $tr_s->addContent($td_s);
+                    // kopie
+                    $td_s = new HTML("td");
+                    $td_s->addAttr("class", "$style");
+                    $td_s->addAttr("height", "22");
+                    $td_s->addAttr("align", "center");
+                    $td_s->addAttr("style", "vertical-align:bottom;");
+                    $b_s = new HTML("b");
+                    $b_s->addContent(_("kopieren"));
+                    $td_s->addContent($b_s);
+                    $tr_s->addContent($td_s);
 
-                $table_s->addContent($tr_s);
+                    $table_s->addContent($tr_s);
 
-                $counter = 0;
+                    $counter = 0;
 
-                if ($ranges["$type_key"]) {
-                    foreach ($ranges["$type_key"] as $range) {
+                    if (!empty($ranges[$type_key])) {
+                        foreach ($ranges["$type_key"] as $range) {
 
-                        if ($counter == 0)
-                            $displayclass = "content_body";
-                        elseif (($counter % 2) == 0)
-                            $displayclass = "table_row_even";
-                        else
-                            $displayclass = "table_row_odd";
+                            if ($counter == 0)
+                                $displayclass = "content_body";
+                            elseif (($counter % 2) == 0)
+                                $displayclass = "table_row_even";
+                            else
+                                $displayclass = "table_row_odd";
 
-                        $tr_s = new HTML("tr");
+                            $tr_s = new HTML("tr");
 
-                        // name
-                        $td_s = new HTML("td");
-                        $td_s->addHTMLContent("&nbsp;");
-                        $td_s->addHTMLContent(htmlready($range["name"]));
-                        $tr_s->addContent($td_s);
+                            // name
+                            $td_s = new HTML("td");
+                            $td_s->addHTMLContent("&nbsp;");
+                            $td_s->addHTMLContent(htmlready($range["name"]));
+                            $tr_s->addContent($td_s);
 
-                        // if the rangeID is a username, convert it to the userID
-                        $new_rangeID = (get_userid($range['id'])) ? get_userid($range['id']) : $range['id'];
+                            // if the rangeID is a username, convert it to the userID
+                            $new_rangeID = (get_userid($range['id'])) ? get_userid($range['id']) : $range['id'];
 
-                        if (!in_array($new_rangeID, $rangeIDs)) {
+                            if (!in_array($new_rangeID, $rangeIDs)) {
 
-                            // link
+                                // link
+                                $td_s = new HTML("td");
+                                $td_s->addAttr("align", "center");
+                                $input = new HTMLempty("input");
+                                $input->addAttr("type", "checkbox");
+                                $input->addAttr("name", "link_range[{$range['id']}]");
+                                $input->addAttr("value", "1");
+                                $td_s->addContent($input);
+                                $tr_s->addContent($td_s);
+                            } else {
+
+                                // no link
+                                $td_s = new HTML("td");
+                                $td_s->addAttr("align", "center");
+                                $td_s->addAttr("colspan", "1");
+                                $input = new HTMLempty("input");
+                                $td_s->addContent(_("Die Evaluation ist bereits diesem Bereich zugeordnet."));
+                                $tr_s->addContent($td_s);
+                            }
+
+                            // copy
                             $td_s = new HTML("td");
                             $td_s->addAttr("align", "center");
                             $input = new HTMLempty("input");
                             $input->addAttr("type", "checkbox");
-                            $input->addAttr("name", "link_range[{$range['id']}]");
+                            $input->addAttr("name", "copy_range[{$range['id']}]");
                             $input->addAttr("value", "1");
                             $td_s->addContent($input);
                             $tr_s->addContent($td_s);
-                        } else {
 
-                            // no link
-                            $td_s = new HTML("td");
-                            $td_s->addAttr("align", "center");
-                            $td_s->addAttr("colspan", "1");
-                            $input = new HTMLempty("input");
-                            $td_s->addContent(_("Die Evaluation ist bereits diesem Bereich zugeordnet."));
-                            $tr_s->addContent($td_s);
+                            $table_s->addContent($tr_s);
+                            $counter++;
                         }
-
-                        // copy
+                    } elseif ($globalperm == "root" || $globalperm == "admin") {
+                        $tr_s = new HTML("tr");
                         $td_s = new HTML("td");
-                        $td_s->addAttr("align", "center");
-                        $input = new HTMLempty("input");
-                        $input->addAttr("type", "checkbox");
-                        $input->addAttr("name", "copy_range[{$range['id']}]");
-                        $input->addAttr("value", "1");
-                        $td_s->addContent($input);
+                        $td_s->addAttr("class", "content_body");
+                        $td_s->addAttr("colspan", "4");
+                        $td_s->addHTMLContent("&nbsp;");
+                        $td_s->addContent(_("Es wurden keine Ergebnisse aus diesem Bereich gefunden."));
                         $tr_s->addContent($td_s);
-
                         $table_s->addContent($tr_s);
-                        $counter++;
                     }
-                } elseif ($globalperm == "root" || $globalperm == "admin") {
-                    $tr_s = new HTML("tr");
-                    $td_s = new HTML("td");
-                    $td_s->addAttr("class", "content_body");
-                    $td_s->addAttr("colspan", "4");
-                    $td_s->addHTMLContent("&nbsp;");
-                    $td_s->addContent(_("Es wurden keine Ergebnisse aus diesem Bereich gefunden."));
-                    $tr_s->addContent($td_s);
-                    $table_s->addContent($tr_s);
+                    reset($ranges);
                 }
-                reset($ranges);
             }
         }
-        if ($showsearchresults) {
+        if (!empty($showsearchresults)) {
             $tr = new HTML("tr");
             $td = new HTML("td");
             $td->addAttr("colspan", "2");
@@ -2066,7 +2056,7 @@ class EvalOverview
 
         if ($globalperm == "dozent" || $globalperm == "autor" || $search)
             $showsearchresults = 1;
-
+        $range_types = [];
         if ($globalperm == "admin")
             $range_types = [
                 "user" => _("Benutzer"),
@@ -2144,7 +2134,7 @@ class EvalOverview
 
                 $counter = 0;
 
-                if ($ranges["$type_key"]) {
+                if (!empty($ranges[$type_key])) {
                     foreach ($ranges["$type_key"] as $range) {
 
                         if ($counter == 0)
@@ -2198,7 +2188,7 @@ class EvalOverview
             }
         }
 
-        return $table->createContent();
+        return !empty($table) ? $table->createContent() : '';
     }
 
     /**

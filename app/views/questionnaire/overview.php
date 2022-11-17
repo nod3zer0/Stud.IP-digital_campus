@@ -15,7 +15,7 @@
         <tbody>
             <? if (count($questionnaires)) : ?>
             <? foreach ($questionnaires as $questionnaire) : ?>
-                <?= $this->render_partial('questionnaire/_overview_questionnaire.php', compact('questionnaire')) ?>
+                <?= $this->render_partial('questionnaire/_overview_questionnaire.php', compact('questionnaire', 'range_type')) ?>
             <? endforeach ?>
             <? else : ?>
                 <tr class="noquestionnaires">

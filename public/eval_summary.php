@@ -156,7 +156,11 @@ function do_graph($data, $evalquestion_id)
     );
 
     if(!empty($data)) {
-        $max_x = max(array_map('next',$data));
+        $_data = [];
+        array_walk($data, function($d) use (&$_data) {
+            $_data[] = next($d);
+        });
+        $max_x = max($_data);
         $graph->SetPlotAreaWorld(NULL, 0); // y-achse bei 0 starten
         $graph->SetPrecisionY(0); //anzahl kommastellen y-achse
         $graph->SetYTickIncrement($max_x < 10 ? 1 : round($max_x/10));
@@ -400,7 +404,7 @@ function groups($parent_id)
         if ($group['child_type'] == 'EvaluationQuestion') {
             echo "  <tr><td class=\"blank\" colspan=\"2\">\n";
 
-            echo "<table border=\"". ($group_type=="normal" || $ausgabeformat==1 ? "0" : "1") ."\" width=\"100%\" cellspacing=\"0\">\n";
+            echo "<table border=\"". (!empty($group_type) && $group_type=="normal" || $ausgabeformat==1 ? "0" : "1") ."\" width=\"100%\" cellspacing=\"0\">\n";
 
             $local_question_counter = 0;
             $answer_arr = [];
@@ -415,7 +419,7 @@ function groups($parent_id)
 
                 $local_question_counter += 1;
 
-                if (do_template("show_questions") && $group_type=="normal") {
+                if (do_template('show_questions') && !empty($group_type) && $group_type === 'normal') {
                     echo "    <tr><td class=\"blank\" colspan=\"2\">\n";
                     echo "      <b>".$global_counter.".".$local_counter.".".$local_question_counter.". ".formatReady($question['text'])."</b></font>\n";
                     echo "    </td></tr>\n";
@@ -434,7 +438,7 @@ function groups($parent_id)
             }
             $questions_statement->closeCursor();
 
-            if (!($freetype) && $group_type=="table") {
+            if (!$freetype && !empty($group_type) && $group_type === 'table') {
                 $antworten_angezeigt = FALSE;
                 $i = 0;
                 $has_residual = 0;
@@ -558,7 +562,7 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
   echo "<td class=\"".($ausgabeformat==1 ? "table_header_bold" : "blank" )."\" align=\"RIGHT\">".($ausgabeformat==1 ? "<a href=\"eval_summary_export.php?eval_id=".$eval_id."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("PDF-Export")."</font></a><b>&nbsp;|&nbsp;</b><a href=\"".URLHelper::getLink('?eval_id='.$eval_id.'&ausgabeformat=2')."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("Druckansicht")."</font></a>&nbsp;&nbsp;<a href=\"eval_config.php?eval_id=".$eval_id."\">" . Icon::create('arr_2right', 'info_alt', ['title' => _('Auswertung konfigurieren')])->asImg() . "</a>" : "" ) ."&nbsp;</td>\n";
   echo "</tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</td></tr>\n";
-  echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\"><font size=\"+1\"><b>&nbsp;&nbsp;".formatReady($evaluation['title'])."</b></font></td>\n";
+  echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\"><font size=\"+1\"><b>&nbsp;&nbsp;".formatReady($evaluation['title'] ?? '')."</b></font></td>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;&nbsp;";
   echo _("Diese Evaluation ist folgenden Bereichen zugeordnet:");
   echo '<ul>';

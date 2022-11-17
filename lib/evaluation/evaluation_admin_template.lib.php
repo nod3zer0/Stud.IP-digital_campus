@@ -579,7 +579,7 @@ class EvalTemplateGUI
                         $isResidual = YES;
 
                     }
-                    if ($lastone != -1 && $i == ($question->getNumberChildren() - 1)) {
+                    if (isset($lastone) && $lastone != -1 && $i == ($question->getNumberChildren() - 1)) {
                         $form->cont(_("Beschriftung letzte Antwort"));
                         $lastone = YES;
                         $input = new HTMpty("input");
@@ -591,7 +591,7 @@ class EvalTemplateGUI
                         $input = new HTMpty("input");
                         $input->attr("type", "hidden");
                         $input->attr("name", "template_answers[1][answer_id]");
-                        $input->attr("value", $oldid);
+                        $input->attr("value", $oldid ?? '');
                         $form->cont($input);
                     }
                 }
@@ -603,6 +603,7 @@ class EvalTemplateGUI
                 $select->attr("name", "template_add_num_answers");
                 $select->attr("size", "1");
                 $select->attr("style", "vertical-align:middle;");
+                $res = 0;
                 if ($isResidual == YES) {
                     $res = 1;
                 }
@@ -702,7 +703,7 @@ class EvalTemplateGUI
             $radio->attr("name", "template_residual");
             $radio->attr("value", YES);
 
-            $value = $isResidual ? "checked" : "unchecked";
+            $value = !empty($isResidual) ? "checked" : "unchecked";
             $radio->attr($value);
 
             $form->cont($radio);
@@ -712,8 +713,8 @@ class EvalTemplateGUI
             $input = new HTMpty("input");
             $input->attr("type", "text");
             $input->attr("name", "template_residual_text");
-            if ($isResidual)
-                $input->attr("value", $residualAnswer->getText());
+            if (!empty($isResidual))
+                $input->attr("value", !empty($residualAnswer) ? $residualAnswer->getText() : '');
             else
                 $input->attr("value", "");
             $input->attr("size", 22);
@@ -735,7 +736,7 @@ class EvalTemplateGUI
             $input = new HTMpty("input");
             $input->attr("type", "hidden");
             $input->attr("name", "template_residual_id");
-            $input->attr("value", $residualAnswer->getObjectID);
+            $input->attr("value", !empty($residualAnswer) ? $residualAnswer->getObjectID() : '');
             $form->cont($input);
             /*end:  residual - kategorie -------------------- */
         }
@@ -773,11 +774,11 @@ class EvalTemplateGUI
         $td->cont($input);
         $tr->cont($td);
 
-        if ($showDelete) {
+        if (!empty($showDelete)) {
             $td = new HTM("td");
             $td->attr("class", "content_body");
             $td->attr("align", "center");
-            $td->cont($input2);
+            $td->cont($input2 ?? '');
             $tr->cont($td);
         }
 
@@ -908,11 +909,11 @@ class EvalTemplateGUI
         $td->cont($input);
         $tr->cont($td);
 
-        if ($showDelete) {
+        if (!empty($showDelete)) {
             $td = new HTM("td");
             $td->attr("class", "content_body");
             $td->attr("align", "center");
-            $td->cont($input2);
+            $td->cont($input2 ?? '');
             $tr->cont($td);
         }
         $table->cont($tr);
@@ -1048,7 +1049,7 @@ class EvalTemplateGUI
                 break;
         }
 
-        $return_command = $command[1];
+        $return_command = $command[1] ?? '';
 
         // extract the command if theres a questionID in the commandname
         if (preg_match("/(.*)_#(.*)/", $return_command, $new_command))
@@ -1094,14 +1095,6 @@ class EvalTemplateGUI
 # ==================================================== end: private functions #
 
 }
-
-# Define constants ========================================================== #
-/**
- * @const EVAL_ROOT_TAG Specifies the string for taging root templates
- * @access public
- */
-define('EVAL_ROOT_TAG', "[R]");
-# ===================================================== end: define constants #
 
 # Include all required files ================================================ #
 require_once 'lib/evaluation/evaluation.config.php';

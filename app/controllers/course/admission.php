@@ -107,7 +107,7 @@ class Course_AdmissionController extends AuthenticatedController
             }
         }
         $lockdata = LockRules::getObjectRule($this->course_id);
-        if ($lockdata['description'] && LockRules::CheckLockRulePermission($this->course_id)) {
+        if (!empty($lockdata['description']) && LockRules::CheckLockRulePermission($this->course_id)) {
             PageLayout::postInfo(formatLinks($lockdata['description']));
         }
     }

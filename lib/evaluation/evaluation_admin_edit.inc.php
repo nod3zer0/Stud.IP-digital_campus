@@ -47,22 +47,6 @@ require_once 'lib/evaluation/evaluation.config.php';
 require_once EVAL_LIB_EDIT;
 require_once EVAL_FILE_EDIT_TREEVIEW;
 
-# ====================================================== end: including files #
-
-# define constancs ========================================================== #
-
-/**
- * @const NEW_EVALUATION_TITLE  title of a new question block
- * @access public
- */
-define("NEW_EVALUATION_TITLE", _("Neue Evaluation"));
-
-/**
- * @const FIRST_ARRANGMENT_BLOCK_TITLE  title of a new arrangment block
- * @access public
- */
-define("FIRST_ARRANGMENT_BLOCK_TITLE", _("Erster Gruppierungsblock"));
-
 # ====================================================== end: define constancs #
 
 $debug = "<pre class=\"steelgroup6\" style=\"font-size:10pt\">"
@@ -141,7 +125,7 @@ if (Request::option("rangeID")) {
 
 # EVTAU: employees of the vote-team against urlhacking ====================== #
 
-$eval = new Evaluation($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
+$eval = new Evaluation($evalID ?? '', NULL, EVAL_LOAD_NO_CHILDREN);
 
 // someone has voted
 if ($eval->hasVoted()) {
@@ -185,13 +169,13 @@ if ($authorID != $user->id) {
 
 # Print Error MSG and end Site ============================================= #
 
-if ($error_msgs) {
+if (!empty($error_msgs)) {
 
     $back_button = ("&nbsp;&nbsp;&nbsp;")
         . "<a href=\"" . URLHelper::getLink('admin_evaluation.php?page=overview&rangeID=' . Request::option('rangeID')) . "\">"
         . _("Zur Evaluations-Verwaltung")
         . "</a>";
-
+    $errors = '';
     if (is_array($error_msgs)) {
         foreach ($error_msgs as $error_msg) {
             $errors .= $error_msg . "<br>";
@@ -214,7 +198,7 @@ $templateSite = include(EVAL_FILE_TEMPLATE);
 
 
 # Creating the Tree ======================================================== #
-$EditTree = new EvaluationTreeEditView($itemID, $evalID);
+$EditTree = new EvaluationTreeEditView($itemID, $evalID ?? null);
 
 # Send messages to the tree ================================================ #
 

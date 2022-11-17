@@ -144,7 +144,6 @@ class EvaluationAnswer extends EvaluationObject
     public function setRows($rows)
     {
         $this->rows = $rows;
-        return;
     }
 
     /**

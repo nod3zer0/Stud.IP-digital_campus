@@ -135,6 +135,9 @@ class HTMLempty
      */
     public function addString($string)
     {
+        if (is_array($string)) {
+            $string = implode(' ', $string);
+        }
         $this->_string .= " " . $string;
     }
 

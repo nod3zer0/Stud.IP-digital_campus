@@ -106,8 +106,8 @@ class QuestionnaireController extends AuthenticatedController
                 ? (strtotime($questionnaire_data['startdate']) ?: time())
                 : null;
             $questionnaire_data['stopdate'] = strtotime($questionnaire_data['stopdate']) ?: null;
-            $questionnaire_data['copyable'] = (int) $questionnaire_data['copyable'];
-            $questionnaire_data['anonymous'] = (int) $questionnaire_data['anonymous'];
+            $questionnaire_data['copyable'] = (int)($questionnaire_data['copyable'] ?? 0);
+            $questionnaire_data['anonymous'] = (int)($questionnaire_data['anonymous'] ?? 0);
             $questionnaire_data['editanswers'] = $questionnaire_data['anonymous'] ? 0 : (int) $questionnaire_data['editanswers'];
             if ($this->questionnaire->isNew()) {
                 $questionnaire_data['visible'] = ($questionnaire_data['startdate'] <= time() && (!$questionnaire_data['stopdate'] || $questionnaire_data['stopdate'] >= time())) ? 1 : 0;
@@ -167,6 +167,8 @@ class QuestionnaireController extends AuthenticatedController
                 if (Request::isAjax()) {
                     $this->questionnaire->restore();
                     $this->questionnaire->resetRelation("assignments");
+                    $this->range_type = Request::get('range_type');
+                    $this->range_id = Request::get('range_id');
                     $output = [
                             'questionnaire_id' => $this->questionnaire->getId(),
                             'overview_html' => $this->render_template_as_string("questionnaire/_overview_questionnaire.php"),

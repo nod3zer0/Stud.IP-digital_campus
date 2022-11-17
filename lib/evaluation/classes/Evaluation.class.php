@@ -362,7 +362,7 @@ class Evaluation extends EvaluationObject implements PrivacyObject
         $temp = [];
         while ($oldRangeID = $this->getNextRangeID()) {
             if ($oldRangeID != $rangeID) {
-                array_push($temp, $oldRangeID);
+                $temp[] = $oldRangeID;
             }
         }
         $this->rangeID = $temp;
@@ -386,7 +386,7 @@ class Evaluation extends EvaluationObject implements PrivacyObject
      */
     public function addRangeID($rangeID)
     {
-        array_push($this->rangeID, $rangeID);
+        $this->rangeID[] = $rangeID;
         $this->numberRanges++;
     }
 

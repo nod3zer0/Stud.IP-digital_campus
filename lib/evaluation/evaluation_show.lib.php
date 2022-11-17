@@ -89,22 +89,22 @@ class EvalShow
       $message = new HTML('div');
       $message->_content = [(string)EvalShow::getStopdateText( $eval, $voted)];
       $table2->cont($message);
-    
+
       if(!$voted && $GLOBALS["mandatories"] != 0) {
           $message = new HTML('div');
           $message->_content = [(string)sprintf(_("Mit %s gekennzeichnete Fragen müssen beantwortet werden."),
               "<b><span class=\"eval_error\">**</span></b>")];
           $table2->cont($message);
       }
-    
-    
+
+
 
       $td->cont( $table2 );
       $tr->cont( $td );
 
       return $tr;
   }
-    
+
 
   /**
    * createEvaluation: generate the evaluation itself (questions and answers)
@@ -191,16 +191,16 @@ class EvalShow
           $html .= sprintf (_("Es haben insgesamt <b>%s</b> Personen teilgenommen"), $number);
       else
           $html .= $voted
-          ? sprintf (_("Sie waren die einzige Person die teilgenommen hat"))
-          : sprintf (_("Es hat insgesamt <b>eine</b> Person teilgenommen"));
+          ? _("Sie waren die einzige Person die teilgenommen hat")
+          : _("Es hat insgesamt <b>eine</b> Person teilgenommen");
       }
       else {
       if ($number != 1)
           $html .= sprintf (_("Es haben bisher <b>%s</b> Personen teilgenommen"), $number);
       else
           $html .= $voted
-          ? sprintf (_("Sie waren bisher der/die einzige Person die teilgenommen hat"))
-          : sprintf (_("Es hat bisher <b>eine</b> Person teilgenommen"));
+          ? _("Sie waren bisher der/die einzige Person die teilgenommen hat")
+          : _("Es hat bisher <b>eine</b> Person teilgenommen");
       }
       /* ---------------------------------------------------------------------- */
 
@@ -271,7 +271,6 @@ class EvalShow
    * @returns a table row
    */
   function createEvaluationFooter( $eval, $voted, $isPreview ) {
-      global $auth;
       if( $isPreview )
       $voted = YES;
 
@@ -365,45 +364,39 @@ class EvalShow
    }
 
    function createEditButton ($eval) {
-         $button = LinkButton::create(_('Bearbeiten'),
-                 URLHelper::getURL(EVAL_FILE_ADMIN."?page=edit&evalID=".$eval->getObjectID()),
-                 ['title' => _('Evaluation bearbeiten.')]);
-         return $button;
+       return LinkButton::create(_('Bearbeiten'),
+               URLHelper::getURL(EVAL_FILE_ADMIN."?page=edit&evalID=".$eval->getObjectID()),
+               ['title' => _('Evaluation bearbeiten.')]);
    }
 
    function createOverviewButton ($rangeID, $evalID) {
-         $button = LinkButton::create(_('Bearbeiten'),
-                 URLHelper::getURL(EVAL_FILE_ADMIN."?rangeID=".$rangeID."&openID=".$evalID."#open"),
-                 ['title' => _('Evaluationsverwaltung.')]);
-         return $button;
+       return LinkButton::create(_('Bearbeiten'),
+               URLHelper::getURL(EVAL_FILE_ADMIN."?rangeID=".$rangeID."&openID=".$evalID."#open"),
+               ['title' => _('Evaluationsverwaltung.')]);
    }
 
    function createDeleteButton ($eval) {
-         $button = LinkButton::create(_('Löschen'),
-                 URLHelper::getURL(EVAL_FILE_ADMIN."?evalAction=delete_request&evalID=".$eval->getObjectID ()),
-                 ['title' => _('Evaluation löschen.')]);
-         return $button;
+       return LinkButton::create(_('Löschen'),
+               URLHelper::getURL(EVAL_FILE_ADMIN."?evalAction=delete_request&evalID=".$eval->getObjectID ()),
+               ['title' => _('Evaluation löschen.')]);
    }
 
    function createStopButton ($eval) {
-         $button = LinkButton::createCancel(_('Stop'),
-                 URLHelper::getURL(EVAL_FILE_ADMIN."?evalAction=stop&evalID=".$eval->getObjectID ()),
-                 ['title' => _('Evaluation stoppen.')]);
-         return $button;
+       return LinkButton::createCancel(_('Stop'),
+               URLHelper::getURL(EVAL_FILE_ADMIN."?evalAction=stop&evalID=".$eval->getObjectID ()),
+               ['title' => _('Evaluation stoppen.')]);
    }
 
    function createContinueButton ($eval) {
-         $button = LinkButton::create(_('Fortsetzen'),
-                 URLHelper::getURL(EVAL_FILE_ADMIN."?evalAction=continue&evalID=".$eval->getObjectID ()),
-                 ['title' => _('Evaluation fortsetzen')]);
-         return $button;
+       return LinkButton::create(_('Fortsetzen'),
+               URLHelper::getURL(EVAL_FILE_ADMIN."?evalAction=continue&evalID=".$eval->getObjectID ()),
+               ['title' => _('Evaluation fortsetzen')]);
    }
 
    function createExportButton ($eval) {
-         $button = LinkButton::create(_('Export'),
-                 URLHelper::getURL(EVAL_FILE_ADMIN."?evalAction=export_request&evalID=".$eval->getObjectID ()),
-                 ['title' => _('Evaluation exportieren.')]);
-         return $button;
+       return LinkButton::create(_('Export'),
+               URLHelper::getURL(EVAL_FILE_ADMIN."?evalAction=export_request&evalID=".$eval->getObjectID ()),
+               ['title' => _('Evaluation exportieren.')]);
    }
 
    function createReportButton($eval) {
