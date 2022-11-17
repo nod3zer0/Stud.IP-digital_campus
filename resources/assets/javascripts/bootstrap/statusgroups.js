@@ -12,7 +12,7 @@ STUDIP.ready(function() {
                 $('<img>').attr({
                     width: 32,
                     height: 32,
-                    src: STUDIP.ASSETS_URL + 'images/ajax-indicator-black.svg'
+                    src: STUDIP.ASSETS_URL + 'images/loading-indicator.svg'
                 })
             );
 

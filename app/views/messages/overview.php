@@ -81,7 +81,7 @@
             </tr>
             <? endif ?>
             <tr id="reloader" class="more">
-                <td colspan="7"><?= Assets::img("ajax_indicator_small.gif") ?></td>
+                <td colspan="7"></td>
             </tr>
         </tbody>
     </table>

@@ -4,7 +4,7 @@
             <blubber-public-composer></blubber-public-composer>
             <ol class="postings" aria-live="polite">
                 <li class="more" v-if="streamData.more_up">
-                    <studip-asset-img file="ajax-indicator-black.svg" width="20"></studip-asset-img>
+                    <studip-asset-img file="loading-indicator.svg" width="20"></studip-asset-img>
                 </li>
 
                 <li :class="blubber.class"
@@ -25,7 +25,7 @@
                 </li>
 
                 <li class="more" v-if="more_down">
-                    <studip-asset-img file="ajax-indicator-black.svg" width="20"></studip-asset-img>
+                    <studip-asset-img file="loading-indicator.svg" width="20"></studip-asset-img>
                 </li>
             </ol>
         </div>

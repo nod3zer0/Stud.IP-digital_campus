@@ -2,7 +2,7 @@ function searchMoreFiles (button) {
     var table = $(button).closest('table');
     var loading = $('<div class="loading" style="padding: 10px">').html(
         $('<img>')
-            .attr('src', STUDIP.ASSETS_URL + 'images/ajax-indicator-black.svg')
+            .attr('src', STUDIP.ASSETS_URL + 'images/loading-indicator.svg')
             .css('width', '24')
             .css('height', '24')
     );

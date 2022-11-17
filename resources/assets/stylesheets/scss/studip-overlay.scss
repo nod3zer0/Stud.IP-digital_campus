@@ -26,14 +26,10 @@
         // browsers (except for some old android versions that we can neglect).
         // Thus said, if the loading animation looks ugly - update your
         // browser ffs!
-        background-image: url("#{$image-path}/ajax_indicator_small.gif");
-        background-image: none, url("#{$image-path}/ajax-indicator-white.svg");
+        background-image: url("#{$image-path}/loading-indicator.svg");
         background-position: center;
         background-repeat: no-repeat;
-    }
-
-    &-ajax.modal-overlay-dark {
-        background-image: none, url("#{$image-path}/ajax-indicator-black.svg");
+        background-size: 32px;
     }
 
     // Progress

@@ -521,7 +521,7 @@ class Fullcalendar
                     if (!$('#loading-spinner').length) {
                         jQuery('#layout_content').append(
                             $('<div id="loading-spinner" style="position: absolute; top: calc(50% - 55px); left: calc(50% + 135px); z-index: 9001;">').html(
-                                $('<img>').attr('src', STUDIP.ASSETS_URL + 'images/ajax-indicator-black.svg')
+                                $('<img>').attr('src', STUDIP.ASSETS_URL + 'images/loading-indicator.svg')
                                     .css({
                                         width: 64,
                                         height: 64

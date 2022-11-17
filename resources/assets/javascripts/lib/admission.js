@@ -23,7 +23,7 @@ const Admission = {
         var loading = $gettext('Wird geladen');
         $('#instcourses').empty();
         $('<img/>', {
-            src: STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif'
+            src: STUDIP.ASSETS_URL + 'images/loading-indicator.svg'
         }).appendTo('#instcourses');
         $('#instcourses').append(loading);
         $('#instcourses').load(targetUrl, data);

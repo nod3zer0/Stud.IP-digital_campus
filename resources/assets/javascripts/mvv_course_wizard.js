@@ -24,7 +24,7 @@ STUDIP.MVV.CourseWizard = {
                     target.children('ul').append(
                         $('<li class="tree-loading">').html(
                             $('<img>')
-                                .attr('src', STUDIP.ASSETS_URL + 'images/ajax-indicator-black.svg')
+                                .attr('src', STUDIP.ASSETS_URL + 'images/loading-indicator.svg')
                                 .css('width', '16')
                                 .css('height', '16')
                         )
@@ -83,7 +83,7 @@ STUDIP.MVV.CourseWizard = {
                         .parent()
                         .append(
                             $('<img>')
-                                .attr('src', STUDIP.ASSETS_URL + 'images/ajax-indicator-black.svg')
+                                .attr('src', STUDIP.ASSETS_URL + 'images/loading-indicator.svg')
                                 .attr('id', 'lvgroup-tree-search-loading')
                                 .css('width', '16')
                                 .css('height', '16')
@@ -260,7 +260,7 @@ STUDIP.MVV.CourseWizard = {
                 left: pos.left
             });
         var loading = $('<img>')
-            .attr('src', STUDIP.ASSETS_URL + 'images/ajax-indicator-black.svg')
+            .attr('src', STUDIP.ASSETS_URL + 'images/loading-indicator.svg')
             .css({
                 width: 32,
                 height: 32,

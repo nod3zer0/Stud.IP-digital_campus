@@ -37,7 +37,7 @@ function loadURL(url, callback) {
             var that = this,
                 src = this.src,
                 image = new Image();
-            this.src = STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif';
+            this.src = STUDIP.ASSETS_URL + 'images/loading-indicator.gif';
 
             image.onload = image.onerror = function() {
                 that.src = src;

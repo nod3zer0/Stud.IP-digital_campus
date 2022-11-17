@@ -34,7 +34,7 @@
                 <ol class="comments" aria-live="polite">
 
                     <li class="more" v-if="threadData.more_up">
-                        <studip-asset-img file="ajax-indicator-black.svg" width="20"></studip-asset-img>
+                        <studip-asset-img file="loading-indicator.svg" width="20"></studip-asset-img>
                     </li>
 
                     <li :class="comment.class"
@@ -62,7 +62,7 @@
                     </li>
 
                     <li class="more" v-if="threadData.more_down">
-                        <studip-asset-img file="ajax-indicator-black.svg" width="20"></studip-asset-img>
+                        <studip-asset-img file="loading-indicator.svg" width="20"></studip-asset-img>
                     </li>
 
                 </ol>

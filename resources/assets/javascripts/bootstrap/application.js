@@ -74,9 +74,6 @@ STUDIP.ready(function() {
  * application wide setup
  * ------------------------------------------------------------------------ */
 STUDIP.domReady(function () {
-    // AJAX Indicator
-    STUDIP.ajax_indicator = true;
-
     STUDIP.study_area_selection.initialize();
 
     if (document.createElement('textarea').style.resize === undefined) {

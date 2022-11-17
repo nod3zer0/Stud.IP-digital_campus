@@ -20,7 +20,7 @@
     position: relative;
 
     .notification {
-        background: rgba(255, 255, 255, 0.5) url("#{$image-path}/ajax_indicator_small.gif") center center no-repeat;
+        background: rgba(255, 255, 255, 0.5) url("#{$image-path}/loading-indicator.svg") center center no-repeat;
         border: 1px solid #ccc;
         border-radius: 8px;
         display: inline-block;
@@ -33,7 +33,7 @@
 }
 
 .ajaxing {
-    background: url("#{$image-path}/ajax_indicator_small.gif") center no-repeat;
+    background: url("#{$image-path}/loading-indicator.svg") center no-repeat;
     display: inline-block;
     @include size(16px, 16px);
     @include hide-text();

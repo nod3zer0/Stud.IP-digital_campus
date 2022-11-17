@@ -1,7 +1,7 @@
 <template>
     <div class="progress-indicator-wrapper">
         <div class="progress-indicator" :style="indicatorStyle"></div>
-        <p v-if="description !== ''" class="progress-indicator-description">
+        <p v-if="hasDescription" class="progress-indicator-description">
             {{ description }}
         </p>
         <p v-else class="progress-indicator-description-default">
@@ -18,17 +18,20 @@ export default {
             type: String,
             required: false
         },
-        width: {
+        size: {
             type: Number,
             default: 32
         }
     },
     computed: {
         indicatorStyle() {
-            let style = 'background-size: ' + this.width + 'px;';
-            style += 'height: ' + this.width + 'px;';
-
-            return style;
+            return {
+                backgroundSize: `${this.size}px`,
+                height: `${this.size}px`
+            };
+        },
+        hasDescription () {
+            return this.description.trim().length > 0;
         }
     }
 }

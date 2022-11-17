@@ -148,7 +148,7 @@ fieldset.attribute_table {
         }
 
         &.ajaxing {
-            background-image: url("#{$image-path}/ajax_indicator_small.gif");
+            background-image: url("#{$image-path}/loading-indicator.svg");
         }
     }
 }
