@@ -41,17 +41,32 @@ trait ConsultationHelper
         return User::find($credentials['id']);
     }
 
-    protected function createBlockWithSlotsForRange(Range $range, array $additional_data = []): ConsultationBlock
+    protected function createBlockWithSlotsForRange(Range $range, bool $lock_blocks = false): ConsultationBlock
     {
-        $hour = date('H');
-        $begin = strtotime("today {$hour}:00:00");
-        $end = strtotime('+2 hours', $begin);
+        // Generate start and end time. Assures that the day is not a holiday.
+        $now = time();
 
+        do {
+            $begin = strtotime('next monday 8:00:00', $now);
+            $end = strtotime('+2 hours', $begin);
+
+            $now = strtotime('+1 week', $now);
+
+            $temp = holiday($begin);
+        } while (is_array($temp) && $temp['col'] === 3);
+
+        // Lock blocks?
+        $additional_data = [];
+        if ($lock_blocks) {
+            $additional_data['lock_time'] = ceil(($begin - time()) / 3600);
+        }
+
+        // Generate blocks
         $blocks = ConsultationBlock::generateBlocks(
             $range,
             $begin,
             $end,
-            date('w'),
+            date('w', $begin),
             1
         );
         $blocks = iterator_to_array($blocks);

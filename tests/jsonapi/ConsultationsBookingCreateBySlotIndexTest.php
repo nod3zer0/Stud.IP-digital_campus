@@ -27,12 +27,12 @@ class ConsultationsBookingCreateBySlotIndexTest extends Codeception\Test\Unit
         );
     }
 
-    public function testAutorMayCreateNotCreateBookingDueToLock(): void
+    public function testAutorMayNotCreateBookingDueToLock(): void
     {
         $credentials = $this->tester->getCredentialsForTestDozent();
         $range = User::find($credentials['id']);
 
-        $block = $this->createBlockWithSlotsForRange($range, ['lock_time' => 2]);
+        $block = $this->createBlockWithSlotsForRange($range, true);
         $slot = $this->getSlotFromBlock($block);
 
         $response = $this->createBooking(
