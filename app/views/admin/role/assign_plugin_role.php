@@ -63,12 +63,22 @@ use Studip\Button;
                 </td>
                 <td>
                     <select multiple name="rolesel[]" size="10" style="width: 300px;">
-                        <? foreach ($roles as $role): ?>
-                            <option value="<?= $role->getRoleid() ?>">
-                                <?= htmlReady($role->getRolename()) ?>
-                                <? if ($role->getSystemtype()): ?>[<?= _('Systemrolle') ?>]<? endif ?>
-                            </option>
-                        <? endforeach ?>
+                        <optgroup label="<?= _('Systemrollen') ?>">
+                            <? foreach ($roles['system'] as $role): ?>
+                                <option value="<?= $role->getRoleid() ?>">
+                                    <?= htmlReady($role->getRolename()) ?>
+                                </option>
+                            <? endforeach ?>
+                        </optgroup>
+                    <? if (count($roles['other']) > 0): ?>
+                        <optgroup label="<?= _('Weitere Rollen') ?>">
+                            <? foreach ($roles['other'] as $role): ?>
+                                <option value="<?= $role->getRoleid() ?>">
+                                    <?= htmlReady($role->getRolename()) ?>
+                                </option>
+                            <? endforeach ?>
+                        </optgroup>
+                    <? endif; ?>
                     </select>
                 </td>
             </tr>

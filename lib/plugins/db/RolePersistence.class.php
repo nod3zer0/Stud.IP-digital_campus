@@ -22,7 +22,7 @@ class RolePersistence
      *
      * @return array Roles
      */
-    public static function getAllRoles(): array
+    public static function getAllRoles(bool $grouped = false): array
     {
         // read cache
         $cache = StudipCacheFactory::getCache();
@@ -44,7 +44,17 @@ class RolePersistence
             $cache->write(self::ROLES_CACHE_KEY, $roles);
         }
 
-        return $roles;
+        if (!$grouped) {
+            return $roles;
+        }
+
+        $groups = ['system' => [], 'other' => []];
+        foreach ($roles as $id => $role) {
+            $index = $role->getSystemtype() ? 'system' : 'other';
+            $groups[$index][$id] = $role;
+        }
+
+        return $groups;
     }
 
     public static function getRoleIdByName($name)

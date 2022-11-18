@@ -177,7 +177,7 @@ class Admin_RoleController extends AuthenticatedController
             $this->currentuser = $this->users[$usersel];
             $this->assignedroles = $this->currentuser->getRoles();
             $this->all_userroles = $this->currentuser->getRoles(true);
-            $this->roles = RolePersistence::getAllRoles();
+            $this->roles = RolePersistence::getAllRoles(true);
             foreach ($this->assignedroles as $role) {
                 $institutes = SimpleCollection::createFromArray(Institute::findMany(RolePersistence::getAssignedRoleInstitutes($usersel, $role->getRoleid())));
                 $this->assignedroles_institutes[$role->getRoleid()] = $institutes->orderBy('name')->pluck('name');
@@ -227,7 +227,7 @@ class Admin_RoleController extends AuthenticatedController
 
         $this->plugins = PluginManager::getInstance()->getPluginInfos();
         $this->assigned = RolePersistence::getAssignedPluginRoles($pluginid);
-        $this->roles = RolePersistence::getAllRoles();
+        $this->roles = RolePersistence::getAllRoles(true);
         $this->pluginid = $pluginid;
     }
 

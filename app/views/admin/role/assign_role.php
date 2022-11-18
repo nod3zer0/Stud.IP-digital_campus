@@ -82,12 +82,22 @@ use Studip\Button, Studip\LinkButton;
                 </td>
                 <td>
                     <select size="10" name="rolesel[]" multiple style="width: 300px;">
-                        <? foreach ($roles as $role): ?>
+                        <optgroup label="<?= _('Systemrollen') ?>">
+                        <? foreach ($roles['system'] as $role): ?>
                             <option value="<?= $role->getRoleid() ?>">
                                 <?= htmlReady($role->getRolename()) ?>
-                                <? if ($role->getSystemtype()): ?>[<?= _('Systemrolle') ?>]<? endif ?>
                             </option>
                         <? endforeach ?>
+                        </optgroup>
+                    <? if (count($roles['other']) > 0): ?>
+                        <optgroup label="<?= _('Weitere Rollen') ?>">
+                        <? foreach ($roles['other'] as $role): ?>
+                            <option value="<?= $role->getRoleid() ?>">
+                                <?= htmlReady($role->getRolename()) ?>
+                            </option>
+                        <? endforeach ?>
+                        </optgroup>
+                    <? endif; ?>
                     </select>
                 </td>
             </tr>
