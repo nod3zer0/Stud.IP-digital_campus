@@ -1,3 +1,28 @@
+__18.11.2022 V 5.2__
+- Courseware: Verknüpfung von einem Lernmaterial in beliebig viele Bereiche
+- Courseware: Zuweisen von Inhalten zu Personen oder Gruppen
+- Courseware: Suchfunktion auf Coursewareseiten
+- Barrierefreiheit: Einstellungen nun auch über Profilbild in der Kopfzeile erreichbar
+- Barrierefreiheit: Hochkontrastschema
+- Barrierefreiheit: Erstellung und Bearbeitung von Ankündigungen ist nun barrierefrei
+- OER-Campus: Anbindung an das niedersächsische OER-Portal "Twillo"
+- OER-Campus: Anbindung an den Open Educational Search Index (OERSI)
+- Veranstaltungen: Studierenden können Materialien zur Veröffentlichung auf dem OER-Markplatz vorschlagen
+- Veranstaltungen: Beschreibungen an Teilnehmendengruppen
+- Veranstaltungen: Rundmailfunktion überarbeitet
+- Für Entwickler:innen: Barrierefreier Formularbaukasten
+- Für Entwickler:innen: OAuth2-Schnittstelle
+
+__11.07.2022 V 5.1__
+- Systemweit: Werbebanner und Ankündigungen mit Anzeigepriorität und Zielgruppe nach Rechterolle
+- Courseware: Neuer Block "Aufgaben Element"
+- Courseware: Inhaltsverzeichnis überarbeitet
+- Kurse: Mehrere durchführende Personen bei Terminvergabe
+- Barrierefreiheit: Bessere Unterstützung von Assistenzssystemen über Skiplinks, Tastaturnavigation und korrekte Beschreibungen von Elementen
+- Raumverwaltung: Übersichten über Berechtigungen von Personen
+- Raumverwaltung: Verbesserte Export-Funktionen, u.a. nach Buchungstyp, mit Kommentaren, ...
+- Raumverwaltung: Quality of Life Verbesserungen, Klickwege verkürzt, mehr und andere Filterfunktionen
+
 __15.01.2022 V 5.0__
 - Courseware komplett neu entwickelt und im Kernsystem integriert
 - OER-Campus neu entwickelt und im Kern integriert
