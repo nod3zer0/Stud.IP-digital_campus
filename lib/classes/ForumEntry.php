@@ -402,7 +402,7 @@ class ForumEntry  implements PrivacyObject
         // retrieve the postings
         foreach ($postings as $data) {
             // we throw away all formatting stuff, tags, etc, leaving the important bit of information
-            $desc_short = ForumEntry::br2space(ForumEntry::killFormat(strip_tags($data['content'])));
+            $desc_short = ForumEntry::br2space(ForumEntry::killFormat($data['content']));
             if (mb_strlen($desc_short) > (ForumEntry::THREAD_PREVIEW_LENGTH + 2)) {
                 $desc_short = mb_substr($desc_short, 0, ForumEntry::THREAD_PREVIEW_LENGTH) . '...';
             } else {
@@ -565,9 +565,8 @@ class ForumEntry  implements PrivacyObject
                 $last_posting['anonymous']     = $data['anonymous'];
 
                 // we throw away all formatting stuff, tags, etc, so we have just the important bit of information
-                $text = strip_tags($data['name']);
-                $text = ForumEntry::br2space($text);
-                $text = ForumEntry::killFormat(ForumEntry::removeQuotes($text));
+                $text = ForumEntry::removeQuotes($data['name']);
+                $text = ForumEntry::br2space(ForumEntry::killFormat($text));
 
                 if (mb_strlen($text) > 42) {
                     $text = mb_substr($text, 0, 40) . '...';
@@ -714,7 +713,7 @@ class ForumEntry  implements PrivacyObject
                 // speed up things a bit by leaving out the formatReady fields
                 foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $data) {
                     // we throw away all formatting stuff, tags, etc, leaving the important bit of information
-                    $desc_short = ForumEntry::br2space(ForumEntry::killFormat(strip_tags($data['content'])));
+                    $desc_short = ForumEntry::br2space(ForumEntry::killFormat($data['content']));
                     if (mb_strlen($desc_short) > (ForumEntry::THREAD_PREVIEW_LENGTH + 2)) {
                         $desc_short = mb_substr($desc_short, 0, ForumEntry::THREAD_PREVIEW_LENGTH) . '...';
                     } else {
