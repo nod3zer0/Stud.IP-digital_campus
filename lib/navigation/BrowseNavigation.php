@@ -78,6 +78,10 @@ class BrowseNavigation extends Navigation
                 $navigation->addSubNavigation('archive', new Navigation(_('Archivierte Veranstaltungen'), 'dispatch.php/my_courses/archive'));
             }
 
+            if (isset($_SESSION['ContentItemSelection'])) {
+                $navigation->addSubNavigation('content_item', new Navigation(_('Veranstaltung verknüpfen'), 'dispatch.php/lti/content_item'));
+            }
+
             $this->addSubNavigation('my_courses', $navigation);
 
             if (Config::get()->MY_COURSES_ENABLE_STUDYGROUPS && !$GLOBALS['perm']->have_perm('admin')) {
