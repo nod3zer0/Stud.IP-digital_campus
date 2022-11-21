@@ -81,8 +81,6 @@ class MyCoursesController extends AuthenticatedController
         PageLayout::setHelpKeyword('Basis.MeineVeranstaltungen');
         PageLayout::setTitle(_('Meine Veranstaltungen'));
 
-        $this->sem_data = Semester::getAllAsArray();
-
         $sem_key     = $this->getSemesterKey();
         $group_field = $this->getGroupField();
 
@@ -115,89 +113,7 @@ class MyCoursesController extends AuthenticatedController
         }
 
         $this->setupSidebar($sem_key, $group_field, $this->check_for_new($sem_courses, $group_field));
-
-        $temp_courses = [];
-        $groups = [];
-        if (is_array($sem_courses)) {
-            foreach ($sem_courses as $_outer_index => $_outer) {
-                if ($group_field === 'sem_number') {
-                    $_courses = [];
-
-                    foreach ($_outer as $course) {
-                        $_courses[$course['seminar_id']] = $course;
-                        if (!empty($course['children']) && is_array($course['children'])) {
-                            foreach ($course['children'] as $child) {
-                                $_courses[$child['seminar_id']] = $child;
-                            }
-                        }
-                    }
-
-                    $groups[] = [
-                        'id' => $_outer_index,
-                        'name' => (string)$this->sem_data[$_outer_index]['name'],
-                        'data' => [
-                            [
-                                'id' => md5($_outer_index),
-                                'label' => false,
-                                'ids' => array_keys($_courses),
-                            ],
-                        ],
-                    ];
-                    $temp_courses = array_merge($temp_courses, $_courses);
-                } else {
-                    $count = 1;
-                    $_groups = [];
-                    foreach ($_outer as $_inner_index => $_inner) {
-                        $_courses = [];
-
-                        foreach ($_inner as $course) {
-                            $_courses[$course['seminar_id']] = $course;
-                            if ($course['children']) {
-                                foreach ($course['children'] as $child) {
-                                    $_courses[$child['seminar_id']] = $child;
-                                }
-                            }
-                        }
-
-                        $label = $_inner_index;
-                        if ($group_field === 'sem_tree_id' && !$label) {
-                            $label = _('keine Zuordnung');
-                        } elseif ($group_field === 'gruppe') {
-                            $label = _('Gruppe') . ' ' . $count++;
-                        }
-
-                        $_groups[] = [
-                            'id' => md5($_outer_index . $_inner_index),
-                            'label' => $label,
-                            'ids' => array_keys($_courses),
-                        ];
-
-                        $temp_courses = array_merge($temp_courses, $_courses);
-                    }
-
-                    $groups[] = [
-                        'id' => $_outer_index,
-                        'name' => (string)$this->sem_data[$_outer_index]['name'],
-                        'data' => $_groups,
-                    ];
-                }
-            }
-        }
-
-        $data = [
-            'courses' => $this->sanitizeNavigations(array_map([$this, 'convertCourse'], $temp_courses)),
-            'groups'  => $groups,
-            'user_id' => $GLOBALS['user']->id,
-            'config'  => [
-                'allow_dozent_visibility'  => Config::get()->ALLOW_DOZENT_VISIBILITY,
-                'open_groups'              => array_values($GLOBALS['user']->cfg->MY_COURSES_OPEN_GROUPS),
-                'sem_number'               => Config::get()->IMPORTANT_SEMNUMBER,
-                'display_type'             => $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY ? 'tiles' : 'tables',
-                'responsive_type'          => $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY_RESPONSIVE ? 'tiles' : 'tables',
-                'navigation_show_only_new' => $GLOBALS['user']->cfg->MY_COURSES_SHOW_NEW_ICONS_ONLY,
-                'group_by'                 => $this->getGroupField(),
-            ],
-        ];
+        $data = $this->getMyCoursesData($sem_courses, $group_field);
 
         PageLayout::addHeadElement(
             'script',
@@ -766,6 +682,119 @@ class MyCoursesController extends AuthenticatedController
             ));
         }
         $this->redirect($this->url_for('my_courses'));
+    }
+
+    /**
+     * Get the data array for presenting the course list in the portal widget.
+     */
+    public function getPortalWidgetData()
+    {
+        $sem_key     = $this->getSemesterKey();
+        $group_field = $this->getGroupField();
+
+        $sem_courses  = MyRealmModel::getPreparedCourses($sem_key, [
+            'group_field'         => $group_field,
+            'order_by'            => null,
+            'order'               => 'asc',
+            'studygroups_enabled' => Config::get()->MY_COURSES_ENABLE_STUDYGROUPS,
+            'deputies_enabled'    => Config::get()->DEPUTIES_ENABLE,
+        ]);
+
+        return $this->getMyCoursesData($sem_courses, $group_field);
+    }
+
+    /**
+     * Get the data array for presenting the course list in Vue.
+     *
+     * @param array $sem_courses
+     * @param string $group_field
+     */
+    private function getMyCoursesData($sem_courses, $group_field)
+    {
+        $sem_data = Semester::getAllAsArray();
+        $temp_courses = [];
+        $groups = [];
+
+        if (is_array($sem_courses)) {
+            foreach ($sem_courses as $_outer_index => $_outer) {
+                if ($group_field === 'sem_number') {
+                    $_courses = [];
+
+                    foreach ($_outer as $course) {
+                        $_courses[$course['seminar_id']] = $course;
+                        if (!empty($course['children']) && is_array($course['children'])) {
+                            foreach ($course['children'] as $child) {
+                                $_courses[$child['seminar_id']] = $child;
+                            }
+                        }
+                    }
+
+                    $groups[] = [
+                        'id' => $_outer_index,
+                        'name' => (string) $sem_data[$_outer_index]['name'],
+                        'data' => [
+                            [
+                                'id' => md5($_outer_index),
+                                'label' => false,
+                                'ids' => array_keys($_courses),
+                            ],
+                        ],
+                    ];
+                    $temp_courses = array_merge($temp_courses, $_courses);
+                } else {
+                    $count = 1;
+                    $_groups = [];
+                    foreach ($_outer as $_inner_index => $_inner) {
+                        $_courses = [];
+
+                        foreach ($_inner as $course) {
+                            $_courses[$course['seminar_id']] = $course;
+                            if ($course['children']) {
+                                foreach ($course['children'] as $child) {
+                                    $_courses[$child['seminar_id']] = $child;
+                                }
+                            }
+                        }
+
+                        $label = $_inner_index;
+                        if ($group_field === 'sem_tree_id' && !$label) {
+                            $label = _('keine Zuordnung');
+                        } elseif ($group_field === 'gruppe') {
+                            $label = _('Gruppe') . ' ' . $count++;
+                        }
+
+                        $_groups[] = [
+                            'id' => md5($_outer_index . $_inner_index),
+                            'label' => $label,
+                            'ids' => array_keys($_courses),
+                        ];
+
+                        $temp_courses = array_merge($temp_courses, $_courses);
+                    }
+
+                    $groups[] = [
+                        'id' => $_outer_index,
+                        'name' => (string) $sem_data[$_outer_index]['name'],
+                        'data' => $_groups,
+                    ];
+                }
+            }
+        }
+
+        return [
+            'courses' => $this->sanitizeNavigations(array_map([$this, 'convertCourse'], $temp_courses)),
+            'groups'  => $groups,
+            'user_id' => $GLOBALS['user']->id,
+            'config'  => [
+                'allow_dozent_visibility'  => Config::get()->ALLOW_DOZENT_VISIBILITY,
+                'open_groups'              => array_values($GLOBALS['user']->cfg->MY_COURSES_OPEN_GROUPS),
+                'sem_number'               => Config::get()->IMPORTANT_SEMNUMBER,
+                'display_type'             => $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY ? 'tiles' : 'tables',
+                'responsive_type'          => $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY_RESPONSIVE ? 'tiles' : 'tables',
+                'navigation_show_only_new' => $GLOBALS['user']->cfg->MY_COURSES_SHOW_NEW_ICONS_ONLY,
+                'group_by'                 => $this->getGroupField(),
+            ],
+        ];
     }
 
     /**
