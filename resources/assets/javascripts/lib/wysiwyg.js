@@ -64,6 +64,43 @@ function replaceTextarea(textarea) {
     if ($textarea.attr('data-editor')) {
         const parsed = parseOptions($textarea.attr('data-editor'));
 
+        if (parsed.toolbar === 'small') {
+            options.toolbar = {
+                removeItems: [
+                    'undo',
+                    'redo',
+                    'findAndReplace',
+                    'strikethrough',
+                    'horizontalLine',
+                    'insertBlockQuote',
+                    'splitBlockQuote',
+                    'removeBlockQuote',
+                ]
+            };
+        } else if (parsed.toolbar === 'minimal') {
+            options.toolbar = {
+                items: [
+                    'bold',
+                    'italic',
+                    'underline',
+                    'subscript',
+                    'superscript',
+                    '|',
+                    'removeFormat',
+                    '|',
+                    'bulletedList',
+                    'numberedList',
+                    '|',
+                    'fontColor',
+                    'fontBackgroundColor',
+                    '|',
+                    'link',
+                    'math',
+                    'specialCharacters',
+                ]
+            };
+        }
+
         if (parsed.removePlugins) {
             options.removePlugins = parsed.removePlugins.split(",")
         }
