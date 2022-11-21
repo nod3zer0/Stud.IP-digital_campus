@@ -44,7 +44,7 @@
                                         Icon::create('trash', Icon::ROLE_CLICKABLE, tooltip2(_('Studiengangteil-Abschnitt löschen'))),
                                         [
                                             'formaction'   => $controller->action_url('delete_abschnitt/' . $abschnitt->id),
-                                            'data-confirm' => sprintf(_('Wollen Sie den Studiengangteil-Abschnitt "%s" wirklich löschen?'), htmlReady($abschnitt->getDisplayName()))
+                                            'data-confirm' => sprintf(_('Wollen Sie den Studiengangteil-Abschnitt "%s" wirklich löschen?'), $abschnitt->getDisplayName())
                                         ]
                                     ) ?>
                                 <? endif; ?>

@@ -40,7 +40,7 @@
 
     <footer data-dialog-button>
         <?= Button::createAccept(_('Eintragen'), 'add_member_list',
-            ['title' => sprintf(_("als %s eintragen"), htmlReady(get_title_for_status('autor', 1)))]) ?>
+            ['title' => sprintf(_("als %s eintragen"), get_title_for_status('autor', 1))]) ?>
         <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('course/members/index')) ?>
     </footer>
 </form>

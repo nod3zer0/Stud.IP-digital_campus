@@ -38,7 +38,7 @@
                             'formaction'   => $controller->action_url('delete/' . $abschluss->id),
                             'data-confirm' => sprintf(
                                 _('Wollen Sie wirklich den Abschluss "%s" löschen?'),
-                                htmlReady($abschluss->name)
+                                $abschluss->name
                             ),
                             'name'         => 'delete'
                         ]); ?>

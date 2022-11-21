@@ -30,7 +30,7 @@
                             $controller->action_url('approve/' . $version->id),
                             _('Version genehmigen'),
                             Icon::create('accept', Icon::ROLE_CLICKABLE, ['title' => _('Version genehmigen')]),
-                            ['data-dialog' => 'title=' . htmlReady($version->getDisplayName()) . ''])
+                            ['data-dialog' => 'title=\'' . $version->getDisplayName() . '\''])
                         ?>
                     <? endif; ?>
                     <? if ($perm->haveFieldPerm('abschnitte', MvvPerm::PERM_CREATE)) : ?>
@@ -59,7 +59,7 @@
                                  'formaction'   => $controller->action_url('copy_version/' . $version->id),
                                  'data-confirm' => sprintf(
                                      _('Wollen Sie wirklich die Version "%s" des Studiengangteils kopieren?'),
-                                     htmlReady($version->getDisplayName()))
+                                     $version->getDisplayName())
                                 ]
                             ))
                         ?>
@@ -73,7 +73,7 @@
                                  'formaction'   => $controller->action_url('delete_version/' . $version->id),
                                  'data-confirm' => sprintf(
                                      _('Wollen Sie wirklich die Version "%s" des Studiengangteils löschen?'),
-                                     htmlReady($version->getDisplayName()))
+                                     $version->getDisplayName())
                                 ]
                             ))
                         ?>

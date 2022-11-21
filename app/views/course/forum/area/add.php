@@ -13,7 +13,7 @@
         <? else : ?>
             <? $num_postings = ForumVisit::getCount($entry['topic_id'], $visitdate) ?>
             <?= Icon::create('forum', $num_postings > 0 ? Icon::ROLE_ATTENTION : Icon::ROLE_INFO)->asImg([
-                'title' => htmlReady(ForumHelpers::getVisitText($num_postings, $entry['topic_id'], $constraint['depth'])),
+                'title' => ForumHelpers::getVisitText($num_postings, $entry['topic_id'], $constraint['depth']),
                 'style' => 'margin-bottom: 15px;',
             ]) ?>
         <? endif ?>

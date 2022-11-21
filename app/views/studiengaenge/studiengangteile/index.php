@@ -77,7 +77,7 @@
                                     Icon::create('trash', Icon::ROLE_CLICKABLE, [
                                         'title'        => _('Studiengangteil löschen'),
                                         'formaction'   => $controller->action_url('delete/' . $stgteil->getId()),
-                                        'data-confirm' => sprintf(_('Wollen Sie wirklich den Studiengangteil "%s" löschen?'), htmlReady($stgteil->getDisplayName())),
+                                        'data-confirm' => sprintf(_('Wollen Sie wirklich den Studiengangteil "%s" löschen?'), $stgteil->getDisplayName()),
                                     ])
                                 ) ?>
                             <? endif; ?>

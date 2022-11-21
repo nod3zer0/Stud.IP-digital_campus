@@ -69,7 +69,7 @@ $perm = MvvPerm::get($grund_stg);
                         <?= Icon::create('trash')->asInput([
                             'formaction' => $controller->url_for('studiengaenge/studiengaenge/aufbaustg_delete', $aufbau_stg->id),
                             'title' => _('Zuordnung als Aufbaustudiengang löschen'),
-                            'data-confirm' => sprintf(_('Wollen Sie wirklich die Zuordnung von "%s" als "%s" löschen?'), htmlReady($aufbau_stg->getDisplayName()), htmlReady($aufbau_stg->typ))
+                            'data-confirm' => sprintf(_('Wollen Sie wirklich die Zuordnung von "%s" als "%s" löschen?'), $aufbau_stg->getDisplayName(), $aufbau_stg->typ)
                         ]) ?>
                     </a>
                 <? endif; ?>

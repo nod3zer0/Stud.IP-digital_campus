@@ -74,8 +74,8 @@
             ]),
             ['data-confirm' => sprintf(
                 _('Soll %s wirklich aus der Gruppe %s entfernt werden?'),
-                htmlReady($user_fullname),
-                htmlReady($group->name)
+                $user_fullname,
+                $group->name
                 )]
                 );
            }

@@ -46,8 +46,8 @@
                                 'formaction'   => $controller->action_url('delete_modul', $assignment->abschnitt_id, $assignment->modul_id),
                                 'data-confirm' => sprintf(
                                         _('Wollen Sie die Zuordnung des Moduls "%s" zum Studiengangteil-Abschnitt "%s" wirklich löschen?'),
-                                        htmlReady($assignment->modul->getDisplayName()),
-                                        htmlReady($abschnitt->getDisplayName())
+                                        $assignment->modul->getDisplayName(),
+                                        $abschnitt->getDisplayName()
                                 )
                             ]); ?>
                     <? endif; ?>

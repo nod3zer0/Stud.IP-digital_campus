@@ -35,7 +35,7 @@
                                 <?= Icon::create('trash', Icon::ROLE_CLICKABLE, tooltip2(_('Fach löschen')))->asInput(
                                     [
                                         'formaction'   => $controller->action_url('delete/' . $fach->id),
-                                        'data-confirm' => sprintf(_('Wollen Sie wirklich das Fach "%s" löschen?'), htmlReady($fach->name)),
+                                        'data-confirm' => sprintf(_('Wollen Sie wirklich das Fach "%s" löschen?'), $fach->name),
                                         'name'         => 'delete'
                                     ]); ?>
                             <? else : ?>

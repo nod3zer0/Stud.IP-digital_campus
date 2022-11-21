@@ -467,7 +467,7 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
                 <?= Button::create(
                     _('Löschen'),
                     'delete',
-                    ['title'      => _('Deskriptor löschen'), 'data-confirm' => sprintf(_('Soll der Deskriptor in der Ausgabesprache %s gelöscht werden?'), htmlReady($GLOBALS['MVV_LANGUAGES']['values'][$display_language]['name'])),
+                    ['title'      => _('Deskriptor löschen'), 'data-confirm' => sprintf(_('Soll der Deskriptor in der Ausgabesprache %s gelöscht werden?'), $GLOBALS['MVV_LANGUAGES']['values'][$display_language]['name']),
                      'formaction' => $controller->action_url('delete_modulteil_deskriptor', $deskriptor->id, $display_language)
                     ]
                 ); ?>s

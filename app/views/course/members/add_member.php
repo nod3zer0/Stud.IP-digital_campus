@@ -85,7 +85,7 @@
                     _('Eintragen'),
                     'add_member_list',
                     [
-                        'title' => sprintf(_("als %s eintragen"), htmlReady($decoratedStatusGroups['autor']))
+                        'title' => sprintf(_("als %s eintragen"), $decoratedStatusGroups['autor'])
                     ]
                 ) ?>
             </td>

@@ -76,7 +76,7 @@
                                 Icon::create('trash', Icon::ROLE_CLICKABLE ,tooltip2(_('Studiengang löschen'))),
                                 [
                                     'formaction'   => $controller->action_url('delete/' . $studiengang->id),
-                                    'data-confirm' => sprintf(_('Wollen Sie wirklich den Studiengang "%s" löschen?'), htmlReady($studiengang->name))
+                                    'data-confirm' => sprintf(_('Wollen Sie wirklich den Studiengang "%s" löschen?'), $studiengang->name)
                                 ]
                             ) ?>
                         <? endif; ?>

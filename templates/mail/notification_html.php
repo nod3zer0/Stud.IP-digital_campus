@@ -35,7 +35,7 @@
             <a href="<?= URLHelper::getLink($module['url'], ['sso' => $sso]) ?>"><?= htmlReady($module['text']) ?></a>
           </td>
           <td>
-            <a href="<?= URLHelper::getLink($module['url'], ['sso' => $sso]) ?>"><?= $module['icon']->asImg(['title' => htmlReady($module['text'])]) ?></a>
+            <a href="<?= URLHelper::getLink($module['url'], ['sso' => $sso]) ?>"><?= $module['icon']->asImg(['title' => $module['text']]) ?></a>
           </td>
         </tr>
         <? endforeach ?>

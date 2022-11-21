@@ -29,7 +29,7 @@
         <?php if ($is_autor && !$is_tutor && $group->id != 'nogroup' && $group->isMember($GLOBALS['user']->id)) : ?>
             <a href="<?= $controller->link_for('messages/write', [
                         'group_id' => $group->id,
-                        'default_subject' => htmlReady($course_title . ' (' . $group->name . ')'),
+                        'default_subject' => $course_title . ' (' . $group->name . ')',
                     ]) ?>" data-dialog="size=auto">
                 <?= Icon::create('mail', Icon::ROLE_CLICKABLE, ['title' => sprintf(
                         _('Nachricht an alle Mitglieder der Gruppe %s schicken'),
@@ -44,7 +44,7 @@
                     <a href="<?= $controller->url_for('course/statusgroups/join', $group->id) ?>">
                         <?= Icon::create('door-enter', Icon::ROLE_CLICKABLE,
                             ['title' => sprintf(_('Mitglied von Gruppe %s werden'),
-                                htmlReady($group->name))]) ?></a>
+                                $group->name)]) ?></a>
                 <?php elseif ($group->id != 'nogroup' && $group->selfassign &&
                     $group->selfassign_start > time()) : ?>
                     <?= Icon::create('door-enter', Icon::ROLE_INACTIVE,
@@ -59,7 +59,7 @@
                     <a href="<?= $controller->url_for('course/statusgroups/leave', $group->id) ?>" data-confirm="<?= sprintf(_('Aus Gruppe %s austragen'),htmlReady($group->name)) . '?' ?>">
                         <?= Icon::create('door-leave', Icon::ROLE_ATTENTION,
                             ['title' => sprintf(_('Aus Gruppe %s austragen'),
-                                htmlReady($group->name))]) ?></a>
+                                $group->name)]) ?></a>
                 <?php endif ?>
             </nav>
         <?php endif ?>
@@ -69,7 +69,7 @@
                       ->addLink(
                           $controller->url_for('messages/write', [
                               'group_id' => $group->id,
-                              'default_subject' => htmlReady($course_title . ' (' . $group->name . ')'),
+                              'default_subject' => $course_title . ' (' . $group->name . ')',
                           ]),
                           _('Nachricht schicken'),
                           Icon::create('mail', Icon::ROLE_CLICKABLE, [
@@ -135,7 +135,7 @@
                     <a href="<?= $controller->url_for('messages/write', [
                         'filter' => 'not_grouped',
                         'course_id' => $course_id,
-                        'default_subject' => htmlReady($course_title).' ('.htmlReady($group->name).')'
+                        'default_subject' => $course_title.' ('.$group->name.')'
                     ]) ?>" data-dialog="size=auto;">
                         <?= Icon::create('mail')->asImg(['title' => _('Nachricht an alle nicht zugeordneten Personen schicken')]) ?>
                     </a>

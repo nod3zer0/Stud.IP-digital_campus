@@ -46,7 +46,7 @@
                             <? else : ?>
                                 <? $num_postings = ForumVisit::getCount($entry['topic_id'], $visitdate) ?>
                                 <?= Icon::create('forum', $num_postings > 0 ? Icon::ROLE_ATTENTION : Icon::ROLE_INFO)->asImg([
-                                    'title' => htmlReady(ForumHelpers::getVisitText($num_postings, $entry['topic_id'])),
+                                    'title' => ForumHelpers::getVisitText($num_postings, $entry['topic_id']),
                                 ]) ?>
                             <? endif ?>
 
@@ -163,7 +163,7 @@
                                     'formaction' => $controller->url_for("course/forum/index/delete_entry/{$entry['topic_id']}"),
                                     'data-confirm' => sprintf(
                                         _('Sind sie sicher dass Sie den Eintrag %s löschen möchten?'),
-                                        htmlReady($entry['name'])
+                                        $entry['name']
                                     )
                                 ]
                             )

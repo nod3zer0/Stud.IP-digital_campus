@@ -35,9 +35,9 @@
                             <a href="<?= $controller->messagehelper(['abschluss_id' => $deg->abschluss_id]) ?>"
                                data-dialog>
                                 <?= Icon::create('mail')->asImg(
-                                    ['title' => htmlReady(sprintf(
+                                    ['title' => sprintf(
                                         _('Alle Studierenden mit dem Studienabschluss %s benachrichtigen.'),
-                                        $deg->name))
+                                        $deg->name)
                                     ]) ?>
                             </a>
                         <? endif ?>

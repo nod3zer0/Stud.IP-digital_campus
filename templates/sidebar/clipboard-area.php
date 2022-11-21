@@ -83,7 +83,7 @@
                                     <td class="actions">
                                     <?= Icon::create('trash')->asInput(
                                         [
-                                            'title' => sprintf(_('%s löschen.'), htmlReady($item['name'])),
+                                            'title' => sprintf(_('%s löschen.'), $item['name']),
                                             'data-confirm-message' => _('Sind Sie sicher?'),
                                             'class' => 'text-bottom clipboard-item-remove-button'
                                         ]

@@ -119,7 +119,7 @@
                                 [
                                     'title' => sprintf(
                                         _('Nachricht mit Weiterleitung an %s senden'),
-                                        htmlReady($fullname)
+                                        $fullname
                                     )
                                 ]
                             ),
@@ -141,7 +141,7 @@
                             Icon::create(
                                 'door-leave',
                                 Icon::ROLE_CLICKABLE,
-                                ['title' => sprintf(_('%s austragen'), htmlReady($fullname))]
+                                ['title' => sprintf(_('%s austragen'), $fullname)]
                             )
                         ) ?>
                     <? endif ?>

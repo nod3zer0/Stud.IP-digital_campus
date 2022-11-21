@@ -28,7 +28,7 @@
 
         <? if (isset($admin_url)): ?>
             <a href="<?= URLHelper::getLink($admin_url) ?>">
-                <?= Icon::create('admin', Icon::ROLE_CLICKABLE, ['title' => htmlReady($admin_title)]) ?>
+                <?= Icon::create('admin', Icon::ROLE_CLICKABLE, ['title' => $admin_title]) ?>
             </a>
         <? endif ?>
 

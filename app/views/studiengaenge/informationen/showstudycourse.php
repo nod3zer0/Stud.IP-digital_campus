@@ -28,9 +28,9 @@
                                 Icon::create(
                                     'mail',
                                     Icon::ROLE_CLICKABLE,
-                                    ['title' => htmlReady(sprintf(
+                                    ['title' => sprintf(
                                         _('Nachricht an alle Studierende mit dem Studiengang %s mit dem Abschluss %s'),
-                                        $course->name, $degree->name))
+                                        $course->name, $degree->name)
                                     ]),
                                 ['data-dialog' => ''])->render()
                         ?>

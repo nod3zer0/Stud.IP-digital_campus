@@ -27,7 +27,7 @@
                     <?= Studip\Button::createAccept(
                         _('Eintragen'),
                         'add_dozent',
-                        ['title' => sprintf(_("als %s eintragen"),  htmlReady($decoratedStatusGroups['dozent']))]
+                        ['title' => sprintf(_("als %s eintragen"), $decoratedStatusGroups['dozent'])]
                     ) ?>
                     <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->url_for('course/members/index')) ?>
                 </td>

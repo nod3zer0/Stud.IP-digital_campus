@@ -102,7 +102,7 @@
                         Icon::create('info-circle'),
                         [
                             'title'        => _('Info'),
-                            'formaction'   => $controller->url_for($module->getRoute('view_course') .'?ilias_search='.htmlReady($ilias_search)),
+                            'formaction'   => $controller->url_for($module->getRoute('view_course') .'?ilias_search='.urlencode($ilias_search)),
                             'data-dialog'  => ''
                         ]
                     )->condition($edit_permission)->addButton(

@@ -39,7 +39,7 @@
                                         'formaction'   => $controller->delete_course_assignment($user, ['course_id' => $course->id]),
                                         'data-confirm' => sprintf(
                                             _('Wollen Sie %s wirklich austragen?'),
-                                            htmlReady($user->getFullName())
+                                            $user->getFullName()
                                         ),
                                         'data-dialog'  => 'size=auto'
                                     ]) ?>
@@ -57,7 +57,7 @@
                 [
                     'data-confirm' => sprintf(
                         _('Wollen Sie %s wirklich austragen?'),
-                        htmlReady($user->getFullName())
+                        $user->getFullName()
                     )
                 ]
             ) ?>

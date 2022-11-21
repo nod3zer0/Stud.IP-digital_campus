@@ -13,7 +13,7 @@
                 <tr>
                     <td>
                         <? if (!empty($ampel_icon)) : ?>
-                            <?= $ampel_icon->asImg(['title' => htmlReady($ampelstatus), 'style' => 'vertical-align: text-top;']) ?>
+                            <?= $ampel_icon->asImg(['title' => $ampelstatus, 'style' => 'vertical-align: text-top;']) ?>
                         <? endif; ?>
                         <?= htmlReady($stgteil->getDisplayName()) ?>
                     </td>
@@ -42,7 +42,7 @@
                                     Icon::ROLE_CLICKABLE ,
                                     ['title'        => _('Studiengangteil löschen'),
                                      'formaction'   => $controller->action_url('delete/' . $stgteil->getId()),
-                                     'data-confirm' => sprintf(_('Wollen Sie wirklich den Studiengangteil "%s" löschen?'), htmlReady($stgteil->getDisplayName()))]
+                                     'data-confirm' => sprintf(_('Wollen Sie wirklich den Studiengangteil "%s" löschen?'), $stgteil->getDisplayName())]
                                 ))
                             ?>
                         <? endif; ?>

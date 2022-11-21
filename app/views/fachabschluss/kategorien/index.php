@@ -48,7 +48,7 @@
                                     <?= Icon::create('trash', Icon::ROLE_CLICKABLE, tooltip2(_('Abschluss-Kategorie löschen')))->asInput(
                                         [
                                             'formaction'   => $controller->action_url('delete', $kategorie->id),
-                                            'data-confirm' => sprintf(_('Wollen Sie wirklich die Abschluss-Kategorie "%s" löschen?'), htmlReady($kategorie->name)),
+                                            'data-confirm' => sprintf(_('Wollen Sie wirklich die Abschluss-Kategorie "%s" löschen?'), $kategorie->name),
                                             'name'         => 'delete'
                                         ]); ?>
                                 <? else : ?>

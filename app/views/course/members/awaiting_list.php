@@ -82,7 +82,7 @@
                     <a href="<?= $controller->url_for('profile?username=' . $waiting['username']) ?>" <? if ($waiting['mkdate'] >= $last_visitdate) echo 'class="new-member"'; ?>>
                         <?= Avatar::getAvatar($waiting['user_id'], $waiting['username'])->getImageTag(Avatar::SMALL, [
                             'style' => 'margin-right: 5px',
-                            'title' => htmlReady($fullname),
+                            'title' => $fullname,
                         ]) ?>
                         <?= htmlReady($fullname) ?>
                     </a>
@@ -112,7 +112,7 @@
                                 [
                                     'title' => sprintf(
                                         _('Nachricht mit Weiterleitung an %s senden'),
-                                        htmlReady($fullname)
+                                        $fullname
                                     )
                                 ]
                             ),
@@ -126,7 +126,7 @@
                             Icon::create(
                                 'door-leave',
                                 'clickable',
-                                ['title' => sprintf(_('%s austragen'), htmlReady($fullname))]
+                                ['title' => sprintf(_('%s austragen'), $fullname)]
                             )
                         ) ?>
                     <? endif ?>

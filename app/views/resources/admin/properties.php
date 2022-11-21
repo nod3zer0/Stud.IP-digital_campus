@@ -48,9 +48,8 @@
                                     [
                                         'title' => _('Löschen'),
                                         'data-confirm' => sprintf(
-                                            _('Soll die Eigenschaft "%s" wirklich gelöscht werden?'
-                                            ),
-                                            htmlReady($property->name)
+                                            _('Soll die Eigenschaft "%s" wirklich gelöscht werden?'),
+                                            $property->name
                                         )
                                     ]
                                 ) ?>

@@ -25,9 +25,9 @@ $ebene3 = [];
                         ?>
                         <a href="<?= URLHelper::getLink($nav->getURL()) ?>" <?= arrayToHtmlAttributes($attr) ?>>
                             <? if ($image = $nav->getImage()) : ?>
-                                <?= $image->asImg(['class' => "tab-icon", 'title' => $nav->getTitle() ? htmlReady($nav->getTitle()) : htmlReady($nav->getDescription())]) ?>
+                                <?= $image->asImg(['class' => "tab-icon", 'title' => $nav->getTitle() ? $nav->getTitle() : $nav->getDescription()]) ?>
                             <? endif ?>
-                            <span title="<?= $nav->getDescription() ? htmlReady($nav->getDescription()) :  htmlReady($nav->getTitle())?>" class="tab-title"><?= $nav->getTitle() ? htmlReady($nav->getTitle()) : '&nbsp;' ?></span>
+                            <span title="<?= $nav->getDescription() ? htmlReady($nav->getDescription()) : htmlReady($nav->getTitle())?>" class="tab-title"><?= $nav->getTitle() ? htmlReady($nav->getTitle()) : '&nbsp;' ?></span>
                         </a>
                         <? if (count($nav->getSubNavigation()) > 1): ?>
 
@@ -50,7 +50,7 @@ $ebene3 = [];
                     <? else: ?>
                         <span class="quiet tab-title">
                             <? if ($image = $nav->getImage()) : ?>
-                                <?= $image->asImg(['class' => "tab-icon", 'title' => htmlReady($nav->getTitle())]) ?>
+                                <?= $image->asImg(['class' => "tab-icon", 'title' => $nav->getTitle()]) ?>
                             <? endif ?>
                             <?= htmlReady($nav->getTitle()) ?>
                         </span>

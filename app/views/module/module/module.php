@@ -72,7 +72,7 @@
                             Icon::create('log', Icon::ROLE_CLICKABLE,['title' => _('Modulbeschreibung ansehen')]),
                             [
                                 'data-dialog' => 'size=auto',
-                                'title'       => htmlReady($modul->getDisplayName())
+                                'title'       => $modul->getDisplayName()
                             ]
                         ) ?>
                     <? endif; ?>
@@ -106,8 +106,8 @@
                             [
                                 'formaction'   => $controller->action_url('delete/' . $modul->id),
                                 'data-confirm' => sprintf(
-                                        _('Wollen Sie wirklich das Modul "%s" löschen?'),
-                                        htmlReady($modul->getDisplayName())
+                                    _('Wollen Sie wirklich das Modul "%s" löschen?'),
+                                    $modul->getDisplayName()
                                 )
                             ]
                         ) ?>

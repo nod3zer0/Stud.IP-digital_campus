@@ -117,7 +117,7 @@
                             ),
                             'data-confirm' => sprintf(
                                 _('Soll die Veranstaltung %1$s wirklich aus dem Archiv gelöscht werden?'),
-                                htmlReady($course->name)
+                                $course->name
                             ),
                             'class' => 'text-top',
                         ]) ?>

@@ -35,7 +35,7 @@
                                         'trash',
                                         Icon::ROLE_CLICKABLE,
                                         ['title' => _('Zuordnung des Studiengangteils löschen')]
-                                    )->asInput(['data-confirm' => htmlReady($msg)]); ?>
+                                    )->asInput(['data-confirm' => $msg]); ?>
                                 </form>
                             <? else : ?>
                                 <? $msg = sprintf(
@@ -50,7 +50,7 @@
                                         'trash',
                                         Icon::ROLE_CLICKABLE ,
                                         ['title' => _('Zuordnung des Studiengangteils löschen')]
-                                    )->asInput(['data-confirm' => htmlReady($msg)]); ?>
+                                    )->asInput(['data-confirm' => $msg]); ?>
                                 </form>
                             <? endif; ?>
                         <? endif; ?>

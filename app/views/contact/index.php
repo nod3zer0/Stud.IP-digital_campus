@@ -14,7 +14,7 @@
                     <?= Icon::create('trash')->asInput(
                         ['formaction'   => $controller->url_for('contact/deleteGroup/' . $filter),
                          'title'        => _('Gruppe löschen'),
-                         'data-confirm' => sprintf(_('Gruppe %s wirklich löschen?'), htmlReady($title))]) ?>
+                         'data-confirm' => sprintf(_('Gruppe %s wirklich löschen?'), $title)]) ?>
                 <? endif; ?>
             </span>
         </caption>
@@ -86,7 +86,7 @@
                                         [
                                             'data-confirm' => sprintf(
                                                 _('Wollen Sie %s wirklich von der Liste entfernen'),
-                                                htmlReady($contact->username)
+                                                $contact->username
                                             ),
                                             'formaction'   => $controller->url_for('contact/remove/' . $filter, ['user' => $contact->username])
                                         ])

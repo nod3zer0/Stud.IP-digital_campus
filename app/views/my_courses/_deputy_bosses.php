@@ -32,12 +32,12 @@
                 <a href="<?= URLHelper::getLink(
                     'dispatch.php/messages/write',
                     ['filter' => 'send_sms_to_all', 'rec_uname' => $boss->boss_username])?>" data-dialog>
-                    <?= Icon::create('mail')->asImg(['title' => sprintf(_('Nachricht an %s senden'), htmlReady($boss_fullname))]) ?>
+                    <?= Icon::create('mail')->asImg(['title' => sprintf(_('Nachricht an %s senden'), $boss_fullname)]) ?>
                 </a>
                 <a href="<?= $controller->link_for('my_courses/delete_boss/' . $boss->range_id) ?>"
                    data-confirm="<?= sprintf(_('Wollen Sie sich wirklich als Standardvertretung von %s austragen?'), htmlReady($boss_fullname)) ?>">
                     <?= Icon::create('trash')->asImg([
-                        'title' => sprintf(_('Mich als Standardvertretung von %s austragen'), htmlReady($boss_fullname))
+                        'title' => sprintf(_('Mich als Standardvertretung von %s austragen'), $boss_fullname)
                     ]) ?>
                 </a>
             </td>

@@ -67,7 +67,7 @@
                                         'formaction'   => $controller->action_url('delete_modulteil/' . $modulteil->id),
                                         'data-confirm' => sprintf(
                                             _('Wollen Sie wirklich den Modulteil "%s" löschen?'),
-                                            htmlReady($modulteil->getDisplayName())
+                                            $modulteil->getDisplayName()
                                         )
                                     ]
                                 ) ?>

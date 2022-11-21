@@ -81,7 +81,7 @@
                         Icon::create(
                             'mail',
                             Icon::ROLE_CLICKABLE,
-                            ['title' => sprintf('Nachricht mit Weiterleitung an %s senden', htmlReady($fullname))]
+                            ['title' => sprintf('Nachricht mit Weiterleitung an %s senden', $fullname)]
                         ),
                         ['data-dialog' => '1']
                     ) ?>
@@ -100,7 +100,7 @@
                         Icon::create(
                             'door-leave',
                             Icon::ROLE_CLICKABLE,
-                            ['title' => sprintf(_('%s austragen'), htmlReady($fullname))]
+                            ['title' => sprintf(_('%s austragen'), $fullname)]
                         )
                     ) ?>
                 <? endif ?>

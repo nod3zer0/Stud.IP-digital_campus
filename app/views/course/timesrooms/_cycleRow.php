@@ -127,21 +127,6 @@ $is_exTermin = $termin instanceof CourseExDate;
             ['data-dialog' => '']
         ) ?>
 
-        <? $params = [
-            'type'         => 'image',
-            'class'        => 'middle',
-            'name'         => 'delete_single_date',
-            'data-confirm' => _('Wollen Sie diesen Termin wirklich löschen / ausfallen lassen?')
-                              . '<br>' . implode('<br>', array_map('htmlReady', $termin->getDeletionWarnings())),
-            'formaction'   => $controller->url_for(
-                'course/timesrooms/deleteSingle/' . $termin->id,
-                ['cycle_id' => $termin->metadate_id] + $linkAttributes
-            ),
-        ] ?>
-        <? if (Request::isXhr()) : ?>
-            <? $params['data-dialog'] = 'size=big' ?>
-        <? endif ?>
-
         <? $actionMenu->addLink(
             $controller->url_for(
                 'course/timesrooms/stack',

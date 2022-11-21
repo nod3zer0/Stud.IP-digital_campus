@@ -78,8 +78,8 @@
                                 'title'        => _('Konfiguration löschen'),
                                 'formaction'   => $controller->url_for("admin/ilias_interface/delete/$ilias_index"),
                                 'data-confirm' => sprintf(
-                                    sprintf(_('Soll die ILIAS-Installation "%s" wirklich entfernt werden?'),
-                                    htmlReady($ilias_config['name']))
+                                    _('Soll die ILIAS-Installation "%s" wirklich entfernt werden?'),
+                                    $ilias_config['name']
                                 ),
                             ])
                     ) ?>
