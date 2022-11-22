@@ -14,20 +14,24 @@
                 <translate>Studierende</translate>
             </caption>
             <colgroup>
-                <col style="width:20%" />
-                <col style="width:35%" />
-                <col style="width:45%" />
+                <col style="width:1%" />
+                <col style="width:19%" />
+                <col style="width:1%" />
+                <col style="width:29%" />
+                <col style="width:50%" />
             </colgroup>
             <thead>
                 <tr>
+                    <th><input type="checkbox" v-model="bulkSelectAutorRead" @click="handleBulkSelectRead($event, 'autor')"/></th>
                     <th><translate>Lesen</translate></th>
+                    <th><input type="checkbox" v-model="bulkSelectAutorWrite" @click="handleBulkSelectWrite($event)"/></th>
                     <th><translate>Lesen und Schreiben</translate></th>
                     <th><translate>Name</translate></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in autor_members" :key="user.user_id">
-                    <td class="perm">
+                <tr v-for="user in autor_members_filtered" :key="user.user_id">
+                    <td class="perm" colspan="2">
                         <input
                             type="checkbox"
                             :id="user.user_id + `_read`"
@@ -35,7 +39,7 @@
                             v-model="userPermsReadUsers"
                         />
                     </td>
-                    <td class="perm">
+                    <td class="perm" colspan="2">
                         <input
                             type="checkbox"
                             :id="user.user_id + `_write`"
@@ -52,6 +56,17 @@
                     </td>
                 </tr>
             </tbody>
+            <tfoot v-if="can_paginate && autor_members.length > entries_per_page">
+                <tr>
+                    <td colspan="5">
+                        <studip-pagination
+                            :currentOffset="autorOffset"
+                            :totalItems="autor_members.length"
+                            :itemsPerPage="entries_per_page"
+                            @updateOffset="updateAutorOffset" />
+                    </td>
+                </tr>
+            </tfoot>
         </table>
 
         <table class="default" v-if="user_members.length">
@@ -59,22 +74,24 @@
                 <translate>Leser/-innen</translate>
             </caption>
             <colgroup>
-                <col style="width:55%" />
-                <col style="width:45%" />
+                <col style="width:1%" />
+                <col style="width:39%" />
+                <col style="width:50%" />
             </colgroup>
             <thead>
                 <tr>
+                    <th><input type="checkbox" v-model="bulkSelectUserRead" @click="handleBulkSelectRead($event, 'user')"/></th>
                     <th><translate>Lesen</translate></th>
                     <th><translate>Name</translate></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in user_members" :key="user.user_id">
-                    <td>
+                <tr v-for="user in user_members_filtered" :key="user.user_id">
+                    <td colspan="2">
                         <input
                             type="checkbox"
                             :id="user.user_id + `_read`"
-                            :value="user.id"
+                            :value="user.user_id"
                             v-model="userPermsReadUsers"
                         />
                     </td>
@@ -87,6 +104,17 @@
                     </td>
                 </tr>
             </tbody>
+            <tfoot v-if="can_paginate && user_members.length > entries_per_page">
+                <tr>
+                    <td colspan="3">
+                        <studip-pagination
+                            :currentOffset="userOffset"
+                            :totalItems="user_members.length"
+                            :itemsPerPage="entries_per_page"
+                            @updateOffset="updateUserOffset"/>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
 
         <table class="default" v-if="groups.length">
@@ -135,12 +163,17 @@
     </div>
 </template>
 <script>
+import StudipPagination from './../StudipPagination.vue';
+
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-structural-element-permissions',
     props: {
         element: Object,
+    },
+    components: {
+        StudipPagination
     },
     data() {
         return {
@@ -151,6 +184,11 @@ export default {
             userPermsWriteUsers: [],
             userPermsWriteGroups: [],
             userPermsWriteAll: Boolean,
+            bulkSelectAutorRead: false,
+            bulkSelectUserRead: false,
+            bulkSelectAutorWrite: false,
+            userOffset: 0,
+            autorOffset: 0,
         };
     },
 
@@ -181,9 +219,19 @@ export default {
         // load memberships for coursewares in a course context
         if (this.context.type === 'courses') {
             const parent = { type: 'courses', id: this.context.id };
-            this.loadCourseMemberships({ parent, relationship: 'memberships', options: { include: 'user' } });
+            let options = {
+                include: 'user',
+                'page[limit]': 10000,
+            }
+            this.loadCourseMemberships({ parent, relationship: 'memberships', options: options });
             this.loadCourseStatusGroups({ parent, relationship: 'status-groups' });
         }
+    },
+
+    updated () {
+        this.handleBulkSelectReadPassive('autor');
+        this.handleBulkSelectReadPassive('user');
+        this.handleBulkSelectWritePassive();
     },
 
     computed: {
@@ -240,6 +288,15 @@ export default {
             return members;
         },
 
+        autor_members_filtered() {
+            if (this.autor_members.length === 0) {
+                return [];
+            }
+            let start = this.autorOffset * this.entries_per_page;
+            let end = ((this.autorOffset + 1) * this.entries_per_page);
+            return this.autor_members.slice(start, end);
+        },
+
         user_members() {
             if (Object.keys(this.users).length === 0 && this.users.constructor === Object) {
                 return [];
@@ -250,6 +307,23 @@ export default {
             });
 
             return members;
+        },
+
+        user_members_filtered() {
+            if (this.user_members.length === 0) {
+                return [];
+            }
+            let start = this.userOffset * this.entries_per_page;
+            let end = ((this.userOffset + 1) * this.entries_per_page);
+            return this.user_members.slice(start, end);
+        },
+
+        entries_per_page() {
+            return STUDIP?.config?.ENTRIES_PER_PAGE ?? 0;
+        },
+
+        can_paginate() {
+            return this.entries_per_page > 0;
         },
 
         readApproval() {
@@ -274,10 +348,93 @@ export default {
             loadCourseMemberships: 'course-memberships/loadRelated',
             loadCourseStatusGroups: 'status-groups/loadRelated',
         }),
+
+        updateAutorOffset(offset) {
+            this.autorOffset = parseInt(offset);
+        },
+
+        updateUserOffset(offset) {
+            this.userOffset = parseInt(offset);
+        },
+
+        handleBulkSelectRead(event, type) {
+            let state = event.target.checked;
+            let list = type === 'autor' ? this.autor_members_filtered : this.user_members_filtered;
+            if (list.length == 0) {
+                return;
+            }
+            if (type === 'autor') {
+                this.bulkSelectAutorRead = state;
+            } else {
+                this.bulkSelectUserRead = state;
+            }
+            for (let user of list) {
+                if (state) { // Add
+                    if (this.userPermsReadUsers.includes(user.user_id) === false) {
+                        this.userPermsReadUsers.push(user.user_id);
+                    }
+                } else { // Remove
+                    if (this.userPermsReadUsers.includes(user.user_id) === true) {
+                        let index = this.userPermsReadUsers.findIndex((perm) => perm == user.user_id);
+                        this.userPermsReadUsers.splice(index, 1);
+                    }
+                }
+            }
+        },
+
+        handleBulkSelectWrite(event) {
+            let state = event.target.checked;
+            let list = this.autor_members_filtered;
+            if (list.length == 0) {
+                return;
+            }
+            this.bulkSelectAutorWrite = state;
+            for (let user of list) {
+                if (state) { // Add
+                    if (this.userPermsWriteUsers.includes(user.user_id) === false) {
+                        this.userPermsWriteUsers.push(user.user_id);
+                    }
+                } else { // Remove
+                    if (this.userPermsWriteUsers.includes(user.user_id) === true) {
+                        let index = this.userPermsWriteUsers.findIndex((perm) => perm == user.user_id);
+                        this.userPermsWriteUsers.splice(index, 1);
+                    }
+                }
+            }
+        },
+
+        handleBulkSelectReadPassive(type) {
+            let bulkState = false;
+            if (type === 'autor' && this.autor_members_filtered?.length > 0) {
+                let currentAutorsIds = this.autor_members_filtered.map((autor) => autor.user_id);
+                if (currentAutorsIds.every((id) => this.userPermsReadUsers.includes(id))) {
+                    bulkState = true;
+                }
+                this.bulkSelectAutorRead = bulkState;
+            }
+            if (type === 'user' && this.user_members_filtered?.length > 0) {
+                let currentUsersIds = this.user_members_filtered.map((user) => user.user_id);
+                if (currentUsersIds.every((id) => this.userPermsReadUsers.includes(id))) {
+                    bulkState = true;
+                }
+                this.bulkSelectUserRead = bulkState;
+            }
+        },
+
+        handleBulkSelectWritePassive() {
+            let bulkState = false;
+            let currentAutorsIds = this.autor_members_filtered.map((autor) => autor.user_id);
+            if (currentAutorsIds.every((id) => this.userPermsWriteUsers.includes(id))) {
+                bulkState = true;
+            }
+            this.bulkSelectAutorWrite = bulkState;
+        }
     },
 
     watch: {
         userPermsReadUsers(newVal, oldVal) {
+            this.handleBulkSelectReadPassive('autor');
+            this.handleBulkSelectReadPassive('user');
             this.$emit('updateReadApproval', this.readApproval);
         },
         userPermsReadGroups(newVal, oldVal) {
@@ -290,6 +447,7 @@ export default {
             }
         },
         userPermsWriteUsers(newVal, oldVal) {
+            this.handleBulkSelectWritePassive();
             this.$emit('updateWriteApproval', this.writeApproval);
         },
         userPermsWriteGroups(newVal, oldVal) {
@@ -301,6 +459,13 @@ export default {
                 this.userPermsReadAll = false;
             }
         },
+        autorOffset(newVal, oldVal) {
+            this.handleBulkSelectReadPassive('autor');
+            this.handleBulkSelectWritePassive();
+        },
+        userOffset(newVal, oldVal) {
+            this.handleBulkSelectReadPassive('user');
+        }
     },
 };
 </script>

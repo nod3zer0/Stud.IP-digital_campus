@@ -12,7 +12,9 @@
 .pagination {
     li {
         display: inline-block;
+    }
 
+    li:not(.no-divider) {
         &:not(:first-of-type) {
             &::before {
                 content: ' | ';
@@ -57,3 +59,13 @@
         @include background-icon(arr_1right);
     }
 }
+
+.pagination-wrapper-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .pagination {
+        margin-left: auto;
+    }
+}
+
