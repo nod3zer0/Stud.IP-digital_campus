@@ -4,6 +4,8 @@ if (!$selected_terms_of_use_id) {
 }
 ?>
 <? if ($content_terms_of_use_entries) : ?>
+<fieldset>
+    <legend><?= _('Lizenzauswahl') ?></legend>
     <div style="margin-bottom: 1ex;">
         <?= _('Bereitgestellte Dateien können heruntergeladen und ggf. weiterverbreitet werden.
                Dabei ist das Urheberrecht sowohl beim Hochladen der Datei als auch bei der Nutzung
@@ -47,4 +49,5 @@ if (!$selected_terms_of_use_id) {
         <? endif ?>
     <? endforeach ?>
     </fieldset>
+</fieldset>
 <? endif; ?>

@@ -36,6 +36,12 @@
                     <? endif ?>
                 </td>
             </tr>
+            <tr>
+                <td><?= _('Barrierefrei') ?></td>
+                <td>
+                    <?= $file->getAccessibility() ? _('ja') : _('nein') ?>
+                </td>
+            </tr>
 
             <? $content_terms_of_use = $file->getTermsOfUse() ?>
 

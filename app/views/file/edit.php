@@ -7,8 +7,7 @@
 
             <?= CSRFProtection::tokenTag() ?>
             <fieldset>
-                <legend><?= _('Datei bearbeiten') ?></legend>
-
+                <legend><?= _('Zusatzangaben') ?></legend>
                 <label>
                     <?= _('Name') ?>
                     <input id="edit_file_name" type="text" name="name"
@@ -18,6 +17,15 @@
                     <?= _('Beschreibung') ?>
                     <textarea name="description" placeholder="<?= _('Optionale Beschreibung') ?>"><?= htmlReady($description); ?></textarea>
                 </label>
+            </fieldset>
+
+            <fieldset>
+                <legend><?= _('Barrierefreiheit') ?></legend>
+                <label>
+                    <input type="checkbox" name="is_accessible" value="1" <?= $file->getAccessibility() ? "checked" : "" ?>>
+                    <?= _('Diese Datei ist barrierefrei.') ?>
+                </label>
+                <?= formatReady((string)Config::get()->ACCESSIBILITY_INFO_TEXT ?: '') ?>
             </fieldset>
 
             <?= $this->render_partial('file/_terms_of_use_select.php', [

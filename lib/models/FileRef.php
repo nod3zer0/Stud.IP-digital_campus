@@ -60,6 +60,7 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
         $config['additional_fields']['download_url']['set'] = 'setDownloadURL';
         $config['additional_fields']['download_url']['get'] = 'getDownloadURL';
         $config['additional_fields']['author_name']['get'] = 'getAuthorName';
+        $config['additional_fields']['is_accessible']['get'] = 'getAccessibility';
         $config['additional_fields']['is_link']['get'] = 'isLink';
         $config['additional_fields']['foldertype']['set'] = 'setFolderType';
         $config['additional_fields']['foldertype']['get'] = 'getFolderType';
@@ -187,6 +188,14 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
             return $this->owner->getFullName('no_title_rev');
         }
         return $this->file->author_name;
+    }
+
+    /**
+     * Returns true if the file is accessible
+     */
+    public function getAccessibility() : bool
+    {
+        return (bool) $this->file->is_accessible;
     }
 
     /**

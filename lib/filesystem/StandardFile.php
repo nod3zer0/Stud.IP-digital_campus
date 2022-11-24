@@ -174,6 +174,10 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
         return $this->fileref['author_name'];
     }
 
+    public function getAccessibility(): bool
+    {
+        return (bool) $this->fileref['is_accessible'];
+    }
 
     public function getUser()
     {

@@ -35,12 +35,16 @@ interface FileType
      */
     public function getUserName();
 
+    /**
+     * Returns if a file is accessible or not.
+     * @return bool
+     */
+    public function getAccessibility(): bool;
 
     /**
      * @returns The User object representing the author.
      */
     public function getUser();
-
 
     /**
      * Returns the size of the file in bytes. If this is null, the file doesn't exist

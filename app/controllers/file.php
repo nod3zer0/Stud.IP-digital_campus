@@ -378,6 +378,8 @@ class FileController extends AuthenticatedController
             $force_save = Request::submitted('force_save');
             $this->name = trim(Request::get('name'));
             $this->description = Request::get('description');
+            $this->store_accessibility_flag($file_ref_id);
+
             $this->content_terms_of_use_id = Request::get('content_terms_of_use_id');
 
             //Check if the FileRef is unmodified:
@@ -1541,6 +1543,12 @@ class FileController extends AuthenticatedController
 
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
+
+            if (count($file_ref_ids) === 1) {
+                // store flag if file is an accessible file
+                $this->store_accessibility_flag($file_ref_ids[0]);
+            }
+
             if (($folder_id == 'bulk') && !Request::submitted('accept')) {
                 $file_ref_ids = Request::getArray('ids');
                 $this->file_refs = FileRef::findMany($file_ref_ids);
@@ -1662,8 +1670,8 @@ class FileController extends AuthenticatedController
 
         PageLayout::setTitle(sprintf(
             ngettext(
-                'Lizenz auswählen',
-                'Lizenz auswählen: %s Dateien',
+                'Zusatzangaben und Lizenz wählen',
+                'Zusatzangaben und Lizenz auswählen: %s Dateien',
                 count($this->file_refs)
             ),
             count($this->file_refs)
@@ -2158,5 +2166,12 @@ class FileController extends AuthenticatedController
             $folder_file_amount++;
         }
         return [$folder_size, $folder_file_amount];
+    }
+
+    private function store_accessibility_flag($file_ref_id)
+    {
+        $file_ref = FileRef::find($file_ref_id);
+        $file_ref->file['is_accessible'] = Request::get('is_accessible');
+        $file_ref->file->store();
     }
 }

@@ -44,6 +44,7 @@ class FilesystemVueDataManager
             'actions' => $actionMenu ? (is_string($actionMenu) ? $actionMenu : $actionMenu->render()) : "",
             'new' => isset($last_visitdate) && $file->getLastChangeDate() > $last_visitdate && $file->getUserId() !== $GLOBALS['user']->id,
             'isEditable' => $file->isEditable(),
+            'isAccessible' => $file->getAccessibility(),
         ];
     }
 

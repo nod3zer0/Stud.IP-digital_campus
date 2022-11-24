@@ -284,4 +284,12 @@ class UnknownFileType implements FileType, ArrayAccess
     {
         return '';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAccessibility() : bool
+    {
+        return false;
+    }
 }

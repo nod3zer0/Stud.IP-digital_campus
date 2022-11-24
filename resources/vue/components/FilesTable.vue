@@ -180,8 +180,15 @@
                            data-lightbox="gallery"></a>
                     </td>
                     <td :class="{'filter-match': valueMatchesFilter(file.name)}">
+
                         <a :href="file.details_url" data-dialog>
                             <span v-html="highlightString(file.name)"></span>
+                            <studip-icon v-if="file.isAccessible"
+                                         shape="accessibility"
+                                         role="info"
+                                         size="16"
+                                         style="vertical-align: text-bottom"
+                                         :title="$gettext('Diese Datei ist barrierefrei.')"></studip-icon>
                         </a>
 
                         <studip-icon v-if="file.restrictedTermsOfUse"
@@ -189,7 +196,9 @@
                                      role="info"
                                      size="16"
                                      :title="$gettext('Das Herunterladen dieser Datei ist nur eingeschränkt möglich.')"></studip-icon>
+
                     </td>
+
                     <td :data-sort-value="file.size"
                         class="responsive-hidden">
                         <studip-file-size v-if="file.size !== null" :size="parseInt(file.size, 10)"></studip-file-size>
@@ -388,7 +397,7 @@ export default {
     },
     computed: {
         numberOfColumns () {
-            return 7
+            return 8
                 + (this.showdownloads ? 1 : 0)
                 + Object.keys(this.topfolder.additionalColumns).length;
         },

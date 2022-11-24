@@ -153,6 +153,14 @@ class AdminNavigation extends Navigation
                 );
             }
 
+            $navigation->addSubNavigation(
+                'accessibility_info_text',
+                new Navigation(
+                    _('Infotext zu barrierefreien Dateien'),
+                    'dispatch.php/admin/accessibility_info_text/index'
+                )
+            );
+
         }
         $this->addSubNavigation('locations', $navigation);
 
