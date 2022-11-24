@@ -8,8 +8,9 @@ if ($best_nine_tags && count($best_nine_tags) > 0) {
         ];
     }
 }
-$material_data = [];
+$material_data = false;
 if (!empty($materialien)) {
+    $material_data = [];
     foreach ($materialien as $material) {
         $data = $material->toRawArray();
 
