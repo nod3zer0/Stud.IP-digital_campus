@@ -87,24 +87,14 @@ class Course_OverviewController extends AuthenticatedController
             $this->show_dozenten = $show_dozenten;
 
             // Check lock rules
-            if (!$GLOBALS["perm"]->have_studip_perm('dozent', $this->course_id)) {
-                $rule = AuxLockRules::getLockRuleBySemId($this->course_id);
-                if (isset($rule)) {
-                    $show = false;
-                    foreach ((array) $rule['attributes'] as $val) {
-                        if ($val == 1) {
-                            // Es gibt also Zusatzangaben. Nun noch überprüfen ob der Nutzer diese Angaben schon gemacht hat...
-                            $count = DataField::countBySql("LEFT JOIN datafields_entries USING (datafield_id) WHERE object_type = ? AND sec_range_id = ? AND range_id = ?",
-                                ['usersemdata', $this->course_id, $GLOBALS['user']->id]
-                            );
-                            if (!$count) {
-                                $show = true;
-                            }
-                            break;
-                        }
-                    }
+            if (!$GLOBALS['perm']->have_studip_perm('dozent', $this->course_id)) {
+                $rule = AuxLockRule::findOneByCourse($this->course);
+                if ($rule && count($rule->attributes) > 0) {
+                    $count = DataField::countBySql("LEFT JOIN datafields_entries USING (datafield_id) WHERE object_type = ? AND sec_range_id = ? AND range_id = ?",
+                        ['usersemdata', $this->course_id, $GLOBALS['user']->id]
+                    );
 
-                    if ($show) {
+                    if ($count === 0) {
                         PageLayout::postInfo(
                             _("Sie haben noch nicht die für diese Veranstaltung benötigten Zusatzinformationen eingetragen."),
                             [

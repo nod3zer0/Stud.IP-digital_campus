@@ -372,13 +372,7 @@ class Admin_CoursesController extends AuthenticatedController
             ]],
             LockRule::findAllByType('sem')
         ));
-        $this->aux_lock_rules = array_merge(
-            [[
-                'name'    => '--' . _("keine Zusatzangaben") . '--',
-                'lock_id' => 'none'
-            ]],
-            AuxLockRules::getAllLockRules()
-        );
+        $this->aux_lock_rules = AuxLockRule::findBySQL('1 ORDER BY name');
 
 
         //build the sidebar:

@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var array $languages
+ * @var array $attributes
+ * @var string $base_lang
+ * @var string $name
+ * @var I18NString $value
+ *
+ */
+?>
 <? foreach ($languages as $locale => $lang): ?>
     <?
         $attr = $attributes;

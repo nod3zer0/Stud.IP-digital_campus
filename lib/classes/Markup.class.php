@@ -233,7 +233,7 @@ class Markup
      * Create HTML purifier instance with Stud.IP-specific configuration.
      *
      * @param  boolean $autoformat  Apply the AutoFormat rules
-     * @return HTMLPurifier A new instance of the HTML purifier.
+     * @return \HTMLPurifier A new instance of the HTML purifier.
      */
     private static function createPurifier($autoformat)
     {

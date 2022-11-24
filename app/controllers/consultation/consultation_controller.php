@@ -26,13 +26,6 @@ abstract class ConsultationController extends AuthenticatedController
             URLHelper::addLinkParam('cid', $this->range->id);
         }
 
-        // Restore request if present
-        if (isset($this->flash['request'])) {
-            foreach ($this->flash['request'] as $key => $value) {
-                Request::set($key, $value);
-            }
-        }
-
         // This defines the function to display a note. Not really a partial,
         // not a controller method. This has no real place...
         $this->displayNote = function ($what, $length = 40, $position = 'above') {
@@ -70,11 +63,6 @@ abstract class ConsultationController extends AuthenticatedController
     protected function getConsultationTitle()
     {
         return $this->range->getConfiguration()->CONSULTATION_TAB_TITLE;
-    }
-
-    protected function keepRequest()
-    {
-        $this->flash['request'] = Request::getInstance()->getIterator()->getArrayCopy();
     }
 
     /**

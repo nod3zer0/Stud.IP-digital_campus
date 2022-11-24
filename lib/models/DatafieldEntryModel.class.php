@@ -48,37 +48,44 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
      */
     public static function findByModel(SimpleORMap $model, $datafield_id = null)
     {
-        $mask = ["user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8, "admin" => 16, "root" => 32];
+        $mask = [
+            'user'   => 1,
+            'autor'  => 2,
+            'tutor'  => 4,
+            'dozent' => 8,
+            'admin'  => 16,
+            'root'   => 32,
+        ];
 
         $sec_range_id = null;
-        if (is_a($model, "Course")) {
+        if ($model instanceof Course) {
             $params[':institution_ids'] = $model->institutes->pluck('institut_id');
             $object_class = SeminarCategories::GetByTypeId($model->status)->id;
             $object_type = 'sem';
-            $range_id = $model->getId();
-        } elseif(is_a($model, "Institute")) {
-            $params[':institution_ids'] = [$model->Institut_id];
+            $range_id = $model->id;
+        } elseif ($model instanceof Institute) {
+            $params[':institution_ids'] = [$model->id];
             $object_class = $model->type;
             $object_type = 'inst';
-            $range_id = $model->getId();
-        } elseif(is_a($model, "User")) {
+            $range_id = $model->id;
+        } elseif ($model instanceof User) {
             $params[':institution_ids'] = $model->institute_memberships->pluck('institut_id');
             $object_class = $mask[$model->perms];
             $object_type = 'user';
-            $range_id = $model->getId();
-        } elseif(is_a($model, "CourseMember")) {
+            $range_id = $model->id;
+        } elseif($model instanceof CourseMember) {
             $params[':institution_ids'] = $model->course->institutes->pluck('institut_id');
             $object_class = $mask[$model->status];
             $object_type = 'usersemdata';
             $range_id = $model->user_id;
             $sec_range_id = $model->seminar_id;
-        } elseif(is_a($model, "InstituteMember")) {
+        } elseif($model instanceof InstituteMember) {
             $params[':institution_ids'] = [$model->institut_id];
             $object_class = $mask[$model->inst_perms];
             $object_type = 'userinstrole';
             $range_id = $model->user_id;
             $sec_range_id = $model->institut_id;
-        } elseif (is_a($model, 'ModulDeskriptor')) {
+        } elseif ($model instanceof ModulDeskriptor) {
             $params[':institution_ids'] = '';
             if (!empty($model->modul->responsible_institute->institut_id)) {
                 $params[':institution_ids'] = [$model->modul->responsible_institute->institut_id];
@@ -86,7 +93,7 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
             $object_class = $model->getVariant();
             $object_type = 'moduldeskriptor';
             $range_id = $model->deskriptor_id;
-        } elseif (is_a($model, 'ModulteilDeskriptor')) {
+        } elseif ($model instanceof ModulteilDeskriptor) {
             $params[':institution_ids'] = [$model->modulteil->modul->responsible_institute->institut_id];
             $object_class = $model->getVariant();
             $object_type = 'modulteildeskriptor';
@@ -106,46 +113,50 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
             $object_class = $model->getVariant();
             $object_type = 'studycourse';
             $range_id = $model->studiengang_id;
-        }
-
-        if (!$object_type) {
+        } else {
             throw new InvalidArgumentException('Wrong type of model: ' . get_class($model));
         }
-        $one_datafield = '';
+
+        $query = "SELECT a.*, b.*, a.datafield_id, b.datafield_id AS isset_content
+                  FROM datafields a
+                  LEFT JOIN datafields_entries b
+                    ON (a.datafield_id=b.datafield_id AND range_id = :range_id AND sec_range_id = :sec_range_id)
+                  WHERE object_type = :object_type
+                    AND (lang IS NULL OR lang = '')
+                    AND (a.institut_id IS NULL OR a.institut_id IN (:institution_ids))";
+
         if ($datafield_id !== null) {
-            $one_datafield = ' AND a.datafield_id = ' . DBManager::get()->quote($datafield_id);
-        } else {
-            $one_datafield = '';
+            $query .= ' AND a.datafield_id = :one_datafield_id';
+            $params[':one_datafield_id'] = $datafield_id;
         }
 
-        $query = "SELECT a.*, b.*,a.datafield_id,b.datafield_id as isset_content ";
-        $query .= "FROM datafields a LEFT JOIN datafields_entries b ON (a.datafield_id=b.datafield_id AND range_id = :range_id AND sec_range_id = :sec_range_id) ";
-        $query .= "WHERE object_type = :object_type AND (ISNULL(lang) OR lang = '') AND (a.institut_id IS NULL OR a.institut_id IN (:institution_ids))";
-
         if ($object_type === 'studycourse') {
-            $query .= "AND (LOCATE(:object_class, object_class) OR LOCATE('all', object_class)) $one_datafield ORDER BY priority";
+            $query .= " AND (LOCATE(:object_class, object_class) OR LOCATE('all', object_class)) ORDER BY priority";
             $params = array_merge($params,[
-                ':range_id' => (string) $range_id,
+                ':range_id'     => (string) $range_id,
                 ':sec_range_id' => (string) $sec_range_id,
-                ':object_type' => $object_type,
-                ':object_class' => (string) $object_class]);
+                ':object_type'  => $object_type,
+                ':object_class' => (string) $object_class,
+            ]);
         } elseif ($object_type === 'moduldeskriptor'
                 || $object_type === 'modulteildeskriptor') {
             // find datafields by language (string)
-            $query .= "AND (LOCATE(:object_class, object_class) OR object_class IS NULL) $one_datafield ORDER BY priority";
+            $query .= " AND (LOCATE(:object_class, object_class) OR object_class IS NULL) ORDER BY priority";
             $params = array_merge($params,[
-                ':range_id' => (string) $range_id,
+                ':range_id'     => (string) $range_id,
                 ':sec_range_id' => (string) $sec_range_id,
-                ':object_type' => $object_type,
-                ':object_class' => (string) $object_class]);
+                ':object_type'  => $object_type,
+                ':object_class' => (string) $object_class,
+            ]);
         } else {
             // find datafields by perms or status (int)
-            $query .= "AND ((object_class & :object_class) OR object_class IS NULL) $one_datafield ORDER BY priority";
+            $query .= " AND ((object_class & :object_class) OR object_class IS NULL) ORDER BY priority";
             $params = array_merge($params, [
-                ':range_id' => (string) $range_id,
+                ':range_id'     => (string) $range_id,
                 ':sec_range_id' => (string) $sec_range_id,
-                ':object_type' => $object_type,
-                ':object_class' => (int) $object_class]);
+                ':object_type'  => $object_type,
+                ':object_class' => (int) $object_class,
+            ]);
         }
 
         $st = DBManager::get()->prepare($query);
@@ -181,6 +192,7 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
         }
         return $ret;
     }
+
     public function setContentLanguage($language)
     {
         if (!Config::get()->CONTENT_LANGUAGES[$language]) {

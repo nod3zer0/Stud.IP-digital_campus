@@ -436,4 +436,12 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
             throw new InvalidArgumentException("{$key} is a protected property, use a different key");
         }
     }
+
+    /**
+     * Returns whether the given value is in the underlying array.
+     */
+    public function contains($value): bool
+    {
+        return in_array($value, $this->storage);
+    }
 }

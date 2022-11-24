@@ -46,10 +46,11 @@ abstract class WidgetContainer
     /**
      * Add a widget to the container.
      *
-     * @param Widget $widget The actual widget
+     * @template W of Widget
+     * @param W $widget The actual widget
      * @param String $index  Optional index/name of the widget, defaults to
      *                       class name without "widget"
-     * @return Widget The added widget to allow for easier handling
+     * @return W The added widget to allow for easier handling
      */
     public function addWidget(Widget $widget, $index = null)
     {

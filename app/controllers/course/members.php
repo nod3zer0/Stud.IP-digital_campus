@@ -1330,6 +1330,9 @@ class Course_MembersController extends AuthenticatedController
         $course = Course::findCurrent();
         $member = $course->members->findOneBy('user_id', $GLOBALS['user']->id);
         $this->datafields = $member ? $course->aux->getMemberData($member) : [];
+
+        $this->editable = false;
+
         // We need aux data in the view
         $this->aux = $course->aux;
 

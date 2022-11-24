@@ -17,6 +17,8 @@
  */
 class Admin_SpecificationController extends AuthenticatedController
 {
+    protected $_autobind = true;
+
     /**
      * Common tasks for all actions.
      */
@@ -41,25 +43,39 @@ class Admin_SpecificationController extends AuthenticatedController
      */
     public function index_action()
     {
-        $this->allrules = AuxLockRules::getAllLockRules();
+        $this->rules = AuxLockRule::findBySQL('1 ORDER BY name');
+
+        Sidebar::Get()->addWidget(new ActionsWidget())->addLink(
+            _('Neue Regel anlegen'),
+            $this->editURL(),
+            Icon::create('add')
+        );
     }
 
     /**
      * Edit or create a rule
-     *
-     * @param string $edit_id
+     * @property AuxLockRule $rule
      */
-    public function edit_action($id = null)
+    public function edit_action(AuxLockRule $rule = null)
     {
-        //get data
-        $user_field            = 'user';
-        $semdata_field         = 'usersemdata';
-        $this->semFields       = AuxLockRules::getSemFields();
-        $this->entries_user    = DataField::getDataFields($user_field);
-        $this->entries_semdata = DataField::getDataFields($semdata_field);
-        $this->rule            = is_null($id) ? false : AuxLockRules::getLockRuleByID($id);
+        $rule->name = Request::i18n('name', $rule->name);
+        $rule->description = Request::i18n('description', $rule->description);
+        $rule->attributes = Request::optionArray('fields') ?: $rule->attributes;
+        $rule->sorting = Request::getArray('order') ?: $rule->sorting;
 
-        if ($GLOBALS['perm']->have_perm('root') && count($this->entries_semdata) == 0) {
+        if ($GLOBALS['perm']->have_perm('root')) {
+            Sidebar::Get()->addWidget(new ActionsWidget())->addLink(
+                _('Datenfelder bearbeiten'),
+                URLHelper::getURL('dispatch.php/admin/datafields'),
+                Icon::create('edit')
+            );
+        }
+
+        $this->semFields       = $this->getSemFields();
+        $this->entries_user    = DataField::getDataFields('user');
+        $this->entries_semdata = DataField::getDataFields('usersemdata');
+
+        if ($GLOBALS['perm']->have_perm('root') && count($this->entries_semdata) === 0) {
             PageLayout::postWarning(sprintf(
                 _('Sie müssen zuerst im Bereich %sDatenfelder%s in der Kategorie '
                 . '<em>Datenfelder für Personenzusatzangaben in Veranstaltungen</em> '
@@ -74,51 +90,63 @@ class Admin_SpecificationController extends AuthenticatedController
      * Store or edit Rule
      * @param string $id
      */
-    public function store_action($id = '')
+    public function store_action(AuxLockRule $rule = null)
     {
-        CSRFProtection::verifyRequest();
+        CSRFProtection::verifyUnsafeRequest();
 
         $errors = [];
-        if (!Request::get('rulename')) {
+        if (!trim(Request::get('name'))) {
             $errors[] = _('Bitte geben Sie der Regel mindestens einen Namen!');
         }
-        if (!AuxLockRules::checkLockRule(Request::getArray('fields'))) {
+
+        if (!AuxLockRule::validateFields(Request::optionArray('fields'))) {
             $errors[] = _('Bitte wählen Sie mindestens ein Feld aus der Kategorie "Zusatzinformationen" aus!');
         }
 
-        if (empty($errors)) {
-            if (!$id) {
-                //new
-                AuxLockRules::createLockRule(Request::get('rulename'), Request::get('description'), Request::getArray('fields'), Request::getArray('order'));
-            } else {
-                //edit
-                AuxLockRules::updateLockRule($id, Request::get('rulename'), Request::get('description'), Request::getArray('fields'), Request::getArray('order'));
-            }
-            PageLayout::postSuccess(sprintf(
-                _('Die Regel "%s" wurde erfolgreich gespeichert!'),
-                htmlReady(Request::get('rulename'))
-            ));
-        } else {
+        if ($errors) {
             PageLayout::postError(_('Ihre Eingaben sind ungültig.'), $errors);
-        }
+            $this->keepRequest();
+            $this->redirect($this->editURL($rule));
+        } else {
+            $rule->name = Request::i18n('name');
+            $rule->description = Studip\Markup::purifyHtml(Request::i18n('description'));
+            $rule->attributes = Request::optionArray('fields') ?? [];
+            $rule->sorting = Request::getArray('order') ?? [];
 
-        $this->redirect('admin/specification');
+            if ($rule->store()) {
+                PageLayout::postSuccess(sprintf(
+                    _('Die Regel "%s" wurde erfolgreich gespeichert!'),
+                    htmlReady($rule->name)
+                ));
+            }
+            $this->redirect('admin/specification');
+        }
     }
 
     /**
      * Delete a rule, using a modal dialog
-     *
-     * @param string $rule_id
      */
-    public function delete_action($rule_id)
+    public function delete_action(AuxLockRule $rule)
     {
         CSRFProtection::verifyUnsafeRequest();
-        if (AuxLockRules::deleteLockRule($rule_id)) {
-            PageLayout::postSuccess(_('Die Regel wurde erfolgreich gelöscht!'));
-        } else {
+
+        $result = $rule->delete();
+        if ($result === false) {
             PageLayout::postError(_('Es können nur nicht verwendete Regeln gelöscht werden!'));
+        } elseif ($result > 0) {
+            PageLayout::postSuccess(_('Die Regel wurde erfolgreich gelöscht!'));
         }
 
-        $this->redirect('admin/specification');
+        $this->redirect($this->indexURL());
+    }
+
+    private function getSemFields(): array
+    {
+        return [
+            'vasemester' => _('Semester'),
+            'vanr'       => _('Veranstaltungsnummer'),
+            'vatitle'    => _('Veranstaltungstitel'),
+            'vadozent'   => _('Dozent'),
+        ];
     }
 }
