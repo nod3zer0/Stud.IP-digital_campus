@@ -403,9 +403,7 @@ STUDIP.ready(function () {
     // and we trigger that namespaced event here, still all change handlers
     // will execute (which is bad due to $(select).change(form.submit())).
     $('select:not([multiple])').each(function() {
-        $(this)
-            .toggleClass('has-no-value', this.value === '')
-            .blur();
+        $(this).toggleClass('has-no-value', this.value === '');
     });
 });
 
