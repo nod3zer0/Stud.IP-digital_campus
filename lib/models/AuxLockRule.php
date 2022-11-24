@@ -108,7 +108,12 @@ class AuxLockRule extends SimpleORMap
         ];
 
         // start collecting entries
-        $result['head']['name'] = _('Name');
+        $result = [
+            'head' => [
+                'name' => _('Name'),
+            ],
+            'rows' => [],
+        ];
 
         // get all autors and users
         foreach ($course->members->findBy('status', ['autor', 'user'])->orderBy('nachname,vorname') as $member) {
@@ -120,7 +125,7 @@ class AuxLockRule extends SimpleORMap
                 // if standard get it from the mapping else get it from the datafield
                 if ($mapping[$field]) {
                     $result['head'][$field] = $head_mapping[$field];
-                    $new[$field] = $mapping[$field];
+                    $new[$field] = htmlReady($mapping[$field]);
                 } else {
                     $datafield = $this->getDatafield($member, $field);
                     if ($datafield && current($datafield)->isVisible()) {
@@ -128,7 +133,7 @@ class AuxLockRule extends SimpleORMap
                         if (!$display_only && current($datafield)->isEditable() && $this->datafieldCache[$field]->object_type == 'usersemdata') {
                             $new[$field] = current($datafield)->getHTML($member->user_id);
                         } else {
-                            $new[$field] = current($datafield)->getDisplayValue(false);
+                            $new[$field] = htmlReady(current($datafield)->getDisplayValue(false));
                         }
                     }
                 }
