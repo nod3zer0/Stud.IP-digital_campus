@@ -493,6 +493,7 @@ class FileController extends AuthenticatedController
         $file_ref = FileRef::find($file_ref_id);
         $filetype = $file_ref->getFileType();
         $this->file = $filetype->convertToStandardFile();
+        $this->icon_shape = $this->file->getIcon(Icon::ROLE_INFO)->getShape();
 
         $this->author = $file_ref->owner->username;
         $this->author_fullname = $file_ref->owner->getFullName('no_title');

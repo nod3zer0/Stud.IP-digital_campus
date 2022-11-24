@@ -296,7 +296,7 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
                 URLHelper::getURL('dispatch.php/file/suggest_oer/' . $this->fileref->id),
                 _('Material für OER Campus vorschlagen'),
                 Icon::create('oer-campus'),
-                ['data-dialog' => 'reload-on-close;size=auto']
+                ['data-dialog' => 'reload-on-close;size=750x750']
             );
         }
 

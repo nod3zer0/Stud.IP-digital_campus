@@ -229,12 +229,60 @@ div.file_select_possibilities.content_terms_of_use_icons {
 }
 
 
-#file_edit_window, #file_details_window {
+#file_edit_window,
+#file_details_window,
+#oer_file_details {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     align-content: flex-start;
 }
+
+#oer_file_details {
+    max-width: 555px;
+    flex-wrap: wrap;
+}
+
+#preview_container,
+#oer_aside {
+    width: 270px;
+}
+
+#oer_title {
+    max-height: 34px;
+    max-width: 225px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    hyphens: auto;
+    word-break: break-all;
+    text-indent: initial;
+}
+
+#oer_preview_image {
+    width: 100%;
+    display: flex;
+    height: 170px;
+    align-items: center;
+
+    img {
+        width: 100%;
+    }
+}
+
+#file_suggest_oer {
+    margin-top: 2%;
+
+    .suggestion_text {
+        font-size: 2em;
+        font-weight: 700;
+        margin-bottom: 0px;
+    }
+
+    #note {
+        margin: 0 0 30px;
+    }
+}
+
 
 
 table.documents tfoot td.sticky {
@@ -319,7 +367,7 @@ table.documents {
     #file_aside, #folder_aside {
         width: calc(30% - 10px);
         max-width: calc(30% - 10px);
-/*         overflow: hidden; */
+        /*         overflow: hidden; */
 
         div.file-icon, div.folder-icon {
             img {
@@ -335,7 +383,8 @@ table.documents {
         }
     }
 
-    #file_management_forms, div#preview_container {
+
+    #file_management_forms, div#preview_container:not(.oercampus_editmaterial) {
         width: calc(70% - 10px);
         max-width: calc(70% - 10px);
 
