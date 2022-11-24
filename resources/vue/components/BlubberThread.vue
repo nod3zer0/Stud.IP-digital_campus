@@ -492,6 +492,9 @@
             });
         },
         watch: {
+            thread_data(current) {
+                this.threadData = current;
+            },
             threadData (new_data, old_data) {
                 if (new_data.thread_posting.thread_id !== old_data.thread_posting.thread_id) {
                     //if the thread got reloaded by a new thread
