@@ -328,35 +328,63 @@ class FileManager
         //two-dimensional array. Each index of the first dimension
         //contains an array attribute for uploaded files, one entry per file.
         if (is_array($uploaded_files['name'])) {
+            $error = [];
             foreach ($uploaded_files['name'] as $key => $filename) {
-                $uploaded_file = StandardFile::create([
-                    'name'     => $filename,
-                    'type'     => $uploaded_files['type'][$key] ?: get_mime_type($filename),
-                    'size'     => $uploaded_files['size'][$key],
-                    'tmp_name' => $uploaded_files['tmp_name'][$key],
-                    'error'    =>  $uploaded_files['error'][$key]
-                ]);
+                $proceed = true;
 
-                if ($uploaded_file instanceof FileType) {
-                    //validate the upload by looking at the folder where the
-                    //uploaded file shall be stored:
-                    if ($folder_error = $folder->validateUpload($uploaded_file, $user_id)) {
-                        $error[] = $folder_error;
-                        $uploaded_file->delete();
-                        continue;
+                if (Config::get()->VIRUSSCAN_ON_UPLOAD) {
+                    $scanned = Virusscanner::scan($uploaded_files['tmp_name'][$key]);
+
+                    if (count($scanned) > 0) {
+                        $proceed = false;
+
+                        if ($scanned['found']) {
+                            $error[] = sprintf(
+                                _('Die Datei "%1$s" wurde vom Virenscanner überprüft. Dabei wurde das Virus ' .
+                                    '"%2$s" gefunden. Die Datei wird nicht hochgeladen.'),
+                                $filename, $scanned['found']
+                            );
+                        } else if ($scanned['error']) {
+                            $error[] = sprintf(
+                                _('Die Datei "%1$s" wurde vom Virenscanner überprüft. Dabei ist ein Problem ' .
+                                    'aufgetreten: %2$s'),
+                                $filename, $scanned['error']
+                            );
+                        }
                     }
+                }
 
-                    $new_reference = $folder->addFile($uploaded_file, $user_id);
-                    if (!$new_reference){
-                        $error[] = _('Ein Systemfehler ist beim Upload aufgetreten.');
+                if ($proceed) {
+                    $uploaded_file = StandardFile::create([
+                        'name' => $filename,
+                        'type' => $uploaded_files['type'][$key] ?: get_mime_type($filename),
+                        'size' => $uploaded_files['size'][$key],
+                        'tmp_name' => $uploaded_files['tmp_name'][$key],
+                        'error' => $uploaded_files['error'][$key]
+                    ]);
+
+                    if ($uploaded_file instanceof FileType) {
+                        //validate the upload by looking at the folder where the
+                        //uploaded file shall be stored:
+                        if ($folder_error = $folder->validateUpload($uploaded_file, $user_id)) {
+                            $error[] = $folder_error;
+                            $uploaded_file->delete();
+                            continue;
+                        }
+
+                        $new_reference = $folder->addFile($uploaded_file, $user_id);
+                        if (!$new_reference) {
+                            $error[] = _('Ein Systemfehler ist beim Upload aufgetreten.');
+                        } else {
+                            $result['files'][] = $new_reference;
+                        }
                     } else {
-                        $result['files'][] = $new_reference;
+                        $error = array_merge($error, $uploaded_file);
                     }
-                } else {
-                    $error = array_merge($error, $uploaded_file);
                 }
             }
         }
+
         return array_merge($result, compact('error'));
     }
 
