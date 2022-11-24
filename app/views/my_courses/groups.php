@@ -22,7 +22,7 @@
 
                 <tr class="table_header header-row">
                     <th colspan="10" class="toggle-indicator">
-                        <a class="toggler">
+                        <a class="toggler" href="#">
                             <? if (is_array($group_names[$group_id])): ?>
                                 <?= htmlReady(my_substr($group_names[$group_id][1] . ' > ' . $group_names[$group_id][0], 0, 70)) ?>
                             <? else: ?>
