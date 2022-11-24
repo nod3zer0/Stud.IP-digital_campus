@@ -27,7 +27,7 @@ class Virusscanner
      * @param string $path
      * @return array Contains the found virus signature, error message or is an empty array on successful scan
      */
-    public static function scan(string $path)
+    public static function scan(string $path): array
     {
         // Get virus scanner singleton.
         if (is_null(static::$instance)) {
@@ -85,6 +85,7 @@ class Virusscanner
             ];
         }
 
+        return [];
     }
 
     /**
