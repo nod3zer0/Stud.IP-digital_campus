@@ -529,15 +529,6 @@ form.narrow {
     }
 }
 
-// this is necessary to give a form made via formbuilder the correct design
-.formbuilderfooter {
-    background-color: #e7ebf1;
-    border-top: 1px solid #1f3f70;
-    clear: both;
-    margin-left: 0;
-    padding: 5px 10px;
-}
-
 // give forms some optimized styling for very narrow screen sizes
 @include media-breakpoint-tiny-down(){
     form.default {

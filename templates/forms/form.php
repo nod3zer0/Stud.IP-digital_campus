@@ -60,8 +60,14 @@ $form_id = md5(uniqid());
         <?= $part->renderWithCondition() ?>
     <? endforeach ?>
     </div>
+    <? if (!Request::isDialog()) : ?>
+        <footer>
+            <?= \Studip\Button::create(_('Speichern'), null, ['form' => $form_id]) ?>
+        </footer>
+    <? endif ?>
 </form>
-
-<footer data-dialog-button class="formbuilderfooter">
-    <?= \Studip\Button::create(_('Speichern'), null, ['form' => $form_id]) ?>
-</footer>
+<? if (Request::isDialog()) : ?>
+    <footer data-dialog-button>
+        <?= \Studip\Button::create(_('Speichern'), null, ['form' => $form_id]) ?>
+    </footer>
+<? endif ?>
