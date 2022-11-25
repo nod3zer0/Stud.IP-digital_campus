@@ -95,25 +95,26 @@ class ConsultationBlock extends SimpleORMap implements PrivacyObject
         };
 
         $config['additional_fields']['responsible_persons']['get'] = function (ConsultationBlock $block) {
-            if (count($block->responsibilities) !== 0) {
-                $result = [];
+            $persons = [];
+            if (count($block->responsibilities) > 0) {
                 foreach (array_merge(...$block->responsibilities->getUsers()) as $user) {
-                    $result[$user->id] = $user;
+                    $persons[$user->id] = $user;
                 }
-                return array_values($result);
+            } elseif ($block->range instanceof User) {
+                $persons[] = $block->range;
+            } elseif ($block->range instanceof Course) {
+                $persons = ConsultationResponsibility::getCourseResponsibilities($block->range);
+            } elseif ($block->range instanceof Institute) {
+                $persons = ConsultationResponsibility::getInstituteResponsibilites($block->range);
+            } else {
+                throw new Exception('Unknown range type');
             }
 
-            if ($block->range instanceof User) {
-                return [$block->range];
-            }
-            if ($block->range instanceof Course) {
-                return ConsultationResponsibility::getCourseResponsibilities($block->range);
-            }
-            if ($block->range instanceof Institute) {
-                return ConsultationResponsibility::getInstituteResponsibilites($block->range);
-            }
-
-            throw new Exception('Unknown range type');
+            // Ensure we only return objects of type User
+            $persons = array_filter($persons, function ($person) {
+                return $person instanceof User;
+            });
+            return array_values($persons);
         };
 
         $config['registered_callbacks']['after_store'][] = function (ConsultationBlock $block) {
