@@ -62,6 +62,6 @@ $form_id = md5(uniqid());
     </div>
 </form>
 
-<div data-dialog-button>
+<footer data-dialog-button class="formbuilderfooter">
     <?= \Studip\Button::create(_('Speichern'), null, ['form' => $form_id]) ?>
-</div>
+</footer>
