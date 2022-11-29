@@ -188,6 +188,8 @@ class Clipboard extends SimpleORMap
      * to output the data of the clipboard with appropriate names
      * and other attributes which may be needed.
      *
+     * @param string $order_by sort column and direction
+     *
      * @returns string[][] A two-dimensional array with strings.
      *     The first dimension represents the list of clipboard items.
      *     The second dimension represents an item and holds at least
@@ -207,13 +209,13 @@ class Clipboard extends SimpleORMap
      *     Derived classes may add further attributes to the array,
      *     if necessary.
      */
-    public function getContent()
+    public function getContent($order_by = 'name asc')
     {
         if (!$this->items) {
             return [];
         }
 
-        $content = [];
+        $content = new SimpleCollection();
         foreach ($this->items as $item) {
             //Only those elements which store the IDs of objects
             //from the allowed content class or its descendants
@@ -228,7 +230,7 @@ class Clipboard extends SimpleORMap
             }
         }
 
-        return $content;
+        return $content->orderBy($order_by)->getArrayCopy();
     }
 
 

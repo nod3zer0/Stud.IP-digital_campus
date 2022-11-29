@@ -54,7 +54,7 @@
                     <colgroup>
                         <col style="width: 70%">
                     </colgroup>
-                    <? $items = $clipboard->getContent(false) ?>
+                    <? $items = $clipboard->getContent() ?>
                     <? if ($items): ?>
                         <? foreach ($items as $item): ?>
                             <?
