@@ -824,7 +824,7 @@ ribbon end
     &.cw-container-colspan-half-center {
         width: 1095px;
         .cw-container-content {
-            width: 540px;
+            max-width: 540px;
             margin: auto;
         }
     }
@@ -3427,7 +3427,9 @@ c o n f i r m  b l o c k  e n d
 /* * * * * * * * * *
 d a t e  b l o c k
 * * * * * * * * * */
-.cw-container-colspan-half {
+
+.cw-container-colspan-half,
+.cw-container-colspan-half-center {
     .cw-block-date {
         .cw-block-content {
             font-size: 9px;
@@ -3452,7 +3454,7 @@ d a t e  b l o c k
                 font-size: 6em;
                 line-height: 1.25em;
                 height: 1.25em;
-                padding: 3px 29px;
+                padding: 3px 0.5em;
                 background: rgba(245,245,245,1);
                 font-weight: 300;
             }
@@ -3474,7 +3476,7 @@ d a t e  b l o c k
 
         }
 
-        .cw-date-date-digits{
+        .cw-date-date-digits {
             display: inline-block;
 
             .cw-date-date-number {
@@ -3484,6 +3486,25 @@ d a t e  b l o c k
                 padding: 0.25em;
                 background: rgba(245,245,245,1);
                 font-weight: 300;
+            }
+        }
+    }
+}
+
+.responsive-display {
+    .cw-block-date {
+        .cw-block-content {
+            font-size: 9px;
+
+            .cw-date-countdown-number {
+                font-size: 3.5em;
+            }
+            .cw-date-countdown-label-sg,
+            .cw-date-countdown-label-pl {
+                font-size: 1em;
+            }
+            .cw-date-date-number {
+                font-size: 3em;
             }
         }
     }
