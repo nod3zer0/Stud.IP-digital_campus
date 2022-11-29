@@ -52,7 +52,7 @@
                         <translate>Haupttitel</translate>
                         <input type="text" v-model="currentTitle" />
                     </label>
-                    <label>
+                    <label v-if="hasSubtitle">
                         <translate>Untertitel</translate>
                         <input type="text" v-model="currentSubtitle" />
                     </label>
@@ -298,6 +298,9 @@ export default {
             }
 
             return style;
+        },
+        hasSubtitle() {
+            return !['bigicon_before'].includes(this.currentStyle);
         }
     },
     mounted() {
