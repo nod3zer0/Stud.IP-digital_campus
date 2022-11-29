@@ -60,6 +60,7 @@ class Admin_LoginStyleController extends AuthenticatedController
             }
 
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            $extension = strtolower($extension);
             if (!in_array($extension, ['gif', 'jpeg', 'jpg', 'png'])) {
                 continue;
             }
