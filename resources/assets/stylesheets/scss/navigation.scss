@@ -272,6 +272,8 @@ body.fixed {
         display: none;
 
         img {
+            filter: contrast(0) brightness(2);
+
             @include square(16px);
             margin-right: 0.8em;
         }
