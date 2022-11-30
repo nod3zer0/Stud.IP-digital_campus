@@ -168,6 +168,10 @@ class Consultation_AdminController extends ConsultationController
                 throw new InvalidArgumentException(_('Die definierte Zeit bis zur Pause ist kleiner als die Dauer eines Termins.'));
             }
 
+            if ($this->range instanceof Institute && !Request::getArray('responsibilities')) {
+                throw new InvalidArgumentException(_('Es muss mindestens eine durchführende Person, Statusgruppe oder Einrichtung ausgewählt werden.'));
+            }
+
             $slot_count = ConsultationBlock::countSlots(
                 $start,
                 $end,

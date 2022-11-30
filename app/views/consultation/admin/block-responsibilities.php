@@ -1,5 +1,9 @@
 <?php
-$block = $block ?? false;
+/**
+ * @var ConsultationBlock|null $block
+ */
+
+$block = $block ?? null;
 $selected = function ($type, $id) use ($block) {
     if (!$block ) {
         return '';

@@ -1,4 +1,12 @@
 <?php
+/**
+ * @var Consultation_AdminController $controller
+ * @var Trails_Flash $flash
+ * @var string|null $room
+ * @var array $responsible
+ * @var Range $range
+ */
+
 $days_of_the_week = [
     _('Montag')     => 1,
     _('Dienstag')   => 2,
@@ -157,6 +165,20 @@ $intervals = [
 <? if ($responsible): ?>
     <fieldset>
         <legend><?= _('Durchführende Personen, Gruppen oder Einrichtungen') ?></legend>
+
+    <? if ($range instanceof Institute): ?>
+        <p>
+            <?= _('Bei Einrichtungen muss mindestens eine durchführende Person, Gruppe oder Einrichtung zugewiesen '
+                . 'werden.') ?>
+        </p>
+        <p>
+            <?= _('Bitte beachten Sie, dass bei Zuweisungen von Statusgruppen alle Personen der Gruppe mit dem Status '
+                . '"tutor" und "dozent" als durchführende Personen zugewiesen werden und über alle Buchungen '
+                . 'informiert werden.') ?>
+            <?= _('Gleiches gilt für eine zugewiesene Einrichtung. Bitte achten Sie darauf, dass Sie Ihre hier '
+                . ' getroffene Auswahl in Absprache tätigen.') ?>
+        </p>
+    <? endif; ?>
 
         <?= $this->render_partial('consultation/admin/block-responsibilities.php', compact('responsible')) ?>
     </fieldset>
