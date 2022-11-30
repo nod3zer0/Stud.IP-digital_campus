@@ -387,7 +387,7 @@ class NewsController extends StudipController
                 'legend' => _('Sichtbarkeitseinstellungen'),
                 'fields' => [
                     'prio' => [
-                        'label' => _('Priorität'),
+                        'label' => _('Priorität (1: niedrigste, 10: höchste)'),
                         'type' => 'range'
                     ],
                     'newsroles' => [
