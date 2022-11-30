@@ -17,6 +17,7 @@ import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalli
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image';
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
 import ImageCaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption';
+import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize';
 import ImageStylePlugin from '@ckeditor/ckeditor5-image/src/imagestyle';
 import ImageToolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import Indent from '@ckeditor/ckeditor5-indent/src/indent';
@@ -74,6 +75,7 @@ ClassicEditor.builtinPlugins = [
     HorizontalLine,
     ImageCaptionPlugin,
     ImagePlugin,
+    ImageResizePlugin,
     ImageStylePlugin,
     ImageToolbarPlugin,
     Indent,
