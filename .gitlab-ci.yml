@@ -240,7 +240,7 @@ release:
     - job: packaging
       artifacts: true
   release:
-    name: "v$CI_COMMIT_TAG"
+    name: "$CI_COMMIT_TAG"
     description: "https://gitlab.studip.de/studip/studip/-/blob/${CI_COMMIT_TAG}/ChangeLog"
     tag_name: "$CI_COMMIT_TAG"
     assets:
