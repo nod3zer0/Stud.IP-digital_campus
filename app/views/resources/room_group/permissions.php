@@ -42,7 +42,7 @@
         ) ?>
         <? if ($partial_permissions): ?>
             <?= $this->render_partial(
-                'resources/_common/_permission_table.php',
+                'resources/_common/_special_permission_table.php',
                 [
                     'permissions' => $partial_permissions,
                     'custom_columns' => [
