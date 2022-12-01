@@ -213,20 +213,21 @@ packaging:
     - if: $CI_COMMIT_TAG
   before_script:
     - echo GE_JOB_ID=$CI_JOB_ID >> .packaging.env
+    - echo STUDIP_VERSION=${CI_COMMIT_TAG#v} >> .packaging.env
     - mkdir .pkg
   script:
     - echo 'Running packaging job'
     - make build clean-npm
-    - zip -r9 .pkg/studip-release-$CI_COMMIT_TAG.zip *
-    - tar -czf .pkg/studip-release-$CI_COMMIT_TAG.tar.gz *
+    - zip -r9 .pkg/studip-${STUDIP_VERSION}.zip *
+    - tar -czf .pkg/studip-${STUDIP_VERSION}.tar.gz *
   artifacts:
-    untracked: true
     name: 'Stud.IP-Release-$CI_COMMIT_TAG'
     paths:
-      - .pkg/studip-release.zip
-      - .pkg/studip-release.tar.gz
+      - ".pkg/studip-${STUDIP_VERSION}.zip"
+      - ".pkg/studip-${STUDIP_VERSION}.tar.gz"
     reports:
       dotenv: .packaging.env
+    expire_in: never
 
 release:
   stage: release
@@ -240,14 +241,14 @@ release:
     - job: packaging
       artifacts: true
   release:
-    name: "Stud.IP-Release-$CI_COMMIT_TAG"
-    description: "Created using the release"
+    name: "v${STUDIP_VERSION}"
+    description: "https://gitlab.studip.de/studip/studip/-/blob/${CI_COMMIT_TAG}/ChangeLog"
     tag_name: "$CI_COMMIT_TAG"
     assets:
       links:
-        - name: "Stud.IP-Release-$CI_COMMIT_TAG.zip"
-          url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/jobs/${GE_JOB_ID}/artifacts/.pkg/studip-release-$CI_COMMIT_TAG.zip"
+        - name: "studip-${STUDIP_VERSION}.zip"
+          url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/jobs/${GE_JOB_ID}/artifacts/.pkg/studip-${STUDIP_VERSION}.zip"
           link_type: package
-        - name: "Stud.IP-Release-$CI_COMMIT_TAG.tar.gz"
-          url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/jobs/${GE_JOB_ID}/artifacts/.pkg/studip-release-$CI_COMMIT_TAG.tar.gz"
+        - name: "studip-${STUDIP_VERSION}.tar.gz"
+          url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/jobs/${GE_JOB_ID}/artifacts/.pkg/studip-${STUDIP_VERSION}.tar.gz"
           link_type: package
