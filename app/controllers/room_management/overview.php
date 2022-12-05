@@ -138,10 +138,9 @@ class RoomManagement_OverviewController extends AuthenticatedController
                     //Global resource admins can see all room requests.
                     //Get the 10 latest requests:
                     $room_requests = RoomRequest::findBySql(
-                        "resource_requests.closed = '0'
+                        "resource_requests.closed = 0
                         ORDER BY chdate DESC
-                        LIMIT 10",
-                        ['room_class_names' => RoomManager::getAllRoomClassNames()]
+                        LIMIT 10"
                     );
                 } else {
                     //Users who aren't global resource admins see only the requests
@@ -165,7 +164,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
                         AND
                         resource_categories.class_name IN ( :room_class_names )
                         AND
-                        resource_requests.closed = '0'
+                        resource_requests.closed = 0
                         ORDER BY chdate DESC
                         LIMIT 10",
                         [
@@ -175,8 +174,9 @@ class RoomManagement_OverviewController extends AuthenticatedController
                     );
                 }
                 $this->room_requests = SimpleCollection::createFromArray($room_requests)
-                    ->filter(function($room_request) {
-                        return $room_request->getEndDate()->getTimestamp() > time();
+                    ->filter(function (RoomRequest $room_request) {
+                        return !$room_request->getEndDate()
+                            || $room_request->getEndDate()->getTimestamp() > time();
                     });
             }
         }

@@ -50,8 +50,14 @@
  * @property string mkdate database column
  * @property string chdate database column
  * @property Resource resource belongs_to Resource
+ * @property ResourceCategory $category belongs_to Category
  * @property User requester belongs_to User
  * @property User last_modifier belongs_to User
+ * @property Course $course belongs_to Course
+ * @property SeminarCycleDate $cycle belongs_to SeminarCycleDate
+ * @property CourseDate $date belongs_to CourseDate
+ * @property ResourceRequestProperty[]|SimpleORMapCollection $properties has_many ResourceRequestProperty
+ * @property ResourceRequestAppointment[]|SimpleORMapCollection $appointments has_many ResourceRequestAppointment
  *
  *
  * The attributes begin and end are only used in simple resource requests.
@@ -801,46 +807,62 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
     public function getStartDate()
     {
         $start_date = new DateTime();
-        if (count($this->appointments)) {
-            $start_date->setTimestamp($this->appointments[0]->appointment->date);
+        if (count($this->appointments) > 0) {
+            $start_date->setTimestamp($this->appointments->first()->appointment->date);
             return $start_date;
-        } elseif ($this->termin_id) {
+        }
+
+        if ($this->termin_id) {
             $start_date->setTimestamp($this->date->date);
             return $start_date;
-        } elseif ($this->metadate_id) {
-            $start_date->setTimestamp($this->cycle->dates[0]->date);
+        }
+
+        if ($this->metadate_id) {
+            $start_date->setTimestamp($this->cycle->dates->first()->date);
             return $start_date;
-        } elseif ($this->course_id) {
-            $start_date = new DateTime();
-            $start_date->setTimestamp($this->course->dates[0]->date);
+        }
+
+        if ($this->course_id) {
+            $start_date->setTimestamp($this->course->dates->first()->date);
             return $start_date;
-        } elseif ($this->begin) {
+        }
+
+        if ($this->begin) {
             $start_date->setTimestamp($this->begin);
             return $start_date;
         }
+
         return null;
     }
 
     public function getEndDate()
     {
         $end_date = new DateTime();
-        if (count($this->appointments)) {
+        if (count($this->appointments) > 0) {
             $end_date->setTimestamp($this->appointments->last()->appointment->end_time);
             return $end_date;
-        } elseif ($this->termin_id) {
+        }
+
+        if ($this->termin_id) {
             $end_date->setTimestamp($this->date->end_time);
             return $end_date;
-        } elseif ($this->metadate_id) {
+        }
+
+        if ($this->metadate_id) {
             $end_date->setTimestamp($this->cycle->dates->last()->end_time);
             return $end_date;
-        } elseif ($this->course_id) {
-            $end_date = new DateTime();
+        }
+
+        if ($this->course_id) {
             $end_date->setTimestamp($this->course->dates->last()->end_time);
             return $end_date;
-        } elseif ($this->end) {
+        }
+
+        if ($this->end) {
             $end_date->setTimestamp($this->end);
             return $end_date;
         }
+
         return null;
     }
 
