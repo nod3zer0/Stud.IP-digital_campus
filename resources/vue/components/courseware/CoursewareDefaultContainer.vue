@@ -93,6 +93,7 @@ export default {
             textDeleteAlert: this.$gettext('Möchten Sie diesen Abschnitt wirklich löschen?'),
             textRemoveLockTitle: this.$gettext('Sperre aufheben'),
             textRemoveLockAlert: this.$gettext('Möchten Sie die Sperre dieses Abschnitts wirklich aufheben?'),
+            objectIsBlocked: false,
         };
     },
     computed: {
@@ -147,6 +148,7 @@ export default {
             }
 
             await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
+            this.objectIsBlocked = true;
             this.showEditDialog = true;
         },
         async closeEdit() {
@@ -155,6 +157,7 @@ export default {
             this.showEditDialog = false;
             if (this.blockedByThisUser) {
                 await this.unlockObject({ id: this.container.id, type: 'courseware-containers' });
+                this.objectIsBlocked = false;
             }
             await this.loadContainer({ id: this.container.id, options: { include: 'edit-blocker' } });
         },
@@ -174,6 +177,7 @@ export default {
             }
             if (this.blockerId === null) {
                 await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
+                this.objectIsBlocked = true;
                 this.$emit('storeContainer');
             }
             this.showEditDialog = false;
@@ -182,6 +186,7 @@ export default {
             await this.loadContainer({ id: this.container.id, options: { include: 'edit-blocker' } });
             if (!this.blocked) {
                 await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
+                this.objectIsBlocked = true;
                 this.showDeleteDialog = true;
             } else {
                 if (this.blockedByThisUser) {
@@ -200,6 +205,7 @@ export default {
             await this.loadContainer({ id: this.container.id, options: { include: 'edit-blocker' } });
             if (this.blockedByThisUser) {
                 await this.unlockObject({ id: this.container.id, type: 'courseware-containers' });
+                this.objectIsBlocked = false;
             }
             this.showDeleteDialog = false;
         },
@@ -231,6 +237,7 @@ export default {
                 return false;
             }
             await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
+            this.objectIsBlocked = true;
             this.$emit('sortBlocks');
         },
         displayRemoveLockDialog() {
@@ -238,10 +245,37 @@ export default {
         },
         async executeRemoveLock() {
             await this.unlockObject({ id: this.container.id , type: 'courseware-containers' });
+            this.objectIsBlocked = false;
             await this.loadContainer({ id: this.container.id });
             this.showRemoveLockDialog = false;
         },
-
+        async beforeUnloadActions() {
+            this.beforeUnloadCleanup();
+            if (this.blockedByThisUser ||  this.objectIsBlocked) {
+                await this.unlockObject({ id: this.container.id , type: 'courseware-containers' });
+            }
+        },
+        beforeUnloadCleanup() {
+            // The following dialogs and elements must be set to be closed, in order to avoid lockObject conflicts.
+            this.showEditDialog = false;
+            this.showDeleteDialog = false;
+            this.$emit('setSortMode', false);
+        },
+        async beforeUnloadHandler(event) {
+            if (this.blockedByThisUser || this.objectIsBlocked) {
+                event.preventDefault();
+                event.returnValue = 'There are unsaved changes, do you want to leave?';
+                await this.beforeUnloadActions();
+                return event.returnValue;
+            }
+            return null;
+        }
+    },
+    mounted () {
+        STUDIP.eventBus.on('studip:beforeunload', this.beforeUnloadHandler);
+    },
+    beforeDestroy () {
+        STUDIP.eventBus.off('studip:beforeunload', this.beforeUnloadHandler);
     },
 
     watch: {

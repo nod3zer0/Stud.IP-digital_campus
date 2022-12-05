@@ -732,6 +732,7 @@ export default {
                 'expire-date': ''
             },
             deletingPreviewImage: false,
+            objectIsBlocked: false,
         };
     },
 
@@ -1348,7 +1349,8 @@ export default {
             this.uploadFileError = '';
             this.deletingPreviewImage = false;
         },
-        async menuAction(action) {
+        async menuAction(action, type = 'open') {
+            this.lastAction = action;
             switch (action) {
                 case 'removeLock':
                     this.displayRemoveLockDialog();
@@ -1362,6 +1364,7 @@ export default {
                     }
                     try {
                         await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                        this.objectIsBlocked = true;
                     } catch(error) {
                         if (error.status === 409) {
                             this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
@@ -1393,6 +1396,7 @@ export default {
                         return false;
                     }
                     await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                    this.objectIsBlocked = true;
                     this.showElementDeleteDialog(true);
                     break;
                 case 'showInfo':
@@ -1419,6 +1423,7 @@ export default {
                     }
                     try {
                         await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                        this.objectIsBlocked = true;
                     } catch (error) {
                         if (error.status === 409) {
                             this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
@@ -1439,6 +1444,7 @@ export default {
             await this.loadStructuralElement(this.currentElement.id);
             if (this.blockedByThisUser) {
                 await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                this.objectIsBlocked = false;
                 await this.loadStructuralElement(this.currentElement.id);
             }
             this.showElementEditDialog(false);
@@ -1476,6 +1482,7 @@ export default {
             }
             if (!this.blocked) {
                 await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                this.objectIsBlocked = true;
             }
             const file = this.$refs?.upload_image?.files[0];
             if (file) {
@@ -1512,6 +1519,7 @@ export default {
                 id: this.currentId,
             });
             await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+            this.objectIsBlocked = false;
             this.$emit('select', this.currentId);
             this.initCurrent();
         },
@@ -1520,7 +1528,7 @@ export default {
             this.setStructuralElementSortMode(true);
         },
 
-        storeSort() {
+        async storeSort() {
             this.setStructuralElementSortMode(false);
 
             this.sortContainersInStructualElements({
@@ -1528,11 +1536,19 @@ export default {
                 containers: this.containerList,
             });
             this.$emit('select', this.currentId);
+            if (this.blockedByThisUser) {
+                await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                this.objectIsBlocked = false;
+            }
         },
 
-        resetSort() {
+        async resetSort() {
             this.setStructuralElementSortMode(false);
             this.containerList = this.containers;
+            if (this.blockedByThisUser) {
+                await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                this.objectIsBlocked = false;
+            }
         },
 
         async exportCurrentElement(data) {
@@ -1580,6 +1596,7 @@ export default {
             await this.loadStructuralElement(this.currentElement.id);
             if (this.blockedByThisUser) {
                 await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                this.objectIsBlocked = false;
             }
             this.showElementDeleteDialog(false);
         },
@@ -1641,7 +1658,7 @@ export default {
                 this.companionSuccess({
                     info:
                         this.$gettextInterpolate(
-                            this.$gettext('Die Seite %{ pageTitle } wurde erfolgreich angelegt.'), 
+                            this.$gettext('Die Seite %{ pageTitle } wurde erfolgreich angelegt.'),
                             { pageTitle: newElement.attributes.title }
                         )
                 });
@@ -1709,12 +1726,41 @@ export default {
         },
         async executeRemoveLock() {
             await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+            this.objectIsBlocked = false;
             await this.loadStructuralElement(this.currentElement.id);
             this.showElementRemoveLockDialog(false);
+        },
+        async beforeUnloadActions() {
+            this.beforeUnloadCleanup();
+            if (this.blockedByThisUser && this.blocked ||  this.objectIsBlocked) {
+                await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+            }
+        },
+        beforeUnloadCleanup() {
+            // The following dialogs and elements must be set to be closed, in order to avoid lockObject conflicts.
+            this.showElementEditDialog(false);
+            this.showElementDeleteDialog(false);
+            this.setStructuralElementSortMode(false);
+            this.showElementAddDialog(false);
+        },
+        async beforeUnloadHandler(event) {
+            if ((this.blockedByThisUser && this.blocked) || this.objectIsBlocked) {
+                event.preventDefault();
+                event.returnValue = 'There are unsaved changes, do you want to leave?';
+                await this.beforeUnloadActions();
+                return event.returnValue;
+            }
+            return null;
         }
     },
     created() {
         this.pluginManager.registerComponentsLocally(this);
+    },
+    mounted () {
+        STUDIP.eventBus.on('studip:beforeunload', this.beforeUnloadHandler);
+    },
+    beforeDestroy () {
+        STUDIP.eventBus.off('studip:beforeunload', this.beforeUnloadHandler);
     },
 
     watch: {

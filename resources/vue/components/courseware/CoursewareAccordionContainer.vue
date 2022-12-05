@@ -8,6 +8,7 @@
         @storeContainer="storeContainer"
         @closeEdit="initCurrentData"
         @sortBlocks="enableSort"
+        @setSortMode="setSortMode"
     >
         <template v-slot:containerContent>
             <courseware-collapsible-box
@@ -244,6 +245,9 @@ export default {
             if (blockAdder.container !== undefined && blockAdder.container.id === this.container.id) {
                 this.initCurrentData();
             }
+        },
+        setSortMode(mode) {
+            this.sortMode = mode;
         }
     },
     watch: {

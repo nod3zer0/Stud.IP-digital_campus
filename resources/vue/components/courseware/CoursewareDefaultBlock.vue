@@ -36,6 +36,7 @@
                 <courseware-block-edit
                     v-if="canEdit && showEdit"
                     :block="block"
+                    :objectIsBlocked="objectIsBlocked"
                     @store="prepareStoreEdit"
                     @close="closeEdit"
                 >
@@ -130,6 +131,7 @@ export default {
             textDeleteAlert: this.$gettext('Möchten Sie diesen Block wirklich löschen?'),
             textRemoveLockTitle: this.$gettext('Sperre aufheben'),
             textRemoveLockAlert: this.$gettext('Möchten Sie die Sperre dieses Blocks wirklich aufheben?'),
+            objectIsBlocked: false,
         };
     },
     computed: {
@@ -217,6 +219,7 @@ export default {
                     await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
                     if (!this.blocked) {
                         await this.lockObject({ id: this.block.id, type: 'courseware-blocks' });
+                        this.objectIsBlocked = true;
                         if (!this.preview) {
                             this.showContent = false;
                         }
@@ -264,15 +267,23 @@ export default {
             }
             if (this.blockerId === null) {
                 await this.lockObject({ id: this.block.id, type: 'courseware-blocks' });
+                this.objectIsBlocked = true;
                 this.$emit('storeEdit');
+            }
+
+            // To make sure the object is not blocked.
+            if (this.objectIsBlocked || this.blockedByThisUser) {
+                await this.unlockObject({ id: this.block.id, type: 'courseware-blocks' });
+                this.objectIsBlocked = false;
             }
         },
         async closeEdit() {
             await this.loadBlock({ id: this.block.id , options: { include: 'edit-blocker' } }); // has block editor lock changed?
             this.displayFeature(false);
             this.$emit('closeEdit');
-            if (this.blockedByThisUser) {
+            if (this.blockedByThisUser || this.blockedByThisUser) {
                 await this.unlockObject({ id: this.block.id, type: 'courseware-blocks' });
+                this.objectIsBlocked = false;
             }
             this.loadBlock({ id: this.block.id , options: { include: 'edit-blocker' } }); // to update block editor lock
         },
@@ -280,6 +291,7 @@ export default {
             await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
             if (!this.blocked) {
                 await this.lockObject({ id: this.block.id, type: 'courseware-blocks' });
+                this.objectIsBlocked = true;
                 this.showDeleteDialog = true;
             } else {
                 if (this.blockedByThisUser) {
@@ -298,6 +310,7 @@ export default {
             await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
             if (this.blockedByThisUser) {
                 await this.unlockObject({ id: this.block.id, type: 'courseware-blocks' });
+                this.objectIsBlocked = false;
             }
             this.showDeleteDialog = false;
         },
@@ -323,6 +336,7 @@ export default {
 
             // lock parent container
             await this.lockObject({ id: containerId, type: 'courseware-containers' });
+            this.objectIsBlocked = true;
             // update container information
             for (let i = 0; i < sections.length; i++) {
                 for (let j = 0; j < sections[i].blocks.length; j++) {
@@ -337,6 +351,7 @@ export default {
             await this.updateContainer({ container, structuralElementId });
             // unlock container
             await this.unlockObject({ id: containerId, type: 'courseware-containers' });
+            this.objectIsBlocked = false;
             await this.loadContainer(containerId);
             this.deleteBlock({
                 blockId: this.block.id,
@@ -348,14 +363,21 @@ export default {
         },
         async executeRemoveLock() {
             await this.unlockObject({ id: this.block.id , type: 'courseware-blocks' });
+            this.objectIsBlocked = false;
             await this.loadBlock({ id: this.block.id });
             this.showRemoveLockDialog = false;
+        },
+        async performUnloadObject() {
+            await this.unlockObject({ id: this.block.id , type: 'courseware-blocks' });
+            this.objectIsBlocked = false;
         }
 
     },
     watch: {
         showEdit(state) {
-            this.$emit('showEdit', state);
+            if (state) {
+                this.objectIsBlocked = true;
+            }
         }
     }
 };

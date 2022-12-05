@@ -74,6 +74,12 @@ export default {
         SidebarWidget,
     },
     mixins: [CoursewareExport],
+    data() {
+        return {
+            objectIsBlocked: false,
+            blockedFrom: ''
+        }
+    },
     computed: {
         ...mapGetters({
             userId: 'userId',
@@ -86,6 +92,9 @@ export default {
             blockerId: 'currentElementBlockerId',
             blockedByThisUser: 'currentElementBlockedByThisUser',
             blockedByAnotherUser: 'currentElementBlockedByAnotherUser',
+            editDialogState: 'showStructuralElementEditDialog',
+            deleteDialogState: 'showStructuralElementDeleteDialog',
+            structuralElementSortMode: 'structuralElementSortMode'
         }),
         isRoot() {
             if (!this.structuralElement) {
@@ -126,6 +135,7 @@ export default {
             companionInfo: 'companionInfo',
             addBookmark: 'addBookmark',
             lockObject: 'lockObject',
+            unlockObject: 'unlockObject',
             setConsumeMode: 'coursewareConsumeMode',
             setViewMode: 'coursewareViewMode',
             setShowToolbar: 'coursewareShowToolbar',
@@ -141,6 +151,8 @@ export default {
             }
             try {
                 await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                this.objectIsBlocked = true;
+                this.blockedFrom = 'editDialogState';
             } catch(error) {
                 if (error.status === 409) {
                     this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
@@ -164,6 +176,8 @@ export default {
             }
             try {
                 await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+                this.objectIsBlocked = true;
+                this.blockedFrom = 'structuralElementSortMode';
             } catch (error) {
                 if (error.status === 409) {
                     this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
@@ -188,6 +202,8 @@ export default {
                 return false;
             }
             await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+            this.objectIsBlocked = true;
+            this.blockedFrom = 'deleteDialogState';
             this.showElementDeleteDialog(true);
         },
         addElement() {
@@ -213,6 +229,60 @@ export default {
         },
         linkElement() {
             this.showElementLinkDialog(true);
+        },
+        async beforeUnloadActions() {
+            this.beforeUnloadCleanup();
+            if (this.objectIsBlocked) {
+                await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+            }
+        },
+        beforeUnloadCleanup() {
+            // The following dialogs and elements must be set to be closed, in order to avoid lockObject conflicts.
+            this.showElementEditDialog(false);
+            this.setStructuralElementSortMode(false);
+            this.showElementDeleteDialog(false);
+        },
+        async beforeUnloadHandler(event) {
+            if (this.objectIsBlocked) {
+                event.preventDefault();
+                event.returnValue = 'There are unsaved changes, do you want to leave?';
+                await this.beforeUnloadActions();
+                return event.returnValue;
+            }
+            return null;
+        }
+    },
+    mounted () {
+        STUDIP.eventBus.on('studip:beforeunload', this.beforeUnloadHandler);
+    },
+    beforeDestroy () {
+        STUDIP.eventBus.off('studip:beforeunload', this.beforeUnloadHandler);
+    },
+    watch: {
+        blockedByThisUser(newValue) {
+            if (!newValue) {
+                this.objectIsBlocked = false
+            }
+        },
+        editDialogState(newValue) {
+            if (!newValue && this.blockedFrom == 'editDialogState') {
+                this.objectIsBlocked = false
+            }
+        },
+        structuralElementSortMode(newValue) {
+            if (!newValue && this.blockedFrom == 'structuralElementSortMode') {
+                this.objectIsBlocked = false
+            }
+        },
+        deleteDialogState(newValue) {
+            if (!newValue && this.blockedFrom == 'deleteDialogState') {
+                this.objectIsBlocked = false
+            }
+        },
+        objectIsBlocked(newValue) {
+            if (!newValue) {
+                this.blockedFrom = '';
+            }
         }
     },
 };
