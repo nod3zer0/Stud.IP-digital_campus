@@ -471,7 +471,7 @@ class SeminarCycleDate extends SimpleORMap
         $course = Course::find($this->seminar_id);
         $ret = [];
 
-        if ($startAfterTimeStamp == 0) {
+        if ($startAfterTimeStamp == 0 || $startAfterTimeStamp < $course->start_semester->vorles_beginn) {
             $startAfterTimeStamp = $course->start_semester->vorles_beginn;
         }
 
