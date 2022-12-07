@@ -1,4 +1,4 @@
-<div id="main_content" role="main">
+<div id="main_content">
 <table class="default">
     <colgroup>
         <col>

@@ -1,8 +1,8 @@
 <!-- Beginn Footer -->
-<?= SkipLinks::addIndex(_('Fußzeile'), 'layout_footer',900) ?>
-<footer id="layout_footer" aria-label="<?= _('Fußzeile') ?>">
+<?= SkipLinks::addIndex(_('Fußzeile'), 'main-footer',900) ?>
+<footer id="main-footer" aria-label="<?= _('Fußzeile') ?>">
 <? if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') : ?>
-    <div id="footer">
+    <div id="main-footer-info">
         <? printf(_('Sie sind angemeldet als %s (%s)'),
                   htmlReady($GLOBALS['user']->username),
                   htmlReady($GLOBALS['user']->perms)) ?>

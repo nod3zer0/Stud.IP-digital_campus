@@ -48,7 +48,7 @@ const Questionnaire = {
             }
             if (data.message) {
                 jQuery('.messagebox').hide();
-                jQuery('#layout_content').prepend(data.message);
+                jQuery('#content').prepend(data.message);
             }
         }
         if (jQuery('.questionnaire_widget .widget_questionnaire_' + data.questionnaire_id).length > 0) {
@@ -80,8 +80,8 @@ const Questionnaire = {
             } else {
                 if (data.message) {
                     jQuery('.messagebox').hide();
-                    jQuery('#layout_content').prepend(data.message);
-                    jQuery.scrollTo('#layout_content', 400);
+                    jQuery('#content').prepend(data.message);
+                    jQuery.scrollTo('#content', 400);
                 }
             }
         }

@@ -98,21 +98,6 @@ const SkipLinks = {
         return false;
     },
 
-    injectAriaRoles: function() {
-        jQuery('#main_content').attr({
-            role: 'main',
-            'aria-labelledby': 'main_content_landmark_label'
-        });
-        jQuery('#layout_content').attr({
-            role: 'main',
-            'aria-labelledby': 'layout_content_landmark_label'
-        });
-        jQuery('#layout_infobox').attr({
-            role: 'complementary',
-            'aria-labelledby': 'layout_infobox_landmark_label'
-        });
-    },
-
     insertHeadLines: function() {
         var target = null;
         jQuery('#skip_link_navigation a').each(function() {
@@ -140,7 +125,6 @@ const SkipLinks = {
 
     initialize: function() {
         SkipLinks.insertSkipLinks();
-        SkipLinks.injectAriaRoles();
         SkipLinks.setActiveTarget();
     }
 };

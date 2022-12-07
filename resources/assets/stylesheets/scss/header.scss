@@ -1,9 +1,10 @@
 /* --- header.css ----------------------------------------------------------- */
-#layout_wrapper {
+body > header {
     box-sizing: border-box;
     padding-top: $bar-bottom-container-height;
 }
-#barBottomContainer {
+
+#top-bar {
     background-color: $base-color;
     border: 1px $brand-color-darker;
     color: $contrast-content-white;
@@ -22,8 +23,8 @@
     z-index: 10000;
 
 }
-#barBottomLeft,
-#barTopFont {
+#responsive-menu,
+#site-title {
     flex: 0 0 auto;
     padding: 0 15px;
     z-index: 2;
@@ -35,10 +36,10 @@ html {
     scroll-padding-top: calc($bar-bottom-container-height + 1em);
 }
 
-#layout_footer,
-#barBottomright {
+#main-footer,
+#header-links {
     > ul > li > a {
-        color: $contrast-content-white;
+        color: $white;
         margin: 0 6px;
         text-decoration: none;
         &:hover {
@@ -47,12 +48,12 @@ html {
     }
 }
 
-#layout_footer {
+#main-footer {
     > ul {
         display: flex;
-        align-items: center;
+        flex: 1;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: flex-end;
         list-style-type: none;
         min-height: 30px;
         padding: 0;
@@ -63,7 +64,7 @@ html {
     }
 }
 
-#barBottomright {
+#header-links {
     flex: 0 1 auto;
     justify-self: flex-end;
     > ul {
@@ -80,11 +81,11 @@ html {
     }
 }
 
-#barTopAvatar {
+#avatar-menu-container {
     display: inline-flex;
 }
 
-#header_avatar_menu {
+#avatar-menu {
     height: 30px;
     margin: 0;
     vertical-align: text-bottom;
@@ -151,10 +152,11 @@ html {
 }
 
 .header_avatar_container {
-    align-items: center;
+    align-items: end;
+    flex: 0;
 }
 
-#barTopFont {
+#site-title {
     flex: 1;
     color: $white;
     margin-left: 0;
@@ -164,7 +166,7 @@ html {
 }
 
 .studip-logo {
-   @include hide-text();
+    @include hide-text();
     background-repeat: no-repeat;
 
     @include retina-background-image('logos/studip4-logo.png', 'logos/studip4-logo@2x.png', 130px, 92px);
@@ -174,31 +176,21 @@ html {
     display: block;
     width: 130px;
     height: 81px;
-    margin-top: -10px;
 }
 
-#barTopStudip {
+#top-logo {
     margin-left: 20px;
     margin-right: 12px;
 }
 
-#barTopLogo {
-    left: 0;
-    position: absolute;
-    top: 0;
-}
-
-
-#flex-header {
-    height: $header-height;
+#navigation-level-1 {
     background-color: $dark-gray-color-5;
-
-    position: relative;
+    height: $header-height;
     z-index: 3;
 }
 
 // Slide menu in header navigation
-#barBottomLeft {
+#responsive-menu {
     box-sizing: border-box;
     overflow-x: hidden;
     padding: 0;
@@ -209,7 +201,7 @@ html {
     }
 }
 body.fixed {
-    #barBottomLeft {
+    #responsive-menu {
         overflow-x: visible;
         padding: 0 15px;
         text-indent: 0;

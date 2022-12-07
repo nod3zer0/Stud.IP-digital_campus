@@ -1,25 +1,11 @@
-$sidebar-width: 270px;
-
-#layout-sidebar {
+#sidebar {
     background: $white;
-    flex: 0 1 auto;
-    position: relative;
-    left: 0px;
-    margin-right: 5px;
-    margin-left: 15px;
-    text-align: left;
-    min-width: 270px;
-}
-.sidebar {
-    padding-bottom: 7px;
-    width: $sidebar-width;
-    z-index: 2;
-
     border-left: 0;
     display: inline-block;
-    flex: 0 0 auto;
-    margin-bottom: 1em;
-    position: relative;
+    margin-top: 15px;
+    padding: 0 5px 7px 15px;
+    text-align: left;
+    z-index: 2;
 
     .sidebar-image {
         width: $sidebar-width;
@@ -79,7 +65,8 @@ $sidebar-width: 270px;
     .sidebar-widget-placeholder {
         background: $white;
         border: 1px solid $content-color-40;
-        margin: 15px 0px 0;
+        margin: 15px 0 0;
+        width: $sidebar-width - 2px;
     }
     .sidebar-widget-header {
         @include clearfix();

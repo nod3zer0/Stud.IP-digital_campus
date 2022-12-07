@@ -30,7 +30,7 @@ $transition-duration: 300ms;
     opacity: 0;
 }
 
-body:not(.fixed) #barTopMenu {
+body:not(.fixed) #navigation-level-1-items {
     > li.active {
         @include border-beneath($dark-gray-color-80);
     }

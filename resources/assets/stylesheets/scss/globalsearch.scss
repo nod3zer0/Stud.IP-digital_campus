@@ -299,7 +299,7 @@ html:not(.size-large) {
     }
 
     &.globalsearch-visible {
-        #barBottomright ul {
+        #header-links ul {
             li {
                 display: none;
             }
@@ -313,7 +313,7 @@ html:not(.size-large) {
             z-index: 0;
         }
 
-        #layout_page {
+        #current-page-structure {
             position: relative;
             filter: blur(1px);
 

@@ -56,7 +56,7 @@ const Responsive = {
             '<label for="responsive-toggle">'
         );
 
-        $('<li>', { html: wrapper }).prependTo('#barBottomright > ul');
+        $('<li>', { html: wrapper }).prependTo('#header-links > ul');
     },
 
     // Responsifies the layout. Builds the responsive menu from existing
@@ -68,17 +68,17 @@ const Responsive = {
 
         Responsive.addMenu();
 
-        if ($('#layout-sidebar > section').length > 0) {
+        if ($('#sidebar > section').length > 0) {
             $('<li id="sidebar-menu">')
                 .on('click', () => Sidebar.open())
-                .appendTo('#barBottomright > ul');
+                .appendTo('#header-links > ul');
 
             $('<label id="sidebar-shadow-toggle">')
                 .on('click', () => Sidebar.close())
-                .prependTo('#layout-sidebar');
+                .prependTo('#sidebar');
 
             $('#responsive-toggle').on('change', function() {
-                $('#layout-sidebar').removeClass('visible-sidebar');
+                $('#sidebar').removeClass('visible-sidebar');
                 $('#responsive-navigation').toggleClass('visible', this.checked);
             });
         } else {
@@ -101,7 +101,7 @@ const Responsive = {
         }).reverse().trigger('change');
 
         var sidebar_avatar_menu = $('<div class="sidebar-widget sidebar-avatar-menu">');
-        var avatar_menu = $('#header_avatar_menu');
+        var avatar_menu = $('#avatar-menu');
         var title = $('.action-menu-title', avatar_menu).text();
         var list = $('<ul class="widget-list widget-links">');
         $('<div class="sidebar-widget-header">').text(title).appendTo(sidebar_avatar_menu);
@@ -122,17 +122,15 @@ const Responsive = {
             .append(list)
             .appendTo(sidebar_avatar_menu);
 
-        $('#layout-sidebar > .sidebar').prepend(sidebar_avatar_menu);
+        $('#sidebar').prepend(sidebar_avatar_menu);
     },
 
     setResponsiveDisplay (state = true) {
         $('html').toggleClass('responsive-display', state);
 
         if (state) {
-            Sidebar.disableSticky();
             HeaderMagic.disable();
         } else {
-            Sidebar.enableSticky();
             HeaderMagic.enable();
         }
     },

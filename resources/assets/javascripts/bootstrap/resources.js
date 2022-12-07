@@ -134,7 +134,7 @@ STUDIP.ready(function () {
     );
 
     //Event handlers for the individual booking plan print view:
-    jQuery('.sidebar .colour-selector').draggable(
+    jQuery('#sidebar .colour-selector').draggable(
         {
             cursorAt: {
                 left: 28, top: 15

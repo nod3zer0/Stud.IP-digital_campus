@@ -57,8 +57,7 @@
     }
 
     function updateStickyTools(editor) {
-        var MARGIN = $('#barBottomContainer').length ?
-                $('#barBottomContainer').height() : 25;
+        var MARGIN = $('#top-bar').height() ?? 25;
 
         var toolbarId = editor.config.sharedSpaces.top;
 

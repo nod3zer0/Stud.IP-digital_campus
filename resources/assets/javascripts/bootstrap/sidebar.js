@@ -1,8 +1,3 @@
-// (De|Re)activate when help tours start|stop
-$(document).on('tourstart.studip tourend.studip', function(event) {
-    STUDIP.Sidebar.setSticky(event.type === 'tourend.studip');
-});
-
 function heightChangeHandler() {
     var curr_height = $(document).height();
     if (doc_height !== curr_height) {
@@ -13,15 +8,15 @@ function heightChangeHandler() {
 
 // Handle dynamic content
 if (window.MutationObserver !== undefined) {
-    // Attach mutation observer to #layout_content and trigger it on
+    // Attach mutation observer to #content and trigger it on
     // changes to class and style attributes (which affect the height
     // of the content). Trigger a recalculation of the sticky kit when
     // a mutation occurs so the sidebar will
     $(document).ready(function() {
-        if ($('#layout_content').length === 0) {
+        if ($('#content').length === 0) {
             return;
         }
-        var target = $('#layout_content').get(0),
+        var target = $('#content').get(0),
             stickyObserver = new window.MutationObserver(function() {
                 window.requestAnimationFrame(function() {
                     $(document.body).trigger('sticky_kit:recalc');
@@ -48,7 +43,7 @@ if (window.MutationObserver !== undefined) {
     // to the previous height before the event occured so recalculation
     // only happens on actual changes
     $(document).on('ajaxComplete', heightChangeHandler);
-    $(document).on('load', '#layout_content img', heightChangeHandler);
+    $(document).on('load', '#content img', heightChangeHandler);
 
     // Specialized handler to trigger recalculation when wysiwyg
     // instances are created.
@@ -59,6 +54,5 @@ if (window.MutationObserver !== undefined) {
 
 // Engage
 STUDIP.domReady(() => {
-    STUDIP.Sidebar.setSticky();
     STUDIP.Sidebar.checkActiveLineHeight();
 });

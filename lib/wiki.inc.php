@@ -1264,7 +1264,7 @@ function getAllWikiPages($range_id, $header, $fullhtml = true) {
 *
 **/
 function showPageFrameStart() {
-    echo '<div id="main_content" role="main">';
+    echo '<div id="main_content">';
 }
 
 /**

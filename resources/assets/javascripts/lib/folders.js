@@ -78,7 +78,7 @@ const Folders = {
                 if ($(data).hasClass('messagebox_success')) {
                     Folders.removeFolderListEntry(folder_id);
                 }
-                $('#layout_content').prepend(data);
+                $('#content').prepend(data);
             }
         });
     }

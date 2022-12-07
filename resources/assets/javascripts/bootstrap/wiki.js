@@ -100,9 +100,9 @@ $(document).on('click', '#wiki button[name="submit-and-edit"]', function(event) 
                     }
 
                     // Remove messages (and display new messages, if any)
-                    $('#layout_content .messagebox').remove();
+                    $('#content .messagebox').remove();
                     if (response.messages !== false) {
-                        $(response.messages).prependTo('#layout_content');
+                        $(response.messages).prependTo('#content');
                     }
                 });
             }

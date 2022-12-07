@@ -21,7 +21,7 @@ $(document).on('click', 'a.copyable-link', function (event) {
     (new Promise((resolve, reject) => {
         let confirmation = $('<div class="copyable-link-confirmation copyable-link-success">');
         confirmation.text($gettext('Link wurde kopiert'));
-        confirmation.insertBefore('#layout_container');
+        confirmation.insertBefore('#content');
 
         // Resolve deferred when animation has ended or after 2 seconds as a
         // fail safe

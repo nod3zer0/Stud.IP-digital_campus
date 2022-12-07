@@ -18,7 +18,7 @@ const Blubber = {
             let panel_data = $('.blubber_panel').data();
             STUDIP.Vue.load().then(({createApp}) => {
                 STUDIP.Blubber.App = createApp({
-                    el: '#layout_container',
+                    el: '#content-wrapper',
                     data() {
                         return {
                             threads: $('.blubber_threads_widget').data('threads_data'),

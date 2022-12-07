@@ -492,8 +492,8 @@
 
 #blubber-index {
     @media screen and (max-width: $major-breakpoint-small) {
-        #page_title_container,
-        .secondary-navigation {
+        #page-title-container,
+        #navigation-level-2 {
             display: none;
         }
     }

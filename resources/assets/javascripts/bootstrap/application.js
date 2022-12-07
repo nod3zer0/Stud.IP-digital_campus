@@ -282,29 +282,29 @@ STUDIP.domReady(function () {
 // Fix horizontal scroll issue on domready, window load and window resize.
 // This also makes the header and footer sticky regarding horizontal scrolling.
 STUDIP.domReady(function () {
-    var page_margin = ($('#layout_page').outerWidth(true) - $('#layout_page').width()) / 2,
-        content_margin = $('#layout_content').outerWidth(true) - $('#layout_content').innerWidth(),
-        sidebar_width = $('#layout-sidebar').outerWidth(true);
+    var page_margin = ($('#current-page-structure').outerWidth(true) - $('#current-page-structure').width()) / 2,
+        content_margin = $('#content').outerWidth(true) - $('#content').innerWidth(),
+        sidebar_width = $('#sidebar').outerWidth(true);
 
     function fixScrolling() {
-        $('#layout_page').removeClass('oversized').css({
+        $('#current-page-structure').removeClass('oversized').css({
             minWidth: '',
             marginRight: '',
             paddingRight: ''
         });
 
         var max_width = 0,
-            fix_required = $('html').is(':not(.responsified)') && $('#layout_content').get(0).scrollWidth > $('#layout_content').width();
+            fix_required = $('html').is(':not(.responsified)') && $('#content').get(0).scrollWidth > $('#content').width();
 
         if (fix_required) {
-            $('#layout_content').children().each(function () {
+            $('#content').children().each(function () {
                 var width = $(this).get(0).scrollWidth + ($(this).outerWidth(true) - $(this).innerWidth());
                 if (width > max_width) {
                     max_width = width;
                 }
             });
 
-            $('#layout_page').addClass('oversized').css({
+            $('#current-page-structure').addClass('oversized').css({
                 minWidth: sidebar_width + content_margin + max_width + page_margin,
                 marginRight: 0,
                 paddingRight: page_margin
@@ -314,7 +314,7 @@ STUDIP.domReady(function () {
                 var last_left = null;
                 return function (top, left) {
                     if (last_left !== left) {
-                        $('#flex-header,#tabs,#layout_footer,#barBottomContainer').css({
+                        $('#navigation-level-1,#tabs,#main-footer,#top-bar').css({
                             transform: 'translate3d(' + left + 'px,0,0)'
                         });
                     }
@@ -326,7 +326,7 @@ STUDIP.domReady(function () {
         }
     }
 
-    if ($('.no-touch #layout_content').length > 0) {
+    if ($('.no-touch #content').length > 0) {
         window.matchMedia('screen').addListener(function() {
             // Try to fix now
             fixScrolling();

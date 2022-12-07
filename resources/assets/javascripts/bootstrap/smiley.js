@@ -5,7 +5,7 @@ $(document).on('click', '.smiley-toggle', function(event) {
 
     $.getJSON(element.attr('href')).then(function(json) {
         var container = $(element)
-            .closest('.ui-dialog-content,#layout_content')
+            .closest('.ui-dialog-content,#content')
             .first();
         $('.messagebox', container).remove();
         container.prepend(json.message);

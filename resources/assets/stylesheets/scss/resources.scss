@@ -46,7 +46,7 @@ tr.resource-planning-selected-request {
     position: absolute;
 }
 
-#layout-sidebar .room-search-tree-widget {
+#sidebar .room-search-tree-widget {
     max-height: unset !important;
 }
 
@@ -292,7 +292,7 @@ ul.resource-tree {
 
 @media screen and (min-width: 1024px) {
     /* individual booking plan print view */
-    .sidebar .colour-selectors {
+    #sidebar .colour-selectors {
         display: flex;
         flex-direction: column;
         margin: 1em;

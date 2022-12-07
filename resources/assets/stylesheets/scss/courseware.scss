@@ -83,7 +83,7 @@ $blockadder-items: (
     biography-achievements: medal,
     biography-career: ranking,
     biography-personal-information: own-license,
-    biography-goals: radar 
+    biography-goals: radar
 );
 
 $achievement-types: (
@@ -252,12 +252,8 @@ $consum_ribbon_width: calc(100% - 58px);
     &.consume {
         overflow: hidden;
     }
-    #layout_container {
-        overflow-x: hidden;
+    #content-wrapper {
         position: relative;
-        #layout_content {
-            overflow: hidden;
-        }
     }
 }
 
@@ -449,7 +445,7 @@ $consum_ribbon_width: calc(100% - 58px);
     box-shadow: 2px 2px #ccc;
     position: absolute;
     right: -570px;
-    top: 15px;
+    top: 0;
     height: 100%;
     max-width: calc(100% - 28px);
     display: flex;
@@ -4127,7 +4123,7 @@ i m a g e  m a p  b l o c k
 i m a g e  m a p  b l o c k  e n d
 * * * * * * * * * * * * * * * * */
 
-/* * * * * * * * * * * * * * 
+/* * * * * * * * * * * * * *
 b i o g r a p h y  b l o c k
 * * * * * * * * * * * * * */
 
@@ -4154,7 +4150,7 @@ b i o g r a p h y  b l o c k
                 margin-top: 0;
             }
         }
-        
+
     }
 }
 
@@ -4922,7 +4918,7 @@ text block end
         display: table;
         width: 100%;
     }
-    
+
     .cw-timeline-item {
         margin-bottom: 50px;
         position: relative;
@@ -4942,7 +4938,7 @@ text block end
                     border: solid 2px $color;
                 }
             }
-            
+
             border-radius: 50%;
 
             img {
@@ -5031,8 +5027,8 @@ text block end
                 position: absolute;
                 left: calc(40% + 40px);
                 top: 18px;
-                width: 0; 
-                height: 0; 
+                width: 0;
+                height: 0;
                 border-top: 7px solid transparent;
                 border-bottom: 7px solid transparent;
             }

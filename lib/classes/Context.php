@@ -181,7 +181,7 @@ class Context
     }
 
     /**
-     * Get Fullname of current context, to use it in the page-title
+     * Get Fullname of current context, to use it in the context-title
      *
      * @return string or null if no context is available
      */

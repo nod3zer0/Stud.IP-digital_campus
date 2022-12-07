@@ -30,7 +30,7 @@ const Avatar = {
                     container.css('max-width', dialog.width() - 220);
                     // No dialog, full page.
                 } else {
-                    dialog = jQuery('#layout_content');
+                    dialog = jQuery('#content');
                     // Responsive view.
                     if (jQuery('html').hasClass('responsified')) {
                         // Adjust maximal cropper container height to page dimensions.

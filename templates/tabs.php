@@ -8,7 +8,7 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
 $ebene3 = [];
 ?>
 <div class="tabs_wrapper">
-    <? SkipLinks::addIndex(_('Zweite Navigationsebene'), 'tabs', 10); ?>
+    <? SkipLinks::addIndex(_('Zweite Navigationsebene'), 'navigation-level-2', 10); ?>
     <ul id="tabs" role="navigation">
         <? if (!empty($navigation)): ?>
         <? foreach ($navigation as $path => $nav) : ?>

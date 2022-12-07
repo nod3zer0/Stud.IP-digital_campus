@@ -95,7 +95,6 @@ if (Request::get('logout'))
     $index_nobody_template->set_attribute('logout', true);
 }
 
-echo '<div><div class="index_container">';
 echo $index_nobody_template->render();
 
 $layout = $GLOBALS['template_factory']->open('shared/index_box');

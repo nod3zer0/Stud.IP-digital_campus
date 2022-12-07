@@ -84,7 +84,7 @@ export default {
                 document.documentElement.scrollHeight,
                 document.documentElement.offsetHeight
             );
-            let footerHeight = document.getElementById('layout_footer').offsetHeight;
+            let footerHeight = document.getElementById('main-footer').offsetHeight;
             let functionalAreaHeight = totalDocHeight - footerHeight;
             return totalExpandedList >= functionalAreaHeight ? 'top' : 'bottom';
         },

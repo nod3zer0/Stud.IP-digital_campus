@@ -1,5 +1,5 @@
 <?= $contentbar ?? '' ?>
-<article class="studip wiki" id="main_content" role="main">
+<article class="studip wiki" id="main_content">
     <section>
         <? if ($wikipage->keyword == 'WikiWikiWeb' && $wikipage->isNew()): ?>
             <div class="wiki-empty-background"></div>

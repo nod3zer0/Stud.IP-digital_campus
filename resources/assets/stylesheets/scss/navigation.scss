@@ -1,9 +1,9 @@
 /* --- main navigation ----------------------------------------------------- */
-body:not(.fixed) #barTopMenu {
+body:not(.fixed) #navigation-level-1-items {
     align-self: flex-end;
 
     margin: 0 0 4px 5px;
-    padding: 0;
+    padding: 20px 0 0 0;
     z-index: 1000;
     font-size: 0;
 
@@ -12,7 +12,6 @@ body:not(.fixed) #barTopMenu {
         list-style-type: none;
         width: 64px;
         height: 55px;
-        padding: 0;
         z-index: 2;
         font-size: $font-size-base;
     }
@@ -249,7 +248,7 @@ html.no-touch {
 }
 
 body.fixed {
-    #flex-header {
+    #navigation-level-1 {
         height: $header-height;
     }
 
@@ -258,7 +257,7 @@ body.fixed {
         max-height: $bar-bottom-container-height;
         height: auto;
     }
-    #barTopMenu {
+    #navigation-level-1-items {
         background-color: $base-color;
 
         list-style: none;
@@ -319,8 +318,8 @@ body.fixed {
 
         }
     }
-    #barBottomLeft:hover #barTopMenu,
-    #barTopMenu-toggle:checked ~ #barTopMenu {
+    #responsive-menu:hover #navigation-level-1-items,
+    #barTopMenu-toggle:checked ~ #navigation-level-1-items {
         display: block;
     }
 }

@@ -10,25 +10,25 @@ const scroll = function(scrolltop) {
     if (is_below_the_fold !== was_below_the_fold) {
         $('body').toggleClass('fixed', is_below_the_fold);
 
-        menu = $('#barTopMenu').remove();
+        menu = $('#navigation-level-1-items').remove();
         if (is_below_the_fold) {
             menu.append(
                 $('.action-menu-list li', menu)
                     .remove()
                     .addClass('from-action-menu')
             );
-            menu.appendTo('#barBottomLeft');
+            menu.appendTo('#responsive-menu');
         } else {
             $('.action-menu-list', menu).append(
                 $('.from-action-menu', menu)
                     .remove()
                     .removeClass('from-action-menu')
             );
-            menu.prependTo('#flex-header');
+            menu.prependTo('#navigation-level-1');
 
             NavigationShrinker();
 
-            $('#barTopMenu-toggle').prop('checked', false);
+            $('#navigation-level-1-items-toggle').prop('checked', false);
         }
 
         was_below_the_fold = is_below_the_fold;
@@ -37,7 +37,7 @@ const scroll = function(scrolltop) {
 
 const HeaderMagic = {
     enable() {
-        fold = $('#flex-header').height();
+        fold = $('#navigation-level-1').height();
         Scroll.addHandler('header', scroll);
     },
     disable() {

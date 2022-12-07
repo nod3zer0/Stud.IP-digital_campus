@@ -172,13 +172,13 @@ const PersonalNotifications = {
             PageLayout.title_prefix = '';
         }
         if (count) {
-            $('#notification_container').addClass('hoverable');
+            $('#notification-container').addClass('hoverable');
             $('#notification_marker').prop('disabled', false);
             if (count > old_count && audio_notification !== false) {
                 audio_notification.play();
             }
         } else {
-            $('#notification_container').removeClass('hoverable');
+            $('#notification-container').removeClass('hoverable');
             $('#notification_marker').prop('disabled', true);
         }
         if (old_count !== count) {
@@ -186,7 +186,7 @@ const PersonalNotifications = {
             let notification_text = $ngettext('%{ count } Benachrichtigung', '%{ count } Benachrichtigungen', count);
             $('#notification_marker').attr('title', $gettextInterpolate(notification_text, {count: count}));
             updateFavicon(count);
-            $('#notification_container .mark-all-as-read').toggleClass('invisible', count < 2);
+            $('#notification-container .mark-all-as-read').toggleClass('invisible', count < 2);
         }
     },
     isVisited () {

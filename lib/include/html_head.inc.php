@@ -68,6 +68,3 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
 </head>
 
 <body id="<?= PageLayout::getBodyElementId() ?>">
-<div id="layout_wrapper">
-    <? SkipLinks::insertContainer() ?>
-    <?= PageLayout::getBodyElements() ?>

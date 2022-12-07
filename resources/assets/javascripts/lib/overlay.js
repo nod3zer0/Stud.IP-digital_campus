@@ -39,7 +39,7 @@ Overlay.show = function(ajax, containment, secure, callback, delay) {
                 this.element.addClass('modal-overlay-local');
             } else {
                 // Blur background
-                $('#layout_wrapper').addClass('has-overlay');
+                $('body').addClass('has-overlay');
             }
             this.element.appendTo(containment);
         }
@@ -60,7 +60,7 @@ Overlay.hide = function(delay) {
             this.element = null;
         }
 
-        $('#layout_wrapper').removeClass('has-overlay');
+        $('body').removeClass('has-overlay');
         $(window).off('beforeunload.overlay');
     }, delay);
 };

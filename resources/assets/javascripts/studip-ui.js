@@ -577,7 +577,7 @@ import { $gettext } from './lib/gettext.js';
             }
             $(window).bind('scroll.datepicker-scroll', _.debounce($.proxy(DpHideOnScroll, null, input), 100, {leading:true, trailing:false}));
 
-            if ($(input).closest('.sidebar').length === 0) {
+            if ($(input).closest('#sidebar').length === 0) {
                 return;
             }
 

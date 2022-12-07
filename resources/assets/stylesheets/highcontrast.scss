@@ -22,8 +22,8 @@ body #scroll-to-top {
     }
 }
 
-body.fixed #barTopMenu li > a,
-#barBottomright > ul > li > a {
+body.fixed #navigation-level-1-items li > a,
+#header-links > ul > li > a {
     color: $white !important;
     text-decoration: underline !important;
 }
@@ -71,23 +71,23 @@ div.index_container div.index_main {
 }
 
 /* HEADER */
-#barBottomLeft,
-#barBottomright {
+#responsive-menu,
+#header-links {
     background-color: $black;
 
 }
 
-#barTopFont {
+#site-title {
     background-color: $black;
     color: $white;
 }
 
-#flex-header {
+#navigation-level-1 {
     background-color: $white;
     border-bottom: 1px solid $black !important;
 }
 
-body.fixed #barTopMenu {
+body.fixed #navigation-level-1-items {
     background-color: $black;
 
     li  a {
@@ -108,20 +108,21 @@ body.fixed #barTopMenu {
 
 }
 
-body:not(.fixed) #barTopMenu > li.active:after,
+body:not(.fixed) #navigation-level-1-items > li.active:after,
 #tabs > li.current:after {
     background-color: $black;
 }
 
 #tabs li,
-#layout_wrapper #layout_page .tabs_wrapper {
+#navigation-level-2,
+#current-page-structure #navigation-level-2 .tabs_wrapper {
     background-color: $white;
 }
 
 #tabs li.current a,
 #tabs li:hover a,
-body:not(.fixed) #barTopMenu li.active .navtitle,
-body:not(.fixed) #barTopMenu li:hover .navtitle {
+body:not(.fixed) #navigation-level-1-items li.active .navtitle,
+body:not(.fixed) #navigation-level-1-items li:hover .navtitle {
     color: $contrast-blue;
 }
 
@@ -150,7 +151,7 @@ body:not(.fixed) #barTopMenu li:hover .navtitle {
 
 }
 
-.responsive-display #layout-sidebar {
+.responsive-display #sidebar {
     background-color: $black;
     background-image: unset;
     border-left: 6px solid $black;
@@ -201,16 +202,15 @@ button.button[disabled]:hover {
 
 /* SIDEBAR AND WIDGETS */
 
-.sidebar .sidebar-image {
+#sidebar .sidebar-image {
     background-image: unset;
     background: $black;
-
 }
 
 .studip-widget .widget-header,
-.sidebar .sidebar-widget-header {
+.sidebar-widget-header {
     background-color: $black !important;
-    color: $white;
+    color: $white !important;
 }
 
 .sidebar-widget-content ul li form,
@@ -448,7 +448,7 @@ table.dates .nextdate {
 }
 
 /* FOOTER */
-#layout_footer {
+#main-footer {
     background-color: $black;
     color: $white;
     font-weight: 700;
@@ -465,8 +465,8 @@ table.dates .nextdate {
 }
 
 /* ICONS */
-body:not(.fixed) #barTopMenu li.active > a img,
-body:not(.fixed) #barTopMenu li:hover > a img,
+body:not(.fixed) #navigation-level-1-items li.active > a img,
+body:not(.fixed) #navigation-level-1-items li:hover > a img,
 form div.files-search.input-group .input-group-append img {
     filter: brightness(0) !important;
 }
@@ -483,7 +483,7 @@ section.course-statusgroups article header h1 a img {
 }
 
 // profile image
-#header_avatar_menu .action-menu-icon,
+#avatar-menu .action-menu-icon,
 .action-menu.is-open .action-menu-icon {
     filter: unset;
 }
@@ -1008,9 +1008,9 @@ a:visited,
     color: $contrast-blue;
 }
 
-#layout_content a,
-#layout_content a:link,
-#layout_content a:visited {
+#content a,
+#content a:link,
+#content a:visited {
     text-decoration: underline;
 }
 
@@ -1420,7 +1420,7 @@ button.skiplink {
 // Notifications: „Desktop-Benachrichtigungen aktivieren“: Blauer Text auf weißem Hintergrund.
 // Benachrichtigungen: Schwarzer Text auf weißem Hintergrund, beim Hovern invertieren.
 
-#notification_container a.enable-desktop-notifications,
+#notification-container a.enable-desktop-notifications,
 #notification_container a.mark-all-as-read {
     background-color: $white;
     color: $contrast-blue;

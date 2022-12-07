@@ -71,8 +71,6 @@ import './studip-jquery-selection-helper.js';
 
 import select2 from 'select2/dist/js/select2.full.js';
 
-import 'sticky-kit/dist/sticky-kit.js';
-
 import 'blueimp-file-upload';
 import 'blueimp-file-upload/js/jquery.iframe-transport.js';
 

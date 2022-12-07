@@ -1,2 +1,2 @@
 <!-- Beginn Page -->
-<div id="layout_page">
+<div id="current-page-structure">

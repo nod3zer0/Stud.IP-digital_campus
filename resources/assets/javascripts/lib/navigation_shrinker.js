@@ -2,7 +2,7 @@ import Cookie from './cookie.js';
 
 // Enable shrinking of navigation
 var shrinker = function() {
-    var main = $('#barTopMenu'),
+    var main = $('#navigation-level-1-items'),
         sink = $('li.overflow', main),
         x = 0,
         index = false,

@@ -1,5 +1,5 @@
 @include media-breakpoint-small-down(){
-  #layout_wrapper { min-width: 0 !important; }
+  body > header { min-width: 0 !important; }
   #login div.index_container .messagebox,
   #index div.index_container .messagebox,
   #request_new_password div.index_container .messagebox,
@@ -11,7 +11,7 @@
 }
 
 @include media-breakpoint-tiny-down(){
-    #barTopStudip img {
+    #top-logo img {
         height: 33px;
         margin-top: 5px;
         width: 153px;
