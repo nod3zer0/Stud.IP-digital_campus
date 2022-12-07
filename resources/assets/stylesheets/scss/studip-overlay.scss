@@ -16,7 +16,7 @@
     bottom: 0;
 
     &-local {
-        background-color: mix($light-gray-color, $white, 50%);
+        background-color: fade-out($light-gray-color, 0.5);
         position: absolute;
     }
 

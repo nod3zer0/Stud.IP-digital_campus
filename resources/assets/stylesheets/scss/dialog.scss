@@ -1,5 +1,5 @@
 .ui-widget-overlay {
-    background: transparentize($base-gray, .2);
+    background: fade-out($base-gray, 0.2);
     opacity: 1;
     position: fixed;
 }

@@ -31,7 +31,7 @@
     }
 
     li.empty-placeholder {
-        color: mix($text-color, $white, 30%);
+        color: fade-out($text-color, 0.3);
 
         &:not(:only-child) {
             display: none;
