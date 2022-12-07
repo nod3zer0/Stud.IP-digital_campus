@@ -36,6 +36,9 @@ class Instance extends SchemaProvider
             'favorite-block-types' => $resource->getFavoriteBlockTypes($user),
             'sequential-progression' => (bool) $resource->getSequentialProgression(),
             'editing-permission-level' => $resource->getEditingPermissionLevel(),
+            'certificate-settings' => $resource->getCertificateSettings(),
+            'reminder-settings' => $resource->getReminderSettings(),
+            'reset-progress-settings' => $resource->getResetProgressSettings()
         ];
     }
 

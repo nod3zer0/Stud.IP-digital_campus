@@ -231,6 +231,161 @@ class Instance
         }
     }
 
+
+    /**
+     * Returns the certificate creation settings.
+     *
+     * @return array
+     */
+    public function getCertificateSettings(): array
+    {
+        $range = $this->getRange();
+        /** @var array $certificateSettings */
+        $certificateSettings = json_decode(
+            $range->getConfiguration()->getValue('COURSEWARE_CERTIFICATE_SETTINGS'),
+            true
+        )?: [];
+        $this->validateCertificateSettings($certificateSettings);
+
+        return $certificateSettings;
+    }
+
+    /**
+     * Sets the certificate settings for this courseware instance.
+     *
+     * @param array $certificateSettings an array of parameters
+     */
+    public function setCertificateSettings(array $certificateSettings): void
+    {
+        $this->validateCertificateSettings($certificateSettings);
+        $range = $this->getRange();
+        $range->getConfiguration()->store('COURSEWARE_CERTIFICATE_SETTINGS',
+            count($certificateSettings) > 0 ? json_encode($certificateSettings) : null);
+    }
+
+    /**
+     * Validates certificate settings.
+     *
+     * @param array $certificateSettings settings for certificate creation
+     *
+     * @return bool true if all given values are valid, false otherwise
+     */
+    public function isValidCertificateSettings(array $certificateSettings): bool
+    {
+        return (int) $certificateSettings['threshold'] >= 0 && (int) $certificateSettings['threshold'] <= 100;
+    }
+
+    private function validateCertificateSettings(array $certificateSettings): void
+    {
+        if (!$this->isValidCertificateSettings($certificateSettings)) {
+            throw new \InvalidArgumentException('Invalid certificate settings given.');
+        }
+    }
+
+    /**
+     * Returns the reminder message sending settings.
+     *
+     * @return array
+     */
+    public function getReminderSettings(): array
+    {
+        $range = $this->getRange();
+        /** @var int $reminderInterval */
+        $reminderSettings = json_decode(
+            $range->getConfiguration()->getValue('COURSEWARE_REMINDER_SETTINGS'),
+            true
+        )?: [];
+        $this->validateReminderSettings($reminderSettings);
+
+        return $reminderSettings;
+    }
+
+    /**
+     * Sets the reminder message settings this courseware instance.
+     *
+     * @param array $reminderSettings an array of parameters
+     */
+    public function setReminderSettings(array $reminderSettings): void
+    {
+        $this->validateReminderSettings($reminderSettings);
+        $range = $this->getRange();
+        $range->getConfiguration()->store('COURSEWARE_REMINDER_SETTINGS',
+            count($reminderSettings) > 0 ? json_encode($reminderSettings) : null);
+    }
+
+    /**
+     * Validates reminder message settings.
+     *
+     * @param array $reminderSettings settings for reminder mail sending
+     *
+     * @return bool true if all given values are valid, false otherwise
+     */
+    public function isValidReminderSettings(array $reminderSettings): bool
+    {
+        $valid = in_array($reminderSettings['interval'], [0, 7, 14, 30, 90, 180, 365]);
+
+        return $valid;
+    }
+
+    private function validateReminderSettings(array $reminderSettings): void
+    {
+        if (!$this->isValidReminderSettings($reminderSettings)) {
+            throw new \InvalidArgumentException('Invalid reminder settings given.');
+        }
+    }
+
+    /**
+     * Returns the progress resetting settings.
+     *
+     * @return array
+     */
+    public function getResetProgressSettings(): array
+    {
+        $range = $this->getRange();
+        /** @var int $reminderInterval */
+        $resetProgressSettings = json_decode(
+            $range->getConfiguration()->getValue('COURSEWARE_RESET_PROGRESS_SETTINGS'),
+            true
+        )?: [];
+        $this->validateResetProgressSettings($resetProgressSettings);
+
+        return $resetProgressSettings;
+    }
+
+    /**
+     * Sets the progress resetting settings this courseware instance.
+     *
+     * @param array $reminderSettings an array of parameters
+     */
+    public function setResetProgressSettings(array $resetProgressSettings): void
+    {
+        $this->validateResetProgressSettings($resetProgressSettings);
+        $range = $this->getRange();
+        $range->getConfiguration()->store('COURSEWARE_RESET_PROGRESS_SETTINGS',
+            count($resetProgressSettings) > 0 ? json_encode($resetProgressSettings) : null);
+    }
+
+    /**
+     * Validates progress resetting settings.
+     *
+     * @param array $resetProgressSettings settings for progress resetting
+     *
+     * @return bool true if all given values are valid, false otherwise
+     */
+    public function isValidResetProgressSettings(array $resetProgressSettings): bool
+    {
+        $valid = in_array($resetProgressSettings['interval'], [0, 14, 30, 90, 180, 365]);
+
+        return $valid;
+    }
+
+    private function validateResetProgressSettings(array $resetProgressSettings): void
+    {
+        if (!$this->isValidResetProgressSettings($resetProgressSettings)) {
+            throw new \InvalidArgumentException('Invalid progress resetting settings given.');
+        }
+    }
+
     /**
      * Returns all bookmarks of a user associated to this courseware instance.
      *

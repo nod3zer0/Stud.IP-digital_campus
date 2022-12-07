@@ -78,6 +78,30 @@ class CoursewareInstancesUpdate extends JsonApiController
                 return 'Attribute `editing-permission-level` contains an invalid value.';
             }
         }
+
+        if (self::arrayHas($json, 'data.attributes.certificate-settings')) {
+            $certificateSettings = self::arrayGet($json, 'data.attributes.certificate-settings');
+
+            if (!$resource->isValidCertificateSettings($certificateSettings)) {
+                return 'Attribute `certificate-settings` contains an invalid value.';
+            }
+        }
+
+        if (self::arrayHas($json, 'data.attributes.reminder-settings')) {
+            $reminderSettings = self::arrayGet($json, 'data.attributes.reminder-settings');
+
+            if (!$resource->isValidReminderSettings($reminderSettings)) {
+                return 'Attribute `reminder-settings` contains an invalid value.';
+            }
+        }
+
+        if (self::arrayHas($json, 'data.attributes.reset-progress-settings')) {
+            $resetProgressSettings = self::arrayGet($json, 'data.attributes.reset-progress-settings');
+
+            if (!$resource->isValidResetProgressSettings($resetProgressSettings)) {
+                return 'Attribute `reset-progress-settings` contains an invalid value.';
+            }
+        }
     }
 
     private function updateInstance(\User $user, Instance $instance, array $json): Instance
@@ -94,6 +118,15 @@ class CoursewareInstancesUpdate extends JsonApiController
 
         $editingPermissionLevel = $get('data.attributes.editing-permission-level');
         $instance->setEditingPermissionLevel($editingPermissionLevel);
+
+        $certificateSettings = $get('data.attributes.certificate-settings');
+        $instance->setCertificateSettings($certificateSettings);
+
+        $reminderSettings = $get('data.attributes.reminder-settings');
+        $instance->setReminderSettings($reminderSettings);
+
+        $resetProgressSettings = $get('data.attributes.reset-progress-settings');
+        $instance->setResetProgressSettings($resetProgressSettings);
 
         return $instance;
     }

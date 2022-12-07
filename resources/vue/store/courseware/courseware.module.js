@@ -536,10 +536,15 @@ export const actions = {
         return dispatch('loadContainer', containerId);
     },
 
-    async storeCoursewareSettings({ dispatch, getters }, { permission, progression }) {
+    async storeCoursewareSettings({ dispatch, getters },
+                                  { permission, progression, certificateSettings, reminderSettings,
+                                      resetProgressSettings }) {
         const courseware = getters.courseware;
         courseware.attributes['editing-permission-level'] = permission;
         courseware.attributes['sequential-progression'] = progression;
+        courseware.attributes['certificate-settings'] = certificateSettings;
+        courseware.attributes['reminder-settings'] = reminderSettings;
+        courseware.attributes['reset-progress-settings'] = resetProgressSettings;
 
         return dispatch('courseware-instances/update', courseware, { root: true });
     },
