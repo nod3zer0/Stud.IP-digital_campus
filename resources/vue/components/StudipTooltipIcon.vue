@@ -1,5 +1,5 @@
 <template>
-    <span data-tooltip class="tooltip tooltip-icon" :class="cssClass" :title="title">
+    <span data-tooltip class="tooltip tooltip-icon" :class="cssClass" :title="title" tabindex="0">
         <span class="tooltip-content" v-if="isHtml" v-html="text"></span>
         <studip-icon shape="info-circle" role="inactive" :size="size"></studip-icon>
     </span>
