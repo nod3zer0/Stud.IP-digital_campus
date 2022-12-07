@@ -18,7 +18,7 @@ class Blubber extends \RESTAPI\RouteMap
      *
      * @get /blubber/threads/:thread_id
      * @param string $thread_id   id of the blubber thread or "global" if you want public threads (not comments). Remind the global thread is a virtual thread with a special behaviour.
-     * @return Array   the blubber as array
+     * @return array   the blubber as array
      */
     public function getThreadData($thread_id)
     {
@@ -31,7 +31,6 @@ class Blubber extends \RESTAPI\RouteMap
         $thread = \BlubberThread::upgradeThread($thread);
         if (!$thread->isReadable()) {
             $this->error(401);
-            return;
         }
 
         $json = $thread->getJSONData(50, null, \Request::get("search"));
@@ -46,7 +45,7 @@ class Blubber extends \RESTAPI\RouteMap
      * Get threads
      *
      * @get /blubber/threads
-     * @return Array   the stream as array
+     * @return array   the stream as array
      */
     public function getMyThreads()
     {
@@ -83,7 +82,7 @@ class Blubber extends \RESTAPI\RouteMap
      *
      * @post /blubber/threads/:thread_id/comments
      * @param string $thread_id   id of the blubber thread
-     * @return Array   the comment as array
+     * @return array   the comment as array
      */
     public function postComment($thread_id)
     {
@@ -93,13 +92,11 @@ class Blubber extends \RESTAPI\RouteMap
 
         if (!trim($this->data['content'])) {
             $this->error(406);
-            return false;
         }
 
         $thread = \BlubberThread::find($thread_id);
         if (!$thread->isCommentable()) {
             $this->error(401);
-            return;
         }
 
         $comment = new \BlubberComment();
@@ -109,7 +106,7 @@ class Blubber extends \RESTAPI\RouteMap
         $comment['external_contact'] = 0;
         $comment->store();
 
-        $GLOBALS['user']->cfg->store("BLUBBERTHREAD_VISITED_".$thread_id, time());
+        $thread->setLastVisit();
 
         return $comment->getJSONData();
     }
@@ -122,14 +119,13 @@ class Blubber extends \RESTAPI\RouteMap
      * @param string $thread_id   id of the blubber thread
      * @param string $comment     id of the comment
      *
-     * @return Array   the comment as array
+     * @return array   the comment as array
      */
     public function editComment($thread_id, $comment_id)
     {
         $comment = \BlubberComment::find($comment_id);
         if (!$comment->isWritable()) {
             $this->error(401);
-            return;
         }
         $old_content = $comment['content'];
         $comment['content'] = $this->data['content'];
@@ -176,7 +172,7 @@ class Blubber extends \RESTAPI\RouteMap
      *
      * @param string $thread_id   id of the blubber thread
      *
-     * @return Array   the comments as array
+     * @return array   the comments as array
      */
     public function getComments($thread_id)
     {
@@ -187,7 +183,6 @@ class Blubber extends \RESTAPI\RouteMap
         $thread = new \BlubberThread($thread_id);
         if (!$thread->isReadable()) {
             $this->error(401);
-            return;
         }
 
         $modifier = \Request::get('modifier');
@@ -228,7 +223,7 @@ class Blubber extends \RESTAPI\RouteMap
                       FROM blubber_comments
                       WHERE blubber_comments.thread_id = :thread_id
                         AND blubber_comments.mkdate >= :timestamp
-                      ORDER BY mkdate ASC
+                      ORDER BY mkdate
                       LIMIT :limit";
             $comments = \DBManager::get()->fetchAll($query, [
                 'thread_id' => $thread_id,

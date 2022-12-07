@@ -1,10 +1,16 @@
 <?php
 
+/**
+ * @property BlubberThread[] $elements
+ */
 class BlubberThreadsWidget extends SidebarWidget
 {
     protected $active_thread = null;
     protected $with_composer = false;
 
+    /**
+     * @param BlubberThread $thread
+     */
     public function addThread($thread)
     {
         $this->elements[] = $thread;
@@ -32,18 +38,18 @@ class BlubberThreadsWidget extends SidebarWidget
         foreach ($this->elements as $thread) {
             $unseen_comments = BlubberComment::countBySQL("thread_id = ? AND mkdate >= ?", [
                 $thread->getId(),
-                $thread->getLastVisit() ?: object_get_visit_threshold()
+                $thread->getLastVisit()
             ]);
 
             $json[] = [
-                'thread_id' => $thread->getId(),
-                'avatar' => $thread->getAvatar(),
-                'name' => $thread->getName(),
-                'timestamp' => (int) $thread->getLatestActivity(),
-                'mkdate' => (int) $thread->mkdate,
+                'thread_id'       => $thread->getId(),
+                'avatar'          => $thread->getAvatar(),
+                'name'            => $thread->getName(),
+                'timestamp'       => (int) $thread->getLatestActivity(),
+                'mkdate'          => (int) $thread->mkdate,
                 'unseen_comments' => $unseen_comments,
-                'notifications' => $thread->id === 'global' || ($thread->context_type === 'course' && !$GLOBALS['perm']->have_perm('admin')),
-                'followed' => $thread->isFollowedByUser(),
+                'notifications'   => $thread->id === 'global' || ($thread->context_type === 'course' && !$GLOBALS['perm']->have_perm('admin')),
+                'followed'        => $thread->isFollowedByUser(),
             ];
         }
 

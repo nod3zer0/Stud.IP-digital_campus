@@ -59,7 +59,11 @@ class Blubber extends CorePlugin implements StudipModule
             'me'         => $user_id,
         ]);
         foreach ($comments as $comment) {
-            if ($comment->thread->isVisibleInStream() && $comment->thread->isReadable() && ($comment->thread->getLatestActivity() > UserConfig::get($user_id)->getValue("BLUBBERTHREAD_VISITED_".$comment['thread_id']))) {
+            if (
+                $comment->thread->isVisibleInStream()
+                && $comment->thread->isReadable()
+                && $comment->thread->getLatestActivity() > $comment->thread->getLastVisit()
+            ) {
                 $icon->setImage(Icon::create('blubber', Icon::ROLE_NEW, ['title' => _('Es gibt neue Blubber')]));
                 $icon->setTitle(_('Es gibt neue Blubber'));
                 $icon->setBadgeNumber(count($comments));
@@ -83,7 +87,11 @@ class Blubber extends CorePlugin implements StudipModule
             'me'         => $GLOBALS['user']->id,
         ]);
         foreach ($threads as $thread) {
-            if ($thread->isVisibleInStream() && $thread->isReadable() && ($thread['mkdate'] > UserConfig::get($user_id)->getValue("BLUBBERTHREAD_VISITED_".$thread->getId()))) {
+            if (
+                $thread->isVisibleInStream()
+                && $thread->isReadable()
+                && $thread->mkdate > $thread->getLastVisit()
+            ) {
                 $icon->setImage(Icon::create('blubber', Icon::ROLE_ATTENTION, ['title' => _('Es gibt neue Blubber')]));
                 $icon->setTitle(_('Es gibt neue Blubber'));
                 break;
