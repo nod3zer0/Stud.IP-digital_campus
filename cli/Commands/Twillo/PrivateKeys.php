@@ -25,8 +25,8 @@ final class PrivateKeys extends AbstractCommand
     {
         $io = new SymfonyStyle($input, $output);
         $appId = str_replace(' ', '-', Config::get()->UNI_NAME_CLEAN);
-        $privateKey = $GLOBALS['ABSOLUTE_PATH_STUDIP'] . '/config/twillo-private.key';
-        $properties = $GLOBALS['ABSOLUTE_PATH_STUDIP'] . '/config/twillo.properties.xml';
+        $privateKey = $GLOBALS['STUDIP_BASE_PATH'] . '/config/twillo-private.key';
+        $properties = $GLOBALS['STUDIP_BASE_PATH'] . '/config/twillo.properties.xml';
 
         if (!file_exists($privateKey)) {
             $key = EduSharingHelper::generateKeyPair();
