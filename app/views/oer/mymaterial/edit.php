@@ -57,7 +57,7 @@
                     <? if ($material['front_image_content_type']) : ?>
                         <label>
                             <input type="checkbox" name="delete_front_image" value="1">
-                            <?= _('Logo löschen') ?>
+                            <?= _('Vorschaubild löschen') ?>
                         </label>
                     <? endif ?>
                 </div>
