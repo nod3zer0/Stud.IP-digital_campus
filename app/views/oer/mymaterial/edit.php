@@ -67,7 +67,7 @@
 
 
 
-            <? if (!empty($_SESSION['NEW_OER']['tmp_name'])) : ?>
+            <? if (empty($_SESSION['NEW_OER']['tmp_name'])) : ?>
                 <label class="file drag-and-drop"
                        data-filename="<?= htmlReady($material['filename']) ?>"
                        data-filesize="<?= htmlReady(!$material->isNew() ? filesize($material->getFilePath()) : "") ?>"
