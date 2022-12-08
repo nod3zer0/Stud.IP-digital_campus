@@ -193,11 +193,13 @@ div.file_select_possibilities, .folder_type_select_possibilities {
 
     /* for file/edit view only: */
 
-    input[name=content_terms_of_use_id] {
+    input[name=content_terms_of_use_id],
+    input[name=oer_upload] {
         display: none;
     }
 
-    input[name=content_terms_of_use_id]:checked + label {
+    input[name=content_terms_of_use_id]:checked + label,
+    input[name=oer_upload]:checked + label {
         background-color: @brand-color-darker;
         color: @contrast-content-white;
 
@@ -400,72 +402,81 @@ table.documents {
 
 }
 
-form.default fieldset.select_terms_of_use {
-    > legend {
-        margin: 0px;
-        width: 100%;
+form.default {
+    #select_oer_upload_info {
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
-    border: none;
-    padding: 0px;
-    margin-left: 0px;
-    margin-right: 0px;
 
-    > input[type=radio] {
-        opacity: 0;
-        position: absolute;
-        &:focus + label {
-            outline: auto;
-        }
-    }
-    > label {
-        cursor: pointer;
-        border: 1px solid @content-color-40;
-        transition: background-color 200ms;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 6px;
-        padding-bottom: 2px;
-        margin-bottom: 0;
-        border-top: none;
-        > .text {
+    fieldset.select_terms_of_use,
+    fieldset.select_oer_upload {
+        > legend {
+            margin: 0px;
             width: 100%;
-            margin-left: 10px;
         }
-        > .arrow {
-            margin-right: 5px;
-        }
-        > .check {
-            display: none;
-        }
-    }
-    > label:first-of-type {
-        border-top: 1px solid @content-color-40;
-    }
-    > div {
-        border: 1px solid @content-color-40;
-        border-top: none;
-        display: none;
-        padding: 10px;
+        border: none;
+        padding: 0px;
+        margin-left: 0px;
+        margin-right: 0px;
 
-    }
-    > input[type=radio]:checked + label {
-        background-color: @content-color-20;
-        transition: background-color 200ms;
-        > .arrow {
+        > input[type=radio] {
+            opacity: 0;
+            position: absolute;
+            &:focus + label {
+                outline: auto;
+            }
+        }
+        > label {
+            cursor: pointer;
+            border: 1px solid @content-color-40;
+            transition: background-color 200ms;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px;
+            padding-bottom: 2px;
+            margin-bottom: 0;
+            border-top: none;
+            > .text {
+                width: 100%;
+                margin-left: 10px;
+            }
+            > .arrow {
+                margin-right: 5px;
+            }
+            > .check {
+                display: none;
+            }
+        }
+        > label:first-of-type {
+            border-top: 1px solid @content-color-40;
+        }
+        > div {
+            border: 1px solid @content-color-40;
+            border-top: none;
             display: none;
+            padding: 10px;
+
         }
-        > .check {
-            display: inline-block;
+        > input[type=radio]:checked + label {
+            background-color: @content-color-20;
+            transition: background-color 200ms;
+            > .arrow {
+                display: none;
+            }
+            > .check {
+                display: inline-block;
+            }
+        }
+        > input[type=radio]:checked + label + div {
+            display: block;
+            .description {
+                animation-duration: 400ms;
+                animation-name: terms_of_use_fadein;
+            }
         }
     }
-    > input[type=radio]:checked + label + div {
-        display: block;
-        .description {
-            animation-duration: 400ms;
-            animation-name: terms_of_use_fadein;
-        }
-    }
+
 }
 
 @keyframes terms_of_use_fadein {

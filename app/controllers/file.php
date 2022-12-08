@@ -461,11 +461,43 @@ class FileController extends AuthenticatedController
         $this->content_terms_of_use = $this->file->getTermsOfUse();
     }
 
+    public function oer_post_upload_action($file_ref_id)
+    {
+        $this->file_ref_id = $file_ref_id;
+        PageLayout::setTitle(_('Datei für OER-Campus bereitstellen'));
+
+        $this->semester_ende = date('d.m.Y',  Semester::findCurrent()->ende);
+
+        if (Request::isPost()) {
+            CSRFProtection::verifyUnsafeRequest();
+            $oer_share = Request::int('oer_upload');
+            $redirect = Request::get('redirect_to_files');
+
+            if ($oer_share === 1) {
+                // share now
+                return $this->share_oer_action($this->file_ref_id, $redirect);
+            } else if ($oer_share === 2) {
+                // save and send a reminder to share later
+                $oer_post_upload = new OERPostUpload();
+                $oer_post_upload->file_ref_id = $this->file_ref_id;
+                $oer_post_upload->user_id = $GLOBALS['user']->id;
+                $oer_post_upload->reminder_date = Semester::findCurrent()->ende;
+                $oer_post_upload->store();
+                $this->response->add_header('X-Dialog-Close', '1');
+                $this->render_nothing();
+                PageLayout::postSuccess(_('Erinnerung wurde gespeichert.'));
+            } else {
+                $this->response->add_header('X-Dialog-Close', '1');
+            }
+        }
+    }
+
     /**
      * The action for sharing a file on the oer campus
      */
-    public function share_oer_action($file_ref_id)
+    public function share_oer_action($file_ref_id, $redirect = null)
     {
+        $this->redirect = $redirect;
         $this->file_ref = FileRef::find($file_ref_id);
         $this->file = $this->file_ref->getFileType();
 
@@ -486,9 +518,19 @@ class FileController extends AuthenticatedController
             'image_tmp_name' => null
         ];
 
-        $this->redirect("oer/mymaterial/edit");
+        // only if you were in Dateibereich
+        if ($this->redirect === 'redirect_to_files') {
+            $_SESSION['NEW_OER']['redirect_url'] = 'files';
+            $_SESSION['NEW_OER']['dir'] = $this->folder->getId();
+            $_SESSION['NEW_OER']['cid'] = $this->folder->range_id;
+        }
+
+        $this->redirect('oer/mymaterial/edit');
     }
 
+    /**
+     * The action for suggesting a file for the oer campus to the file owner
+     */
     public function suggest_oer_action($file_ref_id)
     {
         $this->file_ref_id = $file_ref_id;
@@ -1608,6 +1650,20 @@ class FileController extends AuthenticatedController
                         if ($url) {
                             $redirect = $url;
                             break;
+                        }
+                    }
+
+                    if (count($file_ref_ids) === 1) {
+                        if (Config::get()->OERCAMPUS_ENABLED
+                            && Config::get()->OER_ENABLE_POST_UPLOAD
+                            && $GLOBALS['perm']->have_perm('tutor')
+                        ) {
+                            if ($file_ref['content_terms_of_use_id'] === 'SELFMADE_NONPUB'
+                                || $file_ref['content_terms_of_use_id'] === 'FREE_LICENSE'
+                            ) {
+                                $this->redirect('file/oer_post_upload/' . $file_ref['id']);
+                                return;
+                            }
                         }
                     }
 
