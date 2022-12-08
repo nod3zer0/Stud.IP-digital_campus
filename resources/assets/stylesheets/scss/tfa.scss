@@ -1,11 +1,18 @@
 .tfa-app-code {
     code.qr {
-        display: none;
-    }
-    .qrcode img {
+        display: block;
         margin: auto;
-        width: 40%;
         max-width: 50vw;
+        width: 40%;
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        &:not(.has-qr-code) {
+            display: none;
+        }
     }
 }
 

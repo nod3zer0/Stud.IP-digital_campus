@@ -8,3 +8,19 @@ $(document).on('click', 'a[data-qr-code]', function (event) {
 
     event.preventDefault();
 });
+
+STUDIP.ready(event => {
+    $('code.qr', event.target).each(function () {
+        const text = $(this).text().trim();
+        if ($(this).hasClass('hide-text')) {
+            $(this).text('');
+        }
+
+        $(this).qrcode({
+            text: text,
+            width: 1280,
+            height: 1280,
+            correctLevel: 3
+        }).addClass('has-qr-code');
+    });
+});

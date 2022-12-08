@@ -17,7 +17,7 @@
                 . 'anschliessend ein gültiges Token ein.') ?>
         </p>
         <div class="tfa-app-code">
-            <code class="qr"><?= $secret->getProvisioningUri() ?></code>
+            <code class="qr hide-text"><?= $secret->getProvisioningUri() ?></code>
         </div>
     <? elseif ($secret->type === 'app' && $secret->confirmed): ?>
         <p>
