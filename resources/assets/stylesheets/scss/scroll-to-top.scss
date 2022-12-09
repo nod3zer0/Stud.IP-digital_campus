@@ -3,8 +3,8 @@ $scroll-to-top-width: 45px;
 $scroll-to-top-margin: 35px;
 
 body #scroll-to-top {
-    width: $scroll-to-top-height;
-    height: $scroll-to-top-width;
+    width: $scroll-to-top-width;
+    height: $scroll-to-top-height;
     margin-right: $scroll-to-top-margin;
     margin-bottom: $scroll-to-top-margin;
     padding: 10px;
@@ -23,6 +23,6 @@ body #scroll-to-top {
         border-radius: .12rem;
     }
     &.hide {
-        bottom: calc( 0px - #{$scroll-to-top-height - $scroll-to-top-margin});
+        bottom: calc( 0px - #{$scroll-to-top-height + $scroll-to-top-margin});
     }
 }
