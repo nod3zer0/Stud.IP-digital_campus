@@ -65,7 +65,7 @@
         [
             'editable'           => true,
             'selectable'         => isset($fullcalendar_studip_urls['add']),
-            'studip_urls'        => $fullcalendar_studip_urls,
+            'studip_urls'        => $fullcalendar_studip_urls ?? [],
             'minTime'            => ($min_time),
             'maxTime'            => ($max_time),
             'allDaySlot'         => false,
@@ -93,7 +93,7 @@
                         'semester_id'          => $semester->id,
                         'semester_timerange'   => Request::get("semester_timerange", 'vorles'),
                         'display_requests'     => 0,
-                        'display_all_requests' => $display_all_requests ? 1 : 0
+                        'display_all_requests' => !empty($display_all_requests) ? 1 : 0
                     ]
                 ]
             ],
