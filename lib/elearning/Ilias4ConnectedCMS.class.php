@@ -41,7 +41,8 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
     }
 
     /**
-     * Helper function to fetch childs including objects in folders
+     * Helper function to fetch children including objects in folders
+     * The typo in the function name, 'childs', is intentional to reflect the name of the ILIAS-SOAP call.
      *
      * @access public
      * @param string $parent_id

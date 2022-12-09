@@ -687,7 +687,8 @@ class ConnectedIlias
     }
 
     /**
-     * Helper function to fetch childs including objects in folders
+     * Helper function to fetch children including objects in folders
+     * The typo in the function name, 'childs', is intentional to reflect the name of the ILIAS-SOAP call.
      *
      * @access public
      * @param string $parent_id
@@ -695,28 +696,31 @@ class ConnectedIlias
      */
     public function getChilds($parent_id) {
         $types[] = 'fold';
-        foreach ($this->ilias_config['modules'] as $type => $name) {
-            $types[] = $type;
-        }
-        $result = $this->soap_client->getTreeChilds($parent_id, $types);
-        $user_result = $this->soap_client->getTreeChilds($parent_id, $types, $this->user->getId());
+        if (isset($this->ilias_config['modules']) && $this->ilias_config['modules']) {
+            foreach ($this->ilias_config['modules'] as $type => $name) {
+                $types[] = $type;
+            }
+            $result = $this->soap_client->getTreeChilds($parent_id, $types);
+            $user_result = $this->soap_client->getTreeChilds($parent_id, $types, $this->user->getId());
 
-        if ($result) {
-            foreach($result as $ref_id => $data) {
-                if ($data['type'] == 'fold') {
-                    unset($result[$ref_id]);
-                    $result = $result + $this->getChilds($ref_id);
-                } else {
-                    $result[$ref_id]['accessInfo'] = $user_result[$ref_id]['accessInfo'];
-                    $result[$ref_id]['references'][$ref_id] = $user_result[$ref_id]['references'][$ref_id];
+            if ($result) {
+                foreach($result as $ref_id => $data) {
+                    if ($data['type'] == 'fold') {
+                        unset($result[$ref_id]);
+                        $result = $result + $this->getChilds($ref_id);
+                    } else {
+                        $result[$ref_id]['accessInfo'] = $user_result[$ref_id]['accessInfo'];
+                        $result[$ref_id]['references'][$ref_id] = $user_result[$ref_id]['references'][$ref_id];
+                    }
                 }
             }
         }
 
-        if (is_array($result))
+        if (isset($result) && is_array($result)) {
             return $result;
-            else
-                return [];
+        } else {
+            return [];
+        }
     }
 
     /**
