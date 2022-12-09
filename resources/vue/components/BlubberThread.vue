@@ -83,12 +83,22 @@
                 <studip-icon shape="upload" size="30"></studip-icon>
             </label>
         </div>
+
+        <MountingPortal v-if="hasThreadsWidget" mountTo="#blubber-threads-widget" name="blubber-threads-widget">
+            <blubber-thread-widget
+                :threads="$root.threads"
+                :active_thread="$root.active_thread"
+                :more_down="$root.threads_more_down"></blubber-thread-widget>
+        </MountingPortal>
     </div>
 </template>
 
 <script>
+    import BlubberThreadWidget from "./BlubberThreadWidget.vue";
+
     export default {
         name: 'blubber-thread',
+        components: { BlubberThreadWidget },
         data: function () {
             return {
                 already_loading_up: 0,
@@ -474,6 +484,9 @@
             });
         },
         computed: {
+            hasThreadsWidget() {
+                return document.getElementById("blubber-threads-widget");
+            },
             sortedComments () {
                 return [...this.threadData.comments].sort((a, b) => a.mkdate - b.mkdate);
             },
