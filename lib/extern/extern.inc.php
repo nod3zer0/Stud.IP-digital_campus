@@ -75,7 +75,7 @@ if ($range_id && $module) {
         exit;
     }
 
-    if ($config_name) {
+    if (!empty($config_name)) {
         // check for valid configuration name and convert it into a config_id
         if (!$config_id = ExternConfig::GetConfigurationByName($range_id, $type, $config_name)) {
             echo $GLOBALS['EXTERN_ERROR_MESSAGE'];
@@ -117,7 +117,7 @@ foreach ($GLOBALS['EXTERN_MODULE_TYPES'] as $type) {
 }
 
 // Workaround to include data in scripts
-if ($incdata) {
+if (!empty($incdata)) {
     $module_obj->config->config["Main"]["incdata"] = 1;
 }
 
