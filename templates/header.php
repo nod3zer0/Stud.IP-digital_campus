@@ -276,6 +276,7 @@ if ($navigation) {
         <? endif; ?>
 
         <?
+        $public_hint = '';
         if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') {
             // only mark course if user is logged in and free access enabled
             $is_public_course = Context::isCourse() && Config::get()->ENABLE_FREE_ACCESS;
@@ -289,9 +290,9 @@ if ($navigation) {
                 // indicate to the template that this course is publicly visible
                 // need to handle institutes separately (always visible)
                 if (isset($GLOBALS['SessSemName']['class']) && $GLOBALS['SessSemName']['class'] === 'inst') {
-                    $header_template->public_hint = _('öffentliche Einrichtung');
+                    $public_hint = _('öffentliche Einrichtung');
                 } else if (Course::findCurrent()->lesezugriff == 0) {
-                    $header_template->public_hint = _('öffentliche Veranstaltung');
+                    $public_hint = _('öffentliche Veranstaltung');
                 }
             }
         }
