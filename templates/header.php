@@ -77,7 +77,7 @@ if ($navigation) {
                 $me = ['username' => 'nobody'];
                 $hasSidebar = false;
             } ?>
-            <responsive-navigation :me='<?= json_encode($me) ?>' context="<?= htmlReady(Context::get() ?
+            <responsive-navigation :me="<?= htmlReady(json_encode($me)) ?>" context="<?= htmlReady(Context::get() ?
                 Context::get()->getFullname() : '') ?>" :has-sidebar="<?= $hasSidebar ? 'true' : 'false' ?>">
             </responsive-navigation>
         </div>
