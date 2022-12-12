@@ -1,36 +1,66 @@
-.media-breakpoint-large-down(@rules) {
+.media-breakpoint-xxlarge-down(@rules) {
     @rules();
 }
 
+.media-breakpoint-xlarge-down(@rules) {
+    @media (max-width: (@major-breakpoint-xxlarge - 1px)) { @rules(); }
+}
+
+.media-breakpoint-large-down(@rules) {
+    @media (max-width: (@major-breakpoint-xlarge - 1px)) { @rules(); }
+}
+
 .media-breakpoint-medium-down(@rules) {
-  @media (max-width: (@major-breakpoint-large - 1px)) { @rules(); }
+    @media (max-width: (@major-breakpoint-large - 1px)) { @rules(); }
 }
 
 .media-breakpoint-small-down(@rules) {
-  @media (max-width: (@major-breakpoint-medium - 1px)) { @rules(); }
+    @media (max-width: (@major-breakpoint-medium - 1px)) { @rules(); }
 }
 
 .media-breakpoint-tiny-down(@rules) {
-  @media (max-width: (@major-breakpoint-small - 1px)) { @rules(); }
+    @media (max-width: (@major-breakpoint-small - 1px)) { @rules(); }
 }
 
 
+.media-breakpoint-xxlarge-up(@rules) {
+    @media (min-width: (@major-breakpoint-xxlarge)) { @rules(); }
+}
+
+.media-breakpoint-xlarge-up(@rules) {
+    @media (min-width: (@major-breakpoint-xlarge)) { @rules(); }
+}
+
 .media-breakpoint-large-up(@rules) {
-  @media (min-width: (@major-breakpoint-large)) { @rules(); }
+    @media (min-width: (@major-breakpoint-large)) { @rules(); }
 }
 
 .media-breakpoint-medium-up(@rules) {
-  @media (min-width: (@major-breakpoint-medium)) { @rules(); }
+    @media (min-width: (@major-breakpoint-medium)) { @rules(); }
 }
 
 .media-breakpoint-small-up(@rules) {
-  @media (min-width: (@major-breakpoint-small)) { @rules(); }
+    @media (min-width: (@major-breakpoint-small)) { @rules(); }
 }
 
 .media-breakpoint-tiny-up(@rules) {
     @rules();
 }
 
+
+.hidden-xxlarge-down {
+    .media-breakpoint-xxlarge-down({ display: none !important; })
+}
+.hidden-xxlarge-up {
+    .media-breakpoint-xxlarge-up({ display: none !important; });
+}
+
+.hidden-xlarge-down {
+    .media-breakpoint-xlarge-down({ display: none !important; })
+}
+.hidden-xxlarge-up {
+    .media-breakpoint-large-up({ display: none !important; });
+}
 
 .hidden-large-down {
     .media-breakpoint-large-down({ display: none !important; })

@@ -32,12 +32,6 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
         String.locale = "<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>";
 
         document.querySelector('html').className = 'js';
-        setTimeout(() => {
-            // This needs to be put in a timeout since otherwise it will not match
-            if (window.matchMedia('(max-width: 767px)').matches) {
-                document.querySelector('html').classList.add('responsive-display');
-            }
-        }, 0);
 
         window.STUDIP = {
             ABSOLUTE_URI_STUDIP: "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>",

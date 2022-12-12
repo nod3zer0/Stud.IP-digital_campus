@@ -1,5 +1,7 @@
+@import "./layouts.scss";
+
 /* --- header.css ----------------------------------------------------------- */
-body > header {
+#main-header {
     box-sizing: border-box;
     padding-top: $bar-bottom-container-height;
 }
@@ -23,11 +25,15 @@ body > header {
     z-index: 10000;
 
 }
+
 #responsive-menu,
 #site-title {
     flex: 0 0 auto;
-    padding: 0 15px;
     z-index: 2;
+}
+
+#site-title {
+    padding: 0 $page-margin;
 }
 
 // Fix header covering relevant other areas
@@ -187,23 +193,4 @@ html {
     background-color: $dark-gray-color-5;
     height: $header-height;
     z-index: 3;
-}
-
-// Slide menu in header navigation
-#responsive-menu {
-    box-sizing: border-box;
-    overflow-x: hidden;
-    padding: 0;
-    text-indent: -150px;
-
-    @media not prefers-reduced-motion {
-        transition: all 500ms;
-    }
-}
-body.fixed {
-    #responsive-menu {
-        overflow-x: visible;
-        padding: 0 15px;
-        text-indent: 0;
-    }
 }

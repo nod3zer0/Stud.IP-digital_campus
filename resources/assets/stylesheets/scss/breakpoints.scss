@@ -2,4 +2,9 @@
 $major-breakpoint-tiny: 0;
 $major-breakpoint-small: 576px;
 $major-breakpoint-medium: 768px;
-$major-breakpoint-large: 1200px;
+$major-breakpoint-large: 1024px;
+$major-breakpoint-xlarge: 1280px;
+$major-breakpoint-xxlarge: 1600px;
+
+//** Breakpoint for sidebar display
+$minor-breakpoint-sidebar-fullscreen: 450px;

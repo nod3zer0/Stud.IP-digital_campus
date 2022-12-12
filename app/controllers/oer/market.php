@@ -271,11 +271,10 @@ class Oer_MarketController extends StudipController
             }
         }
 
-        $this->contentbar = new ContentBar(
-            new TOCItem($this->material['name']),
-            $infotext,
-            Icon::create('oer-campus')
-        );
+        $this->contentbar = ContentBar::get()
+            ->setTOC(new TOCItem($this->material['name']))
+            ->setInfo($infotext)
+            ->setIcon(Icon::create('oer-campus'));
     }
 
     public function embed_action($material_id)

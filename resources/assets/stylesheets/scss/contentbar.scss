@@ -1,109 +1,151 @@
 .contentbar {
     background-color: $dark-gray-color-5;
-    border: 1px solid $dark-gray-color-30;
-    gap: 10px;
-    margin-bottom: 15px;
-    min-height: 58px;
-    padding: 0px 9px 0px 9px;
+    border: solid thin $dark-gray-color-30;
     display: flex;
+    flex-wrap: wrap;
+    height: auto;
     justify-content: space-between;
-    flex-wrap: nowrap;
+    margin-bottom: 15px;
+    min-height: 30px;
+    padding: 1em;
 
-    .contentbar_title {
-        align-items: center;
+    .contentbar-wrapper-left {
         display: flex;
-        font-size: 1.3em;
-        max-width: 60%;
-        padding-left: 0.5em;
+        flex: auto;
+        /* Taken from courseware.scss line 323 */
+        max-width: calc(100% - 106px);
 
-        ul.breadcrumb {
-            list-style: none;
-            padding-left: 10px;
-            width: 100%;
-            display: inline-block;
+        .contentbar-nav {
+            display: flex;
+        }
 
-            div {
-                float: left;
-                max-width: 100%;
+        .contentbar-breadcrumb {
+            display: flex;
+            font-size: 1.25em;
+            line-height: 1.5em;
+            margin-right: 1em;
+            min-width: 0;
+
+            .contentbar-icon {
+                flex: 0;
+                height: 24px;
+                margin-top: 2px;
+                width: 24px;
             }
 
-            li {
-                display: inline;
-            }
+            ul {
+                display: flex;
+                list-style: none;
+                margin-left: 15px;
+                padding-left: 0;
 
-            li+li:before {
-                padding: 5px;
-                color: $black;
-                content: "/";
-            }
+                li+li:before {
+                    padding: 0 0.25em;
+                    content: '/';
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
 
+                .contentbar-breadcrumb-item {
+                    display: inline;
+                    flex-shrink: 100000;
+                    min-width: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+
+                    a {
+                        color: $base-color;
+                        text-decoration: none;
+                        &:hover {
+                            color: $active-color;
+                        }
+                    }
+
+                    &.contentbar-breadcrumb-item-current {
+                        flex-shrink: 1;
+                    }
+                }
+            }
         }
     }
 
-    .textblock {
-        display: inline-block;
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-
-    .contentbar_info {
-        align-items: center;
-        text-align: right;
+    .contentbar-wrapper-right {
         display: flex;
-        flex-wrap: nowrap;
-        gap: 5px;
-        margin: 5px;
+        justify-content: flex-end;
+        position: relative;
 
-        .contentbar-icons {
-            display: flex;
+        .contentbar-button-wrapper {
+            height: 24px;
+            margin: 0 7px;
 
-            label {
-                margin-left: 0.5em;
-                margin-right: 0.5em;
+            @-moz-document url-prefix() {
+                &.contentbar-action-menu-wrapper {
+                    margin-top: 2px;
+                }
             }
 
-            .consuming_mode_trigger {
-                margin-left: 0.5em;
-                margin-right: 0.5em;
-                margin-top: -1px;
+            .contentbar-button, .cw-ribbon-button {
+                background-color: transparent;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 24px;
+                border: none;
+                cursor: pointer;
+                display: inline-block;
+                height: 24px;
+                width: 24px;
 
-                @media (max-width: 767px) {
-                    display: none !important;
+                &.contentbar-button-menu,
+                &.cw-ribbon-button-menu {
+                    @include background-icon(table-of-contents, clickable, 24);
+                }
+
+                &.contentbar-button-zoom::before {
+                    left: -5px;
+                    position: relative;
+                    top: -2px;
                 }
 
                 @-moz-document url-prefix() {
-                    margin-top: -4px;
+                    &.contentbar-button-zoom::before {
+                        top: -3px;
+                    }
                 }
+
             }
 
-            .consuming_mode_trigger:not(body.consuming_mode .consuming_mode_trigger) {
-                display: inline-block;
-                width: 24px;
-                height: 24px;
-                @include icon(before, fullscreen-on, clickable, 24px, 0px);
-            }
-
-            nav {
-                margin-left: 2px;
-                margin-top: 2px;
-            }
         }
+    }
+
+}
+
+body:not(.consuming_mode) {
+    .consuming_mode_trigger {
+        @include icon(before, fullscreen-on, clickable, 24px, 0);
+        margin-top: -2px;
+        margin-left: 0
     }
 }
 
 body.consuming_mode {
-    #main-header, #main-footer {
-        display: none;
+    #barBottomContainer,
+    #flex-header,
+    .secondary-navigation,
+    #barTopStudip,
+    #page_title_container {
+        max-height: 0px;
+        opacity: 0;
+        overflow: hidden;
     }
 
-    #sidebar {
+    #layout_wrapper {
+        padding-top: 0px;
+    }
+
+    #layout-sidebar {
         margin-left: -280px;
         opacity: 0;
-    }
-
-    #content {
-        grid-column: 1/3;
-        grid-row: 1/3;
     }
 
     .contentbar {
@@ -114,6 +156,8 @@ body.consuming_mode {
     }
 
     .consuming_mode_trigger {
-        @include icon(before, fullscreen-off, clickable, 25px, 5px);
+        @include icon(before, focusmode-off, clickable, 24px, 0);
+        margin-top: -2px;
+        margin-left: 0
     }
 }

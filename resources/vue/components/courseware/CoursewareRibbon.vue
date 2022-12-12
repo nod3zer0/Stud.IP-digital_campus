@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'cw-ribbon-wrapper-consume': consumeMode }">
+    <div :class="{ 'cw-ribbon-wrapper-consume': consumeMode }" :id="isContentBar ? 'contentbar' : null" >
         <div v-if="stickyRibbon" class="cw-ribbon-sticky-top"></div>
         <header class="cw-ribbon" :class="{ 'cw-ribbon-sticky': stickyRibbon, 'cw-ribbon-consume': consumeMode }">
             <div class="cw-ribbon-wrapper-left">
@@ -67,6 +67,10 @@ export default {
             type: Boolean
         },
         buttonsClass: String,
+        isContentBar: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {
@@ -101,6 +105,7 @@ export default {
     },
     methods: {
         toggleConsumeMode() {
+            STUDIP.Vue.emit('toggle-focus-mode', !this.consumeMode);
             if (!this.consumeMode) {
                 this.$store.dispatch('coursewareConsumeMode', true);
                 this.$store.dispatch('coursewareSelectedToolbarItem', 'contents');
@@ -125,6 +130,9 @@ export default {
     },
     mounted() {
         window.addEventListener('scroll', this.handleScroll);
+        if (this.isContentBar) {
+            STUDIP.Vue.emit('courseware-contentbar-mounted', this);
+        }
     },
     watch: {
         toolsActive(newState, oldState) {

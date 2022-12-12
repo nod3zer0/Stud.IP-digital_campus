@@ -224,7 +224,8 @@ class Sidebar extends WidgetContainer
             SkipLinks::addIndex(
                 _('Dritte Navigationsebene'),
                 $widget->getId(),
-                20
+                20,
+                false
             );
 
             $navigation_widget_added = true;
@@ -237,7 +238,8 @@ class Sidebar extends WidgetContainer
             SkipLinks::addIndex(
                 _('Aktionen'),
                 $widget->getId(),
-                21
+                21,
+                false
             );
 
             $actions_widget_added = true;

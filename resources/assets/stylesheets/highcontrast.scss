@@ -305,8 +305,8 @@ button.button[disabled]:hover {
 }
 
 /* Black borders */
-.sidebar .sidebar-widget,
-.sidebar .sidebar-widget-placeholder,
+.sidebar-widget,
+.sidebar-widget-placeholder,
 section.contentbox,
 article.studip,
 form.default,
@@ -1421,12 +1421,12 @@ button.skiplink {
 // Benachrichtigungen: Schwarzer Text auf weißem Hintergrund, beim Hovern invertieren.
 
 #notification-container a.enable-desktop-notifications,
-#notification_container a.mark-all-as-read {
+#notification-container a.mark-all-as-read {
     background-color: $white;
     color: $contrast-blue;
 }
 
-#notification_container .list .item {
+#notification-container .list .item {
     background-color: $white;
     color: $black;
 

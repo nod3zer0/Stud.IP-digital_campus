@@ -60,27 +60,29 @@ class SkipLinks
      * @param string $url the url of the links
      * @param integer $position the position of the link in the list
      */
-    public static function addLink(string $name, string $url, $position = null)
+    public static function addLink(string $name, string $url, $position = null, bool $inFullscreen = true)
     {
         $position = (!$position || $position < 1) ? count(self::$links) + 100 : (int) $position;
         self::$links[$url] = [
-            'name'     => $name,
-            'url'      => $url,
-            'position' => $position,
+            'name'       => $name,
+            'url'        => $url,
+            'position'   => $position,
+            'fullscreen' => $inFullscreen
         ];
     }
 
     /**
      * Adds a link to an anker on the same page to the list of skip links.
      *
-     * @param string  $name     the displayed name of the links
-     * @param string  $id       the id of the anker
-     * @param integer $position the position of the link in the list
+     * @param string  $name       the displayed name of the links
+     * @param string  $id         the id of the anker
+     * @param integer $position   the position of the link in the list
+     * @param bool    $inFullscreen is this link relevant in fullscreen mode?
      */
-    public static function addIndex($name, $id, $position = null)
+    public static function addIndex($name, $id, $position = null, bool $inFullscreen = true)
     {
         $url = '#' . $id;
-        self::addLink($name, $url, $position);
+        self::addLink($name, $url, $position, $inFullscreen);
     }
 
     /**
@@ -99,12 +101,14 @@ class SkipLinks
         });
 
         $navigation = new Navigation('');
+        $fullscreen = [];
         foreach (array_values(self::$links) as $index => $link) {
             $navigation->addSubNavigation(
                 "/skiplinks/link-{$index}",
                 new Navigation($link['name'], $link['url'])
             );
+            $fullscreen['/skiplinks/link-' . $index] = $link['fullscreen'];
         }
-        return $GLOBALS['template_factory']->render('skiplinks', compact('navigation'));
+        return $GLOBALS['template_factory']->render('skiplinks', compact('navigation', 'fullscreen'));
     }
 }

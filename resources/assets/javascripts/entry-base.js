@@ -87,6 +87,7 @@ import "./bootstrap/cache-admin.js"
 import "./bootstrap/oer.js"
 import "./bootstrap/courseware.js"
 import "./bootstrap/beforeunload-event-listener.js"
+import "./bootstrap/responsive-navigation.js"
 
 import "./mvv_course_wizard.js"
 import "./mvv.js"

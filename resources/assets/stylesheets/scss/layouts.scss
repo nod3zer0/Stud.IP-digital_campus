@@ -1,5 +1,7 @@
 // TODO: SCSSify
 
+@import "./variables.scss";
+
 $page-margin: 15px;
 
 $content-width: 400px;
@@ -253,7 +255,7 @@ body {
 
         flex-grow: 1;
 
-        min-width: $page-width;
+        min-width: $site-width;
 
         .tabs_wrapper {
             display: flex;

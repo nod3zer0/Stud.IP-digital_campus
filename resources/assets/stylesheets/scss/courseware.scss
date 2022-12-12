@@ -404,7 +404,7 @@ $consum_ribbon_width: calc(100% - 58px);
         }
 
         &.cw-ribbon-button-zoom-out {
-            @include background-icon(fullscreen-off, clickable, 24);
+            @include background-icon(focusmode-off, clickable, 24);
         }
 
         &.cw-ribbon-button-prev {

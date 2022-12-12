@@ -160,6 +160,24 @@ abstract class WidgetContainer
     }
 
     /**
+     * Returns the number of widgets in this container. Optionally constrained
+     * to widgets of a specific class.
+     *
+     * @param string|null $widget_class
+     * @return int
+     */
+    public function countWidgets(string $widget_class = null): int
+    {
+        $widgets = $this->widgets;
+        if ($widget_class !== null) {
+            $widgets = array_filter($widgets, function (Widget $widget) use ($widget_class) {
+                return is_a($widget, $widget_class);
+            });
+        }
+        return count($widgets);
+    }
+
+    /**
      * Returns whether this container has any widget.
      *
      * @return bool True if the container has at least one widget, false
@@ -167,7 +185,7 @@ abstract class WidgetContainer
      */
     public function hasWidgets()
     {
-        return count($this->widgets) > 0;
+        return $this->countWidgets() > 0;
     }
 
     /**

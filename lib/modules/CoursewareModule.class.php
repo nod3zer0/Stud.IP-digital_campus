@@ -39,6 +39,7 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule,
             _('Courseware'),
             URLHelper::getURL('dispatch.php/course/courseware/?cid='.$courseId)
         );
+        $navigation->setImage(Icon::create('courseware', Icon::ROLE_INFO_ALT));
         $navigation->addSubNavigation(
             'content',
             new Navigation(_('Inhalt'), 'dispatch.php/course/courseware/?cid='.$courseId)

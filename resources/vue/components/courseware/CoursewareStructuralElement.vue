@@ -7,7 +7,7 @@
                 v-if="validContext"
             >
                 <div class="cw-structural-element-content" v-if="structuralElement">
-                    <courseware-ribbon :canEdit="canEdit && canAddElements">
+                    <courseware-ribbon :canEdit="canEdit && canAddElements" :isContentBar="true">
                         <template #buttons>
                             <router-link v-if="prevElement" :to="'/structural_element/' + prevElement.id">
                                 <div class="cw-ribbon-button cw-ribbon-button-prev" :title="textRibbon.perv" />

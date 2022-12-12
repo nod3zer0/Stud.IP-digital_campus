@@ -1,4 +1,4 @@
-<div class="responsive-visible">
+<div class="hidden-medium-up">
     <?= Avatar::getAvatar($current_user->user_id)->getImageTag(Avatar::NORMAL) ?>
 </div>
 <section class="contentbox">

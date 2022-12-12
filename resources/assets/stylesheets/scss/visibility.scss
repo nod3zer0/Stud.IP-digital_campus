@@ -1,5 +1,15 @@
-@mixin media-breakpoint-large-down() {
+@mixin media-breakpoint-xxlarge-down() {
     @content;
+}
+@mixin media-breakpoint-xlarge-down() {
+  @media (max-width: ($major-breakpoint-xxlarge - 1px)) {
+      @content;
+  }
+}
+@mixin media-breakpoint-large-down() {
+  @media (max-width: ($major-breakpoint-xlarge - 1px)) {
+      @content;
+  }
 }
 @mixin media-breakpoint-medium-down() {
   @media (max-width: ($major-breakpoint-large - 1px)) {
@@ -17,6 +27,16 @@
   }
 }
 
+@mixin media-breakpoint-xxlarge-up() {
+  @media (min-width: ($major-breakpoint-xxlarge)) {
+      @content;
+  }
+}
+@mixin media-breakpoint-xlarge-up() {
+  @media (min-width: ($major-breakpoint-xlarge)) {
+      @content;
+  }
+}
 @mixin media-breakpoint-large-up() {
   @media (min-width: ($major-breakpoint-large)) {
       @content;
@@ -36,6 +56,33 @@
     @content;
 }
 
+@mixin sidebar-breakpoint-down() {
+    @media (max-width: ($minor-breakpoint-sidebar-fullscreen)) {
+        @content;
+    }
+}
+
+@mixin hidden-xxlarge-down {
+    @include media-breakpoint-xxlarge-down() {
+        display: none !important;
+    }
+}
+@mixin hidden-xxlarge-up {
+    @include media-breakpoint-xxlarge-up() {
+        display: none !important;
+    }
+}
+
+@mixin hidden-xlarge-down {
+    @include media-breakpoint-xlarge-down() {
+        display: none !important;
+    }
+}
+@mixin hidden-xlarge-up {
+    @include media-breakpoint-xlarge-up() {
+        display: none !important;
+    }
+}
 
 @mixin hidden-large-down {
     @include media-breakpoint-large-down() {

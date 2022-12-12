@@ -1,36 +1,37 @@
-<div class="contentbar">
-    <div class="contentbar_title">
-        <? if (!$toc->isActive()) : ?>
-        <a href="<?= $toc->getUrl() ?>" title="<?= htmlReady($toc->getTitle()) ?>">
-        <? endif ?>
-            <?= $icon->asImg(24, ['class' => 'text-bottom']) ?>
-        <? if (!$toc->isActive()) : ?>
-            </a>
-        <? endif ?>
-        <ul class="breadcrumb"><?= $breadcrumbs->render() ?></ul>
-    </div>
-
-    <div class="contentbar_info">
-        <div class="textblock"><?= $info ?></div>
-
-        <div class="contentbar-icons">
+<header>
+    <header class="contentbar">
+        <nav class="contentbar-nav"></nav>
+        <div class="contentbar-wrapper-left">
+            <nav class="contentbar-breadcrumb">
+                <? if (!$toc->isActive()) : ?>
+                <a href="<?= $toc->getUrl() ?>" title="<?= htmlReady($toc->getTitle()) ?>" class="contentbar-icon">
+                    <? endif ?>
+                    <?= $icon->asImg(24, ['class' => 'text-bottom']) ?>
+                    <? if (!$toc->isActive()) : ?>
+                </a>
+            <? endif ?>
+                <?= $breadcrumbs->render() ?>
+            </nav>
+        </div>
+        <div class="contentbar-wrapper-right">
             <? if ($toc->hasChildren()) : ?>
-                <input type="checkbox" id="cb-toc">
-                <label for="cb-toc" class="check-box enter-accessible" title="<?= _('Inhaltsverzeichnis') ?>" tabindex="0">
-                    <?= Icon::create('table-of-contents')->asImg(24) ?>
-                </label>
-                <?= $ttpl->render() ?>
+                <div class="contentbar-button-wrapper contentbar-toc-wrapper">
+                    <input type="checkbox" id="cb-toc">
+                    <label for="cb-toc" class="contentbar-button contentbar-button-menu check-box enter-accessible" title="<?= _('Inhaltsverzeichnis') ?>" tabindex="0">
+                    </label>
+                    <?= $ttpl->render() ?>
+                </div>
             <? endif ?>
 
-            <a class="consuming_mode_trigger"
-               href="#"
-               title="<?= _("Konsummodus ein-/ausschalten") ?>">
-            </a>
+            <div class="contentbar-button-wrapper contentbar-consuming-mode-wrapper">
+                <button class="contentbar-button contentbar-button-zoom consuming_mode_trigger"></button>
+            </div>
 
             <? if ($actionMenu) : ?>
-                <?= $actionMenu->render() ?>
+                <div class="contentbar-button-wrapper contentbar-action-menu-wrapper">
+                    <?= $actionMenu->render() ?>
+                </div>
             <? endif ?>
         </div>
-    </div>
-
+    </header>
 </div>

@@ -1,4 +1,4 @@
-<div class="responsive-visible">
+<div class="hidden-medium-up">
     <img src="<?= htmlReady($user['avatar_url'] ?: Avatar::getNobody()->getURL(Avatar::NORMAL)) ?>">
 </div>
 

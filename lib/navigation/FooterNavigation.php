@@ -27,6 +27,9 @@ class FooterNavigation extends Navigation
     {
         parent::initSubNavigation();
 
+        // imprint
+        $this->addSubNavigation('siteinfo', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show?cancel_login=1'));
+
         // sitemap
         if (is_object($GLOBALS['user']) && $GLOBALS['user']->id !== 'nobody') {
             $this->addSubNavigation('sitemap', new Navigation(_('Sitemap'), 'dispatch.php/sitemap/'));
@@ -34,9 +37,6 @@ class FooterNavigation extends Navigation
 
         //studip
         $this->addSubNavigation('studip', new Navigation(_('Stud.IP'), 'http://www.studip.de/'));
-
-        // imprint
-        $this->addSubNavigation('siteinfo', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show?cancel_login=1'));
 
         // Datenschutzerklärung
 

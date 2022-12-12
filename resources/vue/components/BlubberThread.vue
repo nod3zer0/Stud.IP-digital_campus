@@ -3,7 +3,7 @@
          :id="'blubberthread_' + threadData.thread_posting.thread_id"
          @dragover.prevent="dragover" @dragleave.prevent="dragleave"
          @drop.prevent="upload">
-        <div class="responsive-visible context_info" v-if="threadData.notifications">
+        <div class="hidden-medium-up context_info" v-if="threadData.notifications">
             <a href="#"
                @click.prevent="toggleFollow()"
                class="followunfollow"

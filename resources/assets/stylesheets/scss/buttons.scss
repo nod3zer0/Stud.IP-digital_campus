@@ -122,3 +122,8 @@ button.button {
         margin-right: 0;
     }
 }
+
+button.styleless {
+    background-color: unset;
+    border: 0;
+}

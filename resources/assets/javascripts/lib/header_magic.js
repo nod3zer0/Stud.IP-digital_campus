@@ -10,27 +10,6 @@ const scroll = function(scrolltop) {
     if (is_below_the_fold !== was_below_the_fold) {
         $('body').toggleClass('fixed', is_below_the_fold);
 
-        menu = $('#navigation-level-1-items').remove();
-        if (is_below_the_fold) {
-            menu.append(
-                $('.action-menu-list li', menu)
-                    .remove()
-                    .addClass('from-action-menu')
-            );
-            menu.appendTo('#responsive-menu');
-        } else {
-            $('.action-menu-list', menu).append(
-                $('.from-action-menu', menu)
-                    .remove()
-                    .removeClass('from-action-menu')
-            );
-            menu.prependTo('#navigation-level-1');
-
-            NavigationShrinker();
-
-            $('#navigation-level-1-items-toggle').prop('checked', false);
-        }
-
         was_below_the_fold = is_below_the_fold;
     }
 };

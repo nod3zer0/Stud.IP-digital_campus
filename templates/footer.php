@@ -1,5 +1,5 @@
 <!-- Beginn Footer -->
-<?= SkipLinks::addIndex(_('Fußzeile'), 'main-footer',900) ?>
+<?= SkipLinks::addIndex(_('Fußzeile'), 'main-footer', 900, false) ?>
 <footer id="main-footer" aria-label="<?= _('Fußzeile') ?>">
 <? if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') : ?>
     <div id="main-footer-info">
@@ -54,5 +54,4 @@
 <? endif; ?>
 </footer>
 <?= $this->render_partial('debug/db-log.php') ?>
-<?= $this->render_partial('responsive-navigation.php') ?>
 <!-- Ende Footer -->

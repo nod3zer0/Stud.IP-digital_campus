@@ -164,9 +164,9 @@ export default {
     },
 
     created () {
-        this.responsiveDisplay = Responsive.media_query.matches;
+        this.responsiveDisplay = Responsive.isResponsive();
         Responsive.media_query.addListener(() => {
-            this.responsiveDisplay = Responsive.media_query.matches;
+            this.responsiveDisplay = Responsive.isResponsive();
         })
     }
 }

@@ -8,7 +8,7 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
 $ebene3 = [];
 ?>
 <div class="tabs_wrapper">
-    <? SkipLinks::addIndex(_('Zweite Navigationsebene'), 'navigation-level-2', 10); ?>
+    <? SkipLinks::addIndex(_('Zweite Navigationsebene'), 'navigation-level-2', 10, false); ?>
     <ul id="tabs" role="navigation">
         <? if (!empty($navigation)): ?>
         <? foreach ($navigation as $path => $nav) : ?>
@@ -60,13 +60,7 @@ $ebene3 = [];
         <? endforeach ?>
        <? endif; ?>
     </ul>
-    <? if (PageLayout::isFullscreenModeAllowed()): ?>
-        <div class="fullscreen-container">
-            <button class="fullscreen-toggle" aria-label="<?= _('Vollbildmodus') ?>" title="<?= _('Vollbildmodus') ?>">
-                <?= Icon::create('zoom-in2')->asImg(24) ?>
-            </button>
-        </div>
-    <? endif ?>
+    <div id="non-responsive-toggle-fullscreen"></div>
     <? if (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('autor')) : ?>
         <?= Helpbar::get()->render() ?>
     <? endif; ?>

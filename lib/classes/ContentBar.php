@@ -15,25 +15,41 @@ class ContentBar
     public $infoText = '';
     public $icon = '';
     public $toc = null;
+    public $actionMenu = null;
+
     /**
-     * ContentBar constructor.
-     *
-     * Note: An icon for consumer mode is always shown, this would have to be changed via template.
+     * The singleton instance of the container
+     */
+    protected static $instance = null;
+
+    /**
+     * Returns the instance of this container to ensure there is only one
+     * instance.
      *
      * @param TOCItem $toc Table of contents object.
      * @param string $info Some information to show, like creation date, author etc.
      * @param Icon|null $icon An icon to show in content bar.
      * @param ActionMenu|null $actionMenu Optional action menu for page actions.
+     * @return ContentBar
+     * @static
      */
-    public function __construct(TOCItem $toc, string $info = '', Icon $icon = null, ActionMenu $actionMenu = null)
+    public static function get(): ContentBar
     {
-        $this->infoText = $info;
-        $this->icon = $icon;
-        $this->toc = $toc;
-        $this->actionMenu = $actionMenu;
+        if (static::$instance === null) {
+            static::$instance = new static;
+        }
+        return static::$instance;
     }
 
-    public $actionMenu = null;
+    /**
+     * Private constructor to ensure that the singleton Get() method is always
+     * used.
+     *
+     * @see ContentBar::get
+     */
+    protected function __construct()
+    {
+    }
 
     /**
      * Provide some info text.

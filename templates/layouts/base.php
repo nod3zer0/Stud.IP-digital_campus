@@ -26,12 +26,6 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
         String.locale = "<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>";
 
         document.querySelector('html').classList.replace('no-js', 'js');
-        setTimeout(() => {
-            // This needs to be put in a timeout since otherwise it will not match
-            if (window.matchMedia('(max-width: 767px)').matches) {
-                document.querySelector('html').classList.add('responsive-display');
-            }
-        }, 0);
 
         window.STUDIP = {
             ABSOLUTE_URI_STUDIP: "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>",
@@ -66,7 +60,14 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
 
     <script>
     window.STUDIP.editor_enabled = <?= json_encode((bool) Studip\Markup::editorEnabled()) ?>;
-    </script>
+
+    setTimeout(() => {
+        // This needs to be put in a timeout since otherwise it will not match
+        if (STUDIP.Responsive.isResponsive()) {
+            document.querySelector('html').classList.add('responsive-display');
+        }
+    }, 0);
+</script>
 </head>
 
 <body id="<?= PageLayout::getBodyElementId() ?>" <? if (SkipLinks::isEnabled()) echo 'class="enable-skiplinks"'; ?>>
@@ -79,6 +80,7 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
     <!-- Start main page content -->
     <main id="content-wrapper">
         <div id="content">
+            <h1 class="sr-only"><?= htmlReady(PageLayout::getTitle()) ?></h1>
             <? if (PageLayout::isFullscreenModeAllowed()): ?>
                 <button hidden class="fullscreen-toggle unfullscreen" aria-label="<?= _('Vollbildmodus verlassen') ?>" title="<?= _('Vollbildmodus verlassen') ?>">
                     <?= Icon::create('zoom-out2')->asImg(24) ?>

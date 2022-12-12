@@ -9,6 +9,11 @@ STUDIP.domReady(() => {
     }
 
     STUDIP.Responsive.engage();
+
+    if (STUDIP.Responsive.isFullscreen()) {
+        document.querySelector('html').classList.add('fullscreen-mode');
+    }
+
 }, true);
 
 // Trigger search in responsive display

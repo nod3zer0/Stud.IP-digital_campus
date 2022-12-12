@@ -1031,8 +1031,14 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL, $ancestor=NULL)
     }
 
     // Create content bar.
-    $contentBar = new ContentBar($toc,
-        $page_string, Icon::create('wiki'), $actionMenu);
+    $contentBar = ContentBar::get()
+        ->setTOC(CoreWiki::getTOC(WikiPage::getStartPage(Context::getId())))
+        ->setInfo($page_string)
+        ->setIcon(Icon::create('wiki'));
+
+    if ($actionMenu) {
+        $contentBar->setActionMenu($actionMenu);
+    }
 
     $template = $GLOBALS['template_factory']->open('wiki/edit.php');
     $template->keyword  = $keyword;
@@ -1590,8 +1596,14 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
     }
 
     // Create content bar.
-    $contentBar = new ContentBar($toc,
-        $page_string, Icon::create('wiki'), $actionMenu);
+    $contentBar = ContentBar::get()
+        ->setTOC(CoreWiki::getTOC(WikiPage::getStartPage(Context::getId())))
+        ->setInfo($page_string)
+        ->setIcon(Icon::create('wiki'));
+
+    if ($actionMenu) {
+        $contentBar->setActionMenu($actionMenu);
+    }
 
     if ($hilight) {
         // Highlighting must only take place outside HTML tags, so

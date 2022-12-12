@@ -59,11 +59,27 @@ if ($navigation) {
     <!-- Top bar with site title, quick search and avatar menu -->
     <div id="top-bar" role="banner">
         <div id="responsive-menu">
-            <input type="checkbox" id="barTopMenu-toggle">
-            <label for="barTopMenu-toggle">
-                <?= _('Menü') ?>
-            </label>
-            <? // The main menu will be placed here when scrolled, see navigation.less ?>
+            <?= $this->render_partial('responsive-navigation.php') ?>
+            <?
+            $user = User::findCurrent();
+            if ($user) {
+                $me = [
+                    'avatar' => Avatar::getAvatar($user->id)->getURL(Avatar::MEDIUM),
+                    'email' => $user->email,
+                    'fullname' => $user->getFullName(),
+                    'username' => $user->username,
+                    'perm' => $GLOBALS['perm']->get_perm()
+                ];
+
+                $hasSidebar = Sidebar::get()->countWidgets(NavigationWidget::class) > 0;
+                ?>
+            <? } else {
+                $me = ['username' => 'nobody'];
+                $hasSidebar = false;
+            } ?>
+            <responsive-navigation :me='<?= json_encode($me) ?>' context="<?= htmlReady(Context::get() ?
+                Context::get()->getFullname() : '') ?>" :has-sidebar="<?= $hasSidebar ? 'true' : 'false' ?>">
+            </responsive-navigation>
         </div>
         <div id="site-title">
             <?= htmlReady(Config::get()->UNI_NAME_CLEAN) ?>
@@ -97,7 +113,7 @@ if ($navigation) {
                 <? if (PageLayout::hasCustomQuicksearch()): ?>
                     <?= PageLayout::getCustomQuicksearch() ?>
                 <? else: ?>
-                    <? SkipLinks::addIndex(_('Suche'), 'globalsearch-input', 910) ?>
+                    <? SkipLinks::addIndex(_('Suche'), 'globalsearch-input', 910, false) ?>
                     <li id="quicksearch_item">
                         <script>
                             var selectSem = function (seminar_id, name) {
@@ -179,7 +195,7 @@ if ($navigation) {
                             $subnav->getImage()
                         );
                     }
-                    SkipLinks::addIndex(_('Profilmenü'), "header_avatar_image_link", 1);
+                    SkipLinks::addIndex(_('Profilmenü'), 'header_avatar_image_link', 1, false);
                     ?>
                     <?= $action_menu->render(); ?>
                     </div>
@@ -187,6 +203,8 @@ if ($navigation) {
                 </li>
             <? endif; ?>
 
+                <li id="responsive-toggle-desktop"></li>
+                <li id="responsive-toggle-fullscreen"></li>
             </ul>
         </div>
     </div>
@@ -194,7 +212,7 @@ if ($navigation) {
 
     <!-- Main navigation and right-hand logo -->
     <nav id="navigation-level-1" aria-current="page" aria-label="<?= _('Hauptnavigation') ?>">
-        <? SkipLinks::addIndex(_('Hauptnavigation'), 'navigation-level-1', 2); ?>
+        <? SkipLinks::addIndex(_('Hauptnavigation'), 'navigation-level-1', 2, false); ?>
         <ul id="navigation-level-1-items" <? if (count($header_nav['hidden']) > 0) echo 'class="overflown"'; ?>>
         <? foreach ($header_nav['visible'] as $path => $nav): ?>
             <?= $this->render_partial(
@@ -308,6 +326,8 @@ if ($navigation) {
             </div>
         </div>
     </div>
+
+    <div id="responsive-contentbar-container"></div>
 
 <!-- End main site header -->
 </header>

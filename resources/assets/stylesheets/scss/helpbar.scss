@@ -15,7 +15,7 @@ $border-width: 4px;
     position: relative;
     top: 1px;
     min-width: 32px;
-    right: 12px;
+    right: 17px;
 
     float: right;
 
@@ -41,6 +41,7 @@ $border-width: 4px;
 
     > .helpbar-toggler {
         float: right;
+        margin-top: 2px;
     }
 }
 
