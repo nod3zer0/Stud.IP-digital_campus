@@ -203,7 +203,6 @@ if ($navigation) {
                 </li>
             <? endif; ?>
 
-                <li id="responsive-toggle-desktop"></li>
                 <li id="responsive-toggle-fullscreen"></li>
             </ul>
         </div>

@@ -215,6 +215,7 @@ final class TwoFactorAuth
                 )
             );
         }
+        PageLayout::setBodyElementId('tfa-confirmation-screen');
 
         echo $GLOBALS['template_factory']->render(
             'tfa-validate.php',

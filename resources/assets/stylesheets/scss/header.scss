@@ -42,7 +42,6 @@ html {
     scroll-padding-top: calc($bar-bottom-container-height + 1em);
 }
 
-#main-footer,
 #header-links {
     > ul > li > a {
         color: $white;
@@ -50,22 +49,6 @@ html {
         text-decoration: none;
         &:hover {
             text-decoration: underline;
-        }
-    }
-}
-
-#main-footer {
-    > ul {
-        display: flex;
-        flex: 1;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        list-style-type: none;
-        min-height: 30px;
-        padding: 0;
-        > li {
-            margin-left: 2px;
-            margin-right: 2px;
         }
     }
 }

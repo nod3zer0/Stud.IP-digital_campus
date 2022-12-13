@@ -1,4 +1,4 @@
-<header>
+<section>
     <header class="contentbar">
         <nav class="contentbar-nav"></nav>
         <div class="contentbar-wrapper-left">
@@ -34,4 +34,4 @@
             <? endif ?>
         </div>
     </header>
-</div>
+</section>

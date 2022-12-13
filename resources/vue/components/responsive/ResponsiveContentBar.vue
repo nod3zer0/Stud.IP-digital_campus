@@ -153,7 +153,7 @@ export default {
             const realContentbar = document.querySelector('.contentbar:not(#responsive-contentbar)');
             if (realContentbar) {
                 this.realContentbar = realContentbar;
-                this.realContentbarSource = '#layout_content';
+                this.realContentbarSource = '#content';
                 this.realContentbarIconContainer = '.contentbar-nav';
                 this.realContentbarType = 'wiki';
                 this.adjustExistingContentbar(true);

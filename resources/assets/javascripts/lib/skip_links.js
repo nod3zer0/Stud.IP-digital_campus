@@ -101,7 +101,7 @@ const SkipLinks = {
     insertHeadLines: function() {
         var target = null;
         jQuery('#skip_link_navigation a').each(function() {
-            target = jQuery(this).attr('href');
+            target = jQuery(this);
             if (jQuery(target).is('li,td')) {
                 jQuery(target).prepend(
                     '<h2 id="' +
