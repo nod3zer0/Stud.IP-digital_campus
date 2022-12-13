@@ -58,8 +58,8 @@ if ($navigation) {
 
     <!-- Top bar with site title, quick search and avatar menu -->
     <div id="top-bar" role="banner">
+        <?= $this->render_partial('responsive-navigation.php') ?>
         <div id="responsive-menu">
-            <?= $this->render_partial('responsive-navigation.php') ?>
             <?
             $user = User::findCurrent();
             if ($user) {
