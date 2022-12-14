@@ -11,15 +11,9 @@
                 <?= htmlReady($nav->getTitle()) ?>
             </button>
         <? else : ?>
-            <? if (is_internal_url($url)) : ?>
-                <a href="<?= URLHelper::getLink($url) ?>" data-in-fullscreen="<?= $fullscreen[$index] ?>">
-                    <?= htmlReady($nav->getTitle()) ?>
-                </a>
-            <? else : ?>
-                <a href="<?= htmlReady($url) ?>" data-in-fullscreen="<?= $fullscreen[$index] ?>">
-                    <?= htmlReady($nav->getTitle()) ?>
-                </a>
-            <? endif ?>
+            <a href="<?= URLHelper::getLink($url, [], !is_internal_url($url)) ?>" data-in-fullscreen="<?= $fullscreen[$index] ?>">
+                <?= htmlReady($nav->getTitle()) ?>
+            </a>
         <? endif ?>
         </li>
     <? endforeach ?>
