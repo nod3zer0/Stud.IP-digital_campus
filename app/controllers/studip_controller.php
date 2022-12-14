@@ -12,6 +12,9 @@
 require_once 'studip_controller_properties_trait.php';
 require_once 'studip_response.php';
 
+/**
+ * @property StudipResponse $response
+ */
 abstract class StudipController extends Trails_Controller
 {
     use StudipControllerPropertiesTrait;
@@ -413,8 +416,11 @@ abstract class StudipController extends Trails_Controller
      */
     public function render_json($data)
     {
+        $json = json_encode($data);
+
         $this->set_content_type('application/json;charset=utf-8');
-        $this->render_text(json_encode($data));
+        $this->response->add_header('Content-Length', strlen($json));
+        $this->render_text($json);
     }
 
     /**
