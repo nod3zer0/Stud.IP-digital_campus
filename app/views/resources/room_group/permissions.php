@@ -32,7 +32,7 @@
                 'custom_save_button_text' => _('Zuweisen'),
                 'custom_form_action_link' => URLHelper::getLink('dispatch.php/resources/room_group/permissions/' . $clipboard->id),
                 'custom_hidden_fields' => [
-                    'resource_ids[]' => $room_ids
+                    'room_ids[]' => $room_ids
                 ],
                 'permissions' => $common_permissions,
                 'table_caption' => _('Gemeinsame Rechte'),

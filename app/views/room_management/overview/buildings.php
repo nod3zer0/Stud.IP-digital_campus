@@ -1,5 +1,5 @@
 <? if ($buildings): ?>
-    <form class="default" method="post"
+    <form class="default building-list" method="post"
           action="<?= URLHelper::getLink('dispatch.php/room_management/overview/buildings') ?>">
         <table class="default building-list">
             <colgroup>
@@ -14,7 +14,7 @@
                     <th>
                         <input type="checkbox" class="proxy"
                                data-proxyfor="input[name='building_ids[]']"
-                               data-activates="table.building-list button.bulk-action">
+                               data-activates="form.building-list button.bulk-action">
                     </th>
                     <th><?= _('Name') ?></th>
                     <th><?= _('Nummer') ?></th>
@@ -22,26 +22,7 @@
                     <th class="actions"><?= _('Aktionen') ?></th>
                 </tr>
             </thead>
-            <tfoot>
-                <tr>
-                    <td colspan="5">
-                        <?
-                        $button_attrs = [
-                            'class' => 'bulk-action',
-                            'data-activates-condition' => 'table.building-list :checkbox:checked'
-                        ];
-                        if (!$building_ids) {
-                            $button_attrs['disabled'] = 'disabled';
-                        }
-                        ?>
-                        <?= \Studip\Button::create(
-                            _('Raumgruppen für Gebäude erstellen'),
-                            'create_clipboards',
-                            $button_attrs
-                        ) ?>
-                    </td>
-                </tr>
-            </tfoot>
+
             <tbody>
                 <? foreach ($buildings as $building): ?>
                     <?= $this->render_partial(
@@ -90,5 +71,32 @@
                 <? endforeach ?>
             </tbody>
         </table>
+        <footer>
+            <?
+            $button_attrs = [
+                'class' => 'bulk-action',
+                'data-activates-condition' => 'table.building-list :checkbox:checked'
+            ];
+            if (!$building_ids) {
+                $button_attrs['disabled'] = 'disabled';
+            }
+            ?>
+            <?= \Studip\Button::create(
+                _('Raumgruppen für Gebäude erstellen'),
+                'create_clipboards',
+                array_merge($button_attrs, ['aria-title' => _('Raumgruppen für Gebäude erstellen')])
+            ) ?>
+            <?= \Studip\Button::create(
+                _('Berechtigungen für alle Räume setzen'),
+                'room_permissions',
+                array_merge(
+                    $button_attrs,
+                    [
+                        'data-dialog' => 'size=big',
+                        'aria-title' => _('Berechtigungen für alle Räume setzen')
+                    ]
+                )
+            ) ?>
+        </footer>
     </form>
 <? endif ?>

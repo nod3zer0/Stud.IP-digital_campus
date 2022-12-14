@@ -300,6 +300,27 @@ class RoomManagement_OverviewController extends AuthenticatedController
                     )
                 );
             }
+        } elseif (Request::submitted('room_permissions')) {
+            $this->building_ids = Request::optionArray('building_ids');
+
+            $room_ids = [];
+
+            Building::findEachMany(
+                function (Building $building) use (&$room_ids) {
+                    foreach ($building->rooms as $room) {
+                        $room_ids[] = $room->id;
+                    }
+                },
+                $this->building_ids
+            );
+
+            if ($room_ids) {
+                //Redirect to the permissions dialog:
+                $this->redirect(
+                    'resources/room_group/permissions',
+                    ['room_ids' => $room_ids]
+                );
+            }
         }
     }
 

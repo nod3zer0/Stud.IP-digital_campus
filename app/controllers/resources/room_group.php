@@ -66,11 +66,11 @@ class Resources_RoomGroupController extends AuthenticatedController
                 if (!is_array($user_permissions[$permission->user_id])) {
                     $user_permissions[$permission->user_id] = [];
                 }
-        
+
                 if (!is_array($user_permissions[$permission->user_id][$permission->perms])) {
                     $user_permissions[$permission->user_id][$permission->perms] = [];
                 }
-        
+
                 $user_permissions[$permission->user_id][$permission->perms][] = $permission;
             }
         }
@@ -121,35 +121,38 @@ class Resources_RoomGroupController extends AuthenticatedController
             }
         }
 
-        if (!$selected_clipboard_id) {
-            //Check if a clipboard is selected:
-            $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
-        } else {
-            $_SESSION['selected_clipboard_id'] = $selected_clipboard_id;
-        }
+        $clipboard = null;
+        $this->room_ids = Request::optionArray('room_ids');
 
-        $clipboard = Clipboard::find($selected_clipboard_id);
-        if (!$clipboard) {
-            PageLayout::postError(
-                _('Die gewählte Raumgruppe wurde nicht gefunden!')
-            );
-            return;
-        }
-
-        if ($clipboard->user_id != $GLOBALS['user']->id) {
-            throw new AccessDeniedException();
-        }
-
-        PageLayout::setTitle(
-            $clipboard->name . ': ' . _('Berechtigungen setzen')
-        );
-
-        $this->room_ids = $clipboard->getAllRangeIds('Room');
         if (!$this->room_ids) {
-            PageLayout::postInfo(
-                _('Die Raumgruppe enthält keine Räume!')
+            if (!$selected_clipboard_id) {
+                //Check if a clipboard is selected:
+                $selected_clipboard_id = $_SESSION['selected_clipboard_id'];
+            } else {
+                $_SESSION['selected_clipboard_id'] = $selected_clipboard_id;
+            }
+            $clipboard = Clipboard::find($selected_clipboard_id);
+            if (!$clipboard) {
+                PageLayout::postError(
+                    _('Die gewählte Raumgruppe wurde nicht gefunden!')
+                );
+                return;
+            }
+
+            if ($clipboard->user_id != $GLOBALS['user']->id) {
+                throw new AccessDeniedException();
+            }
+            PageLayout::setTitle(
+                $clipboard->name . ': ' . _('Berechtigungen setzen')
             );
-            return;
+
+            $this->room_ids = $clipboard->getAllRangeIds('Room');
+            if (!$this->room_ids) {
+                PageLayout::postInfo(
+                    _('Die Raumgruppe enthält keine Räume!')
+                );
+                return;
+            }
         }
 
         $this->rooms = Room::findMany($this->room_ids);
