@@ -13,7 +13,7 @@ final class MigrateBlubberUserConfigToObjectUserVisits extends Migration
                   WHERE `pluginclassname` = 'Blubber'";
         $blubber_plugin_id = DBManager::get()->fetchColumn($query);
 
-        $query = "INSERT INTO `object_user_visits` (
+        $query = "INSERT IGNORE INTO `object_user_visits` (
                      `object_id`,
                      `user_id`,
                      `plugin_id`,
@@ -41,7 +41,7 @@ final class MigrateBlubberUserConfigToObjectUserVisits extends Migration
                   WHERE `pluginclassname` = 'Blubber'";
         $blubber_plugin_id = DBManager::get()->fetchColumn($query);
 
-        $query = "INSERT INTO `config_values` (
+        $query = "INSERT IGNORE INTO `config_values` (
                      `field`,
                      `range_id`,
                      `value`,
