@@ -183,6 +183,7 @@ class Form extends Part
         if (\Request::isPost() && \Request::isAjax() && !\Request::isDialog()) {
             $this->store();
             \PageLayout::postSuccess(_('Daten wurden gespeichert.'));
+            page_close();
             die();
         }
         return $this;
