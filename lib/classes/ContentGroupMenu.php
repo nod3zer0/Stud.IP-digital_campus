@@ -10,11 +10,6 @@ class ContentGroupMenu
 {
     const THRESHOLD = 1;
 
-    const TEMPLATE_FILE_SINGLE   = 'shared/action-menu-single.php';
-    const TEMPLATE_FILE_MULTIPLE = 'shared/action-menu.php';
-    const TEMPLATE_FILE_ROWS     = 'shared/contentgroup-row.php';
-    const TEMPLATE_FILE_TABLE    = 'shared/contentgroup-table.php';
-
     /**
      * Returns an instance.
      *
@@ -29,8 +24,6 @@ class ContentGroupMenu
     private $condition_all = null;
     private $condition     = true;
 
-    private $rows    = 1;
-    private $columns = 1;
     private $image   = null;
     private $image_link_attributes = [];
     private $label;
@@ -203,12 +196,7 @@ class ContentGroupMenu
             return '';
         }
 
-        //if ($this->rows > 1 || $this->columns > 1 || $this->image) {
-        if ($this->rows > 1 || $this->columns > 1) {
-            $template_file = self::TEMPLATE_FILE_TABLE;
-        } else {
-            $template_file = self::TEMPLATE_FILE_ROWS;
-        }
+        $template_file = 'shared/contentgroup-row.php';
         $template = $GLOBALS['template_factory']->open($template_file);
         $template->actions = $this->actions;
 
@@ -220,9 +208,6 @@ class ContentGroupMenu
             }
         }
         $template->has_link_icons = $has_link_icons;
-
-        $template->rows    = $this->rows;
-        $template->columns = $this->columns;
 
         if ($this->image) {
             $template->image = $this->image;
@@ -236,35 +221,7 @@ class ContentGroupMenu
 
         $template->attributes = $this->attributes;
 
-        /*} else {
-            $template_file = count($this->actions) <= self::THRESHOLD
-            ? self::TEMPLATE_FILE_SINGLE
-            : self::TEMPLATE_FILE_MULTIPLE;
-            $template = $GLOBALS['template_factory']->open($template_file);
-            $template->actions = $this->actions;
-        }*/
-
         return $template->render();
-    }
-
-    /**
-     * Sets the number of rows to layout the elements.
-     *
-     * @param integer $rows number of rows
-     */
-    public function setRows($rows)
-    {
-        $this->rows = $rows;
-    }
-
-    /**
-     * Sets the number of columns to layout the elements.
-     *
-     * @param integer $columns number of columns
-     */
-    public function setcolumns($columns)
-    {
-        $this->columns = $columns;
     }
 
     /**
