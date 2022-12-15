@@ -53,9 +53,9 @@ $format = Request::option('format');
 $choose = Request::quoted('choose');
 $range_id = Request::option('range_id');
 
-if (($o_mode != "direct") AND ($o_mode != "passthrough"))
+if ($o_mode !== 'direct' && $o_mode !== 'passthrough')
 {
-    $perm->check("tutor");
+    $GLOBALS['perm']->check('tutor');
     include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 }
 

@@ -54,24 +54,23 @@ class BrowseNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $user, $perm;
-
         parent::initSubNavigation();
-        $sem_create_perm = in_array(Config::get()->SEM_CREATE_PERM, ['root', 'admin', 'dozent']) ? Config::get()->SEM_CREATE_PERM : 'dozent';
-
 
         // my courses
-        if (is_object($user) && $user->id != 'nobody') {
+        if (User::findCurrent()) {
 
-            if ($perm->have_perm('admin')) {
+            if ($GLOBALS['perm']->have_perm('admin')) {
                 $navigation = new Navigation(_('Administration'));
             } else {
                 $navigation = new Navigation(_('Meine Veranstaltungen'));
             }
 
-            $navigation->addSubNavigation('list', new Navigation($perm->have_perm('admin') ? _('Veranstaltungsadministration') : _('Aktuelle Veranstaltungen'), 'dispatch.php/my_courses'));
+            $navigation->addSubNavigation('list', new Navigation(
+                $GLOBALS['perm']->have_perm('admin') ? _('Veranstaltungsadministration') : _('Aktuelle Veranstaltungen'), 
+                'dispatch.php/my_courses'
+            ));
 
-            if ($perm->have_perm('admin')) {
+            if ($GLOBALS['perm']->have_perm('admin')) {
                 $navigation->addSubNavigation('overlapping', new Navigation(_('Überschneidungsfreiheit'), 'dispatch.php/admin/overlapping'));
                 $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/admin/courseplanning'));
             } else {
@@ -91,7 +90,7 @@ class BrowseNavigation extends Navigation
                 $this->addSubNavigation('my_studygroups', $navigation);
             }
 
-            if (!$perm->have_perm('admin')) {
+            if (!$GLOBALS['perm']->have_perm('admin')) {
                 $navigation = new Navigation(_('Meine Einrichtungen'), 'dispatch.php/my_institutes');
                 $this->addSubNavigation('my_institutes', $navigation);
 
@@ -101,7 +100,7 @@ class BrowseNavigation extends Navigation
                 }
             }
 
-            if ($perm->have_perm('admin') || ($perm->have_perm('dozent') && Config::get()->ALLOW_DOZENT_COURSESET_ADMIN)) {
+            if ($GLOBALS['perm']->have_perm('admin') || ($GLOBALS['perm']->have_perm('dozent') && Config::get()->ALLOW_DOZENT_COURSESET_ADMIN)) {
                 $navigation = new Navigation(_('Anmeldesets'), 'dispatch.php/admission/courseset/index');
                 $this->addSubNavigation('coursesets', $navigation);
                 $navigation->addSubNavigation('sets', new Navigation(_('Anmeldesets verwalten'), 'dispatch.php/admission/courseset/index'));
@@ -110,7 +109,7 @@ class BrowseNavigation extends Navigation
             }
 
             // export
-            if (Config::get()->EXPORT_ENABLE) {
+            if (Config::get()->EXPORT_ENABLE && $GLOBALS['perm']->have_perm('tutor')) {
                 $navigation = new Navigation(_('Export'), 'export.php');
                 $this->addSubNavigation('export', $navigation);
             }
