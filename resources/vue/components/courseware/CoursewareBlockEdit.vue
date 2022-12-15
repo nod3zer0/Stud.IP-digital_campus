@@ -18,7 +18,6 @@ export default {
     name: 'courseware-block-edit',
     props: {
         block: Object,
-        objectIsBlocked: Boolean,
     },
     data() {
         return {
@@ -34,28 +33,12 @@ export default {
             this.$store.dispatch('coursewareBlockAdder', {});
             this.$store.dispatch('coursewareShowToolbar', false);
         },
-        beforeUnloadHandler(event) {
-            if (this.exitHandler || this.objectIsBlocked) {
-                event.preventDefault();
-                this.autoSave();
-                event.returnValue = 'There are unsaved changes, do you want to leave?';
-                return event.returnValue;
-            }
-            return null;
-        },
-        async autoSave() {
-            this.$emit('store');
-            this.exitHandler = false;
-        }
     },
     beforeDestroy() {
         if (this.exitHandler) {
-            this.autoSave();
+            console.log('autosave');
+            this.$emit('store');
         }
-        STUDIP.eventBus.off('studip:beforeunload', this.beforeUnloadHandler);
-    },
-    mounted () {
-        STUDIP.eventBus.on('studip:beforeunload', this.beforeUnloadHandler);
-    },
+    }
 };
 </script>
