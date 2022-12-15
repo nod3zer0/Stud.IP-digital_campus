@@ -6,7 +6,7 @@
 
     <fieldset>
         <legend><?= _('Neue Nachricht') ?></legend>
-    <div>
+    <div class="message-user-list">
         <label for="user_id_1"><?= _("An") ?></label>
         <ul class="list-csv" id="adressees">
             <li id="template_adressee" style="display: none;" class="adressee">
@@ -53,13 +53,13 @@
     <div>
         <label>
             <?= _("Betreff") ?>
-            <input type="text" name="message_subject" style="width: 100%" required value="<?= htmlReady($default_message['subject']) ?>">
+            <input type="text" name="message_subject" required value="<?= htmlReady($default_message['subject']) ?>">
         </label>
     </div>
     <div>
         <label>
             <?= _("Nachricht") ?>
-            <textarea style="width: 100%; height: 200px;" name="message_body" class="add_toolbar wysiwyg"><?= wysiwygReady($default_message['message'],false) ?></textarea>
+            <textarea name="message_body" class="add_toolbar wysiwyg"><?= wysiwygReady($default_message['message'],false) ?></textarea>
         </label>
     </div>
     <div>

@@ -87,10 +87,21 @@ a.message-tag {
     color: $base-gray;
 }
 
+form.default {
+    .message-user-list {
+        label {
+            margin: 0;
+        }
+
+        margin-bottom: $gap;
+    }
+}
+
 .message-search-wrapper {
     display: flex;
     justify-content: flex-start;
     margin-top: 1ex;
+    margin-bottom: 0.5ex;
 
     > * {
         margin-right: 1em;

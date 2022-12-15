@@ -4,7 +4,7 @@
 <? if ($withButton): ?>
 <div class="quicksearch_frame <?= ($extendedLayout === true) ? 'extendedLayout' : ''; ?>" id="<?= $id ?>_frame">
     <? if ($box_align === 'left'): ?>
-        <?= Icon::create('search', 'clickable')->asInput(["class" => 'text-bottom']) ?>
+        <?= Icon::create('search')->asInput(['class' => 'text-bottom']) ?>
     <? endif; ?>
 <? endif ?>
     <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= htmlReady($defaultID) ?>">
@@ -19,7 +19,7 @@
            placeholder="<?= $beschriftung && !$defaultID ? htmlReady($beschriftung) : '' ?>">
 <? if ($withButton): ?>
     <? if ($box_align !== 'left'): ?>
-        <input type="submit" value="Suche starten" name="<?= $search_button_name; ?>"></input>
+        <input type="submit" value="<?= _('Suche starten') ?>" name="<?= htmlReady($search_button_name) ?>">
     <? endif; ?>
 </div>
 <? endif ?>
@@ -28,7 +28,7 @@
     jQuery(function () {
         STUDIP.QuickSearch.autocomplete("<?= $id ?>",
             "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
-            <?= $jsfunction ? $jsfunction : "null" ?>,
+            <?= $jsfunction ?: 'null' ?>,
             <?= $autocomplete_disabled ? "true" : "false" ?>
             );
     });

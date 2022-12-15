@@ -63,6 +63,10 @@
     --ck-color-tooltip-background: var(--dark-gray-color-5);
 
 }
+
+.ck.ck-editor {
+    margin-top: 0.5ex;
+}
 .ck.ck-icon, .ck.ck-icon * {
     color: var(--base-color);
 }
