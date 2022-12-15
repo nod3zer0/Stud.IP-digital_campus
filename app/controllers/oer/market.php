@@ -25,7 +25,13 @@ class Oer_MarketController extends StudipController
         }
         $tag_matrix_entries_number = 9;
         $this->best_nine_tags = OERTag::findBest($tag_matrix_entries_number);
-
+        $this->tags = [];
+        foreach ($this->best_nine_tags as $tag) {
+            $this->tags[] = [
+                'tag_hash' => $tag->tag_hash,
+                'name'     => $tag->name,
+            ];
+        }
         if (Request::get("tag")) {
             $this->materialien = OERMaterial::findByTag(Request::get("tag"));
         }
@@ -34,6 +40,22 @@ class Oer_MarketController extends StudipController
         }
         if (Request::get("get") === "all") {
             $this->materialien = OERMaterial::findBySQL("1 ORDER BY oer_material.mkdate DESC");
+        }
+
+        $this->material_data = false;
+        if (!empty($this->materialien)) {
+            $this->material_data = [];
+            foreach ($this->materialien as $material) {
+                $data = $material->toRawArray();
+
+                $data['tags'] = array_map(function($tag) {
+                    return $tag['name'];
+                }, $material->getTopics());
+
+                $data['logo_url'] = $material->getLogoURL();
+                $data['download_url'] = $material->getDownloadUrl();
+                $this->material_data[] = $data;
+            }
         }
         $this->new_ones = OERMaterial::findBySQL("LEFT JOIN oer_hosts ON (oer_hosts.host_id = oer_material.host_id)
             WHERE draft = '0'
@@ -48,6 +70,23 @@ class Oer_MarketController extends StudipController
         ");
         $statement->execute([$GLOBALS['user']->id]);
         $this->abo = (bool) $statement->fetch(PDO::FETCH_COLUMN, 0);
+
+        if ($GLOBALS['perm']->have_perm('autor')) {
+            $actions = new ActionsWidget();
+            $actions->addLink(
+                _('Neues Lernmaterial hochladen'),
+                $this->url_for('oer/mymaterial/edit'),
+                Icon::create('add'),
+                ['data-dialog' => 'size=auto']
+            );
+            $actions->addLink(
+                $this->abo ? _('Neuigkeiten abbestellen') : _('Neuigkeiten abonnieren'),
+                $this->aboURL(),
+                Icon::create($this->abo ? 'decline' : 'rss'),
+                ['data-dialog' => 'size=auto']
+            );
+            Sidebar::Get()->addWidget($actions);
+        }
     }
 
     public function get_tags_action()
