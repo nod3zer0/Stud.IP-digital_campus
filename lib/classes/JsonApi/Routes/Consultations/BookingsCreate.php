@@ -19,9 +19,10 @@ class BookingsCreate extends JsonApiController
         $json = $this->validate($request, $args);
 
         $slot = $this->getBookingSlot($json, $args);
+        $user = $this->getUser($request);
         $booking_user = $this->getBookingUser($json);
 
-        if (!Authority::canBookSlot($booking_user, $slot)) {
+        if (!Authority::canBookSlotForUser($user, $slot, $booking_user)) {
             throw new AuthorizationFailedException();
         }
 

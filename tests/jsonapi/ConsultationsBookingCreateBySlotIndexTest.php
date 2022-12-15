@@ -6,7 +6,6 @@ use WoohooLabs\Yang\JsonApi\Response\JsonApiResponse;
 
 require_once __DIR__ . '/ConsultationHelper.php';
 
-// TODO: Test locked blocks
 class ConsultationsBookingCreateBySlotIndexTest extends Codeception\Test\Unit
 {
     use ConsultationHelper;

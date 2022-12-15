@@ -44,6 +44,15 @@ final class Authority
         );
     }
 
+    public static function canBookSlotForUser(\User $user, \ConsultationSlot $slot, \User $booking_user): bool
+    {
+        if ($user->id !== $booking_user->id && !self::canEditSlot($user, $slot)) {
+            return false;
+        }
+
+        return self::canBookSlot($booking_user, $slot);
+    }
+
     public static function canShowBooking(\User $user, \ConsultationBooking $booking): bool
     {
         return self::canShowSlot($user, $booking->slot)
