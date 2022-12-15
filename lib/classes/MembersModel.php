@@ -1,4 +1,7 @@
 <?php
+/**
+ * @deprecated since Stud.IP 5.3
+ */
 class MembersModel
 {
 
@@ -100,8 +103,8 @@ class MembersModel
                 $message = sprintf(_('Ihre Anmeldung zur Veranstaltung **%1$s** wurde von Lehrenden  (%2$s) oder Admin aufgehoben.'), $this->course_title, get_title_for_status('dozent', 1));
                 restoreLanguage();
                 $messaging->insert_message($message, $user->username,
-                                '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
-                                        _("Anmeldung aufgehoben")), TRUE);
+                    '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
+                        _("Anmeldung aufgehoben")), TRUE);
                 $msgs[] = $user->getFullName();
             }
         }
@@ -130,8 +133,8 @@ class MembersModel
                 }
                 restoreLanguage();
                 $messaging->insert_message($message, $user->username,
-                                '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
-                                        _("nicht zugelassen in Veranstaltung")), TRUE);
+                    '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
+                        _("nicht zugelassen in Veranstaltung")), TRUE);
                 StudipLog::log('SEM_USER_DEL', $this->course_id, $user_id, 'Wurde aus der Veranstaltung entfernt');
                 NotificationCenter::postNotification('UserDidLeaveCourse', $this->course_id, $user_id);
 
@@ -149,7 +152,7 @@ class MembersModel
                 $user = User::find($user_id);
                 if ($user) {
                     $admission_user = insert_seminar_user($this->course_id, $user_id, $next_status,
-                            ($accepted || $consider_contingent ? TRUE : FALSE), $consider_contingent);
+                        ($accepted || $consider_contingent ? TRUE : FALSE), $consider_contingent);
 
                     // only if user was on the waiting list
                     if ($admission_user) {
@@ -163,7 +166,7 @@ class MembersModel
                             if (!$accepted) {
                                 $message = sprintf(_('Sie wurden von %1$s oder Admin
                                     aus der Warteliste in die Veranstaltung **%2$s** aufgenommen und sind damit zugelassen.'),
-                                        get_title_for_status('dozent', 1), $this->course_title);
+                                    get_title_for_status('dozent', 1), $this->course_title);
                             } else {
                                 $message = sprintf(_('Sie wurden von einem/einer %1$s oder Admin
                                     vom Status **vorläufig akzeptiert** auf **teilnehmend** in der Veranstaltung **%2$s**
@@ -172,8 +175,8 @@ class MembersModel
                         }
 
                         $messaging->insert_message($message, $user->username,
-                                '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
-                                        _('Eintragung in Veranstaltung')), TRUE);
+                            '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
+                                _('Eintragung in Veranstaltung')), TRUE);
                         $msgs[] = $user->getFullName();
                     }
                 }
@@ -208,7 +211,7 @@ class MembersModel
                 if (!$accepted) {
                     $message = sprintf(_('Sie wurden vom einem/einer %1$s oder Admin
                         aus der Warteliste in die Veranstaltung **%2$s** aufgenommen und sind damit zugelassen.'),
-                            get_title_for_status('dozent', 1), $this->course_title);
+                        get_title_for_status('dozent', 1), $this->course_title);
                 } else {
                     $message = sprintf(_('Sie wurden von einem/einer %1$s oder Admin vom Status
                         **vorläufig akzeptiert** auf "**teilnehmend** in der Veranstaltung **%2$s**
@@ -217,8 +220,8 @@ class MembersModel
             }
             restoreLanguage();
             $messaging->insert_message($message, $user->username,
-                    '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
-                            _('Eintragung in Veranstaltung')), TRUE);
+                '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
+                    _('Eintragung in Veranstaltung')), TRUE);
         }
 
         //Warteliste neu sortieren
@@ -265,7 +268,7 @@ class MembersModel
                 get_title_for_status('dozent', 1), $this->course_title);
             restoreLanguage();
             messaging::sendSystemMessage($user_id, sprintf('%s %s', _('Systemnachricht:'),
-                    _('Auf Warteliste gesetzt')), $message);
+                _('Auf Warteliste gesetzt')), $message);
 
             return true;
         }
@@ -483,36 +486,36 @@ class MembersModel
      * @param String $which_end 'last' or 'first': which list end to append to
      * @return mixed Array of messages (stating success and/or errors)
      */
-     public function moveToWaitlist($users, $which_end)
-     {
-         $course = Seminar::getInstance($this->course_id);
-         foreach ($users as $user_id) {
-             // Delete member from seminar
-             if ($course->deleteMember($user_id)) {
-                 setTempLanguage($user_id);
-                 $message = sprintf(_('Sie wurden von der Veranstaltung **%s** von '.
-                     '%s oder der Administration abgemeldet, '.
-                     'Sie wurden auf die Warteliste dieser Veranstaltung gesetzt.'),
-                     $this->course_title, get_title_for_status('dozent', 1));
-                 restoreLanguage();
-                 messaging::sendSystemMessage($user_id, sprintf('%s %s', _('Systemnachricht:'),
-                     _('Anmeldung aufgehoben, auf Warteliste gesetzt')), $message);
-                 // Insert user in waitlist at current position.
-                 if ($course->addToWaitlist($user_id, $which_end)) {
-                     $temp_user = User::find($user_id);
-                     $msgs['success'][] = $temp_user->getFullname('no_title');
-                     $curpos++;
-                     // Something went wrong on removing the user from course.
-                 } else {
-                     $msgs['error'][] = $temp_user->getFullname('no_title');
-                 }
-                 // Something went wrong on inserting the user in waitlist.
-             } else {
-                 $msgs['error'][] = $temp_user->getFullname('no_title');
-             }
-         }
-         return $msgs;
-     }
+    public function moveToWaitlist($users, $which_end)
+    {
+        $course = Seminar::getInstance($this->course_id);
+        foreach ($users as $user_id) {
+            // Delete member from seminar
+            if ($course->deleteMember($user_id)) {
+                setTempLanguage($user_id);
+                $message = sprintf(_('Sie wurden von der Veranstaltung **%s** von '.
+                    '%s oder der Administration abgemeldet, '.
+                    'Sie wurden auf die Warteliste dieser Veranstaltung gesetzt.'),
+                    $this->course_title, get_title_for_status('dozent', 1));
+                restoreLanguage();
+                messaging::sendSystemMessage($user_id, sprintf('%s %s', _('Systemnachricht:'),
+                    _('Anmeldung aufgehoben, auf Warteliste gesetzt')), $message);
+                // Insert user in waitlist at current position.
+                if ($course->addToWaitlist($user_id, $which_end)) {
+                    $temp_user = User::find($user_id);
+                    $msgs['success'][] = $temp_user->getFullname('no_title');
+                    $curpos++;
+                    // Something went wrong on removing the user from course.
+                } else {
+                    $msgs['error'][] = $temp_user->getFullname('no_title');
+                }
+                // Something went wrong on inserting the user in waitlist.
+            } else {
+                $msgs['error'][] = $temp_user->getFullname('no_title');
+            }
+        }
+        return $msgs;
+    }
 
     /**
      * Get the positon out of the database

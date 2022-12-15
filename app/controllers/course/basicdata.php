@@ -477,7 +477,7 @@ class Course_BasicdataController extends AuthenticatedController
 
             //update admission, if turnout was raised
             if($after['admission_turnout'] > $before['admission_turnout'] && $sem->isAdmissionEnabled()) {
-                update_admission($sem->getId());
+                AdmissionApplication::addMembers($sem->getId());
             }
 
             if (sizeof($before) && sizeof($after)) {
@@ -496,9 +496,21 @@ class Course_BasicdataController extends AuthenticatedController
         }
 
         //Labels/Funktionen für Dozenten und Tutoren
-        if ($perm->have_studip_perm("dozent", $sem->getId())) {
-            foreach (Request::getArray("label") as $user_id => $label) {
-                $sem->setLabel($user_id, $label);
+        if ($perm->have_studip_perm('dozent', $sem->getId())) {
+            foreach (Request::getArray('label') as $user_id => $label) {
+                if ($GLOBALS['perm']->have_studip_perm('tutor', $sem->getId(), $user_id)) {
+                    $mb = CourseMember::findOneBySQL('user_id = ? AND Seminar_id = ?', [$user_id, $sem->getId()]);
+                    if ($mb) {
+                        $mb->label = $label;
+                        if ($mb->store()) {
+                            NotificationCenter::postNotification(
+                                'CourseDidChangeMemberLabel',
+                                $sem,
+                                $mb
+                            );
+                        }
+                    }
+                }
             }
         }
 
@@ -791,7 +803,7 @@ class Course_BasicdataController extends AuthenticatedController
                     $members[$key] = $temp_member;
                 }
             }
-            $sem->setMemberPriority($members, $status);
+            $sem->setMemberPriority($members);
         } else {
             $this->msg[] = ["error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern.")];
         }
@@ -828,7 +840,7 @@ class Course_BasicdataController extends AuthenticatedController
                     $members[$key] = $temp_member;
                 }
             }
-            $sem->setMemberPriority($members, $status);
+            $sem->setMemberPriority($members);
         } else {
             $this->msg[] = ["error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern.")];
         }

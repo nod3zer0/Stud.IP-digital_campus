@@ -14,8 +14,6 @@
  * @since       3.0
  */
 
-require_once 'lib/admission.inc.php';
-
 class Admission_CoursesetController extends AuthenticatedController
 {
     /**
@@ -539,7 +537,7 @@ class Admission_CoursesetController extends AuthenticatedController
 
                     $ok += $course->store();
                     if ($do_update_admission) {
-                        update_admission($course->id);
+                        AdmissionApplication::addMembers($course->id);
                     }
                 }
             }

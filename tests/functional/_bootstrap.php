@@ -10,6 +10,7 @@ require 'lib/classes/StudipAutoloader.php';
 require 'lib/functions.php';
 require_once 'lib/language.inc.php';
 require 'lib/visual.inc.php';
+require 'lib/messaging.inc.php';
 
 $STUDIP_BASE_PATH = realpath(dirname(__FILE__) . '/../..');
 

@@ -14,6 +14,8 @@
  * @modulegroup      admission
  * @module       admission.inc.php
  * @package      studip_core
+ * @deprecated since Stud.IP 5.3
+ *
  */
 
 // +---------------------------------------------------------------------------+

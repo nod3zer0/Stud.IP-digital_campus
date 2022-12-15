@@ -1348,9 +1348,8 @@ class Course_StatusgroupsController extends AuthenticatedController
         CSRFProtection::verifyUnsafeRequest();
 
         $members = Request::getArray('members');
-        $model = new MembersModel($this->course_id, $this->course_title);
-
-        $removed_names = $model->cancelSubscription($members);
+        $course = Seminar::GetInstance($this->course_id);
+        $removed_names = $course->cancelSubscription($members);
 
         PageLayout::postSuccess(
             _('Die folgenden Personen wurden aus der Veranstaltung ausgetragen'),

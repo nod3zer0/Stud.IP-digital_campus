@@ -150,41 +150,27 @@ class AutoInsert
 
     private function addUser($user_id, $seminar)
     {
-        $query = "INSERT IGNORE INTO seminar_user (Seminar_id, user_id, status, gruppe, mkdate)
-            VALUES (?, ?, 'autor', ?, UNIX_TIMESTAMP())";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute([$seminar['Seminar_id'], $user_id, select_group($seminar['start_time'])]);
-        $rows = $statement->rowCount();
-        if ($rows > 0) return true;
+        $course_member = new CourseMember([$seminar['Seminar_id'], $user_id]);
+        $course_member->setData([
+            'Seminar_id' => $seminar['Seminar_id'],
+            'user_id'    => $user_id,
+            'status'     => 'autor',
+            'gruppe'     => select_group($seminar['start_time']),
+        ]);
 
-        return false;
+        return $course_member->store() > 0;
     }
 
     private function removeUser($user_id, $seminar)
     {
-        $query = "DELETE FROM seminar_user " . "WHERE user_id = ? " . "AND Seminar_id = ? ";
-
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute([$user_id, $seminar['Seminar_id']]);
-        $rows = $statement->rowCount();
-
-        $query             = "DELETE FROM statusgruppe_user " . "WHERE user_id = ? " . "AND statusgruppe_id IN (SELECT statusgruppe_id FROM statusgruppen WHERE range_id = ?)";
-        $statusgruppe_stmt = DBManager::get()->prepare($query);
-        $statusgruppe_stmt->execute([$user_id, $seminar['Seminar_id']]);
-        $statusgruppe_rows = $statusgruppe_stmt->rowCount();
+        $rows = CourseMember::deleteBySQL(' user_id = ? AND Seminar_id = ?', [$user_id, $seminar['Seminar_id']]);
+        $statusgruppe_rows =  StatusgruppeUser::deleteBySQL(
+            'user_id = ? AND statusgruppe_id IN (SELECT statusgruppe_id FROM statusgruppen WHERE range_id = ?)',
+            [$user_id, $seminar['Seminar_id']]
+        );
         if ($rows > 0 || $statusgruppe_rows > 0) return true;
 
         return false;
-    }
-
-    /**
-     *
-     * @param type $user_id
-     */
-    public function deleteUserSeminare($user_id)
-    {
-        $db = DBManager::get();
-        $db->exec("DELETE FROM seminar_user " . "WHERE user_id = " . $db->quote($user_id));
     }
 
     /**

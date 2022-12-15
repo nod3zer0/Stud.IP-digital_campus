@@ -46,7 +46,7 @@ class Course_AdmissionController extends AuthenticatedController
         if (!SeminarCategories::GetByTypeId($this->course->status)->write_access_nobody) {
             $this->is_locked['write_level'] = 'disabled readonly';
         }
-        update_admission($this->course->id);
+        AdmissionApplication::addMembers($this->course->id);
         PageLayout::addScript('studip-admission.js');
         URLHelper::addLinkParam('return_to_dialog', Request::get('return_to_dialog'));
     }

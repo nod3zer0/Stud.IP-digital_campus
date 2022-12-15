@@ -522,6 +522,7 @@ function get_config($key)
  *
  * @param string $s_id     the seminar to work on
  * @param int    $position the position to start with
+ * @deprecated since Stud.IP 5.3
  *
  * @return void
  */
@@ -540,6 +541,7 @@ function re_sort_dozenten($s_id, $position)
  *
  * @param string $s_id     the seminar to work on
  * @param int    $position the position to start with
+ * @deprecated since Stud.IP 5.3
  *
  * @return void
  */
@@ -558,6 +560,7 @@ function re_sort_tutoren($s_id, $position)
  *
  * @param string $status     can be on of 'tutor', 'dozent', ...
  * @param string $seminar_id the seminar to work on
+ * @deprecated since Stud.IP 5.3
  *
  * @return int  the next available position
  */
@@ -569,7 +572,7 @@ function get_next_position($status, $seminar_id)
     $statement = DBManager::get()->prepare($query);
     $statement->execute([$seminar_id, $status]);
 
-   return $statement->fetchColumn() ?: 0;
+    return $statement->fetchColumn() ?: 0;
 }
 
 /**

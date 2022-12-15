@@ -411,18 +411,25 @@ class Admin_SemesterController extends AuthenticatedController
         }
 
         // Hide courses and set lock rule
-        $query = "UPDATE `seminare`
-                  SET `visible` = 0, `lock_rule` = ?
-                  WHERE `Seminar_id` IN (?)";
-        DBManager::get()->execute($query, [$lock_rule, $course_ids]);
+        Course::findEachMany(
+            function (Course $course) use ($lock_rule) {
+                $course->visible = 0;
+                $course->lock_rule = $lock_rule;
+                $course->store();
+            },
+            [$course_ids]
+        );
 
         // Degrade users
         if ($degrade_users) {
-            $query = "UPDATE `seminar_user`
-                      SET `status` = 'user'
-                      WHERE `Seminar_id` IN (?)
-                        AND `status` = 'autor'";
-            DBManager::get()->execute($query, [$course_ids]);
+            CourseMember::findEachBySQL(
+                function (CourseMember $cm) {
+                    $cm->status = 'user';
+                    $cm->store();
+                },
+                "`Seminar_id` IN (?) and `status` = 'autor'",
+                [$course_ids]
+            );
         }
 
         // Lock enrolment

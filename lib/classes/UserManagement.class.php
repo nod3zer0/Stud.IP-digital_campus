@@ -20,7 +20,6 @@
  */
 
 // Imports
-require_once 'lib/admission.inc.php';   // remove user from waiting lists
 require_once 'lib/statusgruppe.inc.php';    // remove user from statusgroups
 require_once 'lib/messaging.inc.php';   // remove messages send or recieved by user
 require_once 'lib/object.inc.php';
@@ -126,25 +125,29 @@ class UserManagement
                     $this->user->visible = 'yes';
                 }
                 if ($nperms[$this->user->perms] < $nperms[$this->user->getPristineValue('perms')]) {
-                    $query = "UPDATE seminar_user
-                              INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id)
-                              SET seminar_user.status = :new_max_status
-                              WHERE seminar_user.user_id = :user_id
-                                AND seminar_user.status IN (:old_status)
-                                AND seminare.status NOT IN (:studygroups)";
-                    $downgrade = DBManager::get()->prepare($query);
                     $old_status = [];
                     foreach ($nperms as $status => $n) {
                         if ($n > $nperms[$this->user->perms] && $n <= $nperms[$this->user->getPristineValue('perms')]) {
                             $old_status[] = $status;
                         }
                     }
-                    $downgrade->execute([
-                        'user_id'        => $this->user->id,
-                        'old_status'     => $old_status,
-                        'studygroups'    => studygroup_sem_types(),
-                        'new_max_status' => $this->user->perms,
-                    ]);
+                    $new_status =  $this->user->perms;
+                    CourseMember::findEachBySQL(
+                        function (CourseMember $cm) use ($new_status) {
+                            $cm->status = $new_status;
+                            $cm->store();
+                        },
+                        'INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id)
+                        WHERE seminar_user.user_id = ?
+                                AND seminar_user.status IN (?)
+                                AND seminare.status NOT IN (?)
+                        ',
+                        [
+                            $this->user->id,
+                            $old_status,
+                            studygroup_sem_types()
+                        ]
+                    );
                 }
             }
         }
@@ -551,36 +554,35 @@ class UserManagement
             $this->re_sort_position_in_seminar_user();
 
             // delete all seminar entries
-            $query = "SELECT seminar_id FROM seminar_user WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([$this->user_data['auth_user_md5.user_id']]);
-            $seminar_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
-
-            $query = "DELETE FROM seminar_user WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([$this->user_data['auth_user_md5.user_id']]);
-            if ($count = $statement->rowCount()) {
+            $course_member = SimpleCollection::createFromArray(
+                CourseMember::findByUser($this->user_data['auth_user_md5.user_id'])
+            );
+            $seminar_ids = $course_member->pluck('seminar_id');
+            $count = 0;
+            foreach($course_member as $member) {
+                $member->delete();
+                $count++;
+            }
+            if ($count) {
                 $this->msg .= 'info§' . sprintf(_('%s Einträge aus Veranstaltungen gelöscht.'), $count) . '§';
-                array_map('update_admission', $seminar_ids);
+                array_map('AdmissionApplication::addMembers', $seminar_ids);
             }
             // delete all entries from waiting lists
-            $query = "SELECT seminar_id FROM admission_seminar_user WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([$this->user_data['auth_user_md5.user_id']]);
-            $seminar_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
-
-            $query = "DELETE FROM admission_seminar_user WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([$this->user_data['auth_user_md5.user_id']]);
-            if ($count = $statement->rowCount()) {
+            $admission_members = SimpleCollection::createFromArray(
+                AdmissionApplication::findByUser($this->user_data['auth_user_md5.user_id'])
+            );
+            $seminar_ids = $admission_members->pluck('seminar_id');
+            $count = 0;
+            foreach ($admission_members as $admission_member) {
+                $admission_member->delete();
+                $count++;
+            }
+            if ($count) {
                 $this->msg .= 'info§' . sprintf(_('%s Einträge aus Wartelisten gelöscht.'), $count) . '§';
-                array_map('update_admission', $seminar_ids);
+                array_map('AdmissionApplication::addMembers', $seminar_ids);
             }
             // delete 'Studiengaenge'
-            $query = "DELETE FROM user_studiengang WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([$this->user_data['auth_user_md5.user_id']]);
-            if ($count = $statement->rowCount()) {
+            if ($count = UserStudyCourse::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']])) {
                 $this->msg .= 'info§' . sprintf(_('%s Zuordnungen zu Studiengängen gelöscht.'), $count) . '§';
             }
             // delete all private appointments of this user
@@ -1113,7 +1115,7 @@ class UserManagement
         $statement->execute([$user_id]);
         if ($count = $statement->rowCount()) {
             $msg .= 'info§' . sprintf(_('%s Einträge aus Wartelisten gelöscht.'), $count) . '§';
-            array_map('update_admission', $seminar_ids);
+            array_map('AdmissionApplication::addMembers', $seminar_ids);
         }
 
         // delete all personal news from this user
@@ -1277,9 +1279,9 @@ class UserManagement
         $statement->execute([$this->user_data['auth_user_md5.user_id']]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             if ($row['status'] === 'tutor') {
-                re_sort_tutoren($row['Seminar_id'], $row['position']);
+                CourseMember::resortMembership($row['Seminar_id'], (int)$row['position']);
             } else if ($row['status'] === 'dozent') {
-                re_sort_dozenten($row['Seminar_id'], $row['position']);
+                CourseMember::resortMembership($row['Seminar_id'], (int)$row['position'], 'dozent');
             }
         }
     }
@@ -1292,8 +1294,6 @@ class UserManagement
     */
     public function changePassword($password)
     {
-        global $perm;
-
         $this->user_data['auth_user_md5.password'] = self::getPwdHasher()->HashPassword($password);
         $this->storeToDatabase();
 

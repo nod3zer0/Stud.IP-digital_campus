@@ -320,10 +320,12 @@ class Course_StudygroupController extends AuthenticatedController
                 if ($admin) {
                     // insert founder(s)
                     foreach ($founders as $user_id) {
-                        $stmt = DBManager::get()->prepare("INSERT INTO seminar_user
-                            (seminar_id, user_id, status, gruppe)
-                            VALUES (?, ?, 'dozent', 8)");
-                        $stmt->execute([$sem->id, $user_id]);
+                        CourseMember::create([
+                            'seminar_id' => $sem->id,
+                            'user_id'    => $user_id,
+                            'status'     => 'dozent',
+                            'gruppe'     => 8
+                        ]);
                     }
 
                     $this->founders          = null;
@@ -331,10 +333,12 @@ class Course_StudygroupController extends AuthenticatedController
                 } else {
                     $user_id = $GLOBALS['auth']->auth['uid'];
                     // insert dozent
-                    $query     = "INSERT INTO seminar_user (seminar_id, user_id, status, gruppe)
-                              VALUES (?, ?, 'dozent', 8)";
-                    $statement = DBManager::get()->prepare($query);
-                    $statement->execute([$sem->id, $user_id]);
+                    CourseMember::create([
+                        'seminar_id' => $sem->id,
+                        'user_id'    => $user_id,
+                        'status'     => 'dozent',
+                        'gruppe'     => 8
+                    ]);
                 }
 
                 $sem->store();

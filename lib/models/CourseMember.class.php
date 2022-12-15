@@ -156,6 +156,145 @@ class CourseMember extends SimpleORMap implements PrivacyObject
     }
 
     /**
+     * Get members of a course
+     *
+     * @param string $course_id
+     * @param string $sort_status
+     * @param string $order_by
+     * @return array
+     */
+    public function getMembers(string $course_id, string $sort_status = 'autor', string $order_by = 'nachname asc'): array
+    {
+        [$order, $asc] = explode(' ', $order_by);
+        if ($order === 'nachname') {
+            $order_by = "Nachname {$asc},Vorname {$asc}";
+        }
+
+        $query = "SELECT su.user_id, username, Vorname, Nachname, Email, status,
+                         position, su.mkdate, su.visible, su.comment,
+                         {$GLOBALS['_fullname_sql']['full_rev']} AS fullname
+                  FROM seminar_user AS su
+                  INNER JOIN auth_user_md5 USING (user_id)
+                  INNER JOIN user_info USING (user_id)
+                  WHERE seminar_id = ?
+                  ORDER BY position, Nachname ASC";
+        $st = DBManager::get()->prepare($query);
+        $st->execute([$course_id]);
+        $members = SimpleCollection::createFromArray($st->fetchAll(PDO::FETCH_ASSOC));
+        $filtered_members = [];
+
+        foreach (['user', 'autor', 'tutor', 'dozent'] as $status) {
+            $filtered_members[$status] = $members->findBy('status', $status);
+            if ($status === $sort_status) {
+                $filtered_members[$status]->orderBy($order_by, $order !== 'nachname' ? SORT_NUMERIC : SORT_LOCALE_STRING);
+            } else {
+                $filtered_members[$status]->orderBy(in_array($status, ['tutor', 'dozent']) ? 'position,Nachname,Vorname' : 'Nachname,Vorname');
+            }
+        }
+        return $filtered_members;
+    }
+
+    /**
+     * Get user informations by first and last name for csv-import
+     * @param string $course_id
+     * @param string $nachname
+     * @param string $vorname
+     * @return array
+     */
+    public function getMemberByIdentification(string $course_id, string $nachname, string $vorname = null): array
+    {
+        return DBManager::get()->fetchAll("SELECT
+                    auth_user_md5.user_id,
+                    auth_user_md5.username,
+                    auth_user_md5.perms,
+                    seminar_user.Seminar_id AS is_present,
+                    {$GLOBALS['_fullname_sql']['full_rev']} AS fullname
+                 FROM auth_user_md5
+                 LEFT JOIN user_info USING (user_id)
+                 LEFT JOIN seminar_user ON (seminar_user.user_id = auth_user_md5.user_id AND seminar_user.Seminar_id = ?)
+                 WHERE auth_user_md5.perms IN ('autor', 'tutor', 'dozent')
+                 AND auth_user_md5.visible <> 'never'
+                 AND auth_user_md5.Nachname LIKE ? AND (? IS NULL OR auth_user_md5.Vorname LIKE ?)
+                 ORDER BY auth_user_md5.Nachname, auth_user_md5.Vorname",
+            [$course_id, $nachname, $vorname, $vorname]);
+    }
+
+    /**
+     * Get user informations by username for csv-import
+     * @param string $course_id
+     * @param string $username
+     * @return Array
+     */
+    public function getMemberByUsername(string $course_id, string $username): array
+    {
+        return DBManager::get()->fetchAll(
+            "SELECT auth_user_md5.user_id,
+                    auth_user_md5.username,
+                    auth_user_md5.perms,
+                    seminar_user.Seminar_id AS is_present,
+                    {$GLOBALS['_fullname_sql']['full_rev']} AS fullname
+             FROM auth_user_md5
+             LEFT JOIN user_info USING (user_id)
+             LEFT JOIN seminar_user ON (seminar_user.user_id = auth_user_md5.user_id AND seminar_user.Seminar_id = ?)
+             WHERE auth_user_md5.perms IN ('autor', 'tutor', 'dozent')
+             AND auth_user_md5.visible <> 'never'
+               AND auth_user_md5.username LIKE ?
+             ORDER BY auth_user_md5.Nachname, auth_user_md5.Vorname",
+            [$course_id, $username]
+        );
+    }
+
+    /**
+     * Get user informations by email for csv-import
+     * @param String $course_id
+     * @param String $email
+     * @return Array
+     */
+    public function getMemberByEmail($course_id, $email): array
+    {
+        return DBManager::get()->fetchAll(
+            "SELECT a.user_id, username,
+                    perms, b.Seminar_id AS is_present
+             FROM auth_user_md5 AS a
+             LEFT JOIN user_info USING (user_id)
+             LEFT JOIN seminar_user AS b ON (b.user_id = a.user_id AND b.Seminar_id = ?)
+             WHERE auth_user_md5.perms IN ('autor', 'tutor', 'dozent')
+             AND a.visible <> 'never'
+               AND email LIKE ?
+             ORDER BY Nachname, Vorname",
+            [$course_id, $email]
+        );
+    }
+
+    /**
+     * Get user informations by generic datafields for csv-import
+     * @param string $course_id
+     * @param string $nachname
+     * @param string $datafield_id
+     * @return Array
+     */
+    public function getMemberByDatafield(string $course_id, string $nachname,  string $datafield_id): array
+    {
+        // TODO Fullname
+        return DBManager::get()->fetchAll(
+            "SELECT
+                auth_user_md5.user_id,
+                auth_user_md5.username,
+                seminar_user.Seminar_id AS is_present,
+                {$GLOBALS['_fullname_sql']['full_rev']} AS fullname
+             FROM datafields_entries
+             LEFT JOIN auth_user_md5 ON (auth_user_md5.user_id = datafields_entries.range_id)
+             LEFT JOIN user_info USING (user_id)
+             LEFT JOIN seminar_user ON (seminar_user.user_id = auth_user_md5.user_id AND seminar_user.Seminar_id = ?)
+             WHERE auth_user_md5.perms IN ('autor', 'tutor', 'dozent')
+             AND auth_user_md5.visible <> 'never'
+               AND datafields_entries.datafield_id = ? AND datafields_entries.content = ?
+             ORDER BY auth_user_md5.Nachname, auth_user_md5.Vorname",
+            [$course_id, $datafield_id, $nachname]
+        );
+    }
+
+    /**
      * Export available data of a given user into a storage object
      * (an instance of the StoredUserData class) for that user.
      *
@@ -173,5 +312,131 @@ class CourseMember extends SimpleORMap implements PrivacyObject
                 $storage->addTabularData(_('SeminareUser'), 'seminar_user', $field_data);
             }
         }
+    }
+
+    /**
+     * return the highest position-number increased by one for the
+     * passed user-group in the passed seminar
+     *
+     * @param string $status     can be on of 'tutor', 'dozent', ...
+     * @param string $seminar_id the seminar to work on
+     *
+     * @return int  the next available position
+     */
+    public static function getNextPosition(string $status, string $seminar_id): int
+    {
+        return (int) DBManager::get()->fetchColumn(
+            "SELECT MAX(position) + 1
+              FROM seminar_user
+              WHERE Seminar_id = ? AND status = ?",
+            [$seminar_id, $status]
+        );
+    }
+
+    /**
+     * reset the order-positions for the given status in the passed seminar,
+     * starting at the passed position
+     *
+     * @param string $course_id     the seminar to work on
+     * @param int    $position the position to start with
+     *
+     * @return void
+     */
+    public static function resortMembership(string $course_id, int $position, string $status = 'tutor')
+    {
+        self::findEachBySQL(
+            function (CourseMember $membership) {
+                $membership->position = $membership->position - 1;
+                $membership->store();
+            },
+            "Seminar_id = ? AND position > ? AND status = ? ",
+            [$course_id, $position, $status]
+        );
+    }
+    /**
+     * Insert a user into a seminar with optional log-message and contingent
+     *
+     * @param string   $seminar_id
+     * @param string   $user_id
+     * @param string   $status       status of user in the seminar (user, autor, tutor, dozent)
+     * @param boolean  $copy_studycourse  if true, the studycourse is copied from admission_seminar_user
+     *                                    to seminar_user. Overrides the $contingent-parameter
+     * @param string   $contingent   optional studiengang_id, if no id is given, no contingent is considered
+     * @param string   $log_message  optional log-message. if no log-message is given a default one is used
+     * @return bool
+     */
+    public static function insertCourseMember($seminar_id, $user_id, $status, $copy_studycourse = false, $contingent = false, $log_message = false): bool
+    {
+        if (!$user_id) {
+            return false;
+        }
+        // get the seminar-object
+        $sem = Seminar::GetInstance($seminar_id);
+
+        $admission_status = '';
+        $admission_comment = '';
+        $mkdate = time();
+
+        $admission_user = AdmissionApplication::find([$seminar_id, $user_id]);
+        if ($admission_user) {
+            // copy the studycourse from admission_seminar_user
+            if ($copy_studycourse && $admission_user->studiengang_id) {
+                $contingent = $admission_user->studiengang_id;
+            }
+            $admission_status = $admission_user->status;
+            $admission_comment = $admission_user->comment ?? '';
+            $mkdate = $admission_user->mkdate;
+        }
+
+        // check if there are places left in the submitted contingent (if any)
+        //ignore if preliminary
+        if ($admission_status !== 'accepted' && $contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats()) {
+            return false;
+        }
+
+        // get coloured group as used on meine_seminare
+        $colour_group = $sem->getDefaultGroup();
+
+        // LOGGING
+        // if no log message is submitted use a default one
+        if (!$log_message) {
+            $log_message = 'Wurde in die Veranstaltung eingetragen, admission_status: '. $admission_status . ' Kontingent: ' . $contingent;
+        }
+        StudipLog::log('SEM_USER_ADD', $seminar_id, $user_id, $status, $log_message);
+        $membership = new self([$seminar_id, $user_id]);
+        $membership->setData([
+            'Seminar_id' => $seminar_id,
+            'user_id'    => $user_id,
+            'status'     => $status,
+            'comment'    => $admission_comment,
+            'gruppe'     => $colour_group,
+            'mkdate'     => $mkdate,
+        ]);
+        $membership->store();
+
+        NotificationCenter::postNotification('UserDidEnterCourse', $seminar_id, $user_id);
+
+        if ($admission_status) {
+            $admission_user->delete();
+
+            //renumber the waiting/accepted/lot list, a user was deleted from it
+            AdmissionApplication::renumberAdmission($seminar_id);
+        }
+        $cs = $sem->getCourseSet();
+        if ($cs) {
+            AdmissionPriority::unsetPriority($cs->getId(), $user_id, $sem->getId());
+        }
+
+        CalendarScheduleModel::deleteSeminarEntries($user_id, $seminar_id);
+
+        // reload the seminar, the contingents have changed
+        $sem->restore();
+
+        // Check if a parent course exists and insert user there.
+        if ($sem->parent_course) {
+            self::insertCourseMember($sem->parent_course, $user_id, $status, $copy_studycourse, $contingent, $log_message);
+        }
+
+        return true;
     }
 }

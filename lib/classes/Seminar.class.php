@@ -20,7 +20,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/admission.inc.php';
 require_once 'lib/dates.inc.php';
 
 class Seminar
@@ -1530,17 +1529,13 @@ class Seminar
         // Delete that Seminar.
 
         // Alle Benutzer aus dem Seminar rauswerfen.
-        $query = "DELETE FROM seminar_user WHERE Seminar_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute([$s_id]);
-        if (($db_ar = $statement->rowCount()) > 0) {
+        $db_ar = CourseMember::deleteBySQL('Seminar_id = ?', [$s_id]);
+        if ($db_ar > 0) {
             $this->createMessage(sprintf(_("%s Teilnehmende und Lehrende archiviert."), $db_ar));
         }
 
         // Alle Benutzer aus Wartelisten rauswerfen
-        $query = "DELETE FROM admission_seminar_user WHERE seminar_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute([$s_id]);
+        AdmissionApplication::deleteBySQL('seminar_id = ?', [$s_id]);
 
         // Alle beteiligten Institute rauswerfen
         $query = "DELETE FROM seminar_inst WHERE Seminar_id = ?";
@@ -1596,10 +1591,8 @@ class Seminar
 
 
         // Freie Seite zu diesem Seminar löschen
-        $query = "DELETE FROM scm WHERE range_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute([$s_id]);
-        if (($db_ar = $statement->rowCount()) > 0) {
+        $db_ar = StudipScmEntry::deleteBySQL('range_id = ?', [$s_id]);
+        if ($db_ar > 0) {
             $this->createMessage(_("Freie Seite der Veranstaltung archiviert."));
         }
 
@@ -1614,10 +1607,8 @@ class Seminar
         DataFieldEntry::removeAll($s_id);
 
         //kill all wiki-pages
-        $query = "DELETE FROM wiki WHERE range_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute([$s_id]);
-        if (($db_wiki = $statement->rowCount()) > 0) {
+        $db_wiki = WikiPage::deleteBySQL('range_id = ?', [$s_id]);
+        if ($db_wiki > 0) {
             $this->createMessage(sprintf(_("%s Wiki-Seiten archiviert."), $db_wiki));
         }
 
@@ -1892,51 +1883,34 @@ class Seminar
                 return false;
             }
         }
+        $course_member = CourseMember::findOneBySQL('user_id = ? AND Seminar_id = ?', [$user_id, $this->id]);
+        $new_position = (int) DBManager::get()->fetchColumn(
+            "SELECT MAX(position) + 1 FROM seminar_user WHERE status = ? AND Seminar_id = ?",
+            [$status, $this->id]
+        );
+        $numberOfTeachers = CourseMember::countBySql("Seminar_id = ? AND status = 'dozent'", [$this->id]);
 
-        if (!$force) {
-            $query = "SELECT status FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([$user_id, $this->id]);
-            $old_status = $statement->fetchColumn();
-        }
-
-        $query = "SELECT MAX(position) + 1 FROM seminar_user WHERE status = ? AND Seminar_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute([$status, $this->id]);
-        $new_position = $statement->fetchColumn();
-
-        $query = "SELECT COUNT(*) FROM seminar_user WHERE Seminar_id = ? AND status = 'dozent'";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute([$this->id]);
-        $numberOfTeachers = $statement->fetchColumn();
-
-        if (!$old_status) {
-            $query = "INSERT INTO seminar_user (Seminar_id, user_id, status, position, gruppe, visible, mkdate)
-                      VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([
-                $this->id,
-                $user_id,
-                $status,
-                $new_position ?: 0,
-                (int)select_group($this->getSemesterStartTime()),
-                in_array($status, words('tutor dozent')) ? 'yes' : 'unknown',
+        if (!$course_member && !$force) {
+            CourseMember::create([
+                'Seminar_id' => $this->id,
+                'user_id'    => $user_id,
+                'status'     => $status,
+                'position'   => $new_position?:0,
+                'gruppe'     => (int) select_group($this->getSemesterStartTime()),
+                'visible'    => in_array($status, ['tutor', 'dozent']) ? 'yes' : 'unknown',
             ]);
             // delete the entries, user is now in the seminar
-            $stmt = DBManager::get()->prepare('DELETE FROM admission_seminar_user
-                                            WHERE user_id = ? AND seminar_id = ?');
-            $stmt->execute([$user_id, $this->getId()]);
-            if ($stmt->rowCount()) {
+            if (AdmissionApplication::deleteBySQL('user_id = ? AND seminar_id = ?', [$user_id, $this->getId()])) {
                 //renumber the waiting/accepted/lot list, a user was deleted from it
-                renumber_admission($this->getId());
+                AdmissionApplication::renumberAdmission($this->getId());
             }
             $cs = $this->getCourseSet();
             if ($cs) {
-                $prio_delete = AdmissionPriority::unsetPriority($cs->getId(), $user_id, $this->getId());
+                AdmissionPriority::unsetPriority($cs->getId(), $user_id, $this->getId());
             }
 
             CalendarScheduleModel::deleteSeminarEntries($user_id, $this->getId());
-            NotificationCenter::postNotification("CourseDidGetMember", $this, $user_id);
+            NotificationCenter::postNotification('CourseDidGetMember', $this, $user_id);
             NotificationCenter::postNotification('UserDidEnterCourse', $this->id, $user_id);
             StudipLog::log('SEM_USER_ADD', $this->id, $user_id, $status, 'Wurde in die Veranstaltung eingetragen');
             $this->course->resetRelation('members');
@@ -1949,42 +1923,41 @@ class Seminar
             }
 
             return $this;
-        } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
-            && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
-            $query = "UPDATE seminar_user
-                      SET status = ?, visible = IFNULL(?, visible), position = ?
-                      WHERE Seminar_id = ? AND user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([
-                $status,
-                in_array($status, words('tutor dozent')) ? 'yes' : null,
-                $new_position,
-                $this->id,
-                $user_id,
-            ]);
-
-            if ($old_status === 'dozent') {
-                $query = "SELECT termin_id FROM termine WHERE range_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute([$this->id]);
-                $termine = $statement->fetchAll(PDO::FETCH_COLUMN);
-
-                $query = "DELETE FROM termin_related_persons WHERE range_id = ? AND user_id = ?";
-                $statement = DBManager::get()->prepare($query);
-
-                foreach ($termine as $termin_id) {
-                    $statement->execute([$termin_id, $user_id]);
-                }
+        } elseif (
+            ($force || $rangordnung[$course_member->status] < $rangordnung[$status])
+            && ($course_member->status !== 'dozent' || $numberOfTeachers > 1)
+        ) {
+            $visibility = $course_member->visible;
+            if (in_array($status, ['tutor', 'dozent'])) {
+                $visibility = 'yes';
             }
-            NotificationCenter::postNotification("CourseDidChangeMember", $this, $user_id);
+            $course_member->status = $status;
+            $course_member->visible = $visibility;
+            $course_member->position = $new_position;
+            $course_member->store();
+
+            if ($course_member->status === 'dozent') {
+                $termine = DBManager::get()->fetchFirst(
+                    "SELECT termin_id FROM termine WHERE range_id = ?",
+                    [$this->id]
+                );
+
+                DBManager::get()->execute(
+                    "DELETE FROM termin_related_persons WHERE range_id IN (?) AND user_id = ?",
+                    [$termine, $user_id]
+                );
+            }
+            NotificationCenter::postNotification('CourseDidChangeMember', $this, $user_id);
             $this->course->resetRelation('members');
             $this->course->resetRelation('admission_applicants');
             return $this;
         } else {
-            if ($old_status === "dozent" && $numberOfTeachers <= 1) {
-                $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),
+            if ($course_member->status === 'dozent' && $numberOfTeachers <= 1) {
+                $this->createError(sprintf(_('Die Person kann nicht herabgestuft werden, ' .
+'da mindestens ein/eine Veranstaltungsleiter/-in (%s) in die Veranstaltung eingetragen sein muss!'),
                         get_title_for_status('dozent', 1, $this->status)) .
-                    ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen herabzustufen."));
+                    ' ' . sprintf(_('Tragen Sie zunächst eine weitere Person als Veranstaltungsleiter/-in (%s) ein.'),
+get_title_for_status('dozent', 1, $this->status)));
             }
 
             return false;
@@ -1992,24 +1965,116 @@ class Seminar
     }
 
     /**
+     * Cancels a subscription to an admission.
+     *
+     * @param array $users
+     * @param string $status
+     * @return array
+     * @throws NotificationVetoException
+     */
+    public function cancelAdmissionSubscription(array $users, string $status): array
+    {
+        $msgs = [];
+        $messaging = new messaging;
+        $course_set = $this->getCourseSet();
+        $users = User::findMany($users);
+        foreach ($users as $user) {
+            $prio_delete = false;
+            if ($course_set) {
+                $prio_delete = AdmissionPriority::unsetPriority($course_set->getId(), $user->id, $this->getId());
+            }
+            $result = AdmissionApplication::deleteBySQL(
+                'seminar_id = ? AND user_id = ? AND status = ?',
+                [$this->getId(), $user->id, $status]
+            );
+            if ($result || $prio_delete) {
+                setTempLanguage($user->id);
+                if ($status !== 'accepted') {
+                    $message = sprintf(
+                        _('Sie wurden von der Warteliste der Veranstaltung **%s** gestrichen und sind damit __nicht__ zugelassen worden.'),
+                        $this->getFullName()
+                    );
+                } else {
+                    $message = sprintf(
+                        _('Sie wurden aus der Veranstaltung **%s** gestrichen und sind damit __nicht__ zugelassen worden.'),
+                        $this->getFullName()
+                    );
+                }
+                restoreLanguage();
+                $messaging->insert_message(
+                    $message,
+                    $user->username,
+                    '____%system%____',
+                    false,
+                    false,
+                    '1',
+                    false,
+                    sprintf('%s %s', _('Systemnachricht:'), _('nicht zugelassen in Veranstaltung')),
+                    true
+                );
+                StudipLog::log('SEM_USER_DEL', $this->getId(), $user->id, 'Wurde aus der Veranstaltung entfernt');
+                NotificationCenter::postNotification('UserDidLeaveCourse', $this->getId(), $user->id);
+
+                $msgs[] = $user->getFullName();
+            }
+        }
+        return $msgs;
+    }
+
+    /**
+     * Cancels a subscription to a course
+     * @param array $users
+     * @return array
+     * @throws Exception
+     */
+    public function cancelSubscription(array $users): array
+    {
+        $msgs = [];
+        $messaging = new messaging;
+        $users = User::findMany($users);
+        foreach ($users as $user) {
+            // delete member from seminar
+            if ($this->deleteMember($user->id)) {
+                setTempLanguage($user->id);
+                $message = sprintf(
+                    _('Ihre Anmeldung zur Veranstaltung **%s** wurde aufgehoben.'),
+                    $this->getFullName()
+                );
+                restoreLanguage();
+                $messaging->insert_message(
+                    $message,
+                    $user->username,
+                    '____%system%____',
+                    false,
+                    false,
+                    '1',
+                    false,
+                    sprintf('%s %s', _('Systemnachricht:'), _("Anmeldung aufgehoben")),
+                    true
+                );
+                $msgs[] = $user->getFullName();
+            }
+        }
+
+        return $msgs;
+    }
+
+    /**
      * deletes a user from the seminar by respecting the rule that at least one
      * user with status "dozent" must stay there
-     * @param user_id string:   user_id of the user to delete
-     * @param return:   false or $this for chaining
+     * @param string $user_id  user_id of the user to delete
+     * @return boolean
      */
-    public function deleteMember($user_id)
+    public function deleteMember($user_id): bool
     {
-        $dozenten = $this->getMembers('dozent');
+        $dozenten = $this->getMembers();
         if (count($dozenten) >= 2 || !$dozenten[$user_id]) {
-            $query = "DELETE FROM seminar_user WHERE Seminar_id = ? AND user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute([$this->id, $user_id]);
-            if ($statement->rowCount() === 0) {
-                return $this;
+            $result = CourseMember::deleteBySQL('Seminar_id = ? AND user_id = ?', [$this->id, $user_id]);
+            if ($result === 0) {
+                return true;
             }
             // If this course is a child of another course...
             if ($this->parent_course) {
-
                 // ... check if user is member in another sibling ...
                 $other = CourseMember::countBySQL(
                     "`user_id` = :user AND `Seminar_id` IN (:courses) AND `Seminar_id` != :this",
@@ -2018,7 +2083,7 @@ class Seminar
 
                 // ... and delete from parent course if this was the only
                 // course membership in this family.
-                if ($other == 0) {
+                if ($other === 0) {
                     $s = new Seminar($this->parent);
                     $s->deleteMember($user_id);
                 }
@@ -2070,7 +2135,7 @@ class Seminar
             NotificationCenter::postNotification('UserDidLeaveCourse', $this->id, $user_id);
             StudipLog::log('SEM_USER_DEL', $this->id, $user_id, 'Wurde aus der Veranstaltung entfernt');
             $this->course->resetRelation('members');
-            return $this;
+            return true;
         } else {
             $this->createError(
                 sprintf(
@@ -2085,38 +2150,21 @@ class Seminar
 
     /**
      * sets the almost never used column position in the table seminar_user
-     * @param members array: array of user_id's - wrong IDs will be ignored
-     * @return $this
+     * @param array $members members array: array of user_id's - wrong IDs will be ignored
+     * @return Seminar
      */
-    public function setMemberPriority($members)
+    public function setMemberPriority($members): Seminar
     {
-        $query = "UPDATE seminar_user
-                  SET position = ?
-                  WHERE Seminar_id = ? AND user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-
-        foreach(array_values($members) as $num => $member) {
-            $statement->execute([$num, $this->id, $member]);
-        }
-
+        $counter = 0;
+        CourseMember::findEachBySQL(
+            function (CourseMember $membership) use (&$counter) {
+                $membership->position = $counter++;
+                $membership->store();
+            },
+            "Seminar_id = ? AND user_id = IN (?)",
+            [$this->course_id, $members]
+        );
         return $this;
-    }
-
-    public function setLabel($user_id, $label) {
-        if ($GLOBALS['perm']->have_studip_perm('tutor', $this->getId(), $user_id)) {
-            $statement = DBManager::get()->prepare(
-                "UPDATE seminar_user " .
-                "SET label = :label " .
-                "WHERE user_id = :user_id " .
-                "AND Seminar_id = :seminar_id " .
-                "");
-            $statement->execute([
-                'user_id' => $user_id,
-                'seminar_id' => $this->getId(),
-                'label' => $label
-            ]);
-            NotificationCenter::postNotification("CourseDidChangeMemberLabel", $this);
-        }
     }
 
     /**
@@ -2386,10 +2434,7 @@ class Seminar
             case 'first':
             default:
                 // Move all others on the waitlist up by the number of people to add.
-                DBManager::get()->execute("UPDATE `admission_seminar_user`
-                        SET `position`=`position`+1
-                        WHERE `seminar_id`=?
-                            AND `status`='awaiting'", [$this->id]);
+                AdmissionApplication::renumberAdmission($this->id);
                 $waitpos = 1;
         }
         $new_admission_member = new AdmissionApplication();

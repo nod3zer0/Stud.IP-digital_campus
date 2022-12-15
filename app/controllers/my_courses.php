@@ -301,25 +301,31 @@ class MyCoursesController extends AuthenticatedController
         );
         $gruppe = Request::getArray('gruppe');
         if (!empty($gruppe)) {
-            $query = "UPDATE seminar_user SET gruppe = ? WHERE Seminar_id = ? AND user_id = ?";
-            $user_statement = DBManager::get()->prepare($query);
-
-            $query = "UPDATE deputies SET gruppe = ? WHERE range_id = ? AND user_id = ?";
-            $deputy_statement = DBManager::get()->prepare($query);
-
             foreach ($gruppe as $key => $value) {
-                $user_statement->execute([$value,
-                    $key,
-                    $GLOBALS['user']->id
-                ]);
-                $updated = $user_statement->rowCount();
-
-                if ($deputies_enabled && !$updated) {
-                    $deputy_statement->execute([
-                        $value,
+                $updated = CourseMember::findEachBySQL(
+                    function (CourseMember $cm) use ($value) {
+                        $cm->gruppe = $value;
+                        $cm->store();
+                    },
+                    'Seminar_id = ? AND user_id = ?',
+                    [
                         $key,
                         $GLOBALS['user']->id
-                    ]);
+                    ]
+                );
+
+                if ($deputies_enabled && !$updated) {
+                    Deputy::findEachBySQL(
+                        function (Deputy $deputy) use ($value) {
+                            $deputy->gruppe = $value;
+                            $deputy->store();
+                        },
+                        'range_id = ? AND user_id = ?',
+                        [
+                            $key,
+                            $GLOBALS['user']->id
+                        ]
+                    );
                 }
             }
         }
@@ -442,7 +448,7 @@ class MyCoursesController extends AuthenticatedController
                 }
                 $cmd = 'kill';
             } else {
-                if (admission_seminar_user_get_position($GLOBALS['user']->id, $course_id) === false) {
+                if (AdmissionApplication::checkMemberPosition($GLOBALS['user']->id, $course_id) === false) {
                     $message = sprintf(
                         _('Wollen Sie sich von der Anmeldeliste der Veranstaltung "%s" wirklich abmelden?'),
                         htmlReady($current_seminar->name)
@@ -465,10 +471,7 @@ class MyCoursesController extends AuthenticatedController
             return;
         } else {
             if (!LockRules::Check($course_id, 'participants') && $ticket_check && Request::option('cmd') != 'back' && Request::get('cmd') != 'kill_admission') {
-                $query     = "DELETE FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute([$GLOBALS['user']->id, $course_id]);
-                if ($statement->rowCount() == 0) {
+                if (CourseMember::deleteBySQL('user_id = ? AND Seminar_id = ?', [$GLOBALS['user']->id, $course_id]) === 0) {
                     PageLayout::postError(
                         _('In der ausgewählten Veranstaltung wurde die gesuchten Personen nicht gefunden und konnte daher nicht ausgetragen werden.')
                     );
@@ -487,7 +490,7 @@ class MyCoursesController extends AuthenticatedController
                     }
 
                     // Are successor available
-                    update_admission($course_id);
+                    AdmissionApplication::addMembers($course_id);
 
                     // If this course is a child of another course...
                     if ($current_seminar->parent_course) {
@@ -522,16 +525,16 @@ class MyCoursesController extends AuthenticatedController
                 if ($current_seminar->isAdmissionEnabled()) {
                     $prio_delete = AdmissionPriority::unsetPriority($current_seminar->getCourseSet()->getId(), $GLOBALS['user']->id, $course_id);
                 }
-                $query     = "DELETE FROM admission_seminar_user WHERE user_id = ? AND seminar_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute([$GLOBALS['user']->id,
-                    $course_id]);
                 NotificationCenter::postNotification('UserDidLeaveWaitingList', $course_id, $GLOBALS['user']->id);
-                if ($statement->rowCount() || $prio_delete) {
+                $deleted = AdmissionApplication::deleteBySQL(
+                    'user_id = ? AND seminar_id = ?',
+                    [$GLOBALS['user']->id, $course_id]
+                );
+                if ($deleted || $prio_delete) {
                     //Warteliste neu sortieren
-                    renumber_admission($course_id);
+                    AdmissionApplication::renumberAdmission($course_id);
                     //Pruefen, ob es Nachruecker gibt
-                    update_admission($course_id);
+                    AdmissionApplication::addMembers($course_id);
                     PageLayout::postSuccess(sprintf(
                         _("Der Eintrag in der Anmelde- bzw. Warteliste der Veranstaltung <b>%s</b> wurde aufgehoben. Wenn Sie an der Veranstaltung teilnehmen wollen, müssen Sie sich erneut bewerben."),
                         htmlReady($current_seminar->name)
