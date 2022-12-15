@@ -86,7 +86,7 @@ class Course_MembersController extends AuthenticatedController
         ];
 
         //check for admission / waiting list
-        AdmissionApplication::addMembers($this->course->id);
+        AdmissionApplication::addMembers($this->course_id);
         $this->checkUserVisibility();
     }
 
