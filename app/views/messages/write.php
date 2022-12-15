@@ -7,7 +7,7 @@
     <fieldset>
         <legend><?= _('Neue Nachricht') ?></legend>
     <div class="message-user-list">
-        <label for="user_id_1"><?= _("An") ?></label>
+        <label><?= _("An") ?></label>
         <ul class="list-csv" id="adressees">
             <li id="template_adressee" style="display: none;" class="adressee">
                 <input type="hidden" name="message_to[]" value="">
