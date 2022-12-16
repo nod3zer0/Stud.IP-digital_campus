@@ -1,6 +1,6 @@
 <? if ($resource): ?>
-    <form class="default" method="post"
-          action="<?= $controller->link_for('resources/export/bookings')?>">
+    <form class="default" method="post" action="<?= $controller->link_for('resources/export/bookings')?>">
+        <input type="hidden" name="from" value="<?= $controller->resource_bookings($resource->id)?>">
         <?= CSRFProtection::tokenTag() ?>
         <? if ($resource instanceof Room): ?>
             <input type="hidden" name="selected_rooms[]"
