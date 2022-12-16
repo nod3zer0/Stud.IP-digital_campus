@@ -70,9 +70,9 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
 </script>
 </head>
 
-<body id="<?= PageLayout::getBodyElementId() ?>" class="enable-skiplinks">
+<body id="<?= PageLayout::getBodyElementId() ?>">
     <div id="skip_link_navigation" aria-busy="true"></div>
-    <? SkipLinks::addIndex(_('Hauptinhalt'), 'content', 100) ?>
+    <?= PageLayout::getBodyElements() ?>
 
     <? include 'lib/include/header.php' ?>
 
@@ -80,6 +80,7 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
 
     <!-- Start main page content -->
     <main id="content-wrapper">
+        <? SkipLinks::addIndex(_('Hauptinhalt'), 'content', 100) ?>
         <div id="content">
             <h1 class="sr-only"><?= htmlReady(PageLayout::getTitle()) ?></h1>
             <? if (PageLayout::isFullscreenModeAllowed()): ?>

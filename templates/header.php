@@ -50,10 +50,6 @@ if ($navigation) {
 }
 
 ?>
-<div id="skip_link_navigation" aria-busy="true"></div>
-<? SkipLinks::addIndex(_('Hauptinhalt'), 'content', 100) ?>
-<?= PageLayout::getBodyElements() ?>
-
 <!-- Begin main site header -->
 <header id="main-header">
 
