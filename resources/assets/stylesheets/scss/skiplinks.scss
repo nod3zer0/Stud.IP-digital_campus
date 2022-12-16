@@ -41,16 +41,3 @@ button.skiplink {
         transition: color 0.3s;
     }
 }
-
-body.enable-skiplinks {
-    *:not(:empty):focus {
-        outline: 2px dashed $orange;
-    }
-
-    #tabs {
-        a:focus {
-            position: relative;
-            z-index: 100;
-        }
-    }
-}

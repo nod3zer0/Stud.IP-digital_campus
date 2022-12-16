@@ -70,7 +70,8 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
 </script>
 </head>
 
-<body id="<?= PageLayout::getBodyElementId() ?>" <? if (SkipLinks::isEnabled()) echo 'class="enable-skiplinks"'; ?>>
+<body id="<?= PageLayout::getBodyElementId() ?>" class="enable-skiplinks">
+    <div id="skip_link_navigation" aria-busy="true"></div>
     <? SkipLinks::addIndex(_('Hauptinhalt'), 'content', 100) ?>
 
     <? include 'lib/include/header.php' ?>

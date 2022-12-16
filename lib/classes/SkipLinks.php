@@ -26,34 +26,6 @@ class SkipLinks
     private static $links = [];
 
     /**
-     * Returns whether skiplinks are enabled.
-     *
-     * @return boolean
-     */
-    public static function isEnabled()
-    {
-        if (isset($GLOBALS['user']->id)) {
-            //Use the user configuration:
-            return UserConfig::get($GLOBALS['user']->id)->SKIPLINKS_ENABLE;
-        } else {
-            //Use the global configuration:
-            return Config::get()->SKIPLINKS_ENABLE;
-        }
-    }
-
-    /**
-     * Inserts container for skip links in page layout.
-     */
-    public static function insertContainer()
-    {
-        if (!self::isEnabled()) {
-            return;
-        }
-
-        PageLayout::addBodyElements('<div id="skip_link_navigation" aria-busy="true"></div>');
-    }
-
-    /**
      * Adds a link to the list of skip links.
      *
      * @param string $name the displayed name of the links
@@ -92,7 +64,7 @@ class SkipLinks
      */
     public static function getHTML()
     {
-        if (!self::isEnabled() || count(self::$links) === 0) {
+        if (count(self::$links) === 0) {
             return '';
         }
 

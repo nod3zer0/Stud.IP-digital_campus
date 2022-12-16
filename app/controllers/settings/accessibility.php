@@ -36,7 +36,6 @@ class Settings_AccessibilityController extends Settings_SettingsController
         CSRFProtection::verifyUnsafeRequest();
 
         $this->config->store('USER_HIGH_CONTRAST', Request::bool('enable_high_contrast'));
-        $this->config->store('SKIPLINKS_ENABLE', Request::bool('skiplinks_enable'));
 
         PageLayout::postSuccess(_('Ihre Einstellungen wurden gespeichert.'));
         $this->redirect('settings/accessibility');
