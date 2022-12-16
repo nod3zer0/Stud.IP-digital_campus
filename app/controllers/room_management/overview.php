@@ -320,6 +320,9 @@ class RoomManagement_OverviewController extends AuthenticatedController
                     'resources/room_group/permissions',
                     ['room_ids' => $room_ids]
                 );
+            } else {
+                PageLayout::postInfo(_('Das Gebäude hat keine Räume.'));
+                $this->buildings = [];
             }
         }
     }
