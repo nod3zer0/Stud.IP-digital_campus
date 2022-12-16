@@ -1,7 +1,7 @@
 <?php
 require_once 'lib/classes/QuestionType.interface.php';
 
-class Vote extends QuestionnaireQuestion implements QuestionType
+class LikertScale extends QuestionnaireQuestion implements QuestionType
 {
     public static function getIcon(bool $active = false) : Icon
     {
@@ -14,17 +14,17 @@ class Vote extends QuestionnaireQuestion implements QuestionType
      */
     public static function getIconShape()
     {
-        return 'vote';
+        return 'likert';
     }
 
     public static function getName()
     {
-        return _('Auswahlfrage');
+        return _('Likert-Skala');
     }
 
     static public function getEditingComponent()
     {
-        return ['vote-edit', ''];
+        return ['likert-edit', ''];
     }
 
     public function beforeStoringQuestiondata($questiondata)
@@ -32,14 +32,14 @@ class Vote extends QuestionnaireQuestion implements QuestionType
         $questiondata['description'] = \Studip\Markup::markAsHtml(
             \Studip\Markup::purifyHtml($questiondata['description'])
         );
-        $questiondata['options'] = array_filter($questiondata['options']);
+        $questiondata['statements'] = array_filter($questiondata['statements']);
         return $questiondata;
     }
 
     public function getDisplayTemplate()
     {
         $factory = new Flexi_TemplateFactory(realpath(__DIR__.'/../../app/views'));
-        $template = $factory->open('questionnaire/question_types/vote/vote_answer');
+        $template = $factory->open('questionnaire/question_types/likert/likert_answer');
         $template->set_attribute('vote', $this);
         return $template;
     }
@@ -49,25 +49,19 @@ class Vote extends QuestionnaireQuestion implements QuestionType
         $answer = $this->getMyAnswer();
 
         $answers = Request::getArray('answers');
-        if (array_key_exists($this->getId(), $answers)) {
-            $userAnswer = $answers[$this->getId()]['answerdata']['answers'];
-            if (is_array($userAnswer)) {
-                $userAnswer = array_map('intval', $userAnswer);
-            }
-            else {
-                $userAnswer = (int) $userAnswer;
-            }
-        }
-        $answer->setData(['answerData' => ['answers' => $userAnswer ] ]);
+        $userAnswer = (array) $answers[$this->getId()]['answerdata']['answers'];
+        $userAnswer = array_map(function ($val) { return (int) $val; }, $userAnswer);
+        $answer->setData(['answerdata' => ['answers' => $userAnswer ] ]);
         return $answer;
     }
 
     public function getUserIdsOfFilteredAnswer($answer_option)
     {
         $user_ids = [];
+        list($statement_key, $options_key) = explode('_', $answer_option);
         foreach ($this->answers as $answer) {
             $answerData = $answer['answerdata']->getArrayCopy();
-            if (in_array($answer_option, (array) $answerData['answers'])) {
+            if ($answerData['answers'][$statement_key] == $options_key) {
                 $user_ids[] = $answer['user_id'];
             }
         }
@@ -85,7 +79,7 @@ class Vote extends QuestionnaireQuestion implements QuestionType
             }
         }
         $factory = new Flexi_TemplateFactory(realpath(__DIR__.'/../../app/views'));
-        $template = $factory->open('questionnaire/question_types/vote/vote_evaluation');
+        $template = $factory->open('questionnaire/question_types/likert/likert_evaluation');
         $template->set_attribute('vote', $this);
         $template->set_attribute('answers', $answers);
         $template->set_attribute('filtered', $filtered);
@@ -96,9 +90,9 @@ class Vote extends QuestionnaireQuestion implements QuestionType
     {
         $output = [];
 
-        $options = $this['questiondata']['options'] ? $this['questiondata']['options']->getArrayCopy() : [];
+        $statements = $this['questiondata']['statements']->getArrayCopy();
 
-        foreach ($options as $key => $option) {
+        foreach ($statements as $statement_key => $statement) {
             $answerOption = [];
             $countNobodys = 0;
 
@@ -112,13 +106,9 @@ class Vote extends QuestionnaireQuestion implements QuestionType
                     $userId = _('unbekannt').' '.$countNobodys;
                 }
 
-                if (in_array($key, (array) $answerData['answers'])) {
-                    $answerOption[$userId] = 1;
-                } else {
-                    $answerOption[$userId] = 0;
-                }
+                $answerOption[$userId] = $this['questiondata']['options'][$answerData['answers'][$statement_key]];
             }
-            $output[$option] = $answerOption;
+            $output[$statement] = $answerOption;
         }
         return $output;
     }

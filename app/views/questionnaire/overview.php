@@ -1,5 +1,6 @@
 <form action="<?= $controller->link_for("questionnaire/bulkdelete", compact('range_type', 'range_id')) ?>"
       method="post">
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default" id="questionnaire_overview">
         <thead>
             <tr>
@@ -48,7 +49,7 @@ if (!empty($statusgruppen)) {
         _('Fragebogen erstellen'),
         $controller->url_for('questionnaire/edit', compact('range_type', 'range_id')),
         Icon::create('add'),
-        ['data-dialog' => '']
+        ['data-dialog' => 'size=big']
     );
 }
 Sidebar::Get()->addWidget($actions);

@@ -1,9 +1,27 @@
-<div class="questionnaire_results questionnaire_<?= $questionnaire->getId() ?>" data-questionnaire_id="<?= $questionnaire->getId() ?>">
+<?
+/**
+ * @var Questionnaire $questionnaire
+ * @var array $filtered
+ */
+$only_user_ids = null;
+if ($filtered[$questionnaire->getId()] && $filtered[$questionnaire->getId()]['question_id']) {
+    foreach ($questionnaire->questions as $question) {
+        if ($question->getId() === $filtered[$questionnaire->getId()]['question_id']) {
+            $only_user_ids = $question->getUserIdsOfFilteredAnswer($filtered[$questionnaire->getId()]['filterForAnswer']);
+            break;
+        }
+    }
+}
+
+?>
+<div class="questionnaire_results questionnaire_<?= $questionnaire->getId() ?>"
+     data-questionnaire_id="<?= $questionnaire->getId() ?>"
+     data-title="<?= htmlReady($questionnaire['title']) ?>">
 
     <? if ($questionnaire->resultsVisible()) : ?>
         <? foreach ($questionnaire->questions as $question) : ?>
-            <article class="question_<?= $question->getId() ?>">
-                <? $template = $question->getResultTemplate() ?>
+            <article class="question question_<?= $question->getId() ?>">
+                <? $template = $question->getResultTemplate($only_user_ids, $filtered[$questionnaire->getId()]['question_id'] === $question->getId() ? $filtered[$questionnaire->getId()]['filterForAnswer'] : null) ?>
                 <?= $template ? $template->render(['anonAnswers' => $anonAnswers ?? '']) : _("Ergebnisse konnten nicht ausgewertet werden.") ?>
             </article>
         <? endforeach ?>
@@ -50,6 +68,9 @@
         <? endif ?>
         <? if ($questionnaire->isEditable() && !$questionnaire->isRunning()) : ?>
             <?= \Studip\LinkButton::create(_("Starten"), URLHelper::getURL("dispatch.php/questionnaire/start/".$questionnaire->getId())) ?>
+        <? endif ?>
+        <? if ($questionnaire->resultsVisible()) : ?>
+            <?= \Studip\LinkButton::create(_('PDF exportieren'), '#', ['onclick' => "STUDIP.Questionnaire.exportEvaluationAsPDF(); return false;"]) ?>
         <? endif ?>
         <? if ($questionnaire->isEditable() && $questionnaire->isRunning()) : ?>
             <?= \Studip\LinkButton::create(_("Beenden"), URLHelper::getURL("dispatch.php/questionnaire/stop/".$questionnaire->getId())) ?>

@@ -1,13 +1,20 @@
 <?php
-    $etask = $vote->etask;
+/**
+ * @var QuestionnaireQuestion $vote
+ * @var QuestionnaireAnswer[] $answers
+ */
 ?>
-<h3>
-    <?= formatReady($etask->description) ?>
-</h3>
-
+<div class="description_container">
+    <div class="icon_container">
+        <?= Icon::create('guestbook', Icon::ROLE_INFO)->asImg(20) ?>
+    </div>
+    <div class="description">
+        <?= formatReady($vote->questiondata['description']) ?>
+    </div>
+</div>
 
 <ul class="clean">
-<? foreach ($vote->answers as $answer) : ?>
+<? foreach ($answers as $answer) : ?>
     <? if (trim($answer['answerdata']['text'])) : ?>
     <li style="border: #d0d7e3 thin solid; margin: 10px; padding: 10px;">
     <? if (!$vote->questionnaire['anonymous']) : ?>

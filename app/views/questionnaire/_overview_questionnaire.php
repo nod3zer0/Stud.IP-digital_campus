@@ -1,23 +1,12 @@
 <tr id="questionnaire_<?= $questionnaire->id ?>">
+    <? $countedAnswers = $questionnaire->countAnswers() ?>
     <td>
         <input type="checkbox" name="q[]" value="<?= htmlReady($questionnaire->id) ?>">
     </td>
     <td>
-        <a href="<?= $controller->link_for('questionnaire/answer/' . $questionnaire->id) ?>" data-dialog>
+        <a href="<?= $controller->link_for(($questionnaire->isRunning() && $countedAnswers ? 'questionnaire/evaluate/' : 'questionnaire/edit/') . $questionnaire->id) ?>" data-dialog="size=big">
             <?= htmlReady($questionnaire['title']) ?>
         </a>
-        <span>
-        <?
-            $icons = [];
-            foreach ($questionnaire->questions as $question) {
-                $class = get_class($question);
-                $icons[$class] = $class::getIcon();
-            }
-            foreach ($icons as $class => $icon) {
-                echo $icon->asImg(16, ['class' => 'text-bottom', 'title' => $class::getName()])." ";
-            }
-        ?>
-        </span>
     </td>
     <td>
     <? if ($questionnaire['startdate']): ?>
@@ -47,7 +36,8 @@
             <? if ($assignment['range_type'] === 'user') : ?>
                 <?= _('Profilseite')?>
             <? elseif ($assignment['range_type'] === 'course') : ?>
-                <?= htmlReady(Course::find($assignment['range_id'])->name) ?>
+                <? $course = Course::find($assignment['range_id']) ?>
+                <?= htmlReady((Config::get()->IMPORTANT_SEMNUMBER ? $course->veranstaltungsnummer." " : "") . $course['name'] . ' ('.$course->semester_text.')') ?>
             <? elseif ($assignment['range_type'] === 'statusgruppe') : ?>
                 <? $statusgruppe = Statusgruppen::find($assignment['range_id']) ?>
                 <? if ($statusgruppe) : ?>
@@ -77,24 +67,33 @@
     <? endif ?>
     </td>
     <td>
-        <? $countedAnswers = $questionnaire->countAnswers() ?>
         <?= htmlReady($countedAnswers) ?>
     </td>
     <td class="actions">
     <? if ($questionnaire->isRunning() && $countedAnswers) : ?>
         <?= Icon::create('edit', 'inactive')->asImg(20, ['title' => _('Der Fragebogen wurde gestartet und kann nicht mehr bearbeitet werden.')]) ?>
     <? else : ?>
-        <a href="<?= $controller->link_for('questionnaire/edit/' . $questionnaire->id) ?>" data-dialog title="<?= _('Fragebogen bearbeiten') ?>">
+        <a href="<?= $controller->link_for('questionnaire/edit/' . $questionnaire->id) ?>"
+           data-dialog="size=big"
+           title="<?= _('Fragebogen bearbeiten') ?>">
             <?= Icon::create('edit', 'clickable')->asImg(20) ?>
         </a>
     <? endif ?>
-        <a href="<?= $controller->link_for('questionnaire/context/' . $questionnaire->id) ?>" data-dialog title="<?= _('Zuweisungen bearbeiten') ?>">
+        <a href="<?= $controller->link_for('questionnaire/context/' . $questionnaire->id) ?>"
+           data-dialog="reload-on-close"
+           title="<?= _('Zuweisungen bearbeiten') ?>">
             <?= Icon::create('group2', 'clickable')->asImg(20) ?>
         </a>
 
         <?
         $menu = ActionMenu::get()->setContext($questionnaire['title']);
         if ($questionnaire->isRunning()) {
+            $menu->addLink(
+                $controller->url_for('questionnaire/answer/' . $questionnaire->id),
+                _('Ausfüllen'),
+                Icon::create('evaluation', 'clickable'),
+                ['data-dialog' => 1]
+            );
             $menu->addLink(
                 $controller->url_for('questionnaire/stop/' . $questionnaire->id, in_array($range_type, ['course', 'institute']) ? ['redirect' => 'questionnaire/courseoverview'] : []),
                 _('Fragebogen beenden'),
@@ -113,6 +112,28 @@
             Icon::create('stat', 'clickable'),
             ['data-dialog' => '']
         );
+        $menu->addLink(
+            $controller->url_for('questionnaire/copy/'  .$questionnaire->id),
+            _('Kopieren'),
+            Icon::create('clipboard', 'clickable'),
+            ['data-dialog' => '']
+        );
+        $menu->addLink(
+            $controller->url_for('questionnaire/export_file/'  .$questionnaire->id),
+            _('Vorlage herunterladen'),
+            Icon::create('export', 'clickable')
+        );
+        if ($questionnaire->countAnswers() > 0) {
+            $menu->addButton(
+                'reset_answers',
+                _('Antworten löschen'),
+                Icon::create('refresh', 'clickable'),
+                [
+                    'data-confirm' => _('Sollen die Antworten wirklich gelöscht werden?'),
+                    'formaction' => $controller->url_for('questionnaire/reset/' . $questionnaire->id)
+                ]
+            );
+        }
         $menu->addLink(
             $controller->url_for('questionnaire/export/'  .$questionnaire->id),
             _('Export als CSV'),

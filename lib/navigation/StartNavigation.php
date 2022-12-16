@@ -55,19 +55,6 @@ class StartNavigation extends Navigation
                 $statement->execute(['threshold' => $threshold,
                     ':user_id' => $GLOBALS['user']->id, ':plugin_id' => -1]);
                 $vote = (int) $statement->fetchColumn();
-                $query = "SELECT COUNT(IF(chdate > IFNULL(b.visitdate, :threshold) AND d.author_id != :user_id, a.eval_id, NULL))
-                          FROM eval_range a
-                          INNER JOIN eval d ON (a.eval_id = d.eval_id AND d.startdate < UNIX_TIMESTAMP() AND
-                                            (d.stopdate > UNIX_TIMESTAMP() OR d.startdate + d.timespan > UNIX_TIMESTAMP() OR (d.stopdate IS NULL AND d.timespan IS NULL)))
-                          LEFT JOIN object_user_visits b ON (b.object_id = d.eval_id AND b.user_id = :user_id AND b.plugin_id = :plugin_id)
-                          WHERE a.range_id = 'studip'
-                          GROUP BY a.range_id";
-                $statement = DBManager::get()->prepare($query);
-                $statement->bindValue(':user_id', $GLOBALS['user']->id);
-                $statement->bindValue(':threshold', $threshold);
-                $statement->bindValue(':plugin_id', -2);
-                $statement->execute();
-                $vote += (int)$statement->fetchColumn();
             }
         }
 
@@ -243,6 +230,8 @@ class StartNavigation extends Navigation
 
         if (Config::get()->VOTE_ENABLE) {
             $navigation->addSubNavigation('questionnaire', new Navigation(_('Ankündigungen'), 'dispatch.php/news/admin_news'));
+        }
+        if (Config::get()->EVAL_ENABLE) {
             $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php', ['rangeID' => $auth->auth['uname']]));
         }
 

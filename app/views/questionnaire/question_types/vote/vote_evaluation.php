@@ -1,14 +1,18 @@
-<?
-$etask = $vote->etask;
-$taskAnswers = $etask->task['answers'];
-$numTaskAnswers = count($taskAnswers);
+<?php
+/**
+ * @var QuestionnaireQuestion $vote
+ * @var QuestionnaireAnswer[] $answers
+ * @var $filtered string
+ */
+$options = $vote->questiondata['options'];
+$numTaskAnswers = count($vote->answers);
 
 $results = array_fill(0, $numTaskAnswers, 0);
 $results_users = array_fill(0, $numTaskAnswers, []);
 
 if ($numTaskAnswers > 0) {
     foreach ($answers as $answer) {
-        if ($etask->task['type'] === 'multiple') {
+        if ($vote->questiondata['multiplechoice']) {
             if (is_array($answer['answerdata']['answers']) || $answer['answerdata']['answers'] instanceof Traversable) {
                 foreach ($answer['answerdata']['answers'] as $a) {
                     $results[(int)$a]++;
@@ -30,7 +34,7 @@ $ordered_answer_options = [];
 $ordered_users = [];
 foreach ($ordered_results as $index => $value) {
     if ($value > 0) {
-        $ordered_answer_options[] = strip_tags(formatReady($taskAnswers[$index]['text']));
+        $ordered_answer_options[] = strip_tags(formatReady($options[$index]));
     } else {
         unset($ordered_results[$index]);
     }
@@ -38,10 +42,14 @@ foreach ($ordered_results as $index => $value) {
 rsort($ordered_results);
 ?>
 
-<h3>
-    <?= Icon::create('vote', 'info')->asImg(20, ['class' => 'text-bottom']) ?>
-    <?= formatReady($etask->description) ?>
-</h3>
+<div class="description_container">
+    <div class="icon_container">
+        <?= Icon::create('vote', Icon::ROLE_INFO)->asImg(20) ?>
+    </div>
+    <div class="description">
+        <?= formatReady($vote->questiondata['description']) ?>
+    </div>
+</div>
 
 <? if (count($vote->answers) > 0 && $numTaskAnswers > 0) : ?>
     <div style="max-height: none; opacity: 1;"
@@ -58,7 +66,7 @@ rsort($ordered_results);
                  ]
              ) ?>,
              <?= json_encode(Request::isAjax()) ?>,
-             <?= json_encode($etask->task['type'] === 'multiple') ?>
+             <?= json_encode($vote->questiondata['type'] === 'multiple') ?>
          );
     </script>
 <? endif ?>
@@ -66,16 +74,29 @@ rsort($ordered_results);
 <table class="default nohover">
     <tbody>
         <? $countAnswers = $vote->questionnaire->countAnswers() ?>
-        <? foreach ($taskAnswers as $key => $answer) : ?>
+        <? foreach ($options as $key => $answer) : ?>
         <tr>
             <? $percentage = $countAnswers ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>
 
             <td style="text-align: right; background-size: <?= $percentage ?>% 100%; background-position: right center; background-image: url('<?= Assets::image_path("vote_lightgrey.png") ?>'); background-repeat: no-repeat;" width="50%">
-                <strong><?= formatReady($answer['text']) ?></strong>
+                <strong><?= formatReady($answer) ?></strong>
             </td>
 
             <td style="white-space: nowrap;">
-                (<?= $percentage ?>% | <?= (int) $results[$key] ?>/<?= $countAnswers ?>)
+                <? if ($filtered !== null && $filtered == $key) : ?>
+                    <a href=""
+                       title="<?= _('Zeige wieder alle Ergebnisse ohne Filterung an.') ?>"
+                       onclick="STUDIP.Questionnaire.removeFilter('<?= htmlReady($vote['questionnaire_id']) ?>'); return false;">
+                        <?= Icon::create('filter2', Icon::ROLE_CLICKABLE)->asImg(16, ['class' => 'text-bottom']) ?>
+                        (<?= $percentage ?>% | <?= (int) $results[$key] ?>/<?= $countAnswers ?>)
+                    </a>
+                <? else : ?>
+                    <a href=""
+                       onclick="STUDIP.Questionnaire.addFilter('<?= htmlReady($vote['questionnaire_id']) ?>', '<?= htmlReady($vote->getId()) ?>', '<?= $key ?>'); return false;"
+                       title="<?= _('Zeige nur Ergebnisse von Personen an, die diese Option gewählt haben.') ?>">
+                        (<?= $percentage ?>% | <?= (int) $results[$key] ?>/<?= $countAnswers ?>)
+                    </a>
+                <? endif ?>
             </td>
 
             <td width="50%">

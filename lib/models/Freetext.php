@@ -2,22 +2,28 @@
 
 require_once 'lib/classes/QuestionType.interface.php';
 
-use eTask\Task;
-
 class Freetext extends QuestionnaireQuestion implements QuestionType
 {
     /**
      * Returns the Icon-object to this QuestionType.
      * @param bool $active: true if Icon should be clickable, false for black info-icon.
-     * @param bool $add : true if the add-appendix shoudl be added to the icon.
      * @return Icon : guestbook-icon.
      */
-    public static function getIcon($active = false, $add = false)
+    public static function getIcon(bool $active = false) : Icon
     {
         return Icon::create(
-            'guestbook',
+            static::getIconShape(),
             $active ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO
         );
+    }
+
+    /**
+     * Returns the shape of the icon of this QuestionType
+     * @return string
+     */
+    public static function getIconShape()
+    {
+        return 'guestbook';
     }
 
     /**
@@ -29,46 +35,17 @@ class Freetext extends QuestionnaireQuestion implements QuestionType
         return _('Freitextfrage');
     }
 
-    /**
-     * Returns the template to edit this question
-     * @return Flexi_Template
-     * @throws Flexi_TemplateNotFoundException if there is no template.
-     */
-    public function getEditingTemplate()
+    static public function getEditingComponent()
     {
-        $factory = new Flexi_TemplateFactory(realpath(__DIR__ . '/../../app/views'));
-        $template = $factory->open('questionnaire/question_types/freetext/freetext_edit.php');
-        $template->vote = $this;
-        return $template;
+        return ['freetext-edit', ''];
     }
 
-    /**
-     * Processes the request and stores the given values into the etask-object.
-     * Called when the question is saved by the user.
-     */
-    public function createDataFromRequest()
+    public function beforeStoringQuestiondata($questiondata)
     {
-        $questions = Request::getArray('questions');
-        $data = $questions[$this->getId()];
-
-        if (!$this->etask) {
-            $this->etask = Task::create([
-                'type'    => 'freetext',
-                'user_id' => $GLOBALS['user']->id,
-            ]);
-        }
-
-        $this->etask->description = Studip\Markup::purifyHtml($data['description']);
-        $this->etask->task = [];
-
-        // update mandatory option
-        if (isset($data['options']['mandatory'])) {
-            $options = $this->etask->options;
-            $options['mandatory'] = (bool) $data['options']['mandatory'];
-            $this->etask->options = $options;
-        }
-
-        $this->etask->store();
+        $questiondata['description'] = \Studip\Markup::markAsHtml(
+            \Studip\Markup::purifyHtml($questiondata['description'])
+        );
+        return $questiondata;
     }
 
     /**
@@ -98,6 +75,11 @@ class Freetext extends QuestionnaireQuestion implements QuestionType
         return $answer;
     }
 
+    public function getUserIdsOfFilteredAnswer($answer_option)
+    {
+        return [];
+    }
+
     /**
      * Returns the template with the answers of the question so far.
      * @param null $only_user_ids : array of user_ids
@@ -106,9 +88,18 @@ class Freetext extends QuestionnaireQuestion implements QuestionType
      */
     public function getResultTemplate($only_user_ids = null)
     {
+        $answers = $this->answers;
+        if ($only_user_ids !== null) {
+            foreach ($answers as $key => $answer) {
+                if (!in_array($answer['user_id'], $only_user_ids)) {
+                    unset($answers[$key]);
+                }
+            }
+        }
         $factory = new Flexi_TemplateFactory(realpath(__DIR__ . '/../../app/views'));
         $template = $factory->open('questionnaire/question_types/freetext/freetext_evaluation.php');
         $template->vote = $this;
+        $template->set_attribute('answers', $answers);
         return $template;
     }
 
@@ -121,7 +112,7 @@ class Freetext extends QuestionnaireQuestion implements QuestionType
         $output = [];
         $countNobodys = 0;
 
-        $question = trim(strip_tags($this->etask->description));
+        $question = trim(strip_tags($this->questiondata['description']));
         foreach ($this->answers as $answer) {
             if ($answer['user_id'] && $answer['user_id'] != 'nobody') {
                 $userId = $answer['user_id'];

@@ -123,7 +123,18 @@ button.button {
     }
 }
 
+
 button.styleless {
     background-color: unset;
     border: 0;
+}
+button.as-link {
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    cursor: pointer;
+    background-color: transparent;
+    &:hover {
+        background-color: transparent;
+    }
 }

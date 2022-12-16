@@ -1,23 +1,19 @@
-<?
-$etask = $vote->etask;
+<?php
+/**
+ * @var QuestionnaireQuestion $vote
+ */
 
-$taskAnswers = $etask->task['answers'];
-$indexMap = count($taskAnswers) ? range(0, count($taskAnswers) - 1) : [];
-if ($etask->options['randomize']) {
+$answers = $vote->questiondata['options'];
+$indexMap = count($answers) ? range(0, count($answers) - 1) : [];
+if ($vote->questiondata['randomize']) {
     shuffle($indexMap);
 }
 
 $response = $vote->getMyAnswer();
 $responseData = $response['answerdata'] ? $response['answerdata']->getArrayCopy() : [];
 ?>
-<div <?= isset($etask->options['mandatory']) && $etask->options['mandatory'] ? ' class="mandatory"' : "" ?>>
-    <h3>
-        <?= Icon::create(is_a($vote, 'Test') ? 'test' : 'vote', 'info')->asImg(20, ['class' => 'text-bottom']) ?>
-        <? if (isset($etask->options['mandatory']) && $etask->options['mandatory']) : ?>
-            <?= Icon::create('star', Icon::ROLE_ATTENTION)->asImg(20, ['class' => 'text-bottom', 'title' => _("Pflichtantwort")]) ?>
-        <? endif ?>
-        <?= formatReady($etask->description) ?>
-    </h3>
+<div <?= isset($vote->questiondata['mandatory']) && $vote->questiondata['mandatory'] ? ' class="mandatory"' : "" ?>>
+    <?= $this->render_partial('questionnaire/_answer_description_container', ['vote' => $vote, 'iconshape' => 'vote']) ?>
 
     <div class="hidden invalidation_notice">
         <?= _("Diese Frage muss beantwortet werden.") ?>
@@ -27,8 +23,7 @@ $responseData = $response['answerdata'] ? $response['answerdata']->getArrayCopy(
         <? foreach ($indexMap as $index) : ?>
             <li>
                 <label>
-
-                    <? if ($etask->task['type'] === 'multiple') : ?>
+                    <? if ($vote->questiondata['multiplechoice']) : ?>
 
                         <input type="checkbox"
                                name="answers[<?= $vote->getId() ?>][answerdata][answers][<?= $index ?>]"
@@ -43,7 +38,7 @@ $responseData = $response['answerdata'] ? $response['answerdata']->getArrayCopy(
                                <?= isset($responseData['answers']) && $index == $responseData['answers'] ? 'checked' : '' ?>>
                     <? endif ?>
 
-                    <?= formatReady($taskAnswers[$index]['text']) ?>
+                    <?= formatReady($answers[$index]) ?>
 
                 </label>
             </li>

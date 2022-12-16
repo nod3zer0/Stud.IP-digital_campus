@@ -124,3 +124,16 @@
 }
 
 div.indent { margin-left: 2em; }
+
+.input-array {
+    .options > li {
+        display: flex;
+        align-items: center;
+        > * {
+            margin-right: 10px;
+            .dragarea {
+                cursor: grabbing;
+            }
+        }
+    }
+}

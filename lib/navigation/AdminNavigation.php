@@ -75,7 +75,7 @@ class AdminNavigation extends Navigation
         $navigation->addSubNavigation('faculty', new Navigation(_('Mitarbeiter'), 'dispatch.php/institute/members?admin_view=1'));
         $navigation->addSubNavigation('groups', new Navigation(_('Funktionen / Gruppen'), 'dispatch.php/admin/statusgroups?type=inst'));
 
-        if (Config::get()->VOTE_ENABLE) {
+        if (Config::get()->EVAL_ENABLE) {
             $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_inst'));
         }
 

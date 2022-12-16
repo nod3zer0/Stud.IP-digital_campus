@@ -8,6 +8,7 @@ class Questionnaire extends SimpleORMap implements PrivacyObject
 
         $config['has_many']['questions'] = [
             'class_name' => QuestionnaireQuestion::class,
+            'order_by' => 'ORDER BY position ASC',
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
@@ -214,7 +215,8 @@ class Questionnaire extends SimpleORMap implements PrivacyObject
         }
         return $this['resultvisibility'] === "always"
             || $this->isEditable()
-            || ($this['resultvisibility'] === "afterending" && $this->isStopped());
+            || ($this['resultvisibility'] === "afterending" && $this->isStopped())
+            || ($this['resultvisibility'] === 'afterparticipation' && $this->isAnswered());
     }
 
     /**
@@ -235,5 +237,30 @@ class Questionnaire extends SimpleORMap implements PrivacyObject
                 $storage->addTabularData(_('Fragebögen'), 'questionnaires', $field_data);
             }
         }
+    }
+
+    /**
+     * Returns all data as an array that could be stored as JSON.
+     * @return array
+     */
+    public function exportAsFile()
+    {
+        $data = [
+            'questionnaire' => [
+                'title' => $this['title'],
+                'anonymous' => $this['anonymous'],
+                'resultvisibility' => $this['resultvisibility'],
+                'editanswers' => $this['editanswers']
+            ],
+            'questions_data' => []
+        ];
+        foreach ($this->questions as $question) {
+            $data['questions_data'][] = [
+                'questiontype' => $question['questiontype'],
+                'internal_name' => $question['internal_name'],
+                'questiondata' => $question['questiondata']->getArrayCopy()
+            ];
+        }
+        return $data;
     }
 }

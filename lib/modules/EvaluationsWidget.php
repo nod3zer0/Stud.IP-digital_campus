@@ -46,7 +46,9 @@ class EvaluationsWidget extends CorePlugin implements PortalPlugin
         $controller = app(AuthenticatedController::class, ['dispatcher' => app(\Trails_Dispatcher::class)]);
         $controller->suppress_empty_output = true;
 
-        $response = $controller->relay('evaluation/display/studip')->body;
+        if (Config::get()->EVAL_ENABLE) {
+            $response = $controller->relay('evaluation/display/studip')->body;
+        }
 
         $controller->suppress_empty_output = (bool)$response;
         $response .= $controller->relay('questionnaire/widget/start')->body;

@@ -17,11 +17,7 @@ class QuestionnaireQuestion extends SimpleORMap
             'on_delete' => 'delete',
             'on_store' => 'store'
         ];
-        $config['belongs_to']['etask'] = [
-            'class_name' => \eTask\Task::class,
-            'foreign_key' => 'etask_task_id'
-        ];
-
+        $config['serialized_fields']['questiondata'] = 'JSONArrayObject';
         parent::configure($config);
 
     }
@@ -38,24 +34,7 @@ class QuestionnaireQuestion extends SimpleORMap
         $data = $statement->fetchAll();
         $questions = [];
         foreach ($data as $questionnaire_data) {
-
-            if (!$task = Task::find($questionnaire_data['etask_task_id'])) {
-                continue;
-            }
-
-            $class = $task->type;
-
-            if ($class === 'multiple-choice') {
-                $totalScore = array_reduce(
-                    isset($task->task['answers']) ? $task->task['answers']->getArrayCopy() : [],
-                    function ($totalScore, $answer) {
-                        return $totalScore + intval($answer['score'] ?: 0);
-                    },
-                    0
-                );
-                $class = $totalScore === 0 ? 'Vote' : 'Test';
-            }
-
+            $class = $questionnaire_data['questiontype'];
             if (class_exists(ucfirst($class))) {
                 $questions[] = $class::buildExisting($questionnaire_data);
             }

@@ -126,7 +126,9 @@ class ContentsNavigation extends Navigation
                 );
                 $questionnaire->addSubNavigation('assign', $sub_nav);
             }
+        }
 
+        if (Config::get()->EVAL_ENABLE) {
             $eval = new Navigation(_('Evaluationen'), 'admin_evaluation.php', ['rangeID' => $GLOBALS['user']->username]);
             $eval->setImage(Icon::create('test'));
             $eval->setDescription(_('Erstellen Sie komplexe Befragungen'));

@@ -1,9 +1,203 @@
 import { $gettext } from '../lib/gettext.js';
+import md5 from 'md5';
+//import html2canvas from "html2canvas";
+//import {jsPDF} from "jspdf";
 
 const Questionnaire = {
     delayedQueue: [],
+    Editor: null,
+    initEditor () {
+        $('.questionnaire_edit').each(function () {
+            STUDIP.Vue.load().then(({createApp}) => {
+                let form = this;
+                let components = {};
+                let questiontypes = $(form).data('questiontypes');
+                for (let i in questiontypes) {
+                    if (questiontypes[i].component[0] && questiontypes[i].component[1]) {
+                        //for plugins to be able to import their vue components:
+                        components[questiontypes[i].component[0]] = () => import(questiontypes[i].component[1]);
+                    }
+                }
+                components.draggable = () => import('vuedraggable');
+                components['vote-edit'] = () => import('../../../vue/components/questionnaires/VoteEdit.vue');
+                components['freetext-edit'] = () => import('../../../vue/components/questionnaires/FreetextEdit.vue');
+                components['likert-edit'] = () => import('../../../vue/components/questionnaires/LikertEdit.vue');
+                components['rangescale-edit'] = () => import('../../../vue/components/questionnaires/RangescaleEdit.vue');
+                components['questionnaire-info-edit'] = () => import('../../../vue/components/questionnaires/QuestionnaireInfoEdit.vue');
+                STUDIP.Questionnaire.Editor = createApp({
+                    el: form,
+                    data() {
+                        return {
+                            questions: $(form).data('questions_data'),
+                            activeTab: 'admin',
+                            hoverTab: null,
+                            questiontypes: questiontypes,
+                            data: $(form).data('questionnaire_data'),
+                            askForDeletingQuestions: false,
+                            whatQuestionIndexShouldBeDeleted: null,
+                            form_secured: true,
+                            oldData: {
+                                questions: [],
+                                data: {}
+                            },
+                            range_type: $(form).data('range_type'),
+                            range_id: $(form).data('range_id'),
+                            editInternalName: null,
+                            tempInternalName: ''
+                        };
+                    },
+                    methods: {
+                        addQuestion: function (questiontype) {
+                            let id = md5(STUDIP.USER_ID + '_QUESTIONTYPE_' + Math.random());
+                            this.questions.push({
+                                id: id,
+                                questiontype: questiontype,
+                                internal_name: '',
+                                questiondata: {},
+                            });
+                            this.activeTab = id;
+                        },
+                        submit: function () {
+                            let data = {
+                                title: this.data.title,
+                                copyable: this.data.copyable,
+                                anonymous: this.data.anonymous,
+                                editanswers: this.data.editanswers,
+                                startdate: this.data.startdate,
+                                stopdate: this.data.stopdate,
+                                resultvisibility: this.data.resultvisibility
+                            };
+                            let questions = [];
+                            for (let i in this.questions) {
+                                questions.push({
+                                    id: this.questions[i].id,
+                                    questiontype: this.questions[i].questiontype,
+                                    internal_name: this.questions[i].internal_name,
+                                    questiondata: Object.assign({}, this.questions[i].questiondata),
+                                });
+                            }
+                            let v = this;
+                            $.ajax({
+                                url: STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/questionnaire/store/' + (this.data.id || '')),
+                                data: {
+                                    questionnaire: data,
+                                    questions_data: questions,
+                                    range_type: this.range_type,
+                                    range_id: this.range_id
+                                },
+                                type: 'post',
+                                success: function () {
+                                    v.form_secured = false;
+                                    v.$nextTick(function () {
+                                        location.reload();
+                                    });
+                                },
+                                error: function () {
+                                    window.alert('Could not save questionnaire.');
+                                }
+                            });
+                        },
+                        getIndexForQuestion: function (question_id) {
+                            for (let i in this.questions) {
+                                if (this.questions[i].id === question_id || this.questions[i].id === question_id.substring(5)) {
+                                    return typeof i === "string" ? parseInt(i, 10) : i;
+                                }
+                            }
+                        },
+                        duplicateQuestion: function (question_id) {
+                            let i = this.getIndexForQuestion(question_id);
+                            let id = md5(STUDIP.USER_ID + '_QUESTIONTYPE_' + Math.random());
+                            this.questions.push({
+                                id: id,
+                                questiontype: this.questions[i].questiontype,
+                                internal_name: this.questions[i].internal_name,
+                                questiondata: Object.assign({}, this.questions[i].questiondata)
+                            });
+                            this.activeTab = id;
+                        },
+                        askForDeletingTheQuestion: function (question_id) {
+                            this.askForDeletingQuestions = true;
+                            this.whatQuestionIndexShouldBeDeleted = this.getIndexForQuestion(question_id);
+                        },
+                        deleteQuestion: function () {
+                            this.$delete(this.questions, this.whatQuestionIndexShouldBeDeleted);
+                            this.switchTab('add_question');
+                            this.askForDeletingQuestions = false;
+                        },
+                        switchTab: function (tab_id) {
+                            this.activeTab = tab_id;
+                            this.$nextTick(function () {
+                                if (typeof this.$refs.autofocus !== "undefined") {
+                                    if (Array.isArray(this.$refs.autofocus)) {
+                                        if (typeof this.$refs.autofocus[0] !== "undefined") {
+                                            this.$refs.autofocus[0].focus();
+                                        }
+                                    } else {
+                                        this.$refs.autofocus.focus();
+                                    }
+                                }
+                            });
+                        },
+                        objectsEqual: function (obj1, obj2) {
+                            return _.isEqual(obj1, obj2);
+                        },
+                        renameInternalName: function (question_id) {
+                            this.editInternalName = question_id;
+                            let index = this.getIndexForQuestion(question_id);
+                            this.tempInternalName = this.questions[index].internal_name;
+                            this.$nextTick(function () {
+                                this.$refs.editInternalName[0].focus();
+                            });
+                        },
+                        saveInternalName: function (question_id) {
+                            let index = this.getIndexForQuestion(question_id);
+                            this.questions[index].internal_name = this.tempInternalName;
+                            this.editInternalName = null;
+                        },
+                        moveQuestionDown: function (question_id) {
+                            let index = this.getIndexForQuestion(question_id);
+                            if (index < this.questions.length - 1) {
+                                let question = this.questions[index];
+                                this.questions[index] = this.questions[index + 1];
+                                this.questions[index + 1] = question;
+                                this.$forceUpdate();
+                            }
+                        },
+                        moveQuestionUp: function (question_id) {
+                            let index = this.getIndexForQuestion(question_id);
+                            if (index > 0) {
+                                let question = this.questions[index];
+                                this.questions[index] = this.questions[index - 1];
+                                this.questions[index - 1] = question;
+                                this.$forceUpdate();
+                            }
+                        }
+                    },
+                    computed: {
+                        activateFormSecure: function () {
+                            let newData = {
+                                'questions': this.questions,
+                                'data': this.data
+                            };
+                            return this.form_secured && !this.objectsEqual(this.oldData, newData);
+                        }
+                    },
+                    mounted: function () {
+                        this.$refs.autofocus.focus();
+                        this.oldData = {
+                            'questions': [...this.questions],
+                            'data': Object.assign({}, this.data)
+                        };
+                    },
+                    components: components
+                });
+
+            });
+        });
+    },
     delayedInterval: null,
     lastUpdate: null,
+    filtered: {},
     initialize() {
         STUDIP.JSUpdater.register(
             'questionnaire',
@@ -15,7 +209,8 @@ const Questionnaire = {
     getParamsForPolling: function() {
         var questionnaires = {
             questionnaire_ids: [],
-            last_update: Questionnaire.lastUpdate
+            last_update: Questionnaire.lastUpdate,
+            filtered: Questionnaire.filtered
         };
         Questionnaire.lastUpdate = Math.floor(Date.now() / 1000);
         jQuery('.questionnaire_results').each(function() {
@@ -33,6 +228,35 @@ const Questionnaire = {
                 jQuery(document).trigger('dialog-open');
             }
         }
+    },
+    addFilter: function (questionnaire_id, question_id, answer) {
+        Questionnaire.filtered[questionnaire_id] = {
+            question_id: question_id,
+            filterForAnswer: answer
+        };
+        $.ajax({
+            url: STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/questionnaire/evaluate/' + questionnaire_id),
+            data: {
+                filtered: {
+                    question_id: question_id,
+                    filterForAnswer: answer
+                }
+            },
+            success: Questionnaire.updateWidgetQuestionnaire,
+            error: function () {
+                window.alert('Cannot load page.');
+            }
+        });
+    },
+    removeFilter: function (questionnaire_id) {
+        delete Questionnaire.filtered[questionnaire_id];
+        $.ajax({
+            url: STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/questionnaire/evaluate/' + questionnaire_id),
+            success: Questionnaire.updateWidgetQuestionnaire,
+            error: function () {
+                window.alert('Cannot load page.');
+            }
+        });
     },
     updateOverviewQuestionnaire: function(data) {
         if (jQuery('#questionnaire_overview tr#questionnaire_' + data.questionnaire_id).length > 0) {
@@ -90,7 +314,10 @@ const Questionnaire = {
     updateWidgetQuestionnaire: function(html) {
         //update the results of a questionnaire
         var questionnaire_id = jQuery(html).data('questionnaire_id');
-        jQuery('.questionnaire_widget .questionnaire_' + questionnaire_id).replaceWith(html);
+        jQuery('.questionnaire_' + questionnaire_id).replaceWith(html);
+        if (jQuery('.questionnaire_' + questionnaire_id).is('.ui-dialog .questionnaire_results')) {
+            jQuery('.questionnaire_' + questionnaire_id + ' [data-dialog-button]').hide();
+        }
         jQuery(document).trigger('dialog-open');
     },
     beforeAnswer: function() {
@@ -168,38 +395,100 @@ const Questionnaire = {
             return true;
         }
     },
-    addQuestion: function(questiontype) {
-        jQuery.ajax({
-            url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/questionnaire/add_question',
-            data: {
-                questiontype: questiontype
-            },
-            dataType: 'json',
-            success: function(output) {
-                var order = JSON.parse(jQuery("input[name=order]").val());
-                order.push(output.question_id);
-                jQuery("input[name=order]").val(JSON.stringify(order));
-                jQuery(output.html)
-                    .hide()
-                    .appendTo('.questionnaire_edit .all_questions')
-                    .show('fade');
+    LikertScale: {
+        validator: function () {
+            if ($(this).find(".mandatory").length > 0) {
+                let invalid = false;
+                $(this).find('table.answers tbody tr').each(function () {
+                    if ($(this).find(':checked').length === 0) {
+                        invalid = true;
+                    }
+                });
+                if (invalid) {
+                    $(this).find(".invalidation_notice").addClass("invalid");
+                    return false;
+                } else {
+                    $(this).find(".invalidation_notice").removeClass("invalid");
+                }
             }
+            return true;
+        }
+    },
+    RangeScale: {
+        validator: function () {
+            return Questionnaire.LikertScale.validator.call(this);
+        }
+    },
+
+
+    exportEvaluationAsPDF: function () {
+        window.scrollTo(0, 0);
+        const html2canvas = import('html2canvas');
+        const jsPDF = import('jspdf');
+        jsPDF.then(function (jsPDF) {
+            let pdfExporter = jsPDF.default;
+            html2canvas.then(function (canvas) {
+                let canvasCreator = canvas.default;
+
+                let pdf = new pdfExporter({
+                    orientation: 'portrait'
+                });
+                $(".questionnaire_results").addClass('print-view');
+
+                let title = $(".questionnaire_results").data('title');
+
+                let splitTitle = pdf.splitTextToSize(title, 180);
+                pdf.text(splitTitle, 25, 20);
+
+                let count_questions = $(".questionnaire_results .question").length;
+                let questions_rendered = 0;
+                let canvasses = [];
+
+                let blobToDataURL = function (blob, callback) {
+                    let a = new FileReader();
+                    a.onload = function(e) {callback(e.target.result);}
+                    a.readAsDataURL(blob);
+                };
+
+                $(".questionnaire_results .question").each(function (index) {
+                    canvasCreator(this, {logging: false}).then(canvas => {
+                        canvasses[index] = canvas;
+                        questions_rendered++;
+                        if (questions_rendered === count_questions) {
+                            //then all renders are finished:
+                            let height_sum = 0;
+                            for (let i = 0; i < count_questions; i++) {
+                                if (i === 0) {
+                                    height_sum += 15;
+                                }
+                                let imgData = canvasses[i].toDataURL('image/png');
+
+                                let height = Math.floor(160 / canvasses[i].width * canvasses[i].height);
+                                if (height_sum + height > 240 && height < 240) {
+                                    pdf.addPage();
+                                    height_sum = 0;
+                                }
+                                pdf.addImage(imgData, 'JPEG',
+                                    25,
+                                    20 + height_sum,
+                                    160,
+                                    height,
+                                    'image_' + i,
+                                    'NONE',
+
+                                );
+                                height_sum += height + 10;
+                            }
+                            pdf.save(title + '.pdf');
+                        }
+                    });
+                });
+                $(".questionnaire_results").removeClass('print-view');
+            })
         });
+
     },
-    moveQuestionUp: function () {
-        let thisquestion = jQuery(this).closest(".question");
-        let upper = thisquestion.prev();
-        thisquestion.insertBefore(upper);
-        upper.hide().fadeIn();
-        thisquestion.hide().fadeIn();
-    },
-    moveQuestionDown: function () {
-        let thisquestion = jQuery(this).closest(".question");
-        let downer = thisquestion.next();
-        thisquestion.insertAfter(downer);
-        downer.hide().fadeIn();
-        thisquestion.hide().fadeIn();
-    },
+
     addDelayedInit(el, data, isAjax, isMultiple) {
         this.delayedQueue.push({
             el,

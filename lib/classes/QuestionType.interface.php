@@ -14,7 +14,14 @@ interface QuestionType {
      * object but called staticly.
      * @return Icon the specific icon for this type of question
      */
-    static public function getIcon($active = false, $add = false);
+    static public function getIcon(bool $active = false) : Icon;
+
+
+    /**
+     * Returns the shape of the icon that is used in vue.
+     * @return string
+     */
+    static public function getIconShape();
 
     /**
      * Returns the name of the type of question like "Frage" or "Test" or "Dateiablage"
@@ -26,19 +33,20 @@ interface QuestionType {
     static public function getName();
 
     /**
-     * Returns a template that is used to edit or create the question. Note that
-     * $this['data'] might already be filled with data, when the user is editing an
-     * existing question.
-     * @return Flexi_Template
+     * Returns an array with two parts: First one is the name of the component for editing the question. Second
+     * one is the import path of the component. Plugins can use this to get their component imported.
+     * @return Array
      */
-    public function getEditingTemplate();
+    static public function getEditingComponent();
 
     /**
-     * Called right before the questionnaire and the question is stored or when the user
-     * needs to refresh the editing-window, This method is called to store the
-     * request-values into $this['data']. You get them from the Request-class as usual.
+     * Usually the $questiondata is already in the correct format. But for some question types
+     * some data have to be manipulated by for example the HTML-purifier. So this takes
+     * the questiondata and changed them before they get stored.
+     * @param $questiondata
+     * @return mixed
      */
-    public function createDataFromRequest();
+    public function beforeStoringQuestiondata($questiondata);
 
     /**
      * Display the question to the user. This template will be embedded into a
@@ -62,6 +70,15 @@ interface QuestionType {
      * @return QuestionnaireAnswer or derived
      */
     public function createAnswer();
+
+    /**
+     * In the evaluation of the questionnaire you can click on a certain answer and get the evaluation filtered
+     * by the the people that have given that answer. This method asks from the question, what user_ids have
+     * given the answer_option. Answer option could be anything that this question understands as an answer.
+     * @param $answer_option
+     * @return mixed
+     */
+    public function getUserIdsOfFilteredAnswer($answer_option);
 
     /**
      * Returns a template with the results of this question.

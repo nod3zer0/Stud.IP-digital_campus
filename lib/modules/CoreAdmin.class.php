@@ -88,7 +88,8 @@ class CoreAdmin extends CorePlugin implements StudipModule
                     $item->setImage(Icon::create('vote'));
                     $item->setDescription(_('Erstellen und bearbeiten von Fragebögen.'));
                     $navigation->addSubNavigation('questionnaires', $item);
-
+                }
+                if (Config::get()->EVAL_ENABLE) {
                     $item = new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_sem');
                     $item->setImage(Icon::create('evaluation'));
                     $item->setDescription(_('Richten Sie fragebogenbasierte Umfragen und Lehrevaluationen ein.'));

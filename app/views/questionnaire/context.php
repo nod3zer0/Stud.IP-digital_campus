@@ -28,22 +28,24 @@
         <ul class="clean courseselector">
             <? foreach ($this->questionnaire->assignments as $assignment) : ?>
             <? if ($assignment['range_type'] === "course") : ?>
+                <? $course = Course::find($assignment['range_id']) ?>
+                <? if ($course) : ?>
                 <li>
                     <label>
                         <input type="checkbox" name="remove_sem[]" value="<?= htmlReady($assignment['range_id']) ?>" style="display: none;">
-                        <? $course = Course::find($assignment['range_id']) ?>
                         <span>
                             <a href="<?= URLHelper::getLink("seminar_main.php", ['auswahl' => $course->getId()]) ?>">
-                                <?= htmlReady((Config::get()->IMPORTANT_SEMNUMBER ? $course->veranstaltungsnummer." " : "").$course->name) ?>
+                                <?= htmlReady((Config::get()->IMPORTANT_SEMNUMBER ? $course->veranstaltungsnummer." " : "").$course->name. ' ('.$course->semester_text.')') ?>
                             </a>
                             <?= Icon::create("trash", "clickable")->asimg("20px", ['class' => "text-bottom", 'title' => _("Zuweisung zur Veranstaltung aufheben.")]) ?>
                         </span>
                     </label>
                 </li>
+                <? endif ?>
             <? endif ?>
             <? endforeach ?>
         </ul>
-        <?= QuickSearch::get("add_seminar_id", new SeminarSearch())->render() ?>
+        <?= QuickSearch::get("add_seminar_id", $seminarsearch)->render() ?>
 
         <h3><?= _("Teilnehmergruppen in Veranstaltungen") ?></h3>
         <ul class="clean statusgroupselector">
@@ -54,11 +56,11 @@
                             <input type="checkbox" name="remove_statusgruppe[]" value="<?= htmlReady($assignment['range_id']) ?>" style="display: none;">
                             <? $statusgruppe = Statusgruppen::find($assignment['range_id']) ?>
                             <span>
-                            <a href="<?= URLHelper::getLink("seminar_main.php", ['auswahl' => $statusgruppe->getId()]) ?>">
-                                <?= htmlReady($statusgruppe->course['name'].": ".$statusgruppe->name) ?>
-                            </a>
-                            <?= Icon::create("trash", "clickable")->asimg("20px", ['class' => "text-bottom", 'title' => _("Zuweisung zur Veranstaltung aufheben.")]) ?>
-                        </span>
+                                <a href="<?= URLHelper::getLink("seminar_main.php", ['auswahl' => $statusgruppe->getId()]) ?>">
+                                    <?= htmlReady($statusgruppe->course['name'].": ".$statusgruppe->name) ?>
+                                </a>
+                                <?= Icon::create("trash", "clickable")->asimg("20px", ['class' => "text-bottom", 'title' => _("Zuweisung zur Veranstaltung aufheben.")]) ?>
+                            </span>
                         </label>
                     </li>
                 <? endif ?>

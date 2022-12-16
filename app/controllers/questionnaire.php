@@ -16,8 +16,10 @@ class QuestionnaireController extends AuthenticatedController
 
         //trigger autoloading:
         class_exists('Vote');
-        class_exists('Test');
         class_exists('Freetext');
+        class_exists('LikertScale');
+        class_exists('RangeScale');
+        class_exists('QuestionnaireInfo');
         PageLayout::setHelpKeyword('Basis/Votings');
     }
 
@@ -98,103 +100,6 @@ class QuestionnaireController extends AuthenticatedController
             );
             return;
         }
-        if (Request::isPost()) {
-            $neworder = array_flip(Request::getArray("neworder"));
-            $order = array_flip(json_decode(Request::get("order"), true));
-            $questionnaire_data = Request::getArray("questionnaire");
-            $questionnaire_data['startdate'] = $questionnaire_data['startdate']
-                ? (strtotime($questionnaire_data['startdate']) ?: time())
-                : null;
-            $questionnaire_data['stopdate'] = strtotime($questionnaire_data['stopdate']) ?: null;
-            $questionnaire_data['copyable'] = (int)($questionnaire_data['copyable'] ?? 0);
-            $questionnaire_data['anonymous'] = (int)($questionnaire_data['anonymous'] ?? 0);
-            $questionnaire_data['editanswers'] = $questionnaire_data['anonymous'] ? 0 : (int) $questionnaire_data['editanswers'];
-            if ($this->questionnaire->isNew()) {
-                $questionnaire_data['visible'] = ($questionnaire_data['startdate'] <= time() && (!$questionnaire_data['stopdate'] || $questionnaire_data['stopdate'] >= time())) ? 1 : 0;
-            }
-            $this->questionnaire->setData($questionnaire_data);
-            $question_types_data = Request::getArray("question_types");
-            foreach ($question_types_data as $question_id => $question_type) {
-                $question = null;
-                foreach ($this->questionnaire->questions as $index => $q) {
-                    if ($q->getId() === $question_id) {
-                        $question = $q;
-                        break;
-                    }
-                }
-                if (!$question) {
-                    $question = new $question_type($question_id);
-                    $this->questionnaire->questions[] = $question;
-                }
-                $question['position'] = $neworder[$question_id] + 1;
-                $question->createDataFromRequest();
-            }
-            foreach ($this->questionnaire->questions as $q) {
-                if (!in_array($q->getId(), array_keys($question_types_data))) {
-                    $q->delete();
-                }
-            }
-            if (Request::submitted("questionnaire_store")) {
-                //save everything
-                $is_new = $this->questionnaire->isNew();
-                if ($is_new) {
-                    $this->questionnaire['user_id'] = $GLOBALS['user']->id;
-                }
-                $this->questionnaire->store();
-
-                if ($is_new && Request::get("range_id") && Request::get("range_type")) {
-                    if (Request::get("range_id") === "start" && !$GLOBALS['perm']->have_perm("root")) {
-                        throw new Exception(_("Der Fragebogen darf nicht von Ihnen auf die Startseite eingehängt werden, sondern nur von einem Admin."));
-                    }
-                    if (Request::get("range_type") === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", Request::get("range_id"))) {
-                        throw new Exception(_("Der Fragebogen darf nicht in die ausgewählte Veranstaltung eingebunden werden."));
-                    }
-                    if (Request::get("range_type") === "user" && Request::get("range_id") !== $GLOBALS['user']->id) {
-                        throw new Exception(_("Der Fragebogen darf nicht in diesen Bereich eingebunden werden."));
-                    }
-                    $assignment = new QuestionnaireAssignment();
-                    $assignment['questionnaire_id'] = $this->questionnaire->getId();
-                    $assignment['range_id'] = Request::option("range_id");
-                    $assignment['range_type'] = Request::get("range_type");
-                    $assignment['user_id'] = $GLOBALS['user']->id;
-                    $assignment->store();
-                }
-                if ($is_new) {
-                    $message = MessageBox::success(_("Der Fragebogen wurde erfolgreich erstellt."));
-                } else {
-                    $message = MessageBox::success(_("Der Fragebogen wurde gespeichert."));
-                }
-                if (Request::isAjax()) {
-                    $this->questionnaire->restore();
-                    $this->questionnaire->resetRelation("assignments");
-                    $this->range_type = Request::get('range_type');
-                    $this->range_id = Request::get('range_id');
-                    $output = [
-                            'questionnaire_id' => $this->questionnaire->getId(),
-                            'overview_html' => $this->render_template_as_string("questionnaire/_overview_questionnaire.php"),
-                            'widget_html' => $this->questionnaire->isStarted()
-                                ? $this->render_template_as_string("questionnaire/_widget_questionnaire.php")
-                                : "",
-                            'message' => $message->__toString()
-                    ];
-                    $this->response->add_header("X-Dialog-Close", 1);
-                    $this->response->add_header("X-Dialog-Execute", "STUDIP.Questionnaire.updateOverviewQuestionnaire");
-                    $this->render_json($output);
-                } else {
-                    PageLayout::postMessage($message);
-                    if (Request::get("range_type") === "user") {
-                        $this->redirect("profile");
-                    } elseif (Request::get("range_type") === "course") {
-                        $this->redirect("course/overview");
-                    } elseif (Request::get("range_id") === "start") {
-                        $this->redirect("start");
-                    } else {
-                        $this->redirect("questionnaire/overview");
-                    }
-                }
-            }
-            return;
-        }
 
         $statement = DBManager::get()->prepare("
             SELECT question_id
@@ -205,6 +110,90 @@ class QuestionnaireController extends AuthenticatedController
         $statement->execute(array($this->questionnaire->getId()));
         $this->order = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     }
+
+    public function store_action($questionnaire_id = null)
+    {
+        if ($questionnaire_id) {
+            $this->questionnaire = Questionnaire::find($questionnaire_id);
+        } else {
+            $this->questionnaire = new Questionnaire();
+        }
+        if (!$this->questionnaire || !$this->questionnaire->isEditable()) {
+            throw new AccessDeniedException(_('Der Fragebogen ist nicht bearbeitbar.'));
+        }
+        if ($this->questionnaire->isRunning() && $this->questionnaire->countAnswers() > 0) {
+            $this->response->set_status('409', 'Conflict');
+            $this->render_json([
+                'error' => 'alreadystarted',
+                'message' => _("Der Fragebogen ist gestartet worden und kann jetzt nicht mehr bearbeitet werden. Stoppen oder löschen Sie den Fragebogen stattdessen.")
+            ]);
+            return;
+        }
+        if (!Request::isPost()) {
+            throw new MethodNotAllowedException();
+        }
+        $questionnaire_data = Request::getArray("questionnaire");
+        $this->questionnaire['title'] = $questionnaire_data['title'] ?? '';
+        $this->questionnaire['visible'] = $questionnaire_data['visible'] ?? 1;
+        $this->questionnaire['anonymous'] = $questionnaire_data['anonymous'] ?? 0;
+        $this->questionnaire['resultvisibility'] = $questionnaire_data['resultvisibility'] ?? 'always';
+        $this->questionnaire['editanswers'] = $questionnaire_data['editanswers'] ?? 1;
+        $this->questionnaire['copyable'] = $questionnaire_data['copyable'] ?? 1;
+        $this->questionnaire['startdate'] = is_numeric($questionnaire_data['startdate'])
+            ? $questionnaire_data['startdate']
+            : ($questionnaire_data['startdate'] ? time() : null);
+        $this->questionnaire['stopdate'] = is_numeric($questionnaire_data['stopdate'])
+            ? $questionnaire_data['stopdate']
+            : null;
+
+        $this->questionnaire['user_id'] = User::findCurrent()->id;
+        $questions_data = Request::getArray('questions_data');
+        $questions = [];
+        foreach ($questions_data as $index => $question_data) {
+            $class = $question_data['questiontype'];
+            if (!class_exists($class) || !is_subclass_of($class, 'QuestionType')) {
+                continue;
+            }
+            $question = $class::find($question_data['id']);
+            if (!$question) {
+                $question = new $class();
+                $question->setId($question_data['id']);
+            } elseif ($question['questionnaire_id'] !== $this->questionnaire->getId()) {
+                $question = new $class();
+                $question->setId($question->getNewId());
+            }
+            $question_data['questiondata'] = $question->beforeStoringQuestiondata($question_data['questiondata']);
+            unset($question_data['id']);
+            $question->setData($question_data);
+            $question['position'] = $index;
+            $questions[] = $question;
+        }
+        $this->questionnaire->questions = $questions;
+        $this->questionnaire->store();
+
+        //assignments:
+        if (Request::get("range_id") && Request::get("range_type")) {
+            if (Request::get("range_id") === "start" && !$GLOBALS['perm']->have_perm("root")) {
+                throw new AccessDeniedException();
+            }
+            if (Request::get("range_type") === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", Request::get("range_id"))) {
+                throw new AccessDeniedException();
+            }
+            if (Request::get("range_type") === "user" && Request::get("range_id") !== $GLOBALS['user']->id) {
+                throw new AccessDeniedException();
+            }
+            $assignment = new QuestionnaireAssignment();
+            $assignment['questionnaire_id'] = $this->questionnaire->getId();
+            $assignment['range_id'] = Request::option("range_id");
+            $assignment['range_type'] = Request::get("range_type");
+            $assignment['user_id'] = $GLOBALS['user']->id;
+            $assignment->store();
+        }
+
+        PageLayout::postSuccess(_('Die Daten wurden erfolgreich gespeichert.'));
+        $this->render_nothing();
+    }
+
 
     public function copy_action($from)
     {
@@ -225,14 +214,8 @@ class QuestionnaireController extends AuthenticatedController
             $new_question = QuestionnaireQuestion::build($question->toArray());
             $new_question->setId($new_question->getNewId());
             $new_question['questionnaire_id'] = $this->questionnaire->getid();
+            $new_question['questiondata'] = $question['questiondata'];
             $new_question['mkdate'] = time();
-
-            $etask = new \eTask\Task();
-            $etask->setData($question->etask->toRawArray());
-            $etask->setId(null); //to get a new integer id
-            $etask->store();
-            $new_question['etask_task_id'] = $etask->getId();
-
             $new_question->store();
         }
         PageLayout::postSuccess(_('Der Fragebogen wurde kopiert. Wo soll er angezeigt werden?'));
@@ -277,25 +260,6 @@ class QuestionnaireController extends AuthenticatedController
         }
     }
 
-    public function add_question_action()
-    {
-        if (!$GLOBALS['perm']->have_perm("autor")) {
-            throw new AccessDeniedException(_('Der Fragebogen ist nicht einsehbar.'));
-        }
-        $class = Request::get("questiontype");
-        $this->question = new $class();
-        $this->question->setId($this->question->getNewId());
-
-        $template = $this->get_template_factory()->open("questionnaire/_question.php");
-        $template->set_attribute("question", $this->question);
-
-        $output = [
-            'html' => $template->render(),
-            'question_id' => $this->question->getId()
-        ];
-        $this->render_json($output);
-    }
-
     public function answer_action($questionnaire_id)
     {
         $this->questionnaire = new Questionnaire($questionnaire_id);
@@ -316,6 +280,12 @@ class QuestionnaireController extends AuthenticatedController
         }
         object_set_visit($questionnaire_id, 'vote');
         PageLayout::setTitle(sprintf(_("Fragebogen: %s"), $this->questionnaire->title));
+
+        if (Request::submitted('filtered')) {
+            $this->filtered = [
+                $questionnaire_id => Request::getArray('filtered')
+            ];
+        }
 
         if (Request::isAjax() && !$_SERVER['HTTP_X_DIALOG']) {
             PageLayout::clearMessages();
@@ -393,6 +363,31 @@ class QuestionnaireController extends AuthenticatedController
         $this->response->add_header('Content-Type', "text/csv");
         $this->response->add_header('Content-Disposition', "attachment; " . encode_header_parameter('filename', $this->questionnaire['title'].'.csv'));
         $this->render_text(array_to_csv($csv));
+    }
+
+    public function reset_action(Questionnaire $questionnaire)
+    {
+        if (!Request::isPost() || !$questionnaire->isEditable() || !CSRFProtection::verifyRequest()) {
+            throw new AccessDeniedException();
+        }
+        foreach ($questionnaire->anonymousanswers as $anonymous) {
+            $anonymous->delete();
+        }
+        foreach ($questionnaire->questions as $question) {
+            foreach ($question->answers as $answer) {
+                $answer->delete();
+            }
+        }
+        PageLayout::postSuccess(_('Antworten wurden zurückgesetzt.'));
+        if (Request::get("range_type") === "user") {
+            $this->redirect("profile");
+        } elseif (Request::get("range_type") === "course") {
+            $this->redirect("course/overview");
+        } elseif (Request::get("range_id") === "start") {
+            $this->redirect("start");
+        } else {
+            $this->redirect("questionnaire/overview");
+        }
     }
 
     public function context_action($questionnaire_id)
@@ -518,16 +513,29 @@ class QuestionnaireController extends AuthenticatedController
             PageLayout::postSuccess(_('Die Bereichszuweisungen wurden gespeichert.'));
             $this->questionnaire->restore();
             $this->questionnaire->resetRelation("assignments");
-            $output = [
-                'func' => "STUDIP.Questionnaire.updateOverviewQuestionnaire",
-                'payload' => [
-                    'questionnaire_id' => $this->questionnaire->getId(),
-                    'overview_html' => $this->render_template_as_string("questionnaire/_overview_questionnaire.php")
-                ]
-            ];
-            $this->response->add_header("X-Dialog-Execute", json_encode($output));
+            $this->response->add_header("X-Dialog-Close", 1);
         }
         PageLayout::setTitle(sprintf(_("Bereiche für Fragebogen: %s"), $this->questionnaire->title));
+        // Prepare context for MyCoursesSearch...
+        if ($GLOBALS['perm']->have_perm('root')) {
+            $parameters = [
+                'exclude'   => ['']
+            ];
+        } elseif ($GLOBALS['perm']->have_perm('admin')) {
+            $parameters = [
+                'institutes' => array_map(function ($i) {
+                    return $i['Institut_id'];
+                }, Institute::getMyInstitutes()),
+                'exclude'    => ['']
+            ];
+        } else {
+            $parameters = [
+                'userid'    => $GLOBALS['user']->id,
+                'exclude'   => ['']
+            ];
+        }
+        $this->seminarsearch = MyCoursesSearch::get('Seminar_id', $GLOBALS['perm']->get_perm(), $parameters);
+
         if ($GLOBALS['perm']->have_perm("root")) {
             $this->statusgruppesearch = new SQLSearch(
                 "SELECT statusgruppen.statusgruppe_id, CONCAT(seminare.name, ': ', statusgruppen.name) AS search_name
@@ -893,21 +901,21 @@ class QuestionnaireController extends AuthenticatedController
         }
         $answered_before = $this->questionnaire->isAnswered();
         if ($this->questionnaire->isAnswerable()) {
+            $pseudonomous_id = 'q'.substr(md5(uniqid()), 1);
             foreach ($this->questionnaire->questions as $question) {
                 $answer = $question->createAnswer();
                 if (!$answer['question_id']) {
                     $answer['question_id'] = $question->getId();
                 }
-                $answer['user_id'] = $GLOBALS['user']->id;
+                $answer['user_id'] = $GLOBALS['user']->id !== "nobody" ? $GLOBALS['user']->id : $pseudonomous_id;
                 if (!$answer['answerdata']) {
                     $answer['answerdata'] = [];
                 }
                 if ($this->questionnaire['anonymous']) {
-                    $answer['user_id'] = 'anonymous';
+                    $answer['user_id'] = $pseudonomous_id;
                     $answer['chdate'] = 1;
                     $answer['mkdate'] = 1;
                     $this->anonAnswers[] = $answer->toArray();
-                    $answer['user_id'] = null;
                 }
                 $answer->store();
             }
@@ -951,5 +959,18 @@ class QuestionnaireController extends AuthenticatedController
                 $this->redirect("questionnaire/thank_you");
             }
         }
+    }
+
+    public function export_file_action(Questionnaire $questionnaire)
+    {
+        if (!$questionnaire->isCopyable()) {
+            throw new AccessDeniedException(_('Der Fragebogen ist nicht kopierbar.'));
+        }
+        $this->response->add_header('Content-Disposition', 'attachment; ' . encode_header_parameter('filename', $questionnaire['title'].".json"));
+
+        $rawdata = $questionnaire->exportAsFile();
+        $file_data = json_encode($rawdata);
+        $this->response->add_header('Content-Length', strlen($file_data));
+        $this->render_json($rawdata);
     }
 }

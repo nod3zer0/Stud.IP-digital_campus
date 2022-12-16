@@ -9,6 +9,10 @@ class QuestionnaireAnswer extends SimpleORMap implements PrivacyObject
         $config['belongs_to']['question'] = [
             'class_name' => QuestionnaireQuestion::class,
         ];
+        $config['belongs_to']['user'] = [
+            'class_name' => User::class,
+            'foreign_key' => 'user_id'
+        ];
         $config['serialized_fields']['answerdata'] = "JSONArrayObject";
 
         parent::configure($config);
