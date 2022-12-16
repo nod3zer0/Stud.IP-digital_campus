@@ -18,6 +18,7 @@
 @import "scss/avatar";
 @import "scss/badges";
 @import "scss/big-image-handler";
+@import "scss/blockquote.scss";
 @import "scss/blubber";
 @import "scss/buttons";
 @import "scss/clipboard";
@@ -120,20 +121,6 @@
 // @see https://vuejs.org/api/built-in-directives.html#v-cloak
 [v-cloak] {
     display: none;
-}
-
-blockquote {
-    border-left: 3px solid $brand-color-lighter;
-    padding: 5px 5px 5px 8px;
-    margin: 8px 8px 8px 0;
-
-    background-color: rgba(0,0,0,0.05);
-    > .author {
-        background-color: $brand-color-lighter;
-        color: $white;
-        padding: 4px 4px 4px 15px;
-        margin: -5px -5px 5px -10px;
-    }
 }
 
 div.indent { margin-left: 2em; }
