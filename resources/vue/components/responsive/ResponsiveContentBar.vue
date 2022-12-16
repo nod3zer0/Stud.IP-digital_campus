@@ -81,8 +81,11 @@ export default {
                 sidebar.classList.add('responsive-show');
                 sidebar.classList.remove('responsive-hide');
                 if (html.classList.contains('responsive-display') && !html.classList.contains('fullscreen-mode')) {
-                    content.style.display = 'none';
-                    pageTitle.style.display = 'none';
+                    // Set a timeout here so that the content "disappears" after slide-in aninmation is finished.
+                    setTimeout(() => {
+                        content.style.display = 'none';
+                        pageTitle.style.display = 'none';
+                    }, 300);
                 }
                 this.sidebarOpen = true;
             }

@@ -58,7 +58,6 @@ if ($navigation) {
 
     <!-- Top bar with site title, quick search and avatar menu -->
     <div id="top-bar" role="banner">
-        <?= $this->render_partial('responsive-navigation.php') ?>
         <div id="responsive-menu">
             <?
             $user = User::findCurrent();
@@ -71,15 +70,19 @@ if ($navigation) {
                     'perm' => $GLOBALS['perm']->get_perm()
                 ];
 
-                $hasSidebar = Sidebar::get()->countWidgets(NavigationWidget::class) > 0;
+                $navWidget = Sidebar::get()->countWidgets(NavigationWidget::class);
+                $allWidgets = Sidebar::get()->countWidgets();
+                $hasSidebar = $allWidgets - $navWidget > 0;
                 ?>
             <? } else {
                 $me = ['username' => 'nobody'];
                 $hasSidebar = false;
             } ?>
-            <responsive-navigation :me="<?= htmlReady(json_encode($me)) ?>" context="<?= htmlReady(Context::get() ?
-                Context::get()->getFullname() : '') ?>" :has-sidebar="<?= $hasSidebar ? 'true' : 'false' ?>">
-            </responsive-navigation>
+            <responsive-navigation :me="<?= htmlReady(json_encode($me)) ?>"
+                                   context="<?= htmlReady(Context::get() ? Context::get()->getFullname() : '') ?>"
+                                   :has-sidebar="<?= $hasSidebar ? 'true' : 'false' ?>"
+                                   :navigation="<?= htmlReady(json_encode(ResponsiveHelper::getNavigationObject($_COOKIE['responsive-navigation-hash'] ?? null))) ?>"
+            ></responsive-navigation>
         </div>
         <div id="site-title">
             <?= htmlReady(Config::get()->UNI_NAME_CLEAN) ?>

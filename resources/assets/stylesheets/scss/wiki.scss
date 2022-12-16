@@ -85,6 +85,14 @@ a.wiki-restricted {
     overflow: auto;
 }
 
+.wiki {
+    padding: 0 !important;
+
+    section {
+        padding: 0 10px;
+    }
+}
+
 $authors: (
      0: $dark-gray-color-20,
      1: $red-20,

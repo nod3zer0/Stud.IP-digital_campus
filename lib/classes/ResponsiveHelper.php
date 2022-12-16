@@ -78,6 +78,31 @@ class ResponsiveHelper
     }
 
     /**
+     * Returns the navigation object required for the Vue.js component.
+     *
+     * The object will always contain the currently selected navigation path.
+     * Besides that, the object may contain the whole navigation and a hash
+     * for that navigation. If a hash is passed and it matches the currently
+     * genereated hash, the navigation and hash will be omitted from the
+     * response for performance reasons. We don't want to include the large
+     * navigation object in every response.
+     *
+     * @return array
+     */
+    public static function getNavigationObject(string $stored_hash = null): array
+    {
+        [$navigation, $activated] = self::getNavigationArray();
+        $hash = md5(json_encode($navigation));
+
+        $response = compact('activated');
+        if ($stored_hash !== $hash) {
+            $response = array_merge($response, compact('navigation', 'hash'));
+        }
+
+        return $response;
+    }
+
+    /**
      * Recursively build a navigation array from the subnavigation/children
      * of a navigation object.
      *

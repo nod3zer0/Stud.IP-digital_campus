@@ -3,7 +3,7 @@
  * @type {[type]}
  */
 function determineBreakpoint(element) {
-    return $(element).closest('.ui-dialog-content').length > 0 ? '.ui-dialog-content' : '#content';
+    return $(element).closest('.ui-dialog-content').length > 0 ? '.ui-dialog-content' : 'body';
 }
 
 /**

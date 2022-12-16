@@ -1,13 +1,5 @@
 // Build responsive menu on domready or resize
 STUDIP.domReady(() => {
-    const cache = STUDIP.Cache.getInstance('responsive.');
-    if (STUDIP.Navigation.navigation !== undefined) {
-        cache.set('navigation', STUDIP.Navigation.navigation);
-        STUDIP.Cookie.set('responsive-navigation-hash', STUDIP.Navigation.hash);
-    } else {
-        STUDIP.Navigation.navigation = cache.get('navigation');
-    }
-
     STUDIP.Responsive.engage();
 
     if (STUDIP.Responsive.isFullscreen()) {

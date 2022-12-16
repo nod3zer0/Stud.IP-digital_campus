@@ -1,18 +1,20 @@
 <template>
     <div role="navigation">
         <div class="responsive-navigation-header">
-            <button v-if="menuNeeded"
-                    id="responsive-navigation-button" class="styleless"
-                    :title="showMenu ? $gettext('Navigation schließen') : $gettext('Navigation öffnen')"
-                    aria-owns="responsive-navigation-items"
-                    @click.prevent="toggleMenu"
-                    @keydown.prevent.space="toggleMenu"
-                    @keydown.prevent.enter="toggleMenu">
-                <studip-icon shape="hamburger" role="info_alt"
-                             :alt="showMenu ? $gettext('Navigation schließen') : $gettext('Navigation öffnen')"
-                             :size="iconSize" :class="showMenu ? 'menu-open' : 'menu-closed'">
-                </studip-icon>
-            </button>
+            <transition name="slide" appear>
+                <button v-if="menuNeeded"
+                        id="responsive-navigation-button" class="styleless"
+                        :title="showMenu ? $gettext('Navigation schließen') : $gettext('Navigation öffnen')"
+                        aria-owns="responsive-navigation-items"
+                        @click.prevent="toggleMenu"
+                        @keydown.prevent.space="toggleMenu"
+                        @keydown.prevent.enter="toggleMenu">
+                    <studip-icon shape="hamburger" role="info_alt"
+                                 :alt="showMenu ? $gettext('Navigation schließen') : $gettext('Navigation öffnen')"
+                                 :size="iconSize" :class="showMenu ? 'menu-open' : 'menu-closed'">
+                    </studip-icon>
+                </button>
+            </transition>
             <toggle-fullscreen v-if="!isResponsive && !isFocusMode && me.username != 'nobody'"
                                :is-fullscreen="isFullscreen"></toggle-fullscreen>
         </div>
@@ -43,7 +45,7 @@
                         </section>
                     </template>
                     <template v-else>
-                        <focus-trap active="true" :return-focus-on-deactivate="true"
+                        <focus-trap :active="true" :return-focus-on-deactivate="true"
                                     :click-outside-deactivates="true">
                             <div>
                                 <div class="close-avatarmenu">
@@ -127,23 +129,30 @@ export default {
         hasSidebar: {
             type: Boolean,
             default: true
+        },
+        navigation: {
+            type: Object,
+            required: true,
         }
     },
     data() {
+        let studipNavigation = this.sanitizeNavigation(this.navigation);
+
         return {
+            studipNavigation,
             isResponsive: false,
             isFullscreen: false,
             isFocusMode: false,
             headerMagic: false,
             iconSize: 28,
             showMenu: false,
-            activeItem: STUDIP.Navigation.activated.at(-1) ?? 'start',
-            currentNavigation: this.findItem(STUDIP.Navigation.activated.at(0) ?? 'start'),
+            activeItem: this.navigation.activated.at(-1) ?? 'start',
+            currentNavigation: this.findItem(this.navigation.activated.at(0) ?? 'start', studipNavigation),
             initialNavigation: {},
             initialTitle: '',
             isAdmin: ['root','admin'].includes(this.me.perm),
             courses: [],
-            avatarNavigation: STUDIP.Navigation.navigation.avatar,
+            avatarNavigation: studipNavigation.avatar,
             avatarMenuOpen: false,
             observer: null,
             hasSkiplinks: document.querySelector('#skiplink_list') !== null
@@ -152,22 +161,13 @@ export default {
     computed: {
         // Current navigation title, supplemented by context title if available
         currentTitle() {
-            return this.context != '' && this.currentNavigation.path.indexOf('my_courses/') != -1 ?
+            return this.context !== '' && this.currentNavigation.path.indexOf('my_courses/') !== -1 ?
                 this.context : '';
         },
         // The parent element of the current navigation item
         currentParent() {
-            return this.currentNavigation.parent != null
-                 ? this.findItem(this.currentNavigation.parent)
-                 : null;
-        },
-        /*
-         * The parent element of the current navigation item parent
-         * which is used to provide a link up
-         */
-        currentGrandparent() {
-            return this.currentParent != null && this.currentParent.parent != null
-                 ? this.findItem(this.currentParent.parent)
+            return this.currentNavigation.parent
+                 ? this.findItem(this.currentNavigation.parent, this.studipNavigation)
                  : null;
         },
         /*
@@ -210,53 +210,44 @@ export default {
          * @returns {{parent: null, path: string, visible: boolean, children, icon: null, active: boolean, title, url}|null}
          */
         findItem(path, navigation) {
-            // No navigation given, use full Stud.IP navigation hierarchy.
-            if (!navigation) {
-
-                const nav = STUDIP.Navigation.navigation;
-
-                // Some "pseudo" navigation directly at root level.
-                if (path === '/' || path === 'start') {
-                    return {
-                        active: true,
-                        children: nav,
-                        icon: null,
-                        parent: null,
-                        path: '/',
-                        title: nav.start.title,
-                        url: nav.start.url,
-                        visible: true
-                    };
-                    // Direct hit in sub navigation items.
-                } else if (nav[path]) {
-                    return nav[path];
-                    // Recurse through sub navigation items.
-                } else {
-
-                    let found = null;
-                    for (const sub in nav) {
-                        found = this.findItem(path, nav[sub]);
-                        if (found) {
-                            break;
-                        }
-                    }
-                    return found;
-
-                }
-
+            // Some "pseudo" navigation directly at root level.
+            if (path === '/' || path === 'start') {
+                return {
+                    active: true,
+                    children: navigation,
+                    icon: null,
+                    parent: null,
+                    path: '/',
+                    title: navigation.start.title,
+                    url: navigation.start.url,
+                    visible: true
+                };
             } else {
-
                 // Found requested item at current level.
                 if (navigation[path]) {
                     return navigation[path];
                 } else {
+                    // Special handling for first navigation level, we have no "children" attribute here.
+                    if (navigation.start) {
 
-                    if (navigation.children) {
+                        let found = null;
+                        for (const sub in navigation) {
+                            found = this.findItem(path, navigation[sub]);
+                            if (found) {
+                                break;
+                            }
+                        }
+                        return found;
+
+                    } else if (navigation.children) {
+
                         // Found requested item as child of current one.
                         if (navigation.children[path]) {
                             return navigation.children[path];
-                        // Recurse deeper.
+
+                            // Recurse deeper.
                         } else {
+
                             let found = null;
                             for (const sub in navigation.children) {
                                 found = this.findItem(path, navigation.children[sub]);
@@ -267,18 +258,16 @@ export default {
                             return found;
 
                         }
-                    // No children left to search through, we are doomed.
+                        // No children left to search through, we are doomed.
                     } else {
                         return null;
                     }
 
                 }
             }
-
         },
         /**
          * Open or close the navigation menu
-         * @param event
          */
         toggleMenu() {
 
@@ -299,7 +288,7 @@ export default {
         },
         /**
          * Turn fullscreen mode on or off
-         * @param event
+         * @param state
          */
         setFullscreen(state) {
             const html = document.querySelector('html');
@@ -327,11 +316,11 @@ export default {
         },
         /**
          * Move to another item in navigation structure, specified by path
-         * @param string path
+         * @param path
          */
         moveTo(path) {
             this.avatarMenuOpen = false;
-            this.currentNavigation = this.findItem(path ? path : '/');
+            this.currentNavigation = this.findItem(path ? path : '/', this.studipNavigation);
             this.$nextTick(() => {
                 const current = document.querySelector('.navigation-current') ?? document.querySelector('.navigation-item');
                 if (current) {
@@ -384,6 +373,7 @@ export default {
                     if (classList.includes('consuming_mode')) {
                         this.isFocusMode = true;
                         STUDIP.Vue.emit('consuming-mode-enabled');
+                        this.setFullscreen(false);
                     } else {
                         this.isFocusMode = false;
                         STUDIP.Vue.emit('consuming-mode-disabled');
@@ -427,12 +417,22 @@ export default {
                     }
                     break;
                 case 'HEADER':
-                    if (classList.includes('cw-ribbon-consume')) {
-                        this.isFocusMode = true;
-                    } else {
-                        this.isFocusMode = false;
-                    }
+                    this.isFocusMode = classList.includes('cw-ribbon-consume');
             }
+        },
+        sanitizeNavigation(navigation) {
+            const cache = STUDIP.Cache.getInstance('responsive.');
+
+            // No navigation object was sent, read from cache
+            if (navigation.navigation === undefined) {
+                return cache.get('navigation');
+            }
+
+            // Navigation object was sent, store in cache
+            cache.set('navigation', navigation.navigation);
+            STUDIP.Cookie.set('responsive-navigation-hash', navigation.hash);
+
+            return navigation.navigation;
         }
     },
     mounted() {
@@ -503,7 +503,6 @@ export default {
                 attributeFilter: ['class']
             })
         })
-
     },
     beforeDestroy() {
         this.observer.disconnect();
@@ -513,13 +512,40 @@ export default {
 </script>
 
 <style lang="scss">
-.appear-enter-active,
-.appear-leave-active {
-    transition: opacity .3s ease;
-}
+@media not prefers-reduced-motion {
 
-.appear-enter,
-.appear-leave-to {
-   opacity: 0;
+    .slide-enter-active,
+    .slide-leave-active {
+        transition: all .3s ease;
+    }
+
+    .slide-enter-to,
+    .slide-leave-from,
+    .slide-leave {
+        margin-left: 0;
+    }
+
+    .slide-enter,
+    .slide-enter-from,
+    .slide-leave-to {
+        margin-left: -50px;
+    }
+
+    .appear-enter-active,
+    .appear-leave-active {
+        transition: opacity .3s ease;
+    }
+
+    .appear-leave,
+    .appear-leave-from,
+    .appear-enter-to {
+        opacity: 1;
+    }
+
+    .appear-enter,
+    .appear-enter-from,
+    .appear-leave-to {
+        opacity: 0;
+    }
 }
 </style>
