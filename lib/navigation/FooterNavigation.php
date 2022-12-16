@@ -47,5 +47,14 @@ class FooterNavigation extends Navigation
             $privacy_url = URLHelper::getURL($privacy_url, ['cancel_login' => '1']);
         }
         $this->addSubNavigation('privacy', new Navigation(_('Datenschutz'), $privacy_url));
+
+        $this->addSubNavigation(
+            'report_barrier',
+            new Navigation(
+                _('Barriere melden'),
+                URLHelper::getURL('dispatch.php/accessibility/forms/report_barrier', ['page' => Request::url()]),
+                ['data-dialog' => '']
+            )
+        );
     }
 }

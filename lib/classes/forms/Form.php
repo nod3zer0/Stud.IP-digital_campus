@@ -6,7 +6,7 @@ class Form extends Part
 {
 
     //models:
-    protected $afterStore = [];
+    protected $store_callbacks = [];
 
     //internals
     protected $inputs = [];
@@ -14,7 +14,12 @@ class Form extends Part
 
     //appearance in html-form
     protected $url = null;
+    protected $save_button_text = '';
+    protected $save_button_name = '';
+
     protected $autoStore = false;
+    protected $success_message = '';
+
     protected $collapsable = false;
 
     //to identify a form element
@@ -57,6 +62,8 @@ class Form extends Part
     final public function __construct(...$parts)
     {
         parent::__construct(...$parts);
+        //Set a default for the success message:
+        $this->success_message = _('Daten wurden gespeichert.');
     }
 
     /**
@@ -160,6 +167,48 @@ class Form extends Part
         return $this->url;
     }
 
+    /**
+     * Sets the text for the "save" button in the form.
+     *
+     * @param string $text The text for the button to save the form.
+     * @return $this
+     */
+    public function setSaveButtonText(string $text): Form
+    {
+        $this->save_button_text = $text;
+        return $this;
+    }
+
+    /**
+     * @return string The text for the "save" button in the form.
+     */
+    public function getSaveButtonText() : string
+    {
+        return $this->save_button_text ?: _('Speichern');
+    }
+
+    public function setSaveButtonName(string $name): Form
+    {
+        $this->save_button_name = $name;
+        return $this;
+    }
+
+    public function getSaveButtonName() : string
+    {
+        return $this->save_button_name ?: $this->getSaveButtonText();
+    }
+
+    public function setSuccessMessage(string $success_message): Form
+    {
+        $this->success_message = $success_message;
+        return $this;
+    }
+
+    public function getSuccessMessage() : string
+    {
+        return $this->success_message;
+    }
+
     public function setCollapsable($collapsing = true)
     {
         $this->collapsable = $collapsing;
@@ -182,7 +231,9 @@ class Form extends Part
         $this->autoStore = true;
         if (\Request::isPost() && \Request::isAjax() && !\Request::isDialog()) {
             $this->store();
-            \PageLayout::postSuccess(_('Daten wurden gespeichert.'));
+            if ($this->success_message) {
+                \PageLayout::postSuccess($this->success_message);
+            }
             page_close();
             die();
         }
@@ -200,9 +251,9 @@ class Form extends Part
      * @param callable $c
      * @return Form $this
      */
-    public function addAfterStoreCallback(Callable $c)
+    public function addStoreCallback(Callable $c): Form
     {
-        $this->afterStore[] = $c;
+        $this->store_callbacks[] = $c;
         return $this;
     }
 
@@ -240,11 +291,15 @@ class Form extends Part
         $stored = 0;
 
         //store by each input
+        $all_values = [];
         foreach ($this->getAllInputs() as $input) {
             $value = $this->getStorableValueFromRequest($input);
             if ($value !== null) {
                 $callback = $this->getStoringCallback($input);
-                $stored += $callback($value, $input);
+                if (is_callable($callback)) {
+                    $stored += $callback($value, $input);
+                }
+                $all_values[$input->getName()] = $value;
             }
         }
 
@@ -255,9 +310,9 @@ class Form extends Part
             }
         }
 
-        foreach ($this->afterStore as $callback) {
+        foreach ($this->store_callbacks as $callback) {
             if (is_callable($callback)) {
-                $stored += call_user_func($callback, $this);
+                $stored += call_user_func($callback, $this, $all_values);
             } else {
                 //throw warning if callback is not available:
                 if ($callback === null) {
