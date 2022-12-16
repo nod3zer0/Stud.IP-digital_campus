@@ -44,7 +44,6 @@ $drag_and_drop_border: 1px solid $base-color;
     // The special handling for -- as #{"--"} seems to be neccessary to make
     // scss evaluate the color variables
     #{"--"}active-color: $active-color;
-    #{"--"}active-color: $active-color;
     #{"--"}activity-color: $activity-color;
     #{"--"}activity-color-20: $activity-color-20;
     #{"--"}activity-color-40: $activity-color-40;
