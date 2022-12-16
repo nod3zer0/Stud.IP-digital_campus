@@ -19,6 +19,9 @@
         },
         "show_filenames": {
             "type": "string"
+        },
+        "mouseover_filenames": {
+            "type": "string"
         }
     },
     "required": [

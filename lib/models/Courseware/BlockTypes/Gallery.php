@@ -94,6 +94,7 @@ class Gallery extends BlockType
             'nav' => 'true',
             'height' => '610',
             'show_filenames' => 'true',
+            'mouseover_filenames' => 'false',
         ];
     }
 

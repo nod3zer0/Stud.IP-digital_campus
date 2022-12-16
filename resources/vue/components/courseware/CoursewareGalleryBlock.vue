@@ -27,7 +27,8 @@
                                 }
                             "
                         />
-                        <div v-if="currentShowFileNames === 'true'" class="cw-block-gallery-file-name">
+                        <div v-if="currentShowFileNames === 'true' && image?.attributes?.name" class="cw-block-gallery-file-name"
+                            :class="{'show-on-hover': currentMouseoverFileNames === 'true'}">
                             <span>{{ image.attributes.name }}</span>
                         </div>
                     </div>
@@ -72,6 +73,15 @@
                             <option value="false"><translate>Nein</translate></option>
                         </select>
                     </label>
+                    <label v-if="currentShowFileNames === 'true'">
+                        {{ $gettext('Dateiname erscheint bei Mouseover') }}
+                        <studip-tooltip-icon
+                            :text="$gettext('Der Dateiname wird angezeigt, wenn Sie den Mauszeiger über den Inhalt bewegen.')"/>
+                        <select v-model="currentMouseoverFileNames">
+                            <option value="true"><translate>Ja</translate></option>
+                            <option value="false"><translate>Nein</translate></option>
+                        </select>
+                    </label>
                 </form>
             </template>
             <template #info>
@@ -106,6 +116,7 @@ export default {
             currentNav: '',
             currentHeight: '',
             currentShowFileNames: '',
+            currentMouseoverFileNames: '',
             currentAutoplayTimer: '',
             editModeFiles: [],
             slideIndex: 0,
@@ -136,6 +147,9 @@ export default {
         showFileNames() {
             return this.block?.attributes?.payload?.show_filenames;
         },
+        mouseoverFileNames() {
+            return this.block?.attributes?.payload?.mouseover_filenames ?? 'false';
+        },
         files() {
             if (!this.editMode) {
                 return this.block?.attributes?.payload?.files;
@@ -158,6 +172,7 @@ export default {
             this.currentNav = this.nav;
             this.currentHeight = this.height;
             this.currentShowFileNames = this.showFileNames;
+            this.currentMouseoverFileNames = this.mouseoverFileNames;
         },
         startGallery() {
             this.slideIndex = 0;
@@ -218,6 +233,7 @@ export default {
             attributes.payload.nav = this.currentNav;
             attributes.payload.height = this.currentHeight;
             attributes.payload.show_filenames = this.currentShowFileNames;
+            attributes.payload.mouseover_filenames = this.currentMouseoverFileNames;
 
             this.updateBlock({
                 attributes: attributes,

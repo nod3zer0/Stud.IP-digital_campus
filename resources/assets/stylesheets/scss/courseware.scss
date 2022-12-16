@@ -4070,6 +4070,14 @@ g a l l e r y  b l o c k
         background-color: fade-out($black, 0.6);
         padding: 0.5em;
     }
+
+    &.show-on-hover {
+        display: none;
+    }
+}
+
+.cw-block-gallery-content:hover .show-on-hover {
+    display: block;
 }
 
 .cw-block-gallery-number-text {
