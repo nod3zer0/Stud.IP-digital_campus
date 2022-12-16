@@ -195,7 +195,7 @@ class ResponsiveHelper
             $currentIndex = -1;
 
             foreach ($sem_data as $index => $semester) {
-                if ($semester['current']) {
+                if (!empty($semester['current'])) {
                     $currentIndex = $index;
                     break;
                 }

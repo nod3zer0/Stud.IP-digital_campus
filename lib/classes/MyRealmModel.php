@@ -163,8 +163,8 @@ class MyRealmModel
     public static function getCourses($min_sem_key, $max_sem_key, $params = [])
     {
         // init
-        $order_by          = $params['order_by'];
-        $order             = $params['order'];
+        $order_by          = $params['order_by'] ?? null;
+        $order             = $params['order'] ?? null;
         $deputies_enabled  = $params['deputies_enabled'];
 
         $sem_data = Semester::getAllAsArray();
@@ -179,7 +179,7 @@ class MyRealmModel
         }
 
         $semesters = Semester::findMany($semester_ids);
-        $studygroup_filter = !$params['studygroups_enabled'] ? false : true;
+        $studygroup_filter = !empty($params['studygroups_enabled']);
         $ordering          = '';
         // create ordering
         if (!$order_by) {

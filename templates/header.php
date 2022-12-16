@@ -287,7 +287,7 @@ if ($navigation) {
             <nav id="navigation-level-2" aria-current="page" aria-label="<?= _('Zweite Navigationsebene') ?>">
 
                 <? if (PageLayout::isHeaderEnabled() /*&& isset($navigation)*/) : ?>
-                    <?= $this->render_partial('tabs', compact('navigation', 'membership')) ?>
+                    <?= $this->render_partial('tabs', compact('navigation')) ?>
                 <? endif; ?>
             </nav>
         <? endif; ?>
