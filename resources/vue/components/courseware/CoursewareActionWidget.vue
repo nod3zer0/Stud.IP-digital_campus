@@ -22,11 +22,6 @@
                         {{ $gettext('Sperre aufheben') }}
                     </button>
                 </li>
-                <li v-if="canEdit && !blockedByAnotherUser" class="cw-action-widget-sort">
-                    <button @click="sortContainers">
-                        {{ $gettext('Abschnitte sortieren') }}
-                    </button>
-                </li>
                 <li v-if="canEdit" class="cw-action-widget-add">
                     <button @click="addElement">
                         {{ $gettext('Seite hinzufügen') }}
@@ -122,7 +117,6 @@ export default {
             showElementLinkDialog: 'showElementLinkDialog',
             showElementRemoveLockDialog: 'showElementRemoveLockDialog',
             updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
-            setStructuralElementSortMode: 'setStructuralElementSortMode',
             companionInfo: 'companionInfo',
             addBookmark: 'addBookmark',
             lockObject: 'lockObject',
@@ -154,26 +148,6 @@ export default {
         },
         async removeElementLock() {
             this.showElementRemoveLockDialog(true);
-        },
-        async sortContainers() {
-            await this.loadStructuralElement(this.currentId);
-            if (this.blockedByAnotherUser) {
-                this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
-
-                return false;
-            }
-            try {
-                await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
-            } catch (error) {
-                if (error.status === 409) {
-                    this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
-                } else {
-                    console.log(error);
-                }
-
-                return false;
-            }
-            this.setStructuralElementSortMode(true);
         },
         async deleteElement() {
             await this.loadStructuralElement(this.currentId);

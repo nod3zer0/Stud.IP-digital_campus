@@ -33,6 +33,7 @@
                             <courseware-tools-blockadder
                                 id="cw-ribbon-tool-blockadder"
                                 :stickyRibbon="stickyRibbon"
+                                @blockAdded="$emit('blockAdded')"
                             />
                         </courseware-tab>
                         <courseware-tab

@@ -41,6 +41,7 @@
                 :style="{ maxHeight: maxHeight + 'px' }"
                 :canEdit="canEdit"
                 @deactivate="deactivateToolbar"
+                @blockAdded="$emit('blockAdded')"
             />
         </header>
         <div v-if="stickyRibbon" class="cw-ribbon-sticky-bottom"></div>

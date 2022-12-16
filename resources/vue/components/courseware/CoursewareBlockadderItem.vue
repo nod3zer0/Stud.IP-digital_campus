@@ -30,6 +30,7 @@ export default {
     computed: {
         ...mapGetters({
             blockAdder: 'blockAdder',
+            blockById: 'courseware-blocks/byId'
         }),
     },
     methods: {
@@ -41,6 +42,7 @@ export default {
             updateContainer: 'updateContainer',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
+            loadBlock: 'courseware-blocks/loadById',
         }),
         async addBlock() {
             if (Object.keys(this.blockAdder).length !== 0) {

@@ -127,7 +127,7 @@ export default {
                 return this.$refs[selectorId][0];
             }
             return null;
-        }
+        },
     },
     watch: {
         setSelected(tab) {

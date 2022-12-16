@@ -40,8 +40,6 @@ const getDefaultState = () => {
 
         showSuggestOerDialog: false,
 
-        structuralElementSortMode: false,
-
         importFilesState: '',
         importFilesProgress: 0,
         importStructuresState: '',
@@ -200,9 +198,6 @@ const getters = {
     },
     showSuggestOerDialog(state) {
         return state.showSuggestOerDialog;
-    },
-    structuralElementSortMode(state) {
-        return state.structuralElementSortMode;
     },
     importFilesState(state) {
         return state.importFilesState;
@@ -877,10 +872,6 @@ export const actions = {
         context.commit('setShowOverviewElementAddDialog', bool);
     },
 
-    setStructuralElementSortMode({ commit }, bool) {
-        commit('setStructuralElementSortMode', bool);
-    },
-
     setImportFilesState({ commit }, state) {
         commit('setImportFilesState', state);
     },
@@ -1436,10 +1427,6 @@ export const mutations = {
 
     setShowStructuralElementRemoveLockDialog(state, showRemoveLock) {
         state.showStructuralElementRemoveLockDialog = showRemoveLock;
-    },
-
-    setStructuralElementSortMode(state, mode) {
-        state.structuralElementSortMode = mode;
     },
 
     setImportFilesState(state, importFilesState) {

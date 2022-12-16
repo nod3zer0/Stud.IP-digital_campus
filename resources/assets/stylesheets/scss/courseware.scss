@@ -828,7 +828,12 @@ ribbon end
     .cw-container-header {
         background-color: $content-color-20;
         max-height: 30px;
-        padding: 4px 10px;
+        padding: 4px 10px 4px 22px;
+
+        .cw-container-header-toggle {
+            display: inline-block;
+            width: calc(100% - 40px);
+        }
 
         span {
             color: $base-color;
@@ -935,7 +940,6 @@ form.cw-container-dialog-edit-form {
 /* * *
  block
 * * */
-
 .cw-default-block {
     display: flex;
     flex-flow: row;
@@ -977,7 +981,12 @@ form.cw-container-dialog-edit-form {
 .cw-block-header {
     background-color: $content-color-20;
     max-height: 30px;
-    padding: 4px 10px;
+    padding: 4px 10px 4px 22px;
+
+    .cw-block-header-toggle {
+        display: inline-block;
+        width: calc(100% - 50px);
+    }
 
     span {
         color: $base-color;
@@ -1241,70 +1250,72 @@ label[for="cw-keypoint-color"] {
 /* * * * * * * *
  sortable handle
  * * * * * * * */
-.cw-container-list-sort-mode {
-    .block-ghost {
-        opacity: 0.6;
-    }
-    &.cw-container-list-sort-mode-empty {
-        min-height: 4em;
-        border: dashed thin $content-color-40;
-    }
-}
-.cw-structural-element-list-sort-mode {
-    list-style: none;
-    padding-left: 0;
 
-    .cw-container-item-sortable {
-        border: solid thin $content-color-40;
-        background-color: $content-color-20;
-        color: $base-color;
-        font-weight: 700;
-        margin-bottom: 0.5em;
-        padding: 0.5em;
-    }
-    .container-ghost {
-        opacity: 0.6;
+.cw-sortable-handle {
+    display: inline-block;
+    cursor: grab;
+    background-image: url("#{$image-path}/anfasser_24.png");
+    background-repeat: no-repeat;
+    width: 7px;
+    height: 24px;
+    padding-right: 4px;
+    vertical-align: middle;
+    &.cw-sortable-handle-dragging {
+        cursor: grabbing;
     }
 }
-.cw-structural-element-list-sort-mode,
-.cw-container-list-sort-mode {
+
+.cw-block-item-sortable {
     .cw-sortable-handle {
-        display: inline-block;
-        cursor: grab;
-        background-image: url("#{$image-path}/anfasser_24.png");
-        background-repeat: no-repeat;
-        width: 7px;
-        height: 24px;
-        padding-right: 4px;
-        vertical-align: middle;
+        position: relative;
+        left: 12px;
     }
-    .cw-content-wrapper-active:hover {
-        border: solid thin $base-color;
+    .cw-block {
+        margin-top: -32px;
     }
 }
 
-.cw-container-item-sortable.sortable-chosen {
-        .cw-sortable-handle {
-            cursor: grabbing;
-        }
-}
-
-.cw-container-sort-buttons {
-    display: block;
-}
-
-.cw-tree-item-wrapper {
+.cw-container-item-sortable {
     .cw-sortable-handle {
-        display: inline-block;
-        cursor: grab;
-        background-image: url("#{$image-path}/anfasser_24.png");
-        background-repeat: no-repeat;
-        width: 7px;
-        height: 24px;
-        padding-right: 4px;
-        vertical-align: middle;
+        position: relative;
+        left: 12px;
+    }
+    .cw-container {
+        margin-top: -32px;
     }
 }
+
+.cw-collapsible-open {
+    .cw-container-list-sort-mode {
+        margin-top: 8px;
+    }
+}
+
+.container-ghost,
+.block-ghost {
+    opacity: 0.6;
+}
+
+
+.cw-container-wrapper-edit {
+    .cw-structural-element-list {
+        width: 100%;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+.cw-block-item-selected {
+    .cw-block-header {
+        font-style: italic;
+    }
+}
+.cw-container-item-selected {
+    .cw-container-header {
+        font-style: italic;
+    }
+}
+
 /* * * * * * * * * * *
  sortable handle end
  * * * * * * * * * * */

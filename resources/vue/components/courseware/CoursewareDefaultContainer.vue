@@ -4,22 +4,29 @@
         :class="['cw-container-colspan-' + colSpan, showEditMode && canEdit ? 'cw-container-active' : '']"
     >
         <div class="cw-container-content">
-            <header v-if="showEditMode && canEdit" class="cw-container-header">
-                <studip-icon v-if="blockedByAnotherUser" shape="lock-locked" />
-                <span>{{ container.attributes.title }} ({{container.attributes.width}})</span>
-                <span v-if="blockedByAnotherUser" class="cw-default-container-blocker-warning">
-                    | {{ $gettextInterpolate($gettext('wird im Moment von %{ userName } bearbeitet'), { userName: this.blockingUserName }) }}
-                </span>
+            <header v-if="showEditMode && canEdit" class="cw-container-header" :class="{ 'cw-container-header-open': isOpen }">
+                <a href="#" class="cw-container-header-toggle" :aria-expanded="isOpen" @click.prevent="isOpen = !isOpen">
+                    <studip-icon :shape="isOpen ? 'arr_1down' : 'arr_1right'" />
+                    <span>{{ container.attributes.title }} ({{container.attributes.width}})</span>
+                    <studip-icon v-if="blockedByAnotherUser" shape="lock-locked" />
+                    <span v-if="blockedByAnotherUser" class="cw-default-container-blocker-warning">
+                        {{ $gettextInterpolate($gettext('wird im Moment von %{ userName } bearbeitet'), { userName: this.blockingUserName }) }}
+                    </span>
+                </a>
                 <courseware-container-actions
                     :canEdit="canEdit"
                     :container="container"
                     @editContainer="displayEditDialog"
                     @deleteContainer="displayDeleteDialog"
-                    @sortBlocks="sortBlocks"
                     @removeLock="displayRemoveLockDialog"
                 />
             </header>
-            <div class="cw-block-wrapper" :class="{ 'cw-block-wrapper-active': showEditMode }">
+            <div v-show="isOpen"
+                class="cw-block-wrapper"
+                :class="{
+                    'cw-block-wrapper-active': showEditMode,
+                }"
+            >
                 <slot name="containerContent"></slot>
             </div>
 
@@ -93,15 +100,17 @@ export default {
             textDeleteAlert: this.$gettext('Möchten Sie diesen Abschnitt wirklich löschen?'),
             textRemoveLockTitle: this.$gettext('Sperre aufheben'),
             textRemoveLockAlert: this.$gettext('Möchten Sie die Sperre dieses Abschnitts wirklich aufheben?'),
+            isOpen: true,
         };
     },
     computed: {
         ...mapGetters({
             userId: 'userId',
             userById: 'users/byId',
+            viewMode: 'viewMode'
         }),
         showEditMode() {
-            return this.$store.getters.viewMode === 'edit';
+            return this.viewMode === 'edit';
         },
         colSpan() {
             return this.container.attributes.payload.colspan ? this.container.attributes.payload.colspan : 'full';
@@ -222,16 +231,6 @@ export default {
                 this.$store.dispatch('coursewareBlockAdder', {});
             }
             this.showDeleteDialog = false;
-        },
-        async sortBlocks() {
-            await this.loadContainer({ id: this.container.id, options: { include: 'edit-blocker' } });
-            if (this.blockedByAnotherUser) {
-                this.companionInfo({ info: this.$gettext('Dieser Abschnitt wird bereits bearbeitet.') });
-
-                return false;
-            }
-            await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
-            this.$emit('sortBlocks');
         },
         displayRemoveLockDialog() {
             this.showRemoveLockDialog = true;

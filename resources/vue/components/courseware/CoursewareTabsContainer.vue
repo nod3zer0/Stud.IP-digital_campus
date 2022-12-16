@@ -7,19 +7,24 @@
         @showEdit="setShowEdit"
         @storeContainer="storeContainer"
         @closeEdit="initCurrentData"
-        @sortBlocks="enableSort"
     >
         <template v-slot:containerContent>
-            <courseware-tabs v-if="!sortMode">
+            <template v-if="showEditMode && canEdit">
+                <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
+                <span id="operation" class="assistive-text">
+                    {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen')}}
+                </span>
+            </template>
+            <courseware-tabs>
                 <courseware-tab
                     v-for="(section, index) in currentSections"
                     :key="index"
                     :index="index"
                     :name="section.name"
                     :icon="section.icon"
-                    :selected="index === 0"
+                    :selected="sortInTab === index"
                 >
-                    <ul class="cw-container-tabs-block-list">
+                    <ul v-if="!showEditMode" class="cw-container-tabs-block-list">
                         <li v-for="block in section.blocks" :key="block.id" class="cw-block-item">
                             <component
                                 :is="component(block)"
@@ -28,42 +33,48 @@
                                 :isTeacher="isTeacher"
                             />
                         </li>
-                        <li v-if="showEditMode && canAddElements">
-                            <courseware-block-adder-area :container="container" :section="index" @updateContainerContent="updateContent"/>
-                        </li>
                     </ul>
+                    <template v-if="showEditMode && canEdit">
+                        <draggable
+                            class="cw-container-list-block-list cw-container-list-sort-mode"
+                            :class="[section.blocks.length === 0 ? 'cw-container-list-sort-mode-empty' : '']"
+                            tag="ol"
+                            role="listbox"
+                            v-model="section.blocks"
+                            v-bind="dragOptions"
+                            handle=".cw-sortable-handle"
+                            group="blocks"
+                            @start="isDragging = true"
+                            @end="dropBlock"
+                            :containerId="container.id"
+                            :sectionId="index"
+                        >
+                            <li v-for="block in section.blocks" :key="block.id" class="cw-block-item cw-block-item-sortable">
+                                 <span
+                                    :class="{ 'cw-sortable-handle-dragging': isDragging }"
+                                    class="cw-sortable-handle"
+                                    tabindex="0"
+                                    role="option"
+                                    aria-describedby="operation"
+                                    :ref="'sortableHandle' + block.id"
+                                    @keydown="keyHandler($event, block.id, index)"
+                                ></span>
+                                <component
+                                    :is="component(block)"
+                                    :block="block"
+                                    :canEdit="canEdit"
+                                    :isTeacher="isTeacher"
+                                    :class="{ 'cw-block-item-selected': keyboardSelected === block.id}"
+                                    :blockId="block.id"
+                                />
+                            </li>
+                        </draggable>
+                        <template v-if="canAddElements">
+                            <courseware-block-adder-area :container="container" :section="index" @updateContainerContent="updateContent"/>
+                        </template>
+                    </template>
                 </courseware-tab>
             </courseware-tabs>
-            <div v-if="sortMode && canEdit" class="cw-container-tabs-sort">
-                <courseware-collapsible-box
-                    v-for="(section, index) in currentSections"
-                    :key="index"
-                    :title="section.name"
-                    :icon="section.icon"
-                    :open="index === 0"
-                >
-                    <draggable
-                        class="cw-container-list-block-list cw-container-list-sort-mode"
-                        :class="[section.blocks.length === 0 ? 'cw-container-list-sort-mode-empty' : '']"
-                        tag="ul"
-                        v-model="section.blocks"
-                        v-bind="dragOptions"
-                        handle=".cw-sortable-handle"
-                        @start="isDragging = true"
-                        @end="isDragging = false"
-                    >
-                        <transition-group type="transition" name="flip-blocks" tag="div">
-                            <li v-for="block in section.blocks" :key="block.id" class="cw-block-item cw-block-item-sortable">
-                                <component :is="component(block)" :block="block" :canEdit="canEdit" :isTeacher="isTeacher" />
-                            </li>
-                        </transition-group>
-                    </draggable>
-                </courseware-collapsible-box>
-                <div>
-                    <button class="button accept" @click="storeSort"><translate>Sortierung speichern</translate></button>
-                    <button class="button cancel"  @click="resetSort"><translate>Sortieren abbrechen</translate></button>
-                </div>
-            </div>
         </template>
         <template v-slot:containerEditDialog>
             <form class="default cw-container-dialog-edit-form" @submit.prevent="">
@@ -144,21 +155,26 @@ export default {
                 disabled: false,
                 ghostClass: "block-ghost"
             },
+            processing: false,
+            keyboardSelected: null,
+            sortInTab: 0,
+            assistiveLive: ''
         };
     },
     computed: {
         ...mapGetters({
             blockById: 'courseware-blocks/byId',
+            viewMode: 'viewMode'
         }),
+        showEditMode() {
+            return this.viewMode === 'edit';
+        },
         blocks() {
             if (!this.container) {
                 return [];
             }
 
             return this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id })).filter((a) => a);
-        },
-        showEditMode() {
-            return this.$store.getters.viewMode === 'edit';
         },
         icons() {
             return contentIcons;
@@ -170,6 +186,7 @@ export default {
     methods: {
         ...mapActions({
             updateContainer: 'updateContainer',
+            loadContainer: 'courseware-containers/loadById',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
         }),
@@ -227,30 +244,30 @@ export default {
             this.currentContainer.attributes.payload.sections.splice(index, 1);
         },
         async storeContainer() {
+            const timeout = setTimeout(() => this.processing = true, 800);
             this.currentContainer.attributes.payload.sections = this.currentContainer.attributes.payload.sections.filter(section => !section.locked);
             this.currentContainer.attributes.payload.sections.forEach(section => {
                 section.blocks = section.blocks.map((block) => {return block.id;});
                 delete section.locked;
             });
-
             await this.updateContainer({
                 container: this.currentContainer,
                 structuralElementId: this.currentContainer.relationships['structural-element'].data.id,
             });
             await this.unlockObject({ id: this.container.id, type: 'courseware-containers' });
+            await this.loadContainer({id : this.container.id });
             this.initCurrentData();
-        },
-        enableSort() {
-            this.sortMode = true;
+            clearTimeout(timeout);
+            this.processing = false;
         },
         async storeSort() {
-            this.sortMode = false;
+            if (this.blockedByAnotherUser) {
+                this.companionInfo({ info: this.$gettext('Dieser Abschnitt wird bereits bearbeitet.') });
+                this.loadContainer({id : this.container.id });
+                return false;
+            }
+            await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
             this.storeContainer();
-        },
-        async resetSort() {
-            await this.unlockObject({ id: this.currentContainer.id, type: 'courseware-containers' });
-            this.sortMode = false;
-            this.initCurrentData();
         },
         component(block) {
             if (block.attributes) {
@@ -262,6 +279,98 @@ export default {
             if(blockAdder.container !== undefined && blockAdder.container.id === this.container.id) {
                 this.initCurrentData();
             }
+        },
+        keyHandler(e, blockId, sectionIndex) {
+            switch (e.keyCode) {
+                case 27: // esc
+                    this.abortKeyboardSorting(blockId, sectionIndex);
+                    break;
+                case 32: // space
+                    e.preventDefault();
+                    if (this.keyboardSelected) {
+                        this.storeKeyboardSorting(blockId, sectionIndex);
+                    } else {
+                        this.keyboardSelected = blockId;
+                        const block = this.blockById({id: blockId});
+                        const currentIndex = this.currentSections[sectionIndex].blocks.findIndex(block => block.id === blockId);
+                        this.assistiveLive = 
+                            this.$gettextInterpolate(
+                                this.$gettext('%{blockTitle} Block ausgewählt. Aktuelle Position in der Liste: %{pos} von %{listLength}. Drücken Sie die Aufwärts- und Abwärtspfeiltasten, um die Position zu ändern, die Leertaste zum Ablegen, die Escape-Taste zum Abbrechen.')
+                                , {blockTitle: block.attributes.title, pos: currentIndex + 1, listLength: this.currentSections[sectionIndex].blocks.length}
+                            );
+                    }
+                    break;
+            }
+            if (this.keyboardSelected) {
+                switch (e.keyCode) {
+                    case 9: //tab
+                        this.abortKeyboardSorting(blockId, sectionIndex);
+                        break;
+                    case 38: // up
+                        e.preventDefault();
+                        this.moveItemUp(blockId, sectionIndex);
+                        break;
+                    case 40: // down
+                        e.preventDefault();
+                        this.moveItemDown(blockId, sectionIndex);
+                        break;
+                }
+            }
+        },
+        moveItemUp(blockId, sectionIndex) {
+            const currentIndex = this.currentSections[sectionIndex].blocks.findIndex(block => block.id === blockId);
+            const block = this.blockById({id: blockId});
+            if (currentIndex !== 0) {
+                const newPos = currentIndex - 1;
+                this.currentSections[sectionIndex].blocks.splice(newPos, 0, this.currentSections[sectionIndex].blocks.splice(currentIndex, 1)[0]);
+                this.assistiveLive = 
+                    this.$gettextInterpolate(
+                        this.$gettext('%{blockTitle} Block. Aktuelle Position in der Liste: %{pos} von %{listLength}.')
+                        , {blockTitle: block.attributes.title, pos: newPos + 1, listLength: this.currentSections[sectionIndex].blocks.length}
+                    );
+            } else if (sectionIndex !== 0) {
+                const newSectionIndex = sectionIndex - 1;
+                this.sortInTab = newSectionIndex;
+                this.currentSections[newSectionIndex].blocks.push(this.currentSections[sectionIndex].blocks.splice(currentIndex, 1)[0]);
+            }
+        },
+        moveItemDown(blockId, sectionIndex) {
+            const currentIndex = this.currentSections[sectionIndex].blocks.findIndex(block => block.id === blockId);
+            const block = this.blockById({id: blockId});
+            if (this.currentSections[sectionIndex].blocks.length - 1 > currentIndex) {
+                const newPos = currentIndex + 1;
+                this.currentSections[sectionIndex].blocks.splice(newPos, 0, this.currentSections[sectionIndex].blocks.splice(currentIndex, 1)[0]);
+                this.assistiveLive = 
+                    this.$gettextInterpolate(
+                        this.$gettext('%{blockTitle} Block. Aktuelle Position in der Liste: %{pos} von %{listLength}.')
+                        , {blockTitle: block.attributes.title, pos: newPos + 1, listLength: this.currentSections[sectionIndex].blocks.length}
+                    );
+            } else if (this.currentSections.length - 1 > sectionIndex) {
+                const newSectionIndex = sectionIndex + 1;
+                this.sortInTab = newSectionIndex;
+                this.currentSections[newSectionIndex].blocks.splice(0, 0, this.currentSections[sectionIndex].blocks.splice(currentIndex, 1)[0]);
+            }
+        },
+        abortKeyboardSorting(blockId, sectionIndex) {
+            const block = this.blockById({id: blockId});
+            this.keyboardSelected = null;
+            this.assistiveLive = 
+                this.$gettextInterpolate(
+                    this.$gettext('%{blockTitle} Block, Neuordnung abgebrochen')
+                    , {blockTitle: block.attributes.title}
+                );
+            this.initCurrentData();
+        },
+        storeKeyboardSorting(blockId, sectionIndex) {
+            const block = this.blockById({id: blockId});
+            const currentIndex = this.currentSections[sectionIndex].blocks.findIndex(block => block.id === blockId);
+            this.keyboardSelected = null;
+            this.assistiveLive = 
+                this.$gettextInterpolate(
+                    this.$gettext('%{blockTitle} Block, abgelegt. Entgültige Position in der Liste: %{pos} von %{listLength}.')
+                    , {blockTitle: block.attributes.title, pos: currentIndex + 1, listLength: this.currentSections[sectionIndex].blocks.length}
+                );
+            this.storeSort();
         }
     },
     watch: {
@@ -269,6 +378,16 @@ export default {
             if (!this.showEdit) {
                 this.initCurrentData();
             }
+        },
+        currentSections: {
+            handler() {
+                if (this.keyboardSelected) {
+                    this.$nextTick(() => {
+                        this.$refs['sortableHandle' + this.keyboardSelected][0].focus();
+                    });
+                }   
+            },
+            deep: true
         }
     }
 };

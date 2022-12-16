@@ -2,17 +2,18 @@
     <div v-if="block.attributes.visible || canEdit" class="cw-default-block">
         <div class="cw-content-wrapper" :class="[showEditMode ? 'cw-content-wrapper-active' : '']">
             <header v-if="showEditMode" class="cw-block-header">
-                <span class="cw-sortable-handle"></span>
-                <studip-icon v-if="!block.attributes.visible" shape="visibility-invisible" />
-                <studip-icon v-if="blockedByAnotherUser" shape="lock-locked" />
-                <span>{{ blockTitle }}</span>
-                <span v-if="blockedByAnotherUser" class="cw-default-block-blocker-warning">
-                    | {{ $gettextInterpolate($gettext('wird im Moment von %{ userName } bearbeitet'), { userName: this.blockingUserName }) }}
-                </span>
-
-                <span v-if="!block.attributes.visible" class="cw-default-block-invisible-info">
-                    | {{ $gettext('unsichtbar für Nutzende ohne Schreibrecht') }}
-                </span>
+                <a href="#" class="cw-block-header-toggle" :aria-expanded="isOpen" @click.prevent="isOpen = !isOpen">
+                    <studip-icon :shape="isOpen ? 'arr_1down' : 'arr_1right'" />
+                    <span>{{ blockTitle }}</span>
+                    <studip-icon v-if="blockedByAnotherUser" shape="lock-locked" />
+                    <span v-if="blockedByAnotherUser" class="cw-default-block-blocker-warning">
+                        {{ $gettextInterpolate($gettext('wird im Moment von %{ userName } bearbeitet'), { userName: this.blockingUserName }) }}
+                    </span>
+                    <studip-icon v-if="!block.attributes.visible" shape="visibility-invisible" />
+                    <span v-if="!block.attributes.visible" class="cw-default-block-invisible-info">
+                        {{ $gettext('unsichtbar für Nutzende ohne Schreibrecht') }}
+                    </span>
+                </a>
                 <courseware-block-actions
                     :block="block"
                     :canEdit="canEdit"
@@ -24,30 +25,32 @@
                     @removeLock="displayRemoveLockDialog()"
                 />
             </header>
-            <div v-if="showContent" class="cw-block-content">
-                <slot name="content" />
-            </div>
-            <div v-if="showFeatures" class="cw-block-features cw-block-features-default">
-                <courseware-block-export-options
-                    v-if="canEdit && showExportOptions"
-                    :block="block"
-                    @close="displayFeature(false)"
-                />
-                <courseware-block-edit
-                    v-if="canEdit && showEdit"
-                    :block="block"
-                    @store="prepareStoreEdit"
-                    @close="closeEdit"
-                >
-                    <template #edit>
-                        <slot name="edit" />
-                    </template>
-                </courseware-block-edit>
-                <courseware-block-info v-if="showInfo" :block="block" @close="displayFeature(false)">
-                    <template #info>
-                        <slot name="info" />
-                    </template>
-                </courseware-block-info>
+            <div v-show="isOpen">
+                <div v-if="showContent" class="cw-block-content">
+                    <slot name="content" />
+                </div>
+                <div v-if="showFeatures" class="cw-block-features cw-block-features-default">
+                    <courseware-block-export-options
+                        v-if="canEdit && showExportOptions"
+                        :block="block"
+                        @close="displayFeature(false)"
+                    />
+                    <courseware-block-edit
+                        v-if="canEdit && showEdit"
+                        :block="block"
+                        @store="prepareStoreEdit"
+                        @close="closeEdit"
+                    >
+                        <template #edit>
+                            <slot name="edit" />
+                        </template>
+                    </courseware-block-edit>
+                    <courseware-block-info v-if="showInfo" :block="block" @close="displayFeature(false)">
+                        <template #info>
+                            <slot name="info" />
+                        </template>
+                    </courseware-block-info>
+                </div>
             </div>
         </div>
         <div v-if="discussView" class="cw-discuss-wrapper">
@@ -130,6 +133,7 @@ export default {
             textDeleteAlert: this.$gettext('Möchten Sie diesen Block wirklich löschen?'),
             textRemoveLockTitle: this.$gettext('Sperre aufheben'),
             textRemoveLockAlert: this.$gettext('Möchten Sie die Sperre dieses Blocks wirklich aufheben?'),
+            isOpen: true,
         };
     },
     computed: {
@@ -302,6 +306,9 @@ export default {
             this.showDeleteDialog = false;
         },
         async executeDelete() {
+            this.showDeleteDialog = false;
+            this.displayFeature(false);
+            this.$emit('closeEdit');
             await this.loadBlock({ id: this.block.id, options: { include: 'edit-blocker' } });
             if (this.blockedByAnotherUser) {
                 this.companionInfo({

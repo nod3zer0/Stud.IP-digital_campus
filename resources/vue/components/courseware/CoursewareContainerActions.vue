@@ -5,7 +5,6 @@
             :context="container.attributes.title"
             @editContainer="editContainer"
             @deleteContainer="deleteContainer"
-            @sortBlocks="sortBlocks"
             @removeLock="removeLock"
         />
     </div>
@@ -42,8 +41,7 @@ export default {
                 if (this.container.attributes["container-type"] !== 'list') {
                     menuItems.push({ id: 1, label: this.$gettext('Abschnitt bearbeiten'), icon: 'edit', emit: 'editContainer' });
                 }
-                menuItems.push({ id: 2, label: this.$gettext('Blöcke sortieren'), icon: 'arr_1sort', emit: 'sortBlocks' });
-                menuItems.push({ id: 3, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' });
+                menuItems.push({ id: 2, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' });
             }
 
             if (this.blocked && this.blockedByAnotherUser && this.userIsTeacher) {
@@ -71,9 +69,6 @@ export default {
         },
         deleteContainer() {
             this.$emit('deleteContainer');
-        },
-        sortBlocks() {
-            this.$emit('sortBlocks');
         },
         removeLock() {
             this.$emit('removeLock');

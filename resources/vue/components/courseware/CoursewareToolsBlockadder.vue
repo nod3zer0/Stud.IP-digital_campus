@@ -19,6 +19,7 @@
                             :icon="block.icon"
                             :type="block.type"
                             :description="block.description"
+                            @blockAdded="$emit('blockAdded')"
                         />
                     </div>
                     <div class="cw-element-adder-favs-wrapper" v-if="showEditFavs">
@@ -29,6 +30,7 @@
                                 :title="block.title"
                                 :type="block.type"
                                 :description="block.description"
+                                @blockAdded="$emit('blockAdded')"
                             />
                         </div>
                         <div class="cw-element-adder-favs">
@@ -56,6 +58,7 @@
                             :title="block.title"
                             :type="block.type"
                             :description="block.description"
+                            @blockAdded="$emit('blockAdded')"
                         />
                     </div>
                 </courseware-collapsible-box>
@@ -72,6 +75,7 @@
                             :icon="block.icon"
                             :type="block.type"
                             :description="block.description"
+                            @blockAdded="$emit('blockAdded')"
                         />
                     </div>
                 </courseware-collapsible-box>

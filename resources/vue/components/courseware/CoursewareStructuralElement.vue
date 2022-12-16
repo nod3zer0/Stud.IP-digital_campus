@@ -7,7 +7,7 @@
                 v-if="validContext"
             >
                 <div class="cw-structural-element-content" v-if="structuralElement">
-                    <courseware-ribbon :canEdit="canEdit && canAddElements" :isContentBar="true">
+                    <courseware-ribbon :canEdit="canEdit && canAddElements" :isContentBar="true" @blockAdded="updateContainerList">
                         <template #buttons>
                             <router-link v-if="prevElement" :to="'/structural_element/' + prevElement.id">
                                 <div class="cw-ribbon-button cw-ribbon-button-prev" :title="textRibbon.perv" />
@@ -68,7 +68,7 @@
                     </courseware-ribbon>
 
                     <div
-                        v-if="canVisit && !sortMode && !isLink"
+                        v-if="canVisit && !editView && !isLink"
                         class="cw-container-wrapper"
                         :class="{
                             'cw-container-wrapper-consume': consumeMode,
@@ -139,35 +139,50 @@
                             class="cw-container-item"
                         />
                     </div>
-                    <div v-if="canVisit && canEdit && sortMode" class="cw-container-wrapper-sort-mode">
-                        <draggable
-                            class="cw-structural-element-list-sort-mode"
-                            tag="ul"
-                            v-model="containerList"
-                            v-bind="dragOptions"
-                            handle=".cw-sortable-handle"
-                            @start="isDragging = true"
-                            @end="isDragging = false"
-                        >
-                            <transition-group type="transition" name="flip-containers">
+                    <div v-if="canVisit && canEdit && editView" class="cw-container-wrapper cw-container-wrapper-edit">
+                        <template v-if="!processing">
+                            <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
+                            <span id="operation" class="assistive-text">
+                                {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen')}}
+                            </span>
+                            <draggable
+                                class="cw-structural-element-list"
+                                tag="ol"
+                                role="listbox"
+                                v-model="containerList"
+                                v-bind="dragOptions"
+                                handle=".cw-sortable-handle"
+                                @start="isDragging = true"
+                                @end="dropContainer"
+                            >
                                 <li
                                     v-for="container in containerList"
                                     :key="container.id"
                                     class="cw-container-item-sortable"
                                 >
-                                    <span class="cw-sortable-handle"></span>
-                                    <span>{{ container.attributes.title }} ({{ container.attributes.width }})</span>
+                                    <span
+                                        :class="{ 'cw-sortable-handle-dragging': isDragging }"
+                                        class="cw-sortable-handle"
+                                        tabindex="0"
+                                        role="option"
+                                        aria-describedby="operation"
+                                        :ref="'sortableHandle' + container.id"
+                                        @keydown="keyHandler($event, container.id)"
+                                    ></span>
+                                    <component
+                                        :is="containerComponent(container)"
+                                        :container="container"
+                                        :canEdit="canEdit"
+                                        :canAddElements="canAddElements"
+                                        :isTeacher="userIsTeacher"
+                                        class="cw-container-item"
+                                        ref="containers"
+                                        :class="{ 'cw-container-item-selected': keyboardSelected === container.id}"
+                                    />
                                 </li>
-                            </transition-group>
-                        </draggable>
-                        <div class="cw-container-sort-buttons">
-                            <button class="button accept" @click="storeSort">
-                                <translate>Sortierung speichern</translate>
-                            </button>
-                            <button class="button cancel" @click="resetSort">
-                                <translate>Sortieren abbrechen</translate>
-                            </button>
-                        </div>
+                            </draggable>
+                        </template>
+                        <studip-progress-indicator v-if="processing" :description="$gettext('Vorgang wird bearbeitet...')" />
                     </div>
                     <div
                         v-if="!canVisit"
@@ -732,6 +747,9 @@ export default {
                 'expire-date': ''
             },
             deletingPreviewImage: false,
+            processing: false,
+            keyboardSelected: null,
+            assistiveLive: ''
         };
     },
 
@@ -763,7 +781,6 @@ export default {
             exportState: 'exportState',
             exportProgress: 'exportProgress',
             userId: 'userId',
-            sortMode: 'structuralElementSortMode',
             viewMode: 'viewMode',
             taskById: 'courseware-tasks/byId',
             userById: 'users/byId',
@@ -987,12 +1004,6 @@ export default {
                         label: this.$gettext('Seite bearbeiten'),
                         icon: 'edit',
                         emit: 'editCurrentElement',
-                    });
-                    menu.push({
-                        id: 2,
-                        label: this.$gettext('Abschnitte sortieren'),
-                        icon: 'arr_1sort',
-                        emit: 'sortContainers',
                     });
                 }
                 if (this.blockedByAnotherUser && this.userIsTeacher) {
@@ -1335,7 +1346,6 @@ export default {
             showElementRemoveLockDialog: 'showElementRemoveLockDialog',
             updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
             updateContainer: 'updateContainer',
-            setStructuralElementSortMode: 'setStructuralElementSortMode',
             sortContainersInStructualElements: 'sortContainersInStructualElements',
             loadTask: 'loadTask',
             loadStructuralElement: 'loadStructuralElement',
@@ -1409,26 +1419,6 @@ export default {
                     break;
                 case 'setBookmark':
                     this.setBookmark();
-                    break;
-                case 'sortContainers':
-                    await this.loadStructuralElement(this.currentId);
-                    if (this.blockedByAnotherUser) {
-                        this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
-
-                        return false;
-                    }
-                    try {
-                        await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
-                    } catch (error) {
-                        if (error.status === 409) {
-                            this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
-                        } else {
-                            console.log(error);
-                        }
-
-                        return false;
-                    }
-                    this.enableSortContainers();
                     break;
                 case 'linkElement':
                     this.showElementLinkDialog(true);
@@ -1516,23 +1506,41 @@ export default {
             this.initCurrent();
         },
 
-        enableSortContainers() {
-            this.setStructuralElementSortMode(true);
+        dropContainer() {
+            this.isDragging = false;
+            this.storeSort();
         },
 
-        storeSort() {
-            this.setStructuralElementSortMode(false);
+        async storeSort() {
+            const timeout = setTimeout(() => this.processing = true, 800);
+            if (this.blockedByAnotherUser) {
+                this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+                clearTimeout(timeout);
+                this.processing = false;
+                return false;
+            }
+            try {
+                await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
+            } catch (error) {
+                if (error.status === 409) {
+                    this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
+                } else {
+                    console.log(error);
+                }
 
-            this.sortContainersInStructualElements({
+                clearTimeout(timeout);
+                this.processing = false;
+                return false;
+            }
+
+            await this.sortContainersInStructualElements({
                 structuralElement: this.structuralElement,
                 containers: this.containerList,
             });
             this.$emit('select', this.currentId);
-        },
 
-        resetSort() {
-            this.setStructuralElementSortMode(false);
-            this.containerList = this.containers;
+            clearTimeout(timeout);
+            this.processing = false;
         },
 
         async exportCurrentElement(data) {
@@ -1711,6 +1719,97 @@ export default {
             await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
             await this.loadStructuralElement(this.currentElement.id);
             this.showElementRemoveLockDialog(false);
+        },
+        updateContainerList() {
+            this.containerList = this.containers;
+            const containerRefs = this.$refs.containers;
+            for (let ref of containerRefs) {
+                ref.initCurrentData();
+            }
+        },
+        keyHandler(e, containerId) {
+            switch (e.keyCode) {
+                case 27: // esc
+                    this.abortKeyboardSorting(containerId);
+                    break;
+                case 32: // space
+                    e.preventDefault();
+                    if (this.keyboardSelected) {
+                        this.storeKeyboardSorting(containerId);
+                    } else {
+                        this.keyboardSelected = containerId;
+                        const container = this.containerById({id: containerId});
+                        const index = this.containerList.findIndex(c => c.id === container.id);
+                        this.assistiveLive = 
+                            this.$gettextInterpolate(
+                                this.$gettext('%{containerTitle} Abschnitt ausgewählt. Aktuelle Position in der Liste: %{pos} von %{listLength}. Drücken Sie die Aufwärts- und Abwärtspfeiltasten, um die Position zu ändern, die Leertaste zum Ablegen, die Escape-Taste zum Abbrechen.')
+                                , {containerTitle: container.attributes.title, pos: index + 1, listLength: this.containerList.length}
+                            );
+                    }
+                    break;
+            }
+            if (this.keyboardSelected) {
+                switch (e.keyCode) {
+                    case 9: //tab
+                        this.abortKeyboardSorting(containerId);
+                        break;
+                    case 38: // up
+                        e.preventDefault();
+                        this.moveItemUp(containerId);
+                        break;
+                    case 40: // down
+                        e.preventDefault();
+                        this.moveItemDown(containerId);
+                        break;
+                }
+            }
+        },
+        moveItemUp(containerId) {
+            const currentIndex = this.containerList.findIndex(container => container.id === containerId);
+            if (currentIndex !== 0) {
+                const container = this.containerById({id: containerId});
+                const newPos = currentIndex - 1;
+                this.containerList.splice(newPos, 0, this.containerList.splice(currentIndex, 1)[0]);
+                this.assistiveLive = 
+                    this.$gettextInterpolate(
+                        this.$gettext('%{containerTitle} Abschnitt. Aktuelle Position in der Liste: %{pos} von %{listLength}.')
+                        , {containerTitle: container.attributes.title, pos: newPos + 1, listLength: this.containerList.length}
+                    );
+            }
+        },
+        moveItemDown(containerId) {
+            const currentIndex = this.containerList.findIndex(container => container.id === containerId);
+            if (this.containerList.length - 1 > currentIndex) {
+                const container = this.containerById({id: containerId});
+                const newPos = currentIndex + 1;
+                this.containerList.splice(newPos, 0, this.containerList.splice(currentIndex, 1)[0]);
+                this.assistiveLive = 
+                    this.$gettextInterpolate(
+                        this.$gettext('%{containerTitle} Abschnitt. Aktuelle Position in der Liste: %{pos} von %{listLength}.')
+                        , {containerTitle: container.attributes.title, pos: newPos + 1, listLength: this.containerList.length}
+                    );
+            }
+        },
+        abortKeyboardSorting(containerId) {
+            const container = this.containerById({id: containerId});
+            this.keyboardSelected = null;
+            this.assistiveLive = 
+                this.$gettextInterpolate(
+                    this.$gettext('%{containerTitle} Abschnitt, Neuordnung abgebrochen')
+                    , {containerTitle: container.attributes.title}
+                );
+            this.$emit('select', this.currentId);
+        },
+        storeKeyboardSorting(containerId) {
+            const container = this.containerById({id: containerId});
+            const currentIndex = this.containerList.findIndex(container => container.id === containerId);
+            this.keyboardSelected = null;
+            this.assistiveLive = 
+                this.$gettextInterpolate(
+                    this.$gettext('%{containerTitle} Abschnitt, abgelegt. Entgültige Position in der Liste: %{pos} von %{listLength}.')
+                    , {containerTitle: container.attributes.title, pos: currentIndex + 1, listLength: this.containerList.length}
+                );
+            this.storeSort();
         }
     },
     created() {
@@ -1733,6 +1832,15 @@ export default {
         },
         containers() {
             this.containerList = this.containers;
+        },
+        containerList() {
+            if (this.keyboardSelected) {
+                this.$nextTick(() => {
+                    const selected = this.$refs['sortableHandle' + this.keyboardSelected][0];
+                    selected.focus();
+                    selected.scrollIntoView({behavior: "smooth", block: "center"});
+                });
+            }
         },
         consumeMode(newState) {
             this.consumModeTrap = newState;
