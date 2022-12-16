@@ -1293,7 +1293,18 @@ label[for="cw-keypoint-color"] {
     display: block;
 }
 
-
+.cw-tree-item-wrapper {
+    .cw-sortable-handle {
+        display: inline-block;
+        cursor: grab;
+        background-image: url("#{$image-path}/anfasser_24.png");
+        background-repeat: no-repeat;
+        width: 7px;
+        height: 24px;
+        padding-right: 4px;
+        vertical-align: middle;
+    }
+}
 /* * * * * * * * * * *
  sortable handle end
  * * * * * * * * * * */
@@ -1303,137 +1314,143 @@ label[for="cw-keypoint-color"] {
  * * * * */
 
 .cw-tree {
-    ul {
+    ol {
         list-style: none;
         padding-left: 1.25em;
         margin-bottom: 20px;
 
-        &.cw-tree-subchapter-list,
-        &.cw-tree-chapter-list,
         &.cw-tree-root-list {
             padding-left: 0;
-        }
-
-        .cw-tree-item-is-root,
-        .cw-tree-item-first-level {
-            font-size: 16px;
-            border-bottom: solid thin $content-color-40;
-            .cw-tree-item-link {
-                padding-left: 3px;
-            }
-        }
-        .cw-tree-item-is-root {
-            display: block;
-            font-size: 18px;
-            .cw-tree-item-link {
-                padding-left: 26px;
-
-                @include background-icon(courseware, clickable, 18);
-                background-repeat: no-repeat;
-                background-position: 3px 3px;
-                &:hover {
-                    @include background-icon(courseware, attention, 18);
-                }
-                &.cw-tree-item-link-current {
-                    @include background-icon(courseware, info, 18);
-                }
-            }
-        }
-        .cw-tree-item-first-level {
-            margin: 28px 0 12px 0;
-            &:hover {
-                background-color: $content-color-20;
-            }
-            .cw-tree-item-link,
-            .cw-tree-item-link:hover,
-            .cw-tree-item-link.cw-tree-item-link-current {
-                background-image: none;
-            }
-
-            @each $type, $icon in $element-icons {
-                &.cw-tree-item-#{$type} .cw-tree-item-link {
-                    background-repeat: no-repeat;
-                    background-position: 3px 3px;
-                    padding-left: 26px;
-                    @include background-icon(#{$icon}, clickable, 18);
-                    &:hover {
-                        @include background-icon(#{$icon}, attention, 18);
+            > li.cw-tree-item {
+                > .cw-tree-item-wrapper {
+                    border-bottom: solid thin $content-color-40;
+                    display: block;
+                    > .cw-sortable-handle {
+                        margin-bottom: 4px;
                     }
-                    &.cw-tree-item-link-current {
-                        @include background-icon(#{$icon}, info, 18);
+                    > a.cw-tree-item-link {
+                        display: block;
+                        font-size: 18px;
+                        padding-left: 26px;
+                        @include background-icon(courseware, clickable, 18);
+                        background-repeat: no-repeat;
+                        background-position: 3px 3px;
                     }
                 }
-            }
-        }
 
-        .cw-tree-item-link {
-            display: inline-block;
-            width: calc(100% - 14px);
-            text-align: justify;
-            background-repeat: no-repeat;
-            padding-left: 20px;
-            background-position: 4px 1px;
+                ol {
+                    padding-left: 0;
+                    > li.cw-tree-item {
+                        margin: 28px 0 0 0;
+                        > .cw-tree-item-wrapper {
+                            display: block;
+                            border-bottom: solid thin $content-color-40;
+                            margin-bottom: 12px;
+                            > a.cw-tree-item-link {
+                                display: inline-block;
+                                width: calc(100% - 4px);
+                                padding-left: 4px;
+                                font-size: 16px;
+                                &.cw-tree-item-link-edit {
+                                    width: calc(100% - 19px);
+                                }
+                            }
+                        }
+                        @each $type, $icon in $element-icons {
+                            &.cw-tree-item-#{$type} .cw-tree-item-wrapper a.cw-tree-item-link {
+                                 background-position: 0px 2px;
+                                 background-repeat: no-repeat;
+                                 padding-left: 20px;
+                                 @include background-icon(#{$icon}, clickable, 16);
+                                 &:hover {
+                                     @include background-icon(#{$icon}, attention, 16);
+                                 }
+                                 &.cw-tree-item-link-current {
+                                     @include background-icon(#{$icon}, info, 16);
+                                 }
+                             }
+                         }
+                        ol {
+                            padding-left: 0.25em;
+                            &.cw-tree-draggable-list {
+                                padding-left: 1em;
+                            }
+                            > li.cw-tree-item {
+                                margin: 4px 0; 
+                                > .cw-tree-item-wrapper {
+                                    border: none;
+                                    > a.cw-tree-item-link {
+                                        display: inline-block;
+                                        border-bottom: none;
+                                        font-size: 14px;
+                                        width: calc(100% - 14px);
+                                        background-repeat: no-repeat;
+                                        padding-left: 18px;
+                                        margin-left: 4px;
+                                        margin-bottom: 0;
 
-            @include background-icon(bullet-dot, clickable, 18);
-            &:hover {
-                @include background-icon(bullet-dot, attention, 18);
-            }
-            &.cw-tree-item-link-current {
-                @include background-icon(bullet-dot, info, 18);
-            }
+                                        &.cw-tree-item-link-edit {
+                                            width: calc(100% - 38px);
+                                        }
 
-            &:hover {
-                background-color: $light-gray-color-20;
-                color: $active-color;
-            }
-
-            &.cw-tree-item-link-current {
-                color: $black;
-                font-weight: 600;
-                &::before {
-                    color: $black;
+                                        @include background-icon(bullet-dot, clickable, 18);
+                                        &:hover {
+                                            @include background-icon(bullet-dot, attention, 18);
+                                        }
+                                        &.cw-tree-item-link-current {
+                                            @include background-icon(bullet-dot, info, 18);
+                                        }
+                                    }
+                                }
+                                ol {
+                                    padding-left: 1em;
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            @each $type, $icon in $tree-item-flag-icons {
-                .cw-tree-item-flag-#{$type} {
-                    display: inline-block;
-                    width: 16px;
-                    height: 16px;
-                    vertical-align: top;
-                    @include background-icon(#{$icon}, clickable, 16);
-                }
-                &:hover .cw-tree-item-flag-#{$type} {
-                    @include background-icon(#{$icon}, attention, 16);
-                }
-                &.cw-tree-item-link-current .cw-tree-item-flag-#{$type} {
-                    @include background-icon(#{$icon}, info, 16);
-                }
-            }
-        }
-        @each $type, $icon in $element-icons {
-            .cw-tree-item-#{$type} .cw-tree-item-link {
-                background-position: 0px 2px;
-                @include background-icon(#{$icon}, clickable, 16);
-                &:hover {
-                    @include background-icon(#{$icon}, attention, 16);
-                }
-                &.cw-tree-item-link-current {
-                    @include background-icon(#{$icon}, info, 16);
-                }
-            }
-        }
-
+        }    
     }
 
-    .cw-tree-item {
-        margin-bottom: 5px;
-        div {
-            display: inline;
-            &.cw-tree-item-is-root,
-            &.cw-tree-item-first-level{
-                display: block;
+    .cw-tree-item-link {
+        &:hover {
+            background-color: $light-gray-color-20;
+            color: $active-color;
+        }
+        &.cw-tree-item-link-current {
+            color: $black;
+            font-weight: 600;
+            cursor: default;
+            &::before {
+                color: $black;
             }
         }
+        &.cw-tree-item-link-selected {
+            font-style: italic;
+            font-weight: 600;
+        }
+
+
+        @each $type, $icon in $tree-item-flag-icons {
+            .cw-tree-item-flag-#{$type} {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                vertical-align: top;
+                @include background-icon(#{$icon}, clickable, 16);
+            }
+            &:hover .cw-tree-item-flag-#{$type} {
+                @include background-icon(#{$icon}, attention, 16);
+            }
+            &.cw-tree-item-link-current .cw-tree-item-flag-#{$type} {
+                @include background-icon(#{$icon}, info, 16);
+            }
+        }
+    }
+
+    .cw-tree-item-ghost {
+        opacity: 0.6;
     }
 }
 
@@ -5366,4 +5383,21 @@ p u b l i c  l i n k s
 }
 /* * * * * * * * * * * * * * *
 e n d  p u b l i c  l i n k s
+* * * * * * * * * * * * * * */
+
+/* * * * * * * * * * * *
+a s s i s t i v e
+* * * * * * * * * * * */
+.assistive-text {
+    position: absolute;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+/* * * * * * * * * * * * * * *
+e n d  a s s i s t i v e
 * * * * * * * * * * * * * * */

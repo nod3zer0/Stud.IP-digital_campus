@@ -573,7 +573,7 @@
                     v-if="showDeleteDialog"
                     :title="textDelete.title"
                     :question="textDelete.alert"
-                    height="180"
+                    height="200"
                     @confirm="deleteCurrentElement"
                     @close="closeDeleteDialog"
                 ></studip-dialog>

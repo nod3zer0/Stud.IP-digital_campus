@@ -60,6 +60,8 @@ const getDefaultState = () => {
 
         showSearchResults: false,
         searchResults: [],
+
+        assistiveLiveContents: ''
     };
 };
 
@@ -241,6 +243,9 @@ const getters = {
     searchResults(state) {
         return state.searchResults;
     },
+    assistiveLiveContents(state) {
+        return state.assistiveLiveContents;
+    }
 };
 
 export const state = { ...initialState };
@@ -906,6 +911,9 @@ export const actions = {
     setSearchResults({ commit }, state) {
         commit('setSearchResults', state);
     },
+    setAssistiveLiveContents({ commit }, state) {
+        commit('setAssistiveLiveContents', state);
+    },
 
     addBookmark({ dispatch, rootGetters }, structuralElement) {
         const cw = rootGetters['courseware'];
@@ -1477,6 +1485,9 @@ export const mutations = {
     setSearchResults(state, results) {
         state.searchResults = results;
     },
+    setAssistiveLiveContents(state, text) {
+        state.assistiveLiveContents = text;
+    }
 };
 
 export default {

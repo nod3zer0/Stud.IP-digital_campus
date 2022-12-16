@@ -3,7 +3,6 @@
         <div
             class="cw-ribbon-tools"
             :class="{ unfold: toolsActive, 'cw-ribbon-tools-consume': consumeMode }"
-            @keydown.esc="$emit('deactivate')"
         >
             <div class="cw-ribbon-tool-content">
                 <div class="cw-ribbon-tool-content-nav">
