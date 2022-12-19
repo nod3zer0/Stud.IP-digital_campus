@@ -13,7 +13,7 @@
                             <?= htmlReady($navigation->getTitle()) ?>
                         </p>
                         <p class="content-item-description">
-                            <?= htmlReady($navigation->getDescription()) ?>
+                            <?= htmlReady(mila($navigation->getDescription(), 70)) ?>
                         </p>
                     </div>
                 </a>

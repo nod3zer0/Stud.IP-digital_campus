@@ -13,11 +13,10 @@
             .content-item-link {
                 height: 90px;
                 padding: 5px;
+                grid-template-columns: 42px 135px;
 
                 .content-item-img-wrapper {
-                    margin: 5px;
-                    margin-right: 10px;
-                    margin-top: 0;
+                    margin: 0 10px 5px 5px;
                     width: 32px;
                 }
 
@@ -52,24 +51,26 @@
 
         .content-item-link {
             color: unset;
-            display: flex;
+            display: grid;
+            grid-template-columns: 74px auto;
+            grid-gap: 5px;
             height: 130px;
-            padding: 10px;
+            padding: 15px 10px 0 10px;
             transition: 0.5s;
 
             .content-item-img-wrapper {
-                margin: 15px;
-                margin-right: 20px;
-                margin-top: 0;
                 width: 64px;
             }
 
             .content-item-text {
-                padding-top: -2px;
-
                 .content-item-title {
                     color: $base-color;
                     font-size: 2rem;
+                    width: 100%;
+                    max-width: 160px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
             }
 
@@ -94,5 +95,17 @@
 @media (max-width: 820px) {
     .content-items {
         grid-template-columns: 100%;
+
+        .content-item {
+            .content-item-link {
+                .content-item-text {
+                    .content-item-title {
+                        max-width: 100%;
+                        text-overflow: unset;
+                        overflow: unset;
+                    }
+                }
+            }
+        }
     }
 }
