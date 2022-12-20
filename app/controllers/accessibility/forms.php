@@ -166,7 +166,15 @@ class Accessibility_FormsController extends StudipController
                         ->send();
                 }
 
-                $form->setSuccessMessage(_('Ihre Meldung einer Barriere wurde weitergeleitet.'));
+                $form->setSuccessMessage(
+                    _('Ihre Meldung einer Barriere wurde weitergeleitet.') . ' ' .
+                    sprintf(
+                        '<a href="%1$s">%2$s %3$s</a>',
+                        URLHelper::getLink($this->page),
+                        Icon::create('link-intern', ['class' => 'text-bottom']),
+                        _('Zurück')
+                    )
+                );
                 return 1;
             }
         );
