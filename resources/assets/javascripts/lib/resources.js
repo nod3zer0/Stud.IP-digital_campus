@@ -386,21 +386,21 @@ class Resources
             return;
         }
 
-        var input = jQuery(icon_node).parent().find('input');
-        var criteria_name = jQuery(input).attr('name');
+        let input = jQuery(icon_node).parent().find('label').find('input');
+        let criteria_name = jQuery(input).attr('name');
 
-        var form = jQuery(icon_node).parents('form')[0];
+        let form = jQuery(icon_node).parents('form')[0];
 
         if (!form) {
             return;
         }
 
-        var select_element = jQuery(form).find('select.criteria-selector');
+        let select_element = jQuery(form).find('select.criteria-selector');
 
         jQuery(icon_node).parent().remove();
 
         //enable the option in the select field:
-        var disabled_option = jQuery(select_element).find(
+        let disabled_option = jQuery(select_element).find(
             'option[value="' + criteria_name + '"]'
         )[0];
 
