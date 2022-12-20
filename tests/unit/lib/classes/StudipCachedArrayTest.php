@@ -48,6 +48,21 @@ class StudipCachedArrayTest extends \Codeception\Test\Unit
         $this->assertFalse(isset($cache[$key]));
     }
 
+    /**
+     * @depends testStorage
+     * @dataProvider StorageProvider
+     */
+    public function testExpiration($key, $value)
+    {
+        $cache = $this->getCachedArray();
+
+        $cache[$key] = $value;
+
+        $cache->expire();
+
+        $this->assertFalse(isset($cache[$key]));
+    }
+
     public function StorageProvider(): array
     {
         return [

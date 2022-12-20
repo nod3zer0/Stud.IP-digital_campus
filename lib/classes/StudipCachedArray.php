@@ -15,21 +15,24 @@ class StudipCachedArray implements ArrayAccess
 
     protected $data = [];
 
+    protected $hash;
+
     /**
      * Constructs the cached array
      *
-     * @param string $key    Cache key where the array is/should be stored
-     *                       an int which will be length of the substring
-     *                       of the given chache offset or a callable which
-     *                       will return the partition key.
-     * @param int $duration  Duration in seconds for which the item shall be
-     *                       stored
+     * @param string $key      Cache key where the array is/should be stored
+     *                         an int which will be length of the substring
+     *                         of the given chache offset or a callable which
+     *                         will return the partition key.
+     * @param int    $duration Duration in seconds for which the item shall be
+     *                         stored
      */
     public function __construct(string $key, int $duration = StudipCache::DEFAULT_EXPIRATION)
     {
-        $this->key      = self::class . "/{$key}";
-        $this->cache    = StudipCacheFactory::getCache();
+        $this->key = self::class . "/{$key}";
+        $this->cache = StudipCacheFactory::getCache();
         $this->duration = $duration;
+        $this->hash = $this->getHash();
 
         $this->reset();
     }
@@ -43,9 +46,19 @@ class StudipCachedArray implements ArrayAccess
     }
 
     /**
+     * Removes all values from the cache.
+     */
+    public function expire(): void
+    {
+        $this->hash = $this->getHash(true);
+        $this->reset();
+    }
+
+    /**
      * Determines whether an offset exists in the array.
      *
      * @param string $offset Offset
+     *
      * @return bool
      */
     public function offsetExists($offset): bool
@@ -58,6 +71,7 @@ class StudipCachedArray implements ArrayAccess
      * Returns the value at given offset or null if it doesn't exist.
      *
      * @param string $offset Offset
+     *
      * @return mixed
      */
     public function offsetGet($offset)
@@ -75,7 +89,7 @@ class StudipCachedArray implements ArrayAccess
     public function offsetSet($offset, $value): void
     {
         if ($offset === null) {
-            throw new Exception('Cannot push to cached array, use StudipCachedArray instead');
+            throw new Exception('Cannot push to cached array, use correct offset instead');
         }
 
         if (!isset($this->data[$offset]) || $this->data[$offset] !== $value) {
@@ -120,9 +134,11 @@ class StudipCachedArray implements ArrayAccess
      */
     protected function storeData(string $offset): void
     {
+        $data = $this->swapNullAndFalse($this->data[$offset]);
+
         $this->cache->write(
             $this->getCacheKey($offset),
-            $this->swapNullAndFalse($this->data[$offset]),
+            $data,
             $this->duration
         );
     }
@@ -131,11 +147,18 @@ class StudipCachedArray implements ArrayAccess
      * Returns the cache key for a specific offset.
      *
      * @param string $offset Offset of the cached item
+     *
      * @return string
      */
     private function getCacheKey(string $offset): string
     {
-        return rtrim($this->key, '/') . "/{$offset}";
+        $key = rtrim($this->key, '/');
+        if ($this->hash) {
+            $key .= "/{$this->hash}";
+        }
+        $key .= "/{$offset}";
+
+        return $key;
     }
 
     /**
@@ -157,5 +180,22 @@ class StudipCachedArray implements ArrayAccess
         }
 
         return $value;
+    }
+
+    /**
+     * Loads or creates and stores a hash for this cached array.
+     *
+     * @return string
+     */
+    private function getHash(bool $recreate = false): string
+    {
+        if (!$recreate) {
+            $hash = $this->cache->read($this->key);
+            return $hash === false ? '' : $hash;
+        }
+
+        $hash = md5(uniqid(__CLASS__, true));
+        $this->cache->write($this->key, $hash);
+        return $hash;
     }
 }

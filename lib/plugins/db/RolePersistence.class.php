@@ -129,9 +129,10 @@ class RolePersistence
 
         // sweep roles cache
         self::expireRolesCache();
+        self::expireUserCache();
 
         foreach ($statement as $plugin_id) {
-            unset(self::getPluginRolesCache()[$plugin_id]);
+            self::expirePluginCache($plugin_id);
         }
 
         NotificationCenter::postNotification('RoleDidDelete', $id, $name);
@@ -338,7 +339,7 @@ class RolePersistence
             $statement->execute();
         }
 
-        unset(self::getPluginRolesCache()[$plugin_id]);
+        self::expirePluginCache($plugin_id);
 
         foreach ($role_ids as $role_id) {
             NotificationCenter::postNotification(
@@ -370,7 +371,7 @@ class RolePersistence
             $statement->execute();
         }
 
-        unset(self::getPluginRolesCache()[$plugin_id]);
+        self::expirePluginCache($plugin_id);
 
         foreach ($role_ids as $role_id) {
             NotificationCenter::postNotification(
@@ -488,7 +489,7 @@ class RolePersistence
     private static $user_roles_cache = null;
     private static $plugin_roles_cache = null;
 
-    private static function getUserRolesCache()
+    private static function getUserRolesCache(): StudipCachedArray
     {
         if (self::$user_roles_cache === null) {
             self::$user_roles_cache = new StudipCachedArray(self::USER_ROLES_CACHE_KEY);
@@ -496,7 +497,7 @@ class RolePersistence
         return self::$user_roles_cache;
     }
 
-    private static function getPluginRolesCache()
+    private static function getPluginRolesCache(): StudipCachedArray
     {
         if (self::$plugin_roles_cache === null) {
             self::$plugin_roles_cache = new StudipCachedArray(self::PLUGIN_ROLES_CACHE_KEY);
@@ -504,13 +505,52 @@ class RolePersistence
         return self::$plugin_roles_cache;
     }
 
+    /**
+     * Expires all cached roles.
+     */
     public static function expireRolesCache()
     {
         StudipCacheFactory::getCache()->expire(self::ROLES_CACHE_KEY);
     }
 
-    public static function expireUserCache($user_id)
+    /**
+     * Expires all cached user role assignments.
+     *
+     * @param string|null $user_id Optional user id to expire the cache for.
+     *                             If none is given, the whole cache is cleared.
+     */
+    public static function expireUserCache($user_id = null)
     {
-        unset(self::getUserRolesCache()[$user_id]);
+        if ($user_id === null) {
+            self::getUserRolesCache()->expire();
+        } else {
+            unset(self::getUserRolesCache()[$user_id]);
+        }
+    }
+
+    /**
+     * Expires all cached plugin role assignments.
+     *
+     * @param string|int|null $plugin_id Optional plugin id to expire the cache
+     *                                   for. If none is given, the whole cache
+     *                                   is cleared.
+     */
+    public static function expirePluginCache($plugin_id = null)
+    {
+        if ($plugin_id === null) {
+            self::getPluginRolesCache()->expire();
+        } else {
+            unset(self::getPluginRolesCache()[$plugin_id]);
+        }
+    }
+
+    /**
+     * Expires all caches
+     */
+    public static function expireCaches(): void
+    {
+        self::expireRolesCache();
+        self::expireUserCache();
+        self::expirePluginCache();
     }
 }
