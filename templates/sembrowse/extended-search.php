@@ -21,7 +21,7 @@
     </label>
 
     <label class="col-3">
-        <?= _('Kommentar') ?>
+        <?= _('Beschreibung') ?>
         <?= $search_obj->getSearchField('comment') ?>
     </label>
 
