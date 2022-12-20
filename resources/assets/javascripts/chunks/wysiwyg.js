@@ -55,7 +55,7 @@ import StudipUpload from '../cke/StudipUpload.js';
 import StudipWikiLink from '../cke/wiki-link/wiki-link.js';
 import SpecialCharactersSmiley from '../cke/special_characters/SpecialCharactersSmiley.js';
 import SpecialCharactersGreek from '../cke/special_characters/SpecialCharactersGreek.js';
-import '../../stylesheets/studip-cke-ui.css';
+import '../../stylesheets/scss/studip-cke-ui.scss';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 

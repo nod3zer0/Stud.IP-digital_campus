@@ -6,7 +6,7 @@
     --green: #6ead10; */
 
     --ck-color-base-foreground: var(--dark-gray-color-5);
-    --ck-color-base-background: #fff;
+    --ck-color-base-background: var(--white);
     --ck-color-base-border: var(--content-color-40);
     --ck-color-base-action: var(--green);
     --ck-color-base-focus: var(--base-color);
@@ -24,7 +24,7 @@
     --ck-color-button-on-hover-background: var(--base-color);
     --ck-color-button-on-active-background: var(--base-color);
     --ck-color-button-on-active-shadow: transparent;
-    --ck-color-button-action-background: #fff;
+    --ck-color-button-action-background: var(--white);
     --ck-color-switch-button-on-background: var(--base-color);
     --ck-color-switch-button-on-hover-background: var(--base-color);
     --ck-color-split-button-hover-border: transparent;
@@ -74,7 +74,7 @@
 .ck.ck-button.ck-on:not(.ck-dropdown__button) .ck.ck-icon *,
 .ck.ck-button:not(.ck-dropdown__button.ck-button_with-text):not(.ck-disabled):hover .ck.ck-icon,
 .ck.ck-button:not(.ck-dropdown__button.ck-button_with-text):not(.ck-disabled):hover .ck.ck-icon * {
-    color: #fff;
+    color: var(--white);
 }
 
 /* buttons */
@@ -87,14 +87,14 @@
 }
 
 .ck.ck-button.ck-off.ck-button-save {
-    background-image: url('../../assets/images/icons/blue/accept.svg');
+    background-image: url('../../../../public/assets/images/icons/blue/accept.svg');
     background-repeat: no-repeat;
     background-size: 24px;
     background-position: center;
 }
 
 .ck.ck-button.ck-off.ck-button-cancel {
-    background-image: url('../../assets/images/icons/blue/decline.svg');
+    background-image: url('../../../../public/assets/images/icons/blue/decline.svg');
     background-repeat: no-repeat;
     background-size: 24px;
     background-position: center;
@@ -115,7 +115,7 @@
 .ck.ck-button.ck-on.ck-dropdown__button,
 .ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover,
 a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
-    background-color: #fff;
+    background-color: var(--white);
     color: var(--base-color);
 }
 
@@ -132,26 +132,26 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 
 .ck.ck-button.ck-on.ck-button_with-text:not(.ck-disabled):not(.ck-switchbutton):not(.ck-dropdown__button) .ck.ck-button__label,
 .ck.ck-button.ck-off.ck-button_with-text:not(.ck-disabled):not(.ck-dropdown__button):not(.ck-character-grid__tile):hover .ck.ck-button__label {
-    color: #fff;
+    color: var(--white);
 }
 
 .ck.ck-button.ck-on.ck-button_with-text.ck-switchbutton {
     color: var(--base-color);
 }
 .ck.ck-button.ck-on.ck-button_with-text.ck-switchbutton:hover {
-    color: #fff;
+    color: var(--white);
 }
 
 .ck.ck-button.ck-off.ck-button-save:hover:not(.ck-disabled) {
-    background-image: url('../../assets/images/icons/white/accept.svg');
+    background-image: url('../../../../public/assets/images/icons/white/accept.svg');
 }
 
 .ck.ck-button.ck-off.ck-button-save.ck-disabled {
-    background-image: url('../../assets/images/icons/grey/accept.svg');
+    background-image: url('../../../../public/assets/images/icons/grey/accept.svg');
 }
 
 .ck.ck-button.ck-off.ck-button-cancel:hover {
-    background-image: url('../../assets/images/icons/white/decline.svg');
+    background-image: url('../../../../public/assets/images/icons/white/decline.svg');
 }
 
 .ck.ck-button.ck-off.ck-button-save svg,
@@ -170,7 +170,7 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 
 .ck.ck-button.ck-button_with-text.ck-switchbutton {
     color: var(--base-color);
-    background-color: #fff;
+    background-color: var(--white);
 }
 
 .ck.ck-button.ck-button_with-text.ck-switchbutton,
@@ -201,7 +201,7 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 
 .ck.ck-button.ck-button_with-text.ck-switchbutton.ck-on:hover,
 .ck.ck-button.ck-button_with-text.ck-switchbutton:hover {
-    background-color: #fff;
+    background-color: var(--white);
 
 }
 .ck.ck-button.ck-button_with-text.ck-switchbutton.ck-on:hover span,
@@ -226,7 +226,7 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 /* links */
 .ck .ck-fake-link-selection,
 .ck .ck-link_selected {
-    color: #fff;
+    color: var(--white);
 }
 
 /* input */
@@ -249,14 +249,9 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 
 /* blockquote */
 .ck-content blockquote {
-    border-left: 3px solid #899ab9;
-    padding: 5px;
-    margin: 8px;
-    margin-top: 8px;
-    margin-right: 8px;
-    margin-left: 8px;
-    padding-left: 8px;
-    margin-left: 0px;
+    border-left: 3px solid var(--brand-color-lighter);
+    padding: 5px 5px 5px 8px;
+    margin: 8px 8px 8px 0;
     background-color: rgba(0, 0, 0, 0.05);
     font-style: unset;
 }
@@ -266,7 +261,7 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
     margin: 7px 0;
     height: 0;
     background: initial;
-    border: 1px solid #808080;
+    border: 1px solid var(--dark-gray-color-60);
 }
 
 /* StudipWikiLink plugin */
@@ -323,7 +318,7 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 }
 
 .ck.ck-tooltip .ck-tooltip__text {
-    border: 1px solid #c5c7ca;
+    border: 1px solid var(--dark-gray-color-30);
     -webkit-box-shadow: 0 1px 0 hsla(0,0%,100%,.5) inset;
     box-shadow: inset 0 1px 0 hsla(0,0%,100%,.5);
     font-size: 14px;
@@ -345,7 +340,7 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
     position: absolute;
     pointer-events: none;
     border: 8px solid rgba(245,246,246,0);
-    border-bottom-color: #f5f6f6;
+    border-bottom-color: var(--dark-gray-color-5);
     bottom: 100%;
     right: 50%;
     margin-right: -8px;
@@ -358,7 +353,7 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
     position: absolute;
     pointer-events: none;
     border: 9px solid rgba(197,199,202,0);
-    border-bottom-color: #c5c7ca;
+    border-bottom-color: var(--dark-gray-color-30);
     bottom: 100%;
     right: 50%;
     margin-right: -9px;
