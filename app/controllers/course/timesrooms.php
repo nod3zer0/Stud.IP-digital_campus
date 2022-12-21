@@ -1117,7 +1117,7 @@ class Course_TimesroomsController extends AuthenticatedController
             words('day start_time end_time description cycle startWeek teacher_sws fromDialog course_type')
         );
 
-        $this->linkAttributes   = ['fromDialog' => Request::isXhr() ? 1 : 0];
+        $this->linkAttributes = ['fromDialog' => Request::bool('fromDialog')];
 
         $this->cycle = new SeminarCycleDate($cycle_id);
 
