@@ -30,13 +30,28 @@ div.clipboard-area-container {
     margin-bottom: 0.5em;
     overflow-y: scroll;
     max-height: 15em;
+    border: 1px solid $content-color-40;
 }
 
 table.clipboard-area {
     width: 100%;
-    border: 1px solid $content-color-40;
     height: 8em;
-    padding: 0.25em;
+    border-spacing: 0;
+    border: 0;
+    tr {
+        &:hover {
+            background-color: fade-out($light-gray-color, 0.8);
+        }
+        td {
+            padding: 2px 5px;
+            &.item-name {
+                max-width: 160px;
+            }
+            &.action {
+                vertical-align: top;
+            }
+        }
+    }
 }
 
 table.clipboard-area tr.empty-clipboard-message > td {
