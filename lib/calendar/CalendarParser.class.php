@@ -102,11 +102,11 @@ class CalendarParser
         $calendar_event->setAccessibility($component['CLASS']);
         $calendar_event->setUserDefinedCategories($component['CATEGORIES']);
         $calendar_event->event->category_intern = $component['STUDIP_CATEGORY'] ?: 1;
-        $calendar_event->setPriority($component['PRIORITY']);
+        $calendar_event->setPriority($component['PRIORITY'] ?? 0);
         $calendar_event->event->location = $component['LOCATION'];
         $calendar_event->setExceptions($component['EXDATE']);
-        $calendar_event->event->mkdate = $component['CREATED'];
-        $calendar_event->event->chdate = $component['LAST-MODIFIED'] ?: $component['CREATED'];
+        $calendar_event->event->mkdate = $component['CREATED'] ?? time();
+        $calendar_event->event->chdate = $component['LAST-MODIFIED'] ?: $component['CREATED'] ?? time();
         $calendar_event->event->importdate = $this->time;
     }
 
