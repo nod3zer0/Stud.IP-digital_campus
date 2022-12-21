@@ -37,6 +37,7 @@ $(document).on('mouseenter mouseleave focusin focusout', '[data-tooltip],.toolti
         }
         $(this).attr('title', '');
         $(this).attr('data-tooltip', content);
+        $(this).attr('aria-label', content);
 
         tooltip = new STUDIP.Tooltip(x, y, content);
 

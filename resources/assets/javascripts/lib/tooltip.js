@@ -87,6 +87,7 @@ class Tooltip {
      *
      * @param {int} x - Horizontal offset
      * @param {int} y - Vertical offset
+     * @param {bool} left_arrow - Vertical offset
      */
     translateArrows(x, y, left_arrow = false) {
         CSS.removeRule(`#${this.id}::before`);
