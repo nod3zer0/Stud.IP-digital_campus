@@ -485,15 +485,19 @@ class RoomSearchWidget extends SidebarWidget
             }
         }
 
-        $this->rooms = RoomManager::findRooms(
-            $this->selected_criteria['special__room_name']['value'],
-            $this->location_id,
-            $this->building_id,
-            $properties,
-            $time_intervals,
-            'name ASC, mkdate ASC',
-            false
-        );
+        try {
+            $this->rooms = RoomManager::findRooms(
+                $this->selected_criteria['special__room_name']['value'],
+                $this->location_id,
+                $this->building_id,
+                $properties,
+                $time_intervals,
+                'name ASC, mkdate ASC',
+                false
+            );
+        } catch (\InvalidArgumentException $e) {
+            PageLayout::postError($e->getMessage());
+        }
     }
 
     public function resetSearch()
