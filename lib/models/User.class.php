@@ -1078,16 +1078,12 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             $old_user = User::find($old_id);
             $old_user->datafields->each(function ($field) use ($new_id) {
                 if (!$field->isNew() && $field->content !== null) {
-                    $data = $field->toArray('datafield_id sec_range_id content mkdate chdate');
-                    $data['range_id'] = $new_id;
+                    $entry = new DatafieldEntryModel([$field->datafield_id, $new_id, $field->sec_range_id, $field->lang]);
 
-                    $datafield = DatafieldEntryModel::findOneBySQL('datafield_id = ?', [$data['datafield_id']]);
-                    if(!$datafield) {
-                        $datafield = DatafieldEntryModel::build($data);
-                    } else {
-                        $datafield->setData($data);
+                    if ($entry->content === null || $entry->content === '' || $entry->content === 'default_value') {
+                        $entry->content = $field->content;
+                        $entry->store();
                     }
-                    $datafield->store();
                 }
             });
 
