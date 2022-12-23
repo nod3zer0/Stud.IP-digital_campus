@@ -79,8 +79,8 @@ export default {
             stickyRibbon: false,
             textRibbon: {
                 toolbar: this.$gettext('Inhaltsverzeichnis'),
-                fullscreen_on: this.$gettext('Vollbild einschalten'),
-                fullscreen_off: this.$gettext('Vollbild ausschalten'),
+                fullscreen_on: this.$gettext('Fokusmodus einschalten'),
+                fullscreen_off: this.$gettext('Fokusmodus ausschalten'),
             },
             unfold: false,
             showTools: false,
@@ -151,11 +151,11 @@ export default {
             }
         },
         consumeMode(newState) {
-            this.$refs.consumeModeSwitch.focus();
+            this.$refs.consumeModeSwitch?.focus();
             if (newState) {
-                document.body.classList.add('consume');
+                document.body.classList.add('consuming_mode');
             } else {
-                document.body.classList.remove('consume');
+                document.body.classList.remove('consuming_mode');
             }
         }
     }

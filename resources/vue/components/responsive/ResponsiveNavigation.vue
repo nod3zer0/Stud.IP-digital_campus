@@ -1,9 +1,8 @@
 <template>
-    <div role="navigation">
+    <div role="navigation" ref="container" v-if="menuNeeded">
         <div class="responsive-navigation-header">
             <transition name="slide" appear>
-                <button v-if="menuNeeded"
-                        id="responsive-navigation-button" class="styleless"
+                <button id="responsive-navigation-button" class="styleless"
                         :title="showMenu ? $gettext('Navigation schließen') : $gettext('Navigation öffnen')"
                         aria-owns="responsive-navigation-items"
                         @click.prevent="toggleMenu"
@@ -19,7 +18,7 @@
                                :is-fullscreen="isFullscreen"></toggle-fullscreen>
         </div>
         <transition name="appear" appear>
-            <nav v-if="showMenu" id="responsive-navigation-items" class="responsive" ref="navigation"
+            <nav v-show="showMenu" id="responsive-navigation-items" class="responsive" ref="navigation"
                  :aria-expanded="showMenu">
                 <header v-if="me.username !== 'nobody'">
                     <template v-if="!avatarMenuOpen">
@@ -335,9 +334,11 @@ export default {
         moveHelpbar() {
             let tag = 'div';
             let target = '.tabs_wrapper';
+            let before = '#non-responsive-toggle-fullscreen';
             if (this.isFullscreen || this.isResponsive) {
                 tag = 'li';
                 target = '#header-links ul';
+                before = '#responsive-toggle-fullscreen';
             }
 
             let helpBar = document.createElement(tag);
@@ -354,7 +355,7 @@ export default {
                 helpBar.appendChild(helpbarIcon);
                 helpBar.appendChild(document.querySelector('div.helpbar'));
                 helpBar.classList.add('helpbar-container');
-                document.querySelector(target).appendChild(helpBar);
+                document.querySelector(target).insertBefore(helpBar, document.querySelector(before));
                 realHelpBar.remove();
             }
         },
@@ -383,6 +384,7 @@ export default {
                         STUDIP.Vue.emit('header-magic-enabled');
                     } else {
                         this.headerMagic = false;
+                        this.showMenu = false;
                         STUDIP.Vue.emit('header-magic-disabled');
                     }
                     break;
@@ -433,6 +435,25 @@ export default {
             STUDIP.Cookie.set('responsive-navigation-hash', navigation.hash);
 
             return navigation.navigation;
+        },
+        captureOutsideClick(target) {
+            if (target !== null) {
+                if (!this.$refs.container.contains(target)) {
+                    this.toggleMenu();
+                }
+            }
+        }
+    },
+    watch: {
+        showMenu(newState) {
+            if (newState) {
+                // Click outside navigation menu should close it.
+                document.addEventListener('click', event => {
+                    this.captureOutsideClick(event.target);
+                }, true);
+            } else {
+                document.removeEventListener('click', this.captureOutsideClick(null), true)
+            }
         }
     },
     mounted() {
@@ -456,19 +477,27 @@ export default {
             if (this.isResponsive || (this.isFullscreen && !this.isFocusMode)) {
                 this.moveHelpbar();
             }
-        })
+
+        });
+
+        // Pressing escape should close an open navigation.
+        window.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && this.showMenu) {
+                this.toggleMenu();
+            }
+        });
 
         this.initialNavigation = this.currentNavigation;
         this.initialTitle = this.initialNavigation.title;
 
         STUDIP.Vue.on('responsive-navigation-move-to', path => {
             this.moveTo(path);
-        })
+        });
 
         // Listen to changes in fullscreen setting
         STUDIP.Vue.on('toggle-fullscreen', value => {
             this.setFullscreen(value);
-        })
+        });
 
         /*
          * Use an observer for html and body in order to check
@@ -479,21 +508,21 @@ export default {
                 const newValue = m.target.getAttribute(m.attributeName);
                 this.onChangeViewMode(m.target.tagName, newValue);
             }
-        })
+        });
 
         // Observe <html> for class changes.
         this.observer.observe(html, {
             attributes: true,
             attributeOldValue : false,
             attributeFilter: ['class']
-        })
+        });
 
         // Observe <body> for class changes.
         this.observer.observe(body, {
             attributes: true,
             attributeOldValue : false,
             attributeFilter: ['class']
-        })
+        });
 
         // Observe courseware contentbar for consuming mode.
         STUDIP.Vue.on('courseware-ribbon-mounted', element => {
@@ -502,7 +531,7 @@ export default {
                 attributeOldValue : false,
                 attributeFilter: ['class']
             })
-        })
+        });
     },
     beforeDestroy() {
         this.observer.disconnect();
@@ -522,7 +551,7 @@ export default {
     .slide-enter-to,
     .slide-leave-from,
     .slide-leave {
-        margin-left: 0;
+        margin-left: -3px;
     }
 
     .slide-enter,

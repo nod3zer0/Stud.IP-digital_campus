@@ -48,7 +48,7 @@ form.default {
         padding: 5px;
         vertical-align: middle;
         width: 100%;
-        transition: all 0.3s ease-out;
+        transition: all $transition-duration ease-out;
 
         &:focus {
             border-color: $brand-color-dark;
@@ -279,7 +279,7 @@ form.default {
             width: calc(100% - 2em);
             display: inline-block;
 
-            transition: all 0.3s ease-out;
+            transition: all $transition-duration ease-out;
 
             &:focus {
                 border-color: $brand-color-dark;

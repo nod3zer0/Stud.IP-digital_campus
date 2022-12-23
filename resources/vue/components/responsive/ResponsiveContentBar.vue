@@ -100,7 +100,7 @@ export default {
                 if (responsiveMode) {
                     this.realContentbar.id = 'responsive-contentbar';
                     this.realContentbar.classList.add('contentbar');
-                    if (!this.realContentbar.querySelector('#toggle-sidebar-button')) {
+                    if (!this.realContentbar.querySelector('#toggle-sidebar')) {
                         this.realContentbar.querySelector(this.realContentbarIconContainer)
                             .prepend(this.createSidebarIcon());
                     }
@@ -114,7 +114,7 @@ export default {
                     document.getElementById('responsive-contentbar-container').prepend(this.realContentbar);
                 } else {
                     this.realContentbar.id = 'contentbar';
-                    document.getElementById('toggle-sidebar-button').remove();
+                    document.getElementById('toggle-sidebar').remove();
 
                     if (this.realContentbarType === 'courseware') {
                         this.realContentbar.classList.remove('contentbar');
@@ -134,7 +134,7 @@ export default {
             this.sidebarIconClasses.map(className => {
                 button.classList.add(className);
             });
-            button.id = 'toggle-sidebar-button';
+            button.id = 'toggle-sidebar';
             button.title = this.$gettext('Sidebar einblenden');
             button.addEventListener('click', (event) => {
                 button.classList.toggle('contentbar-button-sidebar-open');

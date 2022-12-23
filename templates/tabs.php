@@ -60,8 +60,8 @@ $ebene3 = [];
         <? endforeach ?>
        <? endif; ?>
     </ul>
-    <div id="non-responsive-toggle-fullscreen"></div>
     <? if (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('autor')) : ?>
         <?= Helpbar::get()->render() ?>
     <? endif; ?>
+    <div id="non-responsive-toggle-fullscreen"></div>
 </div>

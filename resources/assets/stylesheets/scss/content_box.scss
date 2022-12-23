@@ -98,7 +98,7 @@ section.contentbox {
             max-height: 0;
             opacity: 0;
             overflow: auto;
-            transition: opacity 0.3s;
+            transition: opacity $transition-duration;
         }
 
 
@@ -218,14 +218,14 @@ section.contentbox {
             max-height: 0;
             opacity: 0;
             overflow: auto;
-            transition: opacity 0.3s;
+            transition: opacity $transition-duration;
         }
 
         &.open {
             > p, > section, > footer, > div {
                 max-height: none;
                 opacity: 1;
-                transition: opacity 0.3s;
+                transition: opacity $transition-duration;
             }
 
             footer {

@@ -13,7 +13,7 @@ a, a:link, a:visited {
 }
 a[href] {
     @media not prefers-reduced-motion {
-        transition: color 0.3s;
+        transition: color $transition-duration;
     }
 }
 a[disabled] {

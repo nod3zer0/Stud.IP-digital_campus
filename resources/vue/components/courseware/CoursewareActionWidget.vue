@@ -9,7 +9,7 @@
                 </li>
                 <li class="cw-action-widget-show-consume-mode">
                     <button @click="showConsumeMode">
-                        {{ $gettext('Vollbild einschalten') }}
+                        {{ $gettext('Fokusmodus einschalten') }}
                     </button>
                 </li>
                 <li v-if="canEdit && !blockedByAnotherUser" class="cw-action-widget-edit">

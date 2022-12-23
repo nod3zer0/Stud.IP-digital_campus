@@ -129,28 +129,9 @@ body:not(.consuming_mode) {
 }
 
 body.consuming_mode {
-    #barBottomContainer,
-    #flex-header,
-    .secondary-navigation,
-    #barTopStudip,
-    #page_title_container {
-        max-height: 0px;
-        opacity: 0;
-        overflow: hidden;
-    }
-
-    #layout_wrapper {
-        padding-top: 0px;
-    }
-
-    #layout-sidebar {
-        margin-left: -280px;
-        opacity: 0;
-    }
-
     .contentbar {
         margin-left: 10px;
-        margin-right: -0;
+        margin-right: 0;
         padding-left: 20px;
         padding-right: 20px;
     }

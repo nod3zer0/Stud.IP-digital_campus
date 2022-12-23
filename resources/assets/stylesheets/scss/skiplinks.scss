@@ -38,6 +38,6 @@ button.skiplink {
     }
 
     @media not prefers-reduced-motion {
-        transition: color 0.3s;
+        transition: color $transition-duration;
     }
 }

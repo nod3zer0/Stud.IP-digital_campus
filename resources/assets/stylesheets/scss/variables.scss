@@ -40,6 +40,8 @@ $sidebar-border-width: 1px;
 $drag_and_drop_z_index: 1000;
 $drag_and_drop_border: 1px solid $base-color;
 
+$transition-duration: .3s;
+
 :root {
     // The special handling for -- as #{"--"} seems to be neccessary to make
     // scss evaluate the color variables

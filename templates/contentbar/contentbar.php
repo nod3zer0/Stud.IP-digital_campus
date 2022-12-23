@@ -24,7 +24,8 @@
             <? endif ?>
 
             <div class="contentbar-button-wrapper contentbar-consuming-mode-wrapper">
-                <button class="contentbar-button contentbar-button-zoom consuming_mode_trigger"></button>
+                <button class="contentbar-button contentbar-button-zoom consuming_mode_trigger"
+                        title="<?= _('Fokusmodus ein-/ausschalten') ?>"></button>
             </div>
 
             <? if ($actionMenu) : ?>

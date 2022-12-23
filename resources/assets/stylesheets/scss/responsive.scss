@@ -5,7 +5,7 @@
 
 $header-bar-container-height: 40px;
 
-$responsive-menu-width: 270px;
+$responsive-menu-width: 1.5 * $sidebar-width;
 
 $sidebarIn: -15px;
 $sidebarOut: -330px;
@@ -26,7 +26,7 @@ $sidebarOut: -330px;
 
 #non-responsive-toggle-fullscreen {
     margin-left: auto;
-    margin-right: 15px;
+    margin-right: 10px;
     position: relative;
     top: 2px;
 
@@ -37,20 +37,19 @@ $sidebarOut: -330px;
 
 #responsive-menu {
     font-size: $font-size-base;
-    padding: 0 5px;
+    margin-top: 4px;
     z-index: 1002;
 
     .responsive-navigation-header {
         display: flex;
-        margin-top: 2px;
-        padding: 2px 0 5px;
+        padding: 2px 0;
 
         .menu-closed {
             cursor: pointer;
             transform: rotate(0deg);
 
             @media not prefers-reduced-motion {
-                transition: 0.5s ease-in-out;
+                transition: $transition-duration ease-in-out;
             }
         }
 
@@ -59,17 +58,16 @@ $sidebarOut: -330px;
             transform: rotate(90deg);
 
             @media not prefers-reduced-motion {
-                transition: 0.5s ease-in-out;
+                transition: $transition-duration ease-in-out;
             }
         }
     }
 
 }
 
-#responsive-navigation-button {
+#responsive-navigation-button:not(.slide-enter-active):not(.slide-leave-active) {
     cursor: pointer;
-    left: 10px;
-    position: relative;
+    margin-left: -3px;
 }
 
 #responsive-navigation-items {
@@ -92,7 +90,7 @@ $sidebarOut: -330px;
     width: $responsive-menu-width;
 
     @media not prefers-reduced-motion {
-        transition: all 0.5s ease-in-out;
+        transition: all $transition-duration ease-in-out;
     }
 
     header {
@@ -168,8 +166,6 @@ $sidebarOut: -330px;
 
         &.navigation-up,
         &.navigation-current {
-            border-bottom: 2px solid $white;
-
             .navigation-icon {
                 img {
                     padding-top: 0;
@@ -187,7 +183,7 @@ $sidebarOut: -330px;
         }
 
         &.navigation-current {
-            background-color: $base-color-60;
+            background-color: $base-color-80;
         }
 
         a {
@@ -292,7 +288,6 @@ $sidebarOut: -330px;
             > li.helpbar-container {
                 float: unset;
                 margin-top: 5px;
-                right: 30px;
             }
         }
 
@@ -317,13 +312,13 @@ $sidebarOut: -330px;
 
         &.responsive-hide {
             @media not prefers-reduced-motion {
-                animation: slide-out 0.5s forwards;
+                animation: slide-out $transition-duration backwards;
             }
         }
 
         &.responsive-show {
             @media not prefers-reduced-motion {
-                animation: slide-in 0.5s forwards;
+                animation: slide-in $transition-duration forwards;
             }
 
             left: 15px;
@@ -377,7 +372,6 @@ $sidebarOut: -330px;
         .contentbar-nav,
         .cw-ribbon-nav {
             width: auto;
-            margin-left: 5px;
 
             .contentbar-button {
 
@@ -454,13 +448,35 @@ $sidebarOut: -330px;
 }
 
 .responsive-display:not(.fullscreen-mode) {
+    #top-bar {
+        padding: 0 3px;
+    }
+
+    #index,
+    #login {
+        #top-bar {
+            padding: 0 20px;
+        }
+    }
+
     #responsive-menu {
+        margin-left: -7px;
+        padding: 0 5px;
         width: calc(100% - 56px);
     }
 
     #responsive-navigation-items {
         max-width: unset;
         width: 100%;
+    }
+
+    .contentbar-nav,
+    .cw-ribbon-nav {
+        margin-left: 3px;
+    }
+
+    #toggle-sidebar {
+        margin-left: -10px;
     }
 
     #sidebar {
@@ -506,11 +522,20 @@ $sidebarOut: -330px;
 
         #responsive-toggle-fullscreen {
             display: block;
-            right: 15px;
+            right: 30px;
         }
 
         .contentbar:not(#responsive-contentbar) {
             display: none;
+        }
+
+        #responsive-contentbar {
+            padding-left: 15px;
+
+            .contentbar-nav,
+            .cw-ribbon-nav {
+                margin-left: -8px;
+            }
         }
 
         #sidebar.responsive-hide {
@@ -529,9 +554,21 @@ $sidebarOut: -330px;
 
     #main-header,
     #sidebar,
-    #main-footer {
+    #main-footer,
+    #wikifooter {
         display: none;
     }
+
+    #content {
+        height: 100vh;
+        position: fixed;
+        width: 100vw;
+
+        .contentbar {
+            margin-right: 30px;
+        }
+    }
+
 }
 
 html:not(.responsive-display):not(.fullscreen-mode) {

@@ -1387,7 +1387,7 @@ label[for="cw-keypoint-color"] {
                                 padding-left: 1em;
                             }
                             > li.cw-tree-item {
-                                margin: 4px 0; 
+                                margin: 4px 0;
                                 > .cw-tree-item-wrapper {
                                     border: none;
                                     > a.cw-tree-item-link {
@@ -1421,7 +1421,7 @@ label[for="cw-keypoint-color"] {
                     }
                 }
             }
-        }    
+        }
     }
 
     .cw-tree-item-link {
@@ -5034,7 +5034,7 @@ text block end
             width: 40%;
             background: $white;
             padding: 20px;
-            transition: all 0.3s ease;
+            transition: all $transition-duration ease;
 
             h3 {
                 padding: 15px;
