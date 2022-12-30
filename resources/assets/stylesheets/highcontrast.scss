@@ -1447,3 +1447,101 @@ button.skiplink {
 .minor, .quiet {
     color: $black;
 }
+
+/* for 5.3 responsive navigation */
+#top-bar,
+#responsive-navigation-items {
+    background-color: $black;
+}
+
+#responsive-navigation-items {
+    header {
+        background-image: unset;
+        > div {
+            .avatar-navigation {
+                .navigation-item {
+                    background-color: transparent;
+                    &:hover {
+                        background-color: $lightgray;
+                        .navigation-title a {
+                            color: $black !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .navigation-item {
+        background-color: $black;
+
+        &:not(:last-child) {
+        }
+
+        &.navigation-up,
+        &.navigation-current {
+            &:hover {
+                background-color: $lightgray;
+
+                .navigation-title button {
+                    .navigation-icon {
+                        filter: brightness(0);
+                    }
+
+                    .navigation-text {
+                        color: $black;
+                    }
+                }
+            }
+
+        }
+
+        // current active element
+        &.navigation-current {
+            background-color: $lightgray;
+            .navigation-title button {
+                .navigation-icon {
+                    filter: brightness(0);
+                }
+
+                .navigation-text {
+                    color: $black;
+                }
+            }
+        }
+
+        button {
+            &.navigation-in {
+                border-left: 1px solid $lightgray;
+            }
+        }
+
+        // right arrow
+        &:not(.navigation-current):not(.navigation-up) {
+            button:hover {
+                background-color: $lightgray;
+
+                > img {
+                    filter: brightness(0);
+                }
+            }
+        }
+
+    }
+
+    // list elements when hovering
+    a {
+        &:hover {
+            background-color: $lightgray;
+            color: $black;
+
+            img {
+                filter: brightness(0);
+            }
+        }
+    }
+
+}
+
+
+
