@@ -13,7 +13,7 @@
                 <div v-if="hasFile" class="cw-pdf-header cw-block-title">
                     <button class="cw-pdf-button-prev" :class="{ inactive: pageNum - 1 === 0 }" @click="prevPage" />
                     <span class="cw-pdf-title">{{ currentTitle }}</span>
-                    <a :href="currentUrl" class="cw-pdf-download" download></a>
+                    <a v-if="downloadable" :href="currentUrl" class="cw-pdf-download" download></a>
                     <span>
                         <translate :translate-params="{pageNum, pageCount}">
                             (Seite %{ pageNum } von %{ pageCount })
@@ -115,7 +115,7 @@ export default {
             return this.block?.attributes?.payload?.title;
         },
         downloadable() {
-            return this.block?.attributes?.payload?.downloadable;
+            return this.block?.attributes?.payload?.downloadable === 'true';
         },
         fileId() {
             return this.block?.attributes?.payload?.file_id;
