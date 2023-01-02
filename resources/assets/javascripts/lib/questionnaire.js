@@ -15,7 +15,7 @@ const Questionnaire = {
                 for (let i in questiontypes) {
                     if (questiontypes[i].component[0] && questiontypes[i].component[1]) {
                         //for plugins to be able to import their vue components:
-                        components[questiontypes[i].component[0]] = () => import(questiontypes[i].component[1]);
+                        components[questiontypes[i].component[0]] = () => import(/* webpackIgnore: true */ questiontypes[i].component[1]);
                     }
                 }
                 components.draggable = () => import('vuedraggable');
