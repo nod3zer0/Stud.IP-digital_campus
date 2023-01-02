@@ -43,7 +43,8 @@ const Questionnaire = {
                             range_type: $(form).data('range_type'),
                             range_id: $(form).data('range_id'),
                             editInternalName: null,
-                            tempInternalName: ''
+                            tempInternalName: '',
+                            validationNotice: false
                         };
                     },
                     methods: {
@@ -58,6 +59,11 @@ const Questionnaire = {
                             this.activeTab = id;
                         },
                         submit: function () {
+                            if (!this.data.title) {
+                                this.switchTab('admin');
+                                this.validationNotice = true;
+                                return;
+                            }
                             let data = {
                                 title: this.data.title,
                                 copyable: this.data.copyable,

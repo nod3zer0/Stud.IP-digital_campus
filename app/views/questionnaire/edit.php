@@ -57,6 +57,31 @@ foreach ($questionnaire->questions as $question) {
     <div class="editor">
         <div class="rightside" aria-live="polite" tabindex="0" ref="rightside">
             <div class="admin" v-if="activeTab === 'admin'">
+
+                <article aria-live="assertive"
+                         class="validation_notes studip">
+                    <header>
+                        <h1>
+                            <?= Icon::create('info-circle', Icon::ROLE_INFO)->asImg(17, ['class' => "text-bottom validation_notes_icon"]) ?>
+                            <?= _('Hinweise zum Ausfüllen des Formulars') ?>
+                        </h1>
+                    </header>
+                    <div class="required_note">
+                        <div aria-hidden="true">
+                            <?= _('Pflichtfelder sind mit Sternchen gekennzeichnet.') ?>
+                        </div>
+                        <div class="sr-only">
+                            <?= _('Dieses Formular enthält Pflichtfelder.') ?>
+                        </div>
+                    </div>
+                    <div v-if="validationNotice && !data.title">
+                        <?= _('Folgende Angaben müssen korrigiert werden, um das Formular abschicken zu können:') ?>
+                        <ul>
+                            <li aria-describedby="questionnaire_title"><?= _('Titel des Fragebogens') ?></li>
+                        </ul>
+                    </div>
+                </article>
+
                 <div class="formpart">
                     <label class="studiprequired" for="questionnaire_title">
                         <span class="textlabel"><?= _('Titel des Fragebogens') ?></span>
