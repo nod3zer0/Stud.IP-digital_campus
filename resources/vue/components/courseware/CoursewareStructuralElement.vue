@@ -66,6 +66,31 @@
                             />
                         </template>
                     </courseware-ribbon>
+                    
+                    <div v-if="structuralElementLoaded && !isLink" class="cw-companion-box-wrapper">
+                        <courseware-companion-box
+                            v-if="!canVisit"
+                            mood="sad"
+                            :msgCompanion="$gettext('Diese Seite steht Ihnen leider nicht zur Verfügung.')"
+                        />
+                        <courseware-companion-box
+                            v-if="blockedByAnotherUser"
+                            :msgCompanion="$gettextInterpolate($gettext('Die Einstellungen dieser Seite werden im Moment von %{blockingUserName} bearbeitet'), {blockingUserName: blockingUserName})"
+                            mood="pointing"
+                        >
+                            <template #companionActions>
+                                <button v-if="userIsTeacher" class="button" @click="menuAction('removeLock')">
+                                    {{ textRemoveLock.title }}
+                                </button>
+                            </template>
+                        </courseware-companion-box>
+                        <courseware-empty-element-box
+                            v-if="showEmptyElementBox"
+                            :canEdit="canEdit"
+                            :noContainers="noContainers"
+                        />
+                        <courseware-wellcome-screen v-if="noContainers && isRoot && canEdit" />
+                    </div>
 
                     <div
                         v-if="canVisit && !editView && !isLink"
@@ -75,25 +100,6 @@
                             'cw-container-wrapper-discuss': discussView,
                         }"
                     >
-                        <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
-                            <courseware-companion-box
-                                v-if="blockedByAnotherUser"
-                                :msgCompanion="$gettextInterpolate($gettext('Die Einstellungen dieser Seite werden im Moment von %{blockingUserName} bearbeitet'), {blockingUserName: blockingUserName})"
-                                mood="pointing"
-                            >
-                                <template #companionActions>
-                                    <button v-if="userIsTeacher" class="button" @click="menuAction('removeLock')">
-                                        {{ textRemoveLock.title }}
-                                    </button>
-                                </template>
-                            </courseware-companion-box>
-                            <courseware-empty-element-box
-                                v-if="showEmptyElementBox"
-                                :canEdit="canEdit"
-                                :noContainers="noContainers"
-                            />
-                            <courseware-wellcome-screen v-if="noContainers && isRoot && canEdit" />
-                        </div>
                         <courseware-structural-element-discussion
                             v-if="!noContainers && discussView"
                             :structuralElement="structuralElement"
@@ -183,18 +189,6 @@
                             </draggable>
                         </template>
                         <studip-progress-indicator v-if="processing" :description="$gettext('Vorgang wird bearbeitet...')" />
-                    </div>
-                    <div
-                        v-if="!canVisit"
-                        class="cw-container-wrapper"
-                        :class="{ 'cw-container-wrapper-consume': consumeMode }"
-                    >
-                        <div v-if="structuralElementLoaded" class="cw-companion-box-wrapper">
-                            <courseware-companion-box
-                                mood="sad"
-                                :msgCompanion="$gettext('Diese Seite steht Ihnen leider nicht zur Verfügung.')"
-                            />
-                        </div>
                     </div>
                 </div>
 

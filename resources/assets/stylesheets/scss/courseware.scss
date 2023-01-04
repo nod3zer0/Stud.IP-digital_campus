@@ -2025,10 +2025,9 @@ c o m p a n i o n  o v e r l a y
     }
 }
 
-.cw-container-wrapper {
-    .cw-companion-box-wrapper {
+.cw-companion-box-wrapper {
         width: 100%;
-    }
+        max-width: 1095px;
 }
 
 /* * * * * * * * * * * * * * * * * *
