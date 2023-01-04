@@ -198,11 +198,15 @@ export default {
 
             const unallocated = new Set(this.blocks.map(({ id }) => id));
 
-            sections.forEach(section => {
+            for (let section of sections) {
                 section.locked = false;
-                section.blocks = section.blocks.map((id) =>  view.blockById({id})).filter((a) => a);
-                section.blocks.forEach(({ id }) => unallocated.delete(id));
-            });
+                section.blocks = section.blocks.map((id) =>  view.blockById({id})).filter(Boolean);
+                for (let sectionBlock of section.blocks) {
+                    if (sectionBlock?.id && unallocated.has(sectionBlock.id)) {
+                        unallocated.delete(sectionBlock.id);
+                    }
+                }
+            }
 
             if (unallocated.size > 0) {
                 this.unallocatedBlocks = [...unallocated].map((id) => view.blockById({ id }));
@@ -293,7 +297,7 @@ export default {
                         this.keyboardSelected = blockId;
                         const block = this.blockById({id: blockId});
                         const currentIndex = this.currentSections[sectionIndex].blocks.findIndex(block => block.id === blockId);
-                        this.assistiveLive = 
+                        this.assistiveLive =
                             this.$gettextInterpolate(
                                 this.$gettext('%{blockTitle} Block ausgewählt. Aktuelle Position in der Liste: %{pos} von %{listLength}. Drücken Sie die Aufwärts- und Abwärtspfeiltasten, um die Position zu ändern, die Leertaste zum Ablegen, die Escape-Taste zum Abbrechen.')
                                 , {blockTitle: block.attributes.title, pos: currentIndex + 1, listLength: this.currentSections[sectionIndex].blocks.length}
@@ -323,7 +327,7 @@ export default {
             if (currentIndex !== 0) {
                 const newPos = currentIndex - 1;
                 this.currentSections[sectionIndex].blocks.splice(newPos, 0, this.currentSections[sectionIndex].blocks.splice(currentIndex, 1)[0]);
-                this.assistiveLive = 
+                this.assistiveLive =
                     this.$gettextInterpolate(
                         this.$gettext('%{blockTitle} Block. Aktuelle Position in der Liste: %{pos} von %{listLength}.')
                         , {blockTitle: block.attributes.title, pos: newPos + 1, listLength: this.currentSections[sectionIndex].blocks.length}
@@ -340,7 +344,7 @@ export default {
             if (this.currentSections[sectionIndex].blocks.length - 1 > currentIndex) {
                 const newPos = currentIndex + 1;
                 this.currentSections[sectionIndex].blocks.splice(newPos, 0, this.currentSections[sectionIndex].blocks.splice(currentIndex, 1)[0]);
-                this.assistiveLive = 
+                this.assistiveLive =
                     this.$gettextInterpolate(
                         this.$gettext('%{blockTitle} Block. Aktuelle Position in der Liste: %{pos} von %{listLength}.')
                         , {blockTitle: block.attributes.title, pos: newPos + 1, listLength: this.currentSections[sectionIndex].blocks.length}
@@ -354,7 +358,7 @@ export default {
         abortKeyboardSorting(blockId, sectionIndex) {
             const block = this.blockById({id: blockId});
             this.keyboardSelected = null;
-            this.assistiveLive = 
+            this.assistiveLive =
                 this.$gettextInterpolate(
                     this.$gettext('%{blockTitle} Block, Neuordnung abgebrochen')
                     , {blockTitle: block.attributes.title}
@@ -365,7 +369,7 @@ export default {
             const block = this.blockById({id: blockId});
             const currentIndex = this.currentSections[sectionIndex].blocks.findIndex(block => block.id === blockId);
             this.keyboardSelected = null;
-            this.assistiveLive = 
+            this.assistiveLive =
                 this.$gettextInterpolate(
                     this.$gettext('%{blockTitle} Block, abgelegt. Entgültige Position in der Liste: %{pos} von %{listLength}.')
                     , {blockTitle: block.attributes.title, pos: currentIndex + 1, listLength: this.currentSections[sectionIndex].blocks.length}
@@ -374,9 +378,11 @@ export default {
         }
     },
     watch: {
-        blocks() {
-            if (!this.showEdit) {
-                this.initCurrentData();
+        blocks(newBlocks, oldBlocks) {
+            if (!this.showEdit && !this.checkSimpleArrayEquality(newBlocks, oldBlocks)) {
+                this.$nextTick(() => {
+                    setTimeout(() =>  this.initCurrentData(), 250);
+                });
             }
         },
         currentSections: {
@@ -385,7 +391,7 @@ export default {
                     this.$nextTick(() => {
                         this.$refs['sortableHandle' + this.keyboardSelected][0].focus();
                     });
-                }   
+                }
             },
             deep: true
         }

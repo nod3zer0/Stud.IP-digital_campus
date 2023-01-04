@@ -73,6 +73,11 @@ const containerMixin = {
             this.loadContainer({id : data.originContainerId });
             this.loadContainer({id : data.targetContainerId });
         },
+        checkSimpleArrayEquality(firstSet, secondSet) {
+            return Array.isArray(firstSet) && Array.isArray(secondSet) &&
+                firstSet.length === secondSet.length &&
+                firstSet.every((val, index) => val === secondSet[index]);
+        }
     }
 };
 
