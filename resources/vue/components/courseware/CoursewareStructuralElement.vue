@@ -149,7 +149,7 @@
                         <template v-if="!processing">
                             <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
                             <span id="operation" class="assistive-text">
-                                {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen')}}
+                                {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen.')}}
                             </span>
                             <draggable
                                 class="cw-structural-element-list"
@@ -1789,7 +1789,7 @@ export default {
             this.keyboardSelected = null;
             this.assistiveLive = 
                 this.$gettextInterpolate(
-                    this.$gettext('%{containerTitle} Abschnitt, Neuordnung abgebrochen')
+                    this.$gettext('%{containerTitle} Abschnitt, Neuordnung abgebrochen.')
                     , {containerTitle: container.attributes.title}
                 );
             this.$emit('select', this.currentId);

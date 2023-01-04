@@ -10,7 +10,7 @@
                     <span>{{ container.attributes.title }} ({{container.attributes.width}})</span>
                     <studip-icon v-if="blockedByAnotherUser" shape="lock-locked" />
                     <span v-if="blockedByAnotherUser" class="cw-default-container-blocker-warning">
-                        {{ $gettextInterpolate($gettext('wird im Moment von %{ userName } bearbeitet'), { userName: this.blockingUserName }) }}
+                        {{ $gettextInterpolate($gettext('Wird im Moment von %{ userName } bearbeitet'), { userName: this.blockingUserName }) }}
                     </span>
                 </a>
                 <courseware-container-actions

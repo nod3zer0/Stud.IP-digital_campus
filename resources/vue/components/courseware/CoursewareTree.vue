@@ -3,7 +3,7 @@
         <template v-if="editMode">
                 <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
                 <span id="operation" class="assistive-text">
-                    {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen')}}
+                    {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen.')}}
                 </span>
         </template>
         <ol v-if="!processing" class="cw-tree-root-list" role="listbox">

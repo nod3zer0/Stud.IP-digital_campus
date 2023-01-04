@@ -12,7 +12,7 @@
             <template v-if="showEditMode && canEdit">
                 <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
                 <span id="operation" class="assistive-text">
-                    {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen')}}
+                    {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen.')}}
                 </span>
             </template>
             <courseware-collapsible-box
@@ -360,7 +360,7 @@ export default {
             this.keyboardSelected = null;
             this.assistiveLive =
                 this.$gettextInterpolate(
-                    this.$gettext('%{blockTitle} Block, Neuordnung abgebrochen')
+                    this.$gettext('%{blockTitle} Block, Neuordnung abgebrochen.')
                     , {blockTitle: block.attributes.title}
                 );
             this.initCurrentData();
@@ -371,7 +371,7 @@ export default {
             this.keyboardSelected = null;
             this.assistiveLive =
                 this.$gettextInterpolate(
-                    this.$gettext('%{blockTitle} Block, abgelegt. Entgültige Position in der Liste: %{pos} von %{listLength}.')
+                    this.$gettext('%{blockTitle} Block, abgelegt. Endgültige Position in der Liste: %{pos} von %{listLength}.')
                     , {blockTitle: block.attributes.title, pos: currentIndex + 1, listLength: this.currentSections[sectionIndex].blocks.length}
                 );
             this.storeSort();

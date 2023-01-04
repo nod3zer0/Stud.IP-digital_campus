@@ -7,11 +7,11 @@
                     <span>{{ blockTitle }}</span>
                     <studip-icon v-if="blockedByAnotherUser" shape="lock-locked" />
                     <span v-if="blockedByAnotherUser" class="cw-default-block-blocker-warning">
-                        {{ $gettextInterpolate($gettext('wird im Moment von %{ userName } bearbeitet'), { userName: this.blockingUserName }) }}
+                        {{ $gettextInterpolate($gettext('Wird im Moment von %{ userName } bearbeitet'), { userName: this.blockingUserName }) }}
                     </span>
                     <studip-icon v-if="!block.attributes.visible" shape="visibility-invisible" />
                     <span v-if="!block.attributes.visible" class="cw-default-block-invisible-info">
-                        {{ $gettext('unsichtbar für Nutzende ohne Schreibrecht') }}
+                        {{ $gettext('Unsichtbar für Nutzende ohne Schreibrecht') }}
                     </span>
                 </a>
                 <courseware-block-actions

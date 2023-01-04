@@ -370,7 +370,7 @@ export default {
         abortKeyboardSorting() {
             this.$emit('childrenUpdated');
             const assistiveLive = this.$gettextInterpolate(
-                this.$gettext('%{elementTitle}. Neuordnung abgebrochen'),
+                this.$gettext('%{elementTitle}. Neuordnung abgebrochen.'),
                 { elementTitle: this.element.attributes.title }
             );
             this.setAssistiveLiveContents(assistiveLive);
