@@ -9,7 +9,7 @@
             <?= htmlReady($card['front_text']); ?>
         </p>
         <p>
-            <? if ($card['front_file_ref']): ?>
+            <? if ($card['back_file_ref']): ?>
                 <img src="<?= htmlReady($card['back_file_ref']->getDownloadURL()); ?>">
             <? endif; ?>
             <?= htmlReady($card['back_text']); ?>
