@@ -19,7 +19,7 @@ class RevampQuestionnaires extends Migration
             'description' => 'Sollen die alten Evaluationen weiterhin eingeschaltet bleiben? Achtung, die alten Evaluationen werden in einem zukünftigen Stud.IP-Release entfernt.',
             'range'       => 'global',
             'type'        => 'boolean',
-            'value'       => '0',
+            'value'       => '1',
             'section'     => 'evaluation'
         ]);
 
