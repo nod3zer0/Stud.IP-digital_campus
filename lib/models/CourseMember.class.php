@@ -163,9 +163,9 @@ class CourseMember extends SimpleORMap implements PrivacyObject
      * @param string $order_by
      * @return array
      */
-    public function getMembers(string $course_id, string $sort_status = 'autor', string $order_by = 'nachname asc'): array
+    public static function getMembers(string $course_id, string $sort_status = 'autor', string $order_by = 'nachname asc'): array
     {
-        [$order, $asc] = explode(' ', $order_by);
+        list($order, $asc) = explode(' ', $order_by);
         if ($order === 'nachname') {
             $order_by = "Nachname {$asc},Vorname {$asc}";
         }
