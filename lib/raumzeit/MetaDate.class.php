@@ -279,7 +279,7 @@ class MetaDate
                     $singledate_count++;
                 }
                 // remove all SingleDates in the future for this CycleData
-                $count = CycleDataDB::deleteNewerSingleDates($data['cycle_id'], time(), true);
+                $count = CycleDataDB::deleteNewerSingleDates($data['cycle_id'], time());
                 // create new SingleDates
                 $this->createSingleDates(['metadate_id'         => $cycle->getMetaDateId(),
                                                'startAfterTimeStamp' => time()

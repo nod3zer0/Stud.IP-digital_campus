@@ -130,11 +130,10 @@ class CycleDataDB
      *
      * @param  string  $metadate_id
      * @param  int  $timestamp
-     * @param  boolean $keepIssues
      *
      * @return int  number of deleted singledates
      */
-    public static function deleteNewerSingleDates($metadate_id, $timestamp, $keepIssues = false)
+    public static function deleteNewerSingleDates($metadate_id, $timestamp)
     {
         $count = 0;
 
@@ -145,7 +144,7 @@ class CycleDataDB
         $statement->execute([$metadate_id, $timestamp]);
         while ($termin_id = $statement->fetchColumn()) {
             $termin = new SingleDate($termin_id);
-            $termin->delete($keepIssues);
+            $termin->delete();
             unset($termin);
 
             $count += 1;

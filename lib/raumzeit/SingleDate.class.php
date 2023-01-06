@@ -270,31 +270,28 @@ class SingleDate
         return $this->metadate_id;
     }
 
+    /**
+     * @deprecated
+     */
     function killIssue()
     {
-        // We delete the issue, cause there is no chance anybody can get to it without the expert view
-        if (!Config::get()->RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW) {
-            if ($issue_ids = $this->getIssueIDs()) {
-                foreach ($issue_ids as $issue_id) {
-                    // delete this issue
-                    unset($this->issues[$issue_id]);
-                    $issue = new Issue(['issue_id' => $issue_id]);
-                    $issue->delete();
-                }
+        $issue_ids = $this->getIssueIDs();
+        if (count($issue_ids) > 0) {
+            CourseTopic::deleteBySQL("issue_id IN (?)", $issue_ids);
+
+            foreach ($issue_ids as $issue_id) {
+                unset($this->issues[$issue_id]);
             }
         }
     }
 
-    function delete($keepIssues = false)
+    function delete()
     {
         $cache = StudipCacheFactory::getCache();
         $cache->expire('course/undecorated_data/' . $this->range_id);
 
         $this->chdate = time();
         $this->killAssign();
-        if (!$keepIssues) {
-            $this->killIssue();
-        }
 
         return SingleDateDB::deleteSingleDate($this->termin_id, $this->ex_termin);
     }

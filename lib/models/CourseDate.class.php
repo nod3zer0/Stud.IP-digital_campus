@@ -405,12 +405,7 @@ class CourseDate extends SimpleORMap implements PrivacyObject
     {
         $warnings = [];
         if (count($this->topics) > 0) {
-            if (Config::get()->RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW) {
-                $warnings[] = _('Diesem Termin ist im Ablaufplan ein Thema zugeordnet.') . "\n"
-                            . _('Titel und Beschreibung des Themas bleiben erhalten und können in der Expertenansicht des Ablaufplans einem anderen Termin wieder zugeordnet werden.');
-            } else {
-                $warnings[] = _('Diesem Termin ist ein Thema zugeordnet.');
-            }
+            $warnings[] = _('Diesem Termin ist ein Thema zugeordnet.');
         }
 
         if (Config::get()->RESOURCES_ENABLE && $this->getRoom()) {
