@@ -4,21 +4,21 @@
             <ul class="widget-list widget-links cw-export-widget" v-if="structuralElement">
                 <li v-if="showExportArchiv" class="cw-export-widget-export">
                     <button @click="exportElement">
-                        <translate>Seite exportieren</translate>
+                        {{ $gettext('Lerninhalte exportieren') }}
                     </button>
                 </li>
                 <li v-if="showExportPdf" class="cw-export-widget-export-pdf">
                     <button @click="pdfElement">
-                        <translate>Seite als pdf-Dokument exportieren</translate>
+                        {{ $gettext('PDF-Dokument erstellen') }}
                     </button>
                 </li>
                 <li v-if="showOer" class="cw-export-widget-oer">
                     <button @click="oerElement">
-                        <translate>Seite auf dem OER Campus veröffentlichen</translate>
+                        {{ $gettext('Auf OER Campus veröffentlichen') }}
                     </button>
                 </li>
                 <li v-if="!showExportArchiv && !showExportPdf && !showOer">
-                    <translate>Keine Exportoptionen verfügbar</translate>
+                    {{ $gettext('Keine Exportoptionen verfügbar') }}
                 </li>
             </ul>
         </template>

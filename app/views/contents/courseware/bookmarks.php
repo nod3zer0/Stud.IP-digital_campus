@@ -1,6 +1,6 @@
 <div
     id="courseware-content-bookmark-app"
     entry-type="users"
-    entry-id="<?= $user_id ?>"
+    entry-id="<?= htmlReady($user_id) ?>"
 >
 </div>

@@ -51,6 +51,7 @@
 
 <script>
 import CoursewareRibbonToolbar from './CoursewareRibbonToolbar.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-ribbon',
@@ -87,12 +88,10 @@ export default {
         };
     },
     computed: {
-        consumeMode() {
-            return this.$store.getters.consumeMode;
-        },
-        toolsActive() {
-            return this.$store.getters.showToolbar;
-        },
+        ...mapGetters({
+            consumeMode: 'consumeMode',
+            toolsActive: 'showToolbar'
+        }),
         breadcrumbFallback() {
             return window.outerWidth < 1200;
         },
@@ -105,21 +104,28 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            coursewareConsumeMode: 'coursewareConsumeMode',
+            coursewareSelectedToolbarItem: 'coursewareSelectedToolbarItem',
+            coursewareViewMode: 'coursewareViewMode',
+            coursewareShowToolbar: 'coursewareShowToolbar'
+
+        }),
         toggleConsumeMode() {
             STUDIP.Vue.emit('toggle-focus-mode', !this.consumeMode);
             if (!this.consumeMode) {
-                this.$store.dispatch('coursewareConsumeMode', true);
-                this.$store.dispatch('coursewareSelectedToolbarItem', 'contents');
-                this.$store.dispatch('coursewareViewMode', 'read');
+                this.coursewareConsumeMode(true);
+                this.coursewareSelectedToolbarItem('contents');
+                this.coursewareViewMode('read');
             } else {
-                this.$store.dispatch('coursewareConsumeMode', false);
+                this.coursewareConsumeMode(false);
             }
         },
         activeToolbar() {
-            this.$store.dispatch('coursewareShowToolbar', true);
+            this.coursewareShowToolbar(true);
         },
         deactivateToolbar() {
-            this.$store.dispatch('coursewareShowToolbar', false);
+            this.coursewareShowToolbar(false);
         },
         handleScroll() {
             if (window.outerWidth > 767) {

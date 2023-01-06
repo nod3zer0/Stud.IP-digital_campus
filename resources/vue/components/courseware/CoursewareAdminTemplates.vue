@@ -151,10 +151,11 @@ export default {
         ...mapActions({
             createTemplate: 'courseware-templates/create',
             updateTemplate: 'courseware-templates/update',
-            deleteTemplate: 'courseware-templates/delete'
+            deleteTemplate: 'courseware-templates/delete',
+            setShowAddTemplateDialog: 'showAddTemplateDialog'
         }),
         closeAddDialog() {
-            this.$store.dispatch('showAddTemplateDialog', false);
+            this.setShowAddTemplateDialog(false);
             this.newTemplateName = '';
             this.newElementPurpose = '';
             this.importZip = null;

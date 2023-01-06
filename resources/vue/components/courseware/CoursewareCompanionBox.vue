@@ -16,7 +16,7 @@ export default {
             type: String,
             default: 'default',
             validator: value => {
-                return ['default','unsure', 'special', 'sad', 'pointing'].includes(value);
+                return ['default','unsure', 'special', 'sad', 'pointing', 'curious'].includes(value);
             }
         }
     },

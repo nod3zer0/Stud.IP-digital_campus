@@ -11,7 +11,10 @@ export default {
             containerById: 'courseware-containers/byId',
             folderById: 'folders/byId',
             filesById: 'files/byId',
+            fileRefsById: 'file-refs/byId',
             structuralElementById: 'courseware-structural-elements/byId',
+            allStructuralElements: 'courseware-structural-elements/all',
+            allBlocks: 'courseware-blocks/all',
         }),
     },
 
@@ -48,11 +51,13 @@ export default {
         },
 
         async createExportFile(root_id = null, options) {
-            let completeExport = false;
+            if (!options || !options.completeExport) {
+                options.completeExport = false;
+            }
 
             if (!root_id) {
                 root_id = this.courseware.relationships.root.data.id;
-                completeExport = true;
+                options.completeExport = true;
             }
             this.setExportState(this.$gettext('Exportiere Elemente'));
             this.setExportProgress(0);
@@ -62,7 +67,7 @@ export default {
             zip.file('courseware.json', JSON.stringify(exportData.json));
             zip.file('files.json', JSON.stringify(exportData.files.json));
 
-            if (completeExport) {
+            if (options.completeExport) {
                 zip.file('settings.json', JSON.stringify(exportData.settings));
             }
 
@@ -93,14 +98,14 @@ export default {
             if (options && options.withChildren === true) {
                 withChildren = true;
             }
-
+            await this.loadStructuralElement(root_id);
             let root_element = await this.structuralElementById({id: root_id});
 
             //prevent loss of data
             root_element = JSON.parse(JSON.stringify(root_element));
 
             // load whole courseware nonetheless, only export relevant elements
-            let elements = await this.$store.getters['courseware-structural-elements/all'];
+            let elements = await this.allStructuralElements;
             this.exportElementCounter = 0;
             if (withChildren) {
                 this.elementCounter = this.countElements(elements);
@@ -135,9 +140,21 @@ export default {
             delete root_element.links;
 
             let settings = {
-                'editing-permission-level': this.courseware.attributes['editing-permission-level'],
-                'sequential-progression': this.courseware.attributes['sequential-progression']
+                'editing-permission-level': 'tutor',
+                'sequential-progression': '0'
             };
+            if (this.courseware != null) {
+                settings = {
+                    'editing-permission-level': this.courseware.attributes['editing-permission-level'],
+                    'sequential-progression': this.courseware.attributes['sequential-progression']
+                };
+            }
+            if (options && options.settings) {
+                settings = {
+                    'editing-permission-level': options.settings['editing-permission-level'],
+                    'sequential-progression': options.settings['sequential-progression']
+                };
+            }
 
             return {
                 json: root_element,
@@ -189,7 +206,6 @@ export default {
                 this.companionInfo({ info: this.$gettext('Die Seite wurde an den OER Campus gesendet.') });
             }).catch(error => {
                 this.companionError({ info: this.$gettext('Beim Veröffentlichen der Seite ist ein Fehler aufgetreten.') });
-                console.debug(error);
             });
         },
 
@@ -198,15 +214,13 @@ export default {
 
             for (var i = 0; i < data.length; i++) {
                 if (data[i].relationships.parent.data?.id === parentId && data[i].attributes['can-edit']) {
+                    const content = { ...data[i] };
+                    await this.loadStructuralElement(content.id);
                     let new_childs = await this.exportStructuralElement(data[i].id, data);
                     this.exportElementCounter++;
-                    let content = { ...data[i] };
                     content.containers = [];
 
-                    await this.loadStructuralElement(content.id);
-
                     let element = this.structuralElementById({ id: content.id });
-
                     // load containers, if there are any for this struct
                     if (element.relationships.containers?.data?.length) {
                         for (var j = 0; j < element.relationships.containers.data.length; j++) {
@@ -237,9 +251,9 @@ export default {
         async exportStructuralElementImage(element) {
             let fileId = element.relationships.image?.data?.id;
             if (fileId) {
-                await this.$store.dispatch('file-refs/loadById', {id: fileId});
-                let fileRef = this.$store.getters['file-refs/byId']({id: fileId});
-
+                await this.loadFileRefsById({id: fileId});
+                let fileRef = this.fileRefsById({id: fileId});
+                
                 let fileRefData = {};
                 fileRefData.id = fileRef.id;
                 fileRefData.attributes = fileRef.attributes;
@@ -262,7 +276,7 @@ export default {
 
             container.blocks = [];
 
-            let blocks = this.$store.getters['courseware-blocks/all'];
+            let blocks = this.allBlocks;
 
             // now, load the blocks for this container, if there are any
             if (blocks.length) {
@@ -358,14 +372,15 @@ export default {
             }
         },
 
-        ...mapActions([
-            'loadStructuralElement',
-            'loadFileRefs',
-            'loadFolder',
-            'companionInfo',
-            'setExportState',
-            'setExportProgress'
-        ]),
+        ...mapActions({
+            loadStructuralElement: 'loadStructuralElement',
+            loadFileRefs: 'loadFileRefs',
+            loadFolder: 'loadFolder',
+            companionInfo: 'companionInfo',
+            setExportState: 'setExportState',
+            setExportProgress: 'setExportProgress',
+            loadFileRefsById: 'file-refs/loadById'
+        }),
     },
     watch: {
         exportElementCounter(counter) {

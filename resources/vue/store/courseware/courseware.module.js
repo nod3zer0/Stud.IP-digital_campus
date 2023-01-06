@@ -30,12 +30,15 @@ const getDefaultState = () => {
 
         showStructuralElementEditDialog: false,
         showStructuralElementAddDialog: false,
+        showStructuralElementImportDialog: false,
+        showStructuralElementCopyDialog: false,
+        showStructuralElementLinkDialog: false,
         showStructuralElementExportDialog: false,
         showStructuralElementPdfExportDialog: false,
         showStructuralElementInfoDialog: false,
         showStructuralElementDeleteDialog: false,
         showStructuralElementOerDialog: false,
-        showStructuralElementLinkDialog: false,
+        showStructuralElementPublicLinkDialog: false,
         showStructuralElementRemoveLockDialog: false,
 
         showSuggestOerDialog: false,
@@ -83,7 +86,8 @@ const getters = {
         return rootGetters['courseware-structural-elements/byId']({ id });
     },
     currentElementBlocked(state, getters, rootState, rootGetters) {
-        return getters.currentStructuralElement?.relationships?.['edit-blocker']?.data !== null;
+        const elemData = getters.currentStructuralElement?.relationships?.['edit-blocker']?.data;
+        return elemData !== null && elemData !== '';
     },
     currentElementBlockerId(state, getters) {
         return getters.currentElementBlocked ? getters.currentStructuralElement?.relationships?.['edit-blocker']?.data?.id : null;
@@ -172,6 +176,15 @@ const getters = {
     showStructuralElementAddDialog(state) {
         return state.showStructuralElementAddDialog;
     },
+    showStructuralElementCopyDialog(state) {
+        return state.showStructuralElementCopyDialog;
+    },
+    showStructuralElementLinkDialog(state) {
+        return state.showStructuralElementLinkDialog;
+    },
+    showStructuralElementImportDialog(state) {
+        return state.showStructuralElementImportDialog;
+    },
     showStructuralElementExportDialog(state) {
         return state.showStructuralElementExportDialog;
     },
@@ -187,8 +200,8 @@ const getters = {
     showStructuralElementDeleteDialog(state) {
         return state.showStructuralElementDeleteDialog;
     },
-    showStructuralElementLinkDialog(state) {
-        return state.showStructuralElementLinkDialog;
+    showStructuralElementPublicLinkDialog(state) {
+        return state.showStructuralElementPublicLinkDialog;
     },
     showStructuralElementRemoveLockDialog(state) {
         return state.showStructuralElementRemoveLockDialog;
@@ -301,16 +314,7 @@ export const actions = {
 
         const activities = rootGetters['users/all'];
 
-        const parentFetchers = activities
-              .filter(({ type }) => type === 'activities')
-              .map((activity) => this.dispatch(
-                  'courseware-structural-elements/loadById',
-                  {
-                      id: activity.relationships.object.meta['object-id'],
-                  },
-              ));
-
-        return Promise.all(parentFetchers).then(() => activities);
+        return activities.filter(({ type }) => type === 'activities');
     },
 
     async createFile(context, { file, filedata, folder }) {
@@ -434,8 +438,8 @@ export const actions = {
             // console.log(resp);
         });
     },
-    async copyStructuralElement({ dispatch, getters, rootGetters }, { parentId, elementId, removePurpose, migrate }) {
-        const copy = { data: { parent_id: parentId, remove_purpose: removePurpose, migrate: migrate } };
+    async copyStructuralElement({ dispatch, getters, rootGetters }, { parentId, elementId, removePurpose, migrate, modifications }) {
+        const copy = { data: { parent_id: parentId, remove_purpose: removePurpose, migrate: migrate, modifications: modifications } };
 
         const result = await state.httpClient.post(`courseware-structural-elements/${elementId}/copy`, copy);
         const id = result.data.data.id;
@@ -836,6 +840,18 @@ export const actions = {
         context.commit('setShowStructuralElementAddDialog', bool);
     },
 
+    showElementImportDialog(context, bool) {
+        context.commit('setShowStructuralElementImportDialog', bool);
+    },
+
+    showElementCopyDialog(context, bool) {
+        context.commit('setShowStructuralElementCopyDialog', bool);
+    },
+
+    showElementLinkDialog(context, bool) {
+        context.commit('setShowStructuralElementLinkDialog', bool);
+    },
+
     showElementExportDialog(context, bool) {
         context.commit('setShowStructuralElementExportDialog', bool);
     },
@@ -860,8 +876,8 @@ export const actions = {
         context.commit('setShowStructuralElementDeleteDialog', bool);
     },
 
-    showElementLinkDialog(context, bool) {
-        context.commit('setShowStructuralElementLinkDialog', bool);
+    showElementPublicLinkDialog(context, bool) {
+        context.commit('setShowStructuralElementPublicLinkDialog', bool);
     },
 
     showElementRemoveLockDialog(context, bool) {
@@ -1294,7 +1310,32 @@ export const actions = {
         await dispatch('courseware-public-links/update', link, { root: true });
 
         return dispatch('courseware-public-links/loadById', { id: link.id }, { root: true });
-    }
+    },
+
+    loadCourseUnits({ dispatch }, cid) {
+        const parent = { type: 'courses', id: cid };
+        const relationship = 'courseware-units';
+        const options = { include: 'structural-element' }
+
+        return dispatch('loadRelatedPaginated', {
+            type: 'courseware-units',
+            parent,
+            relationship,
+            options,
+        });
+    },
+    loadUserUnits({ dispatch }, uid) {
+        const parent = { type: 'users', id: uid };
+        const relationship = 'courseware-units';
+        const options = { include: 'structural-element' }
+
+        return dispatch('loadRelatedPaginated', {
+            type: 'courseware-units',
+            parent,
+            relationship,
+            options,
+        });
+    },
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -1393,6 +1434,18 @@ export const mutations = {
         state.showStructuralElementAddDialog = showAdd;
     },
 
+    setShowStructuralElementImportDialog(state, showImport) {
+        state.showStructuralElementImportDialog = showImport;
+    },
+
+    setShowStructuralElementCopyDialog(state, showCopy) {
+        state.showStructuralElementCopyDialog = showCopy;
+    },
+
+    setShowStructuralElementLinkDialog(state, showLink) {
+        state.showStructuralElementLinkDialog = showLink;
+    },
+
     setShowStructuralElementExportDialog(state, showExport) {
         state.showStructuralElementExportDialog = showExport;
     },
@@ -1421,8 +1474,8 @@ export const mutations = {
         state.showOverviewElementAddDialog = showAdd;
     },
 
-    setShowStructuralElementLinkDialog(state, showLink) {
-        state.showStructuralElementLinkDialog = showLink;
+    setShowStructuralElementPublicLinkDialog(state, showPublicLink) {
+        state.showStructuralElementPublicLinkDialog = showPublicLink;
     },
 
     setShowStructuralElementRemoveLockDialog(state, showRemoveLock) {

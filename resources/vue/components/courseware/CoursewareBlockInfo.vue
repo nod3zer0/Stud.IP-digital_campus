@@ -31,6 +31,7 @@
 
 <script>
 import IsoDate from './IsoDate.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-block-info',
@@ -39,8 +40,11 @@ export default {
         block: Object,
     },
     computed: {
+        ...mapGetters({
+            relatedUsers: 'users/related',
+        }),
         owner() {
-            const owner = this.$store.getters['users/related']({
+            const owner = this.relatedUsers({
                 parent: this.block,
                 relationship: 'owner',
             });
@@ -49,7 +53,7 @@ export default {
         },
 
         editor() {
-            const editor = this.$store.getters['users/related']({
+            const editor = this.relatedUsers({
                 parent: this.block,
                 relationship: 'editor',
             });

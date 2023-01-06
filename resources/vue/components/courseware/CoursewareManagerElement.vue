@@ -177,6 +177,7 @@ export default {
         ...mapGetters({
             childrenById: 'courseware-structure/children',
             containerById: 'courseware-containers/byId',
+            filingData: 'filingData',
             structuralElementById: 'courseware-structural-elements/byId',
         }),
         isCurrent() {
@@ -307,9 +308,6 @@ export default {
             return this.childrenById(this.currentElement.id)
                 .map((id) => this.structuralElementById({ id }))
                 .filter(Boolean);
-        },
-        filingData() {
-            return this.$store.getters.filingData;
         },
         copyProcessFailedMessage() {
             let message = this.$gettext('Der Kopiervorgang ist fehlgeschlagen.');

@@ -9,22 +9,25 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'courseware-admin-view-widget',
     computed: {
-        adminViewMode() {
-            return this.$store.getters.adminViewMode;
-        },
+        ...mapGetters({
+            adminViewMode: 'adminViewMode'
+        }),
         templatesView() {
             return this.adminViewMode === 'templates';
         },
     },
     methods: {
+        ...mapActions({
+            setAdminViewMode: 'adminViewMode'
+        }),
         setTemplatesView() {
-            this.$store.dispatch('adminViewMode', 'templates');
+            this.setAdminViewMode('templates');
         },
     }
-
 }
 </script>

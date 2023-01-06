@@ -19,8 +19,9 @@ class Instance extends SchemaProvider
     public function getId($resource): ?string
     {
         $root = $resource->getRoot();
+        $unit = \Courseware\Unit::findOneBySQL('structural_element_id = ?', [$root->id]);
 
-        return join('_', [$root->range_type, $root->range_id]);
+        return join('_', [$root->range_type, $root->range_id, $unit->id]);
     }
 
     /**
@@ -34,11 +35,12 @@ class Instance extends SchemaProvider
             'block-types' => array_map([$this, 'mapBlockType'], $resource->getBlockTypes()),
             'container-types' => array_map([$this, 'mapContainerType'], $resource->getContainerTypes()),
             'favorite-block-types' => $resource->getFavoriteBlockTypes($user),
-            'sequential-progression' => (bool) $resource->getSequentialProgression(),
+            'sequential-progression' => $resource->getSequentialProgression(),
             'editing-permission-level' => $resource->getEditingPermissionLevel(),
             'certificate-settings' => $resource->getCertificateSettings(),
             'reminder-settings' => $resource->getReminderSettings(),
-            'reset-progress-settings' => $resource->getResetProgressSettings()
+            'reset-progress-settings' => $resource->getResetProgressSettings(),
+            'root-id' => $resource->getRoot()->id
         ];
     }
 

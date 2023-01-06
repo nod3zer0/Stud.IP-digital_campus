@@ -106,6 +106,16 @@ button.button {
 .button.search {
     @include button-with-icon(search, clickable, info_alt);
 }
+.button.arr_left {
+    @include button-with-icon(arr_1left, clickable, info_alt);
+}
+.button.arr_right {
+    @include button-with-icon(arr_1right, clickable, info_alt);
+    &::before {
+        float: right;
+        margin: 1px -8px 0 5px;
+    }
+}
 
 /* Grouped Buttons */
 .button-group {

@@ -4,6 +4,7 @@ namespace JsonApi\Routes\Courseware;
 
 use Courseware\Instance;
 use Courseware\StructuralElement;
+use Courseware\Unit;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
 
@@ -31,7 +32,22 @@ trait CoursewareInstancesHelper
         if (!($method = $methods[$rangeType])) {
             throw new BadRequestException('Invalid range type: "' . $rangeType . '".');
         }
-        if (!($root = StructuralElement::$method($rangeId))) {
+        $root = null;
+        if ($rangeType !== 'sharedusers') {
+            $chunks = explode('_', $rangeId);
+            $courseId = $chunks[0];
+            $unitId = $chunks[1] ?? null;
+
+            if ($unitId) {
+                $unit = Unit::findOneBySQL('range_id = ? AND id = ?', [$courseId, $unitId]);
+            } else {
+                $unit = Unit::findOneBySQL('range_id = ?', [$courseId]);
+            }
+            $root = $unit->structural_element;
+        } else {
+            $root = StructuralElement::$method($rangeId);
+        }
+        if (!$root) {
             throw new RecordNotFoundException();
         }
 

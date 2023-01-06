@@ -125,7 +125,11 @@ const actions = {
     },
 
     loadInstance({ commit, dispatch, rootGetters }, context) {
-        const parent = context;
+        let parent = context;
+        parent = {
+            type: context.type,
+            id: context.id + '_' + context.unit
+        }
         const relationship = 'courseware';
         const options = {
             include: 'bookmarks,root',

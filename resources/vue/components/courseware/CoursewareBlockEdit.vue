@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
     name: 'courseware-block-edit',
     props: {
@@ -29,14 +31,17 @@ export default {
         this.originalBlock = this.block;
     },
     methods: {
+        ...mapActions({
+            coursewareBlockAdder: 'coursewareBlockAdder',
+            coursewareShowToolbar: 'coursewareShowToolbar'
+        }),
         deactivateToolbar() {
-            this.$store.dispatch('coursewareBlockAdder', {});
-            this.$store.dispatch('coursewareShowToolbar', false);
+            this.coursewareBlockAdder({});
+            this.coursewareShowToolbar(false);
         },
     },
     beforeDestroy() {
         if (this.exitHandler) {
-            console.log('autosave');
             this.$emit('store');
         }
     }

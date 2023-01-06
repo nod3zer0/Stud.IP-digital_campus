@@ -1,5 +1,5 @@
 <template>
-    <div class="cw-wellcome-screen">
+    <div class="cw-welcome-screen">
         <courseware-companion-box :msgCompanion="this.$gettext('Es wurden bisher noch keine Inhalte eingepflegt.')">
             <template v-slot:companionActions>
                 <button v-if="canEdit && noContainers" class="button" @click="addContainer"><translate>Einen Abschnitt hinzufügen</translate></button>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 
 export default {
@@ -34,16 +34,23 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            coursewareViewMode: 'coursewareViewMode',
+            coursewareConsumeMode: 'coursewareConsumeMode',
+            coursewareContainerAdder: 'coursewareContainerAdder',
+            coursewareSelectedToolbarItem: 'coursewareSelectedToolbarItem',
+            coursewareShowToolbar: 'coursewareShowToolbar'
+        }),
         addContainer() {
-            this.$store.dispatch('coursewareViewMode', 'edit');
-            this.$store.dispatch('coursewareConsumeMode', false);
-            this.$store.dispatch('coursewareContainerAdder', true);
-            this.$store.dispatch('coursewareSelectedToolbarItem', 'blockadder');
-            this.$store.dispatch('coursewareShowToolbar', true);
+            this.coursewareViewMode('edit');
+            this.coursewareConsumeMode(false);
+            this.coursewareContainerAdder(true);
+            this.coursewareSelectedToolbarItem('blockadder');
+            this.coursewareShowToolbar(true);
         },
         switchToEditView() {
-            this.$store.dispatch('coursewareViewMode', 'edit');
-            this.$store.dispatch('coursewareConsumeMode', false);
+            this.coursewareViewMode('edit');
+            this.coursewareConsumeMode(false);
         }
     }
 

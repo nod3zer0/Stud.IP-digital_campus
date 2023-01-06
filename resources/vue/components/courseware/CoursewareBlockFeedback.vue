@@ -28,7 +28,7 @@
 <script>
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareTalkBubble from './CoursewareTalkBubble.vue';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 
 export default {
@@ -68,6 +68,10 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            createFeedback: 'courseware-block-feedback/create',
+            loadRelatedFeedback: 'courseware-block-feedback/loadRelated',
+        }),
         async postFeedback() {
             this.createFeedback({ blockId: this.block.id, feedback: this.feedbackText });
             this.feedbackText = '';
@@ -90,7 +94,7 @@ export default {
                 type: this.block.type,
                 id: this.block.id,
             };
-            await this.$store.dispatch('courseware-block-feedback/loadRelated', {
+            await this.loadRelatedFeedback({
                 parent,
                 relationship: 'feedback',
                 options: {
@@ -112,7 +116,7 @@ export default {
                     },
                 },
             };
-            await this.$store.dispatch('courseware-block-feedback/create', data, { root: true });
+            await this.createFeedback(data, { root: true });
             this.loadFeedback();
         }
     },

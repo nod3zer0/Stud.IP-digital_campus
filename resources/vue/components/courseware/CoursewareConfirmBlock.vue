@@ -79,6 +79,7 @@ export default {
     methods: {
         ...mapActions({
             updateBlock: 'updateBlockInContainer',
+            updateUserDataFields: 'courseware-user-data-fields/update'
         }),
         initCurrentData() {
             this.currentText = this.text;
@@ -99,7 +100,7 @@ export default {
             data.relationships.block.data.id = this.block.id;
             data.relationships.block.data.type = this.block.type;
 
-            await this.$store.dispatch('courseware-user-data-fields/update', data);
+            await this.updateUserDataFields(data);
             this.userProgress = 1;
             this.confirm = true;
         },

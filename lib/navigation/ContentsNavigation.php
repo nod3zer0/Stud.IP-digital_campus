@@ -52,16 +52,12 @@ class ContentsNavigation extends Navigation
         $courseware->setImage(Icon::create('courseware'));
 
         $courseware->addSubNavigation(
-            'overview',
+            'shelf',
             new Navigation(_('Übersicht'), 'dispatch.php/contents/courseware/index')
         );
         $courseware->addSubNavigation(
             'courseware',
-            new Navigation(_('Persönliche Lernmaterialien'), 'dispatch.php/contents/courseware/courseware')
-        );
-        $courseware->addSubNavigation(
-            'courseware_manager',
-            new Navigation(_('Verwaltung persönlicher Lernmaterialien'), 'dispatch.php/contents/courseware/courseware_manager')
+            new Navigation(_('Inhalt'), 'dispatch.php/contents/courseware/courseware')
         );
         $courseware->addSubNavigation(
             'releases',

@@ -1,23 +1,19 @@
-import ContentOverviewApp from './components/courseware/ContentOverviewApp.vue';
-import CoursewareStructureModule from './store/courseware/structure.module';
+import ActivitiesApp from './components/courseware/ActivitiesApp.vue';
 import { mapResourceModules } from '@elan-ev/reststate-vuex';
-import Vue from 'vue';
 import Vuex from 'vuex';
 import CoursewareModule from './store/courseware/courseware.module';
+import CoursewareActivitiesModule from './store/courseware/courseware-activities.module';
+import CoursewareStructureModule from './store/courseware/structure.module';
 import axios from 'axios';
-import vSelect from 'vue-select';
-import 'vue-select/dist/vue-select.css'
 
-Vue.component('v-select', vSelect);
-
-const mountApp = (STUDIP, createApp, element) => {
+const mountApp = async (STUDIP, createApp, element) => {
     const getHttpClient = () =>
-    axios.create({
-        baseURL: STUDIP.URLHelper.getURL(`jsonapi.php/v1`, {}, true),
-        headers: {
-            'Content-Type': 'application/vnd.api+json',
-        },
-    });
+        axios.create({
+            baseURL: STUDIP.URLHelper.getURL(`jsonapi.php/v1`, {}, true),
+            headers: {
+                'Content-Type': 'application/vnd.api+json',
+            },
+        });
 
     const httpClient = getHttpClient();
 
@@ -25,6 +21,7 @@ const mountApp = (STUDIP, createApp, element) => {
         modules: {
             courseware: CoursewareModule,
             'courseware-structure': CoursewareStructureModule,
+            'courseware-activities': CoursewareActivitiesModule,
             ...mapResourceModules({
                 names: [
                     'activities',
@@ -37,11 +34,15 @@ const mountApp = (STUDIP, createApp, element) => {
                     'courseware-containers',
                     'courseware-instances',
                     'courseware-structural-elements',
-                    'courseware-structural-elements-shared',
-                    'courseware-templates',
+                    'courseware-task-feedback',
+                    'courseware-task-groups',
+                    'courseware-tasks',
+                    'courseware-units',
                     'courseware-user-data-fields',
                     'courseware-user-progresses',
+                    'files',
                     'file-refs',
+                    'folders',
                     'users',
                     'institutes',
                     'semesters',
@@ -55,7 +56,6 @@ const mountApp = (STUDIP, createApp, element) => {
     });
     let entry_id = null;
     let entry_type = null;
-    let licenses = null;
     let elem;
 
     if ((elem = document.getElementById(element.substring(1))) !== undefined) {
@@ -67,34 +67,27 @@ const mountApp = (STUDIP, createApp, element) => {
             if (elem.attributes['entry-id'] !== undefined) {
                 entry_id = elem.attributes['entry-id'].value;
             }
-
-            if (elem.attributes['licenses'] !== undefined) {
-                licenses = JSON.parse(elem.attributes['licenses'].value);
-            }
         }
     }
 
     store.dispatch('setUserId', STUDIP.USER_ID);
-    store.dispatch('users/loadById', {id: STUDIP.USER_ID});
-    store.dispatch('courseware-structural-elements/loadById',{ id: STUDIP.COURSEWARE_USERS_ROOT_ID, options: { include: 'children'}});
-    store.dispatch('courseware-templates/loadAll');
+    await store.dispatch('users/loadById', {id: STUDIP.USER_ID});
     store.dispatch('setHttpClient', httpClient);
-    store.dispatch('licenses', licenses);
     store.dispatch('coursewareContext', {
         id: entry_id,
         type: entry_type,
     });
-
-    store.dispatch('courseware-structural-elements-shared/loadAll', { options: { include: 'owner' } });
+    await store.dispatch('loadTeacherStatus', STUDIP.USER_ID);
+    await store.dispatch('loadCourseUnits', entry_id);
 
     const app = createApp({
-        render: (h) => h(ContentOverviewApp),
-        store
+        render: (h) => h(ActivitiesApp),
+        store,
     });
 
     app.$mount(element);
 
     return app;
-}
+};
 
 export default mountApp;

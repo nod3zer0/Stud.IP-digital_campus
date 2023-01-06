@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-companion-overlay',
@@ -22,8 +22,11 @@ export default {
         }),
     },
     methods: {
+        ...mapActions({
+            coursewareShowCompanionOverlay: 'coursewareShowCompanionOverlay'
+        }),
         hideCompanion() {
-            this.$store.dispatch('coursewareShowCompanionOverlay', false);
+            this.coursewareShowCompanionOverlay(false);
         },
     },
     watch: {

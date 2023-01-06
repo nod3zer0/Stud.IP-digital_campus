@@ -272,6 +272,7 @@ export default {
             createFile: 'createFile',
             companionSuccess: 'companionSuccess',
             companionError: 'companionError',
+            updateUserDataFields: 'courseware-user-data-fields/update'
         }),
         initCurrentData() {
             this.currentTitle = this.title;
@@ -551,7 +552,7 @@ export default {
             data.attributes.payload.canvas_draw.clickTool = JSON.stringify(this.clickTool);
             data.attributes.payload.canvas_draw.Text = JSON.stringify(this.Text);
 
-            await this.$store.dispatch('courseware-user-data-fields/update', data);
+            await this.updateUserDataFields(data);
         },
         storeBlock() {
             let attributes = {};

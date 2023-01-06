@@ -1,8 +1,11 @@
 <?php
 
-use \Courseware\StructuralElement;
+require_once __DIR__.'/../courseware_controller.php';
 
-class Contents_CoursewareController extends AuthenticatedController
+use Courseware\StructuralElement;
+use Courseware\Unit;
+
+class Contents_CoursewareController extends CoursewareController
 {
     /**
      * Callback function being called before an action is executed.
@@ -10,7 +13,7 @@ class Contents_CoursewareController extends AuthenticatedController
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function before_filter(&$action, &$args)
+    public function before_filter(&$action, &$args): void
     {
         parent::before_filter($action, $args);
 
@@ -30,34 +33,20 @@ class Contents_CoursewareController extends AuthenticatedController
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function index_action()
+    public function index_action(): void
     {
-        Navigation::activateItem('/contents/courseware/overview');
+        Navigation::activateItem('/contents/courseware/shelf');
         $this->user_id = $GLOBALS['user']->id;
-        $this->setOverviewSidebar();
-        $this->courseware_root = \Courseware\StructuralElement::getCoursewareUser($this->user_id);
-        if (!$this->courseware_root) {
-            // create initial courseware dataset
-            $new = \Courseware\StructuralElement::createEmptyCourseware($this->user_id, 'user');
-            $this->courseware_root = $new->getRoot();
-        }
-        $this->licenses = $this->getLicences();
+        $this->setShelfSidebar();
+
+        $this->licenses = $this->getLicenses();
     }
 
-    private function setOverviewSidebar()
+    private function setShelfSidebar(): void
     {
         $sidebar = Sidebar::Get();
-        $views = new TemplateWidget(
-            _('Aktionen'),
-            $this->get_template_factory()->open('contents/courseware/overview_action_widget')
-        );
-        $sidebar->addWidget($views)->addLayoutCSSClass('courseware-overview-filter-widget');
-
-        $views = new TemplateWidget(
-            _('Filter'),
-            $this->get_template_factory()->open('contents/courseware/overview_filter_widget')
-        );
-        $sidebar->addWidget($views)->addLayoutCSSClass('courseware-overview-filter-widget');
+        $sidebar->addWidget(new VueWidget('courseware-action-widget'));
+        $sidebar->addWidget(new VueWidget('courseware-import-widget'));
     }
 
     /**
@@ -69,90 +58,29 @@ class Contents_CoursewareController extends AuthenticatedController
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function courseware_action($action = false, $widgetId = null)
+    public function courseware_action($unit_id = null): void
     {
         global $perm, $user;
 
-        Navigation::activateItem('/contents/courseware/courseware');
         $this->user_id = $user->id;
-
+        /** @var array<mixed> $last */
         $last = UserConfig::get($this->user_id)->getValue('COURSEWARE_LAST_ELEMENT');
 
-        if (!empty($last[$this->user_id])) {
-            $this->entry_element_id = $last['global'];
-            $struct = \Courseware\StructuralElement::findOneBySQL(
-                "id = ? AND range_id = ? AND range_type = 'user'",
-                [$this->entry_element_id, $this->user_id]
-            );
+        if ($unit_id === null) {
+            $this->redirectToFirstUnit('user', $this->user_id, $last);
+
+            return;
         }
 
-        // load courseware for current user
-        if (!$this->entry_element_id || !$struct || !$struct->canRead($user)) {
-
-            if (!$user->courseware) {
-                // create initial courseware dataset
-                $struct = StructuralElement::createEmptyCourseware($this->user_id, 'user');
-            }
-
-            $this->entry_element_id = $user->courseware->id;
+        $this->entry_element_id = null;
+        $this->unit_id = null;
+        $unit = Unit::find($unit_id);
+        if (isset($unit)) {
+            $this->setEntryElement('user', $unit, $last, $this->user_id);
+            Navigation::activateItem('/contents/courseware/courseware');
+            $this->licenses = $this->getLicenses();
+            $this->setCoursewareSidebar();
         }
-
-        $last[$this->user_id] = $this->entry_element_id;
-        UserConfig::get($this->user_id)->store('COURSEWARE_LAST_ELEMENT', $last);
-
-        $this->licenses = $this->getLicences();
-
-        $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS);
-
-        // Make sure struct has value., to evaluate the export (edit) capability.
-        if (!isset($struct)) {
-            $struct = \Courseware\StructuralElement::findOneBySQL(
-                "id = ? AND range_id = ? AND range_type = 'user'",
-                [$this->entry_element_id, $this->user_id]
-            );
-        }
-        $this->setCoursewareSidebar();
-    }
-
-    private function setCoursewareSidebar()
-    {
-        $sidebar = \Sidebar::Get();
-        $sidebar->addWidget(new VueWidget('courseware-action-widget'));
-
-        $views = new TemplateWidget(
-            _('Suche'),
-            $this->get_template_factory()->open('course/courseware/search_widget')
-        );
-        $sidebar->addWidget($views)->addLayoutCSSClass('courseware-search-widget');
-
-        $sidebar->addWidget(new VueWidget('courseware-view-widget'));
-        $sidebar->addWidget(new VueWidget('courseware-export-widget'));
-    }
-
-    private function getLicences()
-    {
-        $licenses = array();
-        $sorm_licenses = License::findBySQL("1 ORDER BY name ASC");
-        foreach($sorm_licenses as $license) {
-            array_push($licenses, $license->toArray());
-        }
-        return json_encode($licenses);
-    }
-
-    /**
-     * displays the courseware manager
-     *
-     * @param string $action
-     * @param string $widgetId
-     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
-     * @SuppressWarnings(PHPMD.Superglobals)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function courseware_manager_action($action = false, $widgetId = null)
-    {
-        Navigation::activateItem('/contents/courseware/courseware_manager');
-
-        $this->user_id = $GLOBALS['user']->id;
     }
 
     /**
@@ -165,7 +93,7 @@ class Contents_CoursewareController extends AuthenticatedController
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
 
-    public function bookmarks_action()
+    public function bookmarks_action(): void
     {
         Navigation::activateItem('/contents/courseware/bookmarks');
         $this->user_id = $GLOBALS['user']->id;
@@ -180,13 +108,13 @@ class Contents_CoursewareController extends AuthenticatedController
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
 
-    public function releases_action()
+    public function releases_action(): void
     {
         Navigation::activateItem('/contents/courseware/releases');
         $this->user_id = $GLOBALS['user']->id;
     }
 
-    private function setBookmarkSidebar()
+    private function setBookmarkSidebar(): void
     {
         $sidebar = Sidebar::Get();
         $views = new TemplateWidget(
@@ -205,7 +133,7 @@ class Contents_CoursewareController extends AuthenticatedController
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function courses_overview_action($action = false, $widgetId = null)
+    public function courses_overview_action($action = false, $widgetId = null): void
     {
         Navigation::activateItem('/contents/courseware/courses_overview');
 
@@ -244,7 +172,7 @@ class Contents_CoursewareController extends AuthenticatedController
      *
      * @return array
      */
-    private function getCoursewareCourses($sem_key)
+    private function getCoursewareCourses($sem_key): array
     {
         $this->current_semester = Semester::findCurrent();
 
@@ -326,7 +254,7 @@ class Contents_CoursewareController extends AuthenticatedController
      * @param  string  $course_id  the course to check
      * @return boolean             true if courseware is enabled, false otherwise
      */
-    private function isCoursewareEnabled($course_id)
+    private function isCoursewareEnabled($course_id): bool
     {
         $studip_module = PluginManager::getInstance()->getPlugin('CoursewareModule');
 
@@ -338,7 +266,7 @@ class Contents_CoursewareController extends AuthenticatedController
     }
 
 
-    private function getProjects($purpose)
+    private function getProjects($purpose): array
     {
         $elements = StructuralElement::findProjects($this->user->id, $purpose);
         foreach($elements as &$element) {
@@ -348,85 +276,8 @@ class Contents_CoursewareController extends AuthenticatedController
         return $elements;
     }
 
-    public function create_project_action($action = false, $widgetId = null)
-    {
-        PageLayout::setTitle(_('Neues Lernmaterial'));
 
-        if (!Request::submitted('create_project')) {
-            return;
-        }
-
-        CSRFProtection::verifyUnsafeRequest();
-        $this->user_id = $GLOBALS['user']->id;
-
-        $structural_element = new StructuralElement();
-        $structural_element->title = Request::get('title');
-        $structural_element->purpose = Request::get('project_type');
-        $structural_element->owner_id = $this->user_id;
-        $structural_element->editor_id = $this->user_id;
-        $structural_element->release_date = "";
-        $structural_element->withdraw_date = "";
-        $structural_element->range_id = $this->user_id;
-        $structural_element->range_type = 'user';
-        $structural_element->parent_id = StructuralElement::getCoursewareUser($this->user_id)->id;
-        $structural_element->payload = json_encode([
-            'description'      => Request::get('description'),
-            'color'            => Request::get('color'),
-            'required_time'    => Request::get('required_time'),
-            'license_type'     => Request::get('license_type'),
-            'difficulty_start' => Request::get('difficulty_start'),
-            'difficulty_end'   => Request::get('difficulty_end'),
-        ]);
-        $structural_element->store();
-
-        // set image
-        if ($_FILES['previewfile'] && $_FILES['previewfile']['name']) {
-            $coursewareInstance = new Courseware\Instance($structural_element);
-            $publicFolder = Courseware\Filesystem\PublicFolder::findOrCreateTopFolder($coursewareInstance);
-            $fileRef = $this->handleUpload($publicFolder, $structural_element);
-            $structural_element->image_id = $fileRef->id;
-            $structural_element->store();
-        }
-
-        $this->redirect('contents/courseware/index');
-    }
-
-    private function handleUpload(Courseware\Filesystem\PublicFolder $folder, StructuralElement $structuralElement)
-    {
-        $file = $_FILES['previewfile'];
-        $upload = [
-            'tmp_name' => [$file['tmp_name']],
-            'name'     => [$file['name']],
-            'size'     => [$file['size']],
-            'type'     => [$file['type']],
-            'error'    => [$file['error']]
-        ];
-
-        $uploaded = FileManager::handleFileUpload(
-            $upload,
-            $folder
-        );
-
-        if ($uploaded['error']) {
-            throw new RuntimeException(implode("\n", $uploaded['error']));
-        }
-
-        if (count($uploaded['files'])) {
-            return $uploaded['files'][0];
-        }
-
-        throw new RuntimeException('Could not create preview image.');
-    }
-
-    private function setProjectsSidebar($action)
-    {
-        $sidebar = Sidebar::Get();
-        $actions = new ActionsWidget();
-        $actions->addLink(_('Neues Lernmaterial anlegen'), $this->url_for('contents/courseware/create_project'), Icon::create('add', 'clickable'))->asDialog('size=700');
-        $sidebar->addWidget($actions);
-    }
-
-    public function pdf_export_action($element_id, $with_children)
+    public function pdf_export_action($element_id, $with_children): void
     {
         $element = \Courseware\StructuralElement::findOneById($element_id);
 
@@ -438,7 +289,7 @@ class Contents_CoursewareController extends AuthenticatedController
      *
      * @param string $entry_element_id the shared struct element id
      */
-    public function shared_content_courseware_action($entry_element_id)
+    public function shared_content_courseware_action($entry_element_id): void
     {
         global $perm, $user;
 
@@ -463,7 +314,7 @@ class Contents_CoursewareController extends AuthenticatedController
 
         $this->user_id = $struct->owner_id;
 
-        $this->licenses = $this->getLicences();
+        $this->licenses = $this->getLicenses();
 
         $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS);
 

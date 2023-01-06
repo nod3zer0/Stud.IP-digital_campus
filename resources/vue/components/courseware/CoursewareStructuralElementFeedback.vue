@@ -26,7 +26,7 @@
 <script>
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareTalkBubble from './CoursewareTalkBubble.vue';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-structural-element-feedback',
@@ -68,6 +68,10 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            createFeedback: 'courseware-structural-element-feedback/create',
+            loadRelatedFeedback: 'courseware-structural-element-feedback/loadRelated',
+        }),
         buildPayload(feedback) {
             const { id, type } = feedback;
             const user = this.getRelatedUser({ parent: { id, type }, relationship: 'user' });
@@ -86,7 +90,7 @@ export default {
                 type: this.structuralElement.type,
                 id: this.structuralElement.id,
             };
-            await this.$store.dispatch('courseware-structural-element-feedback/loadRelated', {
+            await this.loadRelatedFeedback({
                 parent,
                 relationship: 'feedback',
                 options: {
@@ -108,7 +112,7 @@ export default {
                     }
                 },
             };
-            await this.$store.dispatch('courseware-structural-element-feedback/create', data, { root: true });
+            await this.createFeedback( data, { root: true });
             this.feedbackText = '';
             this.loadFeedback();
         }

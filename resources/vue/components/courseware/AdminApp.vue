@@ -15,6 +15,8 @@
 import CoursewareAdminActionWidget from './CoursewareAdminActionWidget.vue';
 import CoursewareAdminTemplates from './CoursewareAdminTemplates.vue';
 import CoursewareAdminViewWidget from './CoursewareAdminViewWidget.vue';
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
     components: {
         CoursewareAdminActionWidget,
@@ -22,9 +24,9 @@ export default {
         CoursewareAdminViewWidget
     },
     computed: {
-        adminViewMode() {
-            return this.$store.getters.adminViewMode;
-        },
+        ...mapGetters({
+            adminViewMode: 'adminViewMode'
+        }),
         templatesView() {
             return this.adminViewMode === 'templates';
         },

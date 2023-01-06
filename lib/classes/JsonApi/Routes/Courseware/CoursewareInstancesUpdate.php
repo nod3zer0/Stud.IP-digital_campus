@@ -22,7 +22,12 @@ class CoursewareInstancesUpdate extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $resource = $this->findInstance($args['id']);
+        $chunks = explode('_', $args['id']);
+        $rangeType = $chunks[0];
+        $rangeId = $chunks[1];
+        $unitId = $chunks[2] ?? null;
+
+        $resource = $this->findInstanceWithRange($rangeType, $rangeId . '_' . $unitId);
         $json = $this->validate($request, $resource);
         if (!Authority::canUpdateCoursewareInstance($user = $this->getUser($request), $resource)) {
             throw new AuthorizationFailedException();

@@ -1,4 +1,15 @@
 STUDIP.domReady(() => {
+    if (document.getElementById('courseware-shelf-app')) {
+        STUDIP.Vue.load().then(({ createApp }) => {
+            import(
+                /* webpackChunkName: "courseware-shelf-app" */
+                '@/vue/courseware-shelf-app.js'
+            ).then(({ default: mountApp }) => {
+                return mountApp(STUDIP, createApp, '#courseware-shelf-app');
+            });
+        });
+    }
+
     if (document.getElementById('courseware-index-app')) {
         STUDIP.Vue.load().then(({ createApp }) => {
             import(
@@ -10,13 +21,24 @@ STUDIP.domReady(() => {
         });
     }
 
-    if (document.getElementById('courseware-dashboard-app')) {
+    if (document.getElementById('courseware-activities-app')) {
         STUDIP.Vue.load().then(({ createApp }) => {
             import(
-                /* webpackChunkName: "courseware-dashboard-app" */
-                '@/vue/courseware-dashboard-app.js'
+                /* webpackChunkName: "courseware-activities-app" */
+                '@/vue/courseware-activities-app.js'
             ).then(({ default: mountApp }) => {
-                return mountApp(STUDIP, createApp, '#courseware-dashboard-app');
+                return mountApp(STUDIP, createApp, '#courseware-activities-app');
+            });
+        });
+    }
+
+    if (document.getElementById('courseware-tasks-app')) {
+        STUDIP.Vue.load().then(({ createApp }) => {
+            import(
+                /* webpackChunkName: "courseware-tasks-app" */
+                '@/vue/courseware-tasks-app.js'
+            ).then(({ default: mountApp }) => {
+                return mountApp(STUDIP, createApp, '#courseware-tasks-app');
             });
         });
     }
@@ -28,17 +50,6 @@ STUDIP.domReady(() => {
                 '@/vue/courseware-manager-app.js'
             ).then(({ default: mountApp }) => {
                 return mountApp(STUDIP, createApp, '#courseware-manager-app');
-            });
-        });
-    }
-
-    if (document.getElementById('courseware-content-overview-app')) {
-        STUDIP.Vue.load().then(({ createApp }) => {
-            import(
-                /* webpackChunkName: "courseware-content-overview-app" */
-                '@/vue/courseware-content-overview-app.js'
-            ).then(({ default: mountApp }) => {
-                return mountApp(STUDIP, createApp, '#courseware-content-overview-app');
             });
         });
     }

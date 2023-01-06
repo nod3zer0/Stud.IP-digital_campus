@@ -14,6 +14,8 @@
 
 <script>
 import StudipIcon from '../StudipIcon.vue';
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   components: { StudipIcon },
     name: 'courseware-block-adder-area',
@@ -27,23 +29,28 @@ export default {
         };
     },
     computed: {
+        ...mapGetters({
+            adderStorage: 'blockAdder',
+        }),
         adderDisable() {
-            return Object.keys(this.$store.getters.blockAdder).length !== 0 && !this.adderActive;
-        },
-        adderStorage() {
-            return this.$store.getters.blockAdder;
+            return Object.keys(this.adderStorage).length !== 0 && !this.adderActive;
         },
     },
     methods: {
+        ...mapActions({
+            coursewareBlockAdder: 'coursewareBlockAdder',
+            coursewareSelectedToolbarItem: 'coursewareSelectedToolbarItem',
+            coursewareShowToolbar: 'coursewareShowToolbar'
+        }),
         selectBlockAdder() {
             if (this.adderActive) {
                 this.adderActive = false;
-                this.$store.dispatch('coursewareBlockAdder', {});
+                this.coursewareBlockAdder({});
             } else {
                 this.adderActive = true;
-                this.$store.dispatch('coursewareBlockAdder', { container: this.container, section: this.section });
-                this.$store.dispatch('coursewareSelectedToolbarItem', 'blockadder');
-                this.$store.dispatch('coursewareShowToolbar', true);
+                this.coursewareBlockAdder({ container: this.container, section: this.section });
+                this.coursewareSelectedToolbarItem('blockadder');
+                this.coursewareShowToolbar(true);
             }
         },
     },

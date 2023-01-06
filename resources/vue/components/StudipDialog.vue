@@ -61,28 +61,37 @@
                                     <div v-if="alert">{{ alert }}</div>
                                 </section>
                                 <footer class="studip-dialog-footer" ref="footer">
-                                    <button
-                                        v-if="buttonA"
-                                        :title="buttonA.text"
-                                        :class="[buttonA.class]"
-                                        class="button"
-                                        type="button"
-                                        @click="confirmDialog"
-                                    >
-                                        {{ buttonA.text }}
-                                    </button>
-                                    <slot name="dialogButtons"></slot>
-                                    <button
-                                        v-if="buttonB"
-                                        :title="buttonB.text"
-                                        :class="[buttonB.class]"
-                                        class="button"
-                                        type="button"
-                                        ref="buttonB"
-                                        @click="closeDialog"
-                                    >
-                                        {{ buttonB.text }}
-                                    </button>
+                                    <div class="studip-dialog-footer-buttonset-left">
+                                        <slot name="dialogButtonsBefore"></slot>
+                                    </div>
+                                    <div class="studip-dialog-footer-buttonset-center">
+                                        <button
+                                            v-if="buttonA"
+                                            :title="buttonA.text"
+                                            :class="[buttonA.class]"
+                                            :disabled="buttonA.disabled"
+                                            class="button"
+                                            type="button"
+                                            @click="confirmDialog"
+                                        >
+                                            {{ buttonA.text }}
+                                        </button>
+                                        <slot name="dialogButtons"></slot>
+                                        <button
+                                            v-if="buttonB"
+                                            :title="buttonB.text"
+                                            :class="[buttonB.class]"
+                                            class="button"
+                                            type="button"
+                                            ref="buttonB"
+                                            @click="closeDialog"
+                                        >
+                                            {{ buttonB.text }}
+                                        </button>
+                                    </div>
+                                    <div class="studip-dialog-footer-buttonset-right">
+                                        <slot name="dialogButtonsAfter"></slot>
+                                    </div>
                                 </footer>
                             </div>
                         </vue-resizeable>
@@ -106,11 +115,25 @@ export default {
         VueResizeable,
     },
     props: {
-        height: {type: String, default: '300'},
-        width: {type: String, default: '450'},
+        height: {
+            type: String,
+            default: '300'
+        },
+        width: {
+            type: String,
+            default: '450'
+        },
         title: String,
         confirmText: String,
         closeText: String,
+        confirmShow: {
+            type: Boolean,
+            default: true
+        },
+        confirmDisabled: {
+            type: Boolean,
+            default: false
+        },
         confirmClass: String,
         closeClass: String,
         question: String,
@@ -148,10 +171,11 @@ export default {
                 button.text = this.$gettext('Ja');
                 button.class = 'accept';
             }
-            if (this.confirmText) {
+            if (this.confirmText && this.confirmShow) {
                 button = {};
                 button.text = this.confirmText;
                 button.class = this.confirmClass;
+                button.disabled = this.confirmDisabled
             }
 
             return button;

@@ -59,6 +59,7 @@ class SchemaMap
             \Courseware\StructuralElement::class => Schemas\Courseware\StructuralElement::class,
             \Courseware\StructuralElementComment::class => Schemas\Courseware\StructuralElementComment::class,
             \Courseware\StructuralElementFeedback::class => Schemas\Courseware\StructuralElementFeedback::class,
+            \Courseware\Unit::class => Schemas\Courseware\Unit::class,
             \Courseware\UserDataField::class => Schemas\Courseware\UserDataField::class,
             \Courseware\UserProgress::class => Schemas\Courseware\UserProgress::class,
             \Courseware\Task::class => Schemas\Courseware\Task::class,

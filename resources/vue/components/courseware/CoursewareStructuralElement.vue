@@ -89,7 +89,7 @@
                             :canEdit="canEdit"
                             :noContainers="noContainers"
                         />
-                        <courseware-wellcome-screen v-if="noContainers && isRoot && canEdit" />
+                        <courseware-welcome-screen v-if="noContainers && isRoot && canEdit" />
                     </div>
 
                     <div
@@ -357,6 +357,7 @@
                     :closeText="$gettext('Schließen')"
                     closeClass="cancel"
                     class="cw-structural-element-dialog"
+                    :height="inCourse ? '300' : '430'"
                     @close="closeAddDialog"
                     @confirm="createElement"
                 >
@@ -374,6 +375,30 @@
                             <label>
                                 <translate>Name der neuen Seite</translate><br />
                                 <input v-model="newChapterName" type="text" />
+                            </label>
+                            <label v-if="!inCourse">
+                                <translate>Art des Lernmaterials</translate>
+                                <select v-model="newChapterPurpose">
+                                    <option value="content"><translate>Inhalt</translate></option>
+                                    <option v-if="!inCourse" value="template"><translate>Aufgabenvorlage</translate></option>
+                                    <option value="oer"><translate>OER-Material</translate></option>
+                                    <option value="portfolio"><translate>ePortfolio</translate></option>
+                                    <option value="draft"><translate>Entwurf</translate></option>
+                                    <option value="other"><translate>Sonstiges</translate></option>
+                                </select>
+                            </label>
+                            <label v-if="!inCourse">
+                                <translate>Lernmaterialvorlage</translate>
+                                <select v-model="newChapterTemplate">
+                                    <option :value="null"><translate>ohne Vorlage</translate></option>
+                                    <option
+                                        v-for="template in selectableTemplates"
+                                        :key="template.id"
+                                        :value="template"
+                                    >
+                                        {{ template.attributes.name }}
+                                    </option>
+                                </select>
                             </label>
                         </form>
                     </template>
@@ -587,15 +612,15 @@
                     @close="closeDeleteDialog"
                 ></studip-dialog>
                 <studip-dialog
-                    v-if="showLinkDialog"
+                    v-if="showPublicLinkDialog && inContent"
                     :title="$gettext('Öffentlichen Link für Seite erzeugen')"
                     :confirmText="$gettext('Erstellen')"
                     confirmClass="accept"
-                    :closeText="$gettext('Schließen')"
+                    :closeText="$gettext('Abbrechen')"
                     closeClass="cancel"
                     class="cw-structural-element-dialog"
-                    @close="closeLinkDialog"
-                    @confirm="createElementLink"
+                    @close="closePublicLinkDialog"
+                    @confirm="createElementPublicLink"
                 >
                     <template v-slot:dialogContent>
                         <form class="default" @submit.prevent="">
@@ -619,6 +644,10 @@
                     @confirm="executeRemoveLock"
                     @close="showElementRemoveLockDialog(false)"
                 ></studip-dialog>
+
+                <courseware-structural-element-dialog-import v-if="showImportDialog"/>
+                <courseware-structural-element-dialog-copy v-if="showCopyDialog" />
+                <courseware-structural-element-dialog-link v-if="showLinkDialog"/>
             </div>
             <div v-else>
                 <courseware-companion-box
@@ -634,12 +663,15 @@
 <script>
 import ContainerComponents from './container-components.js';
 import CoursewarePluginComponents from './plugin-components.js';
+import CoursewareStructuralElementDialogCopy from './CoursewareStructuralElementDialogCopy.vue';
+import CoursewareStructuralElementDialogImport from './CoursewareStructuralElementDialogImport.vue';
+import CoursewareStructuralElementDialogLink from './CoursewareStructuralElementDialogLink.vue';
+import CoursewareStructuralElementDiscussion from './CoursewareStructuralElementDiscussion.vue';
 import CoursewareStructuralElementPermissions from './CoursewareStructuralElementPermissions.vue';
 import CoursewareContentPermissions from './CoursewareContentPermissions.vue';
-import CoursewareStructuralElementDiscussion from './CoursewareStructuralElementDiscussion.vue';
 import CoursewareAccordionContainer from './CoursewareAccordionContainer.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
-import CoursewareWellcomeScreen from './CoursewareWellcomeScreen.vue';
+import CoursewareWelcomeScreen from './CoursewareWelcomeScreen.vue';
 import CoursewareEmptyElementBox from './CoursewareEmptyElementBox.vue';
 import CoursewareListContainer from './CoursewareListContainer.vue';
 import CoursewareTabsContainer from './CoursewareTabsContainer.vue';
@@ -648,6 +680,7 @@ import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import CoursewareOerMessage from '@/vue/mixins/courseware/oermessage.js';
+import colorMixin from '@/vue/mixins/courseware/colors.js';
 import CoursewareDateInput from './CoursewareDateInput.vue';
 import { FocusTrap } from 'focus-trap-vue';
 import IsoDate from './IsoDate.vue';
@@ -658,6 +691,9 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'courseware-structural-element',
     components: {
+        CoursewareStructuralElementDialogCopy,
+        CoursewareStructuralElementDialogImport,
+        CoursewareStructuralElementDialogLink,
         CoursewareStructuralElementDiscussion,
         CoursewareStructuralElementPermissions,
         CoursewareContentPermissions,
@@ -666,7 +702,7 @@ export default {
         CoursewareAccordionContainer,
         CoursewareTabsContainer,
         CoursewareCompanionBox,
-        CoursewareWellcomeScreen,
+        CoursewareWelcomeScreen,
         CoursewareEmptyElementBox,
         CoursewareTabs,
         CoursewareTab,
@@ -678,12 +714,14 @@ export default {
     },
     props: ['canVisit', 'orderedStructuralElements', 'structuralElement'],
 
-    mixins: [CoursewareExport, CoursewareOerMessage],
+    mixins: [CoursewareExport, CoursewareOerMessage, colorMixin],
 
     data() {
         return {
             newChapterName: '',
             newChapterParent: 'descendant',
+            newChapterPurpose: 'content',
+            newChapterTemplate: null,
             currentElement: '',
             uploadFileError: '',
             textCompanionWrongContext: this.$gettext('Die angeforderte Seite ist nicht Teil dieser Courseware.'),
@@ -762,13 +800,16 @@ export default {
             pluginManager: 'pluginManager',
             showEditDialog: 'showStructuralElementEditDialog',
             showAddDialog: 'showStructuralElementAddDialog',
+            showImportDialog: 'showStructuralElementImportDialog',
+            showCopyDialog: 'showStructuralElementCopyDialog',
+            showLinkDialog: 'showStructuralElementLinkDialog',
             showExportDialog: 'showStructuralElementExportDialog',
             showPdfExportDialog: 'showStructuralElementPdfExportDialog',
             showInfoDialog: 'showStructuralElementInfoDialog',
             showDeleteDialog: 'showStructuralElementDeleteDialog',
             showOerDialog: 'showStructuralElementOerDialog',
             showSuggestOerDialog: 'showSuggestOerDialog',
-            showLinkDialog: 'showStructuralElementLinkDialog',
+            showPublicLinkDialog: 'showStructuralElementPublicLinkDialog',
             showRemoveLockDialog: 'showStructuralElementRemoveLockDialog',
             oerEnabled: 'oerEnabled',
             licenses: 'licenses',
@@ -778,11 +819,14 @@ export default {
             viewMode: 'viewMode',
             taskById: 'courseware-tasks/byId',
             userById: 'users/byId',
+            lastCreatedElement: 'courseware-structural-elements/lastCreated',
 
             blocked: 'currentElementBlocked',
             blockerId: 'currentElementBlockerId',
             blockedByThisUser: 'currentElementBlockedByThisUser',
             blockedByAnotherUser: 'currentElementBlockedByAnotherUser',
+
+            templates: 'courseware-templates/all',
         }),
 
         currentId() {
@@ -791,27 +835,27 @@ export default {
 
         textOer() {
             return {
-                title: this.$gettext('Seite auf dem OER Campus veröffentlichen'),
+                title: this.$gettext('Lerninhalte auf dem OER Campus veröffentlichen'),
                 confirm: this.$gettext('Veröffentlichen'),
-                close: this.$gettext('Schließen'),
+                close: this.$gettext('Abbrechen'),
             };
         },
 
         textSuggestOer() {
             return {
-                title: this.$gettext('Material für den OER Campus vorschlagen'),
-                confirm: this.$gettext('Material vorschlagen'),
-                close: this.$gettext('Schließen'),
+                title: this.$gettext('Lerninhalt für den OER Campus vorschlagen'),
+                confirm: this.$gettext('Lerninhalt vorschlagen'),
+                close: this.$gettext('Abbrechen'),
             };
         },
 
         inCourse() {
-            return this.$store.getters.context.type === 'courses';
+            return this.context.type === 'courses';
         },
 
         inContent() {
             // The rights tab in contents will be only visible to the owner.
-            return this.$store.getters.context.type === 'users' && this.userId === this.currentElement.relationships.user.data.id;
+            return this.context.type === 'users' && this.userId === this.currentElement.relationships.user.data.id;
         },
 
         textDelete() {
@@ -831,31 +875,30 @@ export default {
 
         validContext() {
             let valid = false;
-            let context = this.$store.getters.context;
-            if (context.type === 'courses' && this.currentElement.relationships) {
+            if (this.context.type === 'courses' && this.currentElement.relationships) {
                 if (
                     this.currentElement.relationships.course &&
-                    context.id === this.currentElement.relationships.course.data.id
+                    this.context.id === this.currentElement.relationships.course.data.id
                 ) {
                     valid = true;
                 }
             }
 
-            if (context.type === 'users' && this.currentElement.relationships) {
+            if (this.context.type === 'users' && this.currentElement.relationships) {
                 if (
                     this.currentElement.relationships.user &&
-                    context.id === this.currentElement.relationships.user.data.id
+                    this.context.id === this.currentElement.relationships.user.data.id
                 ) {
                     valid = true;
                 }
             }
-            if (context.type === 'sharedusers') {
-                if (context.id === this.courseware.relationships.root.data.id) {
+            if (this.context.type === 'sharedusers') {
+                if (this.context.id === this.courseware.relationships.root.data.id) {
                     valid = true;
                 }
             }
 
-            if (context.type === 'public') {
+            if (this.context.type === 'public') {
                 valid = true;
             }
 
@@ -988,7 +1031,7 @@ export default {
             let menu = [
                 { id: 4, label: this.$gettext('Informationen anzeigen'), icon: 'info', emit: 'showInfo' },
                 { id: 5, label: this.$gettext('Lesezeichen setzen'), icon: 'star', emit: 'setBookmark' },
-                { id: 6, label: this.$gettext('Material für den OER Campus vorschlagen'), icon: 'oer-campus', emit: 'showSuggest' },
+                { id: 6, label: this.$gettext('Lerninhalt für OER Campus vorschlagen'), icon: 'oer-campus', emit: 'showSuggest' },
 
             ];
             if (this.canEdit) {
@@ -1026,154 +1069,7 @@ export default {
             return menu;
         },
         colors() {
-            const colors = [
-                {
-                    name: this.$gettext('Schwarz'),
-                    class: 'black',
-                    hex: '#000000',
-                    level: 100,
-                    icon: 'black',
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Weiß'),
-                    class: 'white',
-                    hex: '#ffffff',
-                    level: 100,
-                    icon: 'white',
-                    darkmode: false,
-                },
-
-                {
-                    name: this.$gettext('Blau'),
-                    class: 'studip-blue',
-                    hex: '#28497c',
-                    level: 100,
-                    icon: 'blue',
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Hellblau'),
-                    class: 'studip-lightblue',
-                    hex: '#e7ebf1',
-                    level: 40,
-                    icon: 'lightblue',
-                    darkmode: false,
-                },
-                {
-                    name: this.$gettext('Rot'),
-                    class: 'studip-red',
-                    hex: '#d60000',
-                    level: 100,
-                    icon: 'red',
-                    darkmode: false,
-                },
-                {
-                    name: this.$gettext('Grün'),
-                    class: 'studip-green',
-                    hex: '#008512',
-                    level: 100,
-                    icon: 'green',
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Gelb'),
-                    class: 'studip-yellow',
-                    hex: '#ffbd33',
-                    level: 100,
-                    icon: 'yellow',
-                    darkmode: false,
-                },
-                {
-                    name: this.$gettext('Grau'),
-                    class: 'studip-gray',
-                    hex: '#636a71',
-                    level: 100,
-                    icon: 'grey',
-                    darkmode: true,
-                },
-
-                {
-                    name: this.$gettext('Holzkohle'),
-                    class: 'charcoal',
-                    hex: '#3c454e',
-                    level: 100,
-                    icon: false,
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Königliches Purpur'),
-                    class: 'royal-purple',
-                    hex: '#8656a2',
-                    level: 80,
-                    icon: false,
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Leguangrün'),
-                    class: 'iguana-green',
-                    hex: '#66b570',
-                    level: 60,
-                    icon: false,
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Königin blau'),
-                    class: 'queen-blue',
-                    hex: '#536d96',
-                    level: 80,
-                    icon: false,
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Helles Seegrün'),
-                    class: 'verdigris',
-                    hex: '#41afaa',
-                    level: 80,
-                    icon: false,
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Maulbeere'),
-                    class: 'mulberry',
-                    hex: '#bf5796',
-                    level: 80,
-                    icon: false,
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Kürbis'),
-                    class: 'pumpkin',
-                    hex: '#f26e00',
-                    level: 100,
-                    icon: false,
-                    darkmode: true,
-                },
-                {
-                    name: this.$gettext('Sonnenschein'),
-                    class: 'sunglow',
-                    hex: '#ffca5c',
-                    level: 80,
-                    icon: false,
-                    darkmode: false,
-                },
-                {
-                    name: this.$gettext('Apfelgrün'),
-                    class: 'apple-green',
-                    hex: '#8bbd40',
-                    level: 80,
-                    icon: false,
-                    darkmode: true,
-                },
-            ];
-            let elementColors = [];
-            colors.forEach((color) => {
-                if (color.darkmode) {
-                    elementColors.push(color);
-                }
-            });
-
-            return elementColors;
+            return this.mixinColors.filter(color => color.darkmode);
         },
         currentLicenseName() {
             for (let i = 0; i < this.licenses.length; i++) {
@@ -1313,6 +1209,11 @@ export default {
         ownerName() {
             return this.owner?.attributes['formatted-name'] ?? '?';
         },
+        selectableTemplates() {
+            return this.templates.filter(template => {
+                return template.attributes.purpose === this.newElementPurpose
+            });
+        },
     },
 
     methods: {
@@ -1336,7 +1237,7 @@ export default {
             showElementInfoDialog: 'showElementInfoDialog',
             showElementDeleteDialog: 'showElementDeleteDialog',
             showElementOerDialog: 'showElementOerDialog',
-            showElementLinkDialog: 'showElementLinkDialog',
+            showElementPublicLinkDialog: 'showElementPublicLinkDialog',
             showElementRemoveLockDialog: 'showElementRemoveLockDialog',
             updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
             updateContainer: 'updateContainer',
@@ -1415,7 +1316,7 @@ export default {
                     this.setBookmark();
                     break;
                 case 'linkElement':
-                    this.showElementLinkDialog(true);
+                    this.showElementPublicLinkDialog(true);
                     break;
             }
         },
@@ -1610,11 +1511,11 @@ export default {
             })
             .catch(error => {
                 this.companionError({ info: this.$gettext('Die Seite konnte nicht gelöscht werden.') });
-                console.debug(error);
             });
         },
-        createElement() {
-            let title = this.newChapterName; // this is the title of the new element
+        async createElement() {
+            const title = this.newChapterName; // this is the title of the new element
+            const purpose = this.newChapterPurpose;
             let parent_id = this.currentId; // new page is descandant as default
             let writeApproval = this.currentElement.attributes['write-approval'];
             let readApproval = this.currentElement.attributes['read-approval'];
@@ -1632,9 +1533,11 @@ export default {
             this.createStructuralElement({
                 attributes: {
                     title: title,
+                    purpose: purpose,
                     'write-approval':  writeApproval,
                     'read-approval': readApproval
                 },
+                templateId: this.newChapterTemplate ? this.newChapterTemplate.id : null,
                 parentId: parent_id,
                 currentId: this.currentId,
             })
@@ -1657,6 +1560,13 @@ export default {
                 this.companionError({ info: errorMessage });
             });
 
+            let newElement = this.lastCreatedElement;
+            this.companionSuccess({
+                info: this.$gettextInterpolate(
+                    this.$gettext('Die Seite %{ pageTitle } wurde erfolgreich angelegt.'),
+                    {pageTitle: newElement.attributes.title}
+                )
+            });
             this.newChapterName = '';
         },
         containerComponent(container) {
@@ -1676,7 +1586,7 @@ export default {
             this.suggestViaAction(this.currentElement, this.additionalText);
             this.updateShowSuggestOerDialog(false);
         },
-        async createElementLink() {
+        async createElementPublicLink() {
             const date = this.publicLink['expire-date'];
             const publicLink = {
                 attributes: {
@@ -1699,12 +1609,12 @@ export default {
             });
             this.closeLinkDialog();
         },
-        closeLinkDialog() {
+        closePublicLinkDialog() {
             this.publicLink = {
                 passsword: '',
                 'expire-date': ''
             };
-            this.showElementLinkDialog(false);
+            this.showElementPublicLinkDialog(false);
         },
         displayRemoveLockDialog() {
             this.showElementRemoveLockDialog(true);

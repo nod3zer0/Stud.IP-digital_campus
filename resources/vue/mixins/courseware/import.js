@@ -9,6 +9,7 @@ export default {
             elementCounter: 0,
             importElementCounter: 0,
             currentImportErrors: [],
+            unitId: null,
         };
     },
 
@@ -16,8 +17,26 @@ export default {
         ...mapGetters({
             context: 'context',
             courseware: 'courseware-instances/all',
+            instanceById: 'courseware-instances/byId',
+            lastCreatedBlocks: 'courseware-blocks/lastCreated',
+            lastCreatedContainers: 'courseware-containers/lastCreated',
+            lastCreatedElements: 'courseware-structural-elements/lastCreated',
             structuralElementById: 'courseware-structural-elements/byId',
         }),
+        instance() {
+            if (this.unitId) {
+                if (this.inCourseContext) {
+                    return this.instanceById({id: 'course_' + this.context.id + '_' + this.unitId});
+                } else {
+                    return this.instanceById({id: 'user_' + this.context.id + '_' + this.unitId});
+                }
+            } else {
+                return null;
+            }
+        },
+        inCourseContext() {
+            return this.context.type === 'courses';
+        }
     },
 
     methods: {
@@ -26,7 +45,7 @@ export default {
             updateStructuralElement: 'updateStructuralElement'
         }),
 
-        async importCourseware(element, rootId, files, importBehavior)
+        async importCourseware(element, rootId, files, importBehavior, settings)
         {
             // import all files
             await this.uploadAllFiles(files);
@@ -40,7 +59,7 @@ export default {
                 await this.importStructuralElement([element], rootId, files);
             }
             if (importBehavior === 'migrate') {
-                await this.migrateCourseware(element, rootId, files);
+                await this.migrateCourseware(element, rootId, files, settings);
             }
         },
 
@@ -70,8 +89,20 @@ export default {
             return counter;
         },
 
-        async migrateCourseware(element, rootId, files) {
+        async migrateCourseware(element, rootId, files, settings) {
             let root = this.structuralElementById({ id: rootId });
+
+            if (settings) {
+                this.unitId = root.relationships.unit.data.id;
+                const context = {type: this.context.type, id: this.context.id, unit: this.unitId};
+                await this.loadInstance(context);
+                let currentInstance = this.instance;
+                currentInstance.attributes['editing-permission-level'] = settings['editing-permission-level'];
+                currentInstance.attributes['sequential-progression'] = settings['sequential-progression'];
+                this.storeCoursewareSettings({
+                    instance: currentInstance,
+                });
+            }
             // add containers and blocks
             if (element.containers?.length > 0) {
                 await Promise.all(element.containers.map((container) => this.importContainer(container, root, files)));
@@ -152,7 +183,7 @@ export default {
 
                     this.importElementCounter++;
 
-                    let new_element = this.$store.getters['courseware-structural-elements/lastCreated'];
+                    let new_element = this.lastCreatedElements;
 
                     if (element[i].imageId) {
                         await this.setStructuralElementImage(new_element, element[i].imageId, files);
@@ -205,7 +236,7 @@ export default {
             }
 
             this.importElementCounter++;
-            let new_container = this.$store.getters['courseware-containers/lastCreated'];
+            let new_container = this.lastCreatedContainers;
             await this.unlockObject({ id: new_container.id, type: 'courseware-containers' });
 
             if (container.blocks?.length) {
@@ -242,7 +273,7 @@ export default {
                 return null;
             }
 
-            let new_block = this.$store.getters['courseware-blocks/lastCreated'];
+            let new_block = this.lastCreatedBlocks;
 
             // update old id ids in payload part
             for (var i = 0; i < files.length; i++) {
@@ -394,6 +425,7 @@ export default {
             'createFolder',
             'createRootFolder',
             'createFile',
+            'loadInstance',
             'lockObject',
             'unlockObject',
             'setImportFilesState',
@@ -401,6 +433,7 @@ export default {
             'setImportStructuresState',
             'setImportStructuresProgress',
             'setImportErrors',
+            'storeCoursewareSettings',
             'uploadImageForStructuralElement'
         ]),
     },

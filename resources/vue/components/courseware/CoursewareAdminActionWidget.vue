@@ -9,23 +9,25 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'courseware-admin-action-widget',
     computed: {
-        adminViewMode() {
-            return this.$store.getters.adminViewMode;
-        },
+        ...mapGetters({
+            adminViewMode: 'adminViewMode',
+            showAddTemplateDialog: 'showAddTemplateDialog'
+        }),
         templatesView() {
             return this.adminViewMode === 'templates';
-        },
-        showAddTemplateDialog() {
-            return this.$store.getters.showAddTemplateDialog;
-        },
+        }
     },
     methods: {
+        ...mapActions({
+            setShowAddTemplateDialog: 'showAddTemplateDialog'
+        }),
         addTemplate() {
-            this.$store.dispatch('showAddTemplateDialog', true);
+            this.setShowAddTemplateDialog(true);
         }
     }
 }

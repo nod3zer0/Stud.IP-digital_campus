@@ -1,6 +1,6 @@
 <template>
-    <div class="cw-dashboard-progress">
-        <nav aria-label="Breadcrumb" class="cw-dashboard-progress-breadcrumb">
+    <div class="cw-unit-progress">
+        <nav aria-label="Breadcrumb" class="cw-unit-progress-breadcrumb">
             <a
                 v-if="parent"
                 href="#"
@@ -18,8 +18,8 @@
                 / {{ parent.name }}
             </a>
         </nav>
-        <div v-if="selected" class="cw-dashboard-progress-chapter">
-            <a :href="chapterUrl" :title="$gettextInterpolate($gettext('%{ pageTitle } öffnen'), {pageTitle: selected.name})">
+        <div v-if="selected" class="cw-unit-progress-chapter">
+            <a :href="chapterUrl" :title="$gettextInterpolate('%{ pageTitle } öffnen', {pageTitle: selected.name})">
                 <h1>{{ selected.name }}</h1>
             </a>
             <courseware-progress-circle
@@ -28,12 +28,12 @@
             />
             <courseware-progress-circle
                 :title="$gettext('diese Seite')"
-                class="cw-dashboard-progress-current"
+                class="cw-unit-progress-current"
                 :value="parseInt(selected.progress.self)"
             />
         </div>
-        <div class="cw-dashboard-progress-subchapter-list">
-            <courseware-dashboard-progress-item
+        <div class="cw-unit-progress-subchapter-list">
+            <courseware-unit-progress-item
                 v-for="chapter in children"
                 :key="chapter.id"
                 :name="chapter.name"
@@ -41,8 +41,8 @@
                 :chapterId="chapter.id"
                 @selectChapter="selectChapter"
             />
-            <div v-if="!children.length" class="cw-dashboard-empty-info">
-                <courseware-companion-box
+            <div v-if="!children.length" class="cw-unit-empty-info">
+                <courseware-companion-box 
                     mood="sad"
                     :msgCompanion="$gettext('Diese Seite enthält keine darunter liegenden Seiten.')"
                 />
@@ -52,18 +52,23 @@
 </template>
 
 <script>
-import StudipIcon from '../StudipIcon.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
-import CoursewareDashboardProgressItem from './CoursewareDashboardProgressItem.vue';
+import CoursewareUnitProgressItem from './CoursewareUnitProgressItem.vue';
 import CoursewareProgressCircle from './CoursewareProgressCircle.vue';
+import StudipIcon from '../StudipIcon.vue';
 
 export default {
-    name: 'courseware-dashboard-progress',
+    name: 'courseware-unit-progress',
     components: {
         CoursewareCompanionBox,
-        CoursewareDashboardProgressItem,
+        CoursewareUnitProgressItem,
         CoursewareProgressCircle,
         StudipIcon,
+    },
+    props: {
+        progressData: Object,
+        unitId: String,
+        rootId: String
     },
     data() {
         return {
@@ -71,13 +76,12 @@ export default {
         };
     },
     computed: {
-        progressData() {
-            return STUDIP.courseware_progress_data;
-        },
         chapterUrl() {
             return (
                 STUDIP.URLHelper.base_url +
-                'dispatch.php/course/courseware/?cid=' +
+                'dispatch.php/course/courseware/courseware/'+
+                this.unitId +
+                '?cid=' +
                 STUDIP.URLHelper.parameters.cid +
                 '#/structural_element/' +
                 this.selected.id
@@ -100,7 +104,7 @@ export default {
     },
     methods: {
         visitRoot() {
-            this.selected = Object.values(this.progressData).find(({ parent_id }) => !!parent_id) ?? null;
+            this.selected = this.progressData[this.rootId];
         },
         selectChapter(id) {
             this.selected = this.progressData[id] ?? null;

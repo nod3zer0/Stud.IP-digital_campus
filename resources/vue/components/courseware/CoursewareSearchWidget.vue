@@ -1,40 +1,49 @@
 <template>
-  <form class="sidebar-search" @submit.prevent="">
-      <ul class="needles">
-          <li>
-              <div class="input-group files-search">
-                  <input
-                      type="text"
-                      v-model="searchTerm"
-                      :aria-label="$gettext('Geben Sie einen Suchbegriff mit mindestens 3 Zeichen ein.')"
-                  />
-                  <button v-if="searched" @click.prevent="setShowSearchResults(false)"
-                          class="reset-search" :title="$gettext('Suche zurücksetzen')">
-                      <studip-icon shape="decline" size="20"></studip-icon>
-                  </button>
-                  <button
-                      type="submit"
-                      :value="$gettext('Suchen')"
-                      aria-controls="search"
-                      class="submit-search"
-                      @click="loadResults"
-                  >
-                      <studip-icon shape="search" size="20"></studip-icon>
-                  </button>
-              </div>
-          </li>
-      </ul>
-  </form>
+   <sidebar-widget :title="$gettext('Suche')">
+        <template #content>
+            <form class="sidebar-search" @submit.prevent="">
+                <ul class="needles">
+                    <li>
+                        <div class="input-group files-search">
+                            <input
+                                type="text"
+                                v-model="searchTerm"
+                                :aria-label="$gettext('Geben Sie einen Suchbegriff mit mindestens 3 Zeichen ein.')"
+                            />
+                            <a v-if="showSearchResults" @click.prevent="setShowSearchResults(false)"
+                                class="reset-search">
+                                <studip-icon shape="decline" size="20"></studip-icon>
+                            </a>
+                            <button
+                                type="submit"
+                                :value="$gettext('Suchen')"
+                                aria-controls="search"
+                                class="submit-search"
+                                @click="loadResults"
+                            >
+                                <studip-icon shape="search" size="20"></studip-icon>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </template>
+   </sidebar-widget>
 </template>
 
 <script>
-import axios from 'axios';
-import { mapActions, mapGetters } from 'vuex';
+import SidebarWidget from '../SidebarWidget.vue';
 import StudipIcon from '../StudipIcon.vue';
+
+import { mapActions, mapGetters } from 'vuex';
+import axios from 'axios';
 
 export default {
     name: 'courseware-search-widget',
-    components: { StudipIcon },
+    components: { 
+        StudipIcon,
+        SidebarWidget,
+    },
     data() {
         return {
             searchTerm: ''
@@ -44,16 +53,15 @@ export default {
         ...mapGetters({
             courseware: 'courseware',
             context: 'context',
+            showSearchResults: 'showSearchResults'
         }),
-        searched() {
-            return this.$store.state.courseware.showSearchResults
-        }
     },
     methods: {
         ...mapActions({
             setShowSearchResults: 'setShowSearchResults',
             setSearchResults: 'setSearchResults',
-            companionWarning: 'companionWarning'
+            companionWarning: 'companionWarning',
+            companionError: 'companionError'
         }),
         loadResults() {
             if (this.searchTerm.length < 3) {
@@ -78,11 +86,9 @@ export default {
                     this.setSearchResults([]);
                 }
             }).catch(error => {
-                console.debug(error);
+                this.companionError({ info: this.$gettext('Bei der Anfrage ist ein Fehler aufgetreten.')});
             });
         }
     }
-
-
 }
 </script>

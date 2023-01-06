@@ -41,6 +41,13 @@ class StructuralElementsCopy extends NonJsonApiController
         if ($data['remove_purpose']) {
             $newElement->purpose = '';
         }
+        if (!empty($data['modifications'])) {
+            $newElement->title = $data['modifications']['title'] ?? $newElement->title;
+            $newElement->payload['color'] = $data['modifications']['color'] ?? 'studip-blue';
+            $newElement->payload['description'] = $data['modifications']['description'];
+        }
+
+        $newElement->store();
 
         return $this->redirectToStructuralElement($response, $newElement);
     }

@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
     name: 'courseware-manager-filing',
     props: {
@@ -27,19 +29,22 @@ export default {
         };
     },
     computed: {
-        filingData() {
-            return this.$store.getters.filingData;
-        },
+        ...mapGetters({
+            filingData: 'filingData',
+        }),
     },
     methods: {
+        ...mapActions({
+            cwManagerFilingData: 'cwManagerFilingData'
+        }),
         toggleFiling() {
             if (this.disabled) {
                 return false;
             }
             if (this.active) {
-                this.$store.dispatch('cwManagerFilingData', {});
+                this.cwManagerFilingData({});
             } else {
-                this.$store.dispatch('cwManagerFilingData', { parentId: this.parentId, itemType: this.itemType, parentItem: this.parentItem });
+                this.cwManagerFilingData({ parentId: this.parentId, itemType: this.itemType, parentItem: this.parentItem });
             }
         },
     },

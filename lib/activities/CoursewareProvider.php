@@ -58,104 +58,225 @@ class CoursewareProvider implements ActivityProvider
      */
     public static function postActivity($event, $resource)
     {
-        $data = null;
-        switch ($event) {
-            case Block::class . 'DidCreate':
-                /**
-                 * @var \Courseware\Block $resource
-                 * @var \Courseware\StructuralElement $structuralElement
-                 */
-                $structuralElement = $resource->getStructuralElement();
-                $data = [
-                    'provider' => self::class,
-                    'context' => $structuralElement->range_type,
-                    'context_id' => $structuralElement->range_id,
-                    'content' => null,
-                    'actor_type' => 'user',
-                    'actor_id' => $resource->owner_id,
-                    'verb' => 'created',
-                    'object_id' => $structuralElement->id,
-                    'object_type' => 'courseware',
-                    'mkdate' => time(),
-                ];
-                break;
+        $structuralElement = null;
+        $rangeType = null;
+        if ($resource instanceof StructuralElement) {
+            $structuralElement = $resource;
+        }
+        if ($resource instanceof Task ||
+            $resource instanceof StructuralElementComment ||
+            $resource instanceof StructuralElementFeedback
+        ) {
+            $structuralElement = $resource['structural_element'];
+        }
+        if ($resource instanceof Block ||
+            $resource instanceof BlockComment ||
+            $resource instanceof BlockFeedback ||
+            $resource instanceof Container ||
+            $resource instanceof TaskFeedback
+        ) {
+            $structuralElement = $resource->getStructuralElement();
+        }
 
-            case Block::class . 'DidUpdate':
-                /**
-                 * @var \Courseware\Block $resource
-                 * @var \Courseware\StructuralElement $structuralElement
-                 */
-                $structuralElement = $resource->getStructuralElement();
-                $payload = $resource->type->getPayload();
-                if (
-                    (isset($payload['text']) && $payload['text'] != '') ||
-                    (isset($payload['content']) && $payload['content'] != '')
-                ) {
+        if ($structuralElement !== null) {
+            $rangeType = $structuralElement->range_type;
+        }
+
+        if ($rangeType === 'courses' || $rangeType === 'course') {
+            $data = null;
+            switch ($event) {
+                case Block::class . 'DidCreate':
+                    /**
+                     * @var \Courseware\Block $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    $blockType = $resource->type;
+                    $blockTitle = $blockType->getTitle() ?: $resource->getBlockType();
+                    $content = _('Ein Block vom Typ "%1$s" wurde auf der Seite "%2$s" eingefügt.');
+                    $content = sprintf($content, $blockTitle, $structuralElement->title);
                     $data = [
                         'provider' => self::class,
                         'context' => $structuralElement->range_type,
                         'context_id' => $structuralElement->range_id,
-                        'content' => null,
+                        'content' => $content,
                         'actor_type' => 'user',
-                        'actor_id' => $resource->editor_id,
-                        'verb' => 'edited',
+                        'actor_id' => $resource->owner_id,
+                        'verb' => 'created',
                         'object_id' => $structuralElement->id,
                         'object_type' => 'courseware',
                         'mkdate' => time(),
                     ];
-                }
-                break;
+                    break;
 
-            case BlockComment::class . 'DidCreate':
-                /**
-                 * @var \Courseware\BlockComment $resource
-                 * @var \Courseware\StructuralElement $structuralElement
-                 */
-                $structuralElement = $resource->getStructuralElement();
-                $data = [
-                    'provider' => self::class,
-                    'context' => $structuralElement->range_type,
-                    'context_id' => $structuralElement->range_id,
-                    'content' => $resource->comment,
-                    'actor_type' => 'user',
-                    'actor_id' => $resource->user_id,
-                    'verb' => 'interacted',
-                    'object_id' => $structuralElement->id,
-                    'object_type' => 'courseware',
-                    'mkdate' => time(),
-                ];
-                break;
+                case Block::class . 'DidUpdate':
+                    /**
+                     * @var \Courseware\Block $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    if (!$resource->edit_blocker_id) {
+                        $blockType = $resource->type;
+                        $blockTitle = $blockType->getTitle() ?? $resource->getBlockType();
+                        $content = _('Ein Block vom Typ "%1$s" wurde auf der Seite "%2$s" verändert.');
+                        $content = sprintf($content, $blockTitle, $structuralElement->title);
+                        $data = [
+                            'provider' => self::class,
+                            'context' => $structuralElement->range_type,
+                            'context_id' => $structuralElement->range_id,
+                            'content' => $content,
+                            'actor_type' => 'user',
+                            'actor_id' => $resource->editor_id,
+                            'verb' => 'edited',
+                            'object_id' => $structuralElement->id,
+                            'object_type' => 'courseware',
+                            'mkdate' => time(),
+                        ];
+                    }
+                    break;
 
-            case BlockFeedback::class . 'DidCreate':
-                /**
-                 * @var \Courseware\BlockFeedback $resource
-                 * @var \Courseware\StructuralElement $structuralElement
-                 */
-                $structuralElement = $resource->getStructuralElement();
-                $data = [
-                    'provider' => self::class,
-                    'context' => $structuralElement->range_type,
-                    'context_id' => $structuralElement->range_id,
-                    'content' => $resource->feedback,
-                    'actor_type' => 'user',
-                    'actor_id' => $resource->user_id,
-                    'verb' => 'answered',
-                    'object_id' => $structuralElement->id,
-                    'object_type' => 'courseware',
-                    'mkdate' => time(),
-                ];
-                break;
+                case Block::class . 'DidDelete':
+                    /**
+                     * @var \Courseware\Block $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    $blockType = $resource->type;
+                    $blockTitle = $blockType->getTitle() ?: $resource->getBlockType();
+                    $content = _('Ein Block vom Typ "%1$s" wurde auf der Seite "%2$s" gelöscht.');
+                    $content = sprintf($content, $blockTitle, $structuralElement->title);
+                    $data = [
+                        'provider' => self::class,
+                        'context' => $structuralElement->range_type,
+                        'context_id' => $structuralElement->range_id,
+                        'content' => $content,
+                        'actor_type' => 'user',
+                        'actor_id' => $resource->editor_id,
+                        'verb' => 'voided',
+                        'object_id' => $structuralElement->id,
+                        'object_type' => 'courseware',
+                        'mkdate' => time(),
+                    ];
+                    break;
 
-            case StructuralElement::class . 'DidCreate':
-                /**
-                 * @var \Courseware\StructuralElement $resource
-                 */
-                if ($resource->range_type === 'courses') {
+                case BlockComment::class . 'DidCreate':
+                    /**
+                     * @var \Courseware\BlockComment $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    $structuralElement = $resource->getStructuralElement();
+                    $data = [
+                        'provider' => self::class,
+                        'context' => $structuralElement->range_type,
+                        'context_id' => $structuralElement->range_id,
+                        'content' => $resource->comment,
+                        'actor_type' => 'user',
+                        'actor_id' => $resource->user_id,
+                        'verb' => 'interacted',
+                        'object_id' => $structuralElement->id,
+                        'object_type' => 'courseware',
+                        'mkdate' => time(),
+                    ];
+                    break;
+
+                case BlockFeedback::class . 'DidCreate':
+                    /**
+                     * @var \Courseware\BlockFeedback $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    $data = [
+                        'provider' => self::class,
+                        'context' => $structuralElement->range_type,
+                        'context_id' => $structuralElement->range_id,
+                        'content' => $resource->feedback,
+                        'actor_type' => 'user',
+                        'actor_id' => $resource->user_id,
+                        'verb' => 'answered',
+                        'object_id' => $structuralElement->id,
+                        'object_type' => 'courseware',
+                        'mkdate' => time(),
+                    ];
+                    break;
+
+                case Container::class . 'DidCreate':
+                    /**
+                     * @var \Courseware\Container $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    $containerType = $resource->type;
+                    $containerTitle = $containerType->getTitle() ?: _('unbekannt');
+                    $content = _('Ein Abschnitt vom Typ "%1$s" wurde auf der Seite "%2$s" eingefügt.');
+                    $content = sprintf($content, $containerTitle, $structuralElement->title);
+                    $data = [
+                        'provider' => self::class,
+                        'context' => $structuralElement->range_type,
+                        'context_id' => $structuralElement->range_id,
+                        'content' => $content,
+                        'actor_type' => 'user',
+                        'actor_id' => $resource->owner_id,
+                        'verb' => 'created',
+                        'object_id' => $structuralElement->id,
+                        'object_type' => 'courseware',
+                        'mkdate' => time(),
+                    ];
+                    break;
+
+                case Container::class . 'DidUpdate':
+                    /**
+                     * @var \Courseware\Block $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    if (!$resource->edit_blocker_id) {
+                        $containerType = $resource->type;
+                        $containerTitle = $containerType->getTitle() ?: _('unbekannt');
+                        $content = _('Ein Abschnitt vom Typ "%1$s" wurde auf der Seite "%2$s" verändert.');
+                        $content = sprintf($content, $containerTitle, $structuralElement->title);
+                        $data = [
+                            'provider' => self::class,
+                            'context' => $structuralElement->range_type,
+                            'context_id' => $structuralElement->range_id,
+                            'content' => $content,
+                            'actor_type' => 'user',
+                            'actor_id' => $resource->editor_id,
+                            'verb' => 'edited',
+                            'object_id' => $structuralElement->id,
+                            'object_type' => 'courseware',
+                            'mkdate' => time(),
+                        ];
+                    }
+                    break;
+
+                case Container::class . 'DidDelete':
+                    /**
+                     * @var \Courseware\Container $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    $containerType = $resource->type;
+                    $containerTitle = $containerType->getTitle() ?: _('unbekannt');
+                    $content = _('Ein Abschnitt vom Typ "%1$s" wurde auf der Seite "%2$s" gelöscht.');
+                    $content = sprintf($content, $containerTitle, $structuralElement->title);
+                    $data = [
+                        'provider' => self::class,
+                        'context' => $structuralElement->range_type,
+                        'context_id' => $structuralElement->range_id,
+                        'content' => $content,
+                        'actor_type' => 'user',
+                        'actor_id' => $resource->editor_id,
+                        'verb' => 'voided',
+                        'object_id' => $structuralElement->id,
+                        'object_type' => 'courseware',
+                        'mkdate' => time(),
+                    ];
+                    break;
+
+                case StructuralElement::class . 'DidCreate':
+                    /**
+                     * @var \Courseware\StructuralElement $resource
+                     */
+                    $content = _('Eine Seite mit dem Titel "%s" wurde angelegt.');
+                    $content = sprintf($content, $structuralElement->title);
                     $data = [
                         'provider' => self::class,
                         'context' => $resource->range_type,
                         'context_id' => $resource->range_id,
-                        'content' => null,
+                        'content' => $content,
                         'actor_type' => 'user',
                         'actor_id' => $resource->owner_id,
                         'verb' => 'created',
@@ -163,56 +284,70 @@ class CoursewareProvider implements ActivityProvider
                         'object_type' => 'courseware',
                         'mkdate' => time(),
                     ];
-                }
-                break;
+                    break;
+                case StructuralElement::class . 'DidDelete':
+                    /**
+                     * @var \Courseware\StructuralElement $resource
+                     */
+                    $content = _('Eine Seite mit dem Titel "%s" wurde gelöscht.');
+                    $content = sprintf($content, $structuralElement->title);
+                    $data = [
+                        'provider' => self::class,
+                        'context' => $resource->range_type,
+                        'context_id' => $resource->range_id,
+                        'content' => null,
+                        'actor_type' => 'user',
+                        'actor_id' => $resource->owner_id,
+                        'verb' => 'voided',
+                        'object_id' => $resource->id,
+                        'object_type' => 'courseware',
+                        'mkdate' => time(),
+                    ];
+                    break;
 
-            case StructuralElementComment::class . 'DidCreate':
-                /**
-                 * @var \Courseware\StructuralElementComment $resource
-                 * @var \Courseware\StructuralElement $structuralElement
-                 */
-                $structuralElement = $resource['structural_element'];
-                $data = [
-                    'provider' => self::class,
-                    'context' => $structuralElement->range_type,
-                    'context_id' => $structuralElement->range_id,
-                    'content' => $resource->comment,
-                    'actor_type' => 'user',
-                    'actor_id' => $resource->user_id,
-                    'verb' => 'interacted',
-                    'object_id' => $structuralElement->id,
-                    'object_type' => 'courseware',
-                    'mkdate' => time(),
-                ];
-                break;
+                case StructuralElementComment::class . 'DidCreate':
+                    /**
+                     * @var \Courseware\StructuralElementComment $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    $data = [
+                        'provider' => self::class,
+                        'context' => $structuralElement->range_type,
+                        'context_id' => $structuralElement->range_id,
+                        'content' => $resource->comment,
+                        'actor_type' => 'user',
+                        'actor_id' => $resource->user_id,
+                        'verb' => 'interacted',
+                        'object_id' => $structuralElement->id,
+                        'object_type' => 'courseware',
+                        'mkdate' => time(),
+                    ];
+                    break;
 
-            case StructuralElementFeedback::class . 'DidCreate':
-                /**
-                 * @var \Courseware\StructuralElementFeedback $resource
-                 * @var \Courseware\StructuralElement $structuralElement
-                 */
-                $structuralElement = $resource['structural_element'];
-                $data = [
-                    'provider' => self::class,
-                    'context' => $structuralElement->range_type,
-                    'context_id' => $structuralElement->range_id,
-                    'content' => $resource->feedback,
-                    'actor_type' => 'user',
-                    'actor_id' => $resource->user_id,
-                    'verb' => 'answered',
-                    'object_id' => $structuralElement->id,
-                    'object_type' => 'courseware',
-                    'mkdate' => time(),
-                ];
-                break;
+                case StructuralElementFeedback::class . 'DidCreate':
+                    /**
+                     * @var \Courseware\StructuralElementFeedback $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
+                    $data = [
+                        'provider' => self::class,
+                        'context' => $structuralElement->range_type,
+                        'context_id' => $structuralElement->range_id,
+                        'content' => $resource->feedback,
+                        'actor_type' => 'user',
+                        'actor_id' => $resource->user_id,
+                        'verb' => 'answered',
+                        'object_id' => $structuralElement->id,
+                        'object_type' => 'courseware',
+                        'mkdate' => time(),
+                    ];
+                    break;
 
-            case Task::class . 'DidCreate':
-                /**
-                 * @var \Courseware\Task $resource
-                 * @var \Courseware\StructuralElement $structuralElement
-                 */
-                $structuralElement = $resource['structural_element'];
-                if ($structuralElement->range_type === 'courses') {
+                case Task::class . 'DidCreate':
+                    /**
+                     * @var \Courseware\Task $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
                     $data = [
                         'provider' => self::class,
                         'context' => $structuralElement->range_type,
@@ -220,21 +355,18 @@ class CoursewareProvider implements ActivityProvider
                         'content' => null,
                         'actor_type' => 'user',
                         'actor_id' => $resource->task_group->lecturer_id,
-                        'verb' => 'set',
+                        'verb' => 'created',
                         'object_id' => $structuralElement->id,
                         'object_type' => 'courseware',
                         'mkdate' => time(),
                     ];
-                }
-                break;
+                    break;
 
-            case TaskFeedback::class . 'DidCreate':
-                /**
-                 * @var \Courseware\TaskFeedback $resource
-                 * @var \Courseware\StructuralElement $structuralElement
-                 */
-                $structuralElement = $resource->getStructuralElement();
-                if ($structuralElement->range_type === 'courses') {
+                case TaskFeedback::class . 'DidCreate':
+                    /**
+                     * @var \Courseware\TaskFeedback $resource
+                     * @var \Courseware\StructuralElement $structuralElement
+                     */
                     $data = [
                         'provider' => self::class,
                         'context' => $structuralElement->range_type,
@@ -247,12 +379,11 @@ class CoursewareProvider implements ActivityProvider
                         'object_type' => 'courseware',
                         'mkdate' => time(),
                     ];
-                }
-                break;
-        }
-
-        if ($data) {
-            Activity::create($data);
+                    break;
+            }
+            if ($data) {
+                Activity::create($data);
+            }
         }
     }
 }

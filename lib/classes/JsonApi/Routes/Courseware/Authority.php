@@ -14,10 +14,12 @@ use Courseware\Task;
 use Courseware\TaskFeedback;
 use Courseware\TaskGroup;
 use Courseware\Template;
+use Courseware\Unit;
 use Courseware\UserDataField;
 use Courseware\UserProgress;
 use Courseware\PublicLink;
 use User;
+use Course;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
@@ -69,11 +71,7 @@ class Authority
                 return $structural_element->canEdit($user);
             }
 
-            $perm = $GLOBALS['perm']->have_studip_perm(
-                $structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
-                $structural_element->course->id,
-                $user->id
-            );
+            $perm = $structural_element->hasEditingPermission($user);
 
             return $resource->getBlockerUserId() === $user->id || $perm;
         }
@@ -111,11 +109,7 @@ class Authority
             return $structural_element->canEdit($user);
         }
 
-        $perm = $GLOBALS['perm']->have_studip_perm(
-            $structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
-            $structural_element->course->id,
-            $user->id
-        );
+        $perm = $structural_element->hasEditingPermission($user);
 
         return $resource->edit_blocker_id == '' || $resource->edit_blocker_id === $user->id || $perm;
     }
@@ -262,15 +256,7 @@ class Authority
 
     public static function canUpdateBlockComment(User $user, BlockComment $resource)
     {
-        if ($resource->block->container->structural_element->range_type === 'user') {
-            return $resource->block->container->structural_element->range_id === $user->id;
-        }
-
-        $perm = $GLOBALS['perm']->have_studip_perm(
-            $resource->block->container->structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
-            $resource->block->container->structural_element->course->id,
-            $user->id
-        );
+        $perm = $resource->block->container->structural_element->hasEditingPermission($user);
         return $user->id === $resource->user_id || $perm;
     }
 
@@ -387,15 +373,7 @@ class Authority
             return true;
         }
 
-        if ($resource->structural_element->range_type === 'user') {
-            return $resource->structural_element->range_id === $user->id;
-        }
-
-        $perm = $GLOBALS['perm']->have_studip_perm(
-            $resource->structural_element->course->config->COURSEWARE_EDITING_PERMISSION,
-            $resource->structural_element->course->id,
-            $user->id
-        );
+        $perm = $resource->structural_element->hasEditingPermission($user);
 
         return $user->id == $resource->user_id || $perm;
     }
@@ -416,15 +394,7 @@ class Authority
             return true;
         }
 
-        if ($resource->range_type === 'user') {
-            return $resource->range_id === $user->id;
-        }
-
-        $perm = $GLOBALS['perm']->have_studip_perm(
-            $resource->course->config->COURSEWARE_EDITING_PERMISSION,
-            $resource->course->id,
-            $user->id
-        );
+        $perm = $resource->hasEditingPermission($user);
 
         return $perm;
     }
@@ -502,6 +472,41 @@ class Authority
         $publicLink = PublicLink::findOneBySQL('structural_element_id = ?', [$resource->id]);
 
         return (bool) $publicLink;
+    }
+
+    public static function canShowUnit(User $user, Unit $resource): bool
+    {
+        return $resource->canRead($user);
+    }
+
+    public static function canIndexUnits(User $user): bool
+    {
+        return $GLOBALS['perm']->have_perm('root', $user->id);
+    }
+
+    public static function canCreateUnit(User $user): bool
+    {
+        return $GLOBALS['perm']->have_perm('tutor', $user->id);
+    }
+
+    public static function canUpdateUnit(User $user, Unit $resource): bool
+    {
+        return $resource->canEdit($user);
+    }
+
+    public static function canDeleteUnit(User $user, Unit $resource): bool
+    {
+        return self::canUpdateUnit($user, $resource);
+    }
+
+    public static function canIndexUnitsOfACourse(User $user, Course $course): bool
+    {
+        return $GLOBALS['perm']->have_studip_perm('user', $course->id, $user->id);
+    }
+
+    public static function canIndexUnitsOfAUser(User $request_user, User $user): bool
+    {
+        return $request_user->id === $user->id;
     }
 
 }

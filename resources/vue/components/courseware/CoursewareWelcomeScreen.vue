@@ -1,16 +1,19 @@
 <template>
-    <div class="cw-wellcome-screen">
-        <div class="cw-wellcome-screen-keyvisual"></div>
+    <div class="cw-welcome-screen">
+        <div class="cw-welcome-screen-keyvisual"></div>
         <header>
-            <translate>Willkommen bei Courseware</translate>
+            {{ $gettext('Willkommen bei Courseware') }}
         </header>
-        <div class="cw-wellcome-screen-actions">
-            <a href="https://hilfe.studip.de/help/5.0/de/Basis.Courseware" target="_blank" class="button">
-                <translate>Mehr über Courseware erfahren</translate>
+        <div class="cw-welcome-screen-actions">
+            <a href="https://hilfe.studip.de/help/5.3/de/Basis.Courseware" target="_blank" class="button">
+                {{ $gettext('Mehr über Courseware erfahren') }}
             </a>
-            <button class="button" :title="$gettext('Fügt einen Standard-Abschnitt mit einem Text-Block hinzu')" @click="addDefault"><translate>Ersten Inhalt erstellen</translate></button>
-            <button class="button" @click="addContainer"><translate>Einen Abschnitt auswählen</translate></button>
-
+            <button class="button" :title="$gettext('Fügt einen Standard-Abschnitt mit einem Text-Block hinzu')" @click="addDefault">
+                {{ $gettext('Ersten Inhalt erstellen') }}
+            </button>
+            <button class="button" @click="addContainer">
+                {{ $gettext('Einen Abschnitt auswählen') }}
+            </button>
         </div>
     </div>
 </template>
@@ -19,16 +22,12 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-    name: 'courseware-wellcome-screen',
-    components: {
-    },
-    props: {},
-    data() {
-        return{}
-    },
+    name: 'courseware-welcome-screen',
     computed: {
         ...mapGetters({
-            consumeMode: 'consumeMode'
+            consumeMode: 'consumeMode',
+            lastCreatedBlocks: 'courseware-blocks/lastCreated',
+            lastCreatedContainers: 'courseware-containers/lastCreated'
         }),
     },
     methods: {
@@ -40,12 +39,18 @@ export default {
             updateContainer: 'updateContainer',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
+
+            coursewareConsumeMode: 'coursewareConsumeMode',
+            coursewareViewMode: 'coursewareViewMode',
+            coursewareContainerAdder: 'coursewareContainerAdder',
+            coursewareShowToolbar: 'coursewareShowToolbar'
+
         }),
         addContainer() {
-            this.$store.dispatch('coursewareConsumeMode', false);
-            this.$store.dispatch('coursewareViewMode', 'edit');
-            this.$store.dispatch('coursewareContainerAdder', true);
-            this.$store.dispatch('coursewareShowToolbar', true);
+            this.coursewareConsumeMode(false);
+            this.coursewareViewMode('edit');
+            this.coursewareContainerAdder(true);
+            this.coursewareShowToolbar(true);
         },
         async addDefault() {
             let attributes = {};
@@ -55,19 +60,19 @@ export default {
                 sections: [{ name: 'Liste', icon: '', blocks: [] }],
             };
             await this.createContainer({ structuralElementId: this.$route.params.id, attributes: attributes });
-            let newContainer = this.$store.getters['courseware-containers/lastCreated'];
+            let newContainer = this.lastCreatedContainers;
             await this.lockObject({ id: newContainer.id, type: 'courseware-containers' });
             await this.createBlock({
                 container: newContainer,
                 section: 0,
                 blockType: 'text',
             });
-            this.$store.dispatch('coursewareViewMode', 'edit');
-            this.$store.dispatch('coursewareConsumeMode', false);
+            this.coursewareViewMode('edit');
+            this.coursewareConsumeMode(false);
             this.companionSuccess({
-                info: this.$gettext('Das Elemente für Ihren ersten Inhalt wurden angelegt.'),
+                info: this.$gettext('Das Elemente für Ihren ersten Inhalt wurde angelegt.'),
             });
-            const newBlock = this.$store.getters['courseware-blocks/lastCreated'];
+            const newBlock = this.lastCreatedBlocks;
             newContainer.attributes.payload.sections[0].blocks.push(newBlock.id);
             const structuralElementId = this.$route.params.id
             await this.updateContainer({ container: newContainer, structuralElementId: structuralElementId });

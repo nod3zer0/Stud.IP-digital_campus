@@ -1,0 +1,214 @@
+@import '../mixins';
+.wizard-wrapper {
+    display: flex;
+
+    .wizard-meta {
+        width: 270px;
+        min-height: 440px;
+        margin-top: 38px;
+
+        img {
+            margin: auto;
+            display: block;
+        }
+    
+        p {
+            margin: 15px;
+        }
+        .wizard-requirements {
+            span {
+                font-weight: 700;
+            }
+            ul {
+                padding: 4px 0;
+                li {
+                    list-style: none;
+                    button {
+                        padding: 2px 0;
+                        background-color: transparent;
+                        border: none;
+                        color: $base-color;
+                        cursor: pointer;
+                        &:hover {
+                            color: $red;
+                        }
+                    }
+                    img {
+                        padding-right: 4px;
+                        display: inline-block;
+                        vertical-align: sub;
+                    }
+                }
+            }
+        }
+    }
+    .wizard-content-wrapper {
+        flex-grow: 2;
+        margin-left: 15px;
+
+        h2 span.required {
+            color: $red;
+        }
+
+        .wizard-progress {
+            list-style: none;
+            padding: 0;
+            margin: 1.5em 0 2.5em 0;
+        
+            li {
+                display: inline-block;
+                position: relative;
+                margin-right: 60px;
+                border: solid 2px $base-color;
+                button {
+                    padding: 6px 0;
+                    height: 36px;
+                    width: 36px;
+                    cursor: pointer;
+                    background: no-repeat;
+                    border: none;
+                }
+                &.valid {
+                    background-color: $base-color;
+                }
+                &.invalid {
+                    background-color: white;
+                }
+                &.optional {
+                    border: dashed thin $base-color;
+                }
+                &::before {
+                    position: absolute;
+                    content: "";
+                    width: 62px;
+                    border: solid thin $base-color;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    -o-transform: translateY(-50%);
+                    -ms-transform: translateY(-50%);
+                    -moz-transform: translateY(-50%);
+                    -webkit-transform: translateY(-50%);
+                    left: 100%;
+                }
+                &.active::after {
+                    position: absolute;
+                    content: "";
+                    width: 38px;
+                    height: 3px;
+                    background: $base-color;
+                    top: 44px;
+                    left: -1px;
+                }
+            }
+            li:last-child {
+                margin-right: 0;
+                &::before {
+                    display: none;
+                }
+            }
+            
+        }
+        
+        .wizard-list {
+            list-style: none;
+            padding: 0;
+            .wizard-item {
+                .wizard-content {
+                    max-width: 555px;
+                    max-height: 475px;
+                    overflow-y: auto;
+                    scrollbar-width: thin;
+                    scrollbar-color: $base-color #f5f5f5;
+
+                    .wizard-required {
+                        color: $red;
+                    }
+
+                    textarea {
+                        resize: vertical;
+                    }
+
+                    input[type="text"]::placeholder,
+                    textarea::placeholder {
+                        color: $dark-gray-color-60;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+form.default fieldset.radiobutton-set {
+    > legend {
+        margin: 0px;
+        width: 100%;
+    }
+    border: none;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+
+    > input[type=radio] {
+        opacity: 0;
+        position: absolute;
+        &:focus + label {
+            outline: auto;
+        }
+    }
+    > label {
+        cursor: pointer;
+        border: 1px solid $content-color-40;
+        transition: background-color 200ms;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px;
+        padding-bottom: 2px;
+        margin-bottom: 0;
+        border-top: none;
+        :not(.undecorated) {
+            text-indent: 0;
+        }
+        > .text {
+            width: 100%;
+            margin-left: 10px;
+        }
+        > .unchecked {
+            margin-right: 0;
+        }
+        > .check {
+            display: none;
+        }
+    }
+    > label:first-of-type {
+        border-top: 1px solid $content-color-40;
+    }
+    > label:last-child::after {
+        content: none;
+    }
+    > div {
+        border: 1px solid $content-color-40;
+        border-top: none;
+        display: none;
+        padding: 10px;
+
+    }
+    > input[type=radio]:checked + label {
+        background-color: $content-color-20;
+        transition: background-color 200ms;
+        > .unchecked {
+            display: none;
+        }
+        > .check {
+            display: inline-block;
+        }
+    }
+    > input[type=radio]:checked + label + div {
+        display: block;
+        .description {
+            animation-duration: 400ms;
+            animation-name: terms_of_use_fadein;
+        }
+    }
+}

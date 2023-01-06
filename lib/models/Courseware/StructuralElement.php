@@ -375,7 +375,7 @@ class StructuralElement extends \SimpleORMap
     {
         return $GLOBALS['perm']->have_perm('root', $user->id) ||
             $GLOBALS['perm']->have_studip_perm(
-                \CourseConfig::get($this->range_id)->COURSEWARE_EDITING_PERMISSION,
+                \CourseConfig::get($this->range_id)->COURSEWARE_EDITING_PERMISSION[$this->getCoursewareCourse($this->range_id)->id],
                 $this->range_id,
                 $user->id
             );
@@ -653,6 +653,17 @@ class StructuralElement extends \SimpleORMap
         return $ancestors;
     }
 
+    public function findUnit()
+    {
+        if ($this->isRootNode()) {
+            $root = $this;
+        } else {
+            $root = $this->findAncestors()[0];
+        }
+
+        return Unit::findOneBySQL('structural_element_id = ?', [$root->id]); 
+    }
+
     /**
      * Returns the list of all descendants of this instance in depth-first search order.
      *
@@ -758,6 +769,42 @@ SQL;
     public function getImageUrl()
     {
         return $this->image ? $this->image->getDownloadURL() : null;
+    }
+
+    /**
+     * Copies this instance into another course oder users contents.
+     *
+     * @param User              $user   this user will be the owner of the copy
+     * @param Range $parent the target where to copy this instance
+     *
+     * @return StructuralElement the copy of this instance
+     */
+    public function copyToRange(User $user, string $rangeId, string $rangeType, string $purpose = ''): StructuralElement
+    {
+        $element = self::build([
+            'parent_id' => null,
+            'range_id' => $rangeId,
+            'range_type' => $rangeType,
+            'owner_id' => $user->id,
+            'editor_id' => $user->id,
+            'edit_blocker_id' => null,
+            'title' => $this->title,
+            'purpose' => $purpose ?: $this->purpose,
+            'position' => 0,
+            'payload' => $this->payload,
+        ]);
+
+        $element->store();
+
+        $file_ref_id = $this->copyImage($user, $element);
+        $element->image_id = $file_ref_id;
+        $element->store();
+
+        $this->copyContainers($user, $element);
+
+        $this->copyChildren($user, $element, $purpose);
+
+        return $element;
     }
 
     /**

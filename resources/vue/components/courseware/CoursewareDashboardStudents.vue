@@ -46,7 +46,7 @@
                         </a>
                         <span v-else>{{ element.attributes.title }}</span>
                     </td>
-                    <td>{{ task.attributes.progress.toFixed(2) }}%</td>
+                    <td>{{ task.attributes?.progress?.toFixed(2) || '-.--' }}%</td>
                     <td>{{ getReadableDate(task.attributes['submission-date']) }}</td>
                     <td>
                         <studip-icon v-if="task.attributes.submitted" shape="accept" role="status-green" />
@@ -110,14 +110,8 @@
         <div v-else>
             <courseware-companion-box 
                 mood="pointing"
-                :msgCompanion="
-                    $gettext('Es wurden bisher keine Aufgaben gestellt.') + '<br>' + 
-                    $gettext('Wenn Sie eine Aufgabe stellen möchten, nutzen Sie bitte in der Verwaltung der Courseware die Funktion &quot;Aufgabe verteilen&quot;.')
-                "
+                :msgCompanion="$gettext('Es wurden bisher keine Aufgaben gestellt.')"
             >
-                <template v-slot:companionActions>
-                <a class="button" :href="managerUrl"><translate>Zur Verwaltung</translate></a>
-            </template>
             </courseware-companion-box>
         </div>
         <studip-dialog
@@ -206,6 +200,7 @@
                 </form>
             </template>
         </studip-dialog>
+        <courseware-tasks-dialog-distribute v-if="showTasksDistributeDialog"/>
     </div>
 </template>
 
@@ -214,8 +209,10 @@ import StudipIcon from './../StudipIcon.vue';
 import StudipDialog from './../StudipDialog.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareDateInput from './CoursewareDateInput.vue';
+import CoursewareTasksDialogDistribute from './CoursewareTasksDialogDistribute.vue';
 import taskHelperMixin from '../../mixins/courseware/task-helper.js';
 import { mapActions, mapGetters } from 'vuex';
+
 
 export default {
     name: 'courseware-dashboard-students',
@@ -225,6 +222,7 @@ export default {
         CoursewareDateInput,
         StudipIcon,
         StudipDialog,
+        CoursewareTasksDialogDistribute,
     },
     data() {
         return {
@@ -261,6 +259,7 @@ export default {
             getElementById: 'courseware-structural-elements/byId',
             getFeedbackById: 'courseware-task-feedback/byId',
             relatedTaskGroups: 'courseware-task-groups/related',
+            showTasksDistributeDialog: 'showTasksDistributeDialog'
         }),
         tasks() {
             return this.allTasks.map((task) => {

@@ -1,14 +1,14 @@
 <template>
     <a 
         href="#"
-        class="cw-dashboard-progress-item"
+        class="cw-unit-progress-item"
         :title="name"
         @click="$emit('selectChapter', chapterId)"
     >
-        <div class="cw-dashboard-progress-item-value">
+        <div class="cw-unit-progress-item-value">
             <courseware-progress-circle :value="parseInt(value)" />
         </div>
-        <div class="cw-dashboard-progress-item-description">
+        <div class="cw-unit-progress-item-description">
             {{ name }}
         </div>
     </a>
@@ -18,7 +18,7 @@
 import CoursewareProgressCircle from './CoursewareProgressCircle.vue';
 
 export default {
-    name: 'courseware-dashboard-progress-item',
+    name: 'courseware-unit-progress-item',
     components: {
         CoursewareProgressCircle,
     },

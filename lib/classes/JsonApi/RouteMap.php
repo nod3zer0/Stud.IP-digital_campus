@@ -430,6 +430,8 @@ class RouteMap
 
         $group->get('/courseware-blocks/{id}/user-progress', Routes\Courseware\UserProgressOfBlocksShow::class);
         $group->get('/courseware-user-progresses/{id}', Routes\Courseware\UserProgressesShow::class);
+        // not a JSON route
+        $group->get('/courseware-units/{id}/courseware-user-progresses', Routes\Courseware\UserProgressesOfUnitsShow::class);
         $group->patch('/courseware-user-progresses/{id}', Routes\Courseware\UserProgressesUpdate::class);
 
         $group->get('/courseware-blocks/{id}/comments', Routes\Courseware\BlockCommentsOfBlocksIndex::class);
@@ -468,6 +470,15 @@ class RouteMap
         $group->post('/courseware-public-links', Routes\Courseware\PublicLinksCreate::class);
         $group->patch('/courseware-public-links/{id}', Routes\Courseware\PublicLinksUpdate::class);
         $group->delete('/courseware-public-links/{id}', Routes\Courseware\PublicLinksDelete::class);
+
+        $group->get('/courses/{id}/courseware-units', Routes\Courseware\CoursesUnitsIndex::class);
+        $group->get('/users/{id}/courseware-units', Routes\Courseware\UsersUnitsIndex::class);
+        $group->get('/courseware-units/{id}', Routes\Courseware\UnitsShow::class);
+        $group->post('/courseware-units', Routes\Courseware\UnitsCreate::class);
+        $group->patch('/courseware-units/{id}', Routes\Courseware\UnitsUpdate::class);
+        $group->delete('/courseware-units/{id}', Routes\Courseware\UnitsDelete::class);
+        // not a JSON route
+        $group->post('/courseware-units/{id}/copy', Routes\Courseware\UnitsCopy::class);
     }
 
     private function addAuthenticatedFilesRoutes(RouteCollectorProxy $group): void
@@ -550,3 +561,4 @@ class RouteMap
         $group->map(['GET', 'PATCH', 'POST', 'DELETE'], $url, $handler);
     }
 }
+

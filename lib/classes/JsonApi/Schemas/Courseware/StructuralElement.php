@@ -23,6 +23,7 @@ class StructuralElement extends SchemaProvider
     const REL_PARENT = 'parent';
     const REL_USER = 'user';
     const REL_TASK = 'task';
+    const REL_UNIT = 'unit';
 
     /**
      * {@inheritdoc}
@@ -51,6 +52,7 @@ class StructuralElement extends SchemaProvider
             'write-approval' => $resource['write_approval']->getIterator(),
             'copy-approval' => $resource['copy_approval']->getIterator(),
             'can-edit' => $resource->canEdit($user),
+            'can-visit' => $resource->canVisit($user),
             'is-link' => (int) $resource['is_link'],
             'target-id' => (int)  $resource['target_id'],
             'external-relations' => $resource['external_relations']->getIterator(),
@@ -129,6 +131,12 @@ class StructuralElement extends SchemaProvider
             $relationships,
             $resource,
             $this->shouldInclude($context, self::REL_TASK)
+        );
+
+        $relationships = $this->addUnitRelationship(
+            $relationships,
+            $resource,
+            $this->shouldInclude($context, self::REL_UNIT)
         );
 
         return $relationships;
@@ -351,6 +359,22 @@ class StructuralElement extends SchemaProvider
             : [
                 self::RELATIONSHIP_DATA => null,
             ];
+
+        return $relationships;
+    }
+
+    private function addUnitRelationship(array $relationships, $resource, $includeData): array
+    {
+        $relation = [
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_UNIT),
+            ],
+        ];
+
+        $related = $resource->findUnit();
+        $relation[self::RELATIONSHIP_DATA] = $related;
+
+        $relationships[self::REL_UNIT] = $relation;
 
         return $relationships;
     }

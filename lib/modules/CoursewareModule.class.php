@@ -41,31 +41,21 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule,
         );
         $navigation->setImage(Icon::create('courseware', Icon::ROLE_INFO_ALT));
         $navigation->addSubNavigation(
-            'content',
-            new Navigation(_('Inhalt'), 'dispatch.php/course/courseware/?cid='.$courseId)
+            'shelf',
+            new Navigation(_('Lernmaterialien'), 'dispatch.php/course/courseware/?cid=' . $courseId)
         );
         $navigation->addSubNavigation(
-            'dashboard',
-            new Navigation(_('Übersicht'), 'dispatch.php/course/courseware/dashboard?cid='.$courseId)
+            'unit',
+            new Navigation(_('Inhalt'), 'dispatch.php/course/courseware/courseware?cid=' . $courseId)
         );
-
-        if ($GLOBALS['perm']->have_studip_perm('dozent', $courseId)) {
-            $navigation->addSubNavigation(
-                'manager',
-                new Navigation(_('Verwaltung'), 'dispatch.php/course/courseware/manager?cid='.$courseId)
-            );
-        } else {
-            $element = StructuralElement::getCoursewareCourse($courseId);
-            if ($element !== null) {
-                $instance = new Instance($element);
-                if ($GLOBALS['perm']->have_studip_perm($instance->getEditingPermissionLevel(), $courseId)) {
-                    $navigation->addSubNavigation(
-                        'manager',
-                        new Navigation(_('Verwaltung'), 'dispatch.php/course/courseware/manager?cid='.$courseId)
-                    );
-                }
-            }
-        }
+        $navigation->addSubNavigation(
+            'activities',
+            new Navigation(_('Aktivitäten'), 'dispatch.php/course/courseware/activities?cid=' . $courseId)
+        );
+        $navigation->addSubNavigation(
+            'tasks',
+            new Navigation(_('Aufgaben'), 'dispatch.php/course/courseware/tasks?cid=' . $courseId)
+        );
 
         return ['courseware' => $navigation];
     }
@@ -129,10 +119,10 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule,
     {
         return [
             'summary' => _('Lerninhalte erstellen, verteilen und erleben'),
-            'description' => _('Mit Courseware können Sie interaktive multimediale Lerninhalte erstellen und nutzen. '
+            'description' => _('Mit Courseware können Sie interaktive, multimediale Lerninhalte erstellen und nutzen. '
                              . 'Die Lerninhalte lassen sich hierarchisch unterteilen und können aus Texten, '
                              . 'Videosequenzen, Aufgaben, Kommunikationselementen und einer Vielzahl weiterer '
-                             . 'Elementen bestehen. Fertige Lerninhalte können exportiert und in andere Kurse oder '
+                             . 'Elemente bestehen. Fertige Lerninhalte können exportiert und in andere Kurse oder '
                              . 'andere Installationen importiert werden. Courseware ist nicht nur für digitale '
                              . 'Formate geeignet, sondern kann auch genutzt werden, um klassische '
                              . 'Präsenzveranstaltungen mit Online-Anteilen zu ergänzen. Formate wie integriertes '

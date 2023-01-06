@@ -105,6 +105,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            blockAdder: 'blockAdder',
             userId: 'userId',
             userById: 'users/byId',
             viewMode: 'viewMode'
@@ -146,6 +147,7 @@ export default {
             deleteContainer: 'deleteContainer',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
+            coursewareBlockAdder: 'coursewareBlockAdder'
         }),
         async displayEditDialog() {
             await this.loadContainer({ id: this.container.id, options: { include: 'edit-blocker' } });
@@ -227,8 +229,8 @@ export default {
                 containerId: this.container.id,
                 structuralElementId: this.container.relationships['structural-element'].data.id,
             });
-            if(Object.keys(this.$store.getters.blockAdder).length !== 0 && this.$store.getters.blockAdder.container.id === this.container.id) {
-                this.$store.dispatch('coursewareBlockAdder', {});
+            if(Object.keys(this.blockAdder).length !== 0 && this.blockAdder.container.id === this.container.id) {
+                this.coursewareBlockAdder({});
             }
             this.showDeleteDialog = false;
         },

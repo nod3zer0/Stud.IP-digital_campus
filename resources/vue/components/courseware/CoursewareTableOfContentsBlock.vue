@@ -157,7 +157,7 @@ export default {
                         taskId: taskId,
                     });
                 } catch(error) {
-                    console.debug(error);
+                    // nothing to do here
                 }
             }
         });

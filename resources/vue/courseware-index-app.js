@@ -22,6 +22,7 @@ const mountApp = async (STUDIP, createApp, element) => {
     let elem_id = null;
     let entry_id = null;
     let entry_type = null;
+    let unit_id = null;
     let oer_enabled = null;
     let licenses = null;
     let elem;
@@ -40,6 +41,10 @@ const mountApp = async (STUDIP, createApp, element) => {
                 entry_id = elem.attributes['entry-id'].value;
             }
 
+            if (elem.attributes['unit-id'] !== undefined) {
+                unit_id = elem.attributes['unit-id'].value;
+            }
+
             if (elem.attributes['oer-enabled'] !== undefined) {
                 oer_enabled = elem.attributes['oer-enabled'].value;
             }
@@ -49,7 +54,6 @@ const mountApp = async (STUDIP, createApp, element) => {
             }
         }
     }
-
     const routes = [
         {
             path: '/',
@@ -97,8 +101,10 @@ const mountApp = async (STUDIP, createApp, element) => {
                     'courseware-task-feedback',
                     'courseware-task-groups',
                     'courseware-tasks',
+                    'courseware-templates',
                     'courseware-user-data-fields',
                     'courseware-user-progresses',
+                    'courseware-units',
                     'files',
                     'file-refs',
                     'folders',
@@ -124,12 +130,18 @@ const mountApp = async (STUDIP, createApp, element) => {
     store.dispatch('coursewareContext', {
         id: entry_id,
         type: entry_type,
+        unit: unit_id
     });
+
+    if (entry_type === 'courses') {
+        await store.dispatch('loadTeacherStatus', STUDIP.USER_ID);
+    }
 
     store.dispatch('coursewareCurrentElement', elem_id);
 
     store.dispatch('oerEnabled', oer_enabled);
     store.dispatch('licenses', licenses);
+    store.dispatch('courseware-templates/loadAll');
 
     const pluginManager = new PluginManager();
     store.dispatch('setPluginManager', pluginManager);

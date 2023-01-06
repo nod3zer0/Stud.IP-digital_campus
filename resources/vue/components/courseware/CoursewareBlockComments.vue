@@ -18,7 +18,7 @@
 
 <script>
 import CoursewareTalkBubble from './CoursewareTalkBubble.vue';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-block-comments',
@@ -57,12 +57,16 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            createComments: 'courseware-block-comments/create',
+            loadRelatedComments: 'courseware-block-comments/loadRelated'
+        }),
         async loadComments() {
             const parent = {
                 type: this.block.type,
                 id: this.block.id,
             };
-            await this.$store.dispatch('courseware-block-comments/loadRelated', {
+            await this.loadRelatedComments({
                 parent,
                 relationship: 'comments',
                 options: {
@@ -85,7 +89,7 @@ export default {
                 }
             };
 
-            await this.$store.dispatch('courseware-block-comments/create', data);
+            await this.createComments(data);
             this.loadComments();
             this.createComment = '';
         },

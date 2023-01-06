@@ -148,6 +148,7 @@ export default {
         ...mapActions({
             loadFileRef: 'file-refs/loadById',
             updateBlock: 'updateBlockInContainer',
+            updateUserDataFields: 'courseware-user-data-fields/update'
         }),
         initCurrentData() {
             this.currentTitle = this.title;
@@ -261,7 +262,7 @@ export default {
                     }
                 }
             };
-            this.$store.dispatch('courseware-user-data-fields/update', data);
+            this.updateUserDataFields(data);
             this.userProgress = 1;
         },
     },

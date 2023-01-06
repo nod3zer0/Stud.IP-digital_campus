@@ -165,9 +165,10 @@ class Instance
     public function getSequentialProgression(): bool
     {
         $range = $this->getRange();
-        $config = $range->getConfiguration()->getValue('COURSEWARE_SEQUENTIAL_PROGRESSION');
+        $root = $this->getRoot();
+        $sequentialProgression = $range->getConfiguration()->COURSEWARE_SEQUENTIAL_PROGRESSION[$root->id];
 
-        return (bool) $config;
+        return (bool) $sequentialProgression;
     }
 
     /**
@@ -178,7 +179,10 @@ class Instance
     public function setSequentialProgression(bool $isSequentialProgression): void
     {
         $range = $this->getRange();
-        $range->getConfiguration()->store('COURSEWARE_SEQUENTIAL_PROGRESSION', $isSequentialProgression);
+        $root = $this->getRoot();
+        $progressions = $range->getConfiguration()->getValue('COURSEWARE_SEQUENTIAL_PROGRESSION');
+        $progressions[$root->id] = $isSequentialProgression ? 1 : 0;
+        $range->getConfiguration()->store('COURSEWARE_SEQUENTIAL_PROGRESSION', $progressions);
     }
 
     const EDITING_PERMISSION_DOZENT = 'dozent';
@@ -192,11 +196,15 @@ class Instance
     public function getEditingPermissionLevel(): string
     {
         $range = $this->getRange();
+        $root = $this->getRoot();
         /** @var string $editingPermissionLevel */
-        $editingPermissionLevel = $range->getConfiguration()->getValue('COURSEWARE_EDITING_PERMISSION');
-        $this->validateEditingPermissionLevel($editingPermissionLevel);
+        $editingPermissionLevel = $range->getConfiguration()->COURSEWARE_EDITING_PERMISSION[$root->id];
+        if ($editingPermissionLevel) {
+            $this->validateEditingPermissionLevel($editingPermissionLevel);
+            return $editingPermissionLevel;
+        }
 
-        return $editingPermissionLevel;
+        return self::EDITING_PERMISSION_TUTOR; // tutor is default
     }
 
     /**
@@ -209,7 +217,10 @@ class Instance
     {
         $this->validateEditingPermissionLevel($editingPermissionLevel);
         $range = $this->getRange();
-        $range->getConfiguration()->store('COURSEWARE_EDITING_PERMISSION', $editingPermissionLevel);
+        $root = $this->getRoot();
+        $permissions = $range->getConfiguration()->getValue('COURSEWARE_EDITING_PERMISSION');
+        $permissions[$root->id] = $editingPermissionLevel;
+        $range->getConfiguration()->store('COURSEWARE_EDITING_PERMISSION', $permissions);
     }
 
     /**
@@ -240,9 +251,10 @@ class Instance
     public function getCertificateSettings(): array
     {
         $range = $this->getRange();
+        $root = $this->getRoot();
         /** @var array $certificateSettings */
         $certificateSettings = json_decode(
-            $range->getConfiguration()->getValue('COURSEWARE_CERTIFICATE_SETTINGS'),
+            $range->getConfiguration()->COURSEWARE_CERTIFICATE_SETTINGS[$root->id],
             true
         )?: [];
         $this->validateCertificateSettings($certificateSettings);
@@ -259,8 +271,10 @@ class Instance
     {
         $this->validateCertificateSettings($certificateSettings);
         $range = $this->getRange();
-        $range->getConfiguration()->store('COURSEWARE_CERTIFICATE_SETTINGS',
-            count($certificateSettings) > 0 ? json_encode($certificateSettings) : null);
+        $root = $this->getRoot();
+        $settings = $range->getConfiguration()->getValue('COURSEWARE_CERTIFICATE_SETTINGS');
+        $settings[$root->id] = count($certificateSettings) > 0 ? json_encode($certificateSettings) : null;
+        $range->getConfiguration()->store('COURSEWARE_CERTIFICATE_SETTINGS', $settings);
     }
 
     /**
@@ -290,9 +304,10 @@ class Instance
     public function getReminderSettings(): array
     {
         $range = $this->getRange();
+        $root = $this->getRoot();
         /** @var int $reminderInterval */
         $reminderSettings = json_decode(
-            $range->getConfiguration()->getValue('COURSEWARE_REMINDER_SETTINGS'),
+            $range->getConfiguration()->COURSEWARE_REMINDER_SETTINGS[$root->id],
             true
         )?: [];
         $this->validateReminderSettings($reminderSettings);
@@ -309,8 +324,10 @@ class Instance
     {
         $this->validateReminderSettings($reminderSettings);
         $range = $this->getRange();
-        $range->getConfiguration()->store('COURSEWARE_REMINDER_SETTINGS',
-            count($reminderSettings) > 0 ? json_encode($reminderSettings) : null);
+        $root = $this->getRoot();
+        $settings = $range->getConfiguration()->getValue('COURSEWARE_REMINDER_SETTINGS');
+        $settings[$root->id] = count($reminderSettings) > 0 ? json_encode($reminderSettings) : null;
+        $range->getConfiguration()->store('COURSEWARE_REMINDER_SETTINGS', $settings);
     }
 
     /**
@@ -342,9 +359,10 @@ class Instance
     public function getResetProgressSettings(): array
     {
         $range = $this->getRange();
+        $root = $this->getRoot();
         /** @var int $reminderInterval */
         $resetProgressSettings = json_decode(
-            $range->getConfiguration()->getValue('COURSEWARE_RESET_PROGRESS_SETTINGS'),
+            $range->getConfiguration()->COURSEWARE_RESET_PROGRESS_SETTINGS[$root->id],
             true
         )?: [];
         $this->validateResetProgressSettings($resetProgressSettings);
@@ -361,8 +379,10 @@ class Instance
     {
         $this->validateResetProgressSettings($resetProgressSettings);
         $range = $this->getRange();
-        $range->getConfiguration()->store('COURSEWARE_RESET_PROGRESS_SETTINGS',
-            count($resetProgressSettings) > 0 ? json_encode($resetProgressSettings) : null);
+        $root = $this->getRoot();
+        $settings = $range->getConfiguration()->getValue('COURSEWARE_RESET_PROGRESS_SETTINGS');
+        $settings[$root->id] = count($resetProgressSettings) > 0 ? json_encode($resetProgressSettings) : null;
+        $range->getConfiguration()->store('COURSEWARE_RESET_PROGRESS_SETTINGS', $settings);
     }
 
     /**

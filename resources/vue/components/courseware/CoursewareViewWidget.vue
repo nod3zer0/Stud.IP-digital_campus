@@ -74,7 +74,7 @@ export default {
             this.coursewareViewMode('edit');
         },
         setDiscussView() {
-            this.$store.dispatch('coursewareViewMode', 'discuss');
+            this.coursewareViewMode('discuss');
         },
     },
 };

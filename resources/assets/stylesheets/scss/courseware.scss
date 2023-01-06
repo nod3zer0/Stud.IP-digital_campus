@@ -7,7 +7,8 @@ $companion-types: (
     alert: alert,
     sad: sad,
     happy: happy,
-    pointing: pointing-right
+    pointing: pointing-right,
+    curious: curious
 );
 
 $element-icons: (
@@ -246,9 +247,9 @@ c o n t e n t s  e n d
 r i b b o n
 * * * * * */
 $consum_ribbon_width: calc(100% - 58px);
-#course-courseware-index,
+#course-courseware-courseware,
 #contents-courseware-courseware,
-#contents-courseware-shared_content_courseware  {
+#contents-courseware-shared_content_courseware {
     &.consume {
         overflow: hidden;
     }
@@ -621,8 +622,8 @@ ribbon end
         scrollbar-color: $base-color #f5f5f5;
     }
 
-    .cw-wellcome-screen {
-        .cw-wellcome-screen-keyvisual {
+    .cw-welcome-screen {
+        .cw-welcome-screen-keyvisual {
             margin: 14px 0 42px 0;
             width: 100%;
             height: 400px;
@@ -635,7 +636,7 @@ ribbon end
             text-align: center;
             font-size: 2.25em;
         }
-        .cw-wellcome-screen-actions {
+        .cw-welcome-screen-actions {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -798,6 +799,8 @@ ribbon end
         }
     }
 }
+
+
 
 /* * * * * * * * * * * *
  structual element end
@@ -2084,6 +2087,17 @@ v i e w  w i d g e t
         @include background-icon(oer-campus, clickable);
     }
 }
+.cw-import-widget {
+    .cw-import-widget-archive{
+        @include background-icon(file-archive, clickable);
+    }
+    .cw-import-widget-copy{
+        @include background-icon(files, clickable);
+    }
+    .cw-import-widget-import{
+        @include background-icon(import, clickable);
+    }
+}
 
 /* * * * * * * * * * * * * *
 v i e w  w i d g e t  e n d
@@ -2218,118 +2232,6 @@ textarea.studip-wysiwyg {
 w y s i w y g  e n d
 * * * * * * * * * * */
 
-/* * * * * *
-d i a l o g
-* * * * * */
-
-.studip-dialog-backdrop {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: fade-out($base-color, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 3001;
-}
-.studip-dialog-body {
-    position: absolute;
-    background: $white;
-    box-shadow: 0 0 8px fade-out($black, 0.5);
-    overflow-x: auto;
-    display: flex;
-    flex-direction: column;
-    padding: 3px;
-    margin: 3px;
-    max-height: 98vh;
-
-    .studip-dialog-header,
-    .studip-dialog-footer {
-        padding: 7px;
-        display: flex;
-    }
-    .studip-dialog-header {
-        background: $base-color none repeat scroll 0 0;
-        border-bottom: 1px solid $dark-gray-color-10;
-        color: $white;
-        justify-content: space-between;
-        font-size: 1.3em;
-        padding: 0.5em 1em;
-        cursor: grab;
-
-        &.drag-active {
-            cursor: grabbing;
-        }
-    }
-    .studip-dialog-close-button {
-        @include background-icon(decline, info-alt);
-        background-repeat: no-repeat;
-        background-position-y: center;
-        background-color: transparent;
-        border: none;
-
-        width: 22px;
-        height: 22px;
-        margin-right: -10px;
-        margin-left: 2em;
-        cursor: pointer;
-    }
-    .studip-dialog-content {
-        color: $black;
-        position: relative;
-        padding: 15px;
-        overflow-y: auto;
-        min-width: 100%;
-        // resize: both;
-        box-sizing: border-box;
-    }
-    .studip-dialog-footer {
-        border-top: 1px solid $dark-gray-color-10;
-        justify-content: center;
-    }
-
-    &.studip-dialog-warning,
-    &.studip-dialog-alert {
-        .studip-dialog-content {
-            padding: 15px 15px 15px 62px;
-            background-position: 12px center;
-            background-repeat: no-repeat;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-        }
-    }
-
-    &.studip-dialog-alert {
-        .studip-dialog-header {
-            background: $active-color none repeat scroll 0 0;
-        }
-        .studip-dialog-content {
-            @include background-icon(question-circle-full, attention, 32);
-        }
-    }
-    &.studip-dialog-warning {
-        .studip-dialog-header {
-            color: $black;
-            background: $activity-color none repeat scroll 0 0;
-        }
-        .studip-dialog-close-button {
-            @include background-icon(decline, clickable);
-            border: none;
-            background-color: transparent;
-        }
-        .studip-dialog-content {
-            @include background-icon(question-circle-full, status-yellow, 32);
-        }
-    }
-
-}
-/* * * * * * * * *
-d i a l o g  e n d
-* * * * * * * * */
-
 /* * * * * * * * *
 d a s h b o a r d
 * * * * * * * * */
@@ -2362,56 +2264,7 @@ d a s h b o a r d
         justify-content: center;
 
     }
-    .cw-dashboard-progress {
 
-        .cw-dashboard-progress-breadcrumb {
-            padding: 10px;
-            span {
-                color: $base-color;
-                cursor: pointer;
-
-                &:hover {
-                    color: $active-color;
-                }
-            }
-        }
-
-        .cw-dashboard-progress-chapter {
-            text-align: center;
-            margin-bottom: -3.5em;
-
-            h1 {
-                border: none;
-                margin: 0;
-                padding: 0;
-            }
-
-            .cw-progress-circle {
-                font-size: 18px;
-                margin: 1em auto;
-
-                &.cw-dashboard-progress-current {
-                    font-size: 12px;
-                    top: -4.5em;
-                    left: -2.5em;
-                }
-            }
-        }
-
-        .cw-dashboard-progress-subchapter-list {
-            border-top: solid thin $content-color-40;
-            height: 349px;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            padding: 0 1em 0 1em;
-            scrollbar-width: thin;
-            scrollbar-color: $base-color $dark-gray-color-5;
-
-            .cw-dashboard-empty-info {
-                margin-top: 10px;
-            }
-        }
-    }
     &.cw-dashboard-task-view {
         display: unset;
         max-width: unset;
@@ -2421,12 +2274,6 @@ d a s h b o a r d
         .cw-dashboard-students-wrapper {
             max-height: unset;
         }
-    }
-    &.cw-dashboard-activity-view {
-        .cw-dashboard-activities {
-            max-height: 760px;
-        }
-
     }
 }
 
@@ -2450,60 +2297,16 @@ d a s h b o a r d
     }
 }
 
-.cw-dashboard-progress-item {
-    display: block;
-    border-bottom: solid thin $content-color-40;
-    padding: 10px 0;
+.cw-activities-wrapper {
+    max-width: 1095px;
 
-    &:hover{
-        background-color: hsla(217,6%,45%,.2);
-    }
-
-    &:last-child {
-        border: none;
-    }
-
-    .cw-dashboard-progress-item-value,
-    .cw-dashboard-progress-item-description {
-        display: inline-block;
-        vertical-align: top;
-    }
-
-    .cw-dashboard-progress-item-value {
-        width: 70px;
-        color: $base-color;
-        font-size: xx-large;
-
-        .cw-progress-circle {
-            font-size: 12px;
-            margin: 4px;
-        }
-    }
-    .cw-dashboard-progress-item-description {
-        color: $base-color;
-        padding-left: 14px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        padding: 0.5em 0 0 1em;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-}
-.cw-dashboard-activities-wrapper {
     .cw-companion-box {
         margin: 10px;
     }
 
-    .cw-dashboard-activities {
-        max-height: 525px;
+    .cw-activities {
         list-style: none;
         padding: 0;
-        scrollbar-width: thin;
-        scrollbar-color:$base-color #f5f5f5;
-        overflow-y: auto;
-        overflow-x: hidden;
 
         .cw-activity-item {
             border-bottom: solid thin $content-color-40;
@@ -2519,12 +2322,8 @@ d a s h b o a r d
                     padding-right: 0.5em;
                     vertical-align: text-bottom;
                 }
-                &.cw-activity-item-text {
-                    padding-left: 23px;
-                }
             }
         }
-
     }
 }
 
@@ -2537,10 +2336,6 @@ d a s h b o a r d
 
 .cw-dashboard-tasks-wrapper,
 .cw-dashboard-students-wrapper {
-    overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color:$base-color #f5f5f5;
-    max-height: 280px;
 
     table.default {
         margin: 0;
@@ -2574,6 +2369,99 @@ d a s h b o a r d
 
 /* * * * * * * * * * * *
 d a s h b o a r d  e n d
+* * * * * * * * * * * */
+
+/* * * * * * * * * * * *
+    p r o g r e s s
+* * * * * * * * * * * */
+.cw-unit-progress {
+    .cw-unit-progress-breadcrumb {
+        padding: 10px;
+        span {
+            color: $base-color;
+            cursor: pointer;
+
+            &:hover {
+                color: $active-color;
+            }
+        }
+    }
+
+    .cw-unit-progress-chapter {
+        text-align: center;
+        margin-bottom: -3.5em;
+
+        h1 {
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cw-progress-circle {
+            font-size: 18px;
+            margin: 1em auto;
+
+            &.cw-unit-progress-current {
+                font-size: 12px;
+                top: -4.5em;
+                left: -2.5em;
+            }
+        }
+    }
+
+    .cw-unit-progress-subchapter-list {
+        border-top: solid thin $content-color-40;
+        padding: 0 1em 0 1em;
+
+        .cw-dashboard-empty-info {
+            margin-top: 10px;
+        }
+    }
+}
+
+.cw-unit-progress-item {
+    display: block;
+    border-bottom: solid thin $content-color-40;
+    padding: 10px 0;
+
+    &:hover{
+        background-color: hsla(217,6%,45%,.2);
+    }
+
+    &:last-child {
+        border: none;
+    }
+
+    .cw-unit-progress-item-value,
+    .cw-unit-progress-item-description {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .cw-unit-progress-item-value {
+        width: 70px;
+        color: $base-color;
+        font-size: xx-large;
+
+        .cw-progress-circle {
+            font-size: 12px;
+            margin: 4px;
+        }
+    }
+    .cw-unit-progress-item-description {
+        color: $base-color;
+        padding-left: 14px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 0.5em 0 0 1em;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+}
+/* * * * * * * * * * * *
+ p r o g r e s s  e n d
 * * * * * * * * * * * */
 
 /* * * * * *
@@ -5178,102 +5066,156 @@ cw tiles
     padding-left: 0;
     row-gap: 5px;
     column-gap: 5px;
-
-    .tile {
-        height: 420px;
-        width: 270px;
-        margin: 0;
-        background-color: $base-color;
-        cursor: pointer;
-        &:last-child {
-            margin-right: 0;
-        }
-
-        @each $name, $color in $tile-colors {
-            &.#{"" + $name} {
-                background-color: $color;
-            }
-        };
+}
+.cw-tiles .tile,
+.cw-tile {
+    height: 420px;
+    width: 270px;
+    margin: 0;
+    background-color: $base-color;
+    &:last-child {
+        margin-right: 0;
     }
 
-    .preview-image {
-        height: 180px;
-        width: 100%;
-        background-size: auto 180px;
-        background-repeat: no-repeat;
-        background-color: $content-color-20;
-        background-position: center;
-        &.default-image {
-                @include background-icon(courseware, clickable, 128);
+    @each $name, $color in $tile-colors {
+        &.#{"" + $name} {
+            background-color: $color;
         }
+    };
+}
 
-        .overlay-text {
-            padding: 0.25em;
-            margin: 0.25em;
-            background-color: rgba(255,255,255,0.8);
-            width: fit-content;
-            max-width: 100%;
-            height: 1.25em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            float: right;
-            text-align: right;
-        }
+.preview-image {
+    height: 180px;
+    width: 100%;
+    background-size: auto 180px;
+    background-repeat: no-repeat;
+    background-color: $content-color-20;
+    background-position: center;
+    &.default-image {
+            @include background-icon(courseware, clickable, 128);
     }
 
-    .description {
-        height: 220px;
-        padding: 14px;
+    .overlay-text {
+        padding: 6px 7px;
+        margin: 4px;
+        background-color: rgba(255,255,255,0.8);
+        width: fit-content;
+        max-width: 100%;
+        height: 1.25em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        float: right;
+        text-align: right;
+    }
+
+    .overlay-action-menu {
+        padding: 0;
+        margin: 0.25em;
+        background-color: rgba(255,255,255,0.8);
+        width: fit-content;
+        max-width: 100%;
+        overflow: hidden;
+        float: right;
+        text-align: right;
+        .action-menu {
+            margin: 5px;
+        }
+    }
+}
+
+.description {
+    height: 220px;
+    padding: 14px;
+    color: $white;
+    position: relative;
+    display: block;
+
+    header {
+        font-size: 20px;
+        line-height: 22px;
         color: $white;
-        position: relative;
+        border: none;
+        width: 240px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        background-repeat: no-repeat;
+        background-position: 0 0;
 
-        header {
-            font-size: 20px;
-            line-height: 22px;
-            color: $white;
-            border: none;
-            margin-bottom: 0.75em;
-            width: 240px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            background-repeat: no-repeat;
-            background-position: 0 0;
-
-            @each $type, $icon in $element-icons {
-                &.description-icon-#{$type} {
-                    width: 212px;
-                    padding-left: 28px;
-                    @include background-icon(#{$icon}, info_alt, 22);
-                }
-            }
-        }
-
-        .description-text-wrapper {
-            overflow: hidden;
-            height: 10em;
-            display: -webkit-box;
-            margin-bottom: 1em;
-            -webkit-line-clamp: 7;
-            -webkit-box-orient: vertical;
-            p {
-                text-align: left;
-            }
-        }
-
-        footer {
-            width: 242px;
-            text-align: right;
-            color: $white;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-
-            img {
-                vertical-align: text-bottom;
+        @each $type, $icon in $element-icons {
+            &.description-icon-#{$type} {
+                width: 212px;
+                padding-left: 28px;
+                @include background-icon(#{$icon}, info_alt, 22);
             }
         }
     }
+
+    .progress-wrapper {
+        width: 100%;
+        padding: 1em 0;
+        border: none;
+        background: none;
+
+        progress {
+            display: block;
+            width: 100%;
+            height: 3px;
+            margin: 0;
+            border: none;
+            background: rgba(0,0,0,0.3);
+            &:-webkit-progress-bar {
+                background:  rgba(0,0,0,0.3);
+            }
+            &::-webkit-progress-value {
+                background: white;
+            }
+            &::-moz-progress-bar {
+                background: white;
+            }
+        }
+    }
+
+
+
+    .description-text-wrapper {
+        overflow: hidden;
+        height: 10em;
+        margin-top: 0.5em;
+        display: -webkit-box;
+        margin-bottom: 1em;
+        -webkit-line-clamp: 7;
+        -webkit-box-orient: vertical;
+        p {
+            text-align: left;
+        }
+    }
+
+    footer {
+        width: 242px;
+        text-align: right;
+        color: $white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        img {
+            vertical-align: text-bottom;
+        }
+    }
+}
+
+a[href].description {
+    transition: unset;
+}
+
+a.description,
+a.description:link,
+a.description:visited,
+a.description:hover {
+    height: 210px;
+    color: $white;
+    text-decoration: unset;
 }
 
 /*
@@ -5357,7 +5299,7 @@ cw tiles end
  .cw-file-input {
      width: stretch;
      border: solid thin $base-color;
-     font-size: 13px;
+     font-size: 14px;
     cursor: pointer;
 
     &::file-selector-button {
@@ -5373,6 +5315,20 @@ cw tiles end
             color: $white;
         }
      }
+ }
+ .cw-file-input-change {
+    border: solid thin $base-color;
+
+    button.button {
+        padding: 0.5em 1.5em;
+        margin: 0 0 0 -1px;
+        line-height: 100%;
+        border: none;
+        border-right: solid thin $base-color;
+    }
+    span {
+        padding: 0.5em 1.5em 0.5em 0.5em;
+    }
  }
  /* * * * * * * * * * * * *
  i n p u t  f i l e  e n d
@@ -5412,3 +5368,31 @@ a s s i s t i v e
 /* * * * * * * * * * * * * * *
 e n d  a s s i s t i v e
 * * * * * * * * * * * * * * */
+
+/* * * * * * * * * * * * * * *
+w i z a r d  e l e m e n t s
+* * * * * * * * * * * * * * */
+.cw-element-selector-list {
+    list-style: none;
+    padding: 0;
+
+    .cw-element-selector-item {
+        display: block;
+        width: 100%;
+        border: solid thin $content-color-40;
+        padding: 0.5em;
+        margin-bottom: 5px;
+        background-color: $white;
+        color: $base-color;
+        text-align: left;
+        cursor: pointer;
+
+        &:hover {
+            color: $white;
+            background-color: $base-color;
+        }
+    }
+}
+/* * * * * * * * * * * * * * * * * *
+w i z a r d  e l e m e n t s  e n d 
+* * * * * * * * * * * * * * * * * */

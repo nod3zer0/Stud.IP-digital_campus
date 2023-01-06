@@ -110,8 +110,8 @@ import CoursewareCollapsibleBox from './CoursewareCollapsibleBox.vue';
 import CoursewareBlockadderItem from './CoursewareBlockadderItem.vue';
 import CoursewareContainerAdderItem from './CoursewareContainerAdderItem.vue';
 import CoursewareBlockHelper from './CoursewareBlockHelper.vue';
-import { mapGetters } from 'vuex';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'cw-tools-blockadder',
@@ -185,6 +185,11 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            removeFavoriteBlockType: 'removeFavoriteBlockType',
+            addFavoriteBlockType: 'addFavoriteBlockType',
+            coursewareContainerAdder: 'coursewareContainerAdder'
+        }),
         displayContainerAdder() {
             this.showContaineradder = true;
             this.showBlockadder = false;
@@ -196,9 +201,9 @@ export default {
         },
         toggleFavItem(block) {
             if (this.isBlockFav(block)) {
-                this.$store.dispatch('removeFavoriteBlockType', block.type);
+                this.removeFavoriteBlockType(block.type);
             } else {
-                this.$store.dispatch('addFavoriteBlockType', block.type);
+                this.addFavoriteBlockType(block.type);
             }
         },
         isBlockFav(block) {
@@ -212,7 +217,7 @@ export default {
             return isFav;
         },
         disableContainerAdder() {
-            this.$store.dispatch('coursewareContainerAdder', false);
+            this.coursewareContainerAdder(false);
         },
         endEditFavs() {
             this.showEditFavs = false;

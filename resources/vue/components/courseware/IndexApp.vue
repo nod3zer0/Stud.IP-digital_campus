@@ -10,16 +10,19 @@
                 @select="selectStructuralElement"
             ></courseware-structural-element>
             <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions">
-                <courseware-action-widget :structural-element="selected" :canVisit="canVisit" v-if="!showSearchResults"></courseware-action-widget>
+                <courseware-action-widget v-if="!showSearchResults && canEditSelected" :structural-element="selected"></courseware-action-widget>
             </MountingPortal>
             <MountingPortal mountTo="#courseware-search-widget" name="sidebar-search">
-                <courseware-search-widget></courseware-search-widget>
+                <courseware-search-widget v-if="selected !== null"></courseware-search-widget>
             </MountingPortal>
             <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
-                <courseware-view-widget :structural-element="selected" :canVisit="canVisit" v-if="!showSearchResults"></courseware-view-widget>
+                <courseware-view-widget v-if="!showSearchResults" :structural-element="selected" :canVisit="canVisit"></courseware-view-widget>
+            </MountingPortal>
+            <MountingPortal mountTo="#courseware-import-widget" name="sidebar-import">
+                <courseware-import-widget v-if="!showSearchResults && canEditSelected" :structural-element="selected"></courseware-import-widget>
             </MountingPortal>
             <MountingPortal mountTo="#courseware-export-widget" name="sidebar-export">
-                <courseware-export-widget :structural-element="selected" :canVisit="canVisit" v-if="!showSearchResults"></courseware-export-widget>
+                <courseware-export-widget v-if="!showSearchResults" :structural-element="selected" :canVisit="canVisit"></courseware-export-widget>
             </MountingPortal>
         </div>
         <studip-progress-indicator
@@ -42,6 +45,7 @@ import CoursewareSearchResults from './CoursewareSearchResults.vue';
 import CoursewareViewWidget from './CoursewareViewWidget.vue';
 import CoursewareActionWidget from './CoursewareActionWidget.vue';
 import CoursewareExportWidget from './CoursewareExportWidget.vue';
+import CoursewareImportWidget from './CoursewareImportWidget.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareSearchWidget from './CoursewareSearchWidget.vue';
 import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
@@ -58,6 +62,7 @@ export default {
         CoursewareCompanionBox,
         StudipProgressIndicator,
         CoursewareExportWidget,
+        CoursewareImportWidget,
         CoursewareSearchWidget,
         CoursewareCompanionOverlay,
     },
@@ -89,6 +94,13 @@ export default {
                 default:
                     return this.$gettext('Beim Laden der Seite ist ein Fehler aufgetreten.');
             }
+        },
+        canEditSelected() {
+            if (this.selected) {
+                return this.selected.attributes['can-edit'];
+            }
+
+            return false;
         }
     },
     methods: {
@@ -98,7 +110,6 @@ export default {
             invalidateStructureCache: 'courseware-structure/invalidateCache',
             loadCoursewareStructure: 'courseware-structure/load',
             loadStructuralElement: 'loadStructuralElement',
-            loadTeacherStatus: 'loadTeacherStatus',
         }),
         async selectStructuralElement(id) {
             if (!id) {
@@ -120,9 +131,7 @@ export default {
             this.structureLoadingState = 'error';
             return;
         }
-        if (this.context.type === 'courses') {
-            await this.loadTeacherStatus(this.userId);
-        }
+
         this.structureLoadingState = 'done';
         const selectedId = this.$route.params?.id;
         await this.selectStructuralElement(selectedId);

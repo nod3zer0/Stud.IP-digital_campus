@@ -30,19 +30,20 @@ export default {
     computed: {
         ...mapGetters({
             blockAdder: 'blockAdder',
-            blockById: 'courseware-blocks/byId'
+            blockById: 'courseware-blocks/byId',
+            lastCreatedBlock: 'courseware-blocks/lastCreated',
         }),
     },
     methods: {
         ...mapActions({
-            createBlock: 'createBlockInContainer',
             companionInfo: 'companionInfo',
-            companionWarning: 'companionWarning',
             companionSuccess: 'companionSuccess',
-            updateContainer: 'updateContainer',
+            companionWarning: 'companionWarning',
+            createBlock: 'createBlockInContainer',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
             loadBlock: 'courseware-blocks/loadById',
+            updateContainer: 'updateContainer',
         }),
         async addBlock() {
             if (Object.keys(this.blockAdder).length !== 0) {
@@ -55,7 +56,7 @@ export default {
                     blockType: this.type,
                 });
                 //get new Block
-                const newBlock = this.$store.getters['courseware-blocks/lastCreated'];
+                const newBlock = this.lastCreatedBlock;
                 // update container information -> new block id in sections
                 let container = this.blockAdder.container;
                 container.attributes.payload.sections[this.blockAdder.section].blocks.push(newBlock.id);

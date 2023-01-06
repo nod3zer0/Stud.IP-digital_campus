@@ -36,17 +36,6 @@
                                 @blockAdded="$emit('blockAdded')"
                             />
                         </courseware-tab>
-                        <courseware-tab
-                            v-if="displaySettings"
-                            :name="$gettext('Einstellungen')"
-                            :selected="showAdmin"
-                            alias="admin"
-                            :index="2"
-                        >
-                            <courseware-tools-admin
-                                id="cw-ribbon-tool-admin"
-                            />
-                        </courseware-tab>
                     </courseware-tabs>
                     <button
                         :title="$gettext('schließen')"
@@ -62,7 +51,6 @@
 <script>
 import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
-import CoursewareToolsAdmin from './CoursewareToolsAdmin.vue';
 import CoursewareToolsBlockadder from './CoursewareToolsBlockadder.vue';
 import CoursewareToolsContents from './CoursewareToolsContents.vue';
 import { FocusTrap } from 'focus-trap-vue';
@@ -73,7 +61,6 @@ export default {
     components: {
         CoursewareTabs,
         CoursewareTab,
-        CoursewareToolsAdmin,
         CoursewareToolsBlockadder,
         CoursewareToolsContents,
         FocusTrap,
@@ -97,7 +84,6 @@ export default {
     data() {
         return {
             showContents: true,
-            showAdmin: false,
             showBlockAdder: false,
             trap: false,
             initialFocusElement: null
@@ -143,11 +129,11 @@ export default {
     },
     methods: {
         ...mapActions({
-            setToolbarItem: 'coursewareSelectedToolbarItem'
+            setToolbarItem: 'coursewareSelectedToolbarItem',
+            coursewareContainerAdder: 'coursewareContainerAdder'
         }),
         selectTool(alias) {
             this.showContents = false;
-            this.showAdmin = false;
             this.showBlockAdder = false;
 
             switch (alias) {
@@ -155,10 +141,6 @@ export default {
                     this.showContents = true;
                     this.disableContainerAdder();
                     this.scrollToCurrent();
-                    break;
-                case 'admin':
-                    this.showAdmin = true;
-                    this.disableContainerAdder();
                     break;
                 case 'blockadder':
                     this.showBlockAdder = true;
@@ -171,7 +153,7 @@ export default {
         },
         disableContainerAdder() {
             if (this.containerAdder !== false) {
-                this.$store.dispatch('coursewareContainerAdder', false);
+                this.coursewareContainerAdder(false);
             }
         },
         scrollToCurrent() {
