@@ -201,7 +201,7 @@ class CourseMember extends SimpleORMap implements PrivacyObject
      * @param string $vorname
      * @return array
      */
-    public function getMemberByIdentification(string $course_id, string $nachname, string $vorname = null): array
+    public static function getMemberByIdentification(string $course_id, string $nachname, string $vorname = null): array
     {
         return DBManager::get()->fetchAll("SELECT
                     auth_user_md5.user_id,
@@ -225,7 +225,7 @@ class CourseMember extends SimpleORMap implements PrivacyObject
      * @param string $username
      * @return Array
      */
-    public function getMemberByUsername(string $course_id, string $username): array
+    public static function getMemberByUsername(string $course_id, string $username): array
     {
         return DBManager::get()->fetchAll(
             "SELECT auth_user_md5.user_id,
@@ -250,7 +250,7 @@ class CourseMember extends SimpleORMap implements PrivacyObject
      * @param String $email
      * @return Array
      */
-    public function getMemberByEmail($course_id, $email): array
+    public static function getMemberByEmail($course_id, $email): array
     {
         return DBManager::get()->fetchAll(
             "SELECT a.user_id, username,
@@ -273,7 +273,7 @@ class CourseMember extends SimpleORMap implements PrivacyObject
      * @param string $datafield_id
      * @return Array
      */
-    public function getMemberByDatafield(string $course_id, string $nachname,  string $datafield_id): array
+    public static function getMemberByDatafield(string $course_id, string $nachname,  string $datafield_id): array
     {
         // TODO Fullname
         return DBManager::get()->fetchAll(
