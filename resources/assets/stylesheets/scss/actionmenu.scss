@@ -48,8 +48,8 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
         cursor: pointer;
         display: block;
         padding: 0;
-        width: 20px;
-        height: 20px;
+        width: $action-menu-icon-size;
+        height: $action-menu-icon-size;
 
         // Create animated icon that changes to close icon on activation/hover
         span {

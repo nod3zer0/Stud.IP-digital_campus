@@ -1,3 +1,16 @@
+<?php
+/**
+ * @var array<array{
+ *     type: string,
+ *     label: string,
+ *     link?: string,
+ *     name?: string,
+ *     object?: MultiPersonSearch,
+ *     icon: Icon,
+ *     attributes: array
+ * }> $actions
+ */
+?>
 <? // class "action-menu" will be set from API ?>
 <nav <?= arrayToHtmlAttributes($attributes) ?> aria-role="presentation">
     <button class="action-menu-icon" aria-role="button" aria-expanded="false" title="<?= htmlReady($action_menu_title) ?>">
@@ -15,7 +28,7 @@
             <? if ($action['type'] === 'link'): ?>
                 <a href="<?= htmlReady($action['link']) ?>" <?= arrayToHtmlAttributes($action['attributes']) ?>>
                     <? if ($action['icon']): ?>
-                        <?= $action['icon'] ?>
+                        <?= $action['icon']->asImg(false) ?>
                     <? else: ?>
                         <span class="action-menu-no-icon"></span>
                     <? endif ?>
@@ -24,7 +37,7 @@
             <? elseif ($action['type'] === 'button'): ?>
                 <? if ($action['icon']): ?>
                     <label class="undecorated">
-                        <?= $action['icon']->asInput($action['attributes'] + ['name' => $action['name'], 'title' => $action['label']]) ?>
+                        <?= $action['icon']->asInput(false, $action['attributes'] + ['name' => $action['name'], 'title' => $action['label']]) ?>
                         <?= htmlReady($action['label']) ?>
                     </label>
                 <? else: ?>
