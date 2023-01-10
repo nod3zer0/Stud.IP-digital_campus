@@ -820,6 +820,7 @@ export default {
             taskById: 'courseware-tasks/byId',
             userById: 'users/byId',
             lastCreatedElement: 'courseware-structural-elements/lastCreated',
+            groupById: 'status-groups/byId',
 
             blocked: 'currentElementBlocked',
             blockerId: 'currentElementBlockerId',
