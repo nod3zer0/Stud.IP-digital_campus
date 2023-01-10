@@ -355,6 +355,7 @@ export default {
         },
         solveRenewalRequest(task) {
             this.currentDialogTask = _.cloneDeep(task);
+            this.currentDialogTask.attributes['renewal-date'] = new Date().toISOString();
             this.showRenewalDialog = true;
         },
         updateRenewal() {

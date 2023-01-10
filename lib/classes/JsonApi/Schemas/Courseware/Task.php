@@ -33,7 +33,7 @@ class Task extends SchemaProvider
             'submission-date' => date('c', $resource['submission_date']),
             'submitted' => (bool) $resource['submitted'],
             'renewal' => empty($resource['renewal']) ? null : (string) $resource['renewal'],
-            'renewal-date' => $resource['renewal_date'] ? date('c', $resource['renewal_date']) : null,
+            'renewal-date' => date('c', $resource['renewal_date']),
             'mkdate' => date('c', $resource['mkdate']),
             'chdate' => date('c', $resource['chdate']),
         ];

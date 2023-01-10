@@ -328,7 +328,7 @@ class Authority
 
     public static function canDeleteTask(User $user, Task $resource): bool
     {
-        return self::canCreateTasks($user, $resource->structural_element);
+        return self::canCreateTasks($user, $resource->structural_element) && !$resource->userIsASolver($user);
     }
 
     public static function canCreateTaskFeedback(User $user, Task $resource): bool
