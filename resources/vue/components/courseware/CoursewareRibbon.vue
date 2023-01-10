@@ -38,7 +38,7 @@
                 :toolsActive="unfold"
                 :stickyRibbon="stickyRibbon"
                 :class="{ 'cw-ribbon-tools-sticky': stickyRibbon }"
-                :style="{ maxHeight: maxHeight + 'px' }"
+                :style="{ height: toolbarHeight + 'px' }"
                 :canEdit="canEdit"
                 @deactivate="deactivateToolbar"
                 @blockAdded="$emit('blockAdded')"
@@ -95,7 +95,7 @@ export default {
         breadcrumbFallback() {
             return window.outerWidth < 1200;
         },
-        maxHeight() {
+        toolbarHeight() {
             if (this.stickyRibbon) {
                 return parseInt(window.innerHeight * 0.75);
             } else {
@@ -129,7 +129,7 @@ export default {
         },
         handleScroll() {
             if (window.outerWidth > 767) {
-                this.stickyRibbon = window.scrollY > 130 && !this.consumeMode;
+                this.stickyRibbon = window.scrollY > 128 && !this.consumeMode;
             } else {
                 this.stickyRibbon = window.scrollY > 75 && !this.consumeMode;
             }
