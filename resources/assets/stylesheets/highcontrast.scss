@@ -497,7 +497,7 @@ form.default fieldset.collapsable.collapsed legend {
     @include background-icon('arr_1right', 'info_alt', 20);
 }
 
-.sidebar-widget-header .actions a img {
+.sidebar-widget-header > div > a > img {
     filter: brightness(100);
 }
 
