@@ -70,6 +70,25 @@ abstract class SchemaProvider extends BaseSchema
     {
         $path = $context->getPosition()->getLevel() ? $context->getPosition()->getPath() . '.' : '';
 
-        return in_array($path . $key, $context->getIncludePaths());
+        return in_array($path . $key, $this->getAllowedAncludePaths($context));
+    }
+
+    /**
+     * @param ContextInterface $context
+     * @return array
+     */
+    public function getAllowedAncludePaths(ContextInterface $context): array
+    {
+        $allowedIncludePaths = [];
+
+        foreach ($context->getIncludePaths() as $path) {
+            $carry = '';
+            foreach (explode('.', $path) as $p) {
+                $allowedIncludePaths[] = $carry . $p;
+                $carry .= "{$p}.";
+            }
+        }
+
+        return $allowedIncludePaths;
     }
 }
