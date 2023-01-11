@@ -937,7 +937,7 @@ class MyRealmModel
     {
         $default_modules = [];
         if ($range_type === 'course') {
-            $sem_class = SemClass::getClasses()[1];
+            $sem_class = array_values(SemClass::getClasses())[0] ?? SemClass::getDefaultSemClass();
         } else {
             $sem_class = SemClass::getDefaultInstituteClass(1);
         }
