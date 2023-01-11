@@ -140,7 +140,7 @@ export default {
     },
     computed: {
         sortedItems () {
-            return [...this.items].sort((a, b) => {
+            return [...this.allItems].sort((a, b) => {
                 if (a.icon === b.icon) {
                     return a.name.localeCompare(b.name);
                 } else {
