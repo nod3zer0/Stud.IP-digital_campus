@@ -1,5 +1,5 @@
-$image-path: "../images";
-$icon-path: "#{$image-path}/icons";
+$image-path: "../images" !default;
+$icon-path: "#{$image-path}/icons" !default;
 
 @import "mixins/misc";
 @import "mixins/colors";
