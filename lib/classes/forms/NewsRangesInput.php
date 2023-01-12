@@ -39,49 +39,32 @@ class NewsRangesInput extends Input
         }
 
         $selectable = [];
-        $studip_options = [];
-        if ($GLOBALS['perm']->have_perm('root')) {
-            $studip_options[] = [
-                'value' => 'studip__home',
-                'name'  => _('Stud.IP-Startseite'),
+
+        // Stud.IP
+        $studip_options = $this->getStudipOptions();
+        if (count($studip_options) > 0) {
+            $selectable[] = [
+                'label' => _('Stud.IP'),
+                'options' => $studip_options
             ];
         }
-        $studip_options[] = [
-            'value' => \User::findCurrent()->id . '__person',
-            'name' => _('Meine Profilseite')
-        ];
-        $selectable[] = [
-            'label' => _('Stud.IP'),
-            'options' => $studip_options
-        ];
-        if ($GLOBALS['perm']->have_perm('admin')) {
-            $inst_options = [];
-            foreach (\Institute::getMyInstitutes() as $institut) {
-                $inst_options[] = [
-                    'value' => $institut['Institut_id'] . '__institute',
-                    'name'  => (string) $institut['Name'],
-                ];
-            }
-            if (count($inst_options)) {
-                $selectable[] = [
-                    'label' => _('Einrichtungen'),
-                    'options' => $inst_options
-                ];
-            }
-        } else {
-            $course_options = [];
-            foreach (\Course::findByUser(\User::findCurrent()->id) as $course) {
-                $course_options[] = [
-                    'value' => $course->getId()."__seminar",
-                    'name' => (string) $course['name']
-                ];
-            }
-            if (count($course_options)) {
-                $selectable[] = [
-                    'label' => _('Veranstaltungen'),
-                    'options' => $course_options
-                ];
-            }
+
+        // Institutes
+        $inst_options = $this->getInstituteOptions();
+        if (count($inst_options) > 0) {
+            $selectable[] = [
+                'label' => _('Einrichtungen'),
+                'options' => $inst_options
+            ];
+        }
+
+        // Courses
+        $course_options = $this->getCourseOptions();
+        if (count($course_options) > 0) {
+            $selectable[] = [
+                'label' => _('Veranstaltungen'),
+                'options' => $course_options
+            ];
         }
 
         $template = $GLOBALS['template_factory']->open('forms/news_ranges_input');
@@ -130,5 +113,72 @@ class NewsRangesInput extends Input
             }, $new_ranges);
         }
         return [];
+    }
+
+    /**
+     * Returns a list of all possible stud.ip related ranges to link a news to.
+     */
+    public function getStudipOptions(): array
+    {
+        $options = [];
+
+        if ($GLOBALS['perm']->have_perm('root')) {
+            $options[] = [
+                'value' => 'studip__home',
+                'name'  => _('Stud.IP-Startseite'),
+            ];
+        }
+
+        $options[] = [
+            'value' => \User::findCurrent()->id . '__person',
+            'name' => _('Meine Profilseite')
+        ];
+
+        return $options;
+    }
+
+    /**
+     * Returns a list of all possible institute ranges to link a news to.
+     */
+    public function getInstituteOptions(): array
+    {
+        $options = [];
+
+        foreach (\Institute::getMyInstitutes() as $institut) {
+            if (!\StudipNews::haveRangePermission('edit', $institut['Institut_id'])) {
+                continue;
+            }
+
+            $options[] = [
+                'value' => $institut['Institut_id'] . '__institute',
+                'name'  => (string) $institut['Name'],
+            ];
+        }
+
+        return $options;
+    }
+
+    /**
+     * Returns a list of all possible course ranges to link a news to.
+     */
+    protected function getCourseOptions(): array
+    {
+        if ($GLOBALS['perm']->have_perm('admin')) {
+            return [];
+        }
+
+        $options = [];
+        foreach (\Course::findByUser(\User::findCurrent()->id) as $course) {
+            if (!\StudipNews::haveRangePermission('edit', $course->id)) {
+                continue;
+            }
+
+            $options[] = [
+                'value' => $course->id . '__seminar',
+                'name'  => (string) $course->name,
+            ];
+        }
+
+        return $options;
     }
 }
