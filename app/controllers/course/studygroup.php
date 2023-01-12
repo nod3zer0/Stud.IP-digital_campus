@@ -367,7 +367,7 @@ class Course_StudygroupController extends AuthenticatedController
         PageLayout::setHelpKeyword('Basis.StudiengruppenBearbeiten');
 
         // if we are permitted to edit the studygroup get some data...
-        if ($perm->have_studip_perm('dozent', $id)) {
+        if ($id && $perm->have_studip_perm('dozent', $id)) {
             $sem = Seminar::getInstance($id);
 
             PageLayout::setTitle(Context::getHeaderLine() . ' - ' . _('Studiengruppe bearbeiten'));
