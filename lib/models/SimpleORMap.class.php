@@ -330,13 +330,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
         }
 
-        if ($config['db_fields'][$config['pk'][0]]['extra'] == 'auto_increment') {
-            array_unshift($config['registered_callbacks']['before_store'], 'cbAutoIncrementColumn');
-            array_unshift($config['registered_callbacks']['after_create'], 'cbAutoIncrementColumn');
-        } elseif (count($config['pk']) === 1) {
-            array_unshift($config['registered_callbacks']['before_store'], 'cbAutoKeyCreation');
-        }
-
         $auto_notification_map['after_create'] = $class . 'DidCreate';
         $auto_notification_map['after_store'] = $class . 'DidStore';
         $auto_notification_map['after_delete'] = $class . 'DidDelete';
@@ -1872,10 +1865,23 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function store()
     {
+        // Set id or prepare setting of id
+        if ($this->isNew() && $this->getId() === null) {
+            // Explicitly set id to 0 if auto increment pk is null
+            if ($this->hasAutoIncrementColumn()) {
+                $this->setId(0);
+            } else {
+                $this->setId($this->getNewId());
+            }
+        }
+
         if ($this->applyCallbacks('before_store') === false) {
             return false;
         }
+
         $ret = 0;
+        $i18ncontent = [];
+
         if (!$this->isDeleted() && ($this->isDirty() || $this->isNew())) {
             if ($this->isNew()) {
                 if ($this->applyCallbacks('before_create') === false) {
@@ -1888,7 +1894,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
 
             // Collect i18n contents
-            $i18ncontent = [];
             foreach (array_keys($this->i18n_fields()) as $field) {
                 if ($this->content[$field] instanceof I18NString) {
                     $i18ncontent[$field] = $this->content[$field];
@@ -1931,30 +1936,37 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
             $ret = DBManager::get()->exec($query);
 
-            // Store i18n contents
-            if (count($i18ncontent) > 0) {
-                foreach ($i18ncontent as $field => $one) {
-                    $meta = [
-                        'object_id' => $this->getId(),
-                        'table'     => $this->db_table(),
-                        'field'     => $field
-                    ];
-                    $one->setMetadata($meta);
-                    $one->storeTranslations();
-                    if (!$this->content[$field] instanceof I18NString) {
-                        $this->content[$field] = $one;
-                        $this->content_db[$field] = clone $one;
-                    }
-                }
-            }
             if ($this->isNew()) {
+                if ($this->hasAutoIncrementColumn() && !$this->getId()) {
+                    $this->setId(DBManager::get()->lastInsertId());
+                }
+
                 $this->applyCallbacks('after_create');
             } else {
                 $this->applyCallbacks('after_update');
             }
         }
         $rel_ret = $this->storeRelations();
+
+        // Store i18n contents
+        if (count($i18ncontent) > 0) {
+            foreach ($i18ncontent as $field => $one) {
+                $meta = [
+                    'object_id' => $this->getId(),
+                    'table'     => $this->db_table(),
+                    'field'     => $field
+                ];
+                $one->setMetadata($meta);
+                $one->storeTranslations();
+                if (!$this->content[$field] instanceof I18NString) {
+                    $this->content[$field] = $one;
+                    $this->content_db[$field] = clone $one;
+                }
+            }
+        }
+
         $this->applyCallbacks('after_store');
+
         if ($ret || $rel_ret) {
             $this->restore();
         }
@@ -2342,34 +2354,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
         }
         return $unreg;
-    }
-
-    /**
-     * default callback for tables with auto_increment primary key
-     *
-     * @param string $type callback type
-     * @return boolean
-     */
-    protected function cbAutoIncrementColumn($type)
-    {
-        if ($type == 'after_create' && !$this->getId()) {
-            $this->setId(DBManager::get()->lastInsertId());
-        }
-        if ($type == 'before_store' && $this->isNew() && $this->getId() === null) {
-            $this->setId(0);
-        }
-        return true;
-    }
-
-    /**
-     * default callback for tables without auto_increment
-     * @return void
-     */
-    protected function cbAutoKeyCreation()
-    {
-        if ($this->isNew() && $this->getId() === null) {
-            $this->setId($this->getNewId());
-        }
     }
 
     /**
