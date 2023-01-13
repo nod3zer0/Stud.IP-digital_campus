@@ -1880,20 +1880,15 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
 
         $ret = 0;
-        $i18ncontent = [];
 
         if (!$this->isDeleted() && ($this->isDirty() || $this->isNew())) {
-            if ($this->isNew()) {
-                if ($this->applyCallbacks('before_create') === false) {
-                    return false;
-                }
-            } else {
-                if ($this->applyCallbacks('before_update') === false) {
-                    return false;
-                }
+            $callback = $this->isNew() ? 'before_create' : 'before_update';
+            if ($this->applyCallbacks($callback) === false) {
+                return false;
             }
 
             // Collect i18n contents
+            $i18ncontent = [];
             foreach (array_keys($this->i18n_fields()) as $field) {
                 if ($this->content[$field] instanceof I18NString) {
                     $i18ncontent[$field] = $this->content[$field];
@@ -1902,6 +1897,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 }
             }
 
+            // Create sql data assignment chunks
             foreach ($this->db_fields() as $field => $meta) {
                 $value = $this->content[$field];
                 if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
@@ -1925,6 +1921,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 $this->content[$field] = $value;
                 $query_part[] = "`$field` = " . DBManager::get()->quote($value) . " ";
             }
+
+            // Create store query
             if (!$this->isNew()) {
                 $where_query = $this->getWhereQuery();
                 $query = "UPDATE `{$this->db_table()}` SET "
@@ -1936,20 +1934,15 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
             $ret = DBManager::get()->exec($query);
 
+            // Retrieve generated id from database if pk is an auto increment
+            // column
             if ($this->isNew()) {
                 if ($this->hasAutoIncrementColumn() && !$this->getId()) {
                     $this->setId(DBManager::get()->lastInsertId());
                 }
-
-                $this->applyCallbacks('after_create');
-            } else {
-                $this->applyCallbacks('after_update');
             }
-        }
-        $rel_ret = $this->storeRelations();
 
-        // Store i18n contents
-        if (count($i18ncontent) > 0) {
+            // Store i18n contents
             foreach ($i18ncontent as $field => $one) {
                 $meta = [
                     'object_id' => $this->getId(),
@@ -1963,7 +1956,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                     $this->content_db[$field] = clone $one;
                 }
             }
+
+            // Apply callbacks
+            $this->applyCallbacks($this->isNew() ? 'after_create' : 'after_update');
         }
+        $rel_ret = $this->storeRelations();
 
         $this->applyCallbacks('after_store');
 
