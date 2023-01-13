@@ -1,5 +1,5 @@
 <template>
-    <sidebar-widget :title="$gettext('Aktionen')" v-if="structuralElement">
+    <sidebar-widget id="courseware-action-widget" :title="$gettext('Aktionen')" v-if="structuralElement">
         <template #content>
             <ul class="widget-list widget-links cw-action-widget">
                 <li v-if="canEdit" class="cw-action-widget-add">

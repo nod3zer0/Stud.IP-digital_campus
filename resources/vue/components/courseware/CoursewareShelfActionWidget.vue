@@ -1,5 +1,5 @@
 <template>
-    <sidebar-widget :title="$gettext('Aktionen')">
+    <sidebar-widget id="courseware-action-widget"  :title="$gettext('Aktionen')">
         <template #content>
             <ul class="widget-list widget-links cw-action-widget">
                 <li class="cw-action-widget-add">

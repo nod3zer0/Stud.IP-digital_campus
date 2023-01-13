@@ -92,6 +92,7 @@ class Course_CoursewareController extends CoursewareController
     {
         $sidebar = Sidebar::Get();
         $sidebar->addWidget(new VueWidget('courseware-action-widget'));
+        SkipLinks::addIndex(_('Aktionen'), 'courseware-action-widget', 21);
         $sidebar->addWidget(new VueWidget('courseware-import-widget'));
     }
 
@@ -99,6 +100,7 @@ class Course_CoursewareController extends CoursewareController
     {
         $sidebar = Sidebar::Get();
         $sidebar->addWidget(new VueWidget('courseware-action-widget'));
+        SkipLinks::addIndex(_('Aktionen'), 'courseware-action-widget', 21);
     }
 
     private function setActivitiesSidebar(): void
