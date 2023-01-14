@@ -17,7 +17,7 @@
 <form class="default" action="<?= $controller->url_for('admin/ilias_interface/save/'.$ilias_index) ?>" method="post">
 <? endif ?>
     <?= CSRFProtection::tokenTag() ?>
-    <? if (count($existing_indices) && ($ilias_index == 'new')) : ?>
+    <? if (isset($existing_indices) && count($existing_indices) && ($ilias_index == 'new')) : ?>
     <label>
         <span class="required"><?= _('Art der Verknüpfung') ?></span>
         <select name="ilias_index">

@@ -20,8 +20,10 @@
 </form>
 <script>
 jQuery(function ($) {
-    $('button[name=submit]').click(function () {
-        window.location.reload();
+    $('form.default').submit(function () {
+        window.setTimeout(function () {
+            $('button[name=cancel]').click();
+        }, 500);
     });
 });
 </script>

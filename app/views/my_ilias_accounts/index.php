@@ -5,7 +5,7 @@
         <caption>
             <?= sprintf(_('Meine Lernobjekte in %s'), $ilias->getName()) ?>
             <span class="actions">
-                <a href="<?= $controller->url_for('my_ilias_accounts/add_object/'.$ilias_index) ?>" data-dialog="size=auto;reload-on-close">
+                <a href="<?= $controller->url_for('my_ilias_accounts/add_object/'.$ilias_index) ?>" data-dialog="size=auto">
                     <?= Icon::create('add', Icon::ROLE_CLICKABLE, tooltip2(_('Neues Lernobjekt anlegen'))) ?>
                 </a>
             </span>
