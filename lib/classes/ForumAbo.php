@@ -87,8 +87,8 @@ class ForumAbo
             FROM forum_abo_users
             WHERE topic_id IN (:topic_ids)
                 AND user_id != :user_id");
-        $stmt->bindParam(':topic_ids', array_keys($path), StudipPDO::PARAM_ARRAY);
-        $stmt->bindParam(':user_id', $GLOBALS['user']->id);
+        $stmt->bindValue(':topic_ids', array_keys($path), StudipPDO::PARAM_ARRAY);
+        $stmt->bindValue(':user_id', $GLOBALS['user']->id);
         $stmt->execute();
 
         // get details for topic
