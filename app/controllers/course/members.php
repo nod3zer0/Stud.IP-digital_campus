@@ -397,8 +397,8 @@ class Course_MembersController extends AuthenticatedController
                     $lecturers = $sem->getMembers();
                     foreach ($deputies as $deputy) {
                         // ..but only if not already set as lecturer or deputy.
-                        if (!isset($lecturers[$deputy['user_id']]) && !Deputy::isDeputy($deputy['user_id'], $this->course_id)) {
-                            Deputy::addDeputy($deputy['user_id'], $this->course_id);
+                        if (!isset($lecturers[$deputy])) {
+                            Deputy::addDeputy($deputy, $this->course_id);
                         }
                     }
                 }
