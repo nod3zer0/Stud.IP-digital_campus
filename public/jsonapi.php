@@ -18,18 +18,8 @@ page_open([
 // Set base url for URLHelper class
 URLHelper::setBaseUrl($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']);
 
-$containerBuilder = new ContainerBuilder();
-
-$settings = require 'lib/classes/JsonApi/settings.php';
-$settings($containerBuilder);
-
-$dependencies = require 'lib/classes/JsonApi/dependencies.php';
-$dependencies($containerBuilder);
-
-// Build PHP_DI Container
-$container = $containerBuilder->build();
-
 // Instantiate the app
+$container = app();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 $container->set(\Slim\App::class, $app);
