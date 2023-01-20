@@ -57,13 +57,10 @@ class EvaluationObjectDB extends DatabaseObject
             return _('Systemweite Evaluationen');
         }
         $o_type = get_object_type($rangeID, ['sem', 'user', 'inst']);
-        if (in_array($o_type, ['sem', 'inst', 'fak'])) {
-            $name = Context::getHeaderLine();
-            if ($name != NULL) {
-                if ($html_decode)
-                    $rangename = decodeHTML($name);
-                else
-                    $rangename = $name;
+        if (in_array($o_type, ['sem','inst','fak'])) {
+            $range = get_object_by_range_id($rangeID);
+            if ($range) {
+                $rangename = $range->getFullname('number-name-semester');
             } else {
                 $rangename = _('Kein Titel gefunden.');
             }
