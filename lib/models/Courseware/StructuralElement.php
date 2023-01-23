@@ -817,6 +817,12 @@ SQL;
      */
     public function copy(User $user, StructuralElement $parent, string $purpose = ''): StructuralElement
     {
+        $ancestorIds = array_column($parent->findAncestors(), 'id');
+        $ancestorIds[] = $parent->id;
+        if (in_array($this->id, $ancestorIds)) {
+            throw new \InvalidArgumentException('Cannot copy into descendants.');
+        }
+
         $file_ref_id = $this->copyImage($user, $parent);
 
         $element = self::build([
