@@ -409,12 +409,10 @@ class SingleDate
         if (!$this->date) {
             return null;
         } elseif ((($end_hours - $start_hours) / 60 / 60) > 23) {
-            return sprintf('%s , %s (%s)',strftime('%a', $this->date),
-                strftime('%d.%m.%Y', $this->date),
+            return sprintf('%s (%s)', strftime('%A, %d.%m.%Y', $this->date),
                 _('ganztägig'));
         } else {
-            return sprintf('%s., %s - %s',strftime('%a', $this->date),
-                strftime('%d.%m.%Y %H:%M', $this->date),
+            return sprintf('%s - %s', strftime('%A, %d.%m.%Y %H:%M', $this->date),
                 strftime('%H:%M', $this->end_time));
         }
     }

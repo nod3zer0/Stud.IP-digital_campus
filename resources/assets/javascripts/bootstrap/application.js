@@ -171,19 +171,6 @@ STUDIP.domReady(function () {
             $('.more-dates').attr('title', $gettext('Blenden Sie die restlichen Termine ein'));
         }
     });
-
-    $(document).on('click', '.more-location-dates', function () {
-        $(this).closest('div').prev().toggle();
-        $(this).prev().toggle();
-
-        if ($(this).closest('div').prev().is(':visible')) {
-            $(this).text('(weniger)');
-            $(this).attr('title', $gettext('Blenden Sie die restlichen Termine aus'));
-        } else {
-            $(this).text('(mehr)');
-            $(this).attr('title', $gettext('Blenden Sie die restlichen Termine ein'));
-        }
-    });
 }(jQuery));
 
 /* ------------------------------------------------------------------------
