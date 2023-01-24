@@ -47,15 +47,19 @@ if (!$dates['regular']['turnus_data'] && empty($dates['irregular'])) {
 
     if (isset($dates['irregular']) && is_array($dates['irregular'])) {
         foreach ($dates['irregular'] as $date) {
-            if (!isset($irregular_rooms[$date['resource_id']])) {
-                $irregular_rooms[$date['resource_id']] = 0;
-            }
             $irregular[] = $date;
             $irregular_strings[] = $date['tostring'];
             if ($date['resource_id']) {
+                if (!isset($irregular_rooms[$date['resource_id']])) {
+                    $irregular_rooms[$date['resource_id']] = 0;
+                }
                 $irregular_rooms[$date['resource_id']]++;
             } elseif ($date['raum']) {
-                $freetext_rooms['(' . htmlReady($date['raum']) . ')']++;
+                $temp = '(' . htmlReady($date['raum']) . ')';
+                if (!isset($freetext_rooms[$temp])) {
+                    $irregular_rooms[$temp] = 0;
+                }
+                $freetext_rooms[$temp]++;
             }
         }
         // Remove invalid entry if present
