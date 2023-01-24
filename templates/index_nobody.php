@@ -24,7 +24,7 @@ if ($bg_mobile) {
 
     <div id="background-desktop" style="background: url(<?= $bg_desktop ?>) no-repeat top left/cover;"></div>
     <div id="background-mobile" style="background: url(<?= $bg_mobile ?>) no-repeat top left/cover;"></div>
-    <article id="loginbox" aria-current="page">
+    <article id="loginbox">
         <header>
             <h1><?= htmlReady(Config::get()->UNI_NAME_CLEAN) ?></h1>
         </header>

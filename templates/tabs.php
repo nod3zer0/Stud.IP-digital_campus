@@ -5,7 +5,6 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
         $path1 = $path;
     }
 }
-$ebene3 = [];
 ?>
 <div class="tabs_wrapper">
     <? SkipLinks::addIndex(_('Zweite Navigationsebene'), 'navigation-level-2', 10, false); ?>
@@ -14,7 +13,6 @@ $ebene3 = [];
         <? foreach ($navigation as $path => $nav) : ?>
             <? if ($nav->isVisible()) : ?>
                 <li id="nav_<?= $path1 ?>_<?= $path ?>"<?= $nav->isActive() ? ' class="current"' : '' ?>>
-                    <? if ($nav->isActive()) $path2 = $path; ?>
                     <? if ($nav->isEnabled()): ?>
                         <?
                         $attr = array_merge(['class' => ''], $nav->getLinkAttributes());
@@ -27,26 +25,8 @@ $ebene3 = [];
                             <? if ($image = $nav->getImage()) : ?>
                                 <?= $image->asImg(['class' => "tab-icon", 'title' => $nav->getTitle() ? $nav->getTitle() : $nav->getDescription()]) ?>
                             <? endif ?>
-                            <span title="<?= $nav->getDescription() ? htmlReady($nav->getDescription()) : htmlReady($nav->getTitle())?>" class="tab-title"><?= $nav->getTitle() ? htmlReady($nav->getTitle()) : '&nbsp;' ?></span>
+                            <span title="<?= $nav->getDescription() ? htmlReady($nav->getDescription()) : htmlReady($nav->getTitle())?>" class="tab-title"><?= htmlReady($nav->getTitle()) ?></span>
                         </a>
-                        <? if (count($nav->getSubNavigation()) > 1): ?>
-
-                        <?
-                        if ($nav->isActive()) {
-                            foreach ($nav->getSubNavigation() as $subnav) {
-                                $ebene3[$subnav->getURL()]  = $subnav;
-                            }
-                        }
-                        /*$content_group = ContentGroupMenu::get();
-                            $content_group->setLabel("");
-                            $content_group->setIcon(Icon::create('arr_1down', 'clickable', array()));
-                            foreach ($nav->getSubNavigation() as $subnav) {
-                                $content_group->addLink(URLHelper::getLink($subnav->getURL()), _($subnav->getTitle()), $subnav->getImage());
-                            }*/
-                        ?>
-                        <?//= $content_group->render(); ?>
-
-                        <? endif; ?>
                     <? else: ?>
                         <span class="quiet tab-title">
                             <? if ($image = $nav->getImage()) : ?>

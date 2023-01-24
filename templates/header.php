@@ -210,7 +210,7 @@ if ($navigation) {
     <!-- End top bar -->
 
     <!-- Main navigation and right-hand logo -->
-    <nav id="navigation-level-1" aria-current="page" aria-label="<?= _('Hauptnavigation') ?>">
+    <nav id="navigation-level-1" aria-label="<?= _('Hauptnavigation') ?>">
         <? SkipLinks::addIndex(_('Hauptnavigation'), 'navigation-level-1', 2, false); ?>
         <ul id="navigation-level-1-items" <? if (count($header_nav['hidden']) > 0) echo 'class="overflown"'; ?>>
         <? foreach ($header_nav['visible'] as $path => $nav): ?>
@@ -289,7 +289,7 @@ if ($navigation) {
             <? endif ?>
 
             <? SkipLinks::addIndex(_('Zweite Navigationsebene'), 'navigation-level-2', 910) ?>
-            <nav id="navigation-level-2" aria-current="page" aria-label="<?= _('Zweite Navigationsebene') ?>">
+            <nav id="navigation-level-2" aria-label="<?= _('Zweite Navigationsebene') ?>">
 
                 <? if (PageLayout::isHeaderEnabled() /*&& isset($navigation)*/) : ?>
                     <?= $this->render_partial('tabs', compact('navigation')) ?>

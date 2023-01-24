@@ -399,7 +399,13 @@ class Navigation implements IteratorAggregate
      */
     public function getLinkAttributes()
     {
-        return $this->link_attributes;
+        $attributes = $this->link_attributes;
+
+        if ($this->isActive()) {
+            $attributes['aria-current'] = 'page';
+        }
+
+        return $attributes;
     }
 
     /**
