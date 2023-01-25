@@ -156,6 +156,8 @@ class OpenGraphURL extends SimpleORMap
             return;
         }
 
+        $isOpenGraph = false;
+
         $response = FileManager::fetchURLMetadata($this['url']);
         if ($response['response_code'] == 200 && mb_strpos($response['Content-Type'],'html') !== false) {
             if (preg_match('/(?<=charset=)[^;]*/i', $response['Content-Type'], $match)) {
@@ -186,7 +188,6 @@ class OpenGraphURL extends SimpleORMap
 
             $metatags = $doc->getElementsByTagName('meta');
             $reservedTags = ['url', 'chdate', 'mkdate', 'last_update', 'is_opengraph', 'data'];
-            $isOpenGraph = false;
             $ogTags = [];
             $data = [];
             foreach ($metatags as $tag) {
@@ -230,6 +231,7 @@ class OpenGraphURL extends SimpleORMap
             }
             $this['data'] = $data;
         }
+
         $this['is_opengraph'] = (int) $isOpenGraph;
     }
 
