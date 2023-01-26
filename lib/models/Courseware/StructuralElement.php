@@ -373,9 +373,9 @@ class StructuralElement extends \SimpleORMap
      */
     public function hasEditingPermission($user): bool
     {
-        return $GLOBALS['perm']->have_perm('root', $user->id) ||
-            $GLOBALS['perm']->have_studip_perm(
-                \CourseConfig::get($this->range_id)->COURSEWARE_EDITING_PERMISSION[$this->getCoursewareCourse($this->range_id)->id],
+        return $GLOBALS['perm']->have_perm('root', $user->id)
+            || $GLOBALS['perm']->have_studip_perm(
+                \CourseConfig::get($this->range_id)->COURSEWARE_EDITING_PERMISSION[$this->getCoursewareCourse($this->range_id)->id] ?? 'tutor',
                 $this->range_id,
                 $user->id
             );
@@ -661,7 +661,7 @@ class StructuralElement extends \SimpleORMap
             $root = $this->findAncestors()[0];
         }
 
-        return Unit::findOneBySQL('structural_element_id = ?', [$root->id]); 
+        return Unit::findOneBySQL('structural_element_id = ?', [$root->id]);
     }
 
     /**
