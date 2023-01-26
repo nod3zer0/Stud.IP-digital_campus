@@ -46,9 +46,9 @@ class OERHost extends OERIdentity
         ]);
     }
 
-    public static function findBySQL($condition, $params = [])
+    public static function findBySQL($sql, $params = [])
     {
-        $hosts = parent::findBySQL($condition, $params);
+        $hosts = parent::findBySQL($sql, $params);
         foreach ($hosts as $key => $host) {
             $class = $host['sorm_class'];
             if ($class && ($class !== 'OERHost') && is_subclass_of($class, 'OERHost')) {
