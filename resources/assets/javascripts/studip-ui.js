@@ -1,4 +1,5 @@
 import { $gettext } from './lib/gettext.js';
+import eventBus from "./lib/event-bus";
 
 /**
  * This file contains extensions/adjustments for jQuery UI.
@@ -50,82 +51,6 @@ import { $gettext } from './lib/gettext.js';
     if ($.ui.timepicker === undefined) {
         return;
     }
-
-    // Setup defaults and default locales
-    var defaults = {},
-        locale = {
-            closeText: $gettext('Schließen'),
-            prevText: $gettext('Zurück'),
-            nextText: $gettext('Vor'),
-            currentText: $gettext('Jetzt'),
-            monthNames: [
-                $gettext('Januar'),
-                $gettext('Februar'),
-                $gettext('März'),
-                $gettext('April'),
-                $gettext('Mai'),
-                $gettext('Juni'),
-                $gettext('Juli'),
-                $gettext('August'),
-                $gettext('September'),
-                $gettext('Oktober'),
-                $gettext('November'),
-                $gettext('Dezember')
-            ],
-            monthNamesShort: [
-                $gettext('Jan'),
-                $gettext('Feb'),
-                $gettext('Mär'),
-                $gettext('Apr'),
-                $gettext('Mai'),
-                $gettext('Jun'),
-                $gettext('Jul'),
-                $gettext('Aug'),
-                $gettext('Sep'),
-                $gettext('Okt'),
-                $gettext('Nov'),
-                $gettext('Dez')
-            ],
-            dayNames: [
-                $gettext('Sonntag'),
-                $gettext('Montag'),
-                $gettext('Dienstag'),
-                $gettext('Mittwoch'),
-                $gettext('Donnerstag'),
-                $gettext('Freitag'),
-                $gettext('Samstag')
-            ],
-            dayNamesShort: [
-                $gettext('So'),
-                $gettext('Mo'),
-                $gettext('Di'),
-                $gettext('Mi'),
-                $gettext('Do'),
-                $gettext('Fr'),
-                $gettext('Sa')
-            ],
-            weekHeader: $gettext('Wo'),
-            dateFormat: 'dd.mm.yy',
-            firstDay: 1,
-            isRTL: false,
-            showMonthAfterYear: false,
-            yearSuffix: '',
-            changeMonth: true,
-            changeYear: true,
-            timeOnlyTitle: $gettext('Zeit wählen'),
-            timeText: $gettext('Zeit'),
-            hourText: $gettext('Stunde'),
-            minuteText: $gettext('Minute'),
-            secondText: $gettext('Sekunde'),
-            millisecText: $gettext('Millisekunde'),
-            microsecText: $gettext('Mikrosekunde'),
-            timezoneText: $gettext('Zeitzone'),
-            timeFormat: $gettext('HH:mm'),
-            amNames: [$gettext('vorm.'), 'AM', 'A'],
-            pmNames: [$gettext('nachm.'), 'PM', 'P']
-        };
-    // Set dayNamesMin to dayNamesShort since they are equal
-    locale.dayNamesMin = locale.dayNamesShort;
 
     // Setup Stud.IP's own datepicker extensions
     STUDIP.UI = STUDIP.UI || {};
@@ -545,7 +470,7 @@ import { $gettext } from './lib/gettext.js';
     };
 
     // Apply defaults including date picker handlers
-    defaults = Object.assign({}, locale, {
+    const defaults = {
         beforeShow (input) {
             STUDIP.UI.Datepicker.refresh();
             STUDIP.UI.DateTimepicker.refresh();
@@ -566,9 +491,10 @@ import { $gettext } from './lib/gettext.js';
                 $(this).change();
             }
         }
-    });
+    };
 
-    $.datepicker.setDefaults(Object.assign({}, defaults, {
+    $.datepicker.setDefaults({
+        ...defaults,
         beforeShow (input) {
             // Don't lose original behaviour
             defaults.beforeShow(input);
@@ -601,7 +527,88 @@ import { $gettext } from './lib/gettext.js';
                 $(window).unbind('scroll.datepicker-scroll');
             }
         }
-    }));
+    });
+
+    $.timepicker.setDefaults(defaults);
+
+    eventBus.on('studip:set-locale', () => {
+        const locale = {
+            closeText: $gettext('Schließen'),
+            prevText: $gettext('Zurück'),
+            nextText: $gettext('Vor'),
+            currentText: $gettext('Jetzt'),
+            monthNames: [
+                $gettext('Januar'),
+                $gettext('Februar'),
+                $gettext('März'),
+                $gettext('April'),
+                $gettext('Mai'),
+                $gettext('Juni'),
+                $gettext('Juli'),
+                $gettext('August'),
+                $gettext('September'),
+                $gettext('Oktober'),
+                $gettext('November'),
+                $gettext('Dezember')
+            ],
+            monthNamesShort: [
+                $gettext('Jan'),
+                $gettext('Feb'),
+                $gettext('Mär'),
+                $gettext('Apr'),
+                $gettext('Mai'),
+                $gettext('Jun'),
+                $gettext('Jul'),
+                $gettext('Aug'),
+                $gettext('Sep'),
+                $gettext('Okt'),
+                $gettext('Nov'),
+                $gettext('Dez')
+            ],
+            dayNames: [
+                $gettext('Sonntag'),
+                $gettext('Montag'),
+                $gettext('Dienstag'),
+                $gettext('Mittwoch'),
+                $gettext('Donnerstag'),
+                $gettext('Freitag'),
+                $gettext('Samstag')
+            ],
+            dayNamesShort: [
+                $gettext('So'),
+                $gettext('Mo'),
+                $gettext('Di'),
+                $gettext('Mi'),
+                $gettext('Do'),
+                $gettext('Fr'),
+                $gettext('Sa')
+            ],
+            weekHeader: $gettext('Wo'),
+            dateFormat: 'dd.mm.yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: '',
+            changeMonth: true,
+            changeYear: true,
+            timeOnlyTitle: $gettext('Zeit wählen'),
+            timeText: $gettext('Zeit'),
+            hourText: $gettext('Stunde'),
+            minuteText: $gettext('Minute'),
+            secondText: $gettext('Sekunde'),
+            millisecText: $gettext('Millisekunde'),
+            microsecText: $gettext('Mikrosekunde'),
+            timezoneText: $gettext('Zeitzone'),
+            timeFormat: $gettext('HH:mm'),
+            amNames: [$gettext('vorm.'), 'AM', 'A'],
+            pmNames: [$gettext('nachm.'), 'PM', 'P']
+        };
+        // Set dayNamesMin to dayNamesShort since they are equal
+        locale.dayNamesMin = locale.dayNamesShort;
+
+        $.datepicker.setDefaults(locale);
+        $.timepicker.setDefaults(locale);
+    });
 
     var DpHideOnScroll = function () {
         var input = arguments[0];
@@ -615,10 +622,6 @@ import { $gettext } from './lib/gettext.js';
         _gotoToday.call(this, id);
         this._selectDate(id);
     };
-
-    $.timepicker.setDefaults(Object.assign({}, defaults, {
-        timeFormat: 'HH:mm'
-    }));
 
     // Attach global focus handler on date picker elements
     $(document).on('focus', STUDIP.UI.Datepicker.selector, () => {
