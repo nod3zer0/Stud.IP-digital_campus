@@ -560,6 +560,7 @@ import { $gettext } from './lib/gettext.js';
                 'z-index': 1002
             });
         },
+        showButtonPanel: true,
         onSelect: function (value, instance) {
             if (value !== instance.lastVal) {
                 $(this).change();
@@ -607,6 +608,13 @@ import { $gettext } from './lib/gettext.js';
         $(input).blur();
         $(input).datepicker('hide');
     }
+
+    // Jump to current date when "Now" is clicked
+    var _gotoToday = $.datepicker._gotoToday;
+    $.datepicker._gotoToday = function(id) {
+        _gotoToday.call(this, id);
+        this._selectDate(id);
+    };
 
     $.timepicker.setDefaults(Object.assign({}, defaults, {
         timeFormat: 'HH:mm'
