@@ -101,11 +101,11 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
     /**
      * @return BlubberThread[]
      */
-    public static function findBySQL($sql, $params = [])
+    public static function findBySQL($condition, $params = [])
     {
-        return parent::findAndMapBySQL(function ($thread) {
+        return parent::findAndMapBySQL(function (BlubberThread $thread) {
             return self::upgradeThread($thread);
-        }, $sql, $params);
+        }, $condition, $params);
     }
 
     /**
