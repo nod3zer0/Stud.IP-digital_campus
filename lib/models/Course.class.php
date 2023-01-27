@@ -935,7 +935,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
      * @param bool $with_deputies Whether to include courses where the user is
      *     a deputy (true) or not (false). Defaults to true.
      *
-     * @returns Course[] A list of courses.
+     * @return Course[] A list of courses.
      */
     public static function findByUser($user_id, $perms = [], $with_deputies = true)
     {
@@ -960,6 +960,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         return Course::findBySQL(
             "LEFT JOIN semester_courses ON (semester_courses.course_id = seminare.Seminar_id)
              WHERE Seminar_id IN (?)
+             GROUP BY seminare.Seminar_id
              ORDER BY IF(semester_courses.semester_id IS NULL, 1, 0) DESC, start_time DESC, Name ASC",
             [$seminar_ids]
         );
