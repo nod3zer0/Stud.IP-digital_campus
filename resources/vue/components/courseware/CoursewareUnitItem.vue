@@ -94,13 +94,13 @@ export default {
         menuItems() {
             let menu = [];
             if (this.inCourseContext) {
-                menu.push({ id: 1, label: this.$gettext('Fortschritt'), icon: 'check-circle', emit: 'showProgress' });
+                menu.push({ id: 1, label: this.$gettext('Fortschritt'), icon: 'progress', emit: 'showProgress' });
             }
             if(this.userIsTeacher && this.inCourseContext) {
-                menu.push({ id: 2, label: this.$gettext('Einstellungen'), icon: 'admin', emit: 'showSettings' });
+                menu.push({ id: 2, label: this.$gettext('Einstellungen'), icon: 'settings', emit: 'showSettings' });
             }
             if(this.userIsTeacher || !this.inCourseContext) {
-                menu.push({ id: 3, label: this.$gettext('Kopieren'), icon: 'files', emit: 'copyUnit' });
+                menu.push({ id: 3, label: this.$gettext('Kopieren'), icon: 'copy', emit: 'copyUnit' });
                 menu.push({ id: 4, label: this.$gettext('Exportieren'), icon: 'export', emit: 'showExport' });
                 menu.push({ id: 5, label: this.$gettext('Löschen'), icon: 'trash', emit: 'showDelete' });
             }

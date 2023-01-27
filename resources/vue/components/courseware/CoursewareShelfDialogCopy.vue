@@ -182,7 +182,7 @@ export default {
     data() {
         return {
             wizardSlots: [
-                { id: 1, valid: false, name: 'source', title: this.$gettext('Quelle'), icon: 'network',
+                { id: 1, valid: false, name: 'source', title: this.$gettext('Quelle'), icon: 'source',
                   description: this.$gettext('Wählen Sie hier den Ort in Stud.IP aus, an dem sich das zu kopierende Lernmaterial befindet.') },
                 { id: 2, valid: false, name: 'unit', title: this.$gettext('Lernmaterial'), icon: 'courseware',
                   description: this.$gettext('Wählen Sie hier das gewünschte Lernmaterial aus der Liste aus. Eine Auswahl wird durch einen grauen Hintergrund und einen Kontrollhaken angezeigt.') },

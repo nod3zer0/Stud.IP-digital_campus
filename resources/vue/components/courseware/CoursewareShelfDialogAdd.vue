@@ -135,7 +135,7 @@ export default {
                   description: this.$gettext('Wählen Sie einen kurzen, prägnanten Titel und beschreiben Sie in einigen Worten den Inhalt des Lernmaterials. Eine Beschreibung erleichtert Lernenden die Auswahl des Lernmaterials.') },
                 { id: 2, valid: true, name: 'layout', title: this.$gettext('Erscheinung'), icon: 'picture',
                   description: this.$gettext('Ein Vorschaubild motiviert Lernende das Lernmaterial zu erkunden. Die Kombination aus Bild und Farbe erleichtert das wiederfinden des Lernmaterials in der Übersicht.') },
-                { id: 3, valid: true, name: 'advanced', title: this.$gettext('Zusatzangaben'), icon: 'doctoral_cap',
+                { id: 3, valid: true, name: 'advanced', title: this.$gettext('Zusatzangaben'), icon: 'info-list',
                   description: this.$gettext('Hier können Sie detaillierte Angaben zum Lernmaterial eintragen. Diese sind besonders interessant wenn das Lernmaterial als OER geteilt wird.') }
             ],
             text: {

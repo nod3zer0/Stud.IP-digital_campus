@@ -2084,18 +2084,18 @@ v i e w  w i d g e t
         @include background-icon(export, clickable);
     }
     .cw-export-widget-export-pdf{
-        @include background-icon(file-pdf, clickable);
+        @include background-icon(export, clickable);
     }
     .cw-export-widget-oer{
-        @include background-icon(oer-campus, clickable);
+        @include background-icon(share, clickable);
     }
 }
 .cw-import-widget {
     .cw-import-widget-archive{
-        @include background-icon(file-archive, clickable);
+        @include background-icon(import, clickable);
     }
     .cw-import-widget-copy{
-        @include background-icon(files, clickable);
+        @include background-icon(copy, clickable);
     }
     .cw-import-widget-import{
         @include background-icon(import, clickable);
