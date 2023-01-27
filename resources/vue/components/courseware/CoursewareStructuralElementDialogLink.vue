@@ -1,6 +1,6 @@
 <template>
     <studip-wizard-dialog
-        :title="$gettext('Seite verknüpfen')"
+        :title="$gettext('Seiten verknüpfen')"
         :confirmText="$gettext('Verknüpfen')"
         :closeText="$gettext('Abbrechen')"
         :lastRequiredSlotId="2"

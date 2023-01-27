@@ -1,6 +1,6 @@
 <template>
     <studip-dialog
-        :title="$gettext('Lerninhalte importieren')"
+        :title="$gettext('Seiten importieren')"
         :confirmText="$gettext('Importieren')"
         :confirmDisabled="importRunning || importAborted"
         :closeText="importRunning || importAborted ? $gettext('Schließen') : $gettext('Abbrechen')"

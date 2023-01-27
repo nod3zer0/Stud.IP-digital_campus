@@ -131,7 +131,7 @@
                         />
                         <courseware-companion-box
                             v-if="editView"
-                            :msgCompanion="$gettextInterpolate($gettext('Dieser Inhalt ist aus den persönlichen Lerninhalten von %{ ownerName } verlinkt und kann nur dort bearbeitet werden.'), { ownerName: ownerName })"
+                            :msgCompanion="$gettextInterpolate($gettext('Dieser Inhalt ist aus den persönlichen Lernmaterialien von %{ ownerName } verlinkt und kann nur dort bearbeitet werden.'), { ownerName: ownerName })"
                             mood="pointing"
                         />
                         <component

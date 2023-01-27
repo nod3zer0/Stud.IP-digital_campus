@@ -4,7 +4,7 @@
             <ul class="widget-list widget-links cw-export-widget" v-if="structuralElement">
                 <li v-if="showExportArchiv" class="cw-export-widget-export">
                     <button @click="exportElement">
-                        {{ $gettext('Lerninhalte exportieren') }}
+                        {{ $gettext('Seiten exportieren') }}
                     </button>
                 </li>
                 <li v-if="showExportPdf" class="cw-export-widget-export-pdf">

@@ -2072,9 +2072,6 @@ v i e w  w i d g e t
     .cw-action-widget-oer{
         @include background-icon(oer-campus, clickable);
     }
-    .cw-action-widget-link {
-        @include background-icon(group, clickable);
-    }
     .cw-action-widget-remove-lock{
         @include background-icon(lock-unlocked, clickable);
     }
@@ -2099,6 +2096,9 @@ v i e w  w i d g e t
     }
     .cw-import-widget-import{
         @include background-icon(import, clickable);
+    }
+    .cw-action-widget-link {
+        @include background-icon(group, clickable);
     }
 }
 

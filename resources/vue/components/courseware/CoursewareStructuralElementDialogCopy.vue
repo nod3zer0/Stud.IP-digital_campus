@@ -1,6 +1,6 @@
 <template>
     <studip-wizard-dialog
-        :title="$gettext('Lerninhalte kopieren')"
+        :title="$gettext('Seiten kopieren')"
         :confirmText="$gettext('Kopieren')"
         :closeText="$gettext('Abbrechen')"
         :lastRequiredSlotId="3"
