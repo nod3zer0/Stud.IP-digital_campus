@@ -3,6 +3,7 @@
 use Courseware\StructuralElement;
 use Courseware\Block;
 use Courseware\Container;
+use Courseware\Unit;
 
 /**
  * Global search module for files
@@ -115,6 +116,7 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
     {
         $user = $GLOBALS['user'];
         $structural_element = StructuralElement::find($data['id']);
+        $unit = $structural_element->findUnit();
         if ($structural_element->canRead($user)) {
             if ($data['type'] === 'cw_structural_elements') {
                 $description = self::mark($structural_element->payload['description'], $search, true);
@@ -125,12 +127,16 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
             if ($data['type'] === 'cw_blocks') {
                 $description = _('Suchbegriff wurde in einem Block gefunden');
             }
-            $pageData = self::getPageData($structural_element);
+            $pageData = self::getPageData($structural_element, $unit);
             $date = new DateTime();
             $date->setTimestamp($structural_element->chdate);
 
+            $name = $unit->structural_element->id === $structural_element->id
+                  ? $structural_element->title
+                  : $unit->structural_element->title . ': ' . $structural_element->title;
+
             return [
-                'name' => self::mark($structural_element->title, $search, true),
+                'name' => self::mark($name, $search, true),
                 'description' => $description,
                 'url' => $pageData['url'],
                 'img' => $structural_element->image ? $structural_element->getImageUrl() : Icon::create('courseware')->asImagePath(),
@@ -143,14 +149,14 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
         return [];
     }
 
-    private static function getPageData(StructuralElement $structural_element): Array
+    private static function getPageData(StructuralElement $structural_element, Unit $unit): Array
     {
         $url = '';
         $originUrl = '';
         $originName = '';
         if ($structural_element->range_type === 'course') {
             $url = URLHelper::getURL(
-                "dispatch.php/course/courseware?cid={$structural_element->range_id}#/structural_element/{$structural_element->id}",
+                "dispatch.php/course/courseware/courseware/{$unit->id}?cid={$structural_element->range_id}#/structural_element/{$structural_element->id}",
                 [],
                 true);
             $originUrl = URLHelper::getURL(
@@ -161,7 +167,7 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
         }
         if ($structural_element->range_type === 'user') {
             $url = URLHelper::getURL(
-                "dispatch.php/contents/courseware/courseware#/structural_element/{$structural_element->id}",
+                "dispatch.php/contents/courseware/courseware/{$unit->id}#/structural_element/{$structural_element->id}",
                 [],
                 true);
             $originUrl = URLHelper::getURL(
@@ -170,6 +176,7 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
                 true);
             $originName = _('Persönliche Lernmaterialien');
         }
+
 
         return array(
             'url' => $url,
