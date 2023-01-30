@@ -130,7 +130,16 @@ class DatafieldEntryModel extends SimpleORMap implements PrivacyObject
             $params[':one_datafield_id'] = $datafield_id;
         }
 
-        if ($object_type === 'studycourse') {
+        if ($object_type === 'sem' || $object_type === 'inst') {
+            // find datafields by status (int)
+            $query .= " AND (object_class = :object_class OR object_class IS NULL) ORDER BY priority";
+            $params = array_merge($params, [
+                ':range_id'     => (string) $range_id,
+                ':sec_range_id' => (string) $sec_range_id,
+                ':object_type'  => $object_type,
+                ':object_class' => (int) $object_class
+            ]);
+        } else if ($object_type === 'studycourse') {
             $query .= " AND (LOCATE(:object_class, object_class) OR LOCATE('all', object_class)) ORDER BY priority";
             $params = array_merge($params,[
                 ':range_id'     => (string) $range_id,
