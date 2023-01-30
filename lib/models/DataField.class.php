@@ -98,7 +98,11 @@ class DataField extends SimpleORMap implements PrivacyObject
         }
 
         if ($objectClass) {
-            $condition = ['object_class & ?'];
+            if (in_array($objectType, ['user', 'userinstrole', 'usersemdata', 'roleinstdata'])) {
+                $condition = ['object_class & ?'];
+            } else {
+                $condition = ['object_class = ?'];
+            }
             if ($includeNullClass) {
                 $condition[] = 'object_class IS NULL';
             }
