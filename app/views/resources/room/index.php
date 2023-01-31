@@ -69,7 +69,7 @@
 <? endif ?>
 
 <footer data-dialog-button>
-    <? if ($room->userHasPermission(User::findCurrent(), 'autor')) : ?>
+    <? if ($current_user_is_resource_autor) : ?>
         <?= \Studip\LinkButton::create(
             _('Wochenbelegung'),
             $room->getActionURL('booking_plan')
@@ -78,7 +78,7 @@
             _('Semesterbelegung'),
             $room->getActionURL('semester_plan')
         ) ?>
-    <? elseif ($room->bookingPlanVisibleForUser(User::findCurrent())) : ?>
+    <? elseif ($booking_plan_is_visible) : ?>
         <?= \Studip\LinkButton::create(
             _('Belegungsplan'),
             $room->getActionURL('booking_plan')
@@ -97,7 +97,7 @@
             )
         ) ?>
     <? endif ?>
-    <? if ($room->userHasPermission(User::findCurrent(), 'admin')) : ?>
+    <? if ($current_user_is_resource_admin) : ?>
         <?= \Studip\LinkButton::createEdit(
             _('Bearbeiten'),
             $room->getActionURL('edit'),
@@ -106,11 +106,10 @@
             ]
         ) ?>
     <? endif ?>
-    <? if (!$current_user_is_resource_autor && $room->requestable) : ?>
+    <? if (!$current_user_is_resource_autor && $room->requestable && $current_user_has_request_rights) : ?>
         <?= \Studip\LinkButton::create(
             _('Raum anfragen'),
             $room->getActionURL('request'),
             ['data-dialog' => 'size=auto']) ?>
     <? endif ?>
 </footer>
-

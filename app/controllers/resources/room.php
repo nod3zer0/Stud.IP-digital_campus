@@ -33,6 +33,7 @@ class Resources_RoomController extends AuthenticatedController
 
     public function index_action($room_id = null)
     {
+        $this->user = User::findCurrent();
         $this->room = Room::find($room_id);
 
         if (!$this->room) {
@@ -54,20 +55,12 @@ class Resources_RoomController extends AuthenticatedController
             Navigation::activateItem('/room_management/overview/index');
         }
 
-        $user                                 = User::findCurrent();
-        $current_user_is_resource_admin       = $this->room->userHasPermission(
-            $user,
-            'admin'
-        );
-        $current_user_is_resource_tutor       = $this->room->userHasPermission(
-            $user,
-            'tutor'
-        );
-        $this->current_user_is_resource_autor = $this->room->userHasPermission(
-            $user,
-            'autor'
-        );
-        $current_user_is_resource_user        = $this->room->userHasPermission($user);
+        $this->current_user_is_resource_admin  = $this->room->userHasPermission($this->user, 'admin');
+        $current_user_is_resource_tutor        = $this->room->userHasPermission($this->user, 'tutor');
+        $this->current_user_is_resource_autor  = $this->room->userHasPermission($this->user, 'autor');
+        $this->current_user_has_request_rights = $this->room->userHasRequestRights($this->user);
+        $current_user_is_resource_user         = $this->room->userHasPermission($this->user);
+        $this->booking_plan_is_visible         = $this->room->bookingPlanVisibleForUser($this->user);
 
         $sidebar           = Sidebar::get();
         $actions           = new ActionsWidget();
@@ -92,7 +85,7 @@ class Resources_RoomController extends AuthenticatedController
                         'target' => '_blank'
                     ]
                 );
-            } elseif ($this->room->bookingPlanVisibleForUser($user)) {
+            } elseif ($this->booking_plan_is_visible) {
                 $actions_available = true;
                 $actions->addLink(
                     _('Belegungsplan'),
@@ -111,7 +104,7 @@ class Resources_RoomController extends AuthenticatedController
                     ]
                 );
             }
-            if ($current_user_is_resource_admin) {
+            if ($this->current_user_is_resource_admin) {
                 $actions_available = true;
                 $actions->addLink(
                     _('Raum bearbeiten'),
@@ -142,7 +135,10 @@ class Resources_RoomController extends AuthenticatedController
                 );
             }
         }
-        if (!$this->current_user_is_resource_autor && $this->room->requestable) {
+        if (!$this->current_user_is_resource_autor
+            && $this->room->requestable
+            && $this->current_user_has_request_rights
+        ) {
             $actions_available = true;
             $actions->addLink(
                 _('Raum anfragen'),
