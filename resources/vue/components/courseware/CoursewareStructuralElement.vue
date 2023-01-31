@@ -1518,8 +1518,6 @@ export default {
             const title = this.newChapterName; // this is the title of the new element
             const purpose = this.newChapterPurpose;
             let parent_id = this.currentId; // new page is descandant as default
-            let writeApproval = this.currentElement.attributes['write-approval'];
-            let readApproval = this.currentElement.attributes['read-approval'];
 
             this.errorEmptyChapterName = title.trim();
             if (this.errorEmptyChapterName === '') {
@@ -1527,16 +1525,12 @@ export default {
             }
             if (this.newChapterParent === 'sibling') {
                 parent_id = this.structuralElement.relationships.parent.data.id;
-                writeApproval = [];
-                readApproval = [];
             }
             this.showElementAddDialog(false);
             this.createStructuralElement({
                 attributes: {
                     title: title,
                     purpose: purpose,
-                    'write-approval':  writeApproval,
-                    'read-approval': readApproval
                 },
                 templateId: this.newChapterTemplate ? this.newChapterTemplate.id : null,
                 parentId: parent_id,

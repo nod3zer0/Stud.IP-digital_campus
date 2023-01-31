@@ -837,6 +837,8 @@ SQL;
             'position' => $parent->countChildren(),
             'payload' => $this->payload,
             'image_id' => $file_ref_id,
+            'read_approval' => $parent->read_approval,
+            'write_approval' => $parent->write_approval
         ]);
 
         $element->store();
@@ -944,6 +946,8 @@ SQL;
             'purpose' => $this->purpose,
             'position' => $parent->countChildren(),
             'payload' => $this->payload,
+            'read_approval' => $parent->read_approval,
+            'write_approval' => $parent->write_approval
         ]);
 
         $element->store();
