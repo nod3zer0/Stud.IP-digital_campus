@@ -32,7 +32,7 @@
                 <courseware-companion-box
                     v-else
                     mood="sad"
-                    :msgCompanion="$gettext('Es konnte leider kein Lernmaterial gefunden werden.')"
+                    :msgCompanion="$gettext('Es konnte leider kein Lernmaterial gefunden werden. Bitte erstellen Sie unter Arbeitsplatz/Courseware ein Lernmaterial.')"
                 />
             </form>
             <studip-progress-indicator 
@@ -110,7 +110,7 @@ export default {
         return {
             wizardSlots: [
                 {id: 1, valid: false, name: 'unit', title: this.$gettext('Lernmaterial'), icon: 'courseware', 
-                description: this.$gettext('Wählen Sie das Lernmaterial aus, in dem sich der zu verknüpfende Lerninhalt befindet.')},
+                description: this.$gettext('Wählen Sie das Lernmaterial aus, in dem sich der zu verknüpfende Lerninhalt befindet. Die Lerninhalte, die verknüpft werden können, müssen unter Arbeitsplatz/Courseware vorher erstellt werden.')},
                 {id: 2, valid: false, name: 'element', title: this.$gettext('Seite'), icon: 'content2', 
                 description: this.$gettext('Wählen Sie die zu verknüpfende Seite aus. Vorausgewählt ist die oberste Seite des ausgewählten Lernmaterials. Unterseiten erreichen Sie über die Schaltflächen im Bereich "Unterseiten". Sie können über die "zurück zu" Schaltfläche das übergeordnete Element anwählen. Die ausgewählte Seite ist mit einem Kontrollhaken markiert.')},            ],
             loadingUnits: false,
