@@ -1,6 +1,5 @@
 CODECEPT  = composer/bin/codecept
 CATALOGS  = locale/en/LC_MESSAGES/studip.mo locale/en/LC_MESSAGES/js-resources.json
-NPM_BIN   = $(shell npm bin)
 RESOURCES = $(shell find resources -type f)
 
 PHP_SOURCES = $(shell find app config lib public templates -name '*.php' \( ! -path 'public/plugins_packages/*' -o -path 'public/plugins_packages/core/*' \))
@@ -79,17 +78,17 @@ test-unit: $(CODECEPT)
 catalogs: npm $(CATALOGS)
 
 optimize-icons: npm
-	find public/assets/images/icons -type f | xargs -P0 $(NPM_BIN)/svgo -q --config=config/svgo.config.js
+	find public/assets/images/icons -type f | xargs -P0 npx svgo -q --config=config/svgo.config.js
 
 # default rules for gettext handling
 js-%.pot: $(VUE_SOURCES)
-	$(NPM_BIN)/gettext-extract --attribute v-translate --output $@ $(VUE_SOURCES)
+	npx gettext-extract --attribute v-translate --output $@ $(VUE_SOURCES)
 
 js-%.po: js-%.pot
 	msgmerge -qU -C $(dir $@)studip.po $@ $<
 
 js-%.json: js-%.po
-	$(NPM_BIN)/gettext-compile --output $@ $<
+	npx gettext-compile --output $@ $<
 	sed -i~ 's/^{[^{]*//;s/}$$//' $@
 
 %.pot: $(PHP_SOURCES)
