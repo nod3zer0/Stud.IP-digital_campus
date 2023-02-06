@@ -43,5 +43,12 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
     <? if (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('autor')) : ?>
         <?= Helpbar::get()->render() ?>
     <? endif; ?>
-    <div id="non-responsive-toggle-fullscreen"></div>
+    <? if (User::findCurrent()) : ?>
+    <div id="non-responsive-toggle-fullscreen">
+        <button class="styleless" id="fullscreen-on"
+                title="<?= _('Kompakte Navigation aktivieren') ?>">
+            <?= Icon::create('screen-compact')->asImg(24) ?>
+        </button>
+    </div>
+    <? endif ?>
 </div>

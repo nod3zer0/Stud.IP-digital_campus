@@ -26,10 +26,15 @@ const Responsive = {
         return Responsive.media_query.matches;
     },
 
-    isFullscreen() {
+    isCompactNavigation() {
         const cache = STUDIP.Cache.getInstance('responsive.');
-
-        return cache.get('fullscreen-mode') ?? false;
+        let result = false;
+        if (STUDIP.USER_ID) {
+            result = cache.get('fullscreen-mode') ?? false;
+        } else {
+            cache.remove('fullscreen-mode');
+        }
+        return result;
     }
 };
 

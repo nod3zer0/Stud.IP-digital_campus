@@ -3,8 +3,9 @@
         <div class="responsive-navigation-header">
             <transition name="slide" appear>
                 <button id="responsive-navigation-button" class="styleless"
-                        :title="showMenu ? $gettext('Navigation schließen') : $gettext('Navigation öffnen')"
-                        aria-owns="responsive-navigation-items"
+                        :aria-label="showMenu
+                            ? $gettext('Navigation schließen')
+                            : $gettext('Navigation öffnen')"
                         @click.prevent="toggleMenu"
                         @keydown.prevent.space="toggleMenu"
                         @keydown.prevent.enter="toggleMenu">
@@ -14,8 +15,6 @@
                     </studip-icon>
                 </button>
             </transition>
-            <toggle-fullscreen v-if="!isResponsive && !isFocusMode && me.username != 'nobody'"
-                               :is-fullscreen="isFullscreen"></toggle-fullscreen>
         </div>
         <transition name="appear" appear>
             <nav v-show="showMenu" id="responsive-navigation-items" class="responsive" ref="navigation"
@@ -26,7 +25,8 @@
                             <div class="profile-pic">
                                 <img :src="me.avatar"
                                      @click.prevent="toggleAvatarMenu"
-                                     :title="$gettext('Profilnavigation öffnen')">
+                                     :title="$gettext('Profilnavigation öffnen')"
+                                     :aria-label="$gettext('Profilnavigation öffnen')">
                             </div>
                             <div class="profile-data">
                                 <div>{{ me.fullname }}</div>
@@ -34,11 +34,12 @@
                             </div>
                         </section>
                         <section class="open-avatarmenu">
-                            <button class="styleless" tabindex="0" ref="openAvatarmenu"
+                            <button class="styleless" ref="openAvatarmenu"
                                     @keydown.prevent.enter="toggleAvatarMenu"
                                     @keydown.prevent.space="toggleAvatarMenu"
                                     @click.prevent="toggleAvatarMenu"
-                                    :title="$gettext('Profilnavigation öffnen')">
+                                    :title="$gettext('Profilnavigation öffnen')"
+                                    :aria-label="$gettext('Profilnavigation öffnen')">
                                 <studip-icon shape="arr_1right" role="info_alt" :size="iconSize" alt=""></studip-icon>
                             </button>
                         </section>
@@ -48,10 +49,12 @@
                                     :click-outside-deactivates="true">
                             <div>
                                 <div class="close-avatarmenu">
-                                    <button class="styleless" ref="closeAvatarmenu"  tabindex="0"
+                                    <button class="styleless" ref="closeAvatarmenu"
                                             @keydown.prevent.enter="toggleAvatarMenu"
                                             @keydown.prevent.space="toggleAvatarMenu"
-                                            @click="toggleAvatarMenu">
+                                            @click="toggleAvatarMenu"
+                                            :title="$gettext('Profilnavigation schließen')"
+                                            :aria-label="$gettext('Profilnavigation schließen')">
                                         <studip-icon shape="arr_1left" role="info_alt" :size="iconSize"></studip-icon>
                                     </button>
                                 </div>
@@ -65,9 +68,10 @@
                 </header>
                 <ul class="main-navigation">
                     <li v-if="currentParent != null" class="navigation-item navigation-up">
-                        <div class="navigation-title" :title="$gettext('Zum Start')" @click="moveTo('/')">
+                        <div class="navigation-title" :title="$gettext('Zum Start')"
+                             :aria-label="$gettext('Zum Start')">
                             <button class="styleless" @click="moveTo('/')" @keydown.prevent.enter="moveTo('/')"
-                                    @keydown.prevent.space="moveTo('/')" tabindex="0">
+                                    @keydown.prevent.space="moveTo('/')">
                                 <div class="navigation-icon">
                                     <studip-icon shape="arr_2up" role="info_alt" :size="iconSize - 4"></studip-icon>
                                 </div>
@@ -79,11 +83,12 @@
                     </li>
                     <li v-if="currentParent != null" class="navigation-item navigation-current">
                         <div class="navigation-title">
-                            <button class="styleless" tabindex="0"
+                            <button class="styleless"
                                     @click="moveTo(currentParent.path)"
                                     @keydown.prevent.enter="moveTo(currentParent.path)"
                                     @keydown.prevent.space="moveTo(currentParent.path)"
-                                    :title="$gettext('Eine Ebene höher')">
+                                    :title="$gettext('Eine Ebene höher')"
+                                    :aria-label="$gettext('Eine Ebene höher')">
                                 <div class="navigation-icon">
                                     <studip-icon shape="arr_1left" role="info_alt" :size="iconSize - 4"></studip-icon>
                                 </div>
@@ -99,9 +104,9 @@
             </nav>
         </transition>
         <responsive-content-bar v-if="(isResponsive || isFullscreen) && !isFocusMode"
-                                :has-sidebar="hasSidebar" :title="initialTitle"
+                                :has-sidebar="hasSidebar" :title="contentbarTitle" :aria-label="contentbarTitle"
                                 ref="contentbar"></responsive-content-bar>
-        <responsive-skip-links v-if="isFullscreen && hasSkiplinks" :links="skipLinks"></responsive-skip-links>
+        <responsive-skip-links v-if="(isResponsive || isFullscreen) && hasSkiplinks" :links="skipLinks"></responsive-skip-links>
     </div>
 </template>
 
@@ -109,13 +114,12 @@
 import NavigationItem from './NavigationItem.vue';
 import StudipIcon from '../StudipIcon.vue';
 import ResponsiveContentBar from './ResponsiveContentBar.vue';
-import ToggleFullscreen from './ToggleFullscreen.vue';
 import ResponsiveSkipLinks from './ResponsiveSkipLinks.vue';
 import { FocusTrap } from 'focus-trap-vue';
 
 export default {
     name: 'ResponsiveNavigation',
-    components: { ResponsiveContentBar, StudipIcon, NavigationItem, ToggleFullscreen, ResponsiveSkipLinks, FocusTrap },
+    components: { ResponsiveContentBar, StudipIcon, NavigationItem, ResponsiveSkipLinks, FocusTrap },
     props: {
         me: {
             type: Object,
@@ -154,7 +158,9 @@ export default {
             avatarNavigation: studipNavigation.avatar,
             avatarMenuOpen: false,
             observer: null,
-            hasSkiplinks: document.querySelector('#skiplink_list') !== null
+            hasSkiplinks: document.querySelector('#skiplink_list') !== null,
+            hasContentbar: false,
+            contentbarTitle: ''
         }
     },
     computed: {
@@ -183,10 +189,6 @@ export default {
             ];
 
             if (this.isFullscreen) {
-                links.push(
-                    { url: '#toggle-fullscreen', label: this.$gettext('Vollbildmodus verlassen') },
-                );
-
                 if (this.hasSidebar) {
                     let name = '';
                     if (document.getElementById('sidebar').classList.contains('responsive-show')) {
@@ -272,6 +274,10 @@ export default {
 
             this.showMenu = !this.showMenu;
 
+            if (!this.showMenu && this.avatarMenuOpen) {
+                this.toggleAvatarMenu();
+            }
+
             this.$nextTick(() => {
                 if (this.showMenu && !this.headerMagic) {
                     this.currentNavigation = this.initialNavigation;
@@ -286,22 +292,41 @@ export default {
             })
         },
         /**
-         * Turn fullscreen mode on or off
+         * Turn compact navigation mode on or off
          * @param state
          */
-        setFullscreen(state) {
-            const html = document.querySelector('html');
+        setCompactNavigation(state) {
             const sidebar = document.getElementById('sidebar');
             const cache = STUDIP.Cache.getInstance('responsive.');
 
             if (state) {
-                html.classList.add('fullscreen-mode');
+                if (this.hasContentbar) {
+                    document.getElementById('responsive-toggle-focusmode').style.display = 'block';
+                }
+                document.documentElement.classList.add('fullscreen-mode');
                 cache.set('fullscreen-mode', true);
+
+                const siteTitle = document.getElementById('site-title');
+                siteTitle.dataset.originalTitle = siteTitle.textContent.trim();
+                siteTitle.textContent = this.initialTitle;
+
+                sidebar.style.display = 'none';
+
             } else {
-                html.classList.remove('fullscreen-mode');
-                sidebar.classList.remove('responsive-show', 'fullscreen-mode');
+                document.documentElement.classList.remove('fullscreen-mode');
+                sidebar?.classList.remove('responsive-show', 'fullscreen-mode');
                 this.showMenu = false;
                 cache.remove('fullscreen-mode');
+                document.getElementById('responsive-toggle-focusmode').style.display = 'none';
+                document.body.style.display = null;
+
+                const siteTitle = document.getElementById('site-title');
+                if (siteTitle.dataset.originalTitle) {
+                    siteTitle.textContent = siteTitle.dataset.originalTitle.trim();
+                }
+
+                sidebar.style.display = '';
+
             }
 
             this.isFullscreen = state;
@@ -321,10 +346,10 @@ export default {
             this.avatarMenuOpen = false;
             this.currentNavigation = this.findItem(path ? path : '/', this.studipNavigation);
             this.$nextTick(() => {
-                const current = document.querySelector('.navigation-current') ?? document.querySelector('.navigation-item');
-                if (current) {
-                    current.focus();
-                }
+                const current = document.querySelector('.navigation-current')
+                    ? document.querySelector('.navigation-current .navigation-title button')
+                    : document.querySelector('.navigation-item .navigation-title a');
+                current.focus();
             })
         },
         /**
@@ -364,6 +389,13 @@ export default {
          */
         toggleAvatarMenu() {
             this.avatarMenuOpen = !this.avatarMenuOpen;
+
+            // Focus first menu entry.
+            if (this.avatarMenuOpen) {
+                this.$nextTick(() => {
+                    document.querySelector('.avatar-navigation .navigation-item .navigation-title a').focus();
+                });
+            }
         },
         onChangeViewMode(tagName, classes) {
             const classList = classes.split(' ');
@@ -373,19 +405,19 @@ export default {
                 case 'BODY':
                     if (classList.includes('consuming_mode')) {
                         this.isFocusMode = true;
-                        STUDIP.Vue.emit('consuming-mode-enabled');
-                        this.setFullscreen(false);
+                        STUDIP.eventBus.emit('consuming-mode-enabled');
+                        this.setCompactNavigation(false);
                     } else {
                         this.isFocusMode = false;
-                        STUDIP.Vue.emit('consuming-mode-disabled');
+                        STUDIP.eventBus.emit('consuming-mode-disabled');
                     }
                     if (classList.includes('fixed')) {
                         this.headerMagic = true;
-                        STUDIP.Vue.emit('header-magic-enabled');
+                        STUDIP.eventBus.emit('header-magic-enabled');
                     } else {
                         this.headerMagic = false;
                         this.showMenu = false;
-                        STUDIP.Vue.emit('header-magic-disabled');
+                        STUDIP.eventBus.emit('header-magic-disabled');
                     }
                     break;
                 // Watch for "responsive-display" and "fullscreen-mode" class changes
@@ -394,16 +426,16 @@ export default {
                         this.isResponsive = true;
 
                         if (classList.includes('fullscreen-mode')) {
-                            this.setFullscreen(false);
+                            this.setCompactNavigation(false);
                         }
 
-                        STUDIP.Vue.emit('responsive-display-enabled');
+                        STUDIP.eventBus.emit('responsive-display-enabled');
                         this.$nextTick(() => {
                             this.moveHelpbar();
                         })
                     } else {
                         this.isResponsive = false;
-                        STUDIP.Vue.emit('responsive-display-disabled');
+                        STUDIP.eventBus.emit('responsive-display-disabled');
                         this.$nextTick(() => {
                             this.moveHelpbar();
                         })
@@ -412,10 +444,12 @@ export default {
                     if (classList.includes('fullscreen-mode')) {
                         this.isFullscreen = true;
 
-                        STUDIP.Vue.emit('fullscreen-enabled');
+                        STUDIP.eventBus.emit('fullscreen-enabled');
+                        document.getElementById('sidebar').style.display = 'none';
                     } else {
                         this.isFullscreen = false;
-                        STUDIP.Vue.emit('fullscreen-disabled');
+                        STUDIP.eventBus.emit('fullscreen-disabled');
+                        document.getElementById('sidebar').style.display = '';
                     }
                     break;
                 case 'HEADER':
@@ -437,7 +471,7 @@ export default {
             return navigation.navigation;
         },
         captureOutsideClick(target) {
-            if (target !== null) {
+            if (this.showMenu && target !== null) {
                 if (!this.$refs.container.contains(target)) {
                     this.toggleMenu();
                 }
@@ -458,26 +492,27 @@ export default {
     },
     mounted() {
         const cache = STUDIP.Cache.getInstance('responsive.');
-        const html = document.querySelector('html');
-        const body = document.querySelector('body');
         const fullscreen = cache.get('fullscreen-mode') ?? false;
-        const fullscreenDocument = html.classList.contains('fullscreen-mode');
+        const fullscreenDocument = document.documentElement.classList.contains('fullscreen-mode');
 
-        this.isFullscreen = fullscreenDocument || fullscreen;
-        if (this.isFullscreen && !fullscreenDocument) {
-            html.classList.add('fullscreen-mode');
-        }
-
-        if (html.classList.contains('responsive-display')) {
+        if (document.documentElement.classList.contains('responsive-display')) {
             this.isResponsive = true;
         }
 
+        this.isFullscreen = !this.isResponsive && (fullscreenDocument || fullscreen);
+        if (this.isFullscreen && !fullscreenDocument) {
+            this.setCompactNavigation(true);
+        }
         // Re-structure some DOM elements
         this.$nextTick(() => {
             if (this.isResponsive || (this.isFullscreen && !this.isFocusMode)) {
                 this.moveHelpbar();
-            }
 
+                this.contentbarTitle = document.querySelector('.sidebar-image .sidebar-title').textContent;
+                const siteTitle = document.getElementById('site-title');
+                siteTitle.dataset.originalTitle = siteTitle.textContent.trim();
+                siteTitle.textContent = this.initialTitle;
+            }
         });
 
         // Pressing escape should close an open navigation.
@@ -490,13 +525,13 @@ export default {
         this.initialNavigation = this.currentNavigation;
         this.initialTitle = this.initialNavigation.title;
 
-        STUDIP.Vue.on('responsive-navigation-move-to', path => {
+        this.globalOn('responsive-navigation-move-to', path => {
             this.moveTo(path);
         });
 
         // Listen to changes in fullscreen setting
-        STUDIP.Vue.on('toggle-fullscreen', value => {
-            this.setFullscreen(value);
+        this.globalOn('toggle-compact-navigation', value => {
+            this.setCompactNavigation(value);
         });
 
         /*
@@ -511,21 +546,31 @@ export default {
         });
 
         // Observe <html> for class changes.
-        this.observer.observe(html, {
+        this.observer.observe(document.documentElement, {
             attributes: true,
             attributeOldValue : false,
             attributeFilter: ['class']
         });
 
         // Observe <body> for class changes.
-        this.observer.observe(body, {
+        this.observer.observe(document.body, {
             attributes: true,
             attributeOldValue : false,
             attributeFilter: ['class']
         });
 
+        this.globalOn('has-contentbar', value => {
+            this.hasContentbar = value;
+            if (value && this.isFullscreen) {
+                document.getElementById('responsive-toggle-focusmode').style.display = 'block';
+            }
+        });
+
         // Observe courseware contentbar for consuming mode.
-        STUDIP.Vue.on('courseware-ribbon-mounted', element => {
+        this.globalOn('courseware-contentbar-mounted', element => {
+            if (this.isFullscreen) {
+                document.getElementById('responsive-toggle-focusmode').style.display = 'block';
+            }
             this.observer.observe(element.$el.querySelector('header.cw-ribbon'), {
                 attributes: true,
                 attributeOldValue : false,
@@ -536,6 +581,10 @@ export default {
     beforeDestroy() {
         this.observer.disconnect();
         document.getElementById('header-links').style.display = null;
+        STUDIP.eventBus.off('responsive-navigation-move-to');
+        STUDIP.eventBus.off('toggle-compact-navigation');
+        STUDIP.eventBus.off('has-contentbar');
+        STUDIP.eventBus.off('courseware-contentbar-mounted');
     }
 }
 </script>

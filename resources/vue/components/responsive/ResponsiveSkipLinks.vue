@@ -37,7 +37,7 @@ export default {
             allButtons.forEach(button => {
                 document.getElementById('skiplink_list').appendChild(button.parentNode);
             });
-        })
+        });
     },
     beforeDestroy() {
         const buttons = document.querySelectorAll('button.skiplink:not([data-in-fullscreen="1"])');

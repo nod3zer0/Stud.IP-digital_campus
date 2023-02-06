@@ -400,14 +400,6 @@ $consum_ribbon_width: calc(100% - 58px);
             @include background-icon(table-of-contents, clickable, 24);
         }
 
-        &.cw-ribbon-button-zoom {
-            @include background-icon(fullscreen-on, clickable, 24);
-        }
-
-        &.cw-ribbon-button-zoom-out {
-            @include background-icon(focusmode-off, clickable, 24);
-        }
-
         &.cw-ribbon-button-prev {
             @include background-icon(arr_1left, clickable, 24);
             margin: 0 0.5em 0 0;
@@ -654,7 +646,7 @@ ribbon end
     }
 
     .cw-container-wrapper {
-        max-width: 1095px;
+        max-width: $max-content-width;
         margin: 0;
         padding: 0;
         display: flex;
@@ -816,7 +808,7 @@ ribbon end
     margin-bottom: 1em;
 
     &.cw-container-colspan-full {
-        max-width: 1095px;
+        max-width: $max-content-width;
         width: 100%;
     }
     &.cw-container-colspan-half {
@@ -824,7 +816,7 @@ ribbon end
         width: 100%;
     }
     &.cw-container-colspan-half-center {
-        width: 1095px;
+        width: $max-content-width;
         .cw-container-content {
             max-width: 540px;
             margin: auto;
@@ -974,7 +966,7 @@ form.cw-container-dialog-edit-form {
 .cw-container-wrapper-discuss {
     .cw-container-colspan-full {
         .cw-content-wrapper {
-            max-width: 1095px;
+            max-width: $max-content-width;
         }
     }
     .cw-container-colspan-half,
@@ -1064,7 +1056,7 @@ form.cw-container-dialog-edit-form {
 
 @media only screen and (max-width: 1820px) {
     .cw-structural-element .cw-container-wrapper.cw-container-wrapper-discuss {
-        max-width: 1095px;
+        max-width: $max-content-width;
         .cw-container.cw-container-list.cw-container-item.cw-container-colspan-full {
             .cw-default-block {
                 flex-flow: column;
@@ -1079,7 +1071,7 @@ form.cw-container-dialog-edit-form {
 
 @media only screen and (max-width: 1200px) {
     .cw-structural-element .cw-container-wrapper.cw-container-wrapper-discuss {
-        max-width: 1095px;
+        max-width: $max-content-width;
         .cw-container.cw-container-list.cw-container-item.cw-container-colspan-half,
         .cw-container.cw-container-list.cw-container-item.cw-container-colspan-half-center {
             .cw-default-block {
@@ -2034,7 +2026,7 @@ c o m p a n i o n  o v e r l a y
 
 .cw-companion-box-wrapper {
         width: 100%;
-        max-width: 1095px;
+        max-width: $max-content-width;
 }
 
 /* * * * * * * * * * * * * * * * * *
@@ -2047,9 +2039,6 @@ v i e w  w i d g e t
 .cw-action-widget {
     .cw-action-widget-show-toc {
         @include background-icon(table-of-contents, clickable);
-    }
-    .cw-action-widget-show-consume-mode {
-        @include background-icon(fullscreen-on, clickable);
     }
     .cw-action-widget-edit{
         @include background-icon(edit, clickable);
@@ -2249,7 +2238,7 @@ d a s h b o a r d
         margin-right: 1em;
 
         &.cw-dashboard-box-full {
-            max-width: 1095px;
+            max-width: $max-content-width;
             width: calc(100% - 16px);
         }
         &.cw-dashboard-box-half {
@@ -2301,7 +2290,7 @@ d a s h b o a r d
 }
 
 .cw-activities-wrapper {
-    max-width: 1095px;
+    max-width: $max-content-width;
 
     .cw-companion-box {
         margin: 10px;
@@ -4381,7 +4370,7 @@ headline block
         min-height: 600px;
         overflow: hidden;
         background-position: center;
-        background-size: 1095px;
+        background-size: $max-content-width;
         background-repeat: no-repeat;
 
         &.half {
@@ -5394,5 +5383,5 @@ w i z a r d  e l e m e n t s
     }
 }
 /* * * * * * * * * * * * * * * * * *
-w i z a r d  e l e m e n t s  e n d 
+w i z a r d  e l e m e n t s  e n d
 * * * * * * * * * * * * * * * * * */

@@ -18,17 +18,19 @@ const Sidebar = {
     }
 };
 
-Sidebar.checkActiveLineHeight = () => {
-    $('#sidebar .sidebar-widget-content .widget-links li.active a.active').each(function() {
-        var link = $(this);
-        var actual_text = link.text();
-        link.text('tmp');
-        var default_height = link.outerHeight();
-        link.text(actual_text);
-        var actual_height = link.outerHeight();
-        if (actual_height > default_height) { //it is rendered in more lines
-            link.css('line-height', '20px');
-        }
-    });
+Sidebar.adjustHeight = () => {
+    const display = $('#sidebar').css('display');
+
+    if (display === 'none') {
+        $('#sidebar').css('display', 'block');
+    }
+    const lastWidget = $('.sidebar-widget:last-child');
+    if (lastWidget.length > 0) {
+        const height = lastWidget.offset().top + lastWidget.height();
+        $('#sidebar').css('height', height + 'px');
+    }
+    if (display === 'none') {
+        $('#sidebar').css('display', 'none');
+    }
 }
 export default Sidebar;

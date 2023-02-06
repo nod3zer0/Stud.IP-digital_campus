@@ -2,11 +2,12 @@
 
 $page-margin: 15px;
 
-$content-width: 400px;
-$content-margin: 12px;
-
 $sidebar-padding: 12px;
 $sidebar-width: 270px;
+
+$content-width: 400px;
+$content-margin: 12px;
+$max-content-width: 4 * $sidebar-width + $page-margin;
 
 $footer-height: 32px;
 
@@ -15,6 +16,11 @@ $page-width: ($sidebar-width + $sidebar-padding * 2 + $sidebar-border-width * 2 
 
 $grid-gap: 0;
 
+html {
+    height: 100vh;
+    overflow-y: auto;
+}
+
 body {
     background-color: $white;
     display: grid;
@@ -22,6 +28,10 @@ body {
     grid-row-gap: $grid-gap;
     grid-template-columns: ($sidebar-width + $sidebar-padding) 1fr;
     grid-template-rows: auto 1fr $footer-height;
+
+    &::backdrop {
+        background: $white;
+    }
 }
 
 #main-header {
@@ -214,6 +224,7 @@ body {
     grid-row: 3 / 4;
     justify-content: space-between;
     line-height: $footer-height - 4px;
+    z-index: 1000;
 }
 
 #main-footer-info {

@@ -11,14 +11,13 @@ $sidebarIn: -15px;
 $sidebarOut: -330px;
 
 #responsive-toggle-desktop,
-#responsive-toggle-fullscreen {
+#responsive-toggle-fullscreen,
+#responsive-toggle-focusmode {
     display: none;
 }
 
-#responsive-toggle-fullscreen {
-    position: relative;
-    top: 4px;
-
+#responsive-toggle-fullscreen,
+#responsive-toggle-focusmode {
     img {
         cursor: pointer;
     }
@@ -34,6 +33,7 @@ $sidebarOut: -330px;
         cursor: pointer;
     }
 }
+
 
 #responsive-menu {
     font-size: $font-size-base;
@@ -261,6 +261,10 @@ $sidebarOut: -330px;
     }
 }
 
+.cw-ribbon-button-zoom {
+    display: none;
+}
+
 .responsive-display,
 .fullscreen-mode body:not(.consuming_mode) {
 
@@ -272,7 +276,12 @@ $sidebarOut: -330px;
         flex: 0;
     }
 
-    #site-title,
+    #site-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     #quicksearch_item,
     #avatar-menu-container,
     #current-page-structure {
@@ -281,7 +290,7 @@ $sidebarOut: -330px;
 
     #header-links {
         > ul {
-            > li:not(#responsive-toggle-fullscreen):not(.helpbar-container) {
+            > li:not(#responsive-toggle-fullscreen):not(#responsive-toggle-focusmode):not(.helpbar-container) {
                 display: none;
             }
 
@@ -365,6 +374,7 @@ $sidebarOut: -330px;
     }
 
     #responsive-contentbar {
+        justify-content: stretch;
         margin-bottom: 15px;
         padding-bottom: 0.5em;
         padding-left: 5px;
@@ -395,7 +405,7 @@ $sidebarOut: -330px;
 
         .contentbar-wrapper-left {
             flex: 1;
-            max-width: unset;
+            min-width: 0;
 
             & > .contentbar-icon {
                 margin-right: 15px;
@@ -403,11 +413,19 @@ $sidebarOut: -330px;
 
             .contentbar-breadcrumb {
                 font-size: $font-size-large;
-                width: calc(100% - 75px);
 
                 > img {
                     margin-left: 15px;
                     width: 24px;
+                }
+
+                > span {
+                    display: inline;
+                    flex-shrink: 10000;
+                    min-width: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
         }
@@ -508,25 +526,47 @@ $sidebarOut: -330px;
             max-height: unset;
             opacity: 1;
             overflow: unset;
-        }
-
-        #responsive-menu {
-            max-width: calc(100% - 100px);
-            min-width: calc(100% - 100px);
-            width: calc(100% - 100px);
+            width: calc(100% - 20px);
         }
 
         #main-header {
             flex-basis: 100%;
         }
 
+        #header-links {
+            margin-left: auto;
+
+            ul {
+                li {
+                    &:not(#responsive-toggle-fullscreen):not(#responsive-toggle-focusmode) {
+                        padding: 0;
+                    }
+
+                    .helpbar-container {
+                        right: 0;
+                    }
+                }
+            }
+        }
+
+        #responsive-toggle-fullscreen,
+        #responsive-toggle-focusmode {
+            margin-top: 4px;
+            padding: 4px 0 0;
+        }
+
         #responsive-toggle-fullscreen {
             display: block;
-            right: 30px;
         }
 
         .contentbar:not(#responsive-contentbar) {
             display: none;
+        }
+
+        #responsive-contentbar-container {
+            position: fixed;
+            width: 100vw;
+            z-index: 1000;
         }
 
         #responsive-contentbar {
@@ -544,14 +584,17 @@ $sidebarOut: -330px;
 
         #content-wrapper {
             flex: 1;
-            height: 100%;
+            margin-top: 75px;
+            min-height: calc(100vh - 150px);
         }
     }
 }
 
 .consuming_mode {
     display: unset;
+    overflow-y: auto;
 
+    #skip_link_navigation,
     #main-header,
     #sidebar,
     #main-footer,
@@ -559,13 +602,29 @@ $sidebarOut: -330px;
         display: none;
     }
 
-    #content {
-        height: 100vh;
-        position: fixed;
-        width: 100vw;
+    #content-wrapper {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: $max-content-width;
+        min-height: 100vh;
+        padding-top: 10px;
+    }
 
+    #content {
         .contentbar {
-            margin-right: 30px;
+            margin: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            width: calc(100% - 60px);
+
+            .action-menu {
+                display: none;
+            }
+        }
+
+        .cw-companion-box-wrapper {
+            padding-top: 120px;
         }
     }
 

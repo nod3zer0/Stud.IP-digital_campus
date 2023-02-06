@@ -63,10 +63,11 @@
                                 @showSuggest="menuAction('showSuggest')"
                                 @linkElement="menuAction('linkElement')"
                                 @removeLock="menuAction('removeLock')"
+                                @activateFullscreen="menuAction('activateFullscreen')"
                             />
                         </template>
                     </courseware-ribbon>
-                    
+
                     <div v-if="structuralElementLoaded && !isLink" class="cw-companion-box-wrapper">
                         <courseware-companion-box
                             v-if="!canVisit"
@@ -1033,6 +1034,7 @@ export default {
                 { id: 4, label: this.$gettext('Informationen anzeigen'), icon: 'info', emit: 'showInfo' },
                 { id: 5, label: this.$gettext('Lesezeichen setzen'), icon: 'star', emit: 'setBookmark' },
                 { id: 6, label: this.$gettext('Lerninhalt für OER Campus vorschlagen'), icon: 'oer-campus', emit: 'showSuggest' },
+                { id: 7, label: this.$gettext('Als Vollbild anzeigen'), icon: 'screen-full', emit: 'activateFullscreen'},
 
             ];
             if (this.canEdit) {
@@ -1319,6 +1321,9 @@ export default {
                 case 'linkElement':
                     this.showElementPublicLinkDialog(true);
                     break;
+                case 'activateFullscreen':
+                    STUDIP.Fullscreen.activate();
+                    break;
             }
         },
         async closeEditDialog() {
@@ -1541,7 +1546,7 @@ export default {
                 this.companionSuccess({
                     info:
                         this.$gettextInterpolate(
-                            this.$gettext('Die Seite %{ pageTitle } wurde erfolgreich angelegt.'), 
+                            this.$gettext('Die Seite %{ pageTitle } wurde erfolgreich angelegt.'),
                             { pageTitle: newElement.attributes.title }
                         )
                 });
@@ -1639,7 +1644,7 @@ export default {
                         this.keyboardSelected = containerId;
                         const container = this.containerById({id: containerId});
                         const index = this.containerList.findIndex(c => c.id === container.id);
-                        this.assistiveLive = 
+                        this.assistiveLive =
                             this.$gettextInterpolate(
                                 this.$gettext('%{containerTitle} Abschnitt ausgewählt. Aktuelle Position in der Liste: %{pos} von %{listLength}. Drücken Sie die Aufwärts- und Abwärtspfeiltasten, um die Position zu ändern, die Leertaste zum Ablegen, die Escape-Taste zum Abbrechen.')
                                 , {containerTitle: container.attributes.title, pos: index + 1, listLength: this.containerList.length}
@@ -1669,7 +1674,7 @@ export default {
                 const container = this.containerById({id: containerId});
                 const newPos = currentIndex - 1;
                 this.containerList.splice(newPos, 0, this.containerList.splice(currentIndex, 1)[0]);
-                this.assistiveLive = 
+                this.assistiveLive =
                     this.$gettextInterpolate(
                         this.$gettext('%{containerTitle} Abschnitt. Aktuelle Position in der Liste: %{pos} von %{listLength}.')
                         , {containerTitle: container.attributes.title, pos: newPos + 1, listLength: this.containerList.length}
@@ -1682,7 +1687,7 @@ export default {
                 const container = this.containerById({id: containerId});
                 const newPos = currentIndex + 1;
                 this.containerList.splice(newPos, 0, this.containerList.splice(currentIndex, 1)[0]);
-                this.assistiveLive = 
+                this.assistiveLive =
                     this.$gettextInterpolate(
                         this.$gettext('%{containerTitle} Abschnitt. Aktuelle Position in der Liste: %{pos} von %{listLength}.')
                         , {containerTitle: container.attributes.title, pos: newPos + 1, listLength: this.containerList.length}
@@ -1692,7 +1697,7 @@ export default {
         abortKeyboardSorting(containerId) {
             const container = this.containerById({id: containerId});
             this.keyboardSelected = null;
-            this.assistiveLive = 
+            this.assistiveLive =
                 this.$gettextInterpolate(
                     this.$gettext('%{containerTitle} Abschnitt, Neuordnung abgebrochen.')
                     , {containerTitle: container.attributes.title}
@@ -1703,7 +1708,7 @@ export default {
             const container = this.containerById({id: containerId});
             const currentIndex = this.containerList.findIndex(container => container.id === containerId);
             this.keyboardSelected = null;
-            this.assistiveLive = 
+            this.assistiveLive =
                 this.$gettextInterpolate(
                     this.$gettext('%{containerTitle} Abschnitt, abgelegt. Entgültige Position in der Liste: %{pos} von %{listLength}.')
                     , {containerTitle: container.attributes.title, pos: currentIndex + 1, listLength: this.containerList.length}

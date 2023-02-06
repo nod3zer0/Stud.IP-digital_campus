@@ -14,7 +14,9 @@
                 </div>
                 <div class="contentbar-wrapper-left">
                     <studip-icon :shape="icon" size="24" role="info" class="text-bottom contentbar-icon"></studip-icon>
-                    <nav class="contentbar-breadcrumb" ref="breadcrumbs">{{ title }}</nav>
+                    <nav class="contentbar-breadcrumb" ref="breadcrumbs">
+                        <span>{{ title }}</span>
+                    </nav>
                 </div>
                 <div class="contentbar-wrapper-right" ref="wrapperRight"></div>
             </div>
@@ -66,27 +68,44 @@ export default {
             const sidebar = document.getElementById('sidebar');
             const content = document.getElementById('content-wrapper');
             const pageTitle = document.getElementById('page-title-container');
-            const html = document.querySelector('html');
             if (this.sidebarOpen) {
                 sidebar.classList.add('responsive-hide');
                 sidebar.classList.remove('responsive-show');
 
-                if (html.classList.contains('responsive-display') && !html.classList.contains('fullscreen-mode')) {
+                if (document.documentElement.classList.contains('responsive-display')
+                        && !document.documentElement.classList.contains('fullscreen-mode')) {
                     content.style.display = null;
                     pageTitle.style.display = null;
                 }
 
+                if (!document.documentElement.classList.contains('responsive-display')) {
+                    document.body.style.display = 'flex';
+                }
+
+                // Hide sidebar after slide-out animation has ended so that it isn't focusable anymore.
+                setTimeout(() => {
+                    sidebar.style.display = 'none';
+                }, 301);
+
                 this.sidebarOpen = false;
             } else {
+                sidebar.style.display = '';
+
                 sidebar.classList.add('responsive-show');
                 sidebar.classList.remove('responsive-hide');
-                if (html.classList.contains('responsive-display') && !html.classList.contains('fullscreen-mode')) {
+                if (document.documentElement.classList.contains('responsive-display')
+                        && !document.documentElement.classList.contains('fullscreen-mode')) {
                     // Set a timeout here so that the content "disappears" after slide-in aninmation is finished.
                     setTimeout(() => {
                         content.style.display = 'none';
                         pageTitle.style.display = 'none';
                     }, 300);
                 }
+
+                if (!document.documentElement.classList.contains('responsive-display')) {
+                    document.body.style.display = 'grid';
+                }
+
                 this.sidebarOpen = true;
             }
 
@@ -155,6 +174,8 @@ export default {
         this.$nextTick(() => {
             const realContentbar = document.querySelector('.contentbar:not(#responsive-contentbar)');
             if (realContentbar) {
+                STUDIP.eventBus.emit('has-contentbar', true);
+
                 this.realContentbar = realContentbar;
                 this.realContentbarSource = '#content';
                 this.realContentbarIconContainer = '.contentbar-nav';
@@ -165,6 +186,8 @@ export default {
 
                 const cwContentbar = document.querySelector('#contentbar header');
                 if (cwContentbar) {
+                    STUDIP.eventBus.emit('has-contentbar', true);
+
                     this.realContentbar = cwContentbar;
                     this.realContentbarSource = '.cw-structural-element-content > div';
                     this.realContentbarIconContainer = '.cw-ribbon-nav';
@@ -180,7 +203,9 @@ export default {
         })
 
         // Use courseware contentbar instead of this Vue component.
-        STUDIP.Vue.on('courseware-contentbar-mounted', element => {
+        this.globalOn('courseware-contentbar-mounted', element => {
+            STUDIP.eventBus.emit('has-contentbar', true);
+
             this.realContentbar = element.$el.querySelector('header');
             this.realContentbarSource = '.cw-structural-element-content > div';
             this.realContentbarIconContainer = '.cw-ribbon-nav';
@@ -192,18 +217,21 @@ export default {
             });
         })
 
-        STUDIP.Vue.on('toggle-focus-mode', (state) => {
+        this.globalOn('toggle-focus-mode', (state) => {
             const html = document.querySelector('html');
             if (html.classList.contains('responsive-display') || html.classList.contains('fullscreen-mode')) {
                 this.adjustExistingContentbar(!state);
             }
-        })
+        });
 
     },
     beforeDestroy() {
         if (this.realContentbar) {
             this.adjustExistingContentbar(false);
         }
+
+        STUDIP.eventBus.off('toggle-focus-mode');
+        STUDIP.eventBus.off('courseware-contentbar-mounted');
     }
 }
 </script>

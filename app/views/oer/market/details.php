@@ -336,7 +336,7 @@ if ($material['player_url'] || $material->isVideo() || $material->isPDF()) {
     $actions->addLink(
         _('Vollbild aktivieren'),
         "#",
-        Icon::create("fullscreen-on", Icon::ROLE_CLICKABLE),
+        Icon::create('screen-full'),
         ['onclick' => "STUDIP.OER.requestFullscreen('.lernmarktplatz_player');"]
     );
 }

@@ -203,7 +203,18 @@ if ($navigation) {
                 </li>
             <? endif; ?>
 
-                <li id="responsive-toggle-fullscreen"></li>
+                <li id="responsive-toggle-fullscreen">
+                    <button class="styleless" id="fullscreen-off"
+                            title="<?= _('Kompakte Navigation ausschalten') ?>">
+                        <?= Icon::create('screen-standard', ICON::ROLE_INFO_ALT)->asImg(24) ?>
+                    </button>
+                </li>
+                <li id="responsive-toggle-focusmode">
+                    <button class="styleless consuming_mode_trigger" id="focusmode-on"
+                            title="<?= _('Vollbild aktivieren') ?>">
+                        <?= Icon::create('screen-full', ICON::ROLE_INFO_ALT)->asImg(24) ?>
+                    </button>
+                </li>
             </ul>
         </div>
     </div>

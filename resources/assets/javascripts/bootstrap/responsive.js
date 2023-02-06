@@ -2,8 +2,12 @@
 STUDIP.domReady(() => {
     STUDIP.Responsive.engage();
 
-    if (STUDIP.Responsive.isFullscreen()) {
-        document.querySelector('html').classList.add('fullscreen-mode');
+    if (STUDIP.Responsive.isCompactNavigation()) {
+        document.documentElement.classList.add('fullscreen-mode');
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.style.display = 'none';
+        }
     }
 
 }, true);

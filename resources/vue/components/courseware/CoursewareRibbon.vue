@@ -21,15 +21,6 @@
                     @click.prevent="activeToolbar"
                 >
                 </button>
-                <button
-                    v-if="showModeSwitchButton"
-                    ref="consumeModeSwitch"
-                    class="cw-ribbon-button"
-                    :class="[consumeMode ? 'cw-ribbon-button-zoom-out' : 'cw-ribbon-button-zoom']"
-                    :title="consumeMode ? textRibbon.fullscreen_off : textRibbon.fullscreen_on"
-                     @click="toggleConsumeMode"
-                >
-                </button>
                 <slot name="menu" />
             </div>
             <div v-if="consumeMode" class="cw-ribbon-consume-bottom"></div>
@@ -112,13 +103,15 @@ export default {
 
         }),
         toggleConsumeMode() {
-            STUDIP.Vue.emit('toggle-focus-mode', !this.consumeMode);
+            STUDIP.eventBus.emit('toggle-focus-mode', !this.consumeMode);
             if (!this.consumeMode) {
+                document.body.classList.add('consuming_mode');
                 this.coursewareConsumeMode(true);
                 this.coursewareSelectedToolbarItem('contents');
                 this.coursewareViewMode('read');
             } else {
                 this.coursewareConsumeMode(false);
+                document.body.classList.remove('consuming_mode');
             }
         },
         activeToolbar() {
@@ -138,8 +131,17 @@ export default {
     mounted() {
         window.addEventListener('scroll', this.handleScroll);
         if (this.isContentBar) {
-            STUDIP.Vue.emit('courseware-contentbar-mounted', this);
+            STUDIP.eventBus.emit('courseware-contentbar-mounted', this);
         }
+
+        this.globalOn('switch-focus-mode', (state) => {
+            if (state !== this.consumeMode) {
+                this.toggleConsumeMode();
+            }
+        });
+    },
+    beforeDestroy() {
+        STUDIP.eventBus.off('switch-focus-mode');
     },
     watch: {
         toolsActive(newState, oldState) {
@@ -157,7 +159,6 @@ export default {
             }
         },
         consumeMode(newState) {
-            this.$refs.consumeModeSwitch?.focus();
             if (newState) {
                 document.body.classList.add('consuming_mode');
             } else {

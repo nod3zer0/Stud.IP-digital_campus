@@ -365,11 +365,3 @@ jQuery(document).on('click', 'a[data-behaviour~="ajax-toggle"]', function (event
         $('#open_variable').attr('value', $(this).parent('fieldset').data('open'));
     });
 }(jQuery));
-
-// Trigger consuming mode on contentbar
-STUDIP.domReady(function () {
-    $(document).on("click", ".consuming_mode_trigger", function () {
-        $("body").toggleClass("consuming_mode");
-        return false;
-    });
-});
