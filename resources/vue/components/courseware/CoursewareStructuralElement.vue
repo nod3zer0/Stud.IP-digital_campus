@@ -580,8 +580,8 @@
                     @confirm="sendOerSuggestion"
                 >
                     <template v-slot:dialogContent>
-                        <p><translate>Das folgende Courseware-Material wird %{ ownerName }
-                            zur Veröffentlichung im OER Campus vorgeschlagen:</translate></p>
+                        <p v-translate>Das folgende Courseware-Material wird %{ ownerName }
+                            zur Veröffentlichung im OER Campus vorgeschlagen:</p>
                         <table class="cw-structural-element-info">
                             <tr>
                                 <td><translate>Titel</translate>:</td>
