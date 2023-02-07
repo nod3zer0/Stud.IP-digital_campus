@@ -8,34 +8,37 @@
  * @copyright (c) Authors
  */
 
-class StudipFileloaderTestCase extends \Codeception\Test\Unit {
+class StudipFileloaderTestCase extends \Codeception\Test\Unit
+{
+    public function setUp(): void
+    {
+        ArrayFileStream::set_filesystem([
+            'pathto' => [
+                'config-1.php' => '<?php $CONF = 17; ',
+                'config-2.php' => '<?php $CONF = 17 + $offset; ',
+            ]
+        ]);
 
-    public function setUp(): void {
-        ArrayFileStream::set_filesystem(
-            [
-                'pathto' => [
-                    'config-1.php' => '<? $CONF = 17; '
-                    , 'config-2.php' => '<? $CONF = 17 + $offset; '
-                ]]);
-
-        if (!stream_wrapper_register("var", "ArrayFileStream")) {
-            new Exception("Failed to register protocol");
+        if (!stream_wrapper_register('var', 'ArrayFileStream')) {
+            new Exception('Failed to register protocol');
         }
     }
 
-    public function tearDown(): void {
-        stream_wrapper_unregister("var");
+    public function tearDown(): void
+    {
+        stream_wrapper_unregister('var');
     }
 
 
-    public function test_should_inject_vars() {
+    public function test_should_inject_vars()
+    {
         $container = [];
         StudipFileloader::load('var://pathto/config-1.php', $container);
         $this->assertEquals(['CONF' => 17], $container);
     }
 
-    public function test_should_inject_vars_twice() {
-
+    public function test_should_inject_vars_twice()
+    {
         foreach (range(1,2) as $i) {
             $container = [];
             StudipFileloader::load('var://pathto/config-1.php', $container);
