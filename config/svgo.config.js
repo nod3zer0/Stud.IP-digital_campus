@@ -2,10 +2,6 @@ module.exports = {
     "multipass": true,
     "plugins": [
         {
-            "name": 'removeAttrs',
-            "params": { attrs: 'id' }
-        },
-        {
             "name": 'inlineStyles',
             "params": {
                 "onlyMatchedOnce": false
