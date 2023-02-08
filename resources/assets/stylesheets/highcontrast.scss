@@ -275,7 +275,6 @@ button.button[disabled]:hover {
 .widget-links.sidebar-views > li.active {
     background-color: $medium-gray;
     box-shadow: unset;
-    //border: 1px solid $black;
     border-top: 2px solid $black;
     border-bottom: 2px solid $black;
 
@@ -475,7 +474,8 @@ tr.sortable th.sortdesc:after,
 .course-admin th .course-completion,
 .sortable-table .tablesorter-headerDesc .tablesorter-header-inner:after,
 .sortable-table .tablesorter-headerAsc .tablesorter-header-inner:after,
-.action-menu-wrapper .action-menu-icon, .action-menu .action-menu-icon,
+.action-menu-wrapper .action-menu-icon,
+.action-menu .action-menu-icon,
 .contentbox header nav .tooltip-icon,
 article header h1 .tooltip-icon,
 section.course-statusgroups article header h1 a img {
@@ -1286,7 +1286,8 @@ table.course-search {
 }
 
 .cw-container-wrapper,
-.cw-ribbon-tools {
+.cw-ribbon-tools,
+.courseware-unit-item {
     border: 2px solid $black;
 }
 
@@ -1296,17 +1297,7 @@ table.course-search {
 .cw-discuss-wrapper header,
 .cw-collapsible .cw-collapsible-title,
 .cw-manager-element .cw-manager-container .cw-manager-container-title {
-    //background-color: $white;
     border-bottom: 1px solid $black;
-}
-
-.cw-action-widget li button,
-.cw-view-widget li button,
-.cw-export-widget li button,
-.cw-action-widget li a,
-.cw-view-widget li a,
-.cw-export-widget li a {
-    //color: $black !important;
 }
 
 .cw-action-widget-add:hover span,
@@ -1353,6 +1344,10 @@ table.course-search {
 .cw-ribbon-action-menu .action-menu-icon,
 .cw-block-actions .action-menu .action-menu-icon {
     filter: unset;
+}
+
+.cw-unit-action-menu .action-menu-icon {
+    filter: brightness(0);
 }
 
 .cw-tabs-nav button {
