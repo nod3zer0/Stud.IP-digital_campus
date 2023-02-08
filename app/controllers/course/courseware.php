@@ -30,18 +30,25 @@ class Course_CoursewareController extends CoursewareController
         $this->studip_module = checkObjectModule('CoursewareModule', true);
         object_set_visit_module($this->studip_module->getPluginId());
         $this->last_visitdate = object_get_visit(Context::getId(), $this->studip_module->getPluginId());
+        $this->licenses = $this->getLicenses();
+        $this->unitsNotFound = Unit::countBySql('range_id = ?', [Context::getId()]) === 0;
     }
 
     public function index_action(): void
     {
         Navigation::activateItem('course/courseware/shelf');
-        $this->licenses = $this->getLicenses();
         $this->setIndexSidebar();
     }
 
     public function courseware_action($unit_id = null):  void
     {
         global $perm, $user;
+        Navigation::activateItem('course/courseware/unit');
+        if ($this->unitsNotFound) {
+            PageLayout::postMessage(MessageBox::info(_('Es wurde kein Lernmaterial gefunden.')));
+            return;
+        }
+        $this->setCoursewareSidebar();
 
         $this->user_id = $user->id;
         /** @var array<mixed> $last */
@@ -58,10 +65,6 @@ class Course_CoursewareController extends CoursewareController
         $unit = Unit::find($unit_id);
         if (isset($unit)) {
             $this->setEntryElement('course', $unit, $last, Context::getId());
-
-            Navigation::activateItem('course/courseware/unit');
-            $this->licenses = $this->getLicenses();
-            $this->setCoursewareSidebar();
         }
     }
 

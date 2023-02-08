@@ -37,7 +37,9 @@ trait CoursewareInstancesHelper
             $chunks = explode('_', $rangeId);
             $courseId = $chunks[0];
             $unitId = $chunks[1] ?? null;
-
+            if ($unitId === '') {
+                throw new BadRequestException('Unit id must not be empty.');
+            }
             if ($unitId) {
                 $unit = Unit::findOneBySQL('range_id = ? AND id = ?', [$courseId, $unitId]);
             } else {

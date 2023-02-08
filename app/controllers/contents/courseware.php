@@ -22,6 +22,8 @@ class Contents_CoursewareController extends CoursewareController
         PageLayout::setTitle(_('Courseware'));
 
         $this->user = $GLOBALS['user'];
+        $this->licenses = $this->getLicenses();
+        $this->unitsNotFound = Unit::countBySql('range_id = ?', [$this->user->id]) === 0;
     }
 
     /**
@@ -38,8 +40,6 @@ class Contents_CoursewareController extends CoursewareController
         Navigation::activateItem('/contents/courseware/shelf');
         $this->user_id = $GLOBALS['user']->id;
         $this->setShelfSidebar();
-
-        $this->licenses = $this->getLicenses();
     }
 
     private function setShelfSidebar(): void
@@ -63,6 +63,14 @@ class Contents_CoursewareController extends CoursewareController
     {
         global $perm, $user;
 
+        Navigation::activateItem('/contents/courseware/courseware');
+        if ($this->unitsNotFound) {
+            PageLayout::postMessage(MessageBox::info(_('Es wurde kein Lernmaterial gefunden.')));
+            return;
+        }
+
+        $this->setCoursewareSidebar();
+
         $this->user_id = $user->id;
         /** @var array<mixed> $last */
         $last = UserConfig::get($this->user_id)->getValue('COURSEWARE_LAST_ELEMENT');
@@ -78,9 +86,6 @@ class Contents_CoursewareController extends CoursewareController
         $unit = Unit::find($unit_id);
         if (isset($unit)) {
             $this->setEntryElement('user', $unit, $last, $this->user_id);
-            Navigation::activateItem('/contents/courseware/courseware');
-            $this->licenses = $this->getLicenses();
-            $this->setCoursewareSidebar();
         }
     }
 
@@ -315,7 +320,6 @@ class Contents_CoursewareController extends CoursewareController
 
         $this->user_id = $struct->owner_id;
 
-        $this->licenses = $this->getLicenses();
 
         $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS);
 
