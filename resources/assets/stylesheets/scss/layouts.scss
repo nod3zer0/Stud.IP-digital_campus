@@ -26,7 +26,7 @@ body {
     display: grid;
     grid-column-gap: 5px;
     grid-row-gap: $grid-gap;
-    grid-template-columns: ($sidebar-width + $sidebar-padding) 1fr;
+    grid-template-columns: ($sidebar-width + $sidebar-padding) minmax(auto, calc(100vw - $sidebar-width - $sidebar-padding));
     grid-template-rows: auto 1fr $footer-height;
 
     &::backdrop {
@@ -56,16 +56,16 @@ body {
     min-width: $site-width;
     width: 100%;
 
-    > ul {
-        flex: 0 0 auto;
-        height: 55px;
-    }
-
     #top-logo {
         flex: 0 1 auto;
         margin-right: 12px;
         margin-top: -13px;
     }
+}
+
+#navigation-level-1-items {
+    flex: 1;
+    height: 55px;
 }
 
 /* --- Layouts -------------------------------------------------------------- */
@@ -161,6 +161,7 @@ body {
     grid-row: 2 / 3;
     justify-content: flex-start;
     margin: $page-margin;
+    overflow-x: auto;
     position: relative;
     vertical-align: top;
 
