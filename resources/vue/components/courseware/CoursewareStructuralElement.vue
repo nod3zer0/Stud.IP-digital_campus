@@ -1214,14 +1214,14 @@ export default {
         },
         selectableTemplates() {
             return this.templates.filter(template => {
-                return template.attributes.purpose === this.newElementPurpose
+                return template.attributes.purpose === this.newChapterPurpose
             });
         },
     },
 
     methods: {
         ...mapActions({
-            createStructuralElement: 'createStructuralElement',
+            createStructuralElementWithTemplate: 'createStructuralElementWithTemplate',
             updateStructuralElement: 'updateStructuralElement',
             deleteStructuralElement: 'deleteStructuralElement',
             lockObject: 'lockObject',
@@ -1532,7 +1532,7 @@ export default {
                 parent_id = this.structuralElement.relationships.parent.data.id;
             }
             this.showElementAddDialog(false);
-            this.createStructuralElement({
+            this.createStructuralElementWithTemplate({
                 attributes: {
                     title: title,
                     purpose: purpose,
