@@ -405,6 +405,7 @@ $sidebarOut: -330px;
 
         .contentbar-wrapper-left {
             flex: 1;
+            max-width: calc(100% - 70px);
             min-width: 0;
 
             & > .contentbar-icon {
@@ -445,7 +446,17 @@ $sidebarOut: -330px;
 
             .cw-ribbon-tools {
                 right: 0;
-                top: 96px;
+                top: 4px;
+
+                .cw-tabs-nav {
+                    height: 52px;
+
+                    button {
+                        &.is-active::after {
+                            margin-top: 10px;
+                        }
+                    }
+                }
             }
         }
     }
@@ -453,7 +464,7 @@ $sidebarOut: -330px;
     #toc {
         position: absolute;
         right: -8px;
-        top: 82px;
+        top: -21px;
     }
 
     #toc_header {
@@ -626,6 +637,28 @@ $sidebarOut: -330px;
         .cw-companion-box-wrapper {
             padding-top: 120px;
         }
+
+        .cw-structural-element-consumemode {
+            position: unset;
+
+            .cw-ribbon-wrapper-consume {
+                position: unset;
+
+                .cw-ribbon-consume {
+                    position: unset;
+
+                    .cw-ribbon-consume-bottom {
+                        height: unset;
+                    }
+                }
+            }
+        }
+    }
+
+    #toc {
+        position: absolute;
+        right: -29px;
+        top: -25px;
     }
 
 }
