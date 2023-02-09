@@ -152,7 +152,10 @@ class CourseMember extends SimpleORMap implements PrivacyObject
 
     public function cbRemoveNotifications()
     {
-        CourseMemberNotification::deleteBySQL('user_id = ?', [$this->user_id]);
+        CourseMemberNotification::deleteBySQL(
+            'user_id = ? AND seminar_id = ?',
+            [$this->user_id, $this->seminar_id]
+        );
     }
 
     /**
