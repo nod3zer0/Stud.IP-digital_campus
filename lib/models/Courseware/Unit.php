@@ -2,8 +2,6 @@
 
 namespace Courseware;
 
-use phootwork\collection\ArrayList;
-use phpDocumentor\Reflection\Types\Array_;
 use User;
 
 /**
