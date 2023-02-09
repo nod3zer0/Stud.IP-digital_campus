@@ -94,40 +94,46 @@ class SendMailNotificationsJob extends CronJob
      */
     public function execute($last_result, $parameters = [])
     {
-        global $user;
-
-        $cli_user = $user;
-
         $notification = new ModulesNotification();
 
-        $query = "SELECT DISTINCT user_id FROM seminar_user_notifications";
+        $query = "SELECT DISTINCT user_id
+                  FROM seminar_user_notifications
+                  JOIN seminar_user USING (user_id, seminar_id)";
+        DBManager::get()->fetchFirst(
+            $query,
+            [],
+            function ($user_id) use ($parameters, $notification) {
+                $user = User::find($user_id);
+                if (
+                    !$user
+                    || $user->locked
+                    || ($user->config->EXPIRATION_DATE > 0 && $user->config->EXPIRATION_DATE < time())
+                ) {
+                    return;
+                }
 
-        $rs = DBManager::get()->query($query);
-        while($r = $rs->fetch()){
-            $user = new Seminar_User($r["user_id"]);
-            if ($user->locked || ($user->cfg->EXPIRATION_DATE > 0 && $user->cfg->EXPIRATION_DATE < time())) {
-                continue;
-            }
-            setTempLanguage('', $user->preferred_language);
-            $to = $user->email;
-            $title = "[" . Config::get()->UNI_NAME_CLEAN . "] " . _("Tägliche Benachrichtigung");
-            $mailmessage = $notification->getAllNotifications($user->id);
-            $ok = false;
-            if ($mailmessage) {
-                if ($user->cfg->getValue('MAIL_AS_HTML')) {
-                    $smail = new StudipMail();
-                    $ok = $smail->setSubject($title)
-                                ->addRecipient($to)
-                                ->setBodyHtml($mailmessage['html'])
-                                ->setBodyText($mailmessage['text'])
-                                ->send();
-                } else {
-                    $ok = StudipMail::sendMessage($to, $title, $mailmessage['text']);
+                $ok = false;
+                $mailmessage = $notification->getAllNotifications($user->id);
+
+                if ($mailmessage) {
+                    setTempLanguage('', $user->preferred_language);
+
+                    $ok = StudipMail::sendMessage(
+                        $user->email,
+                        "[" . Config::get()->UNI_NAME_CLEAN . "] " . _('Tägliche Benachrichtigung'),
+                        $mailmessage['text'],
+                        $user->config->MAIL_AS_HTML ? $mailmessage['html'] : null
+                    );
+                }
+
+                // Unset user configuration cache to preserve memory
+                UserConfig::set($user->id, null);
+
+                // Log results
+                if ($ok !== false && $parameters['verbose']) {
+                    echo $user->username . ':' . $ok . "\n";
                 }
             }
-            UserConfig::set($user->id, null);
-            if ($ok !== false && $parameters['verbose']) echo $user->username . ':' . $ok . "\n";
-        }
-        $user = $cli_user;
+        );
     }
 }

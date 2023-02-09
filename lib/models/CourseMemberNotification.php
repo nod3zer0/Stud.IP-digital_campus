@@ -20,6 +20,8 @@
  * @property string chdate database column
  * @property User user belongs_to User
  * @property Course course belongs_to Course
+ *
+ * @property JSONArrayObject notification_data
  */
 class CourseMemberNotification extends SimpleORMap implements PrivacyObject
 {

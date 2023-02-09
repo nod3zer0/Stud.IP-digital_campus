@@ -79,19 +79,24 @@ class ModulesNotification
 
 
 
-    function getAllNotifications ($user_id = NULL)
+    public function getAllNotifications ($user_id = null)
     {
-
-        if (is_null($user_id)) {
+        if ($user_id === null) {
             $user_id = $GLOBALS['user']->id;
         }
 
         $my_sem = [];
-        $query = "SELECT s.Seminar_id, s.Name, s.chdate, s.start_time, IFNULL(visitdate, :threshold) AS visitdate "
-               . "FROM seminar_user_notifications su "
-               . "LEFT JOIN seminare s USING (Seminar_id) "
-               . "LEFT JOIN object_user_visits ouv ON (ouv.object_id = su.Seminar_id AND ouv.user_id = :user_id AND ouv.plugin_id = 0) "
-               . "WHERE su.user_id = :user_id";
+        $query = "SELECT s.Seminar_id, s.Name, s.chdate, s.start_time, IFNULL(visitdate, :threshold) AS visitdate
+                  FROM seminar_user_notifications su
+                  JOIN seminar_user USING (user_id, seminar_id)
+                  JOIN seminare s USING (Seminar_id)
+                  LEFT JOIN object_user_visits ouv
+                    ON (
+                        ouv.object_id = su.Seminar_id
+                        AND ouv.user_id = :user_id
+                        AND ouv.plugin_id = 0
+                    )
+                  WHERE su.user_id = :user_id";
 
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':user_id', $user_id);
@@ -101,21 +106,23 @@ class ModulesNotification
             $seminar_id = $row['Seminar_id'];
             $tools = ToolActivation::findbyRange_id($seminar_id);
             $notification = CourseMemberNotification::find([$user_id, $seminar_id]);
+
+            if (!$notification || count($notification->notification_data) === 0) {
+                continue;
+            }
+
             $my_sem[$seminar_id] = [
-                    'name'       => $row['Name'],
-                    'chdate'     => $row['chdate'],
-                    'start_time' => $row['start_time'],
-                    'tools'    => new SimpleCollection($tools),
-                    'visitdate'  => $row['visitdate'],
-                    'notification'=> $notification ? $notification->notification_data->getArrayCopy() : []
+                'name'         => $row['Name'],
+                'chdate'       => $row['chdate'],
+                'start_time'   => $row['start_time'],
+                'tools'        => new SimpleCollection($tools),
+                'visitdate'    => $row['visitdate'],
+                'notification' => $notification->notification_data->getArrayCopy(),
             ];
         }
         $visit_data = get_objects_visits(array_keys($my_sem), 'sem', null, $user_id, array_keys($this->registered_notification_modules));
         $news = [];
         foreach ($my_sem as $seminar_id => $s_data) {
-            if (!count($s_data['notification'])) {
-                continue;
-            }
             $navigation = MyRealmModel::getAdditionalNavigations($seminar_id, $s_data, null, $user_id, $visit_data[$seminar_id]);
             $n_data = [];
             foreach ($this->registered_notification_modules as $id => $m_data) {
@@ -124,11 +131,11 @@ class ModulesNotification
                     && $navigation[$id]->getImage()
                     && $navigation[$id]->getImage()->getRole() === Icon::ROLE_ATTENTION
                 ) {
-                        $data = $this->getPluginText($navigation[$id], $seminar_id, $id);
-                        if ($data) {
-                            $n_data[] = $data;
-                        }
+                    $data = $this->getPluginText($navigation[$id], $seminar_id, $id);
+                    if ($data) {
+                        $n_data[] = $data;
                     }
+                }
             }
             if (count($n_data)) {
                 $news[$s_data['name']] = $n_data;
@@ -149,6 +156,8 @@ class ModulesNotification
             $template_text->set_attribute('sso', $auth_plugin);
             return ['text' => $template_text->render(), 'html' => $template->render()];
         }
+
+        return null;
     }
 
     function getPluginText($nav, $seminar_id, $id)

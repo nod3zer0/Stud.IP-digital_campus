@@ -68,6 +68,8 @@
  * @property UserInfo   info   has_one UserInfo
  * @property UserOnline online has_one UserOnline
  * @property Kategorie[]|SimpleORMapCollection $profile_categories has_many Kategorie
+ *
+ * @property UserConfig config
  */
 class User extends AuthUserMd5 implements Range, PrivacyObject
 {
