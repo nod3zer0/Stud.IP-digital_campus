@@ -35,7 +35,6 @@
 
 }
 @mixin arrow-top($width, $color, $margin: $width) {
-    @extend %base;
     margin-top: $margin;
 
     &::before {
