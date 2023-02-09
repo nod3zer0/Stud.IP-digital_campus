@@ -1,10 +1,10 @@
 STUDIP.ready(() => {
-    document.getElementById('fullscreen-on').addEventListener('click', event => {
+    document.getElementById('fullscreen-on')?.addEventListener('click', event => {
         event.preventDefault();
         STUDIP.Vue.emit('toggle-compact-navigation', true);
     });
 
-    document.getElementById('fullscreen-off').addEventListener('click', event => {
+    document.getElementById('fullscreen-off')?.addEventListener('click', event => {
         event.preventDefault();
         STUDIP.Vue.emit('toggle-compact-navigation', false);
     })
