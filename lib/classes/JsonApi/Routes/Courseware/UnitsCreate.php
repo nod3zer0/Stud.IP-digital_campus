@@ -99,11 +99,11 @@ class UnitsCreate extends JsonApiController
             'structural_element_id' => $struct->id,
             'content_type' => 'courseware',
             'creator_id' => $user->id,
-            'public' => self::arrayGet($json, 'data.attributes.public', ''),
+            'public' => self::arrayGet($json, 'data.attributes.public', '0'),
             'release_date' => self::arrayGet($json, 'data.attributes.release-date'),
             'withdraw_date' => self::arrayGet($json, 'data.attributes.withdraw-date'),
         ]);
-        
+
         $unit->store();
 
         return $unit;
