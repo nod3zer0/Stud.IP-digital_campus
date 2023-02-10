@@ -20,7 +20,7 @@ class CreateCwUnitsTable extends Migration
             `public`                  TINYINT(4) NOT NULL DEFAULT '1',
             `creator_id`              CHAR(32) COLLATE latin1_bin DEFAULT NULL,
             `release_date`            INT(11) UNSIGNED DEFAULT NULL,
-            `withdraw_date`           INT(11) UNSIGNED NOT NULL,
+            `withdraw_date`           INT(11) UNSIGNED DEFAULT NULL,
             `mkdate`                  INT(11) UNSIGNED NOT NULL,
             `chdate`                  INT(11) UNSIGNED NOT NULL,
 
@@ -36,8 +36,8 @@ class CreateCwUnitsTable extends Migration
 
         // create unit for each courseware root node
         $insert = $db->prepare(
-            "INSERT INTO `cw_units` (`range_id`, `range_type`, `structural_element_id`, `content_type`, `public`, `creator_id`) 
-             VALUES (?, ?, ?, 'courseware', true, ?)"
+            "INSERT INTO `cw_units` (`range_id`, `range_type`, `structural_element_id`, `content_type`, `public`, `creator_id`, `mkdate`, `chdate`)
+             VALUES (?, ?, ?, 'courseware', true, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())"
         );
         foreach ($cw_root_nodes as $courseware) {
             $insert->execute([$courseware['range_id'], $courseware['range_type'], $courseware['id'], $courseware['owner_id']]);

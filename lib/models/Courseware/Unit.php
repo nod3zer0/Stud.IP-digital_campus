@@ -99,8 +99,8 @@ class Unit extends \SimpleORMap
             'content_type' => 'courseware',
             'creator_id' => $user->id,
             'public' => '',
-            'release_date' => '',
-            'withdraw_date' => '',
+            'release_date' => null,
+            'withdraw_date' => null,
         ]);
         
         $newUnit->store();

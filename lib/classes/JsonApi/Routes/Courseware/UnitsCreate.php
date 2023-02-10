@@ -100,8 +100,8 @@ class UnitsCreate extends JsonApiController
             'content_type' => 'courseware',
             'creator_id' => $user->id,
             'public' => self::arrayGet($json, 'data.attributes.public', ''),
-            'release_date' => self::arrayGet($json, 'data.attributes.release-date', ''),
-            'withdraw_date' => self::arrayGet($json, 'data.attributes.withdraw-date', ''),
+            'release_date' => self::arrayGet($json, 'data.attributes.release-date'),
+            'withdraw_date' => self::arrayGet($json, 'data.attributes.withdraw-date'),
         ]);
         
         $unit->store();
@@ -119,4 +119,3 @@ class UnitsCreate extends JsonApiController
         return $type_map[$type] ?? null;
     }
 }
-
