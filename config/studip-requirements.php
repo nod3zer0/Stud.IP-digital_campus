@@ -1,7 +1,7 @@
 <?php
 return [
     'php'   => [
-        'version' => '7.0',
+        'version' => '7.2',
         'modules' => [
             'PDO'       => true,
             'pdo_mysql' => true,
@@ -62,7 +62,7 @@ return [
         ],
     ],
     'mysql' => [
-        'version' => '5.6.10',
+        'version' => '5.7.6',
         'settings' => [
             'innodb_file_per_table' => true,
             'innodb_file_format' => [

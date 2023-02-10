@@ -2,7 +2,7 @@ Die Installation von Stud.IP ist halb so schlimm:
 es müssen lediglich ein paar Dateien kopiert werden und ein paar
 Programme laufen ;-)
 
-Vorausgesetzt wird ein Webserver wie Apache2 oder nginx mit PHP-7.0 Modulen und
+Vorausgesetzt wird ein Webserver wie Apache2 oder nginx mit PHP-7.2 Modulen und
 eine MySQL 5.7.6 Datenbank.
 
 Was genau zu tun ist, steht in
