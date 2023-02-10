@@ -914,7 +914,7 @@ class Module_ModuleController extends MVVController
                     ));
                 }
             }
-            $this->redirect($this->detailsURL($this->modulteil->modul_id . '/' . $this->modulteil->id));
+            $this->redirect($this->detailsURL($this->modulteil->modul_id, $this->modulteil->id));
         }
     }
 
@@ -936,7 +936,7 @@ class Module_ModuleController extends MVVController
                 $lvg_modulteil->delete();
             }
         }
-        $this->redirect($this->detailsURL($modulteil->modul_id . '/' . $modulteil->id));
+        $this->redirect($this->detailsURL($modulteil->modul_id, $modulteil->id));
     }
 
     public function lvgruppe_action($modulteil_id, $lvgruppe_id = null)
@@ -960,7 +960,7 @@ class Module_ModuleController extends MVVController
                     $this->lvgruppe->getDisplayName());
             }
             $this->cancel_url = $this->indexURL();
-            $this->submit_url = $this->lvgruppeURL($this->modulteil->id . '/' . $this->lvgruppe->id);
+            $this->submit_url = $this->lvgruppeURL($this->modulteil->id, $this->lvgruppe->id);
             if (Request::submitted('store')) {
                 CSRFProtection::verifyUnsafeRequest();
                 $stored = false;
@@ -990,7 +990,7 @@ class Module_ModuleController extends MVVController
                     } else {
                         PageLayout::postInfo(_('Es wurden keine Änderungen vorgenommen.'));
                     }
-                    $this->relocate($this->detailsURL($this->modulteil->modul_id . '/' . $this->modulteil->id));
+                    $this->relocate($this->detailsURL($this->modulteil->modul_id, $this->modulteil->id));
                     return;
                 }
             }
@@ -1100,7 +1100,7 @@ class Module_ModuleController extends MVVController
             if (Request::isXhr()) {
                 $this->response->add_header(
                     'X-Location',
-                    $this->diffURL($new_module->id . '/' . $old_module->id)
+                    $this->diffURL($new_module->id, $old_module->id)
                 );
             }
             $type_new = 1;
