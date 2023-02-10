@@ -25,19 +25,35 @@
                             :shape="status.shape"
                             :role="status.role"
                             :title="status.description"
+                            aria-hidden="true"
                         />
+                        <span class="sr-only">{{ status.description }}</span>
                     </td>
                     <td>
                         {{ taskGroup && taskGroup.attributes.title }}
                     </td>
                     <td>
                         <span v-if="user">
-                            <studip-icon shape="person2" role="info" :title="$gettext('Teilnehmer/-in')" />
+                            <studip-icon 
+                                shape="person2"
+                                role="info"
+                                aria-hidden="true"
+                                :title="$gettext('Teilnehmende Person')" 
+                            />
+                            <span class="sr-only">{{ $gettext('Teilnehmende Person') }}</span>
                             {{ user.attributes['formatted-name'] }}
+
                         </span>
                         <span v-if="group">
-                            <studip-icon shape="group2" role="info" :title="$gettext('Gruppe')" />
+                            <studip-icon
+                                shape="group2"
+                                role="info"
+                                aria-hidden="true"
+                                :title="$gettext('Gruppe')"
+                            />
+                            <span class="sr-only">{{ $gettext('Gruppe') }}</span>
                             {{ group.attributes['name'] }}
+
                         </span>
                     </td>
                     <td class="responsive-hidden">
