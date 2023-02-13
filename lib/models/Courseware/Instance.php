@@ -34,9 +34,6 @@ class Instance
 
         $instance = new self($root);
 
-        $range->getConfiguration()->delete('COURSEWARE_SEQUENTIAL_PROGRESSION');
-        $range->getConfiguration()->delete('COURSEWARE_EDITING_PERMISSION');
-
         $last_element_configs = \ConfigValue::findBySQL('field = ? AND value LIKE ?', [
             'COURSEWARE_LAST_ELEMENT',
             '%' . $range->getRangeId() . '%',
@@ -63,6 +60,11 @@ class Instance
     private $root;
 
     /**
+     * @var Unit
+     */
+    private $unit;
+
+    /**
      * Create a new representation of a a courseware instance.
      *
      * This model class purely represents and does not create anything. Its purpose is to have all things related to a
@@ -73,6 +75,7 @@ class Instance
     public function __construct(StructuralElement $root)
     {
         $this->root = $root;
+        $this->unit = $root->findUnit();
     }
 
     /**
@@ -83,6 +86,16 @@ class Instance
     public function getRoot(): StructuralElement
     {
         return $this->root;
+    }
+
+    /**
+     * Returns the unit belonging to this courseware instance.
+     *
+     * @return Unit the unit belonging this courseware instance
+     */
+    public function getUnit(): Unit
+    {
+        return $this->unit;
     }
 
     /**
@@ -164,9 +177,7 @@ class Instance
      */
     public function getSequentialProgression(): bool
     {
-        $range = $this->getRange();
-        $root = $this->getRoot();
-        $sequentialProgression = $range->getConfiguration()->COURSEWARE_SEQUENTIAL_PROGRESSION[$root->id];
+        $sequentialProgression = $this->unit->config['sequential_progression'] ?? false;
 
         return (bool) $sequentialProgression;
     }
@@ -178,11 +189,7 @@ class Instance
      */
     public function setSequentialProgression(bool $isSequentialProgression): void
     {
-        $range = $this->getRange();
-        $root = $this->getRoot();
-        $progressions = $range->getConfiguration()->getValue('COURSEWARE_SEQUENTIAL_PROGRESSION');
-        $progressions[$root->id] = $isSequentialProgression ? 1 : 0;
-        $range->getConfiguration()->store('COURSEWARE_SEQUENTIAL_PROGRESSION', $progressions);
+        $this->unit->config['sequential_progression'] = $isSequentialProgression ? 1 : 0;
     }
 
     const EDITING_PERMISSION_DOZENT = 'dozent';
@@ -195,10 +202,8 @@ class Instance
      */
     public function getEditingPermissionLevel(): string
     {
-        $range = $this->getRange();
-        $root = $this->getRoot();
         /** @var string $editingPermissionLevel */
-        $editingPermissionLevel = $range->getConfiguration()->COURSEWARE_EDITING_PERMISSION[$root->id];
+        $editingPermissionLevel = $this->unit->config['editing_permission'];
         if ($editingPermissionLevel) {
             $this->validateEditingPermissionLevel($editingPermissionLevel);
             return $editingPermissionLevel;
@@ -216,11 +221,7 @@ class Instance
     public function setEditingPermissionLevel(string $editingPermissionLevel): void
     {
         $this->validateEditingPermissionLevel($editingPermissionLevel);
-        $range = $this->getRange();
-        $root = $this->getRoot();
-        $permissions = $range->getConfiguration()->getValue('COURSEWARE_EDITING_PERMISSION');
-        $permissions[$root->id] = $editingPermissionLevel;
-        $range->getConfiguration()->store('COURSEWARE_EDITING_PERMISSION', $permissions);
+        $this->unit->config['editing_permission'] = $editingPermissionLevel;
     }
 
     /**
@@ -250,13 +251,10 @@ class Instance
      */
     public function getCertificateSettings(): array
     {
-        $range = $this->getRange();
-        $root = $this->getRoot();
         /** @var array $certificateSettings */
-        $certificateSettings = json_decode(
-            $range->getConfiguration()->COURSEWARE_CERTIFICATE_SETTINGS[$root->id],
-            true
-        )?: [];
+        $certificateSettings = isset($this->unit->config['certificate'])
+            ? $this->unit->config['certificate']->getArrayCopy()
+            : [];
         $this->validateCertificateSettings($certificateSettings);
 
         return $certificateSettings;
@@ -269,27 +267,27 @@ class Instance
      */
     public function setCertificateSettings(array $certificateSettings): void
     {
-        $this->validateCertificateSettings($certificateSettings);
-        $range = $this->getRange();
-        $root = $this->getRoot();
-        $settings = $range->getConfiguration()->getValue('COURSEWARE_CERTIFICATE_SETTINGS');
-        $settings[$root->id] = count($certificateSettings) > 0 ? json_encode($certificateSettings) : null;
-        $range->getConfiguration()->store('COURSEWARE_CERTIFICATE_SETTINGS', $settings);
+        if (count($certificateSettings) > 0) {
+            $this->validateCertificateSettings($certificateSettings);
+            $this->unit->config['certificate'] = $certificateSettings;
+        } else {
+            unset($this->unit->config['certificate']);
+        }
     }
 
     /**
      * Validates certificate settings.
      *
-     * @param array $certificateSettings settings for certificate creation
+     * @param \JSONArrayObject $certificateSettings settings for certificate creation
      *
      * @return bool true if all given values are valid, false otherwise
      */
-    public function isValidCertificateSettings(array $certificateSettings): bool
+    public function isValidCertificateSettings($certificateSettings): bool
     {
         return (int) $certificateSettings['threshold'] >= 0 && (int) $certificateSettings['threshold'] <= 100;
     }
 
-    private function validateCertificateSettings(array $certificateSettings): void
+    private function validateCertificateSettings($certificateSettings): void
     {
         if (!$this->isValidCertificateSettings($certificateSettings)) {
             throw new \InvalidArgumentException('Invalid certificate settings given.');
@@ -303,13 +301,10 @@ class Instance
      */
     public function getReminderSettings(): array
     {
-        $range = $this->getRange();
-        $root = $this->getRoot();
-        /** @var int $reminderInterval */
-        $reminderSettings = json_decode(
-            $range->getConfiguration()->COURSEWARE_REMINDER_SETTINGS[$root->id],
-            true
-        )?: [];
+        /** @var array $reminderSettings */
+        $reminderSettings = isset($this->unit->config['reminder'])
+            ? $this->unit->config['reminder']->getArrayCopy()
+            : [];
         $this->validateReminderSettings($reminderSettings);
 
         return $reminderSettings;
@@ -318,33 +313,34 @@ class Instance
     /**
      * Sets the reminder message settings this courseware instance.
      *
-     * @param array $reminderSettings an array of parameters
+     * @param \JSONArrayObject $reminderSettings an array of parameters
      */
-    public function setReminderSettings(array $reminderSettings): void
+    public function setReminderSettings($reminderSettings): void
     {
-        $this->validateReminderSettings($reminderSettings);
-        $range = $this->getRange();
-        $root = $this->getRoot();
-        $settings = $range->getConfiguration()->getValue('COURSEWARE_REMINDER_SETTINGS');
-        $settings[$root->id] = count($reminderSettings) > 0 ? json_encode($reminderSettings) : null;
-        $range->getConfiguration()->store('COURSEWARE_REMINDER_SETTINGS', $settings);
+        if (count($reminderSettings) > 0) {
+            $this->validateReminderSettings($reminderSettings);
+            $this->unit->config['reminder'] = $reminderSettings;
+        } else {
+            unset($this->unit->config['reminder']);
+            unset($this->unit->config['last_reminder']);
+        }
     }
 
     /**
      * Validates reminder message settings.
      *
-     * @param array $reminderSettings settings for reminder mail sending
+     * @param \JSONArrayObject $reminderSettings settings for reminder mail sending
      *
      * @return bool true if all given values are valid, false otherwise
      */
-    public function isValidReminderSettings(array $reminderSettings): bool
+    public function isValidReminderSettings($reminderSettings): bool
     {
         $valid = in_array($reminderSettings['interval'], [0, 7, 14, 30, 90, 180, 365]);
 
         return $valid;
     }
 
-    private function validateReminderSettings(array $reminderSettings): void
+    private function validateReminderSettings($reminderSettings): void
     {
         if (!$this->isValidReminderSettings($reminderSettings)) {
             throw new \InvalidArgumentException('Invalid reminder settings given.');
@@ -358,13 +354,10 @@ class Instance
      */
     public function getResetProgressSettings(): array
     {
-        $range = $this->getRange();
-        $root = $this->getRoot();
-        /** @var int $reminderInterval */
-        $resetProgressSettings = json_decode(
-            $range->getConfiguration()->COURSEWARE_RESET_PROGRESS_SETTINGS[$root->id],
-            true
-        )?: [];
+        /** @var array $resetProgressSettings */
+        $resetProgressSettings = isset($this->unit->config['reset_progress'])
+            ? $this->unit->config['reset_progress']->getArrayCopy()
+            : [];
         $this->validateResetProgressSettings($resetProgressSettings);
 
         return $resetProgressSettings;
@@ -373,33 +366,34 @@ class Instance
     /**
      * Sets the progress resetting settings this courseware instance.
      *
-     * @param array $reminderSettings an array of parameters
+     * @param \JSONArrayObject $resetProgressSettings an array of parameters
      */
-    public function setResetProgressSettings(array $resetProgressSettings): void
+    public function setResetProgressSettings($resetProgressSettings): void
     {
-        $this->validateResetProgressSettings($resetProgressSettings);
-        $range = $this->getRange();
-        $root = $this->getRoot();
-        $settings = $range->getConfiguration()->getValue('COURSEWARE_RESET_PROGRESS_SETTINGS');
-        $settings[$root->id] = count($resetProgressSettings) > 0 ? json_encode($resetProgressSettings) : null;
-        $range->getConfiguration()->store('COURSEWARE_RESET_PROGRESS_SETTINGS', $settings);
+        if (count($resetProgressSettings) > 0) {
+            $this->validateResetProgressSettings($resetProgressSettings);
+            $this->unit->config['reset_progress'] = $resetProgressSettings;
+        } else {
+            unset($this->unit->config['reset_progress']);
+            unset($this->unit->config['last_progress_reset']);
+        }
     }
 
     /**
      * Validates progress resetting settings.
      *
-     * @param array $resetProgressSettings settings for progress resetting
+     * @param \JSONArrayObject $resetProgressSettings settings for progress resetting
      *
      * @return bool true if all given values are valid, false otherwise
      */
-    public function isValidResetProgressSettings(array $resetProgressSettings): bool
+    public function isValidResetProgressSettings($resetProgressSettings): bool
     {
         $valid = in_array($resetProgressSettings['interval'], [0, 14, 30, 90, 180, 365]);
 
         return $valid;
     }
 
-    private function validateResetProgressSettings(array $resetProgressSettings): void
+    private function validateResetProgressSettings($resetProgressSettings): void
     {
         if (!$this->isValidResetProgressSettings($resetProgressSettings)) {
             throw new \InvalidArgumentException('Invalid progress resetting settings given.');
@@ -491,4 +485,5 @@ class Instance
 
         return $data;
     }
+
 }

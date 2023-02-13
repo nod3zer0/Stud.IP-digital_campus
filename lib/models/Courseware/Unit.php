@@ -11,7 +11,7 @@ use User;
  * @license GPL2 or any later version
  *
  * @since   Stud.IP 5.3
- * 
+ *
  * @property int                            $id                     database column
  * @property string                         $range_id               database column
  * @property string                         $range_type             database column
@@ -21,11 +21,12 @@ use User;
  * @property string                         $creator_id             database column
  * @property int                            $release_date           database column
  * @property int                            $withdraw_date          database column
+ * @property \JSONArrayObject               $config                 database column
  * @property int                            $mkdate                 database column
  * @property int                            $chdate                 database column
  * @property \User                          $creator                belongs_to User
  * @property \Courseware\StructuralElement  $structural_element     belongs_to Courseware\StructuralElement
- * 
+ *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
@@ -35,6 +36,8 @@ class Unit extends \SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'cw_units';
+
+        $config['serialized_fields']['config'] = 'JSONArrayObject';
 
         $config['has_one']['structural_element'] = [
             'class_name' => StructuralElement::class,
@@ -102,7 +105,7 @@ class Unit extends \SimpleORMap
             'release_date' => null,
             'withdraw_date' => null,
         ]);
-        
+
         $newUnit->store();
 
         return $newUnit;

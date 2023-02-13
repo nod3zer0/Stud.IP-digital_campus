@@ -133,6 +133,9 @@ class CoursewareInstancesUpdate extends JsonApiController
         $resetProgressSettings = $get('data.attributes.reset-progress-settings');
         $instance->setResetProgressSettings($resetProgressSettings);
 
+        // Store changes in unit configuration.
+        $instance->getUnit()->store();
+
         return $instance;
     }
 }
