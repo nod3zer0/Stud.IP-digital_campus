@@ -26,7 +26,8 @@ class Audio extends BlockType
 
     public static function getDescription(): string
     {
-        return _('Spielt eine Audiodatei aus dem Dateibereich oder von einer URL ab.');
+        return _('Spielt eine Audiodatei aus dem Dateibereich oder von ' .
+                 'einer URL ab und ermöglicht Audioaufnahmen direkt im Block.');
     }
 
     public function initialPayload(): array
@@ -86,7 +87,7 @@ class Audio extends BlockType
 
     public static function getCategories(): array
     {
-        return ['basis', 'multimedia'];
+        return ['basis', 'multimedia', 'interaction'];
     }
 
     public static function getContentTypes(): array
