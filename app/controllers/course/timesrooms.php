@@ -410,9 +410,14 @@ class Course_TimesroomsController extends AuthenticatedController
         // Set assigned teachers
         $assigned_teachers = Request::optionArray('assigned_teachers');
         $dozenten          = $this->course->getMembers();
-        $this->dozenten = [];
-        if(count($dozenten) !== count($assigned_teachers)) {
-            $this->dozenten = User::findMany($assigned_teachers);
+        if (count($assigned_teachers) === count($dozenten) || empty($assigned_teachers)) {
+            //The amount of lecturers of the course date is the same as the amount of lecturers of the course
+            //or no lecturers are assigned to the course date.
+            $termin->dozenten = [];
+        } else {
+            //The assigned lecturers (amount or persons) have been changed in the form.
+            //In those cases, the lecturers of the course date have to be set.
+            $termin->dozenten = User::findMany($assigned_teachers);
         }
 
         // Set assigned groups
