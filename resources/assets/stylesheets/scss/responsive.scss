@@ -859,10 +859,9 @@ html:not(.responsive-display):not(.fullscreen-mode) {
                 display: none;
             }
 
-            main {
+            #content {
                 margin: 0;
                 padding: 0;
-                width: calc(100% - 10px);
 
                 .messagebox {
                     margin: 0;
@@ -951,5 +950,3 @@ html:not(.responsive-display):not(.fullscreen-mode) {
         max-width: 100vw;
     }
 }
-
-

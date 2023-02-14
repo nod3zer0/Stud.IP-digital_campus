@@ -77,6 +77,23 @@ PageLayout::setTabNavigation(NULL); // disable display of tabs
 include 'lib/include/html_head.inc.php'; // Output of html head
 include 'lib/include/header.php';
 
+// Prüfen, ob PortalPlugins vorhanden sind.
+// TODO: Remove for Stud.IP 6.0
+/** @deprecated */
+$portalplugins = PluginEngine::getPlugins('PortalPlugin');
+$layout = $GLOBALS['template_factory']->open('shared/index_box');
+
+$plugin_contents = [];
+foreach ($portalplugins as $portalplugin) {
+    $template = $portalplugin->getPortalTemplate();
+
+    if ($template) {
+        $plugin_contents[] = $template->render(NULL, $layout);
+        $layout->clear_attributes();
+    }
+}
+
+
 $index_nobody_template = $GLOBALS['template_factory']->open('index_nobody');
 $cache = StudipCacheFactory::getCache();
 $stat = $cache->read('LOGINFORM_STATISTICS');
@@ -88,28 +105,11 @@ if (!is_array($stat)) {
 }
 $index_nobody_template->set_attributes(array_merge($stat, [
     'num_online_users' => get_users_online_count(),
+    'plugin_contents'  => $plugin_contents,
+    'logout'           =>  Request::bool('logout'),
 ]));
 
-if (Request::get('logout'))
-{
-    $index_nobody_template->set_attribute('logout', true);
-}
-
 echo $index_nobody_template->render();
-
-$layout = $GLOBALS['template_factory']->open('shared/index_box');
-
-// Prüfen, ob PortalPlugins vorhanden sind.
-$portalplugins = PluginEngine::getPlugins('PortalPlugin');
-
-foreach ($portalplugins as $portalplugin) {
-    $template = $portalplugin->getPortalTemplate();
-
-    if ($template) {
-        echo $template->render(NULL, $layout);
-        $layout->clear_attributes();
-    }
-}
 
 page_close();
 

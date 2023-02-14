@@ -1,9 +1,13 @@
-<?
-# Lifter010: TODO
+<?php
+/**
+ * @var string $content_for_layout
+ * @var string|null $icon_url
+ * @var string $title
+ * @var string|null $admin_url
+ * @var string|null $admin_title
+ */
 ?>
 <? if ($content_for_layout != ''): ?>
-    <? if (!isset($admin_title)) $admin_title = _('Administration') ?>
-
     <table class="index_box">
         <tr>
             <td class="table_header_bold" style="font-weight: bold;">
@@ -14,11 +18,13 @@
             </td>
 
             <td class="table_header_bold" style="text-align: right;">
-                <? if (isset($admin_url)): ?>
-                    <a href="<?= URLHelper::getLink($admin_url) ?>" title="<?= htmlReady($admin_title) ?>">
-                        <?= Icon::create('admin', 'info_alt')->asImg(16, ["alt" => htmlReady($admin_title)]) ?>
-                    </a>
-                <? endif ?>
+            <? if (isset($admin_url)): ?>
+                <a href="<?= URLHelper::getLink($admin_url) ?>" title="<?= htmlReady($admin_title ?? _('Administration')) ?>">
+                    <?= Icon::create('admin', Icon::ROLE_INFO_ALT)->asImg([
+                        'alt' => $admin_title ??  ('Administration'),
+                    ]) ?>
+                </a>
+            <? endif ?>
             </td>
         </tr>
 
