@@ -1,6 +1,7 @@
 import { $gettext } from '../lib/gettext.js';
+import eventBus from "../lib/event-bus";
 
-STUDIP.domReady(() => {
+eventBus.on('studip:set-locale', () => {
     $.extend($.ui.multiselect, {
         locale: {
             addAll: $gettext('Alle hinzufügen'),

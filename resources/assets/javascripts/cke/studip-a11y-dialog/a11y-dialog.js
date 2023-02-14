@@ -6,7 +6,7 @@ import A11YDialogUI from './ui.js';
 
 export function updateVoiceLabel() {
     add('de', {
-        'Rich Text Editor': $gettext('Rich Text Editor (Um Bedienhinweise zu erhalten, drücken Sie ALT+0 im Eingabefeld.)'),
+        'Rich Text Editor': 'Rich Text Editor (Um Bedienhinweise zu erhalten, drücken Sie ALT+0 im Eingabefeld.)',
     });
 }
 

@@ -1,4 +1,17 @@
 import { $gettext } from '../lib/gettext.js';
+import eventBus from "./event-bus";
+
+eventBus.on('studip:set-locale', () => {
+    Calendar.day_names = [
+        $gettext('Montag'),
+        $gettext('Dienstag'),
+        $gettext('Mittwoch'),
+        $gettext('Donnerstag'),
+        $gettext('Freitag'),
+        $gettext('Samstag'),
+        $gettext('Sonntag'),
+    ];
+});
 
 /* ------------------------------------------------------------------------
  * calendar gui
@@ -12,13 +25,13 @@ const Calendar = {
     click_in_progress: false,
 
     day_names: [
-        $gettext('Montag'),
-        $gettext('Dienstag'),
-        $gettext('Mittwoch'),
-        $gettext('Donnerstag'),
-        $gettext('Freitag'),
-        $gettext('Samstag'),
-        $gettext('Sonntag')
+        'Montag',
+        'Dienstag',
+        'Mittwoch',
+        'Donnerstag',
+        'Freitag',
+        'Samstag',
+        'Sonntag',
     ],
 
     /**

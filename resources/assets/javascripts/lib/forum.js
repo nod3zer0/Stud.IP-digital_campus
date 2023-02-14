@@ -1,11 +1,16 @@
 import { $gettext } from "./gettext.js";
+import eventBus from "./event-bus";
+
+eventBus.on('studip:set-locale', () => {
+    Forum.warning_text = $gettext('Wenn Sie die Seite verlassen, gehen ihre Änderungen verloren!');
+});
 
 const Forum = {
     confirmDialog: null,
     current_area_id: null,
     current_category_id: null,
     seminar_id: null,
-    warning_text: $gettext('Wenn Sie die Seite verlassen, gehen ihre Änderungen verloren!'),
+    warning_text: 'Wenn Sie die Seite verlassen, gehen ihre Änderungen verloren!',
     clipboard: {},
 
     getTemplate: _.memoize(function(name) {
