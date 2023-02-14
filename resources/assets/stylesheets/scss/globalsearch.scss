@@ -20,12 +20,9 @@
         @include square(16px);
         margin-left: -22px;
         vertical-align: middle;
-
-        opacity: 0;
-        transition: opacity $transition-duration;
     }
-    &.has-value #globalsearch-clear {
-        opacity: 1;
+    &:not(.has-value) #globalsearch-clear {
+        display: none;
     }
 
     // The actual search input
@@ -283,10 +280,6 @@ html.responsive-display {
             left: $padding;
             top: calc($bar-bottom-container-height + $padding);
             width: calc(100vw - (2 * $padding));
-        }
-
-        #globalsearch-clear {
-            opacity: 1;
         }
     }
 }

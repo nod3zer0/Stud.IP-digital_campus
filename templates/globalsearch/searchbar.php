@@ -1,13 +1,14 @@
 <div id="globalsearch-searchbar" role="search" aria-label="<?= _('Globale Suche') ?>">
     <input class="hidden-small-down" type="text" name="globalsearchterm" id="globalsearch-input"
            placeholder="<?= _('Was suchen Sie?') ?>" role="searchbox">
-    <?= Icon::create('decline', Icon::ROLE_INACTIVE)->asImg([
-        'id' => 'globalsearch-clear',
-        'class' => 'hidden-small-down'
+    <?= Icon::create('decline', Icon::ROLE_INACTIVE)->asInput([
+        'id'    => 'globalsearch-clear',
+        'class' => 'hidden-small-down',
+        'alt'   => _('Suche zurücksetzen'),
     ]) ?>
     <?= Icon::create('search', Icon::ROLE_INFO_ALT)->asInput([
-        'id' => 'globalsearch-icon',
-        'aria-label' => _('Suche starten')
+        'id'  => 'globalsearch-icon',
+        'alt' => _('Suche starten')
     ]) ?>
     <div id="globalsearch-list">
         <a href="#" id="globalsearch-togglehints" data-toggle-text="<?= _('Tipps ausblenden') ?>">
