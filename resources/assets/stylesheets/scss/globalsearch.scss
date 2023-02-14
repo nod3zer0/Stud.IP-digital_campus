@@ -313,21 +313,28 @@ html:not(.size-large) {
             z-index: 0;
         }
 
-        #current-page-structure {
+        #navigation-level-1,
+        #current-page-structure,
+        #sidebar,
+        #content-wrapper,
+        #main-footer,
+        #scroll-to-top
+        {
             position: relative;
             filter: blur(1px);
+        }
 
-            &::before {
-                content: ' ';
-                display: block;
-                position: absolute;
-                top: -1px;
-                right: -1px;
-                bottom: -1px;
-                left: -1px;
-                background: mix($base-color, rgba(255,0,0,0), 50%);
-                z-index: 1;
-            }
+        body::before {
+            content: ' ';
+            display: block;
+            position: fixed;
+            top: $bar-bottom-container-height;
+            right: -1px;
+            bottom: -1px;
+            left: -1px;
+            background: mix($base-color, rgba(255,0,0,0), 50%);
+            z-index: 5;
+            pointer-events: none;
         }
     }
 }
