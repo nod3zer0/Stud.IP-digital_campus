@@ -3,8 +3,7 @@
            placeholder="<?= _('Was suchen Sie?') ?>" role="searchbox">
     <?= Icon::create('decline', Icon::ROLE_INACTIVE)->asImg([
         'id' => 'globalsearch-clear',
-        'class' => 'hidden-small-down',
-        'alt' => _('Suche zurücksetzen'),
+        'class' => 'hidden-small-down'
     ]) ?>
     <?= Icon::create('search', Icon::ROLE_INFO_ALT)->asInput([
         'id' => 'globalsearch-icon',
