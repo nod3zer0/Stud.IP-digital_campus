@@ -845,12 +845,16 @@ class ResourceManager
      * This method does the mapping from the old resource management permissions
      * to the new resource management permissions.
      */
-    public static function getGlobalResourcePermission(User $user)
+    public static function getGlobalResourcePermission(User $user = null)
     {
+        if (!$user) {
+            return '';
+        }
+
         global $perm;
         //First we check if the user is a root user:
 
-        if ($perm->get_perm($user->id) == 'root') {
+        if ($perm->get_perm($user->id) === 'root') {
             return 'admin';
         }
 
@@ -886,11 +890,15 @@ class ResourceManager
      *     If this is not set the current timestamp will be used.
      */
     public static function userHasResourcePermissions(
-        User $user,
+        User $user = null,
         $level = 'admin',
         $time = null
     )
     {
+        if (!$user) {
+            return false;
+        }
+
         //Get all permissions and temporary permissions of the user:
 
         $permissions = ResourcePermission::findBySQL(
@@ -1062,16 +1070,14 @@ class ResourceManager
      * Checks if the specified user has the specified permission level
      * for the resource management system.
      *
-     * @param User $user The user whose global resource permissions
-     *     shall be checked.
-     * @param string $requested_permission The required permission level
-     *     for the user.
+     * @param User|null $user The user whose global resource permissions shall be checked.
+     * @param string $requested_permission The required permission level for the user.
      *
      * @returns bool True, if the user has the required permission level,
      *     false otherwise.
      */
     public static function userHasGlobalPermission(
-        User $user,
+        User $user = null,
         $requested_permission = 'user'
     )
     {

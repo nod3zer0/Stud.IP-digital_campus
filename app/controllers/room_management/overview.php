@@ -28,7 +28,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
 {
     public function before_filter(&$action, &$args)
     {
-        if ($action == 'public_booking_plans') {
+        if ($action === 'public_booking_plans') {
             if (Config::get()->RESOURCES_SHOW_PUBLIC_ROOM_PLANS) {
                 $this->allow_nobody = true;
             } else {
@@ -36,6 +36,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
             }
         }
         parent::before_filter($action, $args);
+
         $this->user = User::findCurrent();
         $this->user_is_root = $GLOBALS['perm']->have_perm('root');
         $this->user_is_global_resource_user = ResourceManager::userHasGlobalPermission($this->user);
@@ -43,16 +44,13 @@ class RoomManagement_OverviewController extends AuthenticatedController
 
         $this->show_resource_actions = (
             ResourceManager::userHasGlobalPermission($this->user, 'autor')
-            ||
-            ResourceManager::userHasResourcePermissions($this->user, 'autor')
+            || ResourceManager::userHasResourcePermissions($this->user, 'autor')
         );
         $this->show_admin_actions = (
             $this->user_is_global_resource_admin
-            ||
-            ResourceManager::userHasResourcePermissions($this->user)
+            || ResourceManager::userHasResourcePermissions($this->user)
         );
         $this->show_global_admin_actions = $this->user_is_global_resource_admin;
-
     }
 
     public function index_action()
@@ -61,10 +59,10 @@ class RoomManagement_OverviewController extends AuthenticatedController
             Navigation::activateItem('/resources/overview');
         }
 
-        $sufficient_permissions =
-            ResourceManager::userHasGlobalPermission($this->user)
-            ||
-            ResourceManager::userHasResourcePermissions($this->user, 'user');
+        $sufficient_permissions = (
+            $this->user_is_global_resource_user
+            || ResourceManager::userHasResourcePermissions($this->user, 'user')
+        );
         if (!$sufficient_permissions) {
             throw new AccessDeniedException();
         }
@@ -97,13 +95,11 @@ class RoomManagement_OverviewController extends AuthenticatedController
         $tree_selected_resource = null;
         if ($this->user_is_global_resource_admin) {
 
-            if (ResourceManager::userHasGlobalPermission($this->user, 'admin')){
-                $locations = Location::findAll();
-                if($locations) {
-                    $sidebar->addWidget(
-                        new ResourceTreeWidget($locations)
-                    );
-                }
+            $locations = Location::findAll();
+            if ($locations) {
+                $sidebar->addWidget(
+                    new ResourceTreeWidget($locations)
+                );
             }
 
             $tree_selected_resource = Request::get('tree_selected_resource');
@@ -128,13 +124,12 @@ class RoomManagement_OverviewController extends AuthenticatedController
         }
         $this->room_requests_activated = Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS;
         $this->display_current_requests = false;
-        if (!$tree_selected_resource && $this->room_requests_activated ) {
+        if (!$tree_selected_resource && $this->room_requests_activated) {
             if (Config::get()->RESOURCES_DISPLAY_CURRENT_REQUESTS_IN_OVERVIEW) {
                 $this->display_current_requests = true;
-                $this->current_user = User::findCurrent();
 
                 //Load a list with the current room requests:
-                if (ResourceManager::userHasGlobalPermission($this->current_user, 'admin')) {
+                if ($this->user_is_global_resource_admin) {
                     //Global resource admins can see all room requests.
                     //Get the 10 latest requests:
                     $room_requests = RoomRequest::findBySql(
@@ -146,7 +141,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
                     //Users who aren't global resource admins see only the requests
                     //of the rooms where they have at least 'autor' permissions.
                     $rooms = RoomManager::getUserRooms(
-                        $this->current_user,
+                        $this->user,
                         'autor'
                     );
                     $room_ids = [];
@@ -329,7 +324,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
 
     public function rooms_action()
     {
-        if (ResourceManager::userHasGlobalPermission($this->user)) {
+        if ($this->user_is_global_resource_user) {
             PageLayout::setTitle(_('Übersicht über alle Räume'));
         } else {
             PageLayout::setTitle(_('Meine Räume'));
@@ -345,8 +340,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
         //Check permissions:
         $sufficient_permissions = (
             $this->user_is_global_resource_user
-            ||
-            ResourceManager::userHasResourcePermissions($this->user, 'user')
+            || ResourceManager::userHasResourcePermissions($this->user, 'user')
         );
         if (!$sufficient_permissions) {
             throw new AccessDeniedException();
@@ -393,7 +387,7 @@ class RoomManagement_OverviewController extends AuthenticatedController
         $rooms_parameter['building_name'] = Request::get('building_room_name');
 
         if ($this->user_is_global_resource_user) {
-            if(Request::get('building_room_name')) {
+            if (Request::get('building_room_name')) {
                 $rooms_sql_with_request .= " ORDER BY sort_position DESC, name ASC, mkdate ASC";
                 $this->rooms = Room::findBySQL($rooms_sql_with_request, $rooms_parameter);
             } else {
