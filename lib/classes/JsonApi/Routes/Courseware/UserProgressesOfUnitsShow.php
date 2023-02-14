@@ -95,7 +95,7 @@ class UserProgressesOfUnitsShow extends NonJsonApiController
     }
 
     private function getSelfProgresses(
-        iterable &$allBlockIds,
+        array &$allBlockIds,
         string $elementId,
         array &$userProgresses,
         array &$courseMemberIds

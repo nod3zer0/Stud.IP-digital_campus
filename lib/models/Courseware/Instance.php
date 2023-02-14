@@ -412,7 +412,7 @@ class Instance
         return StructuralElement::findUsersBookmarksByRange($user, $this->getRange());
     }
 
-    public function findAllStructuralElements(): iterable
+    public function findAllStructuralElements(): array
     {
         $sql = 'SELECT se.*
                 FROM cw_structural_elements se
@@ -428,7 +428,7 @@ class Instance
         return $data;
     }
 
-    public function findAllBlocks(): iterable
+    public function findAllBlocks(): array
     {
         $sql = 'SELECT b.*
                 FROM cw_structural_elements se
@@ -452,10 +452,10 @@ class Instance
      *
      * @param ?callable(array $row): mixed $formatter Provide your own callable if you need something else instead of
      *                                                full-blown instances of \Courseware\Block.
-     * @return iterable all the (optionally formatted) blocks grouped by the IDs of the structural element containing
+     * @return array all the (optionally formatted) blocks grouped by the IDs of the structural element containing
      *                  that block.
      */
-    public function findAllBlocksGroupedByStructuralElementId(callable $formatter = null): iterable
+    public function findAllBlocksGroupedByStructuralElementId(callable $formatter = null): array
     {
         if (!$formatter) {
             $formatter = function ($row) {
