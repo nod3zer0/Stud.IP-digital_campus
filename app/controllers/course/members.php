@@ -121,9 +121,9 @@ class Course_MembersController extends AuthenticatedController
                     $this->sort_by . ' ' . $this->order
                 )
             );
-            $this->awaiting = $filtered_members['awaiting']->toArray('user_id username vorname nachname visible mkdate');
-            $this->accepted = $filtered_members['accepted']->toArray('user_id username vorname nachname visible mkdate');
-            $this->claiming = $filtered_members['claiming']->toArray('user_id username vorname nachname visible mkdate');
+            $this->awaiting = $filtered_members['awaiting']->toArray();
+            $this->accepted = $filtered_members['accepted']->toArray();
+            $this->claiming = $filtered_members['claiming']->toArray();
         }
 
         // Check autor-perms
@@ -144,10 +144,10 @@ class Course_MembersController extends AuthenticatedController
         }
 
         // get member informations
-        $this->dozenten = $filtered_members['dozent']->toArray('user_id username vorname nachname');
-        $this->tutoren = $filtered_members['tutor']->toArray('user_id username vorname nachname mkdate');
-        $this->autoren = $filtered_members['autor']->toArray('user_id username vorname nachname visible mkdate');
-        $this->users = $filtered_members['user']->toArray('user_id username vorname nachname visible mkdate');
+        $this->dozenten = $filtered_members['dozent']->toArray();
+        $this->tutoren = $filtered_members['tutor']->toArray();
+        $this->autoren = $filtered_members['autor']->toArray();
+        $this->users = $filtered_members['user']->toArray();
         $this->studipticket = Seminar_Session::get_ticket();
         $this->subject = $this->getSubject();
         $this->groups = $this->status_groups;

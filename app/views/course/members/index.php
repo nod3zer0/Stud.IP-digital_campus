@@ -1,3 +1,16 @@
+<?php
+/**
+ * @var array $dozenten
+ * @var array $tutoren
+ * @var array $autoren
+ * @var array $users
+ * @var array $accepted
+ * @var array $awaiting
+ * @var Course $course
+ * @var bool $is_tutor
+ * @var bool $semAdmissionEnabled
+ */
+?>
 <? if (count($dozenten) > 0) : ?>
     <?= $this->render_partial('course/members/dozent_list') ?>
 <? endif ?>
@@ -17,7 +30,7 @@
     <div class="clear"></div>
 <? endif ?>
 
-<? if(count($autoren) >0) : ?>
+<? if (count($autoren) > 0) : ?>
     <br />
     <?= $this->render_partial('course/members/autor_list') ?>
 <? endif ?>
