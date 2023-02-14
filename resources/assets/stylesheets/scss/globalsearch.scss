@@ -25,7 +25,7 @@
         transition: opacity $transition-duration;
     }
     &.has-value #globalsearch-clear {
-        opacity: 1;
+        display: inline;
     }
 
     // The actual search input
@@ -286,7 +286,7 @@ html.responsive-display {
         }
 
         #globalsearch-clear {
-            opacity: 1;
+            display: inline;
         }
     }
 }
