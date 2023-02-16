@@ -96,11 +96,11 @@
                             type="radio"
                             v-model="selectedUnit"
                             :checked="unit.id === selectedUnitId"
-                            :value="unit.id"
+                            :value="unit"
                             :key="'radio-' + unit.id"
                             :aria-description="unit.element.attributes.title"
                         />
-                        <label @click="selectedUnit = unit" :key="'label-' + unit.id" :for="'cw-element-copy-unit-' + unit.id">
+                        <label :key="'label-' + unit.id" :for="'cw-element-copy-unit-' + unit.id">
                             <div class="icon"><studip-icon shape="courseware" size="32"/></div>
                             <div class="text">{{ unit.element.attributes.title }}</div>
                             <studip-icon shape="radiobutton-unchecked" size="24" class="unchecked" />
