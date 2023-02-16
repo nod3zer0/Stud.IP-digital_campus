@@ -132,7 +132,7 @@ $pagechooser = null;
 <!-- Seitenwähler (bei Bedarf) am oberen Rand anzeigen -->
 <? if ($number_of_entries > ForumEntry::POSTINGS_PER_PAGE) : ?>
 <div data-type="page_chooser" id="page-chooser">
-    <? if ($constraint['depth'] > 0 || !isset($constraint)) : ?>
+    <? if (!isset($constraint) || $constraint['depth'] > 0) : ?>
     <?= $pagechooser = $GLOBALS['template_factory']->render('shared/pagechooser', [
         'page'         => ForumHelpers::getPage(),
         'num_postings' => $number_of_entries,
