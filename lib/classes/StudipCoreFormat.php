@@ -473,7 +473,7 @@ class StudipCoreFormat extends TextFormat
      */
     protected static function markupQuote($markup, $matches, $contents)
     {
-        if (mb_strlen($matches[1]) > 1) {
+        if (isset($matches[1]) && mb_strlen($matches[1]) > 1) {
             $title = sprintf(_('%s hat geschrieben:'), $markup->format(mb_substr($matches[1], 1)));
             return sprintf('<blockquote><div class="author">%s</div>%s</blockquote>',
                        $title, trim($contents));
