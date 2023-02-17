@@ -14,7 +14,10 @@ use JsonApi\Schemas\File as FileSchema;
 
 class FileRefsCreate extends JsonApiController
 {
-    use RangeHelperTrait, RoutesHelperTrait, ValidationTrait;
+    use RangeHelperTrait, RoutesHelperTrait, ValidationTrait {
+        ValidationTrait::arrayGet insteadof RoutesHelperTrait;
+        ValidationTrait::arrayHas insteadof RoutesHelperTrait;
+    }
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameters)
