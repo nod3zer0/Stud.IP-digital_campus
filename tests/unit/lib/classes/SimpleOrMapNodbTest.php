@@ -56,7 +56,7 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
         StudipTestHelper::tear_down_tables();
     }
 
-    public function testConstruct()
+    public function testConstruct(): auth_user_md5
     {
         $a = new auth_user_md5();
         $this->assertInstanceOf('SimpleOrMap', $a);
@@ -287,5 +287,26 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
         $unserialized = unserialize($serialized);
 
         $this->assertEquals($a->toArray(), $unserialized->toArray());
+    }
+
+    /**
+     * @depends testConstruct
+     * @covers SimpleORMap::__clone
+     */
+    public function testClone(auth_user_md5 $a)
+    {
+        $queue = new SplStack();
+        $queue->push(1);
+        $queue->push(2);
+        $queue->push(3);
+
+        $a->additional_dummy_data = $queue;
+
+        $b = clone $a;
+
+        $this->assertEquals(
+            $a->additional_dummy_data->count(),
+            $b->additional_dummy_data->count()
+        );
     }
 }
