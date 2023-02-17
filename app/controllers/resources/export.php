@@ -229,6 +229,7 @@ class Resources_ExportController extends AuthenticatedController
             $this->end->setTime(23, 59, 59);
         }
 
+        $this->weekdays = ['1', '2', '3', '4', '5'];
 
         // All available booking types.
         $this->booking_types = [

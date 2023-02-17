@@ -28,6 +28,10 @@
                 </label>
             </section>
         </fieldset>
+        <?= $this->render_partial(
+            'resources/export/weekday-selector.partial.php',
+            compact('weekdays')
+        ) ?>
         <fieldset>
             <legend><?= _('Belegungstypen auswählen') ?></legend>
             <section>
