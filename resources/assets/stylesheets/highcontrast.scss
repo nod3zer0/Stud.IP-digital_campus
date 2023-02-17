@@ -333,6 +333,10 @@ table.default {
 
 }
 
+article.wiki {
+    border: unset;
+}
+
 // remove this border, else you end up having two
 .studip-widget > div > article.studip {
     border: none !important;
@@ -378,6 +382,15 @@ article.studip > header h1 > img {
 
 article.new.toggle > header h1 > a::before {
     filter: unset !important;
+}
+
+// avoid having double outline and weird line at bottom
+form.default table.default {
+    border: unset;
+
+    tbody:last-of-type>tr:last-child>td {
+        border-bottom: unset;
+    }
 }
 
 /* Sections,Articles and Forms footer */
