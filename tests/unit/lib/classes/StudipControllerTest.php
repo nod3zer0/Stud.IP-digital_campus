@@ -229,6 +229,29 @@ final class StudipControllerTest extends Codeception\Test\Unit
     }
 
     /**
+     * @dataProvider argumentValidationProvider
+     * @covers StudipController::validate_args
+     */
+    public function testArgumentValidation(array $args, array $expected, ?array $types): void
+    {
+        $this->getController()->validate_args($args, $types);
+
+        $this->assertEquals($expected, $args);
+    }
+
+    /**
+     * @dataProvider argumentValidationOptionProvider
+     * @covers StudipController::validate_args
+     */
+    public function testArgumentValidationOption(string $should_fail): void
+    {
+        $args = [$should_fail];
+
+        $this->expectException(Trails_Exception::class);
+        $this->getController()->validate_args($args);
+    }
+
+    /**
      * Returns a relative url for Stud.IP if given url matches.
      */
     private function getRelativeURL(string $url): string
@@ -293,6 +316,29 @@ final class StudipControllerTest extends Codeception\Test\Unit
             'url-and-parameters' => [false, 'https://example.org', ['foo' => 'bar', 'baz' => 42]],
         ];
     }
+
+    public function argumentValidationProvider(): array
+    {
+        return [
+            'default' => [['2', '2,5', 'abc', 'a-b-c'], ['2', '2,5', 'abc', 'a-b-c'], null],
+            'typed'   => [['2.5', '2.5', 'abc', 'a-b-c'], [2, 2.5, 'abc', 'a-b-c'], ['int', 'float', 'option', 'string']],
+            'int'     => [['1.5', '2.5', '-1.5'], [1, 2, -1], ['int', 'int', 'int']],
+            'float'   => [['1.5', '2.5', '-1.5'], [1.5, 2.5, -1.5], ['float', 'float', 'float']],
+            'option'   => [['a-b', '1,2,3', 'foobar'], ['a-b', '1,2,3', 'foobar'], ['option', 'option', 'option']],
+            'string'   => [['a', 'b!', 'http://c#?'], ['a', 'b!', 'http://c#?'], ['string', 'string', 'string']],
+        ];
+    }
+
+    public function argumentValidationOptionProvider(): array
+    {
+        return [
+            'space'               => [' '],
+            'float'               => ['1.5'],
+            'url'                 => ['http://example.org'],
+            'special'             => ['a#b'],
+            'little-bobby-tables' => ["Robert'); DROP TABLE STUDENTS; --"],
+        ];
+    }
 }
 
 class StudipControllerTestController extends StudipController
@@ -302,5 +348,10 @@ class StudipControllerTestController extends StudipController
         parent::__construct($dispatcher);
 
         $this->current_action = 'foo';
+    }
+
+    public function foo_action(int $int, float $float, string $option, string $string): void
+    {
+        $this->render_text('In a test?');
     }
 }

@@ -145,11 +145,11 @@ abstract class StudipController extends Trails_Controller
 
     /**
      * Validate arguments based on a list of given types. The types are:
-     * 'int', 'float', 'option'. If the list of types is NULL
+     * 'int', 'float', 'option' and 'string'. If the list of types is NULL
      * or shorter than the argument list, 'option' is assumed for all
      * remaining arguments. 'option' differs from Request::option() in
      * that it also accepts the charaters '-' and ',' in addition to all
-     * word charaters.
+     * word characters.
      *
      * Since Stud.IP 4.0 it is also possible to directly inject
      * SimpleORMap objects. If types is NULL, the signature of the called
@@ -160,15 +160,15 @@ abstract class StudipController extends Trails_Controller
      * If $_autobind is set to true, the created object is also assigned
      * to the controller so that it is available in a view.
      *
-     * @param array   an array of arguments to the action
-     * @param array   list of argument types (optional)
+     * @param array $args  an array of arguments to the action
+     * @param array $types list of argument types (optional)
      */
     public function validate_args(&$args, $types = null)
     {
         $class_infos = [];
 
         if ($types === null) {
-            $types = array_fill(0, count($args), 'option');
+            $types = [];
         }
 
         if ($this->has_action($this->current_action)) {
@@ -177,10 +177,11 @@ abstract class StudipController extends Trails_Controller
             foreach ($parameters as $i => $parameter) {
                 $class_type = $parameter->getType();
 
-                if (!$class_type
+                if (
+                    !$class_type
                     || !class_exists($class_type->getName())
-                    || !is_a($class_type->getName(), SimpleORMap::class, true))
-                {
+                    || !is_a($class_type->getName(), SimpleORMap::class, true)
+                ) {
                     continue;
                 }
 
@@ -198,7 +199,7 @@ abstract class StudipController extends Trails_Controller
         }
 
         foreach ($args as $i => &$arg) {
-            $type = $types[$i] ?: 'option';
+            $type = $types[$i] ?? 'option';
             switch ($type) {
                 case 'int':
                     $arg = (int) $arg;
@@ -239,6 +240,9 @@ abstract class StudipController extends Trails_Controller
                     if ($this->_autobind) {
                         $this->{$info['var']} = $arg;
                     }
+                    break;
+
+                case 'string':
                     break;
 
                 default:
