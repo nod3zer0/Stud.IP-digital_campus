@@ -90,7 +90,7 @@ class Resources_ExportController extends AuthenticatedController
                     _('Sie müssen zunächst Raumgruppen erstellen'),
                     [
                         sprintf(
-                            _('Klicken %shier%s, um ein Raumgruppen anzulegen.'),
+                            _('Klicken Sie %shier%s, um eine Raumgruppe anzulegen.'),
                             '<a href="' . URLHelper::getLink('dispatch.php/room_management/overview/rooms') . '">',
                             '</a>')
                     ]
