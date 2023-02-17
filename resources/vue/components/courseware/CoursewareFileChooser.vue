@@ -92,7 +92,7 @@ export default {
                 if (this.isVideo && !videoConditions.some(condition => file.attributes['mime-type'].includes(condition))) {
                     return false;
                 }
-                const audioConditions = ['audio/wav', 'audio/ogg', 'audio/webm','audio/flac', 'audio/mpeg'];
+                const audioConditions = ['audio/wav', 'audio/ogg', 'audio/webm','audio/flac', 'audio/mpeg', 'audio/x-m4a', 'audio/mp4'];
                 if (this.isAudio && !audioConditions.some(condition => file.attributes['mime-type'].includes(condition)) ) {
                     return false;
                 }
