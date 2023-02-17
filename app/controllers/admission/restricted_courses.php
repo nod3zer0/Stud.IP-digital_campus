@@ -37,7 +37,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
 
         $sem_condition = "";
         foreach (words('current_institut_id sem_name_prefix') as $param) {
-            $this->$param = $_SESSION[get_class($this)][$param];
+            $this->$param = $_SESSION[get_class($this)][$param] ?? null;
         }
         if (Request::isPost()) {
             if (Request::submitted('choose_institut')) {
@@ -65,6 +65,10 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             $this->my_inst = $this->get_institutes($sem_condition);
         }
         $this->courses = $this->get_courses($sem_condition);
+
+        if (!isset($_SESSION[get_class($this)])) {
+            $_SESSION[get_class($this)] = [];
+        }
         foreach (words('current_institut_id sem_name_prefix') as $param) {
             $_SESSION[get_class($this)][$param] = $this->$param;
         }
