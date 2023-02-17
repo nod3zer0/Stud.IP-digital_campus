@@ -86,7 +86,7 @@ class Admission_CoursesetController extends AuthenticatedController
         $filter['rule_types'] = array_keys($this->current_rule_types);
         $this->myInstitutes = CoursesetModel::getInstitutes($filter);
         if (!$this->current_institut_id) {
-            if ($this->myInstitutes['all']['count'] < 100) {
+            if (!isset($this->myInstitutes['all']['count']) || $this->myInstitutes['all']['count'] < 100) {
                 $this->current_institut_id = 'all';
             } else {
                 list($this->current_institut_id) = reset($this->myInstitutes);
