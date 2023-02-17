@@ -243,9 +243,7 @@ class Resources_ExportController extends AuthenticatedController
 
     public function bookings_action()
     {
-        if (Request::isPost()) {
-            CSRFProtection::verifyUnsafeRequest();
-        }
+        CSRFProtection::verifyUnsafeRequest();
 
         //Get the IDs of all selected clipboards and rooms:
         $this->selected_clipboard_ids = Request::getArray('selected_clipboards');
