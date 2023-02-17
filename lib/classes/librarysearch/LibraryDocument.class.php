@@ -437,10 +437,7 @@ class LibraryDocument
         global $LIBRARY_DOCUMENT_TYPES;
         $ldt = SimpleCollection::createFromArray($LIBRARY_DOCUMENT_TYPES);
         $found = $ldt->findOneBy('name', $this->type);
-        if ($found) {
-            $shape = $found['icon'];
-        }
-        $shape = $shape ?: 'literature-request';
+        $shape = $found['icon'] ?? 'literature-request';
         return Icon::create($shape);
     }
 }
