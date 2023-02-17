@@ -253,17 +253,17 @@ class FileController extends AuthenticatedController
     {
         $this->include_navigation = Request::get('file_navigation', false);
         //check if the file area object is a FileRef:
-        if (Request::get("from_plugin")) {
+        $this->from_plugin = Request::get("from_plugin");
+        if ($this->from_plugin) {
             $file_id = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], "dispatch.php/file/details/") + strlen("dispatch.php/file/details/"));
             if (strpos($file_id, "?") !== false) {
                 $file_id = substr($file_id, 0, strpos($file_id, "?"));
             }
-            $plugin = PluginManager::getInstance()->getPlugin(Request::get("from_plugin"));
+            $plugin = PluginManager::getInstance()->getPlugin($this->from_plugin);
             if (!$plugin) {
                 throw new Trails_Exception(404, _('Plugin existiert nicht.'));
             }
             $this->file = $plugin->getPreparedFile($file_id);
-            $this->from_plugin = Request::get("from_plugin");
         } else {
             $file_ref = FileRef::find($file_area_object_id);
             if ($file_ref) {
@@ -320,7 +320,7 @@ class FileController extends AuthenticatedController
             $this->render_action('file_details');
         } else {
             //file area object is not a FileRef: maybe it's a folder:
-            if (Request::get("from_plugin")) {
+            if ($this->from_plugin) {
                 $this->folder = $plugin->getFolder($file_id);
             } else {
                 $this->folder = FileManager::getTypedFolder($file_area_object_id);

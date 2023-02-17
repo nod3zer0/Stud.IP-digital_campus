@@ -1,3 +1,16 @@
+<?php
+/**
+ * @var Flexi_Template $this
+ * @var FileController $controller
+ * @var Flexi_Template|null $file_info_template
+ * @var array $fullpath
+ * @var FileType $file
+ * @var string|null $previous_file_ref_id
+ * @var string|null $next_file_ref_id
+ * @var string|null $from_plugin
+ * @var bool $include_navigation
+ */
+?>
 <div id="file_details_window">
     <?= $this->render_partial('file/_file_aside.php') ?>
 
