@@ -2,6 +2,7 @@
     <form class="default" method="post"
           action="<?= $controller->link_for('resources/export/bookings') ?>">
         <?= CSRFProtection::tokenTag() ?>
+        <input type="hidden" name="from" value="<?= $controller->link_for('resources/export/select_booking_sources') ?>">
         <fieldset>
             <legend><?= _('Zeitbereich auswählen') ?></legend>
             <label class="col-2">
