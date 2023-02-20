@@ -262,7 +262,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 WHERE user_id = ?";
         $data = DBManager::get()->fetchOne($sql, [$id]);
         if ($data) {
-            return self::buildExisting($data);
+            return static::buildExisting($data);
         }
 
         return null;
@@ -281,7 +281,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 FROM auth_user_md5
                 LEFT JOIN user_info USING (user_id)
                 WHERE user_id IN (?) " . $order_by;
-        $data = DBManager::get()->fetchAll($sql, [$ids], 'User::buildExisting');
+        $data = DBManager::get()->fetchAll($sql, [$ids], [static::class, 'buildExisting']);
         return $data;
     }
 
@@ -304,13 +304,14 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
      */
     public static function findByDatafield($datafield_id, $value)
     {
-        return User::findMany(
+        return static::findMany(
             array_column(
                 DatafieldEntryModel::findBySQL(
                     'datafield_id = :datafield_id AND content = :value',
                     compact('datafield_id', 'value')
                 ),
-                'range_id')
+                'range_id'
+            )
         );
     }
 
@@ -486,7 +487,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             }
         }
 
-        return DBManager::get()->fetchAll($query, $params, __CLASS__ . '::buildExisting');
+        return DBManager::get()->fetchAll($query, $params, [static::class, 'buildExisting']);
     }
 
 
@@ -1374,8 +1375,8 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             $user_id = $GLOBALS['user']->id;
         }
         return $user_id === $this->user_id
-            || self::find($user_id)->perms === 'root'
-            || !in_array(self::find($this->user_id)->visible, ['no', 'never']);
+            || static::find($user_id)->perms === 'root'
+            || !in_array(static::find($this->user_id)->visible, ['no', 'never']);
     }
 
     /**
@@ -1392,7 +1393,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         return $user_id === $this->user_id
             || $GLOBALS['perm']->have_profile_perm('admin', $this->user_id)
             || Deputy::isDeputy($user_id, $this->user_id, true)
-            || self::find($user_id)->perms === 'root';
+            || static::find($user_id)->perms === 'root';
     }
 
     /**
