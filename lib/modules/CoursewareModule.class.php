@@ -65,32 +65,26 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule,
      */
     public function getIconNavigation($courseId, $last_visit, $user_id)
     {
-        $new = 0;
-        $course_elements = Courseware\StructuralElement::findBySQL(
-            'range_type = ? AND range_id = ?',
-            ['course', $courseId]
-        );
-        foreach($course_elements as $element) {
-            $has_new_blocks = false;
-            $containers = $element->containers->getArrayCopy();
-            foreach($containers as $container) {
-                $blocks = $container->blocks->getArrayCopy();
-                foreach($blocks as $block) {
-                    if (
-                        $block->editor_id !== $user_id
-                        &&
-                        $block->chdate >= $last_visit
-                        &&
-                        $block->payload !== ''
-                    ) {
-                        $has_new_blocks = true;
-                    }
-                }
-            }
-            if($has_new_blocks) {
-                $new++;
-            }
-        }
+        $statement = DBManager::get()->prepare("
+                SELECT COUNT(DISTINCT elem.id) 
+                FROM `cw_structural_elements` AS elem 
+                INNER JOIN `cw_containers` as container ON (elem.id = container.structural_element_id)
+                INNER JOIN `cw_blocks` as blocks ON (container.id = blocks.container_id)
+                WHERE elem.range_type = 'course' 
+                AND elem.range_id = :range_id
+                AND blocks.payload != ''
+                AND blocks.chdate > :last_visit
+                AND blocks.editor_id != :user_id
+        ");
+
+        $statement->execute([
+            'range_id' => $courseId,
+            'last_visit' => $last_visit,
+            'user_id' => $user_id
+        ]);
+
+        $new = $statement->fetchColumn();
+
         $nav = new Navigation(_('Courseware'), 'dispatch.php/course/courseware');
         $nav->setImage(Icon::create('courseware', Icon::ROLE_CLICKABLE), [
             'title' => _('Courseware'),
