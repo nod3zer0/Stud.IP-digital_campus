@@ -523,7 +523,7 @@ class Router
 
     private function normalizeDispatchURI($uri)
     {
-        return $uri === null ? $_SERVER['PATH_INFO'] : $uri;
+        return $uri ?? \Request::path_info();
     }
 
     private function normalizeRequestMethod($method)

@@ -55,7 +55,7 @@ if (!function_exists('_')) {
 $GLOBALS['template_factory'] = new Flexi_TemplateFactory('../templates/');
 
 # get plugin class from request
-$dispatch_to = $_SERVER['PATH_INFO'] ?: '';
+$dispatch_to = ltrim(Request::path_info(), '/');
 
 $dispatcher = new Trails_Dispatcher( '../app', $_SERVER['SCRIPT_NAME'], 'admin/install');
 $dispatcher->dispatch("admin/install/{$dispatch_to}");

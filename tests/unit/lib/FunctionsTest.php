@@ -73,4 +73,18 @@ class FunctionsTest extends \Codeception\Test\Unit
         $output = 'https://m%C3%A4uschen-h%C3%BCpft.de/%C3%B6ffnungszeiten?menu=Spa%C3%9F&page=23';
         $this->assertEquals($output, encodeURI($input));
     }
+
+    /**
+     * @covers Trails_Controller::extract_action_and_args()
+     */
+    public function testTrailsControllerExtractActionAndArgs()
+    {
+        $controller = new Trails_Controller(null);
+        list($action, $args, $format) = $controller->extract_action_and_args('foo/bar//42.html');
+
+        $this->assertEquals('foo', $action);
+        $this->assertEquals(['bar', '', '42'], $args);
+        $this->assertEquals('html', $format);
+
+    }
 }

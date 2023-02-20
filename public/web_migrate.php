@@ -34,7 +34,7 @@ $_language_path = init_i18n($_SESSION['_language']);
 $GLOBALS['template_factory'] = new Flexi_TemplateFactory('../templates/');
 
 # get plugin class from request
-$dispatch_to = $_SERVER['PATH_INFO'] ?: '';
+$dispatch_to = Request::path_info() ?: '';
 
 $dispatcher = app(\Trails_Dispatcher::class);
 $dispatcher->trails_uri = $_SERVER['SCRIPT_NAME'];

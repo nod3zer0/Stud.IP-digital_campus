@@ -21,7 +21,5 @@ require '../lib/bootstrap.php';
 // prepare environment
 URLHelper::setBaseUrl($GLOBALS['ABSOLUTE_URI_STUDIP']);
 
-$request_uri = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
-
 $dispatcher = app(\Trails_Dispatcher::class);
-$dispatcher->dispatch($request_uri);
+$dispatcher->dispatch(Request::path_info());

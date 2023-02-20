@@ -132,6 +132,33 @@ class Request implements ArrayAccess, IteratorAggregate
     }
 
     /**
+     * Return the filename of the currently executing script.
+     * @return string
+     */
+    public static function script_name(): string
+    {
+        return $_SERVER['SCRIPT_NAME'];
+    }
+
+    /**
+     * Returns the complete path info including duplicated slashes.
+     * $_SERVER['PATH_INFO'] will remove them.
+     */
+    public static function path_info(): string
+    {
+        $script_name = self::script_name();
+        $script_name = preg_quote($script_name, '#');
+        $script_name = str_replace('/', '/+', $script_name);
+
+        $path_info = preg_replace(
+            "#^{$script_name}#",
+            '',
+            urldecode(self::path())
+        );
+        return parse_url($path_info, PHP_URL_PATH);
+    }
+
+    /**
      * Set the selected query parameter to a specific value.
      *
      * @param string $param    parameter name
@@ -715,7 +742,7 @@ class Request implements ArrayAccess, IteratorAggregate
             $extract[] = array_values(array_filter(array_map('trim', explode(' ', $one))));
         }
         foreach ($extract as $one) {
-            list($param, $func) = $one;
+            [$param, $func] = $one;
             if (!$func) {
                 $func = 'get';
             }

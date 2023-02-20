@@ -30,6 +30,7 @@ namespace {
 }
 
 namespace RESTAPI {
+
     use Config;
 
     // A potential api exception will lead to an according response with the
@@ -44,7 +45,7 @@ namespace RESTAPI {
         // Initialize RESTAPI plugins
         \PluginEngine::getPlugins('RESTAPIPlugin');
 
-        $uri = $_SERVER['PATH_INFO'];
+        $uri = \Request::path_info();
 
         // Check version
         if (defined('RESTAPI\\VERSION') && preg_match('~^/v(\d+)~i', $uri, $match)) {

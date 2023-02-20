@@ -27,7 +27,7 @@ try {
     require_once 'lib/seminar_open.php';
 
     // get plugin class from request
-    $dispatch_to = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '';
+    $dispatch_to = Request::path_info();
     list($plugin_class, $unconsumed) = PluginEngine::routeRequest($dispatch_to);
 
     // handle legacy forum plugin URLs
