@@ -35,7 +35,11 @@ if (Request::get('range_type')) {
             <tr>
                 <td class="avatar">
                     <a href="<?= $controller->link_for('file/choose_file_from_course/' . $folder_id, array_merge($options, ['course_id' => $course->id])) ?>" data-dialog>
-                        <?= CourseAvatar::getAvatar($course->id)->getImageTag(Avatar::MEDIUM, ['style' => 'width: 50px; height: 50px;']) ?>
+                        <? if ($course->isStudygroup()) : ?>
+                            <?= StudygroupAvatar::getAvatar($course->id)->getImageTag(Avatar::MEDIUM, ['style' => 'width: 50px; height: 50px;']) ?>
+                        <? else : ?>
+                            <?= CourseAvatar::getAvatar($course->id)->getImageTag(Avatar::MEDIUM, ['style' => 'width: 50px; height: 50px;']) ?>
+                        <? endif ?>
                     </a>
                 </td>
                 <td>
