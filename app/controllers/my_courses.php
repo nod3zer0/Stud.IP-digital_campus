@@ -570,7 +570,8 @@ class MyCoursesController extends AuthenticatedController
 
         $sortby = Request::option('sortby', 'name');
 
-        $query = "SELECT semester, name, seminar_id, status, archiv_file_id,
+        $query = "SELECT semester, name, seminar_id, status,
+                         archiv_file_id, archiv_protected_file_id,
                          LENGTH(forumdump) > 0 AS forumdump, # Test for existence
                          LENGTH(wikidump) > 0 AS wikidump    # Test for existence
                   FROM archiv_user
