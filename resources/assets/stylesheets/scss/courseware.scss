@@ -1475,11 +1475,6 @@ c o l l a p s i b l e   b o x
 
     border: solid thin $content-color-40;
     margin-bottom: -1px;
-    height: 34px;
-
-    &.cw-collapsible-open {
-        height: unset;
-    }
 
     .cw-collapsible-title {
         @include background-icon(arr_1right, clickable);
@@ -1502,12 +1497,9 @@ c o l l a p s i b l e   b o x
     }
 
     .cw-collapsible-content {
-        padding: 0;
-        visibility: hidden;
-        height: 0;
+        display: none;
         &.cw-collapsible-content-open {
-            visibility: visible;
-            height: unset;
+            display: block;
             padding: 10px;
         }
     }
@@ -1822,7 +1814,6 @@ b l o c k a d d e r
 
     .cw-collapsible {
         .cw-collapsible-content {
-            visibility: unset;
             display: none;
             &.cw-collapsible-content-open {
                 display: block;
