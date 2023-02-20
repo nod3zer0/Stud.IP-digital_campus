@@ -14,9 +14,7 @@
  * @category    Stud.IP
  */
 
-define('DEFAULT_COLOR_SEM', 2);
-define('DEFAULT_COLOR_NEW', 3);
-define('DEFAULT_COLOR_VIRTUAL', 1);
+require_once __DIR__ . '/default_color_definitions.php';
 
 /**
  * Pseudo-namespace containing helper methods for the calendar of institutes.
@@ -25,7 +23,6 @@ define('DEFAULT_COLOR_VIRTUAL', 1);
  */
 class CalendarInstscheduleModel
 {
-
     /**
      * Returns a schedule entry for a course
      *
