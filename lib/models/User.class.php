@@ -369,7 +369,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         }
 
         //permissions
-        if (!is_null($attributes['perm']) && $attributes['perm'] != 'alle') {
+        if (!empty($attributes['perm']) && $attributes['perm'] !== 'alle') {
             $where[] = "au.`perms` = :perms";
             $params[':perms'] = $attributes['perm'];
         }
@@ -399,7 +399,11 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         }
 
         //datafields
-        if (!is_null($attributes['datafields']) && count($attributes['datafields']) > 0) {
+        if (
+            !empty($attributes['datafields'])
+            && is_array($attributes['datafields'])
+            && count($attributes['datafields']) > 0
+        ) {
             $joins[] = "LEFT JOIN `datafields_entries` de ON (de.`range_id` = au.`user_id`)";
             foreach ($attributes['datafields'] as $id => $entry) {
                 $where[] = "de.`datafield_id` = :df_id_". $id;
@@ -447,7 +451,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             }
         }
 
-        if ($attributes['institute']) {
+        if (!empty($attributes['institute'])) {
             $joins[] = "LEFT JOIN `user_inst` uis ON uis.`user_id` = au.`user_id`";
             $where[] = "uis.`Institut_id` = :institute";
             $params[':institute'] = $attributes['institute'];
