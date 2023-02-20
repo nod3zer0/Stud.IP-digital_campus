@@ -43,7 +43,7 @@
         <?= $course_number_format_config['comment'] ? tooltipIcon($course_number_format_config['comment']) : '' ?>
     </label>
     <? $course_number_format = Config::get()->COURSE_NUMBER_FORMAT; ?>
-    <input type="text" name="number" id="wizard-number" size="20" maxlength="99" value="<?= htmlReady($values['number']) ?>"
+    <input type="text" name="number" id="wizard-number" size="20" maxlength="99" value="<?= htmlReady($values['number'] ?? '') ?>"
      <? if ($course_number_format) : ?>pattern="<?= htmlReady($course_number_format) ?>" <? endif ?>/>
 </section>
 <section>
@@ -80,8 +80,8 @@
     <div id="wizard-instsearch">
         <?= $instsearch ?>
     </div>
-    <?php if ($values['part_inst_id_parameter']) : ?>
-        <?= Icon::create('arr_2down', 'sort')->asInput(["name" => 'add_part_inst', "value" => '1']) ?>
+    <?php if (!empty($values['part_inst_id_parameter'])) : ?>
+        <?= Icon::create('arr_2down', Icon::ROLE_SORT)->asInput(["name" => 'add_part_inst', "value" => '1']) ?>
     <?php endif ?>
 </section>
 <section>
@@ -105,8 +105,8 @@
     <div id="wizard-lecturersearch">
         <?= $lsearch ?>
     </div>
-    <?php if ($values['lecturer_id_parameter']) : ?>
-        <?= Icon::create('arr_2down', 'sort')->asInput(["name" => 'add_lecturer', "value" => '1']) ?>
+    <?php if (!empty($values['lecturer_id_parameter'])) : ?>
+        <?= Icon::create('arr_2down', Icon::ROLE_SORT)->asInput(["name" => 'add_lecturer', "value" => '1']) ?>
     <?php endif ?>
 </section>
 <section>
@@ -131,8 +131,8 @@
     <div id="wizard-deputysearch">
         <?= $dsearch ?>
     </div>
-    <?php if ($values['deputy_id_parameter']) : ?>
-        <?= Icon::create('arr_2down', 'sort')->asInput(["name" => 'add_deputy', "value" => '1']) ?>
+    <?php if (!empty($values['deputy_id_parameter'])) : ?>
+        <?= Icon::create('arr_2down', Icon::ROLE_SORT)->asInput(["name" => 'add_deputy', "value" => '1']) ?>
     <?php endif ?>
 </section>
 <section>
@@ -159,8 +159,8 @@
     <div id="wizard-tutorsearch">
         <?= $tsearch ?>
     </div>
-    <?php if ($values['tutor_id_parameter']) : ?>
-        <?= Icon::create('arr_2down', 'sort')->asInput(["name" => 'add_tutor', "value" => '1']) ?>
+    <?php if (!empty($values['tutor_id_parameter'])) : ?>
+        <?= Icon::create('arr_2down', Icon::ROLE_SORT)->asInput(["name" => 'add_tutor', "value" => '1']) ?>
     <?php endif ?>
 </section>
 

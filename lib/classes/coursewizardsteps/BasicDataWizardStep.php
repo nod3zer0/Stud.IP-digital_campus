@@ -82,8 +82,11 @@ class BasicDataWizardStep implements CourseWizardStep
         foreach (Semester::getAll() as $s) {
             if ($s->ende >= $now) {
                 if ($GLOBALS['perm']->have_perm("admin")) {
-                    if ($s->id == $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE &&
-                        !$values['start_time'] && Request::isXhr()) {
+                    if (
+                        $s->id == $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE
+                        && empty($values['start_time'])
+                        && Request::isXhr()
+                    ) {
                         $values['start_time'] = $s->beginn;
                     }
                 }
@@ -93,7 +96,7 @@ class BasicDataWizardStep implements CourseWizardStep
         if (empty($values['start_time'])) {
             $values['start_time'] = Semester::findDefault()->beginn;
         }
-        if ($values['studygroup'] && (!count($typestruct) || !$values['institute']) ) {
+        if (!empty($values['studygroup']) && (!count($typestruct) || empty($values['institute'])) ) {
             $message = sprintf(_('Die Konfiguration der Studiengruppen ist unvollständig. ' .
                 'Bitte wenden Sie sich an [die Stud.IP-Administration]%s .'),
                 URLHelper::getLink('dispatch.php/siteinfo/show')
@@ -104,7 +107,7 @@ class BasicDataWizardStep implements CourseWizardStep
         if (count($semesters) > 0) {
             $tpl->set_attribute('semesters', array_reverse($semesters));
             // If no semester is set, use current as selected default.
-            if (!$values['start_time']) {
+            if (empty($values['start_time'])) {
                 $values['start_time'] = Semester::findCurrent()->beginn;
             }
         } else {
@@ -125,7 +128,7 @@ class BasicDataWizardStep implements CourseWizardStep
         $institutes = Institute::getMyInstitutes();
         if (!empty($values['studygroup']) || count($institutes) > 0) {
             $tpl->set_attribute('institutes', $institutes);
-            if (!$values['institute']) {
+            if (empty($values['institute'])) {
                 if ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT && Request::isXhr()) {
                     $values['institute'] = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
                 } else {
@@ -185,7 +188,11 @@ class BasicDataWizardStep implements CourseWizardStep
          * present. But this can only be done if your own permission level
          * is 'dozent'.
          */
-        if (!$values['lecturers'] && $GLOBALS['perm']->have_perm('dozent') && !$GLOBALS['perm']->have_perm('admin')) {
+        if (
+            empty($values['lecturers'])
+            && $GLOBALS['perm']->have_perm('dozent')
+            && !$GLOBALS['perm']->have_perm('admin')
+        ) {
             $values['lecturers'][$GLOBALS['user']->id] = true;
             // Remove from deputies if set.
             if ($deputies && $values['deputies'][$GLOBALS['user']->id]) {
@@ -556,16 +563,22 @@ class BasicDataWizardStep implements CourseWizardStep
     public static function tsearchHelper($psearch, $context)
     {
         $ret['permission'] = ['tutor', 'dozent'];
-        $ret['exclude_user'] = array_keys((array)$context['tutors']);
-        $ret['institute'] = array_merge([$context['institute']], array_keys((array)$context['participating']));
+        $ret['exclude_user'] = array_keys((array) ($context['tutors'] ?? []));
+        $ret['institute'] = array_merge(
+            [$context['institute']],
+            array_keys((array) ($context['participating'] ?? []))
+        );
         return $ret;
     }
 
     public static function lsearchHelper($psearch, $context)
     {
         $ret['permission'] = 'dozent';
-        $ret['exclude_user'] = array_keys((array)$context['lecturers']);
-        $ret['institute'] = array_merge([$context['institute']], array_keys((array)$context['participating']));
+        $ret['exclude_user'] = array_keys((array) ($context['lecturers'] ?? []));
+        $ret['institute'] = array_merge(
+            [$context['institute']],
+            array_keys((array) ($context['participating'] ?? []))
+        );
         return $ret;
     }
 
