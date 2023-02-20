@@ -849,11 +849,21 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         }
 
         if ($this->metadate_id) {
+            $date = $this->cycle->dates->last();
+            if (!isset($date)) {
+                return null;
+            }
+
             $end_date->setTimestamp($this->cycle->dates->last()->end_time);
             return $end_date;
         }
 
         if ($this->course_id) {
+            $date = $this->course->dates->last();
+            if (!isset($date)) {
+                return null;
+            }
+
             $end_date->setTimestamp($this->course->dates->last()->end_time);
             return $end_date;
         }

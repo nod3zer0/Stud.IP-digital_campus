@@ -32,7 +32,7 @@
                 ]
             ) ?>
         </fieldset>
-        <? if ($defined_properties) : ?>
+        <? if (!empty($defined_properties)) : ?>
             <?= $this->render_partial(
                 'resources/resource/_standard_properties_form_part.php',
                 [

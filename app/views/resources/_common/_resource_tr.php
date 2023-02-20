@@ -88,18 +88,12 @@
         </td>
     <? endif ?>
     <td>
-        <a href="<?= (
-        $booking_plan_link_on_name
-            ? $resource->getActionLink('booking_plan')
-            : $resource->getActionLink('show')
-        ) ?>"
+        <a href="<?= $resource->getActionLink(empty($booking_plan_link_on_name) ? 'show' : 'booking_plan') ?>"
             <?= !empty($user_has_booking_rights) ? '' : 'data-dialog' ?>
            data-id="<?= htmlReady($resource->id) ?>"
-           data-range_type="<?= $clipboard_range_type
-               ? htmlReady($clipboard_range_type)
-               : 'Resource' ?>"
+           data-range_type="<?= htmlReady($clipboard_range_type ?? 'Resource') ?>"
            data-name="<?= htmlReady($resource->name) ?>"
-           <?= $clipboard_range_type ? 'class="clipboard-draggable-item"' : '' ?>>
+           <?= isset($clipboard_range_type) ? 'class="clipboard-draggable-item"' : '' ?>>
             <? if ($show_picture): ?>
                 <? $picture_url = $resource->getPictureUrl(); ?>
                 <? if ($picture_url): ?>

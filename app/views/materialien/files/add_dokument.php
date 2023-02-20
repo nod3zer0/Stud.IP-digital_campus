@@ -29,7 +29,7 @@
             <td>
                 <label>
                     <?= _('Angezeigter Name des Dokuments') ?>
-                    <input name="doc_displayname_<?= $key; ?>" type="text" value="<?= (!$documents || !key_exists($key, $documents))  ? '' : htmlReady($documents[$key]->name) ?>"<?= $perm->disable('name') ?>>
+                    <input name="doc_displayname_<?= $key; ?>" type="text" value="<?= !isset($documents[$key])  ? '' : htmlReady($documents[$key]->name) ?>"<?= $perm->disable('name') ?>>
                 </label>
             </td>
         </tr>
@@ -73,7 +73,7 @@
                 </div>
                 <div id="fileviewer_<?= $key; ?>">
                     <ul class="stgfiles list-unstyled">
-                    <? if ($documents && key_exists($key, $documents)): ?>
+                    <? if (isset($documents[$key])): ?>
                         <li class="stgfile">
                             <input type="hidden" name="document_id" id="document_id" value="<?= htmlReady($documents[$key]->fileref_id) ?>">
                             <span class="icon"><?= Icon::create('file', Icon::ROLE_INFO, ['class' => 'text-bottom']); ?></span>

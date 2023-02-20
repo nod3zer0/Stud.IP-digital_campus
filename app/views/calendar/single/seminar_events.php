@@ -7,7 +7,7 @@
             <? foreach ($sem_courses as $sem_key => $course_group) : ?>
                 <table class="default collapsable">
                     <caption>
-                        <?= htmlReady($sem_data[$sem_key]['name']) ?>
+                        <?= htmlReady($sem_data[$sem_key]['name'] ?? _('Unbekanntes Semester')) ?>
                     </caption>
                     <colgroup>
                         <col width="7px">

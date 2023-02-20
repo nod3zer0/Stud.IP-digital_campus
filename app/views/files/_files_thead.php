@@ -14,7 +14,7 @@
     </colgroup>
     <thead>
         <tr class="sortable">
-            <? if ($show_bulk_checkboxes) : ?>
+            <? if (!empty($show_bulk_checkboxes)) : ?>
                 <th data-sort="false">
                     <input type="checkbox"
                            <?= !empty($table_id)
