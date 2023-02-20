@@ -42,7 +42,7 @@
                 <td style="text-align: center;" class="dont-hide"><?= $kategorie->count_studiengaenge ?></td>
                 <td></td>
             </tr>
-            <? if ($kategorie_id == $kategorie->id) : ?>
+            <? if (isset($kategorie_id) && $kategorie_id == $kategorie->id) : ?>
                 <tr class="loaded-details nohover">
                     <?= $this->render_partial('studiengaenge/studiengaenge/details') ?>
                 </tr>

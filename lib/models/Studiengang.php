@@ -608,7 +608,7 @@ class Studiengang extends ModuleManagementModelTreeItem
         $result = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $status) {
             $result[$status['stat']] = [
-                'name' => $GLOBALS['MVV_STUDIENGANG']['STATUS']['values'][$status['stat']]['name'],
+                'name' => $GLOBALS['MVV_STUDIENGANG']['STATUS']['values'][$status['stat']]['name'] ?? _('Undefinierter Status'),
                 'count_objects' => $status['count_objects']
             ];
         }

@@ -21,7 +21,7 @@ use Studip\Button, Studip\LinkButton;
         <legend>
             <?= _('Fach') ?>
         </legend>
-        <? if (is_array($faecher)) : ?>
+        <? if (isset($faecher) && is_array($faecher)) : ?>
             <label>
                 <?= sprintf(_('Mögliche Fächer im gewählten Fachbereich %s:'), '<strong>' . htmlReady($fachbereich->name) . '</strong>') ?>
                 <select name="fach_item">

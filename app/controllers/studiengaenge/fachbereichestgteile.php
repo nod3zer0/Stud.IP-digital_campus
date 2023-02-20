@@ -55,7 +55,7 @@ class Studiengaenge_FachbereichestgteileController extends Studiengaenge_Studien
         if (Request::isXhr()) {
             $this->render_template('studiengaenge/studiengangteile/details_grouped');
         } else {
-            $this->performe_relayed('index');
+            $this->perform_relayed('index');
         }
     }
 

@@ -51,7 +51,7 @@ class ModulesNotification
             $metadata = $module->getMetadata();
 
             $this->registered_notification_modules[$id] = [
-                'icon' => $metadata['icon'],
+                'icon' => !empty($metadata['icon']) ? $metadata['icon'] : null,
                 'name' => !empty($metadata['displayname'])  ? $metadata['displayname'] : $module->getPluginName(),
             ];
             if ($module instanceof CoreOverview) {

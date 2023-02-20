@@ -42,7 +42,7 @@
                 <td style="text-align: center;" class="dont-hide"><?= $fachbereich->count_objects ?></td>
                 <td></td>
             </tr>
-            <? if ($fachbereich_id === $fachbereich->id) : ?>
+            <? if (isset($fachbereich_id) && $fachbereich_id === $fachbereich->id) : ?>
                 <tr class="loaded-details nohover">
                     <?= $this->render_partial('studiengaenge/studiengaenge/details') ?>
                 </tr>

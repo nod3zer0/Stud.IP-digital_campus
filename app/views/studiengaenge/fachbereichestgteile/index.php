@@ -35,12 +35,13 @@
                             </a>
                         <? endif; ?>
                     </td>
-                    <? if ($details_id === $fachbereich['institut_id'] || count($stgteil_ids)) : ?>
-                    <? $stgteile = StudiengangTeil::findByFachbereich($fachbereich['institut_id'], ['mvv_stgteil.stgteil_id' => $stgteil_ids], 'fach_name,zusatz,kp', 'ASC'); ?>
+                </tr>
+            <? if (isset($details_id) && $details_id === $fachbereich['institut_id'] || count($stgteil_ids)) : ?>
+                <? $stgteile = StudiengangTeil::findByFachbereich($fachbereich['institut_id'], ['mvv_stgteil.stgteil_id' => $stgteil_ids], 'fach_name,zusatz,kp', 'ASC'); ?>
                 <tr class="loaded-details nohover">
                     <?= $this->render_partial('studiengaenge/studiengangteile/details_grouped', compact('stgteile')) ?>
                 </tr>
-                <? endif; ?>
+            <? endif; ?>
             </tbody>
         <? endforeach ?>
     </table>

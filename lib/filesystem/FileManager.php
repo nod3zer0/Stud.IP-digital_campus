@@ -111,7 +111,7 @@ class FileManager
             return 'file-generic';
         }
 
-        [$category, $type] = explode('/', $mime_type, 2);
+        list($category, $type) = explode('/', $mime_type, 2);
 
         switch($category) {
             case 'image':
@@ -1639,9 +1639,9 @@ class FileManager
             $header_parts = explode(';', $disposition_header);
             foreach ($header_parts as $part) {
                 $part = trim($part);
-                [$key, $value] = explode('=', $part, 2);
-                if (mb_strtolower($key) === 'filename') {
-                    $header['filename'] = trim($value, '"');
+                $chunks = explode('=', $part, 2);
+                if (count($chunks) === 2 && mb_strtolower($chunks[0]) === 'filename') {
+                    $header['filename'] = trim($chunks[1], '"');
                 }
             }
         } else {

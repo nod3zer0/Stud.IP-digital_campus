@@ -41,7 +41,7 @@
             <td style="text-align: center;" class="dont-hide"><?= $abschluss->count_studiengaenge ?></td>
             <td></td>
         </tr>
-        <? if ($abschluss_id === $abschluss->id) : ?>
+        <? if (isset($abschluss_id) && $abschluss_id === $abschluss->id) : ?>
             <tr class="loaded-details nohover">
                 <?= $this->render_partial('studiengaenge/studiengaenge/details') ?>
             </tr>

@@ -8,7 +8,7 @@
     <? $perms = [1 => _('Keine'), 2 => _('Lesen'), 4 => _('Schreiben')] ?>
     <table class="default">
         <caption>
-            <?= htmlReady($title) ?>
+            <?= _('Bestehende Freigaben') ?>
             <span class="actions" style="font-size: 0.8em;">
                 <label>
                     <?= _('Auswahl') ?>:
@@ -81,7 +81,7 @@
                             <?= $perms[$own_perms[$user->user_id]] ?>
                         </td>
                         <td class="actions">
-                            <a title="<?= _('Benutzer entfernen') ?>" onClick="STUDIP.CalendarDialog.removeUser(this);" href="<?= $controller->url_for('calendar/single/remove_user/' . $calendar->getRangeId() . $filter, ['user_id' => $user->user_id]) ?>">
+                            <a title="<?= _('Benutzer entfernen') ?>" onClick="STUDIP.CalendarDialog.removeUser(this);" href="<?= $controller->url_for('calendar/single/remove_user/' . $calendar->getRangeId(), ['user_id' => $user->user_id]) ?>">
                                 <?= Icon::create('trash', 'clickable')->asImg() ?>
                             </a>
                         </td>

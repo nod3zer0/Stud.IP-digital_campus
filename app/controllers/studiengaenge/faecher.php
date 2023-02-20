@@ -46,9 +46,6 @@ class Studiengaenge_FaecherController extends Studiengaenge_StudiengangteileCont
             }
             $this->count = StudiengangTeil::getCountAssignedFaecher($filter);
         }
-        if (!isset($this->fach_id)) {
-            $this->fach_id = null;
-        }
         $this->show_sidebar_search = true;
         $this->setSidebar();
     }
