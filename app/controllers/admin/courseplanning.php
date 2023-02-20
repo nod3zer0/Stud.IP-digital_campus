@@ -48,7 +48,11 @@ class Admin_CourseplanningController extends AuthenticatedController
             $stgteil = StudiengangTeil::find($GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL);
             $plan_title .= ' - ' . $stgteil->getDisplayName();
         }
-        if ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE && $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE != 'all') {
+        if (
+            isset($this->semester)
+            && $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE
+            && $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE !== 'all'
+        ) {
             $plan_title .= ' - ' . $this->semester->name;
         }
         return $plan_title;
@@ -838,45 +842,43 @@ class Admin_CourseplanningController extends AuthenticatedController
             $sem_types = SemType::getTypes();
         }
 
-        $seminars   = array_map('reset', $courses);
+        $seminars = array_map('current', $courses);
 
-        if (!empty($seminars)) {
-            foreach ($seminars as $seminar_id => $seminar) {
-                $seminars[$seminar_id]['seminar_id'] = $seminar_id;
-                $seminars[$seminar_id]['obj_type'] = 'sem';
-                $dozenten = $this->getTeacher($seminar_id);
-                $seminars[$seminar_id]['dozenten'] = $dozenten;
+        foreach ($seminars as $seminar_id => $seminar) {
+            $seminars[$seminar_id]['seminar_id'] = $seminar_id;
+            $seminars[$seminar_id]['obj_type'] = 'sem';
+            $dozenten = $this->getTeacher($seminar_id);
+            $seminars[$seminar_id]['dozenten'] = $dozenten;
 
-                if (in_array('contents', $params['view_filter'])) {
-                    $tools = new SimpleCollection(ToolActivation::findbyRange_id($seminar_id, "ORDER BY position"));
-                    $visit_data = get_objects_visits([$seminar_id], 0, null, null, $tools->pluck('plugin_id'));
-                    $seminars[$seminar_id]['tools'] = $tools;
-                    $seminars[$seminar_id]['visitdate'] = $visit_data[$seminar_id][0]['visitdate'];
-                    $seminars[$seminar_id]['last_visitdate'] = $visit_data[$seminar_id][0]['last_visitdate'];
-                    $seminars[$seminar_id]['sem_class'] = $sem_types[$seminar['status']]->getClass();
-                    $seminars[$seminar_id]['navigation'] = MyRealmModel::getAdditionalNavigations(
-                        $seminar_id,
-                        $seminars[$seminar_id],
-                        $seminars[$seminar_id]['sem_class'],
-                        $GLOBALS['user']->id,
-                        $visit_data[$seminar_id]
-                    );
-                }
-                //add last activity column:
-                if (in_array('last_activity', $params['view_filter'])) {
-                    $seminars[$seminar_id]['last_activity'] = lastActivity($seminar_id);
-                }
-                if ($this->selected_action == 17) {
-                    $seminars[$seminar_id]['admission_locked'] = false;
-                    if ($seminar['course_set']) {
-                        $set = new CourseSet($seminar['course_set']);
-                        if (!is_null($set) && $set->hasAdmissionRule('LockedAdmission')) {
-                            $seminars[$seminar_id]['admission_locked'] = 'locked';
-                        } else {
-                            $seminars[$seminar_id]['admission_locked'] = 'disable';
-                        }
-                        unset($set);
+            if (in_array('contents', $params['view_filter'])) {
+                $tools = new SimpleCollection(ToolActivation::findbyRange_id($seminar_id, "ORDER BY position"));
+                $visit_data = get_objects_visits([$seminar_id], 0, null, null, $tools->pluck('plugin_id'));
+                $seminars[$seminar_id]['tools'] = $tools;
+                $seminars[$seminar_id]['visitdate'] = $visit_data[$seminar_id][0]['visitdate'];
+                $seminars[$seminar_id]['last_visitdate'] = $visit_data[$seminar_id][0]['last_visitdate'];
+                $seminars[$seminar_id]['sem_class'] = $sem_types[$seminar['status']]->getClass();
+                $seminars[$seminar_id]['navigation'] = MyRealmModel::getAdditionalNavigations(
+                    $seminar_id,
+                    $seminars[$seminar_id],
+                    $seminars[$seminar_id]['sem_class'],
+                    $GLOBALS['user']->id,
+                    $visit_data[$seminar_id]
+                );
+            }
+            //add last activity column:
+            if (in_array('last_activity', $params['view_filter'])) {
+                $seminars[$seminar_id]['last_activity'] = lastActivity($seminar_id);
+            }
+            if ($this->selected_action == 17) {
+                $seminars[$seminar_id]['admission_locked'] = false;
+                if ($seminar['course_set']) {
+                    $set = new CourseSet($seminar['course_set']);
+                    if (!is_null($set) && $set->hasAdmissionRule('LockedAdmission')) {
+                        $seminars[$seminar_id]['admission_locked'] = 'locked';
+                    } else {
+                        $seminars[$seminar_id]['admission_locked'] = 'disable';
                     }
+                    unset($set);
                 }
             }
         }

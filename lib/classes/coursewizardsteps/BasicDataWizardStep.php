@@ -29,7 +29,7 @@ class BasicDataWizardStep implements CourseWizardStep
     {
         // Load template from step template directory.
         $factory = new Flexi_TemplateFactory($GLOBALS['STUDIP_BASE_PATH'] . '/app/views/course/wizard/steps');
-        if ($values[__CLASS__]['studygroup']) {
+        if (!empty($values[__CLASS__]['studygroup'])) {
             $tpl = $factory->open('basicdata/index_studygroup');
             $values[__CLASS__]['lecturers'][$GLOBALS['user']->id] = 1;
         } else {
@@ -45,13 +45,13 @@ class BasicDataWizardStep implements CourseWizardStep
     protected function setupTemplateAttributes($tpl, $values, $stepnumber, $temp_id)
     {
         // We only need our own stored values here.
-        $values = $values[__CLASS__];
+        $values = $values[__CLASS__] ?? [];
         // Get all available course types and their categories.
         $typestruct = [];
         foreach (SemType::getTypes() as $type) {
             $class = $type->getClass();
             // Creates a studygroup.
-            if ($values['studygroup']) {
+            if (!empty($values['studygroup'])) {
                 // Get all studygroup types.
                 if ($class['studygroup_mode']) {
                     $typestruct[$class['name']][] = $type;

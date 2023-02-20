@@ -609,7 +609,7 @@ class InstituteCalendarHelper
         $rooms = [];
         foreach ($cycle_date->getAllDates() as $course_date) {
             $room = $course_date->getRoom();
-            if ($room->id) {
+            if ($room) {
                 $rooms[$room->id] = $room->name;
             }
         }

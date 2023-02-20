@@ -181,7 +181,7 @@ class I18NString implements JsonSerializable
      */
     public function translation($lang)
     {
-        return $this->toArray()[$lang];
+        return $this->toArray()[$lang] ?? '';
     }
 
     /**

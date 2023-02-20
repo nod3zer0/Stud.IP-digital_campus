@@ -36,7 +36,7 @@
                 <?= htmlReady($consumer->title) ?>
             <? endif; ?>
             </td>
-            <td><?= $types[$consumer->type] ?: '&nbsp;' ?></td>
+            <td><?= $types[$consumer->type] ?? '&nbsp;' ?></td>
             <td>
                 <a href="mailto:<?= htmlReady($consumer->email) ?>">
                     <?= htmlReady($consumer->contact) ?>
