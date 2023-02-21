@@ -17,6 +17,8 @@ class RolePersistence
     const USER_ROLES_CACHE_KEY = 'roles/user';
     const PLUGIN_ROLES_CACHE_KEY = 'roles/plugin';
 
+    protected static $all_roles = null;
+
     /**
      * Returns all available roles.
      *
@@ -24,32 +26,34 @@ class RolePersistence
      */
     public static function getAllRoles(bool $grouped = false): array
     {
-        // read cache
-        $cache = StudipCacheFactory::getCache();
+        if (self::$all_roles === null) {
+            // read cache
+            $cache = StudipCacheFactory::getCache();
 
-        // cache miss, retrieve from database
-        $roles = $cache->read(self::ROLES_CACHE_KEY);
-        if (!$roles) {
-            $query = "SELECT `roleid`, `rolename`, `system` = 'y' AS `is_system`
+            // cache miss, retrieve from database
+            self::$all_roles = $cache->read(self::ROLES_CACHE_KEY);
+            if (!self::$all_roles) {
+                $query = "SELECT `roleid`, `rolename`, `system` = 'y' AS `is_system`
                       FROM `roles`
                       ORDER BY `rolename`";
-            $statement = DBManager::get()->query($query);
-            $statement->setFetchMode(PDO::FETCH_ASSOC);
+                $statement = DBManager::get()->query($query);
+                $statement->setFetchMode(PDO::FETCH_ASSOC);
 
-            $roles = [];
-            foreach ($statement as $row) {
-                $roles[$row['roleid']] = new Role($row['roleid'], $row['rolename'], $row['is_system']);
+                self::$all_roles = [];
+                foreach ($statement as $row) {
+                    self::$all_roles[$row['roleid']] = new Role($row['roleid'], $row['rolename'], $row['is_system']);
+                }
+
+                $cache->write(self::ROLES_CACHE_KEY, self::$all_roles);
             }
-
-            $cache->write(self::ROLES_CACHE_KEY, $roles);
         }
 
         if (!$grouped) {
-            return $roles;
+            return self::$all_roles;
         }
 
         $groups = ['system' => [], 'other' => []];
-        foreach ($roles as $id => $role) {
+        foreach (self::$all_roles as $id => $role) {
             $index = $role->getSystemtype() ? 'system' : 'other';
             $groups[$index][$id] = $role;
         }
@@ -510,6 +514,7 @@ class RolePersistence
      */
     public static function expireRolesCache()
     {
+        self::$all_roles = null;
         StudipCacheFactory::getCache()->expire(self::ROLES_CACHE_KEY);
     }
 
