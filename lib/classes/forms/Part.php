@@ -194,10 +194,17 @@ abstract class Part
      */
     public function getInputFromArray(array $data)
     {
+        // Normalize data
+        $data = array_merge([
+            'label'      => $data['name'] ?? null,
+            'value'      => null,
+            'attributes' => [],
+        ], $data);
+
         $context = $this->getContextObject();
         if ($context && method_exists($context, 'getTableMetadata')) {
             $metadata = $context->getTableMetadata();
-            $meta = $metadata['fields'][$data['name']];
+            $meta = $metadata['fields'][$data['name']] ?? null;
             if (!isset($data['type'])) {
                 if ($meta) {
                     $data = array_merge(Input::getFielddataFromMeta($meta, $context), $data);
@@ -221,16 +228,18 @@ abstract class Part
 
         $classname = "\\Studip\\Forms\\".ucfirst($data['type'])."Input";
         $attributes = $data;
-        unset($attributes['name']);
-        unset($attributes['label']);
-        unset($attributes['value']);
-        unset($attributes['type']);
-        unset($attributes['mapper']);
-        unset($attributes['store']);
-        unset($attributes['if']);
-        unset($attributes['permission']);
-        unset($attributes['required']);
-        unset($attributes['attributes']);
+        unset(
+            $attributes['name'],
+            $attributes['label'],
+            $attributes['value'],
+            $attributes['type'],
+            $attributes['mapper'],
+            $attributes['store'],
+            $attributes['if'],
+            $attributes['permission'],
+            $attributes['required'],
+            $attributes['attributes']
+        );
         $attributes = array_merge($attributes, (array) $data['attributes']);
         if (class_exists($classname)) {
             $input = new $classname($data['name'], $data['label'], $data['value'], $attributes);
@@ -242,21 +251,21 @@ abstract class Part
             throw new \Exception(sprintf(_("Klasse %s oder %s existiert nicht."), $classname, $data['type']));
         }
 
-        if ($data['mapper'] && is_callable($data['mapper'])) {
+        if (isset($data['mapper']) && is_callable($data['mapper'])) {
             $input->mapper = $data['mapper'];
         }
-        if ($data['store'] && is_callable($data['store'])) {
+        if (isset($data['store']) && is_callable($data['store'])) {
             $input->store = $data['store'];
         }
-        if ($data['if']) {
+        if (!empty($data['if'])) {
             $input->if = $data['if'];
         }
         if (isset($data['permission'])) {
             $input->permission = $data['permission'];
         }
-        if ($data['required']) {
-            $input->required = true;
-        }
+
+        $input->required = !empty($data['required']);
+
         return $input;
     }
 }

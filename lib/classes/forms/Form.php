@@ -77,6 +77,13 @@ class Form extends Part
     {
         $metadata = $object->getTableMetadata();
 
+        // Normalize parameters
+        $params = array_merge([
+            'types'   => [],
+            'fields'  => [],
+            'without' => [],
+        ], $params);
+
         if ($params['fields']) {
             //Setting the label
             foreach ($params['fields'] as $fieldname => $fielddata) {
@@ -89,7 +96,7 @@ class Form extends Part
             //Setting the type and name
             foreach ($params['fields'] as $fieldname => $fielddata) {
                 if (is_array($fielddata)) {
-                    $meta = $metadata['fields'][$fieldname];
+                    $meta = $metadata['fields'][$fieldname] ?? null;
                     if (!isset($fielddata['type'])) {
                         if ($meta) {
                             $fielddata = array_merge(Input::getFielddataFromMeta($meta, $object), $fielddata);
