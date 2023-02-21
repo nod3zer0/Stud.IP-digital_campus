@@ -324,7 +324,7 @@ if ($navigation) {
                 // need to handle institutes separately (always visible)
                 if (isset($GLOBALS['SessSemName']['class']) && $GLOBALS['SessSemName']['class'] === 'inst') {
                     $public_hint = _('öffentliche Einrichtung');
-                } else if (Course::findCurrent()->lesezugriff == 0) {
+                } else if (Course::findCurrent() && !Course::findCurrent()->lesezugriff) {
                     $public_hint = _('öffentliche Veranstaltung');
                 }
             }

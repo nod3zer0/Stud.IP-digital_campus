@@ -21,7 +21,7 @@ $element_id = md5(uniqid());
     style="top: <?= $top ?>px; height: <?= $height ?>px; width: <?= str_replace(',', '.', $width) ?>%<?= ($col > 0) ? ';left:'. str_replace(',', '.', $col * $width) .'%' : '' ?>"
     title="<?= htmlReady(implode(', ', $title)) ?>">
 
-    <a <?= $entry['url'] ? ' href="'.$entry['url'].'"' : '' ?>
+    <a <?= isset($entry['url']) ? ' href="'.$entry['url'].'"' : '' ?>
         <?= $entry[0]['onClick'] ? 'onClick="STUDIP.Calendar.clickEngine(' . $entry[0]['onClick'] . ', this, event); return false;"' : '' ?>>
 
     <!-- for safari5 we need to set the height for the dl as well -->

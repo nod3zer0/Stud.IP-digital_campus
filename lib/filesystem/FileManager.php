@@ -1795,7 +1795,7 @@ class FileManager
         return [
             'type'       => $upload_type['type'],
             'file_types' => $upload_type['file_types'],
-            'file_size'  => $upload_type['file_sizes'][$status],
+            'file_size'  => $upload_type['file_sizes'][$status] ?? 0,
         ];
     }
 

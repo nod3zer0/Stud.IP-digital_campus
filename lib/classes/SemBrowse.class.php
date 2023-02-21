@@ -54,7 +54,7 @@ class SemBrowse {
                     ]
                 ];
 
-        if (!$_SESSION['sem_browse_data']) {
+        if (empty($_SESSION['sem_browse_data'])) {
             $_SESSION['sem_browse_data'] = $sem_browse_data_init;
         }
         $this->sem_browse_data =& $_SESSION['sem_browse_data'];
@@ -67,10 +67,12 @@ class SemBrowse {
                 $this->sem_browse_data[$persistend_field] = Request::option($persistend_field);
             }
         }
-        $this->search_obj = new StudipSemSearch('search_sem',
-                false, !(is_object($GLOBALS['perm'])
-                    && $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)),
-                $this->sem_browse_data['show_class']);
+        $this->search_obj = new StudipSemSearch(
+            'search_sem',
+            false,
+            !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)),
+            $this->sem_browse_data['show_class'] ?? null
+        );
 
 
         if (Request::get($this->search_obj->form_name . '_scope_choose')) {
@@ -86,14 +88,15 @@ class SemBrowse {
                     Request::option($this->search_obj->form_name . '_sem');
         }
 
-        if (Request::get('keep_result_set')
-                || $this->sem_browse_data['sset']
-                || (!empty($this->sem_browse_data['search_result'])
-                        && $this->sem_browse_data['show_entries'])) {
+        if (
+            Request::get('keep_result_set')
+            || !empty($this->sem_browse_data['sset'])
+            || (!empty($this->sem_browse_data['search_result']) && $this->sem_browse_data['show_entries'])
+        ) {
             $this->show_result = true;
         }
 
-        if ($this->sem_browse_data['cmd'] == 'xts') {
+        if (isset($this->sem_browse_data['cmd']) && $this->sem_browse_data['cmd'] === 'xts') {
             if ($this->search_obj->new_search_button_clicked) {
                 $this->show_result = false;
                 $this->sem_browse_data['sset'] = false;
@@ -101,7 +104,9 @@ class SemBrowse {
             }
         }
 
-        if($this->sem_browse_data['default_sem'] != 'all') {
+        if (!isset($this->sem_browse_data['default_sem'])) {
+            $this->sem_number[0] = 0;
+        } elseif ($this->sem_browse_data['default_sem'] != 'all') {
             $this->sem_number[0] = intval($this->sem_browse_data['default_sem']);
         } else {
             $this->sem_number = false;
@@ -405,11 +410,12 @@ class SemBrowse {
                 && count($this->sem_browse_data['search_result'])) {
             if (!is_object($this->sem_tree)) {
                 $this->sem_tree = new StudipSemTreeViewSimple(
-                        $this->sem_browse_data['start_item_id'],
+                        $this->sem_browse_data['start_item_id'] ?? null,
                         $this->sem_number,
                         !empty($this->sem_browse_data['sem_status']) && is_array($this->sem_browse_data['sem_status'])
                             ? $this->sem_browse_data['sem_status'] : false,
-                        !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)));
+                        !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM))
+                );
             }
             $the_tree = $this->sem_tree->tree;
 
@@ -429,7 +435,7 @@ class SemBrowse {
                 } else {
                     echo '<tr><th colspan="5">';
                 }
-                switch ($this->sem_browse_data['group_by']){
+                switch ($this->sem_browse_data['group_by'] ?? null) {
                     case 0:
                         echo htmlReady($this->search_obj->sem_dates[$group_field]['name']);
                         break;
@@ -758,8 +764,8 @@ class SemBrowse {
                     for ($i = $start_sem; $i <= $sem_number_end; ++$i) {
                         if ($this->sem_number === false
                                 || is_array($this->sem_number)
-                                && in_array($i,$this->sem_number)) {
-                            if ($group_by_data[$i] && !$tmp_group_by_data[$i]) {
+                                && in_array($i, $this->sem_number)) {
+                            if (!empty($group_by_data[$i]) && empty($tmp_group_by_data[$i])) {
                                 foreach (array_keys($group_by_data[$i]['Seminar_id']) as $id) {
                                     $tmp_group_by_data[$i]['Seminar_id'][$id] = true;
                                 }

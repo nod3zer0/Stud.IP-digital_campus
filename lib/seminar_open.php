@@ -101,7 +101,7 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
         if (UserConfig::get($user->id)->PERSONAL_STARTPAGE > 0 && $i_page == "index.php" && !$perm->have_perm("root")) {
             $seminar_open_redirected = TRUE;
         }
-        if ($_SESSION['contrast']) {
+        if (!empty($_SESSION['contrast'])) {
             UserConfig::get($GLOBALS['user']->id)->store('USER_HIGH_CONTRAST', 1);
             unset($_SESSION['contrast']);
         }
