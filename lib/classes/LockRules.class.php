@@ -85,7 +85,8 @@ class LockRules {
      */
     public static function getObjectRule($object_id, $renew = false, $object_type = null)
     {
-        if(!array_key_exists($object_id, self::$lockmap) || $renew) {
+        if (!array_key_exists($object_id, self::$lockmap) || $renew) {
+            self::$lockmap[$object_id] = null;
             if ($object_type === null) {
                 $object_type = get_object_type($object_id, words('sem inst user'));
             }
@@ -98,12 +99,10 @@ class LockRules {
                 if ($lr) {
                     self::$lockmap[$object_id] = $lr->getId();
                     self::$lockrules[$lr->getId()] = $lr;
-                } else {
-                    self::$lockmap[$object_id] = null;
                 }
             }
         }
-        return self::$lockmap[$object_id] ? self::$lockrules[self::$lockmap[$object_id]] : null;
+        return self::$lockrules[self::$lockmap[$object_id]] ?? null;
     }
 
     /**

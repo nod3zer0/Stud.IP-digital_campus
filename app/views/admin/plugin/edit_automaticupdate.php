@@ -3,8 +3,7 @@
  * @var Admin_PluginController $controller
  * @var array $plugin
  */
-?>
-<?
+
 if (mb_strpos($_SERVER['SERVER_NAME'], ':') !== false) {
     list($_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']) =
         explode(':', $_SERVER['SERVER_NAME']);
@@ -26,7 +25,7 @@ if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
         <?= $m ?>
     <? endforeach ?>
 </div>
-<form action="<?= $controller->url_for('admin/plugin/edit_automaticupdate/'.$plugin['id']) ?>" method="post" class="default" data-dialog="size=auto;reload-on-close">
+<form action="<?= $controller->link_for('admin/plugin/edit_automaticupdate', $plugin['id'] ?? null) ?>" method="post" class="default" data-dialog="size=auto;reload-on-close">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
     <?= MessageBox::info(_("Sie können gitlab, github.com oder dem neuen Stud.IP-Plugin-Marktplatz mitteilen, dass Ihr Stud.IP per Webhook über Änderungen im Code des Plugins benachrichtigt werden soll.")) ?>
@@ -34,15 +33,16 @@ if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
         <legend><?= _("Einstellungen von Stud.IP") ?></legend>
         <label>
             <?= _("URL, von der das Plugin als ZIP-Datei bezogen werden soll") ?>
-            <input type="url" name="automatic_update_url" value="<?= htmlReady($plugin['automatic_update_url']) ?>">
+            <input type="url" name="automatic_update_url" value="<?= htmlReady($plugin['automatic_update_url'] ?? '') ?>">
         </label>
         <label>
             <?= _("Automatisches Update absichern über Sicherheitstoken (optional)") ?>
-            <input type="checkbox" name="use_security_token" value="1"<?= $plugin['automatic_update_secret'] || !$plugin['automatic_update_url'] ? " checked" : "" ?>>
+            <input type="checkbox" name="use_security_token" value="1"
+                   <?= !empty($plugin['automatic_update_secret']) || empty($plugin['automatic_update_url']) ? " checked" : "" ?>>
         </label>
     </fieldset>
 
-    <? if ($plugin['automatic_update_url']) : ?>
+    <? if (!empty($plugin['automatic_update_url'])) : ?>
     <fieldset>
         <legend><?= _("Daten für das bereitstellende System") ?></legend>
         <p class="info">

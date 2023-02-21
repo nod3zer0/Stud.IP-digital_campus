@@ -73,15 +73,16 @@ function get_object_name($range_id, $object_type)
         $statement->execute([$range_id]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if ($SEM_TYPE[$row['status']]['name'] == $SEM_TYPE_MISC_NAME) {
+        if (!$row) {
+            $name = _('Unbekannt');
             $type = _('Veranstaltung');
         } else {
-            $type = $SEM_TYPE[$row['status']]['name'];
+            $name = $row['Name'];
+            $type = $SEM_TYPE[$row['status']]['name'] ?? _('Veranstaltung');
+            if ($type === $SEM_TYPE_MISC_NAME) {
+                $type = _('Veranstaltung');
+            }
         }
-        if (!$type) {
-            $type = _('Veranstaltung');
-        }
-        $name = $row['Name'];
     } else if ($object_type == 'inst' || $object_type == 'fak') {
         $query = "SELECT type, Name FROM Institute WHERE Institut_id = ?";
         $statement = DBManager::get()->prepare($query);
