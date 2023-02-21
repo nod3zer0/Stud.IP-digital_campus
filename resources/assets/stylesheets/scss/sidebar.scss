@@ -57,6 +57,23 @@
         -webkit-box-orient: vertical;
     }
 
+    .sidebar-widget.sidebar-widget-has-extra {
+        display: grid;
+        grid-template-areas: "swh swx" "swc swc";
+        grid-template-rows: auto;
+        grid-template-columns: 1fr min-content;
+
+        .sidebar-widget-header {
+            grid-area: swh;
+        }
+        .sidebar-widget-extra {
+            grid-area: swx;
+        }
+        .sidebar-widget-content {
+            grid-area: swc;
+        }
+    }
+
     .course-avatar-medium,
     .stream-avatar-medium,
     .avatar-medium {
@@ -70,20 +87,12 @@
         margin: 15px 0 0;
         width: $sidebar-width - 5px;
     }
-    .sidebar-widget-header {
-        @include clearfix();
+    .sidebar-widget-header,
+    .sidebar-widget-extra {
         background: $content-color-20;
         color: $base-color;
         font-weight: bold;
         padding: 4px;
-    }
-    .sidebar-widget-options {
-        float: right;
-        opacity: 0;
-        transition: all 0.5s;
-    }
-    .sidebar-widget:hover .sidebar-widget-options {
-        opacity: 1;
     }
 
     // Links inside the sidebar
@@ -216,7 +225,6 @@ div#sidebar-navigation {
 
 .sidebar-widget {
     background: $white;
-    @include clearfix();
 
     .widget-options {
         list-style: none;
@@ -263,13 +271,6 @@ div#sidebar-navigation {
     overflow-wrap: break-word;
     padding: 4px;
     transition: all 0.5s;
-}
-
-.sidebar-widget-header {
-    @include clearfix();
-    .sidebar-widget-extra {
-        float: right;
-    }
 }
 
 // TODO: These two should be combined into one widget
