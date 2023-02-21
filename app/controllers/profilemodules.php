@@ -54,16 +54,14 @@ class ProfileModulesController extends AuthenticatedController
 
     private function getConfig()
     {
-        $config = $GLOBALS['user']->cfg->PLUS_SETTINGS;
-        if (!$config || !isset($config['profile_plus'])) {
-            return [
-                'view'         => 'openall',
-                'displaystyle' => 'category',
-                'hidden'       => [],
-            ];
-        }
+        $default = [
+            'view'         => 'openall',
+            'displaystyle' => 'category',
+            'hidden'       => [],
+        ];
 
-        return array_merge(['hidden' => []], $config['profile_plus']);
+        $config = $GLOBALS['user']->cfg->PLUS_SETTINGS;
+        return array_merge($default, $config['profile_plus'] ?? []);
     }
 
     private function storeConfig(array $config)
