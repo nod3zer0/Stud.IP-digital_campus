@@ -116,9 +116,20 @@ export default {
                 return;
             }
 
-            await this.loadStructuralElement(id);
-            this.canVisit = this.structuralElementLastMeta['can-visit'];
-            this.selected = this.structuralElementById({ id });
+            this.structureLoadingState = 'loading';
+            try {
+                await this.loadStructuralElement(id);
+            } catch (error) {
+                this.loadingErrorStatus = error.status;
+                this.structureLoadingState = 'error';
+                return;
+            }
+
+            this.structureLoadingState = 'done';
+            this.$nextTick( () => {
+                this.canVisit = this.structuralElementLastMeta['can-visit'];
+                this.selected = this.structuralElementById({ id });
+            });
         },
     },
     async mounted() {
