@@ -23,7 +23,7 @@ class Freetext extends QuestionnaireQuestion implements QuestionType
      */
     public static function getIconShape()
     {
-        return 'guestbook';
+        return 'question-text';
     }
 
     /**

@@ -14,7 +14,7 @@ class LikertScale extends QuestionnaireQuestion implements QuestionType
      */
     public static function getIconShape()
     {
-        return 'likert';
+        return 'question-likert';
     }
 
     public static function getName()

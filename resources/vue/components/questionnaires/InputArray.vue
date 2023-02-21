@@ -9,7 +9,7 @@
                    :ref="'draghandle_' + index"
                    :title="$gettextInterpolate('Sortierelement für Option %{option}. Drücken Sie die Tasten Pfeil-nach-oben oder Pfeil-nach-unten, um dieses Element in der Liste zu verschieben.', {option: option})"
                    @keydown="keyHandler($event, index)">
-                    <studip-icon shape="hamburger" role="clickable" alt=""></studip-icon>
+                    <span class="handle"></span>
                 </a>
                 <input type="text"
                        :placeholder="$gettext('Option')"

@@ -14,7 +14,7 @@ class RangeScale extends QuestionnaireQuestion implements QuestionType
      */
     public static function getIconShape()
     {
-        return 'rangescale';
+        return 'question-rangescale';
     }
 
     public static function getName()

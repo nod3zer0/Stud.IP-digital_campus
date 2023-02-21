@@ -14,7 +14,7 @@ class Vote extends QuestionnaireQuestion implements QuestionType
      */
     public static function getIconShape()
     {
-        return 'vote';
+        return 'question-diagram';
     }
 
     public static function getName()

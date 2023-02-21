@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="c">
+        <rect x="0" y="0" width="64" height="64" style="fill:none;"/>
+    </g>
+    <g id="d">
+        <g id="e">
+            <g>
+                <path d="M4,14L4,50L60,50L60,14L4,14ZM57,47L7,47L7,17L57,17L57,47Z" style="fill:white;fill-rule:nonzero;"/>
+                <path d="M18,35.98L15.52,33.5L26.2,33.5C26.87,36.09 29.21,38 32,38C34.79,38 37.14,36.09 37.8,33.5L48.48,33.5L46,35.98L46,40.03L54,32.03L46,24.03L46,28.08L48.42,30.5L37.8,30.5C37.13,27.91 34.79,26 32,26C29.21,26 26.86,27.91 26.2,30.5L15.58,30.5L18,28.08L18,24.03L10,32.03L18,40.03L18,35.98ZM32,29C33.65,29 35,30.35 35,32C35,33.65 33.65,35 32,35C30.35,35 29,33.65 29,32C29,30.35 30.35,29 32,29Z" style="fill:white;fill-rule:nonzero;"/>
+            </g>
+        </g>
+    </g>
+</svg>

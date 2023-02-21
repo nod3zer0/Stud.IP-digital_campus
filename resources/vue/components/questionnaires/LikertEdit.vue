@@ -25,7 +25,7 @@
                            :title="$gettextInterpolate('Sortierelement für Aussage %{statement}. Drücken Sie die Tasten Pfeil-nach-oben oder Pfeil-nach-unten, um dieses Element in der Liste zu verschieben.', {statement: statement})"
                            @keydown="keyHandler($event, index)"
                            :ref="'draghandle_' + index">
-                            <studip-icon shape="hamburger" role="clickable"></studip-icon>
+                            <span class="handle"></span>
                         </a>
                     </td>
                     <td>

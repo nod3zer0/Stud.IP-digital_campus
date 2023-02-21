@@ -158,8 +158,9 @@ foreach ($questionnaire->questions as $question) {
                      :class="(activeTab === question.id || activeTab === 'meta_' + question.id ? 'active' : '') + (hoverTab === question.id ? ' hovered' : '')">
                     <a href="#"
                        @click.prevent="switchTab(question.id)">
-                        <span class="icon handle">
-                            <studip-icon :shape="(hoverTab === question.id) && (questions.length > 1) ? 'hamburger' : questiontypes[question.questiontype].icon" role="clickable" size="30" alt=""></studip-icon>
+                        <span class="handle"></span>
+                        <span class="icon type">
+                            <studip-icon :shape="questiontypes[question.questiontype].icon" role="clickable" size="30" alt=""></studip-icon>
                         </span>
 
                         <div v-if="editInternalName !== question.id">{{ question.internal_name || questiontypes[question.questiontype].name}}</div>
@@ -174,7 +175,7 @@ foreach ($questionnaire->questions as $question) {
                         </div>
                     </a>
 
-                    <studip-action-menu :items="[{label: '<?= _('Umbenennen') ?>', icon: 'edit', emit: 'rename'}, {label: '<?= _('Frage kopieren') ?>', icon: 'clipboard', emit: 'copy'}, {label: '<?= _('Frage nach oben verschieben') ?>', icon: 'arr_1up', emit: 'moveup'}, {label: '<?= _('Frage nach unten verschieben') ?>', icon: 'arr_1down', emit: 'movedown'}, {label: '<?= _('Frage löschen') ?>', icon: 'trash', emit: 'delete'}]"
+                    <studip-action-menu :items="[{label: '<?= _('Umbenennen') ?>', icon: 'edit', emit: 'rename'}, {label: '<?= _('Frage kopieren') ?>', icon: 'copy', emit: 'copy'}, {label: '<?= _('Frage nach oben verschieben') ?>', icon: 'arr_1up', emit: 'moveup'}, {label: '<?= _('Frage nach unten verschieben') ?>', icon: 'arr_1down', emit: 'movedown'}, {label: '<?= _('Frage löschen') ?>', icon: 'trash', emit: 'delete'}]"
                                         @copy="duplicateQuestion(question.id)"
                                         @rename="renameInternalName(question.id)"
                                         @moveup="moveQuestionUp(question.id)"
