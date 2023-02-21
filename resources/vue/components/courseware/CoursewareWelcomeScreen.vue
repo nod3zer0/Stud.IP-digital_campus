@@ -5,7 +5,7 @@
             {{ $gettext('Willkommen bei Courseware') }}
         </header>
         <div class="cw-welcome-screen-actions">
-            <a href="https://hilfe.studip.de/help/5.3/de/Basis.Courseware" target="_blank" class="button">
+            <a href="https://hilfe.studip.de/help/5.0/de/Basis.Courseware" target="_blank" class="button">
                 {{ $gettext('Mehr über Courseware erfahren') }}
             </a>
             <button class="button" :title="$gettext('Fügt einen Standard-Abschnitt mit einem Text-Block hinzu')" @click="addDefault">
@@ -48,9 +48,11 @@ export default {
         }),
         addContainer() {
             this.coursewareConsumeMode(false);
-            this.coursewareViewMode('edit');
-            this.coursewareContainerAdder(true);
             this.coursewareShowToolbar(true);
+            this.coursewareViewMode('edit');
+            this.$nextTick(() => {
+                this.coursewareContainerAdder(true);
+            });
         },
         async addDefault() {
             let attributes = {};
