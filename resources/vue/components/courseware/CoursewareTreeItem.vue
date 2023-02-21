@@ -2,9 +2,6 @@
     <li v-if="showItem"
         :draggable="editMode ? true : null"
         :aria-selected="editMode ? keyboardSelected : null"
-        :class="[
-                hasPurposeClass ? 'cw-tree-item-' + purposeClass : '',
-            ]"
     >
         <div class="cw-tree-item-wrapper">
             <span

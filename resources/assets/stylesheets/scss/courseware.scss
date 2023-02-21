@@ -1366,20 +1366,6 @@ label[for="cw-keypoint-color"] {
                                 }
                             }
                         }
-                        @each $type, $icon in $element-icons {
-                            &.cw-tree-item-#{$type} .cw-tree-item-wrapper a.cw-tree-item-link {
-                                 background-position: 0px 2px;
-                                 background-repeat: no-repeat;
-                                 padding-left: 20px;
-                                 @include background-icon(#{$icon}, clickable, 16);
-                                 &:hover {
-                                     @include background-icon(#{$icon}, attention, 16);
-                                 }
-                                 &.cw-tree-item-link-current {
-                                     @include background-icon(#{$icon}, info, 16);
-                                 }
-                             }
-                         }
                         ol {
                             padding-left: 0.25em;
                             &.cw-tree-draggable-list {
