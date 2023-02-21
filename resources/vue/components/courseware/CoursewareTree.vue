@@ -89,7 +89,8 @@ export default {
             unlockObject: 'unlockObject',
             sortChildrenInStructualElements: 'sortChildrenInStructualElements',
             loadStructuralElement: 'loadStructuralElement',
-            setAssistiveLiveContents: 'setAssistiveLiveContents'
+            setAssistiveLiveContents: 'setAssistiveLiveContents',
+            companionError: 'companionError',
          }),
         updateNestedChildren() {
             this.nestedChildren = this.getNestedChildren(this.rootElement);
@@ -119,10 +120,20 @@ export default {
             const tree = this.$refs.tree;
             const currentScrollPosition = tree.offsetParent.scrollTop;
             this.processing = true;
+            await this.loadStructuralElement(data.newParent);
+            const newParent = this.structuralElementById({ id: data.newParent });
+            if (!newParent.attributes['can-edit']) {
+                this.processing = false;
+                this.updateNestedChildren();
+                this.companionError({
+                    info: this.$gettext('Verschieben nicht möglich. Sie haben keine Schreibrechte für die Ziel-Seite.')
+                });
+                return;
+            }
             if (data.oldParent !== data.newParent) {
                 await this.lockObject({ id: data.id, type: 'courseware-structural-elements' });
                 let element = this.structuralElementById({ id: data.id });
-                element.relationships.parent.data.id = data.newParent;
+                element.relationships.parent.data.id = newParent.id;
                 await this.updateStructuralElement({
                     element: element,
                     id: element.id,
@@ -130,8 +141,8 @@ export default {
                 await this.unlockObject({ id: data.id, type: 'courseware-structural-elements' });
                 await this.loadStructuralElement(data.id);
             }
-            await this.loadStructuralElement(data.newParent);
-            const parent = this.structuralElementById({ id: data.newParent });
+            await this.loadStructuralElement(newParent.id);
+            const parent = this.structuralElementById({ id: newParent.id });
             await this.sortChildrenInStructualElements({parent: parent, children: data.sortArray});
             this.updateNestedChildren();
             this.processing = false;

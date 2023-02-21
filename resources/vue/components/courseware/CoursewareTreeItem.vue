@@ -8,7 +8,7 @@
     >
         <div class="cw-tree-item-wrapper">
             <span
-                v-if="editMode && depth > 0"
+                v-if="editMode && depth > 0 && canEdit"
                 class="cw-sortable-handle"
                 :tabindex="0"
                 aria-describedby="operation"
@@ -270,6 +270,9 @@ export default {
                 ghostClass: "cw-tree-item-ghost"
             };
         },
+        canEdit() {
+            return this.element.attributes['can-edit'];
+        }
     },
     methods: {
         ...mapActions({
