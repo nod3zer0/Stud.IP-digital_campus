@@ -26,12 +26,16 @@ class UserDataFieldOfBlocksShow extends JsonApiController
             throw new RecordNotFoundException();
         }
         // this is automatically scoped to the requesting user
+        // so we don't need to worry about the accessing the user data fields.
         $resource = UserDataField::getUserDataField($user = $this->getUser($request), $block);
 
         if (!Authority::canShowUserDataField($user, $resource)) {
             throw new AuthorizationFailedException();
         }
 
-        return $this->getContentResponse($resource);
+        // however, as it is intended to list all user data fields of the block, we get it here and return it back.
+        $resources = UserDataField::findBySql('block_id = ?', [$block->id]);
+
+        return $this->getContentResponse($resources);
     }
 }

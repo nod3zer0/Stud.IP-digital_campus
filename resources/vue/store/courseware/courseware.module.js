@@ -296,6 +296,16 @@ export const actions = {
         );
     },
 
+    async loadUserDataFields({ dispatch }, blockId) {
+        const parent = { type: 'courseware-blocks', id: `${blockId}` };
+        const relationship = 'user-data-field';
+        const options = {
+            include: 'user',
+        };
+
+        return dispatch('user-data-field/loadRelated', { parent, relationship, options }, { root: true });
+    },
+
     async loadCoursewareActivities({ dispatch, rootGetters }, { userId, courseId }) {
         const parent = {
             type: 'users',

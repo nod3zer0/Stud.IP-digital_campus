@@ -18,6 +18,7 @@
                         <button class="cw-canvasblock-reset" :title="$gettext('Zurücksetzen')" @click="reset"></button>
                         <button class="cw-canvasblock-undo" :title="$gettext('Rückgängig')" @click="undo"></button>
                         <button v-if="hasUploadFolder" class="cw-canvasblock-store" :title="$gettext('Bild im Dateibereich speichern')" @click="store"></button>
+                        <button v-if="canSwitchView" :class="viewButtonClass" :title="viewButtonText" @click="switchView"></button>
                     </div>
                     <div class="cw-canvasblock-buttonset">
                         <button
@@ -171,6 +172,7 @@ export default {
             currentFileId: '',
             currentUploadFolderId: '',
             currentShowUserData: '',
+            currentUserView: 'own',
             currentFile: {},
 
             context: {},
@@ -210,6 +212,7 @@ export default {
             userId: 'userId',
             getUserDataById: 'courseware-user-data-fields/byId',
             usersById: 'users/byId',
+            relatedUserData: 'user-data-field/related'
         }),
         userData() {
             return this.getUserDataById({ id: this.block.relationships['user-data-field'].data.id });
@@ -220,6 +223,35 @@ export default {
             } else {
                 return false;
             }
+        },
+        allCanvasDraws() {
+            const parent = { type: 'courseware-blocks', id: this.block.id };
+            const relationship = 'user-data-field';
+            const userDataFields = this.relatedUserData({
+                parent: parent,
+                relationship: relationship,
+            });
+            let canvasDraws = [];
+            if (userDataFields?.length > 0) {
+                for (let userDataField of userDataFields) {
+                    // extracting the canvas draws of the other users.
+                    if (userDataField?.attributes?.payload?.canvas_draw &&
+                        userDataField?.relationships?.user?.data?.id !== this.userId ) {
+                        let canvas_draw = userDataField.attributes.payload.canvas_draw;
+                        let draw_obj = {
+                            clickX: JSON.parse(canvas_draw.clickX),
+                            clickY: JSON.parse(canvas_draw.clickY),
+                            clickDrag: JSON.parse(canvas_draw.clickDrag),
+                            clickColor: JSON.parse(canvas_draw.clickColor),
+                            clickSize: JSON.parse(canvas_draw.clickSize),
+                            clickTool: JSON.parse(canvas_draw.clickTool),
+                            Text: JSON.parse(canvas_draw.Text),
+                        };
+                        canvasDraws.push(draw_obj);
+                    }
+                }
+            }
+            return canvasDraws;
         },
         title() {
             return this.block?.attributes?.payload?.title;
@@ -255,6 +287,30 @@ export default {
         hasUploadFolder() {
             return this.currentUploadFolderId !== "";
         },
+        canSwitchView() {
+            // this feature is not something to offer in the Arbeitsplatz!
+            let context = this.$store.getters.context;
+            if (context.type !== 'courses') {
+                return false;
+            }
+            if (this.currentShowUserData === 'off') {
+                return false;
+            }
+            if (this.currentShowUserData === 'teacher' && !this.isTeacher) {
+                return false;
+            }
+            return true;
+        },
+        viewButtonText() {
+            let text = this.$gettext('Werte anderer Nutzer anzeigen');
+            if (this.currentUserView == 'own') {
+                text = this.$gettext('Nur eigene Werte anzeigen');
+            }
+            return text;
+        },
+        viewButtonClass() {
+            return 'cw-canvasblock-show-' + this.currentUserView;
+        }
     },
     mounted() {
         this.loadFileRefs(this.block.id).then((response) => {
@@ -272,7 +328,8 @@ export default {
             createFile: 'createFile',
             companionSuccess: 'companionSuccess',
             companionError: 'companionError',
-            updateUserDataFields: 'courseware-user-data-fields/update'
+            updateUserDataFields: 'courseware-user-data-fields/update',
+            loadUserDataFields: 'loadUserDataFields',
         }),
         initCurrentData() {
             this.currentTitle = this.title;
@@ -361,8 +418,6 @@ export default {
         redraw() {
             let view = this;
             let context = view.context;
-            let clickX = view.clickX;
-            let clickY = view.clickY;
             context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
             context.fillStyle = '#ffffff';
             context.fillRect(0, 0, context.canvas.width, context.canvas.height); // set background
@@ -373,25 +428,41 @@ export default {
             }
 
             context.lineJoin = 'round';
-            for (var i = 0; i < clickX.length; i++) {
-                if (view.clickTool[i] === 'pen') {
-                    context.beginPath();
-                    if (view.clickDrag[i] && i) {
-                        context.moveTo(clickX[i - 1], clickY[i - 1]);
-                    } else {
-                        context.moveTo(clickX[i] - 1, clickY[i]);
+            let ownCanvasDraw = {
+                clickX: view.clickX,
+                clickY: view.clickY,
+                clickDrag: view.clickDrag,
+                clickColor: view.clickColor,
+                clickSize: view.clickSize,
+                clickTool: view.clickTool,
+                Text: view.Text
+            }
+            let canvasDraws = [ownCanvasDraw];
+            if (this.currentUserView === 'all') {
+                canvasDraws = [ ...canvasDraws, ...view.allCanvasDraws ];
+            }
+
+            for (let draw of canvasDraws) {
+                for (var j = 0; j < draw.clickX.length; j++) {
+                    if (draw.clickTool[j] === 'pen') {
+                        context.beginPath();
+                        if (draw.clickDrag[j] && j) {
+                            context.moveTo(draw.clickX[j - 1], draw.clickY[j - 1]);
+                        } else {
+                            context.moveTo(draw.clickX[j] - 1, draw.clickY[j]);
+                        }
+                        context.lineTo(draw.clickX[j], draw.clickY[j]);
+                        context.closePath();
+                        context.strokeStyle = draw.clickColor[j];
+                        context.lineWidth = draw.clickSize[j];
+                        context.stroke();
                     }
-                    context.lineTo(clickX[i], clickY[i]);
-                    context.closePath();
-                    context.strokeStyle = view.clickColor[i];
-                    context.lineWidth = view.clickSize[i];
-                    context.stroke();
-                }
-                if (view.clickTool[i] === 'text') {
-                    let fontsize = view.clickSize[i] * 6;
-                    context.font = fontsize + 'px Arial ';
-                    context.fillStyle = view.clickColor[i];
-                    context.fillText(view.Text[i], clickX[i], clickY[i] + fontsize);
+                    if (draw.clickTool[j] === 'text') {
+                        let fontsize = draw.clickSize[j] * 6;
+                        context.font = fontsize + 'px Arial ';
+                        context.fillStyle = draw.clickColor[j];
+                        context.fillText(draw.Text[j], draw.clickX[j], draw.clickY[j] + fontsize);
+                    }
                 }
             }
         },
@@ -602,6 +673,21 @@ export default {
                 });
             }
         },
+        async switchView() {
+            if (['own', 'all'].includes(this.currentUserView)) {
+                let newView = 'own';
+                if (this.currentUserView === 'own') {
+                    // we will get the latest draws by loading them each time the view is going to be switched to all!
+                    await this.loadUserDataFields(this.block.id).then(() => newView = 'all');
+                }
+                this.currentUserView = newView;
+            }
+        }
+    },
+    watch: {
+        currentUserView() {
+            this.redraw();
+        }
     },
 };
 </script>
