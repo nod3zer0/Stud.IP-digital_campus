@@ -24,10 +24,15 @@ class UnitsCreate extends JsonApiController
     {
         $json = $this->validate($request);
         $user = $this->getUser($request);
-        if (!Authority::canCreateUnit($user)) {
+        $range = $this->getRange($json);
+
+        if (!$range) {
+            throw new RecordNotFoundException();
+        }
+        if (!Authority::canCreateUnit($user, $range)) {
             throw new AuthorizationFailedException();
         }
-        $struct = $this->createUnit($user, $json);
+        $struct = $this->createUnit($user, $range, $json);
 
         return $this->getCreatedResponse($struct);
     }
@@ -57,31 +62,33 @@ class UnitsCreate extends JsonApiController
         }
     }
 
-    private function validateRange($json): bool
+    private function getRange($json): ?\Range
     {
         $rangeData = self::arrayGet($json, 'data.relationships.range.data');
 
-        if (!in_array($rangeData['type'], ['courses','users'])) {
-            return false;
+        try {
+            return \RangeFactory::createRange(
+                $this->getRangeType($rangeData['type']),
+                $rangeData['id']
+            );
+        } catch (\Exception $e) {
+            return null;
         }
-        if ($rangeData['type'] ===  'courses') {
-            $range = \Course::find($rangeData['id']);
-        } else {
-            $range = \User::find($rangeData['id']);
-        }
+    }
+
+    private function validateRange($json): bool
+    {
+        $range = $this->getRange($json);
 
         return isset($range);
     }
 
-    private function createUnit(\User $user, array $json)
+    private function createUnit(\User $user, \Range $range, array $json)
     {
-        $range_id = self::arrayGet($json, 'data.relationships.range.data.id');
-        $range_type = self::getRangeType(self::arrayGet($json, 'data.relationships.range.data.type'));
-
-        $struct = \Courseware\StructuralElement::build([
+        $struct = \Courseware\StructuralElement::create([
             'parent_id' => null,
-            'range_id' => $range_id,
-            'range_type' => $range_type,
+            'range_id' => $range->getRangeId(),
+            'range_type' => $range->getRangeType(),
             'owner_id' => $user->id,
             'editor_id' => $user->id,
             'edit_blocker_id' => '',
@@ -91,11 +98,9 @@ class UnitsCreate extends JsonApiController
             'position' => 0
         ]);
 
-        $struct->store();
-
-        $unit = \Courseware\Unit::build([
-            'range_id' => $range_id,
-            'range_type' => $range_type,
+        $unit = \Courseware\Unit::create([
+            'range_id' => $range->getRangeId(),
+            'range_type' => $range->getRangeType(),
             'structural_element_id' => $struct->id,
             'content_type' => 'courseware',
             'creator_id' => $user->id,
@@ -103,8 +108,6 @@ class UnitsCreate extends JsonApiController
             'release_date' => self::arrayGet($json, 'data.attributes.release-date'),
             'withdraw_date' => self::arrayGet($json, 'data.attributes.withdraw-date'),
         ]);
-
-        $unit->store();
 
         return $unit;
     }

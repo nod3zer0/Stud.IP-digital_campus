@@ -484,9 +484,12 @@ class Authority
         return $GLOBALS['perm']->have_perm('root', $user->id);
     }
 
-    public static function canCreateUnit(User $user): bool
+    public static function canCreateUnit(User $user, \Range $range): bool
     {
-        return $GLOBALS['perm']->have_perm('tutor', $user->id);
+        if ($user->id === $range->id) {
+            return true;
+        }
+        return $GLOBALS['perm']->have_studip_perm('tutor', $range->id ,$user->id);
     }
 
     public static function canUpdateUnit(User $user, Unit $resource): bool
