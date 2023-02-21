@@ -16,32 +16,33 @@
 */
 class ConnectedCMS
 {
-    var $title;
+    public $title;
 
-    var $is_active;
-    var $cms_type;
-    var $name;
-    var $ABSOLUTE_PATH_ELEARNINGMODULES;
-    var $ABSOLUTE_PATH_SOAP;
-    var $RELATIVE_PATH_DB_CLASSES;
-    var $CLASS_PREFIX;
-    var $auth_necessary;
-    var $USER_AUTO_CREATE;
-    var $USER_PREFIX;
-    var $target_file;
-    var $logo_file;
-    var $db_classes;
-    var $soap_data;
-    var $soap_client;
-    var $types;
-    var $roles;
+    public $is_active;
+    public $cms_type;
+    public $name = null;
+    public $ABSOLUTE_PATH_ELEARNINGMODULES = null;
+    public $ABSOLUTE_PATH_SOAP = null;
+    public $RELATIVE_PATH_DB_CLASSES = false;
+    public $CLASS_PREFIX = null;
+    public $auth_necessary = null;
+    public $USER_AUTO_CREATE = null;
+    public $USER_PREFIX = null;
+    public $target_file = null;
+    public $logo_file = null;
+    public $db_classes;
+    public $soap_data = null;
+    public $soap_client;
+    public $types = null;
+    public $roles = null;
 
-    var $db;
-    var $db_class;
-    var $link;
-    var $user;
-    var $permissions;
-    var $content_module;
+    public $db;
+    public $db_class;
+    public $link;
+    public $user;
+    public $permissions;
+    public $content_module;
+
     /**
     * constructor
     *
@@ -53,7 +54,10 @@ class ConnectedCMS
     {
         $this->cms_type = $cms;
         $this->is_active = (bool) Config::get()->getValue("ELEARNING_INTERFACE_{$cms}_ACTIVE");
-        $this->init($cms);
+
+        if ($cms) {
+            $this->init($cms);
+        }
     }
 
     /**
@@ -66,7 +70,7 @@ class ConnectedCMS
     public function init($cms)
     {
         global $ELEARNING_INTERFACE_MODULES;
-        $this->name = $ELEARNING_INTERFACE_MODULES[$cms]["name"];
+        $this->name = $ELEARNING_INTERFACE_MODULES[$cms]["name"] ?? null;
         $this->ABSOLUTE_PATH_ELEARNINGMODULES = $ELEARNING_INTERFACE_MODULES[$cms]["ABSOLUTE_PATH_ELEARNINGMODULES"];
         $this->ABSOLUTE_PATH_SOAP = $ELEARNING_INTERFACE_MODULES[$cms]["ABSOLUTE_PATH_SOAP"];
         if (isset($ELEARNING_INTERFACE_MODULES[$cms]["RELATIVE_PATH_DB_CLASSES"]))
@@ -120,96 +124,118 @@ class ConnectedCMS
     */
     public function getConnectionStatus($cms = "")
     {
-        if ($this->cms_type == "")
-        {
+        $msg = [
+            'path' => [],
+        ];
+
+        if ($this->cms_type == "") {
             $this->init($cms);
         }
-        // check connection to CMS
 
+        // check connection to CMS
         if (!$this->auth_necessary) {
-            $msg["auth"]["info"] = sprintf(_("Eine Authentifizierung ist für dieses System nicht vorgesehen."));
+            $msg['auth'] = [
+                'info' => _('Eine Authentifizierung ist für dieses System nicht vorgesehen.')
+            ];
         }
 
         // check for SOAP-Interface
-        if (in_array($this->CLASS_PREFIX, ['Ilias3','Ilias4','Ilias5']))
-        {
+        if (in_array($this->CLASS_PREFIX, ['Ilias3','Ilias4','Ilias5'])) {
             $ch = curl_init($this->ABSOLUTE_PATH_ELEARNINGMODULES . 'login.php');
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_exec($ch);
 
             if (curl_getinfo($ch, CURLINFO_RESPONSE_CODE) !== 200) {
-                $msg["path"]["error"] = sprintf(_("Die Verbindung zum System \"%s\" konnte nicht hergestellt werden. Der Pfad \"$this->ABSOLUTE_PATH_ELEARNINGMODULES\" ist ungültig."), $this->name);
+                $msg['path']['error'] = sprintf(
+                    _('Die Verbindung zum System "%s" konnte nicht hergestellt werden. Der Pfad "%s" ist ungültig.'),
+                    $this->name,
+                    $this->ABSOLUTE_PATH_ELEARNINGMODULES
+                );
 
             } else {
-                $msg["path"]["info"] = sprintf(_("Die %s-Installation wurde gefunden."), $this->name);
+                $msg['path']['info'] = sprintf(
+                    _('Die %s-Installation wurde gefunden.'),
+                    $this->name
+                );
             }
 
+            $msg['soap'] = [];
             if (!Config::get()->SOAP_ENABLE) {
-                $msg["soap"]["error"] = sprintf(_("Das Stud.IP-Modul für die SOAP-Schnittstelle ist nicht aktiviert. Ändern Sie den entsprechenden Eintrag in der Konfigurationsdatei \"local.inc\"."));
-            }
-            elseif (! is_array($this->soap_data)) {
-                $msg["soap"]["error"] = sprintf(_("Die SOAP-Verbindungsdaten sind für dieses System nicht gesetzt. Ergänzen Sie die Einstellungen für dieses Systems um den Eintrag \"soap_data\" in der Konfigurationsdatei \"local.inc\"."));
-            }
-            else
-            {
+                $msg['soap']['error'] = _('Das Stud.IP-Modul für die SOAP-Schnittstelle ist nicht aktiviert. Ändern Sie den entsprechenden Eintrag in der Konfigurationsdatei "local.inc".');
+            } elseif (!is_array($this->soap_data)) {
+                $msg['soap']['error'] = _('Die SOAP-Verbindungsdaten sind für dieses System nicht gesetzt. Ergänzen Sie die Einstellungen für dieses Systems um den Eintrag "soap_data" in der Konfigurationsdatei "local.inc".');
+            } else {
                 $this->soap_client = new StudipSoapClient($this->ABSOLUTE_PATH_SOAP);
-                $msg["soap"]["info"] = sprintf(_("Das SOAP-Modul ist aktiv."));
+                $msg['soap']['info'] = _('Das SOAP-Modul ist aktiv.');
             }
         } else {
-            $file = fopen($this->ABSOLUTE_PATH_ELEARNINGMODULES."", "r");
-            if ($file == false)
-            {
-                $msg["path"]["error"] = sprintf(_("Die Verbindung zum System \"%s\" konnte nicht hergestellt werden. Der Pfad \"$this->ABSOLUTE_PATH_ELEARNINGMODULES\" ist ungültig."), $this->name);
-            }
-            else
-            {
+            $file = fopen($this->ABSOLUTE_PATH_ELEARNINGMODULES, 'r');
+            if ($file === false) {
+                $msg['path']['error'] = sprintf(
+                    _('Die Verbindung zum System "%s" konnte nicht hergestellt werden. Der Pfad "%s" ist ungültig.'),
+                    $this->name,
+                    $this->ABSOLUTE_PATH_ELEARNINGMODULES
+                );
+            } else {
                 fclose($file);
-                $msg["path"]["info"] = sprintf(_("Die %s-Installation wurde gefunden."), $this->name);
+                $msg['path']['info'] = sprintf(
+                    _("Die %s-Installation wurde gefunden."),
+                    $this->name
+                );
 
                 // check if target-file exists
-                $file = fopen($this->ABSOLUTE_PATH_ELEARNINGMODULES.$this->target_file, "r");
-                if ($file == false)
-                {
-                    $msg["auth"]["error"] = sprintf(_("Die Zieldatei \"%s\" liegt nicht im Hauptverzeichnis der %s-Installation."), $this->target_file, $this->name);
-                }
-                else
-                {
+                $msg['auth'] = [];
+
+                $file = fopen($this->ABSOLUTE_PATH_ELEARNINGMODULES . $this->target_file, 'r');
+                if ($file === false) {
+                    $msg['auth']['error'] = sprintf(
+                        _('Die Zieldatei "%s" liegt nicht im Hauptverzeichnis der %s-Installation.'),
+                        $this->target_file,
+                        $this->name
+                    );
+                } else {
                     fclose($file);
-                    $msg["auth"]["info"] = sprintf(_("Die Zieldatei ist vorhanden."));
+                    $msg['auth']['info'] = _('Die Zieldatei ist vorhanden.');
                 }
             }
         }
 
         $el_path = $GLOBALS['STUDIP_BASE_PATH'] . '/lib/elearning';
         // check if needed classes exist
-        if (!file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedUser.class.php") && ($this->auth_necessary)) {
-            $msg["class_user"]["error"] .= sprintf(_("Die Datei \"%s\" existiert nicht."), $el_path."/" . $this->CLASS_PREFIX . "ConnectedUser.class.php");
+        $files = [
+            'class_link'    => "{$el_path}/{$this->CLASS_PREFIX}ConnectedLink.class.php",
+            'class_content' => "{$el_path}/{$this->CLASS_PREFIX}ContentModule.class.php",
+            'class_cms'     => "{$el_path}/{$this->CLASS_PREFIX}ConnectedCMS.class.php",
+        ];
+
+        if ($this->auth_necessary) {
+            $files['class_user'] = "{$el_path}/{$this->CLASS_PREFIX}ConnectedUser.class.php";
+            $files['class_perm'] = "{$el_path}/{$this->CLASS_PREFIX}ConnectedPermissions.class.php";
         }
-        if (!file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedPermissions.class.php") && ($this->auth_necessary)) {
-            $msg["class_perm"]["error"] .= sprintf(_("Die Datei \"%s\" existiert nicht."), $el_path."/" . $this->CLASS_PREFIX . "ConnectedPermissions.class.php");
+
+        $errors = 0;
+        foreach ($files as $index => $file) {
+            if (!file_exists($file)) {
+                $msg[$index] = [
+                    'error' => sprintf(_('Die Datei "%s" existiert nicht.'), $file),
+                ];
+                $errors += 1;
+            }
         }
-        if (!file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedLink.class.php")) {
-            $msg["class_link"]["error"] .= sprintf(_("Die Datei \"%s\" existiert nicht."), $el_path."/" . $this->CLASS_PREFIX . "ConnectedLink.class.php");
-        }
-        if (!file_exists($el_path."/" . $this->CLASS_PREFIX . "ContentModule.class.php")) {
-            $msg["class_content"]["error"] .= sprintf(_("Die Datei \"%s\" existiert nicht."), $el_path."/" . $this->CLASS_PREFIX . "ContentModule.class.php");
-        }
-        if (!file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedCMS.class.php")) {
-            $msg["class_cms"]["error"] .= sprintf(_("Die Datei \"%s\" existiert nicht."), $el_path."/" . $this->CLASS_PREFIX . "ConnectedCMS.class.php");
-        }
-        if (file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedCMS.class.php") &&
-            (file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedUser.class.php") || (!$this->auth_necessary)) &&
-            (file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedPermissions.class.php") || (!$this->auth_necessary)) &&
-            file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedLink.class.php") &&
-            file_exists($el_path."/" . $this->CLASS_PREFIX . "ContentModule.class.php"))
-        {
-            require_once ($el_path."/" . $this->CLASS_PREFIX . "ConnectedCMS.class.php");
-            $msg["classes"]["info"] .= sprintf(_("Die Klassen der Schnittstelle zum System \"%s\" wurden geladen."), $this->name);
-        }
-        else
-        {
-            $msg["classes"]["error"] .= sprintf(_("Die Klassen der Schnittstelle zum System \"%s\" wurden nicht geladen."), $this->name);
+
+        $msg['classes'] = [];
+        if ($errors === 0) {
+            require_once $files['class_cms'];
+            $msg['classes']['info'] = sprintf(
+                _('Die Klassen der Schnittstelle zum System "%s" wurden geladen.'),
+                $this->name
+            );
+        } else {
+            $msg['classes']['error'] = sprintf(
+                _('Die Klassen der Schnittstelle zum System "%s" wurden nicht geladen.'),
+                $this->name
+            );
         }
 
         return $msg;
