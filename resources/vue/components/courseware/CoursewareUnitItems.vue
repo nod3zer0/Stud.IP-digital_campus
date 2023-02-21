@@ -1,5 +1,6 @@
 <template>
     <div class="cw-unit-items">
+        <h2 v-if="!inCourseContext && hasUnits">{{ $gettext('Persönliche Lernmaterialien') }}</h2>
         <ul v-if="hasUnits" class="cw-tiles">
             <courseware-unit-item v-for="unit in units" :key="unit.id" :unit="unit"/>
         </ul>

@@ -50,6 +50,7 @@ const mountApp = async (STUDIP, createApp, element) => {
                     'courseware-user-data-fields',
                     'courseware-user-progresses',
                     'courseware-structural-elements',
+                    'courseware-structural-elements-shared',
                     'files',
                     'file-refs',
                     'folders',
@@ -79,6 +80,7 @@ const mountApp = async (STUDIP, createApp, element) => {
         await store.dispatch('loadCourseUnits', entry_id);
     } else {
         await store.dispatch('loadUserUnits', entry_id);
+        await store.dispatch('courseware-structural-elements-shared/loadAll', { options: { include: 'owner' } });
     }
 
     const app = createApp({

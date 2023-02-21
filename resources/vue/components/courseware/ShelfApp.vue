@@ -2,6 +2,7 @@
     <div>
         <div class="cw-shelf">
             <courseware-unit-items />
+            <courseware-shared-items v-if="!inCourseContext" />
         </div>
         <courseware-shelf-dialog-add v-if="showUnitAddDialog" />
         <courseware-shelf-dialog-copy v-if="showUnitCopyDialog" />
@@ -23,6 +24,7 @@ import CoursewareShelfDialogAdd from './CoursewareShelfDialogAdd.vue';
 import CoursewareShelfDialogCopy from './CoursewareShelfDialogCopy.vue';
 import CoursewareShelfDialogImport from './CoursewareShelfDialogImport.vue';
 import CoursewareUnitItems from './CoursewareUnitItems.vue';
+import CoursewareSharedItems from './CoursewareSharedItems.vue';
 import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
 
 import { mapActions, mapGetters } from 'vuex';
@@ -35,6 +37,7 @@ export default {
         CoursewareShelfDialogCopy,
         CoursewareShelfDialogImport,
         CoursewareUnitItems,
+        CoursewareSharedItems,
         CoursewareCompanionOverlay,
     },
     computed: {
