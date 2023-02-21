@@ -8,10 +8,10 @@
         <th class="actions">
         <?= ActionMenu::get()
             ->setContext($th_title)
-            ->condition($mail_status)
+            ->condition($mail_status ?? false)
             ->addLink(
                 $controller->url_for('messages/write?filter=inst_status', [
-                    'who'             => $key,
+                    'who'             => $key ?? '',
                     'default_subject' => Context::get()->Name,
                     'inst_id'         => Context::getId(),
                 ]),
@@ -19,10 +19,10 @@
                 Icon::create('mail', 'clickable'),
                 ['data-dialog' => '']
             )
-            ->condition($mail_gruppe)
+            ->condition($mail_gruppe ?? false)
             ->addLink(
                 $controller->url_for('messages/write', [
-                    'group_id'        => $group->id,
+                    'group_id'        => $group->id ?? null,
                     'default_subject' => Context::get()->Name,
                 ]),
                 sprintf(_('Nachricht an alle Mitglieder der Gruppe %s verschicken'), $th_title),

@@ -19,8 +19,8 @@
             <td class="toggle-indicator">
                 <a class="mvv-load-in-new-row"
                    href="<?= $controller->action_link('details_studiengang/' . $studiengang->id) ?>">
-                    <? $ampel_icon = $GLOBALS['MVV_STUDIENGANG']['STATUS']['values'][$studiengang->stat]['icon'] ?>
-                    <? $ampelstatus = $GLOBALS['MVV_STUDIENGANG']['STATUS']['values'][$studiengang->stat]['name'] ?>
+                    <? $ampel_icon = $GLOBALS['MVV_STUDIENGANG']['STATUS']['values'][$studiengang->stat]['icon'] ?? null; ?>
+                    <? $ampelstatus = $GLOBALS['MVV_STUDIENGANG']['STATUS']['values'][$studiengang->stat]['name'] ?? null; ?>
                     <? if ($ampel_icon) : ?>
                         <?= $ampel_icon->asImg(['title' => $ampelstatus, 'style' => 'vertical-align: text-top;']) ?>
                     <? endif; ?>

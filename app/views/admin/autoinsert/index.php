@@ -101,7 +101,6 @@
                     </a>
                 </td>
             </tr>
-            <? $i++ ?>
         <? endforeach; ?>
         </tbody>
     </table>
