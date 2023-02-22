@@ -14,7 +14,7 @@ switch($user->geschlecht) {
 }
 echo $p;
 printf(
-    _("Hiermit wird bescheinigt, dass %s am %s erfolgreich am Seminar %s teilgenommen hat."),
+    _("Hiermit wird bescheinigt, dass %1$s am %2$s erfolgreich am Seminar %3$s teilgenommen hat."),
     $span_bold . $anrede . ' ' . $user->getFullname() . $span_close,
     $span_bold . date('d.m.Y', time()) . $span_close,
     $span_bold . $course->name . $span_close

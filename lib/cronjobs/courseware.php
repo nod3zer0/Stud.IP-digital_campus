@@ -223,6 +223,8 @@ class CoursewareCronjob extends CronJob
         $user = User::find($user_id);
         $course = Course::find($unit->range_id);
 
+        setTempLanguage('', $user->preferred_language);
+
         $template = $GLOBALS['template_factory']->open('courseware/mails/certificate');
         $html = $template->render(
             compact('user', 'course')
@@ -253,6 +255,8 @@ class CoursewareCronjob extends CronJob
             ->send();
 
         @unlink($filename);
+
+        restoreLanguage();
 
         // Add database entry for the certificate.
         if ($sent) {
