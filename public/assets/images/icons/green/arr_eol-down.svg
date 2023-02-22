@@ -1,1 +1,1 @@
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54"><defs><style>.a{fill:#00962d;}</style></defs><polygon class="a" points="47.98 10.98 37.36 10.98 26.98 21.36 16.61 10.98 5.99 10.98 26.98 31.98 47.98 10.98"/><rect class="a" x="24.51" y="19.48" width="5" height="42" transform="translate(67.5 13.47) rotate(90)"/></svg>
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54"><path fill="#00962d" d="M47.98 10.98H37.36L26.98 21.36 16.61 10.98H5.99l20.99 21 21-21zm.04 27v5h-42v-5z"/></svg>

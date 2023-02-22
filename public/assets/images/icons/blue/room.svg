@@ -1,1 +1,1 @@
-<svg width="16" height="16" id="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54" fill="#28497c"><g id="room"><polygon points="51 37.2 44.14 37.2 44.14 43.94 9.86 43.94 9.86 9.65 44.14 9.77 44.14 16.62 51 16.62 51 2.79 3 2.79 3 50.79 51 50.79 51 37.2"/></g></svg>
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54" fill="#28497c"><path d="M51 37.2h-6.86v6.74H9.86V9.65l34.28.12v6.85H51V2.79H3v48h48V37.2z"/></svg>

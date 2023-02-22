@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?><svg id="b" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55.98 55.98"><defs><style>.e{fill:#28497c;}</style></defs><g id="c"><g id="d"><g><polygon class="e" points="31.99 0 31.99 4 51.98 4 51.98 23.99 55.98 23.99 55.98 0 31.99 0"/><polygon class="e" points="4 31.99 0 31.99 0 55.98 23.99 55.98 23.99 51.98 4 51.98 4 31.99"/></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55.98 55.98"><path d="M31.99 0v4h19.99v19.99h4V0H31.99zM4 31.99H0v23.99h23.99v-4H4V31.99z" fill="#28497c"/></svg>
