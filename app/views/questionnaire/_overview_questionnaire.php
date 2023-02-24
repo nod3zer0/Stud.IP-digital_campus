@@ -101,6 +101,12 @@
             );
         } else {
             $menu->addLink(
+                $controller->url_for('questionnaire/edit/'  .$questionnaire->id),
+                _('Fragebogen bearbeiten'),
+                Icon::create('edit'),
+                ['data-dialog' => 'size=big']
+            );
+            $menu->addLink(
                 $controller->url_for('questionnaire/start/'  .$questionnaire->id, in_array($range_type, ['course', 'institute']) ? ['redirect' => 'questionnaire/courseoverview'] : []),
                 _('Fragebogen starten'),
                 Icon::create('play', 'clickable')
