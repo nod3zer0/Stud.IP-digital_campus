@@ -103,9 +103,9 @@ class StudipNews extends SimpleORMap implements PrivacyObject
                   INNER JOIN news USING (news_id)
                   WHERE range_id = ? {$clause} ";
         if (Config::get()->SORT_NEWS_BY_CHDATE) {
-            $query .= "ORDER BY prio DESC, chdate DESC, date DESC, topic ASC";
+            $query .= "ORDER BY IF(prio = 0, 6, prio) DESC, chdate DESC, date DESC, topic ASC";
         } else {
-            $query .= "ORDER BY prio DESC, date DESC, chdate DESC, topic ASC";
+            $query .= "ORDER BY IF(prio = 0, 6, prio) DESC, date DESC, chdate DESC, topic ASC";
         }
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$range_id]);
@@ -152,9 +152,9 @@ class StudipNews extends SimpleORMap implements PrivacyObject
                   FROM news
                   WHERE user_id = ? ";
         if (Config::get()->SORT_NEWS_BY_CHDATE) {
-            $query .= "ORDER BY prio DESC, chdate DESC, date DESC";
+            $query .= "ORDER BY IF(prio = 0, 6, prio) DESC, chdate DESC, date DESC";
         } else {
-            $query .= "ORDER BY prio DESC, date DESC, chdate DESC";
+            $query .= "ORDER BY IF(prio = 0, 6, prio) prio DESC, date DESC, chdate DESC";
         }
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$user_id]);
