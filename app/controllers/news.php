@@ -154,7 +154,7 @@ class NewsController extends StudipController
             URLHelper::addLinkParam('nshow_all', 1);
         }
         $this->news           = StudipNews::GetNewsByRange($range_id, !$this->show_all_news, true);
-        $this->count_all_news = $this->show_all_news ? count($this->news) : count(StudipNews::GetNewsByRange($range_id, false));
+        $this->count_all_news = $this->show_all_news ? count($this->news) : count(StudipNews::GetNewsByRange($range_id));
         $this->rss_id         = Config::get()->NEWS_RSS_EXPORT_ENABLE ? StudipNews::GetRssIdFromRangeId($range_id) : false;
         $this->range          = $range_id;
         $this->nobody         = !$GLOBALS['user']->id || $GLOBALS['user']->id === 'nobody';
@@ -223,7 +223,7 @@ class NewsController extends StudipController
         }
 
         if ($id === 'new') {
-            unset($id);
+            $id = null;
             PageLayout::setTitle(_('Ankündigung erstellen'));
         } else
             PageLayout::setTitle(_('Ankündigung bearbeiten'));
@@ -275,7 +275,7 @@ class NewsController extends StudipController
                 return;
             }
             $ranges = $news_template->news_ranges->toArray();
-
+            $changed_areas = 0;
             // remove those ranges for which user doesn't have permission
             foreach ($ranges as $key => $news_range)
                 if (!$news->haveRangePermission('edit', $news_range['range_id'])) {
@@ -457,17 +457,19 @@ class NewsController extends StudipController
                 $remove_ranges[$news_id][] = $range_id;
             }
             $this->flash['question_text'] = remove_news($remove_ranges);
-            $this->flash['question_param'] = ['mark_news' => Request::optionArray('mark_news'),
-                                                   'remove_marked_news' => 1];
+            $this->flash['question_param'] = [
+                'mark_news' => Request::optionArray('mark_news'),
+                'remove_marked_news' => 1
+            ];
         }
         // apply filter
         if (Request::submitted('apply_news_filter')) {
             $this->news_isvisible['basic'] = !$this->news_isvisible['basic'];
             if (Request::get('news_searchterm') && mb_strlen(trim(Request::get('news_searchterm'))) < 3) {
                 PageLayout::postError(_('Der Suchbegriff muss mindestens 3 Zeichen lang sein.'));
-            } elseif ((Request::get('news_startdate') && !$this->getTimeStamp(Request::get('news_startdate'), 'start')) || (Request::get('news_enddate') && !$this->getTimeStamp(Request::get('news_enddate'), 'end'))) {
+            } elseif ((Request::get('news_startdate') && !$this->getTimeStamp(Request::get('news_startdate'))) || (Request::get('news_enddate') && !$this->getTimeStamp(Request::get('news_enddate'), 'end'))) {
                 PageLayout::postError(_('Ungültige Datumsangabe. Bitte geben Sie ein Datum im Format TT.MM.JJJJ ein.'));
-            } elseif (Request::get('news_startdate') && Request::get('news_enddate') && ($this->getTimeStamp(Request::get('news_startdate'), 'start') > $this->getTimeStamp(Request::get('news_enddate'), 'end'))) {
+            } elseif (Request::get('news_startdate') && Request::get('news_enddate') && ($this->getTimeStamp(Request::get('news_startdate')) > $this->getTimeStamp(Request::get('news_enddate'), 'end'))) {
                 PageLayout::postError(_('Das Startdatum muss vor dem Enddatum liegen.'));
             }
 
@@ -475,7 +477,7 @@ class NewsController extends StudipController
                 $this->news_searchterm = Request::get('news_searchterm');
             }
 
-            $this->news_startdate = $this->getTimeStamp(Request::get('news_startdate'), 'start');
+            $this->news_startdate = $this->getTimeStamp(Request::get('news_startdate'));
             $this->news_enddate   = $this->getTimeStamp(Request::get('news_enddate'), 'end') ?: time();
         }
         // fetch news list
@@ -528,8 +530,10 @@ class NewsController extends StudipController
                     // has trash icon been clicked?
                     if (Request::submitted('news_remove_' . $news['object']->news_id . '_' . $news['range_id']) && Request::isPost()) {
                         $this->flash['question_text'] = remove_news([$news['object']->news_id => $news['range_id']]);
-                        $this->flash['question_param'] = ['mark_news' => [$news['object']->news_id.'_'.$news['range_id']],
-                                                               'remove_marked_news' => 1];
+                        $this->flash['question_param'] = [
+                            'mark_news' => [$news['object']->news_id.'_'.$news['range_id']],
+                            'remove_marked_news' => 1
+                        ];
                     }
                     // check if result set too big
                     $counter++;
@@ -645,7 +649,7 @@ class NewsController extends StudipController
             $statement->bindValue(':semester_id', $current_semester->semester_id);
             $statement->execute();
             $seminars = $statement->fetchAll(PDO::FETCH_ASSOC);
-            foreach($seminars as $key => $sem) {
+            foreach($seminars as $sem) {
                 $tmp_result[$sem['Seminar_id']] = [
                     'name' => $sem['sem_name'],
                     'type' => 'sem',
@@ -676,7 +680,7 @@ class NewsController extends StudipController
             $statement->bindValue(':semester_id', $next_semester->semester_id);
             $statement->execute();
             $seminars = $statement->fetchAll(PDO::FETCH_ASSOC);
-            foreach($seminars as $key => $sem) {
+            foreach($seminars as $sem) {
                 $tmp_result[$sem['Seminar_id']] = [
                     'name' => $sem['sem_name'],
                     'type' => 'sem',
