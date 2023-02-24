@@ -513,14 +513,29 @@ class Course_StatusgroupsController extends AuthenticatedController
             }
         }
         $position = Statusgruppen::find($group_id)->position;
+        $selfassign = Request::int('selfassign', 0);
+        // Exclusive entry makes sense only when selfassign is set in general.
+        if ($selfassign !== 0) {
+            $selfassign += Request::int('exclusive', 0);
+        // Selfassign is not set but exclusive selfassign or some timeframe -> show warning message
+        } else if (Request::int('exclusive', 0) !== 0
+                || Request::get('selfassign_start', null) !== null
+                || Request::get('selfassign_end', null) !== null) {
+            PageLayout::postWarning(_('Einstellungen zum Eintrag in eine Gruppe oder zum Eintragszeitraum können ' .
+                'nur gespeichert werden, wenn der Selbsteintrag aktiviert ist.'));
+        }
         $group = Statusgruppen::createOrUpdate(
             $group_id,
             Request::get('name'),
             $position,
             $this->course_id, Request::int('size', 0),
-            Request::int('selfassign', 0) + Request::int('exclusive', 0),
-            strtotime(Request::get('selfassign_start', 'now')),
-            Request::get('selfassign_end') ? strtotime(Request::get('selfassign_end')) : 0,
+            $selfassign,
+            Request::int('selfassign', 0) !== 0
+                ? strtotime(Request::get('selfassign_start', 'now'))
+                : 0,
+            Request::int('selfassign', 0) && Request::get('selfassign_end')
+                ? strtotime(Request::get('selfassign_end'))
+                : 0,
             Request::int('makefolder', 0),
             Request::getArray('dates')
         );
