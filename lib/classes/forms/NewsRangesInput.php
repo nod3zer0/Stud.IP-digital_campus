@@ -167,6 +167,8 @@ class NewsRangesInput extends Input
             return [];
         }
 
+        $name_format = \Config::get()->IMPORANT_SEMNUMBER ? 'number-name-semester' : 'name-semester';
+
         $options = [];
         foreach (\Course::findByUser(\User::findCurrent()->id) as $course) {
             if (!\StudipNews::haveRangePermission('edit', $course->id)) {
@@ -175,7 +177,7 @@ class NewsRangesInput extends Input
 
             $options[] = [
                 'value' => $course->id . '__seminar',
-                'name'  => (string) $course->name,
+                'name'  => $course->getFullname($name_format),
             ];
         }
 

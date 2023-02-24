@@ -545,12 +545,17 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
      */
     public function getFullname($format = 'default')
     {
-        $template['type-name'] = '%2$s: %1$s';
-        $template['number-type-name'] = '%3$s %2$s: %1$s';
-        $template['type-number-name'] = '%2$s: %3$s %1$s';
-        $template['number-name'] = '%3$s %1$s';
-        $template['number-name-semester'] = '%3$s %1$s (%4$s)';
-        $template['sem-duration-name'] = '%4$s';
+        $template = [
+            'name'                 => '%1$s',
+            'name-semester'        => '%1$s (%4$s)',
+            'number-name'          => '%3$s %1$s',
+            'number-name-semester' => '%3$s %1$s (%4$s)',
+            'number-type-name'     => '%3$s %2$s: %1$s',
+            'sem-duration-name'    => '%4$s',
+            'type-name'            => '%2$s: %1$s',
+            'type-number-name'     => '%2$s: %3$s %1$s',
+        ];
+
         if ($format === 'default' || !isset($template[$format])) {
            $format = Config::get()->IMPORTANT_SEMNUMBER ? 'type-number-name' : 'type-name';
         }
@@ -957,11 +962,14 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
             $sql = 'SELECT range_id FROM `deputies` WHERE `deputies`.`user_id` = :user_id';
             $seminar_ids = array_merge($seminar_ids, $db->fetchFirst($sql, $sql_params));
         }
+
+        $name_sort = Config::get()->IMPORTANT_SEMNUMBER ? 'VeranstaltungsNummer, Name' : 'Name';
+
         return Course::findBySQL(
             "LEFT JOIN semester_courses ON (semester_courses.course_id = seminare.Seminar_id)
              WHERE Seminar_id IN (?)
              GROUP BY seminare.Seminar_id
-             ORDER BY IF(semester_courses.semester_id IS NULL, 1, 0) DESC, start_time DESC, Name ASC",
+             ORDER BY semester_courses.semester_id IS NULL DESC, start_time DESC, {$name_sort}",
             [$seminar_ids]
         );
     }
