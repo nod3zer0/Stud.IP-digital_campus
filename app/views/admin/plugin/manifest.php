@@ -22,7 +22,7 @@
 
     <dt><?= _('Beschreibung') ?></dt>
     <dd>
-    <? if ($manifest['description']): ?>
+    <? if (!empty($manifest['description'])): ?>
         <?= htmlReady($manifest['description']) ?>
     <? else: ?>
         (<?= _('keine Beschreibung vorhanden') ?>)
