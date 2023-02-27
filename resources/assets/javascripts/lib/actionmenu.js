@@ -122,6 +122,13 @@ class ActionMenu {
 
         // Reposition the menu?
         if (position) {
+            const form = this.element.closest('form');
+            if (form) {
+                const id = form.uniqueId().attr('id');
+                $('.action-menu-item input[type="image"]:not([form])', this.element).attr('form', id);
+                $('.action-menu-item button:not([form])', this.element).attr('form', id);
+            }
+
             let parents = getScrollableParents(this.element, menu_width, menu_height);
             if (parents.length > 0) {
                 this.menu = $('<div class="action-menu-wrapper">').append(this.content.remove());
