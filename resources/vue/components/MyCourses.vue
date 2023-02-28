@@ -72,3 +72,14 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.course-hidden-info {
+    white-space: nowrap;
+
+    img,
+    svg {
+        vertical-align: text-bottom;
+    }
+}
+</style>

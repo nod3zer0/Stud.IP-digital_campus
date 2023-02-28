@@ -30,12 +30,13 @@
                                         {{ getCourseName(course, getConfig('sem_number')) }}
                                         <span v-if="course.is_deputy">{{ $gettext('[Vertretung]') }}</span>
 
-                                        <span v-if="course.is_hidden">
-                                            {{ $gettext('[versteckt]') }}
-                                            <studip-tooltip-icon :text="getHiddenTooltip(course)"></studip-tooltip-icon>
-                                        </span>
                                     </span>
                                 </a>
+
+                                <span v-if="course.is_hidden" class="course-hidden-info">
+                                    {{ $gettext('[versteckt]') }}
+                                    <studip-tooltip-icon :text="getHiddenTooltip(course)"></studip-tooltip-icon>
+                                </span>
                             </header>
                             <footer class="tiles-grid-element-footer">
                                 <my-courses-navigation :navigation="getNavigationForCourse(course)" :icon-size="iconSize"></my-courses-navigation>
@@ -188,15 +189,15 @@ $tile-padding: 10px;
 
     .tiles-grid-element-header {
         flex: 0 $header-size;
-    }
-
-    .tiled-grid-element-header-title {
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         max-height: $header-size;
         overflow: hidden;
     }
+
+    //.tiled-grid-element-header-title {
+    //}
 
     .tiles-grid-element-header-image {
         float: left;

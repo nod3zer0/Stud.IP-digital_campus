@@ -48,12 +48,11 @@
                         <a :href="urlFor('seminar_main.php', {auswahl: course.id})">
                             {{ getCourseName(course, getConfig('sem_number') && responsiveDisplay) }}
                             <span v-if="course.is_deputy">{{ $gettext('[Vertretung]') }}</span>
-
-                            <span v-if="course.is_hidden">
-                                {{ $gettext('[versteckt]') }}
-                                <studip-tooltip-icon :text="getHiddenTooltip(course)"></studip-tooltip-icon>
-                            </span>
                         </a>
+                        <span v-if="course.is_hidden" class="course-hidden-info">
+                            {{ $gettext('[versteckt]') }}
+                            <studip-tooltip-icon :text="getHiddenTooltip(course)"></studip-tooltip-icon>
+                        </span>
                         <div v-if="responsiveDisplay" class="mycourse_elements">
                             <div class="special_nav">
                                 <studip-action-menu :items="getActionMenuForCourse(course)"
