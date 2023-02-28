@@ -61,7 +61,7 @@ foreach ($topFolder->getAdditionalActionButtons() as $button) {
     ></files-table>
 </form>
 <?
-if ($show_default_sidebar) {
+if (!empty($show_default_sidebar)) {
     if (!empty($enable_table_filter)) {
         $widget = new SidebarWidget();
         $widget->setId('table-view-filter');
@@ -73,14 +73,14 @@ if ($show_default_sidebar) {
     $views = new ViewsWidget();
     $views->addLink(
         _('Ordneransicht'),
-        $controller->url_for(($range_type ? $range_type . '/' : '') . 'files/index'),
+        $controller->url_for((isset($range_type) ? $range_type . '/' : '') . 'files/index'),
         null,
         [],
         'index'
     );
     $views->addLink(
         _('Alle Dateien'),
-        $controller->url_for(($range_type ? $range_type.'/' : '') . 'files/flat'),
+        $controller->url_for((isset($range_type) ? $range_type . '/' : '') . 'files/flat'),
         null,
         [],
         'flat'
