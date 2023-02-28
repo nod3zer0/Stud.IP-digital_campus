@@ -682,8 +682,17 @@ Dialog.initialize = function() {
     // Actual dialog handler
     function dialogHandler(event) {
         if (!event.isDefaultPrevented() && checkValidity(event.target)) {
-            var target = $(event.target).closest('[data-dialog]');
-            var options = target.data().dialog;
+            let target = $(event.target).closest('[data-dialog]');
+            let options = target.data().dialog;
+
+            if (
+                target.is('form')
+                && event.originalEvent.submitter
+                && $(event.originalEvent.submitter).attr('formaction')
+            ) {
+                target.data('formaction', $(event.originalEvent.submitter).attr('formaction'));
+            }
+
             if (Dialog.fromElement(target, parseOptions(options))) {
                 event.preventDefault();
             }
