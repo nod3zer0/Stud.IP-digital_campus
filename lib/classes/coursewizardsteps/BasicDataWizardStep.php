@@ -193,24 +193,28 @@ class BasicDataWizardStep implements CourseWizardStep
             && $GLOBALS['perm']->have_perm('dozent')
             && !$GLOBALS['perm']->have_perm('admin')
         ) {
-            $values['lecturers'][$GLOBALS['user']->id] = true;
+            $values['lecturers'] = [$GLOBALS['user']->id => true];
             // Remove from deputies if set.
-            if ($deputies && $values['deputies'][$GLOBALS['user']->id]) {
+            if ($deputies && isset($values['deputies'][$GLOBALS['user']->id])) {
                 unset($values['deputies'][$GLOBALS['user']->id]);
             }
             // Add your own default deputies if applicable.
             if ($deputies && Config::get()->DEPUTIES_DEFAULTENTRY_ENABLE) {
-                $values['deputies'] = array_merge($values['deputies'] ?: [],
-                    array_flip(Deputy::findDeputies($GLOBALS['user']->id)->pluck('user_id')));
+                $values['deputies'] = array_merge(
+                    $values['deputies'] ?? [],
+                    array_flip(Deputy::findDeputies($GLOBALS['user']->id)->pluck('user_id'))
+                );
             }
         }
         // Add lecturer from my courses filter.
-        if ($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER && !$values['lecturers'] && Request::isXhr()) {
-            $values['lecturers'][$GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER] = true;
+        if ($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER && empty($values['lecturers']) && Request::isXhr()) {
+            $values['lecturers'] = [$GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER => true];
             // Add this lecturer's default deputies if applicable.
             if ($deputies && Config::get()->DEPUTIES_DEFAULTENTRY_ENABLE) {
-                $values['deputies'] = array_merge($values['deputies'] ?: [],
-                    array_flip(Deputy::findDeputies($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER)->pluck('user_id')));
+                $values['deputies'] = array_merge(
+                    $values['deputies'] ?? [],
+                    array_flip(Deputy::findDeputies($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER)->pluck('user_id'))
+                );
             }
         }
         if (empty($values['lecturers'])) {

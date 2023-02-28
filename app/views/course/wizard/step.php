@@ -1,5 +1,15 @@
+<?php
+/**
+ * @var Course_WizardController $controller
+ * @var string $content
+ * @var string $temp_id
+ * @var int $stepnumber
+ * @var bool $first_step
+ * @var bool|null $dialog
+ */
+?>
 <? if ($content) : ?>
-    <form class="default course-wizard-step-<?= $stepnumber ?>" action="<?= $controller->url_for('course/wizard/process', $stepnumber, $temp_id) ?>" method="post" data-secure>
+    <form class="default course-wizard-step-<?= $stepnumber ?>" action="<?= $controller->link_for('course/wizard/process', $stepnumber, $temp_id) ?>" method="post" data-secure>
         <fieldset>
         <?= $content ?>
         </fieldset>
@@ -10,13 +20,13 @@
             <?= Studip\Button::create(
                 _('Zurück'),
                 'back',
-                $dialog ? ['data-dialog' => 'size=50%'] : []
+                !empty($dialog) ? ['data-dialog' => 'size=50%'] : []
             ) ?>
         <? endif; ?>
             <?= Studip\Button::create(
                 _('Weiter'),
                 'next',
-                $dialog ? ['data-dialog' => 'size=50%'] : []
+                !empty($dialog) ? ['data-dialog' => 'size=50%'] : []
             ) ?>
         </footer>
     </form>
