@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Course_FeedbackController $controller
+ * @var FeedbackElement[] $feedback_elements
+ */
+?>
 <? if (empty($feedback_elements)): ?>
     <?= MessageBox::info(_('Es wurden noch keine Feedback-Elemente angelegt.')) ?>
 <? else: ?>
@@ -51,7 +57,7 @@
             <tr>
                 <td data-sort-value="<?= crc32($feedback->range_type) ?>" class="responsive-hidden">
                     <a href="<?= $controller->link_for($range->getRangeUrl()) ?>"
-                        title="<?= $range->getRangeName() ?>">
+                        title="<?= htmlReady($range->getRangeName()) ?>">
                         <?= $range->getRangeIcon('clickable') ?>
                     </a>
                 </td>
@@ -83,9 +89,9 @@
                         <?= _('Kommentar') ?>
                     <? endif; ?>
                 </td>
-                <td data-sort-value="<?= $feedback->user->getFullName('no_title_rev') ?>" class="responsive-hidden">
-                    <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $feedback->user->username) ?>">
-                        <?= $feedback->user->getFullName('no_title_rev') ?>
+                <td data-sort-value="<?= htmlReady($feedback->user->getFullName('no_title_rev')) ?>" class="responsive-hidden">
+                    <a href="<?= URLHelper::getLink('dispatch.php/profile', ['username' => $feedback->user->username]) ?>">
+                        <?= htmlReady($feedback->user->getFullName('no_title_rev')) ?>
                     </a>
                 </td>
                 <td title="<?= strftime('%x %X', $feedback->chdate) ?>" data-sort-value="<?= $feedback->chdate ?>">
