@@ -131,7 +131,7 @@ class ActionMenu {
 
             let parents = getScrollableParents(this.element, menu_width, menu_height);
             if (parents.length > 0) {
-                this.menu = $('<div class="action-menu-wrapper">').append(this.content.remove());
+                this.menu = $('<div class="action-menu-wrapper">').append(this.content);
                 $('.action-menu-icon', element).clone().data('action-menu-element', element).prependTo(this.menu);
 
                 this.menu
