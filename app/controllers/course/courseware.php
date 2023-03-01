@@ -20,7 +20,7 @@ class Course_CoursewareController extends CoursewareController
     {
         parent::before_filter($action, $args);
 
-        PageLayout::setTitle(_('Courseware'));
+        PageLayout::setTitle(Context::get()->getFullname() . ' - ' . _('Courseware'));
         PageLayout::setHelpKeyword('Basis.Courseware');
 
         checkObject();
