@@ -270,7 +270,7 @@ class Course_AdmissionController extends AuthenticatedController
                     $question = sprintf(_("Sie beabsichtigen die Anzahl der Wartenden zu begrenzen. Die letzten %s Einträge der Warteliste werden gelöscht. Sind sie sicher?"), $this->course->getNumWaiting()-$this->course->admission_waitlist_max);
                 }
             }
-            if (Request::submitted('change_admission_turnout_yes') || !$question) {
+            if (Request::submitted('change_admission_turnout_yes') || empty($question)) {
                 if ($this->course->admission_disable_waitlist && $this->course->getNumWaiting()) {
                     $removed_applicants = $this->course->admission_applicants->findBy('status', 'awaiting');
                 }

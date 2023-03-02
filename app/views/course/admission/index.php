@@ -12,7 +12,7 @@
                     <?= $current_courseset->toString(true) ?>
                 </div>
                 <div>
-                    <? if (!$is_locked['admission_type'] || $current_courseset->isUserAllowedToEdit($user_id)) : ?>
+                    <? if (empty($is_locked['admission_type']) || $current_courseset->isUserAllowedToEdit($user_id)) : ?>
                         <? if ($current_courseset->isUserAllowedToAssignCourse($user_id, $course_id)) : ?>
                             <?= Studip\Button::create(_("Zuordnung aufheben"), 'change_course_set_unassign', ['data-dialog' => '']) ?>
                         <? endif ?>
@@ -24,10 +24,10 @@
             </div>
         <? else : ?>
             <div>
-                <? if (!$is_locked['passwort'] && isset($activated_admission_rules['PasswordAdmission'])) : ?>
+                <? if (empty($is_locked['passwort']) && isset($activated_admission_rules['PasswordAdmission'])) : ?>
                     <?= Studip\LinkButton::create(_("Anmeldung mit Passwort"), $controller->action_url('instant_course_set', ['type' => 'PasswordAdmission']), ['data-dialog' => '']) ?>
                 <? endif ?>
-                <? if (!$is_locked['admission_type']) : ?>
+                <? if (empty($is_locked['admission_type'])) : ?>
                     <? if (isset($activated_admission_rules['LockedAdmission'])) : ?>
                         <?= Studip\LinkButton::create(_("Anmeldung gesperrt"), $controller->action_url('instant_course_set', ['type' => 'LockedAdmission']), ['data-dialog' => '']) ?>
                     <? endif ?>
@@ -43,7 +43,7 @@
                     <? endif ?>
                 <? endif ?>
             </div>
-            <? if (!$is_locked['admission_type'] && count($available_coursesets)) : ?>
+            <? if (empty($is_locked['admission_type']) && count($available_coursesets) > 0) : ?>
                 <details class="studip">
                     <summary title="<?= _("Klicken um Zuordnungsmöglichkeiten zu öffnen") ?>">
                         <?= _("Zuordnung zu einem bestehenden Anmeldeset"); ?>
@@ -103,7 +103,7 @@
             <br>
             <?= _('Einstellungen für die Warteliste:') ?>
             <label for="admission_disable_waitlist">
-                <input <?= $is_locked['admission_disable_waitlist'] ?>
+                <input <?= $is_locked['admission_disable_waitlist'] ?? '' ?>
                         type="checkbox" id="admission_disable_waitlist"
                         name="admission_disable_waitlist"
                         value="1" <?= $course->admission_disable_waitlist == 0 ? "checked" : "" ?>>
@@ -113,7 +113,7 @@
                 <? endif ?>
             </label>
             <label for="admission_disable_waitlist_move">
-                <input <?= $is_locked['admission_disable_waitlist_move'] ?>
+                <input <?= $is_locked['admission_disable_waitlist_move'] ?? '' ?>
                         type="checkbox"
                         id="admission_disable_waitlist_move"
                         name="admission_disable_waitlist_move"
@@ -121,7 +121,7 @@
                 <?= _('automatisches Nachrücken aus der Warteliste aktivieren') ?></label>
             <label for="admission_waitlist_max">
                 <?= _('max. Anzahl an Wartenden (optional)') ?>
-                <input <?= $is_locked['admission_waitlist_max'] ?>
+                <input <?= $is_locked['admission_waitlist_max'] ?? ''?>
                         type="text"
                         id="admission_waitlist_max"
                         name="admission_waitlist_max"
