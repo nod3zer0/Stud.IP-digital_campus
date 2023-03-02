@@ -753,7 +753,7 @@ class MyCoursesController extends AuthenticatedController
 
                         foreach ($_inner as $course) {
                             $_courses[$course['seminar_id']] = $course;
-                            if (isset($course['children']) && is_array($couse['children'])) {
+                            if (isset($course['children']) && is_array($course['children'])) {
                                 foreach ($course['children'] as $child) {
                                     $_courses[$child['seminar_id']] = $child;
                                 }
