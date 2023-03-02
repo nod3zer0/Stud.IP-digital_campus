@@ -197,7 +197,7 @@ class Search_StudiengaengeController extends MVVController
             $this->sessSet('selected_semester', $sem);
         }
 
-        $this->with_courses = Request::option('with_courses', ($_SESSION['MVV_SEARCH_SEQUENCE_WITH_COURSES'] ?: null));
+        $this->with_courses = Request::option('with_courses', $_SESSION['MVV_SEARCH_SEQUENCE_WITH_COURSES'] ?? null);
         $_SESSION['MVV_SEARCH_SEQUENCE_WITH_COURSES'] = $this->with_courses;
 
         $studiengangTeil = StudiengangTeil::find($stgteil_id);

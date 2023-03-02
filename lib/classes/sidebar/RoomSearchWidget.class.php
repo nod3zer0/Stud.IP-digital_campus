@@ -339,8 +339,12 @@ class RoomSearchWidget extends SidebarWidget
                     $properties[$name] = $criteria['value'];
                 }
 
-                if ($properties[$name][0] && $properties[$name][1] &&
-                    ($properties[$name][0] > $properties[$name][1]) && $name != 'room_category_id') {
+                if (
+                    isset($properties[$name][0], $properties[$name][1])
+                    && $properties[$name][0] && $properties[$name][1]
+                    && $properties[$name][0] > $properties[$name][1]
+                    && $name !== 'room_category_id'
+                ) {
                     //A range is selected, but the range start is bigger
                     //then the range end. That's an error!
 

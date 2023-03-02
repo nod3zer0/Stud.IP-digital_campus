@@ -9,7 +9,7 @@
             <th class="mvv-modul-details-head" data-mvv-field="mvv_modul.code"><?= htmlReady($modul->code) ?></th>
             <th class="mvv-modul-details-head" data-mvv-field="mvv_modul.kp" style="text-align: right;"><?= sprintf("%d CP", $modul->kp) ?></th>
         </tr>
-    <? if ($show_synopse || $modul->fassung_nr): ?>
+    <? if (!empty($show_synopse) || $modul->fassung_nr): ?>
         <tr>
             <th colspan="2" style="font-weight: normal;">
                 <? if ($show_synopse) : ?>
@@ -44,7 +44,7 @@
         </tr>
         <tr>
             <td><strong><?= _('Semester der erstmaligen Durchführung') ?></strong></td>
-            <td data-mvv-field="mvv_modul.start"><?= htmlReady($startSemester['name']) ?></td>
+            <td data-mvv-field="mvv_modul.start"><?= htmlReady($startSemester['name'] ?? '') ?></td>
         </tr>
         <? if ($instituteName) : ?>
         <tr>
@@ -77,7 +77,7 @@
                     ?>
                     <li data-mvv-field="mvv_stgteilabschnitt_modul" data-mvv-id="<?= $affect_id; ?>" data-mvv-cooid="<?= $modul->getId(); ?>">
                         <?= htmlReady($path)?>
-                        <? if (!$download && (count($pathes) > 9 && $i == 4)) : ?>
+                        <? if (empty($download) && count($pathes) > 9 && $i == 4) : ?>
                         <label class="cb-more-label" for="cb_more_studycourses"><?= _('mehr...') ?></label>
                         <? endif; ?>
                     </li>

@@ -175,11 +175,8 @@ class StudipSemTreeViewSimple
 
     public function getInfoIcon($item_id)
     {
-        if ($item_id === 'root') {
-            $info = $this->root_content;
-        }
-        $ret = $info ? tooltipicon(kill_format($info)) : '';
-        return $ret;
+        $info = $item_id === 'root' ? $this->root_content : '';
+        return $info ? tooltipicon(kill_format($info)) : '';
     }
 
     public function showContent($item_id, $num_all_entries = 0)

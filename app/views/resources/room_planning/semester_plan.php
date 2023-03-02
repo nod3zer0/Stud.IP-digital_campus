@@ -85,10 +85,10 @@
         _('Semesterplan'),
         [
             'editable' => true,
-            'selectable' => ($fullcalendar_studip_urls['add'] != null),
+            'selectable' => isset($fullcalendar_studip_urls['add']),
             'studip_urls' => $fullcalendar_studip_urls,
-            'minTime' => ($min_time),
-            'maxTime' => ($max_time),
+            'minTime' => $min_time,
+            'maxTime' => $max_time,
             'allDaySlot' => false,
             'columnHeaderFormat' => ['weekday'=> 'short'],
             'header' => [

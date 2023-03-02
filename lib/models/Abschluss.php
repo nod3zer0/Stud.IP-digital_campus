@@ -13,7 +13,6 @@
  * @category    Stud.IP
  * @since       3.5
  */
-
 class Abschluss extends ModuleManagementModelTreeItem implements PrivacyObject
 {
     protected static function configure($config = [])
@@ -47,16 +46,21 @@ class Abschluss extends ModuleManagementModelTreeItem implements PrivacyObject
             'order_by' => 'GROUP BY fach_id ORDER BY name'
         ];
 
-        $config['additional_fields']['count_faecher']['get'] =
-            function($abschluss) { return $abschluss->count_faecher; };
-        $config['additional_fields']['kategorie_name']['get'] =
-            function($abschluss) { return $abschluss->kategorie_name; };
-        $config['additional_fields']['kategorie_id']['get'] =
-            function($abschluss) { return $abschluss->category_assignment->kategorie_id; };
-        $config['additional_fields']['count_studiengaenge']['get'] =
-            function($abschluss) { return $abschluss->count_studiengaenge; };
-        $config['additional_fields']['count_objects']['get'] =
-            function($abschluss) { return $abschluss->count_objects; };
+        $config['additional_fields']['count_faecher']['get'] = function (Abschluss $abschluss) {
+            return $abschluss->count_faecher;
+        };
+        $config['additional_fields']['kategorie_name']['get'] = function (Abschluss $abschluss) {
+            return $abschluss->kategorie_name;
+        };
+        $config['additional_fields']['kategorie_id']['get'] = function (Abschluss $abschluss) {
+            return $abschluss->category_assignment ? $abschluss->category_assignment->kategorie_id : null;
+        };
+        $config['additional_fields']['count_studiengaenge']['get'] = function (Abschluss $abschluss) {
+            return $abschluss->count_studiengaenge;
+        };
+        $config['additional_fields']['count_objects']['get'] = function (Abschluss $abschluss) {
+            return $abschluss->count_objects;
+        };
         $config['additional_fields']['count_user']['get'] = 'countUser';
 
         $config['i18n_fields']['name'] = true;

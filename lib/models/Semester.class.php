@@ -268,6 +268,10 @@ class Semester extends SimpleORMap
         $use_semester_id = true
     )
     {
+        $select_attributes = array_merge([
+            'name' => 'sem_select',
+        ], $select_attributes ?? []);
+
         $semester = Semester::findAllVisible();
 
         unset($semester[0]);
@@ -279,10 +283,6 @@ class Semester extends SimpleORMap
             ];
         }
         $semester = array_reverse($semester, true);
-
-        if (!$select_attributes['name']) {
-            $select_attributes['name'] = 'sem_select';
-        }
 
         $template = $GLOBALS['template_factory']->open('shared/semester-selector');
         $template->semesters = $semester;
