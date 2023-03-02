@@ -11,44 +11,44 @@
         <legend><?= _('Standardfelder') ?></legend>
         <label>
             <input name="searchActive" type="checkbox" value="1"
-                <?= ($userSelectedElements['search']) ? 'checked="checked"' : '' ?>
+                <?= (!empty($userSelectedElements['search'])) ? 'checked' : '' ?>
                 >
             <?= _('Freie Suche'); ?>
         </label>
 
         <label>
             <input name="instituteActive" type="checkbox" value="1"
-                <?= ($userSelectedElements['institute']) ? 'checked="checked"' : '' ?>
+                <?= (!empty($userSelectedElements['institute'])) ? 'checked' : '' ?>
                 >
             <?= _('Einrichtung'); ?>
         </label>
         <label>
             <input name="semesterActive" type="checkbox" value="1"
-                <?= ($userSelectedElements['semester']) ? 'checked="checked"' : '' ?>
+                <?= (!empty($userSelectedElements['semester'])) ? 'checked' : '' ?>
                 >
             <?= _('Semester'); ?>
         </label>
         <label>
             <input name="stgteilActive" type="checkbox" value="1"
-                <?= ($userSelectedElements['stgteil']) ? 'checked="checked"' : '' ?>
+                <?= (!empty($userSelectedElements['stgteil'])) ? 'checked' : '' ?>
                 >
             <?= _('Studiengangteil'); ?>
         </label>
         <label>
             <input name="courseTypeActive" type="checkbox" value="1"
-                <?= ($userSelectedElements['courseType']) ? 'checked="checked"' : '' ?>
+                <?= (!empty($userSelectedElements['courseType'])) ? 'checked' : '' ?>
                 >
             <?= _('Veranstaltungstypfilter'); ?>
         </label>
         <label>
             <input name="teacherActive" type="checkbox" value="1"
-                <?= ($userSelectedElements['teacher']) ? 'checked="checked"' : '' ?>
+                <?= (!empty($userSelectedElements['teacher'])) ? 'checked' : '' ?>
                 >
             <?= _('Lehrperson'); ?>
         </label>
         <label>
             <input name="viewFilterActive" type="checkbox" value="1"
-                <?= ($userSelectedElements['viewFilter']) ? 'checked="checked"' : '' ?>
+                <?= (!empty($userSelectedElements['viewFilter'])) ? 'checked' : '' ?>
                 >
             <?= _('Darstellungsfilter'); ?>
         </label>
@@ -59,11 +59,11 @@
         <? foreach ($datafields as $datafield): ?>
         <label>
             <input name="activeDatafields[]" type="checkbox" value="<?= htmlReady($datafield->id) ?>"
-                <? if ($userSelectedElements['datafields']) : ?>
+                <? if (!empty($userSelectedElements['datafields'])) : ?>
                 <?= in_array($datafield->id, $userSelectedElements['datafields']) ? 'checked="checked"' : '' ?>
                 <? endif ?>
                 >
-            <?= $datafield->name ?>
+            <?= htmlReady($datafield->name) ?>
         </label>
         <? endforeach ?>
     </fieldset>
