@@ -169,22 +169,22 @@ class Admin_CoursesController extends AuthenticatedController
             Now draw the configurable elements according
             to the values inside the visibleElements array.
         */
-        if ($visibleElements['search']) {
+        if (!empty($visibleElements['search'])) {
             $this->setSearchWiget();
         }
-        if ($visibleElements['institute']) {
+        if (!empty($visibleElements['institute'])) {
             $this->setInstSelector();
         }
-        if ($visibleElements['semester']) {
+        if (!empty($visibleElements['semester'])) {
             $this->setSemesterSelector();
         }
-        if ($visibleElements['stgteil']) {
+        if (!empty($visibleElements['stgteil'])) {
             $this->setStgteilSelector();
         }
-        if ($visibleElements['courseType']) {
+        if (!empty($visibleElements['courseType'])) {
             $this->setCourseTypeWidget($courseTypeFilterConfig);
         }
-        if ($visibleElements['teacher']) {
+        if (!empty($visibleElements['teacher'])) {
             $this->setTeacherWidget();
         }
 
@@ -592,7 +592,7 @@ class Admin_CoursesController extends AuthenticatedController
             $inst = explode('_', Request::option('institute'));
             $GLOBALS['user']->cfg->store('MY_INSTITUTES_DEFAULT', $inst[0]);
 
-            if ($inst[1] == 'withinst') {
+            if ($inst[1] === 'withinst') {
                 $GLOBALS['user']->cfg->store('MY_INSTITUTES_INCLUDE_CHILDREN', 1);
             } else {
                 $GLOBALS['user']->cfg->store('MY_INSTITUTES_INCLUDE_CHILDREN', 0);
@@ -648,11 +648,11 @@ class Admin_CoursesController extends AuthenticatedController
                     }
 
                     $course = Course::find($course_id);
-                    if ($value == 'none') {
+                    if ($value === 'none') {
                         $value = null;
                     }
 
-                    if ($course->lock_rule == $value) {
+                    if ($course->lock_rule === $value) {
                         continue;
                     }
 
@@ -689,7 +689,7 @@ class Admin_CoursesController extends AuthenticatedController
         $all_courses = Request::getArray('all_sem');
 
         $course_set_id = CourseSet::getGlobalLockedAdmissionSetId();
-
+        $log_msg = '';
         foreach ($all_courses as $course_id) {
             if ($GLOBALS['perm']->have_studip_perm('dozent', $course_id)) {
                 $set = CourseSet::getSetForCourse($course_id);
@@ -713,7 +713,7 @@ class Admin_CoursesController extends AuthenticatedController
                 }
 
                 if ($log_msg) {
-                    StudipLog::log('SEM_CHANGED_ACCESS', $course_id, NULL, $log_msg);
+                    StudipLog::log('SEM_CHANGED_ACCESS', $course_id, null, $log_msg);
                 }
             }
         }
@@ -880,7 +880,7 @@ class Admin_CoursesController extends AuthenticatedController
             throw new AccessDeniedException();
         }
         $course = Course::find($course_id);
-        $course->completion = ($course->completion + 1) % 3;
+        $course->completion = ((int)$course->completion + 1) % 3;
         $course->store();
 
         if (Request::isXhr()) {
@@ -1350,7 +1350,7 @@ class Admin_CoursesController extends AuthenticatedController
             //from that faculty and all its institutes.
 
             //$institut is an array, we can't use the method isFaculty() here!
-            if ($institut['fakultaets_id'] == $institut['Institut_id']) {
+            if ($institut['fakultaets_id'] === $institut['Institut_id']) {
                 $list->addElement(
                     new SelectElement(
                         $institut['Institut_id'] . '_withinst', //_withinst = with institutes
