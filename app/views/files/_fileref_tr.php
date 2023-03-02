@@ -8,7 +8,7 @@ if ($file->isDownloadable($GLOBALS['user']->id)) {
 }
 ?>
 <tr class="<? if ($file->getLastChangeDate() > $last_visitdate && ($file->getUserId() !== $GLOBALS['user']->id)) echo 'new'; ?>"
-    id="fileref_<?= htmlReady($table_id) ?>_<?= htmlReady($file->getId()) ?>"
+    <?= !empty($table_id) ? 'id="' . htmlReady("fileref_{$table_id}_{$file->getId()}") . '"' : '' ?>
     role="row"
     data-permissions="<?= implode($permissions) ?>">
     <? if ($show_bulk_checkboxes) : ?>
