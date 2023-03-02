@@ -85,9 +85,9 @@
 
 <?= $dates ?>
 
-<?= $evaluations ?>
+<?= $evaluations ?? '' ?>
 
-<?= $questionnaires ?>
+<?= $questionnaires ?? '' ?>
 
 <? if (!empty($ausgabe_inhalt)) : ?>
     <? foreach ($ausgabe_inhalt as $key => $inhalt) : ?>
