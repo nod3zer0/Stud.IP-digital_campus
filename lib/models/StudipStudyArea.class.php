@@ -127,7 +127,7 @@ class StudipStudyArea extends SimpleORMap
     public function getName()
     {
         if ($this->studip_object_id) {
-            return $this->institute->name;
+            return $this->institute ? $this->institute->name : _('Unbekannte Einrichtung');
         }
         return $this->content['name'];
     }

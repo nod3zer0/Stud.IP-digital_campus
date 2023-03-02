@@ -634,7 +634,12 @@ class MyRealmModel
      */
     public static function groupBySemTree(&$sem_courses)
     {
+        $_tmp_courses = [];
         foreach ($sem_courses as $sem_key => $collection) {
+            if (!isset($_tmp_courses[$sem_key])) {
+                $_tmp_courses[$sem_key] = [];
+            }
+
             //We have to store the sem_tree names separately
             //since we first need the sem_tree IDs as array keys.
             //This makes it more easy to get the ordering
@@ -644,10 +649,18 @@ class MyRealmModel
                 if (!empty($course['sem_tree'])) {
                     foreach ($course['sem_tree'] as $tree) {
                         $sem_tree_names[$tree['sem_tree_id']] = $tree['name'];
+
+                        if (!isset($_tmp_courses[$sem_key][(string)$tree['sem_tree_id']])) {
+                            $_tmp_courses[$sem_key][(string)$tree['sem_tree_id']] = [];
+                        }
                         $_tmp_courses[$sem_key][(string)$tree['sem_tree_id']][$course['seminar_id']] = $course;
                     }
                 } else {
-                    $_tmp_courses[$sem_key][""][$course['seminar_id']] = $course;
+                    if (!isset($_tmp_courses[$sem_key][''])) {
+                        $_tmp_courses[$sem_key][''] = [];
+                    }
+
+                    $_tmp_courses[$sem_key][''][$course['seminar_id']] = $course;
                 }
             }
             uksort($_tmp_courses[$sem_key], function ($a, $b) use ($sem_tree_names) {
@@ -655,8 +668,7 @@ class MyRealmModel
                     'StudipSemTree',
                     ['build_index' => true]
                 );
-                return (int)($the_tree->tree_data[$a]['index']
-                    - $the_tree->tree_data[$b]['index']);
+                return (int)($the_tree->tree_data[$a]['index'] ?? 0 - $the_tree->tree_data[$b]['index'] ?? 0);
             });
             //At this point the $_tmp_courses array is sorted by the ordering
             //of the sem_tree.
@@ -664,9 +676,13 @@ class MyRealmModel
             //of the $_tmp_courses array with the sem_tree names:
             foreach ($_tmp_courses[$sem_key] as $sem_tree_id => $courses) {
                 foreach ($courses as $course) {
-                    $_tmp_courses[$sem_key][(string)$sem_tree_names[$sem_tree_id]][$course['seminar_id']] = $course;
+                    $index = (string)($sem_tree_names[$sem_tree_id] ?? '');
+                    if (!isset($_tmp_courses[$sem_key][$index])) {
+                        $_tmp_courses[$sem_key][$index] = [];
+                    }
+                    $_tmp_courses[$sem_key][$index][$course['seminar_id']] = $course;
                 }
-                if ($sem_tree_names[$sem_tree_id]) {
+                if (isset($sem_tree_names[$sem_tree_id])) {
                     unset($_tmp_courses[$sem_key][$sem_tree_id]);
                 }
             }
