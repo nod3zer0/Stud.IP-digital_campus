@@ -88,8 +88,8 @@ class AutoInsert
 
     /**
      * Trägt den Benutzer in den Eingestellten veranstaltungen automatisch ein.
-     * @param type $user_id
-     * @param type $status Wenn Status nicht angegeben wird, wird der Status des Users aus user_id genommen
+     * @param string $user_id
+     * @param bool $status Wenn Status nicht angegeben wird, wird der Status des Users aus user_id genommen
      * @return array 'added' Namen der Seminare in die der User eingetragen wurde
      *                     array 'removed' Namen der Seminare aus denen der User ausgetragen wurde
      */

@@ -91,10 +91,10 @@ abstract class DataFieldEntry
     /**
      * Enter description here...
      *
-     * @param unknown_type $range_id
-     * @param unknown_type $object_type
-     * @param unknown_type $object_class_hint
-     * @return unknown
+     * @param string $range_id
+     * @param string $object_type
+     * @param string $object_class_hint
+     * @return array
      */
     public static function getDataFieldEntries($range_id, $object_type = '', $object_class_hint = '')
     {
