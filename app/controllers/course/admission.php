@@ -40,6 +40,7 @@ class Course_AdmissionController extends AuthenticatedController
         PageLayout::setTitle($this->course->getFullname()." - " ._("Verwaltung von Zugangsberechtigungen"));
 
         $lockrules = words('admission_turnout admission_type admission_endtime admission_binding passwort read_level write_level admission_prelim admission_prelim_txt admission_starttime admission_endtime_sem admission_disable_waitlist user_domain admission_binding admission_studiengang');
+        $this->is_locked = [];
         foreach ($lockrules as $rule) {
             $this->is_locked[$rule] = LockRules::Check($this->course_id, $rule) ? 'disabled readonly' : '';
         }
@@ -119,7 +120,7 @@ class Course_AdmissionController extends AuthenticatedController
     {
         CSRFProtection::verifyUnsafeRequest();
         PageLayout::setTitle(_('Anmeldemodus ändern'));
-
+        $request = null;
         if (Request::submitted('change_admission_prelim')) {
             $request = Request::extract('admission_prelim int, admission_binding submitted, admission_prelim_txt');
             $request = array_diff_key($request, array_filter($this->is_locked));
@@ -197,7 +198,7 @@ class Course_AdmissionController extends AuthenticatedController
                 unset($question);
             }
         }
-        if (!$question) {
+        if (empty($question)) {
             $this->redirect($this->action_url('index'));
         } else {
             $this->button_yes = 'change_admission_prelim_yes';
@@ -246,7 +247,7 @@ class Course_AdmissionController extends AuthenticatedController
     {
         CSRFProtection::verifyUnsafeRequest();
         PageLayout::setTitle(_('Teilnehmendenanzahl ändern'));
-
+        $request = null;
         if (Request::submitted('change_admission_turnout')) {
             $request = Request::extract('admission_turnout int, admission_disable_waitlist submitted, admission_disable_waitlist_move submitted, admission_waitlist_max int');
             $request = array_diff_key($request, array_filter($this->is_locked));
@@ -302,7 +303,7 @@ class Course_AdmissionController extends AuthenticatedController
                 unset($question);
             }
         }
-        if (!$question) {
+        if (empty($question)) {
             $this->redirect($this->action_url('index'));
         } else {
             $this->request = $request;
@@ -359,7 +360,7 @@ class Course_AdmissionController extends AuthenticatedController
                     $question = sprintf(_("In dieser Veranstaltung existiert eine Anmeldeliste (Platzverteilung am %s). Die bestehende Anmeldeliste mit %s Einträgen wird gelöscht. Sind sie sicher?"), strftime('%x %R', $cs->getSeatDistributionTime()), count($priorities));
                 }
             }
-            if (!$question && $cs) {
+            if (empty($question) && $cs) {
                 CourseSet::removeCourseFromSet($cs->getId(), $this->course_id);
                 $cs->load();
                 if (!in_array($this->course_id, $cs->getCourses())) {
@@ -390,7 +391,7 @@ class Course_AdmissionController extends AuthenticatedController
                 }
             }
         }
-        if (!$question) {
+        if (empty($question)) {
             $this->redirect($this->action_url('index'));
         } else {
             $this->request = ['change_course_set_unassign' => 1];
@@ -497,7 +498,7 @@ class Course_AdmissionController extends AuthenticatedController
             $this->instant_course_set_view = true;
             $response = $this->relay('admission/courseset/configure/' . $cs->getId());
             $this->body = $response->body;
-            if ($response->headers['Location']) {
+            if (!empty($response->headers['Location'])) {
                 $this->redirect($response->headers['Location']);
             }
         } else {

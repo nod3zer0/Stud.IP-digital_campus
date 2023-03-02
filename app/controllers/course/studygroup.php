@@ -891,11 +891,11 @@ class Course_StudygroupController extends AuthenticatedController
      * @return void
      */
     public function savemodules_action()
-    {
-        global $perm;
-        $perm->check("root");
-        PageLayout::setHelpKeyword('Admin.Studiengruppen');
 
+    {
+        $GLOBALS['perm']->check('root');
+        PageLayout::setHelpKeyword('Admin.Studiengruppen');
+        $errors = [];
         if (!Request::get('institute')) {
             $errors[] = _('Bitte wählen Sie eine Einrichtung aus, der die Studiengruppen zugeordnet werden sollen!');
         }
@@ -927,7 +927,6 @@ class Course_StudygroupController extends AuthenticatedController
         }
         $this->redirect('course/studygroup/globalmodules');
     }
-
     /**
      * globally deactivates the studygroups
      *

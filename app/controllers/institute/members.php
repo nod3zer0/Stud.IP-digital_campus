@@ -177,6 +177,10 @@ class Institute_MembersController extends AuthenticatedController
                 $this->display_tables[] = [
                     'members'     => $institut_members,
                     'dview'       => $dview,
+                    'mail_status' => false,
+                    'mail_gruppe' => false,
+                    'group'       => null,
+                    'key'         => null,
                     'th_title'    => _('keiner Funktion zugeordnet'),
                 ];
             }
@@ -201,6 +205,8 @@ class Institute_MembersController extends AuthenticatedController
                     'members'     => $institut_members,
                     'dview'       => $dview,
                     'mail_status' => true,
+                    'mail_gruppe' => false,
+                    'group'       => null,
                     'key'         => $key,
                     'th_title'    => $permission,
                 ];
@@ -227,6 +233,11 @@ class Institute_MembersController extends AuthenticatedController
             $this->display_tables[] = [
                 'members' => $institut_members,
                 'dview'   => $dview,
+                'mail_status' => false,
+                'group'       => null,
+                'mail_gruppe' => false,
+                'key'         => null,
+                'th_title'    => null,
             ];
         }
 
@@ -272,10 +283,11 @@ class Institute_MembersController extends AuthenticatedController
             // output
             $this->display_tables[] = [
                 'members'     => $institut_members,
+                'mail_status' => false,
                 'group'       => $group,
                 'th_title'    => $title,
                 'dview'       => $dview,
-
+                'key'         => null,
                 // StEP 154: Nachricht an alle Mitglieder der Gruppe
                 'mail_gruppe' => $GLOBALS['ENABLE_EMAIL_TO_STATUSGROUP']
                               && $GLOBALS['perm']->have_studip_perm('autor', $this->institute->id),

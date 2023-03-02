@@ -11,7 +11,7 @@
     <fieldset>
         <legend><?= _('Importieren') ?></legend>
 
-    <? if (!$tourdata) :  ?>
+    <? if (empty($tourdata)) :  ?>
         <label>
             <span class="required"><?= _('Datei:') ?></span>
             <input type="file" size="60" name="tour_file"
@@ -47,7 +47,7 @@
     </fieldset>
 
     <footer data-dialog-button>
-    <? if (!$tourdata) :  ?>
+    <? if (empty($tourdata)) :  ?>
         <?= Studip\Button::create(_('Importieren'), 'import_file', ['data-dialog' => 'size=auto;reload-on-close'])?>
     <? endif ?>
         <?= Studip\LinkButton::createCancel(_('Schließen'), $controller->url_for('tour/admin_overview')) ?>

@@ -70,7 +70,7 @@ if (Config::get()->EXPORT_ENABLE)
     $xslt_process_done = false;
     $start_done = false;
     $xml_output_done = false;
-
+    $xslt_choose_done = false;
     // Zurueckbutton benutzt?
     if (Request::submitted('back'))
     {

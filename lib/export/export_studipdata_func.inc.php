@@ -815,7 +815,7 @@ function export_pers($inst_id)
             if (mb_strtolower($key) == 'email') {
                 $row[$key] = get_visible_email($row['user_id']);
             }
-            if ($row[$key] != '') {
+            if (!empty($row[$key])) {
                 $data_object .= xml_tag($val, $row[$key]);
             }
         }

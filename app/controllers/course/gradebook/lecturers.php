@@ -147,9 +147,7 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
         $course = \Context::get();
         $gradingDefinitions = Definition::findByCourse($course);
         $this->groupedDefinitions = $this->getGroupedDefinitions($gradingDefinitions);
-        $this->customDefinitions = isset($this->groupedDefinitions[Definition::CUSTOM_DEFINITIONS_CATEGORY])
-                                 ? $this->groupedDefinitions[Definition::CUSTOM_DEFINITIONS_CATEGORY]
-                                 : [];
+        $this->customDefinitions = $this->groupedDefinitions[Definition::CUSTOM_DEFINITIONS_CATEGORY] ?? [];
 
         $this->students = $course->getMembersWithStatus('autor', true)->orderBy('nachname, vorname');
         $this->groupedInstances = $this->groupedInstances($course);
@@ -196,9 +194,7 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
         $course = \Context::get();
         $gradingDefinitions = Definition::findByCourse($course);
         $this->groupedDefinitions = $this->getGroupedDefinitions($gradingDefinitions);
-        $this->customDefinitions = isset($this->groupedDefinitions[Definition::CUSTOM_DEFINITIONS_CATEGORY])
-                                 ? $this->groupedDefinitions[Definition::CUSTOM_DEFINITIONS_CATEGORY]
-                                 : [];
+        $this->customDefinitions = $this->groupedDefinitions[Definition::CUSTOM_DEFINITIONS_CATEGORY] ?? [];
     }
 
     /**

@@ -494,17 +494,10 @@ class Calendar_CalendarController extends AuthenticatedController
             $messages[] = _('Die Startzeit muss vor der Endzeit liegen.');
         }
 
-        if (Request::isXhr()) {
-            $event->setTitle(Request::get('summary', ''));
-            $event->event->description = Request::get('description', '');
-            $event->setUserDefinedCategories(Request::get('categories', ''));
-            $event->event->location = Request::get('location', '');
-        } else {
-            $event->setTitle(Request::get('summary'));
-            $event->event->description = Request::get('description', '');
-            $event->setUserDefinedCategories(Request::get('categories', ''));
-            $event->event->location = Request::get('location', '');
-        }
+        $event->setTitle(Request::get('summary', ''));
+        $event->event->description = Request::get('description', '');
+        $event->setUserDefinedCategories(Request::get('categories', ''));
+        $event->event->location        = Request::get('location', '');
         $event->event->category_intern = Request::int('category_intern', 1);
         $event->setAccessibility(Request::option('accessibility', 'PRIVATE'));
         $event->setPriority(Request::int('priority', 0));
@@ -538,7 +531,7 @@ class Calendar_CalendarController extends AuthenticatedController
         }
         switch ($rec_type) {
             case 'daily':
-                if (Request::option('type_daily', 'day') == 'day') {
+                if (Request::option('type_daily', 'day') === 'day') {
                     $rrule['linterval'] = Request::int('linterval_d', 1);
                     $rrule['rtype'] = 'DAILY';
                 } else {
@@ -548,41 +541,38 @@ class Calendar_CalendarController extends AuthenticatedController
                 }
                 break;
             case 'weekly':
+                $rrule['rtype'] = 'WEEKLY';
                 $rrule['linterval'] = Request::int('linterval_w', 1);
                 $rrule['wdays'] = implode('', Request::intArray('wdays',
                         [strftime('%u', $event->getStart())]));
-                $rrule['rtype'] = 'WEEKLY';
                 break;
             case 'monthly':
-                if (Request::option('type_m', 'day') == 'day') {
+                $rrule['rtype'] = 'MONTHLY';
+                if (Request::option('type_m', 'day') === 'day') {
                     $rrule['linterval'] = Request::int('linterval_m1', 1);
                     $rrule['day'] = Request::int('day_m',
                             strftime('%e', $event->getStart()));
-                    $rrule['rtype'] = 'MONTHLY';
                 } else {
                     $rrule['linterval'] = Request::int('linterval_m2', 1);
                     $rrule['sinterval'] = Request::int('sinterval_m', 1);
                     $rrule['wdays'] = Request::int('wday_m',
                             strftime('%u', $event->getStart()));
-                    $rrule['rtype'] = 'MONTHLY';
                 }
                 break;
             case 'yearly':
-                if (Request::option('type_y', 'day') == 'day') {
-                    $rrule['linterval'] = 1;
+                $rrule['rtype'] = 'YEARLY';
+                $rrule['linterval'] = 1;
+                if (Request::option('type_y', 'day') === 'day') {
                     $rrule['day'] = Request::int('day_y',
                             strftime('%e', $event->getStart()));
                     $rrule['month'] = Request::int('month_y1',
                             date('n', $event->getStart()));
-                    $rrule['rtype'] = 'YEARLY';
                 } else {
-                    $rrule['linterval'] = 1;
                     $rrule['sinterval'] = Request::int('sinterval_y', 1);
                     $rrule['wdays'] = Request::int('wday_y',
                             strftime('%u', $event->getStart()));
                     $rrule['month'] = Request::int('month_y2',
                             date('n', $event->getStart()));
-                    $rrule['rtype'] = 'YEARLY';
                 }
                 break;
         }

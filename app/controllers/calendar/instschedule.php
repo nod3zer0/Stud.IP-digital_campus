@@ -20,7 +20,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
      * this action is the main action of the schedule-controller, setting the environment for the timetable,
      * accepting a comma-separated list of days.
      *
-     * @param  string  a list of an arbitrary mix of the numbers 0-6, separated with a comma (e.g. 1,2,3,4,5 (for Monday to Friday, the default))
+     * @param  string $days a list of an arbitrary mix of the numbers 0-6, separated with a comma (e.g. 1,2,3,4,5 (for Monday to Friday, the default))
      */
     function index_action($days = false)
     {
@@ -108,14 +108,14 @@ class Calendar_InstscheduleController extends AuthenticatedController
             $this->url_for('calendar/instschedule/index/'. implode(',', $this->days),
                 ['printview'    => 'true',
                  'semester_id'  => $this->current_semester['semester_id']]),
-            Icon::create('print', 'clickable'),
+            Icon::create('print'),
             ['target' => '_blank']);
 
         // Only admins should have the ability to change their schedule settings here - they have no other schedule
         if ($GLOBALS['perm']->have_perm('admin')) {
             $actions->addLink(_("Darstellung ändern"),
                 $this->url_for('calendar/schedule/settings'),
-                Icon::create('admin', 'clickable'),
+                Icon::create('admin'),
                 ['data-dialog' => '']
             );
 
@@ -124,12 +124,12 @@ class Calendar_InstscheduleController extends AuthenticatedController
                 if ($GLOBALS['user']->cfg->MY_INSTITUTES_INCLUDE_CHILDREN) {
                     $actions->addLink(_("Untergeordnete Institute ignorieren"),
                         $this->url_for('calendar/instschedule/include_children/0'),
-                        Icon::create('checkbox-checked', 'clickable')
+                        Icon::create('checkbox-checked')
                     );
                 } else {
                     $actions->addLink(_("Untergeordnete Institute einbeziehen"),
                         $this->url_for('calendar/instschedule/include_children/1'),
-                        Icon::create('checkbox-unchecked', 'clickable')
+                        Icon::create('checkbox-unchecked')
                     );
                 }
             }

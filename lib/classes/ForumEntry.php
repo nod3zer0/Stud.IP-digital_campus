@@ -597,7 +597,7 @@ class ForumEntry  implements PrivacyObject
     public static function getList($type, $parent_id)
     {
         $start = (ForumHelpers::getPage() - 1) * ForumEntry::POSTINGS_PER_PAGE;
-
+        $last_visit_date = ForumVisit::getLastVisit($constraint['seminar_id']);
         switch ($type) {
             case 'area':
                 $list = ForumEntry::getEntries($parent_id, ForumEntry::WITHOUT_CHILDS, '', 'DESC', 0, 1000);
@@ -650,7 +650,7 @@ class ForumEntry  implements PrivacyObject
                 $stmt->bindParam(':seminar_id', $constraint['seminar_id']);
                 $stmt->bindParam(':left', $constraint['lft']);
                 $stmt->bindParam(':right', $constraint['rgt']);
-                $stmt->bindParam(':mkdate', ForumVisit::getLastVisit($constraint['seminar_id']));
+                $stmt->bindParam(':mkdate', $last_visit_date);
                 $stmt->bindParam(':user_id', $GLOBALS['user']->id);
                 $stmt->execute();
 
@@ -669,7 +669,7 @@ class ForumEntry  implements PrivacyObject
                 $stmt_count->bindParam(':seminar_id', $constraint['seminar_id']);
                 $stmt_count->bindParam(':left', $constraint['lft']);
                 $stmt_count->bindParam(':right', $constraint['rgt']);
-                $stmt_count->bindParam(':mkdate', ForumVisit::getLastVisit($constraint['seminar_id']));
+                $stmt_count->bindParam(':mkdate', $last_visit_date);
                 $stmt_count->execute();
 
 

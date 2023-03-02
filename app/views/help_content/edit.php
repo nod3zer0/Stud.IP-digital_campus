@@ -22,7 +22,7 @@
             <span class="required"><?= _('Sprache des Textes') ?>:</span>
             <select name="help_content_language">
                 <? foreach ($GLOBALS['INSTALLED_LANGUAGES'] as $key => $language) : ?>
-                    <option value="<?= mb_substr($key, 0, 2) ?>"<?= ($help_content->language == mb_substr($key, 0, 2)) ? ' selected' : '' ?>>
+                    <option value="<?= mb_substr($key, 0, 2) ?>"<?= (isset($help_content) && $help_content->language === mb_substr($key, 0, 2)) ? ' selected' : '' ?>>
                         <?= $language['name'] ?>
                     </option>
                 <? endforeach ?>
@@ -32,11 +32,11 @@
         <label for="help_content_content">
             <?= _('Hilfe-Text') ?>:
             <textarea cols="60" rows="5" name="help_content_content"
-                      placeholder="<?= _('Bitte geben Sie den Text ein') ?>"><?= htmlReady($help_content->content ?: '') ?></textarea>
+                      placeholder="<?= _('Bitte geben Sie den Text ein') ?>"><?= htmlReady($help_content->content ?? '') ?></textarea>
         </label>
         <label for="help_content_comment">
             <?= _('Bemerkung') ?>:
-            <textarea name="help_content_comment"><?= htmlReady($help_content->comment ?: '') ?></textarea>
+            <textarea name="help_content_comment"><?= htmlReady($help_content->comment ?? '') ?></textarea>
         </label>
     </fieldset>
 

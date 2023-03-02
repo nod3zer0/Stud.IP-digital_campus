@@ -32,7 +32,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
     {
 
         $actions = new ActionsWidget();
-        $actions->addLink(_("Export"), $this->url_for('admission/restricted_courses', ['csv' => 1]), Icon::create('export', 'clickable'));
+        $actions->addLink(_("Export"), $this->url_for('admission/restricted_courses', ['csv' => 1]), Icon::create('export'));
         Sidebar::get()->addWidget($actions);
 
         $sem_condition = "";
@@ -113,16 +113,14 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             }
         }
         if (is_array($this->not_distributed_coursesets)) {
-            PageLayout::postMessage(MessageBox::info(
+            PageLayout::postInfo(
                 _("Es existieren Anmeldesets, die zum Zeitpunkt der Platzverteilung nicht gelost wurden. Stellen Sie sicher, dass der Cronjob \"Losverfahren überprüfen\" ausgeführt wird."),
-                array_unique($this->not_distributed_coursesets)));
+                array_unique($this->not_distributed_coursesets));
         }
     }
 
     function get_courses($seminare_condition)
     {
-        global $perm, $user;
-
         $chunks = explode('_', $this->current_institut_id);
         $institut_id = $chunks[0];
         $all = $chunks[1] ?? null;
@@ -148,7 +146,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
                 INNER JOIN seminare ON seminar_courseset.seminar_id=seminare.seminar_id
                 LEFT JOIN semester_courses ON (seminare.Seminar_id = semester_courses.course_id)
                 ";
-        if ($institut_id == 'all'  && $perm->have_perm('root')) {
+        if ($institut_id === 'all' && $GLOBALS['perm']->have_perm('root')) {
             $sql .= "WHERE 1 {$seminare_condition} ";
         } elseif ($all == 'all') {
             $sql .= "INNER JOIN Institute USING (Institut_id)
@@ -262,14 +260,17 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
         $statement = DBManager::get()->prepare($query);
         $statement->execute($parameters);
         $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
-
+        $_my_inst = [];
         foreach ($temp as $row) {
+            if (!isset($_my_inst[$row['Institut_id']])) {
+                $_my_inst[$row['Institut_id']] = [];
+            }
             $_my_inst[$row['Institut_id']] = [
                 'name'   => $row['Name'],
                 'is_fak' => $row['is_fak'],
                 'count'  => $row['count'],
             ];
-            if ($row["is_fak"] && (!isset($row['inst_perms']) || $row['inst_perms'] !== 'dozent')) {
+            if ($row['is_fak'] && (!isset($row['inst_perms']) || $row['inst_perms'] !== 'dozent')) {
                 $institute_statement->execute([$row['Institut_id']]);
                 $alle = $institute_statement->fetchAll();
                 if (count($alle)) {

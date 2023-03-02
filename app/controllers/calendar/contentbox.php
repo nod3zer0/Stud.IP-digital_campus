@@ -80,7 +80,7 @@ class Calendar_ContentboxController extends StudipController
     {
         $course = Course::find($id);
         $dates = $course->getDatesWithExdates()->findBy('end_time', [$this->start, $this->start + $this->timespan], '><');
-
+        $this->termine = [];
         foreach ($dates as $courseDate) {
             // Build info
             $info = [];
@@ -120,7 +120,7 @@ class Calendar_ContentboxController extends StudipController
             null,
             $restrictions
         );
-
+        $this->termine = [];
         // Prepare termine
         foreach ($events as $termin) {
             // Exclude events that begin after the given time range

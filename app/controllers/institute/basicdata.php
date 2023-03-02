@@ -81,7 +81,7 @@ class Institute_BasicdataController extends AuthenticatedController
         }
 
         $lockrule = LockRules::getObjectRule($i_view);
-        if ($lockrule->description && LockRules::CheckLockRulePermission($i_view, $lockrule['permission'])) {
+        if ($lockrule && $lockrule->description && LockRules::CheckLockRulePermission($i_view, $lockrule['permission'])) {
             PageLayout::postInfo(formatLinks($lockrule->description));
         }
 
@@ -115,7 +115,7 @@ class Institute_BasicdataController extends AuthenticatedController
         // Read faculties if neccessary
         if (count($institute->sub_institutes) === 0) {
             if ($GLOBALS['perm']->have_perm('root')) {
-                $this->faculties = Institute::findBySQL('Institut_id = fakultaets_id ORDER BY Name ASC', [$i_view]);
+                $this->faculties = Institute::findBySQL('Institut_id = fakultaets_id ORDER BY Name ASC');
             } else {
                 $temp = User::find($GLOBALS['user']->id)
                             ->institute_memberships->findBy('inst_perms', 'admin')
@@ -127,7 +127,7 @@ class Institute_BasicdataController extends AuthenticatedController
                 $this->faculties = $faculties;
             }
         }
-
+        $reason_txt = '';
         // Indicates whether the current user is allowed to delete the institute
         $this->may_delete = $i_view !== 'new'
                          && !(count($institute->home_courses) || count($institute->sub_institutes))

@@ -141,6 +141,7 @@ class Admission_CoursesetController extends AuthenticatedController
     public function configure_action($coursesetId = '')
     {
         $this->courseset = null;
+        $allCourses = [];
         if ($GLOBALS['perm']->have_perm('root')) {
             if ($coursesetId) {
                 // Load course set data.
@@ -159,7 +160,6 @@ class Admission_CoursesetController extends AuthenticatedController
             } else {
                 $this->myInstitutes = [];
                 $this->selectedInstitutes = [];
-                $allCourses = [];
                 $selectedCourses = [];
                 $this->selectedSemester = $_SESSION['_default_sem'] ?: Semester::findCurrent()->semester_id;
             }

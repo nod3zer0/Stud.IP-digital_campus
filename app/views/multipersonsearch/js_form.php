@@ -3,7 +3,7 @@
       data-secure="li.ms-selected:gt(0)">
     <fieldset>
         <legend>
-            <?= htmlReady($title) ?: _('Nach Personen suchen') ?>
+            <?= htmlReady($title ?? _('Nach Personen suchen')) ?>
         </legend>
 
         <label class="with-action">

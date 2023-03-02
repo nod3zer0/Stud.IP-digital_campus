@@ -48,11 +48,10 @@ class Course_Forum_AreaController extends ForumController
     {
         ForumPerm::check('edit_area', $this->getId(), $area_id);
 
+        ForumEntry::update($area_id, Request::get('name'), Request::get('content'));
         if (Request::isAjax()) {
-            ForumEntry::update($area_id, Request::get('name'), Request::get('content'));
             $this->render_json(['content' => ForumEntry::killFormat(ForumEntry::killEdit(Request::get('content')))]);
         } else {
-            ForumEntry::update($area_id, Request::get('name'), Request::get('content'));
             $this->flash['messages'] = ['success' => _('Die Änderungen am Bereich wurden gespeichert.')];
             $this->redirect('course/forum/index/index');
         }

@@ -126,7 +126,7 @@ use Studip\Button, Studip\LinkButton;
                 <? foreach ($institutes as $institute): ?>
                     <option value="<?= htmlReady($institute['Institut_id']) ?>"
                         class="<?= $institute['is_fak'] ? 'nested-item-header' : 'nested-item' ?>"
-                            <?= $item->institut_id === $institute['Institut_id'] ? 'selected' : ''?>>
+                            <?= isset($item) && $item->institut_id === $institute['Institut_id'] ? 'selected' : ''?>>
                         <?= htmlReady(my_substr($institute['Name'],0,80)) ?>
                     </option>
                 <? endforeach; ?>

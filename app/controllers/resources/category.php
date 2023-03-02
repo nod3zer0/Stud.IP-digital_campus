@@ -59,7 +59,7 @@ class Resources_CategoryController extends AuthenticatedController
             'TRUE ORDER BY name ASC'
         );
         //Load the properties:
-        if ($this->category->property_links) {
+        if (!empty($this->category->property_links)) {
             foreach ($this->category->property_links as $link) {
                 //We want to make sure that only properties that are
                 //defined are displayed.

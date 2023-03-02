@@ -83,14 +83,17 @@ class Course_EnrolmentController extends AuthenticatedController
         } catch (Exception $e) {
             $this->confirmed = false;
         }
-
+        $msg_details = [];
+        $msg = '';
         $user_id = $GLOBALS['user']->id;
+        $enrol_user = false;
         $courseset = CourseSet::getSetForCourse($this->course_id);
         if ($courseset) {
             $errors = $courseset->checkAdmission($user_id, $this->course_id);
             if (count($errors)) {
                 $this->courseset_message = $courseset->toString(true);
                 $this->admission_error = MessageBox::error(_("Die Anmeldung war nicht erfolgreich."), $errors);
+                $admission_form = '';
                 foreach ($courseset->getAdmissionRules() as $rule) {
                     $admission_form .= $rule->getInput();
                 }
@@ -231,7 +234,7 @@ class Course_EnrolmentController extends AuthenticatedController
         StudipLock::release();
 
         if ($enrol_user && $this->confirmed) {
-            if ($course->admission_prelim) {
+            if (!empty($course) && $course->admission_prelim) {
                 $this->relocate(URLHelper::getLink('dispatch.php/course/details', ['sem_id' => $this->course_id]));
             } else {
                 $this->relocate(URLHelper::getLink('seminar_main.php', ['auswahl' => $this->course_id]));
@@ -260,6 +263,7 @@ class Course_EnrolmentController extends AuthenticatedController
         $user_id = $GLOBALS['user']->id;
         $courseset = CourseSet::getSetForCourse($this->course_id);
         $anchor = '';
+        $changed = 0;
         if ($courseset->isSeatDistributionEnabled() && !count($courseset->checkAdmission($user_id, $this->course_id))) {
             if ($limit = $courseset->getAdmissionRule('LimitedAdmission')) {
                 $admission_user_limit = Request::int('admission_user_limit');

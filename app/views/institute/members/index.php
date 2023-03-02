@@ -2,10 +2,10 @@
     <table class="default" id="list_institute_members">
         <caption><?= _('Mitarbeiterinnen und Mitarbeiter') ?></caption>
         <colgroup>
-            <col width="32">
+            <col style="width: 32px">
         <? foreach ($structure as $key => $field): ?>
             <? if ($key !== 'statusgruppe'): ?>
-                <col <? if (!empty($field['width'])): ?> width="<?= htmlReady($field['width']) ?>"<? endif; ?>>
+                <col <? if (!empty($field['width'])): ?> style="width: <?= htmlReady($field['width']) ?>px"<? endif ?>>
             <? endif; ?>
         <? endforeach; ?>
         </colgroup>

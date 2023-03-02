@@ -119,7 +119,7 @@ class Resources_AdminController extends AuthenticatedController
         );
 
         $this->sidebar->addWidget($user_search);
-
+        $this->last_activity_date = null;
         $user_id    = Request::get('user_id');
         $this->user = User::find($user_id);
         if ($this->user) {
@@ -453,7 +453,7 @@ class Resources_AdminController extends AuthenticatedController
                 //At least one property is selected for moving into another
                 //property group.
                 foreach ($this->property_move as $property_id => $group_id) {
-                    $property = $property_object_cache[$property_id];
+                    $property = $property_object_cache[$property_id] ?? null;
                     if (!$property) {
                         $property = ResourcePropertyDefinition::find($property_id);
                     }
@@ -482,7 +482,7 @@ class Resources_AdminController extends AuthenticatedController
 
             if ($this->group_position) {
                 foreach ($this->group_position as $group_id => $position) {
-                    $group = $group_object_cache[$group_id];
+                    $group = $group_object_cache[$group_id] ?? null;
                     if (!$group) {
                         $group = ResourcePropertyGroup::find($group_id);
                     }

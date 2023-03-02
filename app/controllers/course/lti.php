@@ -291,7 +291,8 @@ class Course_LtiController extends StudipController
             $lti_data->description = Studip\Markup::purifyHtml(Studip\Markup::markAsHtml($item['text']));
             $lti_data->tool_id = $tool_id;
             $lti_data->launch_url = (string) $item['url'];
-
+            $custom_parameters = '';
+            $options = [];
             if (is_array($item['custom'])) {
                 foreach ($item['custom'] as $key => $value) {
                     $custom_parameters .= $key . '=' . $value . "\n";

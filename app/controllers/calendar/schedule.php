@@ -114,7 +114,7 @@ class Calendar_ScheduleController extends AuthenticatedController
             : CalendarScheduleModel::getUserCalendarView($GLOBALS['user']->id, $show_hidden, $this->current_semester, $this->days);;
 
         // have we chosen an entry to display?
-        if ($this->flash['entry']) {
+        if (!empty($this->flash['entry'])) {
             if ($inst_mode) {
                 $this->show_entry = $this->flash['entry'];
             } else if ($this->flash['entry']['id'] == null) {
@@ -162,10 +162,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         $this->inst_mode = $inst_mode;
         $this->institute_name = $inst['name'];
         $this->institute_id = $institute_id;
-
-        if (Request::get('show_settings')) {
-            $this->show_settings = true;
-        }
+        $this->show_settings = Request::bool('show_settings', false);
     }
 
     public function new_entry_action()

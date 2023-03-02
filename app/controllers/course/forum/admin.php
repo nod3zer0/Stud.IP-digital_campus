@@ -31,9 +31,11 @@ class Course_Forum_AdminController extends ForumController
 
         // sort by cat
         $new_list = [];
+        $this->categories = [];
         // iterate over all categories and add the belonging areas to them
-        foreach ($categories = ForumCat::getListWithAreas($this->getId(), false) as $category) {
-            if ($category['topic_id']) {
+        $categories = ForumCat::getListWithAreas($this->getId(), false) ;
+        foreach ($categories as $category) {
+            if (!empty($category['topic_id'])) {
                 $new_list[$category['category_id']][$category['topic_id']] = $list['list'][$category['topic_id']];
                 unset($list['list'][$category['topic_id']]);
             } else if (ForumPerm::has('add_area', $this->seminar_id)) {
@@ -50,10 +52,10 @@ class Course_Forum_AdminController extends ForumController
         $this->list = $new_list;
 
     }
-    
+
     /**
      * show child entries for the passed entry
-     * 
+     *
      * @param string $parent_id id of entry to get the childs for
      */
     function childs_action($parent_id)
@@ -73,7 +75,7 @@ class Course_Forum_AdminController extends ForumController
 
     /**
      * move the submitted topics[] to the passed destination
-     * 
+     *
      * @param string $destination id of seminar to move topics to
      */
     function move_action($destination)
@@ -82,8 +84,10 @@ class Course_Forum_AdminController extends ForumController
         if (ForumCat::get($destination)) {
             $category_id = $destination;
             $destination = $this->getId();
+        } else {
+            $category_id = null;
         }
-        
+
         ForumPerm::check('admin', $this->getId(), $destination);
 
         foreach (Request::getArray('topics') as $topic_id) {
@@ -104,20 +108,23 @@ class Course_Forum_AdminController extends ForumController
 
                 // second step: move all to deep childs a level up (depth > 3)
                 $data = ForumEntry::getList('depth_to_large', $topic_id);
-                foreach ($data['list'] as $entry) {
-                    $path = ForumEntry::getPathToPosting($entry['topic_id']);
-                    array_shift($path); // Category
-                    array_shift($path); // Area
 
-                    $thread = array_shift($path); // Thread
+                if (!empty($data['list'])) {
+                    foreach ($data['list'] as $entry) {
+                        $path = ForumEntry::getPathToPosting($entry['topic_id']);
+                        array_shift($path); // Category
+                        array_shift($path); // Area
 
-                    ForumEntry::move($entry['topic_id'], $thread['id']);
+                        $thread = array_shift($path); // Thread
+
+                        ForumEntry::move($entry['topic_id'], $thread['id']);
+                    }
                 }
-                
+
                 // add entry to passed category when moving to the top
                 if ($category_id) {
                     ForumCat::addArea($category_id, $topic_id);
-                }                    
+                }
             }
         }
 

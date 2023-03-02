@@ -63,16 +63,16 @@ use Studip\Button, Studip\LinkButton;
         <label>
             <?= _('Zugang zur Tour') ?>:
             <select name="tour_access">
-                <option value="link" <? if ($tour->settings->access === 'link') echo 'selected'; ?>>
+                <option value="link" <? if (isset($tour->settings) && $tour->settings->access === 'link') echo 'selected'; ?>>
                     <?= _('unsichtbar') ?>
                 </option>
-                <option value="standard" <? if ($tour->settings->access === 'standard') echo 'selected'; ?>>
+                <option value="standard" <? if (isset($tour->settings) && $tour->settings->access === 'standard') echo 'selected'; ?>>
                     <?= _('Anzeige im Hilfecenter') ?>
                 </option>
-                <option value="autostart" <? if ($tour->settings->access === 'autostart') echo 'selected'; ?>>
+                <option value="autostart" <? if (isset($tour->settings) && $tour->settings->access === 'autostart') echo 'selected'; ?>>
                     <?= _('Startet bei jedem Aufruf der Seite, bis die Tour abgeschlossen wurde') ?>
                 </option>
-                <option value="autostart_once" <? if ($tour->settings->access === 'autostart_once') echo 'selected'; ?>>
+                <option value="autostart_once" <? if (isset($tour->settings) && $tour->settings->access === 'autostart_once') echo 'selected'; ?>>
                     <?= _('Startet nur beim ersten Aufruf der Seite') ?>
                 </option>
             </select>

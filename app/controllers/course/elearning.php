@@ -102,16 +102,20 @@ class Course_ElearningController extends AuthenticatedController
         $content_modules_list = [];
         if ($object_connections->isConnected()) {
             $caching_active = true;
-            foreach ($connected_modules as $key => $connection) {
-                if (ELearningUtils::isCMSActive($connection["cms"])) {
+            $type_tmp = [];
 
-                    ELearningUtils::loadClass($connection["cms"]);
+            if (!empty($connected_modules)) {
+                foreach ($connected_modules as $key => $connection) {
+                    if (ELearningUtils::isCMSActive($connection["cms"])) {
 
-                    $connected_cms[$connection["cms"]]->newContentModule($connection["id"], $connection["type"], true);
-                    $connected_modules[$key]['title'] = $connected_cms[$connection["cms"]]->content_module[$connection["id"]]->getTitle();
-                    $title_tmp[$key] = str_replace(['ä','ö','ü','ß'],['ae','oe','ue','ss'],mb_strtolower($connected_modules[$key]['title']));
-                    $type_tmp[$key] = array_search($connection['type'], array_keys($GLOBALS['ELEARNING_INTERFACE_MODULES'][$connection["cms"]]['types']));
-                    $class_tmp[$key] = $GLOBALS['ELEARNING_INTERFACE_MODULES'][$connection["cms"]]["CLASS_PREFIX"];
+                        ELearningUtils::loadClass($connection["cms"]);
+
+                        $connected_cms[$connection["cms"]]->newContentModule($connection["id"], $connection["type"], true);
+                        $connected_modules[$key]['title'] = $connected_cms[$connection["cms"]]->content_module[$connection["id"]]->getTitle();
+                        $title_tmp[$key] = str_replace(['ä','ö','ü','ß'],['ae','oe','ue','ss'],mb_strtolower($connected_modules[$key]['title']));
+                        $type_tmp[$key] = array_search($connection['type'], array_keys($GLOBALS['ELEARNING_INTERFACE_MODULES'][$connection["cms"]]['types']));
+                        $class_tmp[$key] = $GLOBALS['ELEARNING_INTERFACE_MODULES'][$connection["cms"]]["CLASS_PREFIX"];
+                    }
                 }
             }
             array_multisort($class_tmp, SORT_ASC, $type_tmp, SORT_ASC, $title_tmp, SORT_ASC, $connected_modules);
@@ -133,7 +137,7 @@ class Course_ElearningController extends AuthenticatedController
                 $content_modules_list[$index]['module'] = $connected_cms[$connection["cms"]]->content_module[$connection["id"]]->view->show();
             }
         }
-        if (($this->module_count == 0) AND ($this->new_account_cms == "")) {
+        if (!$this->module_count && !$this->new_account_cms) {
             if (Context::isInstitute()) {
                 PageLayout::postInfo(_('Momentan sind dieser Einrichtung keine Lernmodule zugeordnet.'));
             } else {
@@ -182,7 +186,10 @@ class Course_ElearningController extends AuthenticatedController
 
         // ggf. bestehenden Ilias4-Kurs zuordnen
         if (Request::submitted('connect_course')) {
-            if ((ObjectConnections::getConnectionModuleId(Request::option("connect_course_sem_id"), "crs", $this->cms_select)) AND ($GLOBALS['perm']->have_studip_perm("dozent", Request::option("connect_course_sem_id")))) {
+            if (
+                ObjectConnections::getConnectionModuleId(Request::option('connect_course_sem_id'), 'crs', $this->cms_select)
+                && $GLOBALS['perm']->have_studip_perm('dozent', Request::option('connect_course_sem_id'))
+            ) {
                 ObjectConnections::setConnection($this->seminar_id, ObjectConnections::getConnectionModuleId(Request::option("connect_course_sem_id"), "crs", $this->cms_select), "crs", $this->cms_select);
                 PageLayout::postInfo(_('Zuordnung wurde gespeichert.'));
                 ELearningUtils::loadClass($this->cms_select);

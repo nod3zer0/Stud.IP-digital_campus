@@ -108,8 +108,9 @@ class Course_Forum_IndexController extends ForumController
 
             if ($this->constraint['depth'] == 0) {  // BEREICHE
                 $new_list = [];
+                $this->categories  = [];
                 // iterate over all categories and add the belonging areas to them
-                foreach ($categories = ForumCat::getListWithAreas($this->getId(), false) as $category) {
+                foreach (ForumCat::getListWithAreas($this->getId(), false) as $category) {
                     if ($category['topic_id']) {
                         $new_list[$category['category_id']][$category['topic_id']] = $list['list'][$category['topic_id']];
                         unset($list['list'][$category['topic_id']]);
@@ -237,10 +238,7 @@ class Course_Forum_IndexController extends ForumController
         $this->postings          = $list['list'];
         $this->number_of_entries = $list['count'];
         $this->show_full_path    = true;
-
-        if (empty($this->postings)) {
-            $this->no_entries = true;
-        }
+        $this->no_entries        = empty($this->postings);
 
         $this->render_action('index');
     }
@@ -270,10 +268,7 @@ class Course_Forum_IndexController extends ForumController
         $this->postings          = $list['list'];
         $this->number_of_entries = $list['count'];
         $this->show_full_path    = true;
-
-        if (empty($this->postings)) {
-            $this->no_entries = true;
-        }
+        $this->no_entries        = empty($this->postings);
 
         // exploit the visitdate for this view
         $this->visitdate = ForumVisit::getLastVisit($this->getId());
@@ -306,8 +301,8 @@ class Course_Forum_IndexController extends ForumController
 
         $this->section = 'search';
         $this->topic_id = $this->getId();
-        $this->show_full_path    = true;
-
+        $this->show_full_path = true;
+        $this->options = [];
         // parse filter-options
         foreach (['search_title', 'search_content', 'search_author'] as $option) {
             $this->options[$option] = Request::option($option);
@@ -417,7 +412,7 @@ class Course_Forum_IndexController extends ForumController
         // get the page of the posting to be able to jump there again
         $page = ForumEntry::getPostingPage($topic_id);
         URLHelper::addLinkParam('page', $page);
-
+        $parent = null;
         if (ForumPerm::hasEditPerms($topic_id) || ForumPerm::check('remove_entry', $this->getId(), $topic_id)) {
             $path = ForumEntry::getPathToPosting($topic_id);
             $topic  = array_pop($path);

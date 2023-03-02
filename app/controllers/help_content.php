@@ -125,7 +125,7 @@ class HelpContentController extends AuthenticatedController
         }
         $this->parameters         = $parameters;
         $this->help_content_route = Request::get('help_content_route');
-
+        $this->help_content_id    = null;
         $this->render_template('help_content/edit');
     }
 

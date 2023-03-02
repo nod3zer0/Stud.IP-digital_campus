@@ -108,7 +108,9 @@ function GetRoleNames($roles, $level = 0, $pred = '', $all = false) {
 
     if (is_array($roles))
     foreach ($roles as $role_id => $role) {
-        if (!$role['name']) $role['name'] = $role['role']->getName();
+        if (empty($role['name'])) {
+            $role['name'] = $role['role']->getName();
+        }
 
         if ($pred != '') {
             $new_pred = $pred.' > '.$role['name'];
@@ -116,11 +118,11 @@ function GetRoleNames($roles, $level = 0, $pred = '', $all = false) {
             $new_pred = $role['name'];
         }
 
-        if ($role['user_there'] || $all) {
+        if (!empty($role['user_there']) || $all) {
             $out[$role_id] = $new_pred;
         }
 
-        if ($role['child']) {
+        if (!empty($role['child'])) {
             $out = array_merge((array)$out, (array)GetRoleNames($role['child'], $level+1, $new_pred, $all));
         }
     }

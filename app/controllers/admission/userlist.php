@@ -64,13 +64,13 @@ class Admission_UserListController extends AuthenticatedController
         }
         $this->users = User::findMany(array_keys($this->userlist->getUsers()));
         if ($this->flash['name'] || $this->flash['factor'] || $this->flash['users'] || $this->flash['deleted_member']) {
-            if ($this->flash['name']) {
+            if (!empty($this->flash['name'])) {
                 $this->userlist->setName($this->flash['name']);
             }
-            if ($this->flash['factor']) {
+            if (!empty($this->flash['factor'])) {
                 $this->userlist->setFactor($this->flash['factor']);
             }
-            if ($this->flash['users'] || $this->flash['deleted_member']) {
+            if (!empty($this->flash['users']) || !empty($this->flash['deleted_member'])) {
                 $this->users = User::findMany($this->flash['cleared_users'] ?: $this->flash['users'] ?: []);
             }
         }

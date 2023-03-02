@@ -481,7 +481,10 @@ class Course_BasicdataController extends AuthenticatedController
             }
 
             if (sizeof($before) && sizeof($after)) {
-                foreach($before as $k => $v) $log_message .= "$k: $v => " . $after[$k] . " \n";
+                $log_message = '';
+                foreach ($before as $k => $v) {
+                    $log_message .= "$k: $v => " . $after[$k] . " \n";
+                }
                 StudipLog::log('CHANGE_BASIC_DATA', $sem->getId(), " ", $log_message);
                 NotificationCenter::postNotification('SeminarBasicDataDidUpdate', $sem->id , $GLOBALS['user']->id);
             }
@@ -849,10 +852,10 @@ class Course_BasicdataController extends AuthenticatedController
         $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
     }
 
-    public function switchdeputy_action($course_id, $newstatus) {
+    public function switchdeputy_action($course_id, $newstatus)
+    {
         CSRFProtection::verifySecurityToken();
 
-        $course = Seminar::getInstance($course_id);
         switch($newstatus) {
             case 'dozent':
                 $dozent = new CourseMember();

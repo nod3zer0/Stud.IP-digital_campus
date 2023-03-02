@@ -18,12 +18,12 @@ class Calendar_GroupController extends Calendar_CalendarController
         $actions = new ActionsWidget();
         $actions->addLink(_('Termin anlegen'),
                           $this->url_for('calendar/group/edit'),
-                          Icon::create('add', 'clickable'),
+                          Icon::create('add'),
             ['data-dialog' => 'size=auto']);
         $actions->addLink(_('Kalender freigeben'),
                 $this->url_for('calendar/single/manage_access/' . $GLOBALS['user']->id,
                                ['group_filter' => $this->range_id]),
-                          Icon::create('community', 'clickable'),
+                          Icon::create('community'),
                           ['id' => 'calendar-open-manageaccess',
                                 'data-dialog' => '', 'data-dialogname' => 'manageaccess']);
         $sidebar->addWidget($actions);
@@ -49,6 +49,7 @@ class Calendar_GroupController extends Calendar_CalendarController
         // the first calendar is the calendar of the actual user
         $this->calendar = new SingleCalendar($GLOBALS['user']->id);
         $group = $this->getGroup($this->calendar);
+        $this->attendee_ids = [];
         if ($group) {
             $calendar_owners = CalendarUser::getOwners($GLOBALS['user']->id,
                         Calendar::PERMISSION_WRITABLE)->pluck('owner_id');
@@ -157,11 +158,11 @@ class Calendar_GroupController extends Calendar_CalendarController
                     header('X-Dialog-Close: 1');
                     exit;
                 } else {
-                    PageLayout::postMessage(MessageBox::success(_('Der Termin wurde nicht geändert.')));
+                    PageLayout::postSuccess(_('Der Termin wurde nicht geändert.'));
                     $this->relocate('calendar/group/' . $this->last_view, ['atime' => $this->atime]);
                 }
             } else {
-                PageLayout::postMessage(MessageBox::success(_('Der Termin wurde gespeichert.')));
+                PageLayout::postSuccess(_('Der Termin wurde gespeichert.'));
                 $this->relocate('calendar/group/' . $this->last_view, ['atime' => $this->atime]);
             }
         } else {
@@ -221,6 +222,7 @@ class Calendar_GroupController extends Calendar_CalendarController
 
     public function week_action($range_id = null)
     {
+        $this->calendars = [];
         $this->range_id = $range_id ?: $this->range_id;
         $timestamp = mktime(12, 0, 0, date('n', $this->atime),
                 date('j', $this->atime), date('Y', $this->atime));
@@ -260,6 +262,7 @@ class Calendar_GroupController extends Calendar_CalendarController
 
     public function month_action($range_id = null)
     {
+        $this->calendars = [];
         $this->range_id = $range_id ?: $this->range_id;
         $month_start = mktime(12, 0, 0, date('n', $this->atime), 1, date('Y', $this->atime));
         $month_end = mktime(12, 0, 0, date('n', $this->atime), date('t', $this->atime), date('Y', $this->atime));
@@ -299,6 +302,9 @@ class Calendar_GroupController extends Calendar_CalendarController
 
     public function year_action($range_id = null)
     {
+        $this->calendars = [];
+        $this->count_lists = [];
+
         $this->range_id = $range_id ?: $this->range_id;
         $start = mktime(0, 0, 0, 1, 1, date('Y', $this->atime));
         $end = mktime(23, 59, 59, 12, 31, date('Y', $this->atime));

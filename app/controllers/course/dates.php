@@ -136,7 +136,7 @@ class Course_DatesController extends AuthenticatedController
     public function details_action($termin_id)
     {
         $this->date = new CourseDate($termin_id);
-
+        $this->teachers = [];
         Navigation::activateItem('/course/schedule/dates');
         PageLayout::setTitle(
             $this->date->getTypeName() . ': ' .
@@ -182,7 +182,9 @@ class Course_DatesController extends AuthenticatedController
         $this->assignLockRulesToTemplate();
 
         Navigation::activateItem('/course/schedule/dates');
-
+        $start_time = null;
+        $end_time = null;
+        $xtitle = '';
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
 

@@ -279,7 +279,7 @@ class TourController extends AuthenticatedController
 
         PageLayout::setTitle(_('Hilfe-Tour importieren'));
 
-        if ($_FILES['tour_file']['tmp_name']) {
+        if (!empty($_FILES['tour_file']['tmp_name'])) {
             $tour_json_data = file_get_contents($_FILES['tour_file']['tmp_name']);
             $tour_data = @json_decode($tour_json_data, true);
             if (!$tour_data || !$tour_data['tour']) {
@@ -622,7 +622,7 @@ class TourController extends AuthenticatedController
         }
 
         $this->delete_question = '';
-
+        $this->tour_startpage = '';
         // initialize
         PageLayout::setTitle(_('Verwalten von Touren'));
         PageLayout::setHelpKeyword('Basis.TourAdmin');

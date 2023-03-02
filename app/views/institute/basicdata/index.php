@@ -1,4 +1,4 @@
-<?= $question ?>
+<?= $question ?? '' ?>
 <form method="post" name="edit" action="<?= $controller->url_for('institute/basicdata/store/' . $i_view) ?>" class="default">
     <?= CSRFProtection::tokenTag() ?>
 

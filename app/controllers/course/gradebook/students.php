@@ -69,7 +69,7 @@ class Course_Gradebook_StudentsController extends AuthenticatedController
         $lines = [];
         foreach ($this->categories as $category) {
             foreach ($this->groupedDefinitions[$category] as $definition) {
-                $instance = isset($this->groupedInstances[$definition->id]) ? $this->groupedInstances[$definition->id] : null;
+                $instance = $this->groupedInstances[$definition->id] ?? null;
                 $lines[] = [
                     $category,
                     $definition->name,

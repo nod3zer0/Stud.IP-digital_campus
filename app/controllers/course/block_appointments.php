@@ -122,7 +122,8 @@ class Course_BlockAppointmentsController extends AuthenticatedController
 
         $start_day = strtotime(Request::get('block_appointments_start_day'));
         $end_day = strtotime(Request::get('block_appointments_end_day'));
-
+        $start_time = null;
+        $end_time = null;
         if (!($start_day && $end_day && $start_day <= $end_day)) {
             $errors[] = _('Bitte geben Sie korrekte Werte für Start- und Enddatum an!');
         } else {
@@ -236,7 +237,6 @@ class Course_BlockAppointmentsController extends AuthenticatedController
                     'block_appointments_days'       => $days
                 ];
                 $dates_created = array_filter(array_map(function ($d) use ($free_room_text) {
-                    $result = false;
                     if (!Request::get('room_id')) {
                         $d->raum = $free_room_text;
                         $result = $d->store();

@@ -92,7 +92,6 @@ class Admission_RuleController extends AuthenticatedController
     public function save_action($ruleType, $ruleId = '')
     {
         CSRFProtection::verifyUnsafeRequest();
-        $rules = AdmissionRule::getAvailableAdmissionRules();
         $this->rule = new $ruleType($ruleId);
         $requestData = Request::getInstance();
         // Check for start and end date and parse the String values to timestamps.
@@ -120,7 +119,6 @@ class Admission_RuleController extends AuthenticatedController
      */
     public function validate_action($ruleType, $ruleId = '')
     {
-        $rules = AdmissionRule::getAvailableAdmissionRules();
         $rule = new $ruleType($ruleId);
         $this->errors = $rule->validate(Request::getInstance());
     }

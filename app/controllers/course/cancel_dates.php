@@ -53,6 +53,7 @@ class Course_CancelDatesController extends AuthenticatedController
     {
         CSRFProtection::verifyUnsafeRequest();
         $sem = Seminar::getInstance($this->course_id);
+        $msg = '';
         foreach ($this->dates as $date) {
             $sem->cancelSingleDate($date->getTerminId(), $date->getMetadateId());
             $date->setComment(Request::get('cancel_dates_comment'));

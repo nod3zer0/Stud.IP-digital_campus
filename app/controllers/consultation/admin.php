@@ -286,7 +286,6 @@ class Consultation_AdminController extends ConsultationController
             throw new MethodNotAllowedException();
         }
 
-        $is_expired = false;
         if (!$slot_id) {
             $block = $this->loadBlock($block_id);
             $is_expired = $block->is_expired;
@@ -657,7 +656,6 @@ class Consultation_AdminController extends ConsultationController
         );
 
         if (array_sum($deleted) > 0) {
-            $message = [];
             if ($deleted['current'] > 0) {
                 PageLayout::postSuccess(sprintf(
                     _('%u aktuelle Termine wurden gelöscht'),
@@ -682,7 +680,7 @@ class Consultation_AdminController extends ConsultationController
             $slots = $this->getSlotsFromBulk();
         } else {
             $block = $this->loadBlock($block_id);
-
+            $slots = [];
             foreach ($block->slots as $slot) {
                 if ($slot_id && $slot->id != $slot_id) {
                     continue;
