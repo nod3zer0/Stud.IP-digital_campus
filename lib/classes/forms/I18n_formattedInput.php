@@ -16,7 +16,11 @@ class I18n_formattedInput extends Input
             $value = $this->value;
         } else {
             $value = [\I18NString::getDefaultLanguage() => $this->value->original()];
-            $value = json_encode(array_merge($value, $this->value->toArray()));
+            $value = array_merge($value, $this->value->toArray());
+            $value = array_map(function ($item) {
+                return $item ?? '';
+            }, $value);
+            $value = json_encode($value);
         }
 
         $template = $GLOBALS['template_factory']->open('forms/i18n_formatted_input');
