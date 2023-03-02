@@ -94,6 +94,8 @@ class SendMailNotificationsJob extends CronJob
      */
     public function execute($last_result, $parameters = [])
     {
+        $cli_user = $GLOBALS['user'];
+
         $notification = new ModulesNotification();
 
         $query = "SELECT DISTINCT user_id
@@ -111,6 +113,8 @@ class SendMailNotificationsJob extends CronJob
                 ) {
                     return;
                 }
+
+                $GLOBALS['user'] = new Seminar_user($user);
 
                 $ok = false;
                 $mailmessage = $notification->getAllNotifications($user->id);
@@ -135,5 +139,7 @@ class SendMailNotificationsJob extends CronJob
                 }
             }
         );
+
+        $GLOBALS['user'] = $cli_user;
     }
 }
