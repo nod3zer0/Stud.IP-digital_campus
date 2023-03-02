@@ -29,10 +29,10 @@
                     <?= htmlReady($query['value']) ?>
                 </td>
                 <td>
-                    <? if ($query['details']) : ?>
+                    <? if (!empty($query['details'])) : ?>
                         <a href="<?= $controller->url_for('admin/user/activities/' . $user['user_id'], ['view' => $query['details']] + $params) ?>"
                             <?= Request::isXhr() ? 'data-dialog="size=50%"' :  ''?>>
-                            <?= Icon::create('info-circle', 'clickable', ['title' => _('Übersicht anzeigen')])->asImg('16') ?>
+                            <?= Icon::create('info-circle')->asImg(['title' => _('Übersicht anzeigen')]) ?>
                         </a>
                     <? endif ?>
                 </td>
@@ -42,7 +42,7 @@
 </section>
 
 <? if (Request::get('view') !== 'files') : ?>
-    <? if (Request::get('view') == 'courses') : ?>
+    <? if (Request::get('view') === 'courses') : ?>
         <?= $this->render_partial('admin/user/_course_list.php',
                 ['memberships' => $sections['courses'],
                  'headline'    => _('Übersicht Veranstaltungen'),
@@ -57,11 +57,11 @@
     <? endif ?>
 
 
-    <? if (Request::get('view') == 'seminar_wait') : ?>
+    <? if (Request::get('view') === 'seminar_wait' && !empty($sections['seminar_wait'])) : ?>
         <?= $this->render_partial('admin/user/_waiting_list.php', ['memberships' => $sections['seminar_wait']]) ?>
     <? endif ?>
 
-    <? if (Request::get('view') == 'priorities') : ?>
+    <? if (Request::get('view') === 'priorities' && !empty($sections['priorities'])) : ?>
         <?= $this->render_partial('admin/user/_priority_list.php', ['priorities' => $sections['priorities']]) ?>
     <? endif ?>
 <? endif ?>
@@ -70,7 +70,7 @@
         <?= $this->render_partial('admin/user/_course_files.php', ['course_files' => $sections['course_files']]) ?>
     <? endif ?>
 
-    <? if ($sections['institutes']) : ?>
+    <? if (!empty($sections['institutes'])) : ?>
         <?= $this->render_partial('admin/user/_institute_files.php', ['institutes' => $sections['institutes']]) ?>
     <? endif ?>
 <? endif ?>

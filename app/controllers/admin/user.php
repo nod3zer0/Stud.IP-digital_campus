@@ -1280,7 +1280,7 @@ class Admin_UserController extends AuthenticatedController
         $this->sections = [];
 
         foreach ($memberships as $membership) {
-            $semester_name = $membership->course->isOpenEnded() ? _('unbegrenzt') : $membership->course->start_semester->name;
+            $semester_name = $membership->course->isOpenEnded() ? _('unbegrenzt') : (string)$membership->course->start_semester->name;
             if (!Request::get('view') || Request::get('view') === 'files') {
                 // count files for course
 
@@ -1290,10 +1290,15 @@ class Admin_UserController extends AuthenticatedController
 
 
                 if ($count) {
-                    if (!isset($course_files[$membership->seminar_id])) {
-                        $course_files[$semester_name][$membership->course->id]['course'] = $membership->course;
+                    if (!isset($course_files[$semester_name])) {
+                        $course_files[$semester_name] = [];
                     }
-                    $course_files[$semester_name][$membership->course->id]['files'] = $count;
+                    if (!isset($course_files[$semester_name][$membership->seminar_id])) {
+                        $course_files[$semester_name][$membership->seminar_id] = [
+                            'course' => $membership->course,
+                        ];
+                    }
+                    $course_files[$semester_name][$membership->seminar_id]['files'] = $count;
                 }
             }
             if (in_array(Request::get('view'), words('courses closed_courses'))) {
@@ -1335,6 +1340,7 @@ class Admin_UserController extends AuthenticatedController
         } elseif (Request::get('view') === 'priorities') {
             // priorities
             $priorities = DBManager::get()->fetchAll('SELECT * FROM `priorities` WHERE `user_id` = ?', [$user_id]);
+            $seminar_wait = [];
         }
 
         if (!empty($course_files)) {
@@ -1350,7 +1356,7 @@ class Admin_UserController extends AuthenticatedController
             $this->sections['closed_courses'] = $closed_courses;
         }
 
-        if (is_array($seminar_wait) && count($seminar_wait)) {
+        if (!empty($seminar_wait)) {
             $this->sections['seminar_wait'] = $seminar_wait;
         }
 

@@ -250,7 +250,7 @@ class CourseDate extends SimpleORMap implements PrivacyObject
      */
     public function getTypeName()
     {
-        return $GLOBALS['TERMIN_TYP'][$this->date_typ]['name'];
+        return $GLOBALS['TERMIN_TYP'][$this->date_typ]['name'] ?? '';
     }
 
     /**

@@ -45,11 +45,11 @@ use Studip\Button;
             <?= _('Status')?>
 
             <select name="perm">
-            <? foreach(words('alle user autor tutor dozent admin root') as $one): ?>
-                <option value="<?= $one ?>" <?= (!empty($request['perm']) && $request['perm'] === $one) ? 'selected' : '' ?>>
-                    <?= ($one === 'alle') ? _('alle') : $one ?>
-                </option>
-            <? endforeach; ?>
+                <? foreach(words('alle user autor tutor dozent admin root') as $one): ?>
+                    <option value="<?= $one ?>" <?= (!empty($request['perm']) && $request['perm'] === $one) ? 'selected' : '' ?>>
+                        <?= ($one === 'alle') ? _('alle') : $one ?>
+                    </option>
+                <? endforeach; ?>
             </select>
         </label>
 
@@ -58,11 +58,11 @@ use Studip\Button;
 
             <div class="hgroup">
                 <select name="inaktiv" class="size-s">
-                <? foreach(['<=' => '>=', '=' => '=', '>' => '<', 'nie' =>_('nie')] as $i => $one): ?>
-                    <option value="<?= htmlready($i) ?>" <?= (!empty($request['inaktiv'][0]) && $request['inaktiv'][0] === $i) ? 'selected' : '' ?>>
-                        <?= htmlReady($one) ?>
-                    </option>
-                <? endforeach; ?>
+                    <? foreach(['<=' => '>=', '=' => '=', '>' => '<', 'nie' =>_('nie')] as $i => $one): ?>
+                        <option value="<?= htmlready($i) ?>" <?= (!empty($request['inaktiv'][0]) && $request['inaktiv'][0] === $i) ? 'selected' : '' ?>>
+                            <?= htmlReady($one) ?>
+                        </option>
+                    <? endforeach; ?>
                 </select>
 
                 <input name="inaktiv_tage" type="number" id="inactive"
@@ -100,11 +100,11 @@ use Studip\Button;
                 <option value="null-domain" <?= $request['userdomains'] === 'null-domain' ? 'selected' : '' ?>>
                     <?= _('Ohne Domäne') ?>
                 </option>
-            <? foreach ($userdomains as $one): ?>
-                <option value="<?= htmlReady($one->id) ?>" <?= $request['userdomains'] === $one->id ? 'selected' : ''?>>
-                    <?= htmlReady($one->name ?: $one->id) ?>
-                </option>
-            <? endforeach; ?>
+                <? foreach ($userdomains as $one): ?>
+                    <option value="<?= htmlReady($one->id) ?>" <?= $request['userdomains'] === $one->id ? 'selected' : ''?>>
+                        <?= htmlReady($one->name ?: $one->id) ?>
+                    </option>
+                <? endforeach; ?>
             </select>
         </label>
 
@@ -149,51 +149,51 @@ use Studip\Button;
         <label class="col-3">
             <?= _('Authentifizierung') ?>
             <select name="auth_plugins">
-               <option value=""><?= _('Alle') ?></option>
-           <? foreach (array_merge(['preliminary' => _('vorläufig')], $available_auth_plugins) as $key => $val): ?>
-                <option value="<?= $key ?>" <?= $request['auth_plugins'] === $key ? 'selected' : '' ?>>
-                    <?= htmlReady($val) ?>
-                </option>
-            <? endforeach; ?>
+                <option value=""><?= _('Alle') ?></option>
+                <? foreach (array_merge(['preliminary' => _('vorläufig')], $available_auth_plugins) as $key => $val): ?>
+                    <option value="<?= $key ?>" <?= $request['auth_plugins'] === $key ? 'selected' : '' ?>>
+                        <?= htmlReady($val) ?>
+                    </option>
+                <? endforeach; ?>
             </select>
         </label>
 
-    <? foreach ($datafields as $datafield): ?>
-        <label class="col-3">
-            <?= htmlReady($datafield->name) ?>
+        <? foreach ($datafields as $datafield): ?>
+            <label class="col-3">
+                <?= htmlReady($datafield->name) ?>
 
-        <? if ($datafield->type === 'bool'): ?>
-            <section class="hgroup">
+                <? if ($datafield->type === 'bool'): ?>
+                    <section class="hgroup">
                 <span class="col-2">
-                    <input type="radio" name="<?= $datafield->id ?>" value="" <?= (mb_strlen($request[$datafield->id]) === 0) ? 'checked' : '' ?>>
+                    <input type="radio" name="<?= $datafield->id ?>" value="" <?= isset($request[$datafield->id]) && mb_strlen($request[$datafield->id]) === 0 ? 'checked' : '' ?>>
                     <?= _('egal') ?>
                 </span>
-                <span class="col-2">
-                    <input type="radio" name="<?= $datafield->id ?>" value="1" <?= ($request[$datafield->id] === '1') ? 'checked' : '' ?>>
+                        <span class="col-2">
+                    <input type="radio" name="<?= $datafield->id ?>" value="1" <?= (!empty($request[$datafield->id]) && $request[$datafield->id] === '1') ? 'checked' : '' ?>>
                     <?= _('ja') ?>
                 </span>
-                <span class="col-2">
-                    <input type="radio" name="<?= $datafield->id ?>" value="0" <?= ($request[$datafield->id] === '0') ? 'checked' : '' ?>>
+                        <span class="col-2">
+                    <input type="radio" name="<?= $datafield->id ?>" value="0" <?= isset($request[$datafield->id]) && $request[$datafield->id] === '0' ? 'checked' : '' ?>>
                     <?= _('nein') ?>
                 </span>
-            </section>
-        <? elseif ($datafield->type === 'selectbox' || $datafield->type === 'radio') : ?>
-            <? $datafield_entry = DataFieldEntry::createDataFieldEntry($datafield);?>
-            <? [$type_param, $is_assoc_param] = $datafield_entry->getParameters(); ?>
-            <select name="<?= $datafield->id ?>">
-                <option value="---ignore---"><?= _('alle') ?></option>
-            <? foreach ($type_param as $pkey => $pval) :?>
-                <? $value = $is_assoc_param ? (string) $pkey : $pval; ?>
-                <option value="<?= $value ?>" <?= ($request[$datafield->id] === $value) ? 'selected' : '' ?>>
-                    <?= htmlReady($pval) ?>
-                </option>
-            <? endforeach ?>
-            </select>
-        <? else : ?>
-            <input type="text" name="<?= htmlReady($datafield->id) ?>" value="<?= htmlReady($request[$datafield->id] ?? '') ?>">
-        <? endif ?>
-        </label>
-    <? endforeach; ?>
+                    </section>
+                <? elseif ($datafield->type === 'selectbox' || $datafield->type === 'radio') : ?>
+                    <? $datafield_entry = DataFieldEntry::createDataFieldEntry($datafield);?>
+                    <? [$type_param, $is_assoc_param] = $datafield_entry->getParameters(); ?>
+                    <select name="<?= $datafield->id ?>">
+                        <option value="---ignore---"><?= _('alle') ?></option>
+                        <? foreach ($type_param as $pkey => $pval) :?>
+                            <? $value = $is_assoc_param ? (string) $pkey : $pval; ?>
+                            <option value="<?= $value ?>" <?= isset($request[$datafield->id]) && $request[$datafield->id] === $value ? 'selected' : '' ?>>
+                                <?= htmlReady($pval) ?>
+                            </option>
+                        <? endforeach ?>
+                    </select>
+                <? else : ?>
+                    <input type="text" name="<?= htmlReady($datafield->id) ?>" value="<?= htmlReady($request[$datafield->id] ?? '') ?>">
+                <? endif ?>
+            </label>
+        <? endforeach; ?>
         <? if(!empty($roles)) :?>
             <label class="col-3">
                 <?= _('Rollen')?>
@@ -209,7 +209,7 @@ use Studip\Button;
         <? endif?>
         <label>
             <input type="checkbox" name="show_only_not_lectures" value="1"
-                   <?= (!empty($request['show_only_not_lectures'])) ? 'checked' : '' ?>>
+                <?= (!empty($request['show_only_not_lectures'])) ? 'checked' : '' ?>>
             <?= _('Nur Personen anzeigen, die in keiner Veranstaltung Lehrende sind')?>
         </label>
     </fieldset>
