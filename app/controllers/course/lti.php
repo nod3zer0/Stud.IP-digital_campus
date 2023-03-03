@@ -242,8 +242,8 @@ class Course_LtiController extends StudipController
         ]);
 
         foreach ($custom_parameters as $param) {
-            list($key, $value) = explode('=', $param, 2);
-            if (isset($value)) {
+            if (strpos($param, '=') !== false) {
+                list($key, $value) = explode('=', $param, 2);
                 $lti_link->addCustomParameter(trim($key), trim($value));
             }
         }
@@ -291,13 +291,12 @@ class Course_LtiController extends StudipController
             $lti_data->description = Studip\Markup::purifyHtml(Studip\Markup::markAsHtml($item['text']));
             $lti_data->tool_id = $tool_id;
             $lti_data->launch_url = (string) $item['url'];
-            $custom_parameters = '';
             $options = [];
             if (is_array($item['custom'])) {
+                $custom_parameters = '';
                 foreach ($item['custom'] as $key => $value) {
                     $custom_parameters .= $key . '=' . $value . "\n";
                 }
-
                 $options['custom_parameters'] = $custom_parameters;
             }
 
@@ -352,8 +351,8 @@ class Course_LtiController extends StudipController
         ]);
 
         foreach ($custom_parameters as $param) {
-            list($key, $value) = explode('=', $param, 2);
-            if (isset($value)) {
+            if (strpos($param, '=') !== false) {
+                list($key, $value) = explode('=', $param, 2);
                 $lti_link->addCustomParameter(trim($key), trim($value));
             }
         }

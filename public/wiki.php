@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 require '../lib/bootstrap.php';
 
 page_open(["sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"]);
-$auth->login_if(Request::get('again') && ($auth->auth["uid"] == "nobody"));
+$GLOBALS['auth']->login_if(Request::get('again') && $GLOBALS['user']->id === 'nobody');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
@@ -77,7 +77,7 @@ if (in_array(Request::get('view'), words('listnew listall export'))) {
 
 if (Request::option('wiki_comments') === 'none') {  // don't show comments
     $show_wiki_comments = 'none';
-} else if ($user->cfg->WIKI_COMMENTS_ENABLE) {      // show all comments
+} else if ($GLOBALS['user']->cfg->WIKI_COMMENTS_ENABLE) {      // show all comments
     $show_wiki_comments = 'all';
 } else {                                            // show comments as icons
     $show_wiki_comments = 'icon';
@@ -145,10 +145,10 @@ if ($view === 'listall') {
     }
 
     // set lock
-    setWikiLock(null, $user->id, Context::getId(), $keyword);
+    setWikiLock(null, $GLOBALS['user']->id, Context::getId(), $keyword);
 
     // show form
-    wikiEdit($keyword, $wikiData, $user->id);
+    wikiEdit($keyword, $wikiData, $GLOBALS['user']->id);
 
 } else if ($view === 'editnew') {
     //
@@ -161,7 +161,7 @@ if ($view === 'listall') {
         $ancestor = null;
     }
     $edit_perms = CourseConfig::get($range_id)->WIKI_COURSE_EDIT_RESTRICTED ? 'tutor' : 'autor';
-    if (!$perm->have_studip_perm($edit_perms, $range_id)) {
+    if (!$GLOBALS['perm']->have_studip_perm($edit_perms, $range_id)) {
         throw new AccessDeniedException(_('Sie haben keine Berechtigung, in dieser Veranstaltung Seiten zu editieren!'));
     }
 
@@ -181,10 +181,10 @@ if ($view === 'listall') {
     }
 
     // set lock
-    setWikiLock(null, $user->id, Context::getId(), $keyword);
+    setWikiLock(null, $GLOBALS['user']->id, Context::getId(), $keyword);
 
     //show form
-    wikiEdit($keyword, $wikiData, $user->id, Request::get('lastpage'), $ancestor);
+    wikiEdit($keyword, $wikiData, $GLOBALS['user']->id, Request::get('lastpage'), $ancestor);
 
 } else {
     // Default action: Display WikiPage (+ logic for submission)
@@ -202,9 +202,10 @@ if ($view === 'listall') {
         if (Request::get('ancestor')) {
             $ancestor = Request::get('ancestor');
         } else {
-            $ancestor = WikiPage::findLatestPage(Context::getId(), $keyword)->ancestor ?: null;
+            $latest_page = WikiPage::findLatestPage(Context::getId(), $keyword);
+            $ancestor = $latest_page ? $latest_page->ancestor : null;
         }
-        submitWikiPage($keyword, $version, Studip\Markup::purifyHtml(Request::get('body')), $user->id, Context::getId(), $ancestor);
+        submitWikiPage($keyword, $version, Studip\Markup::purifyHtml(Request::get('body')), $GLOBALS['user']->id, Context::getId(), $ancestor);
         $version = ''; // $version="" means: get latest
 
     } else if ($cmd === 'abortedit') { // Editieren abgebrochen
@@ -213,7 +214,7 @@ if ($view === 'listall') {
         //
 
         // kill lock (set when starting to edit)
-        releasePageLocks($keyword, $user->id);
+        releasePageLocks($keyword, $GLOBALS['user']->id);
 
         // if editing new page was aborted, display last page again
         $keyword = Request::get('lastpage', $keyword);

@@ -103,8 +103,13 @@ class Course_ScmController extends AuthenticatedController
             )->includeTicket('studip_ticket');
         }
 
-        $this->set_title($this->scm->tab_name ?: _('Informationen'));
-        Navigation::activateItem('/course/scm/' . $this->scm->id);
+        if (isset($this->scm)) {
+            $this->set_title($this->scm->tab_name);
+            Navigation::activateItem('/course/scm/' . $this->scm->id);
+        } else {
+            $this->set_title(_('Informationen'));
+            Navigation::activateItem('/course/scm');
+        }
     }
 
     /**

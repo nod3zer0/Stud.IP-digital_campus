@@ -2,14 +2,14 @@
     <header>
         <h1>
             <?= Icon::create('infopage', Icon::ROLE_INACTIVE)->asImg(['class' => 'text-top']) ?>
-            <?= htmlReady($scm->tab_name) ?>
+            <?= htmlReady(isset($scm) ? $scm->tab_name : '') ?>
         </h1>
         <nav>
             <span>
-            <? if ($scm->user): ?>
+            <? if (isset($scm) && $scm->user): ?>
                 <?= sprintf(_('Zuletzt geändert von %s am %s'), ObjectdisplayHelper::link($scm->user), strftime('%x, %X', $scm->chdate)) ?>
             <? else: ?>
-                <?= $scm->chdate ? sprintf(_('Zuletzt geändert am %s'), strftime('%x, %X', $scm->chdate)) : '' ?>
+                <?= isset($scm) && $scm->chdate ? sprintf(_('Zuletzt geändert am %s'), strftime('%x, %X', $scm->chdate)) : '' ?>
             <? endif; ?>
             </span>
         <? if ($priviledged): ?>
@@ -30,6 +30,6 @@
         </nav>
     </header>
     <section>
-        <?= ((string) $scm->content) ? formatReady($scm->content) : MessageBox::info(_('In diesem Bereich wurden noch keine Inhalte erstellt.')) ?>
+        <?= (isset($scm) && (string) $scm->content) ? formatReady($scm->content) : MessageBox::info(_('In diesem Bereich wurden noch keine Inhalte erstellt.')) ?>
     </section>
 </article>

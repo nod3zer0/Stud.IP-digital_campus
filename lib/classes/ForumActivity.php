@@ -22,7 +22,7 @@ class ForumActivity
      */
     public static function newEntry($event, $topic_id, $post)
     {
-        $verb = $post['depth'] === 3 ? 'answered' : 'created';
+        $verb = isset($post['depth']) && $post['depth'] === 3 ? 'answered' : 'created';
 
         if ($verb === 'created') {
             if (isset($post['depth']) && (int)$post['depth'] === 1) {
@@ -41,7 +41,7 @@ class ForumActivity
      * Post activity for updating a forum post
      * @param string $event
      * @param string $topic_id
-     * @param string $post
+     * @param array $post
      */
     public static function updateEntry($event, $topic_id, $post)
     {
@@ -69,7 +69,7 @@ class ForumActivity
      * Post activity for deleting a forum post
      * $param string $event
      * @param string $topic_id
-     * @param string $post
+     * @param array $post
      */
     public static function deleteEntry($event, $topic_id, $post)
     {

@@ -187,7 +187,7 @@ class LtiLink
     /**
      * Add a list of additional launch parameters to this LTI launch request.
      *
-     * @param string $params    list of launch parameters
+     * @param array $params    list of launch parameters
      */
     public function addLaunchParameters($params)
     {
@@ -217,7 +217,7 @@ class LtiLink
     /**
      * Add a list of custom launch parameters to this LTI launch request.
      *
-     * @param string $params    list of custom parameters
+     * @param array $params    list of custom parameters
      */
     public function addCustomParameters($params)
     {
@@ -244,7 +244,7 @@ class LtiLink
     /**
      * Add a list of substitution variables to this LTI launch request.
      *
-     * @param string $variables list of substitution variables
+     * @param array $variables list of substitution variables
      */
     public function addVariables($variables)
     {
@@ -292,8 +292,15 @@ class LtiLink
      */
     public function getLaunchSignature($launch_params)
     {
-        list($launch_url, $fragment) = explode('#', $this->launch_url);
-        list($launch_url, $query)    = explode('?', $launch_url);
+        $launch_url = $this->launch_url;
+
+        if (strpos($launch_url, '#') !== false) {
+            $launch_url = explode('#', $launch_url)[0];
+        }
+
+        if (strpos($launch_url, '?') !== false) {
+            list($launch_url, $query) = explode('?', $launch_url);
+        }
 
         if (isset($query)) {
             parse_str($query, $query_params);
