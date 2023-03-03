@@ -37,7 +37,7 @@
                 <?= _('Profilseite')?>
             <? elseif ($assignment['range_type'] === 'course') : ?>
                 <? $course = Course::find($assignment['range_id']) ?>
-                <?= htmlReady((Config::get()->IMPORTANT_SEMNUMBER ? $course->veranstaltungsnummer." " : "") . $course['name'] . ' ('.$course->semester_text.')') ?>
+                <?= $course ? htmlReady((!empty($course->veranstaltungsnummer) && Config::get()->IMPORTANT_SEMNUMBER ? $course->veranstaltungsnummer . ' ' : '') . "{$course->name} ({$course->semester_text})") : '' ?>
             <? elseif ($assignment['range_type'] === 'statusgruppe') : ?>
                 <? $statusgruppe = Statusgruppen::find($assignment['range_id']) ?>
                 <? if ($statusgruppe) : ?>
@@ -71,18 +71,18 @@
     </td>
     <td class="actions">
     <? if ($questionnaire->isRunning() && $countedAnswers) : ?>
-        <?= Icon::create('edit', 'inactive')->asImg(20, ['title' => _('Der Fragebogen wurde gestartet und kann nicht mehr bearbeitet werden.')]) ?>
+        <?= Icon::create('edit', Icon::ROLE_INACTIVE)->asImg(['title' => _('Der Fragebogen wurde gestartet und kann nicht mehr bearbeitet werden.')]) ?>
     <? else : ?>
         <a href="<?= $controller->link_for('questionnaire/edit/' . $questionnaire->id) ?>"
            data-dialog="size=big"
            title="<?= _('Fragebogen bearbeiten') ?>">
-            <?= Icon::create('edit', 'clickable')->asImg(20) ?>
+            <?= Icon::create('edit') ?>
         </a>
     <? endif ?>
         <a href="<?= $controller->link_for('questionnaire/context/' . $questionnaire->id) ?>"
            data-dialog="reload-on-close"
            title="<?= _('Zuweisungen bearbeiten') ?>">
-            <?= Icon::create('group2', 'clickable')->asImg(20) ?>
+            <?= Icon::create('group2') ?>
         </a>
 
         <?
@@ -91,13 +91,13 @@
             $menu->addLink(
                 $controller->url_for('questionnaire/answer/' . $questionnaire->id),
                 _('Ausfüllen'),
-                Icon::create('evaluation', 'clickable'),
+                Icon::create('evaluation'),
                 ['data-dialog' => 1]
             );
             $menu->addLink(
                 $controller->url_for('questionnaire/stop/' . $questionnaire->id, in_array($range_type, ['course', 'institute']) ? ['redirect' => 'questionnaire/courseoverview'] : []),
                 _('Fragebogen beenden'),
-                Icon::create('pause', 'clickable')
+                Icon::create('pause')
             );
         } else {
             $menu->addLink(
@@ -109,31 +109,31 @@
             $menu->addLink(
                 $controller->url_for('questionnaire/start/'  .$questionnaire->id, in_array($range_type, ['course', 'institute']) ? ['redirect' => 'questionnaire/courseoverview'] : []),
                 _('Fragebogen starten'),
-                Icon::create('play', 'clickable')
+                Icon::create('play')
             );
         }
         $menu->addLink(
             $controller->url_for('questionnaire/evaluate/'  .$questionnaire->id),
             _('Auswertung'),
-            Icon::create('stat', 'clickable'),
+            Icon::create('stat'),
             ['data-dialog' => '']
         );
         $menu->addLink(
             $controller->url_for('questionnaire/copy/'  .$questionnaire->id),
             _('Kopieren'),
-            Icon::create('clipboard', 'clickable'),
+            Icon::create('clipboard'),
             ['data-dialog' => '']
         );
         $menu->addLink(
             $controller->url_for('questionnaire/export_file/'  .$questionnaire->id),
             _('Vorlage herunterladen'),
-            Icon::create('export', 'clickable')
+            Icon::create('export')
         );
         if ($questionnaire->countAnswers() > 0) {
             $menu->addButton(
                 'reset_answers',
                 _('Antworten löschen'),
-                Icon::create('refresh', 'clickable'),
+                Icon::create('refresh'),
                 [
                     'data-confirm' => _('Sollen die Antworten wirklich gelöscht werden?'),
                     'formaction' => $controller->url_for('questionnaire/reset/' . $questionnaire->id)
@@ -143,12 +143,12 @@
         $menu->addLink(
             $controller->url_for('questionnaire/export/'  .$questionnaire->id),
             _('Export als CSV'),
-            Icon::create('file-excel', 'clickable')
+            Icon::create('file-excel')
         );
         $menu->addLink(
             $controller->url_for('questionnaire/delete/'  .$questionnaire->id),
             _('Fragebogen löschen'),
-            Icon::create('trash', 'clickable'),
+            Icon::create('trash'),
             ['data-confirm' => _('Wirklich löschen?')]
         );
         echo $menu->render();
