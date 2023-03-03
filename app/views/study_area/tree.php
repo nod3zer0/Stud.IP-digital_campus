@@ -6,6 +6,7 @@
  * @var array $dont_open
  * @var string $compulsory
  */
+$layer = 0;
 ?>
 <li>
 <? if ($node->id !== 'root' && $node->required_children): ?>

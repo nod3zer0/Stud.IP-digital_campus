@@ -11,7 +11,7 @@ if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turn
     if ($cycle['desc'])
         $cycle_output .= ', <i>' . htmlReady($cycle['desc']) . '</i>';
 
-    if ($show_room) :
+    if (!empty($show_room)) :
         $cycle_output .= $this->render_partial('dates/_seminar_rooms', ['assigned' => $cycle['assigned_rooms'],
                                                                         'freetext' => $cycle['freetext_rooms'],
                                                                         'link'     => $link

@@ -363,7 +363,7 @@
     </article>
 <? endif ?>
 
-<? if ($study_areas && count($study_areas) > 0) : ?>
+<? if (!empty($study_areas)) : ?>
     <article class="studip">
         <header>
             <h1><?= _('Studienbereiche') ?></h1>
