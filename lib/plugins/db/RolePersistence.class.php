@@ -247,7 +247,7 @@ class RolePersistence
                       WHERE `permname` = :perm";
             $statement = DBManager::get()->prepare($query);
             $statement->bindValue(':user_id', $user_id);
-            $statement->bindValue(':perm', is_object($GLOBALS['perm']) ? $GLOBALS['perm']->get_perm($user_id) : 'nobody');
+            $statement->bindValue(':perm', empty($GLOBALS['perm']) ? 'nobody' : $GLOBALS['perm']->get_perm($user_id));
             $statement->execute();
             $statement->setFetchMode(PDO::FETCH_ASSOC);
 
