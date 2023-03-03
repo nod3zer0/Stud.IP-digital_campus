@@ -32,7 +32,13 @@ class UnitsCopy extends NonJsonApiController
         $rangeType = $data['rangeType'];
         $modified = $data['modified'];
 
-        if (!Authority::canCreateUnit($user)) {
+        try {
+            $range = \RangeFactory::createRange($rangeType, $rangeId);
+        } catch (\Exception $e) {
+            throw new RecordNotFoundException('Range could not be found');
+        }
+
+        if (!Authority::canCreateUnit($user, $range)) {
             throw new AuthorizationFailedException();
         }
 

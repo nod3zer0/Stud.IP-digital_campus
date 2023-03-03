@@ -237,7 +237,10 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
      */
     public static function build($data, $is_new = true)
     {
-        $user = new static();
+        // Note: This should be used instead of `new static()` since PHPStan
+        $class = get_called_class();
+        $user = new $class();
+
         $user->info = new UserInfo();
         $user->setData($data);
         $user->setNew($is_new);

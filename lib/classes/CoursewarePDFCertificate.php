@@ -2,13 +2,12 @@
 
 class CoursewarePDFCertificate extends TCPDF
 {
+    protected $background;
+
     public function __construct($background = false, $orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = true, $encoding = 'UTF-8')
     {
-        $this->config = Config::get();
-        if ($this->config->getValue('LOAD_EXTERNAL_MEDIA') === 'proxy') {
-            $this->media_proxy = new MediaProxy();
-        }
         parent::__construct($orientation, $unit, $format, $unicode, $encoding, false);
+
         if ($background) {
             $fileRef = FileRef::find($background);
             $this->background = $fileRef->file->getPath();

@@ -39,10 +39,10 @@ class RemindOerUpload extends CronJob
                 $filetype = $file_ref->getFileType();
                 $file_to_suggest = $filetype->convertToStandardFile();
 
-                $this->author = $file_ref->owner->username;
-                $this->link_to_share = URLHelper::getURL('dispatch.php/file/share_oer/' . $result['file_ref_id']);
-                $this->linktext = _('Klicken Sie hier, um das Material im OER-Campus zu veröffentlichen.');
-                $this->formatted_link = '['. $this->linktext .']' . $this->link_to_share;
+                $author = $file_ref->owner->username;
+                $link_to_share = URLHelper::getURL('dispatch.php/file/share_oer/' . $result['file_ref_id']);
+                $linktext = _('Klicken Sie hier, um das Material im OER-Campus zu veröffentlichen.');
+                $formatted_link = '['. $linktext .']' . $link_to_share;
 
                 $oer_reminder_message = sprintf(_("Sie wollten daran erinnert werden, die folgende Datei im OER-Campus zu veröffentlichen:\n\n"
                     . "Dateiname: %s \n"
@@ -50,14 +50,14 @@ class RemindOerUpload extends CronJob
                     . "%s \n\n"),
                     $file_to_suggest->getFilename(),
                     $file_to_suggest->getDescription(),
-                    $this->formatted_link
+                    $formatted_link
                 );
 
                 $messaging = new messaging();
 
                 $messaging->insert_message(
                     $oer_reminder_message,
-                    $this->author,
+                    $author,
                     '____%system%____',
                     '',
                     Request::option('message_id'),
@@ -67,10 +67,7 @@ class RemindOerUpload extends CronJob
                 );
 
                 OERPostUpload::deleteBySQL("file_ref_id = ?", [$result['file_ref_id']]);
-
             }
-
         }
-
     }
 }

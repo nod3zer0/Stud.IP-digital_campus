@@ -114,7 +114,7 @@ class FileRefsContentShow extends NonJsonApiController
 
         $fileRef->incrementDownloadCounter();
 
-        $stream = Psr7\stream_for(fopen($pathFile, 'rb'));
+        $stream = Psr7\Utils::streamFor(fopen($pathFile, 'rb'));
 
         return $response->withBody($stream);
     }

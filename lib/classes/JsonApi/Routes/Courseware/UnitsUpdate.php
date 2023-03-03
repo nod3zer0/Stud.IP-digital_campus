@@ -6,6 +6,7 @@ use Courseware\Unit;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
+use JsonApi\Routes\TimestampTrait;
 use JsonApi\Routes\ValidationTrait;
 use JsonApi\Schemas\Courseware\Unit as UnitSchema;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,6 +18,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class UnitsUpdate extends JsonApiController
 {
     use EditBlockAwareTrait;
+    use TimestampTrait;
     use ValidationTrait;
 
     /**

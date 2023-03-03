@@ -114,7 +114,7 @@ class SendMailNotificationsJob extends CronJob
                     return;
                 }
 
-                $GLOBALS['user'] = new Seminar_user($user);
+                $GLOBALS['user'] = new Seminar_User($user);
 
                 $ok = false;
                 $mailmessage = $notification->getAllNotifications($user->id);

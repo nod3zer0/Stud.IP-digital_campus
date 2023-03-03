@@ -36,18 +36,19 @@ class ContentBar
     public static function get(): ContentBar
     {
         if (static::$instance === null) {
-            static::$instance = new static;
+            static::$instance = new static();
         }
         return static::$instance;
     }
 
     /**
      * Private constructor to ensure that the singleton Get() method is always
-     * used.
+     * used. The constructor is finalized so that the call to get() will never
+     * fail.
      *
      * @see ContentBar::get
      */
-    protected function __construct()
+    protected final function __construct()
     {
     }
 

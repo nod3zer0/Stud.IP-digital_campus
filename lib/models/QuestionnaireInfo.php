@@ -1,6 +1,4 @@
 <?php
-require_once 'lib/classes/QuestionType.interface.php';
-
 class QuestionnaireInfo extends QuestionnaireQuestion implements QuestionType
 {
     public static function getIcon(bool $active = false) : Icon
@@ -45,7 +43,7 @@ class QuestionnaireInfo extends QuestionnaireQuestion implements QuestionType
 
     public function createAnswer()
     {
-
+        return new QuestionnaireAnswer(); // Unused but necessary
     }
 
     public function getUserIdsOfFilteredAnswer($answer_option)

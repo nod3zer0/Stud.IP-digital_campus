@@ -89,6 +89,13 @@ class Virusscanner
     }
 
     /**
+     * Finalized constructor so that the instantition in scan() will never fail.
+     */
+    protected final function __construct()
+    {
+    }
+
+    /**
      * Establishes a connection to virus scanner via socket or TCP, depending on Stud.IP configuration.
      *
      * @return resource|null
