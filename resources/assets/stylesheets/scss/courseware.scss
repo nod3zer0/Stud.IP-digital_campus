@@ -5269,6 +5269,7 @@ cw tiles end
     cursor: pointer;
 
     &::file-selector-button {
+        font-family: inherit;
         border: none;
         border-right: solid thin $base-color;
         background-color: $white;
