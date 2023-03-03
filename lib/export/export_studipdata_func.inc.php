@@ -83,7 +83,7 @@ function output_data($object_data, $output_mode = "file", $flush = false)
 function export_range($range_id)
 {
     global $o_mode, $range_name, $ex_person_details, $persons, $ex_sem;
-
+    $output_startet = false;
     // Ist die Range-ID eine Einrichtungs-ID?
     $query     = "SELECT Name FROM Institute WHERE Institut_id = ?";
     $statement = DBManager::get()->prepare($query);
@@ -104,7 +104,7 @@ function export_range($range_id)
     $statement = DBManager::get()->prepare($query);
     $statement->execute([$range_id]);
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        if ($row['Name'] != '') {
+        if (!empty($row['Name'])) {
             // output_data ( xml_header(), $o_mode);
             export_inst($row['Institut_id']);
         }
@@ -117,7 +117,7 @@ function export_range($range_id)
     $statement = DBManager::get()->prepare($query);
     $statement->execute([$range_id]);
     $row = $statement->fetch(PDO::FETCH_ASSOC);
-    if ($row && $row['Name'] != '') {
+    if ($row && $row['Name']) {
         $range_name = $row['Name'];
         if (!$output_startet) {
             output_data(xml_header(), $o_mode);
@@ -149,7 +149,7 @@ function export_range($range_id)
                 output_data(xml_header(), $o_mode);
                 $output_startet = true;
             }
-            foreach ($inst_array as $key => $inst_ids) {
+            foreach ($inst_array as $inst_ids) {
                 export_inst($inst_ids);
             }
         }
@@ -158,6 +158,7 @@ function export_range($range_id)
     $query     = "SELECT 1 FROM sem_tree WHERE sem_tree_id = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute([$range_id]);
+    $sem_ids = [];
     if ($statement->fetchColumn() || $range_id == 'root') {
         if (!$output_startet) {
             output_data(xml_header(), $o_mode);
@@ -226,7 +227,7 @@ function export_range($range_id)
  */
 function export_inst($inst_id, $ex_sem_id = "all")
 {
-    global $ex_type, $o_mode, $xml_file, $xml_names_inst, $xml_groupnames_inst, $INST_TYPE;
+    global $ex_type, $o_mode, $xml_names_inst, $xml_groupnames_inst, $INST_TYPE;
 
     $query     = "SELECT * FROM Institute WHERE Institut_id = ?";
     $statement = DBManager::get()->prepare($query);
@@ -238,9 +239,9 @@ function export_inst($inst_id, $ex_sem_id = "all")
         if ($val == '') {
             $val = $key;
         }
-        if ($key == 'type' && $INST_TYPE[$institute[$key]]['name'] != '') {
+        if ($key === 'type' && !empty($INST_TYPE[$institute[$key]]) && $INST_TYPE[$institute[$key]]['name']) {
             $data_object .= xml_tag($val, $INST_TYPE[$institute[$key]]['name']);
-        } elseif ($institute[$key] != '') {
+        } elseif (!empty($institute[$key])) {
             $data_object .= xml_tag($val, $institute[$key]);
         }
     }
@@ -252,7 +253,7 @@ function export_inst($inst_id, $ex_sem_id = "all")
     $statement = DBManager::get()->prepare($query);
     $statement->execute([$institute['fakultaets_id']]);
     $faculty = $statement->fetch(PDO::FETCH_ASSOC);
-    if ($faculty['Name'] != '') {
+    if ($faculty && $faculty['Name']) {
         $data_object .= xml_tag($xml_groupnames_inst["childobject"], $faculty['Name'], ['key' => $faculty['Institut_id']]);
     }
 
@@ -480,7 +481,7 @@ function export_sem($inst_id, $ex_sem_id = 'all')
                 $data_object .= xml_close_tag($xml_groupnames_lecture['childgroup3a']);
             } elseif ($key === 'admission_turnout') {
                 $data_object .= xml_open_tag($val, !empty($row['admission_type']) ? _('max.') : _('erw.'));
-                $data_object .= $row[$key];
+                $data_object .= $row[$key] ?? '';
                 $data_object .= xml_close_tag($val);
             } elseif ($key === 'teilnehmer_anzahl_aktuell') {
                 $count_statement->execute([$row['seminar_id']]);
@@ -511,6 +512,9 @@ function export_sem($inst_id, $ex_sem_id = 'all')
 
         $inner_statement->execute([$row['seminar_id']]);
         while ($inner = $inner_statement->fetch(PDO::FETCH_ASSOC)) {
+            if (!isset($persons[$inner['user_id']])) {
+                $persons[$inner['user_id']] = false;
+            }
             if ($ex_person_details) {
                 $persons[$inner['user_id']] = true;
             }
@@ -554,7 +558,7 @@ function export_sem($inst_id, $ex_sem_id = 'all')
  */
 function export_teilis($inst_id, $ex_sem_id = "no")
 {
-    global $range_id, $xml_file, $o_mode, $xml_names_person, $xml_groupnames_person, $xml_names_studiengaenge, $xml_groupnames_studiengaenge, $object_counter, $filter, $SEM_CLASS, $SEM_TYPE;
+    global $range_id, $o_mode, $xml_names_person, $xml_groupnames_person, $xml_names_studiengaenge, $xml_groupnames_studiengaenge, $object_counter, $filter, $SEM_CLASS, $SEM_TYPE;
 
     if ($filter == 'status') {
         $query     = "SELECT statusgruppe_id, name
@@ -692,10 +696,14 @@ function export_teilis($inst_id, $ex_sem_id = "no")
         $object_counter_tmp = $object_counter;
         if (count($data) > 0) {
             $data_object_tmp .= xml_open_tag($xml_groupnames_person['subgroup1'], $val1);
+            $person_out = [];
             foreach ($data as $row) {
+                if (!isset($person_out[$row['user_id']])) {
+                    $person_out[$row['user_id']] = false;
+                }
                 // Nur Personen ausgeben, die entweder einer Gruppe angehoeren
                 // oder zur Veranstaltung gehoeren und noch nicht ausgegeben wurden.
-                if ($key1 != 'no' || $person_out[$row['user_id']] != true) {
+                if ($key1 !== 'no' || !$person_out[$row['user_id']]) {
                     $object_counter  += 1;
                     $data_object_tmp .= xml_open_tag($xml_groupnames_person["object"], $row['username']);
 
@@ -704,7 +712,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                         if ($val == '') {
                             $val = $key;
                         }
-                        if ($row[$key] != '') {
+                        if (!empty($row[$key])) {
                             $data_object_tmp .= xml_tag($val, $row[$key]);
                         }
                     }
@@ -766,7 +774,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
  */
 function export_pers($inst_id)
 {
-    global $range_id, $xml_file, $o_mode, $xml_names_person, $xml_groupnames_person, $object_counter, $filter;
+    global $o_mode, $xml_names_person, $xml_groupnames_person, $object_counter;
 
     $group           = 'FIRSTGROUP';
     $group_tab_zelle = 'name';
@@ -795,10 +803,11 @@ function export_pers($inst_id)
     }
     // create xml-output
     $data_object = xml_open_tag($xml_groupnames_person['group']);
+    $data_found = false;
     foreach ($rows as $row) {
         $data_found   = true;
         $group_string = '';
-        if ($do_group && $group != $row[$group_tab_zelle]) {
+        if ($do_group && isset($row[$group_tab_zelle]) && $group != $row[$group_tab_zelle]) {
             if ($group != 'FIRSTGROUP') {
                 $group_string .= xml_close_tag($xml_groupnames_person['subgroup1']);
             }
@@ -870,7 +879,7 @@ function export_persons($persons)
             if ($val == '') {
                 $val = $key;
             }
-            if ($row[$key] != '') {
+            if (!empty($row[$key])) {
                 $data_object .= xml_tag($val, $row[$key]);
             }
         }

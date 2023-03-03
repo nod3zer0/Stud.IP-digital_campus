@@ -456,13 +456,12 @@ class Course_MembersController extends AuthenticatedController
             $this->flash['move'] = Request::int('move');
             $this->redirect('course/members/send_to_course');
         } else {
-            global $perm;
-            if ($perm->have_perm('root')) {
+            if ($GLOBALS['perm']->have_perm('root')) {
                 $parameters = [
                     'semtypes' => studygroup_sem_types() ?: null,
                     'exclude' => [Context::getId()],
                 ];
-            } else if ($perm->have_perm('admin')) {
+            } else if ($GLOBALS['perm']->have_perm('admin')) {
                 $parameters = [
                     'semtypes' => studygroup_sem_types() ?: null,
                     'institutes' => array_map(function ($i) {
@@ -488,6 +487,7 @@ class Course_MembersController extends AuthenticatedController
             if (!empty($this->flash['users']) || Request::getArray('users')) {
                 $users = $this->flash['users'] ?: Request::getArray('users');
                 // create a usable array
+                $this->users = [];
                 foreach ($users as $user => $val) {
                     if ($val) {
                         $this->users[] = $user;
@@ -558,6 +558,7 @@ class Course_MembersController extends AuthenticatedController
     public function send_message_action()
     {
         if (!empty($this->flash['users'])) {
+            $users = [];
             // create a usable array
             foreach ($this->flash['users'] as $user => $val) {
                 if ($val) {
@@ -827,7 +828,6 @@ class Course_MembersController extends AuthenticatedController
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
-                break;
             default:
                 $target = 'course/members/index';
                 break;
@@ -867,11 +867,9 @@ class Course_MembersController extends AuthenticatedController
             case 'to_course':
                 $this->redirect('course/members/select_course');
                 return;
-                break;
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
-                break;
             default:
                 $target = 'course/members/index';
                 break;
@@ -910,11 +908,9 @@ class Course_MembersController extends AuthenticatedController
             case 'to_course':
                 $this->redirect('course/members/select_course');
                 return;
-                break;
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
-                break;
             default:
                 $target = 'course/members/index';
                 break;
@@ -950,7 +946,6 @@ class Course_MembersController extends AuthenticatedController
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
-                break;
             default:
                 $target = 'course/members/index';
                 break;
@@ -984,7 +979,6 @@ class Course_MembersController extends AuthenticatedController
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
-                break;
             default:
                 $target = 'course/members/index';
                 break;
@@ -1096,8 +1090,9 @@ class Course_MembersController extends AuthenticatedController
                     ));
                 }
             } else {
+                $users = [];
                 if ($cmd === 'singleuser') {
-                    $users = [$user_id];
+                    $users[] = $user_id;
                 } else {
                     // create a usable array
                     foreach ($this->flash['users'] as $user => $val) {
@@ -1570,7 +1565,7 @@ class Course_MembersController extends AuthenticatedController
                     'user_id',
                     [
                         'permission' => ['autor', 'tutor', 'dozent'],
-                        'institute'  => $sem_institutes,
+                        'institute'  => $sem_institutes ?? [],
                         'seminar_id' => $course->id,
                     ]
                 );
@@ -2131,7 +2126,7 @@ class Course_MembersController extends AuthenticatedController
     private function insertAdmissionMember(array $users, string $next_status, bool $consider_contingent, bool $accepted = false, string $cmd = 'add_user'): array
     {
         $messaging = new messaging;
-        $status_title = get_title_for_status('dozent', 1);
+        $msgs = [];
         foreach ($users as $user_id => $value) {
             if ($value) {
                 $user = User::find($user_id);
@@ -2156,10 +2151,15 @@ class Course_MembersController extends AuthenticatedController
                             );
                         } else {
                             if (!$accepted) {
-                                $message = sprintf(_('Sie wurden aus der Warteliste in die Veranstaltung **%s** aufgenommen und sind damit zugelassen.'),
-$this->course_title);
+                                $message = sprintf(
+                                    _('Sie wurden aus der Warteliste in die Veranstaltung **%s** aufgenommen und sind damit zugelassen.'),
+                                    $this->course_title
+                                );
                             } else {
-                                $message = sprintf(_('Sie wurden vom Status **vorläufig akzeptiert** auf **teilnehmend** in der Veranstaltung **%s** hochgestuft und sind damit zugelassen.'), $this->course_title);
+                                $message = sprintf(
+                                    _('Sie wurden vom Status **vorläufig akzeptiert** auf **teilnehmend** in der Veranstaltung **%s** hochgestuft und sind damit zugelassen.'),
+                                    $this->course_title
+                                );
                             }
                         }
 
@@ -2243,7 +2243,7 @@ $this->course_title);
         } else {
             $directionString = 'runtergestuft';
         }
-
+        $log_level = '';
         switch ($status) {
             case 'tutor': $log_level = 'zum Tutor';
                 break;

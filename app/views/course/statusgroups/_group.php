@@ -146,7 +146,7 @@
     <section>
         <article id="group-members-<?= $group->id ?>"<?= $load ? ' class="open"' : ''?>>
             <?php if ($load) : ?>
-                <?= $this->render_partial('course/statusgroups/getgroup', compact('members is_tutor is_locked group order sort_by')) ?>
+                <?= $this->render_partial('course/statusgroups/getgroup', compact('members', 'is_tutor', 'is_locked', 'group', 'order','sort_by')) ?>
             <?php endif ?>
         </article>
     </section>

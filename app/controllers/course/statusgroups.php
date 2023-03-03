@@ -34,9 +34,9 @@ class Course_StatusgroupsController extends AuthenticatedController
         $this->config = CourseConfig::get($this->course_id);
 
         // Check perms
-        $this->is_dozent = $perm->have_studip_perm('dozent', $this->course_id);
-        $this->is_tutor  = $perm->have_studip_perm('tutor', $this->course_id);
-        $this->is_autor  = $perm->have_studip_perm('autor', $this->course_id);
+        $this->is_dozent = $GLOBALS['perm']->have_studip_perm('dozent', $this->course_id);
+        $this->is_tutor  = $GLOBALS['perm']->have_studip_perm('tutor', $this->course_id);
+        $this->is_autor  = $GLOBALS['perm']->have_studip_perm('autor', $this->course_id);
 
         // Hide groups page?
         if (!$this->is_tutor && $this->config->COURSE_MEMBERS_HIDE) {
@@ -106,7 +106,7 @@ class Course_StatusgroupsController extends AuthenticatedController
             $groupdata = [
                 'group' => $g,
                 'members' => [],
-                'membercount' => $membercounts[$g->id] ?: 0,
+                'membercount' => $membercounts[$g->id] ?? 0,
                 'invisible_users' => 0
             ];
 
@@ -118,7 +118,7 @@ class Course_StatusgroupsController extends AuthenticatedController
                 if ($this->sort_group == $g->id) {
                     $sorted = $this->sortMembers($g->members, $this->sort_by, $this->order);
                 } else {
-                    $sorted = $sorted = $this->sortMembers($g->members);
+                    $sorted = $this->sortMembers($g->members);
                 }
 
                 foreach ($sorted as $member) {
@@ -783,7 +783,7 @@ class Course_StatusgroupsController extends AuthenticatedController
                 $numbering = Request::int('startnumber', 1);
             }
             for ($i = 0 ; $i < Request::int('number') ; $i++) {
-                $group = Statusgruppen::createOrUpdate('', Request::get('prefix').' '.
+                Statusgruppen::createOrUpdate('', Request::get('prefix').' '.
                     $numbering++,
                     null, $this->course_id, Request::int('size', 0),
                     Request::int('selfassign', 0) + Request::int('exclusive', 0),
@@ -1059,7 +1059,7 @@ class Course_StatusgroupsController extends AuthenticatedController
 
             // Get selected action for group members.
             $actions = Request::getArray('members_action');
-            $action = $actions[$group_id];
+            $action = $actions[$group_id] ?? '';
 
             switch ($action) {
                 case 'move':
