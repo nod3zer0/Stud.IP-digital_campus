@@ -334,14 +334,15 @@ class Course_IliasInterfaceController extends AuthenticatedController
                 } else {
                     $query = "SELECT DISTINCT object_id, module_id, Name
                               FROM object_contentmodules
-                              LEFT JOIN seminare ON (object_id = Seminar_id)
-                              LEFT JOIN seminar_user USING (Seminar_id)
+                              JOIN seminare ON (object_id = Seminar_id)
+                              JOIN seminar_user USING (Seminar_id)
                               WHERE module_type = 'crs'
                                 AND system_type = ?
-                                AND seminar_user.status = 'dozent'";
+                                AND seminar_user.status = 'dozent'
+                                AND seminar_user.user_id = ?";
                 }
                 $statement = DBManager::get()->prepare($query);
-                $statement->execute([$this->ilias_index]);
+                $statement->execute([$this->ilias_index, User::findCurrent()->id]);
                 $this->studip_course_list = [];
                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                     $this->studip_course_list[$row['module_id']] = my_substr($row['Name'],0,60)." ".sprintf(_("(Kurs-ID %s)"), $row['module_id']);
