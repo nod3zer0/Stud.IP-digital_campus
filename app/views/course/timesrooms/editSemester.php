@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Course_TimesroomsController $controller
+ * @var Semester[] $semester
+ * @var Course $course
+ */
+?>
 <form action="<?= $controller->link_for('course/timesrooms/editSemester') ?>" method="post"
       class="default" data-dialog>
     <?=CSRFProtection::tokenTag()?>
@@ -20,7 +27,7 @@
             <?= _('Dauer') ?>
             <select name="endSemester" id="endSemester">
                 <option value="0"
-                    <?= $course->end_semester->id === $course->start_semester->id ? 'selected' : '' ?>>
+                    <?= count($course->semesters) === 1 ? 'selected' : '' ?>>
                     <?= _('Ein Semester') ?></option>
                 <? foreach ($semester as $sem) : ?>
                     <? if ($sem->beginn >= $course->start_semester->beginn) : ?>

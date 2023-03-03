@@ -60,6 +60,7 @@
  * @property SimpleORMapCollection admission_applicants has_many AdmissionApplication
  * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
  * @property SimpleORMapCollection cycles has_many SeminarCycleDate
+ * @property Semester[]|SimpleORMapCollection $semesters belongs_to Semester
  * @property Semester start_semester belongs_to Semester
  * @property Semester end_semester belongs_to Semester
  * @property Institute home_institut belongs_to Institute

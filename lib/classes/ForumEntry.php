@@ -597,7 +597,6 @@ class ForumEntry  implements PrivacyObject
     public static function getList($type, $parent_id)
     {
         $start = (ForumHelpers::getPage() - 1) * ForumEntry::POSTINGS_PER_PAGE;
-        $last_visit_date = ForumVisit::getLastVisit($constraint['seminar_id']);
         switch ($type) {
             case 'area':
                 $list = ForumEntry::getEntries($parent_id, ForumEntry::WITHOUT_CHILDS, '', 'DESC', 0, 1000);
@@ -637,6 +636,7 @@ class ForumEntry  implements PrivacyObject
 
             case 'newest':
                 $constraint = ForumEntry::getConstraints($parent_id);
+                $last_visit_date = ForumVisit::getLastVisit($constraint['seminar_id']);
 
                 // get postings
                 $stmt = DBManager::get()->prepare("SELECT forum_entries.*, IF(ou.topic_id IS NOT NULL, 'fav', NULL) as fav
@@ -657,7 +657,6 @@ class ForumEntry  implements PrivacyObject
                 $postings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 $postings = ForumEntry::parseEntries($postings);
-                // var_dump($postings);
 
                 // count found postings
                 $stmt_count = DBManager::get()->prepare("SELECT COUNT(*)

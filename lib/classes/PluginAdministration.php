@@ -26,8 +26,6 @@ class PluginAdministration
      */
     public function installPlugin($filename)
     {
-        global $SOFTWARE_VERSION;
-
         $packagedir = Config::get()->PLUGINS_PATH . '/tmp_' . md5($filename);
 
         // extract plugin files
@@ -69,8 +67,8 @@ class PluginAdministration
         // get plugin meta data
         $pluginclass = $manifest['pluginclassname'];
         $origin      = $manifest['origin'];
-        $min_version = $manifest['studipMinVersion'];
-        $max_version = $manifest['studipMaxVersion'];
+        $min_version = $manifest['studipMinVersion'] ?? null;
+        $max_version = $manifest['studipMaxVersion'] ?? null;
 
         // check for compatible version
         if ((isset($min_version) && StudipVersion::olderThan($min_version)) ||
@@ -134,7 +132,7 @@ class PluginAdministration
         }
 
         // register additional plugin classes in this package
-        $additionalclasses = $manifest['additionalclasses'];
+        $additionalclasses = $manifest['additionalclasses'] ?? null;
 
         if (is_array($additionalclasses)) {
             foreach ($additionalclasses as $class) {

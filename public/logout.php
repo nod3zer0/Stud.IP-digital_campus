@@ -59,7 +59,7 @@ if ($auth->auth["uid"]!="nobody") {
     $user->set_last_action($timeout);
 
     //der logout() Aufruf fuer CAS (dadurch wird das Cookie (Ticket) im Browser zerstoert)
-    if ($docaslogout){
+    if (!empty($docaslogout)) {
         $casauth->logout();
     }
 } else {
@@ -68,5 +68,3 @@ if ($auth->auth["uid"]!="nobody") {
 }
 
 header("Location:" . URLHelper::getURL("index.php?logout=true&set_language=$_language&set_contrast=$contrast"));
-
-?>

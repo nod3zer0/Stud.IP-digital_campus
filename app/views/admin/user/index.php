@@ -84,8 +84,9 @@ use Studip\Button;
             <?=_('Einrichtung')?>
             <select name="institute">
                 <option value=""><?= _('Alle')?></option>
-                <? foreach($institutes as $institute) : ?>
-                    <option value="<?= $institute['Institut_id']?>" <?= $request['institute'] == $institute['Institut_id'] ? 'selected' : ''?>>
+                <? foreach ($institutes as $institute) : ?>
+                    <option value="<?= htmlReady($institute['Institut_id']) ?>"
+                        <?= isset($request['institute']) && $request['institute'] === $institute['Institut_id'] ? 'selected' : ''?>>
                         <?= htmlReady($institute['Name'])?>
                     </option>
                 <? endforeach ?>
@@ -97,11 +98,12 @@ use Studip\Button;
 
             <select name="userdomains">
                 <option value=""><?= _('Alle') ?></option>
-                <option value="null-domain" <?= $request['userdomains'] === 'null-domain' ? 'selected' : '' ?>>
+                <option value="null-domain" <?= isset($request['userdomains']) && $request['userdomains'] === 'null-domain' ? 'selected' : '' ?>>
                     <?= _('Ohne Domäne') ?>
                 </option>
                 <? foreach ($userdomains as $one): ?>
-                    <option value="<?= htmlReady($one->id) ?>" <?= $request['userdomains'] === $one->id ? 'selected' : ''?>>
+                    <option value="<?= htmlReady($one->id) ?>"
+                        <?= isset($request['userdomains']) && $request['userdomains'] === $one->id ? 'selected' : ''?>>
                         <?= htmlReady($one->name ?: $one->id) ?>
                     </option>
                 <? endforeach; ?>
@@ -114,7 +116,7 @@ use Studip\Button;
                 <option value=""><?=_('Alle')?></option>
                 <? foreach($degrees as $degree) : ?>
                     <option value="<?= $degree->id ?>"
-                        <?= !empty($request['degree']) && in_array($degree->id, $request['degree']) ? 'selected' : ''?>>
+                        <?= isset($request['degree']) && in_array($degree->id, $request['degree']) ? 'selected' : '' ?>>
                         <?=htmlReady($degree->name)?>
                     </option>
                 <? endforeach ?>
@@ -127,7 +129,7 @@ use Studip\Button;
                 <option value=""><?=_('Alle')?></option>
                 <? foreach($studycourses as $studycourse) : ?>
                     <option value="<?= $studycourse->id ?>"
-                        <?= !empty($request['studycourse']) && in_array($studycourse->id, $request['studycourse']) ? 'selected' : ''?>>
+                        <?= isset($request['studycourse']) && in_array($studycourse->id, $request['studycourse']) ? 'selected' : ''?>>
                         <?=htmlReady($studycourse->name)?>
                     </option>
                 <? endforeach ?>
@@ -139,7 +141,7 @@ use Studip\Button;
             <select name="fachsem">
                 <option value=""><?= _('Alle') ?></option>
                 <? for ($i = 1; $i <= 50; $i += 1): ?>
-                    <option <?= $request['fachsem'] && (int)$request['fachsem'] === $i ? 'selected' : ''?>>
+                    <option <?= isset($request['fachsem']) && (int) $request['fachsem'] === $i ? 'selected' : ''?>>
                         <?= $i ?>
                     </option>
                 <? endfor; ?>
@@ -151,7 +153,8 @@ use Studip\Button;
             <select name="auth_plugins">
                 <option value=""><?= _('Alle') ?></option>
                 <? foreach (array_merge(['preliminary' => _('vorläufig')], $available_auth_plugins) as $key => $val): ?>
-                    <option value="<?= $key ?>" <?= $request['auth_plugins'] === $key ? 'selected' : '' ?>>
+                    <option value="<?= $key ?>"
+                        <?= isset($request['auth_plugins']) && $request['auth_plugins'] === $key ? 'selected' : '' ?>>
                         <?= htmlReady($val) ?>
                     </option>
                 <? endforeach; ?>
@@ -165,15 +168,15 @@ use Studip\Button;
                 <? if ($datafield->type === 'bool'): ?>
                     <section class="hgroup">
                 <span class="col-2">
-                    <input type="radio" name="<?= $datafield->id ?>" value="" <?= isset($request[$datafield->id]) && mb_strlen($request[$datafield->id]) === 0 ? 'checked' : '' ?>>
+                    <input type="radio" name="<?= htmlReady($datafield->id) ?>" value="" <?= isset($request[$datafield->id]) && mb_strlen($request[$datafield->id]) === 0 ? 'checked' : '' ?>>
                     <?= _('egal') ?>
                 </span>
                         <span class="col-2">
-                    <input type="radio" name="<?= $datafield->id ?>" value="1" <?= (!empty($request[$datafield->id]) && $request[$datafield->id] === '1') ? 'checked' : '' ?>>
+                    <input type="radio" name="<?= htmlReady($datafield->id) ?>" value="1" <?= (!empty($request[$datafield->id]) && $request[$datafield->id] === '1') ? 'checked' : '' ?>>
                     <?= _('ja') ?>
                 </span>
                         <span class="col-2">
-                    <input type="radio" name="<?= $datafield->id ?>" value="0" <?= isset($request[$datafield->id]) && $request[$datafield->id] === '0' ? 'checked' : '' ?>>
+                    <input type="radio" name="<?= htmlReady($datafield->id) ?>" value="0" <?= isset($request[$datafield->id]) && $request[$datafield->id] === '0' ? 'checked' : '' ?>>
                     <?= _('nein') ?>
                 </span>
                     </section>
