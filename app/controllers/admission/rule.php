@@ -92,7 +92,8 @@ class Admission_RuleController extends AuthenticatedController
     public function save_action($ruleType, $ruleId = '')
     {
         CSRFProtection::verifyUnsafeRequest();
-        $this->rule = new $ruleType($ruleId);
+
+        $this->rule = $this->loadRule($ruleType, $ruleId);
         $requestData = Request::getInstance();
         // Check for start and end date and parse the String values to timestamps.
         if (!empty($requestData['start_date'])) {
@@ -119,7 +120,33 @@ class Admission_RuleController extends AuthenticatedController
      */
     public function validate_action($ruleType, $ruleId = '')
     {
-        $rule = new $ruleType($ruleId);
+        $rule = $this->loadRule($ruleType, $ruleId);
         $this->errors = $rule->validate(Request::getInstance());
+    }
+
+    /**
+     * Loads a rule by string and ensures that it is a subclass of the abstract
+     * admission rule.
+     *
+     * @param string $rule_type
+     * @param string $rule_id
+     * @return AdmissionRule
+     */
+    private function loadRule(string $rule_type, string $rule_id = ''): AdmissionRule
+    {
+        static $initialized = false;
+
+        if (!$initialized) {
+            // This is neccessary so that all admission rules are correctly
+            // loaded and known to the system
+            AdmissionRule::getAvailableAdmissionRules();
+            $initialized = true;
+        }
+
+        if (!is_a($rule_type, AdmissionRule::class, true)) {
+            throw new InvalidArgumentException('Rule type must be a subclass of ' . AdmissionRule::class);
+        }
+
+        return new $rule_type($rule_id);
     }
 }
