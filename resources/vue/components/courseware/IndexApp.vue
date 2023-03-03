@@ -116,7 +116,6 @@ export default {
                 return;
             }
 
-            this.structureLoadingState = 'loading';
             try {
                 await this.loadStructuralElement(id);
             } catch (error) {
@@ -125,7 +124,6 @@ export default {
                 return;
             }
 
-            this.structureLoadingState = 'done';
             this.$nextTick( () => {
                 this.canVisit = this.structuralElementLastMeta['can-visit'];
                 this.selected = this.structuralElementById({ id });
