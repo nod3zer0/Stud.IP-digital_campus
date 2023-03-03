@@ -382,12 +382,12 @@ class Seminar_Auth
      */
     function auth_set_user_settings($user)
     {
-        $divided = explode("x", Request::get('resolution'));
-        $this->auth["xres"] = ($divided[0] != 0) ? (int)$divided[0] : 1024; //default
-        $this->auth["yres"] = ($divided[1] != 0) ? (int)$divided[1] : 768; //default
+        $divided = explode('x', Request::get('resolution'));
+        $this->auth["xres" . ""] = !empty($divided[0]) ? (int) $divided[0] : 1024; //default
+        $this->auth['yres'] = !empty($divided[1]) ? (int)$divided[1] : 768; //default
         // Change X-Resulotion on Multi-Screen Systems (as Matrox Graphic-Adapters are)
-        if (($this->auth["xres"] / $this->auth["yres"]) > 2) {
-            $this->auth["xres"] = $this->auth["xres"] / 2;
+        if ($this->auth['xres'] / $this->auth['yres'] > 2) {
+            $this->auth['xres'] = $this->auth['xres'] / 2;
         }
         $user = User::toObject($user);
         //restore user-specific language preference
