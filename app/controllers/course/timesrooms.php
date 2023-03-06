@@ -713,30 +713,65 @@ class Course_TimesroomsController extends AuthenticatedController
          */
         $this->date = CourseDate::findOneByMetadate_id($cycle_id);
         $this->checked_dates = $_SESSION['_checked_dates'];
-        $this->preparation_time = '0';
-        //Check if the preparation time is the same for all dates.
-        //In that case, use the common value as preparation time.
-        $i = 0;
-        $ptime = 0;
-        foreach ($checked_course_dates as $course_date) {
-            $current_ptime = $course_date->room_booking->preparation_time;
-            if ($i == 0) {
-                $ptime = $current_ptime;
-            } else {
-                if ($current_ptime != $ptime) {
-                    $ptime = -1;
-                    break;
-                }
-            }
-            $i++;
-        }
-        if ($ptime > -1) {
-            $this->preparation_time = $ptime / 60;
-        }
+
+        $this->selected_lecturer_ids = $this->getSameFieldValue($checked_course_dates, function (CourseDate $date) {
+            return $date->dozenten->pluck('user_id');
+        });
+        $this->selected_room_id = $this->getSameFieldValue($checked_course_dates, function (CourseDate $date) {
+            return $date->room_booking->resource_id ?? '';
+        });
+        $this->selected_room_name = $this->getSameFieldValue($checked_course_dates, function (CourseDate $date) {
+            return $date->raum ?? '';
+        });
+
+        $preparation_time = $this->getSameFieldValue($checked_course_dates, function (CourseDate $date) {
+            return $date->room_booking->preparation_time ?? 0;
+        });
+        $this->preparation_time = floor($preparation_time / 60);
+
         $this->max_preparation_time = Config::get()->RESOURCES_MAX_PREPARATION_TIME;
         $this->render_template('course/timesrooms/editStack');
     }
 
+    /**
+     * Checks a specific field value of the specified course dates for equality.
+     * A closure defines which field of the course dates to check.
+     *
+     * @param CourseDate[] $dates The dates from which to extract values.
+     * @param Closure $callback The closure that extracts values from a CourseDate object that is passed to it.
+     * @return mixed The identical value that has been retrieved from all course dates or a value that is equal to
+     *     false in case the value differs. The returned result might be a string or an array or it may be empty.
+     */
+    protected function getSameFieldValue(array $dates, Closure $callback)
+    {
+        $data = array_map($callback, $dates);
+
+        $initial = null;
+        foreach ($data as $item) {
+            if ($initial === null) {
+                $initial = $item;
+                continue;
+            }
+
+            // Compare array by checking their sizes and different items
+            if (
+                is_array($initial)
+                && (
+                    count($initial) !== count($item)
+                    || count(array_diff($initial, $item)) > 0
+                )
+            ) {
+                return [];
+            }
+
+            // Otherwise compare items themselves
+            if (!is_array($initial) && $initial != $item) {
+                return '';
+            }
+        }
+
+        return $initial;
+    }
 
     /**
      * Creates a new room request for the selected dates.

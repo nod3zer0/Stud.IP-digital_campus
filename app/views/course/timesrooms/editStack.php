@@ -5,13 +5,13 @@
  * @var array $linkAttributes
  * @var array $checked_dates
  * @var array $selectable_rooms
- * @var array $tpl
  * @var QuickSearch $room_search
  * @var array $only_bookable_rooms
  * @var array $teachers
  * @var array $gruppen
  * @var int $preparation_time
  * @var int $max_preparation_time
+ * @var string[] $selected_lecturer_ids
  */
 ?>
 <form method="post" action="<?= $controller->url_for('course/timesrooms/saveStack/' . $cycle_id, $linkAttributes) ?>"
@@ -46,7 +46,8 @@
                                 <select name="room_id" onFocus="jQuery('input[type=radio][name=action][value=room]').prop('checked', 'checked')">
                                     <option value="0"><?= _('Auswählen') ?></option>
                                     <? foreach ($selectable_rooms as $room): ?>
-                                        <option value="<?= htmlReady($room->id)?>">
+                                        <option value="<?= htmlReady($room->id)?>"
+                                            <?= $room->id === $selected_room_id ? 'selected' : '' ?>>
                                             <?= htmlReady($room->name) ?>
                                         </option>
                                     <? endforeach ?>
@@ -75,7 +76,7 @@
                 <?= $placerholder ?>
             </label>
             <label>
-                <input type="text" name="freeRoomText" value="<?= htmlReady($tpl['freeRoomText']) ?>"
+                <input type="text" name="freeRoomText" value="<?= htmlReady($selected_room_name) ?>"
                        placeholder="<?= $placerholder ?>"
                        onFocus="jQuery('input[type=radio][name=action][value=freetext]').prop('checked', 'checked')">
             </label>
@@ -108,6 +109,15 @@
 
     <fieldset class="collapsed">
         <legend><?= _('Durchführende Lehrende') ?></legend>
+        <? if ($selected_lecturer_ids) : ?>
+            <ul>
+                <? foreach ($teachers as $teacher) : ?>
+                    <? if (in_array($teacher['user_id'], $selected_lecturer_ids)) : ?>
+                        <li><?= htmlReady($teacher['fullname']) ?></li>
+                    <? endif ?>
+                <? endforeach ?>
+            </ul>
+        <? endif ?>
         <label>
             <?= _('Aktion auswählen') ?>
             <select name="related_persons_action" id="related_persons_action">
@@ -121,11 +131,11 @@
             <label>
                 <?= _('Lehrende') ?>
                 <select name="related_persons[]" id="related_persons" multiple>
-                    <? foreach ($teachers as $teacher) : ?>
-                        <option value="<?= htmlReady($teacher['user_id']) ?>">
-                            <?= htmlReady($teacher['fullname']) ?>
-                        </option>
-                    <? endforeach ?>
+                <? foreach ($teachers as $teacher) : ?>
+                    <option value="<?= htmlReady($teacher['user_id']) ?>">
+                        <?= htmlReady($teacher['fullname']) ?>
+                    </option>
+                <? endforeach ?>
                 </select>
             </label>
         <? endif ?>
