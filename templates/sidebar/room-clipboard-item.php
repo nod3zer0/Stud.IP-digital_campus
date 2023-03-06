@@ -30,7 +30,7 @@ if (!$item) {
 ?>
 <tr class="<?= htmlReady($classes) ?>"
     data-range_id="<?= htmlReady($item['range_id'] ?? '') ?>">
-    <td class="item-name"><?= htmlReady($item['name']) ?></td>
+    <td class="item-name"><?= htmlReady($item['name'] ?? '') ?></td>
     <td class="actions">
         <a href="<?= Room::getLinkForAction('show', (!empty($item) ? $item['range_id'] : 'RANGE_ID')) ?>" data-dialog>
             <?= Icon::create(
