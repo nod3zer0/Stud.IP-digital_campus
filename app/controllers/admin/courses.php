@@ -592,7 +592,7 @@ class Admin_CoursesController extends AuthenticatedController
             $inst = explode('_', Request::option('institute'));
             $GLOBALS['user']->cfg->store('MY_INSTITUTES_DEFAULT', $inst[0]);
 
-            if ($inst[1] === 'withinst') {
+            if (isset($inst[1]) && $inst[1] === 'withinst') {
                 $GLOBALS['user']->cfg->store('MY_INSTITUTES_INCLUDE_CHILDREN', 1);
             } else {
                 $GLOBALS['user']->cfg->store('MY_INSTITUTES_INCLUDE_CHILDREN', 0);
