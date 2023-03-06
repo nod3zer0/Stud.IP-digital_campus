@@ -137,7 +137,7 @@ class smtp_message_class extends email_message_class
 
 	var $smtp;
 	var $line_break="\r\n";
-	var $delivery = 0;
+	var $delivered = 0;
 
 	/* Public variables */
 
@@ -658,7 +658,7 @@ class smtp_message_class extends email_message_class
 		$this->smtp->esmtp=$this->esmtp;
 		if($this->smtp->Connect())
 		{
-			$this->delivery = 0;
+			$this->delivered = 0;
 			return("");
 		}
 		return($this->ResetConnection($this->smtp->error));
@@ -753,11 +753,11 @@ class smtp_message_class extends email_message_class
 
 	Function StopSendingMessage()
 	{
-		++$this->delivery;
+		++$this->delivered;
 		if($this->bulk_mail
 		&& !$this->smtp_direct_delivery
 		&& ($this->maximum_bulk_deliveries == 0
-		|| $this->delivery < $this->maximum_bulk_deliveries))
+		|| $this->delivered < $this->maximum_bulk_deliveries))
 			return("");
 		return($this->ResetConnection(''));
 	}
