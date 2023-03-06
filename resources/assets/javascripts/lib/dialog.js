@@ -687,7 +687,7 @@ Dialog.initialize = function() {
 
             if (
                 target.is('form')
-                && event.originalEvent.submitter
+                && event.originalEvent?.submitter
                 && $(event.originalEvent.submitter).attr('formaction')
             ) {
                 target.data('formaction', $(event.originalEvent.submitter).attr('formaction'));
