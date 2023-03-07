@@ -5,7 +5,7 @@ class Vote extends QuestionnaireQuestion implements QuestionType
 {
     public static function getIcon(bool $active = false) : Icon
     {
-        return Icon::create(static::getIconShape(), $active ? 'clickable' : 'info');
+        return Icon::create(static::getIconShape(), $active ? Icon::ROLE_CLICKABLE : Icon::ROLE_INFO);
     }
 
     /**
@@ -32,7 +32,7 @@ class Vote extends QuestionnaireQuestion implements QuestionType
         $questiondata['description'] = \Studip\Markup::markAsHtml(
             \Studip\Markup::purifyHtml($questiondata['description'])
         );
-        $questiondata['options'] = array_filter($questiondata['options']);
+        $questiondata['options'] = array_filter($questiondata['options'] ?? []);
         return $questiondata;
     }
 
@@ -49,6 +49,7 @@ class Vote extends QuestionnaireQuestion implements QuestionType
         $answer = $this->getMyAnswer();
 
         $answers = Request::getArray('answers');
+        $userAnswer = 0;
         if (array_key_exists($this->getId(), $answers)) {
             $userAnswer = $answers[$this->getId()]['answerdata']['answers'];
             if (is_array($userAnswer)) {
