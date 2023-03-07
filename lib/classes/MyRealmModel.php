@@ -114,7 +114,7 @@ class MyRealmModel
         if (!empty($result)) {
             $count += $result['count'];
             $neue += $result['neue'];
-            if (!is_null($result['last_modified']) && (int)$result['last_modified'] != 0) {
+            if (isset($my_obj['last_modified'], $result['last_modified']) && $result['last_modified']) {
                 if ($my_obj['last_modified'] < $result['last_modified']) {
                     $my_obj['last_modified'] = $result['last_modified'];
                 }
@@ -173,7 +173,7 @@ class MyRealmModel
         if (is_numeric($min_sem_key) && is_numeric($max_sem_key)) {
             foreach ($sem_data as $index => $data) {
                 if ($index >= $min_sem_key && $index <= $max_sem_key) {
-                    $semester_ids[] = $data['semester_id'];
+                    $semester_ids[] = $data['semester_id'] ?? '';
                 }
             }
         }
@@ -222,15 +222,14 @@ class MyRealmModel
             }
             return false;
         });
-        $courses = self::sortCourses($courses, $ordering);
-
-        return $courses;
+        return self::sortCourses($courses, $ordering);
     }
 
     public static function getSelectedSemesters($sem = 'all')
     {
         $sem_data = Semester::getAllAsArray();
         $semesters = [];
+        $current_sem = null;
         foreach ($sem_data as $sem_key => $one_sem) {
             $current_sem = $sem_key;
             if (!$one_sem['past']) break;
@@ -308,7 +307,7 @@ class MyRealmModel
         $children = [];
         $semester_assign = [];
 
-        foreach ($courses as $index => $course) {
+        foreach ($courses as $course) {
             // export object to array for simple handling
             $_course = $course->toArray($param_array);
             $_course['start_semester'] = $course->start_semester ? $course->start_semester->name : null;
@@ -453,6 +452,7 @@ class MyRealmModel
      */
     public static function getAdditionalNavigations($object_id, &$my_obj_values, $sem_class, $user_id, $visit_data = [])
     {
+        $navigation = [];
         foreach (self::getDefaultModules() as $plugin_id => $plugin) {
 
             // Go to next module if current module is not available and not voting-module
@@ -586,9 +586,7 @@ class MyRealmModel
             "ORDER BY admission_seminar_user.status, name");
         $stmt->execute([$user_id]);
 
-        $waitlists = array_merge($claiming, $stmt->fetchAll(PDO::FETCH_ASSOC));
-
-        return $waitlists;
+        return array_merge($claiming, $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
 
@@ -718,6 +716,7 @@ class MyRealmModel
      */
     public static function groupByGruppe(&$sem_courses)
     {
+        $_tmp_courses = [];
         foreach ($sem_courses as $sem_key => $collection) {
             foreach ($collection as $course) {
                 $_tmp_courses[$sem_key][$course['gruppe']][$course['seminar_id']] = $course;
@@ -734,6 +733,7 @@ class MyRealmModel
      */
     public static function groupBySemStatus(&$sem_courses)
     {
+        $_tmp_courses = [];
         foreach ($sem_courses as $sem_key => $collection) {
             foreach ($collection as $course) {
 
@@ -758,6 +758,7 @@ class MyRealmModel
      */
     public static function groupByTeacher(&$sem_courses)
     {
+        $_tmp_courses = [];
         foreach ($sem_courses as $sem_key => $collection) {
             foreach ($collection as $course) {
                 if (!empty($course['teachers'])) {
@@ -818,6 +819,9 @@ class MyRealmModel
                      . 'chdate admission_binding admission_prelim';
         $studygroup_data = [];
         foreach ($studygroup_memberships as $membership) {
+            if (!isset($studygroups[$membership->seminar_id])) {
+                continue;
+            }
             $studygroup = $studygroups[$membership->seminar_id];
             $visit_data = get_objects_visits([$studygroup->id], 0, null, null, $studygroup->tools->pluck('plugin_id'));
             $data = $studygroup->toArray($data_fields);
