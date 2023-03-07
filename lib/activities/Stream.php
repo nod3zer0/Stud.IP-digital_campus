@@ -59,7 +59,7 @@ class Stream implements \ArrayAccess, \Countable, \IteratorAggregate
             $id = md5($activity->provider . $activity->content .
                     $activity->verb . $activity->object_type . $activity->mkdate);
 
-            if ($new_activities[$id]) {
+            if (isset($new_activities[$id])) {
                 $url = key($activity->object_url);
                 $name = current($activity->object_url);
                 next($activity->object_url);

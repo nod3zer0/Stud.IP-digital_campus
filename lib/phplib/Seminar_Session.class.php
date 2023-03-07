@@ -130,7 +130,7 @@ class Seminar_Session
             return self::$current_session_state;
         }
         $state = false;
-        if (is_object($GLOBALS['user'])) {
+        if (isset($GLOBALS['user']) && is_object($GLOBALS['user'])) {
             $state = in_array($GLOBALS['user']->id, ['nobody', 'form']) ? 'nobody' : 'authenticated';
         } else {
             $sid = $_COOKIE[__CLASS__];
@@ -157,7 +157,7 @@ class Seminar_Session
      */
     public static function get_session_vars($sid)
     {
-        $sess = $GLOBALS['sess'];
+        $sess = $GLOBALS['sess'] ?? null;
         if (!is_object($sess)) {
             $sess = new self();
         }

@@ -50,7 +50,7 @@ use Negotiation\AcceptHeader;
 function get_accepted_languages(Psr\Http\Message\RequestInterface $request = null) {
     $accepted_languages = null;
     if ($request === null) {
-        $accepted_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        $accepted_languages = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
     } elseif ($request->hasHeader('Accept-Language')) {
         $accepted_languages = $request->getHeaderLine('Accept-Language');
     }

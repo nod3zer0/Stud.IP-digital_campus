@@ -121,7 +121,7 @@ class ForumActivity
             'verb'         => $verb,              // the activity type
             'object_id'    => $post['topic_id'],  // the id of the referenced object
             'object_type'  => 'forum',            // type of activity object
-            'mkdate'       => $post['mkdate'] ?: time()
+            'mkdate'       => $post['mkdate'] ?? time()
         ];
 
         if ($post['anonymous']) {

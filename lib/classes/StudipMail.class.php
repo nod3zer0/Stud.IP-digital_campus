@@ -36,7 +36,7 @@ class StudipMail
      */
     private $attachments = [];
     /**
-     * @var string
+     * @var array
      */
     private $sender;
     /**
@@ -45,7 +45,7 @@ class StudipMail
      */
     private $recipients = [];
     /**
-     * @var string
+     * @var array
      */
     private $reply_to;
 
@@ -175,7 +175,7 @@ class StudipMail
      */
     public function getReplyToEmail()
     {
-        return $this->reply_to['mail'];
+        return $this->reply_to['mail'] ?? '';
     }
 
     /**
@@ -193,7 +193,7 @@ class StudipMail
      */
     public function getReplyToName()
     {
-        return $this->reply_to['name'];
+        return $this->reply_to['name'] ?? '';
     }
 
     /**
