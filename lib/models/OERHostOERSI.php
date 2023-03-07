@@ -98,13 +98,12 @@ class OERHostOERSI extends OERHost
                 $data['filename'] = '';
                 $data['short_description'] = '';
                 $data['description'] = $output['description'] ?: '';
-                $data['difficulty_start'] = 0;
                 $data['difficulty_start'] = 12;
                 $data['uri'] = $output['encoding'][0]['contentUrl'] ?: '';
                 $data['source_url'] = $output['id'];
                 $data['content_type'] = $output['encoding'][0]['encodingFormat'] ?: '';
                 $data['license_identifier'] = $this->getLicenseID($output['license']['id']) ?: '';
-                if (!$data['category']) {
+                if (empty($data['category'])) {
                     $data['category'] = $material->autoDetectCategory();
                 }
                 $data['front_image_content_type'] = $output['image'] ? 'image/jpg' : null;
@@ -113,11 +112,10 @@ class OERHostOERSI extends OERHost
                 $data['data']['front_image_url'] = $output['image'];
                 $data['data']['authors'] = $output['creator'];
                 $data['data']['organization'] = $output['sourceOrganization'][0]['name'] ?: $output['publisher'][0]['name'];
-                $data = [
+                return [
                     'data' => $data,
-                    'topics' => $output['keywords']
+                    'topics' => $output['keywords'] ?? []
                 ];
-                return $data;
             }
         } else {
             return ['deleted' => 1];

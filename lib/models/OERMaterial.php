@@ -1,5 +1,38 @@
 <?php
 
+/**
+ * @property string $id
+ * @property string $material_id
+ * @property string|null $foreign_material_id
+ * @property string|null $host_id
+ * @property string $name
+ * @property string $category
+ * @property bool $draft
+ * @property string $filename
+ * @property string|null $short_description
+ * @property string $description
+ * @property int $difficulty_start
+ * @property int $difficulty_end
+ * @property string|null $player_url
+ * @property string|null $tool
+ * @property string $content_type
+ * @property string|null $front_image_content_type
+ * @property JSONArrayObject $structure
+ * @property float $rating
+ * @property string $license_identifier
+ * @property string $uri
+ * @property string $uri_hash
+ * @property string|null $published_id_on_twillo
+ * @property string|null $source_url
+ * @property JSONArrayObject $data
+ * @property int $chdate
+ * @property int $mkdate
+ *
+ * @property OERHost $host
+ * @property OERReview[]|SimpleORMapCollection $reviews
+ * @property OERMaterialUser[]|SimpleORMapCollection $users
+ * @property License $license
+ */
 class OERMaterial extends SimpleORMap
 {
     protected static function configure($config = [])
@@ -297,6 +330,32 @@ class OERMaterial extends SimpleORMap
         }
     }
 
+    /**
+     * Returns an appropriate icon for the material.
+     *
+     * @param string $role
+     * @return Icon
+     */
+    public function getIcon(string $role = Icon::ROLE_CLICKABLE): Icon
+    {
+        $icon = 'file';
+        if ($this->category === 'video') {
+            $icon = 'video';
+        } elseif ($this->category === 'audio') {
+            $icon = 'file-audio';
+        } elseif ($this->category === 'presentation') {
+            $icon = 'file-pdf';
+        } elseif ($this->category === 'elearning') {
+            $icon = 'learnmodule';
+        }
+
+        if ($this->content_type === 'application/zip') {
+            $icon = 'archive3';
+        }
+
+        return Icon::create($icon, $role);
+    }
+
     public function isFolder()
     {
         return (bool) $this['structure'];
@@ -436,7 +495,7 @@ class OERMaterial extends SimpleORMap
                 return false;
             }
 
-            if ($data['deleted']) {
+            if (!empty($data['deleted'])) {
                 return "deleted";
             }
 
@@ -448,12 +507,12 @@ class OERMaterial extends SimpleORMap
             $this->store();
 
             //topics:
-            $this->setTopics($data['topics']);
+            $this->setTopics($data['topics'] ?? []);
 
             //user:
-            $this->setUsers($data['users']);
-
-            foreach ((array) $data['reviews'] as $review_data) {
+            $this->setUsers($data['users'] ?? []);
+            $reviews = $data['reviews'] ?? [];
+            foreach ($reviews as $review_data) {
                 $currenthost = OERHost::findOneByUrl(trim($review_data['host']['url']));
                 if (!$currenthost) {
                     $currenthost = new OERHost();

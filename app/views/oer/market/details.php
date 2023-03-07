@@ -158,19 +158,19 @@
             <ul class="author_information clean">
                 <? foreach ($material->getAuthors() as $authordata) : ?>
                     <li>
-                        <div class="avatar" style="background-image: url('<?= htmlReady($authordata['avatar'] ?: Avatar::getNobody()->getURL(Avatar::MEDIUM)) ?>');"></div>
+                        <div class="avatar" style="background-image: url('<?= htmlReady($authordata['avatar'] ?? Avatar::getNobody()->getURL(Avatar::MEDIUM)) ?>');"></div>
                         <div>
                             <div class="author_name">
-                                <? if ($authordata['link']) : ?>
+                                <? if (isset($authordata['link'])) : ?>
                                 <a href="<?= htmlReady($authordata['link']) ?>">
                                 <? endif ?>
-                                    <?= htmlReady($authordata['name']) ?>
-                                <? if ($authordata['link']) : ?>
+                                    <?= htmlReady($authordata['name'] ?? '') ?>
+                                <? if (isset($authordata['link'])) : ?>
                                 </a>
                                 <? endif ?>
                             </div>
-                            <div class="author_host">(<?= htmlReady($authordata['hostname']) ?>)</div>
-                            <? if ($authordata['description']) : ?>
+                            <div class="author_host">(<?= htmlReady($authordata['hostname'] ?? '') ?>)</div>
+                            <? if (isset($authordata['description'])) : ?>
                             <div class="description"><?= formatReady($authordata['description']) ?></div>
                             <? endif ?>
                         </div>
