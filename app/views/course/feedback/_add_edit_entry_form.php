@@ -26,7 +26,7 @@
 <? if ($feedback->commentable) : ?>
 <label>
     <?= _('Kommentar') ?>
-    <textarea name="comment"><?= htmlReady($entry->comment) ?></textarea>
+    <textarea name="comment"><?= htmlReady(isset($entry) ? $entry->comment : '') ?></textarea>
 </label>
 <? endif; ?>
 <div>

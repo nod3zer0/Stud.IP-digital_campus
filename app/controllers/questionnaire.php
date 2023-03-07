@@ -281,13 +281,12 @@ class QuestionnaireController extends AuthenticatedController
         object_set_visit($questionnaire_id, 'vote');
         PageLayout::setTitle(sprintf(_("Fragebogen: %s"), $this->questionnaire->title));
 
+        $this->filtered = [];
         if (Request::submitted('filtered')) {
-            $this->filtered = [
-                $questionnaire_id => Request::getArray('filtered')
-            ];
+            $this->filtered[$questionnaire_id] = Request::getArray('filtered');
         }
 
-        if (Request::isAjax() && !$_SERVER['HTTP_X_DIALOG']) {
+        if (Request::isAjax() && empty($_SERVER['HTTP_X_DIALOG'])) {
             PageLayout::clearMessages();
         }
     }

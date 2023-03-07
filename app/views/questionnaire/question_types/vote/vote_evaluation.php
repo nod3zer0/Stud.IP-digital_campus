@@ -94,13 +94,13 @@ rsort($ordered_results);
                     <a href=""
                        onclick="STUDIP.Questionnaire.addFilter('<?= htmlReady($vote['questionnaire_id']) ?>', '<?= htmlReady($vote->getId()) ?>', '<?= $key ?>'); return false;"
                        title="<?= _('Zeige nur Ergebnisse von Personen an, die diese Option gewählt haben.') ?>">
-                        (<?= $percentage ?>% | <?= (int) $results[$key] ?>/<?= $countAnswers ?>)
+                        (<?= $percentage ?>% | <?= (int) ($results[$key] ?? 0) ?>/<?= $countAnswers ?>)
                     </a>
                 <? endif ?>
             </td>
 
             <td width="50%">
-                <? if (!$vote->questionnaire['anonymous'] && $results[$key]) : ?>
+                <? if (empty($vote->questionnaire['anonymous']) && !empty($results[$key])) : ?>
 
                     <? $users = SimpleCollection::createFromArray(
                         User::findMany($results_users[$key])); ?>

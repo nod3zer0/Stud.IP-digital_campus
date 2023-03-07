@@ -1,10 +1,10 @@
-<?
+<?php
 /**
  * @var Questionnaire $questionnaire
  * @var array $filtered
  */
 $only_user_ids = null;
-if ($filtered[$questionnaire->getId()] && $filtered[$questionnaire->getId()]['question_id']) {
+if (isset($filtered[$questionnaire->getId()]) && $filtered[$questionnaire->getId()]['question_id']) {
     foreach ($questionnaire->questions as $question) {
         if ($question->getId() === $filtered[$questionnaire->getId()]['question_id']) {
             $only_user_ids = $question->getUserIdsOfFilteredAnswer($filtered[$questionnaire->getId()]['filterForAnswer']);
@@ -21,7 +21,13 @@ if ($filtered[$questionnaire->getId()] && $filtered[$questionnaire->getId()]['qu
     <? if ($questionnaire->resultsVisible()) : ?>
         <? foreach ($questionnaire->questions as $question) : ?>
             <article class="question question_<?= $question->getId() ?>">
-                <? $template = $question->getResultTemplate($only_user_ids, $filtered[$questionnaire->getId()]['question_id'] === $question->getId() ? $filtered[$questionnaire->getId()]['filterForAnswer'] : null) ?>
+                <? $template = $question->getResultTemplate(
+                    $only_user_ids,
+                    (
+                        isset($filtered[$questionnaire->getId()]['question_id'])
+                        && $filtered[$questionnaire->getId()]['question_id'] === $question->getId()
+                    ) ? $filtered[$questionnaire->getId()]['filterForAnswer'] : null
+                ) ?>
                 <?= $template ? $template->render(['anonAnswers' => $anonAnswers ?? '']) : _("Ergebnisse konnten nicht ausgewertet werden.") ?>
             </article>
         <? endforeach ?>
