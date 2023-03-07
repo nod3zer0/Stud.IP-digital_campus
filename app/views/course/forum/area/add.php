@@ -8,13 +8,11 @@
         <? if ($entry['chdate'] >= $visitdate && $entry['user_id'] !== $GLOBALS['user']->id): ?>
             <?= Icon::create('forum', Icon::ROLE_ATTENTION)->asImg([
                 'title' => _('Dieser Eintrag ist neu!'),
-                'style' => 'margin-bottom: 15px',
             ]) ?>
         <? else : ?>
             <? $num_postings = ForumVisit::getCount($entry['topic_id'], $visitdate) ?>
             <?= Icon::create('forum', $num_postings > 0 ? Icon::ROLE_ATTENTION : Icon::ROLE_INFO)->asImg([
                 'title' => ForumHelpers::getVisitText($num_postings, $entry['topic_id'], $constraint['depth']),
-                'style' => 'margin-bottom: 15px;',
             ]) ?>
         <? endif ?>
         </a>
