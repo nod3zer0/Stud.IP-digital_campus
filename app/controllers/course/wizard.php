@@ -108,6 +108,8 @@ class Course_WizardController extends AuthenticatedController
      */
     public function process_action($step_number, $temp_id)
     {
+        $stop = false;
+        $next_step = 0;
         $this->temp_id = $temp_id;
         // Get request data and store it in session.
         $iterator = Request::getInstance()->getIterator();
@@ -230,7 +232,7 @@ class Course_WizardController extends AuthenticatedController
         }
         if (!$stop) {
             // We are after the last step -> all done, show summary.
-            if ($next_step >= sizeof($this->steps)) {
+            if ($next_step >= count($this->steps)) {
                 $this->redirect($this->url_for('course/wizard/summary', $next_step, $temp_id));
             // Redirect to next step.
             } else {
@@ -246,6 +248,7 @@ class Course_WizardController extends AuthenticatedController
     {
         $this->stepnumber = $stepnumber;
         $this->temp_id = $temp_id;
+        $this->source_course = null;
         if (!$this->getValues()) {
             PageLayout::postError(_('Ihre Session ist abgelaufen, bitte erneut anfangen.'));
             $this->redirect('course/wizard');

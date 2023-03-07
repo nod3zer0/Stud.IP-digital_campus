@@ -143,7 +143,7 @@ class StudyAreasWizardStep implements CourseWizardStep
         $values = $values[get_class($this)];
         $ok = true;
         $errors = [];
-        if (!$values['studyareas']) {
+        if (empty($values['studyareas'])) {
             $ok = false;
             $errors[] = _('Die Veranstaltung muss mindestens einem Studienbereich zugeordnet sein.');
         }

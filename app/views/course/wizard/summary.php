@@ -40,7 +40,7 @@
 </fieldset>
 
     <footer data-dialog-button>
-    <? if ($_SESSION['coursewizard'][$this->temp_id]['batchcreate']) : ?>
+    <? if (isset($_SESSION['coursewizard'][$this->temp_id]['batchcreate'])) : ?>
         <? foreach ($_SESSION['coursewizard'][$this->temp_id]['batchcreate'] as $key => $value) : ?>
             <input type="hidden" name="batchcreate[<?= $key ?>]" value="<?= $value ?>">
         <? endforeach ?>
