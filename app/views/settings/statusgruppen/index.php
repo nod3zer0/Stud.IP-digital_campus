@@ -18,27 +18,27 @@
                     <nav>
                         <? if (!$locked && $inst_count > 0) : ?>
                             <a href="<?= $controller->url_for('settings/statusgruppen/move', $inst_id, 'up') ?>">
-                                <?= Icon::create('arr_2up', 'sort')->asImg() ?>
+                                <?= Icon::create('arr_2up', Icon::ROLE_SORT) ?>
                             </a>
                         <? elseif (!$locked && count($institutes) > 1): ?>
-                            <?= Icon::create('arr_2up', 'inactive')->asImg() ?>
+                            <?= Icon::create('arr_2up', Icon::ROLE_INACTIVE) ?>
                         <? endif; ?>
 
                         <? if (!$locked && $inst_count + 1 < count($institutes)): ?>
                             <a href="<?= $controller->url_for('settings/statusgruppen/move', $inst_id, 'down') ?>">
-                                <?= Icon::create('arr_2down', 'sort')->asImg() ?>
+                                <?= Icon::create('arr_2down', Icon::ROLE_SORT) ?>
                             </a>
                         <? elseif (!$locked && count($institutes) > 1): ?>
-                            <?= Icon::create('arr_2down', 'inactive')->asImg() ?>
+                            <?= Icon::create('arr_2down', Icon::ROLE_INACTIVE) ?>
                         <? endif; ?>
 
                         <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id)) : ?>
                             <a href="<?= URLHelper::getURL('dispatch.php/institute/members', ['cid' => $inst_id, 'admin_view' => 1]) ?>">
-                                <?= Icon::create('link-intern', 'clickable', ['title' => _('Zur Einrichtung')])->asImg() ?>
+                                <?= Icon::create('link-intern')->asImg(['title' => _('Zur Einrichtung')]) ?>
                             </a>
                         <? else: ?>
                             <a href="<?= URLHelper::getURL('dispatch.php/institute/overview', ['auswahl' => $inst_id]) ?>">
-                                <?= Icon::create('link-intern', 'clickable', ['title' => _('Zur Einrichtung')])->asImg() ?>
+                                <?= Icon::create('link-intern')->asImg(['title' => _('Zur Einrichtung')]) ?>
                             </a>
                         <? endif; ?>
                     </nav>
@@ -57,16 +57,16 @@
             <?
                 $inst_count += 1;
                 $role_count = 1;
-                $max_roles  = count($institute['flattened']);
+                $max_roles  = isset($institute['flattened']) ? count($institute['flattened']) : 0;
             ?>
             <? foreach ($institute['flattened'] as $role_id => $role): ?>
-                <article class="indented <?= ContentBoxHelper::classes($role_id) ?> <? if (Request::get('type') === 'role' && Request::get('open') == $role_id) : ?>open<? endif ?>">
+                <article class="indented <?= ContentBoxHelper::classes($role_id) ?> <? if (Request::get('type') === 'role' && Request::get('open') === $role_id) : ?>open<? endif ?>">
                     <header>
                         <h1>
-                            <? if (count($institute['datafields'][$role_id]) > 0): ?>
+                            <? if (isset($institute['datafields'][$role_id]) && count($institute['datafields'][$role_id]) > 0): ?>
                                 <a href="<?= ContentBoxHelper::href($role_id) ?>"
                                    name="<?= $role_id ?>"
-                                   class="link <?= $open === $role_id ? 'open' : 'closed' ?>">
+                                   class="link <?= Request::get('open') === $role_id ? 'open' : 'closed' ?>">
                                     <?= htmlReady($role['name_long']) ?>
                                 </a>
                             <? else: ?>
@@ -78,11 +78,11 @@
                         <nav>
                             <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id) && !$locked) : ?>
                                 <a href="<?= $controller->url_for('settings/statusgruppen/verify/delete/' . $role_id) ?>#<?= $role_id ?>">
-                                    <?= Icon::create('trash', 'clickable', ['title' => _('Löschen')])->asImg() ?>
+                                    <?= Icon::create('trash')->asImg(['title' => _('Löschen')]) ?>
                                 </a>
 
                                 <a href="<?= URLHelper::getURL('dispatch.php/admin/statusgroups', ['cid' => $inst_id]) ?>#group-<?= $role_id ?>">
-                                    <?= Icon::create('link-intern', 'clickable', ['title' => _('Zur Funktion')])->asImg() ?>
+                                    <?= Icon::create('link-intern')->asImg(['title' => _('Zur Funktion')]) ?>
                                 </a>
                             <? endif; ?>
                         </nav>
@@ -94,8 +94,8 @@
                             'inst_id'    => $inst_id,
                             'role_id'    => $role_id,
                             'institute'  => Institute::find($inst_id),
-                            'datafields' => $institute['datafields'][$role_id],
-                            'role'       => $role['role'],
+                            'datafields' => $institute['datafields'][$role_id] ?? [],
+                            'role'       => $role['role'] ?? null,
                         ]) ?>
                     </section>
                 </article>
@@ -105,7 +105,7 @@
         <? endforeach; ?>
     </section>
 
-    <? if ($GLOBALS['perm']->have_perm('admin') && !$locked): ?>
+    <? if ($GLOBALS['perm']->have_perm('admin') && empty($locked)): ?>
         <?= $this->render_partial('settings/statusgruppen/assign', compact('admin_insts')) ?>
     <? endif; ?>
 
