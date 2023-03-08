@@ -25,7 +25,7 @@ class CT_Cache {
         return $this->ac_get_value($str) === false ? $str : false;
     }
 
-    function ac_store($id, $name = null, $str) {
+    function ac_store($id, $name, $str) {
         $cache_key = self::CACHE_KEY_PREFIX . '/' . $id;
         return $this->cache->write($cache_key, $str, self::SESSION_LIFETIME);
     }
@@ -51,7 +51,6 @@ class CT_Cache {
     function ac_get_changed($id, $name = null) {
     }
 
-    function ac_set_changed($id, $name = null, $timestamp) {
+    function ac_set_changed($id, $name, $timestamp) {
     }
 }
-?>

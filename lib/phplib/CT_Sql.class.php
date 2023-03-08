@@ -79,7 +79,7 @@ class CT_Sql {
         return $rs->fetchColumn();
     }
     
-    function ac_set_changed($id, $name = null, $timestamp){
+    function ac_set_changed($id, $name, $timestamp){
         $db = DBManager::get();
         $stmt = $db->prepare(sprintf("UPDATE %s SET changed = FROM_UNIXTIME(?) WHERE sid  = ?", $this->database_table));
         $stmt->execute([$timestamp, $id]);
@@ -99,4 +99,3 @@ class CT_Sql {
     function ac_halt($s) {
     }
 }
-?>
