@@ -280,26 +280,18 @@ class EvaluationQuestionDB extends EvaluationObjectDB
     {
         $db = DBManager::get();
 
-        if (EvaluationObjectDB::getGlobalPerm() == "root") {
-            $sql =
-                "SELECT" .
-                " evalquestion_id " .
-                "FROM" .
-                " evalquestion " .
-                "WHERE" .
-                " parent_id = '0' ORDER BY text";
+        if (EvaluationObjectDB::getGlobalPerm() === 'root') {
+            $sql = "SELECT evalquestion_id
+                    FROM evalquestion
+                    WHERE parent_id = '0'
+                    ORDER BY text";
             return $db->fetchFirst($sql);
         } else {
-            $sql =
-                "SELECT" .
-                " evalquestion_id " .
-                "FROM" .
-                " evalquestion " .
-                "WHERE" .
-                " parent_id = '" . $userID . "' " .
-                "OR " .
-                " parent_id = '0' ORDER BY text";
-            $sql .= " ";
+            $sql = "SELECT evalquestion_id
+                    FROM evalquestion
+                    WHERE parent_id = ?
+                       OR parent_id = '0'
+                    ORDER BY text";
             return $db->fetchFirst($sql, [$userID]);
         }
     }
