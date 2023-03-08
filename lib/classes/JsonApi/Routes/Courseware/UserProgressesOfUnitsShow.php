@@ -95,10 +95,10 @@ class UserProgressesOfUnitsShow extends NonJsonApiController
     }
 
     private function getSelfProgresses(
-        array &$allBlockIds,
+        array $allBlockIds,
         string $elementId,
-        array &$userProgresses,
-        array &$courseMemberIds
+        array $userProgresses,
+        array $courseMemberIds
     ): array {
         $blks = $allBlockIds[$elementId] ?? [];
         if (count($blks) === 0) {
@@ -116,7 +116,7 @@ class UserProgressesOfUnitsShow extends NonJsonApiController
         $usersCounter = count($courseMemberIds);
         foreach ($blks as $blk) {
             $progresses = $userProgresses[$blk];
-            $usersProgress = $progresses['count'] ? (float) $progresses['sum'] : 0;
+            $usersProgress = $progresses['count'] ? (float) $progresses['grade'] : 0;
             $data['progress'] += $usersProgress / $usersCounter;
         }
 
