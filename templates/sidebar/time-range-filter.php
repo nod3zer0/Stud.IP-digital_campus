@@ -2,15 +2,15 @@
     <?= CSRFProtection::tokenTag() ?>
     <label>
         <?= _('Dateien neuer als') ?>:
-        <input type="text" name="begin" value="<?= htmlReady($begin) ?>"
+        <input type="text" name="begin" value="<?= htmlReady($begin ?? '') ?>"
                class="hasDatePicker">
     </label>
     <label>
         <?= _('Dateien älter als') ?>:
-        <input type="text" name="end" value="<?= htmlReady($end) ?>"
+        <input type="text" name="end" value="<?= htmlReady($end ?? '') ?>"
                class="hasDatePicker submit-on-change">
     </label>
-    <? if ($course_options) : ?>
+    <? if (!empty($course_options)) : ?>
         <label>
             <?= _('Veranstaltung') ?>:
             <select name="course_id">

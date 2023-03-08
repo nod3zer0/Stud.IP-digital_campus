@@ -45,7 +45,7 @@ foreach ($topFolder->getAdditionalActionButtons() as $button) {
 ?>
 <form id="files_table_form"
       method="post"
-      action="<?= htmlReady($form_action) ?>"
+      action="<?= htmlReady($form_action ?? '') ?>"
       data-files="<?= htmlReady(json_encode($vue_files)) ?>"
       data-topfolder="<?= htmlReady(json_encode((array) $vue_topFolder)) ?>">
     <?= CSRFProtection::tokenTag() ?>
@@ -55,8 +55,8 @@ foreach ($topFolder->getAdditionalActionButtons() as $button) {
                  :folders="folders"
                  :topfolder="topfolder"
                  :allow_filter="<?= json_encode(!empty($enable_table_filter)) ?>"
-                 table_title="<?= htmlReady($table_title) ?>"
-                 pagination="<?= htmlReady($pagination_html) ?>"
+                 table_title="<?= htmlReady($table_title ?? '') ?>"
+                 pagination="<?= htmlReady($pagination_html ?? '') ?>"
                  :initial_sort="{sortedBy:'chdate',sortDirection:'desc'}"
     ></files-table>
 </form>

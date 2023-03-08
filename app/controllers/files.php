@@ -334,7 +334,6 @@ class FilesController extends AuthenticatedController
 
         $course_did_change = false;
         if ($this->current_view != 'overview') {
-            $tzdt = new DateTime();
             if (Request::submitted('filter')) {
                 CSRFProtection::verifyUnsafeRequest();
                 if (Request::get('begin') && Request::get('end')) {
@@ -365,9 +364,9 @@ class FilesController extends AuthenticatedController
                     $_SESSION['files_overview']['course_id'] = $this->course_id;
                 }
             } else {
-                $this->begin = $_SESSION['files_overview']['begin'];
-                $this->end = $_SESSION['files_overview']['end'];
-                $this->course_id = $_SESSION['files_overview']['course_id'];
+                $this->begin = $_SESSION['files_overview']['begin'] ?? null;
+                $this->end = $_SESSION['files_overview']['end'] ?? null;
+                $this->course_id = $_SESSION['files_overview']['course_id'] ?? null;
             }
         }
 
@@ -700,7 +699,7 @@ class FilesController extends AuthenticatedController
         $copymode   = Request::get('copymode');
 
         $user = User::findCurrent();
-
+        $destination_plugin = null;
         if ($to_plugin) {
 
             $destination_id = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], "dispatch.php/files/copyhandler/") + strlen("dispatch.php/files/copyhandler/"));
@@ -721,7 +720,7 @@ class FilesController extends AuthenticatedController
 
         $count_files   = 0;
         $count_folders = 0;
-
+        $source_folder = null;
         $filerefs = $fileref_id;
         if (!empty($filerefs)) {
 
@@ -784,7 +783,7 @@ class FilesController extends AuthenticatedController
                         }
                     }
                 }
-                if (is_array($result)) {
+                if (isset($result) && is_array($result)) {
                     $errors = array_merge($errors, $result);
                 }
             }
