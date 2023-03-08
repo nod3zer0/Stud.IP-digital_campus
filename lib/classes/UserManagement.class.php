@@ -1187,6 +1187,8 @@ class UserManagement
             "DELETE FROM evalanswer_user WHERE user_id = ?",
             "DELETE FROM help_tour_user WHERE user_id = ?",
             "DELETE FROM personal_notifications_user WHERE user_id = ?",
+            "DELETE FROM forum_abo_users WHERE user_id = ?",
+            "DELETE FROM forum_favorites WHERE user_id = ?",
 
             "DELETE FROM comments WHERE user_id = ?",
             "DELETE questionnaires FROM questionnaires LEFT JOIN questionnaire_assignments qa USING (`questionnaire_id`) WHERE qa.range_id = ?",
