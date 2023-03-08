@@ -27,10 +27,10 @@
                     <?= tooltipIcon(_('vorläufige Teilnahme: ') . $course['count_prelim']) ?>
                 <? endif ?>
                 </td>
-                <td data-value="<?= $course['count_claiming'] ?: 0 ?>">
+                <td data-value="<?= $course['count_claiming'] ?? 0 ?>">
                     <?= htmlReady(isset($course['count_claiming']) ? $course['count_claiming'] : '-') ?>
                 </td>
-                <td data-sort-value="<?= $course['count_waiting'] ?: 0 ?>">
+                <td data-sort-value="<?= $course['count_waiting'] ?? 0 ?>">
                     <?= htmlReady(isset($course['count_waiting']) ? $course['count_waiting'] : '-') ?>
                 </td>
                 <td style="white-space:nowrap" data-sort-value="<?= (int) $course['distribution_time']?>">

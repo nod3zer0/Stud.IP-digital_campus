@@ -10,7 +10,7 @@ $courseIds = $courseset ? $courseset->getCourses() : [];
 // Load assigned user list IDs.
 $userlistIds = $courseset ? $courseset->getUserlists() : [];
 
-if ($flash['error']) {
+if (isset($flash['error'])) {
     echo MessageBox::error($flash['error']);
 }
 ?>
@@ -62,9 +62,9 @@ if ($flash['error']) {
                     <?= $instTpl ?>
                 <?php } else { ?>
                     <?php foreach ($myInstitutes as $institute) { ?>
-                        <?php if (sizeof($myInstitutes) != 1) { ?>
+                        <?php if (count($myInstitutes) !== 1) { ?>
                     <input type="checkbox" name="institutes[]" value="<?= $institute['Institut_id'] ?>"
-                        <?= $selectedInstitutes[$institute['Institut_id']] ? 'checked="checked"' : '' ?>
+                        <?= !empty($selectedInstitutes[$institute['Institut_id']]) ? 'checked' : '' ?>
                         class="institute" onclick="STUDIP.Admission.getCourses(
                         '<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')"/>
                         <?php } else { ?>
@@ -77,9 +77,13 @@ if ($flash['error']) {
             <?php } else { ?>
                 <?php if ($instSearch) { ?>
                 <div id="institutes">
-                    <?= Icon::create('arr_2down', 'sort', ['title' => _('Einrichtung hinzufügen')])->asImg(16, ["alt" => _('Einrichtung hinzufügen'), "onclick" => "STUDIP.Admission.updateInstitutes($('input[name=\"institute_id\"]').val(), '".$controller->url_for('admission/courseset/institutes',$courseset?$courseset->getId():'')."', '".$controller->url_for('admission/courseset/instcourses',$courseset?$courseset->getId():'')."', 'add')"]) ?>
+                    <?= Icon::create('arr_2down', Icon::ROLE_SORT)->asImg([
+                        'title' => _('Einrichtung hinzufügen'),
+                        'alt' => _('Einrichtung hinzufügen'),
+                        'onclick' => "STUDIP.Admission.updateInstitutes($('input[name=\"institute_id\"]').val(), '"  .$controller->url_for('admission/courseset/institutes',$courseset?$courseset->getId() : '') . "', '" . $controller->url_for('admission/courseset/instcourses',$courseset?$courseset->getId() : '') . "', 'add')"
+                    ]) ?>
                     <?= $instSearch ?>
-                    <?= Icon::create('search', 'clickable', ['title' => _("Suche starten")])->asImg()?>
+                    <?= Icon::create('search')->asImg(['title' => _("Suche starten")])?>
                 </div>
                 <i><?=  _('Sie haben noch keine Einrichtung ausgewählt. Benutzen Sie obige Suche, um dies zu tun.') ?></i>
                 <?php } else { ?>
@@ -101,7 +105,7 @@ if ($flash['error']) {
                 <?= _('Semester') ?>
                 <select name="semester" onchange="STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')">
                     <?php foreach(array_reverse(Semester::getAll(), true) as $id => $semester) { ?>
-                    <option value="<?= $id ?>"<?= $id == $selectedSemester ? ' selected="selected"' : '' ?>>
+                    <option value="<?= $id ?>"<?= $id === $selectedSemester ? ' selected' : '' ?>>
                         <?= htmlReady($semester->name) ?>
                     </option>
                     <?php } ?>
@@ -203,14 +207,12 @@ if ($flash['error']) {
                 <i><?=  _('Sie haben noch keine Personenlisten angelegt.') ?></i>
             <?php
             }?>
-            <? if ($courseset) : ?>
             <div>
                     <?= LinkButton::create(_('Liste der Nutzer'),
                         $controller->url_for('admission/courseset/factored_users/' . $courseset->getId()),
                         ['data-dialog' => '']
                         ); ?>
             </div>
-            <? endif ?>
             <?php
             // Keep lists that were assigned by other users.
             foreach ($userlistIds as $list) {
