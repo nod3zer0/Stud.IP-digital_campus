@@ -472,7 +472,7 @@ class FilesController extends AuthenticatedController
             $new_file_refs = FileRef::findAll($GLOBALS['user']->id, $this->begin, $this->end, $this->course_id, $this->page_size, $offset);
             //Group the file refs by their folder:
             foreach ($new_file_refs as $file_ref) {
-                if (!is_array($folders[$file_ref->folder_id])) {
+                if (!isset($folders[$file_ref->folder_id])) {
                     $folders[$file_ref->folder_id] = [
                         'folder' => $file_ref->folder->getTypedFolder(),
                         'file_refs' => []
