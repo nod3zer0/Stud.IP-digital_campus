@@ -197,7 +197,7 @@ abstract class ContainerType
 
         foreach ($payload['sections'] as &$section) {
             foreach ($section['blocks'] as &$block) {
-                $block = $block_map[$block];
+                $block = $block_map[$block] ?? null;
             }
         }
 

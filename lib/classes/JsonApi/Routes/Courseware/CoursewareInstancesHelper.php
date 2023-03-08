@@ -32,6 +32,7 @@ trait CoursewareInstancesHelper
         if (!($method = $methods[$rangeType])) {
             throw new BadRequestException('Invalid range type: "' . $rangeType . '".');
         }
+
         $root = null;
         if ($rangeType !== 'sharedusers') {
             $chunks = explode('_', $rangeId);
@@ -45,7 +46,9 @@ trait CoursewareInstancesHelper
             } else {
                 $unit = Unit::findOneBySQL('range_id = ?', [$courseId]);
             }
-            $root = $unit->structural_element;
+            if ($unit) {
+                $root = $unit->structural_element;
+            }
         } else {
             $root = StructuralElement::$method($rangeId);
         }
