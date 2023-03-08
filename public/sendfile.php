@@ -45,7 +45,7 @@ page_open(["sess" => "Seminar_Session",
                 "user" => "Seminar_User"]);
 
 //Load plugins, unless they are disabled via an URL parameter.
-if (Request::int('disable_plugins') !== null && ($user->id === 'nobody' || $perm->have_perm('root'))) {
+if (Request::int('disable_plugins') !== null && ($GLOBALS['user']->id === 'nobody' || $GLOBALS['perm']->have_perm('root'))) {
     // deactivate non-core plugins
     PluginManager::getInstance()->setPluginsDisabled(Request::int('disable_plugins'));
 }
@@ -65,6 +65,8 @@ if ($type < 0 || $type > 7) {
 
 $no_access    = true;
 $file_missing = false;
+$file = null;
+$file_ref = null;
 
 switch ($type) {
     //download from course or institute or document is a message attachment
@@ -114,13 +116,13 @@ if ($file_missing) {
 //if download not allowed throw exception to terminate script
 if ($no_access) {
     // redirect to login page if user is not logged in
-    $auth->login_if($auth->auth['uid'] == 'nobody');
+    $GLOBALS['auth']->login_if($GLOBALS['auth']->auth['uid'] === 'nobody');
     throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung für diesen Download!"));
 }
 
 //replace bad charakters to avoid problems when saving the file
 $file_name = FileManager::cleanFileName(Request::get('file_name'));
-
+$path_file = '';
 switch ($type) {
     //We want to download from the archive (this mode performs perm checks)
     case 1:
@@ -151,7 +153,10 @@ switch ($type) {
 
 // check if linked file is obtainable
 $filesize = 0;
-if (isset($file_ref) && $file_ref->file->metadata['access_type'] == 'proxy') {
+if (
+    isset($file_ref, $file_ref->file, $file_ref->file->metadata['access_type']) 
+    && $file_ref->file->metadata['access_type'] === 'proxy'
+) {
     $link_data = FileManager::fetchURLMetadata($file_ref->file->metadata['url']);
     if ($link_data['response_code'] != 200) {
         throw new Exception(_("Diese Datei wird von einem externen Server geladen und ist dort momentan nicht erreichbar!"));
@@ -258,6 +263,6 @@ if (isset($file_ref) && !$start) {
 }
 
 //remove temporary file
-if ($type == 4) {
+if ($type === 4) {
     @unlink($path_file);
 }
