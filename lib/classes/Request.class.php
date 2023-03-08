@@ -56,7 +56,7 @@ class Request implements ArrayAccess, IteratorAggregate
      */
     public function offsetGet($offset)
     {
-        return $this->params[$offset];
+        return $this->params[$offset] ?? null;
     }
 
     /**
