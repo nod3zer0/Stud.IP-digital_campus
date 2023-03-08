@@ -85,6 +85,7 @@ class ForumAbo
         // fetch all users to notify, exclude current user
         $stmt = $db->prepare("SELECT DISTINCT user_id
             FROM forum_abo_users
+            JOIN auth_user_md5 USING (user_id)
             WHERE topic_id IN (:topic_ids)
                 AND user_id != :user_id");
         $stmt->bindValue(':topic_ids', array_keys($path), StudipPDO::PARAM_ARRAY);
@@ -117,10 +118,12 @@ class ForumAbo
             if ($user->locked || ($expiration > 0 && $expiration < time())) {
                 $force_email = false;
             }
-            $parent_id = ForumEntry::getParentTopicId($topic['topic_id']);
 
             setTempLanguage($data['user_id']);
-            $notification = sprintf(_("%s hat einen Beitrag geschrieben"), ($topic['anonymous'] ? _('Anonym') : $topic['author']));
+            $notification = sprintf(
+                _('%s hat einen Beitrag geschrieben'),
+                $topic['anonymous'] ? _('Anonym') : $topic['author']
+            );
             restoreLanguage();
 
             PersonalNotifications::add(
