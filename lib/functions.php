@@ -67,6 +67,8 @@ function get_object_name($range_id, $object_type)
 {
     global $SEM_TYPE,$INST_TYPE, $SEM_TYPE_MISC_NAME;
 
+    $name = '';
+    $type = '';
     if ($object_type == "sem") {
         $query = "SELECT status, Name FROM seminare WHERE Seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
@@ -105,7 +107,7 @@ function get_object_name($range_id, $object_type)
  * Returns a sorm object for a given range_id
  *
  * @param string the range_id
- * @return SimpleORMap Course/Institute/User/Statusgruppen/
+ * @return bool|SimpleORMap Course/Institute/User/Statusgruppen/
  */
 function get_object_by_range_id($range_id) {
     $possible_sorms = "Course Institute User";
@@ -256,13 +258,11 @@ function get_object_type($id, $check_only = [])
 function select_group($sem_start_time)
 {
     //Farben Algorhytmus, erzeugt eindeutige Farbe fuer jedes Semester. Funktioniert ab 2001 die naechsten 1000 Jahre.....
-    $year_of_millenium=date ("Y", $sem_start_time) % 1000;
-    $index=$year_of_millenium * 2;
-    if (date ("n", $sem_start_time) > 6)
+    $year_of_millenium = date ('Y', $sem_start_time) % 1000;
+    $index = $year_of_millenium * 2;
+    if (date('n', $sem_start_time) > 6)
         $index++;
-    $group=($index % 7) + 1;
-
-    return $group;
+    return ($index % 7) + 1;
 }
 
 /**
@@ -281,7 +281,7 @@ function select_group($sem_start_time)
  */
 function my_substr($what, $start, $end)
 {
-    $length=$end-$start;
+    $length = $end - $start;
     $what_length = mb_strlen($what);
     // adding 5 because: mb_strlen("[...]") == 5
     if ($what_length > $length + 5) {
@@ -436,11 +436,11 @@ function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">")
 {
     $the_tree = TreeAbstract::GetInstance("StudipSemTree");
     $view = DbView::getView('sem_tree');
-    $ret = null;
+    $ret = [];
     $view->params[0] = $seminar_id;
     $rs = $view->get_query("view:SEMINAR_SEM_TREE_GET_IDS");
     while ($rs->next_record()){
-        $ret[$rs->f('sem_tree_id')] = $the_tree->getShortPath($rs->f('sem_tree_id'), NULL, $delimeter, $depth ? $depth - 1 : 0);
+        $ret[$rs->f('sem_tree_id')] = $the_tree->getShortPath($rs->f('sem_tree_id'), null, $delimeter, $depth ? $depth - 1 : 0);
     }
     return $ret;
 }
@@ -463,8 +463,7 @@ function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">")
  */
 function check_and_set_date($tag, $monat, $jahr, $stunde, $minute, &$arr, $field)
 {
-
-    $check=TRUE; // everything ok?
+    $check = true; // everything ok?
     if (($jahr>0) && ($jahr<100))
         $jahr=$jahr+2000;
 
@@ -476,16 +475,16 @@ function check_and_set_date($tag, $monat, $jahr, $stunde, $minute, &$arr, $field
 
     if (($monat) && ($tag) && ($jahr)) {
         if ($stunde==_("hh")) {
-            $check=FALSE;
+            $check = false;
         }
 
         if ((!checkdate((int)$monat, (int)$tag, (int)$jahr) && ((int)$monat) && ((int)$tag) && ((int)$jahr))) {
-            $check=FALSE;
+            $check = false;
         }
 
         if (($stunde > 24) || ($minute > 59)
             || ($stunde == 24 && $minute > 0) ) {
-            $check=FALSE;
+            $check = false;
         }
 
         if ($stunde == 24) {
@@ -612,12 +611,11 @@ function StringToFloat($str)
 function archiv_check_perm($seminar_id)
 {
     static $archiv_perms;
-    global $perm, $user;
 
-    $u_id = $user->id;
+    $u_id = $GLOBALS['user']->id;
 
     // root darf sowieso ueberall dran
-    if ($perm->have_perm('root')) {
+    if ($GLOBALS['perm']->have_perm('root')) {
         return 'admin';
     }
 
@@ -627,7 +625,7 @@ function archiv_check_perm($seminar_id)
         $statement->execute([$u_id]);
         $archiv_perms = $statement->fetchGrouped(PDO::FETCH_COLUMN);
 
-        if ($perm->have_perm("admin")){
+        if ($GLOBALS['perm']->have_perm('admin')) {
             $query = "SELECT archiv.seminar_id, 'admin'
                       FROM user_inst
                       INNER JOIN archiv ON (heimat_inst_id = institut_id)
@@ -638,7 +636,7 @@ function archiv_check_perm($seminar_id)
 
             $archiv_perms = array_merge($archiv_perms, $temp_perms);
         }
-        if ($perm->is_fak_admin()){
+        if ($GLOBALS['perm']->is_fak_admin()) {
             $query = "SELECT archiv.seminar_id, 'admin'
                       FROM user_inst
                       INNER JOIN Institute ON (user_inst.institut_id = Institute.fakultaets_id)
@@ -651,7 +649,7 @@ function archiv_check_perm($seminar_id)
             $archiv_perms = array_merge($archiv_perms, $temp_perms);
         }
     }
-    return $archiv_perms[$seminar_id];
+    return $archiv_perms[$seminar_id] ?? '';
 }
 
 /**
@@ -761,7 +759,7 @@ function check_ticket($studipticket)
  */
 function search_range($search_str = false, $search_user = false, $show_sem = true)
 {
-    global $perm, $user, $_fullname_sql;
+    global $_fullname_sql;
 
     // Helper function that obtains the correct name for an entity taking
     // in account whether the semesters should be displayed or not
@@ -781,7 +779,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
     $show_sem_sql2 = "LEFT JOIN semester_courses ON (semester_courses.course_id = s.Seminar_id) ";
 
 
-    if ($search_str && $perm->have_perm('root')) {
+    if ($search_str && $GLOBALS['perm']->have_perm('root')) {
         if ($search_user) {
             $query = "SELECT user_id, CONCAT({$_fullname_sql['full']}, ' (', username, ')') AS name
                       FROM auth_user_md5 AS a
@@ -830,7 +828,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                 'name' => $row['Name'],
             ];
         }
-    } elseif ($search_str && $perm->have_perm('admin')) {
+    } elseif ($search_str && $GLOBALS['perm']->have_perm('admin')) {
         $_hidden = _('(versteckt)');
         $query = "SELECT s.Seminar_id, IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}'), s.Name) AS Name %s
                   FROM user_inst AS a
@@ -841,7 +839,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
                : sprintf($query, '', '');
         $statement = DBManager::get()->prepare($query);
-        $statement->execute([$user->id, $search_str]);
+        $statement->execute([$GLOBALS['user']->id, $search_str]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $search_result[$row['Seminar_id']] = [
                 'type'      => 'sem',
@@ -858,14 +856,14 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                     AND a.institut_id != b.fakultaets_id AND b.Name LIKE CONCAT('%', ?, '%')
                   ORDER BY Name";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute([$user->id, $search_str]);
+        $statement->execute([$GLOBALS['user']->id, $search_str]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $search_result[$row['Institut_id']] = [
                 'type' => 'inst',
                 'name' => $row['Name'],
             ];
         }
-        if ($perm->is_fak_admin()) {
+        if ($GLOBALS['perm']->is_fak_admin()) {
             $_hidden = _('(versteckt)');
             $query = "SELECT s.Seminar_id, IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}'), s.Name) AS Name %s
                       FROM user_inst AS a
@@ -879,7 +877,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                    ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
                    : sprintf($query, '', '');
             $statement = DBManager::get()->prepare($query);
-            $statement->execute([$user->id, $search_str]);
+            $statement->execute([$GLOBALS['user']->id, $search_str]);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $search_result[$row['Seminar_id']] = [
                     'type'      => 'sem',
@@ -897,7 +895,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                         AND c.Name LIKE CONCAT('%', ?, '%')
                       ORDER BY Name";
             $statement = DBManager::get()->prepare($query);
-            $statement->execute([$user->id, $search_str]);
+            $statement->execute([$GLOBALS['user']->id, $search_str]);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $search_result[$row['Institut_id']] = [
                     'type' => 'inst',
@@ -912,7 +910,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                         AND b.Name LIKE CONCAT('%', ?, '%')
                       ORDER BY Name";
             $statement = DBManager::get()->prepare($query);
-            $statement->execute([$user->id, $search_str]);
+            $statement->execute([$GLOBALS['user']->id, $search_str]);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $search_result[$row['Institut_id']] = [
                     'type' => 'inst',
@@ -920,7 +918,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                 ];
             }
         }
-    } elseif ($perm->have_perm('tutor') || $perm->have_perm('autor')) {
+    } elseif ($GLOBALS['perm']->have_perm('tutor') || $GLOBALS['perm']->have_perm('autor')) {
         // autors my also have evaluations and news in studygroups with proper rights
         $_hidden = _('(versteckt)');
         $query = "SELECT s.Seminar_id, IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}'), s.Name) AS Name %s
@@ -932,7 +930,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
                : sprintf($query, '', '');
         $statement = DBManager::get()->prepare($query);
-        $statement->execute([$user->id]);
+        $statement->execute([$GLOBALS['user']->id]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $search_result[$row['Seminar_id']] = [
                 'type'      => 'sem',
@@ -949,7 +947,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                   WHERE a.user_id = ? AND a.inst_perms IN ('dozent','tutor')
                   ORDER BY Name";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute([$user->id]);
+        $statement->execute([$GLOBALS['user']->id]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $search_result[$row['Institut_id']] = [
                 'name' => $row['Name'],
@@ -971,7 +969,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
                : sprintf($query, '', '');
         $statement = DBManager::get()->prepare($query);
-        $statement->execute([$user->id]);
+        $statement->execute([$GLOBALS['user']->id]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $search_result[$row['Seminar_id']] = [
                 'type'      => 'sem',
@@ -990,7 +988,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                       ORDER BY name ASC";
             $statement = DBManager::get()->prepare($query);
             $statement->execute([
-                $user->id
+                $GLOBALS['user']->id
             ]);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $search_result[$row['user_id']] = $row;
@@ -1021,9 +1019,7 @@ function format_help_url($keyword)
     preg_match('/^\d+/', $GLOBALS['SOFTWARE_VERSION'], $v);
     $version = $v[0];
 
-    $help_query = sprintf('https://hilfe.studip.de/help/%s/%s/%s',
-                          $version, $lang, $keyword);
-    return $help_query;
+    return sprintf('https://hilfe.studip.de/help/%s/%s/%s', $version, $lang, $keyword);
 }
 
 /**
@@ -1116,9 +1112,7 @@ function legacy_studip_utf8decode($data)
  */
 function studip_json_decode($json, $assoc = true, $depth = 512, $options = 0)
 {
-    $data = json_decode($json, $assoc, $depth, $options);
-
-    return $data;
+    return json_decode($json, $assoc, $depth, $options);
 }
 
 /**
@@ -1132,9 +1126,7 @@ function studip_json_decode($json, $assoc = true, $depth = 512, $options = 0)
  */
 function studip_json_encode($data, $options = 0)
 {
-    $json = json_encode($data, $options);
-
-    return $json;
+    return json_encode($data, $options);
 }
 
 /**
@@ -1181,10 +1173,8 @@ function get_title_for_status($type, $count, $sem_type = NULL)
     $index = $count == 1 ? 0 : 1;
     $class_index = $count == 1 ? $atype : $atype . '_plural';
 
-    $title = $SEM_CLASS[$SEM_TYPE[$sem_type]['class']][$class_index] ??
+    return $SEM_CLASS[$SEM_TYPE[$sem_type]['class']][$class_index] ??
              $DEFAULT_TITLE_FOR_STATUS[$type][$index] ?? _('unbekannt');
-
-    return $title;
 }
 
 /**
@@ -1569,8 +1559,7 @@ function strtocamelcase($string, $ucfirst = false) {
 function strtosnakecase($string) {
     $string = preg_replace('/\W+/', '_', $string);
     $string = preg_replace('/(?<!^)[A-Z]/', '_$0', $string);
-    $string = mb_strtolower($string);
-    return $string;
+    return mb_strtolower($string);
 }
 
 /**
@@ -1582,8 +1571,7 @@ function strtosnakecase($string) {
 function strtokebabcase($string) {
     $string = preg_replace('/\W+/', '-', $string);
     $string = preg_replace('/(?<!^)[A-Z]/', '-$0', $string);
-    $string = mb_strtolower($string);
-    return $string;
+    return mb_strtolower($string);
 }
 
 /**
@@ -1643,8 +1631,8 @@ function array_to_csv($data, $filename = null, $caption = null, $delimiter = ';'
     foreach ($data as $row) {
         if (is_array($caption)) {
             $fields = [];
-            foreach(array_keys($caption) as $fieldname) {
-                $fields[] = $row[$fieldname];
+            foreach (array_keys($caption) as $fieldname) {
+                $fields[] = $row[$fieldname] ?? '';
             }
         } else {
             $fields = $row;
