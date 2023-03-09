@@ -25,11 +25,10 @@ class Siteinfo {
         $this->db = DBManager::get();
     }
     function get_detail_content($id) {
-        global $perm;
         //first we define some fallbacks
-        if ($id == 0) {
+        if ((int)$id === 0) {
             //users with root priveleges get a hint whether what to do...
-            if ($perm->have_perm('root')) {
+            if ($GLOBALS['perm']->have_perm('root')) {
                 if ($this->rubrics_empty) {
                     return _("Benutzen Sie den Link »neue Rubrik anlegen« in der Infobox, um eine Rubrik anzulegen.");
                 } else {
@@ -63,8 +62,7 @@ class Siteinfo {
     function get_detail_content_processed($id) {
         //applying Schnellformatierungen and Siteinfo-specific markup to the content
         $content = $this->get_detail_content($id);
-        $output = $this->sme->siteinfoDirectives(formatReady(language_filter($content)));
-        return $output;
+        return $this->sme->siteinfoDirectives(formatReady(language_filter($content)));
     }
 
     function get_all_details() {
@@ -107,8 +105,8 @@ class Siteinfo {
         if ($result->rowCount() > 0) {
             return $rows[0];
         } else {
-            $this->rubrics_empty = TRUE;
-            return NULL;
+            $this->rubrics_empty = true;
+            return null;
         }
     }
 
@@ -134,6 +132,8 @@ class Siteinfo {
 
     function save($type, $input) {
         //distinguish the subject and the action (modification/insertion)
+        $rubric = '';
+        $detail = '';
         switch ($type) {
             case 'update_detail':
                 $query = "UPDATE siteinfo_details
@@ -186,8 +186,9 @@ class Siteinfo {
         return [$rubric, $detail];
     }
 
-    function delete($type,$id) {
-        if($type=="rubric") {
+    public function delete($type, $id)
+    {
+        if ($type === 'rubric') {
             $query = "DELETE FROM siteinfo_details WHERE rubric_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute([$id]);
@@ -269,7 +270,7 @@ class SiteinfoMarkupEngine {
         $statement->execute([$input]);
         $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        if (count($temp) == 1) {
+        if (count($temp) === 1) {
             $user = reset($temp);
             $template->username = $user['username'];
             $template->fullname = $user['fullname'];
@@ -290,7 +291,7 @@ class SiteinfoMarkupEngine {
         $statement->execute([$input]);
         $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        if (count($temp) == 1) {
+        if (count($temp) === 1) {
             $user = reset($temp);
             $template->username = $user['username'];
             $template->fullname = $user['fullname'];
@@ -355,8 +356,7 @@ class SiteinfoMarkupEngine {
             $remotefile = file_get_contents('https://develop.studip.de/studip/extern.php?module=Persons&config_id=8d1dafc3afca2bce6125d57d4119b631&range_id=4498a5bc62d7974d0a0ac3e97aca5296', false, get_default_http_stream_context('https://develop.studip.de'));
             $cache->write('coregroup', $remotefile);
         }
-        $out = str_replace(['class="normal"','align="left"'], ["",""], $remotefile);
-        return $out;
+        return str_replace(['class="normal"', 'align="left"'], ['', ''], $remotefile);
     }
 
     function toplist($item) {
@@ -365,6 +365,7 @@ class SiteinfoMarkupEngine {
             return $found_in_cache;
         }
         $template = $this->template_factory->open('toplist');
+        $sql = '';
         switch ($item) {
             case "mostparticipants":
                 $template->heading = _("die meisten Teilnehmenden");
@@ -424,7 +425,7 @@ class SiteinfoMarkupEngine {
 
                 // sort the seminars by the number of combined postings
                 usort($seminars, function($a, $b) {
-                    if ($a['count'] == $b['count']) {
+                    if ($a['count'] === $b['count']) {
                         return 0;
                     }
                     return ($a['count'] > $b['count']) ? -1 : 1;
@@ -520,7 +521,7 @@ class SiteinfoMarkupEngine {
                                        "detail" => _("von Stud.IP verwaltete Ressourcen wie Räume oder Geräte"),
                                        "constraint" => Config::get()->RESOURCES_ENABLE];
 
-        if ($key == 'posting') {
+        if ($key === 'posting') {
             $count = 0;
 
             // sum up number of postings for all availabe ForumModules
@@ -547,10 +548,10 @@ class SiteinfoMarkupEngine {
                         $template->detail = $indicator[$key]['detail'];
                     }
                 } else {
-                    return "";
+                    return '';
                 }
             } else {
-                return "";
+                return '';
             }
         }
         $ret = $template->render();
@@ -563,7 +564,7 @@ class SiteinfoMarkupEngine {
     }
 
     function termsOfUse() {
-        return @file_get_contents($GLOBALS['STUDIP_BASE_PATH'] . '/locale/' . ($GLOBALS['_language_path'] ?: 'de') . '/LC_HELP/pages/nutzung.html');
+        return @file_get_contents($GLOBALS['STUDIP_BASE_PATH'] . '/locale/' . ($GLOBALS['_language_path'] ?? 'de') . '/LC_HELP/pages/nutzung.html');
     }
 
     function style($style, $styled) {
@@ -583,7 +584,7 @@ function language_filter($input) {
 
 function stripforeignlanguage($language, $text) {
     list($primary, $sub) = explode('_',$_SESSION['_language']);
-    if (($language==$primary) || ($language==$_SESSION['_language'])) {
+    if ($language === $primary || $language === $_SESSION['_language']) {
         return str_replace('\"', '"', $text);
     } else {
         return '';
