@@ -1,3 +1,15 @@
+__11.03.2023 V 5.3__
+System: Komplett neue Navigation auf Mobilgeräten
+System: Kompatibilität mit PHP 8.0
+System: Optionaler Virenscan beim Upload von Dateien
+System: Usabilityverbesserung von Drag&Drop-Elementen
+Fragebögen: Neue Fragetypen
+Courseware: Zertifikatsversand
+Courseware: Vereinfachtes Anordnen von Blöcken und Abschnitten, Verschieben von Blöcken im Inhaltsverzeichnis
+Courseware: Optimierte Darstellung mehrerer Lernmaterialien
+Raumverwaltung: Usability beim Stellen von Raumanfragen verbessert
+Barrierefreiheit: Neue HTML-Strukturen
+
 __18.11.2022 V 5.2__
 - Courseware: Verknüpfung von einem Lernmaterial in beliebig viele Bereiche
 - Courseware: Zuweisen von Inhalten zu Personen oder Gruppen
