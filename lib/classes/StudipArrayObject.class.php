@@ -159,7 +159,10 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
      * Get the number of public properties in the ArrayObject
      *
      * @return int
+     *
+     * @todo Add int return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->storage);
@@ -215,7 +218,10 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
      * Create a new iterator from an ArrayObject instance
      *
      * @return \Iterator
+     *
+     * @todo Add Traversable return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         $class = $this->iteratorClass;
@@ -268,7 +274,10 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
      *
      * @param  mixed $key
      * @return bool
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return isset($this->storage[$key]);
@@ -279,7 +288,10 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
      *
      * @param  mixed $key
      * @return mixed
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($key)
     {
         $ret = null;
@@ -297,7 +309,10 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
      * @param  mixed $key
      * @param  mixed $value
      * @return void
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if (is_null($key)) {
@@ -312,7 +327,10 @@ class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable,
      *
      * @param  mixed $key
      * @return void
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         if ($this->offsetExists($key)) {

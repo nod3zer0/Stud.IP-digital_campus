@@ -122,21 +122,41 @@ class Response implements \ArrayAccess
     }
 
     // array access methods for headers
+
+    /**
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->headers[$offset]);
     }
 
+    /**
+     * @param $offset
+     * @return mixed
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
+     */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return @$this->headers[$offset];
     }
 
+    /**
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->headers[$offset] = $value;
     }
 
+    /**
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->headers[$offset]);

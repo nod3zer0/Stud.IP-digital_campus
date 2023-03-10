@@ -153,11 +153,15 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * IteratorAggregate
+     *
+     * @todo Add Traversable return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->data);
     }
+
     /**
      * magic method for dynamic properties
      */
@@ -165,6 +169,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
     {
         return $this->getValue($field);
     }
+
     /**
      * magic method for dynamic properties
      */
@@ -172,6 +177,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
     {
          return $this->setValue($field, $value);
     }
+
     /**
      * magic method for dynamic properties
      */
@@ -179,37 +185,57 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
     {
         return isset($this->data[$field]);
     }
+
     /**
      * ArrayAccess: Check whether the given offset exists.
+     *
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->$offset);
     }
+
     /**
      * ArrayAccess: Get the value at the given offset.
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->$offset;
     }
+
     /**
      * ArrayAccess: Set the value at the given offset.
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->$offset = $value;
     }
+
     /**
      * ArrayAccess: unset the value at the given offset (not applicable)
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
 
     }
+
     /**
      * Countable
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->data);

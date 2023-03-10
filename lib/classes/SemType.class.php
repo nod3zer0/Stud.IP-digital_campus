@@ -119,7 +119,10 @@ class SemType implements ArrayAccess
      * deprecated, does nothing, should not be used
      * @param string $offset
      * @param mixed $value
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
     }
@@ -129,7 +132,10 @@ class SemType implements ArrayAccess
      * new array-structure to the old boolean values.
      * @param integer $offset: name of attribute
      * @return boolean|(localized)string
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         switch ($offset) {
@@ -146,9 +152,12 @@ class SemType implements ArrayAccess
 
     /**
      * ArrayAccess method to check if an attribute exists.
-     * @param type $offset
-     * @return type
+     * @param mixed $offset
+     * @return bool
+     *
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->data[$offset]);
@@ -157,7 +166,10 @@ class SemType implements ArrayAccess
     /**
      * deprecated, does nothing, should not be used
      * @param string $offset
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
     }
@@ -256,4 +268,3 @@ class SemType implements ArrayAccess
     }
 
 }
-

@@ -112,7 +112,10 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
 
     /**
      * ArrayAccess: Check whether the given offset exists.
+     *
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->__isset($offset);
@@ -120,7 +123,10 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
 
     /**
      * ArrayAccess: Get the value at the given offset.
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->__get($offset);
@@ -128,7 +134,10 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
 
     /**
      * ArrayAccess: Set the value at the given offset.
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->__set($offset, $value);
@@ -136,7 +145,10 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
 
     /**
      * ArrayAccess: unset the value at the given offset (not applicable)
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
 

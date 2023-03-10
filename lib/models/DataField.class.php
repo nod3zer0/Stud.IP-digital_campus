@@ -254,7 +254,10 @@ class DataField extends SimpleORMap implements PrivacyObject
      * Specialized count method that returns the number of concrete entries.
      *
      * @return int number of entries
+     *
+     * @todo Add int return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function count()
     {
         return DatafieldEntryModel::countBySQL('datafield_id = ?', [$this->id]);

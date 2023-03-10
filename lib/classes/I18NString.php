@@ -80,7 +80,10 @@ class I18NString implements JsonSerializable
      * Return the JSON representation of this i18n field in selected language.
      *
      * @return string
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return (string) $this;

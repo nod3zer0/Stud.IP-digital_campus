@@ -99,7 +99,10 @@ class StudipPDOStatement implements IteratorAggregate
 
     /**
      * Forwards all Iterator methods to the actual statement object.
+     *
+     * @todo Add Traversable return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->stmt;

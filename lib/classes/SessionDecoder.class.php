@@ -83,44 +83,98 @@ class SessionDecoder implements ArrayAccess, Countable, Iterator {
         return $this->var_names;
     }
 
-    public function rewind() {
+    /**
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function rewind()
+    {
         reset($this->var_names);
     }
 
-    public function current() {
+    /**
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function current()
+    {
         $current = current($this->var_names);
         return $current !== false ? $this->offsetGet($current) : false;
     }
 
-    public function key() {
+    /**
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function key()
+    {
         return current($this->var_names);
     }
 
-    public function next() {
-        $next = next($this->var_names);
-        return $this->current();
+    /**
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function next()
+    {
+        next($this->var_names);
     }
 
-    public function valid() {
+    /**
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function valid()
+    {
         $current = current($this->var_names);
         return $current !== false;
     }
 
-    public function offsetExists($offset){
+    /**
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function offsetExists($offset)
+    {
         return isset($this->encoded_session[$offset]);
     }
 
-    public function offsetGet($offset){
-        if($this->offsetExists($offset) && !isset($this->decoded_session[$offset])){
+    /**
+     * @param $offset
+     * @return mixed|null
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function offsetGet($offset)
+    {
+        if($this->offsetExists($offset) && !isset($this->decoded_session[$offset])) {
             $this->decoded_session[$offset] = unserialize($this->encoded_session[$offset]);
         }
-        return isset($this->decoded_session[$offset]) ? $this->decoded_session[$offset] : null;
+        return $this->decoded_session[$offset] ?? null;
     }
 
-    public function offsetSet($offset, $value) {}
-    public function offsetUnset($offset) {}
+    /**
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function offsetSet($offset, $value)
+    {
+    }
 
-    public function count(){
+    /**
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function offsetUnset($offset)
+    {
+    }
+
+    /**
+     * @todo Add int return type when Stud.IP requires PHP8 minimal
+     */
+    #[ReturnTypeWillChange]
+    public function count()
+    {
         return count($this->var_names);
     }
 

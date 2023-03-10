@@ -73,7 +73,10 @@ class StudipCachedArray implements ArrayAccess
      * @param string $offset Offset
      *
      * @return mixed
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         $this->loadData($offset);

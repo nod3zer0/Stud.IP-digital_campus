@@ -80,7 +80,10 @@ class MultiDimArrayObject extends StudipArrayObject
      * Create a new iterator from an ArrayObject instance
      *
      * @return \Iterator
+     *
+     * @todo Add Traversable return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         $class = $this->iteratorClass;
@@ -94,7 +97,10 @@ class MultiDimArrayObject extends StudipArrayObject
      * @param  mixed $key
      * @param  mixed $value
      * @return void
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         $new_value = $this->recursiveArrayToArrayObjects($value);
@@ -103,9 +109,10 @@ class MultiDimArrayObject extends StudipArrayObject
             $new_value = new $class($new_value, $this->getFlags(), $this->getIteratorClass());
         }
         if (is_null($key)) {
-            return $this->storage[] = $new_value;
+            $this->storage[] = $new_value;
+        } else {
+            $this->storage[$key] = $new_value;
         }
-        $this->storage[$key] = $new_value;
     }
 
     protected function recursiveArrayToArrayObjects($data)

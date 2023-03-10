@@ -90,7 +90,10 @@ class SimpleORMapCollection extends SimpleCollection
      *
      * @see ArrayObject::offsetSet()
      * @throws InvalidArgumentException if the given model does not fit (wrong type or id)
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($index, $newval)
     {
         if (!is_null($index)) {

@@ -51,7 +51,10 @@ class UnknownFileType implements FileType, ArrayAccess
 
     /**
      * ArrayAccess: Check whether the given offset exists.
+     *
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->__isset($offset);
@@ -59,7 +62,10 @@ class UnknownFileType implements FileType, ArrayAccess
 
     /**
      * ArrayAccess: Get the value at the given offset.
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->__get($offset);
@@ -67,7 +73,10 @@ class UnknownFileType implements FileType, ArrayAccess
 
     /**
      * ArrayAccess: Set the value at the given offset.
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->__set($offset, $value);
@@ -75,7 +84,10 @@ class UnknownFileType implements FileType, ArrayAccess
 
     /**
      * ArrayAccess: unset the value at the given offset (not applicable)
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
 

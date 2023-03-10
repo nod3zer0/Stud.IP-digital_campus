@@ -45,7 +45,10 @@ class Request implements ArrayAccess, IteratorAggregate
 
     /**
      * ArrayAccess: Check whether the given offset exists.
+     *
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->params[$offset]);
@@ -53,7 +56,10 @@ class Request implements ArrayAccess, IteratorAggregate
 
     /**
      * ArrayAccess: Get the value at the given offset.
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->params[$offset] ?? null;
@@ -61,7 +67,10 @@ class Request implements ArrayAccess, IteratorAggregate
 
     /**
      * ArrayAccess: Set the value at the given offset.
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->params[$offset] = $value;
@@ -69,7 +78,10 @@ class Request implements ArrayAccess, IteratorAggregate
 
     /**
      * ArrayAccess: Delete the value at the given offset.
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->params[$offset]);
@@ -77,7 +89,10 @@ class Request implements ArrayAccess, IteratorAggregate
 
     /**
      * IteratorAggregate: Create interator for request parameters.
+     *
+     * @todo Add Traversable return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator((array)$this->params);

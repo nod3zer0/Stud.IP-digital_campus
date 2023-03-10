@@ -18,7 +18,10 @@ class DummyNavigation extends \Navigation implements \ArrayAccess
 
     /**
      * ArrayAccess: Check whether the given offset exists.
+     *
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return true;
@@ -26,7 +29,10 @@ class DummyNavigation extends \Navigation implements \ArrayAccess
 
     /**
      * ArrayAccess: Get the value at the given offset.
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this;
@@ -34,21 +40,30 @@ class DummyNavigation extends \Navigation implements \ArrayAccess
 
     /**
      * ArrayAccess: Set the value at the given offset.
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
     }
 
     /**
      * ArrayAccess: Delete the value at the given offset.
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
     }
 
     /**
      * IteratorAggregate: Create interator for request parameters.
+     *
+     * @todo Add \Traversable return type when Stud.IP requires PHP8 minimal
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator();
@@ -58,8 +73,8 @@ class DummyNavigation extends \Navigation implements \ArrayAccess
 class StudipMockNavigation
 {
     /**
-     * @param Request                 $request das PSR-7 Request-Objekt
-     * @param RequestHandlerInterface $handler das PSR-7 Response-Objekt
+     * @param Request        $request das PSR-7 Request-Objekt
+     * @param RequestHandler $handler das PSR-7 Response-Objekt
      *
      * @return ResponseInterface die neue Response
      */

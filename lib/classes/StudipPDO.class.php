@@ -123,8 +123,11 @@ class StudipPDO extends PDO
      *
      * @param mixed $value PHP value to quote
      * @param ?int $type parameter type (e.g. PDO::PARAM_STR)
-     * @return string quoted SQL string
+     * @return string|false quoted SQL string
+     *
+     * @todo Add string|false return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function quote($value, $type = null)
     {
         if (!isset($type)) {
@@ -161,8 +164,11 @@ class StudipPDO extends PDO
      * Executes an SQL statement and returns the number of affected rows.
      *
      * @param string    SQL statement
-     * @return int      number of affected rows
+     * @return int|false      number of affected rows
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function exec($statement)
     {
         $this->verify($statement);
@@ -195,9 +201,12 @@ class StudipPDO extends PDO
     /**
      * Prepares a statement for execution and returns a statement object.
      *
-     * @param string    SQL statement
-     * @return object   PDOStatement object
+     * @param string $statement SQL statement
+     * @param array  $driver_options
+     *
+     * @return StudipPDOStatement
      */
+    #[ReturnTypeWillChange]
     public function prepare($statement, $driver_options = [])
     {
         $this->verify($statement);

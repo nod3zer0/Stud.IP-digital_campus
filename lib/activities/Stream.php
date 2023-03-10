@@ -79,7 +79,10 @@ class Stream implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * ArrayAccess: Check whether the given offset exists.
+     *
+     * @todo Add bool return type when Stud.IP requires PHP8 minimal
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->activities[$offset]);
@@ -87,7 +90,10 @@ class Stream implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * ArrayAccess: Get the value at the given offset.
+     *
+     * @todo Add mixed return type when Stud.IP requires PHP8 minimal
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->activities[$offset];
@@ -95,7 +101,10 @@ class Stream implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * ArrayAccess: Set the value at the given offset.
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->activities[$offset] = $value;
@@ -103,7 +112,10 @@ class Stream implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * ArrayAccess: unset the value at the given offset (not applicable)
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->activities[$offset]);
@@ -111,7 +123,10 @@ class Stream implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * IteratorAggregate
+     *
+     * @todo Add \Traversable return type when Stud.IP requires PHP8 minimal
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->activities);
@@ -119,10 +134,13 @@ class Stream implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * Countable
+     *
+     * @todo Add int return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function count()
     {
-        return sizeof($this->activities);
+        return count($this->activities);
     }
 
     /**

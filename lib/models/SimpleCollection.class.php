@@ -292,9 +292,15 @@ class SimpleCollection extends StudipArrayObject
      * Sets the value at the specified index
      * ensures the value has ArrayAccess
      *
+     * @param mixed $index
+     * @param mixed $newval
+     *
      * @see ArrayObject::offsetSet()
      * @return void
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($index, $newval)
     {
         if (is_numeric($index)) {
@@ -309,7 +315,10 @@ class SimpleCollection extends StudipArrayObject
      *
      * @see ArrayObject::offsetUnset()
      * @throws InvalidArgumentException
+     *
+     * @todo Add void return type when Stud.IP requires PHP8 minimal
      */
+    #[ReturnTypeWillChange]
     public function offsetUnset($index)
     {
         if ($this->offsetExists($index)) {
