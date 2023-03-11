@@ -109,14 +109,14 @@
                         <dt><?= _('Rüstzeit') ?></dt>
                         <dd>
                             <?= htmlReady(sprintf(
-                                ngettext('%d Minute', '%d Minuten', $request->preparation_time / 60),
+                                ngettext('%d Minute', '%d Minuten', (int)$request->preparation_time / 60),
                                 $request->preparation_time / 60
                             )) ?>
                         </dd>
                     <? endif ?>
 
-                    <? if ($room_request->preparation_time): ?>
-                        <? $preparation_time_minutes = intval($room_request->preparation_time / 60) ?>
+                    <? if (isset($room_request) && $room_request->preparation_time): ?>
+                        <? $preparation_time_minutes = (int)$room_request->preparation_time / 60 ?>
                         <dt><?= _('Rüstzeit') ?></dt>
                         <dd>
                             <?= htmlReady(
@@ -159,7 +159,7 @@
                     <dt><?= _('Antwort') ?></dt>
                     <? if ($request->closed == 0) : ?>
                         <dd>
-                            <textarea name="reply_comment"><?= htmlReady($room_request->reply_comment) ?></textarea>
+                            <textarea name="reply_comment"><?= htmlReady(isset($room_request) ? $room_request->reply_comment : '') ?></textarea>
                         </dd>
                     <? else : ?>
                         <dd><?= htmlReady($request->reply_comment) ?></dd>
@@ -348,7 +348,7 @@
                                     'room' => $request_resource,
                                     'time_intervals' => $request_time_intervals,
                                     'availability' => $room_availability[$request_resource->id],
-                                    'underload' => $room_underload[$room_request->resource_id],
+                                    'underload' => isset($room_request) && isset($room_underload[$room_request->resource_id]) ? $room_underload[$room_request->resource_id] : '',
                                     'selected_rooms' => $selected_rooms
                                 ]
                             ) ?>
@@ -375,14 +375,14 @@
     <? endif ?>
     </section>
     <footer data-dialog-button>
-        <? if ($prev_request) : ?>
+        <? if (!empty($prev_request)) : ?>
             <?= \Studip\LinkButton::create(
                 _('Vorherige Anfrage'),
                 $controller->resolveURL($prev_request),
                 ['data-dialog' => 'size=big']
             ) ?>
         <? endif ?>
-        <? if ($show_form) : ?>
+        <? if (!empty($show_form)) : ?>
             <? if ($show_force_resolve_button): ?>
                 <?= \Studip\Button::create(_('Anfrage trotzdem auflösen'), 'force_resolve') ?>
             <? else: ?>
@@ -415,7 +415,7 @@
                 $controller->declineURL($request->id, ['delete' => '1']),
                 ['data-dialog' => 'size=auto']
             ) ?>
-            <? if ($show_expand_metadates_button) : ?>
+            <? if (!empty($show_expand_metadates_button)) : ?>
                 <?= \Studip\Button::create(_('Terminserien expandieren'), 'expand_metadates') ?>
             <? endif ?>
             <? if (Request::submitted('expand_metadates')) : ?>
@@ -425,7 +425,7 @@
                 ) ?>
             <? endif ?>
         <? endif ?>
-        <? if ($next_request) : ?>
+        <? if (!empty($next_request)) : ?>
             <?= \Studip\LinkButton::create(
                 _('Nächste Anfrage'),
                 $controller->resolveURL($next_request),

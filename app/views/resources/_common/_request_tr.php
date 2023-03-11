@@ -48,7 +48,7 @@
         <? endif ?>
     </td>
     <? $intervals = $request->getTimeIntervals() ?>
-    <td data-sort-value="<?= htmlReady($intervals[0]['begin']) ?>">
+    <td data-sort-value="<?= htmlReady(isset($intervals[0]) ? $intervals[0]['begin'] : '') ?>">
         <?= $request->getTypeString() ?>
         <? if ($request->isSimpleRequest()): ?>
             <?
@@ -74,7 +74,7 @@
                 <? endif ?>
             <? endif ?>
         <? else: ?>
-            <? if (count($intervals) > 1 && $intervals[0]['begin'] > 0): ?>
+            <? if (count($intervals) > 1 && isset($intervals[0]) && $intervals[0]['begin'] > 0): ?>
                 <br>
                 (<?= htmlReady(
                     sprintf(

@@ -3,7 +3,7 @@
         <? if ($room->bookingPlanVisibleForUser($current_user)): ?>
             <?
             $booking_plan_params = [];
-            if ($time_intervals[0]['begin']) {
+            if (isset($time_intervals[0]) && $time_intervals[0]['begin']) {
                 $booking_plan_params = [
                     'defaultDate' => date('Y-m-d', $time_intervals[0]['begin'])
                 ];
@@ -25,7 +25,7 @@
             [<?= htmlReady($underload) ?>%]
         <? endif ?>
     </td>
-    <? if (count($time_intervals) > 1) : ?>
+    <? if (!empty($time_intervals) && count($time_intervals) > 1) : ?>
         <td>
             <input type="checkbox" data-proxyfor="input.radio-<?= htmlReady($room->id) ?>"
                    name="all_in_room" value="<?= htmlReady($room->id) ?>"

@@ -1484,14 +1484,14 @@ class Resources_RoomRequestController extends AuthenticatedController
         $this->request_semester_string = '';
         $request_start_semester = $this->request->getStartSemester();
         $request_end_semester = $this->request->getEndSemester();
-        if ($request_start_semester->id != $request_end_semester->id && $request_end_semester->id) {
+        if ($request_start_semester && $request_end_semester && $request_start_semester->id != $request_end_semester->id && $request_end_semester->id) {
             $this->request_semester_string = sprintf(
                 '%1$s - %2$s',
                 $request_start_semester->name,
                 $request_end_semester->name
             );
         } else {
-            $this->request_semester_string = $request_start_semester->name;
+            $this->request_semester_string = $request_start_semester ? $request_start_semester->name : '';
         }
 
         $this->metadate_availability_share = [];
