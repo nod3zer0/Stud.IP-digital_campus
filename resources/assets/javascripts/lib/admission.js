@@ -20,10 +20,11 @@ const Admission = {
                 _.map($('input[name="institutes[]"]:checked'), 'value')
             )
         };
-        var loading = $gettext('Wird geladen');
+        let loading = $gettext('Wird geladen');
         $('#instcourses').empty();
         $('<img/>', {
-            src: STUDIP.ASSETS_URL + 'images/loading-indicator.svg'
+            src: STUDIP.ASSETS_URL + 'images/loading-indicator.svg',
+            style: 'vertical-align: middle; width: 64px; height: 64px',
         }).appendTo('#instcourses');
         $('#instcourses').append(loading);
         $('#instcourses').load(targetUrl, data);
