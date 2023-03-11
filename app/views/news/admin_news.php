@@ -102,7 +102,7 @@
                                            data-proxyfor=".news_<?= $news['range_id'] ?>"
                                            aria-labelledby="<?= _('Alle auswählen') ?>">
                                 </th>
-                                <th colspan="5"><?= mila(htmlReady($news['title'])) . ' ' . htmlReady($news['semester']) ?></th>
+                                <th colspan="5"><?= mila(htmlReady($news['title'] ?? '')) . ' ' . htmlReady($news['semester'] ?? '') ?></th>
                             </tr>
                         <? endif ?>
                         <? $last_title = $title ?>
@@ -114,7 +114,11 @@
                                    aria-label="<?= _('Diese Ankündigung zum Entfernen vormerken') ?>" <?= tooltip(_("Diese Ankündigung zum Entfernen vormerken"), false) ?>>
                         </td>
                         <td><?= htmlReady($news['object']->topic) ?></td>
-                        <? list ($body, $admin_msg) = explode('<admin_msg>', $news['object']->body); ?>
+                        <?
+                            $parts = explode('<admin_msg>', $news['object']->body);
+                            $body = $parts[0];
+                            $admin_msg = $parts[1] ?? ';'
+                        ?>
                         <td><?= htmlReady($news['object']->author) ?></td>
                         <td><?= strftime("%d.%m.%y", $news['object']->date) ?></td>
                         <td><?= strftime("%d.%m.%y", $news['object']->date + $news['object']->expire) ?></td>

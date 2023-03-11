@@ -143,7 +143,7 @@ class StudipNews extends SimpleORMap implements PrivacyObject
                 unset($ret[$news_id]);
             }
         }
-        return (int) count($ret);
+        return count($ret);
     }
 
     public static function GetNewsByAuthor($user_id, $as_objects = false)
@@ -206,13 +206,13 @@ class StudipNews extends SimpleORMap implements PrivacyObject
         if ($limit <= 0) {
             return $news_result;
         }
-
+        $where_querypart = [];
         if (isset($startdate)) {
-            $where_querypart[]  = "(date+expire) > ?";
+            $where_querypart[]  = '(date+expire) > ?';
             $query_vars[]       = $startdate;
         }
         if (isset($enddate)) {
-            $where_querypart[]  = "date < ?";
+            $where_querypart[]  = 'date < ?';
             $query_vars[]       = $enddate;
         }
 
@@ -291,20 +291,23 @@ class StudipNews extends SimpleORMap implements PrivacyObject
         foreach($news_result as $id => $result) {
             $objects[$area][$id] = [
                 'range_id' => $result['range_id'],
-                'title'    => $result['title'],
+                'title'    => $result['title'] ?? '',
             ];
-            if ($area == 'sem') {
+            if ($area === 'sem') {
+                if (!isset($objects[$area][$id]['semester'])) {
+                    $objects[$area][$id]['semester'] = '';
+                }
                 $objects[$area][$id]['semester'] .= sprintf('(%s%s)',
                     $result['startsem'],
                     $result['startsem'] != $result['endsem'] ? ' - ' . $result['endsem'] : '');
-            } elseif ($area == 'user') {
-                if ($GLOBALS['user']->id == $result['userid']) {
+            } elseif ($area === 'user') {
+                if ($GLOBALS['user']->id === $result['userid']) {
                     $objects[$area][$id]['title'] = _('Ankündigungen auf Ihrer Profilseite');
                 }
                 else {
                     $objects[$area][$id]['title'] = sprintf(_('Ankündigungen auf der Profilseite von %s'), get_fullname($result['userid']));
                 }
-            } elseif ($area == 'global') {
+            } elseif ($area === 'global') {
                 $objects[$area][$id]['title'] = _('Ankündigungen auf der Stud.IP Startseite');
             }
             if ($as_objects) {
@@ -422,7 +425,7 @@ class StudipNews extends SimpleORMap implements PrivacyObject
         $stm = $db->prepare($query);
         $stm->execute($parameters);
         $result = $stm->fetchAll(PDO::FETCH_COLUMN);
-
+        $killed = 0;
         if (count($result) > 0) {
             $query = "DELETE FROM news WHERE news_id IN (?)";
             $statement = $db->prepare($query);
@@ -454,6 +457,7 @@ class StudipNews extends SimpleORMap implements PrivacyObject
 
     public static function DeleteNewsByAuthor($user_id)
     {
+        $deleted = 0;
         foreach (static::GetNewsByAuthor($user_id, true) as $news) {
             $deleted += $news->delete();
         }
@@ -516,8 +520,7 @@ class StudipNews extends SimpleORMap implements PrivacyObject
 
     public function getRanges()
     {
-        $ranges = $this->news_ranges->pluck('range_id');
-        return $ranges;
+        return $this->news_ranges->pluck('range_id');
     }
 
     public function issetRange($range_id)

@@ -38,7 +38,10 @@ class Button extends Interactable
     public function __toString()
     {
         // add "button" to attribute @class
-        @$this->attributes['class'] .= ' button';
+        if (!isset($this->attributes['class'])) {
+            $this->attributes['class'] = '';
+        }
+        $this->attributes['class'] .= ' button';
 
         $attributes = [];
         ksort($this->attributes);
