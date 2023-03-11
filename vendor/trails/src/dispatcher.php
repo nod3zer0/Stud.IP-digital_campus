@@ -263,6 +263,9 @@ class Trails_Dispatcher {
    * @return void
    */
   function error_handler($errno, $string, $file, $line, $context) {
+    if (!(5888 & $errno)) {
+      return false;
+    }
     throw new Trails_Exception(500, $string);
   }
 }
