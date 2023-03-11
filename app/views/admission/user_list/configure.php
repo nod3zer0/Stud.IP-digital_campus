@@ -1,4 +1,11 @@
 <?php
+/**
+ * @var Admission_UserListController $controller
+ * @var string $userlist_id
+ * @var AdmissionUserList $userlist
+ * @var string $userSearch
+ * @var array $users
+ */
 use Studip\Button, Studip\LinkButton;
 
 Helpbar::get()->addPlainText(_('Info'), "Personenlisten dienen dazu, um Sonderfälle erfassen zu ".

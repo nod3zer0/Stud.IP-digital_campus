@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $courses
+ */
+?>
 <?= $this->render_partial('admission/restricted_courses/_institute_choose.php')?>
 <br>
 <? if (count($courses)) : ?>

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var AdmissionUserList[] $userlists
+ * @var Admission_UserListController $controller
+ */
 Helpbar::get()->addPlainText(_('Info'),"Personenlisten erfassen eine Menge von Personen, die ".
                                        "mit modifizierten Chancen in die Platzverteilung bei ".
                                        "Anmeldeverfahren eingehen. Dies können z.B. ".

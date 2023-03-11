@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admission_RuleadministrationController $controller
+ * @var AdmissionRule[] $ruleTypes
+ */
+?>
 <? if ($ruleTypes) : ?>
     <table class="default" id="admissionrules">
         <caption><?= _('Installierte Anmelderegeln:') ?></caption>

@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Admission_CoursesetController $controller
+ * @var string $instSearch
+ * @var array $selectedInstitutes
+ */
+?>
 <?= Icon::create('arr_2down', Icon::ROLE_SORT)->asImg([
     'title'   => _('Einrichtung hinzufügen'),
     'onclick' => "STUDIP.Admission.updateInstitutes($('input[name=\"institute_id\"]').val(), '" . $controller->url_for('admission/courseset/institutes', !empty($courseset) ? $courseset->getId() : '') . "', '" . $controller->url_for('admission/courseset/instcourses', !empty($courseset) ? $courseset->getId() : '') . "', 'add')",

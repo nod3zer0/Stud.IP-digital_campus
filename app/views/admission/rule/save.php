@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var AdmissionRule $rule
+ * @var Admission_CoursesetController $controller
+ */
+?>
 <div class="hover_box admissionrule" id="rule_<?= $rule->getId() ?>">
     <div id="rule_data_<?= $rule->getId() ?>" class="col-3" style="margin-top: unset">
         <?= $rule->toString() ?>

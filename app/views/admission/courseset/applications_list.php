@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var array $captions
+ * @var array $data
+ * @var Admission_CoursesetController $controller
+ * @var string $set_id
+ */
+?>
 <table class="default">
     <thead>
         <tr>

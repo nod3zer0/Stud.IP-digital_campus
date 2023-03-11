@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var Admission_CoursesetController $controller
+ * @var string $set_id
+ * @var bool $participant_restriction
+ * @var Course[] $courses
+ * @var int $count_distinct_members
+ * @var int $count_multi_members
+ */
+?>
 <form name="configure_courses" action="<?= $controller->url_for('admission/courseset/configure_courses/' . $set_id) ?>" method="post">
     <table class="default">
         <thead>

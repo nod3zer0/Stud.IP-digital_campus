@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $institutes
+ * @var string $current_institut_id
+ */
+?>
 <? reset($institutes); ?>
 <label>
     <?=_("Einrichtung:")?>

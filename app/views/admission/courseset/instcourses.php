@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $selectedCourses
+ */
+?>
 <table id="courselist" class="default">
     <thead>
         <colgroup>

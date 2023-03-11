@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @var CourseSet[] $coursesets
+ * @var Admission_CoursesetController $controller
+ * @var string $course_set_details
+ */
 Helpbar::get()->addPlainText(_('Info'),_("Anmeldesets legen fest, wer sich zu den zugeordneten Veranstaltungen anmelden darf."));
 Helpbar::get()->addPlainText(_('Info'),_("Hier sehen Sie alle Anmeldesets, auf die Sie Zugriff haben."));
 

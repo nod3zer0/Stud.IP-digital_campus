@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var AdmissionUserList $userlist
+ * @var Admission_UserListController $controller
+ */
+?>
 <?= QuestionBox::create(
     sprintf(
         _('Soll die Nutzerliste %s wirklich gelöscht werden?'),

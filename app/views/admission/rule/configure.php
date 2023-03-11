@@ -1,5 +1,11 @@
 <?php
 use Studip\Button, Studip\LinkButton;
+
+/**
+ * @var Admission_CoursesetController $controller
+ * @var AdmissionRule $class
+ * @var string $ruleTemplate
+ */
 ?>
 <div id="errormessage"></div>
 <form action="<?= $controller->url_for('admission/rule/save', get_class($rule), $rule->getId()) ?>"

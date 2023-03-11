@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var array $my_inst
+ * @var string $current_institut_id
+ * @var string $sem_name_prefix
+ * @var string $current_semester_id
+ */
+?>
 <form action="?" method="post" name="institute_choose" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>

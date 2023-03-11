@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Admission_RuleadministrationController $controller
+ * @var AdmissionRule[] $ruletypes
+ */
+?>
 <form class="default" action="<?= $controller->url_for('admission/ruleadministration/save_compat') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">

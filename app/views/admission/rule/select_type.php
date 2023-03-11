@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var AdmissionRule[] $ruleTypes
+ * @var CourseSet $courseset
+ * @var Admission_CoursesetController $controller
+ */
+?>
 <form name="select_rule_type" class="default" action="<?= $controller->url_for('admission/rule/configure') ?>" method="post">
     <fieldset>
         <legend><?= _('Anmelderegel konfigurieren') ?></legend>

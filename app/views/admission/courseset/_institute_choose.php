@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var array $myInstitutes
+ * @var string $current_institut_id
+ * @var string $set_name_prefix
+ * @var array $ruleTypes
+ * @var string $current_semester_id
+ */
+?>
 <form action="?" method="post" name="institute_choose" class="default">
     <?= CSRFProtection::tokenTag() ?>
 

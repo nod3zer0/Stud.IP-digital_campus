@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $users
+ */
+?>
 <table class="default">
     <thead>
         <tr>

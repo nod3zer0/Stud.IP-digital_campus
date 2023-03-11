@@ -1,4 +1,17 @@
 <?php
+/**
+ * @var CourseSet $courseset
+ * @var array $flash
+ * @var Admission_CoursesetController|Course_AdmissionController $controller
+ * @var bool $instant_course_set_view
+ * @var array $myInstitutes
+ * @var array $selectedInstitutes
+ * @var QuickSearch $instSearch
+ * @var string $instTpl
+ * @var string $coursesTpl
+ * @var string $selectedSemester
+ * @var AdmissionUserList[] $myUserlists
+ */
 use Studip\Button, Studip\LinkButton;
 
 Helpbar::get()->addPlainText(_('Regeln'), _('Hier können Sie die Regeln, Eigenschaften und Zuordnungen des Anmeldesets bearbeiten.'));

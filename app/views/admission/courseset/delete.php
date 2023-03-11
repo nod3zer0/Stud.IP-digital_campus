@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var CourseSet $courseset
+ * @var Admission_CoursesetController $controller
+ */
+?>
 <?= (string) QuestionBox::create(
     sprintf(_('Sind Sie sicher, dass das Anmeldeset "%s" ' .
         'gelöscht werden soll? Damit werden alle Regeln zur Anmeldung zu den ' .
