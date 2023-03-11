@@ -29,7 +29,7 @@ use Studip\Button, Studip\LinkButton;
 require '../lib/bootstrap.php';
 
 page_open(["sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"]);
-$perm->check("root");
+$GLOBALS['perm']->check("root");
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 // -- here you have to put initialisations for the current page
@@ -44,7 +44,8 @@ $cms_select = Request::get('cms_select');
 
 if (Config::get()->ELEARNING_INTERFACE_ENABLE)
 {
-
+    $connection_status = [];
+    $connected_cms = [];
     if ($cms_select != "" && isset($ELEARNING_INTERFACE_MODULES[$cms_select]))
     {
         $connected_cms[$cms_select] = new ConnectedCMS();
@@ -84,17 +85,17 @@ if (Config::get()->ELEARNING_INTERFACE_ENABLE)
         {
             if ($msg["error"] != "")
             {
-                echo "<tr><td valign=\"middle\">" . Icon::create('decline', 'attention')->asImg(['class' => 'text-top', 'title' => _('Fehler')]) . $msg["error"] . "</td></tr>";
+                echo "<tr><td valign=\"middle\">" . Icon::create('decline', Icon::ROLE_ATTENTION)->asImg(['class' => 'text-top', 'title' => _('Fehler')]) . $msg["error"] . "</td></tr>";
                 $error_count++;
             }
             else
-                echo "<tr><td valign=\"middle\">" . Icon::create('accept', 'accept')->asImg(['class' => 'text-top', 'title' => _('OK')]) . $msg["info"] . "</td></tr>";
+                echo "<tr><td valign=\"middle\">" . Icon::create('accept', Icon::ROLE_ACCEPT)->asImg(['class' => 'text-top', 'title' => _('OK')]) . $msg["info"] . "</td></tr>";
         }
         echo "<tr><td><br></td></tr>";
         if ($error_count > 0)
         {
             $status_info = "error";
-            echo "<tr><td valign=\"middle\">" . Icon::create('decline', 'attention')->asImg(['class' => 'text-top', 'title' => _('Fehler')]) . "<b>";
+            echo "<tr><td valign=\"middle\">" . Icon::create('decline', Icon::ROLE_ATTENTION)->asImg(['class' => 'text-top', 'title' => _('Fehler')]) . "<b>";
             echo _("Beim Laden der Schnittstelle sind Fehler aufgetreten. ");
             if (ELearningUtils::isCMSActive($cms_select))
             {
@@ -104,10 +105,10 @@ if (Config::get()->ELEARNING_INTERFACE_ENABLE)
             echo "</b></td></tr>";
         }
         else
-            echo "<tr><td valign=\"middle\">" . Icon::create('accept', 'accept', ['title' =>  _('OK')])->asImg(['class' => 'text-top']) . "<b>" .sprintf( _("Die Schnittstelle zum %s-System ist korrekt konfiguriert."), $connected_cms[$cms_select]->getName()) . "</b></td></tr>";
+            echo "<tr><td valign=\"middle\">" . Icon::create('accept', Icon::ROLE_ACCEPT, ['title' =>  _('OK')])->asImg(['class' => 'text-top']) . "<b>" .sprintf( _("Die Schnittstelle zum %s-System ist korrekt konfiguriert."), $connected_cms[$cms_select]->getName()) . "</b></td></tr>";
         echo "</table>";
         echo "<br>\n";
-        echo ELearningUtils::getCMSHeader($connected_cms[$cms_select]->getName());
+        echo htmlReady(ELearningUtils::getCMSHeader(isset($connected_cms[$cms_select]) ? $connected_cms[$cms_select]->getName() : ''));
         echo "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\" class=\"default\">\n";
         echo CSRFProtection::tokenTag();
         echo '<fieldset>';
@@ -174,7 +175,7 @@ if (Config::get()->ELEARNING_INTERFACE_ENABLE)
     }
 
 // terminate objects
-    if (is_array($connected_cms))
+    if (!empty($connected_cms))
         foreach($connected_cms as $system)
             $system->terminate();
 
