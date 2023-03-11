@@ -1193,7 +1193,9 @@ class Admin_CoursesController extends AuthenticatedController
             $filter->filterBySemester($this->semester->getId());
         }
         if ($active_elements['courseType'] && $params['typeFilter'] && $params['typeFilter'] !== "all") {
-            list($class_filter,$type_filter) = explode('_', $params['typeFilter']);
+            $parts = explode('_', $params['typeFilter']);
+            $class_filter = $parts[0];
+            $type_filter = $parts[1] ?? null;
             if (!$type_filter && !empty($GLOBALS['SEM_CLASS'][$class_filter])) {
                 $type_filter = array_keys($GLOBALS['SEM_CLASS'][$class_filter]->getSemTypes());
             }

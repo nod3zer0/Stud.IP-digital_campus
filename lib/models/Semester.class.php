@@ -243,7 +243,7 @@ class Semester extends SimpleORMap
             $semesters = self::getAllAsArray($with_before_first);
         }
         foreach ($semesters as $index => $semester) {
-            if (@$semester['semester_id'] === $semester_id) {
+            if (isset($semester['semester_id']) && $semester['semester_id'] === $semester_id) {
                 return $index;
             }
         }
