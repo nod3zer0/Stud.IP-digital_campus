@@ -81,6 +81,13 @@ article.studip {
         }
     }
 
+    &.empty {
+        > header {
+            margin-bottom: 0;
+        }
+        padding-bottom: 0;
+    }
+
     &.toggle {
         > header {
             h1 > a {

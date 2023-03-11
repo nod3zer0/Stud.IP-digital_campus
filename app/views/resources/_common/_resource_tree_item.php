@@ -1,8 +1,8 @@
 <?php
-$children = $resource->children;
+$children     = $resource->children;
 $has_children = count($children) > 0;
 ?>
-<article class="studip <?= $has_children ? 'toggle' : ''?> <?= $open ? 'open' : ''?>">
+<article class="studip <?= $has_children ? 'toggle' : ((string)$resource->description === '' ? 'empty' : '') ?> <?= $open ? 'open' : '' ?>">
     <header>
         <h1>
             <a href="#"><?= htmlReady($resource->getFullName()) ?></a>
@@ -18,14 +18,16 @@ $has_children = count($children) > 0;
                     'resources/_common/_resource_tree_item',
                     [
                         'resource' => $child,
-                        'open' => false
+                        'open'     => false
                     ]
                 ) ?>
             <? endforeach ?>
         </section>
     <? else : ?>
-        <section>
-            <?= htmlReady($resource->description) ?>
-        </section>
+        <? if ((string)$resource->description !== '') : ?>
+            <section>
+                <?= htmlReady($resource->description) ?>
+            </section>
+        <? endif ?>
     <? endif ?>
 </article>
