@@ -11,6 +11,9 @@ class ActionMenu
     const TEMPLATE_FILE_SINGLE   = 'shared/action-menu-single.php';
     const TEMPLATE_FILE_MULTIPLE = 'shared/action-menu.php';
 
+    const RENDERING_MODE_ICONS = 'icons';
+    const RENDERING_MODE_MENU = 'menu';
+
     /**
      * Returns an instance.
      *
@@ -32,6 +35,10 @@ class ActionMenu
      */
     protected $context = '';
 
+    /**
+     * @var string|null $rendering_mode The forced rendering mode
+     */
+    protected $rendering_mode = null;
 
     /**
      * Private constructur.
@@ -248,10 +255,10 @@ class ActionMenu
             return '';
         }
 
-        $template_file = count($this->actions) <= Config::get()->ACTION_MENU_THRESHOLD
+        $template_file = $this->getRenderingMode() === self::RENDERING_MODE_ICONS
                        ? self::TEMPLATE_FILE_SINGLE
                        : self::TEMPLATE_FILE_MULTIPLE;
-
+;
         $template = $GLOBALS['template_factory']->open($template_file);
         $template->actions = array_map(function ($action) {
             $disabled = isset($action['attributes']['disabled'])
@@ -287,7 +294,6 @@ class ActionMenu
         return null;
     }
 
-
     /**
      * Sets the context for the menu.
      *
@@ -302,6 +308,47 @@ class ActionMenu
         return $this;
     }
 
+    /**
+     * Forces an explicit rendering mode.
+     *
+     * @param string|null $mode The desired rendering mode or null for automatic detection
+     * @return ActionMenu The action menu instance to allow chaining
+     * @throws Exception
+     */
+    public function setRenderingMode(?string $mode): ActionMenu
+    {
+        if (
+            $mode !== null
+            && $mode !== self::RENDERING_MODE_ICONS
+            && $mode !== self::RENDERING_MODE_MENU
+        ) {
+            throw new Exception("Invalid rendering mode '{$mode}'");
+        }
+
+        $this->rendering_mode = $mode;
+
+        return $this;
+    }
+
+    /**
+     * Returns the rendering mode for this action menu. This is set by either
+     * calling setRenderingMode or automatically determined by the configured
+     * threshold.
+     *
+     * @return string
+     */
+    public function getRenderingMode(): string
+    {
+        $rendering_mode = $this->rendering_mode;
+
+        if ($rendering_mode === null) {
+            $rendering_mode = count($this->actions) <= Config::get()->ACTION_MENU_THRESHOLD
+                            ? self::RENDERING_MODE_ICONS
+                            : self::RENDERING_MODE_MENU;
+        }
+
+        return $rendering_mode;
+    }
 
     /**
      * Generates the title of the action menu, including its context, if the context has been set.
