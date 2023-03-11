@@ -649,7 +649,10 @@ class PluginManager
      */
     public function getPluginManifest($plugindir)
     {
-        $manifest = @file($plugindir . '/plugin.manifest');
+        if (!file_exists($plugindir . '/plugin.manifest')) {
+            return null;
+        }
+        $manifest = file($plugindir . '/plugin.manifest');
         $result = [];
 
         if ($manifest === false) {
