@@ -284,7 +284,11 @@ class Instance
      */
     public function isValidCertificateSettings($certificateSettings): bool
     {
-        return (int) $certificateSettings['threshold'] >= 0 && (int) $certificateSettings['threshold'] <= 100;
+        return !isset($certificateSettings['threshold'])
+            || (
+                $certificateSettings['threshold'] >= 0
+                && $certificateSettings['threshold'] <= 100
+            );
     }
 
     private function validateCertificateSettings($certificateSettings): void
@@ -335,7 +339,7 @@ class Instance
      */
     public function isValidReminderSettings($reminderSettings): bool
     {
-        $valid = in_array($reminderSettings['interval'], [0, 7, 14, 30, 90, 180, 365]);
+        $valid = in_array($reminderSettings['interval'] ?? 0, [0, 7, 14, 30, 90, 180, 365]);
 
         return $valid;
     }
@@ -388,7 +392,7 @@ class Instance
      */
     public function isValidResetProgressSettings($resetProgressSettings): bool
     {
-        $valid = in_array($resetProgressSettings['interval'], [0, 14, 30, 90, 180, 365]);
+        $valid = in_array($resetProgressSettings['interval'] ?? 0, [0, 14, 30, 90, 180, 365]);
 
         return $valid;
     }

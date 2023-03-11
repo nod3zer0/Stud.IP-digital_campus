@@ -26,6 +26,8 @@ class Instance extends SchemaProvider
 
     /**
      * {@inheritdoc}
+     *
+     * @param \Courseware\Instance $resource
      */
     public function getAttributes($resource, ContextInterface $context): iterable
     {
