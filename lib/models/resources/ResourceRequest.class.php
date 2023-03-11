@@ -2430,10 +2430,12 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
 
     public function getPriority()
     {
-        if (!isset($this->getTimeIntervals()[0])) {
-            return 0;
+
+        $result = $this->getTimeIntervals();
+        if (count($result) === 0) {
+            return null;
         }
-        $first = $this->getTimeIntervals()[0];
+        $first = $result[0];
         return round(($first['begin'] - time()) / 86400);
     }
 
