@@ -19,7 +19,7 @@
         <h1><?= _('Beschreibung und Hinweise') ?></h1>
     </header>
     <section>
-        <? if ($room->description): ?>
+        <? if ((string)$room->description !== ''): ?>
             <p><?= htmlReady($room->description) ?></p>
         <? endif ?>
         <ul>
@@ -51,6 +51,10 @@
             <h1><?= _('Dateien') ?></h1>
         </header>
         <table class="default sortable-table" data-sortlist="[[2, 0]]">
+            <colgroup>
+                <col style="width: 70%">
+                <col>
+            </colgroup>
             <?= $this->render_partial('files/_files_thead') ?>
             <? foreach ($resource_folder->getFiles() as $file): ?>
                 <? if ($file->isVisible($GLOBALS['user']->id)) : ?>

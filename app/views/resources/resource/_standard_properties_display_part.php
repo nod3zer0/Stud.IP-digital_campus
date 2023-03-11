@@ -23,6 +23,10 @@
             </header>
 
             <table class="default">
+                <colgroup>
+                    <col style="width: 70%">
+                    <col>
+                </colgroup>
                 <thead>
                     <tr>
                         <th>
@@ -39,8 +43,7 @@
                             <td>
                                 <?= htmlReady(
                                     $property->display_name
-                                        ? $property->display_name
-                                        : $property->name
+                                        ?: $property->name
                                 ) ?>
                             </td>
                             <td>
