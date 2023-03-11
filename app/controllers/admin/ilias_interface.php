@@ -66,20 +66,20 @@ class Admin_IliasInterfaceController extends AuthenticatedController
     {
         Navigation::activateItem('admin/config/ilias_interface');
 
-        PageLayout::setTitle(_("Verwaltung der ILIAS-Schnittstelle"));
+        PageLayout::setTitle(_('Verwaltung der ILIAS-Schnittstelle'));
 
         $widget = new ActionsWidget();
 
         $widget->addLink(
                 _('Schnittstelle konfigurieren'),
                 $this->url_for('admin/ilias_interface/edit_interface_settings'),
-                Icon::create('admin', 'clickable'),
+                Icon::create('admin'),
                 ['data-dialog' => 'size=auto']
                 );
         $widget->addLink(
                 _('ILIAS-Installation hinzufügen'),
                 $this->url_for('admin/ilias_interface/edit_server/new'),
-                Icon::create('add', 'clickable'),
+                Icon::create('add'),
                 ['data-dialog' => 'size=auto']
                 );
         $this->sidebar->addWidget($widget);
@@ -125,7 +125,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
         $this->ilias_version = '';
         $this->ilias_version_date = '';
         $this->clients = [];
-        if ($index == 'new') {
+        if ($index === 'new') {
             // default values
             $this->ilias_config = [
                             'is_active' => false,
@@ -178,7 +178,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
                     } else {
                         $this->ilias_version = '';
                     }
-                    if (Request::get('ilias_index') != 'new') {
+                    if (Request::get('ilias_index') !== 'new') {
                         // use data from previously connected ILIAS
                         $index = Request::get('ilias_index');
                     } else {
@@ -189,9 +189,9 @@ class Admin_IliasInterfaceController extends AuthenticatedController
                         }
                         // find new unique index
                         $index = 'ilias'.ConnectedIlias::getIntVersion($this->ilias_version);
-                        if (is_array($this->ilias_configs[$index]) OR is_array($this->existing_indices[$index])) {
+                        if (is_array($this->ilias_configs[$index]) || is_array($this->existing_indices[$index])) {
                             $i = 1;
-                            while (is_array($this->ilias_configs[$index.'-'.$i]) OR is_array($this->existing_indices[$index.'-'.$i])) {
+                            while (is_array($this->ilias_configs[$index.'-'.$i]) || is_array($this->existing_indices[$index.'-'.$i])) {
                                 $i++;
                             }
                             $index = $index.'-'.$i;
@@ -247,7 +247,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
 
     /**
      * edit connected ILIAS permissions settings
-     * @param $index Index of ILIAS settings
+     * @param string $index Index of ILIAS settings
      */
     public function edit_permissions_action($index)
     {
@@ -257,7 +257,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
 
     /**
      * Deletes given ILIAS settings from configuration
-     * @param $index Index of ILIAS settings
+     * @param string $index Index of ILIAS settings
      */
     public function delete_action($index)
     {
@@ -272,7 +272,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
 
     /**
      * Save connected ILIAS installation settings
-     * @param $index Index of ILIAS settings
+     * @param string $index Index of ILIAS settings
      */
     public function save_action($index)
     {
@@ -359,9 +359,10 @@ class Admin_IliasInterfaceController extends AuthenticatedController
                 }
             }
         }
-        // show error messages
-        foreach ($connected_ilias->getError() as $error) {
-            PageLayout::postError($error);
+        if (isset($connected_ilias)) { // show error messages
+            foreach ($connected_ilias->getError() as $error) {
+                PageLayout::postError($error);
+            }
         }
         $this->redirect($this->url_for('admin/ilias_interface'));
     }
@@ -376,7 +377,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
 
         //check stored configuration
         $connected_ilias = new ConnectedIlias($index);
-        if ($connected_ilias->getConnectionSettingsStatus() AND $connected_ilias->getContentSettingsStatus() AND $connected_ilias->getPermissionsSettingsStatus()) {
+        if ($connected_ilias->getConnectionSettingsStatus() && $connected_ilias->getContentSettingsStatus() && $connected_ilias->getPermissionsSettingsStatus()) {
             //store config entry
             Config::get()->store('ILIAS_INTERFACE_SETTINGS', $this->ilias_configs);
             PageLayout::postSuccess(_('ILIAS-Installation aktiviert.'));
@@ -427,6 +428,7 @@ class Admin_IliasInterfaceController extends AuthenticatedController
                     }
                 }
             } elseif (Request::get('ilias_call')) {
+                $params = [];
                 foreach ($this->soap_methods[Request::get('ilias_call')] as $param) {
                     $params[$param] = Request::get('ilias_soap_param_'.$param);
                 }

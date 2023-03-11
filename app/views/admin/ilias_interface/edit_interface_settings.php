@@ -12,35 +12,35 @@
         <input type="text" name="ilias_interface_moduletitle" size="50" maxlength="255" value="<?= htmlReady($ilias_interface_moduletitle) ?>" required>
     </label>
     <label>
-        <input type="checkbox" name="ilias_interface_edit_moduletitle" value="1" <?= $ilias_interface_config['edit_moduletitle'] ? 'checked' : '' ?>>
+        <input type="checkbox" name="ilias_interface_edit_moduletitle" value="1" <?= !empty($ilias_interface_config['edit_moduletitle']) ? 'checked' : '' ?>>
         <span><?= _('Lehrende können den Seitennamen der ILIAS-Schnittstelle in Veranstaltungen anpassen') ?></span>
     </label>
     <label>
-        <input type="checkbox" name="ilias_interface_show_offline" value="1" <?= $ilias_interface_config['show_offline'] ? 'checked' : '' ?>>
+        <input type="checkbox" name="ilias_interface_show_offline" value="1" <?= !empty($ilias_interface_config['show_offline']) ? 'checked' : '' ?>>
         <span><?= _('Namen von Lernobjekten und Kursen, die in ILIAS offline sind, sind in Stud.IP sichtbar') ?></span>
     </label>
     <label>
-        <input type="checkbox" name="ilias_interface_add_statusgroups" value="1" <?= $ilias_interface_config['add_statusgroups'] ? 'checked' : '' ?>>
+        <input type="checkbox" name="ilias_interface_add_statusgroups" value="1" <?= !empty($ilias_interface_config['add_statusgroups']) ? 'checked' : '' ?>>
         <span><?= _('Lehrende können Statusgruppen nach ILIAS übertragen') ?></span>
     </label>
     <label>
-        <input type="checkbox" name="ilias_interface_allow_change_course" value="1" <?= $ilias_interface_config['allow_change_course'] ? 'checked' : '' ?>>
+        <input type="checkbox" name="ilias_interface_allow_change_course" value="1" <?= !empty($ilias_interface_config['allow_change_course']) ? 'checked' : '' ?>>
         <span><?= _('Lehrende können die Kursverknüpfung einer Veranstaltung ändern') ?></span>
     </label>
     <label>
-        <input type="checkbox" name="ilias_interface_allow_add_own_course" value="1" <?= $ilias_interface_config['allow_add_own_course'] ? 'checked' : '' ?>>
+        <input type="checkbox" name="ilias_interface_allow_add_own_course" value="1" <?= !empty($ilias_interface_config['allow_add_own_course']) ? 'checked' : '' ?>>
         <span><?= _('Lehrende können einen eigenen ILIAS-Kurs verknüpfen, der noch nicht mit Stud.IP verbunden ist') ?></span>
     </label>
     <label>
-        <input type="checkbox" name="ilias_interface_show_tools_page" value="1" <?= $ilias_interface_config['show_tools_page'] ? 'checked' : '' ?>>
+        <input type="checkbox" name="ilias_interface_show_tools_page" value="1" <?= !empty($ilias_interface_config['show_tools_page']) ? 'checked' : '' ?>>
         <span><?= _('Account-Seite im Tools-Bereich ist für alle Nutzenden (auch für Studierende ohne Berechtigung zum Anlegen von Lernobjekten) sichtbar') ?></span>
     </label>
     <label>
-        <input type="checkbox" name="ilias_interface_search_active" value="1" <?= $ilias_interface_config['search_active'] ? 'checked' : '' ?>>
+        <input type="checkbox" name="ilias_interface_search_active" value="1" <?= !empty($ilias_interface_config['search_active']) ? 'checked' : '' ?>>
         <span><?= _('Suche nach Lernobjekten verfügbar') ?></span>
     </label>
     <label>
-        <input type="checkbox" name="ilias_interface_cache" value="1" <?= $ilias_interface_config['cache'] ? 'checked' : '' ?>>
+        <input type="checkbox" name="ilias_interface_cache" value="1" <?= !empty($ilias_interface_config['cache']) ? 'checked' : '' ?>>
         <span><?= _('SOAP-Cache') ?></span>
     </label>
     <? if (!empty($existing_indices)) : ?>
