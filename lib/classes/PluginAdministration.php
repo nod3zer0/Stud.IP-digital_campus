@@ -383,6 +383,7 @@ class PluginAdministration
         $plugin = $plugin_manager->getPluginInfoById($plugin_id);
         $basepath = Config::get()->PLUGINS_PATH;
         $plugindir = $basepath . '/' . $plugin['path'] . '/';
+        $log = '';
         if (is_dir($plugindir . '/migrations')) {
             $schema_version = new DBSchemaVersion($plugin['name']);
             $migrator = new Migrator($plugindir .'/migrations', $schema_version, true);
@@ -410,6 +411,9 @@ class PluginAdministration
                         '/plugin\.manifest$/', RecursiveRegexIterator::MATCH);
         foreach ($iterator as $manifest_file) {
             $manifest = $plugin_manager->getPluginManifest($manifest_file->getPath());
+            if (!isset($manifest['pluginclassname'])) {
+                continue;
+            }
             $pluginpath = $basepath . '/' . $manifest['origin'] . '/' . $manifest['pluginclassname'];
             if (!$plugin_manager->getPluginInfo($manifest['pluginclassname'])
                 && $pluginpath === $manifest_file->getPath()) {
