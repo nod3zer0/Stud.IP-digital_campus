@@ -159,7 +159,7 @@ class OpenGraphURL extends SimpleORMap
         $isOpenGraph = false;
 
         $response = FileManager::fetchURLMetadata($this['url']);
-        if ($response['response_code'] == 200 && mb_strpos($response['Content-Type'],'html') !== false) {
+        if ((int)$response['response_code'] === 200 && isset($response['Content-Type']) && mb_strpos($response['Content-Type'],'html') !== false) {
             if (preg_match('/(?<=charset=)[^;]*/i', $response['Content-Type'], $match)) {
                 $currentEncoding = trim($match[0], '"');
             } else {
@@ -214,13 +214,13 @@ class OpenGraphURL extends SimpleORMap
                     $this[$key] = $tag;
                 }
             }
-            if (!$this['title'] && $isOpenGraph) {
+            if (empty($this['title']) && $isOpenGraph) {
                 $titles = $doc->getElementsByTagName('title');
                 if ($titles->length > 0) {
                     $this['title'] = $titles->item(0)->textContent;
                 }
             }
-            if (!$this['description'] && $isOpenGraph) {
+            if (empty($this['description']) && $isOpenGraph) {
                 foreach ($metatags as $tag) {
                     if (mb_stripos($tag->getAttribute('name'), "description") !== false
                         || mb_stripos($tag->getAttribute('property'), "description") !== false)
