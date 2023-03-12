@@ -31,9 +31,9 @@ class MyRealmModel
 
     /**
      * Check the voting system
-     * @param      $my_obj
-     * @param      $user_id
-     * @param null $modules
+     * @param string $my_obj
+     * @param string $user_id
+     * @param  $object_id
      */
     public static function checkVote(&$my_obj, $user_id, $object_id)
     {
@@ -320,8 +320,8 @@ class MyRealmModel
             if ($group_field === 'sem_tree_id') {
                 $_course['sem_tree'] = $course->study_areas->toArray();
             }
-
-            $user_status = @$member_ships[$course->id]['status'];
+            $deputy = null;
+            $user_status = $member_ships[$course->id]['status'] ?? null;
             if (!$user_status && Config::get()->DEPUTIES_ENABLE && Deputy::isDeputy($GLOBALS['user']->id, $course->id)) {
                 $user_status = 'dozent';
                 $deputy = Deputy::findOneBySQL('range_id = ? AND user_id = ?', [$course->id, $GLOBALS['user']->id]);
@@ -341,7 +341,7 @@ class MyRealmModel
             $_course['last_visitdate'] = $visits[$course->id][0]['last_visitdate'];
             $_course['visitdate']      = $visits[$course->id][0]['visitdate'];
             $_course['user_status']    = $user_status;
-            $_course['gruppe']         = !$is_deputy ? @$member_ships[$course->id]['gruppe'] : $deputy->gruppe;
+            $_course['gruppe']         = !$is_deputy ? $member_ships[$course->id]['gruppe'] ?? null : ($deputy ? $deputy->gruppe : null);
             $_course['sem_number_end'] = $course->isOpenEnded() ? $max_sem_key : Semester::getIndexById($course->end_semester->id);
             $_course['sem_number']     = Semester::getIndexById($course->start_semester->id);
             $_course['tools']        = $course->tools;
@@ -541,7 +541,7 @@ class MyRealmModel
     /**
      * Returns a list of all the courses the user is in the waiting list for.
      *
-     * @param $user_id Id of the user
+     * @param string $user_id Id of the user
      * @return array
      */
     public static function getWaitingList($user_id)
@@ -897,7 +897,7 @@ class MyRealmModel
     /**
      * Trims an array from it's null value from the right.
      *
-     * @param Array $array The array to trim
+     * @param array $array The array to trim
      * @return array The trimmed array
      * @author tlx
      */
