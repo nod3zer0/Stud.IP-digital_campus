@@ -61,6 +61,7 @@ function replaceTextarea(textarea) {
     const $textarea = textarea instanceof jQuery ? textarea : $(textarea);
 
     let options = {};
+
     if ($textarea.attr('data-editor')) {
         const parsed = parseOptions($textarea.attr('data-editor'));
 
@@ -124,7 +125,43 @@ function replaceTextarea(textarea) {
         .then(emitLoadEvent);
 
     function createEditor(ClassicEditor) {
-        return ClassicEditor.create(textarea, options);
+        return ClassicEditor.create(textarea, options).then(editor => {
+            function getViewportOffsetTop() {
+                const topBar = document.getElementById('top-bar');
+                const responsiveContentbar = document.getElementById('responsive-contentbar');
+
+                let top = topBar.clientHeight + topBar.clientTop;
+                if (responsiveContentbar) {
+                    top += responsiveContentbar?.clientHeight + responsiveContentbar.clientTop;
+                }
+
+                return top;
+            }
+
+            function updateOffsetTop() {
+                // This needs to be delayed since some events will fire before
+                // changing the DOM
+                setTimeout(() => {
+                    editor.ui.viewportOffset = {top: getViewportOffsetTop()};
+                    editor.ui.update();
+                }, 50);
+            }
+
+            // Set initial offset top
+            updateOffsetTop();
+
+            // Listen to relevant events that may require the sticky panel to be misplaced
+            STUDIP.eventBus.on('toggle-compact-navigation', updateOffsetTop);
+            STUDIP.eventBus.on('switch-focus-mode', updateOffsetTop);
+
+            // Stop listening if editor is destroyed
+            editor.on('destroy', () => {
+                STUDIP.eventBus.off('toggle-compact-navigation', updateOffsetTop);
+                STUDIP.eventBus.off('switch-focus-mode', updateOffsetTop);
+            });
+
+            return editor;
+        });
     }
 
     function setEditorInstance(ckeditor) {
