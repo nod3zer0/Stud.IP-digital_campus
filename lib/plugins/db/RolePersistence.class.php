@@ -22,7 +22,7 @@ class RolePersistence
     /**
      * Returns all available roles.
      *
-     * @return array Roles
+     * @return Role[]|array{system: Role[], other: Role[]}
      */
     public static function getAllRoles(bool $grouped = false): array
     {
@@ -111,7 +111,7 @@ class RolePersistence
      *
      * @param Role $role
      */
-    public static function deleteRole($role)
+    public static function deleteRole($role): bool
     {
         $id = $role->getRoleid();
         $name = $role->getRolename();
@@ -121,7 +121,7 @@ class RolePersistence
         $statement->execute([$id]);
         $statement->setFetchMode(PDO::FETCH_COLUMN, 0);
 
-        DBManager::get()->execute(
+        $result = DBManager::get()->execute(
             "DELETE `roles`, `roles_user`, `roles_plugins`, `roles_studipperms`
              FROM `roles`
              LEFT JOIN `roles_user` USING (`roleid`)
@@ -130,6 +130,10 @@ class RolePersistence
              WHERE `roleid` = ? AND `system` = 'n'",
             [$id]
         );
+
+        if ($result === 0) {
+            return false;
+        }
 
         // sweep roles cache
         self::expireRolesCache();
@@ -140,6 +144,27 @@ class RolePersistence
         }
 
         NotificationCenter::postNotification('RoleDidDelete', $id, $name);
+
+        return true;
+    }
+
+    /**
+     * Delete role by name if not a permanent role. System roles cannot be
+     * deleted.
+     *
+     * @param string $role_name
+     *
+     * @return bool
+     */
+    public static function deleteRoleByName(string $role_name): bool
+    {
+        foreach (self::getAllRoles() as $role) {
+            if ($role->getRolename() === $role_name) {
+                return self::deleteRole($role);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -172,6 +197,44 @@ class RolePersistence
             $user->id,
             $institut_id
         );
+    }
+
+    /**
+     * Assigns a role to a stud.ip permission. System roles cannot be assigned
+     * to permissions.
+     *
+     * @param string $perm
+     * @param Role   $role
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public static function assignRoleToPerm(string $perm, Role $role): bool
+    {
+        if ($role->getSystemtype()) {
+            throw new Exception('Cannot assign system roles to permissions.');
+        }
+
+        if (!in_array($perm, ['user', 'autor', 'tutor', 'dozent', 'admin', 'root'])) {
+            throw new Exception("Invalid permission {$perm}");
+        }
+
+        $query = "INSERT INTO `roles_studipperms` (`roleid`, `permname`)
+                  VALUES (?, ?)";
+        $result = DBManager::get()->execute($query, [$role->getRoleid(), $perm]);
+
+        if ($result === 0) {
+            return false;
+        }
+
+        User::findEachByPerms(
+            function (User $user) {
+                self::expireUserCache($user->id);
+            },
+            $perm
+        );
+
+        return true;
     }
 
     /**
@@ -306,6 +369,46 @@ class RolePersistence
             $institut_id
         );
     }
+
+    /**
+     * Removes a role from a stud.ip permission. System roles cannot be removed
+     * from permissions.
+     *
+     * @param string $perm
+     * @param Role   $role
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public static function deleteRoleAssignmentFromPerm(string $perm, Role $role): bool
+    {
+        if ($role->getSystemtype()) {
+            throw new Exception('Cannot remove system role assignment from permissions.');
+        }
+
+        if (!in_array($perm, ['user', 'autor', 'tutor', 'dozent', 'admin', 'root'])) {
+            throw new Exception("Invalid permission {$perm}");
+        }
+
+        $query = "DELETE FROM `roles_studipperms`
+                  WHERE `roleid` = ?
+                    AND `permname` = ?";
+        $result = DBManager::get()->execute($query, [$role->getRoleid(), $perm]);
+
+        if ($result === 0) {
+            return false;
+        }
+
+        User::findEachByPerms(
+            function (User $user) {
+                self::expireUserCache($user->id);
+            },
+            $perm
+        );
+
+        return true;
+    }
+
 
     /**
      * Get's all Role-Assignments for a certain user.
