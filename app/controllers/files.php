@@ -429,10 +429,10 @@ class FilesController extends AuthenticatedController
             }
         } elseif ($this->current_view == 'all_files') {
             $this->table_title = _('Alle Dateien');
-            $this->page_size = 25;
+            $this->page_size = Config::get()->ENTRIES_PER_PAGE;
             $this->page = 1;
             if (!$course_did_change) {
-                $this->page = Request::get('page') + 1;
+                $this->page = Request::int('page') + 1;
             }
             if (($this->page < 1) || !$this->page) {
                 $this->page = 1;
@@ -505,12 +505,12 @@ class FilesController extends AuthenticatedController
                 $this->files[] = $file_ref->getFileType();
             }
         } elseif ($this->current_view == 'my_uploaded_files') {
-            $this->page_size = 25;
+            $this->page_size = Config::get()->ENTRIES_PER_PAGE;
             $this->page = 1;
             if (!$course_did_change) {
-                $this->page = Request::get('page') + 1;
+                $this->page = Request::int('page') + 1;
             }
-            if (($this->page < 1) || !$this->page) {
+            if ($this->page < 1) {
                 $this->page = 1;
             }
             $offset = $this->page_size * ($this->page - 1);
