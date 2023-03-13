@@ -9,6 +9,55 @@
 trait PluginAssetsTrait
 {
     /**
+     * Adds an asset while detecting the type automatically.
+     *
+     * @param string $asset Asset to add
+     * @param array  $variables Variables for the LESS/SCSS compiler, unused for JS
+     * @since Stud.IP 5.4
+     */
+    public function addAsset(string $asset, array $variables = []): void
+    {
+        $type = $this->detectAssetType($asset);
+        if ($type === 'js') {
+            $this->addScript($asset);
+        } elseif ($type === 'css') {
+            $this->addStylesheet($asset, $variables);
+        }
+    }
+
+    /**
+     * Adds many assets while detecting the type automatically.
+     *
+     * @param string[] $assets Assets to add
+     * @param array $variables Variables for the LESS/SCSS compiler, unused
+     *                         for JS
+     * @param bool $combine If true, the assets will be combined into one
+     *                      single file for each type
+     * @since Stud.IP 5.4
+     */
+    public function addAssets(array $assets, array $variables = [], bool $combine = false): void
+    {
+        if (!$combine) {
+            foreach ($assets as $asset) {
+                $this->addAsset($asset, $variables);
+            }
+        } else {
+            $temp = ['css' => [], 'js' => []];
+
+            foreach ($assets as $asset) {
+                $temp[$this->detectAssetType($asset)] = $asset;
+            }
+
+            if (count($temp['css']) > 0) {
+                $this->addStylesheets($temp['css'], $variables);
+            }
+            if (count($temp['js']) > 0) {
+                $this->addScripts($temp['js']);
+            }
+        }
+    }
+
+    /**
      * Adds many stylesheeets at once.
      * @param array  $filenames List of relative filenames
      * @param array  $variables Optional array of variables to pass to the
@@ -211,5 +260,27 @@ trait PluginAssetsTrait
             ]);
         }
         return $contents;
+    }
+
+    /**
+     * Detects the asset type based on the extension of the asset.
+     *
+     * @param string $asset Asset to test
+     * @return string Either 'css' or 'js'
+     * @throws InvalidArgumentException if no valid type can be detected
+     */
+    private function detectAssetType(string $asset): string
+    {
+        $extension = pathinfo($asset, PATHINFO_EXTENSION);
+
+        if ($extension === 'js') {
+            return 'js';
+        }
+
+        if (in_array($extension, ['css', 'less', 'scss'])) {
+            return 'css';
+        }
+
+        throw new InvalidArgumentException("Unknown asset type {$extension}");
     }
 }
