@@ -4,20 +4,19 @@
     display: flex;
     flex-wrap: wrap;
     height: auto;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin-bottom: 15px;
     min-height: 30px;
-    padding: 1em;
+    padding: 1em 2em;
+
+    .contentbar-nav {
+        display: flex;
+        width: auto;
+    }
 
     .contentbar-wrapper-left {
         display: flex;
         flex: auto;
-        /* Taken from courseware.scss line 323 */
-        max-width: calc(100% - 106px);
-
-        .contentbar-nav {
-            display: flex;
-        }
 
         .contentbar-breadcrumb {
             display: flex;

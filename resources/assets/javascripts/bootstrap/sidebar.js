@@ -1,4 +1,6 @@
 // Set correct sidebar height for stickyness
 STUDIP.domReady(() => {
-    STUDIP.Sidebar.adjustHeight();
+    if (!STUDIP.Responsive.isResponsive()) {
+        STUDIP.Sidebar.adjustHeight();
+    }
 });

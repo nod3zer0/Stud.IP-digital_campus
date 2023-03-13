@@ -182,7 +182,7 @@ $sidebarOut: -330px;
 
         }
 
-        &.navigation-current {
+        &.navigation-item-active {
             background-color: $base-color-80;
         }
 
@@ -314,7 +314,6 @@ $sidebarOut: -330px;
     #sidebar {
         background-color: $white;
         max-height: calc(100vh - 100px);
-        overflow-y: auto;
         position: absolute;
         transform: translateX($sidebarOut);
         z-index: 100;
@@ -332,6 +331,7 @@ $sidebarOut: -330px;
 
             left: 15px;
             position: relative;
+            top: 60px;
         }
 
         .sidebar-image {
@@ -373,6 +373,16 @@ $sidebarOut: -330px;
         }
     }
 
+    #content-wrapper {
+        width: calc(100vw - 2 * $page-margin);
+    }
+
+    .cw-ribbon-sticky-bottom,
+    .cw-ribbon-sticky-spacer,
+    .cw-ribbon-sticky-top {
+        display: none;
+    }
+
     #responsive-contentbar {
         justify-content: stretch;
         margin-bottom: 15px;
@@ -381,8 +391,6 @@ $sidebarOut: -330px;
 
         .contentbar-nav,
         .cw-ribbon-nav {
-            width: auto;
-
             .contentbar-button {
 
                 &.contentbar-button-sidebar {
@@ -407,6 +415,7 @@ $sidebarOut: -330px;
             flex: 1;
             max-width: calc(100% - 70px);
             min-width: 0;
+            width:100%;
 
             & > .contentbar-icon {
                 margin-right: 15px;
@@ -432,8 +441,9 @@ $sidebarOut: -330px;
         }
 
         > .contentbar-wrapper-right {
-            position: relative;
+            flex: 1;
             left: 5px;
+            position: relative;
 
             .contentbar-button,
             nav {
@@ -442,11 +452,8 @@ $sidebarOut: -330px;
         }
 
         &.cw-ribbon {
-            margin-top: 4px;
-
             .cw-ribbon-tools {
-                right: 0;
-                top: 4px;
+                width: 540px;
 
                 .cw-tabs-nav {
                     height: 52px;
@@ -455,6 +462,26 @@ $sidebarOut: -330px;
                         &.is-active::after {
                             margin-top: 10px;
                         }
+                    }
+                }
+            }
+        }
+
+        &.cw-ribbon-sticky {
+            position: unset;
+            width: calc(100vw - 30px);
+        }
+    }
+
+    .blubber_threads_widget {
+        .sidebar-widget-content {
+            ol {
+                li.active {
+                    &::before {
+                        right: 23px;
+                    }
+                    &::after {
+                        right: 24px;
                     }
                 }
             }
@@ -486,6 +513,10 @@ $sidebarOut: -330px;
         #top-bar {
             padding: 0 20px;
         }
+
+        #responsive-contentbar-container {
+            display: none;
+        }
     }
 
     #responsive-menu {
@@ -499,9 +530,17 @@ $sidebarOut: -330px;
         width: 100%;
     }
 
-    .contentbar-nav,
-    .cw-ribbon-nav {
-        margin-left: 3px;
+    #responsive-contentbar {
+        &.cw-ribbon {
+            .cw-ribbon-tools {
+                top: 40px;
+            }
+        }
+
+        &.cw-ribbon-sticky {
+            position: unset;
+            width: calc(100vw - 30px);
+        }
     }
 
     #toggle-sidebar {
@@ -634,12 +673,12 @@ $sidebarOut: -330px;
             }
         }
 
-        .cw-companion-box-wrapper {
-            padding-top: 120px;
-        }
-
         .cw-structural-element-consumemode {
             position: unset;
+
+            .cw-container-wrapper-consume {
+                padding-top: 15px;
+            }
 
             .cw-ribbon-wrapper-consume {
                 position: unset;
@@ -685,11 +724,9 @@ html:not(.responsive-display):not(.fullscreen-mode) {
 .responsive-display {
     @include media-breakpoint-small-down() {
         #navigation-level-1,
-        #site-title,
         #navigation-level1-items,
         .current_page,
         #tabs,
-        #site-title,
         #footer,
         .tabs_wrapper .colorblock {
             display: none !important;

@@ -1028,12 +1028,6 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL, $ancestor=NULL)
                 ['data-confirm' => showDeleteDialog($page->keyword, $page->version)]
             );
         }
-        $actionMenu->addLink(
-            '#',
-            _('Als Vollbild anzeigen'),
-            Icon::create('screen-compact'),
-            ['class' => 'fullscreen-trigger']
-        );
     }
 
     // Create content bar.
@@ -1603,7 +1597,7 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
             '#',
             _('Als Vollbild anzeigen'),
             Icon::create('screen-full'),
-            ['class' => 'fullscreen-trigger']
+            ['class' => 'fullscreen-trigger hidden-medium-down']
         );
     }
 

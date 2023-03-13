@@ -238,19 +238,22 @@ class ResponsiveHelper
                 'children' => []
             ];
 
+            $path = 'browse/my_courses/' . $course->id;
+
             foreach ($course->tools as $tool) {
                 if (Seminar_Perm::get()->have_studip_perm($tool->getVisibilityPermission(), $course->id)) {
-
-                    $path = 'browse/my_courses/' . $course->id;
 
                     $studip_module = $tool->getStudipModule();
                     if ($studip_module instanceof StudipModule) {
                         $tool_nav = $studip_module->getTabNavigation($course->id) ?: [];
                         foreach ($tool_nav as $nav_name => $navigation) {
+                            if (!empty($tool->metadata['displayname'])) {
+                                $navigation->setTitle($tool->getDisplayname());
+                            }
                             if ($nav_name && is_a($navigation, 'Navigation')) {
                                 $cnav['children'][$path . '/' . $nav_name] = [
                                     'icon'     => $navigation->getImage() ? $navigation->getImage()->asImagePath() : '',
-                                    'title'    => $tool->getDisplayname(),
+                                    'title'    => $navigation->getTitle(),
                                     'url'      => URLHelper::getURL($navigation->getURL(), ['cid' => $course->id]),
                                     'parent'   => 'browse/my_courses/' . $course->id,
                                     'path'     => 'browse/my_courses/' . $course->id . '/' . $nav_name,
@@ -267,6 +270,19 @@ class ResponsiveHelper
                         }
                     }
                 }
+            }
+
+            if ($GLOBALS['perm']->have_studip_perm('tutor', $course->id)) {
+                $cnav['children'][$path . '/plus'] = [
+                    'icon' => Icon::create('add', Icon::ROLE_INFO_ALT)->asImagePath(),
+                    'title' => _('Mehr...'),
+                    'url' => URLHelper::getURL('dispatch.php/course/plus/index', ['cid' => $course->id]),
+                    'parent' => 'browse/my_courses/' . $course->id,
+                    'path' => 'browse/my_courses/' . $course->id . '/plus/index',
+                    'visible' => true,
+                    'active' => false,
+                    'children' => [],
+                ];
             }
 
             $items['browse/my_courses/' . $course->id] = $cnav;

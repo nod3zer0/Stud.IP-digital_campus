@@ -27,7 +27,7 @@ body {
     grid-column-gap: 5px;
     grid-row-gap: $grid-gap;
     grid-template-columns: ($sidebar-width + $sidebar-padding) minmax(auto, calc(100vw - $sidebar-width - $sidebar-padding));
-    grid-template-rows: auto 1fr $footer-height;
+    grid-template-rows: auto 1fr auto;
 
     &::backdrop {
         background: $white;
@@ -161,7 +161,6 @@ body {
     grid-row: 2 / 3;
     justify-content: flex-start;
     margin: $page-margin;
-    overflow-x: auto;
     position: relative;
     vertical-align: top;
 
@@ -172,6 +171,7 @@ body {
 
 #content {
     flex: 1;
+    max-width: 100%;
 }
 
 // for old pages without template layout

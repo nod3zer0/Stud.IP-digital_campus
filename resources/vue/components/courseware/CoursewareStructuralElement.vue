@@ -1033,10 +1033,17 @@ export default {
             let menu = [
                 { id: 4, label: this.$gettext('Informationen anzeigen'), icon: 'info', emit: 'showInfo' },
                 { id: 5, label: this.$gettext('Lesezeichen setzen'), icon: 'star', emit: 'setBookmark' },
-                { id: 6, label: this.$gettext('Lerninhalt für OER Campus vorschlagen'), icon: 'oer-campus', emit: 'showSuggest' },
-                { id: 7, label: this.$gettext('Als Vollbild anzeigen'), icon: 'screen-full', emit: 'activateFullscreen'},
-
+                { id: 6, label: this.$gettext('Lerninhalt für OER Campus vorschlagen'), icon: 'oer-campus',
+                    emit: 'showSuggest' }
             ];
+
+            if (!document.documentElement.classList.contains('responsive-display')) {
+                menu.push(
+                    { id: 7, label: this.$gettext('Als Vollbild anzeigen'), icon: 'screen-full',
+                        emit: 'activateFullscreen'},
+                );
+            }
+
             if (this.canEdit) {
                 if (!this.blockedByAnotherUser) {
                     menu.push({
@@ -1057,7 +1064,7 @@ export default {
                 menu.push({ id: 3, label: this.$gettext('Seite hinzufügen'), icon: 'add', emit: 'addElement' });
             }
             if (this.context.type === 'users') {
-                menu.push({ id: 7, label: this.$gettext('Öffentlichen Link erzeugen'), icon: 'group', emit: 'linkElement' });
+                menu.push({ id: 8, label: this.$gettext('Öffentlichen Link erzeugen'), icon: 'group', emit: 'linkElement' });
             }
             if (!this.isRoot && this.canEdit && !this.isTask && !this.blocked) {
                 menu.push({

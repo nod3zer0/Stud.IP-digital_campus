@@ -99,7 +99,7 @@
                         </div>
                     </li>
                     <navigation-item v-for="(item, index) in currentNavigation.children" :key="index"
-                                     :item="item"></navigation-item>
+                                     :item="item" :active="item.active"></navigation-item>
                 </ul>
             </nav>
         </transition>
@@ -307,8 +307,10 @@ export default {
                 cache.set('fullscreen-mode', true);
 
                 const siteTitle = document.getElementById('site-title');
-                siteTitle.dataset.originalTitle = siteTitle.textContent.trim();
-                siteTitle.textContent = this.initialTitle;
+                if (siteTitle) {
+                    siteTitle.dataset.originalTitle = siteTitle.textContent.trim();
+                    siteTitle.textContent = this.initialTitle;
+                }
 
                 sidebar.style.display = 'none';
 
@@ -508,10 +510,12 @@ export default {
             if (this.isResponsive || (this.isFullscreen && !this.isFocusMode)) {
                 this.moveHelpbar();
 
-                this.contentbarTitle = document.querySelector('.sidebar-image .sidebar-title').textContent;
+                this.contentbarTitle = document.querySelector('.sidebar-image .sidebar-title')?.textContent;
                 const siteTitle = document.getElementById('site-title');
-                siteTitle.dataset.originalTitle = siteTitle.textContent.trim();
-                siteTitle.textContent = this.initialTitle;
+                if (siteTitle) {
+                    siteTitle.dataset.originalTitle = siteTitle.textContent.trim();
+                    siteTitle.textContent = this.initialTitle;
+                }
             }
         });
 
