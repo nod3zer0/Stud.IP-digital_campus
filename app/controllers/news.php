@@ -464,7 +464,7 @@ class NewsController extends StudipController
         }
         // apply filter
         if (Request::submitted('apply_news_filter')) {
-            $this->news_isvisible['basic'] = !$this->news_isvisible['basic'];
+            $this->news_isvisible['basic'] = empty($this->news_isvisible['basic']);
             if (Request::get('news_searchterm') && mb_strlen(trim(Request::get('news_searchterm'))) < 3) {
                 PageLayout::postError(_('Der Suchbegriff muss mindestens 3 Zeichen lang sein.'));
             } elseif ((Request::get('news_startdate') && !$this->getTimeStamp(Request::get('news_startdate'))) || (Request::get('news_enddate') && !$this->getTimeStamp(Request::get('news_enddate'), 'end'))) {
@@ -537,7 +537,7 @@ class NewsController extends StudipController
                     }
                     // check if result set too big
                     $counter++;
-                    if ($counter == $limit + 1) {
+                    if ($counter === $limit + 1) {
                         PageLayout::postInfo(sprintf(_('Es werden nur die ersten %s Ankündigungen angezeigt.'), $limit));
                         unset($this->news_items[$type][$key]);
                     }

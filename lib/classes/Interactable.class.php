@@ -61,7 +61,7 @@ abstract class Interactable
             $class = self::hyphenate(mb_substr($name, 6));
 
             # a.) set name unless set
-            if (!is_string(@$args[1])) {
+            if (empty($args[1]) || !is_string($args[1])) {
                 $interactable->attributes['name'] =  $class;
             }
 
