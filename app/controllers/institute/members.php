@@ -590,7 +590,8 @@ class Institute_MembersController extends AuthenticatedController
         $sidebar->addWidget($widget);
 
         if (Config::get()->EXPORT_ENABLE && $GLOBALS['perm']->have_perm('tutor')) {
-            $widget = new ExportWidget();
+            $widget = new SidebarWidget();
+            $widget->setTitle(_('Export'));
             $widget->addElement(new WidgetElement(export_form_sidebar($this->institute->id,
                 'person', $this->institute->Name)));
             $sidebar->addWidget($widget);
