@@ -53,7 +53,7 @@ class Accessibility_FormsController extends StudipController
         )->setRequired();
         $this->form->addPart($details_part);
         $personal_data_part = new \Studip\Forms\Fieldset(_('Ihre persönlichen Daten'));
-        $personal_data_part->addText(sprintf('<p>%s</p>', _('Geben Sie bitte Ihren Namen und Ihre E-Mail-Adresse an. Optional können Sie auch Ihre Telefonnummer angeben.')));
+        $personal_data_part->addText(sprintf('<p>%s</p>', _('Freiwillige Angaben Ihrer Kontaktdaten für etwaige Rückfragen.')));
         $personal_data_part->addInput(
             new \Studip\Forms\SelectInput(
                 'salutation',
@@ -75,7 +75,7 @@ class Accessibility_FormsController extends StudipController
                 _('Vorname und Nachname'),
                 $user ? sprintf('%s %s', $user->vorname, $user->nachname) : ''
             )
-        )->setRequired();
+        );
         $personal_data_part->addInput(
             new \Studip\Forms\TextInput(
                 'phone_number',
@@ -89,7 +89,11 @@ class Accessibility_FormsController extends StudipController
                 _('E-Mail-Adresse'),
                 $user ? $user->email : ''
             )
-        )->setRequired();
+        );
+
+        $personal_data_part->addText(sprintf('<p>%s</p>',
+            _('Informationen zum Datenschutz dieses Formulars finden Sie in der Datenschutzerklärung.')));
+
         $privacy_url = Config::get()->PRIVACY_URL;
 
         if (is_internal_url($privacy_url)) {
@@ -107,13 +111,7 @@ class Accessibility_FormsController extends StudipController
                 ['target' => '_blank']
             );
         }
-        $personal_data_part->addInput(
-            new \Studip\Forms\CheckboxInput(
-                'confirm_privacy',
-                _('Ich habe die Datenschutzerklärung gelesen und akzeptiere sie.'),
-                ''
-            )
-        )->setRequired();
+
         $this->form->addPart($personal_data_part);
         $this->form->setSaveButtonText(_('Barriere melden'));
         $this->form->setSaveButtonName('report');
