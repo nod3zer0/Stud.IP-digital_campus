@@ -268,6 +268,27 @@ const Messages = {
             }
         });
     },
+    createDraggable: function(element) {
+        return $(arguments.length === 1 ? element : this).draggable({
+            //cursor: "move",
+            distance: 10,
+            cursorAt: { left: 28, top: 15 },
+            helper() {
+                const title = $(this).find('.title').text().trim();
+                return $('<div id="message-move-handle">').text(title);
+            },
+            revert: true,
+            revertDuration: '200',
+            appendTo: 'body',
+            zIndex: 1000,
+            start() {
+                $('#messages-tags').addClass('dragging');
+            },
+            stop() {
+                $('#messages-tags').removeClass('dragging');
+            }
+        });
+    },
     toggleSetting: function(name) {
         jQuery('#' + name).toggle('fade');
         if (jQuery('#' + name).is(':visible')) {

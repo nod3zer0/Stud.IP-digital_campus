@@ -45,7 +45,7 @@ STUDIP.domReady(() => {
 
                             jQuery('#loaded').val(parseInt(jQuery('#loaded').val(), 10) + 1);
                             jQuery.each(response.messages, function(index, message) {
-                                jQuery('#messages > tbody').append(message);
+                                STUDIP.Messages.createDraggable(message).appendTo('#messages > tbody');
                             });
 
                             if (response.more) {
@@ -70,28 +70,8 @@ STUDIP.domReady(() => {
         }
     });
 
-    jQuery('#messages > tbody > tr').draggable({
-        //cursor: "move",
-        distance: 10,
-        cursorAt: { left: 28, top: 15 },
-        helper: function() {
-            var title = jQuery(this)
-                .find('.title')
-                .text()
-                .trim();
-            return jQuery('<div id="message-move-handle">').text(title);
-        },
-        revert: true,
-        revertDuration: '200',
-        appendTo: 'body',
-        zIndex: 1000,
-        start: function() {
-            jQuery('#messages-tags').addClass('dragging');
-        },
-        stop: function() {
-            jQuery('#messages-tags').removeClass('dragging');
-        }
-    });
+    $('#messages > tbody > tr').each(STUDIP.Messages.createDraggable)
+
     jQuery('#messages > tbody').trigger('touchstart');
     jQuery('.widget-links li:has(.tag)').each(STUDIP.Messages.createDroppable);
 
