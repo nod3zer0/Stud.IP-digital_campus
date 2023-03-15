@@ -89,32 +89,16 @@ use Studip\Button, Studip\LinkButton;
 
     <? endif ?>
 
-    <section>
-        <?= _('Geltungsbereich (Nutzendenstatus)') ?>:
-        <? foreach (['autor', 'tutor', 'dozent', 'admin', 'root'] as $role) : ?>
-        <label>
-            <input type="checkbox" name="tour_roles[]" value="<?= $role ?>"
-                   <? if (mb_strpos($tour->roles, $role) !== false) echo 'checked'; ?>>
-            <?=$role ?>
-        </label>
-        <? endforeach ?>
-    </section>
-
-        <!--label for="tour_audience" class="caption">
-        <?= _('Bedingung') ?>
-    </label>
-    <select name="tour_audience_type">
-    <option value=""></option>
-    <option value="sem"<?= ($audience->type == 'sem') ? ' selected' : '' ?>><?= _('Teilnehmende der Veranstaltung') ?></option>
-    <option value="inst"<?= ($audience->type == 'inst') ? ' selected' : '' ?>><?= _('Mitglied der Einrichtung') ?></option>
-    <option value="studiengang"<?= ($audience->type == 'studiengang') ? ' selected' : '' ?>><?= _('Eingeschrieben in Studiengang') ?></option>
-    <option value="abschluss"<?= ($audience->type == 'abschluss') ? ' selected' : '' ?>><?= _('Angestrebter Abschluss') ?></option>
-    <option value="userdomain"<?= ($audience->type == 'userdomain') ? ' selected' : '' ?>><?= _('Zugeordnet zur Nutzerdomäne') ?></option>
-    </select>
-    <input type="text" size="60" maxlength="255" name="tour_audience_range_id"
-        value="<?= $audience ? htmlReady($audience->range_id) : '' ?>"
-        placeholder="<?= _('interne ID des Objekts') ?>"/-->
-
+        <section>
+            <?= _('Geltungsbereich (Nutzendenstatus)') ?>:
+            <? foreach (['autor', 'tutor', 'dozent', 'admin', 'root'] as $role) : ?>
+            <label>
+                <input type="checkbox" name="tour_roles[]" value="<?= $role ?>"
+                       <? if (mb_strpos($tour->roles, $role) !== false) echo 'checked'; ?>>
+                <?= $role ?>
+            </label>
+            <? endforeach ?>
+        </section>
     </fieldset>
     <footer>
         <?= CSRFProtection::tokenTag() ?>
@@ -142,9 +126,9 @@ use Studip\Button, Studip\LinkButton;
                 </tr>
             </thead>
             <tbody>
-            <? if (count($tour->steps)) : ?>
+            <? if (count($tour->steps) > 0) : ?>
                 <? foreach ($tour->steps as $step) : ?>
-                    <tr id="<?= $tour_id . '_' . $step->step ?>">
+                    <tr id="<?= htmlReady("{$tour->id}_{$step->step}") ?>">
                         <td><?= $step->step ?></td>
                         <td><?= htmlReady($step->title) ?></td>
                         <td><?= htmlReady($step->tip) ?></td>
@@ -185,17 +169,3 @@ use Studip\Button, Studip\LinkButton;
         </table>
     </form>
 <? endif ?>
-
-<?
-if (count($tour->steps)) {
-    $sidebar = Sidebar::get();
-
-    $widget = new ActionsWidget();
-    $widget->addLink(
-        _('Schritt hinzufügen'),
-        $controller->url_for('tour/edit_step/' . $tour->tour_id . '/' . (count($tour->steps) + 1) . '/new'),
-        Icon::create('add'),
-        ['data-dialog' => 'size=auto;reload-on-close']
-    );
-    $sidebar->addWidget($widget);
-}

@@ -656,6 +656,18 @@ class TourController extends AuthenticatedController
             $this->tour->roles            = implode(',', Request::getArray('tour_roles'));
             $this->tour_startpage         = Request::get('tour_startpage');
         }
+        if (count($this->tour->steps) > 0) {
+            $sidebar = Sidebar::get();
+
+            $widget = new ActionsWidget();
+            $widget->addLink(
+                _('Schritt hinzufügen'),
+                $this->url_for('tour/edit_step/' . $this->tour->tour_id . '/' . (count($this->tour->steps) + 1) . '/new'),
+                Icon::create('add'),
+                ['data-dialog' => 'size=auto;reload-on-close']
+            );
+            $sidebar->addWidget($widget);
+        }
     }
 
     /**
