@@ -816,15 +816,17 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             return $start_date;
         }
 
-        $fist_date = $this->cycle->dates->first();
-        if ($this->metadate_id && isset($first_date->date)) {
-            $start_date->setTimestamp($first_date->date);
-            return $start_date;
-        }
+        if (isset($this->cycle) && count($this->cycle->dates) > 0) {
+            $first_date = $this->cycle->dates->first();
+            if ($this->metadate_id && isset($first_date->date)) {
+                $start_date->setTimestamp($first_date->date);
+                return $start_date;
+            }
 
-        if ($this->course_id && isset($first_date->date)) {
-            $start_date->setTimestamp($fist_date->date);
-            return $start_date;
+            if ($this->course_id && isset($first_date->date)) {
+                $start_date->setTimestamp($first_date->date);
+                return $start_date;
+            }
         }
 
         if ($this->begin) {
