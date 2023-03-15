@@ -372,6 +372,7 @@ $editor-min-height: 8em;
     min-height: calc($editor-min-height + 2px);
 }
 .ck-editor__editable_inline {
+    cursor: text;
     min-height: $editor-min-height;
 }
 
