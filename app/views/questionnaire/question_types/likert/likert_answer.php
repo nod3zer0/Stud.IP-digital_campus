@@ -14,7 +14,7 @@ $response = $vote->getMyAnswer();
 $responseData = isset($response->answerdata['answers']) ? $response->answerdata['answers']->getArrayCopy() : [];
 ?>
 <div <?= isset($vote->questiondata['mandatory']) && $vote->questiondata['mandatory'] ? ' class="mandatory"' : "" ?>>
-    <?= $this->render_partial('questionnaire/_answer_description_container', ['vote' => $vote, 'iconshape' => 'likert']) ?>
+    <?= $this->render_partial('questionnaire/_answer_description_container', ['vote' => $vote, 'iconshape' => 'question-likert']) ?>
 
     <div class="hidden invalidation_notice">
         <?= _("Diese Frage muss beantwortet werden.") ?>

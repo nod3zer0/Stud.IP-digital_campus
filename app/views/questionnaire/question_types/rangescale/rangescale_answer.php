@@ -14,7 +14,7 @@ $response = $vote->getMyAnswer();
 $responseData = $response['answerdata'] && $response['answerdata']['answers'] ? $response['answerdata']['answers']->getArrayCopy() : [];
 ?>
 <div <?= isset($vote->questiondata['mandatory']) && $vote->questiondata['mandatory'] ? ' class="mandatory"' : "" ?>>
-    <?= $this->render_partial('questionnaire/_answer_description_container', ['vote' => $vote, 'iconshape' => 'rangescale']) ?>
+    <?= $this->render_partial('questionnaire/_answer_description_container', ['vote' => $vote, 'iconshape' => 'question-rangescale']) ?>
 
     <div class="hidden invalidation_notice">
         <?= _("Diese Frage muss beantwortet werden.") ?>

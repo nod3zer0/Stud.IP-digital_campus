@@ -9,7 +9,7 @@ $options = $vote->questiondata['options'];
 
 <div class="description_container">
     <div class="icon_container">
-        <?= Icon::create('rangescale', Icon::ROLE_INFO)->asImg(20) ?>
+        <?= Icon::create('question-likert', Icon::ROLE_INFO)->asImg(20) ?>
     </div>
     <div class="description">
         <?= formatReady(isset($vote->questiondata) && isset($vote->questiondata['description']) ? $vote->questiondata['description'] : '') ?>
