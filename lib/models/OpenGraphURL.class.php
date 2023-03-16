@@ -305,7 +305,11 @@ class OpenGraphURL extends SimpleORMap
                 }
             }
         }
-        if ($_SERVER['HTTPS'] === 'on' && count($secure_media) > 0) {
+        if (
+            isset($_SERVER['HTTPS'])
+            && $_SERVER['HTTPS'] === 'on'
+            && count($secure_media) > 0
+        ) {
             foreach ($secure_media as $index => $url) {
                 $files[] = [$url, $media_types[$index]];
             }

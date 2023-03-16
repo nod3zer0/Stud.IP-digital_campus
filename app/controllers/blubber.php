@@ -57,7 +57,10 @@ class BlubberController extends AuthenticatedController
             );
         }
 
-        if (!Avatar::getAvatar($GLOBALS['user']->id)->is_customized() && !$_SESSION['already_asked_for_avatar']) {
+        if (
+            empty($_SESSION['already_asked_for_avatar'])
+            && !Avatar::getAvatar($GLOBALS['user']->id)->is_customized()
+        ) {
             $_SESSION['already_asked_for_avatar'] = true;
             PageLayout::postInfo(sprintf(
                 _('Wollen Sie ein Avatar-Bild nutzen? %sLaden Sie jetzt ein Bild hoch%s.'),

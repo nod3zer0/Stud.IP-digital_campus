@@ -11,7 +11,7 @@ if ($file->isDownloadable($GLOBALS['user']->id)) {
     <?= !empty($table_id) ? 'id="' . htmlReady("fileref_{$table_id}_{$file->getId()}") . '"' : '' ?>
     role="row"
     data-permissions="<?= implode($permissions) ?>">
-    <? if ($show_bulk_checkboxes) : ?>
+    <? if (!empty($show_bulk_checkboxes)) : ?>
         <td>
             <? if ($file->isDownloadable($GLOBALS['user']->id)) : ?>
                 <input type="checkbox"
