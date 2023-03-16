@@ -289,14 +289,12 @@ class StructuralElement extends \SimpleORMap
                     return true;
                 }
 
-                return $this->hasReadApproval($user);
-
                 $link = StructuralElement::findOneBySQL('target_id = ?', [$this->id]);
                 if ($link) {
                     return true;
                 }
 
-                return false;
+                return $this->hasReadApproval($user);
             case 'course':
                 if (!$GLOBALS['perm']->have_studip_perm('user', $this->range_id, $user->id)) {
                     return false;
