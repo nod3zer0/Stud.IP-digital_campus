@@ -21,10 +21,11 @@ abstract class CoursewareController extends AuthenticatedController
     {
         $this->unit_id = $unit->id;
         $last_element = $this->getLastElement($last, $context, $rangeId);
-        if($last_element) {
+
+        if ($last_element) {
             $last_element_unit = $last_element->findUnit();
         }
-        if ($last_element_unit->id === $unit->id) {
+        if (isset($last_element_unit) && $last_element_unit->id === $unit->id) {
             $this->entry_element_id = $last_element->id;
         } else {
             $this->entry_element_id = $unit->structural_element_id;
