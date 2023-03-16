@@ -66,6 +66,7 @@ class Tooltip {
         this.element = $('<div>');
         this.element.addClass(css_class || 'studip-tooltip');
         this.element.attr('id', this.id);
+        this.element.attr('role', 'tooltip');
         this.element.appendTo('body');
 
         // Set position and content and paint the tooltip

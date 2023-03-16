@@ -35,12 +35,13 @@ $(document).on('mouseenter mouseleave focusin focusout', '[data-tooltip],.toolti
         if (!content) {
             content = $(this).find('.tooltip-content').remove().html();
         }
-        $(this).attr('title', '');
+        $(this).attr('title', null);
         $(this).attr('data-tooltip', content);
 
         tooltip = new STUDIP.Tooltip(x, y, content);
 
         data.tooltipObject = tooltip;
+        $(this).attr('aria-describedby', tooltip.id);
 
         $(this).on('remove', function() {
             tooltip.remove();
