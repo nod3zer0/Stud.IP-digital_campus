@@ -215,12 +215,21 @@ class ResponsiveHelper
         $standardIcon = Icon::create('seminar', Icon::ROLE_INFO_ALT)->asImagePath();
 
         // Add current course to list.
-        if (Context::get() && Context::isCourse()) {
+        if (Context::get()) {
             $courses[] = Context::get();
         }
 
         foreach ($courses as $course) {
-            $avatar = CourseAvatar::getAvatar($course->id);
+
+            $avatarClass = CourseAvatar::class;
+            $url = 'dispatch.php/course/details';
+            if (Context::isInstitute()) {
+                $avatarClass = InstituteAvatar::class;
+                $url = 'dispatch.php/institute/overview';
+                $standardIcon = Icon::create('institute', Icon::ROLE_INFO_ALT)->asImagePath();
+            }
+
+            $avatar = $avatarClass::getAvatar($course->id);
             if ($avatar->is_customized()) {
                 $icon = $avatar->getURL(Avatar::SMALL);
             } else {
@@ -230,11 +239,11 @@ class ResponsiveHelper
             $cnav = [
                 'icon'     => $icon,
                 'title'    => $course->getFullname(),
-                'url'      => URLHelper::getURL('dispatch.php/course/details', ['cid' => $course->id]),
+                'url'      => URLHelper::getURL($url, ['cid' => $course->id]),
                 'parent'   => 'browse/my_courses',
                 'path'     => 'browse/my_courses/' . $course->id,
                 'visible'  => true,
-                'active'   => Course::findCurrent() ? Course::findCurrent()->id === $course->id : false,
+                'active'   => Context::getId() === $course->id,
                 'children' => []
             ];
 
