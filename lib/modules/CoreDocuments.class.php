@@ -109,7 +109,7 @@ class CoreDocuments extends CorePlugin implements StudipModule, OERModule
             _('Dateibereich'),
             "dispatch.php/{$range_type}/files"
         );
-        $navigation->setImage(Icon::create('files'));
+        $navigation->setImage(Icon::create('files', Icon::ROLE_CLICKABLE, ['title' => _('Dateien')]));
 
         $condition = "INNER JOIN folders ON (folders.id = file_refs.folder_id)
                       WHERE folders.range_type = :range_type
