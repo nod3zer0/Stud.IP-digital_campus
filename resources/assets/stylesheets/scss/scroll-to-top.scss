@@ -9,7 +9,7 @@ body #scroll-to-top {
     margin-bottom: $scroll-to-top-margin;
     padding: 10px;
     background: $base-color;
-    border: .05rem solid transparent;
+    border: 1px solid transparent;
     background-clip: padding-box;
     cursor: pointer;
     box-sizing: border-box;
@@ -20,7 +20,7 @@ body #scroll-to-top {
     z-index: 1;
     &:hover {
         background: $brand-color-darker;
-        border-radius: .12rem;
+        border-radius: 2px;
     }
     &.hide {
         bottom: calc( 0px - #{$scroll-to-top-height + $scroll-to-top-margin});

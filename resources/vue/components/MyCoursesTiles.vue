@@ -172,10 +172,6 @@ $tile-padding: 10px;
     $header-size: $avatar-size;
     $element-height: (100px + $header-size);
 
-    &:not(:last-child) {
-        margin-bottom: 2rem;
-    }
-
     .studip-grid-element {
         box-sizing: border-box;
         display: flex;
@@ -195,9 +191,6 @@ $tile-padding: 10px;
         max-height: $header-size;
         overflow: hidden;
     }
-
-    //.tiled-grid-element-header-title {
-    //}
 
     .tiles-grid-element-header-image {
         float: left;
