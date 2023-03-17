@@ -397,3 +397,12 @@ form.default .ck-source-editing-area textarea {
 .ck.ck-toolbar > .ck-toolbar__items {
     max-width: calc(100% - 20px);
 }
+
+.studip-dialog {
+    .ck-editor {
+        overflow: hidden;
+        .ck.ck-editor__main > .ck-editor__editable {
+            height: 200px;
+        }
+    }
+}
