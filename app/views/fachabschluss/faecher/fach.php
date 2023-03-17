@@ -2,7 +2,7 @@
 <?= $controller->jsUrl() ?>
 
 <? $perm = MvvPerm::get($fach) ?>
-<form class="default" action="<?= $controller->action_link('fach/', $fach->id) ?>" method="post">
+<form class="default" action="<?= $controller->action_link('fach', $fach->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset class="collapsable">
         <legend>
