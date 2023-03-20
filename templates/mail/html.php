@@ -6,7 +6,7 @@
   <?= Assets::stylesheet('studip-base.css') ?>
 </head>
 <body>
-  <div style="background-color: white; margin: auto; max-width: 700px; padding: 4px;">
+  <div style="background-color: white; margin: auto; width: 700px; padding: 4px;">
     <?= Assets::img("locale/$lang/LC_PICTURES/mail_header.png") ?>
     <p>
       <?= formatReady($message, true, true) ?>
