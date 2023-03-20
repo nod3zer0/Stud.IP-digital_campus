@@ -43,12 +43,14 @@ trait ConsultationHelper
 
     protected function createBlockWithSlotsForRange(Range $range, bool $lock_blocks = false): ConsultationBlock
     {
+        $slot_length_in_hours = 2;
+
         // Generate start and end time. Assures that the day is not a holiday.
         $now = time();
 
         do {
             $begin = strtotime('next monday 8:00:00', $now);
-            $end = strtotime('+2 hours', $begin);
+            $end = strtotime("+{$slot_length_in_hours} hours", $begin);
 
             $now = strtotime('+1 week', $now);
 
@@ -58,7 +60,7 @@ trait ConsultationHelper
         // Lock blocks?
         $additional_data = [];
         if ($lock_blocks) {
-            $additional_data['lock_time'] = ceil(($begin - time()) / 3600);
+            $additional_data['lock_time'] = ceil(($begin - time()) / 3600) + $slot_length_in_hours;
         }
 
         // Generate blocks
