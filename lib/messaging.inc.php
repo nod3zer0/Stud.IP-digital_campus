@@ -186,6 +186,7 @@ class messaging
             $reply_to = $sender->Email;
         }
         $attachments = [];
+        $attachments_as_links = false;
         if ($GLOBALS['ENABLE_EMAIL_ATTACHMENTS'] && $msg->attachment_folder) {
             $attachments = $msg->attachment_folder->file_refs;
             $size_of_attachments = array_sum($attachments->pluck('size')) ?: 0;
@@ -357,10 +358,16 @@ class messaging
         // diese user_id schreiben wir in ein tempraeres array
         foreach ($rec_id as $one) {
             $smsforward_rec = User::find($one)->smsforward_rec;
-            $tmp_forward_id = User::find($smsforward_rec)->user_id;
-            if ($tmp_forward_id) {
-                $rec_id[] = $tmp_forward_id;
+            if (!$smsforward_rec) {
+                continue;
             }
+
+            $tmp_forward = User::find($smsforward_rec);
+            if (!$tmp_forward) {
+                continue;
+            }
+
+            $rec_id[] = $tmp_forward->id;
         }
 
         // wir mergen die eben erstellten arrays und entfernen doppelte eintraege
