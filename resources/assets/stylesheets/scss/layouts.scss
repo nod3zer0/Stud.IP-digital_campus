@@ -167,6 +167,10 @@ body {
     .oversized & {
         overflow: visible;
     }
+
+    .no-sidebar & {
+        grid-column: 1 / 3;
+    }
 }
 
 #content {

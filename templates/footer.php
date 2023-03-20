@@ -1,3 +1,4 @@
+<? if (PageLayout::isFooterEnabled()): ?>
 <!-- Beginn Footer -->
 <?= SkipLinks::addIndex(_('Fußzeile'), 'main-footer', 900, false) ?>
 <footer id="main-footer" aria-label="<?= _('Fußzeile') ?>">
@@ -55,5 +56,6 @@
     </nav>
 <? endif; ?>
 </footer>
+<? endif; ?>
 <?= $this->render_partial('debug/db-log.php') ?>
 <!-- Ende Footer -->

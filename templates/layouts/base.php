@@ -70,13 +70,15 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
 </script>
 </head>
 
-<body id="<?= PageLayout::getBodyElementId() ?>">
+<body id="<?= PageLayout::getBodyElementId() ?>" <? if (!PageLayout::isSidebarEnabled()) echo 'class="no-sidebar"'; ?>>
     <div id="skip_link_navigation" aria-busy="true"></div>
     <?= PageLayout::getBodyElements() ?>
 
     <? include 'lib/include/header.php' ?>
 
-    <?= Sidebar::get()->render() ?>
+    <? if (PageLayout::isSidebarEnabled()): ?>
+        <?= Sidebar::get()->render() ?>
+    <? endif; ?>
 
     <!-- Start main page content -->
     <main id="content-wrapper">

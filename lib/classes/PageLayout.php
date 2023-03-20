@@ -65,6 +65,16 @@ class PageLayout
      */
     private static $display_header = true;
 
+    /**
+     * determines whether the sidebar is displayed or not
+     */
+    private static $display_sidebar = true;
+
+    /**
+     * determines whether the page footer is displayed or not
+     */
+    private static $display_footer = true;
+
     /*
      * Custom quicksearch on the page
      */
@@ -462,6 +472,48 @@ class PageLayout
     public static function isHeaderEnabled()
     {
         return self::$display_header && empty($GLOBALS['_NOHEADER']);
+    }
+
+    /**
+     * Disable output of the sidebar for this page.
+     *
+     * @since Stud.IP 5.4
+     */
+    public static function disableSidebar(bool $state = true)
+    {
+        self::$display_sidebar = !$state;
+    }
+
+    /**
+     * Return whether output of the sidebar is enabled.
+     *
+     * @since Stud.IP 5.4
+     */
+    public static function isSidebarEnabled(): bool
+    {
+        return self::$display_sidebar;
+    }
+
+    /**
+     * Disable output of the page footer for this page.
+     *
+     * @param bool $state
+     *
+     * @since Stud.IP 5.4
+     */
+    public static function disableFooter(bool $state = true)
+    {
+        self::$display_footer = !$state;
+    }
+
+    /**
+     * Return whether output of the page footer is enabled.
+     *
+     * @since Stud.IP 5.4
+     */
+    public static function isFooterEnabled(): bool
+    {
+        return self::$display_footer;
     }
 
     /**
