@@ -108,10 +108,7 @@ class GarbageCollectorJob extends CronJob
             AND
             range_id NOT IN (
                 SELECT message_id FROM message
-            )",
-            [
-                'user_id' => $GLOBALS['user']->id
-            ]
+            )"
         );
 
         //delete old attachments of non-stored and deleted mvv objects:
