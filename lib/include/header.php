@@ -51,8 +51,5 @@ if (PageLayout::isHeaderEnabled()) //Einige Seiten benötigen keinen Header, spr
             $header_template->show_quicksearch = true;
         }
     }
-} else {
-    $header_template = $GLOBALS['template_factory']->open('noheader');
+    echo $header_template->render();
 }
-
-echo $header_template->render();
