@@ -21,6 +21,14 @@ if ($numTaskAnswers > 0) {
             }
         } else {
             if (isset($answer['answerdata']['answers'])) {
+                if (!isset($results[(int) $answer['answerdata']['answers']])) {
+                    $results[(int) $answer['answerdata']['answers']] = 0;
+                }
+                $results[(int) $answer['answerdata']['answers']]++;
+
+                if (!isset($results_users[(int) $answer['answerdata']['answers']])) {
+                    $results_users[(int) $answer['answerdata']['answers']] = [];
+                }
                 $results[(int) $answer['answerdata']['answers']]++;
                 $results_users[(int) $answer['answerdata']['answers']][] = $answer['user_id'];
             }
@@ -76,7 +84,7 @@ rsort($ordered_results);
         <? $countAnswers = $vote->questionnaire->countAnswers() ?>
         <? foreach ($options as $key => $answer) : ?>
         <tr>
-            <? $percentage = $countAnswers ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>
+            <? $percentage = ($countAnswers && isset($results[$key])) ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>
 
             <td style="text-align: right; background-size: <?= $percentage ?>% 100%; background-position: right center; background-image: url('<?= Assets::image_path("vote_lightgrey.png") ?>'); background-repeat: no-repeat;" width="50%">
                 <strong><?= formatReady($answer) ?></strong>

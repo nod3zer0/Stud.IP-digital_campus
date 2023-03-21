@@ -22,7 +22,7 @@
     aria-labelledby="pagination-label-<?= $random_id ?>">
 <? if ($cur_page > 1): ?>
     <li class="prev">
-        <a class="pagination--link" href="<?= URLHelper::getLink(sprintf($pagelink, $cur_page - 1), $pageparams) ?>" rel="prev" <?= $dialog ?: ''?>>
+        <a class="pagination--link" href="<?= URLHelper::getLink(sprintf($pagelink, $cur_page - 1), $pageparams) ?>" rel="prev" <?= $dialog ?? '' ?>>
             <span class="audible"><?= _('Eine Seite') ?></span>
             <?= _('zurück') ?>
         </a>

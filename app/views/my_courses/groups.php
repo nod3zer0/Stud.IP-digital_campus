@@ -1,7 +1,7 @@
-<form method="post" action="<?= $controller->url_for('my_courses/store_groups/'.$studygroups) ?>" class="default">
+<form method="post" action="<?= $controller->link_for('my_courses/store_groups/'.$studygroups) ?>" class="default">
     <?= CSRFProtection::tokenTag() ?>
 
-    <input type="hidden" name="cid" value="<?= $cid ?>">
+    <input type="hidden" name="cid" value="<?= htmlReady($cid) ?>">
     <table class="default collapsable">
         <caption><?= _('Gruppenzuordnung') ?></caption>
         <colgroup>
@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <? foreach ($groups as $group_id => $group_members): ?>
-            <tbody class="<?= $current_semester != $semesters[$group_id]['semester_id'] ? 'collapsed' : ''?>">
+            <tbody <? if (isset($semesters[$group_id]['semester_id']) && $current_semester != $semesters[$group_id]['semester_id']) echo 'class="collapsed"'; ?>>
             <? if ($group_field !== 'not_grouped'): ?>
 
                 <tr class="table_header header-row">
