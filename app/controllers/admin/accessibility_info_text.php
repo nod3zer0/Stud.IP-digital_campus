@@ -26,7 +26,12 @@ class Admin_AccessibilityInfoTextController extends AuthenticatedController
     public function edit_action()
     {
         CSRFProtection::verifyUnsafeRequest();
-        Config::get()->store('ACCESSIBILITY_INFO_TEXT', Request::i18n('accessbility_info_text'));
+
+        Config::get()->store(
+            'ACCESSIBILITY_INFO_TEXT',
+            Studip\Markup::purifyHtml(Request::i18n('accessbility_info_text'))
+        );
+
         PageLayout::postSuccess(_('Die Einstellungen wurden gespeichert.'));
         $this->relocate('admin/accessibility_info_text/index');
     }
