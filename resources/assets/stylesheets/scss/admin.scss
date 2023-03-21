@@ -138,13 +138,13 @@ fieldset.attribute_table {
     }
 
     td .course-completion {
-        @include background-icon(radiobutton-checked, status-red);
+        @include background-icon(span-empty, status-red);
 
         &[data-course-completion="1"] {
-            @include background-icon(radiobutton-checked, status-yellow);
+            @include background-icon(span-2quarter, status-yellow);
         }
         &[data-course-completion="2"] {
-            @include background-icon(radiobutton-checked, status-green);
+            @include background-icon(span-full, status-green);
         }
 
         &.ajaxing {
