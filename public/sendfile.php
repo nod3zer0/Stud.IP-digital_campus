@@ -142,7 +142,7 @@ switch ($type) {
                 $path_file = $file->metadata['url'];
             }
         } else {
-            $path_file = is_a($file, "URLFile")
+            $path_file = $file instanceof URLFile
                        ? $file_ref->file->metadata['url']
                        : $file_ref->file->path;
         }
@@ -154,12 +154,12 @@ switch ($type) {
 // check if linked file is obtainable
 $filesize = 0;
 if (
-    isset($file_ref, $file_ref->file, $file_ref->file->metadata['access_type']) 
+    isset($file_ref, $file_ref->file, $file_ref->file->metadata['access_type'])
     && $file_ref->file->metadata['access_type'] === 'proxy'
 ) {
     $link_data = FileManager::fetchURLMetadata($file_ref->file->metadata['url']);
     if ($link_data['response_code'] != 200) {
-        throw new Exception(_("Diese Datei wird von einem externen Server geladen und ist dort momentan nicht erreichbar!"));
+        throw new Trails_Exception(404, _("Diese Datei wird von einem externen Server geladen und ist dort momentan nicht erreichbar!"));
     }
     $content_type = $link_data['Content-Type'] ? strstr($link_data['Content-Type'], ';', true) : get_mime_type($file_name);
 
@@ -169,9 +169,10 @@ if (
 if (isset($file)) {
     $filesize = $file->getSize();
     if ($filesize === false) {
-        throw new Exception(_('Fehler beim Laden der Inhalte der Datei'));
+        throw new Trails_Exception(404, _('Fehler beim Laden der Inhalte der Datei'));
     }
 }
+
 // close session, download will mostly be a parallel action
 page_close();
 
@@ -187,8 +188,8 @@ if (isset($file_ref, $file_ref->file, $file_ref->file->metadata['access_type']) 
 }
 
 // Check if file actually exists
-if (!file_exists($path_file)) {
-    throw new Exception(_('Fehler beim Laden der Inhalte der Datei'));
+if (!parse_url($path_file, PHP_URL_SCHEME) && !file_exists($path_file)) {
+    throw new Trails_Exception(404, _('Fehler beim Laden der Inhalte der Datei'));
 }
 
 $allowed_mime_types = get_mime_types();
@@ -203,7 +204,7 @@ if (Request::int('force_download') || $content_type == "application/octet-stream
 }
 
 $start = $end = null;
-if ($filesize && $file_ref->file->filetype !== 'URLFile') {
+if ($filesize && !parse_url($path_file, PHP_URL_SCHEME)) {
     header("Accept-Ranges: bytes");
     $start = 0;
     $end = $filesize - 1;
