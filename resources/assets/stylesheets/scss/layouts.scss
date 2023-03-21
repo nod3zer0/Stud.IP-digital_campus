@@ -167,9 +167,9 @@ body {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     justify-content: flex-start;
-    margin: $page-margin;
-    margin-bottom: calc($page-margin + 35px);
     overflow-x: auto;
+    padding: $page-margin;
+    padding-bottom: calc($page-margin + 35px);
     vertical-align: top;
 
     .oversized & {
