@@ -29,7 +29,7 @@ class Admin_Cronjobs_LogsController extends AuthenticatedController
         if (empty($_SESSION['cronlog-filter'])) {
             $_SESSION['cronlog-filter'] = [
                 'where'  => '1',
-                'values' => [],
+                'values' => array_fill_keys(['status', 'schedule_id', 'task_id'], null),
             ];
         }
 
