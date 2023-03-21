@@ -17,6 +17,10 @@
         pointer-events: none;
     }
 
+    #skiplink_list {
+        display: unset;
+    }
+
     ul {
         list-style-type: none;
         margin: 0;
@@ -40,4 +44,8 @@ button.skiplink {
     @media not prefers-reduced-motion {
         transition: color $transition-duration;
     }
+}
+
+#skiplink_list {
+    display: none;
 }
