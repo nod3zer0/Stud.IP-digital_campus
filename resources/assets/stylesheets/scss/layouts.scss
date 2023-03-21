@@ -155,13 +155,21 @@ body {
 }
 
 #content-wrapper {
-    background-color: $white;
+    background:
+        linear-gradient(90deg, #fff 30%, hsla(0, 0%, 100%, 0)),
+        linear-gradient(90deg, hsla(0, 0%, 100%, 0), #fff 70%) 100% 0,
+        radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, .2), transparent),
+        radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, .2), transparent) 100% 0;
+    background-attachment: local, local, scroll, scroll;
+    background-repeat: no-repeat;
+    background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
     display: inline-flex;
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     justify-content: flex-start;
     margin: $page-margin;
     margin-bottom: calc($page-margin + 35px);
+    overflow-x: auto;
     vertical-align: top;
 
     .oversized & {
