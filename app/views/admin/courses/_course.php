@@ -25,10 +25,11 @@ if (!$values['parent_course'] || !in_array($values['parent_course'], array_keys(
         <td>
         <? if (Config::get()->ADMIN_COURSES_SHOW_COMPLETE): ?>
             <? if ($GLOBALS['perm']->have_studip_perm('tutor', $semid)) : ?>
-                <a href="<?= $controller->url_for('admin/courses/toggle_complete/' . $semid) ?>"
+                <a href="<?= $controller->toggle_complete($course) ?>"
                    class="course-completion"
                    data-course-completion="<?= $values['completion'] ?>"
-                   title="<?= _('Bearbeitungsstatus ändern') ?>">
+                   title="<?= htmlReady($course->getCompetionLabel()) ?>"
+                   aria-label="<?= _('Bearbeitungsstatus ändern') ?>">
                     <?= _('Bearbeitungsstatus ändern') ?>
                 </a>
             <? else : ?>

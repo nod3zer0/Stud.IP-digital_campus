@@ -334,10 +334,13 @@ jQuery(document).on('click', '.course-admin td .course-completion', function () 
             $(this).addClass('ajaxing');
         }.bind(this), 300);
 
-    $.getJSON(href).done(function (completion) {
+    $.getJSON(href).done(function (response) {
         clearTimeout(timeout);
 
-        $(this).removeClass('ajaxing').attr('data-course-completion', completion);
+        $(this).removeClass('ajaxing').attr({
+            'data-course-completion': response.state,
+            title: response.label
+        });
     }.bind(this));
 
     return false;

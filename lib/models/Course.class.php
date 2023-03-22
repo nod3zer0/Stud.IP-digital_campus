@@ -755,6 +755,20 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     }
 
     /**
+     * Returns the appropriate label for the completion status.
+     *
+     * @return string
+     */
+    public function getCompetionLabel(): string
+    {
+        return [
+            0 => _('unvollständig'),
+            1 => _('in Bearbeitung'),
+            2 => _('fertig'),
+        ][$this->completion] ?? _('undefiniert');
+    }
+
+    /**
      * Generates a general log entry if the course were changed.
      * Furthermore, this method emits notifications when the
      * start and/or the end semester has/have changed.

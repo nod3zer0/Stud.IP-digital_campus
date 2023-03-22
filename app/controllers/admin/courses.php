@@ -884,7 +884,10 @@ class Admin_CoursesController extends AuthenticatedController
         $course->store();
 
         if (Request::isXhr()) {
-            $this->render_json((int)$course->completion);
+            $this->render_json([
+                'state' => (int)$course->completion,
+                'label' => $course->getCompetionLabel(),
+            ]);
         } else {
             $this->redirect('admin/courses/index#course-' . $course_id);
         }
