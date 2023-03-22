@@ -15,7 +15,7 @@
  * @category    Stud.IP
  */
 
-class Admission_UserListController extends AuthenticatedController
+class Admission_UserlistController extends AuthenticatedController
 {
     /**
      * @see AuthenticatedController::before_filter
@@ -28,16 +28,18 @@ class Admission_UserListController extends AuthenticatedController
         Navigation::activateItem('/browse/coursesets/userlists');
         PageLayout::addScript('studip-admission.js');
 
-        $views = new ViewsWidget();
-        $views->setTitle(_('Aktionen'));
-        $views->addLink(_('Personenliste anlegen'),$this->url_for('admission/userlist/configure'))->setActive($action == 'configure');
-        Sidebar::Get()->addWidget($views);
+        Sidebar::get()->addWidget(new ActionsWidget())->addLink(
+            _('Personenliste anlegen'),
+            $this->configureURL(),
+            Icon::create('add')
+        );
     }
 
     /**
      * Show the user lists the current user has access to.
      */
-    public function index_action() {
+    public function index_action()
+    {
         $this->userlists = [];
         foreach (AdmissionUserList::getUserLists($GLOBALS['user']->id) as $list) {
             $this->userlists[$list->getId()] = $list;
@@ -50,7 +52,8 @@ class Admission_UserListController extends AuthenticatedController
      * @param String $userlistId user list to load settings from (or empty
      * if it is a new user list)
      */
-    public function configure_action($userlistId='') {
+    public function configure_action($userlistId = '')
+    {
         if ($userlistId) {
             $this->userlist = new AdmissionUserList($userlistId);
             $this->userlist_id = $userlistId;
@@ -100,7 +103,8 @@ class Admission_UserListController extends AuthenticatedController
      *
      * @param String $userlistId user list to save
      */
-    public function save_action($userlistId='') {
+    public function save_action($userlistId = '')
+    {
         CSRFProtection::verifyUnsafeRequest();
         $userlist = new AdmissionUserList($userlistId);
         $userlist->setName(Request::get('name'))
@@ -120,15 +124,13 @@ class Admission_UserListController extends AuthenticatedController
      *
      * @param String $userlistId the user list to delete
      */
-    public function delete_action($userlistId) {
-        $this->userlist = new AdmissionUserList($userlistId);
-        if (Request::int('really')) {
-            $this->userlist->delete();
-            $this->redirect($this->url_for('admission/userlist'));
-        }
-        if (Request::int('cancel')) {
-            $this->redirect($this->url_for('admission/userlist'));
-        }
+    public function delete_action($userlistId)
+    {
+        CSRFProtection::verifyUnsafeRequest();
+
+        $userlist = new AdmissionUserList($userlistId);
+        $userlist->delete();
+        $this->redirect($this->indexURL());
     }
 
     /**

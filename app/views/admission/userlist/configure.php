@@ -19,12 +19,12 @@ Helpbar::get()->addPlainText(_('Info'), "Stellen Sie hier ein, wie die Chancen b
                                         "bevorzugt.");
 ?>
 <?= $error ?? '' ?>
-<form class="default" action="<?= $controller->url_for('admission/userlist/save', $userlist_id) ?>" method="post">
+<form class="default" action="<?= $controller->link_for('admission/userlist/save', $userlist_id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
     <fieldset>
         <legend>
-            <?= ($userlist_id) ? _('Personenliste bearbeiten') : _('Personenliste anlegen') ?>
+            <?= $userlist_id ? _('Personenliste bearbeiten') : _('Personenliste anlegen') ?>
         </legend>
         <label>
             <span class="required">

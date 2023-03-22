@@ -181,11 +181,23 @@ class AdmissionUserList
     /**
      * Gets all assigned user IDs.
      *
-     * @return String
+     * @param bool $as_objects Whether the users should be returned as objects
+     * @return array|User[]
      */
-    public function getUsers()
+    public function getUsers(bool $as_objects = false)
     {
-        return $this->users;
+        if (!$as_objects) {
+            return $this->users;
+        }
+
+        $result = $this->users;
+        User::findEachMany(
+            function (User $user) use (&$result) {
+                $result[$user->id] = $user;
+            },
+            array_keys($this->users)
+        );
+        return array_values($result);
     }
 
     /**
@@ -313,6 +325,26 @@ class AdmissionUserList
         return $this;
     }
 
+    public function describe(array $wrapper = ['', '']): string
+    {
+        if ($this->getFactor() == 0) {
+            return _('Bei der Platzverteilung zu Veranstaltungen werden die '
+                   . 'betreffenden Personen nur nachrangig berücksichtigt.');
+        }
+
+        if ($this->getFactor() == PHP_INT_MAX) {
+            return _('Bei der Platzverteilung zu Veranstaltungen werden die '
+                   . 'betreffenden Personen vor allen anderen einen Platz erhalten.');
+        }
+
+        return sprintf(
+            _('Bei der Platzverteilung zu Veranstaltungen haben die betreffenden '
+            . 'Personen gegenüber Anderen eine %s-fache Chance darauf, einen Platz zu '
+            . 'erhalten.'),
+            $wrapper[0] . $this->getFactor() . $wrapper[1]
+        );
+    }
+
     /**
      * Function for storing the data to DB. Is not called automatically on
      * changing object values.
@@ -353,7 +385,8 @@ class AdmissionUserList
     /**
      * String representation of this object.
      */
-    public function toString() {
+    public function toString()
+    {
         $tpl = $GLOBALS['template_factory']->open('admission/userlist');
         $tpl->set_attribute('userlist', $this);
         return $tpl->render();
@@ -364,9 +397,9 @@ class AdmissionUserList
      *
      * @return String
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->toString();
     }
 
-} /* end of class AdmissionUserList */
-?>
+}
