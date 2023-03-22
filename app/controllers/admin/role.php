@@ -492,7 +492,7 @@ class Admin_RoleController extends AuthenticatedController
             ->setLinkText(_('Personen hinzufügen'))
             ->setTitle(_('Personen zur Rolle hinzufügen'))
             ->setExecuteURL($url)
-            ->setSearchObject(new SQLSearch($query, _('Nutzer suchen'), 'user_id'));
+            ->setSearchObject(new SQLSearch($query, _('Person suchen'), 'user_id'));
     }
 
     public function assign_role_institutes_action($role_id, $user_id)

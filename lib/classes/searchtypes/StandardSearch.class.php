@@ -70,7 +70,7 @@ class StandardSearch extends SQLSearch
         switch ($this->search) {
             case "username":
             case "user_id":
-                return _("Nutzer suchen");
+                return _("Person suchen");
             case "Seminar_id":
             case "AnySeminar_id":
                 return _("Veranstaltung suchen");

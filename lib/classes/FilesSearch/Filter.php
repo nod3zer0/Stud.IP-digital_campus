@@ -25,7 +25,7 @@ class Filter
             'course' => _('Veranstaltungen'),
             'institute' => _('Einrichtungen'),
             'message' => _('Nachrichten'),
-            'user' => _('Nutzer'),
+            'user' => _('Person'),
         ];
     }
 
