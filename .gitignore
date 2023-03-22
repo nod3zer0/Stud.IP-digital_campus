@@ -31,10 +31,6 @@ public/pictures/banner/*.jpg
 public/pictures/banner/*.png
 public/pictures/course/[0-9a-f]*.png
 public/pictures/institute/[0-9a-f]*.png
-public/pictures/smile/*.gif
-public/pictures/smile/*.jpeg
-public/pictures/smile/*.jpg
-public/pictures/smile/*.png
 public/pictures/user/[0-9a-f]*.png
 public/plugins_packages/*
 

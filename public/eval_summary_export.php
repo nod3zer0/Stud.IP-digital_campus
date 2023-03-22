@@ -176,7 +176,7 @@ function freetype_answers ($parent_id, $anz_nutzer) {
     while ($answer = $statement->fetchColumn()) {
         $counter++;
         fputs($fo_file,"                <fo:table-row>\n");
-        fputs($fo_file,"                  <fo:table-cell ><fo:block linefeed-treatment=\"preserve\" font-size=\"8pt\">".$counter.". ".preg_replace($pattern,$replace,smile(xml_escape($answer)))."</fo:block></fo:table-cell>\n");
+        fputs($fo_file,"                  <fo:table-cell ><fo:block linefeed-treatment=\"preserve\" font-size=\"8pt\">".$counter.". ".preg_replace($pattern,$replace,xml_escape($answer))."</fo:block></fo:table-cell>\n");
         fputs($fo_file,"                </fo:table-row>\n");
     }
     fputs($fo_file,"                <fo:table-row>\n");

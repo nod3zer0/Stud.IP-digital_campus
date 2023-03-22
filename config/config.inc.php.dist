@@ -44,7 +44,6 @@ global
   $NAME_FORMAT_DESC,
   $PERS_TERMIN_KAT,
   $SCM_PRESET,
-  $SMILE_SHORT,
   $SYMBOL_SHORT,
   $TERMIN_TYP,
   $TITLE_FRONT_TEMPLATE,
@@ -251,16 +250,6 @@ $SCM_PRESET[2] = array("name"=>_("Literatur"));
 $SCM_PRESET[3] = array("name"=>_("Links"));
 $SCM_PRESET[4] = array("name"=>_("Verschiedenes"));
 //you can add more presets here
-
-//Shortcuts for smileys
-$SMILE_SHORT = array( //diese Kuerzel fuegen das angegebene Smiley ein (Dateiname + ".gif")
-    ":)"=>"smile" ,
-    ":-)"=>"asmile" ,
-    ":#:"=>"zwinker" ,
-    ":("=>"frown" ,
-    ":o"=>"redface" ,
-    ":D"=>"biggrin",
-    ";-)"=>"wink");
 
 //Shortcuts for symbols
 $SYMBOL_SHORT = array(

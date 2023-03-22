@@ -63,10 +63,6 @@ const Forum = {
         STUDIP.Forum.attachEventHandlers();
     },
 
-    insertSmiley: function(textarea_id, element) {
-        jQuery('textarea[data-textarea=' + textarea_id + ']').insertAtCaret(jQuery(element).data('smiley'));
-    },
-
     approveDelete: function () {
         if (STUDIP.Forum.current_area_id) {
             // hide the area in the dom

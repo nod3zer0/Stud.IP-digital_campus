@@ -55,7 +55,6 @@
  * @property string smsforward_rec computed column read/write
  * @property string guestbook computed column read/write
  * @property string email_forward computed column read/write
- * @property string smiley_favorite computed column read/write
  * @property string motto computed column read/write
  * @property string lock_rule computed column read/write
  * @property SimpleORMapCollection course_memberships has_many CourseMember
@@ -1426,7 +1425,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 $storage->addTabularData(_('Kerndaten'), 'auth_user_md5', $field_data);
             }
 
-            $limit = 'user_id hobby lebenslauf publi schwerp home privatnr privatcell privadr score geschlecht mkdate chdate title_front title_rear preferred_language smsforward_copy smsforward_rec email_forward smiley_favorite motto lock_rule';
+            $limit = 'user_id hobby lebenslauf publi schwerp home privatnr privatcell privadr score geschlecht mkdate chdate title_front title_rear preferred_language smsforward_copy smsforward_rec email_forward motto lock_rule';
             $field_data = [];
             foreach ($sorm as $row) {
                 $field_data[] = $row->toRawArray($limit);

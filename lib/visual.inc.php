@@ -252,7 +252,6 @@ function kill_format ($text) {
                     //"'\[.+?\](((http\://|https\://|ftp\://)?([^/\s]+)(.[^/\s]+){2,})|([-a-z0-9_]+(\.[_a-z0-9-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)+)))'i",
                     "'\[(.+?)\](((http\://|https\://|ftp\://)?([^/\s]+)(\.[^/\s]+){2,}(/[^\s]*)?)|([-a-z0-9_]+(\.[_a-z0-9-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)+)))'i",
             //      "'\[quote=.+?quote\]'is",    // quoting
-                    "'(\s):[^\s]+?:(\s)'s"              // smileys
 
                     ];
     $replace = [
@@ -358,25 +357,26 @@ function idna_link($link, $mail = false) {
  * @access public
  * @param  string $text The text to convert
  * @return string Converted text
+ * @deprecated and useless since Stud.IP 5.4
  */
 function smile($text = '') {
-    $markup = new SmileyFormat();
-    return $markup->format($text);
+    trigger_error('Smileys are no longer supported.', E_USER_DEPRECATED);
+    return $text;
 }
 
 
 /**
-* create symbols from the shorts
-*
-* This functions converts the short, locatet in the config.inc
-* into the assigned pictures. It uses a different directory
-* as the smile-function, becauso symbols should not be shown in
-* the smiley and so, no link is given onto the picture. A tooltip which
-* shows the symbol code is given, too.
-*
-* @access   public
-* @param        string  the text to convert
-* @return       string  convertet text
+ * create symbols from the shorts
+ *
+ * This functions converts the short, locatet in the config.inc
+ * into the assigned pictures. A tooltip which shows the symbol
+ * code is given, too.
+ *
+ * @access   public
+ *
+ * @param        string  the text to convert
+ *
+ * @return       string  convertet text
 */
 function symbol ($text = '')
 {

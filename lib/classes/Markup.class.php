@@ -184,7 +184,7 @@ class Markup
      */
     private static function markupText($markup, $text)
     {
-        return symbol(smile($markup->format($text), false));
+        return symbol($markup->format($text));
     }
 
     /**

@@ -13,7 +13,6 @@ require_once 'lib/models/SimpleORMap.class.php';
 require_once 'lib/models/OpenGraphURL.class.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/classes/Config.class.php';
-require_once 'lib/classes/SmileyFormat.php';
 
 class VisualFunctionsTest extends \Codeception\Test\Unit
 {
@@ -26,13 +25,7 @@ class VisualFunctionsTest extends \Codeception\Test\Unit
 
         Config::set(new Config($config));
 
-        $GLOBALS['SMILEY_NO_DB'] = true;
         $GLOBALS['SYMBOL_SHORT'] = [];
-    }
-
-    public function tearDown(): void
-    {
-        $GLOBALS['SMILEY_NO_DB'] = false;
     }
 
     public function testFormatReady()

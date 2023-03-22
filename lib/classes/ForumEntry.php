@@ -165,26 +165,14 @@ class ForumEntry  implements PrivacyObject
 
 
     /**
-     * calls Stud.IP's kill_format and additionally removes any found smiley-tag
+     * calls Stud.IP's kill_format
      *
      * @param string $text the text to parse
-     * @return string the text without format-tags and without smileys
+     * @return string the text without format-tags
      */
     public static function killFormat($text)
     {
-        $text = kill_format($text);
-
-        // find stuff which is enclosed between to colons
-        preg_match('/' . SmileyFormat::REGEXP . '/U', $text, $matches);
-
-        // remove the match if it is a smiley
-        foreach ($matches as $match) {
-            if (Smiley::getByName($match) || Smiley::getByShort($match)) {
-                $text = str_replace($match, '', $text);
-            }
-        }
-
-        return $text;
+        return kill_format($text);
     }
 
     /**

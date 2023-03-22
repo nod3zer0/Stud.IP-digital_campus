@@ -34,7 +34,6 @@
  * @property string smsforward_rec database column
  * @property string guestbook database column
  * @property string email_forward database column
- * @property string smiley_favorite database column
  * @property string motto database column
  * @property string lock_rule database column
  */

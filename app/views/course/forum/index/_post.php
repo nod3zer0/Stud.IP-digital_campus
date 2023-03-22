@@ -161,9 +161,6 @@
     <span data-edit-topic="<?= $post['topic_id'] ?>" <?= $edit_posting == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <dl class="postprofile">
             <dt>
-                <? if (!Config::get()->WYSIWYG): ?>
-                    <?= $this->render_partial('course/forum/index/_smiley_favorites', ['textarea_id' => $post['topic_id']]) ?>
-                <? endif; ?>
             </dt>
         </dl>
     </span>

@@ -69,7 +69,6 @@ import Scroll from './lib/scroll.js';
 import Search from './lib/search.js';
 import Sidebar from './lib/sidebar.js';
 import SkipLinks from './lib/skip_links.js';
-import SmileyPicker from './lib/smiley_picker.js';
 import startpage from './lib/startpage.js';
 import Statusgroups from './lib/statusgroups.js';
 import study_area_selection from './lib/study_area_selection.js';
@@ -155,7 +154,6 @@ window.STUDIP = _.assign(window.STUDIP || {}, {
     Search,
     Sidebar,
     SkipLinks,
-    SmileyPicker,
     startpage,
     Statusgroups,
     study_area_selection,

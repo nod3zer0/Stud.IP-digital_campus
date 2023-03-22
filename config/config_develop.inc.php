@@ -47,7 +47,6 @@ global
   $PERS_TERMIN_KAT,
   $SCM_PRESET,
   $SEM_STATUS_GROUPS,
-  $SMILE_SHORT,
   $SYMBOL_SHORT,
   $TERMIN_TYP,
   $TIME_PRESETS,
@@ -308,16 +307,6 @@ $LIT_LIST_FORMAT_TEMPLATE = "**{dc_creator}** |({dc_contributor})||\n"
                         . "%%{published}%%||\n"
                         . "{note}||\n"
                         . "[{lit_plugin_display_name}]{external_link}|\n";
-
-//Shortcuts for smileys
-$SMILE_SHORT = [ //diese Kuerzel fuegen das angegebene Smiley ein (Dateiname + ".gif")
-    ":)"=>"smile" ,
-    ":-)"=>"asmile" ,
-    ":#:"=>"zwinker" ,
-    ":("=>"frown" ,
-    ":o"=>"redface" ,
-    ":D"=>"biggrin",
-    ";-)"=>"wink"];
 
 //Shortcuts for symbols
 $SYMBOL_SHORT = [

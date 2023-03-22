@@ -178,10 +178,6 @@ class AdminNavigation extends Navigation
                 new Navigation(_('Anlegeassistent'), 'dispatch.php/admin/coursewizardsteps'));
             $navigation->addSubNavigation('studygroup', new Navigation(_('Studiengruppen'), 'dispatch.php/course/studygroup/globalmodules'));
 
-            if (Config::get()->SMILEYADMIN_ENABLE) {
-                $navigation->addSubNavigation('smileys', new Navigation(_('Smileys'), 'dispatch.php/admin/smileys'));
-            }
-
             if (Config::get()->TOURS_ENABLE) {
                 $navigation->addSubNavigation('tour', new Navigation(_('Touren'), 'dispatch.php/tour/admin_overview'));
             }
