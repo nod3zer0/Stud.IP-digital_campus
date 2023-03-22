@@ -107,20 +107,24 @@
                         <? switch ($hday['col']) {
                             case 1:
                                 ?><a class="<?= $style ?>day" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
-                                   <?= $aday ?>
+                                <?= $aday ?>
                                 </a><?
                                 break;
                             case 2:
                             case 3;
                                 ?><a class="<?= $style ?>hday" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
-                                    <?= $aday ?>
+                                <?= $aday ?>
                                 </a><?
                                 break;
                             default:
                                 ?><a class="<?= $style ?>day" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= $js_inc ?>>
-                                    <?= $aday ?>
+                                <?= $aday ?>
                                 </a>
-                        <?}?>
+                            <?}?>
+                    <? else : ?>
+                        <a class="<?= $style ?>day" href="<?= $controller->url_for($href, ['atime' => $i]) ?>" <?= $js_inc ?>>
+                            <?= $aday ?>
+                        </a>
                     <? endif ?>
                     </td>
                 <? endif; ?>

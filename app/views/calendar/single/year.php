@@ -95,15 +95,15 @@
                                                 <? else : ?>
                                                     <a style="font-weight:bold;" class="hday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
                                                 <? endif; ?>
+                                            <? endif ?>
+                                        <? else : ?>
+                                            <? if (date('w', $aday) == '0') : ?>
+                                                <a style="font-weight:bold;" class="sday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
+                                                <? $count++; ?>
                                             <? else : ?>
-                                                <? if (date('w', $aday) == '0') : ?>
-                                                    <a style="font-weight:bold;" class="sday" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
-                                                    <? $count++; ?>
-                                                <? else : ?>
-                                                    <a style="font-weight:bold;" class="day" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
-                                                <? endif; ?>
+                                                <a style="font-weight:bold;" class="day" href="<?= $controller->url_for('calendar/single/day', ['atime' => $aday]) ?>"><?= $i ?></a> <?= $weekday; ?>
                                             <? endif; ?>
-                                        <? endif ?>
+                                        <? endif; ?>
                                     </span>
 
                                     <? if (isset($count_list[$iday]) && count($count_list[$iday])) : ?>
