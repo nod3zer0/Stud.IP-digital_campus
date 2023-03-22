@@ -4,7 +4,7 @@
             <a v-if="hideDetails" class="details" href="" :title="$gettext('Detailanzeige umschalten')" @click.prevent.stop="closedDetails = !closedDetails">
                 <span>{{ $gettext('Detailanzeige umschalten') }}</span>
             </a>
-            <a v-if="!hideClose" class="close" href="" :title="$gettext('Nachrichtenbox schließen')" @click.prevent="closed = true">
+            <a v-if="!hideClose" class="close" href="" :title="$gettext('Nachrichtenbox schließen')" @click.prevent="close()">
                 <span>{{ $gettext('Nachrichtenbox schließen') }}</span>
             </a>
         </div>
@@ -56,6 +56,13 @@ export default {
         },
         showDetails() {
             return this.hasDetails && !this.closedDetails;
+        }
+    },
+    methods: {
+        close() {
+            this.closed = true;
+
+            this.$emit('close');
         }
     },
     data() {
