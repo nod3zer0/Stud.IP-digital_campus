@@ -8,7 +8,6 @@ Helpbar::get()->addPlainText(_('Info'),_("Anmeldesets legen fest, wer sich zu de
 Helpbar::get()->addPlainText(_('Info'),_("Hier sehen Sie alle Anmeldesets, auf die Sie Zugriff haben."));
 
 ?>
-<?= $this->render_partial('dialog/confirm_dialog') ?>
 <?= $this->render_partial('admission/courseset/_institute_choose.php') ?>
 <?php
 if ($coursesets) {

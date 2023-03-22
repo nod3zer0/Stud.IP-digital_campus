@@ -30,7 +30,6 @@ if (isset($flash['error'])) {
 <div class="hidden-alert" style="display:none">
     <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert."));?>
 </div>
-<?= $this->render_partial('dialog/confirm_dialog') ?>
 <h1><?= $courseset ? _('Anmeldeset bearbeiten') : _('Anmeldeset anlegen') ?></h1>
 <form class="default" id="courseset-form" action="<?= $controller->url_for(!$instant_course_set_view ?
     'admission/courseset/save/' . ($courseset ? $courseset->getId() : '') :

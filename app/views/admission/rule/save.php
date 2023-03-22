@@ -14,9 +14,8 @@
         $controller->url_for('admission/rule/configure', get_class($rule), $rule->getId()) ?>', '<?=
         $rule->getId() ?>')">
             <?= Icon::create('edit', 'clickable')->asImg(); ?></a>
-        <a href="#" onclick="return STUDIP.Dialogs.showConfirmDialog('<?=
-        _('Soll die Anmelderegel wirklich gelöscht werden?') ?>',
-            'javascript:STUDIP.Admission.removeRule(\'rule_<?= $rule->getId() ?>\', \'rules\')')">
+        <a href="javascript:STUDIP.Admission.removeRule('rule_<?= $rule->getId() ?>', 'rules')"
+           data-confirm="<?= _('Soll die Anmelderegel wirklich gelöscht werden?') ?>">
             <?= Icon::create('trash', 'clickable')->asImg(); ?></a>
     </div>
 </div>

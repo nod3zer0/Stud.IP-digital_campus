@@ -20,7 +20,6 @@ import createURLHelper from './lib/url_helper.js';
 import CSS from './lib/css.js';
 import Dates from './lib/dates.js';
 import Dialog from './lib/dialog.js';
-import Dialogs from './lib/dialogs.js';
 import DragAndDropUpload from './lib/drag_and_drop_upload.js';
 import enrollment from './lib/enrollment.js';
 import eventBus from './lib/event-bus.js';
@@ -107,7 +106,6 @@ window.STUDIP = _.assign(window.STUDIP || {}, {
     CSS,
     Dates,
     Dialog,
-    Dialogs,
     DragAndDropUpload,
     enrollment,
     eventBus,

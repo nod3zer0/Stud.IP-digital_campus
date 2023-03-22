@@ -3,7 +3,6 @@
  * ------------------------------------------------------------------------ */
 import { $gettext } from './gettext.js';
 import Dialog from './dialog.js';
-import Dialogs from './dialogs.js';
 
 const Admission = {
     getCourses: function(targetUrl) {
@@ -100,7 +99,6 @@ const Admission = {
             var norules = $gettext('Sie haben noch keine Anmelderegeln festgelegt.');
             $('#' + containerId).prepend('<span id="norules">' + '<i>' + norules + '</i></span>');
         }
-        Dialogs.closeConfirmDialog();
         Admission.toggleNotSavedAlert();
     },
 

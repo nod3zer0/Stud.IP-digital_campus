@@ -3,7 +3,6 @@
  * ------------------------------------------------------------------------ */
 import { $gettext } from './gettext.js';
 import Dialog from './dialog.js';
-import Dialogs from './dialogs.js';
 
 const UserFilter = {
     new_group_nr: 1,
@@ -157,7 +156,6 @@ const UserFilter = {
 
     removeConditionField: function(element) {
         element.remove();
-        Dialogs.closeConfirmDialog();
         return false;
     },
 

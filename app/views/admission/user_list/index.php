@@ -11,7 +11,6 @@ Helpbar::get()->addPlainText(_('Info'),"Personenlisten erfassen eine Menge von P
 Helpbar::get()->addPlainText(_('Info'), "Hier sehen Sie alle Personenlisten, auf die Sie Zugriff ".
                                         "haben.");
 ?>
-<?= $this->render_partial('dialog/confirm_dialog') ?>
 
 <?php
 if ($userlists) {
@@ -27,12 +26,8 @@ if ($userlists) {
            href="<?= URLHelper::getURL('dispatch.php/admission/userlist/configure/'.$list->getId()); ?>">
             <?= Icon::create('edit', 'clickable', ['title' => _('Nutzerliste bearbeiten')])->asImg(20, ["alt" => _('Nutzerliste bearbeiten')]); ?>
         </a>
-        <a class="userlist-action" href="<?= $controller->url_for('admission/userlist/delete',
-            $list->getId()) ?>"
-            onclick="return STUDIP.Dialogs.showConfirmDialog('<?=
-                sprintf(_('Soll die Nutzerliste %s wirklich gelöscht werden?'), htmlReady($list->getName())) ?>', '<?=
-                URLHelper::getURL('dispatch.php/admission/userlist/delete/'.
-                $list->getId(), ['really' => 1]) ?>')">
+        <a class="userlist-action" href="<?= $controller->link_for('admission/userlist/delete', $list->getId(), ['really' => true]) ?>"
+           data-confirm="<?= htmlReady(sprintf(_('Soll die Nutzerliste %s wirklich gelöscht werden?'), $list->getName())) ?>">
             <?= Icon::create('trash', 'clickable', ['title' => _('Personenliste löschen')])->asImg(20) ?>
         </a>
     </div>

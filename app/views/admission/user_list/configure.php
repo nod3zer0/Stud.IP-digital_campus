@@ -18,7 +18,6 @@ Helpbar::get()->addPlainText(_('Info'), "Stellen Sie hier ein, wie die Chancen b
                                         "größer als 1 werden die betreffenden Personen ".
                                         "bevorzugt.");
 ?>
-<?= $this->render_partial('dialog/confirm_dialog') ?>
 <?= $error ?? '' ?>
 <form class="default" action="<?= $controller->url_for('admission/userlist/save', $userlist_id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
