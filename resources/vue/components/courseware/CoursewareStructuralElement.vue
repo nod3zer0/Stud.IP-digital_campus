@@ -130,11 +130,12 @@
                             :structuralElement="structuralElement"
                             :canEdit="canEdit"
                         />
-                        <courseware-companion-box
-                            v-if="editView"
-                            :msgCompanion="$gettextInterpolate($gettext('Dieser Inhalt ist aus den persönlichen Lernmaterialien von %{ ownerName } verlinkt und kann nur dort bearbeitet werden.'), { ownerName: ownerName })"
-                            mood="pointing"
-                        />
+                        <div v-if="editView" class="cw-companion-box-wrapper">
+                            <courseware-companion-box
+                                :msgCompanion="$gettextInterpolate($gettext('Dieser Inhalt ist aus den persönlichen Lernmaterialien von %{ ownerName } verlinkt und kann nur dort bearbeitet werden.'), { ownerName: ownerName })"
+                                mood="pointing"
+                            />
+                        </div>
                         <component
                             v-for="container in linkedContainers"
                             :key="container.id"
@@ -146,7 +147,7 @@
                             class="cw-container-item"
                         />
                     </div>
-                    <div v-if="canVisit && canEdit && editView" class="cw-container-wrapper cw-container-wrapper-edit">
+                    <div v-if="canVisit && canEdit && editView && !isLink" class="cw-container-wrapper cw-container-wrapper-edit">
                         <template v-if="!processing">
                             <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
                             <span id="operation" class="assistive-text">
@@ -827,6 +828,7 @@ export default {
             blockerId: 'currentElementBlockerId',
             blockedByThisUser: 'currentElementBlockedByThisUser',
             blockedByAnotherUser: 'currentElementBlockedByAnotherUser',
+            isLink: 'currentElementisLink',
 
             templates: 'courseware-templates/all',
         }),
@@ -1177,14 +1179,6 @@ export default {
             return (
                 (!this.isRoot && this.canEdit) || !this.canEdit || (!this.noContainers && this.isRoot && this.canEdit)
             );
-        },
-
-        isLink() {
-            if (this.structuralElement) {
-                return this.structuralElement.attributes['is-link'] === 1;
-            }
-
-            return false;
         },
 
         linkedElement() {

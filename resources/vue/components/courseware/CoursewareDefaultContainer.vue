@@ -108,10 +108,11 @@ export default {
             blockAdder: 'blockAdder',
             userId: 'userId',
             userById: 'users/byId',
-            viewMode: 'viewMode'
+            viewMode: 'viewMode',
+            currentElementisLink: 'currentElementisLink'
         }),
         showEditMode() {
-            return this.viewMode === 'edit';
+            return this.viewMode === 'edit' && !this.currentElementisLink;
         },
         colSpan() {
             return this.container.attributes.payload.colspan ? this.container.attributes.payload.colspan : 'full';

@@ -98,6 +98,9 @@ const getters = {
     currentElementBlockedByAnotherUser(state, getters) {
         return getters.currentElementBlocked && getters.userId !== getters.currentElementBlockerId;
     },
+    currentElementisLink(state, getters, rootState, rootGetters) {
+        return getters.currentStructuralElement?.attributes?.['is-link'] === 1;
+    },
     oerEnabled(state) {
         return state.oerEnabled;
     },
