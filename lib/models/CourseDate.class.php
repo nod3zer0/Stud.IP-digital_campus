@@ -121,16 +121,18 @@ class CourseDate extends SimpleORMap implements PrivacyObject
      */
     public static function getConsecutiveNumber($date, $semester = null)
     {
-        if (!isset(self::$numbered_dates[@$semester->id ?: 'all'])) {
+        $semester_id = $semester ? $semester->id : 'all';
+
+        if (!isset(self::$numbered_dates[$semester_id])) {
             $db = DBManager::get();
             $numbered = array_flip($db->fetchFirst("SELECT termin_id FROM termine WHERE range_id = ?" .
                 ($semester ? " AND date BETWEEN ? AND ?" : "") .
                 " ORDER BY date",
                 $semester ? [$date->range_id, $semester->beginn, $semester->ende] : [$date->range_id]));
-            self::$numbered_dates[@$semester->id ?: 'all'] = $numbered;
+            self::$numbered_dates[$semester_id] = $numbered;
         }
-        return isset(self::$numbered_dates[@$semester->id ?: 'all'][$date->termin_id])
-             ? self::$numbered_dates[@$semester->id ?: 'all'][$date->termin_id] + 1
+        return isset(self::$numbered_dates[$semester_id][$date->termin_id])
+             ? self::$numbered_dates[$semester_id][$date->termin_id] + 1
              : null;
     }
 
