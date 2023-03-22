@@ -72,9 +72,9 @@ global $SOFTWARE_VERSION, $ex_type, $ex_sem, $range_name, $range_id;
 * @param        string  value for optional attribute "key"
 * @return       string  xml open tag
 */
-function xml_open_tag($tag_name, $tag_key = null)
+function xml_open_tag($tag_name, $key = null)
 {
-    $xml_tag_string = rtrim(' ' . xml_attributes_to_string(compact('tag_key')));
+    $xml_tag_string = rtrim(' ' . xml_attributes_to_string(compact('key')));
     $xml_tag_string = "<{$tag_name}{$xml_tag_string}>\n";
     return $xml_tag_string;
 }
