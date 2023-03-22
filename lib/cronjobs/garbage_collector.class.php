@@ -176,5 +176,11 @@ class GarbageCollectorJob extends CronJob
         if ($removed > 0 && $parameters['verbose']) {
             printf(_('Gelöschte Terminblöcke: %u') . "\n", $removed);
         }
+
+        // Remove expired tfa tokens
+        TFAToken::deleteBySQL(
+            'mkdate < UNIX_TIMESTAMP() - ?',
+            [TFASecret::getGreatestValidityDuration()]
+        );
     }
 }

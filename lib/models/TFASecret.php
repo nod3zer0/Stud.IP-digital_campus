@@ -58,6 +58,24 @@ class TFASecret extends SimpleORMap
         $t = self::TYPES[$type];
         return $t['window'] * $t['period'];
     }
+
+    /**
+     * Returns the greatest validity duration for all defined types.
+     *
+     * @return int
+     */
+    public static function getGreatestValidityDuration(): int
+    {
+        $validity_duration = 0;
+        foreach (self::TYPES as $type) {
+            $duration = $type['window'] * $type['period'];
+            if ($duration > $validity_duration) {
+                $validity_duration = $duration;
+            }
+        }
+        return $validity_duration;
+    }
+
     /**
      * Overwrites the SORM setNew() method. This will create the secret string.
      *
