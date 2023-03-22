@@ -22,61 +22,19 @@ class PluginRegister extends AbstractPluginCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $pluginpath = $input->getArgument('pluginpath');
-        $pluginManager = \PluginManager::getInstance();
-        $manifest = $pluginManager->getPluginManifest($pluginpath);
-        if (!$manifest) {
-            $output->writeln('<error>The plugin\'s manifest is missing.</error>');
+
+        try {
+            // This will try to set the language to english so we have a
+            // consistent usage of english in cli commands.
+            setTempLanguage(false, 'en_GB');
+
+            $plugin_administration = new \PluginAdministration();
+            $plugin_administration->registerPlugin($pluginpath);
+        } catch (\PluginInstallationException $e) {
+            $output->writeln("<error>{$e->getMessage()}</error>");
             return Command::FAILURE;
-        }
-
-        // get plugin meta data
-        $pluginclass = $manifest['pluginclassname'];
-        $origin = $manifest['origin'];
-        $minVersion = $manifest['studipMinVersion'];
-        $maxVersion = $manifest['studipMaxVersion'];
-
-        // check for compatible version
-        if (
-            (isset($minVersion) && \StudipVersion::olderThan($minVersion)) ||
-            (isset($maxVersion) && \StudipVersion::newerThan($maxVersion))
-        ) {
-            $output->writeln('<error>The plugin is not compatible with this version of Stud.IP.</error>');
-            return Command::FAILURE;
-        }
-
-        // determine the plugin path
-        $pluginregistered = $pluginManager->getPluginInfo($pluginclass);
-
-        // create database schema if needed
-        if (isset($manifest['dbscheme']) && !$pluginregistered) {
-            $schemafile = $pluginpath . '/' . $manifest['dbscheme'];
-            $contents = file_get_contents($schemafile);
-            $statements = preg_split("/;[[:space:]]*\n/", $contents, -1, PREG_SPLIT_NO_EMPTY);
-            $db = \DBManager::get();
-            foreach ($statements as $statement) {
-                $db->exec($statement);
-            }
-        }
-
-        // check for migrations
-        if (is_dir($pluginpath . '/migrations')) {
-            $schemaVersion = new \DBSchemaVersion($manifest['pluginname']);
-            $migrator = new \Migrator($pluginpath . '/migrations', $schemaVersion);
-            $migrator->migrateTo(null);
-        }
-
-        $pluginpath = $origin . '/' . $pluginclass;
-
-        // now register the plugin in the database
-        $pluginid = $pluginManager->registerPlugin($manifest['pluginname'], $pluginclass, $pluginpath);
-
-        // register additional plugin classes in this package
-        $additionalclasses = $manifest['additionalclasses'];
-
-        if (is_array($additionalclasses)) {
-            foreach ($additionalclasses as $class) {
-                $pluginManager->registerPlugin($class, $class, $pluginpath, $pluginid);
-            }
+        } finally {
+            restoreLanguage();
         }
 
         $output->writeln('The plugin was successfully registered.');
