@@ -244,12 +244,6 @@ ClassicEditor.defaultConfig = {
     },
     link: {
         defaultProtocol: 'https://',
-        decorators: {
-            addTargetToExternalLinks: {
-                mode: 'automatic',
-                callback: url => /^(https?:)?\/\//.test( url )
-            }
-        }
     },
     language: 'de',
     htmlSupport: {
