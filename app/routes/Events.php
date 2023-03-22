@@ -165,11 +165,7 @@ class Events extends \RESTAPI\RouteMap
                     }
                 }
             } else {
-                if (Config::get()->RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT) {
-                    $room = '('._("kein gebuchter Raum").')';
-                } else {
-                    $room = _("keine Raumangabe");
-                }
+                $room = _("keine Raumangabe");
 
                 if ($val->isExTermin()) {
                     if ($name = $val->isHoliday()) {

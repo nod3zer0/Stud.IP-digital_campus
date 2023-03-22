@@ -1106,38 +1106,6 @@ class RoomManagementMigration extends Migration
         );
     }
 
-
-    public function removeObsoleteConfigEntries(PDO $db)
-    {
-        $entries = [
-            'RESOURCES_ALLOW_CREATE_ROOMS',
-            'RESOURCES_ALLOW_CREATE_TOP_LEVEL',
-            'RESOURCES_ALLOW_DELETE_REQUESTS',
-            'RESOURCES_ALLOW_REQUESTABLE_ROOM_REQUESTS',
-            'RESOURCES_ALLOW_ROOM_REQUESTS_ALL_ROOMS',
-            'RESOURCES_ENABLE_GROUPING',
-            'RESOURCES_ENABLE_ORGA_CLASSIFY',
-            'RESOURCES_ENABLE_SEM_SCHEDULE',
-            'RESOURCES_ENABLE_VIRTUAL_ROOM_GROUPS',
-            'RESOURCES_HIDE_PAST_SINGLE_DATES',
-            'RESOURCES_INHERITANCE_PERMS',
-            'RESOURCES_INHERITANCE_PERMS_ROOMS',
-            'RESOURCES_LOCKING_ACTIVE',
-            'RESOURCES_ROOM_REQUEST_DEFAULT_ACTION',
-            'RESOURCES_SCHEDULE_EXPLAIN_USER_NAME',
-            'RESOURCES_SEARCH_ONLY_REQUESTABLE_PROPERTY',
-            'RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT',
-            'RESOURCES_ENABLE_ORGA_ADMIN_NOTICE'
-        ];
-
-        $stmt = $db->prepare(
-            'DELETE FROM config WHERE field IN ( :entries );'
-        );
-
-        $stmt->execute(['entries' => $entries]);
-    }
-
-
     public function createPropertyGroups(PDO $db)
     {
         $get_group_id_stmt = $db->prepare(
