@@ -5,7 +5,8 @@
  * @var string $roleid
  * @var Role[] $roles
  * @var QuickSearch $mps
- * @var array $users
+ * @var User[] $users
+ * @var array $user_institutes
  * @var array $plugins
  * @var int $implicit_count
  */
@@ -90,29 +91,30 @@ use Studip\Button;
         <? foreach (array_values($users) as $index => $user): ?>
             <tr>
                 <td>
-                    <input type="checkbox" name="ids[]" value="<?= $user['user_id'] ?>">
+                    <input type="checkbox" name="ids[]" value="<?= htmlReady($user->id) ?>">
                 </td>
                 <td style="text-align: right;">
                     <?= $index + 1 ?>.
                 </td>
                 <td>
-                    <a href="<?= $controller->url_for('admin/role/assign_role', $user['user_id']) ?>">
-                        <?= htmlReady(sprintf('%s %s (%s)', $user['Vorname'], $user['Nachname'], $user['username'])) ?>
+                    <a href="<?= $controller->link_for('admin/role/assign_role', $user->id) ?>">
+                        <?= htmlReady(sprintf('%s %s (%s)', $user->vorname, $user->nachname, $user->username)) ?>
                     </a>
                 </td>
-                <td><?= $user['perms'] ?></td>
+                <td><?= htmlReady($user->perms) ?></td>
                 <td>
-                <? $institutes = join(', ', $user['institutes']); ?>
+                <? $institutes = join(', ', $user_institutes[$user->id]); ?>
                     <?= htmlReady(mb_substr($institutes, 0, 60)) ?>
                     <? if (mb_strlen($institutes) > 60): ?>
-                    ...<?= tooltipIcon(join("\n", $user['institutes']))?>
+                    ...<?= tooltipIcon(join("\n", $user_institutes[$user->id]))?>
                     <? endif ?>
                 </td>
                 <td class="actions">
-                    <?= Icon::create('trash', 'clickable', ['title' => _('Rolle entziehen')])
-                            ->asInput([
-                                "data-confirm" => _('Soll dieser Person wirklich die Rolle entzogen werden?'),
-                                "formaction" => $controller->url_for('admin/role/remove_user/'.$roleid.'/'.$user['user_id'])]) ?>
+                    <?= Icon::create('trash')->asInput([
+                        'title'        => _('Rolle entziehen'),
+                        'data-confirm' => _('Soll dieser Person wirklich die Rolle entzogen werden?'),
+                        'formaction'   => $controller->url_for('admin/role/remove_user', $roleid, $user->id),
+                    ]) ?>
                 </td>
             </tr>
         <? endforeach; ?>

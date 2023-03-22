@@ -526,6 +526,62 @@ class RolePersistence
     }
 
     /**
+     * Returns all users that have a specific role - given by it's name.
+     *
+     * @param string $role_name   Name of the role
+     * @param bool   $only_explicit Only select explicit assignments from table
+     *                              `roles_user` if true, otherwise also select
+     *                              by perm defined in table `roles_studipperms`
+     *
+     * @return User[]
+     */
+    public static function getUsersWithRoleByName(string $role_name, bool $only_explicit = true): array
+    {
+        $role_id = self::getRoleIdByName($role_name);
+        if ($role_id === false) {
+            throw new Exception("Unknown role name {$role_name}");
+        }
+
+        return self::getUsersWithRoleById($role_id, $only_explicit);
+    }
+
+    /**
+     * Returns all users that have a specific role - given by it's id.
+     *
+     * @param int  $role_id       Id of the role
+     * @param bool $only_explicit Only select explicit assignments from table
+     *                            `roles_user` if true, otherwise also select
+     *                            by perm defined in table `roles_studipperms`
+     *
+     * @return User[]
+     */
+    public static function getUsersWithRoleById(int $role_id, bool $only_explicit = true): array
+    {
+        $query = "SELECT `userid` AS `user_id`
+                  FROM `roles_user`
+                  WHERE `roleid` = :role_id";
+
+        if (!$only_explicit) {
+            $query = "SELECT DISTINCT `user_id`
+                      FROM (
+                          {$query}
+
+                          UNION ALL
+
+                          SELECT `user_id`
+                          FROM `roles_studipperms` AS `rsp`
+                          JOIN `auth_user_md5` AS `aum`
+                            ON (`rsp`.`permname` = `aum`.`perms`)
+                          WHERE `rsp`.`roleid` = :role_id
+                      ) AS tmp";
+        }
+
+        $user_ids = DBManager::get()->fetchFirst($query, [':role_id' => $role_id]);
+
+        return User::findMany($user_ids);
+    }
+
+    /**
      * Returns statistic values for each role:
      *
      * - number of explicitely assigned users

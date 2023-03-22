@@ -288,18 +288,17 @@ class Admin_RoleController extends AuthenticatedController
         $this->roleid = '';
 
         if ($roleid) {
-            $sql = "SELECT DISTINCT Vorname,Nachname,user_id,username,perms
-                    FROM auth_user_md5
-                    JOIN roles_user ON userid = user_id
-                    WHERE roleid = ?
-                    ORDER BY Nachname, Vorname";
-            $statement = DBManager::get()->prepare($sql);
-            $statement->execute([$roleid]);
+            $this->users = RolePersistence::getUsersWithRoleById($roleid);
 
-            $users = $statement->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($users as $key => $user) {
-                $institutes = new SimpleCollection(Institute::findMany(RolePersistence::getAssignedRoleInstitutes($user['user_id'], $roleid)));
-                $users[$key]['institutes'] = $institutes->orderBy('name')->pluck('name');
+            $this->user_institutes = [];
+            foreach ($this->users as $user) {
+                $this->user_institutes[$user->id] = Institute::findAndMapMany(
+                    function (Institute $institute) {
+                        return $institute->name;
+                    },
+                    RolePersistence::getAssignedRoleInstitutes($user['user_id'], $roleid),
+                    'ORDER BY name'
+                );
             }
 
             $plugins = PluginManager::getInstance()->getPluginInfos();
@@ -311,7 +310,6 @@ class Admin_RoleController extends AuthenticatedController
 
             $this->implicit_count = RolePersistence::countImplicitUsers($roleid);
 
-            $this->users   = $users;
             $this->plugins = $plugins;
             $this->role    = self::getRole($roleid);
             $this->roleid  = $roleid;
