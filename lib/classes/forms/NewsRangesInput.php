@@ -8,20 +8,7 @@ class NewsRangesInput extends Input
     public function render()
     {
         $context = $this->getContextObject();
-        $sql = "SELECT CONCAT(`Seminar_id`, '__seminar') AS `range_id`, `name` FROM `seminare` WHERE `name` LIKE :input ";
-        if ($GLOBALS['perm']->have_perm('admin')) {
-            $sql .= "UNION SELECT CONCAT(`Institut_id`, '__institute') AS `range_id`, `Name` AS `name` FROM Institute WHERE `name` LIKE :input ";
-            if (!$GLOBALS['perm']->have_perm('root')) {
-                $sql .= "AND ";
-            }
-        }
-        if ($GLOBALS['perm']->have_perm('root')) {
-            $sql .= "UNION SELECT * FROM (SELECT CAST('studip__home' AS BINARY) AS `range_id`, '"._('Stud.IP-Startseite')."' AS `name`) as tmp_global_table WHERE `name` LIKE :input ";
-            $sql .= "UNION SELECT CONCAT(`user_id`, '__person') AS `range_id`, CONCAT(`Vorname`, ' ', `Nachname`) AS `name` FROM `auth_user_md5` WHERE CONCAT(`Vorname`, ' ', `Nachname`) LIKE :input ";
-        } else {
-            $sql .= "UNION SELECT * FROM (SELECT CAST('".\User::findCurrent()->id."__person' AS BINARY) AS `range_id`, '".\addslashes(\User::findCurrent()->getFullName()." - "._('Profilseite'))."' AS `name`) as tmp_user_table WHERE `name` LIKE :input ";
-        }
-        $searchtype = new \SQLSearch($sql, _('Bereich suchen'));
+
         $items = [];
         $icons = [
             'global' => 'home',
@@ -70,7 +57,7 @@ class NewsRangesInput extends Input
         $template = $GLOBALS['template_factory']->open('forms/news_ranges_input');
         $template->name = $this->name;
         $template->items = $items;
-        $template->searchtype = $searchtype;
+        $template->searchtype = new \NewsRangesSearch();
         $template->selectable = $selectable;
         $template->category_order = ['home', 'institute', 'seminar', 'person'];
         return $template->render();
@@ -170,7 +157,7 @@ class NewsRangesInput extends Input
         $name_format = \Config::get()->IMPORANT_SEMNUMBER ? 'number-name-semester' : 'name-semester';
 
         $options = [];
-        foreach (\Course::findByUser(\User::findCurrent()->id) as $course) {
+        foreach (\Course::findByUser(\User::findCurrent()->id, ['tutor', 'dozent']) as $course) {
             if (!\StudipNews::haveRangePermission('edit', $course->id)) {
                 continue;
             }
