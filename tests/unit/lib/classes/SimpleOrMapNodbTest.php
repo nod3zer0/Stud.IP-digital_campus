@@ -25,6 +25,8 @@ class auth_user_md5 extends SimpleORMap
         $config['serialized_fields']['jsondata'] = 'JSONArrayObject';
         $config['notification_map']['after_store'] = 'auth_user_md5DidCreateOrUpdate';
 
+        $config['i18n_fields'] = ['i18n_field'];
+
         parent::configure($config);
     }
 
@@ -46,25 +48,39 @@ class auth_user_md5 extends SimpleORMap
 
 class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 {
-    function setUp(): void
+    protected static function setupFixture(): void
     {
         StudipTestHelper::set_up_tables(['auth_user_md5']);
     }
 
-    function tearDown(): void
+    protected static function teardownFixture(): void
     {
         StudipTestHelper::tear_down_tables();
     }
 
+    public function setUp(): void
+    {
+        self::setupFixture();
+    }
+
+    public function tearDown(): void
+    {
+        self::teardownFixture();
+    }
+
+    /**
+     * @covers SimpleORMap::__construct
+     */
     public function testConstruct(): auth_user_md5
     {
         $a = new auth_user_md5();
-        $this->assertInstanceOf('SimpleOrMap', $a);
+        $this->assertInstanceOf(SimpleORMap::class, $a);
         return $a;
     }
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::getTableMetadata
      */
     public function testMetaData($a)
     {
@@ -76,19 +92,22 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::getDefaultValue
      */
     public function testDefaults($a)
     {
         $this->assertEquals(null, $a->email);
         $this->assertEquals('unknown', $a->visible);
         $this->assertEquals('', $a->validation_key);
-        $this->assertInstanceOf('CSVArrayObject', $a->csvdata);
+        $this->assertInstanceOf(CSVArrayObject::class, $a->csvdata);
         $this->assertEquals('1,3', (string)$a->csvdata);
-        $this->assertInstanceOf('JSONArrayObject', $a->jsondata);
+        $this->assertInstanceOf(JSONArrayObject::class, $a->jsondata);
     }
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::getValue
+     * @covers SimpleORMap::setValue
      */
     public function testGetterAndSetter($a)
     {
@@ -102,14 +121,14 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
         $a->perms = 'ADMIN';
         $this->assertEquals('ok:admin', $a['perms']);
         $a->csvdata = '1,2,3,4,5';
-        $this->assertInstanceOf('CSVArrayObject', $a->csvdata);
+        $this->assertInstanceOf(CSVArrayObject::class, $a->csvdata);
         $this->assertEquals('1,2,3,4,5', (string)$a->csvdata);
         $this->assertEquals(range(1,5), $a['csvdata']->getArrayCopy());
         $a->jsondata = [0 => 'test1', 1 => 'test2'];
-        $this->assertInstanceOf('JSONArrayObject', $a->jsondata);
+        $this->assertInstanceOf(JSONArrayObject::class, $a->jsondata);
         $this->assertEquals('["test1","test2"]', (string)$a->jsondata);
         $a->jsondata[] = [1,2,3];
-        $this->assertInstanceOf('JSONArrayObject', $a->jsondata[2]);
+        $this->assertInstanceOf(JSONArrayObject::class, $a->jsondata[2]);
         $this->assertEquals('["test1","test2",[1,2,3]]', (string)$a->jsondata);
         $a->jsondata[2][] = ['test3' => 'test3'];
         $this->assertEquals('["test1","test2",[1,2,3,{"test3":"test3"}]]', (string)$a->jsondata);
@@ -117,6 +136,8 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::isDirty
+     * @covers SimpleORMap::isFieldDirty
      */
     public function testDirty($a)
     {
@@ -134,6 +155,7 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::revertValue
      */
     public function testRevert($a)
     {
@@ -147,6 +169,7 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::setData
      */
     public function testsetData($a)
     {
@@ -178,6 +201,8 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::getId()
+     * @covers SimpleORMap::setId()
      */
     public function testPrimaryKey($a)
     {
@@ -196,9 +221,13 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::isAdditionalField
+     * @covers SimpleORMap::_setAdditionalValue
+     * @covers SimpleORMap::_getAdditionalValue
      */
     public function testAdditional($a)
     {
+        $this->assertTrue($a->isAdditionalField('additional'));
         $this->assertNull($a->additional);
         $a->additional = 'test';
         $this->assertEquals($a->additional_dummy_data, $a->additional);
@@ -206,6 +235,7 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::toArray
      */
     public function testToArray($a)
     {
@@ -216,7 +246,7 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
         $this->assertEquals('ok:user', $to_array['perms']);
         $this->assertEquals(range(1,4), $to_array['csvdata']);
         $this->assertArrayHasKey('visible', $to_array);
-        $this->assertCount(17, $to_array);
+        $this->assertCount(18, $to_array);
 
         $to_array = $a->toArray('id user_id additional perms');
         $this->assertEquals(2, $to_array['id']);
@@ -229,6 +259,7 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::setValue
      */
     public function testInvalidColumnException($a)
     {
@@ -239,6 +270,7 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::registerCallback
      */
     public function testCallback($a)
     {
@@ -258,6 +290,7 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
 
     /**
      * @depends testConstruct
+     * @covers SimpleORMap::applyCallbacks
      */
     public function testNotification($a)
     {
@@ -308,5 +341,45 @@ class SimpleOrMapNodbTest extends \Codeception\Test\Unit
             $a->additional_dummy_data->count(),
             $b->additional_dummy_data->count()
         );
+    }
+
+    /**
+     * @dataProvider  i18nProvider
+     * @covers SimpleORMap::isI18nField
+     * @covers SimpleORMap::i18n_fields
+     */
+    public function testI18nFields(SimpleORMap $a): void
+    {
+        $this->assertTrue($a->isI18nField('i18n_field'));
+        $this->assertInstanceOf(I18NString::class, $a->i18n_field);
+    }
+
+    public static function i18nProvider(): array
+    {
+        self::setupFixture();
+
+        $result = [
+            'definition as list' => [new auth_user_md5()],
+            'definition as associative array' => [new class extends SimpleORMap {
+                protected static function configure($config = [])
+                {
+                    $config['db_table'] = 'auth_user_md5';
+                    $config['i18n_fields'] = ['i18n_field' => true];
+                    parent::configure($config);
+                }
+            }],
+            'definition as string' => [new class extends SimpleORMap {
+                protected static function configure($config = [])
+                {
+                    $config['db_table'] = 'auth_user_md5';
+                    $config['i18n_fields'] = 'i18n_field';
+                    parent::configure($config);
+                }
+            }]
+        ];
+
+        self::teardownFixture();
+
+        return $result;
     }
 }

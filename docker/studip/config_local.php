@@ -44,4 +44,6 @@ namespace {
         $ASSETS_URL = $ABSOLUTE_URI_STUDIP.'/assets/';
     }
     $MAIL_TRANSPORT = getenv('STUDIP_MAIL_TRANSPORT');
+
+    $CONTENT_LANGUAGES['en_GB'] = ['picture' => 'lang_en.gif', 'name' => 'English'];
 }

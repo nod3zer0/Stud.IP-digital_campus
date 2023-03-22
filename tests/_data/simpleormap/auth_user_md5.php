@@ -135,4 +135,13 @@ $result =  [
     'default' => '[1,2]',
     'extra' => '',
   ],
+  15 =>
+  [
+      'name' => 'i18n_field',
+      'type' => 'varchar(255)',
+      'null' => 'NO',
+      'key' => '',
+      'default' => '',
+      'extra' => '',
+  ],
 ];

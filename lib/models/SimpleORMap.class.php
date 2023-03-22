@@ -355,8 +355,19 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
         }
 
-        if (!I18N::isEnabled()) {
+        if (!I18N::isEnabled() || empty($config['i18n_fields'])) {
             $config['i18n_fields'] = [];
+        } elseif (is_string($config['i18n_fields'])) {
+            $i18n_fields = words($config['i18n_fields']);
+            $config['i18n_fields'] = array_combine(
+                $i18n_fields,
+                array_fill(0, count($i18n_fields), true)
+            );
+        } elseif (array_is_list($config['i18n_fields'])) {
+            $config['i18n_fields'] = array_combine(
+                $config['i18n_fields'],
+                array_fill(0, count($config['i18n_fields']), true)
+            );
         }
 
         array_unshift($config['registered_callbacks']['after_initialize'], 'cbAfterInitialize');
