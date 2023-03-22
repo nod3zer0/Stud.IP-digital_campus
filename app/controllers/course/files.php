@@ -59,16 +59,6 @@ class Course_FilesController extends AuthenticatedController
             );
         }
 
-        $actions->addLink(
-            _('Bildergalerie öffnen'),
-            '#g',
-            Icon::create('file-pic', 'clickable'),
-            [
-                'onClick' => "STUDIP.Files.openGallery(); return false;",
-                'v-if' => "hasFilesOfType('image')"
-            ]
-        );
-
         if ($this->topFolder && $this->topFolder->isSubfolderAllowed($GLOBALS['user']->id)) {
             $actions->addLink(
                 _('Neuer Ordner'),
@@ -93,9 +83,18 @@ class Course_FilesController extends AuthenticatedController
             )->asDialog();
 
         }
+
+        $actions->addLink(
+            _('Bildergalerie öffnen'),
+            '#g',
+            Icon::create('file-pic'),
+            [
+                'onClick' => "STUDIP.Files.openGallery(); return false;",
+                'style'   => 'display: none',
+            ]
+        );
+
         $sidebar->addWidget($actions);
-
-
 
         if ($this->topFolder->isWritable($GLOBALS['user']->id)) {
             $uploadArea = new LinksWidget();
@@ -172,10 +171,10 @@ class Course_FilesController extends AuthenticatedController
         $actions->addLink(
             _('Bildergalerie öffnen'),
             '#g',
-            Icon::create('file-pic', 'clickable'),
+            Icon::create('file-pic'),
             [
                 'onClick' => "STUDIP.Files.openGallery(); return false;",
-                'v-if' => "hasFilesOfType('image')"
+                'style'   => 'display: none',
             ]
         );
         if ($GLOBALS['user']->id !== 'nobody') {

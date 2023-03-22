@@ -100,15 +100,6 @@ class FilesController extends AuthenticatedController
             );
         }
 
-        $actions->addLink(
-            _('Bildergalerie öffnen'),
-            '#g',
-            Icon::create('file-pic', 'clickable'),
-            [
-                'onClick' => "STUDIP.Files.openGallery(); return false;"
-            ]
-        );
-
         if ($folder->isWritable($GLOBALS['user']->id)) {
             $actions->addLink(
                 _('Dokument hinzufügen'),
@@ -146,6 +137,17 @@ class FilesController extends AuthenticatedController
                 )->asDialog();
             }
         }
+
+        $actions->addLink(
+            _('Bildergalerie öffnen'),
+            '#g',
+            Icon::create('file-pic'),
+            [
+                'onClick' => "STUDIP.Files.openGallery(); return false;",
+                'style'   => 'display: none',
+            ]
+        );
+
         $sidebar->addWidget($actions);
 
         if ($folder->isWritable($GLOBALS['user']->id)) {
@@ -612,10 +614,10 @@ class FilesController extends AuthenticatedController
         $actions->addLink(
             _('Bildergalerie öffnen'),
             '#g',
-            Icon::create('file-pic', 'clickable'),
+            Icon::create('file-pic'),
             [
                 'onClick' => "STUDIP.Files.openGallery(); return false;",
-                'v-if' => "hasFilesOfType('image')"
+                'style'   => 'display: none',
             ]
         );
         $sidebar->addWidget($actions);

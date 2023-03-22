@@ -29,11 +29,19 @@ const Files = {
                         },
                         removeFile(id) {
                             this.files = this.files.filter(file => file.id != id)
+                        },
+                        onUpdated() {
+                            STUDIP.eventBus.emit('files-vue-app-updated', {
+                                hasImages: this.hasFilesOfType('image'),
+                            });
                         }
                     },
                     components: { FilesTable, },
-                    mounted () {
-                        $(document).trigger('files-vue-app-loaded');
+                    updated () {
+                        this.onUpdated();
+                    },
+                    created () {
+                        this.onUpdated();
                     }
                 });
             });

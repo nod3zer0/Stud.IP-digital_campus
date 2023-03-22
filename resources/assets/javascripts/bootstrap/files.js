@@ -17,6 +17,10 @@ function searchMoreFiles (button) {
     return false;
 }
 
+STUDIP.eventBus.on('files-vue-app-updated', ({hasImages}) => {
+    $('#sidebar-actions a[onclick*="Files.openGallery"]').toggle(hasImages);
+});
+
 STUDIP.domReady(() => {
 
     STUDIP.Files.init();
@@ -47,11 +51,6 @@ STUDIP.domReady(() => {
 
         event.preventDefault();
     });
-});
-
-$(document).on('files-vue-app-loaded', () => {
-    const lightboxImages = $('.lightbox-image');
-    $('#sidebar-actions a[onclick*="Files.openGallery"]').attr('disabled', lightboxImages.length === 0);
 });
 
 jQuery(document).on('ajaxComplete', (event, xhr) => {
