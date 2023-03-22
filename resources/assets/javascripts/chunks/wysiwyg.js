@@ -247,11 +247,7 @@ ClassicEditor.defaultConfig = {
         decorators: {
             addTargetToExternalLinks: {
                 mode: 'automatic',
-                callback: url => /^(https?:)?\/\//.test( url ),
-                attributes: {
-                    target: '_blank',
-                    rel: 'noopener noreferrer'
-                }
+                callback: url => /^(https?:)?\/\//.test( url )
             }
         }
     },
