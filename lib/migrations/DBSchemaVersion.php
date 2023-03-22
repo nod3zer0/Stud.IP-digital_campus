@@ -116,7 +116,7 @@ class DBSchemaVersion implements SchemaVersion
      */
     public function get($branch = 0)
     {
-        return $this->versions[$branch];
+        return $this->versions[$branch] ?? 0;
     }
 
     /**
