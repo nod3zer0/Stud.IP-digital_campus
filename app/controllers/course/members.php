@@ -295,7 +295,7 @@ class Course_MembersController extends AuthenticatedController
         $countAdded = 0;
         $msg = [];
         foreach ($mp->getAddedUsers() as $a) {
-            if ($this->addMember($a, true, Request::bool('consider_contingent'), $msg)) {
+            if ($this->addMember($a, true, Request::bool('consider_contingent', false), $msg)) {
                 $countAdded++;
             }
         }
@@ -1015,7 +1015,7 @@ class Course_MembersController extends AuthenticatedController
             $msgs = $this->insertAdmissionMember(
                 $users,
                 $target_status,
-                Request::bool('consider_contingent'),
+                Request::bool('consider_contingent', false),
                 $status === 'accepted'
             );
             if ($msgs) {
