@@ -397,15 +397,21 @@ class Modul extends ModuleManagementModelTreeItem
         if (!$institute) {
             return false;
         }
-        if ($this->responsible_institute && $this->responsible_institute->institut_id != $institut_id) {
-            $this->responsible_institute && $this->responsible_institute->delete();
-            $resp_institute = new ModulInst();
-            $resp_institute->institut_id = $institute->id;
-            $resp_institute->modul_id = $this->id;
-            $resp_institute->gruppe = 'hauptverantwortlich';
-            $this->responsible_institute = $resp_institute;
+
+        if (!$this->responsible_institute || $this->responsible_institute->institut_id !== $institut_id) {
+            if ($this->responsible_institute) {
+                $this->responsible_institute->delete();
+            }
+
+            $this->responsible_institute = ModulInst::build([
+                'institut_id' => $institute->id,
+                'modul_id'    => $this->id,
+                'gruppe'      => 'hauptverantwortlich',
+            ]);
         }
+
         $this->assigned_institutes->unsetBy('institut_id', $institute->id);
+
         return true;
     }
 
