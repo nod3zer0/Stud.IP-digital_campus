@@ -36,7 +36,7 @@ class FieldsetFilter extends \Neomerx\JsonApi\Representation\FieldSetFilter
      */
     private function resolveValue($value)
     {
-        if (is_callable($value)) {
+        if (!is_string($value) && is_callable($value)) {
             return $value();
         }
 
