@@ -18,19 +18,4 @@ const Sidebar = {
     }
 };
 
-Sidebar.adjustHeight = () => {
-    const display = $('#sidebar').css('display');
-
-    if (display === 'none') {
-        $('#sidebar').css('display', 'block');
-    }
-    const lastWidget = $('.sidebar-widget:last-child');
-    if (lastWidget.length > 0) {
-        const height = lastWidget.offset().top + lastWidget.height();
-        $('#sidebar').css('height', height + 'px');
-    }
-    if (display === 'none') {
-        $('#sidebar').css('display', 'none');
-    }
-}
 export default Sidebar;

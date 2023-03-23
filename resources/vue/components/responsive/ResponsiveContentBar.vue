@@ -69,32 +69,28 @@ export default {
             const content = document.getElementById('content-wrapper');
             const pageTitle = document.getElementById('page-title-container');
             if (this.sidebarOpen) {
+                sidebar.ariaHidden = 'true';
                 sidebar.classList.add('responsive-hide');
                 sidebar.classList.remove('responsive-show');
 
                 if (document.documentElement.classList.contains('responsive-display')
                         && !document.documentElement.classList.contains('fullscreen-mode')) {
-                    content.style.display = null;
-                    pageTitle.style.display = null;
+                    content.style.display = '';
+                    pageTitle.style.display = '';
                 }
 
                 if (!document.documentElement.classList.contains('responsive-display')) {
                     document.body.style.display = 'flex';
                 }
 
-                // Hide sidebar after slide-out animation has ended so that it isn't focusable anymore.
-                setTimeout(() => {
-                    sidebar.style.display = 'none';
-                }, 301);
-
                 this.sidebarOpen = false;
             } else {
-                sidebar.style.display = '';
-
+                sidebar.ariaHidden = '';
                 sidebar.classList.add('responsive-show');
                 sidebar.classList.remove('responsive-hide');
+
                 if (document.documentElement.classList.contains('responsive-display')
-                        && !document.documentElement.classList.contains('fullscreen-mode')) {
+                    && !document.documentElement.classList.contains('fullscreen-mode')) {
                     // Set a timeout here so that the content "disappears" after slide-in aninmation is finished.
                     setTimeout(() => {
                         content.style.display = 'none';

@@ -312,7 +312,7 @@ export default {
                     siteTitle.textContent = this.initialTitle;
                 }
 
-                sidebar.style.display = 'none';
+                sidebar.ariaHidden = 'true';
 
             } else {
                 document.documentElement.classList.remove('fullscreen-mode');
@@ -327,8 +327,7 @@ export default {
                     siteTitle.textContent = siteTitle.dataset.originalTitle.trim();
                 }
 
-                sidebar.style.display = '';
-
+                sidebar.ariaHidden = '';
             }
 
             this.isFullscreen = state;
@@ -447,11 +446,9 @@ export default {
                         this.isFullscreen = true;
 
                         STUDIP.eventBus.emit('fullscreen-enabled');
-                        document.getElementById('sidebar').style.display = 'none';
                     } else {
                         this.isFullscreen = false;
                         STUDIP.eventBus.emit('fullscreen-disabled');
-                        document.getElementById('sidebar').style.display = '';
                     }
                     break;
                 case 'HEADER':

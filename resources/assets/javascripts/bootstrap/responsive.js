@@ -6,7 +6,7 @@ STUDIP.domReady(() => {
         document.documentElement.classList.add('fullscreen-mode');
         const sidebar = document.getElementById('sidebar');
         if (sidebar) {
-            sidebar.style.display = 'none';
+            sidebar.ariaHidden = 'true';
         }
     }
 
