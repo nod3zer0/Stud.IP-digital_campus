@@ -118,7 +118,8 @@ function replaceTextarea(textarea) {
     }
 
     return STUDIP.loadChunk('wysiwyg')
-        .then(loadMathJax)
+    // TODO: Zuerst muss #2481 behoben werden, bevor diese Zeile wieder funktionieren kann.
+    // .then(loadMathJax)
         .then(createEditor)
         .then(setEditorInstance)
         .then(enhanceEditor)
