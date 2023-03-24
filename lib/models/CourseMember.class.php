@@ -380,12 +380,8 @@ class CourseMember extends SimpleORMap implements PrivacyObject
         $admission_comment = '';
         $mkdate = time();
 
-        $admission_user = AdmissionApplication::find([$seminar_id, $user_id]);
+        $admission_user = AdmissionApplication::find([$user_id, $seminar_id]);
         if ($admission_user) {
-            // copy the studycourse from admission_seminar_user
-            if ($copy_studycourse && $admission_user->studiengang_id) {
-                $contingent = $admission_user->studiengang_id;
-            }
             $admission_status = $admission_user->status;
             $admission_comment = $admission_user->comment ?? '';
             $mkdate = $admission_user->mkdate;
