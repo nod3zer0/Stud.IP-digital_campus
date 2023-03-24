@@ -53,38 +53,50 @@
                         <studip-icon shape="check-circle" size="24" class="check" />
                     </label>
                 </fieldset>
-                <label v-if="source === 'courses'">
-                    <span>{{ $gettext('Veranstaltung') }}</span><span aria-hidden="true" class="wizard-required">*</span>
-                    <studip-select
-                        v-if="courses.length !== 0 && !loadingCourses"
-                        :options="courses"
-                        label="title"
-                        :clearable="false"
-                        :reduce="option => option.id"
-                        v-model="selectedRange"
-                    >
-                        <template #open-indicator="selectAttributes">
-                            <span v-bind="selectAttributes"
-                                ><studip-icon shape="arr_1down" size="10"
-                            /></span>
-                        </template>
-                        <template #no-options="{}">
-                            {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
-                        </template>
-                        <template #selected-option="{ attributes }">
-                            <span>{{ attributes.title }}</span>
-                        </template>
-                        <template #option="{ attributes }">
-                            <span>{{ attributes.title }}</span>
-                        </template>
-                    </studip-select>
-                    <p v-if="loadingCourses">
-                        {{$gettext('Lade Veranstaltungen…')}}
-                    </p>
-                    <p v-if="courses.length === 0 && !loadingCourses">
-                        {{$gettext('Es wurden keine geeigneten Veranstaltungen gefunden.')}}
-                    </p>
-                </label>
+                <template v-if="source === 'courses'">
+                    <label>
+                        <span>{{ $gettext('Semester') }}</span><span aria-hidden="true"></span>
+                        <select v-model="selectedSemester">
+                            <option value="all">{{ $gettext('Alle Semester') }}</option>
+                            <option v-for="semester in semesterMap" :key="semester.id" :value="semester.id">
+                                {{ semester.attributes.title }}
+                            </option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>{{ $gettext('Veranstaltung') }}</span><span aria-hidden="true" class="wizard-required">*</span>
+                        <studip-select
+                            v-if="filteredCourses.length !== 0 && !loadingCourses"
+                            :options="filteredCourses"
+                            label="title"
+                            :clearable="false"
+                            :reduce="option => option.id"
+                            v-model="selectedRange"
+                        >
+                            <template #open-indicator="selectAttributes">
+                                <span v-bind="selectAttributes"
+                                    ><studip-icon shape="arr_1down" size="10"
+                                /></span>
+                            </template>
+                            <template #no-options="{}">
+                                {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
+                            </template>
+                            <template #selected-option="{ attributes }">
+                                <span>{{ attributes.title }}</span>
+                            </template>
+                            <template #option="{ attributes }">
+                                <span>{{ attributes.title }}</span>
+                            </template>
+                        </studip-select>
+                        <p v-if="loadingCourses">
+                            {{$gettext('Lade Veranstaltungen…')}}
+                        </p>
+                        <p v-if="filteredCourses.length === 0 && !loadingCourses">
+                            {{$gettext('Es wurden keine geeigneten Veranstaltungen gefunden.')}}
+                        </p>
+                    </label>
+                </template>
+
             </form>
         </template>
         <template v-slot:unit>
@@ -239,6 +251,8 @@ export default {
             source: '',
             loadingCourses: false,
             courses: [],
+            semesterMap: [],
+            selectedSemester: 'all',
             selectedRange: '',
             loadingUnits: false,
             selectedUnit: null,
@@ -261,6 +275,7 @@ export default {
         ...mapGetters({
             userId: 'userId',
             coursewareUnits: 'courseware-units/all',
+            semesterById: 'semesters/byId',
             structuralElementById: 'courseware-structural-elements/byId',
             context: 'context',
             childrenById: 'courseware-structure/children',
@@ -313,6 +328,16 @@ export default {
                 .map((id) => this.structuralElementById({ id }))
                 .filter(Boolean);
         },
+        filteredCourses() {
+            const courses = this.courses.filter((course) => { return course.id !== this.context.id});
+            if (this.selectedSemester === 'all') {
+                return courses;
+            } else {
+                return courses.filter((course) => {
+                    return course.relationships['start-semester'].data.id === this.selectedSemester;
+                });
+            }
+        }
     },
     mounted() {
         this.initWizardData();
@@ -323,6 +348,7 @@ export default {
             loadCourseUnits: 'loadCourseUnits',
             loadUserUnits: 'loadUserUnits',
             loadUsersCourses: 'loadUsersCourses',
+            loadSemester: 'semesters/loadById',
             loadStructuralElement: 'courseware-structural-elements/loadById',
             copyStructuralElement: 'copyStructuralElement',
             companionError: 'companionError',
@@ -339,7 +365,26 @@ export default {
         async updateCourses() {
             this.loadingCourses = true;
             this.courses = await this.loadUsersCourses({ userId: this.userId, withCourseware: true });
+            this.loadSemesterMap();
             this.loadingCourses = false;
+        },
+        loadSemesterMap() {
+            let view = this;
+            let semesters = [];
+            this.courses.every(course => {
+                let semId = course.relationships['start-semester'].data.id;
+                if(!semesters.includes(semId)) {
+                    semesters.push(semId);
+                }
+                return true;
+            });
+            semesters.every(semester => {
+                view.loadSemester({id: semester}).then( () => {
+                    view.semesterMap.push(view.semesterById({id: semester}));
+                    view.semesterMap.sort((a, b) => a.attributes.start < b.attributes.start);
+                });
+                return true;
+            });
         },
         async updateCourseUnits(cid) {
             this.loadingUnits = true;
@@ -461,6 +506,9 @@ export default {
                     this.selectedRange = this.userId;
                     break;
             }
+        },
+        selectedSemester(newSemester) {
+            this.selectedRange = '';
         }
     }
 }

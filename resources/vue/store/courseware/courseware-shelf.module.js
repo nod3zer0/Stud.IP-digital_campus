@@ -296,7 +296,7 @@ export const actions = {
         });
 
         const otherMemberships = memberships.filter(({ attributes, relationships }) => {
-            return ['dozent', 'tutor'].includes(attributes.permission) && state.context.id !== relationships.course.data.id;
+            return ['dozent', 'tutor'].includes(attributes.permission);
         });
 
         if (!withCourseware) {
@@ -305,20 +305,16 @@ export const actions = {
             });
         }
 
-        const items = await Promise.all(
-            otherMemberships.map((membership) => {
-                const course = getCourse(membership);
+        const items = otherMemberships.map((membership) => {
+            let course = getCourse(membership);
+            course['userPermission'] = membership.attributes.permission;
 
-                return dispatch('loadRemoteCoursewareStructure', {
-                    rangeId: course.id,
-                    rangeType: course.type
-                }).then((instance) => ({ instance, membership, course }));
-            })
-        )
+            return { membership, course };
+        });
 
-        return items
-            .filter(({ instance, membership }) => {
-                return instance?.relationships?.root && (membership.attributes.permission === 'dozent' || instance.attributes['editing-permission-level'] === 'tutor');
+         return items
+            .filter(({ membership, course }) => {
+                return course.relationships.courseware;
             })
             .map(({ course }) => course);
 

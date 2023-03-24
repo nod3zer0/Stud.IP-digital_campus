@@ -55,6 +55,51 @@ class Instance
     }
 
     /**
+     * @param \Range $range
+     * @return ?static
+     */
+    public static function existsForRange(\Range $range): bool
+    {
+        switch ($range->getRangeType()) {
+            case 'course':
+            case 'user':
+                $result = \DBManager::get()->fetchOne(
+                    'SELECT COUNT(*) as count FROM cw_structural_elements WHERE range_id = ? AND range_type = ? AND parent_id IS NULL',
+                    [$range->getRangeId(), $range->getRangeType()]
+                );
+
+                return ((int) $result['count']) > 0;
+
+            default:
+                throw new \InvalidArgumentException('Only ranges of type "user" and "course" are currently supported.');
+        }
+    }
+
+
+        /**
+     * @param \Range $range
+     * @return ?static
+     */
+    public static function findForRange(\Range $range)
+    {
+        $root = null;
+        switch ($range->getRangeType()) {
+            case 'course':
+                $root = StructuralElement::getCoursewareCourse($range->getRangeId());
+                break;
+            case 'user':
+                $root = StructuralElement::getCoursewareUser($range->getRangeId());
+                break;
+        }
+        if (!$root) {
+            return null;
+        }
+
+        return new self($root);
+    }
+
+
+    /**
      * @var StructuralElement
      */
     private $root;

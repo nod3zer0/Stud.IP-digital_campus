@@ -184,7 +184,6 @@ export default {
         ...mapActions({
             showElementLinkDialog: 'showElementLinkDialog',
             loadUserUnits: 'loadUserUnits',
-            loadUsersCourses: 'loadUsersCourses',
             loadStructuralElement: 'courseware-structural-elements/loadById',
             linkStructuralElement: 'linkStructuralElement',
             companionError: 'companionError',

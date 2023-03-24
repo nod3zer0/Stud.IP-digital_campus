@@ -542,7 +542,6 @@ export default {
             setShowTasksDistributeDialog: 'setShowTasksDistributeDialog',
             loadCourseUnits: 'loadCourseUnits',
             loadUserUnits: 'loadUserUnits',
-            loadUsersCourses: 'loadUsersCourses',
             loadStructuralElement: 'courseware-structural-elements/loadById',
             copyStructuralElement: 'copyStructuralElement',
             companionError: 'companionError',
