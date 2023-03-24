@@ -118,8 +118,7 @@ function replaceTextarea(textarea) {
     }
 
     return STUDIP.loadChunk('wysiwyg')
-    // TODO: Zuerst muss #2481 behoben werden, bevor diese Zeile wieder funktionieren kann.
-    // .then(loadMathJax)
+        .then(loadMathJax)
         .then(createEditor)
         .then(setEditorInstance)
         .then(enhanceEditor)
@@ -193,10 +192,15 @@ function replaceTextarea(textarea) {
             button.withText = false;
         }
 
+        // Tell MathJax v2.7 to leave the editor alone
+        ckeditor.ui.element.classList.add('tex2jax_ignore');
+
         // TODO: Kein updateSourceElement im SourceEditing-Modus
         //     $(ckeditor.container.$).on('blur', '.CodeMirror', function (event) {
         //         ckeditor.updateElement(); // also update in source mode
         //     });
+
+        return ckeditor;
     }
 
     function emitLoadEvent(ckeditor) {
