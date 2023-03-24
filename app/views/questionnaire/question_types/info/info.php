@@ -1,6 +1,6 @@
 <?php
 /**
- * @var QuestionnaireQuestion $vote
+ * @var QuestionnaireInfo $vote
  */
 ?>
 
@@ -9,7 +9,7 @@
         <?= Icon::create('info-circle', Icon::ROLE_INFO)->asImg(20) ?>
     </div>
     <div class="description">
-        <? if (isset($vote->questiondata['url']) && trim($vote->questiondata['url'])) : ?>
+        <? if ($vote->hasValidURL()) : ?>
             <iframe <?= is_internal_url($vote->questiondata['url']) ? 'sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-scripts"' : '' ?>
                     src="<?= htmlReady($vote->questiondata['url']) ?>"></iframe>
         <? endif ?>

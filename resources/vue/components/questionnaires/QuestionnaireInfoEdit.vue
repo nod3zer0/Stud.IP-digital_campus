@@ -2,7 +2,8 @@
     <div class="vote_edit">
         <label>
             {{ $gettext('Link eines Videos oder einer anderen Informationsseite (optional)') }}
-            <input type="text" v-model="val_clone.url" ref="autofocus">
+            <input type="url" v-model="val_clone.url" ref="infoUrl"
+                   @input="checkValidity()">
         </label>
 
         <div class="formpart">
@@ -24,7 +25,7 @@ export default {
         value: {
             type: Object,
             required: false,
-            default: function () {
+            default() {
                 return {
                     url: '',
                     description: ''
@@ -36,14 +37,26 @@ export default {
             required: false
         }
     },
-    data: function () {
+    data () {
         return {
-            val_clone: ''
+            val_clone: this.value,
         };
     },
-    mounted: function () {
-        this.val_clone = this.value;
-        this.$refs.autofocus.focus();
+    methods: {
+        checkValidity() {
+            this.$refs.infoUrl.setCustomValidity('');
+
+            if (!this.$refs.infoUrl.checkValidity()) {
+                this.$refs.infoUrl.setCustomValidity(
+                    this.$gettext('Der eingegebene Link ist nicht korrekt und wird nicht angezeigt werden.')
+                );
+                this.$refs.infoUrl.reportValidity();
+            }
+        }
+    },
+    mounted() {
+        this.$refs.infoUrl.focus();
+        this.checkValidity();
     },
     watch: {
         value (new_val) {

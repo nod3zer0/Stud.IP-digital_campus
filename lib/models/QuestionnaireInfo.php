@@ -63,4 +63,15 @@ class QuestionnaireInfo extends QuestionnaireQuestion implements QuestionType
     {
         return [];
     }
+
+    /**
+     * Return whether a given url is valid.
+     * @return bool
+     */
+    public function hasValidURL(): bool
+    {
+        return !empty($this->questiondata['url'])
+            && trim($this->questiondata['url'])
+            && filter_var($this->questiondata['url'], FILTER_VALIDATE_URL);
+    }
 }
