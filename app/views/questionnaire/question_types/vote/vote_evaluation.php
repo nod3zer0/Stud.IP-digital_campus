@@ -24,8 +24,6 @@ if ($numTaskAnswers > 0) {
                 if (!isset($results[(int) $answer['answerdata']['answers']])) {
                     $results[(int) $answer['answerdata']['answers']] = 0;
                 }
-                $results[(int) $answer['answerdata']['answers']]++;
-
                 if (!isset($results_users[(int) $answer['answerdata']['answers']])) {
                     $results_users[(int) $answer['answerdata']['answers']] = [];
                 }
@@ -35,7 +33,6 @@ if ($numTaskAnswers > 0) {
         }
     }
 }
-
 $ordered_results = $results;
 arsort($ordered_results);
 $ordered_answer_options = [];
