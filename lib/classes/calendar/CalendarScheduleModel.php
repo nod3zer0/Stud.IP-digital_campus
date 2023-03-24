@@ -225,7 +225,7 @@ class CalendarScheduleModel
                         'title' => _("Dies ist eine vorgemerkte Veranstaltung")
                     ];
                 } else {
-                    $entry['color'] = $details ? $details['color'] : ($member->gruppe % 9 + 1);
+                    $entry['color'] = !empty($details['color']) ? $details['color'] : ($member->gruppe % 9 + 1);
                 }
                 $entry['visible'] = $details ? $details['visible'] : 1;
 
