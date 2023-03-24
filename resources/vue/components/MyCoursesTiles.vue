@@ -185,9 +185,6 @@ $tile-padding: 10px;
 
     .tiles-grid-element-header {
         flex: 0 $header-size;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
         max-height: $header-size;
         overflow: hidden;
     }
