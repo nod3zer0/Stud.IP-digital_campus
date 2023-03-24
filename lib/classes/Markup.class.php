@@ -347,6 +347,7 @@ class Markup
             'float',
             'border'
         ]);
+        $config->set('CSS.MaxImgLength', null);
 
         if ($autoformat) {
             $config->set('AutoFormat.Linkify', true);
