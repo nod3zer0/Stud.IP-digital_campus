@@ -295,7 +295,7 @@ class Markup
             h6
             hr
             i
-            img[alt|src|height|width|style]
+            img[alt|src|height|width|class|style]
             li
             ol
             p[style]
@@ -324,6 +324,9 @@ class Markup
         $config->set('Attr.AllowedClasses', [
             'author',
             'content',
+            'image',
+            'image-style-side',
+            'image_resized',
             'link-extern',
             'link-intern',
             'math-tex',
