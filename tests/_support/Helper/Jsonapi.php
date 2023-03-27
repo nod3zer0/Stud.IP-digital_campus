@@ -203,8 +203,12 @@ class Jsonapi extends \Codeception\Module
             }
         }
 
-        $jsonPretty = new \Camspiers\JsonPretty\JsonPretty();
-        $json = $jsonPretty->prettify($jsonBody, JSON_UNESCAPED_SLASHES, '  ');
+        $json = json_encode($jsonBody, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+        // This converts the default indentation of 4 spaces to 2 spaces
+        $json = preg_replace_callback('/^( +)(?=\S)/m', function ($match) {
+            return str_pad('', strlen($match[1]) / 2, ' ');
+        }, $json);
 
         $dirname = codecept_output_dir() . 'json-for-slate/';
         if (!file_exists($dirname)) {

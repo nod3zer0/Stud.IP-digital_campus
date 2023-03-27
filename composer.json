@@ -9,7 +9,6 @@
     },
     "require-dev": {
         "adlawson/vfs": "~0.12.1",
-        "camspiers/json-pretty": "~1.0.2",
         "php-http/curl-client": "~1.7.0",
         "woohoolabs/yang": "2.3.2",
         "codeception/codeception": "^4.2",
