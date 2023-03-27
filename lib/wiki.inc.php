@@ -1603,7 +1603,7 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
 
     // Create content bar.
     $contentBar = ContentBar::get()
-        ->setTOC(CoreWiki::getTOC(WikiPage::getStartPage(Context::getId())))
+        ->setTOC($toc)
         ->setInfo($page_string)
         ->setIcon(Icon::create('wiki'));
 
