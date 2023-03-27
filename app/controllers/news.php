@@ -296,7 +296,7 @@ class NewsController extends StudipController
         } else {
             // for new news, set startdate to today and range to dialog context
             $news->date   = strtotime('today');
-            $news->expire = strtotime('23:59 +1 week') - $news->date;
+            $news->expire = strtotime('23:59 +1 week') - (int)$news->date;
             if ($context_range && $context_range !== 'template') {
                 $add_range = new NewsRange(['', $context_range]);
                 $ranges[] = $add_range->toArray();
@@ -336,10 +336,10 @@ class NewsController extends StudipController
                             'name' => 'expire',
                             'label' => _('Ende'),
                             'type' => 'datetimepicker',
-                            'value' => $news['date'] + $news['expire'],
+                            'value' => (int)$news['date'] + (int)$news['expire'],
                             'mindate' => 'date',
                             'mapper' => function ($value, $obj) { //hier müssen wir vom UnixTimestamp noch den Beginn abziehen:
-                                return $value - $obj['date'];
+                                return (int)$value - (int)$obj['date'];
                             },
                             'required' => true
                         ],
