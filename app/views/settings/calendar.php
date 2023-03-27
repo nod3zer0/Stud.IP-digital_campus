@@ -118,36 +118,40 @@ $cal_step_weeks = [
 
     </fieldset>
 
-    <? if (Config::get()->CALENDAR_GROUP_ENABLE): ?>
-        <fieldset>
-            <legend>
-                <?= _('Gruppenterminkalender') ?>
-            </legend>
+<? if (Config::get()->CALENDAR_GROUP_ENABLE): ?>
+    <fieldset>
+        <legend>
+            <?= _('Gruppenterminkalender') ?>
+        </legend>
 
-            <label>
-                <?= _("Zeitintervall der Tagesansicht") ?>
-                <select name="cal_step_day_group" id="cal_step_day_group">
-                    <? foreach ($cal_step_days as $index => $label): ?>
-                        <option value="<?= $index ?>" <? if ($step_day_group == $index) echo 'selected'; ?>>
-                            <?= $label ?>
-                        </option>
-                    <? endforeach; ?>
-                </select>
-            </label>
+        <label>
+            <?= _("Zeitintervall der Tagesansicht") ?>
+            <select name="cal_step_day_group" id="cal_step_day_group">
+            <? foreach ($cal_step_days as $index => $label): ?>
+                <option value="<?= $index ?>"
+                         <? if (isset($step_day_group) && $step_day_group == $index) echo 'selected'; ?>
+                >
+                    <?= $label ?>
+                </option>
+            <? endforeach; ?>
+            </select>
+        </label>
 
-            <label>
-                <?= _('Zeitintervall der Wochenansicht') ?>
-                <select name="cal_step_week_group" id="cal_step_week_group">
-                    <? foreach ($cal_step_weeks as $index => $label): ?>
-                        <option value="<?= $index ?>" <? if ($step_week_group == $index) echo 'selected'; ?>>
-                            <?= $label ?>
-                        </option>
-                    <? endforeach; ?>
-                </select>
-            </label>
+        <label>
+            <?= _('Zeitintervall der Wochenansicht') ?>
+            <select name="cal_step_week_group" id="cal_step_week_group">
+            <? foreach ($cal_step_weeks as $index => $label): ?>
+                <option value="<?= $index ?>"
+                        <? if (isset($step_week_group) && $step_week_group == $index) echo 'selected'; ?>
+                >
+                    <?= $label ?>
+                </option>
+            <? endforeach; ?>
+            </select>
+        </label>
 
-        </fieldset>
-    <? endif ?>
+    </fieldset>
+<? endif ?>
 
     <footer>
         <? if (Request::option('atime')): ?>
