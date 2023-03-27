@@ -70,6 +70,10 @@ form.default {
         }
     }
 
+    textarea:not(.size-l) + .ck-editor {
+        max-width: $max-width-m;
+    }
+
     .quicksearch_container {
         max-width: $max-width-m;
     }
