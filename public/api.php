@@ -45,7 +45,7 @@ namespace RESTAPI {
         // Initialize RESTAPI plugins
         \PluginEngine::getPlugins('RESTAPIPlugin');
 
-        $uri = \Request::path_info();
+        $uri = \Request::pathInfo();
 
         // Check version
         if (defined('RESTAPI\\VERSION') && preg_match('~^/v(\d+)~i', $uri, $match)) {

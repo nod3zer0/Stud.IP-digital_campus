@@ -22,4 +22,4 @@ require '../lib/bootstrap.php';
 URLHelper::setBaseUrl($GLOBALS['ABSOLUTE_URI_STUDIP']);
 
 $dispatcher = app(\Trails_Dispatcher::class);
-$dispatcher->dispatch(Request::path_info());
+$dispatcher->dispatch(Request::pathInfo());

@@ -15,7 +15,7 @@
 require_once '../lib/bootstrap.php';
 
 // Obtain request information
-$uri = ltrim(Request::path_info(), '/');
+$uri = ltrim(Request::pathInfo(), '/');
 list($type, $id) = explode('/', $uri, 2);
 
 // Setup response

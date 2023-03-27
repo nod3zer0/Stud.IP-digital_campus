@@ -112,20 +112,20 @@ class RequestTest extends \Codeception\Test\Unit
     public function testScriptName(): void
     {
         $this->setScriptName('/index.php');
-        $this->assertEquals('/index.php', Request::script_name());
+        $this->assertEquals('/index.php', Request::scriptName());
     }
 
     /**
      * @depends testPath
      * @depends testScriptName
-     * @covers       Request::path_info
+     * @covers       Request::pathInfo
      * @dataProvider PathProvider
      */
     public function testPathInfo(string $request_uri, string $script_name, string $expected): void
     {
         $this->setScriptName($script_name);
         $this->setRequestUri($request_uri);
-        $this->assertEquals($expected, Request::path_info());
+        $this->assertEquals($expected, Request::pathInfo());
     }
 
     /**

@@ -150,7 +150,7 @@ class Request implements ArrayAccess, IteratorAggregate
      * Return the filename of the currently executing script.
      * @return string
      */
-    public static function script_name(): string
+    public static function scriptName(): string
     {
         return $_SERVER['SCRIPT_NAME'];
     }
@@ -159,9 +159,9 @@ class Request implements ArrayAccess, IteratorAggregate
      * Returns the complete path info including duplicated slashes.
      * $_SERVER['PATH_INFO'] will remove them.
      */
-    public static function path_info(): string
+    public static function pathInfo(): string
     {
-        $script_name = self::script_name();
+        $script_name = self::scriptName();
         $script_name = preg_quote($script_name, '#');
         $script_name = str_replace('/', '/+', $script_name);
 
