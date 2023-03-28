@@ -688,16 +688,16 @@
         },
         {
             "name": "jumbojett/openid-connect-php",
-            "version": "v0.9.8",
+            "version": "v0.9.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jumbojett/OpenID-Connect-PHP.git",
-                "reference": "1f800145f64e1151f9d623dedc71a66f4143341f"
+                "reference": "45aac47b525f0483dd4db3324bb1f1cab4666061"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jumbojett/OpenID-Connect-PHP/zipball/1f800145f64e1151f9d623dedc71a66f4143341f",
-                "reference": "1f800145f64e1151f9d623dedc71a66f4143341f",
+                "url": "https://api.github.com/repos/jumbojett/OpenID-Connect-PHP/zipball/45aac47b525f0483dd4db3324bb1f1cab4666061",
+                "reference": "45aac47b525f0483dd4db3324bb1f1cab4666061",
                 "shasum": ""
             },
             "require": {
@@ -724,9 +724,9 @@
             "description": "Bare-bones OpenID Connect client",
             "support": {
                 "issues": "https://github.com/jumbojett/OpenID-Connect-PHP/issues",
-                "source": "https://github.com/jumbojett/OpenID-Connect-PHP/tree/v0.9.8"
+                "source": "https://github.com/jumbojett/OpenID-Connect-PHP/tree/v0.9.10"
             },
-            "time": "2022-08-05T13:48:50+00:00"
+            "time": "2022-09-30T12:34:46+00:00"
         },
         {
             "name": "kub-at/php-simple-html-dom-parser",
