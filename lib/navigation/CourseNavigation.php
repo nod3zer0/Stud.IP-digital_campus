@@ -48,11 +48,16 @@ class CourseNavigation extends Navigation
     {
         parent::initSubNavigation();
 
-        foreach (Context::get()->tools as $tool) {
-            if (Context::isInstitute() || Seminar_Perm::get()->have_studip_perm($tool->getVisibilityPermission(), Context::get()->getId())) {
+        $context = Context::get();
+        if (!$context) {
+            return;
+        }
+
+        foreach ($context->tools as $tool) {
+            if (Context::isInstitute() || Seminar_Perm::get()->have_studip_perm($tool->getVisibilityPermission(), $context->id)) {
                 $studip_module = $tool->getStudipModule();
                 if ($studip_module instanceof StudipModule) {
-                    $tool_nav = $studip_module->getTabNavigation(Context::getId()) ?: [];
+                    $tool_nav = $studip_module->getTabNavigation($context->id) ?: [];
                     foreach ($tool_nav as $nav_name => $navigation) {
                         if ($nav_name && is_a($navigation, "Navigation")) {
                             if ($tool->metadata['displayname']) {
