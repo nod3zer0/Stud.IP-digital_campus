@@ -49,7 +49,10 @@ class Template
     public function __construct($string)
     {
         $this->template = new ArrayNode();
-        $this->functions = array('count' => 'count', 'strlen' => 'mb_strlen');
+        $this->functions = array(
+            'count' => function($a) { return count($a); },
+            'strlen' => function($a) { return mb_strlen($a); }
+        );
         self::parseTemplate($this->template, $string, 0);
     }
 

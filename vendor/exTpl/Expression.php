@@ -320,7 +320,7 @@ class FunctionExpression implements Expression
             $arguments[] = $expr->value($context);
         }
 
-        if (is_callable($callable)) {
+        if ($callable instanceof \Closure) {
             return call_user_func_array($callable, $arguments);
         }
 

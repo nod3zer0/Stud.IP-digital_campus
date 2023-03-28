@@ -168,8 +168,12 @@ class template_test extends PHPUnit\Framework\TestCase
 
     public function testFilters()
     {
-        $bindings = array('pi' => 3.14159, 'format_number' => 'number_format', 'upper' => 'strtoupper');
-        $template = '{pi|format_number(3) ~ ":" ~ "foobar"|upper}';
+        $bindings = array(
+            'pi' => 3.14159,
+            'format' => function($a, $b) { return number_format($a, $b); },
+            'upper' => function($a) { return strtoupper($a); }
+        );
+        $template = '{pi|format(3) ~ ":" ~ "foobar"|upper}';
         $expected = '3.142:FOOBAR';
         $tmpl_obj = new Template($template);
 
@@ -178,7 +182,7 @@ class template_test extends PHPUnit\Framework\TestCase
 
     public function testRawFilter()
     {
-        $bindings = array('foo' => '<img>', 'upper' => 'strtoupper');
+        $bindings = array('foo' => '<img>', 'upper' => function($a) { return strtoupper($a); });
         $template = '{foo}:{foo|upper|raw}';
         $expected = '&lt;img&gt;:<IMG>';
         $tmpl_obj = new Template($template);
