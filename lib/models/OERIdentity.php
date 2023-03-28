@@ -1,5 +1,7 @@
 <?php
 
+use phpseclib3\Crypt\RSA;
+
 abstract class OERIdentity extends SimpleORMap
 {
     /**
@@ -14,16 +16,12 @@ abstract class OERIdentity extends SimpleORMap
 
     public function createSignature($text)
     {
-        $rsa = new \phpseclib\Crypt\RSA();
-        $rsa->loadKey($this['private_key']);
-        return $rsa->sign($text);
+        return RSA::loadPrivateKey($this['private_key'])->sign($text);
     }
 
     public function verifySignature($text, $signature)
     {
-        $rsa = new \phpseclib\Crypt\RSA();
-        $rsa->loadKey($this['public_key']);
-        return $rsa->verify($text, $signature);
+        return RSA::loadPublicKey($this['public_key'])->verify($text, $signature);
     }
 
     public function cbCreateKeysIfNecessary()
@@ -33,9 +31,9 @@ abstract class OERIdentity extends SimpleORMap
         }
     }
 
-    protected function createKeys() {
-        $rsa = new \phpseclib\Crypt\RSA();
-        $keypair = $rsa->createKey(4096);
+    protected function createKeys()
+    {
+        $keypair = RSA::createKey(4096);
         $this['private_key'] = preg_replace("/\r/", "", $keypair['privatekey']);
         $this['public_key'] = preg_replace("/\r/", "", $keypair['publickey']);
     }

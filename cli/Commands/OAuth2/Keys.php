@@ -2,7 +2,7 @@
 
 namespace Studip\Cli\Commands\OAuth2;
 
-use phpseclib\Crypt\RSA;
+use phpseclib3\Crypt\RSA;
 use Studip\OAuth2\Container;
 use Studip\OAuth2\KeyInformation;
 use Studip\OAuth2\SetupInformation;
@@ -46,7 +46,7 @@ class Keys extends Command
 
         $this->storeKeyContentsToFile($encryptionKey, $this->generateEncryptionKey());
 
-        $keys = (new RSA())->createKey(4096);
+        $keys = RSA::createKey(4096);
         $this->storeKeyContentsToFile($publicKey, $keys['publickey']);
         $this->storeKeyContentsToFile($privateKey, $keys['privatekey']);
 
