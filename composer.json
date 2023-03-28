@@ -21,7 +21,7 @@
         "php": "^7.2",
         "guzzlehttp/psr7": "^2.3",
         "neomerx/json-api": "4.0.1",
-        "spomky-labs/otphp": "^8.3.3",
+        "spomky-labs/otphp": "^10",
         "tuupola/cors-middleware": "^1.2.1",
         "tecnickcom/tcpdf": "^6.3",
         "scssphp/scssphp": "^1.4",

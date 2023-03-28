@@ -1,6 +1,5 @@
 <?php
 use OTPHP\TOTP;
-use ParagonIE\ConstantTime\Base32;
 
 /**
  * Model for a two factor authentication secret.
@@ -8,6 +7,17 @@ use ParagonIE\ConstantTime\Base32;
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL2 or any later version
  * @since   Stud.IP 4.4
+ *
+ * @property string $id
+ * @property string $user_id
+ * @property string $secret
+ * @property string $type
+ * @property bool $confirmed
+ * @property int $mkdate
+ * @property int $chdate
+ *
+ * @property User $user
+ * @property TFAToken[]|SimpleORMapCollection $tokens
  */
 class TFASecret extends SimpleORMap
 {
@@ -86,9 +96,9 @@ class TFASecret extends SimpleORMap
     {
         if ($is_new) {
             if (!$this->isNew()) {
-                return;
+                return true;
             }
-            $this->secret    = (new TOTP())->getSecret();
+            $this->secret    = TOTP::create()->getSecret();
             $this->confirmed = false;
         }
 
@@ -133,7 +143,7 @@ class TFASecret extends SimpleORMap
      */
     public function getToken($timestamp = null)
     {
-        return $this->getTOTP($this->secret)->at($timestamp ?: time());
+        return $this->getTOTP()->at($timestamp ?? time());
     }
 
     /**
@@ -189,13 +199,14 @@ class TFASecret extends SimpleORMap
      * Returns a totp object used for validation/creation of tokens.
      * @return TOTP
      */
-    private function getTOTP()
+    private function getTOTP(): TOTP
     {
-        return new TOTP(
-            $this->user->email,
+        $totp = TOTP::create(
             $this->secret,
             self::TYPES[$this->type]['period']
         );
+        $totp->setLabel($this->user->email);
+        return $totp;
     }
 
     /**
