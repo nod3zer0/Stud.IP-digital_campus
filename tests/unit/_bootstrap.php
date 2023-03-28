@@ -81,7 +81,7 @@ StudipFileloader::load(
     true
 );
 
-$config = Symfony\Component\Yaml\Yaml::parse(file_get_contents(__DIR__ .'/../unit.suite.yml'));
+$config = Symfony\Component\Yaml\Yaml::parseFile(__DIR__ .'/../unit.suite.yml');
 
 // connect to database if configured
 if (isset($config['modules']['config']['Db'])) {

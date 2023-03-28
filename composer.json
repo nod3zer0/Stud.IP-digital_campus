@@ -25,7 +25,7 @@
         "tuupola/cors-middleware": "1.2.1",
         "tecnickcom/tcpdf": "^6.3",
         "scssphp/scssphp": "^1.4",
-        "symfony/yaml": "^3.4",
+        "symfony/yaml": "^5.0",
         "mishal/iless": "^2.2",
         "ezyang/htmlpurifier": "^4.13",
         "davefx/phplot": "^6.2",
