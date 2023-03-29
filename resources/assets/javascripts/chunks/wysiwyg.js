@@ -253,6 +253,10 @@ ClassicEditor.defaultConfig = {
                 name: 'div',
                 classes: 'author',
             },
+            {
+                name: 'pre',
+                classes: 'usercode'
+            }
         ],
         disallow: [
             /* HTML features to disallow */

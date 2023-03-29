@@ -282,7 +282,7 @@ class Markup
             blockquote
             br
             caption
-            code
+            code[class]
             div[class|style]
             em
             figure[class|style]
@@ -327,6 +327,18 @@ class Markup
             'image',
             'image-style-side',
             'image_resized',
+            'language-cpp',
+            'language-css',
+            'language-diff',
+            'language-java',
+            'language-javascript',
+            'language-json',
+            'language-php',
+            'language-python',
+            'language-ruby',
+            'language-scss',
+            'language-sql',
+            'language-xml',
             'link-extern',
             'link-intern',
             'math-tex',
