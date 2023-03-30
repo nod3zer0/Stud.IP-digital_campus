@@ -634,7 +634,7 @@ class Admin_UserController extends AuthenticatedController
             $this->available_auth_plugins[mb_strtolower($ap)] = $ap;
         }
 
-        if (count($this->user->institute_memberships)) {
+        if (!empty($this->user->institute_memberships)) {
             $this->student_institutes = $this->user->institute_memberships->filter(function ($a) {
                 return $a->inst_perms === 'user';
             });
@@ -1081,7 +1081,7 @@ class Admin_UserController extends AuthenticatedController
     {
         $this->user = User::find($user_id);
         $institute = null;
-        if (count($this->user->institute_memberships)) {
+        if (!empty($this->user->institute_memberships)) {
             $this->user->institute_memberships->filter(function ($a) use ($institute_id, &$institute) {
                 if ($a->institut_id === $institute_id) {
                     $institute = $a;
@@ -1516,8 +1516,6 @@ class Admin_UserController extends AuthenticatedController
      */
     public function download_user_files_action($user_id, $range_id = null)
     {
-        global $TMP_PATH;
-
         Seminar_Perm::get()->check('root');
 
         if ($range_id === null) {
@@ -1530,9 +1528,9 @@ class Admin_UserController extends AuthenticatedController
 
         $archive_file_name = $user->username . '_files_' . date('Ymd-Hi') . '.zip';
 
-        $archive_path = $TMP_PATH . '/' . $archive_file_name;
+        $archive_path = $GLOBALS['TMP_PATH'] . '/' . $archive_file_name;
 
-        $result = FileArchiveManager::createArchiveFromFileRefs(
+        FileArchiveManager::createArchiveFromFileRefs(
             $file_refs,
             User::findCurrent(),
             $archive_path,
