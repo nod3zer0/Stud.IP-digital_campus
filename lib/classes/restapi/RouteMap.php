@@ -964,8 +964,14 @@ abstract class RouteMap
     public function getRoutes($http_method = null)
     {
         $ref      = new \ReflectionClass($this);
-        $docblock = new Docblock($ref);
-        $class_conditions = $this->extractConditions($docblock);
+
+        if ($ref->getDocComment()) {
+            $docblock = new Docblock($ref);
+            $class_conditions = $this->extractConditions($docblock);
+        } else {
+            $class_conditions = [];
+        }
+
 
         // Create result array by creating an associative array from all
         // supported methods as keys
