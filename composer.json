@@ -30,7 +30,6 @@
         "davefx/phplot": "^6.2",
         "jasig/phpcas": "^1.3",
         "phpxmlrpc/phpxmlrpc": "^4.4",
-        "gossi/docblock": "^1.6",
         "phpxmlrpc/extras": "^0.6.2",
         "algo26-matthias/idna-convert": "^3.0",
         "caxy/php-htmldiff": "^0.1.9",
@@ -59,7 +58,8 @@
         "symfony/polyfill-php73": "^1.27",
         "symfony/polyfill-php74": "^1.27",
         "symfony/polyfill-php80": "^1.27",
-        "symfony/polyfill-php81": "^1.27"
+        "symfony/polyfill-php81": "^1.27",
+        "phpowermove/docblock": "^2.0"
     },
     "replace": {
         "symfony/polyfill-php54": "*",

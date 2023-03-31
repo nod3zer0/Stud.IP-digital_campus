@@ -977,9 +977,9 @@ abstract class RouteMap
         }
 
         // Iterate through all methods of the routemap
-        foreach ($ref->getMethods() as $ref_method) {
-            // Not public? Not an api route!
-            if (!$ref_method->isPublic()) {
+        foreach ($ref->getMethods( \ReflectionMethod::IS_PUBLIC) as $ref_method) {
+            // No docblock? Not an api route!
+            if (!$ref_method->getDocComment()) {
                 continue;
             }
 
