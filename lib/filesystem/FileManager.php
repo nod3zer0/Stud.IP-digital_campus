@@ -111,9 +111,11 @@ class FileManager
             return 'file-generic';
         }
 
-        list($category, $type) = explode('/', $mime_type, 2);
+        $chunks = explode('/', $mime_type, 2);
+        $category = $chunks[0];
+        $type = $chunks[1] ?? null;
 
-        switch($category) {
+        switch ($category) {
             case 'image':
                 return 'file-pic';
             case 'audio':

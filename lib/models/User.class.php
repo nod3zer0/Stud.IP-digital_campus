@@ -67,6 +67,7 @@
  * @property UserInfo   info   has_one UserInfo
  * @property UserOnline online has_one UserOnline
  * @property Kategorie[]|SimpleORMapCollection $profile_categories has_many Kategorie
+ * @property UserDomain[]|SimpleORMapCollection $domains
  *
  * @property UserConfig config
  */

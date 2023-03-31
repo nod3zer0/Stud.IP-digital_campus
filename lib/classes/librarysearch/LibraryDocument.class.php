@@ -121,7 +121,7 @@ class LibraryDocument
     {
         if ($format == 'long') {
             $long_title = '';
-            if ($this->csl_data['issued'] && $this->csl_data['author']) {
+            if (isset($this->csl_data['issued'], $this->csl_data['author'])) {
                 $first_author_last_name = $this->csl_data['author'][0]['family'];
                 $year = $this->getIssueDate(true);
                 if ($year) {
@@ -129,11 +129,11 @@ class LibraryDocument
                 } else {
                     $long_title = sprintf('%s - ', $first_author_last_name);
                 }
-            } elseif ($this->csl_data['author']) {
+            } elseif (isset($this->csl_data['author'])) {
                 $first_author_last_name = $this->csl_data['author'][0]['family'];
                 $long_title = sprintf('%s - ', $first_author_last_name);
             }
-            $long_title .= $this->csl_data['title'];
+            $long_title .= $this->csl_data['title'] ?? '';
             return $long_title;
         } elseif ($format == 'long-comma') {
             $data = [];
@@ -142,13 +142,13 @@ class LibraryDocument
             if ($first_author_last_name) {
                 $data[] = $first_author_last_name;
             }
-            $data[] = $this->csl_data['title'];
+            $data[] = $this->csl_data['title'] ?? '';
             if ($year) {
                 $data[] = $year;
             }
             return implode(', ', $data);
         } else {
-            return $this->csl_data['title'] ? $this->csl_data['title'] : '';
+            return $this->csl_data['title'] ?? '';
         }
     }
 
@@ -158,7 +158,7 @@ class LibraryDocument
      */
     public function getAuthorNames(): string
     {
-        if (!$this->csl_data['author']) {
+        if (empty($this->csl_data['author'])) {
             return '';
         }
 
@@ -411,22 +411,22 @@ class LibraryDocument
     public function getSearchDescription()
     {
         $description = [];
-        if ($this->search_params[LibrarySearch::AUTHOR]) {
+        if (isset($this->search_params[LibrarySearch::AUTHOR])) {
             $description[] = sprintf(_('Autor: „%s“'), $this->search_params[LibrarySearch::AUTHOR]);
         }
-        if ($this->search_params[LibrarySearch::YEAR]) {
+        if (isset($this->search_params[LibrarySearch::YEAR])) {
             $description[] = sprintf(_('Jahr: „%s“'), $this->search_params[LibrarySearch::YEAR]);
         }
-        if ($this->search_params[LibrarySearch::TITLE]) {
+        if (isset($this->search_params[LibrarySearch::TITLE])) {
             $description[] = sprintf(_('Titel: „%s“'), $this->search_params[LibrarySearch::TITLE]);
         }
-        if ($this->search_params[LibrarySearch::NUMBER]) {
+        if (isset($this->search_params[LibrarySearch::NUMBER])) {
             $description[] = sprintf(_('Nummer: „%s“'), $this->search_params[LibrarySearch::NUMBER]);
         }
-        if ($this->search_params[LibrarySearch::PUBLICATION]) {
+        if (isset($this->search_params[LibrarySearch::PUBLICATION])) {
             $description[] = sprintf(_('Zeitschrift: „%s“'), $this->search_params[LibrarySearch::PUBLICATION]);
         }
-        if ($this->search_params[LibrarySearch::SIGNATURE]) {
+        if (isset($this->search_params[LibrarySearch::SIGNATURE])) {
             $description[] = sprintf(_('Signatur: „%s“'), $this->search_params[LibrarySearch::SIGNATURE]);
         }
         return $description;
