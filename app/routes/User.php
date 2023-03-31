@@ -5,7 +5,7 @@ namespace RESTAPI\Routes;
  * @author     André Klaßen <andre.klassen@elan-ev.de>
  * @author     <mlunzena@uos.de>
  * @license    GPL 2 or later
- * @deprecated Since Stud.IP 5.0. Will be removed in Stud.IP 5.2.
+ * @deprecated Since Stud.IP 5.0. Will be removed in Stud.IP 6.0.
  *
  * @condition user_id ^[0-9a-f]{1,32}$
  */

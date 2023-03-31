@@ -9,7 +9,7 @@ namespace RESTAPI\Routes;
  * @copyright   2017-2019
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @since       4.5
- * @deprecated  Since Stud.IP 5.0. Will be removed in Stud.IP 5.2.
+ * @deprecated  Since Stud.IP 5.0. Will be removed in Stud.IP 6.0.
  */
 class Resources extends \RESTAPI\RouteMap
 {

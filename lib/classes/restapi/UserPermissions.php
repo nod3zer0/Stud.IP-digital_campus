@@ -8,7 +8,7 @@ use DBManager, PDO;
  * @author     Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license    GPL 2 or later
  * @since      Stud.IP 2.6
- * @deprecated Since Stud.IP 5.0. Will be removed in Stud.IP 5.2.
+ * @deprecated Since Stud.IP 5.0. Will be removed in Stud.IP 6.0.
  */
 class UserPermissions
 {

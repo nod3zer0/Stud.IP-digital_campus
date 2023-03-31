@@ -10,6 +10,9 @@
  * the License, or (at your option) any later version.
  */
 
+/**
+ * @deprecated Since Stud.IP 5.0. Will be removed in Stud.IP 6.0.
+ */
 interface RESTAPIPlugin
 {
     /**

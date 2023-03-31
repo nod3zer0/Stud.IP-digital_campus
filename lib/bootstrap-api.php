@@ -1,4 +1,8 @@
 <?php
+/**
+ * @deprecated Since Stud.IP 5.0. Will be removed in Stud.IP 6.0.
+ */
+
 namespace {
     StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/vendor/oauth-php/library');
 

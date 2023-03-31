@@ -40,7 +40,7 @@ use RESTAPI\Renderer\DefaultRenderer;
  * @license    GPL 2 or later
  * @see        Inspired by http://blog.sosedoff.com/2009/07/04/simpe-php-url-routing-controller/
  * @since      Stud.IP 3.0
- * @deprecated Since Stud.IP 5.0. Will be removed in Stud.IP 5.2.
+ * @deprecated Since Stud.IP 5.0. Will be removed in Stud.IP 6.0.
  */
 class Router
 {
