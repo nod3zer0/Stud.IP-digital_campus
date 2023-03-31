@@ -14,6 +14,7 @@ import FontColor from '@ckeditor/ckeditor5-font/src/fontcolor.js';
 import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport';
 import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading';
 import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
+import HtmlComment from '@ckeditor/ckeditor5-html-support/src/htmlcomment';
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image';
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
 import ImageCaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption';
@@ -73,6 +74,7 @@ ClassicEditor.builtinPlugins = [
     GeneralHtmlSupport,
     HeadingPlugin,
     HorizontalLine,
+    HtmlComment,
     ImageCaptionPlugin,
     ImagePlugin,
     ImageResizePlugin,

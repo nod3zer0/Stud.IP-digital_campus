@@ -173,7 +173,8 @@ function replaceTextarea(textarea) {
         // make sure HTML marker is always set, in
         // case contents are cut-off by the backend
         $textarea.closest('form').submit(() => {
-            ckeditor.sourceElement.value = wysiwyg.markAsHtml(ckeditor.getData());
+            ckeditor.setData(wysiwyg.markAsHtml(ckeditor.getData()));
+            ckeditor.updateSourceElement();
         });
 
         // focus the editor if requested
@@ -183,6 +184,7 @@ function replaceTextarea(textarea) {
 
         ckeditor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
             if (!isFocused) {
+                ckeditor.setData(wysiwyg.markAsHtml(ckeditor.getData()));
                 ckeditor.updateSourceElement();
             }
         });
