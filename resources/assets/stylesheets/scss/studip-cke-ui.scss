@@ -1,12 +1,6 @@
 @use '../mixins.scss' as *;
 
 :root {
-
-    /* --dark-gray-color-5: #f5f5f6;
-    --content-color-40: #d0d7e3;
-    --red: #d60000;
-    --green: #6ead10; */
-
     --ck-color-base-foreground: var(--dark-gray-color-5);
     --ck-color-base-background: var(--white);
     --ck-color-base-border: var(--content-color-40);
@@ -64,6 +58,8 @@
     --ck-tooltip-arrow-size: 8px;
     --ck-color-tooltip-background: var(--dark-gray-color-5);
 
+    /* z-index */
+    --ck-z-modal: 1003;
 }
 
 .ck.ck-editor {
@@ -300,11 +296,6 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
     min-width: 50px;
 }
 
-/* tool balloons*/
-.ck.ck-balloon-panel.ck-balloon-panel_visible {
-    z-index: 1003;
-}
-
 /* table inserter */
 .ck .ck-insert-table-dropdown-grid-box.ck-on {
     background: var(--base-color-20);
@@ -312,10 +303,6 @@ a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
 
 /* tooltips */
 
-
-.ck.ck-tooltip.ck-tooltip_s {
-
-}
 
 .ck.ck-tooltip .ck-tooltip__text {
     border: 1px solid var(--dark-gray-color-30);

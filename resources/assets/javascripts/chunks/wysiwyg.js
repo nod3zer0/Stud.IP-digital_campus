@@ -241,8 +241,6 @@ ClassicEditor.defaultConfig = {
     math: {
         engine: 'mathjax',
         outputType: 'span',
-        forceOutputType: false,
-        enablePreview: false,
     },
     link: {
         defaultProtocol: 'https://',
