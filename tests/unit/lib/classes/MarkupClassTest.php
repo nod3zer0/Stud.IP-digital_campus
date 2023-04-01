@@ -50,40 +50,14 @@ class Seminar_Session
  */
 class MarkupClassTest extends \Codeception\Test\Unit
 {
-    public function testRemoveHTML()
+    /**
+     * @dataProvider removeProvider
+     */
+    public function testRemoveHTML(string $input, string $expected): void
     {
         Config::set(new Config(['WYSIWYG' => true]));
 
-        foreach ([
-            'plain text' => 'plain text',
-            '<p>paragraph only</p>' => 'paragraph only',
-
-            '<a>no href</a>' => 'no href',
-            '<a href=""></a>' => '',
-            '<a href="">empty href</a>' => 'empty href',
-            '<a href="href only" />' => '[ href%20only ]',
-            '<a href="href end-tag"></a>' => '[ href%20end-tag ]',
-            '<a href="http://href.de">and text</a>' => '[ http://href.de ]and text',
-            'before <a href="http://href.de">and text</a> after'
-            => 'before [ http://href.de ]and text after',
-
-            '<img>no src</img>' => 'no src',
-            '<img src="src only" />' => '[ src%20only ]',
-            '<img src="src end-tag"></img>' => '[ src%20end-tag ]',
-            '<img src="http://src.de">and text</a>' => '[ http://src.de ]and text',
-            'before <img src="http://src.de">and text</img> after'
-            => 'before [ http://src.de ]and text after',
-
-            // some "real" urls
-            '<a href="https://example.org/">Example'
-            => '[ https://example.org/ ]Example',
-            '<img src="https://example.org/image.png">'
-            => '[ https://example.org/image.png ]',
-            '<p>link <a href="http://example.org">Example-Domain</a> and picture <img src="https://example.org/image.png"></p>'
-            => 'link [ http://example.org ]Example-Domain and picture [ https://example.org/image.png ]'
-        ] as $in => $out) {
-            $this->assertEquals($out, Studip\Markup::removeHtml(Studip\Markup::markAsHtml($in)));
-        }
+        $this->assertEquals($expected, Studip\Markup::removeHtml(Studip\Markup::markAsHtml($input)));
     }
 
     public function testGetMediaUrl()
@@ -222,5 +196,42 @@ class MarkupClassTest extends \Codeception\Test\Unit
                 $this->assertEquals($test['out'], $out, 'Test ' . $index);
             }
         }
+    }
+
+    public static function removeProvider(): array
+    {
+        return [
+            'plain text' => ['plain text', 'plain text'],
+            'paragraph only' => ['<p>paragraph only</p>', 'paragraph only'],
+
+            'link: no href' => ['<a>no href</a>', 'no href'],
+            'link: empty' => ['<a href=""></a>', ''],
+            'link: empty href' => ['<a href="">empty href</a>', 'empty href'],
+            'link: href only' => ['<a href="href only" />', '[ href%20only ]'],
+            'link: href end-tag' => ['<a href="href end-tag"></a>', '[ href%20end-tag ]'],
+            'link: href and text' => ['<a href="http://href.de">and text</a>', '[ http://href.de ]and text'],
+            'link: before and text after' => ['before <a href="http://href.de">and text</a> after', 'before [ http://href.de ]and text after'],
+
+            'image: no src' => ['<img>no src</img>', 'no src'],
+            'image: src only' => ['<img src="src only" />', '[ src%20only ]'],
+            'image: src end-tag' => ['<img src="src end-tag"></img>', '[ src%20end-tag ]'],
+            'image: src and text' => ['<img src="http://src.de">and text</a>', '[ http://src.de ]and text'],
+            'image: before and text after' => ['before <img src="http://src.de">and text</img> after', 'before [ http://src.de ]and text after'],
+
+            // some "real" urls
+            'real link' => ['<a href="https://example.org/">Example', '[ https://example.org/ ]Example'],
+            'real image' => ['<img src="https://example.org/image.png">', '[ https://example.org/image.png ]'],
+            'real link and image' => [
+                '<p>link <a href="http://example.org">Example-Domain</a> and picture <img src="https://example.org/image.png"></p>',
+                'link [ http://example.org ]Example-Domain and picture [ https://example.org/image.png ]',
+            ],
+
+            // Line breaks
+            'html: ul' => [\Studip\Markup::HTML_MARKER . '<ul><li>1</li><li>2</li></ul><p>3</p>', "1\n2\n\n3"],
+            'html: ol' => [\Studip\Markup::HTML_MARKER . '<ol><li>1</li><li>2</li></ol><p>3</p>', "1\n2\n\n3"],
+            'html: br' => [\Studip\Markup::HTML_MARKER . '1<br>2<br>3', "1\n2\n3"],
+            'html: div' => [\Studip\Markup::HTML_MARKER . '<div>1</div><div>2</div><div>3</div>', "1\n\n2\n\n3"],
+            'html: p' => [\Studip\Markup::HTML_MARKER . '<p>1</p><p>2</p><p>3</p>', "1\n\n2\n\n3"],
+        ];
     }
 }

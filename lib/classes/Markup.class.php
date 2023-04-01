@@ -487,6 +487,13 @@ class Markup
             $config->set('HTML.Allowed', 'a[href],img[alt|src],br');
             $config->set('AutoFormat.Custom', ['Unlinkify']);
 
+            $html = str_replace('</li>', '</li><br>', $html);
+            $html = str_replace('</ol>', '</ol><br>', $html);
+            $html = str_replace('</ul>', '</ul><br>', $html);
+            $html = str_replace('</tr>', '</tr><br>', $html);
+            $html = str_replace('</p>', '</p><br><br>', $html);
+            $html = str_replace('</div>', '</div><br><br>', $html);
+
             $purifier = new \HTMLPurifier($config);
             $html = $purifier->purify($html);
 
