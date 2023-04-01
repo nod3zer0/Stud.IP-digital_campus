@@ -1660,14 +1660,14 @@ function showDiffs($keyword, $versions_since)
     }
 
     $version     = array_shift($versions);
-    $last        = $version['body'];
+    $last        = Studip\Markup::removeHtml($version['body']);
     $lastversion = $version['version'];
     $zusatz      = getZusatz($version);
 
     $content = '';
     foreach ($versions as $version) {
         $content .= '<tr>';
-        $current        = $version['body'];
+        $current        = Studip\Markup::removeHtml($version['body']);
         $currentversion = $version['version'];
 
         $diffarray = '<b><font size=-1>'. _("Änderungen zu") . " </font> $zusatz</b><p>";
@@ -1720,6 +1720,7 @@ function do_diff($strlines1,$strlines2)
 
 function toDiffLineArray($lines, $who) {
     $dla = [];
+    $lines = Studip\Markup::removeHtml($lines);
     $lines = explode("\n",preg_replace("/\r/",'',$lines));
     foreach ($lines as $l) {
         $dla[] = new DiffLine($l, $who);
