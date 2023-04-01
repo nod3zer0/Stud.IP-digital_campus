@@ -277,6 +277,7 @@ class WikiController extends AuthenticatedController
                 [
                     'userid'    => $GLOBALS['user']->id,
                     'exclude'   => [$course_id],
+                    'institutes' => array_column(Institute::getMyInstitutes(), 'Institut_id')
                 ],
                 's.`Seminar_id` IN (
                     SELECT range_id FROM wiki
