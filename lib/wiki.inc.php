@@ -875,10 +875,11 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch)
         $offset=0; // step through text
         $ignore_next_hits=0; // don't show hits more than once
         $first_line=1; // don't print <br> before first hit
+        $body = Studip\Markup::removeHtml($result['body']);
         print($tdheadleft);
         // find all occurences
-        while ($offset < mb_strlen($result['body'])) {
-            $pos=mb_stripos($result['body'], $searchfor,$offset);
+        while ($offset < mb_strlen($body)) {
+            $pos=mb_stripos($body, $searchfor, $offset);
             if ($pos===FALSE) break;
             $offset=$pos+1;
             if (($ignore_next_hits--)>0) {
@@ -889,7 +890,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch)
             }
             // show max 80 chars
             $fragment = '';
-            $split_fragment = preg_split('/('.preg_quote($searchfor,'/').')/i', mb_substr($result['body'],max(0, $pos-40), 80), -1, PREG_SPLIT_DELIM_CAPTURE);
+            $split_fragment = preg_split('/('.preg_quote($searchfor,'/').')/i', mb_substr($body, max(0, $pos-40), 80), -1, PREG_SPLIT_DELIM_CAPTURE);
             for ($i = 0; $i < count($split_fragment); ++$i) {
                 if ($i % 2) {
                     $fragment .= '<span style="background-color:#FFFF88">';
