@@ -48,38 +48,52 @@ class StudipLog
     * @param mixed  $dbg_info   Debug information to add to the event
     * @param mixed  $user_id    Provide null for the current user id
     **/
-    public static function log($action_name, $affected = null,
-            $coaffected = null, $info = null, $dbg_info = null, $user_id = null)
-    {
+    public static function log(
+        $action_name,
+        $affected = null,
+        $coaffected = null,
+        $info = null,
+        $dbg_info = null,
+        $user_id = null
+    ) {
         if (!Config::get()->LOG_ENABLE) {
-            return;
+            return false;
+        }
+
+        // automagically set current user as agent
+        if (!$user_id) {
+            $user_id = $GLOBALS['user']->id;
         }
 
         $log_action = LogAction::findOneByName($action_name);
         if (!$log_action) {
             // Action doesn't exist -> LOG_ERROR
-            $debug = sprintf('StudipLog::log(%s,%s,%s,%s,%s) for user %s',
-                    $log_action->name, $affected, $coaffected, $info,
-                    $dbg_info, $user_id);
+            $debug = sprintf(
+                'StudipLog::log(%s,%s,%s,%s,%s) for user %s',
+                $action_name,
+                $affected,
+                $coaffected,
+                $info,
+                $dbg_info,
+                $user_id
+            );
             self::log('LOG_ERROR', null, null, null, $debug);
             return false;
         }
-        if ($log_action->isActive()) {
-            // automagically set current user as agent
-            if (!$user_id) {
-                $user_id = $GLOBALS['auth']->auth['uid'];
-            }
-            $log_event = new LogEvent();
-            $log_event->user_id = $user_id;
-            $log_event->action_id = $log_action->getId();
-            $log_event->affected_range_id = $affected;
-            $log_event->coaffected_range_id = $coaffected;
-            $log_event->info = $info;
-            $log_event->dbg_info = $dbg_info;
-            $log_event->store();
-            return true;
+
+        if (!$log_action->isActive()) {
+            return false;
         }
-        return false;
+
+        $log_event = new LogEvent();
+        $log_event->user_id = $user_id;
+        $log_event->action_id = $log_action->getId();
+        $log_event->affected_range_id = $affected;
+        $log_event->coaffected_range_id = $coaffected;
+        $log_event->info = $info;
+        $log_event->dbg_info = $dbg_info;
+        $log_event->store();
+        return true;
     }
 
     /**
