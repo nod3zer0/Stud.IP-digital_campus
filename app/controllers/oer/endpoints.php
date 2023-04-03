@@ -93,7 +93,8 @@ class Oer_EndpointsController extends StudipController
         if (!$host) {
             return;
         }
-        $host_data = file_get_contents($url."fetch_public_host_key");
+        $url = $url."fetch_public_host_key";
+        $host_data = @file_get_contents($url, false, get_default_http_stream_context($url));
         if ($host_data) {
             $host_data = json_decode($host_data, true);
             if ($host_data) {

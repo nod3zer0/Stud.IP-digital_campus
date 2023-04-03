@@ -17,7 +17,7 @@ class OERHostOERSI extends OERHost
         } else {
             $endpoint_url .= '?q=' . urlencode($text . $appendix);
         }
-        $output = @file_get_contents($endpoint_url);
+        $output = @file_get_contents($endpoint_url, false, get_default_http_stream_context($endpoint_url));
         if ($output) {
             $output = json_decode($output, true);
             foreach ((array) $output['hits']['hits'] as $material_data) {
@@ -88,7 +88,7 @@ class OERHostOERSI extends OERHost
     public function fetchItemData(OERMaterial $material)
     {
         $endpoint_url = 'https://oersi.de/resources/' . urlencode($material['data']['id']) . '?format=json';
-        $output = @file_get_contents($endpoint_url);
+        $output = @file_get_contents($endpoint_url, false, get_default_http_stream_context($endpoint_url));
         if ($output) {
             $output = json_decode($output, true);
             if ($output) {

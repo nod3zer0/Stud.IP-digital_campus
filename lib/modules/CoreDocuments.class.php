@@ -54,7 +54,7 @@ class CoreDocuments extends CorePlugin implements StudipModule, OERModule
         if ($url) {
             if ($material['host_id']) {
                 $tmp_name = $GLOBALS['TMP_PATH'] . '/oer_' . $material->getId();
-                file_put_contents($tmp_name, file_get_contents($url));
+                file_put_contents($tmp_name, file_get_contents($url, false, get_default_http_stream_context($url)));
                 $uploaded_file['tmp_name'] = $tmp_name;
                 $uploaded_file['type'] = filesize($tmp_name);
             } else {

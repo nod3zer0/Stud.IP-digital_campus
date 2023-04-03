@@ -13,7 +13,9 @@ class OERDownloadcounter extends SimpleORMap
         $counter['material_id'] = $material_id;
         if (Config::get()->oer_GEOLOCATOR_API) {
             list($url, $lon, $lat) = explode(" ", Config::get()->oer_GEOLOCATOR_API);
-            $output = json_decode(file_get_contents(sprintf($url, $_SERVER['REMOTE_ADDR'])), true);
+            $url = sprintf($url, $_SERVER['REMOTE_ADDR']);
+            $output = @file_get_contents($url, false, get_default_http_stream_context($url));
+            $output = json_decode($output, true);
             if (isset($output[$lon])) {
                 $counter['longitude'] = $output[$lon];
             }
