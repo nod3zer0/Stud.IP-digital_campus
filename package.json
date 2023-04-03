@@ -4,8 +4,6 @@
     "description": "Stud.IP",
     "private": true,
     "scripts": {
-        "lint": "eslint --ext .js,.vue resources/assets/javascripts resources/vue",
-        "css-lint": "stylelint resources/assets/stylesheets",
         "webpack-dev": "webpack --config webpack.dev.js --mode development",
         "webpack-prod": "webpack --config webpack.prod.js --mode production",
         "webpack-watch": "webpack --config webpack.dev.js --mode development --watch"
@@ -73,7 +71,6 @@
         "easygettext": "^2.17.0",
         "es6-promise": "4.2.8",
         "eslint": "^7.32.0",
-        "eslint-junit": "^1.0.1",
         "eslint-plugin-vue": "7.7.0",
         "eslint-webpack-plugin": "^3.1.1",
         "expose-loader": "1.0.1",
@@ -111,9 +108,6 @@
         "sprintf-js": "^1.0.3",
         "stream-browserify": "^3.0.0",
         "style-loader": "^2.0.0",
-        "stylelint": "^14.9.1",
-        "stylelint-config-standard": "^26.0.0",
-        "stylelint-junit-formatter": "^0.2.2",
         "svgo": "^2.3.1",
         "tablesorter": "2.31.3",
         "vrp-vue-resizable": "1.2.7",

@@ -1,0 +1,43 @@
+#!/usr/bin/env php
+<?php
+function error(string $error, int $status = 1): void
+{
+    echo trim($error) . "\n";
+    exit($status);
+}
+
+$self = basename($argv[0]);
+
+if ($argc !== 2) {
+    error("Missing report file, use {$self} <filename>");
+}
+
+$report_file = $argv[1];
+if (!file_exists($report_file)) {
+    error("Report file {$report_file} does not exist");
+}
+if (!is_readable($report_file)) {
+    error("Report file {$report_file} is not readable");
+}
+
+$json = json_decode(file_get_contents($report_file), true);
+if ($json === false) {
+    error("Could not read json contents of {$report_file}");
+}
+
+$errors = [];
+foreach ($json['errors'] as $error) {
+    $errors[] = [
+        'description' => $error['error'],
+        'fingerprint' => md5("{$error['file_name']}:{$error['line']}"),
+        'severity' => 'major',
+        'location' => [
+            'path' => $error['file_name'],
+            'lines' => [
+                'begin' => $error['line'],
+            ],
+        ],
+    ];
+}
+
+echo json_encode($errors);

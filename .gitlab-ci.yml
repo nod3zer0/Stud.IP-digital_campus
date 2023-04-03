@@ -1,6 +1,7 @@
 image: studip/studip:tests-php7.2
 
 variables:
+  GIT_DEPTH: 1
   MYSQL_RANDOM_ROOT_PASSWORD: "true"
   MYSQL_DATABASE: studip_db
   MYSQL_USER: studip_user
@@ -12,150 +13,177 @@ variables:
   # Optimize caching
   FF_USE_FASTZIP: "true"
   CACHE_COMPRESSION_LEVEL: "fast"
-  # User faster docker driver
+  # Use faster docker driver
   DOCKER_DRIVER: overlay2
+  # Images
+  NODE_IMAGE: node:14-slim
+  # Directories
+  CACHE_DIR: .caches
+  REPORT_DIR: .reports
 
 stages:
   - checks
   - analyse
-  - tests
+  - test
   - packaging
   - release
   - build
 
 .scripts:
-  install-composer:
+  mkdir-caches: &mkdir-caches
+    - mkdir -p $CACHE_DIR
+  mkdir-reports: &mkdir-reports
+    - mkdir -p $REPORT_DIR
+  install-composer: &install-composer
     - make composer-dev
-  configure-studip:
-    - !reference [.scripts, install-composer]
+  configure-studip: &configure-studip
+    - *install-composer
     - cp docker/studip/config_local.php config/config_local.inc.php
     - cp config/config.inc.php.dist config/config.inc.php
-  initialize-studip-database:
-    - !reference [.scripts, configure-studip]
+  initialize-studip-database: &initialize-studip-database
+    - *configure-studip
     - chmod +x .gitlab/scripts/install_db.sh
     - .gitlab/scripts/install_db.sh
     - cli/studip migrate
-  remove-absolute-path-in-report:
-    - sed -i "s%$PWD/%%" tests/_output/report.xml
-
-.artifacts:
-  common: &common-artifacts
-    when: always
-    expire_in: 1 week
-  tests: &test-artifacts
-    <<: *common-artifacts
-    paths:
-      - tests/_output
-    reports:
-      junit: tests/_output/report.xml
 
 .caches:
   php: &composer-cache
     key: "php-$CI_COMMIT_REF_SLUG"
     paths:
       - composer/
-      - .caches/phplint-cache
-      - .caches/resultCache.php
-      - .caches/cache/*
-      - .caches/resultCaches/*
+      - $CACHE_DIR/phplint-cache
+      - $CACHE_DIR/resultCache.php
+      - $CACHE_DIR/cache/*
+      - $CACHE_DIR/resultCaches/*
   js: &npm-cache
     key: "js-$CI_COMMIT_REF_SLUG"
     paths:
       - node_modules/
-      - .caches/eslint-cache
-      - .caches/stylelint-cache
+      - $CACHE_DIR/eslint-cache
+      - $CACHE_DIR/stylelint-cache
 
 lint-php:
   stage: checks
   needs: []
   cache: *composer-cache
-  allow_failure: false
+  variables:
+    PHPLINT_JSON_REPORT: $REPORT_DIR/phplint-report.json
+    PHPLINT_CODE_QUALITY_REPORT: $REPORT_DIR/phplint-codequality.json
   interruptible: true
   before_script:
-    - !reference [.scripts, install-composer]
-    - mkdir -p .reports
+    - *mkdir-caches
+    - *mkdir-reports
+    - *install-composer
   script:
-    - php -d memory_limit=-1 composer/bin/phplint --xml .reports/phplint-report.xml --cache=.caches/phplint-cache
+    - php -d memory_limit=-1
+      composer/bin/phplint
+      --json $PHPLINT_JSON_REPORT
+      --cache=$CACHE_DIR/phplint-cache
+  after_script:
+    - ./.gitlab/scripts/convert-phplint-report $PHPLINT_JSON_REPORT > $PHPLINT_CODE_QUALITY_REPORT
   artifacts:
-    <<: *common-artifacts
-    paths:
-      - .reports/phplint-report.xml
     reports:
-      junit: .reports/phplint-report.xml
+      codequality: $PHPLINT_CODE_QUALITY_REPORT
 
 lint-js:
   stage: checks
   needs: []
-  cache: *npm-cache
-  allow_failure: false
+  image: $NODE_IMAGE
+  variables:
+    ESLINT_CODE_QUALITY_REPORT: $REPORT_DIR/eslint-codequality.json
   interruptible: true
   before_script:
-    - make npm
+    - *mkdir-reports
+    - npm install
+      --no-save --no-audit --no-fund
+      --loglevel=error
+      eslint eslint-formatter-gitlab
   script:
-    - npm run lint -- --cache --cache-location .caches/eslint-cache --format ./node_modules/eslint-junit/index.js
+    - npx eslint
+      --ext .js,.vue
+      --format gitlab
+      resources/assets/javascripts resources/vue
   artifacts:
-    <<: *common-artifacts
-    paths:
-      - .reports/eslint-report.xml
     reports:
-       junit: .reports/eslint-report.xml
+      codequality: $ESLINT_CODE_QUALITY_REPORT
 
 lint-css:
   stage: checks
   needs: []
-  cache: *npm-cache
-  allow_failure: false
+  image: $NODE_IMAGE
+  variables:
+    STYLELINT_CODE_QUALITY_REPORT: $REPORT_DIR/stylelint-codequality.json
   interruptible: true
   before_script:
-    - make npm
+    - *mkdir-reports
+    - npm install
+      --no-save --no-audit --no-fund
+      --loglevel=error 
+      stylelint@^14.9.1
+      stylelint-config-standard@^26.0.0
+      stylelint-formatter-gitlab
   script:
-    - npm run css-lint -s -- --cache --cache-location .caches/stylelint-cache --custom-formatter node_modules/stylelint-junit-formatter --output-file .reports/stylelint-report.xml
+    - npx
+      stylelint
+      --custom-formatter=node_modules/stylelint-formatter-gitlab 
+      resources/assets/stylesheets
   artifacts:
-    <<: *common-artifacts
-    paths:
-      - .reports/stylelint-report.xml
     reports:
-      junit: .reports/stylelint-report.xml
+      codequality: $STYLELINT_CODE_QUALITY_REPORT
 
 phpstan:
   stage: analyse
   needs: [lint-php]
+  variables:
+    PHPSTAN_CODE_QUALITY_REPORT: $REPORT_DIR/phpstan-codequality.json
   allow_failure: true
   interruptible: true
   when: manual
   cache: *composer-cache
   before_script:
-    - make composer-dev
-    - mkdir .reports -p
+    - *mkdir-reports
+    - *install-composer
   script:
-    - php composer/bin/phpstan analyse --memory-limit=1G --no-progress --level=$PHPSTAN_LEVEL --error-format=gitlab > .reports/report-phpstan.json
+    - php
+      composer/bin/phpstan analyse 
+      --memory-limit=1G 
+      --no-progress 
+      --level=$PHPSTAN_LEVEL
+      --error-format=gitlab > $PHPSTAN_CODE_QUALITY_REPORT
   artifacts:
-    paths:
-        - .reports/report-phpstan.json
-    expire_in: 14 days
-    when: always
     reports:
-      codequality: .reports/report-phpstan.json
+      codequality: $PHPSTAN_CODE_QUALITY_REPORT
 
 test-unit:
-  stage: tests
+  stage: test
   needs: [lint-php]
+  variables:
+    PHPUNIT_XML_REPORT: $REPORT_DIR/phpunit-report.xml
   cache:
     <<: *composer-cache
     policy: pull
   allow_failure: false
   interruptible: true
   before_script:
-    - !reference [.scripts, configure-studip]
+    - *mkdir-reports
+    - *configure-studip
   script:
-    - composer/bin/codecept run unit --xml
-    - !reference [.scripts, remove-absolute-path-in-report]
+    - 'composer/bin/codecept
+      run unit
+      --xml=$PHPUNIT_XML_REPORT
+      -o "paths: output: ."'
+  after_script:
+    - sed -i "s%$PWD/%%" $PHPUNIT_XML_REPORT
   artifacts:
-    <<: *test-artifacts
+    reports:
+      junit: $PHPUNIT_XML_REPORT
 
 test-functional:
-  stage: tests
+  stage: test
   needs: [lint-php]
+  variables:
+    FUNCTIONAL_XML_REPORT: $REPORT_DIR/functional-report.xml
+    FUNCTIONAL_CODE_QUALITY_REPORT: $REPORT_DIR/functional-codequality.json
   cache:
     <<: *composer-cache
     policy: pull
@@ -164,47 +192,54 @@ test-functional:
   allow_failure: false
   interruptible: true
   before_script:
-    - !reference [.scripts, initialize-studip-database]
+    - *mkdir-reports
+    - *initialize-studip-database
   script:
-    - composer/bin/codecept run functional --xml
-    - !reference [.scripts, remove-absolute-path-in-report]
+    - 'composer/bin/codecept
+      run functional
+      --xml=$FUNCTIONAL_XML_REPORT
+      -o "paths: output: ."'
+  after_script:
+    - sed -i "s%$PWD/%%" $FUNCTIONAL_XML_REPORT
   artifacts:
-   <<: *test-artifacts
+    reports:
+      junit: $FUNCTIONAL_XML_REPORT
 
 test-jsonapi:
-  stage: tests
+  stage: test
   needs: [lint-php]
   cache:
     <<: *composer-cache
     policy: pull
   services:
     - mariadb
-  allow_failure: false
+  variables:
+    JSONAPI_XML_REPORT: $REPORT_DIR/jsonapi-report.xml
   interruptible: true
   before_script:
-    - !reference [.scripts, initialize-studip-database]
+    - *mkdir-reports
+    - *initialize-studip-database
   script:
-    - composer/bin/codecept run jsonapi --xml
-    - !reference [.scripts, remove-absolute-path-in-report]
+    - 'composer/bin/codecept
+      run jsonapi
+      --xml=$JSONAPI_XML_REPORT
+      -o "paths: output: ."'
+  after_script:
+    - sed -i "s%$PWD/%%" $JSONAPI_XML_REPORT
   artifacts:
-    <<: *test-artifacts
-    when: always
-    expire_in: 1 week
-    paths:
-      - tests/_output
     reports:
-      junit: tests/_output/report.xml
+      junit: $JSONAPI_XML_REPORT
 
 test-assets:
-  stage: tests
+  stage: test
   needs: []
+  image: $NODE_IMAGE
   cache: *npm-cache
-  allow_failure: false
   interruptible: true
   before_script:
-    - make npm
+    - npm install
   script:
-    - make webpack-dev
+    - npm run webpack-dev
 
 packaging:
   stage: packaging
