@@ -99,7 +99,7 @@ class OERHost extends OERIdentity
     public function fetchPublicKey()
     {
         $endpoint_url = $this['url']."fetch_public_host_key";
-        $endpoint_url .= "?from=".urlencode($GLOBALS['oer_PREFERRED_URI'] ?: $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/");
+        $endpoint_url .= "?from=".urlencode($GLOBALS['oer_PREFERRED_URI'] ?? $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/");
         $host_data = @file_get_contents($endpoint_url, false, get_default_http_stream_context($endpoint_url));
         if ($host_data) {
             $host_data = json_decode($host_data, true);
@@ -123,9 +123,9 @@ class OERHost extends OERIdentity
     public function askKnownHosts()
     {
         $endpoint_url = $this['url']."fetch_known_hosts"
-            ."?from=".urlencode(!empty($GLOBALS['oer_PREFERRED_URI']) ?: $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/");
+            ."?from=".urlencode($GLOBALS['oer_PREFERRED_URI'] ?? $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/oer/endpoints/");
         $output = @file_get_contents($endpoint_url, false, get_default_http_stream_context($endpoint_url));
-        if (!empty($output)) {
+        if ($output) {
             $output = json_decode($output, true);
             foreach ((array) $output['hosts'] as $host_data) {
                 $host = OERHost::findOneByUrl($host_data['url']);
