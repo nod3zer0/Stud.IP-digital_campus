@@ -40,7 +40,7 @@ $options = range($vote->questiondata['minimum'], $vote->questiondata['maximum'])
                 foreach ($answers as $answer) {
                     if ($answer['answerdata']['answers'][$key] == $option) {
                         $hits++;
-                        if ($answer['user_id'] && $answer['user_id'][0] !== 'n') {
+                        if ($answer['user_id'] && $answer['user_id'][0] !== 'q' && $answer['user_id'][0] !== 'n') {
                             $names[] = $answer->user->getFullName('full');
                         }
                     }
