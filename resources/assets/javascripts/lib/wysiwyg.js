@@ -184,8 +184,7 @@ function replaceTextarea(textarea) {
 
         ckeditor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
             if (!isFocused) {
-                ckeditor.setData(wysiwyg.markAsHtml(ckeditor.getData()));
-                ckeditor.updateSourceElement();
+                ckeditor.updateSourceElement(wysiwyg.markAsHtml(ckeditor.getData()));
             }
         });
 
@@ -196,11 +195,6 @@ function replaceTextarea(textarea) {
 
         // Tell MathJax v2.7 to leave the editor alone
         ckeditor.ui.element.classList.add('tex2jax_ignore');
-
-        // TODO: Kein updateSourceElement im SourceEditing-Modus
-        //     $(ckeditor.container.$).on('blur', '.CodeMirror', function (event) {
-        //         ckeditor.updateElement(); // also update in source mode
-        //     });
 
         return ckeditor;
     }
