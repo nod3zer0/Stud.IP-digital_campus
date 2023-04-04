@@ -37,9 +37,10 @@ class ClientRepository implements ClientRepositoryInterface
      */
     public function validateClient($clientIdentifier, $clientSecret, $grantType): bool
     {
-        if ($grantType !== 'authorization_code') {
+        if (!in_array($grantType, ['authorization_code', 'refresh_token'])) {
             return false;
         }
+
         $client = Client::findActive($clientIdentifier);
         if (!$client) {
             return false;
