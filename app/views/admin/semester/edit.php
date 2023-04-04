@@ -30,14 +30,6 @@
         </label>
 
         <label>
-            <?= _('Beschreibung') ?>
-
-            <?= I18N::textarea('description', $semester->description, [
-                'id' => 'description',
-            ]) ?>
-        </label>
-
-        <label>
             <?= _('Externe ID') ?>
 
             <input type="text" name="external_id" value="<?= htmlReady($semester->external_id) ?>" maxlength="50">

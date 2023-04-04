@@ -16,7 +16,6 @@
  * @property string semester_id database column
  * @property string id alias column for semester_id
  * @property string name database column
- * @property string description database column
  * @property string semester_token database column
  * @property string beginn database column
  * @property string ende database column
@@ -64,7 +63,6 @@ class Semester extends SimpleORMap
         $config['registered_callbacks']['after_delete'][] = 'refreshCache';
 
         $config['i18n_fields']['name'] = true;
-        $config['i18n_fields']['description'] = true;
         $config['i18n_fields']['semester_token'] = true;
 
         parent::configure($config);

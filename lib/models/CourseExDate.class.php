@@ -15,7 +15,6 @@
  * @property string range_id database column
  * @property string autor_id database column
  * @property string content database column
- * @property string description database column
  * @property string date database column
  * @property string end_time database column
  * @property string mkdate database column

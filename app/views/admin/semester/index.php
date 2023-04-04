@@ -60,7 +60,7 @@
                     <? endif; ?>
                 >
             </td>
-            <td title="<?= htmlReady($semester->description) ?>">
+            <td>
                 <?= htmlReady($semester->name) ?>
                 <? if (!$semester->visible): ?>
                 <?= '(' . _('gesperrt') . ')'; ?>

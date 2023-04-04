@@ -105,7 +105,6 @@ class Semester extends \RESTAPI\RouteMap
             'id'             => $semester['semester_id'],
             'title'          => (string) $semester['name'],
             'token'          => (string) $semester['semester_token'],
-            'description'    => (string) $semester['description'],
             'begin'          => (int) $semester['beginn'],
             'end'            => (int) $semester['ende'],
             'seminars_begin' => (int) $semester['vorles_beginn'],
