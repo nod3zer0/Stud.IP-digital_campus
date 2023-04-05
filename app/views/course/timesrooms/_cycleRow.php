@@ -90,7 +90,7 @@ $is_exTermin = $termin instanceof CourseExDate;
     </td>
     <td class="actions">
         <? $actionMenu = ActionMenu::get()->setContext($termin) ?>
-    <? if ($is_exTermin): ?>
+    <? if ($is_exTermin && !$locked): ?>
         <? $actionMenu->addLink(
             $controller->url_for(
                 'course/timesrooms/cancel/' . $termin->id
