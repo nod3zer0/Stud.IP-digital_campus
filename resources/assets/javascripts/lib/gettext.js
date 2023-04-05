@@ -1,6 +1,6 @@
 import { translate } from 'vue-gettext';
 import defaultTranslations from '../../../../locale/de/LC_MESSAGES/js-resources.json';
-import eventBus from './event-bus.js';
+import eventBus from './event-bus.ts';
 
 const DEFAULT_LANG = 'de_DE';
 const DEFAULT_LANG_NAME = 'Deutsch';

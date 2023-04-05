@@ -1,6 +1,6 @@
 {
     "parserOptions": {
-        "parser": "@babel/eslint-parser",
+        "parser": "@typescript-eslint/parser",
         "sourceType": "module"
     },
     "env": {
@@ -9,7 +9,8 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:vue/essential"
+        "plugin:vue/essential",
+        "@vue/eslint-config-typescript"
     ],
     "globals": {
         "STUDIP": "writable",
@@ -23,13 +24,15 @@
     ],
     "rules": {
         "no-unused-vars": "off",
-
+        "@typescript-eslint/no-unused-vars": "off",
         "no-async-promise-executor": "error",
         "no-await-in-loop": "error",
         "no-promise-executor-return": "error",
         "require-atomic-updates": "error",
         "max-nested-callbacks": ["error", 4],
         "no-return-await": "error",
-        "prefer-promise-reject-errors": "error"
+        "prefer-promise-reject-errors": "error",
+
+        "vue/multi-word-component-names": "off"
     }
 }

@@ -1,5 +1,5 @@
 import { $gettext } from '../lib/gettext.js';
-import eventBus from "./event-bus";
+import eventBus from "./event-bus.ts";
 
 eventBus.on('studip:set-locale', () => {
     Calendar.day_names = [

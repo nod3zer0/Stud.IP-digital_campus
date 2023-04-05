@@ -105,6 +105,14 @@ module.exports = {
                 ]
             },
             {
+                test: /\.ts$/,
+                loader: 'ts-loader',
+                exclude: /node_modules/,
+                options: {
+                    appendTsSuffixTo: [/\.vue$/],
+                },
+            },
+            {
                 test: /\.js$/,
                 exclude: /node_modules|ckeditor/,
                 use: {

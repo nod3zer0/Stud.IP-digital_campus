@@ -1,5 +1,5 @@
 import { $gettext } from '../lib/gettext.js';
-import eventBus from "../lib/event-bus";
+import eventBus from "../lib/event-bus.ts";
 
 /* ------------------------------------------------------------------------
  * application.js

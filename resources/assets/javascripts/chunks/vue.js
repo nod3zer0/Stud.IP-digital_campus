@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Router from "vue-router";
-import eventBus from '../lib/event-bus.js';
+import eventBus from '../lib/event-bus.ts';
 import GetTextPlugin from 'vue-gettext';
 import { getLocale, getVueConfig } from '../lib/gettext.js';
 import PortalVue from 'portal-vue';

@@ -1,5 +1,5 @@
 import { $gettext } from "./gettext.js";
-import eventBus from "./event-bus";
+import eventBus from "./event-bus.ts";
 
 eventBus.on('studip:set-locale', () => {
     Forum.warning_text = $gettext('Wenn Sie die Seite verlassen, gehen ihre Änderungen verloren!');
