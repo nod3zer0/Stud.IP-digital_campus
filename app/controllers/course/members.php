@@ -1817,10 +1817,11 @@ class Course_MembersController extends AuthenticatedController
         }
 
         //Calculate the amount of recipients for each group:
-        $this->user_count = CourseMember::countByCourseAndStatus($this->course_id, 'user');
-        $this->autor_count = CourseMember::countByCourseAndStatus($this->course_id, 'autor');
-        $this->tutor_count = CourseMember::countByCourseAndStatus($this->course_id, 'tutor');
-        $this->dozent_count = CourseMember::countByCourseAndStatus($this->course_id, 'dozent');
+        $visibility_constraint = !$this->is_tutor ? " AND visible <> 'no'" : "";
+        $this->user_count = CourseMember::countBySql("seminar_id=? AND status=?" . $visibility_constraint, [$this->course_id, 'user']);
+        $this->autor_count = CourseMember::countBySql("seminar_id=? AND status=?" . $visibility_constraint, [$this->course_id, 'autor']);
+        $this->tutor_count = CourseMember::countBySql("seminar_id=? AND status=?" . $visibility_constraint, [$this->course_id, 'tutor']);
+        $this->dozent_count = CourseMember::countBySql("seminar_id=? AND status=?" . $visibility_constraint, [$this->course_id, 'dozent']);
 
         //Use the correct names for thte four status groups:
         $sem = Seminar::GetInstance($this->course_id);
@@ -1844,6 +1845,10 @@ class Course_MembersController extends AuthenticatedController
                     'course_id' => $this->course_id
                 ]
             );
+            $cs = CourseSet::getSetForCourse($this->course_id);
+            if (is_object($cs) && !$cs->hasAlgorithmRun()) {
+                $this->claiming_count = count(AdmissionPriority::getPrioritiesByCourse($cs->getId(), $this->course_id));
+            }
         }
         $this->default_selected_groups = ['dozent', 'tutor', 'autor', 'user'];
         $this->all_available_groups = $this->default_selected_groups;
@@ -1854,6 +1859,9 @@ class Course_MembersController extends AuthenticatedController
             }
             if ($this->awaiting_count) {
                 $this->all_available_groups[] = 'awaiting';
+            }
+            if ($this->claiming_count) {
+                $this->all_available_groups[] = 'claiming';
             }
         }
         if (Request::submitted('write')) {
@@ -1867,73 +1875,54 @@ class Course_MembersController extends AuthenticatedController
                     $filtered_groups[] = $group;
                 }
             }
-            if ($filtered_groups == $this->default_selected_groups) {
-                $this->redirect(URLHelper::getURL(
-                    'dispatch.php/messages/write',
-                    [
-                        'course_id' => $this->course_id,
-                        'default_subject' => $this->default_subject,
-                        'filter' => 'all',
-                        'emailrequest' => 1
-                    ]
-                ));
-            } elseif ($filtered_groups == $this->all_available_groups) {
-                $this->redirect(URLHelper::getURL(
-                    'dispatch.php/messages/write',
-                    [
-                        'course_id' => $this->course_id,
-                        'default_subject' => $this->default_subject,
-                        'filter' => 'really_all',
-                        'emailrequest' => 1
-                    ]
-                ));
-            } else {
-                //Do custom filtering.
-                $filters = [];
-                $who_param = [];
+            //Do custom filtering.
+            $filters = [];
+            $who_param = [];
 
-                foreach ($filtered_groups as $group) {
-                    if ($group === 'awaiting') {
-                        $filters[] = 'awaiting';
-                    } elseif ($group === 'accepted') {
-                        $filters[] = 'prelim';
-                    } elseif ($group === 'user') {
-                        $filters[] = 'all';
-                        $who_param[] = 'user';
-                    } elseif ($group === 'autor') {
-                        $filters[] = 'all';
-                        $who_param[] = 'autor';
-                    } elseif ($group === 'tutor') {
-                        $filters[] = 'all';
-                        $who_param[] = 'tutor';
-                    } elseif ($group === 'dozent') {
-                        $filters[] = 'all';
-                        $who_param[] = 'dozent';
-                    }
+            foreach ($filtered_groups as $group) {
+                if ($group === 'awaiting') {
+                    $filters[] = 'awaiting';
+                } elseif ($group === 'accepted') {
+                    $filters[] = 'prelim';
+                } elseif ($group === 'claiming') {
+                    $filters[] = 'claiming';
+                } elseif ($group === 'user') {
+                    $filters[] = 'all';
+                    $who_param[] = 'user';
+                } elseif ($group === 'autor') {
+                    $filters[] = 'all';
+                    $who_param[] = 'autor';
+                } elseif ($group === 'tutor') {
+                    $filters[] = 'all';
+                    $who_param[] = 'tutor';
+                } elseif ($group === 'dozent') {
+                    $filters[] = 'all';
+                    $who_param[] = 'dozent';
                 }
-                $filters = array_unique($filters);
-                if (!$filters) {
-                    PageLayout::postError(
-                        _('Es wurde keine Gruppe ausgewählt!')
-                    );
-                    return;
-                }
-
-                $url_params = [
-                    'course_id' => $this->course_id,
-                    'default_subject' => $this->default_subject,
-                    'filter' => implode(',', array_unique($filters)),
-                    'emailrequest' => 1
-                ];
-                if ($who_param) {
-                    $url_params['who'] = implode(',', $who_param);
-                }
-
-                $this->redirect(URLHelper::getURL(
-                    'dispatch.php/messages/write',
-                    $url_params
-                ));
             }
+            $filters = array_unique($filters);
+            if (!$filters) {
+                PageLayout::postError(
+                    _('Es wurde keine Gruppe ausgewählt!')
+                );
+                return;
+            }
+
+            $url_params = [
+                'course_id' => $this->course_id,
+                'default_subject' => $this->default_subject,
+                'filter' => implode(',', array_unique($filters)),
+                'emailrequest' => 1
+            ];
+            if ($who_param) {
+                $url_params['who'] = implode(',', $who_param);
+            }
+
+            $this->redirect(URLHelper::getURL(
+                'dispatch.php/messages/write',
+                $url_params
+            ));
+
         }
     }
     public function checkUserVisibility()

@@ -95,6 +95,21 @@
                 </em>
             </label>
         <? endif ?>
+        <? if (in_array('claiming', $all_available_groups)) : ?>
+            <label>
+                <input type="checkbox" name="selected_groups[]" value="claiming"
+                    <? if (!$claiming_count): echo 'disabled'; ?>
+                    <? elseif (in_array('claiming', $default_selected_groups)): echo 'checked'; ?>
+                    <? endif; ?>>
+                <?= _('Alle Personen auf der Losliste der Veranstaltung') ?>
+                <em>
+                    (<?= sprintf(
+                        ngettext('%u Person', '%u Personen', $claiming_count),
+                        $claiming_count
+                    ) ?>)
+                </em>
+            </label>
+        <? endif ?>
     </fieldset>
     <div data-dialog-button>
         <?= \Studip\Button::create(_('Rundmail schreiben'), 'write') ?>
