@@ -48,7 +48,7 @@
             ['data-dialog' => 'size=auto']
                 );
            }
-           if ($is_tutor) {
+           if ($is_tutor && !$is_locked) {
                 $actions->addLink(
             $controller->url_for('course/statusgroups/move_member', $m->user_id, $group->id),
             _('In eine andere Gruppe verschieben'),
@@ -61,7 +61,7 @@
             ['data-dialog' => 'size=auto']
                 );
            }
-           if ($group->id !== 'nogroup' && ($is_tutor || ($m->user_id === $GLOBALS['user']->id && $group->userMayLeave($GLOBALS['user']->id)))) {
+           if ($group->id !== 'nogroup' && !$is_locked && ($is_tutor || ($m->user_id === $GLOBALS['user']->id && $group->userMayLeave($GLOBALS['user']->id)))) {
                 $actions->addLink(
             $controller->url_for('course/statusgroups/delete_member', $m->user_id, $group->id),
             _('Aus der Gruppe entfernen'),
