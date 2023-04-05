@@ -35,6 +35,10 @@
  * @property string execution_count database column
  * @property string assigned_count database column
  * @property SimpleORMapCollection schedules has_many CronjobSchedule
+ *
+ * @property string $description
+ * @property string $name
+ * @property array $parameters
  */
 class CronjobTask extends SimpleORMap
 {

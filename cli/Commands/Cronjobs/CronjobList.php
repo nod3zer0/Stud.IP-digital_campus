@@ -27,7 +27,7 @@ class CronjobList extends Command
             $table->setStyle('compact');
             $table->setHeaders(['Task-ID', 'Description']);
             foreach ($tasks as $task) {
-                if (!class_exists($task->class)) {
+                if (!$task->valid) {
                     continue;
                 }
                 $description = call_user_func(['\\' . $task->class, 'getDescription']);
