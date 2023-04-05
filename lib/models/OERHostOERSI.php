@@ -10,7 +10,7 @@ class OERHostOERSI extends OERHost
      */
     public function fetchRemoteSearch($text = null, $tag = null)
     {
-        $endpoint_url = 'https://oersi.de/resources/api-internal/search/oer_data/_search';
+        $endpoint_url = 'https://oersi.org/resources/api/search/oer_data/_search';
         $appendix = Config::get()->OER_OERSI_ONLY_DOWNLOADABLE ? ' AND _exists_:encoding.contentUrl' : '';
         if ($tag) {
             $endpoint_url .= '?q=' . urlencode("keywords:" . $tag . $appendix);
@@ -87,7 +87,7 @@ class OERHostOERSI extends OERHost
      */
     public function fetchItemData(OERMaterial $material)
     {
-        $endpoint_url = 'https://oersi.de/resources/' . urlencode($material['data']['id']) . '?format=json';
+        $endpoint_url = 'https://oersi.org/resources/' . urlencode($material['data']['id']) . '?format=json';
         $output = @file_get_contents($endpoint_url, false, get_default_http_stream_context($endpoint_url));
         if ($output) {
             $output = json_decode($output, true);
