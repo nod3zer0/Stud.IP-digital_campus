@@ -473,7 +473,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Returns true if given key exists in the database.
      *
-     * @param string $id primary key
+     * @param string|array $id primary key
      * @return boolean
      */
     public static function exists($id)
@@ -621,7 +621,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * returns array of instances of given class filtered by given sql
      * @param string $sql sql clause to use on the right side of WHERE
      * @param ?array $params parameters for query
-     * @return array array of "self" objects
+     * @return static[] array of "self" objects
      */
     public static function findBySQL($sql, $params = [])
     {
@@ -672,7 +672,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param string $foreign_key_value value of foreign key to find related records
      * @param array $options relation options from other side of relation
-     * @return array of "self" objects
+     * @return static[] array of "self" objects
      */
     public static function findThru($foreign_key_value, $options)
     {
@@ -754,7 +754,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @param ?array $pks array of primary keys
      * @param ?string $order order by clause
      * @param ?array $order_params
-     * @return array
+     * @return static[]
      */
     public static function findMany($pks = [], $order = '', $order_params = [])
     {
@@ -888,7 +888,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @param string $name
      * @param array $arguments
      * @throws BadMethodCallException
-     * @return mixed
+     * @return int|static|static[]
      */
     public static function __callStatic($name, $arguments)
     {
@@ -1243,7 +1243,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
             return true;
         }
-        return false;
     }
 
     /**

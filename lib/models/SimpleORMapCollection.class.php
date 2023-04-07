@@ -14,6 +14,8 @@
  * @category    Stud.IP
  *
  * @extends SimpleCollection<SimpleORMap>
+ *
+ * @template T of SimpleORMap
  */
 class SimpleORMapCollection extends SimpleCollection
 {
@@ -45,9 +47,9 @@ class SimpleORMapCollection extends SimpleCollection
      * all objects should be of the same type
      *
      * @throws InvalidArgumentException if first entry is not SimpleOrMap
-     * @param array<?SimpleORMap> $data array with SimpleORMap objects
+     * @param T[] $data array with SimpleORMap objects
      * @param bool $strict check every element for correct type and unique pk
-     * @return SimpleORMapCollection
+     * @return SimpleORMapCollection<T>
      */
     public static function createFromArray(array $data, $strict = true)
     {
@@ -73,9 +75,9 @@ class SimpleORMapCollection extends SimpleCollection
     /**
      * Constructor
      *
-     * @param ?Closure $finder callable to fill collection
-     * @param ?array $options relationship options
-     * @param ?SimpleORMap $record related record
+     * @param ?Closure         $finder  callable to fill collection
+     * @param ?array           $options relationship options
+     * @param SimpleORMap|null $record  related record
      */
     public function __construct(Closure $finder = null, array $options = null, SimpleORMap $record = null)
     {
@@ -175,7 +177,7 @@ class SimpleORMapCollection extends SimpleCollection
      * returns element with given primary key value
      *
      * @param string $value primary key value to search for
-     * @return ?SimpleORMap
+     * @return ?T
      */
     public function find($value)
     {
@@ -217,7 +219,7 @@ class SimpleORMapCollection extends SimpleCollection
      * internal deleted collection
      *
      * @param string $id primary key of element
-     * @return number of unsetted elements
+     * @return int number of unsetted elements
      */
     public function unsetByPk($id)
     {
