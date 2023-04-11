@@ -80,7 +80,9 @@ export default {
                 }
 
                 if (!document.documentElement.classList.contains('responsive-display')) {
-                    document.body.style.display = 'flex';
+                    setTimeout(() => {
+                        document.body.style.display = 'flex';
+                    }, 300);
                 }
 
                 this.sidebarOpen = false;
