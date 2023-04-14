@@ -267,10 +267,10 @@ class OERHost extends OERIdentity
             if ($materialdata['external_contact']) {
                 $user = $materialdata['oeruser'];
                 $users[] = [
-                    'user_id' => $user['foreign_user_id'],
+                    'user_id' => $user['foreign_id'],
                     'name' => $user['name'],
-                    'avatar' => $user['avatar'],
-                    'description' => $user['description'],
+                    'avatar' => $user['avatar_url'],
+                    'description' => $user['data']['description'],
                     'host_url' => $user->host['url'],
                     'link' => URLHelper::getURL('dispatch.php/oer/market/profile/' . $user->getId()),
                     'hostname' => $this['name']

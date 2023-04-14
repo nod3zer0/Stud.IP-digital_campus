@@ -223,11 +223,14 @@ class Oer_EndpointsController extends StudipController
                     'avatar' => $userdata['external_contact']
                         ? $user->avatar_url
                         : Avatar::getAvatar($userdata['user_id'])->getURL(Avatar::NORMAL),
+                    'description' => $userdata['external_contact']
+                        ? $user['data']['description']
+                        : $user->datafields,
                     'host_url' => $material->host ? $material->host['url'] : $me['url']
                 ];
             }
             $this->render_json([
-                    'data' => [
+                'data' => [
                     'name' => $material['name'],
                     'short_description' => $material['short_description'],
                     'description' => $material['description'],
@@ -407,7 +410,9 @@ class Oer_EndpointsController extends StudipController
             $user['contact_type'] = 'oercampus';
             $user['name'] = $data['user']['name'];
             $user['avatar_url'] = $data['user']['avatar'];
-            $user['data']['description'] = $data['user']['description'] ?: "";
+            $user['data'] = [
+                'description' => $data['user']['description'] ?: ''
+            ];
             $user->store();
 
             $review = OERReview::findOneBySQL("display_class = 'OERReview'
@@ -488,7 +493,9 @@ class Oer_EndpointsController extends StudipController
             $user['contact_type'] = 'oercampus';
             $user['name'] = $data['user']['name'];
             $user['avatar_url'] = $data['user']['avatar'];
-            $user['data']['description'] = $data['user']['description'] ?: "";
+            $user['data'] = [
+                'description' => $data['user']['description'] ?: ''
+            ];
             $user->store();
 
             $comment = new BlubberComment();

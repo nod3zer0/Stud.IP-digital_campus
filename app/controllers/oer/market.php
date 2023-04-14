@@ -453,9 +453,9 @@ class Oer_MarketController extends StudipController
         if ($this->user->isNew()) {
             throw new Exception(_("Nutzer ist nicht erfasst."));
         }
-        $this->materials = OERMaterial::findBySQL("user_id = ?
-                AND host_id IS NOT NULL
-            ORDER BY mkdate DESC", [
+        $this->materials = OERMaterial::findBySQL("LEFT JOIN oer_material_users ON (oer_material_users.material_id = oer_material.material_id AND external_contact = 1)
+            WHERE oer_material_users.user_id = ?
+            ORDER BY oer_material.mkdate DESC", [
             $external_user_id
         ]);
     }

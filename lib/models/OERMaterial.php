@@ -566,7 +566,9 @@ class OERMaterial extends SimpleORMap
                     $user['contact_type'] = "oercampus";
                     $user['name'] = $review_data['user']['name'];
                     $user['avatar_url'] = $review_data['user']['avatar'] ?: null;
-                    $user['data']['description'] = $review_data['user']['description'] ?: null;
+                    $user['data'] = [
+                        'description' => $review_data['user']['description'] ?: ''
+                    ];
                     $user->store();
 
                     $review['user_id'] = $user->getId();
@@ -609,7 +611,7 @@ class OERMaterial extends SimpleORMap
                 }
                 $user['name'] = $userdata['name'];
                 $user['avatar_url'] = $userdata['avatar'] ?: null;
-                $userdata = $user['data'] ? $user['data']->toArrayCopy() : [];
+                $userdata = $user['data'] ? $user['data']->getArrayCopy() : [];
                 $userdata['description'] = $userdata['description'] ?: null;
                 $user['data'] = $userdata;
                 $user->store();

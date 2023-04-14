@@ -24,6 +24,11 @@ class ExternalUser extends SimpleORMap
     protected static function configure($config = [])
     {
         $config['db_table'] = 'external_users';
+        $config['belongs_to']['host'] = [
+            'class_name' => OERHost::class,
+            'foreign_key' => 'host_id'
+        ];
+        $config['serialized_fields']['data'] = 'JSONArrayObject';
         parent::configure($config);
     }
 }

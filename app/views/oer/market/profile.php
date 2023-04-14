@@ -1,11 +1,11 @@
 <div style="display: flex; width: 100%; margin-bottom: 20px;">
     <div>
-        <img class="avatar-normal" src="<?= htmlReady($user['avatar']) ?>">
+        <img class="avatar-normal" src="<?= htmlReady($user['avatar_url']) ?>">
     </div>
     <div style="width: 100%; padding-left: 10px;">
         <h1><?= htmlReady($user['name']) ?></h1>
         <div>
-            <?= formatReady($user['description']) ?>
+            <?= formatReady($user['data']['description']) ?>
         </div>
     </div>
 </div>
@@ -19,7 +19,7 @@
             </h1>
         </header>
         <section>
-            <?= $this->render_partial("mymaterial/_material_list.php", ['materialien' => $materials]) ?>
+            <?= $this->render_partial("oer/mymaterial/_material_list.php", ['materialien' => $materials]) ?>
         </section>
     </section>
 <? endif ?>

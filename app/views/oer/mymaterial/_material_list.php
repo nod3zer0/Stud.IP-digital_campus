@@ -44,17 +44,17 @@
                 <? endif ?>
             </td>
             <td>
-                <a href="<?= $controller->statistics($material) ?>" data-dialog="size=auto">
+                <a href="<?= $controller->link_for('oer/mymaterial/statistics/' . $material->id) ?>" data-dialog="size=auto">
                     <?= OERDownloadcounter::countBySQL('material_id = ?', [$material->id]) ?>
                 </a>
             </td>
             <td class="actions">
                 <? if ($material->isMine()) : ?>
-                    <a href="<?= $controller->edit($material) ?>" data-dialog
+                    <a href="<?= $controller->link_for('oer/mymaterial/edit/' . $material->id)  ?>" data-dialog
                        title="<?= _('Lernmaterial bearbeiten') ?>">
                         <?= Icon::create('edit', Icon::ROLE_CLICKABLE)->asImg(20) ?>
                     </a>
-                    <form action="<?= $controller->delete($material) ?>"
+                    <form action="<?= $controller->link_for('oer/mymaterial/delete/' . $material->id) ?>"
                           class="inlineform"
                           method="post"
                           data-confirm="<?= _('Dieses Material wirklich löschen?') ?>">
