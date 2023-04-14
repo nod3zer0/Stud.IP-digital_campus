@@ -34,19 +34,6 @@ class Oer_AdminController extends AuthenticatedController
             PageLayout::postInfo(_('Der OER Campus ist nicht für nobody freigegeben. Damit kann er sich nicht mit anderen Stud.IPs verbinden. Um das zu ändern, setzen Sie die Konfiguration OER_PUBLIC_STATUS auf "nobody".'));
         }
 
-        //zufällig einen Host nach Neuigkeiten fragen:
-        if (count($this->hosts) > 1) {
-            $index = rand(0, count($this->hosts) - 1);
-            while($this->hosts[$index]->isMe()) {
-                $index++;
-                if ($index >= count($this->hosts)) {
-                    $index = 0;
-                }
-            }
-            $this->askForHosts($this->hosts[$index]);
-        }
-
-
     }
 
     public function add_new_host_action()
