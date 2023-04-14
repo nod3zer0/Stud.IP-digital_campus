@@ -34,7 +34,7 @@ abstract class OERIdentity extends SimpleORMap
     protected function createKeys()
     {
         $keypair = RSA::createKey(4096);
-        $this['private_key'] = preg_replace("/\r/", "", $keypair['privatekey']);
-        $this['public_key'] = preg_replace("/\r/", "", $keypair['publickey']);
+        $this['private_key'] = preg_replace("/\r/", "", $keypair->toString('PKCS1'));
+        $this['public_key'] = preg_replace("/\r/", "", $keypair->getPublicKey()->toString('PKCS1'));
     }
 }
