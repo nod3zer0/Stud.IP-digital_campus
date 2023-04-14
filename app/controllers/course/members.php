@@ -2186,7 +2186,10 @@ class Course_MembersController extends AuthenticatedController
     public function moveToWaitlist($users, $which_end)
     {
         $course = Seminar::getInstance($this->course_id);
-        $msgs = [];
+        $msgs = [
+            'success' => [],
+            'error' => [],
+        ];
         foreach ($users as $user_id) {
             // Delete member from seminar
             $temp_user = User::find($user_id);
