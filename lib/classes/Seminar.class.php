@@ -2162,7 +2162,7 @@ get_title_for_status('dozent', 1, $this->status)));
                 $membership->store();
             },
             "Seminar_id = ? AND user_id = IN (?)",
-            [$this->course_id, $members]
+            [$this->id, $members]
         );
         return $this;
     }
