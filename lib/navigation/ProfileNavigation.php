@@ -62,8 +62,16 @@ class ProfileNavigation extends Navigation
             // profile data
             $navigation = new Navigation(_('Persönliche Angaben'));
             $navigation->addSubNavigation('profile', new Navigation(_('Grunddaten'), 'dispatch.php/settings/account'));
-            if (($perm->get_profile_perm($current_user->user_id) == 'user'
-                || ($perm->have_perm('root') && Config::get()->ALLOW_ADMIN_USERACCESS))) {
+            if (
+                !StudipAuthAbstract::CheckField('auth_user_md5.password', $current_user->auth_plugin)
+                && (
+                    $perm->get_profile_perm($current_user->user_id) === 'user'
+                    || (
+                        $perm->have_perm('root')
+                        && Config::get()->ALLOW_ADMIN_USERACCESS
+                    )
+                )
+            ) {
                 $navigation->addSubNavigation('password', new Navigation(
                     _('Passwort ändern'),
                     'dispatch.php/settings/password'
