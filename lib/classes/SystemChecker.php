@@ -113,7 +113,11 @@ final class SystemChecker
         $settings = [];
         $settings_valid = true;
         foreach ($requirements['settings'] as $setting => $state) {
-            $settings[$setting] = $this->compareSetting($variables[$setting], $state, $version['present']);
+            $settings[$setting] = $this->compareSetting(
+                $variables[$setting] ?? null,
+                $state,
+                $version['present']
+            );
 
             $settings_valid = $settings_valid && $settings[$setting]['valid'];
         }

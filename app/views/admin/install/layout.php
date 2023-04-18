@@ -59,14 +59,14 @@
                 ) ?>
             <?php endif; ?>
 
-            <?php if (!$valid && $button_label): ?>
+            <?php if (!$valid && !empty($button_label)): ?>
                 <?= Studip\Button::create($button_label, 'continue') ?>
             <?php elseif (!$valid): ?>
                 <?= Studip\Button::create(_('Erneut prüfen'), 'check') ?>
             <?php elseif ($next_step): ?>
                 <?= Studip\Button::create($button_label ?? (_('Weiter') . ' >>'), 'continue') ?>
             <?php else: ?>
-                <?= Studip\Button::create($button_label, 'continue', ['style' => 'visibility: hidden;']) ?>
+                <?= Studip\Button::create($button_label ?? '', 'continue', ['style' => 'visibility: hidden;']) ?>
             <?php endif; ?>
             </div>
         </div>
