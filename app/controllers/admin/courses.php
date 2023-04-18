@@ -536,7 +536,7 @@ class Admin_CoursesController extends AuthenticatedController
                 }
 
                 if (in_array('institute', $filter_config)) {
-                    $row['institute'] = $course->home_institut ? $course->home_institut['name'] : $course['institute'];
+                    $row['institute'] = $course_model->home_institut ? (string) $course_model->home_institut['name'] : $course_model['institut_id'];
                 }
 
                 foreach (PluginManager::getInstance()->getPlugins('AdminCourseContents') as $plugin) {
