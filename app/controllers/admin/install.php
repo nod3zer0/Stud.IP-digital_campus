@@ -403,11 +403,12 @@ class Admin_InstallController extends Trails_Controller
 
     public function migrate_action()
     {
+        URLHelper::setBaseURL($_SESSION['STUDIP_INSTALLATION']['system']['ABSOLUTE_URI_STUDIP']);
+
         unset($_SESSION['STUDIP_INSTALLATION']);
         session_destroy();
 
-        header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/web_migrate.php');
-        die;
+        $this->redirect(URLHelper::getURL('web_migrate.php'));
     }
 
     public function session_error_action()
