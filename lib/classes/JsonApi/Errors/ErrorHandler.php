@@ -40,6 +40,10 @@ class ErrorHandler
 
         $code = $this->determineStatusCode($exception, $request->getMethod());
 
+        if ($code >= 500) {
+            error_log($exception);
+        }
+
         return $response->withStatus($code);
     }
 
