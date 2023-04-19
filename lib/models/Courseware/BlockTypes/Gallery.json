@@ -27,5 +27,5 @@
     "required": [
         "folder_id"
     ],
-    "additionalProperties": false
+    "additionalProperties": true
 }
