@@ -39,7 +39,7 @@ class StructuralElementsUpdate extends JsonApiController
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameters)
      */
-    protected function validateResourceDocument($json, $resource)
+    protected function validateResourceDocument($json, $data)
     {
         if (!self::arrayHas($json, 'data')) {
             return 'Missing `data` member at document´s top level.';
@@ -55,7 +55,7 @@ class StructuralElementsUpdate extends JsonApiController
 
         if (self::arrayHas($json, 'data.relationships.parent')) {
             // Sonderfall: Wurzel hat kein parent und kann auch nicht verändert werden
-            if ($resource->isRootNode()) {
+            if ($data->isRootNode()) {
                 if (null !== self::arrayGet($json, 'data.relationships.parent.data')) {
                     return 'Cannot modify `parent` of a root node.';
                 }
@@ -70,7 +70,7 @@ class StructuralElementsUpdate extends JsonApiController
                 // keine Schleifen
                 if (
                     in_array(
-                        $resource->id,
+                        $data->id,
                         array_merge(
                             [$parent->id],
                             array_map(function ($ancestor) {

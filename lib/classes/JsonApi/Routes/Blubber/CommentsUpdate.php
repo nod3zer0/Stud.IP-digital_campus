@@ -44,7 +44,7 @@ class CommentsUpdate extends JsonApiController
         return $this->getCodeResponse(204);
     }
 
-    protected function validateResourceDocument($json)
+    protected function validateResourceDocument($json, $data)
     {
         if (empty(self::arrayGet($json, 'data.attributes.content'))) {
             return 'Comment should not be empty.';

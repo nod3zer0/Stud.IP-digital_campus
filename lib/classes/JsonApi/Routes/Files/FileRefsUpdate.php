@@ -66,9 +66,9 @@ class FileRefsUpdate extends JsonApiController
         }
     }
 
-    protected function validateResourceDocument($json, $fileRef)
+    protected function validateResourceDocument($json, $data)
     {
-        if ($err = $this->validateFileRefResourceObject($json, $fileRef)) {
+        if ($err = $this->validateFileRefResourceObject($json, $data)) {
             return $err;
         }
     }

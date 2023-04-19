@@ -70,7 +70,7 @@ class CourseMembershipsUpdate extends JsonApiController
         return $membership;
     }
 
-    protected function validateResourceDocument($json, \CourseMember $membership)
+    protected function validateResourceDocument($json, $data)
     {
         if (CourseMemberSchema::TYPE !== self::arrayGet($json, 'data.type')) {
             return 'Missing or wrong type.';
@@ -93,7 +93,11 @@ class CourseMembershipsUpdate extends JsonApiController
                 return 'Attribute `visible` must be either `yes` or `no`';
             }
 
-            if ('no' === $visible && in_array($membership->status, ['tutor', 'dozent'])) {
+            if (
+                'no' === $visible
+                && $data instanceof \CourseMember
+                && in_array($data->status, ['tutor', 'dozent'])
+            ) {
                 return 'Users of status `tutor` or `dozent` must remain visible.';
             }
         }

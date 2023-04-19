@@ -40,7 +40,7 @@ class CoursewareInstancesUpdate extends JsonApiController
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameters)
      */
-    protected function validateResourceDocument($json, $resource)
+    protected function validateResourceDocument($json, $data)
     {
         if (!self::arrayHas($json, 'data')) {
             return 'Missing `data` member at document´s top level.';
@@ -61,7 +61,7 @@ class CoursewareInstancesUpdate extends JsonApiController
             }
             $blockTypes = array_map(function ($blockType) {
                 return $blockType::getType();
-            }, $resource->getBlockTypes());
+            }, $data->getBlockTypes());
             foreach ($favoriteBlockTypes as $favoriteBlockType) {
                 if (!in_array($favoriteBlockType, $blockTypes)) {
                     return 'Attribute `favorite-block-types` contains an invalid block type.';
@@ -79,7 +79,7 @@ class CoursewareInstancesUpdate extends JsonApiController
             if (!is_string($editingPermissionLevel)) {
                 return 'Attribute `editing-permission-level` must be a string.';
             }
-            if (!$resource->isValidEditingPermissionLevel($editingPermissionLevel)) {
+            if (!$data->isValidEditingPermissionLevel($editingPermissionLevel)) {
                 return 'Attribute `editing-permission-level` contains an invalid value.';
             }
         }
@@ -87,7 +87,7 @@ class CoursewareInstancesUpdate extends JsonApiController
         if (self::arrayHas($json, 'data.attributes.certificate-settings')) {
             $certificateSettings = self::arrayGet($json, 'data.attributes.certificate-settings');
 
-            if (!$resource->isValidCertificateSettings($certificateSettings)) {
+            if (!$data->isValidCertificateSettings($certificateSettings)) {
                 return 'Attribute `certificate-settings` contains an invalid value.';
             }
         }
@@ -95,7 +95,7 @@ class CoursewareInstancesUpdate extends JsonApiController
         if (self::arrayHas($json, 'data.attributes.reminder-settings')) {
             $reminderSettings = self::arrayGet($json, 'data.attributes.reminder-settings');
 
-            if (!$resource->isValidReminderSettings($reminderSettings)) {
+            if (!$data->isValidReminderSettings($reminderSettings)) {
                 return 'Attribute `reminder-settings` contains an invalid value.';
             }
         }
@@ -103,7 +103,7 @@ class CoursewareInstancesUpdate extends JsonApiController
         if (self::arrayHas($json, 'data.attributes.reset-progress-settings')) {
             $resetProgressSettings = self::arrayGet($json, 'data.attributes.reset-progress-settings');
 
-            if (!$resource->isValidResetProgressSettings($resetProgressSettings)) {
+            if (!$data->isValidResetProgressSettings($resetProgressSettings)) {
                 return 'Attribute `reset-progress-settings` contains an invalid value.';
             }
         }

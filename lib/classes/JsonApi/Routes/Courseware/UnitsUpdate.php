@@ -43,7 +43,7 @@ class UnitsUpdate extends JsonApiController
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameters)
      */
-    protected function validateResourceDocument($json, $resource)
+    protected function validateResourceDocument($json, $data)
     {
         if (!self::arrayHas($json, 'data')) {
             return 'Missing `data` member at document´s top level.';

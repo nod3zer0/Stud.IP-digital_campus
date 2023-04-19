@@ -60,7 +60,7 @@ class ForumEntriesUpdate extends JsonApiController
         return $entry;
     }
 
-    protected function validateResourceDocument($json)
+    protected function validateResourceDocument($json, $data)
     {
         $title = self::arrayGet($json, 'data.attributes.title');
         $content = self::arrayGet($json, 'data.attributes.content');

@@ -51,7 +51,7 @@ class ThreadsCreate extends JsonApiController
         return $this->getCreatedResponse($thread);
     }
 
-    protected function validateResourceDocument($json)
+    protected function validateResourceDocument($json, $data)
     {
         if (Schema::TYPE !== self::arrayGet($json, 'data.type')) {
             return 'Missing or wrong type.';

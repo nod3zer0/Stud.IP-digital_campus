@@ -41,7 +41,7 @@ class ConfigValuesUpdate extends JsonApiController
         return $this->getContentResponse($resource);
     }
 
-    protected function validateResourceDocument($json, $resource)
+    protected function validateResourceDocument($json, $data)
     {
         if (!self::arrayHas($json, 'data')) {
             return 'Missing `data` member at document´s top level.';
@@ -55,7 +55,7 @@ class ConfigValuesUpdate extends JsonApiController
             return 'Document must have an `id`.';
         }
 
-        if (self::arrayGet($json, 'data.id') !== $this->generateId($resource)) {
+        if (self::arrayGet($json, 'data.id') !== $this->generateId($data)) {
             return 'Mismatch between URI parameter and document `id`.';
         }
 

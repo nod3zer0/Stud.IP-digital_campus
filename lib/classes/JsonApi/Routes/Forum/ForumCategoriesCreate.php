@@ -51,7 +51,7 @@ class ForumCategoriesCreate extends JsonApiController
         return $category;
     }
 
-    protected function validateResourceDocument($json)
+    protected function validateResourceDocument($json, $data)
     {
         $title = self::arrayGet($json, 'data.attributes.title', '');
         if (empty($title)) {

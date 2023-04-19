@@ -77,7 +77,7 @@ class NewsUpdate extends JsonApiController
         return $news;
     }
 
-    protected function validateResourceDocument($json, \StudipNews $news)
+    protected function validateResourceDocument($json, $data)
     {
         if (NewsSchema::TYPE !== self::arrayGet($json, 'data.type')) {
             return 'Missing or wrong type.';

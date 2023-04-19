@@ -37,7 +37,7 @@ class MessageUpdate extends JsonApiController
         return $this->getContentResponse($message);
     }
 
-    protected function validateResourceDocument($json)
+    protected function validateResourceDocument($json, $data)
     {
         if (!self::arrayHas($json, 'data')) {
             return 'Missing `data` member at message´s top level.';

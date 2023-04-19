@@ -66,9 +66,9 @@ class FoldersUpdate extends JsonApiController
         }
     }
 
-    protected function validateResourceDocument($json, \FolderType $folder)
+    protected function validateResourceDocument($json, $data)
     {
-        if ($err = $this->validateFolderResourceObject($json, $folder)) {
+        if ($err = $this->validateFolderResourceObject($json, $data)) {
             return $err;
         }
     }

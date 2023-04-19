@@ -11,7 +11,7 @@ abstract class AbstractEntriesCreate extends JsonApiController
 {
     use ValidationTrait;
 
-    protected function validateResourceDocument($json)
+    protected function validateResourceDocument($json, $data)
     {
         $content = self::arrayHas($json, 'data.attributes.title');
         if (empty($content)) {
