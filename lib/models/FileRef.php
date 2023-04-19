@@ -489,7 +489,7 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
             AND `folders`.`range_type` = 'user' ";
         $sql_params = [];
         if ($user_id) {
-            $sql .= " AND `folders`.`user_id` = :user_id";
+            $sql .= " AND `folders`.`range_id` = :user_id";
             $sql_params['user_id'] = $user_id;
         }
         if (($begin instanceof DateTime) && ($end instanceof DateTime)) {
