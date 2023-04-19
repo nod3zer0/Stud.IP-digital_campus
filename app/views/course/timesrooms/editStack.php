@@ -34,6 +34,7 @@
                         <span class="flex-row"></span>
                         <?= $room_search
                             ->setAttributes(['onFocus' => "jQuery('input[type=radio][name=action][value=room]').prop('checked', true)"])
+                            ->setMinLength(2)
                             ->render() ?>
                         <? if (!$only_bookable_rooms) : ?>
                             <?= $this->render_partial('course/timesrooms/_bookable_rooms_icon.php') ?>

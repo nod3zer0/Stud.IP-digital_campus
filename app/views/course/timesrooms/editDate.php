@@ -43,6 +43,7 @@
                     <? if ($room_search && !$only_bookable_rooms): ?>
                         <?= $room_search
                             ->setAttributes(['onFocus' => "jQuery('input[type=radio][name=room][value=room]').prop('checked', 'checked')"])
+                            ->setMinLength(2)
                             ->render() ?>
                     <? else: ?>
                         <? $selected_room_id = $date->room_booking->resource_id ?? ''; ?>

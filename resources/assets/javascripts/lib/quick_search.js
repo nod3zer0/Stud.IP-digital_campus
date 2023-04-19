@@ -13,7 +13,7 @@ const QuickSearch = {
      *        when user has selected something
      * @return: void
      */
-    autocomplete: function(name, url, func, disabled) {
+    autocomplete: function(name, url, func, disabled, minLength = 3) {
         if (disabled === undefined || disabled !== true) {
             var appendTo = 'body';
             if (jQuery(`#${name}_frame`).length > 0) {
@@ -23,7 +23,7 @@ const QuickSearch = {
             }
             jQuery('#' + name).quicksearch({
                 delay: 500,
-                minLength: 3,
+                minLength: minLength,
                 appendTo: appendTo,
                 create: function() {
                     if ($(this).is('[autofocus]')) {

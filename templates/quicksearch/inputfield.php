@@ -29,7 +29,8 @@
         STUDIP.QuickSearch.autocomplete("<?= $id ?>",
             "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
             <?= $jsfunction ?: 'null' ?>,
-            <?= $autocomplete_disabled ? "true" : "false" ?>
+            <?= $autocomplete_disabled ? "true" : "false" ?>,
+            <?= $minLength ?>
             );
     });
 </script>
