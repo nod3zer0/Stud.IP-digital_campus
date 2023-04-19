@@ -1,5 +1,10 @@
 @import "../mixins/colors.scss";
 
+body#install {
+    grid-template-columns: auto;
+    justify-content: center;
+}
+
 .stage {
     $image-path: '../images/';
     $icon-path: '#{$image-path}icons/';
