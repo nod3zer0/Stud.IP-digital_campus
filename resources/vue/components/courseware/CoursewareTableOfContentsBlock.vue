@@ -10,61 +10,69 @@
             @closeEdit="initCurrentData"
         >
             <template #content>
-                <div v-if="currentStyle !== 'tiles' && currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
-                <ul
-                    v-if="currentStyle === 'list-details' || currentStyle === 'list'"
-                    :class="['cw-block-table-of-contents-' + currentStyle]"
-                >
-                    <li v-for="child in childElementsWithTasks" :key="child.id">
-                        <router-link :to="'/structural_element/' + child.id">
-                            <div class="cw-block-table-of-contents-title-box" :class="[child.attributes.payload.color]">
-                                {{ child.attributes.title }}
-                                <span v-if="child.attributes.purpose === 'task'"> | {{ child.solverName }}</span>
-                                <p v-if="currentStyle === 'list-details'">{{ child.attributes.payload.description }}</p>
-                            </div>
-                        </router-link>
-                    </li>
-                </ul>
-                <ul
-                    v-if="currentStyle === 'tiles'" 
-                    class="cw-block-table-of-contents-tiles cw-tiles"
-                >
-                    <li
-                        v-for="child in childElementsWithTasks"
-                        :key="child.id"
-                        class="tile"
-                        :class="[child.attributes.payload.color]"
+                <div v-if="childElementsWithTasks.length > 0">
+                    <div v-if="currentStyle !== 'tiles' && currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
+                    <ul
+                        v-if="currentStyle === 'list-details' || currentStyle === 'list'"
+                        :class="['cw-block-table-of-contents-' + currentStyle]"
                     >
-                        <router-link :to="'/structural_element/' + child.id" :title="child.attributes.purpose === 'task' ? child.attributes.title + ' | ' + child.solverName : child.attributes.title"> 
-                            <div
-                                class="preview-image"
-                                :class="[hasImage(child) ? '' : 'default-image']"
-                                :style="getChildStyle(child)"
-                            >
-                                <div v-if="child.attributes.purpose === 'task'" class="overlay-text">{{ child.solverName }}</div>
-                            </div>
-                            <div class="description">
-                                <header
-                                    :class="[child.attributes.purpose !== '' ? 'description-icon-' + child.attributes.purpose : '']"
-                                >
-                                    {{ child.attributes.title || "–"}}
-                                </header>
-                                <div class="description-text-wrapper">
-                                    <p>{{ child.attributes.payload.description }}</p>
+                        <li v-for="child in childElementsWithTasks" :key="child.id">
+                            <router-link :to="'/structural_element/' + child.id">
+                                <div class="cw-block-table-of-contents-title-box" :class="[child.attributes.payload.color]">
+                                    {{ child.attributes.title }}
+                                    <span v-if="child.attributes.purpose === 'task'"> | {{ child.solverName }}</span>
+                                    <p v-if="currentStyle === 'list-details'">{{ child.attributes.payload.description }}</p>
                                 </div>
-                                <footer>
-                                    {{ countChildChildren(child) }}
-                                    <translate
-                                        :translate-n="countChildChildren(child)"
-                                        translate-plural="Seiten"
+                            </router-link>
+                        </li>
+                    </ul>
+                    <ul
+                        v-if="currentStyle === 'tiles'" 
+                        class="cw-block-table-of-contents-tiles cw-tiles"
+                    >
+                        <li
+                            v-for="child in childElementsWithTasks"
+                            :key="child.id"
+                            class="tile"
+                            :class="[child.attributes.payload.color]"
+                        >
+                            <router-link :to="'/structural_element/' + child.id" :title="child.attributes.purpose === 'task' ? child.attributes.title + ' | ' + child.solverName : child.attributes.title"> 
+                                <div
+                                    class="preview-image"
+                                    :class="[hasImage(child) ? '' : 'default-image']"
+                                    :style="getChildStyle(child)"
+                                >
+                                    <div v-if="child.attributes.purpose === 'task'" class="overlay-text">{{ child.solverName }}</div>
+                                </div>
+                                <div class="description">
+                                    <header
+                                        :class="[child.attributes.purpose !== '' ? 'description-icon-' + child.attributes.purpose : '']"
                                     >
-                                       Seite
-                                    </translate>
-                                </footer>
-                            </div>
-                        </router-link>
-                    </li>
-                </ul>
+                                        {{ child.attributes.title || "–"}}
+                                    </header>
+                                    <div class="description-text-wrapper">
+                                        <p>{{ child.attributes.payload.description }}</p>
+                                    </div>
+                                    <footer>
+                                        {{ countChildChildren(child) }}
+                                        <translate
+                                            :translate-n="countChildChildren(child)"
+                                            translate-plural="Seiten"
+                                        >
+                                        Seite
+                                        </translate>
+                                    </footer>
+                                </div>
+                            </router-link>
+                        </li>
+                    </ul>
+                </div>
+                <courseware-companion-box
+                    v-if="viewMode === 'edit' && childElementsWithTasks.length === 0"
+                    :msgCompanion="$gettext('Es sind noch keine Unterseiten vorhanden. ' +
+                        'Sobald Sie weitere Unterseiten anlegen, erscheinen diese automatisch hier im Inhaltsverzeichnis.')"
+                    mood="pointing"
+                />
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
@@ -89,6 +97,7 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
+import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -97,6 +106,7 @@ export default {
     mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
+        CoursewareCompanionBox,
     },
     props: {
         block: Object,
@@ -117,6 +127,7 @@ export default {
             taskById: 'courseware-tasks/byId',
             userById: 'users/byId',
             groupById: 'status-groups/byId',
+            viewMode: 'viewMode',
         }),
         structuralElement() {
             return this.structuralElementById({ id: this.$route.params.id });
