@@ -310,7 +310,7 @@ class Course_StatusgroupsController extends AuthenticatedController
             $this->group = Statusgruppen::find($group_id);
             $this->members = [];
             $this->invisible = 0;
-            if (count($this->group->members) > 0) {
+            if (!empty($this->group->members)) {
                 //Note: $members consists of StatusgruppeUser objects here.
                 $members = $this->sortMembers($this->group->members);
                 foreach ($members as $member) {
