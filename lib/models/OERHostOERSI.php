@@ -17,54 +17,72 @@ class OERHostOERSI extends OERHost
         } else {
             $endpoint_url .= '?q=' . urlencode($text . $appendix);
         }
-        $output = @file_get_contents($endpoint_url, false, get_default_http_stream_context($endpoint_url));
+        $cr = curl_init();
+        curl_setopt($cr, CURLOPT_URL, $endpoint_url);
+        curl_setopt($cr, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($cr, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($cr, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($cr, CURLOPT_SSL_VERIFYHOST, false);
+        $stream_context_options = stream_context_get_options(get_default_http_stream_context($endpoint_url));
+        curl_setopt($cr, CURLOPT_PROXY, isset($stream_context_options['http']['proxy']) ? Config::get()->HTTP_PROXY : '');
+        $output = curl_exec($cr);
+        $error = curl_error($cr);
+        if ($error) {
+            $error_number = curl_getinfo($cr,    CURLINFO_HTTP_CODE);
+            error_log('OERSI search is not working. '.$error_number.': '.$error);
+        }
+        curl_close($cr);
         if ($output) {
-            $output = json_decode($output, true);
-            foreach ((array) $output['hits']['hits'] as $material_data) {
-                //check if material already in database from this or another OER Campus host
-                if (OERHost::URIExists($material_data['_source']['id'])) {
-                    continue;
+            $json = json_decode($output, true);
+            if ($json !== null) {
+                foreach ((array)$json['hits']['hits'] as $material_data) {
+                    //check if material already in database from this or another OER Campus host
+                    if (OERHost::URIExists($material_data['_source']['id'])) {
+                        continue;
+                    }
+
+                    $material = OERMaterial::findOneBySQL('foreign_material_id = ? AND host_id = ?', [
+                        md5($material_data['_source']['id']),
+                        $this->getId()
+                    ]);
+                    if (!$material) {
+                        $material = new OERMaterial();
+                        $material['foreign_material_id'] = md5($material_data['_source']['id']);
+                        $material['host_id'] = $this->getId();
+                    }
+                    $material['name'] = mb_substr($material_data['_source']['name'], 0, 64);
+                    $material['draft'] = '0';
+                    $material['filename'] = '';
+                    $material['short_description'] = '';
+                    $material['description'] = $material_data['_source']['description'] ?: '';
+                    $material['difficulty_start'] = 0;
+                    $material['difficulty_end'] = 12;
+                    $material['uri'] = $material_data['_source']['id'];
+                    $material['source_url'] = $material_data['_source']['id'];
+                    $material['content_type'] = $material_data['_source']['encoding'][0]['encodingFormat'] ?: '';
+                    $material['license_identifier'] = $this->getLicenseID($material_data['_source']['license']['id']) ?: '';
+                    if (!$material['category']) {
+                        $material['category'] = $material->autoDetectCategory();
+                    }
+                    $material['front_image_content_type'] = $material_data['_source']['image'] ? 'image/jpg' : null;
+                    $material['data'] = [
+                        'front_image_url' => $material_data['_source']['image'],
+                        'download' => $material_data['_source']['encoding'][0]['contentUrl'] ?: '',
+                        'id' => $material_data['_id'],
+                        'authors' => $material_data['_source']['creator'],
+                        'organization' => $material_data['_source']['sourceOrganization'][0]['name'] ?: $material_data['_source']['publisher'][0]['name']
+                    ];
+                    $material->store();
+
+                    //set topics:
+                    //$material->setUsers([]);
+
+                    //set topics:
+                    $material->setTopics($material_data['_source']['keywords']);
+
                 }
-
-                $material = OERMaterial::findOneBySQL('foreign_material_id = ? AND host_id = ?', [
-                    md5($material_data['_source']['id']),
-                    $this->getId()
-                ]);
-                if (!$material) {
-                    $material = new OERMaterial();
-                    $material['foreign_material_id'] = md5($material_data['_source']['id']);
-                    $material['host_id'] = $this->getId();
-                }
-                $material['name'] = mb_substr($material_data['_source']['name'], 0, 64);
-                $material['draft'] = '0';
-                $material['filename'] = '';
-                $material['short_description'] = '';
-                $material['description'] = $material_data['_source']['description'] ?: '';
-                $material['difficulty_start'] = 0;
-                $material['difficulty_start'] = 12;
-                $material['uri'] = $material_data['_source']['id'];
-                $material['source_url'] = $material_data['_source']['id'];
-                $material['content_type'] = $material_data['_source']['encoding'][0]['encodingFormat'] ?: '';
-                $material['license_identifier'] = $this->getLicenseID($material_data['_source']['license']['id']) ?: '';
-                if (!$material['category']) {
-                    $material['category'] = $material->autoDetectCategory();
-                }
-                $material['front_image_content_type'] = $material_data['_source']['image'] ? 'image/jpg' : null;
-                $material['data'] = [
-                    'front_image_url' => $material_data['_source']['image'],
-                    'download' => $material_data['_source']['encoding'][0]['contentUrl'] ?: '',
-                    'id' => $material_data['_id'],
-                    'authors' => $material_data['_source']['creator'],
-                    'organization' => $material_data['_source']['sourceOrganization'][0]['name'] ?: $material_data['_source']['publisher'][0]['name']
-                ];
-                $material->store();
-
-                //set topics:
-                //$material->setUsers([]);
-
-                //set topics:
-                $material->setTopics($material_data['_source']['keywords']);
-
+            } else {
+                error_log('OERSI returns bad JSON data: '.$output);
             }
         }
     }
