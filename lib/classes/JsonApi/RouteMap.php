@@ -7,6 +7,7 @@ use JsonApi\Middlewares\Authentication;
 use JsonApi\Middlewares\DangerousRouteHandler;
 use JsonApi\Middlewares\JsonApi as JsonApiMiddleware;
 use JsonApi\Middlewares\StudipMockNavigation;
+use JsonApi\Routes\Holidays\HolidaysShow;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -142,6 +143,8 @@ class RouteMap
     public function unauthenticatedRoutes(RouteCollectorProxy $group): void
     {
         \PluginEngine::sendMessage(JsonApiPlugin::class, 'registerUnauthenticatedRoutes', $group);
+
+        $group->get('/holidays', HolidaysShow::class);
 
         $group->get('/semesters', Routes\SemestersIndex::class);
         $group->get('/semesters/{id}', Routes\SemestersShow::class)->setName('get-semester');
@@ -561,4 +564,3 @@ class RouteMap
         $group->map(['GET', 'PATCH', 'POST', 'DELETE'], $url, $handler);
     }
 }
-

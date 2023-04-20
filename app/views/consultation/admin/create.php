@@ -61,7 +61,7 @@ $intervals = [
             <input required type="text" name="start-date" id="start-date"
                    value="<?= htmlReady(Request::get('start-date', strftime('%d.%m.%Y', strtotime('+7 days'))))  ?>"
                    placeholder="<?= _('tt.mm.jjjj') ?>"
-                   data-date-picker='{">=":"today"}'>
+                   data-date-picker='{">=":"today","disable_holidays": true}'>
         </label>
 
         <label class="col-3">
@@ -70,7 +70,7 @@ $intervals = [
             <input required type="text" name="end-date" id="end-date"
                    value="<?= htmlReady(Request::get('end-date', strftime('%d.%m.%Y', strtotime('+4 weeks'))))  ?>"
                    placeholder="<?= _('tt.mm.jjjj') ?>"
-                   data-date-picker='{">=":"#start-date"}'>
+                   data-date-picker='{">=":"#start-date","disable_holidays": true}'>
         </label>
 
         <label class="col-3">

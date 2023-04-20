@@ -27,6 +27,37 @@ import eventBus from "./lib/event-bus.ts";
         return element?.classList?.contains('ck-body-wrapper');
     }
 
+    function disableHolidaysBeforeShow(date) {
+        const year = date.getFullYear();
+
+        if (STUDIP.UI.restrictedDates[year] === undefined) {
+            STUDIP.UI.restrictedDates[year] = {};
+
+            STUDIP.jsonapi.GET('holidays', {data: {
+                'filter[year]': year
+            }}).done(response => {
+                // Since PHP will return an empty object as an array,
+                // we need to check
+                if (Array.isArray(response)) {
+                    return;
+                }
+
+                for (const [date, data] of Object.entries(response)) {
+                    STUDIP.UI.addRestrictedDate(
+                        new Date(date),
+                        data.holiday,
+                        data.mandatory
+                    );
+                }
+
+                $(this).datepicker('refresh');
+            });
+        }
+
+        const {reason, lock} = STUDIP.UI.isDateRestricted(date, false);
+        return [!lock, lock ? 'ui-datepicker-is-locked' : null, reason];
+    }
+
     /**
      * Setup and refine date picker, add automated handling for .has-date-picker
      * and [data-date-picker].
@@ -53,27 +84,84 @@ import eventBus from "./lib/event-bus.ts";
     }
 
     // Setup Stud.IP's own datepicker extensions
-    STUDIP.UI = STUDIP.UI || {};
+    STUDIP.UI = Object.assign(STUDIP.UI || {}, {
+        restrictedDates: {},
+        addRestrictedDate(date, reason = '', lock = true) {
+            if (this.isDateRestricted(date)) {
+                return;
+            }
+
+            const [year, month, day] = this.convertDateForRestriction(date);
+            if (this.restrictedDates[year] === undefined) {
+                this.restrictedDates[year] = {};
+            }
+            if (this.restrictedDates[year][month] === undefined) {
+                this.restrictedDates[year][month] = {};
+            }
+
+            this.restrictedDates[year][month][day] = {reason, lock};
+        },
+        removeRestrictedDate(date) {
+            if (!this.isDateRestricted(date)) {
+                return false;
+            }
+            const [year, month, day] = this.convertDateForRestriction(date);
+
+            delete this.restrictedDates[year][month][day];
+
+            if (Object.keys(this.restrictedDates[year][month]).length === 0) {
+                delete this.restrictedDates[year][month];
+            }
+
+            return true;
+        },
+        isDateRestricted(date, return_bool = true) {
+            const [year, month, day] = this.convertDateForRestriction(date);
+            if (
+                this.restrictedDates[year] === undefined
+                || this.restrictedDates[year][month] === undefined
+                || this.restrictedDates[year][month][day] === undefined
+            ) {
+                return return_bool ? false : {
+                    reason: null,
+                    lock: false,
+                };
+            }
+
+            return return_bool ? true : this.restrictedDates[year][month][day];
+        },
+        convertDateForRestriction(date) {
+            return [date.getFullYear(), date.getMonth() + 1, date.getDate()];
+        }
+    });
     STUDIP.UI.Datepicker = {
         selector: '.has-date-picker,[data-date-picker]',
         // Initialize all datepickers that not yet been initialized (e.g. in dialogs)
-        init: function () {
+        init() {
             $(this.selector).filter(function () {
                 return $(this).data('date-picker-init') === undefined;
             }).each(function () {
-                $(this).data('date-picker-init', true).datepicker();
+                const dataOptions = $(this).data().datePicker;
+
+                const options = {};
+                if (
+                    dataOptions['disable_holidays'] !== undefined
+                    && dataOptions['disable_holidays'] === true
+                ) {
+                    options.beforeShowDay = disableHolidaysBeforeShow;
+                }
+                $(this).data('date-picker-init', true).datepicker(options);
             });
         },
         // Apply registered handlers. Take care: This happens upon before a
         // picker is shown as well as after a date has been selected.
-        refresh: function () {
+        refresh() {
             $(this.selector).each(function () {
-                var element = this,
-                    options = $(element).data().datePicker;
+                const options = $(this).data().datePicker;
                 if (options) {
-                    $.each(options, function (key, value) {
+                    $.each(options, (key, value) => {
                         if (STUDIP.UI.Datepicker.dataHandlers[key] !== undefined) {
-                            STUDIP.UI.Datepicker.dataHandlers[key].call(element, value);
+                            STUDIP.UI.Datepicker.dataHandlers[key].call(this, value);
                         }
                     });
                 }
@@ -190,23 +278,31 @@ import eventBus from "./lib/event-bus.ts";
     STUDIP.UI.DateTimepicker = {
         selector: '.has-datetime-picker,[data-datetime-picker]',
         // Initialize all datetimepickers that not yet been initialized (e.g. in dialogs)
-        init: function () {
+        init() {
             $(this.selector).filter(function () {
                 return $(this).data('datetime-picker-init') === undefined;
             }).each(function () {
-                $(this).data('datetime-picker-init', true).datetimepicker();
+                const dataOptions = $(this).data().datePicker;
+
+                const options = {};
+                if (
+                    dataOptions['disable_holidays'] !== undefined
+                    && dataOptions['disable_holidays'] === true
+                ) {
+                    options.beforeShowDay = disableHolidaysBeforeShow;
+                }
+                $(this).data('date-picker-init', true).datepicker(options);
             });
         },
         // Apply registered handlers. Take care: This happens upon before a
         // picker is shown as well as after a date has been selected.
-        refresh: function () {
+        refresh() {
             $(this.selector).each(function () {
-                var element = this,
-                    options = $(element).data().datetimePicker;
+                const options = $(this).data().datetimePicker;
                 if (options) {
-                    $.each(options, function (key, value) {
+                    $.each(options, (key, value) => {
                         if (STUDIP.UI.DateTimepicker.dataHandlers[key] !== undefined) {
-                            STUDIP.UI.DateTimepicker.dataHandlers[key].call(element, value);
+                            STUDIP.UI.DateTimepicker.dataHandlers[key].call(this, value);
                         }
                     });
                 }
@@ -317,7 +413,7 @@ import eventBus from "./lib/event-bus.ts";
     STUDIP.UI.Timepicker = {
         selector: '.has-time-picker,[data-time-picker]',
         // Initialize all datetimepickers that not yet been initialized (e.g. in dialogs)
-        init: function () {
+        init() {
             $(this.selector).filter(function () {
                 return $(this).data('time-picker-init') === undefined;
             }).each(function () {
@@ -326,7 +422,7 @@ import eventBus from "./lib/event-bus.ts";
         },
         // Apply registered handlers. Take care: This happens upon before a
         // picker is shown as well as after a date has been selected.
-        refresh: function () {
+        refresh() {
             $(this.selector).each(function () {
                 var element = this,
                     options = $(element).data().timePicker;
@@ -395,7 +491,6 @@ import eventBus from "./lib/event-bus.ts";
                     parsed.minute
                 );
 
-                console.log('max time:', this_time, max_time);
                 if (this_time && this_time > max_time) {
                     $(this).timepicker(STUDIP.UI.Timepicker.parseTime(max_time));
                 }
@@ -446,7 +541,6 @@ import eventBus from "./lib/event-bus.ts";
                     parsed.minute
                 );
 
-                console.log('min time:', this_time, min_time);
                 if (this_time && this_time < min_time) {
                     $(this).timepicker(STUDIP.UI.Timepicker.parseTime(min_time));
                 }
