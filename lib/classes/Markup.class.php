@@ -342,6 +342,7 @@ class Markup
             'link-extern',
             'link-intern',
             'math-tex',
+            'table',
             'usercode',
             'wiki-link'
         ]);
@@ -358,6 +359,7 @@ class Markup
             'height',
             'color',
             'background-color', // needed by span, td
+            'border-color',
             'border-style',
             'float',
             'border'

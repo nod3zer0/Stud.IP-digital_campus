@@ -220,10 +220,21 @@ ClassicEditor.defaultConfig = {
         tableProperties: {
             borderColors: customColorPalette,
             backgroundColors: customColorPalette,
+            defaultProperties: {
+                alignment: 'left',
+                borderStyle: 'solid',
+                borderColor: '#666666',
+                borderWidth: '1px',
+            },
         },
         tableCellProperties: {
             borderColors: customColorPalette,
             backgroundColors: customColorPalette,
+            defaultProperties: {
+                borderStyle: 'solid',
+                borderColor: '#666666',
+                borderWidth: '1px',
+            },
         },
     },
     typing: {

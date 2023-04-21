@@ -45,6 +45,28 @@ table.content {
         border: thin solid #666;
         padding: 3px;
     }
+
+    /* for CKE5 Table Border Colors */
+    &[style*='border-color'] {
+        border-width: thin;
+        border-style: solid;
+    }
+
+    td:first-child {
+        border-inline-start: unset;
+    }
+
+    td:last-child {
+        border-inline-end: unset;
+    }
+
+    tr:first-child td {
+        border-block-start: unset;
+    }
+
+    tr:last-child td {
+        border-block-end: unset;
+    }
 }
 
 

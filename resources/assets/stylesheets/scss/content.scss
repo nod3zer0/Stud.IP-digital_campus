@@ -55,18 +55,16 @@
         white-space: pre-wrap;
     }
 
-    figure {
+    figure.table {
         display: table;
         margin: 0.9em auto;
 
-        table {
-            width: 100%;
-            height: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
+        &:not([style]) {
+            margin-inline-start: 0;
+        }
 
+        table {
             td {
-                border: unset;
                 min-width: 2em;
                 padding: 0.4em;
             }
