@@ -582,6 +582,15 @@ $sidebarOut: -330px;
         flex-direction: row;
         flex-wrap: wrap;
 
+        &.fullscreen-sidebar-shown {
+            display: grid;
+            grid-template-columns: ($sidebar-width + $sidebar-padding) calc(100vw - $sidebar-width - $sidebar-padding - 35px);
+
+            #content-wrapper {
+                max-width: 100%;
+            }
+        }
+
         #top-bar {
             max-height: unset;
             opacity: 1;

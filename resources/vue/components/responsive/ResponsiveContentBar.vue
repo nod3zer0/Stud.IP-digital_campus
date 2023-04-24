@@ -81,7 +81,7 @@ export default {
 
                 if (!document.documentElement.classList.contains('responsive-display')) {
                     setTimeout(() => {
-                        document.body.style.display = 'flex';
+                        document.body.classList.remove('fullscreen-sidebar-shown');
                     }, 300);
                 }
 
@@ -101,7 +101,7 @@ export default {
                 }
 
                 if (!document.documentElement.classList.contains('responsive-display')) {
-                    document.body.style.display = 'grid';
+                    document.body.classList.add('fullscreen-sidebar-shown');
                 }
 
                 this.sidebarOpen = true;
