@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var Course_Gradebook_StudentsController $controller
+ * @var float $total
+ * @var string[] $categories
+ * @var float[] $subtotals
+ * @var array<string, Grading\Definition> $groupedDefinitions
+ */
+?>
 <article class="gradebook-student">
     <header>
         <h1><?= _("Gesamt") ?></h1>
@@ -31,7 +40,7 @@
                 <tbody>
                     <?
                     foreach ($groupedDefinitions[$category] as $definition) {
-                        $instance = $groupedInstances[$definition->id];
+                        $instance = $groupedInstances[$definition->id] ?? null;
                         $grade = $controller->formatAsPercent($instance ? $instance->rawgrade : 0);
                         $feedback = $instance ? $instance->feedback : '';
                     ?>

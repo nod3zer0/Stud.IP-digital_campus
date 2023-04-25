@@ -1093,7 +1093,7 @@ class Course_MembersController extends AuthenticatedController
                 $users = [];
                 if ($cmd === 'singleuser') {
                     $users[] = $user_id;
-                } else {
+                } elseif (isset($this->flash['users']) && is_array($this->flash['users'])) {
                     // create a usable array
                     foreach ($this->flash['users'] as $user => $val) {
                         if ($val) {

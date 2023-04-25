@@ -93,7 +93,7 @@ rsort($ordered_results);
                        title="<?= _('Zeige wieder alle Ergebnisse ohne Filterung an.') ?>"
                        onclick="STUDIP.Questionnaire.removeFilter('<?= htmlReady($vote['questionnaire_id']) ?>'); return false;">
                         <?= Icon::create('filter2', Icon::ROLE_CLICKABLE)->asImg(16, ['class' => 'text-bottom']) ?>
-                        (<?= $percentage ?>% | <?= (int) $results[$key] ?>/<?= $countAnswers ?>)
+                        (<?= $percentage ?>% | <?= (int) ($results[$key] ?? 0) ?>/<?= $countAnswers ?>)
                     </a>
                 <? else : ?>
                     <a href=""
