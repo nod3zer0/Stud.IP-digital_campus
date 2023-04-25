@@ -63,7 +63,7 @@ use Studip\Button, Studip\LinkButton;
                 <label>
                     <input type="checkbox" name="online" value="1"
                             <? if ($online_visibility) echo 'checked'; ?>>
-                    <?= _('sichtbar in "Wer ist online"') ?>
+                    <?= _('sichtbar in "Wer ist online" mit Zeitpunkt der letzten Aktivität') ?>
                 </label>
             <? endif; ?>
             <? if (Visibility::isFieldHideableForUser('search', $user)): ?>

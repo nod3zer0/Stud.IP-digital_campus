@@ -22,6 +22,7 @@
     <tr>
         <td valign="top">
             <ul>
+                <li>will appear in the public "who-is-online"-list with the time of your last activity</li>
                 <li>can use any opportunity of communication</li>
                 <li>can decide most extensively what information other users are able to see on your personal homepage
                 </li>

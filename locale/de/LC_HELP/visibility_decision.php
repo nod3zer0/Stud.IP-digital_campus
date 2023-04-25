@@ -25,6 +25,9 @@
     <tr>
         <td valign="top">
             <ul>
+                <li>werden Sie in der öffentlichen "Wer-ist-online"-Liste
+                    mit Zeitpunkt ihrer letzten Aktivität erscheinen,
+                </li>
                 <li>können Sie alle Kommunikationsmöglichkeiten wie gewohnt
                     nutzen,
                 </li>
