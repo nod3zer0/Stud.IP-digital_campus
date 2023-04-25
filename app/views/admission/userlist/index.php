@@ -47,13 +47,19 @@ Helpbar::get()->addPlainText(_('Info'), "Hier sehen Sie alle Personenlisten, auf
                 <td><?= htmlReady($list->describe()) ?></td>
                 <td><?= count($list->getUsers()) ?></td>
                 <td class="actions">
-                    <a href="<?= $controller->configure($list->getId()) ?>">
-                        <?= Icon::create('edit')->asImg(tooltip2(_('Nutzerliste bearbeiten'))) ?>
-                    </a>
-                    <?= Icon::create('trash')->asInput(tooltip2(_('Personenliste löschen')) + [
-                       'formaction' => $controller->deleteURL($list->getId()),
-                       'data-confirm' => sprintf(_('Soll die Nutzerliste %s wirklich gelöscht werden?'), $list->getName()),
-                    ]) ?>
+                    <?= ActionMenu::get()->addLink(
+                        $controller->configureURL($list->getId()),
+                        _('Nutzerliste bearbeiten'),
+                        Icon::create('edit')
+                    )->addButton(
+                        'delete',
+                        _('Personenliste löschen'),
+                        Icon::create('trash'),
+                        [
+                           'formaction' => $controller->deleteURL($list->getId()),
+                           'data-confirm' => sprintf(_('Soll die Nutzerliste %s wirklich gelöscht werden?'), $list->getName()),
+                        ]
+                    ) ?>
                 </td>
             </tr>
         <? endforeach; ?>
