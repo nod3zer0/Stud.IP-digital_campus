@@ -649,14 +649,15 @@ table.withdetails {
         display: inline-block;
         height: 16px;
         margin-left: 0;
-        .retina-background-image('dreieck_@{direction}.png', 'dreieck_@{direction}@2x.png', 16px, 16px);
-        vertical-align: text-top;
+        .background-icon('arr_1@{direction}');
+        vertical-align: text-bottom;
         width: 16px;
     }
 }
 
 .sortable-table {
-    .header, .tablesorter-header:not(.sorter-false) {
+    .header,
+    .tablesorter-header:not(.sorter-false) {
         white-space: nowrap;
 
         color: @base-color;
@@ -664,18 +665,20 @@ table.withdetails {
             color: @active-color;
             cursor: pointer;
         }
+        &.tablesorter-headerDesc:hover .tablesorter-header-inner::after {
+            .background-icon('arr_1down', 'status-red');
+        }
+        &.tablesorter-headerAsc:hover .tablesorter-header-inner::after {
+            .background-icon('arr_1up', 'status-red');
+        }
     }
-    .headerSortUp, .tablesorter-headerDesc .tablesorter-header-inner {
+    .headerSortUp,
+    .tablesorter-headerDesc .tablesorter-header-inner {
         .sortable-dreieck('down');
-        &::after {
-            vertical-align: inherit;
-        }
     }
-    .headerSortDown, .tablesorter-headerAsc .tablesorter-header-inner {
+    .headerSortDown,
+    .tablesorter-headerAsc .tablesorter-header-inner {
         .sortable-dreieck('up');
-        &::after {
-            vertical-align: inherit;
-        }
     }
     .tablesorter-headerUnSorted:not(.sorter-false) .tablesorter-header-inner {
         margin-right: 15px;
