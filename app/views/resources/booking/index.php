@@ -82,10 +82,10 @@
     <? endif ?>
     <? if ($user_may_see_course_data): ?>
         <h3><?= _('Gebucht für:') ?></h3>
-        <a href="<?= URLHelper::getScriptLink(
+        <a href="<?= URLHelper::getLink(
                  'dispatch.php/course/details/index/'
                  . $booking->getAssignedUser()->id
-                 ) ?>" data-dialog>
+                 ) ?>" target="_blank">
             <?= htmlReady($booking->getAssignedUserName(), true, true) ?>
             <?= Icon::create(
                 'link-intern',
