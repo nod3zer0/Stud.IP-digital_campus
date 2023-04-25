@@ -19,14 +19,14 @@ Helpbar::get()->addPlainText(_('Info'), "Hier sehen Sie alle Personenlisten, auf
             <col>
             <col>
             <col>
-            <col style="width: 48px">
+            <col style="width: 8ex;">
         </colgroup>
         <thead>
             <tr>
                 <th><?= _('Name') ?></th>
                 <th><?= _('Beschreibung') ?></th>
                 <th><?= _('Personen') ?></th>
-                <th></th>
+                <th><?= _('Aktionen') ?></th>
             </tr>
         </thead>
         <tbody>
