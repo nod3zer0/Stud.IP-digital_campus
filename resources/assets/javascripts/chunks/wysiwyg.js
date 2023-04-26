@@ -188,7 +188,34 @@ ClassicEditor.defaultConfig = {
         colors: customColorPalette,
     },
     image: {
+        resizeOptions: [
+            {
+                name: 'resizeImage:original',
+                value: null,
+                icon: 'original'
+            },
+            {
+                name: 'resizeImage:25',
+                value: '25',
+                icon: 'small'
+            },
+            {
+                name: 'resizeImage:50',
+                value: '50',
+                icon: 'medium'
+            },
+            {
+                name: 'resizeImage:75',
+                value: '75',
+                icon: 'large'
+            }
+        ],
         toolbar: [
+            'resizeImage:25',
+            'resizeImage:50',
+            'resizeImage:75',
+            'resizeImage:original',
+            '|',
             'imageStyle:inline',
             'imageStyle:block',
             'imageStyle:side',
