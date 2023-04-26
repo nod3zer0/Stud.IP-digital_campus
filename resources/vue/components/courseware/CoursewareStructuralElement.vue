@@ -321,7 +321,7 @@
                                     </label>
                                 </form>
                             </courseware-tab>
-                            <courseware-tab :name="textEdit.approval" :index="3">
+                            <courseware-tab v-if="(inCourse && !isTask) || inContent" :name="textEdit.approval" :index="3">
                                 <courseware-structural-element-permissions
                                     v-if="inCourse"
                                     :element="currentElement"
@@ -335,7 +335,7 @@
                                     @updateWriteApproval="updateWriteApproval"
                                 />
                             </courseware-tab>
-                            <courseware-tab v-if="inCourse" :name="textEdit.visible" :index="4">
+                            <courseware-tab v-if="inCourse && !isTask" :name="textEdit.visible" :index="4">
                                 <form class="default" @submit.prevent="">
                                     <label>
                                         <translate>Sichtbar ab</translate>
