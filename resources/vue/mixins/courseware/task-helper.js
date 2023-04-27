@@ -50,14 +50,13 @@ export default {
 
             return status;
         },
-        getLinkToElement(elementId) {
-            return (
-                STUDIP.URLHelper.base_url +
-                'dispatch.php/course/courseware/?cid=' +
-                STUDIP.URLHelper.parameters.cid +
-                '#/structural_element/' +
-                elementId
-            );
+        getLinkToElement(element) {
+            const unitId = element.relationships?.unit?.data?.id;
+            if (!unitId) {
+                return '';
+            }
+
+            return `${STUDIP.URLHelper.base_url}dispatch.php/course/courseware/courseware/${unitId}?cid=${STUDIP.URLHelper.parameters.cid}#/structural_element/${element.id}`;
         },
         getReadableDate(date) {
             return new Date(date).toLocaleDateString();

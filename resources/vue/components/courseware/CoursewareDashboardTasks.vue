@@ -37,7 +37,7 @@
                         {{ taskGroup.attributes.title }}
                     </td>
                     <td>
-                        <a :href="getLinkToElement(element.id)">{{ element.attributes.title }}</a>
+                        <a :href="getLinkToElement(element)">{{ element.attributes.title }}</a>
                     </td>
                     <td>{{ task.attributes?.progress?.toFixed(2) || '-'}}%</td>
                     <td>{{ getReadableDate(task.attributes['submission-date']) }}</td>

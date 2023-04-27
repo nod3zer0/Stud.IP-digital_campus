@@ -57,7 +57,7 @@
                         </span>
                     </td>
                     <td class="responsive-hidden">
-                        <a v-if="task.attributes.submitted" :href="getLinkToElement(element.id)">
+                        <a v-if="task.attributes.submitted" :href="getLinkToElement(element)">
                             {{ element.attributes.title }}
                         </a>
                         <span v-else>{{ element.attributes.title }}</span>
