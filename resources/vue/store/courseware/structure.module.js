@@ -107,23 +107,6 @@ const actions = {
         return instance;
     },
 
-    // load the structure of a specified courseware
-    async loadAnotherCourseware({ commit, dispatch, rootGetters }, context) {
-        const instance = await dispatch('loadInstance', context);
-
-        const root = rootGetters['courseware-structural-elements/related']({
-            parent: { id: instance.id, type: instance.type },
-            relationship: 'root',
-        });
-        if (!root) {
-            throw new Error(`Could not find root of courseware { id: ${instance.id}, type: ${instance.type}`);
-        }
-
-        await dispatch('loadDescendants', { root });
-
-        return instance;
-    },
-
     loadInstance({ commit, dispatch, rootGetters }, context) {
         let parent = context;
         parent = {

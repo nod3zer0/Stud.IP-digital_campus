@@ -13,8 +13,7 @@ const getDefaultState = () => {
         httpClient: null,
         lastElement: null,
         msg: 'Dehydrated',
-        msgCompanionOverlay:
-            'Hallo! Ich bin Ihr persönlicher Companion. Wussten Sie schon, dass Courseware jetzt noch einfacher zu bedienen ist?',
+        msgCompanionOverlay: '',
         styleCompanionOverlay: 'default',
         pluginManager: null,
         showCompanionOverlay: false,
@@ -24,7 +23,6 @@ const getDefaultState = () => {
         userId: null,
         viewMode: 'read',
         dashboardViewMode: 'default',
-        filingData: {},
         userIsTeacher: false,
         teacherStatusLoaded: false,
 
@@ -169,9 +167,6 @@ const getters = {
     },
     pluginManager(state) {
         return state.pluginManager;
-    },
-    filingData(state) {
-        return state.filingData;
     },
     showStructuralElementEditDialog(state) {
         return state.showStructuralElementEditDialog;
@@ -1008,10 +1003,6 @@ export const actions = {
         return dispatch('loadStructuralElement', structuralElement.id);
     },
 
-    cwManagerFilingData(context, msg) {
-        context.commit('cwManagerFilingDataSet', msg);
-    },
-
     async loadRelatedPaginated({ dispatch, rootGetters }, { type, parent, relationship, options }) {
         const limit = 100;
         let offset = 0;
@@ -1429,10 +1420,6 @@ export const mutations = {
 
     setPluginManager(state, pluginManager) {
         state.pluginManager = pluginManager;
-    },
-
-    cwManagerFilingDataSet(state, data) {
-        state.filingData = data;
     },
 
     setShowStructuralElementEditDialog(state, showEdit) {
