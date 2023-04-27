@@ -809,16 +809,19 @@ SQL;
      *
      * @param User              $user   this user will be the owner of the copy
      * @param StructuralElement $parent the target where to copy this instance
+     * @param string $purpose the purpose of copying this instance
+     * @param string $recursiveId the optional mapping id for copying child structural elements upon recursive call to this function
      *
      * @return StructuralElement the copy of this instance
      */
-    public function copy(User $user, StructuralElement $parent, string $purpose = ''): StructuralElement
+    public function copy(User $user, StructuralElement $parent, string $purpose = '', string $recursiveId = ''): StructuralElement
     {
         $ancestorIds = array_column($parent->findAncestors(), 'id');
         $ancestorIds[] = $parent->id;
         if (in_array($this->id, $ancestorIds)) {
             throw new \InvalidArgumentException('Cannot copy into descendants.');
         }
+        static $mapping = [];
 
         $file_ref_id = $this->copyImage($user, $parent);
 
@@ -840,9 +843,26 @@ SQL;
 
         $element->store();
 
-        $this->copyContainers($user, $element);
+        list($containerMap, $blockMap) = $this->copyContainers($user, $element);
 
-        $this->copyChildren($user, $element, $purpose);
+        $mappingId = $recursiveId === '' ? $this->id . '_' . $element->id : $recursiveId;
+        if (!isset($mapping[$mappingId])) {
+            $mapping[$mappingId] = [
+                'elements'   => [],
+                'containers' => [],
+                'blocks'     => [],
+            ];
+        }
+        $mapping[$mappingId]['elements'][$this->id] = $element->id;
+        $mapping[$mappingId]['containers'] = $mapping[$mappingId]['containers'] + $containerMap;
+        $mapping[$mappingId]['blocks'] = $mapping[$mappingId]['blocks'] + $blockMap;
+
+        $this->copyChildren($user, $element, $purpose, $mappingId);
+
+        if ($recursiveId === '') {
+            $this->performMapping($mapping[$mappingId]);
+            unset($mapping[$mappingId]);
+        }
 
         return $element;
     }
@@ -914,17 +934,22 @@ SQL;
         return $this;
     }
 
-    private function copyContainers(User $user, StructuralElement $newElement): void
+    private function copyContainers(User $user, StructuralElement $newElement): array
     {
+        $containerMap = [];
+        $blockMap = [];
         foreach ($this->containers as $container) {
-            $container->copy($user, $newElement);
+            list($newContainer, $blockMapsObjs) = $container->copy($user, $newElement);
+            $containerMap[$container->id] = $newContainer->id;
+            $blockMap = $blockMap + $blockMapsObjs;
         }
+        return [$containerMap, $blockMap];
     }
 
-    private function copyChildren(User $user, StructuralElement $newElement, string $purpose = ''): void
+    private function copyChildren(User $user, StructuralElement $newElement, string $purpose = '', string $recursiveId = ''): void
     {
         foreach ($this->children as $child) {
-            $child->copy($user, $newElement, $purpose);
+            $child->copy($user, $newElement, $purpose, $recursiveId);
         }
     }
 
@@ -1045,5 +1070,24 @@ SQL;
         }
 
         return $this->parent->findParentTask();
+    }
+
+    private function performMapping($mapping)
+    {
+        // Blocks mapping.
+        foreach ($mapping['blocks'] as $oldBlockId => $newBlockObj) {
+            if ($newBlockObj->type->getType() === \Courseware\BlockTypes\Link::getType()) {
+                $payload = $newBlockObj->type->getPayload();
+                if ($payload['type'] === 'internal' && '' != $payload['target']) {
+                    if (in_array($payload['target'], array_keys($mapping['elements']))) {
+                        $payload['target'] = $mapping['elements'][intval($payload['target'])];
+                    } else {
+                        $payload['target'] = '';
+                    }
+                    $newBlockObj->type->setPayload($payload);
+                    $newBlockObj->store();
+                }
+            }
+        }
     }
 }

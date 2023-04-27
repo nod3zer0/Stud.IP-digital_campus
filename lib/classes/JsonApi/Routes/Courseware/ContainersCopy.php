@@ -45,7 +45,7 @@ class ContainersCopy extends NonJsonApiController
 
     private function copyContainer(\User $user, \Courseware\Container $remote_container, \Courseware\StructuralElement $element)
     {
-        $container = $remote_container->copy($user, $element);
+        list($container, $blockMapObjs) = $remote_container->copy($user, $element);
 
         return $container;
     }

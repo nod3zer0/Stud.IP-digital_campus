@@ -104,9 +104,9 @@ class Container extends \SimpleORMap
      * @param User              $user    the owner and editor of the new copy of this block
      * @param StructuralElement $element the structural element this block will be copied into
      *
-     * @return Container the copy of this Container
+     * @return array an array containing the container object and the block maps
      */
-    public function copy(User $user, StructuralElement $element): Container
+    public function copy(User $user, StructuralElement $element): array
     {
         $container = self::build([
             'structural_element_id' => $element->id,
@@ -120,24 +120,26 @@ class Container extends \SimpleORMap
 
         $container->store();
 
-        $blockMap = $this->copyBlocks($user, $container);
+        list($blockMapIds, $blockMapObjs) = $this->copyBlocks($user, $container);
 
-        $container['payload'] = $container->type->copyPayload($blockMap);
+        $container['payload'] = $container->type->copyPayload($blockMapIds);
 
         $container->store();
 
-        return $container;
+        return [$container, $blockMapObjs];
     }
 
     private function copyBlocks(User $user, Container $newContainer): array
     {
         $blockMap = [];
+        $newBlockList = [];
 
         foreach ($this->blocks as $block) {
             $newBlock = $block->copy($user, $newContainer);
             $blockMap[$block->id] = $newBlock->id;
+            $newBlockList[$block->id] = $newBlock;
         }
 
-        return $blockMap;
+        return [$blockMap, $newBlockList];
     }
 }
