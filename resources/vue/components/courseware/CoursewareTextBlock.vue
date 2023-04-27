@@ -14,7 +14,7 @@
                 <section class="formatted-content" v-html="currentText" ref="content"></section>
             </template>
             <template v-if="canEdit" #edit>
-                <ckeditor :editor="editor" v-model="currentText" :config="editorConfig"></ckeditor>
+                <ckeditor :editor="editor" v-model="currentText" :config="editorConfig" @ready="onReady"></ckeditor>
             </template>
             <template #info><translate>Informationen zum Text-Block</translate></template>
         </courseware-default-block>
@@ -51,6 +51,18 @@ export default {
         text() {    
             return this.block?.attributes?.payload?.text;
         },
+        ckeToolbarTop() {
+            const topBar = document.getElementById('top-bar');
+            const responsiveContentbar = document.getElementById('responsive-contentbar');
+            let top = topBar.clientHeight + topBar.clientTop;
+            if (responsiveContentbar) {
+                top += responsiveContentbar?.clientHeight + responsiveContentbar?.clientTop;
+            } else {
+                top += 85;
+            }
+            
+            return top;
+        },
     },
     mounted() {
         this.initCurrent();
@@ -62,6 +74,10 @@ export default {
         initCurrent() {
             this.currentText = this.text;
             this.loadMathjax();
+        },
+        onReady( editor )  {
+            editor.ui.viewportOffset = { top: this.ckeToolbarTop };
+            editor.ui.update();
         },
         async storeText() {
             let attributes = this.block.attributes;
@@ -91,7 +107,7 @@ export default {
             .catch(() => {
                 console.log('Warning: Could not load MathJax.');
             });
-        }
-    },
+        },
+    }
 };
 </script>
