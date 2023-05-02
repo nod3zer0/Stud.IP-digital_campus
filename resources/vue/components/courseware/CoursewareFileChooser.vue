@@ -7,17 +7,10 @@
             <option v-show="canBeEmpty" value="">
                 <translate>Keine Auswahl</translate>
             </option>
-            <optgroup v-if="this.context.type === 'courses' && courseFiles.length !== 0" :label="textOptGroupCourse">
-                <option v-for="(file, index) in courseFiles" :key="index" :value="file.id">
-                    {{ file.name }}
-                </option>
-            </optgroup>
-            <optgroup v-if="userFiles.length !== 0" :label="textOptGroupUser">
-                <option v-for="(file, index) in userFiles" :key="index" :value="file.id">
-                    {{ file.name }}
-                </option>
-            </optgroup>
-            <option v-show="userFiles.length === 0 && courseFiles.length === 0" disabled>
+            <option v-for="(file, index) in files" :key="index" :value="file.id">
+                {{ file.name }}
+            </option>
+            <option v-show="files.length === 0" disabled>
                 <translate>Keine Dateien vorhanden</translate>
             </option>
         </select>
@@ -45,17 +38,12 @@ export default {
         return {
             currentValue: '',
             selectedFolderId: '',
-            loadedCourseFiles: [],
-            courseFiles: [],
-            loadedUserFiles: [],
-            userFiles: [],
-            textOptGroupCourse: this.$gettext('Dateibereich der Veranstaltung'),
-            textOptGroupUser: this.$gettext('Persönlicher Dateibereich'),
+            files: [],
         };
     },
     computed: {
         ...mapGetters({
-            context: 'context',
+            fileRefById: 'file-refs/byId',
             relatedFileRefs: 'file-refs/related',
             urlHelper: 'urlHelper',
             userId: 'userId',
@@ -64,12 +52,13 @@ export default {
     },
     methods: {
         ...mapActions({
+            loadFileRef: 'file-refs/loadById',
             loadRelatedFileRefs: 'file-refs/loadRelated',
         }),
         selectFile() {
             this.$emit(
                 'selectFile',
-                this.userFiles.concat(this.courseFiles).find((file) => file.id === this.currentValue)
+                this.files.find((file) => file.id === this.currentValue)
             );
         },
         filterFiles(loadArray) {
@@ -77,9 +66,6 @@ export default {
                 let fileTermsOfUse = this.relatedTermOfUse({parent: file, relationship: 'terms-of-use'});
 
                 if (fileTermsOfUse !== null && fileTermsOfUse.attributes['download-condition'] !== 0) {
-                    return false;
-                }
-                if (this.selectedFolderId !== '' && this.selectedFolderId !== file.relationships.parent.data.id) {
                     return false;
                 }
                 if (this.mimeType !== '' && this.mimeType !== file.attributes['mime-type']) {
@@ -115,40 +101,32 @@ export default {
                 ),
             }));
         },
-        updateFiles() {
-            this.courseFiles = this.filterFiles(this.loadedCourseFiles);
-            this.userFiles = this.filterFiles(this.loadedUserFiles);
-        },
-        async getCourseFiles() {
-            const parent = { type: 'courses', id: `${this.context.id}` };
+        async getFolderFiles() {
+            const parent = { type: 'folders', id: `${this.selectedFolderId}` };
             const relationship = 'file-refs';
             const options = { include: 'terms-of-use', 'page[limit]': 10000 };
             await this.loadRelatedFileRefs({ parent, relationship, options });
 
-            this.loadedCourseFiles = this.relatedFileRefs({ parent, relationship });
-            this.updateFiles();
-        },
-        async getUserFiles() {
-            const parent = { type: 'users', id: `${this.userId}` };
-            const relationship = 'file-refs';
-            const options = { include: 'terms-of-use', 'page[limit]': 10000 };
-            await this.loadRelatedFileRefs({ parent, relationship, options });
-
-            this.loadedUserFiles = this.relatedFileRefs({ parent, relationship });
-            this.updateFiles();
+            const files = this.relatedFileRefs({ parent, relationship });
+            this.files = this.filterFiles(files);
         },
     },
-    mounted() {
-        if (this.context.type !== 'users') {
-            this.getCourseFiles();
-        }
-        this.getUserFiles();
+    async mounted() {
+        if (this.value != '') {
+            await this.loadFileRef({ id: this.value });
+            const fileRef = this.fileRefById({ id: this.value });
 
-        this.currentValue = this.value;
+            if (fileRef) {
+                this.selectedFolderId = fileRef.relationships.parent.data.id;
+                this.currentValue = this.value;
+            }
+        }
     },
     watch: {
         selectedFolderId() {
-            this.updateFiles();
+            if (this.selectedFolderId !== '') {
+                this.getFolderFiles();
+            }
         },
     },
 };

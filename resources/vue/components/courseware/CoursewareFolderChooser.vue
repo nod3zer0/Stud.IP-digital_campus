@@ -158,5 +158,10 @@ export default {
         await this.getUserFolders();
         this.confirmSelectedFolder();
     },
+    watch: {
+        value() {
+            this.currentValue = this.value;
+        }
+    },
 };
 </script>
