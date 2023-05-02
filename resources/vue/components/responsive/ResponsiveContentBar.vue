@@ -8,12 +8,12 @@
                 <div v-if="hasSidebar" class="contentbar-nav" ref="leftNav">
                     <button :class="sidebarIconClasses" @click.prevent="toggleSidebar" id="toggle-sidebar"
                             :title="$gettext('Sidebar öffnen')">
-                        <studip-icon shape="sidebar3" size="24" ref="sidebarIcon"
+                        <studip-icon shape="sidebar3" :size="24" ref="sidebarIcon"
                                      alt=""></studip-icon>
                     </button>
                 </div>
                 <div class="contentbar-wrapper-left">
-                    <studip-icon :shape="icon" size="24" role="info" class="text-bottom contentbar-icon"></studip-icon>
+                    <studip-icon :shape="icon" :size="24" role="info" class="text-bottom contentbar-icon"></studip-icon>
                     <nav class="contentbar-breadcrumb" ref="breadcrumbs">
                         <span>{{ title }}</span>
                     </nav>

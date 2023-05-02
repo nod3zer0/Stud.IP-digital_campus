@@ -150,7 +150,8 @@ export default {
             iconSize: 28,
             showMenu: false,
             activeItem: this.navigation.activated.at(-1) ?? 'start',
-            currentNavigation: this.findItem(this.navigation.activated.at(0) ?? 'start', studipNavigation),
+            currentNavigation: this.findItem(this.navigation.activated.at(0) ?? 'start', studipNavigation)
+                ?? this.studipNavigation,
             initialNavigation: {},
             initialTitle: '',
             isAdmin: ['root','admin'].includes(this.me.perm),
@@ -259,7 +260,7 @@ export default {
                             return found;
 
                         }
-                        // No children left to search through, we are doomed.
+                    // No children left to search through, we are doomed.
                     } else {
                         return null;
                     }
@@ -345,7 +346,8 @@ export default {
          */
         moveTo(path) {
             this.avatarMenuOpen = false;
-            this.currentNavigation = this.findItem(path ? path : '/', this.studipNavigation);
+            this.currentNavigation =
+                this.findItem(path ? path : '/', this.studipNavigation) ?? this.studipNavigation;
             this.$nextTick(() => {
                 const current = document.querySelector('.navigation-current')
                     ? document.querySelector('.navigation-current .navigation-title button')
