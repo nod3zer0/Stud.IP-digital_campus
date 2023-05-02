@@ -32,5 +32,9 @@
 - [ ] Anhand des vorgelesenen Textes ist die Struktur der Seite erkennbar.
 - [ ] Dopplungen von Text (durch ein Icon neben einem Text) tauchen nicht auf.
 
+## Mängel
+
+- (Hier Mängel auflisten)
+
 
 /label ~BIEST ~Accessibility ~"Version::5.4"
