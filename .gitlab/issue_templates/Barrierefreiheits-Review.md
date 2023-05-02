@@ -6,6 +6,7 @@
   - Mindestens 4,5:1 bei Text und 3:1 bei Icons, idealerweise 7:1.
 - [ ] Links werden passend hervorgehoben.
   - Kontrast mindestens 3:1 und mit einer weiteren Hervorhebung.
+  - Wegen GUI-Richtlinien nur im Fließtext umsetzbar.
 - [ ] Die angezeigten Informationen sind auch ohne Farbsehen erkennbar.
 
 ### Prüfung auf Tastaturbedienbarkeit von Seitenelementen
