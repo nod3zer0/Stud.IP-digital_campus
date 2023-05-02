@@ -26,15 +26,18 @@ class MultipersonsearchController extends AuthenticatedController
         $searchterm = preg_replace('/\s+/u', ' ', $searchterm);
 
         $result = [];
+        $alreadyMember = [];
         // execute searchobject if searchterm is at least 3 chars long
         if (mb_strlen($searchterm) >= 3) {
             $mp = MultiPersonSearch::load($name);
             $searchObject = $mp->getSearchObject();
-            $result = array_map(function ($r) {
-                return $r['user_id'];
-            }, $searchObject->getResults($searchterm, [], 50));
-            $result = User::findFullMany($result, 'ORDER BY Nachname ASC, Vorname ASC');
-            $alreadyMember = $mp->getDefaultSelectedUsersIDs();
+            if (isset($searchObject)) {
+                $result = array_map(function ($r) {
+                    return $r['user_id'];
+                }, $searchObject->getResults($searchterm, [], 50));
+                $result = User::findFullMany($result, 'ORDER BY Nachname ASC, Vorname ASC');
+                $alreadyMember = $mp->getDefaultSelectedUsersIDs();
+            }
         }
 
         $output = [];
@@ -122,6 +125,7 @@ class MultipersonsearchController extends AuthenticatedController
 
         $this->selectableUsers = [];
         $this->selectedUsers = [];
+        $this->alreadyMemberUsers = [];
         $this->search = Request::get("freesearch");
         $this->additionHTML = $mp->getAdditionHTML();
         $previousSelectableUsers = json_decode(Request::get('search_persons_selectable_hidden'), true);
@@ -252,16 +256,19 @@ class MultipersonsearchController extends AuthenticatedController
         $searchterm = preg_replace('/\s+/u', ' ', $searchterm);
 
         $result = [];
+        $alreadyMember = [];
         // execute searchobject if searchterm is at least 3 chars long
         if (mb_strlen($searchterm) >= 3) {
             $mp = MultiPersonSearch::load($name);
             $mp->setSearchObject(new StandardSearch('user_id'));
             $searchObject = $mp->getSearchObject();
-            $result = array_map(function ($r) {
-                return $r['user_id'];
-            }, $searchObject->getResults($searchterm, [], 50));
-            $result = User::findFullMany($result, 'ORDER BY Nachname ASC, Vorname ASC');
-            $alreadyMember = $mp->getDefaultSelectedUsersIDs();
+            if (isset($searchObject)) {
+                $result = array_map(function ($r) {
+                    return $r['user_id'];
+                }, $searchObject->getResults($searchterm, [], 50));
+                $result = User::findFullMany($result, 'ORDER BY Nachname ASC, Vorname ASC');
+                $alreadyMember = $mp->getDefaultSelectedUsersIDs();
+            }
         }
 
         $output = [];
@@ -270,7 +277,7 @@ class MultipersonsearchController extends AuthenticatedController
                 'id' => $user->id,
                 'avatar'  => Avatar::getAvatar($user->id)->getURL(Avatar::SMALL),
                 'text'    => "{$user->nachname}, {$user->vorname} -- {$user->perms} ({$user->username})",
-                'selected'  => $alreadyMember === null ? false : in_array($user->id, $alreadyMember),
+                'selected'  => in_array($user->id, $alreadyMember),
                 'nachname' => $user->nachname,
                 'vorname' => $user->vorname,
                 'username' => $user->username,
@@ -279,6 +286,4 @@ class MultipersonsearchController extends AuthenticatedController
         }
         $this->render_json($output);
     }
-
-
 }
