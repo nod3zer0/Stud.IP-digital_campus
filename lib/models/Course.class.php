@@ -1004,15 +1004,9 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     public function setDefaultTools()
     {
         $this->tools = [];
-        foreach (array_values($this->getSemClass()->getActivatedModuleObjects()) as  $pos => $module) {
-            $this->tools[] = ToolActivation::create(
-                [
-                    'plugin_id' => $module->getPluginId(),
-                    'range_type'  => 'course',
-                    'range_id' => $this->id,
-                    'position' => $pos
-                ]
-            );
+        foreach (array_values($this->getSemClass()->getActivatedModuleObjects()) as $module) {
+            PluginManager::getInstance()->setPluginActivated($module->getPluginId(), $this->id, true);
+            $this->tools[] = ToolActivation::find([$this->id, $module->getPluginId()]);
         }
     }
 

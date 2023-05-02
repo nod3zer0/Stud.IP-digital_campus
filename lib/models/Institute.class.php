@@ -320,17 +320,11 @@ class Institute extends SimpleORMap implements Range
      */
     public function setDefaultTools()
     {
-        $this->tools = [];
-        foreach (array_values($this->getSemClass()->getActivatedModuleObjects()) as  $pos => $module) {
-            $this->tools[] = ToolActivation::create(
-                [
-                    'plugin_id' => $module->getPluginId(),
-                    'range_type'  => 'institute',
-                    'range_id' => $this->id,
-                    'position' => $pos
-                ]
-            );
-        }
+       $this->tools = [];
+       foreach (array_values($this->getSemClass()->getActivatedModuleObjects()) as $module) {
+           PluginManager::getInstance()->setPluginActivated($module->getPluginId(), $this->id, true);
+           $this->tools[] = ToolActivation::find([$this->id, $module->getPluginId()]);
+       }
     }
 
     /**

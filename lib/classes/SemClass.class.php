@@ -147,16 +147,8 @@ class SemClass implements ArrayAccess
         $plugin = PluginManager::getInstance()->getPlugin($module);
         if ($plugin) {
             return Course::findEachBySQL(function ($course) use ($plugin) {
-                if (!$course->tools->findOneby('plugin_id', $plugin->getPluginId())) {
-                    return ToolActivation::create([
-                        'plugin_id' => $plugin->getPluginId(),
-                        'range_type'  => 'course',
-                        'range_id' => $course->id
-                    ]);
-                } else {
-                    return 0;
-                }
-        },
+                return PluginManager::getInstance()->setPluginActivated($plugin->getPluginId(), $course->id, true);
+            },
                 "seminare.status IN (?)",
                 [array_keys($this->getSemTypes())]);
         } else {
@@ -173,11 +165,7 @@ class SemClass implements ArrayAccess
         $plugin = PluginManager::getInstance()->getPlugin($module);
         if ($plugin) {
             return Course::findEachBySQL(function ($course) use ($plugin) {
-                if ($tool = $course->tools->findOneby('plugin_id', $plugin->getPluginId())) {
-                    return $tool->delete();
-                } else {
-                    return 0;
-                }
+                return PluginManager::getInstance()->setPluginActivated($plugin->getPluginId(), $course->id, false);
             },
                 "seminare.status IN (?)",
                 [array_keys($this->getSemTypes())]);
