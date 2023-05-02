@@ -66,10 +66,10 @@
                         <translate>Beteiligung</translate>
                         <input type="text" v-model="currentData.role">
                     </label>
-                    <label>
+                    <div class="label-text">
                         <translate>Beschreibung</translate>
-                        <studip-wysiwyg v-model="currentData.description"></studip-wysiwyg>
-                    </label>
+                    </div>
+                    <studip-wysiwyg v-model="currentData.description"></studip-wysiwyg>
                 </form>
             </template>
             <template #info><translate>Informationen zum Erfolge-Block</translate></template>

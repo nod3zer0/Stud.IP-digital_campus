@@ -29,10 +29,10 @@
                             <option value="professional"><translate>Berufliches Ziel</translate></option>
                         </select>
                     </label>
-                    <label for="description">
-                        <span><translate>Beschreibung</translate></span>
-                        <studip-wysiwyg name="description" v-model="currentData.description"></studip-wysiwyg>
-                    </label>
+                    <div class="label-text">
+                        <translate>Beschreibung</translate>
+                    </div>
+                    <studip-wysiwyg v-model="currentData.description"></studip-wysiwyg>
                 </form>
             </template>
             <template #info><translate>Informationen zum Ziele-Block</translate></template>
