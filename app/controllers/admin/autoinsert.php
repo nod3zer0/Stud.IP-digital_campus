@@ -149,14 +149,17 @@ class Admin_AutoinsertController extends AuthenticatedController
         $this->seminar_search = [];
 
         PageLayout::setTitle(_('Manuelles Eintragen von Nutzergruppen in Veranstaltungen'));
-        if (Request::submitted('submit')) {
+        if (Request::submittedSome('submit', 'force')) {
             $filters = array_filter(Request::getArray('filter'));
-            if (!Request::get('sem_id') || Request::get('sem_id') == 'false') {
+            $force = Request::bool('force', false);
+            $seminar_id = Request::option('sem_id');
+
+            if (!$seminar_id || $seminar_id === 'false') {
                 PageLayout::postError(_('Ungültiger Aufruf'));
             } elseif (!count($filters)) {
                 PageLayout::postError(_('Keine Filterkriterien gewählt'));
             } else {
-                $seminar = Seminar::GetInstance(Request::option('sem_id'));
+                $seminar = Seminar::GetInstance($seminar_id);
 
                 $userlookup = new UserLookup();
                 foreach ($filters as $type => $values) {
@@ -166,9 +169,9 @@ class Admin_AutoinsertController extends AuthenticatedController
                 $real_users = 0;
 
                 foreach ($user_ids as $user_id) {
-                    if (!AutoInsert::checkAutoInsertUser(Request::option('sem_id'), $user_id)) {
-                        $seminar->addMember($user_id);
-                        $real_users += AutoInsert::saveAutoInsertUser(Request::option('sem_id'), $user_id);
+                    if ($force || !AutoInsert::checkAutoInsertUser($seminar_id, $user_id)) {
+                        $real_users += $seminar->addMember($user_id) ? 1 : 0;
+                        AutoInsert::saveAutoInsertUser($seminar_id, $user_id);
                     }
                 }
 
@@ -192,6 +195,7 @@ class Admin_AutoinsertController extends AuthenticatedController
                 }
 
                 $this->redirect('admin/autoinsert/manual');
+                return;
             }
         }
 

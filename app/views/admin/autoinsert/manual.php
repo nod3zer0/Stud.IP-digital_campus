@@ -134,6 +134,25 @@
                 </tr>
                 </tbody>
             <? endif ?>
+            <thead>
+                <tr>
+                    <th colspan="3"><?= _('Einstellungen') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="3">
+                        <label>
+                            <input type="checkbox" name="force" value="1">
+                            <?= _('Eintragung forcieren') ?>
+                            <?= tooltipIcon(implode("\n", [
+                                _('Über diese Einstellung kann forciert werden, dass alle gefundenen Personen in die Veranstaltung eingetragen werden.'),
+                                _('Ansonsten werden nur die Personen eingetragen, die bislang noch nicht über diesen Mechanismus eingetragen wurden.'),
+                            ])) ?>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
             <tfoot>
             <tr>
                 <td colspan="3">
@@ -157,20 +176,20 @@
                 if (!$(this).next().length || !$(this).next().is('span')) {
                     $(this).after($('<span id="autoinsert_count" style="vertical-align: middle;"/>'));
                 }
-                $.getJSON('<?= $controller->manual_count() ?>',
-                    $(this).closest('form').serializeArray(),
-                    function (json) {
-                        var result = "";
-                        if (!json || json.error) {
-                            result = '<?= _('Fehler') ?>: ';
-                            result += json.error || '<?= _('Fehler bei der Übertragung') ?>';
-                        } else {
-                            result = '<?= _('Gefundene Nutzer') ?>: ';
-                            result += "<strong>" + json.users + "</strong>";
-                        }
-                        $('#autoinsert_count').html(result);
+                $.getJSON(
+                    '<?= $controller->manual_count() ?>',
+                    $(this).closest('form').serializeArray()
+                ).done(function (json) {
+                    let result = '';
+                    if (!json || json.error) {
+                        result = '<?= _('Fehler') ?>: ';
+                        result += json.error || '<?= _('Fehler bei der Übertragung') ?>';
+                    } else {
+                        result = '<?= _('Gefundene Personen') ?>: ';
+                        result += "<strong>" + json.users + "</strong>";
                     }
-                );
+                    $('#autoinsert_count').html(' ' + result);
+                });
                 event.preventDefault();
             });
             $('input[name^=remove_filter]').click(function (event) {
