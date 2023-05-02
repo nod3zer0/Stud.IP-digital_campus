@@ -157,7 +157,6 @@ class Admin_AutoinsertController extends AuthenticatedController
                 PageLayout::postError(_('Keine Filterkriterien gewählt'));
             } else {
                 $seminar = Seminar::GetInstance(Request::option('sem_id'));
-                $group = select_group($seminar->getSemesterStartTime());
 
                 $userlookup = new UserLookup();
                 foreach ($filters as $type => $values) {
@@ -231,7 +230,8 @@ class Admin_AutoinsertController extends AuthenticatedController
             'fachsemester' => _('Studienfachsemester'),
             'institut'     => _('Einrichtung'),
             'status'       => _('Statusgruppe'),
-            'domain'       => _('Domäne')
+            'domain'       => _('Domäne'),
+            'role'         => _('Rolle'),
         ];
 
         $links = new ActionsWidget();

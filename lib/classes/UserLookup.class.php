@@ -67,8 +67,12 @@ class UserLookup
             'values' => 'UserLookup::statusValues',
         ],
         'domain' => [
-            'filter'    =>'UserLookup::domainFilter',
-            'values'    =>'UserLookup::domainValues'
+            'filter' => 'UserLookup::domainFilter',
+            'values' => 'UserLookup::domainValues',
+        ],
+        'role' => [
+            'filter' => 'UserLookup::roleFilter',
+            'values' => 'UserLookup::roleValues',
         ],
     ];
 
@@ -456,5 +460,44 @@ class UserLookup
         }
 
         return $domains;
+    }
+
+    /**
+     * Return all users with a matching assigned role given in $needles
+     *
+     * @param  array $needles List of domain ids to filter against
+     * @return array List of user ids matching the given filter
+     */
+    protected static function roleFilter($needles): array
+    {
+        if (!$needles) {
+            return [];
+        }
+
+        $user_ids = [];
+        foreach ($needles as $role_id) {
+            $users = RolePersistence::getUsersWithRoleById($role_id, false);
+            foreach ($users as $user) {
+                $user_ids[$user->id] = $user->id;
+            }
+        }
+
+        return array_values($user_ids);
+    }
+
+    /**
+     * Return all valid roles
+     *
+     * @return array Associative array of domain id and name
+     */
+    protected static function roleValues(): array
+    {
+        $roles = [];
+        $roles['keine'] = _('Ohne Rollenzuweisung');
+        foreach (RolePersistence::getAllRoles() as $role) {
+            $roles[$role->getRoleid()] = $role->getRolename();
+        }
+
+        return $roles;
     }
 }

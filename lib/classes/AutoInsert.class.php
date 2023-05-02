@@ -89,7 +89,7 @@ class AutoInsert
     /**
      * Trägt den Benutzer in den Eingestellten veranstaltungen automatisch ein.
      * @param string $user_id
-     * @param bool $status Wenn Status nicht angegeben wird, wird der Status des Users aus user_id genommen
+     * @param string|bool $status Wenn Status nicht angegeben wird, wird der Status des Users aus user_id genommen
      * @return array 'added' Namen der Seminare in die der User eingetragen wurde
      *                     array 'removed' Namen der Seminare aus denen der User ausgetragen wurde
      */
@@ -112,7 +112,6 @@ class AutoInsert
 
             $key = $domain . '.' . $status;
             if (is_array($this->settings[$key])) {
-                $id = key($this->settings[$key]);
                 foreach ($this->settings[$key] as $id => $value) {
                     $settings[$id] = $value;
                 }
@@ -241,13 +240,15 @@ class AutoInsert
      * Removes a seminar from the autoinsertion process.
      * @param string $seminar_id Id of the seminar
      */
-    public static function deleteSeminar($seminar_id)
+    public static function deleteSeminar($seminar_id): bool
     {
         $query     = "DELETE FROM auto_insert_sem WHERE seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute([$seminar_id]);
+        $result = $statement->execute([$seminar_id]);
 
         unset(self::getSeminarCache()[$seminar_id]);
+
+        return $result > 0;
     }
 
     /**

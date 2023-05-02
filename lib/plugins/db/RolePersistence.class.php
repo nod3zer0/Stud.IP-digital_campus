@@ -22,6 +22,7 @@ class RolePersistence
     /**
      * Returns all available roles.
      *
+     * @param bool $grouped Return the roles grouped by system type or other
      * @return Role[]|array{system: Role[], other: Role[]}
      */
     public static function getAllRoles(bool $grouped = false): array
