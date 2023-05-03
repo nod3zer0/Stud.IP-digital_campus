@@ -144,10 +144,7 @@ import eventBus from "./lib/event-bus.ts";
                 const dataOptions = $(this).data().datePicker;
 
                 const options = {};
-                if (
-                    dataOptions['disable_holidays'] !== undefined
-                    && dataOptions['disable_holidays'] === true
-                ) {
+                if (dataOptions?.disable_holidays === true) {
                     options.beforeShowDay = disableHolidaysBeforeShow;
                 }
                 $(this).data('date-picker-init', true).datepicker(options);
@@ -285,10 +282,7 @@ import eventBus from "./lib/event-bus.ts";
                 const dataOptions = $(this).data().datePicker;
 
                 const options = {};
-                if (
-                    dataOptions['disable_holidays'] !== undefined
-                    && dataOptions['disable_holidays'] === true
-                ) {
+                if (dataOptions?.disable_holidays === true) {
                     options.beforeShowDay = disableHolidaysBeforeShow;
                 }
                 $(this).data('date-picker-init', true).datepicker(options);
