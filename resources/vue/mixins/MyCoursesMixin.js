@@ -16,6 +16,22 @@ export default {
             'updateConfigValue',
         ]),
 
+        getViewConfig(key) {
+            return this.getConfig(
+                'view_settings',
+                this.responsiveDisplay ? 'responsive' : 'regular',
+                key
+            );
+        },
+        updateViewConfig(key, value) {
+            let config = this.getConfig('view_settings');
+            config[this.responsiveDisplay ? 'responsive' : 'regular'][key] = value;
+            return this.updateConfigValue({
+                key: 'view_settings',
+                value: config
+            });
+        },
+
         getCourseName(course, include_number = false) {
             let name = course.name;
             if (include_number) {
@@ -110,7 +126,7 @@ export default {
                     return;
                 }
 
-                if (this.getConfig('navigation_show_only_new') && !nav.important) {
+                if (this.getViewConfig('only_new') && !nav.important) {
                     return;
                 }
 
@@ -150,9 +166,6 @@ export default {
             'getConfig',
         ]),
 
-        viewConfig () {
-            return this.responsiveDisplay ? 'responsive_type' : 'display_type';
-        },
         numberOfNavElements () {
             return Math.max(
                 ...Object.values(this.courses).map(course => {

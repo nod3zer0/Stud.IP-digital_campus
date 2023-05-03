@@ -2,7 +2,7 @@
     <ul class="widget-list widget-options">
         <li>
             <a href="#" class="options-checkbox" :class="showNewContents ? 'options-checked' : 'options-unchecked'" @click.prevent="toggleNewContents">
-                <translate>Nur neue Inhalte anzeigen</translate>
+                {{ $gettext('Nur neue Inhalte anzeigen') }}
             </a>
         </li>
     </ul>
@@ -17,15 +17,12 @@ export default {
     mixins: [MyCoursesMixin],
     computed: {
         showNewContents () {
-            return this.getConfig('navigation_show_only_new');
+            return this.getViewConfig('only_new');
         },
     },
     methods: {
         toggleNewContents() {
-            this.updateConfigValue({
-                key: 'navigation_show_only_new',
-                value: !this.getConfig('navigation_show_only_new'),
-            }).then(() => {
+            this.updateViewConfig('only_new', !this.showNewContents).then(() => {
                 Sidebar.close();
             });
         },

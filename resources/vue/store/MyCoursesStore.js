@@ -1,17 +1,7 @@
 const configMapping = {
-    display_type: value => {
+    view_settings: value => {
         return {
-            MY_COURSES_TILED_DISPLAY: value === 'tiles',
-        }
-    },
-    responsive_type: value => {
-        return {
-            MY_COURSES_TILED_DISPLAY_RESPONSIVE: value === 'tiles',
-        }
-    },
-    navigation_show_only_new: value => {
-        return {
-            MY_COURSES_SHOW_NEW_ICONS_ONLY: value,
+            MY_COURSES_VIEW_SETTINGS: value
         };
     },
     open_groups: value => {
@@ -19,7 +9,6 @@ const configMapping = {
             MY_COURSES_OPEN_GROUPS: value,
         };
     },
-
 };
 
 export default {
@@ -39,8 +28,12 @@ export default {
             }
             return state.config.open_groups.includes(group.id);
         },
-        getConfig: (state) => (key) => {
-            return state.config[key];
+        getConfig: (state) => (...keys) => {
+            let config = state.config;
+            for (const key of keys) {
+                config = config[key];
+            }
+            return config;
         },
     },
 

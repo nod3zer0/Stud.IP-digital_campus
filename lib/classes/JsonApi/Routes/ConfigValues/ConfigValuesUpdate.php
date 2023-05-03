@@ -31,7 +31,11 @@ class ConfigValuesUpdate extends JsonApiController
         $resource = $this->findOrFakeConfigValue($range, $field);
 
         // TODO: zunächst kann diese Route nur Konfigurationseinstellungen vom Typ bool ändern
-        if ('boolean' !== $resource->entry['type'] && $resource->entry['field'] !== 'MY_COURSES_OPEN_GROUPS') {
+        if (
+            'boolean' !== $resource->entry['type']
+            && $resource->entry['field'] !== 'MY_COURSES_OPEN_GROUPS'
+            && $resource->entry['field'] !== 'MY_COURSES_VIEW_SETTINGS'
+        ) {
             throw new NotImplementedException();
         }
 

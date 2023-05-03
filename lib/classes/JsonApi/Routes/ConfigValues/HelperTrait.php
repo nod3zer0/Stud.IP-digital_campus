@@ -2,11 +2,12 @@
 
 namespace JsonApi\Routes\ConfigValues;
 
+use ConfigValue;
 use JsonApi\Errors\RecordNotFoundException;
 
 trait HelperTrait
 {
-    private function generateId(\ConfigValue $resource): string
+    private function generateId(ConfigValue $resource): string
     {
         return join('_', [$resource['range_id'], $resource['field']]);
     }
@@ -29,10 +30,10 @@ trait HelperTrait
         return $range;
     }
 
-    private function findOrFakeConfigValue(?\Range $range, string $field)
+    private function findOrFakeConfigValue(?\Range $range, string $field): ConfigValue
     {
         // first search optimistically for this config value
-        if ($configValue = \ConfigValue::find([$field, $range->id])) {
+        if ($configValue = ConfigValue::find([$field, $range->id])) {
             return $configValue;
         }
 
@@ -41,7 +42,7 @@ trait HelperTrait
             throw new RecordNotFoundException();
         }
 
-        return \ConfigValue::build([
+        return ConfigValue::build([
             'field' => $field,
             'range_id' => $range->id,
             'value' => $configEntry->value,

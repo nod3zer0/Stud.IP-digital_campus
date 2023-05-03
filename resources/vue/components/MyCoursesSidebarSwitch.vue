@@ -1,13 +1,13 @@
 <template>
     <ul class="widget-list widget-links sidebar-views">
         <li :class="{ active: tableView }">
-            <a href="#" @click.prevent="setTableView">
-                <translate>Tabellarische Ansicht</translate>
+            <a href="#" @click.prevent="setTiledView(false)">
+                {{ $gettext('Tabellarische Ansicht') }}
             </a>
         </li>
         <li :class="{ active: tilesView }">
-            <a href="#" @click.prevent="setTilesView">
-                <translate>Kachelansicht</translate>
+            <a href="#" @click.prevent="setTiledView(true)">
+                {{ $gettext('Kachelansicht') }}
             </a>
         </li>
     </ul>
@@ -22,24 +22,15 @@ export default {
     mixins: [MyCoursesMixin],
     computed: {
         tableView () {
-            return this.getConfig(this.viewConfig) === 'tables';
+            return !this.getViewConfig('tiled');
         },
         tilesView () {
-            return this.getConfig(this.viewConfig) === 'tiles';
+            return this.getViewConfig('tiled');
         },
     },
     methods: {
-        setTableView () {
-            this.setView('tables');
-        },
-        setTilesView () {
-            this.setView('tiles');
-        },
-        setView (view) {
-            this.updateConfigValue({
-                key: this.viewConfig,
-                value: view
-            }).then(() => {
+        setTiledView (state) {
+            this.updateViewConfig('tiled', state).then(() => {
                 Sidebar.close();
             });
         }

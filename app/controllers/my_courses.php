@@ -793,9 +793,7 @@ class MyCoursesController extends AuthenticatedController
                 'allow_dozent_visibility'  => Config::get()->ALLOW_DOZENT_VISIBILITY,
                 'open_groups'              => array_values($GLOBALS['user']->cfg->MY_COURSES_OPEN_GROUPS),
                 'sem_number'               => Config::get()->IMPORTANT_SEMNUMBER,
-                'display_type'             => $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY ? 'tiles' : 'tables',
-                'responsive_type'          => $GLOBALS['user']->cfg->MY_COURSES_TILED_DISPLAY_RESPONSIVE ? 'tiles' : 'tables',
-                'navigation_show_only_new' => $GLOBALS['user']->cfg->MY_COURSES_SHOW_NEW_ICONS_ONLY,
+                'view_settings'            => $GLOBALS['user']->cfg->MY_COURSES_VIEW_SETTINGS,
                 'group_by'                 => $this->getGroupField(),
             ],
         ];

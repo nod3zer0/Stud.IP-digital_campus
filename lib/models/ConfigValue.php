@@ -12,6 +12,16 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  *
  * @category    Stud.IP
+ *
+ * @property array $id
+ * @property string $field
+ * @property string $range_id
+ * @property string $value
+ * @property int $mkdate
+ * @property int $chdate
+ * @property string $comment
+ *
+ * @property ConfigEntry $entry
  */
 
 class ConfigValue extends SimpleORMap
