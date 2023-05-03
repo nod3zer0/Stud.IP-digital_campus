@@ -119,12 +119,12 @@ final class CombineMyCoursesViewSettings extends Migration
     {
         return [
             'regular' => [
-                'tiled'    => (bool) $config['MY_COURSES_TILED_DISPLAY'],
-                'only_new' => (bool) $config['MY_COURSES_SHOW_NEW_ICONS_ONLY'],
+                'tiled'    => (bool) ($config['MY_COURSES_TILED_DISPLAY'] ?? self::OLD_FIELDS['MY_COURSES_TILED_DISPLAY']),
+                'only_new' => (bool) ($config['MY_COURSES_SHOW_NEW_ICONS_ONLY'] ?? self::OLD_FIELDS['MY_COURSES_SHOW_NEW_ICONS_ONLY']),
             ],
             'responsive' => [
-                'tiled'    => (bool) $config['MY_COURSES_TILED_DISPLAY_RESPONSIVE'],
-                'only_new' => (bool) $config['MY_COURSES_SHOW_NEW_ICONS_ONLY'],
+                'tiled'    => (bool) ($config['MY_COURSES_TILED_DISPLAY_RESPONSIVE'] ?? self::OLD_FIELDS['MY_COURSES_TILED_DISPLAY_RESPONSIVE']),
+                'only_new' => (bool) ($config['MY_COURSES_SHOW_NEW_ICONS_ONLY'] ?? self::OLD_FIELDS['MY_COURSES_SHOW_NEW_ICONS_ONLY']),
             ],
         ];
     }
