@@ -37,7 +37,11 @@ h1, h2, h3, h4, h5, h6 {
   color: $headings-color;
 }
 
-h1,
+h1 {
+  margin-top: 0;
+  margin-bottom: calc($line-height-computed / 2);
+}
+
 h2,
 h3 {
   margin-top: $line-height-computed;
@@ -66,16 +70,6 @@ h1, h2 {
     font-size: 1.3em;
 }
 
-
-h1 {
-  margin-top: 0;
-  span:not([style]) {
-    display: block;
-    font-size: calc($font-size-h1 * 0.75);
-    font-weight: calc($headings-font-weight / 7);
-    padding: calc($line-height-computed / 4) 0;
-  }
-}
 
 // Body text
 // -------------------------
