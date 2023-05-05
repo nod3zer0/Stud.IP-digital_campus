@@ -108,9 +108,12 @@ export default {
             }
 
             // Adjust toggle sidebar button title
-            document.getElementById('toggle-sidebar').title = this.sidebarOpen
-                ? this.$gettext('Sidebar schließen')
-                : this.$gettext('Sidebar öffnen');
+            const toggle = document.getElementById('toggle-sidebar');
+            if (toggle) {
+                toggle.title = this.sidebarOpen
+                    ? this.$gettext('Sidebar schließen')
+                    : this.$gettext('Sidebar öffnen');
+            }
         },
         adjustExistingContentbar(responsiveMode) {
             if (this.realContentbar) {

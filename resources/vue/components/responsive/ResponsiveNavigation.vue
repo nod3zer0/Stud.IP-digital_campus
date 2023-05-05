@@ -1,5 +1,5 @@
 <template>
-    <div role="navigation" ref="container" v-if="menuNeeded">
+    <div role="navigation" ref="container" id="responsive-navigation-container" v-if="menuNeeded">
         <div class="responsive-navigation-header">
             <transition name="slide" appear>
                 <button id="responsive-navigation-button" class="styleless"
@@ -158,7 +158,8 @@ export default {
             courses: [],
             avatarNavigation: studipNavigation.avatar,
             avatarMenuOpen: false,
-            observer: null,
+            classObserver: null,
+            dialogObserver: null,
             hasSkiplinks: document.querySelector('#skiplink_list') !== null,
             hasContentbar: false,
             contentbarTitle: ''
@@ -272,7 +273,6 @@ export default {
          * Open or close the navigation menu
          */
         toggleMenu() {
-
             this.showMenu = !this.showMenu;
 
             if (!this.showMenu && this.avatarMenuOpen) {
@@ -541,7 +541,7 @@ export default {
          * Use an observer for html and body in order to check
          * whether we move into consuming mode or leave responsive mode.
          */
-        this.observer = new MutationObserver(mutations => {
+        this.classObserver = new MutationObserver(mutations => {
             for (const m of mutations) {
                 const newValue = m.target.getAttribute(m.attributeName);
                 this.onChangeViewMode(m.target.tagName, newValue);
@@ -549,17 +549,29 @@ export default {
         });
 
         // Observe <html> for class changes.
-        this.observer.observe(document.documentElement, {
+        this.classObserver.observe(document.documentElement, {
             attributes: true,
             attributeOldValue : false,
             attributeFilter: ['class']
         });
 
         // Observe <body> for class changes.
-        this.observer.observe(document.body, {
+        this.classObserver.observe(document.body, {
             attributes: true,
             attributeOldValue : false,
             attributeFilter: ['class']
+        });
+
+        // Check for closed dialog, re-mounting the Vue component.
+        this.dialogObserver = new MutationObserver(mutations => {
+            if (mutations[0].removedNodes.length > 0 &&
+                    mutations[0].removedNodes[0].classList.contains('ui-widget-overlay')) {
+                document.getElementById('responsive-menu').replaceChildren(this.$el);
+            }
+        });
+
+        this.dialogObserver.observe(document.body, {
+            childList: true
         });
 
         this.globalOn('has-contentbar', value => {
@@ -574,7 +586,7 @@ export default {
             if (this.isFullscreen) {
                 document.getElementById('responsive-toggle-focusmode').style.display = 'block';
             }
-            this.observer.observe(element.$el.querySelector('header.cw-ribbon'), {
+            this.classObserver.observe(element.$el.querySelector('header.cw-ribbon'), {
                 attributes: true,
                 attributeOldValue : false,
                 attributeFilter: ['class']
@@ -582,7 +594,8 @@ export default {
         });
     },
     beforeDestroy() {
-        this.observer.disconnect();
+        this.classObserver.disconnect();
+        this.dialogObserver.disconnect();
         document.getElementById('header-links').style.display = null;
         STUDIP.eventBus.off('responsive-navigation-move-to');
         STUDIP.eventBus.off('toggle-compact-navigation');
@@ -594,7 +607,6 @@ export default {
 
 <style lang="scss">
 @media not prefers-reduced-motion {
-
     .slide-enter-active,
     .slide-leave-active {
         transition: all .3s ease;
