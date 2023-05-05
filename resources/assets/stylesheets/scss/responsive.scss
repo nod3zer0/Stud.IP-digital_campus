@@ -481,21 +481,6 @@ $sidebarOut: -330px;
         }
     }
 
-    .blubber_threads_widget {
-        .sidebar-widget-content {
-            ol {
-                li.active {
-                    &::before {
-                        right: 23px;
-                    }
-                    &::after {
-                        right: 24px;
-                    }
-                }
-            }
-        }
-    }
-
     #toc {
         max-width: 100vw;
         position: absolute;

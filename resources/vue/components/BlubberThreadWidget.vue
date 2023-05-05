@@ -63,8 +63,8 @@
                 // directive definition
                 inserted (el) {
                     let threads = el.__vue__;
-                    $(el).parent().on('scroll', function (event) {
-                        let top = $(el).parent().scrollTop();
+                    $(el).parent().parent().on('scroll', function (event) {
+                        let top = $(el).parent().parent().scrollTop();
                         let height = $(el).height();
 
                         $(el).toggleClass('scrolled', top > 0);
