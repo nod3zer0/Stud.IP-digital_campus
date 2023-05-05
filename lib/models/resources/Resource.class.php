@@ -2216,7 +2216,7 @@ class Resource extends SimpleORMap implements StudipItem
         $perm_object->perms = $perm;
         $stored = (bool)$perm_object->store();
         if ($stored) {
-            if (!is_array(self::$permission_cache[$this->id])) {
+            if (!isset(self::$permission_cache[$this->id])) {
                 self::$permission_cache[$this->id] = [];
             }
             //Update the permission cache.
@@ -2351,7 +2351,7 @@ class Resource extends SimpleORMap implements StudipItem
                     ]
                 );
                 if ($perms) {
-                    if (!is_array(self::$permission_cache[$this->id])) {
+                    if (!isset(self::$permission_cache[$this->id])) {
                         self::$permission_cache[$this->id] = [];
                     }
                     self::$permission_cache[$this->id][$user->id] = $perms->perms;
@@ -2368,7 +2368,7 @@ class Resource extends SimpleORMap implements StudipItem
             $global_perm = ResourceManager::getGlobalResourcePermission($user);
             if ($global_perm) {
                 //Set the permission cache:
-                if (!is_array(self::$permission_cache[$this->id])) {
+                if (!isset(self::$permission_cache[$this->id])) {
                     self::$permission_cache[$this->id] = [];
                 }
                 self::$permission_cache[$this->id][$user->id] = $global_perm;
