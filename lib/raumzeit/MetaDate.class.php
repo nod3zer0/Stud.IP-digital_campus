@@ -359,6 +359,7 @@ class MetaDate
     function store()
     {
         $old_cycle_dates = [];
+        $changed = 0;
         foreach (SeminarCycleDate::findBySeminar($this->seminar_id) as $c) {
             $old_cycle_dates[$c->getId()] = $c;
         }
@@ -465,7 +466,7 @@ class MetaDate
     /**
      * returns true if a given cycle has at least one date at all or in the given time range
      *
-     * @param     string cycle id
+     * @param string $metadate_id
      * @param int $filterStart
      * @param int $filterEnd
      * @return bool
@@ -518,7 +519,8 @@ class MetaDate
         $ret = [];
 
         $all_semester = Semester::findAllVisible(false);
-
+        $sem_begin = null;
+        $sem_end = null;
         // get the starting-point for creating singleDates for the choosen cycleData
         foreach ($all_semester as $val) {
             if (($this->seminarStartTime >= $val["beginn"]) && ($this->seminarStartTime <= $val["ende"])) {
