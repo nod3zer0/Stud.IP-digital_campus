@@ -79,6 +79,10 @@ abstract class ConsultationController extends AuthenticatedController
 
         $block = ConsultationBlock::find($block_id);
 
+        if (!$block || !$block->range) {
+            throw new Exception(_('Dieser Terminblock ist ungültig.'));
+        }
+
         if (!$block->range->isAccessibleToUser()) {
             throw new AccessDeniedException();
         }
