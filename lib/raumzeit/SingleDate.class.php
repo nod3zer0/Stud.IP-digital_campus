@@ -71,6 +71,7 @@ class SingleDate
     function __construct($data = '')
     {
         global $user, $id;
+        $termin_id = '';
         if ($data instanceOf CourseDate || $data instanceof CourseExDate) {
             $single_date_data = $data->toArray();
             $single_date_data['ex_termin'] = $data instanceOf CourseDate ? 0 : 1;
@@ -87,7 +88,7 @@ class SingleDate
             } else {
                 $termin_id = $data;
             }
-            if ($termin_id != '') {
+            if ($termin_id !== '') {
                 $this->termin_id = $termin_id;
                 $this->update = true;
                 $this->restore();
@@ -102,6 +103,10 @@ class SingleDate
         }
     }
 
+    public function __toString()
+    {
+        return $this->toString();
+    }
 
     function getStartTime()
     {
@@ -356,6 +361,7 @@ class SingleDate
 
     function isHoliday()
     {
+        $name = null;
         foreach (SemesterHoliday::getAll() as $val) {
             if (($val['beginn'] <= $this->date) && ($val['ende'] >= $this->end_time)) {
                 $name = $val['name'];
