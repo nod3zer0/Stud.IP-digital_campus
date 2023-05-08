@@ -161,7 +161,7 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
                     default:
                         $link[] = 'normal/';
                 }
-                $link[] = $type . '/' . $file_id . '/' . $file_name;
+                $link[] = $type . '/' . $file_id . '/' . urlencode($file_name);
                 break;
             default:
                 $link[] = 'sendfile.php';
