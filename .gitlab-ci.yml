@@ -263,6 +263,16 @@ packaging:
       dotenv: .packaging.env
     expire_in: never
 
+build_image:
+  image: 
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  stage: build
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  script:
+    - /kaniko/executor --context=dir://${CI_PROJECT_DIR} --dockerfile ${CI_PROJECT_DIR}/docker/studip/Dockerfile --destination ${IMAGE_TAG} --cache=true
+
 release:
   stage: release
   image: studip/release-cli

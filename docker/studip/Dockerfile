@@ -51,6 +51,9 @@ WORKDIR /var/www/studip
 # Add config template
 COPY ./docker/studip/config_local.php ./config/config_local.inc.php
 
+# Copy config
+RUN cp ./config/config.inc.php.dist ./config/config.inc.php
+
 # Add custom entrypoint
 COPY ./docker/studip/docker-entrypoint.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
