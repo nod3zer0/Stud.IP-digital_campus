@@ -6,4 +6,4 @@ Welches Problem ist aufgetreten und wie ist es dazu gekommen? (Hilfreich: vorher
 
 Ist der Fehler reproduzierbar? Falls ja, wie.
 
-/label ~BIEST ~"Version::5.3"
+/label ~BIEST ~"Version::5.4"
