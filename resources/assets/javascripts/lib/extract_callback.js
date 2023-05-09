@@ -1,8 +1,7 @@
-export default function extractCallback(cmd, payload) {
+export default function extractCallback(cmd, payload, root = window) {
     var command = cmd,
-        chunks,
         last_chunk = null,
-        callback = window,
+        callback = root,
         previous = null;
 
     // Try to decode URI component in case it is encoded
@@ -14,7 +13,7 @@ export default function extractCallback(cmd, payload) {
 
     // Try to parse value as JSON (value might be {func: 'foo', payload: {}})
     try {
-        command = $.parseJSON(command);
+        command = JSON.parse(command);
     } catch (e) {
         command = { func: command };
     }
@@ -30,8 +29,7 @@ export default function extractCallback(cmd, payload) {
     }
 
     // Find callback
-    chunks = command.func.trim().split(/\./);
-    $.each(chunks, function(index, chunk) {
+    command.func.trim().split(/\./).forEach(chunk => {
         // Check if last chunk was unfinished
         if (last_chunk !== null) {
             chunk = last_chunk + '.' + chunk;
@@ -52,7 +50,7 @@ export default function extractCallback(cmd, payload) {
         if (match !== null) {
             chunk = chunk.replace(match[0], '');
             try {
-                parameters = $.parseJSON('[' + match[1].replace(/'/g, '"') + ']');
+                parameters = JSON.parse('[' + match[1].replace(/'/g, '"') + ']');
             } catch (e) {
                 console.log('error parsing json', match);
             }
@@ -62,7 +60,7 @@ export default function extractCallback(cmd, payload) {
             throw 'Error: Undefined callback ' + cmd;
         }
 
-        if ($.isFunction(callback[chunk]) && parameters !== null) {
+        if (typeof callback[chunk] === 'function' && parameters !== null) {
             callback = callback[chunk].apply(callback, parameters);
         } else {
             callback = callback[chunk];
@@ -70,13 +68,13 @@ export default function extractCallback(cmd, payload) {
     });
 
     // Check callback
-    if (!$.isFunction(callback)) {
+    if (typeof callback !== 'function') {
         return function() {
             return callback;
         };
     }
 
     return function(p) {
-        return callback.apply(previous, [p || payload]);
+        return callback.apply(previous, [p || command.payload]);
     };
 }

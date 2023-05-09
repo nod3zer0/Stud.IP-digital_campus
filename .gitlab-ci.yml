@@ -178,6 +178,22 @@ test-unit:
     reports:
       junit: $PHPUNIT_XML_REPORT
 
+test-jest:
+  stage: test
+  needs: [lint-js]
+  variables:
+    JS_TEST_REPORT: $REPORT_DIR/jest.xml
+  cache: *npm-cache
+  interruptible: true
+  before_script:
+    - *mkdir-reports
+    - npm install
+  script:
+    - JEST_JUNIT_OUTPUT_FILE="$JS_TEST_REPORT" npx jest tests/jest/ --ci --reporters=default --reporters=jest-junit
+  artifacts:
+    reports:
+      junit: $JS_TEST_REPORT
+
 test-functional:
   stage: test
   needs: [lint-php]
