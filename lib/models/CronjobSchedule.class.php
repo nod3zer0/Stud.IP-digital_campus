@@ -120,7 +120,7 @@ class CronjobSchedule extends SimpleORMap
      */
     public function getTitle()
     {
-        return $this->content['title'] ?: $this->task->name ?? '';
+        return ($this->content['title'] ?: $this->task->name) ?? '';
     }
 
     protected function cbJsonifyParameters($type)
