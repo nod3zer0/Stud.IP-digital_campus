@@ -401,7 +401,7 @@ class Admin_SemesterController extends AuthenticatedController
                   FROM `semester_courses`
                   JOIN `semester_data` USING (`semester_id`)
                   GROUP BY `course_id`
-                  HAVING MAX(`beginn`) <= ?";
+                  HAVING MAX(`beginn`) = ?";
         $course_ids = DBManager::get()->fetchFirst($query, [$semester->beginn]);
 
         // Leave early if no courses are affected
