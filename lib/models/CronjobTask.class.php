@@ -56,6 +56,40 @@ class CronjobTask extends SimpleORMap
             'on_store'   => 'store'
         ];
 
+        $config['additional_fields'] = [
+            'description' => [
+                'get' => function (CronjobTask $task): string {
+                    if ($task->valid) {
+                        return $task->class::getDescription();
+                    }
+                    return _('Unbekannt');
+                },
+            ],
+            'name' => [
+                'get' => function (CronjobTask $task): string {
+                    if ($task->valid) {
+                        return $task->class::getName();
+                    }
+                    $result = $task->filename;
+                    if (strpos($result, 'public/plugins_packages') !== false) {
+                        $result = preg_replace('/.*public\/plugins_packages\/(.+)(_Cronjob)?(\.class)?\.php$/', '$1', $result);
+                    } else {
+                        $result = preg_replace('/(_Cronjob)?(\.class)?\.php$/', '', basename($result));
+                    }
+                    $result .= ' (' . _('fehlerhaft') . ')';
+                    return $result;
+                },
+            ],
+            'parameters' => [
+                'get' => function (CronjobTask $task): array {
+                    if ($task->valid) {
+                        return $task->class::getParameters();
+                    }
+                    return [];
+                },
+            ],
+        ];
+
         $config['registered_callbacks']['after_initialize'][] = 'loadClass';
 
         parent::configure($config);
@@ -120,37 +154,6 @@ class CronjobTask extends SimpleORMap
         }
 
         return $result;
-    }
-
-    /**
-     * Proxy the static methods "getDescription", "getName" and
-     * "getParameters" from the task class.
-     *
-     * @param  String $field Field which should be accessed.
-     * @return mixed Value of the method call
-     */
-    public function getValue($field)
-    {
-        if (in_array($field, words('description name parameters'))) {
-            if ($this->valid) {
-                $method = 'get' . ucfirst($field);
-                return call_user_func("{$this->class}::{$method}");
-            } elseif ($field === 'description') {
-                return _('Unbekannt');
-            } elseif ($field === 'name') {
-                $result = $this->filename;
-                if (strpos($result, 'public/plugins_packages') !== false) {
-                    $result = preg_replace('/.*public\/plugins_packages\/(.+)(_Cronjob)?(\.class)?\.php$/', '$1', $result);
-                } else {
-                    $result = preg_replace('/(_Cronjob)?(\.class)?\.php$/', '', basename($result));
-                }
-                $result .= ' (' . _('fehlerhaft') . ')';
-                return $result;
-            } elseif ($field === 'parameters') {
-                return [];
-            }
-        }
-        return parent::getValue($field);
     }
 
 // Convenience methods to ease the usage
