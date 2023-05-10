@@ -1,14 +1,13 @@
 <?php
 /**
  * @var Admin_Cronjobs_TasksController $controller
- * @var Pagination $pagination
  * @var CronjobTask[] $tasks
  */
 
 use Studip\Button;
 ?>
 
-<form action="<?= $controller->bulk($pagination->getCurrentPage()) ?>" method="post" class="default">
+<form action="<?= $controller->bulk() ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
 
     <table class="default cronjobs sortable-table" data-sortlist="[[1,0]]">
@@ -50,11 +49,11 @@ use Studip\Button;
                 <td><?= $task->isCore() ? _('Kern') : _('Plugin') ?></td>
                 <td style="text-align: center;" data-sort-value="'<?= (int) $task->active ?>'">
                 <? if ($task->active): ?>
-                    <a href="<?= $controller->deactivate($task, $pagination->getCurrentPage()) ?>" data-behaviour="ajax-toggle">
+                    <a href="<?= $controller->deactivate($task) ?>" data-behaviour="ajax-toggle">
                         <?= Icon::create('checkbox-checked')->asImg(['title' => _('Aufgabe deaktivieren')]) ?>
                     </a>
                 <? else: ?>
-                    <a href="<?= $controller->activate($task, $pagination->getCurrentPage()) ?>" data-behaviour="ajax-toggle">
+                    <a href="<?= $controller->activate($task) ?>" data-behaviour="ajax-toggle">
                         <?= Icon::create('checkbox-unchecked')->asImg(['title' => _('Aufgabe aktivieren')]) ?>
                     </a>
                 <? endif; ?>
@@ -70,7 +69,7 @@ use Studip\Button;
                     </a>
                     <?= Icon::create('trash')->asInput([
                         'data-confirm' => _('Wollen Sie die ausgewählte Aufgabe wirklich löschen?'),
-                        'formaction'   => $controller->deleteURL($task, $pagination->getCurrentPage()),
+                        'formaction'   => $controller->deleteURL($task),
                     ]) ?>
                 </td>
             </tr>
@@ -86,12 +85,6 @@ use Studip\Button;
                         <option value="delete"><?= _('Löschen') ?></option>
                     </select>
                     <?= Button::createAccept(_('Ausführen'), 'bulk') ?>
-
-                    <section style="float: right">
-                        <?= $pagination->asLinks(function ($page) use ($controller) {
-                            return $controller->index($page);
-                        }) ?>
-                    </section>
                 </td>
             </tr>
         </tfoot>

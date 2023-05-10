@@ -18,7 +18,7 @@ $days_of_week = [
     7 => _('Sonntag'),
 ];
 ?>
-<form action="<?= $controller->edit($schedule, $page) ?>" method="post" class="cronjobs-edit default">
+<form action="<?= $controller->edit($schedule) ?>" method="post" class="cronjobs-edit default">
     <?= CSRFProtection::tokenTag() ?>
 
     <h1>
@@ -242,6 +242,6 @@ $days_of_week = [
 
     <footer class="buttons">
         <?= Button::createAccept(_('Speichern'), 'store') ?>
-        <?= LinkButton::createCancel('Abbrechen', $controller->indexURL($page)) ?>
+        <?= LinkButton::createCancel('Abbrechen', $controller->indexURL()) ?>
     </footer>
 </form>

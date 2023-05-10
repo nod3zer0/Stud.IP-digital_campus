@@ -47,26 +47,18 @@ class Admin_Cronjobs_TasksController extends AuthenticatedController
 
     /**
      * Displays all available tasks.
-     *
-     * @param int $page Which page to display
      */
-    public function index_action($page = 0)
+    public function index_action()
     {
-        $this->pagination = Pagination::create(
-            CronjobTask::countBySql('1'),
-            $page
-        );
-
-        $this->tasks = $this->pagination->loadSORMCollection(CronjobTask::class);
+        $this->tasks = CronjobTask::findBySQL('1');
     }
 
     /**
      * Activates a tasks.
      *
      * @param CronjobTask $task Task to activate
-     * @param int         $page Return to this page after activating (optional)
      */
-    public function activate_action(CronjobTask $task, $page = 0)
+    public function activate_action(CronjobTask $task)
     {
         $task->active = true;
         $task->store();
@@ -80,16 +72,15 @@ class Admin_Cronjobs_TasksController extends AuthenticatedController
             $message = sprintf(_('Die Aufgabe und %u Cronjob(s) wurden aktiviert.'), $activated);
             PageLayout::postSuccess($message);
         }
-        $this->redirect("admin/cronjobs/tasks/index/{$page}#task-{$task->id}");
+        $this->redirect("admin/cronjobs/tasks/index#task-{$task->id}");
     }
 
     /**
      * Deactivates a tasks.
      *
      * @param CronjobTask $task Task to deactivate
-     * @param int         $page Return to this page after deactivating (optional)
      */
-    public function deactivate_action(CronjobTask $task, $page = 0)
+    public function deactivate_action(CronjobTask $task)
     {
         $task->active = false;
         $task->store();
@@ -103,16 +94,15 @@ class Admin_Cronjobs_TasksController extends AuthenticatedController
             $message = sprintf(_('Die Aufgabe und %u Cronjob(s) wurden deaktiviert.'), $deactivated);
             PageLayout::postSuccess($message);
         }
-        $this->redirect("admin/cronjobs/tasks/index/{$page}#task-{$task->id}");
+        $this->redirect("admin/cronjobs/tasks/index#task-{$task->id}");
     }
 
     /**
      * Deletes a tasks.
      *
      * @param CronjobTask $task Task to delete
-     * @param int         $page Return to this page after deleting (optional)
      */
-    public function delete_action(CronjobTask $task, $page = 0)
+    public function delete_action(CronjobTask $task)
     {
         CSRFProtection::verifyUnsafeRequest();
         $deleted = $task->schedules->count();
@@ -121,16 +111,14 @@ class Admin_Cronjobs_TasksController extends AuthenticatedController
         $message = sprintf(_('Die Aufgabe und %u Cronjob(s) wurden gelöscht.'), $deleted);
         PageLayout::postSuccess($message);
 
-        $this->redirect("admin/cronjobs/tasks/index/{$page}");
+        $this->redirect('admin/cronjobs/tasks/index');
     }
 
     /**
      * Performs a bulk operation on a set of tasks. Operation can be either
      * activating, deactivating or deleting.
-     *
-     * @param int    $page Return to this page afterwarsd (optional)
      */
-    public function bulk_action($page = 0)
+    public function bulk_action()
     {
         $action = Request::option('action');
         $ids    = Request::optionArray('ids');
@@ -170,7 +158,7 @@ class Admin_Cronjobs_TasksController extends AuthenticatedController
             PageLayout::postSuccess($message);
         }
 
-        $this->redirect('admin/cronjobs/tasks/index/' . $page);
+        $this->redirect('admin/cronjobs/tasks/index');
     }
 
     /**

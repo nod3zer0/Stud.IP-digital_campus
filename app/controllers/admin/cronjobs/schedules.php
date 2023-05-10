@@ -61,24 +61,14 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
 
     /**
      * Displays all available schedules according to the set filters.
-     *
-     * @param int $page Which page to display
      */
-    public function index_action($page = 0)
+    public function index_action()
     {
         $filter = $_SESSION['cronjob-filter'];
 
         $this->total = CronjobSchedule::countBySql('1');
 
-        $this->pagination = Pagination::create(
-            CronjobSchedule::countBySql($filter['where']),
-            $page
-        );
-
-        $this->schedules = $this->pagination->loadSORMCollection(
-            CronjobSchedule::class,
-            $filter['where']
-        );
+        $this->schedules = CronjobSchedule::findBySQL($filter['where']);
 
         // Filters
         $this->tasks  = CronjobTask::findBySql('1');
@@ -134,9 +124,8 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
      * Edits a schedule.
      *
      * @param String $id   Id of the schedule in question (null to create)
-     * @param int    $page Return to this page after editing (optional)
      */
-    public function edit_action(CronjobSchedule $schedule = null, $page = 0)
+    public function edit_action(CronjobSchedule $schedule = null)
     {
         if (Request::submitted('store')) {
             $parameters = Request::getArray('parameters');
@@ -173,7 +162,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
             $schedule->store();
 
             PageLayout::postSuccess(_('Die Änderungen wurden gespeichert.'));
-            $this->redirect('admin/cronjobs/schedules/index/' . $page);
+            $this->redirect('admin/cronjobs/schedules/index');
             return;
         }
 
@@ -182,11 +171,10 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
         $actions = Sidebar::get()->addWidget(new ActionsWidget());
         $actions->addLink(
             _('Zurück zur Übersicht'),
-            $this->indexURL($page),
+            $this->indexURL(),
             Icon::create('link-intern')
         );
 
-        $this->page  = $page;
         $this->tasks = CronjobTask::findBySql('1');
     }
 
@@ -214,56 +202,51 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
      * Activates a schedule.
      *
      * @param CronjobSchedule $schedule Schedule to activate
-     * @param int             $page Return to this page after activating (optional)
      */
-    public function activate_action(CronjobSchedule $schedule, $page = 0)
+    public function activate_action(CronjobSchedule $schedule)
     {
         $schedule->activate();
 
         if (!Request::isXhr()) {
             PageLayout::postSuccess(_('Der Cronjob wurde aktiviert.'));
         }
-        $this->redirect("admin/cronjobs/schedules/index/{$page}#job-{$schedule->id}");
+        $this->redirect("admin/cronjobs/schedules/index#job-{$schedule->id}");
     }
 
     /**
      * Deactivates a schedule.
      *
      * @param CronjobSchedule $schedule Schedule to deactivate
-     * @param int             $page Return to this page after deactivating (optional)
      */
-    public function deactivate_action(CronjobSchedule $schedule, $page = 0)
+    public function deactivate_action(CronjobSchedule $schedule)
     {
         $schedule->deactivate();
 
         if (!Request::isXhr()) {
             PageLayout::postSuccess(_('Der Cronjob wurde deaktiviert.'));
         }
-        $this->redirect("admin/cronjobs/schedules/index/{$page}#job-{$schedule->id}");
+        $this->redirect("admin/cronjobs/schedules/index#job-{$schedule->id}");
     }
 
     /**
      * Cancels/deletes a schedule.
      *
      * @param CronjobSchedule $schedule Schedule to cancel
-     * @param int             $page Return to this page after canceling (optional)
      */
-    public function cancel_action(CronjobSchedule $schedule, $page = 0)
+    public function cancel_action(CronjobSchedule $schedule)
     {
         CSRFProtection::verifyUnsafeRequest();
         $schedule->delete();
 
         PageLayout::postSuccess(_('Der Cronjob wurde gelöscht.'));
-        $this->redirect("admin/cronjobs/schedules/index/{$page}");
+        $this->redirect('admin/cronjobs/schedules/index');
     }
 
     /**
      * Performs a bulk operation on a set of schedules. Operation can be
      * either activating, deactivating or canceling/deleting.
-     *
-     * @param int    $page Return to this page afterwarsd (optional)
      */
-    public function bulk_action($page = 0)
+    public function bulk_action()
     {
         $action    = Request::option('action');
         $ids       = Request::optionArray('ids');
@@ -310,6 +293,6 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
             PageLayout::postSuccess($message);
         }
 
-        $this->redirect("admin/cronjobs/schedules/index/{$page}");
+        $this->redirect('admin/cronjobs/schedules/index');
     }
 }
