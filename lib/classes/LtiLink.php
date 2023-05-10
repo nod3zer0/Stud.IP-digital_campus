@@ -116,7 +116,7 @@ class LtiLink
                 'CourseSection.credits' => $course->ects,
                 'CourseSection.maxNumberofStudents' => $course->admission_turnout,
                 'CourseSection.numberofStudents' => $course->getNumParticipants(),
-                'CourseSection.dept' => $course->home_institut->name,
+                'CourseSection.dept' => $course->home_institut->name ?? null,
             ]);
 
             $this->addLaunchParameters([
