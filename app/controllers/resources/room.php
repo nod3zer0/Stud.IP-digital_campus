@@ -198,8 +198,6 @@ class Resources_RoomController extends AuthenticatedController
         $this->mode      = $mode;
         $this->show_form = false;
         $this->parent_id = '';
-        $this->category_id = '';
-        $this->room = null;
         $this->booking_plan_is_public = false;
         $this->sort_position = '0';
 
@@ -287,9 +285,7 @@ class Resources_RoomController extends AuthenticatedController
             if ($mode == 'add' || $mode == 'edit') {
                 //Process submitted form:
                 $this->parent_id = Request::get('parent_id');
-                if ($mode == 'add') {
-                    $this->category_id = Request::get('category_id');
-                }
+                $this->category_id = Request::get('category_id');
                 $this->name                   = Request::get('name');
                 $this->description            = Request::get('description');
                 $this->requestable            = Request::int('requestable');
