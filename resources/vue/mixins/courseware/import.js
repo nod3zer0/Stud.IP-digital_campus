@@ -168,22 +168,24 @@ export default {
             if (element.length) {
                 for (var i = 0; i < element.length; i++) {
                     this.setImportStructuresState(this.$gettext('Lege Seite an:') + ' ' + element[i].attributes.title);
+                    let new_element = null;
                     try {
                         await this.createStructuralElement({
                             attributes: element[i].attributes,
                             parentId: parent_id,
                             currentId: parent_id,
                         });
+                        new_element = this.lastCreatedElements;
                     } catch(error) {
                         this.currentImportErrors.push(this.$gettext('Seite konnte nicht erstellt werden') + ': '
                         + element.attributes.title);
-
-                        continue;
                     }
 
                     this.importElementCounter++;
-
-                    let new_element = this.lastCreatedElements;
+                    if (new_element === null) {
+                        continue;
+                    }
+                    
 
                     if (element[i].imageId) {
                         await this.setStructuralElementImage(new_element, element[i].imageId, files);
@@ -221,30 +223,32 @@ export default {
 
         async importContainer(container, structuralElement, files) {
             this.setImportStructuresState(this.$gettext('Lege Abschnitt an:') + ' ' + container.attributes.title);
+            let new_container = null;
             try {
                 await this.createContainer({
                     attributes: container.attributes,
                     structuralElementId: structuralElement.id,
                 });
-
+                new_container = this.lastCreatedContainers;
             } catch(error) {
                 this.currentImportErrors.push(this.$gettext('Abschnitt konnte nicht erstellt werden') + ': '
                 + structuralElement.attributes.title + '→'
                 + container.attributes.title);
-
-                return null;
             }
 
             this.importElementCounter++;
-            let new_container = this.lastCreatedContainers;
+            if (new_container === null) {
+                return null;
+            }
+            
             await this.unlockObject({ id: new_container.id, type: 'courseware-containers' });
 
             if (container.blocks?.length) {
                 let new_block = null;
                 for (var k = 0; k < container.blocks.length; k++) {
                     new_block = await this.importBlock(container.blocks[k], new_container, files, structuralElement);
+                    this.importElementCounter++;
                     if (new_block !== null) {
-                        this.importElementCounter++;
                         try {
                             await this.updateContainerPayload(new_container, structuralElement.id, container.blocks[k].id, new_block.id);
                         } catch(error) {

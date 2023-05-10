@@ -115,7 +115,9 @@
                             {{ importStructuresState }}
                         </div>
                     </fieldset>
-                    <fieldset v-show="importErrors.length > 0">
+                </form>
+                <form v-if="importErrors.length > 0" class="default" @submit.prevent="">
+                    <fieldset>
                         <legend>{{$gettext('Fehlermeldungen')}}</legend>
                         <ul>
                             <li v-for="(error, index) in importErrors" :key="index"> {{error}} </li>
