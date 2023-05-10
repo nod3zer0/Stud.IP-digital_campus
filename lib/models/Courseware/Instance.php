@@ -13,47 +13,6 @@ namespace Courseware;
  */
 class Instance
 {
-    public static function deleteForRange(\Range $range): void
-    {
-        $root = null;
-        switch ($range->getRangeType()) {
-            case 'course':
-                $root = StructuralElement::getCoursewareCourse($range->getRangeId());
-                break;
-            case 'user':
-                $root = StructuralElement::getCoursewareUser($range->getRangeId());
-                break;
-            default:
-                throw new \InvalidArgumentException('Only ranges of type "user" and "course" are currently supported.');
-        }
-
-        // there is no courseware for this course
-        if (!$root) {
-            return;
-        }
-
-        $instance = new self($root);
-
-        $last_element_configs = \ConfigValue::findBySQL('field = ? AND value LIKE ?', [
-            'COURSEWARE_LAST_ELEMENT',
-            '%' . $range->getRangeId() . '%',
-        ]);
-        foreach ($last_element_configs as $config) {
-            $arr = json_decode($config->value, true);
-            $arr = array_filter(
-                $arr,
-                function ($key) use ($range) {
-                    return $key !== $range->id;
-                },
-                ARRAY_FILTER_USE_KEY
-            );
-            \UserConfig::get($config->range_id)->unsetValue('COURSEWARE_LAST_ELEMENT');
-            \UserConfig::get($config->range_id)->store('COURSEWARE_LAST_ELEMENT', $arr);
-        }
-
-        $root->delete();
-    }
-
     /**
      * @param \Range $range
      * @return ?static

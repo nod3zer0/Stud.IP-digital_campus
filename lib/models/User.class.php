@@ -182,9 +182,10 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             'order_by'          => 'ORDER BY name',
         ];
 
-        $config['has_one']['courseware'] = [
-            'class_name' => \Courseware\StructuralElement::class,
-            'assoc_func' => 'getCoursewareUser'
+        $config['has_one']['courseware_units'] = [
+            'class_name' => \Courseware\Unit::class,
+            'assoc_foreign_key' => 'range_id',
+            'on_delete'  => 'delete',
         ];
 
         $config['has_many']['course_notifications'] = [

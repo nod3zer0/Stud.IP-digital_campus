@@ -12,11 +12,22 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule,
     {
         parent::__construct();
 
-        NotificationCenter::on('UserDidDelete', function ($event, $user) {
-            Instance::deleteForRange($user);
-        });
         NotificationCenter::on('CourseDidDelete', function ($event, $course) {
-            Instance::deleteForRange($course);
+            $last_element_configs = \ConfigValue::findBySQL('field = ? AND value LIKE ?', [
+                'COURSEWARE_LAST_ELEMENT',
+                '%' . $course->id . '%',
+            ]);
+            foreach ($last_element_configs as $config) {
+                $arr = json_decode($config->value, true);
+                $arr = array_filter(
+                    $arr,
+                    function ($key) use ($course) {
+                        return $key !== $course->id;
+                    },
+                    ARRAY_FILTER_USE_KEY
+                );
+                \UserConfig::get($config->range_id)->store('COURSEWARE_LAST_ELEMENT', $arr);
+            }
         });
     }
 
