@@ -242,8 +242,11 @@ $sidebarOut: -330px;
 
         img,
         svg {
-            vertical-align: text-bottom;
+            &:not(.avatar) {
+                filter: contrast(0) brightness(2);
+            }
             margin-right: 10px;
+            vertical-align: text-bottom;
         }
 
     }

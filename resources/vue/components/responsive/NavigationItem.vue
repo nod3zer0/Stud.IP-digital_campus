@@ -10,7 +10,7 @@
                 >
                     <span class="navigation-icon">
                         <studip-icon v-if="isCourse" shape="seminar" role="info_alt" :size="24" alt=""></studip-icon>
-                        <img v-if="item.icon" :src="iconUrl" width="24" alt="" />
+                        <img v-if="item.icon" :src="iconUrl" width="24" alt="" :class="{avatar: item.avatar}"/>
                     </span>
                     <span class="navigation-text">
                         {{ item.title }}
@@ -36,7 +36,7 @@
                 :aria-label="navigateToText(item.title)"
             >
                 <studip-icon v-if="isCourse" shape="seminar" role="info_alt" :size="24" alt=""></studip-icon>
-                <img v-if="item.icon" :src="iconUrl" width="24" alt="" />
+                <img v-if="item.icon" :src="iconUrl" width="24" alt="" :class="{avatar: item.avatar}"/>
                 {{ item.title }}
             </a>
         </div>

@@ -230,14 +230,12 @@ class ResponsiveHelper
             }
 
             $avatar = $avatarClass::getAvatar($course->id);
-            if ($avatar->is_customized()) {
-                $icon = $avatar->getURL(Avatar::SMALL);
-            } else {
-                $icon = $standardIcon;
-            }
+            $hasAvatar = $avatar->is_customized();
+            $icon = $hasAvatar ? $avatar->getURL(Avatar::SMALL) : $standardIcon;
 
             $cnav = [
                 'icon'     => $icon,
+                'avatar'   => $hasAvatar,
                 'title'    => $course->getFullname(),
                 'url'      => URLHelper::getURL($url, ['cid' => $course->id]),
                 'parent'   => 'browse/my_courses',
