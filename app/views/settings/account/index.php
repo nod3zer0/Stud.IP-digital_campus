@@ -8,8 +8,7 @@ $genders = [
 ?>
 
 <? if ($user->auth_plugin !== 'standard'): ?>
-    <?= MessageBox::info(sprintf(_('Einige Ihrer persönlichen Daten werden nicht in Stud.IP verwaltet '
-                                   . 'und können daher hier nicht geändert werden.'))) ?>
+    <?= MessageBox::info(Config::get()->PERSONAL_DETAILS_INFO_TEXT) ?>
 <? endif; ?>
 
 <? if ($locked_info): ?>
