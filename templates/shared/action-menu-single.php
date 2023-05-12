@@ -15,14 +15,14 @@
     <? if ($action['type'] === 'link'): ?>
         <a href="<?= htmlReady($action['link']) ?>" <?= arrayToHtmlAttributes($action['attributes'] + ['title' => $action['label']]) ?>>
             <? if ($action['icon']): ?>
-                <?= $action['icon']->asImg(false) ?>
+                <?= $action['icon']->asImg() ?>
             <? else: ?>
                 <?= htmlReady($action['label']) ?>
             <? endif ?>
         </a>
     <? elseif ($action['type'] === 'button'): ?>
         <? if ($action['icon']): ?>
-            <?= $action['icon']->asInput(false, $action['attributes'] + ['name' => $action['name'], 'title' => $action['label']]) ?>
+            <?= $action['icon']->asInput($action['attributes'] + ['name' => $action['name'], 'title' => $action['label']]) ?>
         <? else: ?>
             <button name="<?= htmlReady($action['name']) ?>" <?= arrayToHtmlAttributes($action['attributes']) ?>>
                 <?= htmlReady($action['label']) ?>
