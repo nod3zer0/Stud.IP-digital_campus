@@ -175,6 +175,7 @@ if (!Request::isXhr() && $perm->have_perm('root')) {
         );
 
         $migrations = $migrator->relevantMigrations(null);
+
         $_SESSION['migration-check'] = [
             'disabled'  => $_SESSION['migration-check']['disabled'] ?? false,
             'timestamp' => time(),
@@ -186,7 +187,7 @@ if (!Request::isXhr() && $perm->have_perm('root')) {
         $_SESSION['migration-check']['disabled'] = true;
     }
 
-    if (!empty($_SESSION['migration-check']['disabled'])
+    if (empty($_SESSION['migration-check']['disabled'])
         && $_SESSION['migration-check']['count'] > 0
     ) {
         $info = sprintf(
