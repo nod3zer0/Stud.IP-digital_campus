@@ -18,6 +18,7 @@ $commands = [
     Commands\Checks\HelpTours::class,
     Commands\Checks\HelpTours::class,
     Commands\CleanupAdmissionRules::class,
+    Commands\Composer\GenerateUpdateList::class,
     Commands\Cronjobs\CronjobExecute::class,
     Commands\Cronjobs\CronjobExecute::class,
     Commands\Cronjobs\CronjobList::class,
