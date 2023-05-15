@@ -1933,7 +1933,10 @@ class FileController extends AuthenticatedController
             throw new AccessDeniedException();
         }
         $parent_folder = $folder->getParent();
-        $folder_types = FileManager::getAvailableFolderTypes($parent_folder->range_id, $GLOBALS['user']->id);
+        $folder_types = FileManager::getAvailableFolderTypes(
+            $parent_folder ? $parent_folder->range_id : null,
+            $GLOBALS['user']->id
+        );
         $this->name = Request::get('name', $folder->name);
         $this->description = Request::get('description', $folder->description);
 
@@ -1942,7 +1945,7 @@ class FileController extends AuthenticatedController
 
         $this->folder_types = [];
 
-        if (!is_a($folder, 'VirtualFolderType')) {
+        if (!is_a($folder, 'VirtualFolderType') && $parent_folder) {
             foreach ($folder_types as $folder_type) {
                 $folder_type_instance = new $folder_type(
                     [
@@ -1952,14 +1955,20 @@ class FileController extends AuthenticatedController
                     ]
                 );
                 $this->folder_types[] = [
-                    'class'    => $folder_type,
+                    'class' => $folder_type,
                     'instance' => $folder_type_instance,
-                    'name'     => $folder_type::getTypeName(),
-                    'icon'     => $folder_type_instance->getIcon('clickable')
+                    'name' => $folder_type::getTypeName(),
+                    'icon' => $folder_type_instance->getIcon('clickable')
                 ];
             }
+        } elseif (!$parent_folder) {
+            $this->folder_types[] = [
+                'class' => get_class($folder),
+                'instance' => $folder,
+                'name' => $folder::getTypeName(),
+                'icon' => $folder->getIcon('clickable')
+            ];
         }
-
 
         if (Request::submitted('edit')) {
             CSRFProtection::verifyUnsafeRequest();
@@ -1973,7 +1982,9 @@ class FileController extends AuthenticatedController
                 }
             }
             $request = Request::getInstance();
-            $request->offsetSet('parent_id', $folder->getParent()->getId());
+            if ($folder->getParent()) {
+                $request->offsetSet('parent_id', $folder->getParent()->getId());
+            }
             $result = $folder->setDataFromEditTemplate($request);
             if ($result instanceof FolderType) {
                 if ($folder->store()) {

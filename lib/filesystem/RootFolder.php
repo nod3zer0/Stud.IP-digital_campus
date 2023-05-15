@@ -48,7 +48,14 @@ class RootFolder extends StandardFolder
     public function isWritable($user_id)
     {
         return ($this->range_type === 'user' && $this->range_id === $user_id)
-            || Seminar_Perm::get()->have_studip_perm('autor', $this->range_id, $user_id);
+            || $this->isEditable($user_id)
+            || (
+                Seminar_Perm::get()->have_studip_perm('autor', $this->range_id, $user_id)
+                && (
+                    !$this->folderdata['data_content']
+                    || !$this->folderdata['data_content']['locked']
+                )
+            );
     }
 
     /**
@@ -57,7 +64,7 @@ class RootFolder extends StandardFolder
      */
     public function isEditable($user_id)
     {
-        return false;
+        return Seminar_Perm::get()->have_studip_perm('tutor', $this->range_id, $user_id);
     }
 
     /**
@@ -76,5 +83,27 @@ class RootFolder extends StandardFolder
     {
         $this->folderdata['parent_id'] = '';
         return $this->folderdata->store();
+    }
+
+    /**
+     * @return Flexi_Template
+     */
+    public function getEditTemplate()
+    {
+        $template = $GLOBALS['template_factory']->open('filesystem/root_folder/edit');
+        $template->folder = $this;
+        return $template;
+    }
+
+    /**
+     * @param array $request
+     * @return FolderType|MessageBox
+     */
+    public function setDataFromEditTemplate($request)
+    {
+        $this->folderdata['data_content'] = [
+            'locked' => $request['locked'] ? 1 : 0
+        ];
+        return parent::setDataFromEditTemplate($request);
     }
 }

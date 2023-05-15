@@ -1,3 +1,4 @@
+<? if (!is_a($folder, 'RootFolder')) : ?>
 <fieldset>
     <legend>
         <?= _('Ordnereigenschaften') ?>
@@ -11,12 +12,15 @@
         <textarea name="description" class="wysiwyg" placeholder="<?= _('Optionale Beschreibung') ?>"><?= htmlReady($description); ?></textarea>
     </label>
 </fieldset>
+<? endif ?>
 
-<? if (!is_a($folder, 'VirtualFolderType')): ?>
+<? if (!is_a($folder, 'VirtualFolderType') && $folder_types && count($folder_types) > 0): ?>
     <fieldset class="select_terms_of_use">
+        <? if (count($folder_types) > 1) : ?>
         <legend>
             <?= _('Ordnertyp auswählen') ?>
         </legend>
+        <? endif ?>
         <? foreach ($folder_types as $folder_type) : ?>
         <input type="radio" name="folder_type"
                value="<?= htmlReady($folder_type['class']) ?>"
