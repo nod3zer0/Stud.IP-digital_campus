@@ -44,7 +44,6 @@ class SemClass implements ArrayAccess
     static protected $studygroup_forbidden_modules = [
         'CoreAdmin',
         'CoreParticipants',
-        'CoreSchedule'
     ];
 
     static protected $sem_classes = null;
