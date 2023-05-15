@@ -150,7 +150,7 @@ foreach ($questionnaire->questions as $question) {
                 <span class="icon"><studip-icon shape="evaluation" role="clickable" size="30" alt=""></studip-icon></span>
                 <?= _('Einstellungen') ?>
             </a>
-            <draggable v-if="questions.length > 0" v-model="questions" handle=".handle" group="questions" class="questions_container questions">
+            <draggable v-if="questions.length > 0" v-model="questions" handle=".drag-handle" group="questions" class="questions_container questions">
                 <div v-for="question in questions"
                      :key="question.id"
                      @mouseenter="hoverTab = question.id"
@@ -158,7 +158,7 @@ foreach ($questionnaire->questions as $question) {
                      :class="(activeTab === question.id || activeTab === 'meta_' + question.id ? 'active' : '') + (hoverTab === question.id ? ' hovered' : '')">
                     <a href="#"
                        @click.prevent="switchTab(question.id)">
-                        <span class="handle"></span>
+                        <span class="drag-handle"></span>
                         <span class="icon type">
                             <studip-icon :shape="questiontypes[question.questiontype].icon" role="clickable" size="30" alt=""></studip-icon>
                         </span>

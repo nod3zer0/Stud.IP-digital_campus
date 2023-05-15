@@ -25,7 +25,7 @@
                            :title="$gettextInterpolate('Sortierelement für Aussage %{statement}. Drücken Sie die Tasten Pfeil-nach-oben oder Pfeil-nach-unten, um dieses Element in der Liste zu verschieben.', {statement: statement})"
                            @keydown="keyHandler($event, index)"
                            :ref="'draghandle_' + index">
-                            <span class="handle"></span>
+                            <span class="drag-handle"></span>
                         </a>
                     </td>
                     <td>

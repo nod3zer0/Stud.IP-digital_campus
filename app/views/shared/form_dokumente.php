@@ -39,7 +39,7 @@
         <? endif; ?>
         <? foreach ($dokumente as $dokument) : ?>
             <? if ($perm_dokumente) : ?>
-                <li id="dokumente_<?= $dokument->dokument_id ?>" class="sort_items">
+                <li id="dokumente_<?= $dokument->dokument_id ?>" class="drag-handle">
                     <div style="flex: 9;">
                         <?= htmlReady($dokument->document->isI18nField('name')
                             ? $dokument->document->name->original()

@@ -1,10 +1,5 @@
 <tr data-area-id="<?= $entry['topic_id'] ?>" <?= (ForumPerm::has('sort_area', $seminar_id)) ? 'class="movable"' : '' ?>>
-    <td class="icon">
-    <? if (ForumPerm::has('sort_area', $seminar_id)) : ?>
-        <?= Assets::img('anfasser_48.png', ['class' => 'handle js']) ?>
-    <? endif ?>
-
-        <a href="<?= $controller->link_for("course/forum/index/index/{$entry['topic_id']}#{$entry['topic_id']}") ?>">
+    <td class="icon <?= ForumPerm::has('sort_area', $seminar_id) ? 'drag-handle' : '' ?>">
         <? if ($entry['chdate'] >= $visitdate && $entry['user_id'] !== $GLOBALS['user']->id): ?>
             <?= Icon::create('forum', Icon::ROLE_ATTENTION)->asImg([
                 'title' => _('Dieser Eintrag ist neu!'),
@@ -15,7 +10,6 @@
                 'title' => ForumHelpers::getVisitText($num_postings, $entry['topic_id'], $constraint['depth']),
             ]) ?>
         <? endif ?>
-        </a>
     </td>
     <td class="areaentry">
         <div style="position: relative;<?= Request::get('edit_area') == $entry['topic_id'] ? 'height: auto;' : '' ?>">

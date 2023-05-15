@@ -45,7 +45,7 @@ const Forum = {
             axis: 'y',
             items: ">*:not(.sort-disabled)",
             connectWith: 'tbody.sortable',
-            handle: 'img.handle',
+            handle: '.drag-handle',
             helper: function (e, ui) {
                 ui.children().each(function () {
                     jQuery(this).width(jQuery(this).width());

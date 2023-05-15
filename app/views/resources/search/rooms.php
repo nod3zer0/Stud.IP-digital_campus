@@ -16,16 +16,8 @@
         <tbody>
             <? foreach ($rooms as $room): ?>
                 <tr>
-                    <td>
-                        <?= Assets::img(
-                            'anfasser_24.png',
-                            [
-                                'class'           => 'clipboard-draggable-item',
-                                'data-id'         => $room->id,
-                                'data-range_type' => 'Room',
-                                'data-name'       => $room->name
-                            ]
-                        ) ?>
+                    <td class="drag-handle clipboard-draggable-item"
+                        data-id="<?= $room->id ?>" data-range_type="Room" data-name="<?= htmlReady($room->name) ?>">
                     </td>
                     <td>
                         <? if ($room->bookingPlanVisibleForUser($current_user)): ?>

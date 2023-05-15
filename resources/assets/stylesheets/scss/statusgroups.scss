@@ -76,13 +76,5 @@ section.course-statusgroups {
         article.ui-sortable-placeholder {
             border-style: dotted;
         }
-
-        .sg-sortable-handle {
-            cursor: move;
-            background-image: url("#{$image-path}/anfasser_24.png");
-            background-position: 3px center;
-            background-repeat: no-repeat;
-            width: 12px;
-        }
     }
 }

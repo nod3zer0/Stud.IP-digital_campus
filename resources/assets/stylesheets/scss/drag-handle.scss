@@ -1,0 +1,19 @@
+.drag-handle {
+    background-image: url("#{$image-path}/grabber_grey.svg");
+    background-position: 2px center;
+    background-repeat: no-repeat;
+    background-size: auto 24px;
+    cursor: move;
+    padding-left: 12px;
+
+    &:hover {
+        background-image: url("#{$image-path}/grabber_black.svg");
+    }
+    &.darkbackground:hover {
+        background-image: url("#{$image-path}/grabber_white.svg");
+    }
+}
+
+table.default td.drag-handle {
+    padding-left: 14px;
+}

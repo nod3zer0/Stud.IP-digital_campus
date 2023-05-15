@@ -9,7 +9,7 @@
                    :ref="'draghandle_' + index"
                    :title="$gettextInterpolate('Sortierelement für Option %{option}. Drücken Sie die Tasten Pfeil-nach-oben oder Pfeil-nach-unten, um dieses Element in der Liste zu verschieben.', {option: option})"
                    @keydown="keyHandler($event, index)">
-                    <span class="handle"></span>
+                    <span class="drag-handle"></span>
                 </a>
                 <input type="text"
                        :placeholder="$gettext('Option')"

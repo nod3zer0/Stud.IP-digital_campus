@@ -239,7 +239,7 @@ use Studip\Button, Studip\LinkButton;
                     <?= _('Geben Sie die Lehrsprachen an.') ?>
                 </li>
                 <? foreach ($studiengang->languages as $assigned_language) : ?>
-                <li id="language_<?= $assigned_language->lang ?>" class="sort_items">
+                <li id="language_<?= $assigned_language->lang ?>" class="drag-handle">
                     <div class="mvv-item-list-text"><?= htmlReady($assigned_language->getDisplayName()) ?></div>
                     <div class="mvv-item-list-buttons">
                         <a href="#" class="mvv-item-remove"><?= Icon::create('trash', 'clickable', array('title' => _('Sprache entfernen')))->asImg() ?></a>

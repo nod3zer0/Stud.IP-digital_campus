@@ -36,16 +36,6 @@ $shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
     box-shadow: $shadow
 }
 
-html.no-js #forum {
-    .js {
-        display: none;
-    }
-
-    .handle {
-        cursor: default;
-    }
-}
-
 #forum {
     img.button, input[type=image] {
         vertical-align: middle;
@@ -143,24 +133,8 @@ html.no-js #forum {
         }
     }
 
-    .icon {
-        padding: 0;
-        margin: 0pt;
-        width: 30px;
-        height: 50px;
-        white-space: nowrap;
-        text-align: center;
-
-        * {
-            vertical-align: middle;
-        }
-    }
-
-    .icon_thread {
-        padding: 0pt;
-        margin: 0pt;
-        width: 40px;
-        height: 30px;
+    .icon img {
+        vertical-align: middle;
     }
 
     span.areaname {
@@ -286,10 +260,6 @@ html.no-js #forum {
     textarea {
         width: 100%;
         height: 20em;
-    }
-
-    .handle.ui-sortable-handle {
-        cursor: move;
     }
 
     .editor_toolbar {

@@ -149,18 +149,9 @@ $width: 270px;
                 justify-items: center;
             }
         }
-        .handle {
+        .drag-handle {
             display: inline-block;
-            width: 8px;
-            height: 27px;
-            background-image: url("#{$image-path}/grabber_grey.svg");
-            background-size: 100% auto;
-            background-position: center center;
-            background-repeat: no-repeat;
-            cursor: move;
-            &:hover {
-                background-image: url("#{$image-path}/grabber_black.svg");
-            }
+            height: 24px;
         }
     }
 

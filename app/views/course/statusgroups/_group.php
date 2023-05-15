@@ -1,7 +1,7 @@
 <article class="<?= ContentBoxHelper::classes($group->id) ?> <? if ($group->id != 'nogroup' && $is_tutor && !$is_locked) echo 'draggable'; ?> <?= $open_group ? 'open' : '' ?>" id="<?= $group->id ?>">
     <header>
         <? if ($group->id != 'nogroup' && $is_tutor && !$is_locked) : ?>
-            <span class="sg-sortable-handle"></span>
+            <span class="drag-handle"></span>
         <? endif ?>
         <h1>
             <?php if ($group->id != 'nogroup' && $is_tutor && !$is_locked) : ?>

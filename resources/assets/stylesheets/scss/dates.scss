@@ -23,10 +23,8 @@ table.dates {
             background-color: $activity-color-80;
         }
     }
-    .draggable-topic-handle {
-        cursor: move;
-        background: transparent url("#{$image-path}/anfasser_24.png") 3px center no-repeat;
-        padding-left: 12px;
+    .drag-handle {
+        background-size: unset;
     }
     .ui-draggable-dragging {
         img.icon-shape-trash {

@@ -9,7 +9,7 @@ function createDraggable() {
 
         $(this)
             .children()
-            .addClass('draggable-topic-handle');
+            .addClass('drag-handle');
 
         $(this)
             .closest('li')
@@ -19,7 +19,7 @@ function createDraggable() {
             .draggable({
                 axis: 'y',
                 containment: $(this).closest('tbody'),
-                handle: '.draggable-topic-handle',
+                handle: '.drag-handle',
                 revert: true
             });
     });

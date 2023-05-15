@@ -23,9 +23,7 @@ STUDIP.ready(function() {
         }
     });
 
-    var handle = '.sg-sortable-handle';
     // Check for touch device
-    handle = '.sg-sortable-handle';
     if (window.matchMedia('(hover: none)').matches) {
         $('.course-statusgroups[data-sortable]').addClass('by-touch');
     }
@@ -36,7 +34,7 @@ STUDIP.ready(function() {
             axis: 'y',
             containment: 'parent',
             forcePlaceholderSize: true,
-            handle: handle,
+            handle: '.drag-handle',
             items: '> .draggable',
             placeholder: 'sortable-placeholder',
             start: function(event, ui) {

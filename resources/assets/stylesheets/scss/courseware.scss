@@ -1250,14 +1250,9 @@ label[for="cw-keypoint-color"] {
  * * * * * * * */
 
 .cw-sortable-handle {
+    @extend .drag-handle;
     display: inline-block;
-    cursor: grab;
-    background-image: url("#{$image-path}/anfasser_24.png");
-    background-repeat: no-repeat;
-    width: 7px;
     height: 24px;
-    padding-right: 4px;
-    vertical-align: middle;
     &.cw-sortable-handle-dragging {
         cursor: grabbing;
     }
@@ -1266,20 +1261,20 @@ label[for="cw-keypoint-color"] {
 .cw-block-item-sortable {
     .cw-sortable-handle {
         position: relative;
-        left: 12px;
+        left: 4px;
     }
     .cw-block {
-        margin-top: -32px;
+        margin-top: -38px;
     }
 }
 
 .cw-container-item-sortable {
     .cw-sortable-handle {
         position: relative;
-        left: 12px;
+        left: 4px;
     }
     .cw-container {
-        margin-top: -32px;
+        margin-top: -38px;
     }
 }
 
@@ -1335,9 +1330,6 @@ label[for="cw-keypoint-color"] {
                 > .cw-tree-item-wrapper {
                     border-bottom: solid thin $content-color-40;
                     display: block;
-                    > .cw-sortable-handle {
-                        margin-bottom: 4px;
-                    }
                     > a.cw-tree-item-link {
                         display: block;
                         font-size: 18px;
@@ -1362,7 +1354,7 @@ label[for="cw-keypoint-color"] {
                                 padding-left: 4px;
                                 font-size: 16px;
                                 &.cw-tree-item-link-edit {
-                                    width: calc(100% - 19px);
+                                    width: calc(100% - 20px);
                                 }
                             }
                         }
@@ -1409,6 +1401,9 @@ label[for="cw-keypoint-color"] {
         }
     }
 
+    .cw-sortable-handle {
+        vertical-align: middle;
+    }
     .cw-tree-item-link {
         &:hover {
             background-color: $light-gray-color-20;

@@ -7,7 +7,7 @@
 ?>
 <? foreach ($group->members as $user): ?>
     <tr data-userid="<?= $user->user_id ?>">
-        <td <?= ($tutor ? 'class="dragHandle"' : '') ?>></td>
+        <td <?= ($tutor ? 'class="drag-handle"' : '') ?>></td>
         <td><?= $user->position + 1 ?></td>
         <td><?= $user->avatar() ?></td>
         <td><?= htmlReady($user->name()) ?></td>

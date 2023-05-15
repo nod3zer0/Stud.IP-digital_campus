@@ -3,7 +3,7 @@ const Statusgroups = {
     apply: function() {
         $('.movable tbody').sortable({
             axis: 'y',
-            handle: '.dragHandle',
+            handle: '.drag-handle',
             helper: function(event, ui) {
                 ui.children().each(function() {
                     $(this).width($(this).width());

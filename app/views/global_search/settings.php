@@ -47,7 +47,7 @@
             <tbody>
                 <?php foreach ($modules as $module) : ?>
                     <tr>
-                        <td class="dragHandle"></td>
+                        <td class="drag-handle"></td>
                         <td>
                             <?php $resourcesInactive = (get_class($module) == 'GlobalSearchResources' ||
                                 get_class($module) == 'GlobalSearchRoomBookings') && !Config::get()->RESOURCES_ENABLE ?>
