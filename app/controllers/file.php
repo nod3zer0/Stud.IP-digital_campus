@@ -503,7 +503,11 @@ class FileController extends AuthenticatedController
 
         $this->folder = $this->file->getFoldertype();
 
-        if (!$this->folder || !$this->folder->isFileEditable($this->file->getId(), $GLOBALS['user']->id)) {
+        if (
+            !$this->folder
+            || !$this->folder->isFileEditable($this->file->getId(), $GLOBALS['user']->id)
+            || !$GLOBALS['perm']->have_perm(Config::get()->OER_PUBLIC_STATUS)
+        ) {
             throw new AccessDeniedException();
         }
 
