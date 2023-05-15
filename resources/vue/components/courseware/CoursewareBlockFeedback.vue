@@ -72,10 +72,6 @@ export default {
             createFeedback: 'courseware-block-feedback/create',
             loadRelatedFeedback: 'courseware-block-feedback/loadRelated',
         }),
-        async postFeedback() {
-            this.createFeedback({ blockId: this.block.id, feedback: this.feedbackText });
-            this.feedbackText = '';
-        },
         buildPayload(feedback) {
             const { id, type } = feedback;
             const user = this.getRelatedUser({ parent: { id, type }, relationship: 'user' });
@@ -102,7 +98,7 @@ export default {
                 },
             });
         },
-        async createFeedback() {
+        async postFeedback() {
             const data = {
                 attributes: {
                     feedback: this.feedbackText,
@@ -117,6 +113,7 @@ export default {
                 },
             };
             await this.createFeedback(data, { root: true });
+            this.feedbackText = '';
             this.loadFeedback();
         }
     },
