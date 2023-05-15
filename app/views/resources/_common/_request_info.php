@@ -90,7 +90,7 @@
             : _('unbekannt')
         ) ?>
     </dd>
-    <dt><?= _('Bearbeitungsstatus') ?></dt>
+    <dt><?= _('Bearbeitungsstatus') ?>:</dt>
     <dd><?= htmlReady($request->getStatusText()) ?></dd>
     <? if ($request->comment) : ?>
         <dt><?= _('Nachricht an die Administration') ?></dt>
