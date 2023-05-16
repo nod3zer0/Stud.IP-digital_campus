@@ -19,6 +19,11 @@ $commands = [
     Commands\Checks\HelpTours::class,
     Commands\CleanupAdmissionRules::class,
     Commands\Composer\GenerateUpdateList::class,
+    Commands\Config\ConfigList::class,
+    Commands\Config\GetConfigValue::class,
+    Commands\Config\SectionList::class,
+    Commands\Config\SetConfigValue::class,
+    Commands\Course\GetCourse::class,
     Commands\Cronjobs\CronjobExecute::class,
     Commands\Cronjobs\CronjobExecute::class,
     Commands\Cronjobs\CronjobList::class,
@@ -56,8 +61,8 @@ $commands = [
     Commands\Resources\UpdateBookingIntervals::class,
     Commands\SORM\DescribeModels::class,
     Commands\Twillo\PrivateKeys::class,
-    Commands\Users\UserDelete::class,
-    Commands\Users\UserDelete::class,
+    Commands\User\UsersDelete::class,
+    Commands\User\GetUser::class,
 ];
 $creator = function ($command) {
     return new $command();
