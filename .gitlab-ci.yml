@@ -20,14 +20,16 @@ variables:
   # Directories
   CACHE_DIR: .caches
   REPORT_DIR: .reports
+  # Set npm cache directory
+  npm_config_cache: $CI_PROJECT_DIR/.npm
 
 stages:
+  - build
   - checks
   - analyse
   - test
   - packaging
   - release
-  - build
 
 .scripts:
   mkdir-caches: &mkdir-caches
@@ -47,38 +49,60 @@ stages:
     - cli/studip migrate
 
 .caches:
-  php: &composer-cache
-    key: "php-$CI_COMMIT_REF_SLUG"
+  composer: &composer-cache
+    key:
+      files:
+        - composer.lock
     paths:
       - composer/
-      - $CACHE_DIR/phplint-cache
-      - $CACHE_DIR/resultCache.php
-      - $CACHE_DIR/cache/*
-      - $CACHE_DIR/resultCaches/*
-  js: &npm-cache
-    key: "js-$CI_COMMIT_REF_SLUG"
+    policy: pull
+  npm: &npm-cache
+    key:
+      files:
+        - package-lock.json
     paths:
-      - node_modules/
-      - $CACHE_DIR/eslint-cache
-      - $CACHE_DIR/stylelint-cache
+      - .npm
+
+build-composer:
+  stage: build
+  needs: []
+  interruptible: true
+  variables:
+    COMPOSER_CACHE: $CACHE_DIR/composer-cache
+  before_script:
+    - mkdir -p $COMPOSER_CACHE
+  script:
+    - composer install
+  cache:
+    - *composer-cache
+    - key: composer-package-cache
+      paths:
+        - $COMPOSER_CACHE
+      policy: pull-push
 
 lint-php:
   stage: checks
-  needs: []
-  cache: *composer-cache
+  needs: [build-composer]
   variables:
+    CACHE_LOCATION: $CACHE_DIR/phplint-cache
     PHPLINT_JSON_REPORT: $REPORT_DIR/phplint-report.json
     PHPLINT_CODE_QUALITY_REPORT: $REPORT_DIR/phplint-codequality.json
   interruptible: true
+  cache:
+    - *composer-cache
+    - key: "$CI_JOB_NAME_SLUG:$CI_COMMIT_REF_SLUG"
+      paths:
+        - $CACHE_LOCATION
   before_script:
     - *mkdir-caches
     - *mkdir-reports
     - *install-composer
   script:
-    - php -d memory_limit=-1
-      composer/bin/phplint
+    - COMPOSER_MEMORY_LIMIT=-1
+      composer exec phplint
+      --
       --json $PHPLINT_JSON_REPORT
-      --cache=$CACHE_DIR/phplint-cache
+      --cache=$CACHE_LOCATION
   after_script:
     - ./.gitlab/scripts/convert-phplint-report $PHPLINT_JSON_REPORT > $PHPLINT_CODE_QUALITY_REPORT
   artifacts:
@@ -90,7 +114,12 @@ lint-js:
   needs: []
   image: $NODE_IMAGE
   variables:
+    CACHE_LOCATION: $CACHE_DIR/eslint-cache
     ESLINT_CODE_QUALITY_REPORT: $REPORT_DIR/eslint-codequality.json
+  cache:
+    - key: "$CI_JOB_NAME_SLUG:$CI_COMMIT_REF_SLUG"
+      paths:
+        - $CACHE_LOCATION
   interruptible: true
   before_script:
     - *mkdir-reports
@@ -101,6 +130,7 @@ lint-js:
   script:
     - npx eslint
       --ext .js,.vue
+      --cache --cache-location $CACHE_LOCATION
       --format gitlab
       resources/assets/javascripts resources/vue
   artifacts:
@@ -112,8 +142,13 @@ lint-css:
   needs: []
   image: $NODE_IMAGE
   variables:
+    CACHE_LOCATION: $CACHE_DIR/stylelint-cache
     STYLELINT_CODE_QUALITY_REPORT: $REPORT_DIR/stylelint-codequality.json
   interruptible: true
+  cache:
+    - key: "$CI_JOB_NAME_SLUG:CI_COMMIT_REF_SLUG"
+      paths:
+        - $CACHE_LOCATION
   before_script:
     - *mkdir-reports
     - npm install
@@ -125,7 +160,9 @@ lint-css:
   script:
     - npx
       stylelint
+      --cache --cache-location $CACHE_LOCATION
       --custom-formatter=node_modules/stylelint-formatter-gitlab 
+      --output-file $STYLELINT_CODE_QUALITY_REPORT
       resources/assets/stylesheets
   artifacts:
     reports:
@@ -133,16 +170,23 @@ lint-css:
 
 phpstan:
   stage: analyse
-  needs: [lint-php]
+  needs: [build-composer]
   variables:
+    CACHE_LOCATION: $CACHE_DIR/phpstan
     PHPSTAN_CODE_QUALITY_REPORT: $REPORT_DIR/phpstan-codequality.json
   allow_failure: true
   interruptible: true
   when: manual
-  cache: *composer-cache
+  cache:
+   - *composer-cache
+   - key: "$CO_JOB_NAME_SLUG:$CI_COMMIT_REF_SLUG"
+     paths:
+       - $CACHE_LOCATION
   before_script:
+    - *mkdir-caches
     - *mkdir-reports
     - *install-composer
+    - 'echo "includes:\n    - phpstan.neon.dist\n\nparameters:\n   tmpDir: $PHPSTAN_CACHE_PATH" > phpstan.neon'
   script:
     - php
       composer/bin/phpstan analyse 
@@ -150,6 +194,8 @@ phpstan:
       --no-progress 
       --level=$PHPSTAN_LEVEL
       --error-format=gitlab > $PHPSTAN_CODE_QUALITY_REPORT
+  after_script:
+    - rm phpstan.neon
   artifacts:
     reports:
       codequality: $PHPSTAN_CODE_QUALITY_REPORT
