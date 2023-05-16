@@ -245,49 +245,7 @@ const Messages = {
             $(container).append(html);
         });
         $('#messages-tags')
-            .toggle(tags.length !== 0)
-            .find('li:has(.tag):not(.ui-droppable)')
-            .each(Messages.createDroppable);
-    },
-    createDroppable: function(element) {
-        jQuery(arguments.length === 1 ? element : this).droppable({
-            hoverClass: 'dropping',
-            drop: function(event, ui) {
-                var message_id = ui.draggable.attr('id').substr(ui.draggable.attr('id').lastIndexOf('_') + 1),
-                    tag = jQuery(this)
-                        .text()
-                        .trim();
-                jQuery
-                    .post(STUDIP.URLHelper.getURL('dispatch.php/messages/tag/' + message_id), {
-                        add_tag: tag
-                    })
-                    .then(function(response, status, xhr) {
-                        var tags = jQuery.parseJSON(xhr.getResponseHeader('X-Tags'));
-                        Messages.setTags(message_id, tags);
-                    });
-            }
-        });
-    },
-    createDraggable: function(element) {
-        return $(arguments.length === 1 ? element : this).draggable({
-            //cursor: "move",
-            distance: 10,
-            cursorAt: { left: 28, top: 15 },
-            helper() {
-                const title = $(this).find('.title').text().trim();
-                return $('<div id="message-move-handle">').text(title);
-            },
-            revert: true,
-            revertDuration: '200',
-            appendTo: 'body',
-            zIndex: 1000,
-            start() {
-                $('#messages-tags').addClass('dragging');
-            },
-            stop() {
-                $('#messages-tags').removeClass('dragging');
-            }
-        });
+            .toggle(tags.length !== 0);
     },
     toggleSetting: function(name) {
         jQuery('#' + name).toggle('fade');

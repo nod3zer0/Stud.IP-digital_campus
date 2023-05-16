@@ -44,8 +44,8 @@ STUDIP.domReady(() => {
                             var more_indicator = jQuery('#reloader').detach();
 
                             jQuery('#loaded').val(parseInt(jQuery('#loaded').val(), 10) + 1);
-                            jQuery.each(response.messages, function(index, message) {
-                                STUDIP.Messages.createDraggable(message).appendTo('#messages > tbody');
+                            jQuery.each(response.messages, (index, message) => {
+                                jQuery(message).appendTo('#messages > tbody');
                             });
 
                             if (response.more) {
@@ -59,21 +59,6 @@ STUDIP.domReady(() => {
             }, 30)
         );
     }
-
-    /*********** dragging the messages to the tags ***********/
-
-    jQuery('#messages > tbody').on('mouseover touchstart', function() {
-        if ($('html').is('.responsive-display') || jQuery('#messages-tags ul > li').length === 0) {
-            jQuery('#messages > tbody > tr').draggable('disable');
-        } else {
-            jQuery('#messages > tbody > tr').draggable('enable');
-        }
-    });
-
-    $('#messages > tbody > tr').each(STUDIP.Messages.createDraggable)
-
-    jQuery('#messages > tbody').trigger('touchstart');
-    jQuery('.widget-links li:has(.tag)').each(STUDIP.Messages.createDroppable);
 
     jQuery(document).on('click', '.adressee .remove_adressee', STUDIP.Messages.remove_adressee);
     jQuery(document).on('click', '.file .remove_attachment', STUDIP.Messages.remove_attachment);
