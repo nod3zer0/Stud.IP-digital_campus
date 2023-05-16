@@ -65,8 +65,8 @@ if ($bg_mobile) {
 
             <div id="languages">
                 <? foreach ($GLOBALS['INSTALLED_LANGUAGES'] as $temp_language_key => $temp_language): ?>
+                    <?= Assets::img('languages/' . $temp_language['picture'], ['alt' => $temp_language['name'], 'size' => '24']) ?>
                     <a href="index.php?set_language=<?= $temp_language_key ?>">
-                        <?= Assets::img('languages/' . $temp_language['picture'], tooltip2($temp_language['name'])) ?>
                         <?= htmlReady($temp_language['name']) ?>
                     </a>
                 <? endforeach; ?>

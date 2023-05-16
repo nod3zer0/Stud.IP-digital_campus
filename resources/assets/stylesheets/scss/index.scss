@@ -79,17 +79,7 @@ $gap-between-boxes: calc($login-page-margin / 2);
     footer {
         overflow: auto;
 
-        #languages {
-            border-top: 1px solid $light-gray-color;
-            font-size: 0.9em;
-            padding: 10px;
-
-            a {
-                padding-right: 10px;
-            }
-        }
-
-        #contrast {
+        #languages, #contrast {
             display: flex;
             align-items: center;
             gap: 5px;
