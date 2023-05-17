@@ -400,8 +400,9 @@ form.default .ck-source-editing-area textarea {
 .studip-dialog {
     .ck-editor {
         overflow: hidden;
-        .ck.ck-editor__main > .ck-editor__editable {
+        .ck-editor__editable_inline {
             height: 200px;
+            resize: vertical;
         }
     }
 }
