@@ -1608,7 +1608,7 @@ export default {
             this.companionSuccess({
                 info: this.$gettext('Öffentlicher Link wurde angelegt. Unter Freigaben finden Sie alle Ihre öffentlichen Links.'),
             });
-            this.closeLinkDialog();
+            this.closePublicLinkDialog();
         },
         closePublicLinkDialog() {
             this.publicLink = {
