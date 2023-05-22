@@ -1,7 +1,7 @@
 <template>
-    <div class="courseware-unit-item">
+    <li class="courseware-unit-item">
         <courseware-tile
-            tag="li"
+            tag="div"
             :color="color"
             :title="title"
             :descriptionLink="url"
@@ -54,7 +54,7 @@
 
         <courseware-unit-item-dialog-export v-if="showExportDialog" :unit="unit" @close="showExportDialog = false" />
         <courseware-unit-item-dialog-settings v-if="showSettingsDialog" :unit="unit" @close="closeSettingsDialog"/>
-    </div>
+    </li>
 </template>
 
 <script>
