@@ -371,9 +371,10 @@ class StructuralElement extends \SimpleORMap
      */
     public function hasEditingPermission($user): bool
     {
+        $unit = $unit = $this->findUnit();
         return $GLOBALS['perm']->have_perm('root', $user->id)
             || $GLOBALS['perm']->have_studip_perm(
-                \CourseConfig::get($this->range_id)->COURSEWARE_EDITING_PERMISSION[$this->getCoursewareCourse($this->range_id)->id] ?? 'tutor',
+                $unit->config['editing_permission'],
                 $this->range_id,
                 $user->id
             );
