@@ -115,21 +115,21 @@ class OERHostOERSI extends OERHost
                 $data['draft'] = '0';
                 $data['filename'] = '';
                 $data['short_description'] = '';
-                $data['description'] = $output['description'] ?: '';
+                $data['description'] = $output['description'] ?? '';
                 $data['difficulty_start'] = 12;
-                $data['uri'] = $output['encoding'][0]['contentUrl'] ?: '';
+                $data['uri'] = $output['encoding'][0]['contentUrl'] ?? '';
                 $data['source_url'] = $output['id'];
-                $data['content_type'] = $output['encoding'][0]['encodingFormat'] ?: '';
+                $data['content_type'] = $output['encoding'][0]['encodingFormat'] ?? '';
                 $data['license_identifier'] = $this->getLicenseID($output['license']['id']) ?: '';
                 if (empty($data['category'])) {
                     $data['category'] = $material->autoDetectCategory();
                 }
-                $data['front_image_content_type'] = $output['image'] ? 'image/jpg' : null;
+                $data['front_image_content_type'] = !empty($output['image']) ? 'image/jpg' : null;
                 $data['data'] = $material['data']->getArrayCopy();
-                $data['data']['download'] = $output['encoding'][0]['contentUrl'] ?: '';
-                $data['data']['front_image_url'] = $output['image'];
+                $data['data']['download'] = $output['encoding'][0]['contentUrl'] ?? '';
+                $data['data']['front_image_url'] = $output['image'] ?? '';
                 $data['data']['authors'] = $output['creator'];
-                $data['data']['organization'] = $output['sourceOrganization'][0]['name'] ?: $output['publisher'][0]['name'];
+                $data['data']['organization'] = $output['sourceOrganization'][0]['name'] ?? $output['publisher'][0]['name'] ?? '';
                 return [
                     'data' => $data,
                     'topics' => $output['keywords'] ?? []
@@ -152,8 +152,8 @@ class OERHostOERSI extends OERHost
      */
     protected function getLicenseID($license)
     {
-        preg_match("^https:\/\/creativecommons.org\/licenses\/([\w\d\-\.]+)\/([\w\d\-\.]+)^", $license, $matches);
-        if ($matches[0]) {
+        $matched = preg_match("^https:\/\/creativecommons.org\/licenses\/([\w\d\-\.]+)\/([\w\d\-\.]+)^", $license, $matches);
+        if ($matched) {
             $spdx_id = 'CC-' . strtoupper($matches[1]) . '-' . strtoupper($matches[2]);
             if (License::find($spdx_id)) {
                 return $spdx_id;

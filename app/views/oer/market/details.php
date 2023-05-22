@@ -129,12 +129,12 @@
         <? if (!Config::get()->OER_DISABLE_LICENSE) : ?>
             <div class="license" style="margin-top: 20px;">
                 <h2><?= _('Lizenz') ?></h2>
-                <? if ($material->license['link']) : ?>
+            <? if (!empty($material->license['link'])) : ?>
                 <a href="<?= htmlReady($material->license['link']) ?>" target="_blank">
-                    <? endif ?>
+            <? endif ?>
                     <?= LicenseAvatar::getAvatar($material['license_identifier'])->getImageTag(Avatar::MEDIUM) ?>
                     <?= htmlReady($material['license_identifier']) ?>
-                    <? if ($material->license['link']) : ?>
+            <? if (!empty($material->license['link'])) : ?>
                 </a>
             <? endif ?>
                 <div>
