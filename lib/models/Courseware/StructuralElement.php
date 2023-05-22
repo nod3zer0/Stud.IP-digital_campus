@@ -371,7 +371,7 @@ class StructuralElement extends \SimpleORMap
      */
     public function hasEditingPermission($user): bool
     {
-        $unit = $unit = $this->findUnit();
+        $unit = $this->findUnit();
         return $GLOBALS['perm']->have_perm('root', $user->id)
             || $GLOBALS['perm']->have_studip_perm(
                 $unit->config['editing_permission'],
