@@ -126,7 +126,7 @@ class Accessibility_FormsController extends StudipController
                 //Get the sender and their language:
                 $sender = User::findCurrent();
                 //Default to the system default language:
-                $lang = explode('_', $GLOBALS['DEFAULT_LANGUAGE'])[0];
+                $lang = explode('_', Config::get()->DEFAULT_LANGUAGE ?? 'de_DE')[0];
                 if ($sender) {
                     //Use the senders language since the choices in the form
                     //are in their language as well.
