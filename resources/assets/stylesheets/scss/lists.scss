@@ -23,7 +23,7 @@ ol {
         }
 
         &:last-child::after {
-            content: "";
+            content: unset;
         }
     }
 
