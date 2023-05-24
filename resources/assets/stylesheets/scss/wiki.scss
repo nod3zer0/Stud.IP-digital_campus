@@ -131,3 +131,11 @@ $authors: (
         background-color: $bgcolor;
     }
 }
+
+article.studip.wiki {
+    border: 0;
+
+    > footer {
+        margin: 0;
+    }
+}
