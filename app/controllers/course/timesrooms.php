@@ -130,7 +130,7 @@ class Course_TimesroomsController extends AuthenticatedController
             $this->show = [
                 'regular'     => true,
                 'irregular'   => true,
-                'roomRequest' => false,
+                'roomRequest' => true,
             ];
         }
         $this->linkAttributes   = ['fromDialog' => Request::isXhr() ? 1 : 0];
@@ -187,7 +187,22 @@ class Course_TimesroomsController extends AuthenticatedController
 
         $dates = $this->course->getDatesWithExdates();
 
+        $this->current_user = User::findCurrent();
+        $this->user_has_permissions = ResourceManager::userHasGlobalPermission($this->current_user, 'admin');
+
         $check_room_requests = Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS;
+        $this->room_requests = RoomRequest::findBySQL(
+            'course_id = :course_id
+            ORDER BY course_id, metadate_id, termin_id',
+            [
+                'course_id' => $this->course->id
+            ]
+        );
+
+        $this->global_requests = $this->course->room_requests->filter(function (RoomRequest $request) {
+            return $request->closed < 2 && !$request->termin_id;
+        });
+
         $single_dates  = [];
         $this->single_date_room_request_c = 0;
         foreach ($dates as $val) {
@@ -793,9 +808,10 @@ class Course_TimesroomsController extends AuthenticatedController
         }
 
         $this->redirect(
-            'course/room_requests/request_start',
+            'course/room_requests/new_request',
             [
                 'range' => 'date-multiple',
+                'range_str' => 'date-multiple',
                 'range_ids' => $appointment_ids
             ]
         );
@@ -1471,9 +1487,23 @@ class Course_TimesroomsController extends AuthenticatedController
         }
         Sidebar::Get()->addWidget($widget);
 
-        if ($GLOBALS['perm']->have_studip_perm('admin', $this->course->id)) {
-            $widget = new CourseManagementSelectWidget();
-            Sidebar::Get()->addWidget($widget);
+        if ($GLOBALS['perm']->have_perm('admin')) {
+            $list = new SelectWidget(
+                _('Veranstaltungen'),
+                $this->indexURL(),
+                'cid'
+            );
+
+            foreach (AdminCourseFilter::get()->getCoursesForAdminWidget() as $seminar) {
+                $list->addElement(new SelectElement(
+                    $seminar['Seminar_id'],
+                    $seminar['Name'],
+                    $seminar['Seminar_id'] === Context::getId(),
+                    $seminar['VeranstaltungsNummer'] . ' ' . $seminar['Name']
+                ));
+            }
+            $list->size = 8;
+            Sidebar::Get()->addWidget($list);
         }
     }
 
@@ -1661,6 +1691,7 @@ class Course_TimesroomsController extends AuthenticatedController
                     ];
                 }
             }
+            $this->selectable_rooms = [];
             $rooms_with_booking_permissions = 0;
             if ($current_user_is_resource_admin) {
                 $rooms_with_booking_permissions = Room::countAll();

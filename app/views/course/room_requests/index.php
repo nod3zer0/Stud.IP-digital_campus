@@ -14,12 +14,12 @@ echo $flash['message'];
             <col style="width: 50px">
         </colgroup>
         <thead>
-        <tr>
-            <th><?= _('Art der Anfrage') ?></th>
-            <th><?= _('Anfragender') ?></th>
-            <th><?= _('Bearbeitungsstatus') ?></th>
-            <th></th>
-        </tr>
+            <tr>
+                <th><?= _('Art der Anfrage') ?></th>
+                <th><?= _('Anfragender') ?></th>
+                <th><?= _('Bearbeitungsstatus') ?></th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
         <? foreach ($room_requests as $rr): ?>

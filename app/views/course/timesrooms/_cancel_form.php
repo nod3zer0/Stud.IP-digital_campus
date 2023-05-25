@@ -17,3 +17,4 @@ if (isset($termin) && $termin instanceof CourseExDate) {
     <input type="checkbox" id="cancel_send_message" name="cancel_send_message" value="1">
     <?= _('Benachrichtigung über ausfallende Termine an alle Teilnehmenden verschicken') ?>
 </label>
+

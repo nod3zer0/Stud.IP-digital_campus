@@ -140,7 +140,8 @@ class ResourcePropertyDefinition extends SimpleORMap
         $value = '',
         $special_name = '',
         $with_label = false,
-        $allow_boolean_false = true
+        $allow_boolean_false = true,
+        $disabled = false
     )
     {
         $label_html_classes = '';
@@ -155,16 +156,18 @@ class ResourcePropertyDefinition extends SimpleORMap
             //whether a false state shall be selectable or not.
             if ($allow_boolean_false) {
                 $input_html = sprintf(
-                    '<input type="hidden" name="%1$s" value="0" %2$s>'
+                    '<input type="hidden" name="%1$s" value="0" %2$s %3$s>'
                   . '<input type="checkbox" name="%1$s" value="1" %2$s>',
                     htmlReady($input_name),
-                    $value ? 'checked="checked"' : ''
+                    $value ? 'checked' : '',
+                    $disabled ? 'disabled' : ''
                 );
             } else {
                 $input_html = sprintf(
-                    '<input type="checkbox" name="%1$s" value="1" %2$s>',
+                    '<input type="checkbox" name="%1$s" value="1" %2$s %3$s>',
                     htmlReady($input_name),
-                    $value ? 'checked="checked"' : ''
+                    $value ? 'checked' : '',
+                    $disabled ? 'disabled' : ''
                 );
             }
             if ($with_label) {
@@ -254,7 +257,7 @@ class ResourcePropertyDefinition extends SimpleORMap
             }
             if ($with_label) {
                 return sprintf(
-                    '<label %1$s>%5$s<input type="%2$s" name="%3$s" value="%4$s"></label>',
+                    '<label %1$s>%5$s<input type="%2$s" name="%3$s" value="%4$s" %5$s></label>',
                     (
                         $label_html_classes
                         ? 'class="' . htmlReady($label_html_classes) . '"'
@@ -263,14 +266,16 @@ class ResourcePropertyDefinition extends SimpleORMap
                     $input_type,
                     htmlReady($input_name),
                     $value,
-                    htmlReady($this->__toString())
+                    htmlReady($this->__toString()),
+                    $disabled ? 'disabled' : ''
                 );
             } else {
                 return sprintf(
-                    '<input type="%1$s" name="%2$s" value="%3$s">',
+                    '<input type="%1$s" name="%2$s" value="%3$s" %4$s>',
                     $input_type,
                     htmlReady($input_name),
-                    $value
+                    $value,
+                    $disabled ? 'disabled' : ''
                 );
             }
         }

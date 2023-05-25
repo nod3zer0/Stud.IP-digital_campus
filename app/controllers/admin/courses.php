@@ -1055,14 +1055,6 @@ class Admin_CoursesController extends AuthenticatedController
             unset($actions[16]);
         }
 
-        if (Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) {
-            $actions[4] = [
-                'name'  => 'Raumanfragen',
-                'title' => _('Raumanfragen'),
-                'url'   => 'dispatch.php/course/room_requests/index?cid=%s&origin=admin_courses',
-                'attributes' => ['data-dialog' => 'size=big'],
-            ];
-        }
         ksort($actions);
 
         foreach (PluginManager::getInstance()->getPlugins('AdminCourseAction') as $plugin) {

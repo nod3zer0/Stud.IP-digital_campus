@@ -228,8 +228,8 @@
                         'course/room_requests/request_summary/' . $request_id
                     )
                     :  $controller->url_for(
-                        'course/room_requests/request_start/' . $request_id,
-                        array_merge($params, ['range_str' => 'date_' . $date->id,'origin' => 'course_timesrooms'])
+                        'course/room_requests/new_request/' . $request_id,
+                        array_merge($params, ['range_str' => 'date', 'range_id' => $date->id])
                     )
                 ),
                 ['data-dialog' => 'size=big']) ?>

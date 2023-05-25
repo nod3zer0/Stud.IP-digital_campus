@@ -122,6 +122,7 @@ STUDIP.domReady(function () {
 
         if ($(this).closest('tr').next().hasClass('loaded-details')) {
             $(this).closest('tr').next().remove();
+            $('a.load-in-new-row').attr('aria-expanded', 'false');
             return false;
         }
         $(this).showAjaxNotification().data('busy', true);
@@ -140,6 +141,8 @@ STUDIP.domReady(function () {
 
             $(that).data('busy', false);
             $('body').trigger('ajaxLoaded');
+            $('a.load-in-new-row').attr('aria-expanded', 'true');
+
         });
 
         return false;

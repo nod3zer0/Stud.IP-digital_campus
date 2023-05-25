@@ -89,18 +89,19 @@
                         <? if (Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) : ?>
                             <? $actionMenu->addLink(
                                 $controller->url_for(
-                                    'course/room_requests/request_start/',
+                                    'course/room_requests/new_request/',
                                     [
-                                        'range' => 'cycle',
-                                        'range_id' => $metadate_id
+                                        'cid'       => $course->id,
+                                        'range_str' => 'cycle',
+                                        'range_id'  => $metadate_id
                                     ]
                                 ),
-                                _('Raumanfrage erstellen'),
+                                _('Neue Raumanfrage'),
                                 Icon::create(
                                     'room-request',
                                     Icon::ROLE_CLICKABLE,
                                     [
-                                        'title' => _('Raumanfrage erstellen'),
+                                        'title' => _('Neue Raumanfrage'),
                                         'style' => 'vertical-align: middle;'
                                     ]
                                 ),

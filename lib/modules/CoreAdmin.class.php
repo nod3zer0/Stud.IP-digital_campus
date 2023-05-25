@@ -63,13 +63,6 @@ class CoreAdmin extends CorePlugin implements StudipModule
                 $item->setDescription(_('Regelmäßige Veranstaltungszeiten, Einzeltermine und Ortsangaben ändern.'));
                 $navigation->addSubNavigation('dates', $item);
 
-                if (Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) {
-                    $item = new Navigation(_('Raumanfragen'), 'dispatch.php/course/room_requests/index/' . $course_id);
-                    $item->setImage(Icon::create('resources'));
-                    $item->setDescription(_('Raumanfragen zu Veranstaltungszeiten verwalten.'));
-                    $navigation->addSubNavigation('room_requests', $item);
-                }
-
                 $item = new Navigation(_('Zugangsberechtigungen'), 'dispatch.php/course/admission');
                 $item->setImage(Icon::create('lock-locked'));
                 $item->setDescription(_('Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für diese Veranstaltung einrichten.'));
