@@ -17,7 +17,7 @@ abstract class Context
         'participants',
         'schedule',
         'wiki',
-        'courseware', 
+        'courseware',
         'forum'
     ];
 
@@ -86,6 +86,11 @@ abstract class Context
         $params = [$this->getContextType(), $this->getRangeId(), $filter->getStartDate(), $filter->getEndDate()];
 
         if ($filter->getContext() !== null && $filter->getContextId() !== null) {
+            // if a single context is provided and this context does not match, do not return any activites
+            if ($this->getRangeId() != $filter->getContextId()) {
+                return null;
+            }
+
             $params = [$filter->getContext(), $filter->getContextId(), $filter->getStartDate(), $filter->getEndDate()];
         }
 
