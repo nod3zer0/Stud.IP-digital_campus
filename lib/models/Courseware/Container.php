@@ -33,7 +33,7 @@ use User;
  * @property \User                                    $edit_blocker          belongs_to User
  * @property \Courseware\StructuralElement            $structural_element    belongs_to Courseware\StructuralElement
  */
-class Container extends \SimpleORMap
+class Container extends \SimpleORMap implements \PrivacyObject
 {
     protected static function configure($config = [])
     {
@@ -141,5 +141,23 @@ class Container extends \SimpleORMap
         }
 
         return [$blockMap, $newBlockList];
+    }
+
+    /**
+     * Export available data of a given user into a storage object
+     * (an instance of the StoredUserData class) for that user.
+     *
+     * @param StoredUserData $storage object to store data into
+     */
+    public static function exportUserData(\StoredUserData $storage)
+    {
+        $containers = \DBManager::get()->fetchAll(
+            'SELECT * FROM cw_containers WHERE owner_id = ? OR editor_id = ?',
+            [$storage->user_id, $storage->user_id]
+        );
+        if ($containers) {
+            $storage->addTabularData(_('Courseware Abschnitte'), 'cw_containers', $containers);
+        }
+        
     }
 }

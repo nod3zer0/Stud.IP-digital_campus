@@ -20,7 +20,7 @@ namespace Courseware;
  * @property \User                         $user       belongs_to User
  * @property \Courseware\StructuralElement $element    belongs_to Courseware\StructuralElement
  */
-class Bookmark extends \SimpleORMap
+class Bookmark extends \SimpleORMap implements \PrivacyObject
 {
     protected static function configure($config = [])
     {
@@ -61,5 +61,22 @@ class Bookmark extends \SimpleORMap
     public static function findUsersBookmarks($user): array
     {
         return self::findBySQL('user_id = ? ORDER BY chdate', [$user->id]);
+    }
+
+    /**
+     * Export available data of a given user into a storage object
+     * (an instance of the StoredUserData class) for that user.
+     *
+     * @param StoredUserData $storage object to store data into
+     */
+    public static function exportUserData(\StoredUserData $storage)
+    {
+        $bookmarks = \DBManager::get()->fetchAll(
+            'SELECT * FROM cw_bookmarks WHERE user_id = ?',
+            [$storage->user_id]
+        );
+        if ($bookmarks) {
+            $storage->addTabularData(_('Courseware Lesezeichen'), 'cw_bookmarks', $bookmarks);
+        }
     }
 }

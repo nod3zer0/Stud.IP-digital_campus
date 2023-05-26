@@ -439,7 +439,7 @@ class PrivacyController extends AuthenticatedController
             'content' => [
                 'icon'        => Icon::create('forum2'),
                 'title'       => _('Inhalte'),
-                'description' => _('Dateien, Forum, Wiki, Literaturlisten'),
+                'description' => _('Courseware, Dateien, Forum, Wiki, Literaturlisten'),
             ],
             'quest' => [
                 'icon'        => Icon::create('vote'),

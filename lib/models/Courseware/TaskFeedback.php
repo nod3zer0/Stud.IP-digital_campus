@@ -22,7 +22,7 @@ use User;
 * @property \User                          $lecturer               belongs_to User
 * @property \Courseware\Task               $task                   belongs_to Courseware\Task
 */
-class TaskFeedback extends \SimpleORMap
+class TaskFeedback extends \SimpleORMap implements \PrivacyObject
 {
     protected static function configure($config = [])
     {
@@ -54,5 +54,22 @@ class TaskFeedback extends \SimpleORMap
         }
 
         return StructuralElement::build($structuralElement, false);
+    }
+
+    /**
+     * Export available data of a given user into a storage object
+     * (an instance of the StoredUserData class) for that user.
+     *
+     * @param StoredUserData $storage object to store data into
+     */
+    public static function exportUserData(\StoredUserData $storage)
+    {
+        $feedback = \DBManager::get()->fetchAll(
+            'SELECT * FROM cw_task_feedbacks WHERE lecturer_id = ?',
+            [$storage->user_id]
+        );
+        if ($feedback) {
+            $storage->addTabularData(_('Courseware Aufgaben Feedback'), 'cw_task_feedbacks', $feedback);
+        }
     }
 }

@@ -31,7 +31,7 @@ use User;
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 
-class Unit extends \SimpleORMap
+class Unit extends \SimpleORMap implements \PrivacyObject
 {
     protected static function configure($config = [])
     {
@@ -109,5 +109,22 @@ class Unit extends \SimpleORMap
         $newUnit->store();
 
         return $newUnit;
+    }
+    /**
+     * Export available data of a given user into a storage object
+     * (an instance of the StoredUserData class) for that user.
+     *
+     * @param StoredUserData $storage object to store data into
+     */
+    public static function exportUserData(\StoredUserData $storage)
+    {
+        $units = \DBManager::get()->fetchAll(
+            'SELECT * FROM cw_units WHERE creator_id = ?',
+            [$storage->user_id]
+        );
+        if ($units) {
+            $storage->addTabularData(_('Courseware Lernmaterialien'), 'cw_units', $units);
+        }
+        
     }
 }

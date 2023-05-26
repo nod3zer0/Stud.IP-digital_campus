@@ -25,7 +25,7 @@ use User;
  * @property \Courseware\StructuralElement $structural_element    belongs_to Courseware\StructuralElement
  * @property \SimpleORMapCollection        $tasks                 has_many Courseware\Task
  */
-class TaskGroup extends \SimpleORMap
+class TaskGroup extends \SimpleORMap implements \PrivacyObject
 {
     protected static function configure($config = [])
     {
@@ -57,5 +57,23 @@ class TaskGroup extends \SimpleORMap
         $solvers = $this->tasks->pluck('solver');
 
         return $solvers;
+    }
+
+    /**
+     * Export available data of a given user into a storage object
+     * (an instance of the StoredUserData class) for that user.
+     *
+     * @param StoredUserData $storage object to store data into
+     */
+    public static function exportUserData(\StoredUserData $storage)
+    {
+        $task_groups = \DBManager::get()->fetchAll(
+            'SELECT * FROM cw_task_groups WHERE lecturer_id = ?',
+            [$storage->user_id]
+        );
+        if ($task_groups) {
+            $storage->addTabularData(_('Courseware Aufgaben'), 'cw_task_groups', $task_groups);
+        }
+        
     }
 }

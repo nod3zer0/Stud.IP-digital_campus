@@ -21,7 +21,7 @@ use User;
  * @property \User             $user      belongs_to User
  * @property \Courseware\Block $block     belongs_to Courseware\Block
  */
-class BlockFeedback extends \SimpleORMap
+class BlockFeedback extends \SimpleORMap implements \PrivacyObject
 {
     protected static function configure($config = [])
     {
@@ -54,5 +54,22 @@ class BlockFeedback extends \SimpleORMap
         }
 
         return StructuralElement::build($structuralElement, false);
+    }
+
+    /**
+     * Export available data of a given user into a storage object
+     * (an instance of the StoredUserData class) for that user.
+     *
+     * @param StoredUserData $storage object to store data into
+     */
+    public static function exportUserData(\StoredUserData $storage)
+    {
+        $feedback = \DBManager::get()->fetchAll(
+            'SELECT * FROM cw_block_feedbacks WHERE user_id = ?',
+            [$storage->user_id]
+        );
+        if ($feedback) {
+            $storage->addTabularData(_('Courseware Block Feedback'), 'cw_block_feedback', $feedback);
+        }
     }
 }

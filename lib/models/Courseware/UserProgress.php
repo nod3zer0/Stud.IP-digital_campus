@@ -21,7 +21,7 @@ namespace Courseware;
  * @property \Courseware\Block $block    belongs_to Courseware\Block
  * @property \User             $user     belongs_to User
  */
-class UserProgress extends \SimpleORMap
+class UserProgress extends \SimpleORMap implements \PrivacyObject
 {
     protected static function configure($config = [])
     {
@@ -62,5 +62,22 @@ class UserProgress extends \SimpleORMap
         }
 
         return $progress;
+    }
+
+    /**
+     * Export available data of a given user into a storage object
+     * (an instance of the StoredUserData class) for that user.
+     *
+     * @param StoredUserData $storage object to store data into
+     */
+    public static function exportUserData(\StoredUserData $storage)
+    {
+        $userProgresses = \DBManager::get()->fetchAll(
+            'SELECT * FROM cw_user_progresses WHERE user_id = ?',
+            [$storage->user_id]
+        );
+        if ($userProgresses) {
+            $storage->addTabularData(_('Courseware Fortschritt'), 'cw_user_progresses', $userProgresses);
+        }
     }
 }

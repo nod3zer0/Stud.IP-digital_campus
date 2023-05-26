@@ -21,7 +21,7 @@ namespace Courseware;
  * @property \Courseware\Block $block    belongs_to Courseware\Block
  * @property \User             $user     belongs_to User
  */
-class UserDataField extends \SimpleORMap
+class UserDataField extends \SimpleORMap implements \PrivacyObject
 {
     protected static function configure($config = [])
     {
@@ -66,5 +66,22 @@ class UserDataField extends \SimpleORMap
         }
 
         return $userDataField;
+    }
+
+    /**
+     * Export available data of a given user into a storage object
+     * (an instance of the StoredUserData class) for that user.
+     *
+     * @param StoredUserData $storage object to store data into
+     */
+    public static function exportUserData(\StoredUserData $storage)
+    {
+        $userData = \DBManager::get()->fetchAll(
+            'SELECT * FROM cw_user_data_fields WHERE user_id = ?',
+            [$storage->user_id]
+        );
+        if ($userData) {
+            $storage->addTabularData(_('Courseware Nutzerdaten'), 'cw_user_data_fields', $userData);
+        }
     }
 }

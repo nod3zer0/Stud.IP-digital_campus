@@ -21,7 +21,7 @@ use User;
  * @property \User                          $user                    belongs_to User
  * @property \Courseware\StructuralElement  $structural_element      belongs_to Courseware\StructuralElement
  */
-class StructuralElementComment extends \SimpleORMap
+class StructuralElementComment extends \SimpleORMap implements \PrivacyObject
 {
     protected static function configure($config = [])
     {
@@ -38,5 +38,22 @@ class StructuralElementComment extends \SimpleORMap
         ];
 
         parent::configure($config);
+    }
+
+    /**
+     * Export available data of a given user into a storage object
+     * (an instance of the StoredUserData class) for that user.
+     *
+     * @param StoredUserData $storage object to store data into
+     */
+    public static function exportUserData(\StoredUserData $storage)
+    {
+        $comments = \DBManager::get()->fetchAll(
+            'SELECT * FROM cw_structural_element_comments WHERE user_id = ?',
+            [$storage->user_id]
+        );
+        if ($comments) {
+            $storage->addTabularData(_('Courseware Seiten Kommentare'), 'cw_structural_element_comments', $comments);
+        }
     }
 }
