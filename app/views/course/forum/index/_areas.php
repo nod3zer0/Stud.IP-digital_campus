@@ -42,7 +42,7 @@
     </caption>
 
     <colgroup>
-        <col>
+        <col style="width: 30px">
         <col>
         <col>
         <col class="hidden-tiny-down">

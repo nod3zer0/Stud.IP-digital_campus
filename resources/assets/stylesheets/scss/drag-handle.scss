@@ -7,7 +7,7 @@
     padding-left: 12px;
 
     &:hover {
-        background-image: url("#{$image-path}/grabber_black.svg");
+        background-image: url("#{$image-path}/grabber_blue.svg");
     }
     &.darkbackground:hover {
         background-image: url("#{$image-path}/grabber_white.svg");
