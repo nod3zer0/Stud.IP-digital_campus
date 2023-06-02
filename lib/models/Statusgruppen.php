@@ -36,6 +36,9 @@
  * @property Course course belongs_to course
  * @property Institute institute belongs_to institute
  * @property User user belongs_to user
+ *
+ * @property ConsultationBlock[]|SimpleORMapCollection $consultation_blocks
+ * @property ConsultationResponsibility[]|SimpleORMapCollection $consultation_responsibilities
  */
 class Statusgruppen extends SimpleORMap implements PrivacyObject
 {
@@ -77,6 +80,17 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
             'on_store' => 'store',
             'on_delete' => 'delete'
         ];
+        $config['has_many']['consultation_blocks'] = [
+            'class_name'        => ConsultationBlock::class,
+            'assoc_foreign_key' => 'range_id',
+            'on_delete'         => 'delete',
+        ];
+        $config['has_many']['consultation_responsibilities'] = [
+            'class_name'        => ConsultationResponsibility::class,
+            'assoc_func'        => 'findByStatusgroupId',
+            'on_delete'         => 'delete',
+        ];
+
         $config['additional_fields']['children'] = true;
 
         $config['default_values']['position'] = null;

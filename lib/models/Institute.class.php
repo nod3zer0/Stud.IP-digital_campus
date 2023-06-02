@@ -37,6 +37,9 @@
  * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
  * @property Institute faculty belongs_to Institute
  * @property SimpleORMapCollection courses has_and_belongs_to_many Course
+ *
+ * @property ConsultationBlock[]|SimpleORMapCollection $consultation_blocks
+ * @property ConsultationResponsibility[]|SimpleORMapCollection $consultation_responsibilities
  */
 
 class Institute extends SimpleORMap implements Range
@@ -110,6 +113,11 @@ class Institute extends SimpleORMap implements Range
         $config['has_many']['consultation_blocks'] = [
             'class_name'        => ConsultationBlock::class,
             'assoc_foreign_key' => 'range_id',
+            'on_delete'         => 'delete',
+        ];
+        $config['has_many']['consultation_responsibilities'] = [
+            'class_name'        => ConsultationResponsibility::class,
+            'assoc_func'        => 'findByInstituteId',
             'on_delete'         => 'delete',
         ];
         $config['has_many']['tools'] = [

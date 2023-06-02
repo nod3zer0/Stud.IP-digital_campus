@@ -68,6 +68,9 @@
  * @property UserOnline online has_one UserOnline
  * @property Kategorie[]|SimpleORMapCollection $profile_categories has_many Kategorie
  * @property UserDomain[]|SimpleORMapCollection $domains
+ * @property ConsultationBlock[]|SimpleORMapCollection $consultation_blocks
+ * @property ConsultationBooking[]|SimpleORMapCollection $consultation_bookings
+ * @property ConsultationResponsibility[]|SimpleORMapCollection $consultation_responsibilities
  *
  * @property UserConfig config
  */
@@ -160,6 +163,11 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
         $config['has_many']['consultation_bookings'] = [
             'class_name' => ConsultationBooking::class,
             'on_delete'  => 'delete',
+        ];
+        $config['has_many']['consultation_responsibilities'] = [
+            'class_name'        => ConsultationResponsibility::class,
+            'assoc_func'        => 'findByUserId',
+            'on_delete'         => 'delete',
         ];
         $config['has_many']['profile_categories'] = [
             'class_name'        => Kategorie::class,

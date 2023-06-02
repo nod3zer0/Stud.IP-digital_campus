@@ -25,6 +25,49 @@ class ConsultationResponsibility extends SimpleORMap
     }
 
     /**
+     * Finds all responsibilities for a given user id.
+     *
+     * @param string $user_id
+     * @return array
+     */
+    public static function findByUserId(string $user_id): array
+    {
+        return self::findBySQL(
+            "range_id = ? AND range_type = 'user'",
+            [$user_id]
+        );
+    }
+
+    /**
+     * Finds all responsibilities for a given institute id.
+     *
+     * @param string $institute_id
+     * @return array
+     */
+    public static function findByInstituteId(string $institute_id): array
+    {
+        return self::findBySQL(
+            "range_id = ? AND range_type = 'institute'",
+            [$institute_id]
+        );
+    }
+
+    /**
+     * Finds all responsibilities for a given statusgroup id.
+     *
+     * @param string $statusgroup_id
+     *
+     * @return array
+     */
+    public static function findByStatusgroupId(string $statusgroup_id): array
+    {
+        return self::findBySQL(
+            "range_id = ? AND range_type = 'statusgroup'",
+            [$statusgroup_id]
+        );
+    }
+
+    /**
      * Returns the name of the associated responsibility.
      *
      * @return string
