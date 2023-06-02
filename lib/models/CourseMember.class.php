@@ -261,7 +261,7 @@ class CourseMember extends SimpleORMap implements PrivacyObject
              FROM auth_user_md5 AS a
              LEFT JOIN user_info USING (user_id)
              LEFT JOIN seminar_user AS b ON (b.user_id = a.user_id AND b.Seminar_id = ?)
-             WHERE auth_user_md5.perms IN ('autor', 'tutor', 'dozent')
+             WHERE a.perms IN ('autor', 'tutor', 'dozent')
              AND a.visible <> 'never'
                AND email LIKE ?
              ORDER BY Nachname, Vorname",
