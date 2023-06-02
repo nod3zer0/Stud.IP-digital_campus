@@ -16,7 +16,7 @@ variables:
   # Use faster docker driver
   DOCKER_DRIVER: overlay2
   # Images
-  NODE_IMAGE: node:14-slim
+  NODE_IMAGE: node:16-slim
   # Directories
   CACHE_DIR: .caches
   REPORT_DIR: .reports

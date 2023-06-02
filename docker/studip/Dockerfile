@@ -18,7 +18,7 @@ RUN apt update && apt install -y --no-install-recommends \
 RUN docker-php-ext-configure gd --with-jpeg
 RUN docker-php-ext-install pdo gettext curl gd mbstring zip pdo pdo_mysql mysqli intl json
 
-FROM node:14 as nodejs
+FROM node:16 as nodejs
 
 # Install node modules
 COPY . /studip
