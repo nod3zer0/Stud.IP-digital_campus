@@ -8,7 +8,7 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
 ?>
 <div class="tabs_wrapper">
     <? SkipLinks::addIndex(_('Zweite Navigationsebene'), 'navigation-level-2', 10, false); ?>
-    <ul id="tabs" role="navigation">
+    <ul id="tabs">
         <? if (!empty($navigation)): ?>
         <? foreach ($navigation as $path => $nav) : ?>
             <? if ($nav->isVisible()) : ?>
