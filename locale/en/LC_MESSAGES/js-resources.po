@@ -17,12 +17,12 @@ msgstr ""
 msgid " Dieser Filter enthält keine (neuen) Personen."
 msgstr " This selection contains no (new) users."
 
-#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:349
+#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:348
 #, fuzzy
 msgid " Ziel-Lernmaterial"
 msgstr "Tab title"
 
-#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:352
+#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:351
 #, fuzzy
 msgid " Zielseite"
 msgstr "Target semester"
@@ -42,13 +42,13 @@ msgstr "Name"
 msgid "(Seite %{ pageNum } von %{ pageCount })"
 msgstr "(Page %{pageNum} of %{pageCount})"
 
-#: resources/vue/components/MyCoursesTables.vue:170
-#: resources/vue/components/MyCoursesTiles.vue:83
+#: resources/vue/components/MyCoursesTables.vue:174
+#: resources/vue/components/MyCoursesTiles.vue:88
 msgid "[versteckt]"
 msgstr "[hidden]"
 
-#: resources/vue/components/MyCoursesTables.vue:166
-#: resources/vue/components/MyCoursesTiles.vue:79
+#: resources/vue/components/MyCoursesTables.vue:169
+#: resources/vue/components/MyCoursesTiles.vue:82
 msgid "[Vertretung]"
 msgstr "[Substitute]"
 
@@ -59,36 +59,14 @@ msgid_plural "%{ count } Benachrichtigungen"
 msgstr[0] "Notification"
 msgstr[1] "Notification"
 
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:131
-#: resources/vue/components/courseware/CoursewareManagerElementItem.vue:61
-#, fuzzy
-msgid "%{ elementTitle } kopieren"
-msgstr "Copy admission/course set"
-
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:136
-#: resources/vue/components/courseware/CoursewareManagerElementItem.vue:66
-#, fuzzy
-msgid "%{ elementTitle } verschieben"
-msgstr "Move this element down"
-
 #: resources/vue/components/EditableList.vue:52
 #, fuzzy
 msgid "%{ name } löschen"
 msgstr "Delete recording"
 
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:291
-#, fuzzy
-msgid "%{ pageTitle } konnte nicht kopiert werden."
-msgstr "Data could not be copied!"
-
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:306
-#, fuzzy
-msgid "%{ pageTitle } konnte nicht verknüpft werden."
-msgstr "%s could not be removed."
-
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:183
-#: resources/vue/components/courseware/CoursewareListContainer.vue:128
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:186
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:184
+#: resources/vue/components/courseware/CoursewareListContainer.vue:129
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:187
 msgid ""
 "%{blockTitle} Block ausgewählt. Aktuelle Position in der Liste: %{pos} von "
 "%{listLength}. Drücken Sie die Aufwärts- und Abwärtspfeiltasten, um die "
@@ -96,26 +74,26 @@ msgid ""
 "Abbrechen."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:259
-#: resources/vue/components/courseware/CoursewareListContainer.vue:192
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:258
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:260
+#: resources/vue/components/courseware/CoursewareListContainer.vue:193
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:259
 msgid ""
 "%{blockTitle} Block, abgelegt. Endgültige Position in der Liste: %{pos} von "
 "%{listLength}."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:248
-#: resources/vue/components/courseware/CoursewareListContainer.vue:181
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:247
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:249
+#: resources/vue/components/courseware/CoursewareListContainer.vue:182
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:248
 msgid "%{blockTitle} Block, Neuordnung abgebrochen."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:213
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:232
-#: resources/vue/components/courseware/CoursewareListContainer.vue:158
-#: resources/vue/components/courseware/CoursewareListContainer.vue:171
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:216
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:233
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:214
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:233
+#: resources/vue/components/courseware/CoursewareListContainer.vue:159
+#: resources/vue/components/courseware/CoursewareListContainer.vue:172
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:217
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:234
 msgid ""
 "%{blockTitle} Block. Aktuelle Position in der Liste: %{pos} von "
 "%{listLength}."
@@ -152,7 +130,7 @@ msgid_plural "%{count} Objekte"
 msgstr[0] ""
 msgstr[1] ""
 
-#: resources/vue/components/courseware/CoursewareTreeItem.vue:219
+#: resources/vue/components/courseware/CoursewareTreeItem.vue:222
 msgid ""
 "%{elementTitle} ausgewählt. Aktuelle Position in der Liste: %{pos} von "
 "%{listLength}. Drücken Sie die Aufwärts- und Abwärtspfeiltasten, um die "
@@ -161,36 +139,36 @@ msgid ""
 "Hierarchie verändert werden."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareTree.vue:165
+#: resources/vue/components/courseware/CoursewareTree.vue:176
 msgid ""
 "%{elementTitle} bewegt. Aktuelle Position in der Liste: %{pos} von "
 "%{listLength}"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareTree.vue:147
+#: resources/vue/components/courseware/CoursewareTree.vue:158
 msgid ""
 "%{elementTitle} eine Ebene nach oben bewegt. Übergeordnete Seite: "
 "%{parentTitle}. Aktuelle Position in der Liste: %{pos} von %{listLength}"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareTree.vue:184
+#: resources/vue/components/courseware/CoursewareTree.vue:195
 msgid ""
 "%{elementTitle} eine Ebene nach unten bewegt. Übergeordnete Seite: "
 "%{parentTitle}. Aktuelle Position in der Liste: %{pos} von %{listLength}"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareTreeItem.vue:313
+#: resources/vue/components/courseware/CoursewareTreeItem.vue:316
 msgid ""
 "%{elementTitle}, abgelegt. Entgültige Position in der Liste: %{pos} von "
 "%{listLength}."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareTreeItem.vue:275
-#: resources/vue/components/courseware/CoursewareTreeItem.vue:305
+#: resources/vue/components/courseware/CoursewareTreeItem.vue:278
+#: resources/vue/components/courseware/CoursewareTreeItem.vue:308
 msgid "%{elementTitle}. Neuordnung abgebrochen."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareTreeItem.vue:296
+#: resources/vue/components/courseware/CoursewareTreeItem.vue:299
 msgid "%{elementTitle}. Neuordnung nicht möglich."
 msgstr ""
 
@@ -214,7 +192,7 @@ msgid "%{userName} auswählen"
 msgstr "Select %s"
 
 #: resources/assets/javascripts/cke/studip-quote/StudipBlockQuote.js:87
-#: resources/assets/javascripts/lib/forum.js:468
+#: resources/assets/javascripts/lib/forum.js:464
 msgid "%s hat geschrieben:"
 msgstr "%s wrote:"
 
@@ -230,12 +208,12 @@ msgstr "fortnightly"
 
 #: resources/vue/components/courseware/CoursewareBlockEdit.vue:9
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:35
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:48
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:50
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:41
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:178
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:186
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1416
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:45
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:179
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:187
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1424
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:47
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:30
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:28
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:60
@@ -258,7 +236,6 @@ msgstr ""
 
 #: resources/vue/components/courseware/CoursewareDashboardStudents.vue:13
 #: resources/vue/components/courseware/CoursewareDashboardTasks.vue:12
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:21
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:211
 #, fuzzy
 msgid "Abgabefrist"
@@ -268,7 +245,7 @@ msgstr "Export format:"
 #: resources/vue/components/courseware/CoursewareContentLinks.vue:40
 #: resources/vue/components/courseware/CoursewareContentLinks.vue:7
 #: resources/vue/components/courseware/CoursewareContentPermissions.vue:21
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:369
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:371
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:7
 msgid "Ablaufdatum"
 msgstr "End date"
@@ -287,30 +264,16 @@ msgstr "Submit"
 msgid "AbschlussKategorie suchen"
 msgstr "Search degree category"
 
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:85
-msgid "Abschnitt"
-msgstr "Section"
-
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:346
-#, fuzzy
-msgid "Abschnitt \"%{ containerTitle }\" konnte nicht kopiert werden"
-msgstr "Section could not be copied"
-
 #: resources/vue/components/courseware/CoursewareBlockAdderArea.vue:5
 msgid "Abschnitt aktiv - Blöcke werden hier eingefügt"
 msgstr "Section is active - blocks will be inserted here"
-
-#: resources/vue/components/courseware/CoursewareManagerFiling.vue:3
-#, fuzzy
-msgid "Abschnitt an dieser Stelle einfügen"
-msgstr "insert here"
 
 #: resources/vue/components/courseware/CoursewareContainerActions.vue:29
 #: resources/vue/components/courseware/CoursewareDefaultContainer.vue:24
 msgid "Abschnitt bearbeiten"
 msgstr "Edit section"
 
-#: resources/vue/mixins/courseware/import.js:231
+#: resources/vue/mixins/courseware/import.js:234
 #, fuzzy
 msgid "Abschnitt konnte nicht erstellt werden"
 msgstr "Section could not be copied"
@@ -323,7 +286,7 @@ msgstr "Delete section"
 msgid "Abschnitt unwiderruflich löschen"
 msgstr "Delete section irreversibly"
 
-#: resources/vue/mixins/courseware/import.js:251
+#: resources/vue/mixins/courseware/import.js:255
 msgid ""
 "Abschnittdaten sind beschädigt. Möglicherweise werden nicht alle Blöcke "
 "dargestellt"
@@ -332,10 +295,6 @@ msgstr ""
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:171
 msgid "Abschnitte"
 msgstr "Sections"
-
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:21
-msgid "Abschnitte sortieren"
-msgstr "Sort sections"
 
 #: resources/vue/components/courseware/PublicApp.vue:14
 msgid "Absenden"
@@ -431,7 +390,7 @@ msgstr "all"
 msgid "Alle"
 msgstr "All"
 
-#: resources/assets/javascripts/lib/forum.js:115
+#: resources/assets/javascripts/lib/forum.js:111
 msgid "Alle Bereiche werden dann nach \"Allgemein\" verschoben!"
 msgstr "All areas will be moved to the category \"general\"!"
 
@@ -457,14 +416,14 @@ msgstr "Select all groups"
 msgid "Alle hinzufügen"
 msgstr "Add all"
 
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:10
-#, fuzzy
-msgid "Alle Inhalte kopieren"
-msgstr "Copy from my contents"
-
 #: resources/assets/javascripts/bootstrap/raumzeit.js:114
 msgid "Alle Räume anzeigen"
 msgstr "Show all rooms"
+
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:169
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:168
+msgid "Alle Semester"
+msgstr "All semesters"
 
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:406
 #, fuzzy
@@ -489,15 +448,11 @@ msgstr "Read and write"
 msgid "Allen Leserechte geben"
 msgstr "Set bookmark"
 
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:11
-msgid "Alles exportieren"
-msgstr "Export all"
-
 #: resources/vue/components/courseware/CoursewareUnitItemDialogSettings.vue:66
 msgid "Allgemeine Einstellungen"
 msgstr "General settings"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:373
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:379
 #, fuzzy
 msgid "Als Vollbild anzeigen"
 msgstr "Show picture"
@@ -538,7 +493,7 @@ msgstr "Request processed."
 msgid "Anhalten"
 msgstr "Contents"
 
-#: resources/vue/mixins/courseware/import.js:358
+#: resources/vue/mixins/courseware/import.js:362
 #, fuzzy
 msgid "Anlegen des Import-Ordners fehlgeschlagen."
 msgstr "Category could not be created."
@@ -548,7 +503,7 @@ msgstr "Category could not be created."
 msgid "Anmelderegel konfigurieren"
 msgstr "Configure admission setting"
 
-#: resources/assets/javascripts/lib/forum.js:432
+#: resources/assets/javascripts/lib/forum.js:428
 msgid "Anonym"
 msgstr "Anonymous"
 
@@ -562,14 +517,14 @@ msgstr ""
 msgid "Ansichten"
 msgstr "Views"
 
-#: resources/vue/components/questionnaires/LikertEdit.vue:169
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:177
+#: resources/vue/components/questionnaires/LikertEdit.vue:168
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:176
 #: resources/vue/components/questionnaires/VoteEdit.vue:73
 #, fuzzy
 msgid "Antworten den Teilnehmenden zufällig präsentieren"
 msgstr "Display answers to participants in random order."
 
-#: resources/vue/components/questionnaires/LikertEdit.vue:172
+#: resources/vue/components/questionnaires/LikertEdit.vue:171
 #, fuzzy
 msgid "Antwortmöglichkeiten konfigurieren"
 msgstr "Configure activities"
@@ -578,16 +533,16 @@ msgstr "Configure activities"
 msgid "Apfelgrün"
 msgstr "Apple green"
 
-#: resources/assets/javascripts/studip-ui.js:558
+#: resources/assets/javascripts/studip-ui.js:646
 msgid "Apr"
 msgstr "Apr"
 
-#: resources/assets/javascripts/studip-ui.js:544
+#: resources/assets/javascripts/studip-ui.js:632
 msgid "April"
 msgstr "April"
 
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:43
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:42
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:45
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:44
 #, fuzzy
 msgid "Arbeitsplatz"
 msgstr "Working group"
@@ -607,8 +562,8 @@ msgstr "Type of chapter order"
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:62
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:7
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:139
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:117
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:208
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:119
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:210
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:34
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:16
 #, fuzzy
@@ -641,10 +596,6 @@ msgstr "Audio"
 msgid "Auf OER Campus veröffentlichen"
 msgstr "Publish your score"
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:4
-msgid "Aufgabe"
-msgstr "Task"
-
 #: resources/vue/components/courseware/CoursewareDashboardTasks.vue:28
 #: resources/vue/components/courseware/CoursewareDashboardTasks.vue:76
 #, fuzzy
@@ -661,37 +612,20 @@ msgstr "Activate task"
 msgid "Aufgabe bereit"
 msgstr "Activate task"
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:58
-#, fuzzy
-msgid "Aufgabe Gruppen zuweisen"
-msgstr "Assign group"
-
 #: resources/vue/mixins/courseware/task-helper.js:20
 #: resources/vue/mixins/courseware/task-helper.js:34
 #, fuzzy
 msgid "Aufgabe muss bald abgegeben werden"
 msgstr "The amount of semester must be provided."
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:40
-#, fuzzy
-msgid "Aufgabe Studierenden zuweisen"
-msgstr "Assign all search results"
-
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:218
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:77
 #: resources/vue/components/courseware/CoursewareTasksActionWidget.vue:18
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:58
 #, fuzzy
 msgid "Aufgabe verteilen"
 msgstr "Manage tasks"
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:216
-#, fuzzy
-msgid "Aufgabe wurde verteilt."
-msgstr "%s object processed."
-
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:69
-#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:355
+#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:354
 #, fuzzy
 msgid "Aufgabe zuweisen"
 msgstr "Assign group"
@@ -700,20 +634,19 @@ msgstr "Assign group"
 msgid "Aufgaben & Interaktion"
 msgstr "Tasks & Interaction"
 
-#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:314
+#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:313
 #, fuzzy
 msgid "Aufgaben wurden verteilt."
 msgstr "The data have been saved."
 
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:39
-#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:346
+#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:345
 #, fuzzy
 msgid "Aufgabeneinstellungen"
 msgstr "Basic settings"
 
 #: resources/vue/components/courseware/CoursewareDashboardStudents.vue:9
 #: resources/vue/components/courseware/CoursewareDashboardTasks.vue:9
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:6
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:200
 #, fuzzy
 msgid "Aufgabentitel"
@@ -723,14 +656,13 @@ msgstr "Tasks"
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:65
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:10
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:107
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:10
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:148
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:120
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:211
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:122
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:213
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:37
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:19
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:29
-#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:343
+#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:342
 #, fuzzy
 msgid "Aufgabenvorlage"
 msgstr "Manage tasks"
@@ -798,56 +730,47 @@ msgstr "Display"
 msgid "Aufsteigend sortiert, "
 msgstr "Sort pages"
 
-#: resources/assets/javascripts/studip-ui.js:562
+#: resources/assets/javascripts/studip-ui.js:650
 msgid "Aug"
 msgstr "Aug"
 
-#: resources/assets/javascripts/studip-ui.js:548
+#: resources/assets/javascripts/studip-ui.js:636
 msgid "August"
 msgstr "August"
 
-#: resources/vue/mixins/MyCoursesMixin.js:86
-#: resources/vue/mixins/MyCoursesMixin.js:96
+#: resources/vue/mixins/MyCoursesMixin.js:102
+#: resources/vue/mixins/MyCoursesMixin.js:112
 msgid "Aus der Veranstaltung austragen"
 msgstr "Sign out of the course"
-
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:3
-#, fuzzy
-msgid "Aus persönlichen Lernmaterialien kopieren"
-msgstr "Personal files"
-
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:4
-msgid "Aus Veranstaltung kopieren"
-msgstr "Copy from course"
 
 #: resources/assets/javascripts/bootstrap/multi_select.js:9
 #: resources/vue/components/MyCoursesColorPicker.vue:30
 msgid "ausgewählt"
 msgstr "selected"
 
-#: resources/vue/components/questionnaires/LikertEdit.vue:82
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:92
+#: resources/vue/components/questionnaires/LikertEdit.vue:81
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:91
 msgid "Aussage"
 msgstr ""
 
-#: resources/vue/components/questionnaires/LikertEdit.vue:126
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:148
+#: resources/vue/components/questionnaires/LikertEdit.vue:125
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:147
 #, fuzzy
 msgid "Aussage hinzufügen"
 msgstr "Add exception"
 
-#: resources/vue/components/questionnaires/LikertEdit.vue:103
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:125
+#: resources/vue/components/questionnaires/LikertEdit.vue:102
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:124
 #, fuzzy
 msgid "Aussage löschen"
 msgstr "Delete exception"
 
-#: resources/vue/components/questionnaires/LikertEdit.vue:45
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:47
+#: resources/vue/components/questionnaires/LikertEdit.vue:49
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:51
 msgid "Aussagen"
 msgstr ""
 
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:208
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:207
 #, fuzzy
 msgid "Ausweichantwort (leer lassen für keine)"
 msgstr "End time (leave empty to end manually)"
@@ -914,18 +837,13 @@ msgstr "edit"
 msgid "Bearbeitet"
 msgstr "Edited:"
 
-#: resources/assets/javascripts/lib/user_filter.js:13
+#: resources/assets/javascripts/lib/user_filter.js:12
 msgid "Bedingung konfigurieren"
 msgstr "Configure condition"
 
 #: resources/vue/components/courseware/CoursewareSearchWidget.vue:55
 #, fuzzy
 msgid "Bei der Anfrage ist ein Fehler aufgetreten."
-msgstr "Error occurred while converting."
-
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:157
-#, fuzzy
-msgid "Beim Kopiervorgang sind Fehler aufgetreten."
 msgstr "Error occurred while converting."
 
 #: resources/vue/components/courseware/IndexApp.vue:53
@@ -945,7 +863,7 @@ msgstr ""
 msgid "Beim Veröffentlichen der Seite ist ein Fehler aufgetreten."
 msgstr "The following errors occurred while deleting the semesters."
 
-#: resources/assets/javascripts/lib/forum.js:533
+#: resources/assets/javascripts/lib/forum.js:529
 msgid "Beitrag verschieben"
 msgstr "Move post"
 
@@ -1017,15 +935,15 @@ msgstr "Execution"
 #: resources/vue/components/courseware/CoursewareBiographyGoalsBlock.vue:24
 #: resources/vue/components/courseware/CoursewareBiographyGoalsBlock.vue:12
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:25
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:314
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:335
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:41
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:92
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:239
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:308
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:347
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:94
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:241
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:310
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:349
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:9
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:7
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:377
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:398
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:51
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:31
 msgid "Beschreibung"
@@ -1078,16 +996,16 @@ msgstr "Picture"
 msgid "Bild %u von %u"
 msgstr "Image %u of %u"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:166
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:168
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:83
 msgid "Bild hochladen"
 msgstr "Upload picture"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:84
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:85
 msgid "Bild im Dateibereich speichern"
 msgstr "Save the picture in the file area"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:160
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:162
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:77
 msgid "Bild löschen"
 msgstr "Delete picture"
@@ -1102,7 +1020,7 @@ msgstr "Image back"
 msgid "Bild Vorderseite"
 msgstr "Image front"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:55
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:56
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:14
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:31
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:3
@@ -1114,7 +1032,7 @@ msgid "Biografie"
 msgstr ""
 
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:195
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:147
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:149
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:64
 msgid "bis"
 msgstr "until"
@@ -1132,9 +1050,9 @@ msgstr "Please enter %u characters less"
 msgid "Bitte bestätigen Sie die Aktion"
 msgstr "Please confirm action"
 
-#: resources/vue/components/questionnaires/InputArray.vue:92
-#: resources/vue/components/questionnaires/LikertEdit.vue:181
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:219
+#: resources/vue/components/questionnaires/InputArray.vue:90
+#: resources/vue/components/questionnaires/LikertEdit.vue:180
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:218
 #, fuzzy
 msgid "Bitte bestätigen Sie die Aktion."
 msgstr "Please confirm action"
@@ -1176,16 +1094,6 @@ msgstr "To continue, please reload the page"
 msgid "Bitte schreiben Sie ein Feedback."
 msgstr "Write a feedback..."
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:312
-#, fuzzy
-msgid "Bitte wählen aus, an welcher Stelle die Aufgabe eingefügt werden soll."
-msgstr "Please select a place where the block should be inserted."
-
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:155
-#, fuzzy
-msgid "Bitte wählen Sie aus, an wen die Aufgabe verteilt werden sollen."
-msgstr "Please select a place where the block should be inserted."
-
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:156
 #, fuzzy
 msgid "Bitte wählen Sie ein Import-Archiv aus."
@@ -1196,8 +1104,8 @@ msgstr "Please select the previous picture."
 msgid "Bitte wählen Sie ein Lernmaterial als Ziel aus."
 msgstr "Please select a page as target"
 
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:328
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:318
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:349
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:339
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:189
 #, fuzzy
 msgid "Bitte wählen Sie ein Lernmaterial aus."
@@ -1218,11 +1126,6 @@ msgstr "Please select a video"
 msgid "Bitte wählen Sie ein Vorherbild aus."
 msgstr "Please select the previous picture."
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:148
-#, fuzzy
-msgid "Bitte wählen Sie eine Abgabefrist aus."
-msgstr "Please select a file"
-
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:296
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:362
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:499
@@ -1230,7 +1133,6 @@ msgstr "Please select a file"
 msgid "Bitte wählen Sie eine Aufgabe aus."
 msgstr "Please select a file"
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:141
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:236
 #, fuzzy
 msgid "Bitte wählen Sie eine Aufgabenvorlage aus."
@@ -1248,15 +1150,10 @@ msgstr "Please select a file"
 msgid "Bitte wählen Sie eine Seite als Ziel aus."
 msgstr "Please select a page as target"
 
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:389
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:410
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:506
 #, fuzzy
 msgid "Bitte wählen Sie eine Seite aus."
-msgstr "Please select a file"
-
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:134
-#, fuzzy
-msgid "Bitte wählen Sie einen Aufgabentitel aus."
 msgstr "Please select a file"
 
 #: resources/assets/javascripts/lib/quick_search.js:146
@@ -1272,16 +1169,6 @@ msgstr "Please choose a value"
 msgid "Bitte wählen Sie einen Ort aus, an dem der Block eingefügt werden soll."
 msgstr "Please select a place where the block should be inserted."
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:171
-#, fuzzy
-msgid "Bitte wählen Sie mindestens eine Gruppe aus."
-msgstr "Please select at least one day!"
-
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:163
-#, fuzzy
-msgid "Bitte wählen Sie mindestens einen Studierenden aus."
-msgstr "Please select at least one day!"
-
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:157
 #, fuzzy
 msgid "Bitte wählen Sie zuerst das Lernmaterial aus."
@@ -1291,7 +1178,7 @@ msgstr "Please select a file"
 msgid "Blättern"
 msgstr "Browse"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:38
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:39
 msgid "blau"
 msgstr "blue"
 
@@ -1301,29 +1188,19 @@ msgstr "blue"
 msgid "Blau"
 msgstr "Blue"
 
-#: resources/assets/javascripts/bootstrap/application.js:169
+#: resources/assets/javascripts/bootstrap/application.js:172
 msgid "Blenden Sie die restlichen Termine aus"
 msgstr "Hide remaining dates"
 
-#: resources/assets/javascripts/bootstrap/application.js:172
+#: resources/assets/javascripts/bootstrap/application.js:175
 msgid "Blenden Sie die restlichen Termine ein"
 msgstr "Show the remaining dates"
-
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:412
-#, fuzzy
-msgid "Block \"%{ blockTitle }\" konnte nicht kopiert werden"
-msgstr "Block could not be copied"
-
-#: resources/vue/components/courseware/CoursewareManagerFiling.vue:4
-#, fuzzy
-msgid "Block an dieser Stelle einfügen"
-msgstr "insert here"
 
 #: resources/vue/components/courseware/CoursewareBlockActions.vue:39
 msgid "Block bearbeiten"
 msgstr "Edit block"
 
-#: resources/vue/mixins/courseware/import.js:268
+#: resources/vue/mixins/courseware/import.js:272
 msgid "Block konnte nicht erstellt werden"
 msgstr "Block could not be created"
 
@@ -1355,18 +1232,13 @@ msgstr "Block assistant"
 msgid "Blockbeschreibung"
 msgstr "Block description"
 
-#: resources/vue/mixins/courseware/import.js:300
+#: resources/vue/mixins/courseware/import.js:304
 msgid "Blockdaten sind beschädigt. Es werden die Standardwerte eingesetzt"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareManagerContainer.vue:68
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:31
 msgid "Blöcke"
 msgstr "Blocks"
-
-#: resources/vue/components/courseware/CoursewareManagerContainer.vue:19
-msgid "Blöcke sortieren"
-msgstr "Sort blocks"
 
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:69
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:41
@@ -1407,7 +1279,6 @@ msgstr "Creative Commons specifications"
 msgid "Das Ablaufdatum der Berechtigungen für %{ userName }"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:75
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:122
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:81
 msgid ""
@@ -1416,14 +1287,12 @@ msgid ""
 "mit dieser Courseware."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:67
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:114
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:73
 #, fuzzy
 msgid "Das Archiv enthält keine courseware.json Datei."
 msgstr "The ZIP archive doesn't contain any file!"
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:71
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:118
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:77
 #, fuzzy
@@ -1435,7 +1304,7 @@ msgstr "The ZIP archive doesn't contain any file!"
 msgid "Das Bild für das neue Lernmaterial konnte nicht gespeichert werden."
 msgstr "The new file could not be saved!"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:450
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:520
 #, fuzzy
 msgid "Das Bild wurde erfolgreich im Dateibereich abgelegt."
 msgstr "Image has been successfully stored in the file area."
@@ -1445,7 +1314,7 @@ msgstr "Image has been successfully stored in the file area."
 msgid "Das eingegebene Passwort ist leider falsch."
 msgstr "Wrong password."
 
-#: resources/vue/components/courseware/CoursewareWelcomeScreen.vue:52
+#: resources/vue/components/courseware/CoursewareWelcomeScreen.vue:54
 #, fuzzy
 msgid "Das Elemente für Ihren ersten Inhalt wurde angelegt."
 msgstr "Element for your first content has been created"
@@ -1455,7 +1324,7 @@ msgstr "Element for your first content has been created"
 msgid "Das Feld für die Wikiseite darf nicht leer sein."
 msgstr "The title must not be empty."
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:339
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:341
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:1
 msgid ""
 "Das folgende Courseware-Material wird %{ ownerName }\n"
@@ -1505,8 +1374,8 @@ msgstr "Change data"
 msgid "Datei herunterladen"
 msgstr "Download file"
 
-#: resources/assets/javascripts/lib/files.js:134
-#: resources/assets/javascripts/lib/files.js:138
+#: resources/assets/javascripts/lib/files.js:142
+#: resources/assets/javascripts/lib/files.js:146
 #: resources/vue/components/BlubberPublicComposer.vue:26
 #: resources/vue/components/BlubberThread.vue:242
 #: resources/vue/components/courseware/CoursewareFolderBlock.vue:122
@@ -1518,7 +1387,7 @@ msgstr "Upload file"
 msgid "Datei ist nicht verfügbar"
 msgstr "File is not available"
 
-#: resources/assets/javascripts/lib/files.js:128
+#: resources/assets/javascripts/lib/files.js:136
 msgid "Datei ist zu groß oder hat eine nicht erlaubte Endung."
 msgstr "The file is too big or it doesn't have an allowed extension."
 
@@ -1535,10 +1404,6 @@ msgstr "File area"
 #: resources/vue/components/courseware/CoursewareAudioBlock.vue:9
 msgid "Dateibereich Datei"
 msgstr "File area file"
-
-#: resources/vue/components/courseware/CoursewareFileChooser.vue:25
-msgid "Dateibereich der Veranstaltung"
-msgstr "Course file area"
 
 #: resources/vue/components/courseware/CoursewareFolderChooser.vue:64
 msgid "Dateibereich dieser Veranstaltung"
@@ -1616,7 +1481,7 @@ msgstr "Date"
 msgid "Datum und Zeit"
 msgstr "Date and author"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:65
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:66
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:24
 msgid "deaktiviert"
 msgstr "deactivated"
@@ -1649,9 +1514,10 @@ msgid ""
 "bewegen."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:196
-msgid "Der Kopiervorgang ist fehlgeschlagen."
-msgstr "The copy operation has failed."
+#: resources/vue/components/questionnaires/QuestionnaireInfoEdit.vue:35
+#, fuzzy
+msgid "Der eingegebene Link ist nicht korrekt und wird nicht angezeigt werden."
+msgstr "The specified resource cannot be requested!"
 
 #: resources/vue/mixins/courseware/oermessage.js:17
 #, fuzzy
@@ -1667,15 +1533,15 @@ msgstr "Switch detailed view"
 msgid "Detaillierte Veranstaltungsliste"
 msgstr "Detailed list of courses"
 
-#: resources/assets/javascripts/studip-ui.js:566
+#: resources/assets/javascripts/studip-ui.js:654
 msgid "Dez"
 msgstr "Dec"
 
-#: resources/assets/javascripts/studip-ui.js:552
+#: resources/assets/javascripts/studip-ui.js:640
 msgid "Dezember"
 msgstr "December"
 
-#: resources/assets/javascripts/studip-ui.js:580
+#: resources/assets/javascripts/studip-ui.js:668
 msgid "Di"
 msgstr "Tue."
 
@@ -1702,13 +1568,11 @@ msgstr ""
 msgid "Die Beschreibung der Courseware-Einstellungen ist nicht valide."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:93
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:150
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:101
 msgid "Die Beschreibung der Courseware-Inhalte ist nicht valide."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:100
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:169
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:108
 #, fuzzy
@@ -1724,7 +1588,7 @@ msgstr "Image has been successfully stored in the file area."
 msgid "Die E-Mail-Adresse ist nicht korrekt!"
 msgstr "Invalid e-mail address!"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:318
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:322
 msgid ""
 "Die Einstellungen dieser Seite werden im Moment von %{blockingUserName} "
 "bearbeitet"
@@ -1761,12 +1625,12 @@ msgstr "The user was added to your contacts."
 msgid "Die Person ist bereits eingetragen."
 msgstr "This person is already enroled."
 
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:180
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:213
 #, fuzzy
 msgid "Die Seite %{ pageTitle } konnte nicht kopiert werden."
 msgstr "Data could not be copied!"
 
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:128
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:127
 #, fuzzy
 msgid "Die Seite %{ pageTitle } konnte nicht verknüpft werden."
 msgstr "Cannot delete partial course of study."
@@ -1777,12 +1641,12 @@ msgstr "Cannot delete partial course of study."
 msgid "Die Seite %{ pageTitle } wurde erfolgreich angelegt."
 msgstr "Institute \"%s\" created."
 
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:172
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:205
 #, fuzzy
 msgid "Die Seite %{ pageTitle } wurde erfolgreich kopiert."
 msgstr "Data successfully exported."
 
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:120
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:119
 #, fuzzy
 msgid "Die Seite %{ pageTitle } wurde erfolgreich verknüpft."
 msgstr "The achievement has been defined successfully."
@@ -1814,7 +1678,7 @@ msgstr "Page has been sent to the OER campus."
 msgid "Die Seite wurde gelöscht."
 msgstr "Rule deleted."
 
-#: resources/assets/javascripts/lib/forum.js:493
+#: resources/assets/javascripts/lib/forum.js:489
 msgid ""
 "Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden "
 "Beitrag aufmerksam machen. "
@@ -1822,18 +1686,14 @@ msgstr ""
 "The sender of this message wants to call your attention to the following "
 "posting."
 
-#: resources/vue/mixins/MyCoursesMixin.js:89
+#: resources/vue/mixins/MyCoursesMixin.js:105
 msgid "Die Teilnahme ist bindend. Bitte wenden Sie sich an die Lehrenden."
 msgstr "Participation is binding. Please contact the lecturers."
 
 #: resources/assets/javascripts/lib/calendar.js:7
-#: resources/assets/javascripts/studip-ui.js:571
+#: resources/assets/javascripts/studip-ui.js:659
 msgid "Dienstag"
 msgstr "Tuesday"
-
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:35
-msgid "Diese Courseware"
-msgstr "This Courseware"
 
 #: resources/vue/components/FilesTable.vue:464
 #, fuzzy
@@ -1865,7 +1725,7 @@ msgstr "this page"
 msgid "Diese Seite enthält keine darunter liegenden Seiten."
 msgstr "This page does not contain any underlying pages"
 
-#: resources/vue/components/courseware/CoursewareTreeItem.vue:52
+#: resources/vue/components/courseware/CoursewareTreeItem.vue:49
 msgid "Diese Seite hat eine zeitlich beschränkte Sichtbarkeit"
 msgstr ""
 
@@ -1873,17 +1733,17 @@ msgstr ""
 msgid "diese Seite inkl. darunter liegende Seiten"
 msgstr "this page incl. underlying pages"
 
-#: resources/vue/components/courseware/CoursewareTreeItem.vue:59
+#: resources/vue/components/courseware/CoursewareTreeItem.vue:56
 #, fuzzy
 msgid "Diese Seite kann von Teilnehmenden bearbeitet werden"
 msgstr "The start time could not be processed!"
 
-#: resources/vue/components/courseware/CoursewareTreeItem.vue:66
+#: resources/vue/components/courseware/CoursewareTreeItem.vue:63
 #, fuzzy
 msgid "Diese Seite kann von Teilnehmenden nicht gesehen werden"
 msgstr "The file cannot be read!"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:312
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:316
 #: resources/vue/components/courseware/IndexApp.vue:51
 #: resources/vue/components/courseware/PublicApp.vue:41
 #, fuzzy
@@ -1897,8 +1757,8 @@ msgstr "This page is not available for you"
 msgid "Diese Seite wird bereits bearbeitet."
 msgstr "This page is already being edited."
 
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:41
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:40
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:43
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:42
 #, fuzzy
 msgid "Diese Veranstaltung"
 msgstr "Courses"
@@ -1907,22 +1767,18 @@ msgstr "Courses"
 msgid "Diesen Dialog schließen"
 msgstr "Close this dialog"
 
-#: resources/vue/components/courseware/CoursewareManagerContainer.vue:29
-msgid "Dieser Abschnitt enthält keine Blöcke."
-msgstr "This section does not contain blocks."
-
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:148
-#: resources/vue/components/courseware/CoursewareDefaultContainer.vue:81
-#: resources/vue/components/courseware/CoursewareListContainer.vue:87
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:153
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:149
+#: resources/vue/components/courseware/CoursewareDefaultContainer.vue:82
+#: resources/vue/components/courseware/CoursewareListContainer.vue:88
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:154
 msgid "Dieser Abschnitt wird bereits bearbeitet."
 msgstr "This section is already being edited."
 
-#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:153
+#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:154
 msgid "Dieser Block wird bereits bearbeitet."
 msgstr "This block is already being edited."
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:390
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:394
 msgid ""
 "Dieser Inhalt ist aus den persönlichen Lernmaterialien von %{ ownerName } "
 "verlinkt und kann nur dort bearbeitet werden."
@@ -1945,15 +1801,6 @@ msgid ""
 "Darstellung."
 msgstr "Preview size. Click to enlarge."
 
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:31
-msgid "Dieses Element enthält keine Abschnitte."
-msgstr "This element does not contain sections."
-
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:51
-#, fuzzy
-msgid "Dieses Element enthält keine Unterseiten."
-msgstr "This element does not contain pages."
-
 #: resources/vue/components/EditableList.vue:19
 #, fuzzy
 msgid "Direkt auswählen ..."
@@ -1963,7 +1810,7 @@ msgstr "Please select"
 msgid "divers"
 msgstr "diverse"
 
-#: resources/assets/javascripts/studip-ui.js:582
+#: resources/assets/javascripts/studip-ui.js:670
 msgid "Do"
 msgstr "Thu."
 
@@ -1971,8 +1818,8 @@ msgstr "Thu."
 msgid "Dokument"
 msgstr "Document"
 
-#: resources/assets/javascripts/lib/files.js:69
-#: resources/assets/javascripts/lib/files.js:74
+#: resources/assets/javascripts/lib/files.js:77
+#: resources/assets/javascripts/lib/files.js:82
 #: resources/assets/javascripts/lib/folders.js:14
 msgid "Dokument hinzufügen"
 msgstr "Add document"
@@ -1982,7 +1829,7 @@ msgid "Dokument suchen"
 msgstr "Search document"
 
 #: resources/assets/javascripts/lib/calendar.js:9
-#: resources/assets/javascripts/studip-ui.js:573
+#: resources/assets/javascripts/studip-ui.js:661
 msgid "Donnerstag"
 msgstr "Thursday"
 
@@ -2001,13 +1848,13 @@ msgstr "Print"
 
 #: resources/vue/components/courseware/CoursewareAccordionContainer.vue:59
 #: resources/vue/components/courseware/CoursewareListContainer.vue:50
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:411
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:416
 #: resources/vue/components/courseware/CoursewareTabsContainer.vue:55
 #: resources/vue/components/courseware/CoursewareTree.vue:29
 msgid "Drücken Sie die Leertaste, um neu anzuordnen."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:45
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:46
 #, fuzzy
 msgid "dunkel grau"
 msgstr "Dark gray"
@@ -2027,9 +1874,9 @@ msgid ""
 "Lernmaterials in der Übersicht."
 msgstr ""
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:206
 #: resources/vue/components/responsive/ResponsiveNavigation.vue:207
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:216
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:208
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:217
 #, fuzzy
 msgid "Eine Ebene höher"
 msgstr "Delete this level"
@@ -2057,30 +1904,18 @@ msgstr "add"
 msgid "eingetragene Lebenspartnerschaft"
 msgstr ""
 
-#: resources/vue/components/questionnaires/LikertEdit.vue:34
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:36
+#: resources/vue/components/questionnaires/LikertEdit.vue:38
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:40
 #, fuzzy
 msgid "Einleitungstext"
 msgstr "Introduction"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:327
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:329
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:28
 #: resources/vue/components/courseware/CoursewareUnitItem.vue:40
 #: resources/vue/components/courseware/CoursewareUnitItemDialogSettings.vue:48
 msgid "Einstellungen"
 msgstr "Settings"
-
-#: resources/vue/components/courseware/CoursewareManagerBlock.vue:32
-#: resources/vue/components/courseware/CoursewareManagerContainer.vue:46
-#: resources/vue/components/courseware/CoursewareManagerElementItem.vue:44
-msgid "Element nach oben verschieben"
-msgstr "Move this element up"
-
-#: resources/vue/components/courseware/CoursewareManagerBlock.vue:42
-#: resources/vue/components/courseware/CoursewareManagerContainer.vue:56
-#: resources/vue/components/courseware/CoursewareManagerElementItem.vue:54
-msgid "Element nach unten verschieben"
-msgstr "Move this element down"
 
 #: resources/vue/components/courseware/CoursewareRibbonToolbar.vue:48
 msgid "Elemente hinzufügen"
@@ -2118,8 +1953,8 @@ msgstr "Does the content contain one or more files?"
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:13
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:113
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:146
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:123
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:214
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:125
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:216
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:40
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:22
 msgid "Entwurf"
@@ -2130,8 +1965,8 @@ msgstr "Draft"
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:12
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:111
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:145
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:122
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:213
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:124
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:215
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:39
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:21
 msgid "ePortfolio"
@@ -2196,12 +2031,12 @@ msgstr "Create zip file"
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:112
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:34
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:86
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:857
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1414
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:865
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1422
 msgid "Erstellen"
 msgstr "Create"
 
-#: resources/vue/components/courseware/CoursewareUnitItems.vue:65
+#: resources/vue/components/courseware/CoursewareUnitItems.vue:69
 msgid ""
 "Erstellen und verwalten Sie hier Ihre eigenen persönlichen Lernmaterialien "
 "in Form von ePorfolios,Vorlagen für Veranstaltungen oder einfach nur "
@@ -2237,11 +2072,11 @@ msgstr "Course's forum"
 msgid "Erstmaliges Zurücksetzen am"
 msgstr "Reset settings"
 
-#: resources/vue/mixins/courseware/import.js:400
+#: resources/vue/mixins/courseware/import.js:404
 msgid "Erzeuge Datei"
 msgstr "Creating file"
 
-#: resources/assets/javascripts/lib/files.js:197
+#: resources/assets/javascripts/lib/files.js:205
 msgid "Es gab einen Fehler beim Hochladen der Datei(en):"
 msgstr "An error occurred while uploading the file(s):"
 
@@ -2261,7 +2096,7 @@ msgstr "An error occurred! The recording could not be saved."
 msgid "Es ist ein Fehler aufgetreten. Die Seite konnte nicht erstellt werden."
 msgstr "An error occurred! The recording could not be saved."
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:454
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:524
 msgid ""
 "Es ist ein Fehler aufgetretten! Das Bild konnte nicht gespeichert werden."
 msgstr "An error has occurred! The image could not be saved."
@@ -2288,19 +2123,25 @@ msgid ""
 "unter Arbeitsplatz/Courseware ein Lernmaterial."
 msgstr ""
 
+#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:137
+msgid ""
+"Es sind noch keine Unterseiten vorhanden. Sobald Sie weitere Unterseiten "
+"anlegen, erscheinen diese automatisch hier im Inhaltsverzeichnis."
+msgstr ""
+
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:116
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:290
 #, fuzzy
 msgid "Es stehen keine Lernmaterialien zur Verfügung."
 msgstr "No more seats available."
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:106
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:108
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:23
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:1
 msgid "Es steht keine Auswahl zur Verfügung"
 msgstr "No selection available"
 
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:43
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:47
 #: resources/vue/components/courseware/CoursewareAccordionContainer.vue:14
 #: resources/vue/components/courseware/CoursewareAccordionContainer.vue:1
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:45
@@ -2324,12 +2165,12 @@ msgstr "No selection available"
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:32
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:1
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:112
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:182
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:294
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:202
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:315
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:124
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:181
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:357
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:44
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:201
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:378
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:46
 #: resources/vue/components/courseware/CoursewareTabsContainer.vue:14
 #: resources/vue/components/courseware/CoursewareTabsContainer.vue:1
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:61
@@ -2341,7 +2182,7 @@ msgstr "No selection available"
 msgid "Es steht keine Auswahl zur Verfügung."
 msgstr "No selection available"
 
-#: resources/assets/javascripts/lib/forum.js:188
+#: resources/assets/javascripts/lib/forum.js:184
 msgid "Es werden auch alle Beiträge in diesem Bereich gelöscht!"
 msgstr "All postings in this area will be deleted as well!"
 
@@ -2366,13 +2207,12 @@ msgstr "No content has been added yet."
 msgid "Es wurden keine Aktivitäten gefunden."
 msgstr "No wiki pages have been found!"
 
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:197
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:196
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:217
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:216
 #, fuzzy
 msgid "Es wurden keine geeigneten Veranstaltungen gefunden."
 msgstr "No course found."
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:244
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:445
 #, fuzzy
 msgid "Es wurden keine Gruppen in dieser Veranstaltung gefunden."
@@ -2387,7 +2227,6 @@ msgstr "No results were found for \"<%= needle %>\"."
 msgid "Es wurden keine neuen Ergebnisse für \"<%= needle %>\" gefunden."
 msgstr "No results were found for \"<%= needle %>\"."
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:184
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:394
 #, fuzzy
 msgid "Es wurden keine Studierenden in dieser Veranstaltung gefunden."
@@ -2398,7 +2237,7 @@ msgstr "No matching course could be found."
 msgid "Es wurden keine Suchergebnisse gefunden."
 msgstr "No results."
 
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:310
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:331
 #, fuzzy
 msgid "Es wurden keine Unterseiten gefunden"
 msgstr "No wiki pages have been found!"
@@ -2410,16 +2249,11 @@ msgstr "No wiki pages have been found!"
 msgid "Es wurden keine Unterseiten gefunden."
 msgstr "No persons have been found."
 
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:142
-#, fuzzy
-msgid "Es wurden keine Veranstaltung mit Courseware-Inhalten gefunden."
-msgstr "No course found."
-
 #: resources/vue/components/MyCourses.vue:61
 msgid "Es wurden keine Veranstaltungen gefunden."
 msgstr "No course found."
 
-#: resources/vue/components/courseware/CoursewareUnitItems.vue:56
+#: resources/vue/components/courseware/CoursewareUnitItems.vue:60
 #, fuzzy
 msgid "Es wurden leider noch keine Lernmaterialien angelegt."
 msgstr "No vacation periods have been created yet."
@@ -2429,7 +2263,6 @@ msgstr "No vacation periods have been created yet."
 msgid "Es wurden noch keine Freigaben erteilt"
 msgstr "No vacation periods have been created yet."
 
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:50
 #: resources/vue/components/courseware/CoursewareExportWidget.vue:27
 msgid "Export"
 msgstr "Export"
@@ -2439,9 +2272,8 @@ msgstr "Export"
 msgid "Export des Lernmaterials: %{title}"
 msgstr "Date type"
 
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:68
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1151
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1325
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1159
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1333
 msgid "Export läuft, bitte haben sie einen Moment Geduld..."
 msgstr "Export is in progress, please be patient for a moment..."
 
@@ -2474,12 +2306,12 @@ msgstr "External contents"
 msgid "Externer Link"
 msgstr "External link"
 
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:58
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:62
 #: resources/vue/components/courseware/CoursewareAccordionContainer.vue:29
 msgid "Fach hinzufügen"
 msgstr "Add panel"
 
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:54
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:58
 #: resources/vue/components/courseware/CoursewareAccordionContainer.vue:25
 msgid "Fach löschen"
 msgstr "Delete panel"
@@ -2496,10 +2328,6 @@ msgstr "Select semester of study (optional)"
 msgid "Familienstand"
 msgstr "Family"
 
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:97
-msgid "FAQ"
-msgstr "FAQ"
-
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:39
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:33
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:97
@@ -2509,17 +2337,17 @@ msgstr "FAQ"
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:17
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:8
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:95
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:276
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:297
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:40
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:100
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:102
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:17
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:339
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:360
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:55
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:35
 msgid "Farbe"
 msgstr "Color"
 
-#: resources/vue/mixins/MyCoursesMixin.js:74
+#: resources/vue/mixins/MyCoursesMixin.js:90
 msgid "Farbgruppierung ändern"
 msgstr "Change colour grouping"
 
@@ -2535,11 +2363,11 @@ msgstr "Edit favourites"
 msgid "Favoriten bearbeiten schließen"
 msgstr "Close edit favorites"
 
-#: resources/assets/javascripts/studip-ui.js:556
+#: resources/assets/javascripts/studip-ui.js:644
 msgid "Feb"
 msgstr "Feb"
 
-#: resources/assets/javascripts/studip-ui.js:542
+#: resources/assets/javascripts/studip-ui.js:630
 msgid "Februar"
 msgstr "February"
 
@@ -2603,7 +2431,7 @@ msgid "Feedback zur Seite"
 msgstr "Edit feedback"
 
 #: resources/assets/javascripts/lib/quick_search.js:101
-#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:99
+#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:100
 msgid "Fehler"
 msgstr "Error"
 
@@ -2619,7 +2447,7 @@ msgstr "Error accessing the tour controller"
 msgid "Fehler beim Hochladen der Datei."
 msgstr "Error when uploading the file."
 
-#: resources/vue/mixins/courseware/import.js:218
+#: resources/vue/mixins/courseware/import.js:220
 #, fuzzy
 msgid "Fehler beim Hochladen des Vorschaubildes."
 msgstr "Error when uploading the file."
@@ -2629,9 +2457,8 @@ msgstr "Error when uploading the file."
 msgid "Fehler im Import-Archiv"
 msgstr "Error while exporting"
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:26
-#: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:233
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:132
+#: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:241
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:140
 #, fuzzy
 msgid "Fehlermeldungen"
 msgstr "Registrations"
@@ -2672,7 +2499,7 @@ msgstr "Reset filters"
 msgid "Fortschritt: %{progress}%"
 msgstr "Progress"
 
-#: resources/assets/javascripts/studip-ui.js:583
+#: resources/assets/javascripts/studip-ui.js:671
 msgid "Fr"
 msgstr "Fri."
 
@@ -2697,7 +2524,7 @@ msgid "Freigabe löschen"
 msgstr "Delete request"
 
 #: resources/assets/javascripts/lib/calendar.js:10
-#: resources/assets/javascripts/studip-ui.js:574
+#: resources/assets/javascripts/studip-ui.js:662
 msgid "Freitag"
 msgstr "Friday"
 
@@ -2715,16 +2542,16 @@ msgstr "Adds a default section with a text block"
 msgid "Füllen Sie noch die rot markierten Stellen korrekt aus."
 msgstr "Fill in the red marked areas correctly."
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:67
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:68
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:26
 msgid "für alle"
 msgstr "for all"
 
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:250
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:271
 msgid "Für die gewählte Quelle stehen kein Lernmaterialien zur Verfügung."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:252
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:273
 #, fuzzy
 msgid "Für die gewählte Quelle stehen keine Lernmaterialien zur Verfügung."
 msgstr "No more seats available."
@@ -2733,16 +2560,6 @@ msgstr "No more seats available."
 #: resources/vue/components/CacheAdministration.vue:1
 msgid "Für diesen Cachetyp ist keine Konfiguration erforderlich."
 msgstr "No configuration is required for this cache type."
-
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:35
-#, fuzzy
-msgid "für Gruppen"
-msgstr "Groups"
-
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:34
-#, fuzzy
-msgid "für Studierende"
-msgstr "Students"
 
 #: resources/vue/components/courseware/CoursewareSearchWidget.vue:26
 #, fuzzy
@@ -2765,7 +2582,7 @@ msgstr "Birthday"
 msgid "Geburtsort"
 msgstr "Birthday"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:42
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:43
 msgid "gelb"
 msgstr "yellow"
 
@@ -2781,7 +2598,7 @@ msgid "Gelöscht"
 msgstr "File deleted."
 
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:171
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:136
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:138
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:53
 msgid "Geschätzter zeitlicher Aufwand"
 msgstr "Estimated time effort"
@@ -2806,13 +2623,18 @@ msgstr "Speed"
 msgid "Gestaltung"
 msgstr "Layout"
 
+#: resources/vue/components/courseware/CoursewareSharedItems.vue:17
+#, fuzzy
+msgid "Geteilte Lernmaterialien"
+msgstr "Personal files"
+
 #: resources/vue/components/courseware/CoursewareDashboardStudents.vue:102
 #: resources/vue/components/courseware/CoursewareDashboardStudents.vue:9
 #, fuzzy
 msgid "gewähren"
 msgstr "selected"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:44
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:45
 msgid "grau"
 msgstr "grey"
 
@@ -2822,7 +2644,7 @@ msgstr "grey"
 msgid "Grau"
 msgstr "Grey"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:112
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:121
 msgid "groß"
 msgstr "large"
 
@@ -2845,7 +2667,7 @@ msgstr "Big icon in front"
 msgid "Großes Icon oben"
 msgstr "Big icon above"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:39
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:40
 msgid "grün"
 msgstr "green"
 
@@ -2855,7 +2677,7 @@ msgstr "green"
 msgid "Grün"
 msgstr "Green"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:302
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:304
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:3
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:69
 msgid "Grunddaten"
@@ -2884,7 +2706,6 @@ msgstr "Groups"
 msgid "Gruppenaufgabe"
 msgstr "Group/colour"
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:64
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:462
 msgid "Gruppenname"
 msgstr "Group name"
@@ -2919,7 +2740,7 @@ msgstr "Is the content mostly text?"
 msgid "Hauptfächer / Schwerpunkt"
 msgstr ""
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:75
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:77
 msgid "Hauptnavigation"
 msgstr "Main navigation"
 
@@ -2946,11 +2767,11 @@ msgstr "Verdigris"
 msgid "Hellgrau"
 msgstr "light grey"
 
-#: resources/assets/javascripts/lib/forum.js:811
+#: resources/assets/javascripts/lib/forum.js:807
 msgid "Hervorhebung aufheben"
 msgstr "Delete mark"
 
-#: resources/assets/javascripts/studip-ui.js:602
+#: resources/assets/javascripts/studip-ui.js:690
 msgid "HH:mm"
 msgstr "HH:mm"
 
@@ -2976,7 +2797,7 @@ msgstr ""
 msgid "Hierauf antworten."
 msgstr "Reply on this."
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:288
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:290
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:1
 #, fuzzy
 msgid ""
@@ -2986,7 +2807,7 @@ msgstr ""
 "Hereby you export the page \"{{ currentElement.attributes.title }}\" as ZIP "
 "file."
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:265
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:267
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:2
 #, fuzzy
 msgid ""
@@ -2996,7 +2817,7 @@ msgstr ""
 "Hereby you export the page \"{{ currentElement.attributes.title }}\" as ZIP "
 "file."
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:48
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:49
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:7
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:119
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:102
@@ -3017,7 +2838,7 @@ msgstr "Background color"
 msgid "Hintergrundtyp"
 msgstr "Background type"
 
-#: resources/vue/components/questionnaires/QuestionnaireInfoEdit.vue:21
+#: resources/vue/components/questionnaires/QuestionnaireInfoEdit.vue:22
 #, fuzzy
 msgid "Hinweistext (optional)"
 msgstr "First name (optional)"
@@ -3056,13 +2877,13 @@ msgstr ""
 "I will help you choose the right block. Just answer me a few questions. My "
 "suggestions will then display here."
 
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:37
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:41
 #: resources/vue/components/courseware/CoursewareAccordionContainer.vue:8
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:61
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:44
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:35
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:26
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:38
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:40
 #: resources/vue/components/courseware/CoursewareTabsContainer.vue:8
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:72
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:52
@@ -3078,15 +2899,15 @@ msgstr "Icon colour"
 msgid "Ihr Browser unterstützt dieses Audioformat leider nicht."
 msgstr "Unfortunately, your browser does not support this audio format."
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:353
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:355
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:15
 msgid ""
 "Ihr Vorschlag wird anonym versendet. Falls gewünscht, können Sie\n"
 "                                    zusätzlich eine Nachricht verfassen:"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:178
-#: resources/vue/components/courseware/CoursewareDefaultContainer.vue:106
+#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:179
+#: resources/vue/components/courseware/CoursewareDefaultContainer.vue:107
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:697
 #, fuzzy
 msgid ""
@@ -3105,13 +2926,12 @@ msgstr "Your request has been processed!"
 msgid "Ihre Eingaben wurden bislang noch nicht gespeichert."
 msgstr "Your input has not been saved yet."
 
-#: resources/vue/components/courseware/CoursewareUnitItems.vue:64
+#: resources/vue/components/courseware/CoursewareUnitItems.vue:68
 #, fuzzy
 msgid "Ihre persönlichen Lernmaterialien"
 msgstr "Personal files"
 
 #: resources/vue/components/courseware/CoursewareImportWidget.vue:15
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:32
 #: resources/vue/components/courseware/CoursewareShelfImportWidget.vue:11
 #, fuzzy
 msgid "Import"
@@ -3122,23 +2942,16 @@ msgstr "Import"
 msgid "Import abgebrochen. Es sind Fehler aufgetreten!"
 msgstr "Errors occurred."
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:43
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:180
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:73
 #, fuzzy
 msgid "Import abgeschlossen. Es sind Fehler aufgetreten!"
 msgstr "Errors occurred."
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:37
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:174
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:67
 msgid "Import erfolgreich!"
 msgstr "Import successful!"
-
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:49
-#, fuzzy
-msgid "Import fehlgeschlagen. Es sind Fehler aufgetreten!"
-msgstr "Error during upload"
 
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:186
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:79
@@ -3150,50 +2963,32 @@ msgstr ""
 "Import in progress. Please do not leave the page until the import is "
 "completed."
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:55
-msgid ""
-"Import läuft. Bitte verlassen Sie die Seite nicht bis der Import "
-"abgeschlossen wurde."
-msgstr ""
-"Import in progress. Please do not leave the page until the import is "
-"completed."
-
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:9
-msgid "Import läuft..."
-msgstr ""
-
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:19
 #, fuzzy
 msgid "Import-Archiv"
 msgstr "Archive"
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:34
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:38
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:43
 #, fuzzy
 msgid "Importdatei"
 msgstr "Imported files"
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:11
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:201
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:100
 msgid "Importiere Dateien"
 msgstr "Imported files"
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:18
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:217
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:116
 msgid "Importiere Elemente"
 msgstr "Import elements"
 
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:207
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:47
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:40
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:28
 msgid "Importieren"
 msgstr "Import"
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:38
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:53
 #, fuzzy
 msgid "Importverhalten"
@@ -3216,11 +3011,6 @@ msgstr ""
 "<strong>semester filter</strong> on the left!\n"
 "                    </br>"
 
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:159
-#, fuzzy
-msgid "In dieser Veranstaltung wurden noch keine Inhalte angelegt."
-msgstr "No contents have been created in this course yet"
-
 #: resources/vue/components/courseware/CoursewareDownloadBlock.vue:43
 #: resources/vue/components/courseware/CoursewareDownloadBlock.vue:15
 msgid "Infobox nach Download"
@@ -3239,7 +3029,7 @@ msgstr "Information"
 msgid "Informationen"
 msgstr "Information"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:370
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:371
 msgid "Informationen anzeigen"
 msgstr "Display information"
 
@@ -3309,7 +3099,7 @@ msgstr "Information about the gallery block"
 msgid "Informationen zum IFrame-Block"
 msgstr "Information about the iframe block"
 
-#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:56
+#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:60
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:1
 msgid "Informationen zum Inhaltsverzeichnis-Block"
 msgstr "Information about the table of contents block"
@@ -3320,7 +3110,7 @@ msgstr "Information about the table of contents block"
 msgid "Informationen zum Karriere-Block"
 msgstr "Information about the gallery block"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:73
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:74
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:1
 msgid "Informationen zum Leinwand-Block"
 msgstr "Information about the canvas block"
@@ -3399,14 +3189,14 @@ msgstr "Information about the page"
 msgid "Informationen zur Seite"
 msgstr "Information about the page"
 
-#: resources/vue/components/MyCoursesTables.vue:104
+#: resources/vue/components/MyCoursesTables.vue:107
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:33
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:64
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:9
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:105
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:143
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:119
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:210
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:121
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:212
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:36
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:18
 msgid "Inhalt"
@@ -3417,24 +3207,16 @@ msgstr "Content"
 msgid "Inhalt kopieren"
 msgstr "Copy file"
 
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:40
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:57
 #, fuzzy
 msgid "Inhalte anhängen"
 msgstr "File attachments:"
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:25
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:221
 #, fuzzy
 msgid "Inhalte ergänzen"
 msgstr "Contents are being loaded"
 
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:145
-#, fuzzy
-msgid "Inhalte werden kopiert…"
-msgstr "Contents are being loaded"
-
-#: resources/vue/components/courseware/CoursewareManagerImport.vue:41
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:58
 #, fuzzy
 msgid "Inhalte zusammenführen"
@@ -3455,7 +3237,6 @@ msgstr "Internal"
 msgid "Interner Link"
 msgstr "Internal link"
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:27
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:226
 msgid "ja"
 msgstr "yes"
@@ -3467,7 +3248,7 @@ msgstr "yes"
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:34
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:55
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:70
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:50
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:51
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:9
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:30
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:13
@@ -3486,9 +3267,9 @@ msgstr "yes"
 #: resources/vue/components/courseware/CoursewareUnitItemDialogSettings.vue:86
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:39
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:32
-#: resources/vue/components/questionnaires/InputArray.vue:94
-#: resources/vue/components/questionnaires/LikertEdit.vue:183
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:221
+#: resources/vue/components/questionnaires/InputArray.vue:92
+#: resources/vue/components/questionnaires/LikertEdit.vue:182
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:220
 msgid "Ja"
 msgstr "Yes"
 
@@ -3503,40 +3284,40 @@ msgstr "Year"
 msgid "jährlich"
 msgstr "Yearly"
 
-#: resources/assets/javascripts/studip-ui.js:555
+#: resources/assets/javascripts/studip-ui.js:643
 msgid "Jan"
 msgstr "Jan"
 
-#: resources/assets/javascripts/studip-ui.js:541
+#: resources/assets/javascripts/studip-ui.js:629
 msgid "Januar"
 msgstr "January"
 
-#: resources/assets/javascripts/studip-ui.js:539
+#: resources/assets/javascripts/studip-ui.js:627
 #: resources/vue/components/StudipDateTime.vue:39
 msgid "Jetzt"
 msgstr "Now"
 
-#: resources/assets/javascripts/studip-ui.js:561
+#: resources/assets/javascripts/studip-ui.js:649
 msgid "Jul"
 msgstr "Jul"
 
-#: resources/assets/javascripts/studip-ui.js:547
+#: resources/assets/javascripts/studip-ui.js:635
 msgid "Juli"
 msgstr "July"
 
-#: resources/assets/javascripts/studip-ui.js:560
+#: resources/assets/javascripts/studip-ui.js:648
 msgid "Jun"
 msgstr "Jun"
 
-#: resources/assets/javascripts/studip-ui.js:546
+#: resources/assets/javascripts/studip-ui.js:634
 msgid "Juni"
 msgstr "June"
 
-#: resources/vue/components/MyCoursesSidebarSwitch.vue:9
+#: resources/vue/components/MyCoursesSidebarSwitch.vue:21
 msgid "Kachelansicht"
 msgstr "Tile view"
 
-#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:51
+#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:55
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:11
 msgid "Kacheln"
 msgstr "Tiles"
@@ -3604,7 +3385,7 @@ msgstr "No selection"
 msgid "Keine Auswahlmöglichkeiten"
 msgstr "No further selection possible"
 
-#: resources/vue/components/courseware/CoursewareFileChooser.vue:20
+#: resources/vue/components/courseware/CoursewareFileChooser.vue:13
 msgid "Keine Dateien vorhanden"
 msgstr "No files available"
 
@@ -3622,7 +3403,7 @@ msgstr "no next card"
 msgid "keine nächste Seite"
 msgstr "no next card"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:241
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:245
 #, fuzzy
 msgid "Keine nächste Seite"
 msgstr "no next card"
@@ -3649,7 +3430,7 @@ msgstr "no previous card"
 msgid "keine vorherige Seite"
 msgstr "no previous card"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:223
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:227
 #, fuzzy
 msgid "Keine vorherige Seite"
 msgstr "no previous card"
@@ -3658,7 +3439,7 @@ msgstr "no previous card"
 msgid "Keine weitere Auswahl möglich"
 msgstr "No further selection possible"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:102
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:111
 msgid "klein"
 msgstr "small"
 
@@ -3706,17 +3487,11 @@ msgstr "Could not load the conversation. Please try again later."
 msgid "Konnte die Suche nicht ausführen. Probieren Sie es nachher erneut."
 msgstr "Could not execute the search. Please try again later."
 
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:183
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:47
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:44
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:49
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:46
 #: resources/vue/components/courseware/CoursewareUnitItem.vue:43
 msgid "Kopieren"
 msgstr "Copy"
-
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:160
-#, fuzzy
-msgid "Kopiervorgang abgeschlossen."
-msgstr "The copy operation has failed."
 
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:35
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:7
@@ -3766,13 +3541,13 @@ msgstr "Date type"
 msgid "Lade mehr Ergebnisse..."
 msgstr "Load more results..."
 
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:194
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:193
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:214
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:213
 #, fuzzy
 msgid "Lade Veranstaltungen…"
 msgstr "Courses"
 
-#: resources/vue/mixins/courseware/import.js:212
+#: resources/vue/mixins/courseware/import.js:214
 #, fuzzy
 msgid "Lade Vorschaubild hoch"
 msgstr "no image file uploaded yet"
@@ -3790,7 +3565,7 @@ msgstr "Slow"
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:11
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:20
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:3
-#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:47
+#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:51
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:7
 msgid "Layout"
 msgstr "Layout"
@@ -3799,17 +3574,17 @@ msgstr "Layout"
 msgid "ledig"
 msgstr ""
 
-#: resources/vue/mixins/courseware/import.js:223
+#: resources/vue/mixins/courseware/import.js:225
 #, fuzzy
 msgid "Lege Abschnitt an:"
 msgstr "Add section"
 
-#: resources/vue/mixins/courseware/import.js:345
+#: resources/vue/mixins/courseware/import.js:349
 #, fuzzy
 msgid "Lege Import Ordner an..."
 msgstr "Creating folder"
 
-#: resources/vue/mixins/courseware/import.js:372
+#: resources/vue/mixins/courseware/import.js:376
 msgid "Lege Ordner an"
 msgstr "Creating folder"
 
@@ -3831,35 +3606,35 @@ msgstr ""
 "Unfortunately, your search term is too short. The search term must be at "
 "least \"%s\" characters long."
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:184
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:185
 #, fuzzy
 msgid "Lerninhalt für den OER Campus vorschlagen"
 msgstr "Information for distributing system. "
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:372
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:373
 #, fuzzy
 msgid "Lerninhalt für OER Campus vorschlagen"
 msgstr "Information for distributing system. "
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:185
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:186
 #, fuzzy
 msgid "Lerninhalt vorschlagen"
 msgstr "Upload files"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:176
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:177
 #, fuzzy
 msgid "Lerninhalte auf dem OER Campus veröffentlichen"
 msgstr "Publish your score"
 
 #: resources/vue/components/courseware/CoursewareActivitiesWidgetFilterUnit.vue:11
 #: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:21
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:40
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:42
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:21
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:44
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:46
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:17
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:144
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:143
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:19
-#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:340
+#: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:339
 #, fuzzy
 msgid "Lernmaterial"
 msgstr "Date type"
@@ -3887,13 +3662,13 @@ msgstr "Import dates"
 msgid "Lernmaterial importiert."
 msgstr "File \"%s\" does not exist."
 
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:46
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:48
 #: resources/vue/components/courseware/CoursewareShelfImportWidget.vue:23
 #, fuzzy
 msgid "Lernmaterial kopieren"
 msgstr "Copy file"
 
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:116
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:130
 #: resources/vue/components/courseware/CoursewareUnitItem.vue:121
 #, fuzzy
 msgid "Lernmaterial kopiert."
@@ -3909,11 +3684,11 @@ msgstr "Delete file"
 msgid "Lernmaterial öffnen"
 msgstr "Open folder"
 
-#: resources/vue/components/courseware/CoursewareUnitItems.vue:39
+#: resources/vue/components/courseware/CoursewareUnitItems.vue:43
 msgid "Lernmaterialien"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:219
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:221
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:27
 #, fuzzy
 msgid "Lernmaterialvorlage"
@@ -3961,7 +3736,7 @@ msgstr "Read permission"
 msgid "Leserechte für %{ userName }"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:371
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:372
 msgid "Lesezeichen setzen"
 msgstr "Set bookmark"
 
@@ -3975,7 +3750,7 @@ msgstr "Last changes on"
 msgid "Letztmaliges Zurücksetzen am"
 msgstr "Reset"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:40
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:41
 msgid "lila"
 msgstr "purple"
 
@@ -4029,7 +3804,7 @@ msgstr "The evaluation has been copied to one area."
 msgid "Link wurde kopiert"
 msgstr "Link has been copied"
 
-#: resources/assets/javascripts/lib/forum.js:495
+#: resources/assets/javascripts/lib/forum.js:491
 msgid "Link zum Beitrag: "
 msgstr "Link to posting:"
 
@@ -4037,12 +3812,12 @@ msgstr "Link to posting:"
 msgid "Linktext"
 msgstr "Link text"
 
-#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:49
+#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:53
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:9
 msgid "Liste"
 msgstr "List"
 
-#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:50
+#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:54
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:10
 msgid "Liste mit Beschreibung"
 msgstr "List with description"
@@ -4065,8 +3840,8 @@ msgid "Lizenzauswahl abbrechen"
 msgstr "Cancel license selection"
 
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:156
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:128
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:319
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:130
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:321
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:45
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:20
 msgid "Lizenztyp"
@@ -4085,17 +3860,17 @@ msgstr "Delete"
 msgid "Löschen der Freigabe"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareDefaultContainer.vue:129
+#: resources/vue/components/courseware/CoursewareDefaultContainer.vue:130
 #, fuzzy
 msgid "Löschen nicht möglich, da %{blockingUserName} den Abschnitt bearbeitet."
 msgstr "Deletion impossible. The tour must have at least one step."
 
-#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:210
+#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:211
 msgid "Löschen nicht möglich, da %{blockingUserName} den Block bearbeitet."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:232
-#: resources/vue/components/courseware/CoursewareDefaultContainer.vue:148
+#: resources/vue/components/courseware/CoursewareDefaultBlock.vue:233
+#: resources/vue/components/courseware/CoursewareDefaultContainer.vue:149
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:836
 msgid ""
 "Löschen nicht möglich, da %{blockingUserName} die Bearbeitung übernommen hat."
@@ -4106,8 +3881,8 @@ msgstr ""
 msgid "Löschen nicht möglich, da %{blockingUserName} die Seite bearbeitet."
 msgstr "Deletion impossible. The tour must have at least one step."
 
-#: resources/assets/javascripts/studip-ui.js:545
-#: resources/assets/javascripts/studip-ui.js:559
+#: resources/assets/javascripts/studip-ui.js:633
+#: resources/assets/javascripts/studip-ui.js:647
 msgid "Mai"
 msgstr "May"
 
@@ -4115,11 +3890,11 @@ msgstr "May"
 msgid "männlich"
 msgstr "male"
 
-#: resources/assets/javascripts/studip-ui.js:557
+#: resources/assets/javascripts/studip-ui.js:645
 msgid "Mär"
 msgstr "Mar"
 
-#: resources/assets/javascripts/studip-ui.js:543
+#: resources/assets/javascripts/studip-ui.js:631
 msgid "März"
 msgstr "March"
 
@@ -4132,7 +3907,7 @@ msgstr "Mulberry"
 msgid "Maximale Höhe"
 msgstr "Maximum height"
 
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:180
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:179
 msgid "Maximum"
 msgstr ""
 
@@ -4158,23 +3933,23 @@ msgstr "Key point"
 msgid "Metadaten"
 msgstr "Metadata"
 
-#: resources/assets/javascripts/studip-ui.js:581
+#: resources/assets/javascripts/studip-ui.js:669
 msgid "Mi"
 msgstr "Wed."
 
-#: resources/assets/javascripts/studip-ui.js:600
+#: resources/assets/javascripts/studip-ui.js:688
 msgid "Mikrosekunde"
 msgstr "Microsecond"
 
-#: resources/assets/javascripts/studip-ui.js:599
+#: resources/assets/javascripts/studip-ui.js:687
 msgid "Millisekunde"
 msgstr "Millisecond"
 
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:194
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:193
 msgid "Minimum"
 msgstr ""
 
-#: resources/assets/javascripts/studip-ui.js:597
+#: resources/assets/javascripts/studip-ui.js:685
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:26
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:23
 msgid "Minute"
@@ -4185,7 +3960,7 @@ msgstr "Minute"
 msgid "Minuten"
 msgstr "Minutes"
 
-#: resources/vue/components/courseware/CoursewareUnitItems.vue:40
+#: resources/vue/components/courseware/CoursewareUnitItems.vue:44
 msgid ""
 "Mit Courseware können Sie interaktive, multimediale Lerninhalte erstellen "
 "und nutzen. Die Lerninhalte lassen sich hierarchisch unterteilen und können "
@@ -4208,11 +3983,11 @@ msgid "Mitgliedschaft"
 msgstr "Decline membership"
 
 #: resources/assets/javascripts/lib/calendar.js:8
-#: resources/assets/javascripts/studip-ui.js:572
+#: resources/assets/javascripts/studip-ui.js:660
 msgid "Mittwoch"
 msgstr "Wednesday"
 
-#: resources/assets/javascripts/studip-ui.js:579
+#: resources/assets/javascripts/studip-ui.js:667
 msgid "Mo"
 msgstr "Mon."
 
@@ -4226,14 +4001,14 @@ msgstr "Do you really want to delete this section?"
 msgid "Möchten Sie die Freigabe für %{ pageTitle} wirklich löschen?"
 msgstr "Do you really want to delete the page?"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:206
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:207
 #, fuzzy
 msgid ""
 "Möchten Sie die Seite %{ pageTitle } und alle ihre Unterseiten wirklich "
 "löschen?"
 msgstr "Do you really want to delete the page?"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:202
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:203
 msgid "Möchten Sie die Seite wirklich löschen?"
 msgstr "Do you really want to delete the page?"
 
@@ -4289,7 +4064,7 @@ msgid "monatlich"
 msgstr "monthly"
 
 #: resources/assets/javascripts/lib/calendar.js:6
-#: resources/assets/javascripts/studip-ui.js:570
+#: resources/assets/javascripts/studip-ui.js:658
 msgid "Montag"
 msgstr "Monday"
 
@@ -4297,7 +4072,7 @@ msgstr "Monday"
 msgid "Multimedia"
 msgstr "Multimedia"
 
-#: resources/assets/javascripts/studip-ui.js:604
+#: resources/assets/javascripts/studip-ui.js:692
 msgid "nachm."
 msgstr "PM"
 
@@ -4311,12 +4086,11 @@ msgid "Nachrichtenbox schließen"
 msgstr "Close message box"
 
 #: resources/vue/components/FilesTable.vue:221
-#: resources/vue/components/MyCoursesTables.vue:101
+#: resources/vue/components/MyCoursesTables.vue:104
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:9
 #: resources/vue/components/courseware/CoursewareBiographyPersonalInformationBlock.vue:26
 #: resources/vue/components/courseware/CoursewareBiographyPersonalInformationBlock.vue:3
 #: resources/vue/components/courseware/CoursewareContentPermissions.vue:18
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:46
 #: resources/vue/components/courseware/CoursewareStructuralElementPermissions.vue:28
 #: resources/vue/components/courseware/CoursewareStructuralElementPermissions.vue:70
 #: resources/vue/components/courseware/CoursewareStructuralElementPermissions.vue:109
@@ -4324,7 +4098,7 @@ msgstr "Close message box"
 msgid "Name"
 msgstr "Name"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:204
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:206
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:12
 msgid "Name der neuen Seite"
 msgstr "New page name"
@@ -4390,28 +4164,27 @@ msgstr "Attribution & Sharing under the same conditions"
 msgid "Navigation"
 msgstr "Navigation"
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:58
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:68
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:59
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:69
 #, fuzzy
 msgid "Navigation öffnen"
 msgstr "Navigation"
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:57
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:68
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:58
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:69
 #, fuzzy
 msgid "Navigation schließen"
 msgstr "Close message box"
 
-#: resources/vue/components/responsive/NavigationItem.vue:40
+#: resources/vue/components/responsive/NavigationItem.vue
 msgid "Navigiere zu %{ title }"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:198
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:200
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:6
 msgid "Neben der aktuellen Seite"
 msgstr "Besides the current page"
 
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:28
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:227
 msgid "nein"
 msgstr "no"
@@ -4423,7 +4196,7 @@ msgstr "no"
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:38
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:59
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:74
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:51
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:52
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:10
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:31
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:14
@@ -4442,9 +4215,9 @@ msgstr "no"
 #: resources/vue/components/courseware/CoursewareUnitItemDialogSettings.vue:85
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:38
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:31
-#: resources/vue/components/questionnaires/InputArray.vue:95
-#: resources/vue/components/questionnaires/LikertEdit.vue:184
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:222
+#: resources/vue/components/questionnaires/InputArray.vue:93
+#: resources/vue/components/questionnaires/LikertEdit.vue:183
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:221
 msgid "Nein"
 msgstr "No"
 
@@ -4467,8 +4240,8 @@ msgstr "Create new date"
 msgid "Neues Lernmaterial angelegt."
 msgstr "Create a new learning module"
 
-#: resources/vue/components/courseware/CoursewareUnitItems.vue:51
-#: resources/vue/components/courseware/CoursewareUnitItems.vue:71
+#: resources/vue/components/courseware/CoursewareUnitItems.vue:55
+#: resources/vue/components/courseware/CoursewareUnitItems.vue:75
 #, fuzzy
 msgid "Neues Lernmaterial anlegen"
 msgstr "Upload new smiley"
@@ -4477,15 +4250,15 @@ msgstr "Upload new smiley"
 msgid "Nicht buchbare Räume:"
 msgstr "Non-allocatable rooms:"
 
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:93
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:99
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:94
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:100
 #, fuzzy
 msgid "nicht zugewiesene Inhalte"
 msgstr "%s assigned courses"
 
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:180
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:140
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:312
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:142
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:314
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:57
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:13
 msgid "Niveau"
@@ -4495,7 +4268,7 @@ msgstr "Level"
 msgid "Noch nicht komplett ausgefüllt."
 msgstr "Not yet filled in completely."
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:107
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:116
 msgid "normal"
 msgstr "normal"
 
@@ -4504,15 +4277,15 @@ msgstr "normal"
 msgid "Normal"
 msgstr "Normal"
 
-#: resources/assets/javascripts/studip-ui.js:565
+#: resources/assets/javascripts/studip-ui.js:653
 msgid "Nov"
 msgstr "Nov"
 
-#: resources/assets/javascripts/studip-ui.js:551
+#: resources/assets/javascripts/studip-ui.js:639
 msgid "November"
 msgstr "November"
 
-#: resources/vue/components/MyCoursesTables.vue:92
+#: resources/vue/components/MyCoursesTables.vue:95
 msgid "Nr."
 msgstr "No."
 
@@ -4520,12 +4293,17 @@ msgstr "No."
 msgid "Nur buchbare Räume anzeigen"
 msgstr "Display bookable rooms only"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:66
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:159
+#, fuzzy
+msgid "Nur eigene Werte anzeigen"
+msgstr "Display my courses only"
+
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:67
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:25
 msgid "nur für Lehrende"
 msgstr "for teachers only"
 
-#: resources/vue/components/MyCoursesNewContentToggle.vue:4
+#: resources/vue/components/MyCoursesNewContentToggle.vue:12
 msgid "Nur neue Inhalte anzeigen"
 msgstr "Only show new contents"
 
@@ -4534,7 +4312,7 @@ msgstr "Only show new contents"
 msgid "Nutzerspezifische ID übergeben"
 msgstr "Submit user-specific ID"
 
-#: resources/assets/javascripts/lib/user_filter.js:65
+#: resources/assets/javascripts/lib/user_filter.js:64
 msgid "oder"
 msgstr "or"
 
@@ -4548,8 +4326,8 @@ msgstr "select a different semester"
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:11
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:109
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:144
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:121
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:212
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:123
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:214
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:38
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:20
 msgid "OER-Material"
@@ -4560,12 +4338,12 @@ msgstr "OER material"
 msgid "Öffentlich verlinkte Seiten"
 msgstr "Public via link"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:396
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:404
 #, fuzzy
 msgid "Öffentlichen Link erzeugen"
 msgstr "Public via link"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1413
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:1421
 #, fuzzy
 msgid "Öffentlichen Link für Seite erzeugen"
 msgstr "As public link for unregistered users"
@@ -4576,7 +4354,7 @@ msgid ""
 "öffentlichen Links."
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:221
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:223
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:29
 #, fuzzy
 msgid "ohne Vorlage"
@@ -4587,25 +4365,25 @@ msgstr "no template"
 msgid "Ok"
 msgstr "Ok"
 
-#: resources/assets/javascripts/studip-ui.js:564
+#: resources/assets/javascripts/studip-ui.js:652
 msgid "Okt"
 msgstr "Oct"
 
-#: resources/assets/javascripts/studip-ui.js:550
+#: resources/assets/javascripts/studip-ui.js:638
 msgid "Oktober"
 msgstr "October"
 
-#: resources/vue/components/questionnaires/InputArray.vue:49
+#: resources/vue/components/questionnaires/InputArray.vue:47
 #, fuzzy
 msgid "Option"
 msgstr "Options"
 
-#: resources/vue/components/questionnaires/InputArray.vue:73
+#: resources/vue/components/questionnaires/InputArray.vue:71
 #, fuzzy
 msgid "Option hinzufügen"
 msgstr "Add link"
 
-#: resources/vue/components/questionnaires/InputArray.vue:59
+#: resources/vue/components/questionnaires/InputArray.vue:57
 #, fuzzy
 msgid "Option löschen"
 msgstr "Delete version"
@@ -4619,7 +4397,7 @@ msgstr "optional"
 msgid "Optional weitere Studiengangteile (max. 5)"
 msgstr "Optional additional components (max. 5)"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:43
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:44
 msgid "orange"
 msgstr "orange"
 
@@ -4648,7 +4426,7 @@ msgstr "Add oval"
 #: resources/vue/components/courseware/CoursewareContentLinks.vue:10
 #: resources/vue/components/courseware/CoursewareContentLinks.vue:36
 #: resources/vue/components/courseware/CoursewareContentLinks.vue:3
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:365
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:367
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:3
 #: resources/vue/components/courseware/PublicApp.vue:10
 msgid "Passwort"
@@ -4677,7 +4455,11 @@ msgstr "Add users"
 msgid "Personen löschen"
 msgstr "Delete account"
 
-#: resources/vue/components/courseware/CoursewareFileChooser.vue:26
+#: resources/vue/components/courseware/CoursewareUnitItems.vue:26
+#, fuzzy
+msgid "Persönliche Lernmaterialien"
+msgstr "Personal files"
+
 #: resources/vue/components/courseware/CoursewareFolderChooser.vue:65
 msgid "Persönlicher Dateibereich"
 msgstr "Personal file area"
@@ -4690,8 +4472,8 @@ msgid "Persönliches Ziel"
 msgstr "Personal files"
 
 #: resources/vue/components/questionnaires/FreetextEdit.vue:28
-#: resources/vue/components/questionnaires/LikertEdit.vue:153
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:168
+#: resources/vue/components/questionnaires/LikertEdit.vue:152
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:167
 #: resources/vue/components/questionnaires/VoteEdit.vue:57
 msgid "Pflichtfrage"
 msgstr "Mandatory question"
@@ -4706,7 +4488,7 @@ msgstr "Polar area chart"
 msgid "Port"
 msgstr "Port"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:195
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:197
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:3
 msgid "Position der neuen Seite"
 msgstr "Position of the new page"
@@ -4722,15 +4504,15 @@ msgstr "Position of the new page"
 msgid "Prima! Hier sind meine Vorschläge."
 msgstr "Great! Here are my suggestions."
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:97
 #: resources/vue/components/responsive/ResponsiveNavigation.vue:98
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:115
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:99
 #: resources/vue/components/responsive/ResponsiveNavigation.vue:116
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:117
 msgid "Profilnavigation öffnen"
 msgstr ""
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:144
 #: resources/vue/components/responsive/ResponsiveNavigation.vue:145
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:146
 #, fuzzy
 msgid "Profilnavigation schließen"
 msgstr "Close this dialog"
@@ -4745,17 +4527,13 @@ msgstr "C0de"
 #: resources/vue/components/courseware/CoursewareEmbedBlock.vue:33
 #: resources/vue/components/courseware/CoursewareEmbedBlock.vue:7
 #: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:19
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:39
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:41
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:19
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:43
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:45
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:14
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:7
 msgid "Quelle"
 msgstr "Resource"
-
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:8
-msgid "Quelle auswählen"
-msgstr "Select source"
 
 #: resources/vue/components/courseware/CoursewareBeforeAfterBlock.vue:24
 #: resources/vue/components/courseware/CoursewareBeforeAfterBlock.vue:18
@@ -4790,7 +4568,7 @@ msgstr "Rights"
 msgid "Rechteck hinzufügen"
 msgstr "Add rectangle"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:117
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:126
 msgid "riesig"
 msgstr "huge"
 
@@ -4799,7 +4577,7 @@ msgstr "huge"
 msgid "Ringdiagramm"
 msgstr "Donut"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:41
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:42
 msgid "rot"
 msgstr "red"
 
@@ -4809,16 +4587,16 @@ msgstr "red"
 msgid "Rot"
 msgstr "Red"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:77
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:78
 msgid "Rückgängig"
 msgstr "Undo"
 
-#: resources/assets/javascripts/studip-ui.js:584
+#: resources/assets/javascripts/studip-ui.js:672
 msgid "Sa"
 msgstr "Sat."
 
 #: resources/assets/javascripts/lib/calendar.js:11
-#: resources/assets/javascripts/studip-ui.js:575
+#: resources/assets/javascripts/studip-ui.js:663
 msgid "Samstag"
 msgstr "Saturday"
 
@@ -4827,19 +4605,15 @@ msgstr "Saturday"
 msgid "Säulendiagramm"
 msgstr "Bar chart"
 
-#: resources/assets/javascripts/lib/smiley_picker.js:83
-msgid "Schliessen"
-msgstr "Close"
-
 #: resources/vue/components/courseware/CoursewareRibbonToolbar.vue:68
 msgid "schließen"
 msgstr "close"
 
-#: resources/assets/javascripts/bootstrap/application.js:186
+#: resources/assets/javascripts/bootstrap/application.js:189
 #: resources/assets/javascripts/lib/dialog.js:419
 #: resources/assets/javascripts/lib/jsupdater.js:174
 #: resources/assets/javascripts/lib/qr_code.js:55
-#: resources/assets/javascripts/studip-ui.js:536
+#: resources/assets/javascripts/studip-ui.js:624
 #: resources/vue/components/StudipDialog.vue:85
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:114
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:245
@@ -4857,7 +4631,7 @@ msgstr "close"
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:77
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:82
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:87
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:859
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:867
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogImport.vue:30
 #: resources/vue/components/courseware/CoursewareUnitItem.vue:58
 #: resources/vue/components/courseware/CoursewareUnitItemDialogExport.vue:15
@@ -4901,7 +4675,7 @@ msgstr ""
 msgid "Schulisches Ziel"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:46
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:47
 msgid "schwarz"
 msgstr "black"
 
@@ -4923,25 +4697,21 @@ msgstr "Very fast"
 #: resources/vue/components/courseware/CoursewareDashboardTasks.vue:10
 #: resources/vue/components/courseware/CoursewareLinkBlock.vue:39
 #: resources/vue/components/courseware/CoursewareLinkBlock.vue:18
+#: resources/vue/components/courseware/CoursewareSharedItems.vue:18
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:23
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:45
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:47
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:19
-#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:31
-#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:28
+#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:32
+#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:29
 msgid "Seite"
 msgid_plural "Seiten"
 msgstr[0] "Page"
 msgstr[1] "Pages"
 
-#: resources/vue/components/courseware/CoursewareManagerFiling.vue:2
-#, fuzzy
-msgid "Seite an dieser Stelle einfügen"
-msgstr "insert here"
-
 #: resources/vue/components/courseware/CoursewareEmptyElementBox.vue:5
 #: resources/vue/components/courseware/CoursewareEmptyElementBox.vue:2
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:66
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:380
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:388
 msgid "Seite bearbeiten"
 msgstr "Edit page"
 
@@ -4951,30 +4721,30 @@ msgstr "Export page"
 
 #: resources/vue/components/courseware/CoursewareActionWidget.vue:24
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:85
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:393
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:856
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:401
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:864
 msgid "Seite hinzufügen"
 msgstr "Add page"
 
-#: resources/vue/mixins/courseware/import.js:178
+#: resources/vue/mixins/courseware/import.js:180
 #, fuzzy
 msgid "Seite konnte nicht erstellt werden"
 msgstr "Block could not be created"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:401
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:409
 msgid "Seite löschen"
 msgstr "Delete page"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:201
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:202
 msgid "Seite unwiderruflich löschen"
 msgstr "Delete page irreversibly"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:247
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:249
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:15
 msgid "Seite wurde erstellt am"
 msgstr "Page created on"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:243
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:245
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:11
 msgid "Seite wurde erstellt von"
 msgstr "Page created by"
@@ -4989,7 +4759,7 @@ msgid "Seiten importieren"
 msgstr "Import pages"
 
 #: resources/vue/components/courseware/CoursewareImportWidget.vue:27
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:43
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:45
 #, fuzzy
 msgid "Seiten kopieren"
 msgstr "Sort pages"
@@ -5000,80 +4770,6 @@ msgstr "Sort pages"
 msgid "Seiten verknüpfen"
 msgstr "Remove this course"
 
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:58
-#, fuzzy
-msgid ""
-"Seiten, Abschnitte und Blöcke lassen sich aus einer anderen Veranstaltung "
-"und Ihren\n"
-"                            eigenen Inhalten kopieren.\n"
-"                            Hierzu wählen Sie auf der linken Seite unter "
-"\"Diese Courseware\" die Schaltfläche\n"
-"                            \"Seite an dieser Stelle einfügen\", \"Abschnitt "
-"an dieser Stelle einfügen\" oder\n"
-"                            \"Block an dieser Stelle einfügen\". Wählen Sie "
-"dann auf der rechten Seite unter\n"
-"                            \"Kopieren\" erst die Veranstaltung aus der Sie "
-"kopieren möchten oder Ihre eigenen\n"
-"                            Inhalte. Wählen sie dann das Objekt aus, das Sie "
-"kopieren möchten. Kopierbare Objekte\n"
-"                            erkennen Sie an den zwei nach links zeigenden "
-"gelben Pfeilen."
-msgstr ""
-"Pages, sections and blocks can be copied from another course and from your "
-"own contents.\n"
-"For that, select \"Insert page here\", \"Insert section here\" or \"Insert "
-"block here\" below \"This Courseware\" on the left.\n"
-"After that, first select the course from which to copy or your own contents "
-"below \"Copy\" on the right side.\n"
-"Objects that can be copied can be identified by the two yellow arrows "
-"pointing to the left."
-
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:38
-#, fuzzy
-msgid ""
-"Seiten, Abschnitte und Blöcke lassen sich in ihrer Reihenfolge sortieren.\n"
-"                            Hierzu wählen Sie auf der linken Seite unter "
-"\"Diese Courseware\" die Schaltfläche \"Unterseiten sortieren\",\n"
-"                            \"Abschnitte sortieren\" oder \"Blöcke "
-"sortieren\".\n"
-"                            An den Objekten werden Pfeile angezeigt, mit "
-"diesen können die Objekte an die gewünschte\n"
-"                            Position gebracht werden. Um die neue Sortierung "
-"zu speichern, wählen Sie \"Sortieren beenden\".\n"
-"                            Sie können die Änderungen auch rückgängig "
-"machen, indem Sie \"Sortieren abbrechen\" wählen."
-msgstr ""
-"Pages, sections and blocks can be sorted.\n"
-"For that, select \"Sort pages\", \"Sort sections\" or \"Sort blocks\" below "
-"\"This Courseware\" on the left.\n"
-"Arrows will be shown at the objects that can be used to move the objects to "
-"the desired position.\n"
-"To save the new sorting, select \"Finish sorting\". You can also revert the "
-"changes by selecting \"Cancel sorting\"."
-
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:48
-#, fuzzy
-msgid ""
-"Seiten, Abschnitte und Blöcke lassen sich verschieben.\n"
-"                            Hierzu wählen Sie auf der linken Seite unter "
-"\"Diese Courseware\" die Schaltfläche\n"
-"                            \"Seite an dieser Stelle einfügen\", \"Abschnitt "
-"an dieser Stelle einfügen\" oder\n"
-"                            \"Block an dieser Stelle einfügen\". Wählen Sie "
-"dann auf der rechten Seite unter\n"
-"                            \"Verschieben\" das Objekt aus, das Sie "
-"verschieben möchten. Verschiebbare Objekte\n"
-"                            erkennen Sie an den zwei nach links zeigenden "
-"gelben Pfeilen."
-msgstr ""
-"Pages, sections and blocks can be moved.\n"
-"For that, select \"Insert page here\", \"Insert section here\" or \"Insert "
-"block here\" below \"This Courseware\" on the left.\n"
-"After that, select the object you want to move below \"Move\" on the right "
-"side.\n"
-"Objects that can be moved can be identified by the two yellow arrows "
-"pointing to the left."
-
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:29
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:22
 msgid "Seitenverhältnis"
@@ -5083,7 +4779,7 @@ msgstr "Aspect ratio"
 msgid "Sektion entfernen"
 msgstr "Remove section"
 
-#: resources/assets/javascripts/studip-ui.js:598
+#: resources/assets/javascripts/studip-ui.js:686
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:35
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:32
 msgid "Sekunde"
@@ -5094,6 +4790,11 @@ msgstr "Second"
 msgid "Sekunden"
 msgstr "Seconds"
 
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:164
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:163
+msgid "Semester"
+msgstr "Semester"
+
 #: resources/vue/components/courseware/CoursewareBlockComments.vue:8
 #: resources/vue/components/courseware/CoursewareBlockFeedback.vue:9
 #: resources/vue/components/courseware/CoursewareStructuralElementComments.vue:7
@@ -5101,11 +4802,11 @@ msgstr "Seconds"
 msgid "Senden"
 msgstr "Send"
 
-#: resources/assets/javascripts/studip-ui.js:563
+#: resources/assets/javascripts/studip-ui.js:651
 msgid "Sep"
 msgstr "Sep"
 
-#: resources/assets/javascripts/studip-ui.js:549
+#: resources/assets/javascripts/studip-ui.js:637
 msgid "September"
 msgstr "September"
 
@@ -5117,7 +4818,7 @@ msgstr "Sequential"
 msgid "Server hinzufügen"
 msgstr "Add server"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:178
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:180
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:95
 msgid "Sichtbar ab"
 msgstr "Visible from"
@@ -5130,17 +4831,17 @@ msgstr "set visible"
 msgid "Sichtbarkeit"
 msgstr "Visibility"
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:84
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:86
 #, fuzzy
 msgid "Sidebar anzeigen"
 msgstr "Show picture"
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:82
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:84
 #, fuzzy
 msgid "Sidebar ausblenden"
 msgstr "Hide comments"
 
-#: resources/vue/components/responsive/ResponsiveContentBar.vue:130
+#: resources/vue/components/responsive/ResponsiveContentBar.vue:131
 #, fuzzy
 msgid "Sidebar einblenden"
 msgstr "Show hints"
@@ -5180,16 +4881,11 @@ msgstr "You did not specify who should receive the message!"
 msgid "Sie haben noch keine Anmelderegeln festgelegt."
 msgstr "You haven't yet defined any admission rule."
 
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:177
-#, fuzzy
-msgid "Sie haben noch keine eigenen Inhalte angelegt."
-msgstr "You did not yet create own contents"
-
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:35
 msgid "Sie haben noch keine Lieblingsblöcke ausgewählt."
 msgstr "You have not selected any favorite blocks yet."
 
-#: resources/assets/javascripts/lib/admission.js:163
+#: resources/assets/javascripts/lib/admission.js:162
 msgid "Sie haben noch niemanden hinzugefügt."
 msgstr "No-one added yet."
 
@@ -5210,7 +4906,7 @@ msgstr ""
 "<strong>Search / add courses</strong> </a> to enrol into courses.\n"
 "                    </br>"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:323
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:325
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:24
 #, fuzzy
 msgid "Sie können diese Daten unter \"Seite bearbeiten\" verändern."
@@ -5256,23 +4952,19 @@ msgstr "You have uploaded the following files to this folder:"
 msgid "Sie sind nicht mehr im System angemeldet."
 msgstr "You are no longer logged in."
 
-#: resources/assets/javascripts/lib/forum.js:114
+#: resources/assets/javascripts/lib/forum.js:110
 msgid "Sind sie sicher, dass Sie diese Kategorie entfernen möchten? "
 msgstr "Are you sure to delete this category?"
 
-#: resources/assets/javascripts/lib/forum.js:187
+#: resources/assets/javascripts/lib/forum.js:183
 msgid "Sind sie sicher, dass Sie diesen Bereich löschen möchten? "
 msgstr "Are you sure to delete this area?"
 
-#: resources/assets/javascripts/lib/forum.js:382
+#: resources/assets/javascripts/lib/forum.js:378
 msgid "Sind sie sicher, dass Sie ihren bisherigen Beitrag verwerfen wollen?"
 msgstr "Do really want to discard your posting?"
 
-#: resources/assets/javascripts/lib/smiley_picker.js:70
-msgid "Smileys"
-msgstr "Smileys"
-
-#: resources/assets/javascripts/studip-ui.js:578
+#: resources/assets/javascripts/studip-ui.js:666
 msgid "So"
 msgstr "Sun."
 
@@ -5285,7 +4977,7 @@ msgid "Sonnenschein"
 msgstr "Sunglow"
 
 #: resources/assets/javascripts/lib/calendar.js:12
-#: resources/assets/javascripts/studip-ui.js:569
+#: resources/assets/javascripts/studip-ui.js:657
 msgid "Sonntag"
 msgstr "Sunday"
 
@@ -5297,24 +4989,12 @@ msgstr "Miscellaneous"
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:69
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:14
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:150
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:124
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:215
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:126
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:217
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:41
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:23
 msgid "Sonstiges"
 msgstr "Miscellanea"
-
-#: resources/vue/components/courseware/CoursewareManagerContainer.vue:25
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:27
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:47
-msgid "Sortieren abbrechen"
-msgstr "Cancel sorting"
-
-#: resources/vue/components/courseware/CoursewareManagerContainer.vue:22
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:24
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:44
-msgid "Sortieren beenden"
-msgstr "Finish sorting"
 
 #: resources/assets/javascripts/chunks/tablesorter.js:26
 #, fuzzy
@@ -5337,7 +5017,7 @@ msgstr "Wait list deactivated"
 msgid "Speichern"
 msgstr "Save"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:59
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:60
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:18
 msgid "Speicherort"
 msgstr "Storage location"
@@ -5367,7 +5047,7 @@ msgstr "Text language:"
 msgid "Standard"
 msgstr "Standard"
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:191
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:192
 msgid "Start"
 msgstr "Start"
 
@@ -5412,7 +5092,7 @@ msgstr "Search course of study"
 msgid "Studierende"
 msgstr "Students"
 
-#: resources/assets/javascripts/studip-ui.js:596
+#: resources/assets/javascripts/studip-ui.js:684
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:17
 #: resources/vue/components/courseware/CoursewareDateBlock.vue:14
 msgid "Stunde"
@@ -5458,17 +5138,17 @@ msgstr "Search results"
 msgid "Suchergebnisse schließen"
 msgstr "Search results"
 
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:59
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:61
 #: resources/vue/components/courseware/CoursewareTabsContainer.vue:29
 msgid "Tab hinzufügen"
 msgstr "Add tab"
 
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:55
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:57
 #: resources/vue/components/courseware/CoursewareTabsContainer.vue:25
 msgid "Tab löschen"
 msgstr "Delete tab"
 
-#: resources/vue/components/MyCoursesSidebarSwitch.vue:4
+#: resources/vue/components/MyCoursesSidebarSwitch.vue:13
 msgid "Tabellarische Ansicht"
 msgstr "Tabular view"
 
@@ -5531,8 +5211,8 @@ msgstr "Text front"
 msgid "Texte"
 msgstr "Texts"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:37
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:34
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:38
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:35
 msgid "Texteingabe mit Enter-Taste bestätigen"
 msgstr "Confirm text input with Enter key"
 
@@ -5543,21 +5223,21 @@ msgstr "Confirm text input with Enter key"
 msgid "Textfarbe"
 msgstr "Text colour"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:129
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:138
 msgid "Textwerkzeug"
 msgstr "Text tool"
 
-#: resources/assets/javascripts/lib/forum.js:826
+#: resources/assets/javascripts/lib/forum.js:822
 msgid "Thema hervorheben"
 msgstr "Mark topic"
 
-#: resources/assets/javascripts/lib/forum.js:762
-#: resources/assets/javascripts/lib/forum.js:779
+#: resources/assets/javascripts/lib/forum.js:758
+#: resources/assets/javascripts/lib/forum.js:775
 msgid "Thema öffnen"
 msgstr "Open topic"
 
-#: resources/assets/javascripts/lib/forum.js:722
-#: resources/assets/javascripts/lib/forum.js:738
+#: resources/assets/javascripts/lib/forum.js:718
+#: resources/assets/javascripts/lib/forum.js:734
 msgid "Thema schließen"
 msgstr "Close topic"
 
@@ -5569,14 +5249,14 @@ msgstr "Close topic"
 #: resources/vue/components/courseware/CoursewareIframeBlock.vue:3
 #: resources/vue/components/courseware/CoursewareLinkBlock.vue:24
 #: resources/vue/components/courseware/CoursewareLinkBlock.vue:3
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:264
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:285
 #: resources/vue/components/courseware/CoursewareShelfDialogImport.vue:39
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:88
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:235
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:343
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:90
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:237
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:345
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:5
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:3
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:329
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:350
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:47
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:27
 msgid "Titel"
@@ -5587,9 +5267,9 @@ msgstr "Title"
 msgid "Titel des Lernmaterials"
 msgstr "Tab title"
 
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:33
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:37
 #: resources/vue/components/courseware/CoursewareAccordionContainer.vue:4
-#: resources/vue/components/courseware/CoursewareTabsContainer.vue:34
+#: resources/vue/components/courseware/CoursewareTabsContainer.vue:36
 #: resources/vue/components/courseware/CoursewareTabsContainer.vue:4
 msgid "Title"
 msgstr "Title"
@@ -5623,7 +5303,6 @@ msgstr "Turkish"
 #: resources/vue/components/FilesTable.vue:212
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:13
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:7
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:32
 msgid "Typ"
 msgstr "Type"
 
@@ -5634,7 +5313,7 @@ msgstr ""
 
 #: resources/vue/components/courseware/CoursewareAudioBlock.vue:63
 #: resources/vue/components/courseware/CoursewareAudioBlock.vue:3
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:44
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:45
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:3
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:20
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:3
@@ -5643,7 +5322,7 @@ msgstr ""
 #: resources/vue/components/courseware/CoursewareEmbedBlock.vue:29
 #: resources/vue/components/courseware/CoursewareEmbedBlock.vue:3
 #: resources/vue/components/courseware/CoursewareFolderBlock.vue:212
-#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:43
+#: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:47
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:3
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:10
 #: resources/vue/components/courseware/CoursewareVideoBlock.vue:3
@@ -5659,15 +5338,15 @@ msgstr "Time"
 msgid "Um Aufnahmen zu ermöglichen, muss ein Ordner ausgewählt werden."
 msgstr ""
 
-#: resources/vue/mixins/MyCoursesMixin.js:48
+#: resources/vue/mixins/MyCoursesMixin.js:64
 msgid ""
-"Um die Veranstaltung sichtbar zu machen, wählen Sie den Punkt "
-"\"Sichtbarkeit\" im Administrationsbereich der Veranstaltung."
+"Um die Veranstaltung sichtbar zu machen, wählen Sie den Punkt \"Sichtbarkeit"
+"\" im Administrationsbereich der Veranstaltung."
 msgstr ""
 "In order to enable visibility of the course, please choose the tab "
 "\"visibility\" in the administration area of the course."
 
-#: resources/vue/mixins/MyCoursesMixin.js:50
+#: resources/vue/mixins/MyCoursesMixin.js:66
 msgid ""
 "Um die Veranstaltung sichtbar zu machen, wenden Sie sich an Administrierende."
 msgstr "To make this course visible you need to contact the administrators."
@@ -5680,7 +5359,7 @@ msgstr "What kind of file(s) are we talking about?"
 msgid "unbekannt"
 msgstr "unknown"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:182
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:184
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:99
 msgid "Unsichtbar ab"
 msgstr "Invisible from"
@@ -5694,17 +5373,16 @@ msgstr "invisible for users without write permission"
 msgid "unsichtbar setzen"
 msgstr "set invisible"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:200
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:202
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:8
 msgid "Unterhalb der aktuellen Seite"
 msgstr "Below current page"
 
-#: resources/vue/components/responsive/NavigationItem.vue:46
+#: resources/vue/components/responsive/NavigationItem.vue
 msgid "Unternavigation zu %{ title } öffnen"
 msgstr ""
 
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:181
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:297
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:318
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:134
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:168
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:339
@@ -5712,19 +5390,14 @@ msgstr ""
 msgid "Unterseiten"
 msgstr "Subtitle"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:269
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:292
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:271
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:294
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:6
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:5
 msgid "Unterseiten exportieren"
 msgstr "Export sub pages"
 
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:41
-#, fuzzy
-msgid "Unterseiten sortieren"
-msgstr "Export sub pages"
-
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:329
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:331
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:30
 msgid "Unterseiten veröffentlichen"
 msgstr "Publish sub pages"
@@ -5756,16 +5429,12 @@ msgstr "Subtitle"
 msgid "URL"
 msgstr "URL"
 
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:42
-#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:161
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:41
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:160
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:44
+#: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:181
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:43
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:180
 msgid "Veranstaltung"
 msgstr "Course"
-
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:9
-msgid "Veranstaltung auswählen"
-msgstr "Choose course"
 
 #: resources/assets/javascripts/lib/overlapping.js:84
 msgid "Veranstaltung berücksichtigen"
@@ -5775,13 +5444,9 @@ msgstr "Regard course"
 msgid "Veranstaltung nicht berücksichtigen"
 msgstr "Do not regard course"
 
-#: resources/vue/components/courseware/CoursewareManagerCopySelector.vue:12
-msgid "Veranstaltungen"
-msgstr "Courses"
-
 #: resources/assets/javascripts/lib/schedule.js:129
 #: resources/assets/javascripts/lib/schedule.js:162
-#: resources/vue/mixins/MyCoursesMixin.js:61
+#: resources/vue/mixins/MyCoursesMixin.js:77
 msgid "Veranstaltungsdetails"
 msgstr "Course details"
 
@@ -5798,7 +5463,6 @@ msgstr ""
 msgid "Verhindern"
 msgstr "Prevent"
 
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:195
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:27
 #, fuzzy
 msgid "Verknüpfen"
@@ -5825,7 +5489,7 @@ msgstr "Automatic enrolment"
 msgid "Verlängerungsanfrage bearbeiten"
 msgstr "Edit requests"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:177
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:178
 msgid "Veröffentlichen"
 msgstr "Publish"
 
@@ -5840,11 +5504,12 @@ msgstr "published at"
 msgid "Veröffentlichung"
 msgstr "Publish"
 
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:166
-msgid "Verschieben"
-msgstr "Move"
+#: resources/vue/components/courseware/CoursewareTree.vue:100
+msgid ""
+"Verschieben nicht möglich. Sie haben keine Schreibrechte für die Ziel-Seite."
+msgstr ""
 
-#: resources/vue/mixins/MyCoursesMixin.js:45
+#: resources/vue/mixins/MyCoursesMixin.js:61
 msgid ""
 "Versteckte Veranstaltungen können über die Suchfunktionen nicht gefunden "
 "werden."
@@ -5889,7 +5554,7 @@ msgid "Vollbild"
 msgstr "Full"
 
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:182
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:141
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:143
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:58
 msgid "von"
 msgstr "from"
@@ -5898,7 +5563,7 @@ msgstr "from"
 msgid "Von mir geteilte Lerninhalte"
 msgstr ""
 
-#: resources/assets/javascripts/studip-ui.js:538
+#: resources/assets/javascripts/studip-ui.js:626
 msgid "Vor"
 msgstr "Before"
 
@@ -5906,13 +5571,9 @@ msgstr "Before"
 msgid "Vor %s Minuten"
 msgstr "%s minutes ago"
 
-#: resources/vue/components/courseware/CoursewareManagerElement.vue:53
-msgid "Vorgang läuft. Bitte warten Sie einen Moment."
-msgstr "Process running. Please wait a moment."
-
-#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:141
-#: resources/vue/components/courseware/CoursewareListContainer.vue:109
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:457
+#: resources/vue/components/courseware/CoursewareAccordionContainer.vue:143
+#: resources/vue/components/courseware/CoursewareListContainer.vue:107
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:462
 #: resources/vue/components/courseware/CoursewareTree.vue:48
 #, fuzzy
 msgid "Vorgang wird bearbeitet..."
@@ -5952,44 +5613,15 @@ msgstr "Select search template"
 msgid "Vorlagen"
 msgstr "Templates"
 
-#: resources/assets/javascripts/studip-ui.js:603
+#: resources/assets/javascripts/studip-ui.js:691
 msgid "vorm."
 msgstr "AM"
 
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:304
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:306
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:5
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:742
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:747
 msgid "Vorschaubild"
 msgstr "Preview image"
-
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:26
-#, fuzzy
-msgid ""
-"Wählen Sie auf der linken Seite \"Diese Courseware\" aus.\n"
-"                            Beim Laden der Seite ist dies immer gewählt. Die "
-"Überschrift\n"
-"                            gibt an, welche Seite Sie gerade ausgewählt "
-"haben. Darunter befinden\n"
-"                            sich die Abschnitte der Seite und innerhalb "
-"dieser deren Blöcke.\n"
-"                            Möchten Sie eine Seite, die unterhalb der "
-"gewählten liegt, bearbeiten,\n"
-"                            können Sie diese über die Schaltflächen im "
-"Bereich \"Unterseiten\" wählen.\n"
-"                            Über der Überschrift wird eine Navigation "
-"eingeblendet, mit der Sie beliebig\n"
-"                            weit hoch in der Hierarchie springen können."
-msgstr ""
-"Select \"This Courseware\" on the left.\n"
-"This is alway selected while loading the page. The heading shows which page "
-"you\n"
-"have currently selected. Below that are the sections of the page and in them "
-"their blocks.\n"
-"If you want to edit a page that lies below the selected one, you can select "
-"that one via\n"
-"the buttons in the area \"Pages\". A navigation is shown above the heading. "
-"With it you can\n"
-"jump up the hierarchy as far as you wish."
 
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:22
 msgid ""
@@ -6032,16 +5664,11 @@ msgstr ""
 msgid ""
 "Wählen Sie die zu verteilende Aufgabenvorlage aus. Vorausgewählt ist die "
 "oberste Seite des ausgewählten Lernmaterials. Unterseiten erreichen Sie über "
-"die Schaltflächen im Bereich \"Unterseiten\". Sie können über die \"zurück "
-"zu\" Schaltfläche das übergeordnete Element anwählen. Die ausgewählte "
+"die Schaltflächen im Bereich \"Unterseiten\". Sie können über die \"zurück zu"
+"\" Schaltfläche das übergeordnete Element anwählen. Die ausgewählte "
 "Aufgabenvorlage ist mit einem Kontrollhaken markiert. Nur Seiten der "
 "Kategorie \"Aufgabenvorlage\" können verteilt werden."
 msgstr ""
-
-#: resources/vue/components/courseware/CoursewareManagerTaskDistributor.vue:13
-#, fuzzy
-msgid "wählen Sie eine Vorlage aus"
-msgstr "Please select a file"
 
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:17
 msgid ""
@@ -6119,7 +5746,7 @@ msgstr "Web address"
 msgid "Weiblich"
 msgstr "female"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:37
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:38
 msgid "weiß"
 msgstr ""
 
@@ -6166,26 +5793,11 @@ msgstr "Work"
 msgid "Wert"
 msgstr "Value"
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:63
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:64
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:22
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:157
 msgid "Werte anderer Nutzer anzeigen"
 msgstr "Show values of other users"
-
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:103
-msgid "Wie finde ich die gewünschte Stelle?"
-msgstr "How do I find the right place?"
-
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:148
-msgid "Wie kopiere ich Objekte?"
-msgstr "How do I copy objects?"
-
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:118
-msgid "Wie sortiere ich Objekte?"
-msgstr "How do I sort objects?"
-
-#: resources/vue/components/courseware/CoursewareCourseManager.vue:133
-msgid "Wie verschiebe ich Objekte?"
-msgstr "How do I move objects?"
 
 #: resources/assets/javascripts/cke/wiki-link/formview.js:23
 #, fuzzy
@@ -6196,7 +5808,7 @@ msgstr "Wiki pages"
 msgid "Willkommen bei Courseware"
 msgstr "Welcome to Courseware"
 
-#: resources/assets/javascripts/lib/admission.js:23
+#: resources/assets/javascripts/lib/admission.js:22
 msgid "Wird geladen"
 msgstr "Loading"
 
@@ -6205,13 +5817,13 @@ msgstr "Loading"
 msgid "Wird im Moment von %{ userName } bearbeitet"
 msgstr ""
 
-#: resources/vue/components/questionnaires/InputArray.vue:93
-#: resources/vue/components/questionnaires/LikertEdit.vue:182
-#: resources/vue/components/questionnaires/RangescaleEdit.vue:220
+#: resources/vue/components/questionnaires/InputArray.vue:91
+#: resources/vue/components/questionnaires/LikertEdit.vue:181
+#: resources/vue/components/questionnaires/RangescaleEdit.vue:219
 msgid "Wirklich löschen?"
 msgstr "Really delete?"
 
-#: resources/assets/javascripts/studip-ui.js:586
+#: resources/assets/javascripts/studip-ui.js:674
 msgid "Wo"
 msgstr "Where"
 
@@ -6244,11 +5856,11 @@ msgstr "has been created successfully."
 msgid "Zeichen verbleibend: "
 msgstr "Remaining characters: "
 
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:124
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:133
 msgid "Zeichenwerkzeug"
 msgstr "Drawing tool"
 
-#: resources/assets/javascripts/studip-ui.js:595
+#: resources/assets/javascripts/studip-ui.js:683
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:36
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:93
 #: resources/vue/components/courseware/CoursewareTimelineBlock.vue:16
@@ -6256,7 +5868,7 @@ msgstr "Drawing tool"
 msgid "Zeit"
 msgstr "Time"
 
-#: resources/assets/javascripts/studip-ui.js:594
+#: resources/assets/javascripts/studip-ui.js:682
 msgid "Zeit wählen"
 msgstr "Select time"
 
@@ -6282,7 +5894,7 @@ msgstr ""
 msgid "Zeitraum zwischen Erinnerungen"
 msgstr ""
 
-#: resources/assets/javascripts/studip-ui.js:601
+#: resources/assets/javascripts/studip-ui.js:689
 msgid "Zeitzone"
 msgstr "Timezone"
 
@@ -6342,13 +5954,13 @@ msgid "Zufallszeichen für Verschlüsselung (Salt)"
 msgstr "Random character for encryption (Salt)"
 
 #: resources/vue/components/courseware/CoursewareBlockInfo.vue:22
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:255
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:257
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:23
 msgid "Zuletzt bearbeitet am"
 msgstr "Last changed on"
 
 #: resources/vue/components/courseware/CoursewareBlockInfo.vue:18
-#: resources/vue/components/courseware/CoursewareStructuralElement.vue:251
+#: resources/vue/components/courseware/CoursewareStructuralElement.vue:253
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:19
 msgid "Zuletzt bearbeitet von"
 msgstr "Last changed by"
@@ -6362,8 +5974,8 @@ msgstr "Wiki start page"
 msgid "Zum Hauptordner"
 msgstr "Go to main folder"
 
-#: resources/vue/components/responsive/ResponsiveNavigation.vue:173
 #: resources/vue/components/responsive/ResponsiveNavigation.vue:174
+#: resources/vue/components/responsive/ResponsiveNavigation.vue:175
 #, fuzzy
 msgid "Zum Start"
 msgstr "Start"
@@ -6371,10 +5983,6 @@ msgstr "Start"
 #: resources/vue/components/BlubberGlobalstream.vue:17
 msgid "Zur Diskussion"
 msgstr "Go to discussion"
-
-#: resources/assets/javascripts/lib/smiley_picker.js:75
-msgid "Zur Gesamtübersicht"
-msgstr "Back to overview"
 
 #: resources/vue/components/courseware/CoursewareDialogCardsBlock.vue:102
 msgid "zur nächsten Karte"
@@ -6391,13 +5999,13 @@ msgstr "to the previous card"
 msgid "zurück"
 msgstr "back"
 
-#: resources/assets/javascripts/studip-ui.js:537
+#: resources/assets/javascripts/studip-ui.js:625
 #: resources/vue/components/StudipPagination.vue:38
 #: resources/vue/components/courseware/CoursewareAudioBlock.vue:108
 msgid "Zurück"
 msgstr "Back"
 
-#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:292
+#: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:313
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:129
 #, fuzzy
 msgid "zurück zu %{ parentTitle }"
@@ -6410,7 +6018,7 @@ msgid "zurück zur übergeordneten Seite"
 msgstr "URL to superior level"
 
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:12
-#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:72
+#: resources/vue/components/courseware/CoursewareCanvasBlock.vue:73
 msgid "Zurücksetzen"
 msgstr "Reset"
 
@@ -6421,6 +6029,326 @@ msgstr "Additional information"
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:192
 msgid "zweites Element"
 msgstr "second element"
+
+#, fuzzy
+#~ msgid "%{ elementTitle } kopieren"
+#~ msgstr "Copy admission/course set"
+
+#, fuzzy
+#~ msgid "%{ elementTitle } verschieben"
+#~ msgstr "Move this element down"
+
+#, fuzzy
+#~ msgid "%{ pageTitle } konnte nicht kopiert werden."
+#~ msgstr "Data could not be copied!"
+
+#, fuzzy
+#~ msgid "%{ pageTitle } konnte nicht verknüpft werden."
+#~ msgstr "%s could not be removed."
+
+#~ msgid "Abschnitt"
+#~ msgstr "Section"
+
+#, fuzzy
+#~ msgid "Abschnitt \"%{ containerTitle }\" konnte nicht kopiert werden"
+#~ msgstr "Section could not be copied"
+
+#, fuzzy
+#~ msgid "Abschnitt an dieser Stelle einfügen"
+#~ msgstr "insert here"
+
+#~ msgid "Abschnitte sortieren"
+#~ msgstr "Sort sections"
+
+#, fuzzy
+#~ msgid "Alle Inhalte kopieren"
+#~ msgstr "Copy from my contents"
+
+#~ msgid "Alles exportieren"
+#~ msgstr "Export all"
+
+#~ msgid "Aufgabe"
+#~ msgstr "Task"
+
+#, fuzzy
+#~ msgid "Aufgabe Gruppen zuweisen"
+#~ msgstr "Assign group"
+
+#, fuzzy
+#~ msgid "Aufgabe Studierenden zuweisen"
+#~ msgstr "Assign all search results"
+
+#, fuzzy
+#~ msgid "Aufgabe wurde verteilt."
+#~ msgstr "%s object processed."
+
+#, fuzzy
+#~ msgid "Aus persönlichen Lernmaterialien kopieren"
+#~ msgstr "Personal files"
+
+#~ msgid "Aus Veranstaltung kopieren"
+#~ msgstr "Copy from course"
+
+#, fuzzy
+#~ msgid "Beim Kopiervorgang sind Fehler aufgetreten."
+#~ msgstr "Error occurred while converting."
+
+#, fuzzy
+#~ msgid ""
+#~ "Bitte wählen aus, an welcher Stelle die Aufgabe eingefügt werden soll."
+#~ msgstr "Please select a place where the block should be inserted."
+
+#, fuzzy
+#~ msgid "Bitte wählen Sie aus, an wen die Aufgabe verteilt werden sollen."
+#~ msgstr "Please select a place where the block should be inserted."
+
+#, fuzzy
+#~ msgid "Bitte wählen Sie eine Abgabefrist aus."
+#~ msgstr "Please select a file"
+
+#, fuzzy
+#~ msgid "Bitte wählen Sie einen Aufgabentitel aus."
+#~ msgstr "Please select a file"
+
+#, fuzzy
+#~ msgid "Bitte wählen Sie mindestens eine Gruppe aus."
+#~ msgstr "Please select at least one day!"
+
+#, fuzzy
+#~ msgid "Bitte wählen Sie mindestens einen Studierenden aus."
+#~ msgstr "Please select at least one day!"
+
+#, fuzzy
+#~ msgid "Block \"%{ blockTitle }\" konnte nicht kopiert werden"
+#~ msgstr "Block could not be copied"
+
+#, fuzzy
+#~ msgid "Block an dieser Stelle einfügen"
+#~ msgstr "insert here"
+
+#~ msgid "Blöcke sortieren"
+#~ msgstr "Sort blocks"
+
+#~ msgid "Dateibereich der Veranstaltung"
+#~ msgstr "Course file area"
+
+#~ msgid "Der Kopiervorgang ist fehlgeschlagen."
+#~ msgstr "The copy operation has failed."
+
+#~ msgid "Diese Courseware"
+#~ msgstr "This Courseware"
+
+#~ msgid "Dieser Abschnitt enthält keine Blöcke."
+#~ msgstr "This section does not contain blocks."
+
+#~ msgid "Dieses Element enthält keine Abschnitte."
+#~ msgstr "This element does not contain sections."
+
+#, fuzzy
+#~ msgid "Dieses Element enthält keine Unterseiten."
+#~ msgstr "This element does not contain pages."
+
+#~ msgid "Element nach oben verschieben"
+#~ msgstr "Move this element up"
+
+#~ msgid "Element nach unten verschieben"
+#~ msgstr "Move this element down"
+
+#, fuzzy
+#~ msgid "Es wurden keine Veranstaltung mit Courseware-Inhalten gefunden."
+#~ msgstr "No course found."
+
+#~ msgid "FAQ"
+#~ msgstr "FAQ"
+
+#, fuzzy
+#~ msgid "für Gruppen"
+#~ msgstr "Groups"
+
+#, fuzzy
+#~ msgid "für Studierende"
+#~ msgstr "Students"
+
+#, fuzzy
+#~ msgid "Import fehlgeschlagen. Es sind Fehler aufgetreten!"
+#~ msgstr "Error during upload"
+
+#~ msgid ""
+#~ "Import läuft. Bitte verlassen Sie die Seite nicht bis der Import "
+#~ "abgeschlossen wurde."
+#~ msgstr ""
+#~ "Import in progress. Please do not leave the page until the import is "
+#~ "completed."
+
+#, fuzzy
+#~ msgid "In dieser Veranstaltung wurden noch keine Inhalte angelegt."
+#~ msgstr "No contents have been created in this course yet"
+
+#, fuzzy
+#~ msgid "Inhalte werden kopiert…"
+#~ msgstr "Contents are being loaded"
+
+#, fuzzy
+#~ msgid "Kopiervorgang abgeschlossen."
+#~ msgstr "The copy operation has failed."
+
+#~ msgid "Quelle auswählen"
+#~ msgstr "Select source"
+
+#~ msgid "Schliessen"
+#~ msgstr "Close"
+
+#, fuzzy
+#~ msgid "Seite an dieser Stelle einfügen"
+#~ msgstr "insert here"
+
+#, fuzzy
+#~ msgid ""
+#~ "Seiten, Abschnitte und Blöcke lassen sich aus einer anderen Veranstaltung "
+#~ "und Ihren\n"
+#~ "                            eigenen Inhalten kopieren.\n"
+#~ "                            Hierzu wählen Sie auf der linken Seite unter "
+#~ "\"Diese Courseware\" die Schaltfläche\n"
+#~ "                            \"Seite an dieser Stelle einfügen\", "
+#~ "\"Abschnitt an dieser Stelle einfügen\" oder\n"
+#~ "                            \"Block an dieser Stelle einfügen\". Wählen "
+#~ "Sie dann auf der rechten Seite unter\n"
+#~ "                            \"Kopieren\" erst die Veranstaltung aus der "
+#~ "Sie kopieren möchten oder Ihre eigenen\n"
+#~ "                            Inhalte. Wählen sie dann das Objekt aus, das "
+#~ "Sie kopieren möchten. Kopierbare Objekte\n"
+#~ "                            erkennen Sie an den zwei nach links zeigenden "
+#~ "gelben Pfeilen."
+#~ msgstr ""
+#~ "Pages, sections and blocks can be copied from another course and from "
+#~ "your own contents.\n"
+#~ "For that, select \"Insert page here\", \"Insert section here\" or "
+#~ "\"Insert block here\" below \"This Courseware\" on the left.\n"
+#~ "After that, first select the course from which to copy or your own "
+#~ "contents below \"Copy\" on the right side.\n"
+#~ "Objects that can be copied can be identified by the two yellow arrows "
+#~ "pointing to the left."
+
+#, fuzzy
+#~ msgid ""
+#~ "Seiten, Abschnitte und Blöcke lassen sich in ihrer Reihenfolge "
+#~ "sortieren.\n"
+#~ "                            Hierzu wählen Sie auf der linken Seite unter "
+#~ "\"Diese Courseware\" die Schaltfläche \"Unterseiten sortieren\",\n"
+#~ "                            \"Abschnitte sortieren\" oder \"Blöcke "
+#~ "sortieren\".\n"
+#~ "                            An den Objekten werden Pfeile angezeigt, mit "
+#~ "diesen können die Objekte an die gewünschte\n"
+#~ "                            Position gebracht werden. Um die neue "
+#~ "Sortierung zu speichern, wählen Sie \"Sortieren beenden\".\n"
+#~ "                            Sie können die Änderungen auch rückgängig "
+#~ "machen, indem Sie \"Sortieren abbrechen\" wählen."
+#~ msgstr ""
+#~ "Pages, sections and blocks can be sorted.\n"
+#~ "For that, select \"Sort pages\", \"Sort sections\" or \"Sort blocks\" "
+#~ "below \"This Courseware\" on the left.\n"
+#~ "Arrows will be shown at the objects that can be used to move the objects "
+#~ "to the desired position.\n"
+#~ "To save the new sorting, select \"Finish sorting\". You can also revert "
+#~ "the changes by selecting \"Cancel sorting\"."
+
+#, fuzzy
+#~ msgid ""
+#~ "Seiten, Abschnitte und Blöcke lassen sich verschieben.\n"
+#~ "                            Hierzu wählen Sie auf der linken Seite unter "
+#~ "\"Diese Courseware\" die Schaltfläche\n"
+#~ "                            \"Seite an dieser Stelle einfügen\", "
+#~ "\"Abschnitt an dieser Stelle einfügen\" oder\n"
+#~ "                            \"Block an dieser Stelle einfügen\". Wählen "
+#~ "Sie dann auf der rechten Seite unter\n"
+#~ "                            \"Verschieben\" das Objekt aus, das Sie "
+#~ "verschieben möchten. Verschiebbare Objekte\n"
+#~ "                            erkennen Sie an den zwei nach links zeigenden "
+#~ "gelben Pfeilen."
+#~ msgstr ""
+#~ "Pages, sections and blocks can be moved.\n"
+#~ "For that, select \"Insert page here\", \"Insert section here\" or "
+#~ "\"Insert block here\" below \"This Courseware\" on the left.\n"
+#~ "After that, select the object you want to move below \"Move\" on the "
+#~ "right side.\n"
+#~ "Objects that can be moved can be identified by the two yellow arrows "
+#~ "pointing to the left."
+
+#, fuzzy
+#~ msgid "Sie haben noch keine eigenen Inhalte angelegt."
+#~ msgstr "You did not yet create own contents"
+
+#~ msgid "Smileys"
+#~ msgstr "Smileys"
+
+#~ msgid "Sortieren abbrechen"
+#~ msgstr "Cancel sorting"
+
+#~ msgid "Sortieren beenden"
+#~ msgstr "Finish sorting"
+
+#, fuzzy
+#~ msgid "Unterseiten sortieren"
+#~ msgstr "Export sub pages"
+
+#~ msgid "Veranstaltung auswählen"
+#~ msgstr "Choose course"
+
+#~ msgid "Veranstaltungen"
+#~ msgstr "Courses"
+
+#~ msgid "Verschieben"
+#~ msgstr "Move"
+
+#~ msgid "Vorgang läuft. Bitte warten Sie einen Moment."
+#~ msgstr "Process running. Please wait a moment."
+
+#, fuzzy
+#~ msgid ""
+#~ "Wählen Sie auf der linken Seite \"Diese Courseware\" aus.\n"
+#~ "                            Beim Laden der Seite ist dies immer gewählt. "
+#~ "Die Überschrift\n"
+#~ "                            gibt an, welche Seite Sie gerade ausgewählt "
+#~ "haben. Darunter befinden\n"
+#~ "                            sich die Abschnitte der Seite und innerhalb "
+#~ "dieser deren Blöcke.\n"
+#~ "                            Möchten Sie eine Seite, die unterhalb der "
+#~ "gewählten liegt, bearbeiten,\n"
+#~ "                            können Sie diese über die Schaltflächen im "
+#~ "Bereich \"Unterseiten\" wählen.\n"
+#~ "                            Über der Überschrift wird eine Navigation "
+#~ "eingeblendet, mit der Sie beliebig\n"
+#~ "                            weit hoch in der Hierarchie springen können."
+#~ msgstr ""
+#~ "Select \"This Courseware\" on the left.\n"
+#~ "This is alway selected while loading the page. The heading shows which "
+#~ "page you\n"
+#~ "have currently selected. Below that are the sections of the page and in "
+#~ "them their blocks.\n"
+#~ "If you want to edit a page that lies below the selected one, you can "
+#~ "select that one via\n"
+#~ "the buttons in the area \"Pages\". A navigation is shown above the "
+#~ "heading. With it you can\n"
+#~ "jump up the hierarchy as far as you wish."
+
+#, fuzzy
+#~ msgid "wählen Sie eine Vorlage aus"
+#~ msgstr "Please select a file"
+
+#~ msgid "Wie finde ich die gewünschte Stelle?"
+#~ msgstr "How do I find the right place?"
+
+#~ msgid "Wie kopiere ich Objekte?"
+#~ msgstr "How do I copy objects?"
+
+#~ msgid "Wie sortiere ich Objekte?"
+#~ msgstr "How do I sort objects?"
+
+#~ msgid "Wie verschiebe ich Objekte?"
+#~ msgstr "How do I move objects?"
+
+#~ msgid "Zur Gesamtübersicht"
+#~ msgstr "Back to overview"
 
 #~ msgid "abgeschlossene Seiten"
 #~ msgstr "finished pages"
