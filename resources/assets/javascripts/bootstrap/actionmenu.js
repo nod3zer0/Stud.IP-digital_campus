@@ -42,7 +42,7 @@
             STUDIP.ActionMenu.closeAll();
         } else if (event.key === 'Tab') {
             //Check if the focus is inside an action menu:
-            let menu = $(event.target).closest('nav.action-menu');
+            let menu = $(event.target).closest('.action-menu');
             if (menu.hasClass('is-open') && STUDIP.ActionMenu.tabThroughItems(menu, event.shiftKey)) {
                 event.preventDefault();
             }

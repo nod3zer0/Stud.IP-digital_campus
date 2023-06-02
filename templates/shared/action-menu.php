@@ -12,8 +12,8 @@
  */
 ?>
 <? // class "action-menu" will be set from API ?>
-<nav <?= arrayToHtmlAttributes($attributes) ?> aria-role="presentation">
-    <button class="action-menu-icon" aria-role="button" aria-expanded="false" title="<?= htmlReady($action_menu_title) ?>">
+<div <?= arrayToHtmlAttributes($attributes) ?>>
+    <button class="action-menu-icon" aria-expanded="false" title="<?= htmlReady($action_menu_title) ?>">
         <span></span>
         <span></span>
         <span></span>
@@ -53,4 +53,4 @@
         <? endforeach ?>
         </ul>
     </div>
-</nav>
+</div>
