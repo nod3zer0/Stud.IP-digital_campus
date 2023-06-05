@@ -7,7 +7,7 @@
             <span class="asterisk" title="<?= _('Dies ist ein Pflichtfeld') ?>" aria-hidden="true">*</span>
         <? endif ?>
     </label>
-    <i18n-textarea type="<?= \Config::get()->WYSIWYG ? 'wysiwyg' : 'textarea' ?>"
+    <i18n-textarea type="wysiwyg"
                    id="<?= $id ?>"
                    name="<?= htmlReady($name) ?>"
                    value="<?= htmlReady($value) ?>"

@@ -17,7 +17,7 @@
                       v-bind="$attrs"
                       v-on="$listeners"
                       v-model="values[selectedLanguage.id]"
-                      :required="required && defaultLanguage === language.id"
+                      :required="required && defaultLanguage === selectedLanguage.id"
                       v-else-if="type === 'textarea'"></textarea>
             <studip-wysiwyg :name="nameOfInput(selectedLanguage.id)"
                             ref="inputfield"
