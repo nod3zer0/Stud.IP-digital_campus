@@ -102,6 +102,7 @@ body:not(.fixed) #navigation-level-1-items {
 
     // Recolor on hover and for active items
     li:hover,
+    li a:focus,
     li.active {
         .navtitle {
             opacity: 1;
