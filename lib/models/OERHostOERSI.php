@@ -69,13 +69,20 @@ class OERHostOERSI extends OERHost
                         'front_image_url' => $material_data['_source']['image'],
                         'download' => $material_data['_source']['encoding'][0]['contentUrl'] ?: '',
                         'id' => $material_data['_id'],
-                        'authors' => $material_data['_source']['creator'],
                         'organization' => $material_data['_source']['sourceOrganization'][0]['name'] ?: $material_data['_source']['publisher'][0]['name']
                     ];
                     $material->store();
 
-                    //set topics:
-                    //$material->setUsers([]);
+                    //set users:
+                    $userdata = [];
+                    foreach ((array) $material_data['_source']['creator'] as $creator) {
+                        $userdata[] = [
+                            'user_id' => md5($creator['name']),
+                            'name' => $creator['name'],
+                            'host_url' => $this['url']
+                        ];
+                    }
+                    $material->setUsers($userdata);
 
                     //set topics:
                     $material->setTopics($material_data['_source']['keywords']);
@@ -128,7 +135,6 @@ class OERHostOERSI extends OERHost
                 $data['data'] = $material['data']->getArrayCopy();
                 $data['data']['download'] = $output['encoding'][0]['contentUrl'] ?? '';
                 $data['data']['front_image_url'] = $output['image'] ?? '';
-                $data['data']['authors'] = $output['creator'];
                 $data['data']['organization'] = $output['sourceOrganization'][0]['name'] ?? $output['publisher'][0]['name'] ?? '';
                 return [
                     'data' => $data,
@@ -165,19 +171,6 @@ class OERHostOERSI extends OERHost
     public function isReviewable()
     {
         return false;
-    }
-
-    public function getAuthorsForMaterial(OERMaterial $material)
-    {
-        $users = [];
-        $data = $material->data->getArrayCopy();
-        foreach ((array) $data['authors'] as $author) {
-            $users[] = [
-                'name' => $author['name'],
-                'hostname' => $data['organization'] ?: $this['name']
-            ];
-        }
-        return $users;
     }
 
     public function getDownloadURLForMaterial(OERMaterial $material)

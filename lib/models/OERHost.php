@@ -264,8 +264,9 @@ class OERHost extends OERIdentity
     {
         $users = [];
         foreach ($material->users as $materialdata) {
-            if ($materialdata['external_contact']) {
+            if ($materialdata['oeruser']) {
                 $user = $materialdata['oeruser'];
+
                 $users[] = [
                     'user_id' => $user['foreign_id'],
                     'name' => $user['name'],

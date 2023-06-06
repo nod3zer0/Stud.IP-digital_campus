@@ -188,9 +188,24 @@ class Oer_MarketController extends StudipController
                     "oer_tags_material.tag_hash = oer_tags.tag_hash",
                     "LEFT JOIN"
                 );
+                $search->join(
+                    "oer_material_users",
+                    "oer_material_users.material_id = oer_material.material_id",
+                    "LEFT JOIN"
+                );
+                $search->join(
+                    "external_users",
+                    "oer_material_users.user_id = external_users.external_contact_id AND oer_material_users.external_contact = '1'",
+                    "LEFT JOIN"
+                );
+                $search->join(
+                    "auth_user_md5",
+                    "oer_material_users.user_id = auth_user_md5.user_id AND oer_material_users.external_contact = '0'",
+                    "LEFT JOIN"
+                );
                 $search->where(
                     "textsearch",
-                    "(oer_material.name LIKE :search OR oer_material.description LIKE :search OR oer_material.short_description LIKE :search OR oer_tags.name LIKE :search)",
+                    "(oer_material.name LIKE :search OR oer_material.description LIKE :search OR oer_material.short_description LIKE :search OR oer_tags.name LIKE :search OR external_users.name LIKE :search OR CONCAT(auth_user_md5.Vorname, ' ', auth_user_md5.Nachname) LIKE :search)",
                     ['search' => '%'.Request::get("search").'%']
                 );
             }

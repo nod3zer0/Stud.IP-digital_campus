@@ -166,9 +166,11 @@ class OERMaterial extends SimpleORMap
         $cache_name = "oer_remote_searched_for_".md5($text)."_".($tag ? 1 : 0);
         $already_searched = (bool) StudipCacheFactory::getCache()->read($cache_name);
         if (!$already_searched) {
-            $host = OERHost::findOneBySQL("index_server = '1' AND allowed_as_index_server = '1' ORDER BY RAND()");
-            if ($host && !$host->isMe()) {
-                $host->fetchRemoteSearch($text, $tag);
+            $hosts = OERHost::findBySQL("index_server = '1' AND allowed_as_index_server = '1' ORDER BY RAND()");
+            foreach ($hosts as $host) {
+                if (!$host->isMe()) {
+                    $host->fetchRemoteSearch($text, $tag);
+                }
             }
             StudipCacheFactory::getCache()->read($cache_name, "1", 60);
         }
