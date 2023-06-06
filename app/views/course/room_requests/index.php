@@ -16,7 +16,7 @@ echo $flash['message'];
         <thead>
             <tr>
                 <th><?= _('Art der Anfrage') ?></th>
-                <th><?= _('Anfragender') ?></th>
+                <th><?= _('Angefragt von') ?></th>
                 <th><?= _('Bearbeitungsstatus') ?></th>
                 <th></th>
             </tr>

@@ -38,7 +38,7 @@
             <thead>
             <tr class="sortable">
                 <th data-sort="text"><?= _('Art der Anfrage') ?></th>
-                <th data-sort="text"><?= _('Anfragender') ?></th>
+                <th data-sort="text"><?= _('Angefragt von') ?></th>
                 <th data-sort="text"><?= _('Bearbeitungsstatus') ?></th>
                 <th></th>
             </tr>
