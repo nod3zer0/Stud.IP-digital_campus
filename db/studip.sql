@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.31, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Linux (x86_64)
 --
--- Host: localhost    Database: studip_52
+-- Host: localhost    Database: studip_53
 -- ------------------------------------------------------
--- Server version	8.0.31-0ubuntu0.22.04.1
+-- Server version	8.0.33-0ubuntu0.22.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -190,7 +190,7 @@ CREATE TABLE `admissionrules` (
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ruletype` (`ruletype`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -351,9 +351,9 @@ CREATE TABLE `auth_user_md5` (
   `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `password` varbinary(64) NOT NULL DEFAULT '',
   `perms` enum('user','autor','tutor','dozent','admin','root') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'user',
-  `Vorname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Nachname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Vorname` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `Nachname` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `Email` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `validation_key` varchar(10) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `auth_plugin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'standard',
   `locked` tinyint unsigned NOT NULL DEFAULT '0',
@@ -493,22 +493,6 @@ CREATE TABLE `blubber_events_queue` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `blubber_follower`
---
-
-DROP TABLE IF EXISTS `blubber_follower`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `blubber_follower` (
-  `studip_user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `external_contact_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `left_follows_right` tinyint unsigned NOT NULL DEFAULT '0',
-  KEY `studip_user_id` (`studip_user_id`),
-  KEY `external_contact_id` (`external_contact_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `blubber_mentions`
 --
 
@@ -632,7 +616,7 @@ CREATE TABLE `cache_types` (
   `mkdate` int DEFAULT NULL,
   PRIMARY KEY (`cache_id`),
   UNIQUE KEY `class_name` (`class_name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -699,7 +683,7 @@ DROP TABLE IF EXISTS `clipboards`;
 CREATE TABLE `clipboards` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
-  `name` varchar(256) NOT NULL DEFAULT '',
+  `name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `handler` varchar(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'Clipboard',
   `allowed_item_class` varchar(64) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'StudipItem',
   `mkdate` int unsigned NOT NULL DEFAULT '0',
@@ -718,7 +702,7 @@ DROP TABLE IF EXISTS `colour_values`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `colour_values` (
   `colour_id` varchar(128) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `description` varchar(256) NOT NULL DEFAULT '',
+  `description` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `value` varchar(8) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'ffffffff',
   `mkdate` int unsigned NOT NULL DEFAULT '0',
   `chdate` int unsigned NOT NULL DEFAULT '0',
@@ -825,6 +809,7 @@ CREATE TABLE `consultation_blocks` (
   `confirmation_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `size` tinyint unsigned NOT NULL DEFAULT '1' COMMENT 'How many people may book a slot',
+  `lock_time` int unsigned DEFAULT NULL,
   `mkdate` int unsigned NOT NULL,
   `chdate` int unsigned NOT NULL,
   PRIMARY KEY (`block_id`),
@@ -1207,6 +1192,25 @@ CREATE TABLE `cw_bookmarks` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `cw_certificates`
+--
+
+DROP TABLE IF EXISTS `cw_certificates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cw_certificates` (
+  `id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  `course_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  `unit_id` int NOT NULL,
+  `mkdate` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_user_id` (`user_id`),
+  KEY `index_unit_id` (`unit_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `cw_containers`
 --
 
@@ -1263,7 +1267,7 @@ CREATE TABLE `cw_structural_element_comments` (
   `id` int NOT NULL AUTO_INCREMENT,
   `structural_element_id` int NOT NULL,
   `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `comment` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `comment` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mkdate` int NOT NULL,
   `chdate` int NOT NULL,
   PRIMARY KEY (`id`),
@@ -1283,7 +1287,7 @@ CREATE TABLE `cw_structural_element_feedbacks` (
   `id` int NOT NULL AUTO_INCREMENT,
   `structural_element_id` int NOT NULL,
   `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `feedback` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `feedback` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mkdate` int NOT NULL,
   `chdate` int NOT NULL,
   PRIMARY KEY (`id`),
@@ -1340,7 +1344,7 @@ CREATE TABLE `cw_task_feedbacks` (
   `id` int NOT NULL AUTO_INCREMENT,
   `task_id` int NOT NULL,
   `lecturer_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `content` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mkdate` int NOT NULL,
   `chdate` int NOT NULL,
   PRIMARY KEY (`id`),
@@ -1363,7 +1367,7 @@ CREATE TABLE `cw_task_groups` (
   `target_id` int NOT NULL,
   `task_template_id` int NOT NULL,
   `solver_may_add_blocks` tinyint(1) NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mkdate` int NOT NULL,
   `chdate` int NOT NULL,
   PRIMARY KEY (`id`),
@@ -1408,12 +1412,38 @@ DROP TABLE IF EXISTS `cw_templates`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cw_templates` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `purpose` enum('content','template','oer','portfolio','draft','other') CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
-  `structure` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `structure` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mkdate` int NOT NULL,
   `chdate` int NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cw_units`
+--
+
+DROP TABLE IF EXISTS `cw_units`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cw_units` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `range_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
+  `range_type` enum('course','user') CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
+  `structural_element_id` int NOT NULL,
+  `content_type` enum('courseware') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  `public` tinyint NOT NULL DEFAULT '1',
+  `creator_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
+  `release_date` int unsigned DEFAULT NULL,
+  `withdraw_date` int unsigned DEFAULT NULL,
+  `config` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mkdate` int unsigned NOT NULL,
+  `chdate` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_range_id` (`range_id`),
+  KEY `index_structural_element_id` (`structural_element_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1952,7 +1982,7 @@ CREATE TABLE `ex_termine` (
   `range_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `autor_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date` int unsigned NOT NULL DEFAULT '0',
   `end_time` int unsigned NOT NULL DEFAULT '0',
   `mkdate` int unsigned NOT NULL DEFAULT '0',
@@ -2121,6 +2151,7 @@ CREATE TABLE `files` (
   `size` int unsigned NOT NULL,
   `metadata` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `author_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `is_accessible` tinyint(1) DEFAULT NULL,
   `mkdate` int unsigned NOT NULL,
   `chdate` int unsigned NOT NULL,
   PRIMARY KEY (`id`)
@@ -2433,7 +2464,7 @@ CREATE TABLE `help_content` (
   `installation_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mkdate` int unsigned NOT NULL,
   `chdate` int unsigned NOT NULL,
-  `comment` text COLLATE utf8mb4_unicode_ci,
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`content_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2604,13 +2635,13 @@ DROP TABLE IF EXISTS `licenses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `licenses` (
-  `identifier` varchar(64) NOT NULL COMMENT 'According to SPDX standard if able.',
-  `name` varchar(128) DEFAULT NULL,
-  `link` varchar(256) DEFAULT NULL,
+  `identifier` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'According to SPDX standard if able.',
+  `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `link` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `default` tinyint(1) DEFAULT '0',
-  `description` text,
-  `twillo_licensekey` varchar(16) DEFAULT NULL,
-  `twillo_cclicenseversion` varchar(8) DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `twillo_licensekey` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `twillo_cclicenseversion` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `chdate` int DEFAULT NULL,
   `mkdate` int DEFAULT NULL,
   PRIMARY KEY (`identifier`),
@@ -2715,7 +2746,7 @@ CREATE TABLE `log_events` (
   `mkdate` int unsigned NOT NULL,
   PRIMARY KEY (`event_id`),
   KEY `action_id` (`action_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2734,7 +2765,7 @@ CREATE TABLE `loginbackgrounds` (
   `mkdate` int unsigned DEFAULT NULL,
   `chdate` int unsigned DEFAULT NULL,
   PRIMARY KEY (`background_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3757,10 +3788,10 @@ DROP TABLE IF EXISTS `oauth2_access_tokens`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `oauth2_access_tokens` (
-  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
   `client_id` bigint unsigned NOT NULL,
-  `scopes` text COLLATE utf8mb4_unicode_ci,
+  `scopes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `revoked` tinyint(1) NOT NULL DEFAULT '0',
   `expires_at` int DEFAULT NULL,
   `mkdate` int NOT NULL,
@@ -3778,10 +3809,10 @@ DROP TABLE IF EXISTS `oauth2_auth_codes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `oauth2_auth_codes` (
-  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `client_id` bigint unsigned NOT NULL,
-  `scopes` text COLLATE utf8mb4_unicode_ci,
+  `scopes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `revoked` tinyint(1) NOT NULL DEFAULT '0',
   `expires_at` int DEFAULT NULL,
   `mkdate` int NOT NULL,
@@ -3800,14 +3831,14 @@ DROP TABLE IF EXISTS `oauth2_clients`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `oauth2_clients` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `secret` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `redirect` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `redirect` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `revoked` tinyint(1) NOT NULL DEFAULT '0',
-  `description` text COLLATE utf8mb4_unicode_ci,
-  `owner` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `homepage` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `admin_notes` text COLLATE utf8mb4_unicode_ci,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `owner` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `homepage` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `admin_notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `mkdate` int NOT NULL,
   `chdate` int NOT NULL,
   PRIMARY KEY (`id`)
@@ -3822,8 +3853,8 @@ DROP TABLE IF EXISTS `oauth2_refresh_tokens`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `oauth2_refresh_tokens` (
-  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `access_token_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `access_token_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `revoked` tinyint(1) NOT NULL DEFAULT '0',
   `expires_at` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -4065,7 +4096,7 @@ CREATE TABLE `oer_comments` (
   `comment_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `review_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `foreign_comment_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
-  `comment` text NOT NULL,
+  `comment` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `host_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
   `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `chdate` bigint NOT NULL,
@@ -4104,11 +4135,11 @@ DROP TABLE IF EXISTS `oer_hosts`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `oer_hosts` (
   `host_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `sorm_class` varchar(50) NOT NULL DEFAULT 'OERHost',
-  `name` varchar(64) NOT NULL,
-  `url` varchar(200) NOT NULL,
-  `public_key` text NOT NULL,
-  `private_key` text,
+  `sorm_class` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'OERHost',
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `public_key` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `private_key` text COLLATE utf8mb4_unicode_ci,
   `active` tinyint NOT NULL DEFAULT '1',
   `index_server` tinyint NOT NULL DEFAULT '0',
   `allowed_as_index_server` tinyint NOT NULL DEFAULT '1',
@@ -4131,26 +4162,26 @@ CREATE TABLE `oer_material` (
   `material_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `foreign_material_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
   `host_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
-  `name` varchar(64) NOT NULL,
-  `category` varchar(64) NOT NULL DEFAULT '',
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `draft` tinyint(1) NOT NULL DEFAULT '0',
-  `filename` varchar(64) NOT NULL,
-  `short_description` varchar(100) DEFAULT NULL,
-  `description` text NOT NULL,
+  `filename` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `short_description` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `difficulty_start` tinyint NOT NULL DEFAULT '1',
   `difficulty_end` tinyint NOT NULL DEFAULT '12',
-  `player_url` varchar(256) DEFAULT NULL,
-  `tool` varchar(128) DEFAULT NULL,
+  `player_url` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tool` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `content_type` varchar(256) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `front_image_content_type` varchar(64) DEFAULT NULL,
-  `structure` text,
+  `front_image_content_type` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `structure` text COLLATE utf8mb4_unicode_ci,
   `rating` double DEFAULT NULL,
-  `license_identifier` varchar(64) NOT NULL DEFAULT 'CC BY SA 3.0',
-  `uri` varchar(1000) NOT NULL DEFAULT '',
-  `uri_hash` char(32) NOT NULL DEFAULT '',
-  `published_id_on_twillo` varchar(50) DEFAULT NULL,
-  `source_url` varchar(256) DEFAULT NULL,
-  `data` text,
+  `license_identifier` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CC BY SA 3.0',
+  `uri` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `uri_hash` char(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `published_id_on_twillo` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `source_url` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `data` text COLLATE utf8mb4_unicode_ci,
   `chdate` bigint NOT NULL,
   `mkdate` int NOT NULL,
   PRIMARY KEY (`material_id`),
@@ -4181,6 +4212,23 @@ CREATE TABLE `oer_material_users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `oer_post_upload`
+--
+
+DROP TABLE IF EXISTS `oer_post_upload`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `oer_post_upload` (
+  `file_ref_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  `reminder_date` int unsigned DEFAULT NULL,
+  `mkdate` int NOT NULL,
+  `chdate` int NOT NULL,
+  PRIMARY KEY (`user_id`,`file_ref_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `oer_reviews`
 --
 
@@ -4194,7 +4242,7 @@ CREATE TABLE `oer_reviews` (
   `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `host_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
   `rating` int NOT NULL,
-  `review` text NOT NULL,
+  `review` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `chdate` int NOT NULL,
   `mkdate` int NOT NULL,
   PRIMARY KEY (`review_id`),
@@ -4215,7 +4263,7 @@ DROP TABLE IF EXISTS `oer_tags`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `oer_tags` (
   `tag_hash` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`tag_hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4247,9 +4295,9 @@ CREATE TABLE `oer_user` (
   `user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `foreign_user_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `host_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `avatar` varchar(256) DEFAULT NULL,
-  `description` text,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
   `chdate` int NOT NULL,
   `mkdate` int NOT NULL,
   PRIMARY KEY (`user_id`),
@@ -4396,7 +4444,7 @@ CREATE TABLE `plugins` (
   `automatic_update_url` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `automatic_update_secret` varchar(32) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
   PRIMARY KEY (`pluginid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4539,7 +4587,9 @@ DROP TABLE IF EXISTS `questionnaire_questions`;
 CREATE TABLE `questionnaire_questions` (
   `question_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `questionnaire_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `etask_task_id` int NOT NULL,
+  `questiontype` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `internal_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `questiondata` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `position` int NOT NULL,
   `chdate` int unsigned NOT NULL,
   `mkdate` int unsigned NOT NULL,
@@ -4564,7 +4614,7 @@ CREATE TABLE `questionnaires` (
   `stopdate` int unsigned DEFAULT NULL,
   `visible` tinyint unsigned NOT NULL DEFAULT '0',
   `anonymous` tinyint unsigned NOT NULL DEFAULT '0',
-  `resultvisibility` enum('always','never','afterending') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'always',
+  `resultvisibility` enum('always','never','afterending','afterparticipation') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'always',
   `editanswers` tinyint unsigned NOT NULL DEFAULT '1',
   `copyable` tinyint unsigned NOT NULL DEFAULT '0',
   `chdate` int unsigned NOT NULL,
@@ -4633,7 +4683,6 @@ CREATE TABLE `resource_bookings` (
   `begin` int unsigned NOT NULL DEFAULT '0',
   `end` int unsigned NOT NULL DEFAULT '0',
   `repeat_end` int unsigned DEFAULT NULL,
-  `repeat_quantity` int DEFAULT NULL,
   `mkdate` int unsigned NOT NULL DEFAULT '0',
   `chdate` int unsigned NOT NULL DEFAULT '0',
   `internal_comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -4734,7 +4783,7 @@ CREATE TABLE `resource_property_definitions` (
   `property_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `type` set('bool','text','num','select','user','institute','position','fileref','url','resource_ref_list') CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
+  `type` enum('bool','text','num','select','user','institute','position','fileref','url') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `options` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `system` tinyint unsigned NOT NULL DEFAULT '0',
   `info_label` tinyint NOT NULL DEFAULT '0',
@@ -4759,7 +4808,7 @@ DROP TABLE IF EXISTS `resource_property_groups`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `resource_property_groups` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `position` tinyint NOT NULL DEFAULT '0',
   `mkdate` int unsigned NOT NULL DEFAULT '0',
   `chdate` int unsigned NOT NULL DEFAULT '0',
@@ -4897,7 +4946,7 @@ CREATE TABLE `roles` (
   `rolename` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `system` enum('y','n') CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT 'n',
   PRIMARY KEY (`roleid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5056,7 +5105,7 @@ CREATE TABLE `sem_classes` (
   `chdate` int unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5097,7 +5146,7 @@ CREATE TABLE `sem_types` (
   `mkdate` int unsigned NOT NULL,
   `chdate` int unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5127,7 +5176,7 @@ DROP TABLE IF EXISTS `semester_data`;
 CREATE TABLE `semester_data` (
   `semester_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `semester_token` varchar(10) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `beginn` int unsigned DEFAULT NULL,
   `ende` int unsigned DEFAULT NULL,
@@ -5366,7 +5415,7 @@ DROP TABLE IF EXISTS `separable_rooms`;
 CREATE TABLE `separable_rooms` (
   `id` int NOT NULL AUTO_INCREMENT,
   `building_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
-  `name` varchar(256) NOT NULL DEFAULT '',
+  `name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `mkdate` int unsigned NOT NULL DEFAULT '0',
   `chdate` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -5403,7 +5452,7 @@ CREATE TABLE `siteinfo_details` (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`detail_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5418,7 +5467,7 @@ CREATE TABLE `siteinfo_rubrics` (
   `position` tinyint unsigned DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`rubric_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5474,7 +5523,7 @@ DROP TABLE IF EXISTS `statusgruppen`;
 CREATE TABLE `statusgruppen` (
   `statusgruppe_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `range_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `position` int NOT NULL DEFAULT '0',
   `size` int NOT NULL DEFAULT '0',
@@ -5547,7 +5596,7 @@ CREATE TABLE `termine` (
   `range_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `autor_id` char(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date` int unsigned NOT NULL DEFAULT '0',
   `end_time` int unsigned NOT NULL DEFAULT '0',
   `mkdate` int unsigned NOT NULL DEFAULT '0',
@@ -6079,4 +6128,4 @@ CREATE TABLE `wiki_page_config` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-21 15:24:29
+-- Dump completed on 2023-06-07 17:12:29
