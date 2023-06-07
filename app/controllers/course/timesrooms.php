@@ -458,7 +458,7 @@ class Course_TimesroomsController extends AuthenticatedController
             //has to be recereated, even if the room option
             //is set to "nochange".
             $room_id = null;
-            $preparation_time = Request::get('preparation_time');
+            $preparation_time = Request::int('preparation_time', 0);
             if (Request::option('room') == 'room') {
                 $room_id = Request::get('room_id');
                 if ($preparation_time > $max_preparation_time) {

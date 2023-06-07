@@ -963,7 +963,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             $this->begin_time_str = Request::get('begin_time');
             $this->end_date_str = Request::get('end_date');
             $this->end_time_str = Request::get('end_time');
-            $this->preparation_time = Request::get('preparation_time');
+            $this->preparation_time = Request::int('preparation_time', 0);
 
             if (!$this->begin_date_str) {
                 PageLayout::postError(

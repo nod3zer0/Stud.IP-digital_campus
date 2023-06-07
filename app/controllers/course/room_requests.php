@@ -607,7 +607,7 @@ class Course_RoomRequestsController extends AuthenticatedController
             CSRFProtection::verifyUnsafeRequest();
 
             $this->request->user_id = $this->current_user->id;
-            $this->preparation_time = Request::get('preparation_time');
+            $this->preparation_time = Request::int('preparation_time', 0);
             $this->request->preparation_time = $this->preparation_time * 60;
             $this->request->comment = Request::get('comment');
 
