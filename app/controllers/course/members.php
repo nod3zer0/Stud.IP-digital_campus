@@ -1237,9 +1237,9 @@ class Course_MembersController extends AuthenticatedController
                     count($msg['success'])),
                     count($msg['success']) <= 5 ? $msg['success'] : []);
             }
-            if (count($msg['errors'])) {
+            if (count($msg['error'])) {
                 PageLayout::postError(sprintf(_('%s Person(en) konnten nicht auf die Warteliste verschoben werden.'),
-                    count($msg['errors'])),
+                    count($msg['error'])),
                     count($msg['error']) <= 5 ? $msg['error'] : []);
             }
         } else {
