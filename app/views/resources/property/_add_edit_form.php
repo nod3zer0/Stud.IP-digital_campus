@@ -23,8 +23,7 @@
 </label>
 <label>
     <?= _('Minimale Rechtestufe für Änderungen') ?>
-    <select name="write_permission_level" class="size-l"
-        <?= $property->system ? 'disabled="disabled"' : '' ?>>
+    <select name="write_permission_level" class="size-l">
         <? foreach(['user', 'autor', 'tutor', 'admin'] as $level) : ?>
             <option value="<?= $level?>"
                 <?= $write_permission_level === $level ? 'selected="selected"' : '' ?>>
@@ -40,7 +39,7 @@
 <label>
     <?= _('Mögliche Werte') ?>
     <input type="text" name="options" value="<?= htmlReady($options) ?>"
-        <?= $property->system && !$GLOBALS['perm']->have_perm('root') ? 'readonly="readonly"' : '' ?>>
+        <?= !$GLOBALS['perm']->have_perm('root') ? 'disabled="disabled"' : '' ?>>
 </label>
 <label>
     <?= _('Angezeigter Name') ?>
@@ -48,8 +47,7 @@
 </label>
 <label>
     <input type="checkbox" name="searchable"
-        <?= $searchable ? 'checked="checked"' : '' ?>
-        <?= $property->system ? 'disabled="disabled"' : '' ?>>
+        <?= $searchable ? 'checked="checked"' : '' ?>>
     <?= _('Diese Eigenschaft kann zur Suche genutzt werden.') ?>
 </label>
 <label>
@@ -59,7 +57,6 @@
 </label>
 <label>
     <input type="checkbox" name="range_search" value="1"
-        <?= $range_search ? 'checked="checked"' : '' ?>
-        <?= $property->system ? 'disabled="disabled"' : '' ?>>
+        <?= $range_search ? 'checked="checked"' : '' ?>>
     <?= _('Suchkriterium mit Intervall') ?>
 </label>

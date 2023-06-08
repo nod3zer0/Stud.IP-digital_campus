@@ -157,32 +157,27 @@ class Resources_PropertyController extends AuthenticatedController
                     );
                     return;
                 }
-                if (!in_array($this->write_permission_level, ['user', 'autor', 'tutor', 'admin', 'admin-global'])) {
-                    PageLayout::postError(
-                        _('Die angegebene Rechtestufe ist ungültig!')
-                    );
-                    return;
-                }
+            }
+
+            if (!in_array($this->write_permission_level, ['user', 'autor', 'tutor', 'admin', 'admin-global'])) {
+                PageLayout::postError(
+                    _('Die angegebene Rechtestufe ist ungültig!')
+                );
+                return;
             }
 
             $this->property->description = $this->description;
             $this->property->display_name = $this->display_name;
+            $this->property->write_permission_level = $this->write_permission_level;
+            $this->property->searchable = $this->searchable ? '1' : '0';
             $this->property->info_label = $this->info_label ? '1' : '0';
+            $this->property->range_search = $this->range_search ? '1' : '0';
 
             if (!$this->property->system) {
                 //The following fields may only be edited
                 //if the property is not a system property:
                 $this->property->name = $this->name;
                 $this->property->type = $this->type;
-                $this->property->searchable = ($this->searchable ? '1' : '0');
-                $this->property->options = $this->options;
-                $this->property->range_search = (
-                    $this->range_search
-                    ? '1'
-                    : '0'
-                );
-                $this->property->write_permission_level = $this->write_permission_level;
-
             }
 
             $success = $this->property->store();
