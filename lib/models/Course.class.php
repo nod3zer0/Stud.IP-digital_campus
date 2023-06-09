@@ -288,6 +288,27 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
 
         return null;
     }
+
+    /**
+     * Returns the associated mvv modules for a given course id.
+     *
+     * @param string $course_id
+     * @return Modul[]
+     */
+    public static function getMVVModulesForCourseId(string $course_id): array
+    {
+        $query = "SELECT mvv_modul.*
+                  FROM mvv_lvgruppe_seminar
+                  JOIN `mvv_lvgruppe` on(`mvv_lvgruppe_seminar`.`lvgruppe_id` = `mvv_lvgruppe`.`lvgruppe_id`)
+                  JOIN `mvv_lvgruppe_modulteil` on(`mvv_lvgruppe_seminar`.`lvgruppe_id` = `mvv_lvgruppe_modulteil`.`lvgruppe_id`)
+                  JOIN `mvv_modulteil` on(`mvv_lvgruppe_modulteil`.`modulteil_id` = `mvv_modulteil`.`modulteil_id`)
+                  JOIN `mvv_modul` on(`mvv_modulteil`.`modul_id` = `mvv_modul`.`modul_id`)
+                  WHERE seminar_id = ?";
+        return DBManager::get()->fetchAll($query, [$course_id], function ($row) {
+            return Modul::buildExisting($row);
+        });
+    }
+
     public function getEnd_Time()
     {
         return $this->duration_time == -1 ? -1 : $this->start_time + $this->duration_time;
@@ -1029,7 +1050,6 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     {
         return array_filter($this->tools->getStudipModule());
     }
-
 
     /**
      * @see Range::__toString()

@@ -90,7 +90,7 @@ class MyCoursesController extends AuthenticatedController
             'order'               => 'asc',
             'studygroups_enabled' => Config::get()->MY_COURSES_ENABLE_STUDYGROUPS,
             'deputies_enabled'    => Config::get()->DEPUTIES_ENABLE,
-        ]);
+        ]) ?? [];
 
         // Waiting list
         $this->waiting_list = MyRealmModel::getWaitingList($GLOBALS['user']->id);
@@ -182,25 +182,26 @@ class MyCoursesController extends AuthenticatedController
         $this->current_semester = $sem ?: Semester::findCurrent()->semester_id;
         $this->semesters = Semester::findAllVisible();
 
-        $forced_grouping = Config::get()->MY_COURSES_FORCE_GROUPING;
-        if ($forced_grouping == 'not_grouped') {
-            $forced_grouping = 'sem_number';
-        }
-
-        $no_grouping_allowed = ($forced_grouping == 'sem_number' || !in_array($forced_grouping, getValidGroupingFields()));
-
-        $group_field = $GLOBALS['user']->cfg->MY_COURSES_GROUPING ? : $forced_grouping;
+        $group_field = $this->getGroupField();
 
         $groups     = [];
         $add_fields = '';
         $add_query  = '';
 
-        if ($group_field == 'sem_tree_id') {
+        if ($group_field === 'sem_tree_id') {
             $add_fields = ', sem_tree_id';
             $add_query  = "LEFT JOIN seminar_sem_tree sst ON (sst.seminar_id=seminare.Seminar_id)";
-        } else if ($group_field == 'dozent_id') {
+        } elseif ($group_field === 'dozent_id') {
             $add_fields = ', su1.user_id as dozent_id';
             $add_query  = "LEFT JOIN seminar_user as su1 ON (su1.seminar_id=seminare.Seminar_id AND su1.status='dozent')";
+        } elseif ($group_field === 'mvv') {
+            $add_fields = ', mm.`modul_id` AS mvv';
+            $add_query  = "LEFT JOIN `mvv_lvgruppe_seminar` AS mls ON (mls.`seminar_id` = seminare.`Seminar_id`) 
+                           LEFT JOIN `mvv_lvgruppe` AS ml ON (mls.`lvgruppe_id` = ml.`lvgruppe_id`)
+                           LEFT JOIN `mvv_lvgruppe_modulteil` AS mlm on(mls.`lvgruppe_id` = mlm.`lvgruppe_id`)
+                           LEFT JOIN `mvv_modulteil` AS mmt ON (mlm.`modulteil_id` = mmt.`modulteil_id`)
+                           LEFT JOIN `mvv_modul` AS mm ON (mmt.`modul_id` = mm.`modul_id`)";
+                              
         }
 
         $dbv = DbView::getView('sem_tree');
@@ -229,7 +230,7 @@ class MyCoursesController extends AuthenticatedController
         $query .= " ORDER BY sem_nr ASC";
 
         $statement = DBManager::get()->prepare($query);
-        $statement->execute([$GLOBALS['user']->id, studygroup_sem_types()]);
+        $statement->execute([$GLOBALS['user']->id]);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $my_sem[$row['Seminar_id']] = [
                 'obj_type'       => 'sem',
@@ -276,12 +277,11 @@ class MyCoursesController extends AuthenticatedController
             }
         }
         $this->studygroups         = $studygroups;
-        $this->no_grouping_allowed = $no_grouping_allowed;
         $this->groups              = $groups;
         $this->group_names         = get_group_names($group_field, $groups);
         $this->group_field         = $group_field;
         $this->my_sem              = $my_sem;
-        $this->cid                 = Request::get('cid') ? Request::get('cid') : '';
+        $this->cid                 = Request::get('cid', '');
     }
 
     /**
@@ -712,8 +712,22 @@ class MyCoursesController extends AuthenticatedController
      *
      * @param array $sem_courses
      * @param string $group_field
+     * @return array{
+     *     courses: array,
+     *     groups: array,
+     *     user_id: string,
+     *     config: array{
+     *         allow_dozent_visibility: bool,
+     *         open_groups: array,
+     *         sem_number: bool,
+     *         display_type: string,
+     *         responsive_type: string,
+     *         navigation_show_only_new: bool,
+     *         group_by: string
+     *     }
+     * }
      */
-    private function getMyCoursesData($sem_courses, $group_field)
+    private function getMyCoursesData(array $sem_courses, string $group_field): array
     {
         $sem_data = Semester::getAllAsArray();
         $temp_courses = [];
@@ -813,6 +827,11 @@ class MyCoursesController extends AuthenticatedController
             'gruppe'      => _('Farbgruppen'),
             'dozent_id'   => _('Lehrende'),
         ];
+
+        if (LvgruppeSeminar::countBySql('1') > 0) {
+            $groups['mvv'] = _('Modul');
+        }
+
         $views = Sidebar::get()->addWidget(new ViewsWidget());
         $views->setTitle(_('Gruppierung'));
         foreach ($groups as $key => $group) {

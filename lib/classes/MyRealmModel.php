@@ -333,8 +333,8 @@ class MyRealmModel
             // get teachers only if grouping selected (for better performance)
             if ($group_field === 'dozent_id') {
                 $teachers = new SimpleCollection($course->getMembersWithStatus('dozent'));
-                $teachers->filter(function ($a) use (&$_course) {
-                    return $_course['teachers'][] = $a->user->getFullName('no_title_rev');
+                $_course['teachers'] = $teachers->map(function (CourseMember $a) {
+                    return $a->user->getFullName('no_title_rev');
                 });
             }
 
@@ -344,7 +344,7 @@ class MyRealmModel
             $_course['gruppe']         = !$is_deputy ? $member_ships[$course->id]['gruppe'] ?? null : ($deputy ? $deputy->gruppe : null);
             $_course['sem_number_end'] = $course->isOpenEnded() ? $max_sem_key : Semester::getIndexById($course->end_semester->id);
             $_course['sem_number']     = Semester::getIndexById($course->start_semester->id);
-            $_course['tools']        = $course->tools;
+            $_course['tools']          = $course->tools;
             $_course['name']           = $course->name;
             $_course['temp_name']      = $course->name;
             $_course['number']         = $course->veranstaltungsnummer;
@@ -437,6 +437,11 @@ class MyRealmModel
         // Group by sem_tree
         if ($group_field === 'sem_tree_id') {
             self::groupBySemTree($sem_courses);
+        }
+
+        // Group by mvv module
+        if ($group_field === 'mvv') {
+            self::groupByMVVModule($sem_courses);
         }
 
         return $sem_courses ?: null;
@@ -771,9 +776,41 @@ class MyRealmModel
                 ksort($_tmp_courses[$sem_key]);
             }
         }
+
         $sem_courses = $_tmp_courses;
     }
 
+    /**
+     * Groups the list of courses by associated mvv module of the course..
+     *
+     * @param array $sem_courses
+     */
+    public static function groupByMVVModule(array &$sem_courses): void
+    {
+        $_tmp_courses = [];
+        foreach ($sem_courses as $sem_key => $collection) {
+            $_tmp_courses[$sem_key] = [];
+            foreach ($collection as $course) {
+                $modules = Course::getMVVModulesForCourseId($course['seminar_id']);
+                if ($modules) {
+                    $modules = array_map(function (Modul $module) {
+                        return $module->getDisplayName();
+                    }, $modules);
+                } else {
+                    $modules = [_('Keinem Modul zugeordnet')];
+                }
+
+                foreach ($modules as $module) {
+                    if (!isset($_tmp_courses[$sem_key][$module])) {
+                        $_tmp_courses[$sem_key][$module] = [];
+                    }
+                    $_tmp_courses[$sem_key][$module][$course['seminar_id']] = $course;
+                }
+            }
+            ksort($_tmp_courses[$sem_key]);
+        }
+        $sem_courses = $_tmp_courses;
+    }
 
     /**
      * Retrieves all study groups for the current user.

@@ -1,4 +1,16 @@
-<form method="post" action="<?= $controller->link_for('my_courses/store_groups/'.$studygroups) ?>" class="default">
+<?php
+/**
+ * @var MyCoursesController $controller
+ * @var bool $studygroups
+ * @var string $cid
+ * @var array $groups
+ * @var array $group_names
+ * @var array $semesters
+ * @var string $group_field
+ * @var string $current_semester
+ */
+?>
+<form method="post" action="<?= $controller->store_groups($studygroups) ?>" class="default">
     <?= CSRFProtection::tokenTag() ?>
 
     <input type="hidden" name="cid" value="<?= htmlReady($cid) ?>">
@@ -24,9 +36,9 @@
                     <th colspan="10" class="toggle-indicator">
                         <a class="toggler" href="#">
                             <? if (is_array($group_names[$group_id])): ?>
-                                <?= htmlReady(my_substr($group_names[$group_id][1] . ' > ' . $group_names[$group_id][0], 0, 70)) ?>
+                                <?= htmlReady($group_names[$group_id][1] . ' > ' . $group_names[$group_id][0]) ?>
                             <? else: ?>
-                                <?= htmlReady(my_substr($group_names[$group_id], 0, 70)) ?>
+                                <?= htmlReady($group_names[$group_id]) ?>
                             <? endif; ?>
                         </a>
                     </th>
