@@ -108,17 +108,6 @@ class ForumAbo
 
             $user = User::find($user_id);
 
-            // check if user wants an email for all or selected messages only
-            $force_email = false;
-            if ($messaging->user_wants_email($user_id)) {
-                $force_email = true;
-            }
-            // do not send mails when account is locked or expired
-            $expiration = UserConfig::get($user->id)->EXPIRATION_DATE;
-            if ($user->locked || ($expiration > 0 && $expiration < time())) {
-                $force_email = false;
-            }
-
             setTempLanguage($data['user_id']);
             $notification = sprintf(
                 _('%s hat einen Beitrag geschrieben'),
@@ -138,7 +127,8 @@ class ForumAbo
                 Icon::create('forum', 'clickable')
             );
 
-            if ($force_email) {
+            // check if user wants an email for all or selected messages only
+            if (!$user->isBlocked() && $messaging->user_wants_email($user_id)) {
                 $title = implode(' >> ', ForumEntry::getFlatPathToPosting($topic_id));
 
                 $subject = _('[Forum]') . ' ' . ($title ?: _('Neuer Beitrag'));

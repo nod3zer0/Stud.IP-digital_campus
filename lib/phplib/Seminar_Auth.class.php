@@ -230,12 +230,11 @@ class Seminar_Auth
         if (!empty($this->auth['uid']) && !in_array($this->auth['uid'], ['form', 'nobody'])) {
             $user = null;
             if (isset($GLOBALS['user']) && $GLOBALS['user']->id == $this->auth['uid']) {
-                $user = $GLOBALS['user'];
+                $user = $GLOBALS['user']->getAuthenticatedUser();
             } else {
                 $user = User::find($this->auth['uid']);
             }
-            $exp_d = $user->username ? UserConfig::get($user->id)->EXPIRATION_DATE : 0;
-            if (!$user->username || $user->locked || ($exp_d > 0 && $exp_d < time())) {
+            if (!$user->username || $user->isBlocked()) {
                 $this->unauth();
             }
         } elseif ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && Request::username('loginname')) {
@@ -265,8 +264,7 @@ class Seminar_Auth
                 $authplugin->authenticateUser('', '');
                 if ($authplugin->getUser()) {
                     $user = $authplugin->getStudipUser($authplugin->getUser());
-                    $exp_d = UserConfig::get($user->id)->EXPIRATION_DATE;
-                    if ($exp_d > 0 && $exp_d < time()) {
+                    if ($user->isExpired()) {
                         throw new AccessDeniedException(_('Dieses Benutzerkonto ist abgelaufen. Wenden Sie sich bitte an die Administration.'));
                     }
                     if ($user->locked == 1) {

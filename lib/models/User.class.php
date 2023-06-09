@@ -1474,4 +1474,28 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
     {
         return $this->getFullName();
     }
+
+    /**
+     * Returns whether a user is blocked either explicitely due to the "locked"
+     * property or by a set expiration date.
+     *
+     * @return bool
+     * @since Stud.IP 5.4
+     */
+    public function isBlocked(): bool
+    {
+        return $this->locked || $this->isExpired();
+    }
+
+    /**
+     * Returns whether a user account is expired.
+     *
+     * @return bool
+     * @since Stud.IP 5.4
+     */
+    public function isExpired(): bool
+    {
+        return $this->config->EXPIRATION_DATE > 0
+            && $this->config->EXPIRATION_DATE < time();
+    }
 }

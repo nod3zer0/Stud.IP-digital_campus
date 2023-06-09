@@ -149,9 +149,7 @@ class StudipAuthAbstract
                     $checkIPRange = ($GLOBALS['ENABLE_ADMIN_IP_CHECK'] && $user['perms'] === 'admin')
                         || ($GLOBALS['ENABLE_ROOT_IP_CHECK'] && $user['perms'] === 'root');
 
-                    $exp_d = UserConfig::get($user['user_id'])->EXPIRATION_DATE;
-
-                    if ($exp_d > 0 && $exp_d < time()) {
+                    if ($user->isExpired()) {
                         $error .= _('Dieses Benutzerkonto ist abgelaufen.<br> Wenden Sie sich bitte an die Administration.') . '<BR>';
                         return ['uid' => false, 'error' => $error];
                     } else if ($locked) {

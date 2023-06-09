@@ -106,11 +106,7 @@ class SendMailNotificationsJob extends CronJob
             [],
             function ($user_id) use ($parameters, $notification) {
                 $user = User::find($user_id);
-                if (
-                    !$user
-                    || $user->locked
-                    || ($user->config->EXPIRATION_DATE > 0 && $user->config->EXPIRATION_DATE < time())
-                ) {
+                if (!$user || $user->isBlocked()) {
                     return;
                 }
 
