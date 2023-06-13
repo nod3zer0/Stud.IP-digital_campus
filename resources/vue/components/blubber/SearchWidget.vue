@@ -15,6 +15,7 @@
                             />
 
                             <a
+                                v-if="search"
                                 class="reset-search"
                                 :href="urlReset"
                                 tabindex="0"
