@@ -19,10 +19,14 @@ class BlubberComment extends SchemaProvider
 
     public function getAttributes($resource, ContextInterface $context): iterable
     {
+        $userId = $this->currentUser->id;
+
         $attributes = [
             # `network` VARCHAR(64) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
             'content' => $resource['content'],
             'content-html' => blubberReady($resource['content']),
+
+            'is-writable' => $resource->isWritable($userId),
 
             'mkdate' => date('c', $resource['mkdate']),
             'chdate' => date('c', $resource['chdate']),

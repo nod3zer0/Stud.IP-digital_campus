@@ -15,20 +15,16 @@ class BlubberController extends AuthenticatedController
 
     public function index_action($thread_id = null)
     {
-        Navigation::activateItem('/community/blubber');
+        if (Navigation::hasItem('/community/blubber')) {
+            Navigation::activateItem('/community/blubber');
+        }
 
-        $this->threads = BlubberThread::findMyGlobalThreads(
-            51,
-            null,
-            null,
-            null,
-            Request::get("search")
-        );
+        $this->search = Request::get('search');
+        $this->threads = BlubberThread::findMyGlobalThreads(21, null, null, null, $this->search);
         if (count($this->threads) > 20) {
             array_pop($this->threads);
             $this->threads_more_down = 1;
         }
-
         if ($thread_id) {
             $GLOBALS['user']->cfg->store('BLUBBER_DEFAULT_THREAD', $thread_id);
         } else {
@@ -47,14 +43,8 @@ class BlubberController extends AuthenticatedController
             $this->thread = array_pop($threads);
         }
 
-        $this->thread_data = [];
         if ($this->thread) {
             $this->thread->markAsRead();
-            $this->thread_data = $this->thread->getJSONData(
-                50,
-                null,
-                Request::get("search")
-            );
         }
 
         if (
@@ -62,19 +52,20 @@ class BlubberController extends AuthenticatedController
             && !Avatar::getAvatar($GLOBALS['user']->id)->is_customized()
         ) {
             $_SESSION['already_asked_for_avatar'] = true;
-            PageLayout::postInfo(sprintf(
-                _('Wollen Sie ein Avatar-Bild nutzen? %sLaden Sie jetzt ein Bild hoch%s.'),
-                '<a href="' . URLHelper::getLink("dispatch.php/avatar/update/user/" . $GLOBALS['user']->id) . '" data-dialog>',
-                '</a>'
-            ));
-        }
-
-        if (Request::isDialog()) {
-            PageLayout::setTitle($this->thread->getName());
+            PageLayout::postInfo(
+                sprintf(
+                    _('Wollen Sie ein Avatar-Bild nutzen? %sLaden Sie jetzt ein Bild hoch%s.'),
+                    '<a href="' .
+                        URLHelper::getLink('dispatch.php/avatar/update/user/' . $GLOBALS['user']->id) .
+                        '" data-dialog>',
+                    '</a>'
+                )
+            );
         }
         $this->buildSidebar();
 
         if (Request::isDialog()) {
+            PageLayout::setTitle($this->thread->getName());
             $this->render_template('blubber/dialog');
         }
     }
@@ -111,7 +102,7 @@ class BlubberController extends AuthenticatedController
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute([
                     'me' => $GLOBALS['user']->id,
-                    'friend' => $user_ids[0]
+                    'friend' => $user_ids[0],
                 ]);
                 $thread_id = $statement->fetchColumn();
                 if ($thread_id) {
@@ -141,16 +132,19 @@ class BlubberController extends AuthenticatedController
             foreach ($user_ids as $user_id) {
                 $insert->execute([
                     'thread_id' => $blubber->getId(),
-                    'user_id'   => $user_id,
+                    'user_id' => $user_id,
                 ]);
             }
             $this->redirect("blubber/index/{$blubber->getId()}");
             return;
         }
 
-        $this->contacts = Contact::findBySQL("JOIN auth_user_md5 USING (user_id) WHERE owner_id = ? ORDER BY auth_user_md5.Nachname ASC, auth_user_md5.Vorname ASC", [
-            $GLOBALS['user']->id
-        ]);
+        $this->contacts = Contact::findBySQL(
+            "JOIN auth_user_md5 USING (user_id)
+             WHERE owner_id = ?
+             ORDER BY auth_user_md5.Nachname, auth_user_md5.Vorname",
+            [$GLOBALS['user']->id]
+        );
     }
 
     public function delete_action($thread_id)
@@ -164,7 +158,7 @@ class BlubberController extends AuthenticatedController
             $this->thread->delete();
             PageLayout::postSuccess(_('Der Blubber wurde gelöscht.'));
         }
-        $this->redirect("blubber/index");
+        $this->redirect('blubber/index');
         return;
     }
 
@@ -194,7 +188,7 @@ class BlubberController extends AuthenticatedController
                       LIMIT 1";
             $statement = DBManager::get()->prepare($query);
             $statement->execute([
-                'me'     => $GLOBALS['user']->id,
+                'me' => $GLOBALS['user']->id,
                 'friend' => $user_ids[0],
             ]);
             $thread_id = $statement->fetchColumn();
@@ -225,7 +219,7 @@ class BlubberController extends AuthenticatedController
         foreach ($user_ids as $user_id) {
             $insert->execute([
                 'thread_id' => $blubber->getId(),
-                'user_id'   => $user_id,
+                'user_id' => $user_id,
             ]);
         }
         $this->redirect("blubber/index/{$blubber->getId()}");
@@ -265,8 +259,12 @@ class BlubberController extends AuthenticatedController
     {
         $context = Request::get('context', $GLOBALS['user']->id);
         $context_type = Request::option('context_type');
-        if (!Request::isPost()
-            || ($context_type === 'course' && !$GLOBALS['perm']->have_studip_perm('autor', $context))
+        if (
+            !Request::isPost()
+            || (
+                $context_type === 'course'
+                && !$GLOBALS['perm']->have_studip_perm('autor', $context)
+            )
         ) {
             throw new AccessDeniedException();
         }
@@ -275,7 +273,6 @@ class BlubberController extends AuthenticatedController
         foreach ($_FILES as $file) {
             $newfile = null; //is filled below
             $file_ref = null; //is also filled below
-
 
             if ($file['size']) {
                 $document['user_id'] = $GLOBALS['user']->id;
@@ -290,10 +287,9 @@ class BlubberController extends AuthenticatedController
                          AND data_content = :content",
                         [
                             'parent_id' => $root_dir->getId(),
-                            'content'   => json_encode(['Blubber']),
+                            'content' => json_encode(['Blubber']),
                         ]
                     );
-
 
                     if ($blubber_directory) {
                         $blubber_directory = $blubber_directory->getTypedFolder();
@@ -321,10 +317,10 @@ class BlubberController extends AuthenticatedController
                         $uploaded = FileManager::handleFileUpload(
                             [
                                 'tmp_name' => [$file['tmp_name']],
-                                'name'     => [$file['name']],
-                                'size'     => [$file['size']],
-                                'type'     => [$file['type']],
-                                'error'    => [$file['error']]
+                                'name' => [$file['name']],
+                                'size' => [$file['size']],
+                                'type' => [$file['type']],
+                                'error' => [$file['error']],
                             ],
                             $blubber_directory,
                             $GLOBALS['user']->id
@@ -332,7 +328,7 @@ class BlubberController extends AuthenticatedController
 
                         if ($uploaded['error']) {
                             throw new Exception(implode("\n", $uploaded['error']));
-                        } elseif($uploaded['files'][0]) {
+                        } elseif ($uploaded['files'][0]) {
                             $oldbase = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
                             $url = $uploaded['files'][0]->getDownloadURL();
                             URLHelper::setBaseURL($oldbase);
@@ -340,13 +336,11 @@ class BlubberController extends AuthenticatedController
                         } else {
                             throw new Exception('File cannot be created!');
                         }
-
                     }
                 } catch (Exception $e) {
                     $output['errors'][] = $e->getMessage();
                     $success = false;
                 }
-
 
                 if ($success) {
                     $type = null;
@@ -387,12 +381,9 @@ class BlubberController extends AuthenticatedController
             $statement = DBManager::get()->prepare($query);
             $statement->execute([
                 'thread_id' => $thread_id,
-                'user_id'   => Request::option('user_id'),
+                'user_id' => Request::option('user_id'),
             ]);
-            $this->response->add_header(
-                'X-Dialog-Execute',
-                'STUDIP.Blubber.refreshThread'
-            );
+            $this->response->add_header('X-Dialog-Execute', 'STUDIP.Blubber.refreshThread');
             $this->response->add_header('X-Dialog-Close', '1');
             $this->render_json([
                 'thread_id' => $thread_id,
@@ -405,7 +396,7 @@ class BlubberController extends AuthenticatedController
         if ($this->thread['context_type'] !== 'private' || !$this->thread->isReadable()) {
             throw new AccessDeniedException();
         }
-        PageLayout::setTitle(_("Studiengruppe aus Konversation erstellen"));
+        PageLayout::setTitle(_('Studiengruppe aus Konversation erstellen'));
         if (Request::isPost() && count(studygroup_sem_types())) {
             $studgroup_sem_types = studygroup_sem_types();
             $course = new Course();
@@ -436,7 +427,9 @@ class BlubberController extends AuthenticatedController
             $this->thread->store();
 
             PluginManager::getInstance()->setPluginActivated(
-                PluginManager::getInstance()->getPlugin('Blubber')->getPluginId(),
+                PluginManager::getInstance()
+                    ->getPlugin('Blubber')
+                    ->getPluginId(),
                 $course->getId(),
                 true
             );
@@ -451,62 +444,47 @@ class BlubberController extends AuthenticatedController
         if ($this->thread['context_type'] !== 'private' || !$this->thread->isReadable()) {
             throw new AccessDeniedException();
         }
-        PageLayout::setTitle(_("Private Konversation verlassen"));
+        PageLayout::setTitle(_('Private Konversation verlassen'));
         if (Request::isPost()) {
             BlubberMention::deleteBySQL("user_id = :me AND external_contact = '0' AND thread_id = :thread_id", [
                 'thread_id' => $this->thread->getId(),
-                'me' => $GLOBALS['user']->id
+                'me' => $GLOBALS['user']->id,
             ]);
-            if (Request::get("delete_comments")) {
+            if (Request::get('delete_comments')) {
                 BlubberComment::deleteBySQL("thread_id = :thread_id AND user_id = :me AND external_contact = '0'", [
                     'thread_id' => $this->thread->getId(),
-                    'me' => $GLOBALS['user']->id
+                    'me' => $GLOBALS['user']->id,
                 ]);
             }
             if ($this->thread['user_id'] === $GLOBALS['user']->id) {
-                $this->thread['content'] = "";
+                $this->thread['content'] = '';
                 $this->thread->store();
             }
-            $count_departed = BlubberMention::countBySQL("INNER JOIN auth_user_md5 USING (user_id) WHERE external_contact = '0' AND thread_id = :thread_id", [
-                'thread_id' => $this->thread->getId()
-            ]);
+            $count_departed = BlubberMention::countBySQL(
+                "JOIN auth_user_md5 USING (user_id)
+                 WHERE external_contact = 0 AND thread_id = :thread_id",
+                [
+                    'thread_id' => $this->thread->getId(),
+                ]
+            );
             $count_comments = BlubberComment::countBySQL("thread_id = :thread_id AND external_contact = '0'", [
-                'thread_id' => $this->thread->getId()
+                'thread_id' => $this->thread->getId(),
             ]);
             if (!$count_departed || (!$count_comments && !$this->thread['content'])) {
                 //ich mache das Licht aus:
                 $this->thread->delete();
-                PageLayout::postSuccess(_("Private Konversation gelöscht."));
+                PageLayout::postSuccess(_('Private Konversation gelöscht.'));
             } else {
-                PageLayout::postSuccess(_("Private Konversation verlassen."));
+                PageLayout::postSuccess(_('Private Konversation verlassen.'));
             }
-            $this->redirect("blubber/index");
+            $this->redirect('blubber/index');
         }
     }
 
     protected function buildSidebar()
     {
-        $search = new SearchWidget("#");
-        $search->addNeedle(
-            _("Suche nach ..."),
-            "search",
-            true
-        );
-
-        Sidebar::Get()->addWidget($search, "blubbersearch");
-
-        $threads_widget = Sidebar::Get()->addWidget(
-            new BlubberThreadsWidget(),
-            'threads'
-        );
-        foreach ($this->threads as $thread) {
-            $threads_widget->addThread($thread);
-        }
-
-        if ($this->thread) {
-            $threads_widget->setActive($this->thread->getId());
-        }
-
-        $threads_widget->withComposer();
+        $sidebar = Sidebar::Get();
+        $sidebar->addWidget(new VueWidget('blubber-search-widget'));
+        $sidebar->addWidget(new VueWidget('blubber-threads-widget'));
     }
 }

@@ -15,7 +15,6 @@ import "./jquery-bundle.js"
 
 import "./init.js"
 import "./bootstrap/responsive.js"
-import "./chunk-loader.js"
 import "./bootstrap/vue.js"
 
 import "./bootstrap/my-courses.js";

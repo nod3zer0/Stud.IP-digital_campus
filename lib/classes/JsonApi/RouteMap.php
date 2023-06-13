@@ -173,20 +173,29 @@ class RouteMap
         $group->get('/users/{id}/blubber-threads', Routes\Blubber\ThreadsIndex::class)->setArgument('type', 'private');
         $group->get('/blubber-threads', Routes\Blubber\ThreadsIndex::class)->setArgument('type', 'all');
         $group->get('/blubber-threads/{id}', Routes\Blubber\ThreadsShow::class);
+        $group->patch('/blubber-threads/{id}', Routes\Blubber\ThreadsUpdate::class);
 
         // create, read, update and delete BlubberComments
         $group->get('/blubber-threads/{id}/comments', Routes\Blubber\CommentsByThreadIndex::class);
         $group->post('/blubber-threads/{id}/comments', Routes\Blubber\CommentsCreate::class);
         $group->get('/blubber-comments', Routes\Blubber\CommentsIndex::class);
         $group->get('/blubber-comments/{id}', Routes\Blubber\CommentsShow::class);
+        $group->post('/blubber-comments', Routes\Blubber\CommentsCreate::class);
         $group->patch('/blubber-comments/{id}', Routes\Blubber\CommentsUpdate::class);
         $group->delete('/blubber-comments/{id}', Routes\Blubber\CommentsDelete::class);
 
-        // REL mentions
+        // REL blubber-threads > mentions
         $this->addRelationship(
             $group,
             '/blubber-threads/{id}/relationships/mentions',
             Routes\Blubber\Rel\Mentions::class
+        );
+
+        // REL users > blubber-default-thread
+        $this->addRelationship(
+            $group,
+            '/users/{id}/relationships/blubber-default-thread',
+            Routes\Blubber\Rel\DefaultThread::class
         );
     }
 

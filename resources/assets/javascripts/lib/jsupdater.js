@@ -219,6 +219,12 @@ const JSUpdater = {
         active = false;
     },
 
+    // Returns true if there is already a registered handler for this index,
+    // false otherwise
+    isRegistered(index) {
+        return index in registeredHandlers;
+    },
+
     // Registers a new handler by an index, a callback and an optional data
     // object or function
     register(index, callback, data = null, interval = 0) {

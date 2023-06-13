@@ -1085,9 +1085,11 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
     /**
      * Returns whether the notifications for this thread may be disabled.
      *
+     * @param string $user_id  optional; use this ID instead of $GLOBALS['user']->id
+     *
      * @return bool
      */
-    public function mayDisableNotifications(): bool
+    public function mayDisableNotifications(string $user_id = null): bool
     {
         // Notifications may always be disabled for global blubber stream
         if ($this->id === 'global') {
@@ -1101,6 +1103,25 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
         }
 
         // Only users with permission below admin may disable the notifications.
-        return !$GLOBALS['perm']->have_perm('admin');
+        $user_id = $user_id ?? $GLOBALS['user']->id;
+
+        return !$GLOBALS['perm']->have_perm('admin', $user_id);
+    }
+
+    /**
+     * Count all unseen comments of this thread.
+     *
+     * @param string $user_id  optional; use this ID instead of $GLOBALS['user']->id
+     *
+     */
+    public function countUnseenComments(string $user_id = null): int
+    {
+        return \BlubberComment::countBySQL(
+            'thread_id = ? AND mkdate >= ?',
+            [
+                $this->getId(),
+                $this->getLastVisit($user_id ?? $GLOBALS['user']->id) ?: object_get_visit_threshold(),
+            ]
+        );
     }
 }

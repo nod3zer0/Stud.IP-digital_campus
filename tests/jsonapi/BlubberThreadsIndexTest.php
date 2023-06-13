@@ -17,6 +17,12 @@ class BlubberThreadsIndexTest extends \Codeception\Test\Unit
     protected function _before()
     {
         \DBManager::getInstance()->setConnection('studip', $this->getModule('\\Helper\\StudipDb')->dbh);
+
+        // Create global template factory if neccessary
+        $has_template_factory = isset($GLOBALS['template_factory']);
+        if (!$has_template_factory) {
+            $GLOBALS['template_factory'] = new Flexi_TemplateFactory($GLOBALS['STUDIP_BASE_PATH'] . '/templates');
+        }
     }
 
     protected function _after()

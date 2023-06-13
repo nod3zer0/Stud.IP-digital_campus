@@ -9,7 +9,7 @@ use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\InternalServerError;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
-
+use JsonApi\Schemas\BlubberThread as ThreadSchema;
 use JsonApi\Routes\ValidationTrait;
 
 /**
@@ -24,9 +24,15 @@ class CommentsCreate extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $json = $this->validate($request);
+        if (isset($args['id'])) {
+            $json = $this->validate($request, $args['id']);
+            $thread = \BlubberThread::find($args['id']);
+        } else {
+            $json = $this->validate($request, null);
+            $thread = $this->getThreadFromJson($json);
+        }
 
-        if (!($thread = \BlubberThread::find($args['id']))) {
+        if (!$thread) {
             throw new RecordNotFoundException();
         }
 
@@ -40,16 +46,30 @@ class CommentsCreate extends JsonApiController
             'thread_id' => $thread->id,
             'content' => $content,
             'user_id' => $user->id,
-            'external_contact' => 0
+            'external_contact' => 0,
         ]);
 
         return $this->getCreatedResponse($comment);
     }
 
-    protected function validateResourceDocument($json, $data)
+    protected function validateResourceDocument($json, $id = null)
     {
         if (empty(self::arrayGet($json, 'data.attributes.content'))) {
             return 'Comment should not be empty.';
         }
+        if (!$id && !$this->getThreadFromJson($json)) {
+            return 'Invalid `block` relationship.';
+        }
+    }
+
+    private function getThreadFromJson($json)
+    {
+        $relationship = 'thread';
+        if (!$this->validateResourceObject($json, 'data.relationships.' . $relationship, ThreadSchema::TYPE)) {
+            return null;
+        }
+        $resourceId = self::arrayGet($json, 'data.relationships.' . $relationship . '.data.id');
+
+        return \BlubberThread::find($resourceId);
     }
 }

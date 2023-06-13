@@ -14,6 +14,11 @@ class Authority
         return self::userIsAuthor($user) && $resource->isReadable($user->id);
     }
 
+    public static function canEditBlubberThread(User $user, BlubberThread $resource): bool
+    {
+        return self::canShowBlubberThread($user, $resource);
+    }
+
     public static function canCreatePrivateBlubberThread(User $user)
     {
         return self::userIsAuthor($user);

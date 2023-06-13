@@ -14,11 +14,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class CommentsByThreadIndex extends JsonApiController
 {
-    use TimestampTrait, FilterTrait;
+    use FilterTrait;
+    use SortTrait;
+    use TimestampTrait;
 
     protected $allowedFilteringParameters = ['since', 'before', 'search'];
-    protected $allowedIncludePaths = ['author', 'mentions', 'thread'];
+    protected $allowedIncludePaths = ['author', 'mentions', 'thread', 'thread.author'];
     protected $allowedPagingParameters = ['offset', 'limit'];
+    protected $allowedSortFields = ['mkdate'];
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -49,12 +52,12 @@ class CommentsByThreadIndex extends JsonApiController
         $params = ['thread_id' => $thread->id];
 
         if (isset($filters['before'])) {
-            $query .= ' AND mkdate <= :before';
+            $query .= ' AND mkdate < :before';
             $params['before'] = $filters['before'];
         }
 
         if (isset($filters['since'])) {
-            $query .= ' AND mkdate >= :since';
+            $query .= ' AND mkdate > :since';
             $params['since'] = $filters['since'];
         }
 
@@ -63,7 +66,14 @@ class CommentsByThreadIndex extends JsonApiController
             $params['search'] = '%' . $filters['search'] . '%';
         }
 
-        $query .= ' ORDER BY mkdate ASC LIMIT :limit OFFSET :offset';
+        $sortParameters = $this->getSortParameters();
+        if (empty($sortParameters)) {
+            $query .= ' ORDER BY mkdate';
+        } elseif (array_key_exists('mkdate', $sortParameters)) {
+            $query .= ' ORDER BY mkdate ' . ($sortParameters['mkdate'] ? 'ASC' : 'DESC');
+        }
+
+        $query .= ' LIMIT :limit OFFSET :offset';
         $params['limit'] = $limit + 1;
         $params['offset'] = $offset;
 

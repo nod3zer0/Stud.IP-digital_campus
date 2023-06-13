@@ -14,8 +14,6 @@ class BlubberThread extends SchemaProvider
     const REL_CONTEXT = 'context';
     const REL_MENTIONS = 'mentions';
 
-
-
     public function getId($resource): ?string
     {
         return $resource->id;
@@ -25,8 +23,18 @@ class BlubberThread extends SchemaProvider
     {
         $userId = $this->currentUser->id;
 
+        $contextInfo = null;
+        $contextTemplate = $resource->getContextTemplate();
+        if ($contextTemplate) {
+            $contextInfo = $contextTemplate->render();
+        }
+
         $attributes = [
+            'name' => $resource->getName(),
+
             'context-type' => $resource['context_type'],
+            'context-info' => $contextInfo,
+
             'content' => $resource['content'],
             'content-html' => formatReady($resource['content']),
 
@@ -35,7 +43,11 @@ class BlubberThread extends SchemaProvider
             'is-writable' => (bool) $resource->isWritable($userId),
 
             'is-visible-in-stream' => (bool) $resource->isVisibleInStream(),
+            'is-followed' => (bool) $resource->isFollowedByUser($userId),
+            'may-disable-notifications' => (bool) $resource->mayDisableNotifications($userId),
 
+            'latest-activity' => date('c', $resource->getLatestActivity()),
+            'visited-at' => date('c', $resource->getLastVisit($userId)),
             'mkdate' => date('c', $resource['mkdate']),
             'chdate' => date('c', $resource['chdate']),
         ];
@@ -51,16 +63,32 @@ class BlubberThread extends SchemaProvider
     public function getRelationships($resource, ContextInterface $context): iterable
     {
         $relationships = [];
-        $relationships = $this->getAuthorRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_AUTHOR));
+        $relationships = $this->getAuthorRelationship(
+            $relationships,
+            $resource,
+            $this->shouldInclude($context, self::REL_AUTHOR)
+        );
 
         $isPrimary = $context->getPosition()->getLevel() === 0;
         if (!$isPrimary) {
             return $relationships;
         }
 
-        $relationships = $this->getCommentsRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_COMMENTS));
-        $relationships = $this->getContextRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_CONTEXT));
-        $relationships = $this->getMentionsRelationship($relationships, $resource, $this->shouldInclude($context, self::REL_MENTIONS));
+        $relationships = $this->getCommentsRelationship(
+            $relationships,
+            $resource,
+            $this->shouldInclude($context, self::REL_COMMENTS)
+        );
+        $relationships = $this->getContextRelationship(
+            $relationships,
+            $resource,
+            $this->shouldInclude($context, self::REL_CONTEXT)
+        );
+        $relationships = $this->getMentionsRelationship(
+            $relationships,
+            $resource,
+            $this->shouldInclude($context, self::REL_MENTIONS)
+        );
 
         return $relationships;
     }
@@ -77,6 +105,10 @@ class BlubberThread extends SchemaProvider
                     Link::RELATED => $this->createLinkToResource($related),
                 ],
                 self::RELATIONSHIP_DATA => $related,
+            ];
+        } else {
+            $relationships[self::REL_AUTHOR] = [
+                self::RELATIONSHIP_DATA => null,
             ];
         }
 
@@ -107,7 +139,12 @@ class BlubberThread extends SchemaProvider
     {
         $relationship = [
             self::RELATIONSHIP_LINKS => [
-                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_COMMENTS),
+                Link::RELATED => $this->getFactory()->createLink(
+                    true,
+                    $this->getSelfSubUrl($resource) . '/' . self::REL_COMMENTS,
+                    true,
+                    ['unseen-comments' => $resource->countUnseenComments($this->currentUser->id)]
+                ),
             ],
         ];
 
@@ -128,7 +165,8 @@ class BlubberThread extends SchemaProvider
         $related = $data = null;
 
         if ('course' === $resource['context_type']) {
-            if (!$course = \Course::find($resource['context_id'])) {
+            $course = \Course::find($resource['context_id']);
+            if (!$course) {
                 throw new InternalServerError('Inconsistent data in BlubberThread.');
             }
 
@@ -137,7 +175,8 @@ class BlubberThread extends SchemaProvider
         }
 
         if ('institute' === $resource['context_type']) {
-            if (!$institute = \Institute::find($resource['context_id'])) {
+            $institute = \Institute::find($resource['context_id']);
+            if (!$institute) {
                 throw new InternalServerError('Inconsistent data in BlubberThread.');
             }
 
@@ -156,5 +195,23 @@ class BlubberThread extends SchemaProvider
         }
 
         return $relationships;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function hasResourceMeta($resource): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResourceMeta($resource)
+    {
+        return [
+            'avatar' => $resource->getAvatar(),
+        ];
     }
 }

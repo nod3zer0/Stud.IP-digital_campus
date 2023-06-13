@@ -2,6 +2,7 @@
 
 namespace JsonApi\Schemas;
 
+use JsonApi\Routes\Users\Authority as UsersAuthority;
 use Neomerx\JsonApi\Contracts\Factories\FactoryInterface;
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Schema\Link;
@@ -12,6 +13,7 @@ class User extends SchemaProvider
 
     const REL_ACTIVITYSTREAM = 'activitystream';
     const REL_BLUBBER = 'blubber-threads';
+    const REL_BLUBBER_DEFAULT_THREAD = 'blubber-default-thread';
     const REL_CONFIG_VALUES = 'config-values';
     const REL_CONTACTS = 'contacts';
     const REL_COURSES = 'courses';
@@ -191,11 +193,26 @@ class User extends SchemaProvider
      */
     private function getBlubberRelationship(array $relationships, \User $user, $includeData)
     {
-        $relationships[self::REL_BLUBBER] = [
-            self::RELATIONSHIP_LINKS => [
-                Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_BLUBBER),
-            ],
-        ];
+        if (\Config::get()->BLUBBER_GLOBAL_MESSENGER_ACTIVATE) {
+            $relationships[self::REL_BLUBBER] = [
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->getRelationshipRelatedLink($user, self::REL_BLUBBER),
+                ],
+            ];
+
+            if (UsersAuthority::canEditUser($this->currentUser, $user)) {
+                $threadId = $user->getConfiguration()->getValue('BLUBBER_DEFAULT_THREAD');
+                $thread = $includeData
+                    ? \BlubberThread::find($threadId)
+                    : \BlubberThread::build(['id' => $threadId], false);
+                $relationships[self::REL_BLUBBER_DEFAULT_THREAD] = [
+                    self::RELATIONSHIP_LINKS_SELF => true,
+                    self::RELATIONSHIP_LINKS => [
+                        Link::RELATED => $this->createLinkToResource($thread),
+                    ],
+                ];
+            }
+        }
 
         return $relationships;
     }

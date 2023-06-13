@@ -1,3 +1,4 @@
+import { loadChunk, loadScript, } from './chunk-loader.js';
 import Vue from './lib/studip-vue.js';
 
 import ActionMenu from './lib/actionmenu.js';
@@ -125,6 +126,8 @@ window.STUDIP = _.assign(window.STUDIP || {}, {
     JSONAPI,
     JSUpdater,
     Lightbox,
+    loadChunk,
+    loadScript,
     Markup,
     Members,
     Messages,

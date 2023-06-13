@@ -1,4 +1,4 @@
-STUDIP.loadScript = function (script_name) {
+export const loadScript = function (script_name) {
     return new Promise(function (resolve, reject) {
         let script = document.createElement('script');
         script.src = `${STUDIP.ASSETS_URL}${script_name}`;
@@ -8,7 +8,7 @@ STUDIP.loadScript = function (script_name) {
     });
 };
 
-STUDIP.loadChunk = (function () {
+export const loadChunk = (function () {
     var mathjax_promise = null;
 
     return function (chunk) {
