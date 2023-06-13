@@ -16,6 +16,7 @@ use ILess\Parser;
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL2 or any later version
  * @since   Stud.IP 4.4
+ * @deprecated since Stud.IP 5.4 and will be removed in Stud.IP 6.0
  */
 class LESSCompiler implements Compiler
 {
@@ -54,6 +55,20 @@ class LESSCompiler implements Compiler
      */
     public function compile($input, array $variables = []): string
     {
+        // Show deprecation notice
+        if (\Studip\ENV === 'development') {
+            \PageLayout::postMessage(
+                \MessageBox::info(
+                    _('Das Verwenden von LESS-Stylesheets in Plugins ist deprecated und wird zu Stud.IP 6.0 entfernt.'),
+                    [
+                        _('Als Alternative steht die Verwendung von SCSS bereit.'),
+                        _('Bitte stellen Sie Ihre Plugins entsprechend um bzw. geben den Plugin-AutorInnen Bescheid.'),
+                    ]
+                ),
+                'less-deprecation-notice'
+            );
+        }
+
         $less = $this->getPrefix() . $input;
 
         $variables['image-path'] = '"' . Assets::url('images') . '"';

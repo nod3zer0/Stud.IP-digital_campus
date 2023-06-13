@@ -16,7 +16,7 @@
 
 ## Deprecated Features
 
--
+- Das Verwenden von LESS-Stylesheets in Plugins wurde deprecated und wird zu Stud.IP 6.0 entfernt werden. Die betroffenen Plugins müssen angepasst und auf SCSS umgestellt werden.
 
 ## Known Issues
 
