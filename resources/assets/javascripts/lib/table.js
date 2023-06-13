@@ -23,6 +23,12 @@ class Table
             table = table.get(0);
         }
 
+        // Failproof
+        if (!table) {
+            console.error('Called enhanceSortableTable with invalid table object');
+            return;
+        }
+
         await STUDIP.loadChunk('tablesorter');
 
         // Iterate over the header columns and determine sorting mechanism
@@ -63,7 +69,7 @@ class Table
         }
 
         // Get additional widgets
-        const widgets = $(table).data().sortWidgets ?? [];
+        const widgets = table.dataset.sortWidgets ?? [];
 
         // Actually activate table sorter
         $(table).tablesorter({

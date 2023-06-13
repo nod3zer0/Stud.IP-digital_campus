@@ -560,7 +560,9 @@ STUDIP.MVV.Content = {
             jQuery('body').trigger('ajaxLoaded');
             jQuery(row).show();
             STUDIP.MVV.Sort.init(jQuery('.sortable'));
-            STUDIP.Table.enhanceSortableTable(row.find('.sortable-table'));
+            row.find('.sortable-table').each((index, element) => {
+                STUDIP.Table.enhanceSortableTable(element);
+            });
         });
         element.closest('tbody').toggleClass('collapsed not-collapsed');
         return false;
@@ -808,8 +810,9 @@ STUDIP.MVV.Aufbaustg = {
                 data: $(df).serialize(),
                 type: 'POST',
                 success: function (data) {
-                    $('#mvv-aufbaustg-table').html($(data).html());
-                    STUDIP.Table.enhanceSortableTable($('#mvv-aufbaustg-table').find('.sortable-table'));
+                    $('#mvv-aufbaustg-table').html($(data).html()).find('.sortable-table').each((index, element) => {
+                        STUDIP.Table.enhanceSortableTable(element);
+                    });
                 }
             })
         }, 100);
@@ -820,8 +823,9 @@ STUDIP.MVV.Aufbaustg = {
                 url: STUDIP.URLHelper.getURL('dispatch.php/studiengaenge/studiengaenge/aufbaustg_table/' + stg_id),
                 type: 'GET',
                 success: function (data) {
-                    $('#mvv-aufbaustg-table').html($(data).html());
-                    STUDIP.Table.enhanceSortableTable($('#mvv-aufbaustg-table').find('.sortable-table'));
+                    $('#mvv-aufbaustg-table').html($(data).html()).find('.sortable-table').each((index, element) => {
+                        STUDIP.Table.enhanceSortableTable(element);
+                    });
                 }
             })
         }, 100);
