@@ -367,6 +367,7 @@ STUDIP.MVV.Sort = {
             items: '> .drag-handle',
             cursor: 'move',
             containment: 'parent',
+            tolerance: 'pointer',
             axis: 'y',
             start: STUDIP.MVV.Sort.start,
             stop: STUDIP.MVV.Sort.stop
