@@ -111,7 +111,7 @@ class IliasSoap extends StudipSoapClient
             return false;
         }
 
-        $cache_index = md5($method . ':' . implode($params, '-'));
+        $cache_index = md5($method . ':' . implode('-', $params));
         if ($this->caching_active && isset($this->soap_cache[$cache_index]) && $method !== 'login') {
             $result = $this->soap_cache[$cache_index];
         } else {
@@ -1128,7 +1128,7 @@ class IliasSoap extends StudipSoapClient
         }
 
         if (is_array($path)) {
-            return implode($path, $this->separator_string);
+            return implode($this->separator_string, $path);
         } else {
             return false;
         }
@@ -1160,7 +1160,7 @@ class IliasSoap extends StudipSoapClient
         }
 
         if (is_array($path)) {
-            return implode($path, '_');
+            return implode('_', $path);
         } else {
             return false;
         }

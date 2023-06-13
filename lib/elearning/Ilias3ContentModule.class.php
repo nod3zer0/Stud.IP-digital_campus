@@ -62,7 +62,6 @@ class Ilias3ContentModule extends ContentModule
                 $user_name = trim($user_data["title"] . " " . $user_data["firstname"] . " " . $user_data["lastname"]);
                 $this->setAuthors($user_name);
             }
-//          echo $object_data["accessInfo"] . ": " . implode($object_data["operations"], ".");
             $this->setPermissions($object_data["accessInfo"], $object_data["operations"]);
         }
         else

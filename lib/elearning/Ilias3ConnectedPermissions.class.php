@@ -111,8 +111,6 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
                     }
                 }
             }
-//             if ($GLOBALS["debug"] == true)
-//                 echo "P$proper_role A$active_role U" . $user_crs_role . " R" . implode($connected_cms[$this->cms_type]->user->getRoles(), ".")."<br>";
         }
 
         // is user already course-member? otherwise add member with proper role
@@ -205,9 +203,9 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
                     $module_id,
                     $connected_cms[$this->cms_type]->user->getId()
                     );
-//      echo "MID".$module_id."UID".$connected_cms[$this->cms_type]->user->getId()."OPS".implode($this->tree_allowed_operations,"-") ;
-        if (! is_array($this->tree_allowed_operations))
+        if (!is_array($this->tree_allowed_operations)) {
             return false;
+        }
 
         $no_permission = false;
         if (isset($current_module)) { //TODO: fixes Warning:Creating default object from empty value - possible side effects

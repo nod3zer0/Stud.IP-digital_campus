@@ -83,7 +83,7 @@ class MvvFileFileref extends ModuleManagementModel
                 list($category, $type) = explode('/', $mime_type, 2);
                 if ($category == 'application') {
                     foreach ($application_category as $name => $type_name) {
-                        if (preg_match('/' . implode($type_name, '|') . '/i', $type)) {
+                        if (preg_match('/' . implode('|', $type_name) . '/i', $type)) {
                             return $name;
                         }
                     }

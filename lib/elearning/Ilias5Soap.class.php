@@ -30,7 +30,7 @@ class Ilias5Soap extends Ilias4Soap
      */
     function call($method, $params)
     {
-        $index = md5($method . ":" . implode($params, "-"));
+        $index = md5($method . ":" . implode('-', $params));
         // return false if no session_id is given
         if (($method != "login") AND ($params["sid"] == ""))
             return false;

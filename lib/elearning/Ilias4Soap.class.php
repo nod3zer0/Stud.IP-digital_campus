@@ -141,7 +141,7 @@ class Ilias4Soap extends Ilias3Soap
         }
 
         if (is_array($path)) {
-            return implode($path, $this->separator_string);
+            return implode($this->separator_string, $path);
         } else {
             return false;
         }
@@ -173,7 +173,7 @@ class Ilias4Soap extends Ilias3Soap
         }
 
         if (is_array($path)) {
-            return implode($path, '_');
+            return implode('_', $path);
         } else {
             return false;
         }

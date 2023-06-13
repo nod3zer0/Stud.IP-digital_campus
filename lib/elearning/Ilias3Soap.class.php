@@ -93,7 +93,7 @@ class Ilias3Soap extends StudipSoapClient
     */
     function call($method, $params)
     {
-        $index = md5($method . ":" . implode($params, "-"));
+        $index = md5($method . ":" . implode('-', $params));
         // return false if no session_id is given
         if (($method != "login") AND ($params["sid"] == ""))
             return false;
@@ -597,9 +597,9 @@ class Ilias3Soap extends StudipSoapClient
         {
             $objects = $this->parseXML($result);
             $roles = [];
-            foreach ($objects as $count => $role)
+            foreach ($objects as $count => $role) {
                 $roles[$count] = $role["obj_id"];
-//          echo implode($roles, ".");
+            }
             return $roles;
         }
         return false;
