@@ -27,8 +27,8 @@ trait FilterTrait
     {
         $filtering = $this->getQueryParameters()->getFilteringParameters() ?? [];
 
-        $filters['since'] = $filtering['since'] ? self::fromISO8601($filtering['since'])->getTimestamp() : null;
-        $filters['before'] = $filtering['before'] ? self::fromISO8601($filtering['before'])->getTimestamp() : null;
+        $filters['since'] = isset($filtering['since']) ? self::fromISO8601($filtering['since'])->getTimestamp() : null;
+        $filters['before'] = isset($filtering['before']) ? self::fromISO8601($filtering['before'])->getTimestamp() : null;
         $filters['search'] = $filtering['search'] ?? null;
 
         return $filters;
