@@ -203,7 +203,7 @@ class TreeAbstract {
     */
     public function getKids($item_id)
     {
-        return (isset($this->tree_childs[$item_id]) && is_array($this->tree_childs[$item_id])) ? $this->tree_childs[$item_id] : null;
+        return (isset($this->tree_childs[$item_id]) && is_array($this->tree_childs[$item_id])) ? $this->tree_childs[$item_id] : [];
     }
 
     /**
@@ -242,7 +242,7 @@ class TreeAbstract {
                 $this->getKidsKids($kids[$i],true);
             }
         }
-        return (!$in_recursion) ? $kidskids : null;
+        return (!$in_recursion) ? $kidskids : [];
     }
 
     /**
@@ -266,7 +266,7 @@ class TreeAbstract {
                 $this->getNumKidsKids($kids[$i],true);
             }
         }
-        return (!$in_recursion) ? $num_kidskids : null;
+        return (!$in_recursion) ? $num_kidskids : 0;
     }
 
     /**
