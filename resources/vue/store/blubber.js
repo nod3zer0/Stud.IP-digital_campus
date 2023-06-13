@@ -213,6 +213,10 @@ export default {
             }
         },
 
+        loadComment({ dispatch }, { id }) {
+            return dispatch('blubber-comments/loadById', { id }, { root: true });
+        },
+
         async loadNewerComments({ commit, dispatch, getters, rootGetters }, { id, search }) {
             if (!getters.moreNewer(id)) {
                 return;
@@ -319,7 +323,7 @@ export default {
                 {
                     parent,
                     relationship: 'blubber-default-thread',
-                    data: { type: "blubber-threads", id },
+                    data: { type: 'blubber-threads', id },
                 },
                 { root: true }
             );
@@ -339,12 +343,16 @@ export default {
         updateState({ commit, dispatch }, datagram) {
             Object.entries(datagram).forEach(([method, data]) => {
                 if (method === 'addNewComments') {
-                    return Promise.all(
-                        Object.keys(data).map((id) => {
-                            commit('setMoreNewer', { id, hasMore: true });
-                            return dispatch('loadNewerComments', { id });
-                        })
-                    );
+                    const loadThreads = Object.keys(data).map((id) => {
+                        commit('setMoreNewer', { id, hasMore: true });
+                        return dispatch('loadNewerComments', { id });
+                    });
+                    const loadComments = Object.values(data)
+                        .flat()
+                        .filter((comment) => comment.mkdate !== comment.chdate)
+                        .map(({ comment_id }) => dispatch('loadComment', { id: comment_id }));
+
+                    return Promise.all(loadThreads.concat(loadComments));
                 } else if (method === 'removeDeletedComments') {
                     return Promise.all(
                         data.map((id) => {
