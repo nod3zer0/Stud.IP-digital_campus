@@ -23,7 +23,9 @@ class Studiengaenge_VersionenController extends SharedVersionController
             'chooser_filter',
             Request::optionArray('chooser')
         );
-        URLHelper::bindLinkParam('chooser', $this->chooser_filter);
+        if (count($this->chooser_filter) > 0) {
+            URLHelper::bindLinkParam('chooser', $this->chooser_filter);
+        }
     }
 
     public function chooser_action()
@@ -32,21 +34,21 @@ class Studiengaenge_VersionenController extends SharedVersionController
         switch ($step) {
             case 'index' :
                 $this->chooser_filter['fachbereich'] =
-                    Request::option('id', !empty($this->chooser_filter['fachbereich']));
+                    Request::option('id', $this->chooser_filter['fachbereich'] ?? null);
                 $this->chooser_filter['stgteile'] = null;
                 $this->chooser_faecher_fachbereich();
                 $list = 'faecher_fachbereich';
                 break;
             case 'faecher_fachbereich' :
                 $this->chooser_filter['fach'] =
-                    Request::option('id', !empty($this->chooser_filter['fach']));
+                    Request::option('id', $this->chooser_filter['fach'] ?? null);
                 $this->chooser_filter['stgteile'] = null;
                 $this->chooser_stgteile_fach();
                 $list = 'stgteile_fach';
                 break;
             case 'stgteile_fach' :
                 $this->chooser_filter['stgteile'] =
-                    Request::option('id', $this->chooser_filter['stgteile']);
+                    Request::option('id', $this->chooser_filter['stgteile'] ?? null);
                 $this->redirect($this->action_url('index/' .  $this->chooser_filter['stgteile']));
                 return;
             default :
