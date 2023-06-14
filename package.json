@@ -122,6 +122,7 @@
         "typescript": "^5.0.2",
         "vrp-vue-resizable": "1.2.7",
         "vue": "^2.6.12",
+        "vue-dragscroll": "^3.0.1",
         "vue-gettext": "^2.1.12",
         "vue-loader": "^15.9.8",
         "vue-router": "^3.5.1",
