@@ -1791,6 +1791,67 @@ b l o c k a d d e r
         overflow-y: auto;
         scrollbar-width: thin;
         scrollbar-color: $base-color #f5f5f5;
+
+        .input-group.files-search {
+            &.search {
+                border: thin solid var(--dark-gray-color-30);
+                margin-bottom: 0px;
+                input {
+                    border: none;
+                }
+            }
+
+            .input-group-append {
+                .button {
+                    border: none;
+                    border-left: thin solid var(--dark-gray-color-30);
+                    &.active {
+                        background-color: var(--base-color);
+                    }
+                }
+                .reset-search {
+                    border: none;
+                    background-color: var(--white);
+                }
+            }
+
+            .active-filter {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border: solid thin var(--black);
+                background-color: var(--content-color-10);
+                margin: 3px;
+                padding: 2px 3px;
+
+                .removefilter {
+                    border: none;
+                    background-color: transparent;
+                }
+            }
+        }
+
+        .cw-block-search {
+            width: inherit;
+        }
+
+        .filterpanel {
+            margin-bottom: 5px;
+            padding: 2px;
+            border: thin solid var(--dark-gray-color-30);
+            border-top: none;
+            background-color: #fff;
+
+            .button {
+                min-width: inherit;
+                margin: 4px 2px;
+
+                &.button-active {
+                    background-color: var(--base-color);
+                    color: var(--white);
+                }
+            }
+        }
     }
 
     .cw-collapsible {

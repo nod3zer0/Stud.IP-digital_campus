@@ -90,4 +90,14 @@ class Canvas extends BlockType
     {
         return ['image'];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Bild'), _('Interaktion'), 'jpg', 'png', 'gif', _('zeichnen'),
+            _('schreiben'), _('Studierende aktivieren'), _('Whiteboard'), _('malen'),
+            _('Grafik'), _('Screenshot'), _('Hintergrundbild'), _('Einstieg'),
+            _('Reflexion'), _('Austausch'), _('Notizen'), _('Brainstorming')
+        ];
+    }
 }

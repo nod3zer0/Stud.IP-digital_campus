@@ -109,4 +109,17 @@ class Embed extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Text'), _('Video'), _('Audio'), _('Bild'), _('Webseite'), 'YouTube',
+            'Vimeo', 'Spotify', 'swan.office', 'speakerdeck', 'soundcloud',
+            'slideshare', 'sketchfab', 'learningapps', 'kidoju', 'giphy',
+            'flickr', 'ethfiddle', 'deviantart', 'codesandbox', 'codepen',
+            'audiomack', _('extern'), _('einbinden'), _('einbetten'), _('einfügen'),
+            _('Multimedia'), _('Grafik'), _('Podcast'), _('Medien'), _('bereitstellen'),
+            'gif', 'meme', _('Cloud'), _('Interaktion')
+        ];
+    }
 }

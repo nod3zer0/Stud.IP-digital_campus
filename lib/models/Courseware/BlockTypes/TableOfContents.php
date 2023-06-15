@@ -58,4 +58,13 @@ class TableOfContents extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Inhalt'), _('Kacheln'), _('Layout'), _('Navigation'), _('Inhaltsnavigation'),
+            _('Unterseite'), _('Liste'), _('Gliederung'), _('Struktur'), _('Dekoration'),
+            _('Design'), _('Strukturierung'), _('Orientierung'), _('Übersicht')
+        ];
+    }
 }

@@ -63,4 +63,13 @@ class BiographyAchievements extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Portfolio'), _('Lebenslauf'), _('Zertifikat'), _('Bewerbung'), _('Karriere'), _('Job'),
+            _('Beruf'), _('Achievement'), _('Badges'), _('Auszeichnung'), _('Ergebnis'), _('Sammelmappe'),
+            _('Akkreditierung'), _('Buch'), _('Veröffentlichung'), _('Mitgliedschaft'), _('Abzeichen')
+        ];
+    }
 }

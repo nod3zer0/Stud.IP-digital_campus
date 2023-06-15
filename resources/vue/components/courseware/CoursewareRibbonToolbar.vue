@@ -31,6 +31,7 @@
                             :index="1"
                         >
                             <courseware-tools-blockadder
+                                v-if="showBlockAdder"
                                 id="cw-ribbon-tool-blockadder"
                                 :stickyRibbon="stickyRibbon"
                                 @blockAdded="$emit('blockAdded')"

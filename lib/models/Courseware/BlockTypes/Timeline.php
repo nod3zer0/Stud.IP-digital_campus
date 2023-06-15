@@ -66,4 +66,12 @@ class Timeline extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Ereignis'), _('Zeitstrahl'), _('Geschichte'), _('Gestaltung'), _('Layout'),
+            _('Prozess'), _('Ablauf'), _('Ablaufplan'), _('Chronologie'), _('Deadline')
+        ];
+    }
 }

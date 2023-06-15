@@ -58,4 +58,14 @@ class Code extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Quelltext'), _('Syntaxhervorhebung'), _('Monospace'),
+            _('Codeblock'), _('Programmcode'), _('programmieren'), _('Pseudocode'), 'Python',
+            'C', 'Java', 'Prolog', 'Lisp', 'Javascript', 'Haskell', 'C++',
+            'C#', 'Objective C', 'Rust', 'Assembler', _('Algorithmus')
+        ];
+    }
 }

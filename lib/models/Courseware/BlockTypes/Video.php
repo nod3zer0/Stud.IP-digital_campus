@@ -81,7 +81,7 @@ class Video extends BlockType
 
     public static function getCategories(): array
     {
-        return ['basis', 'multimedia'];
+        return ['multimedia'];
     }
 
     public static function getContentTypes(): array
@@ -92,5 +92,16 @@ class Video extends BlockType
     public static function getFileTypes(): array
     {
         return ['video'];
+    }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Datei'), _('Upload'), _('abspielen'), _('Medien'), _('Einstieg'),
+            _('Film'), _('PowerPoint'), _('Lernvideo'), _('Lehrvideo'), _('Lernfilm'),
+            _('Screencast'), _('Aufzeichnung'), _('Präsentation'), _('Erklärfilm'),
+            _('Visualisierung'), _('Veranschaulichung'), 'mp4', 'avi', 'mkv',
+            _('Inhalt erstellen'), _('Input'), _('Illustration'), _('Vertiefung')
+        ];
     }
 }

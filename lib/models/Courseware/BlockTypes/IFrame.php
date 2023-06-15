@@ -66,4 +66,14 @@ class IFrame extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Webseite'), _('einbinden'), _('extern'), _('klickbar'), _('Rahmen'),
+            _('Datei'), _('einbetten'), _('Seite auf der Seite'), _('Multimedia'),
+            _('Navigation'), _('Material'), _('Reader'), _('online lesen'), _('Infomaterial'),
+            _('Homepage'), _('Evaluation'), _('Survey')
+        ];
+    }
 }

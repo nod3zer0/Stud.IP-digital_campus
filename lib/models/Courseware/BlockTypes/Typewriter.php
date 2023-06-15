@@ -60,4 +60,12 @@ class Typewriter extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Dekoration'), _('Einblenden'), _('Texteffekt'), _('Einstieg'), _('Design'),
+            _('Auflockerung'), _('Gestaltung'), _('Text'), _('Animation')
+        ];
+    }
 }

@@ -104,4 +104,13 @@ class BeforeAfter extends BlockType
     {
         return ['image'];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Bild'), _('Interaktion'), 'jpg', 'png', 'gif', _('Studierende aktivieren'),
+            _('Schieberegler'), _('hochladen'), _('Illustration'), _('Vergleich'), _('vergleichen'),
+            _('schieben'), _('bewegen'), _('anfassen'), _('Webbild'), _('Veränderung'), _('Vorher Nachher')
+        ];
+    }
 }

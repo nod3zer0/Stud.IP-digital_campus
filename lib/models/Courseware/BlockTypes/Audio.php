@@ -87,7 +87,7 @@ class Audio extends BlockType
 
     public static function getCategories(): array
     {
-        return ['basis', 'multimedia', 'interaction'];
+        return ['multimedia', 'interaction'];
     }
 
     public static function getContentTypes(): array
@@ -98,5 +98,19 @@ class Audio extends BlockType
     public static function getFileTypes(): array
     {
         return ['audio'];
+    }
+
+    public static function getTags(): array
+    {
+        return [
+            'mp3', _('Interaktion'), _('Sprachnachricht'), _('Audiogalerie'),
+            _('Studierende aktivieren'), _('Austausch'), _('Musik'), _('Sprache'),
+            _('Ton'), _('Tonaufzeichnung'), _('O Ton'), _('Zitat'), _('Sprachmemo'),
+            _('Tonaufnahme'), _('Vorstellungsrunde'), _('Podcast'), _('Audioforum'),
+            _('Sprachaufzeichnung'), _('Aufzeichnung'), _('Multimedia'),
+            _('Inhalt erstellen'), _('Studierende interagieren'), _('Einstieg'),
+            _('hochladen'), _('Aufnahme'), _('Abspielen'), _('Aktivierung'),
+            _('Interview'), _('Radio'), _('Tonspur'), _('Stimme'), _('Sprachaufnahme')
+        ];
     }
 }

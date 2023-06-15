@@ -117,4 +117,14 @@ class DialogCards extends BlockType
     {
         return ['image'];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Karteikarten'), _('Vokabeln'), _('Übersetzung'), _('übersetzen'), _('Glossar'),
+            _('FAQ'), _('wenden'), _('umdrehen'), _('beidseitig'), _('Quiz'), _('Selbsttest'),
+            _('Memory'), _('Lernkarten'), _('Interaktion'), _('Frage Antwort'),
+            _('Lernhilfe'), _('Lerntest')
+        ];
+    }
 }

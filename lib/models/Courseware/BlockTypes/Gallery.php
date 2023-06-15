@@ -150,4 +150,13 @@ class Gallery extends BlockType
     {
         return ['image'];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Bild'), _('Gestaltung'), _('Galerie'), _('Bilderkarussell'), _('Illustration'),
+            _('Foto'), 'jpg', 'png', 'gif', _('Abbildung'), _('Slideshow'),
+            _('Diashow'), _('Slider'), _('blättern'), _('Veranschaulichung'), _('Visualisierung')
+        ];
+    }
 }

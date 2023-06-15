@@ -59,4 +59,14 @@ class KeyPoint extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Merksatz'), _('Eselsbrücke'), _('Zusammenfassung'), _('Hinweis'), _('Tipp'),
+            _('Warnung'), _('Definition'), _('Motto'), _('Fazit'), _('merken'), _('Icon'),
+            _('Rahmen'), _('hervorheben'), _('Gestaltung'), _('Dekoration'),
+            _('Illustration'), _('Design'), _('Ergebnissicherung'), _('highlighten'), _('Markierung')
+        ];
+    }
 }

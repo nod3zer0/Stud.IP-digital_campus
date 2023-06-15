@@ -78,6 +78,16 @@ abstract class BlockType
     abstract public static function getFileTypes(): array;
 
     /**
+     * Returns a list of tags to which this type of block is associated.
+     * 
+     * @return array the list of tags
+     */
+    public static function getTags(): array
+    {
+        return ['unspecified'];
+    }
+
+    /**
      * Returns all known types of containers: core types and plugin types as well.
      *
      * @return array<string> a list of all known types of blocks;

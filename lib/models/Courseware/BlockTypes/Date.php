@@ -58,4 +58,16 @@ class Date extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Darstellung'), _('Layout'), _('Erinnerung'), _('Datum'), _('Kalender'),
+            _('Dekoration'), _('Termin'), _('Countdown'), _('Uhr'), _('Ziffer'), _('Zahl'),
+            _('Uhrzeit'), _('Tag'), _('Stunde'), _('Minute'), _('Veranstaltungszeit'),
+            _('live'), _('Treffen'), _('VK'), _('Deadline'), _('Konferenz'), _('Meeting'),
+            _('Session'), _('Sitzung'), _('Verabredung'), _('Abgabezeitpunkt'),
+            _('Einreichungsfrist'), _('Frist'), _('Bearbeitungszeit')
+        ];
+    }
 }

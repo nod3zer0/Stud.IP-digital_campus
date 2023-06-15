@@ -62,4 +62,13 @@ class BiographyPersonalInformation extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Portfolio'), _('Lebenslauf'), _('Zertifikat'), _('Bewerbung'), _('Qualifikation'),
+            _('Job'), _('Beruf'), _('Präsentation'), _('Geburtstag'), _('Geburtsort'), _('Daten'),
+            _('Person'), _('Sammelmappe'), _('Biografie'), _('Familienstand')
+        ];
+    }
 }

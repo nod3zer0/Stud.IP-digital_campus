@@ -106,4 +106,14 @@ class Headline extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Gestaltung'), _('Überschrift'), _('Text'), _('Dekoration'), _('Trenner'),
+            _('Design'), _('Titel'), _('Illustration'), _('Thema'), _('Auflockerung'),
+            _('Strukturierung'), _('Icon'), _('Farbe'), _('Layout'), _('Banner'),
+            _('highlighten'), _('Markierung'), _('hervorheben')
+        ];
+    }
 }

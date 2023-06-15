@@ -116,7 +116,7 @@ class Text extends BlockType
 
     public static function getCategories(): array
     {
-        return ['basis', 'text'];
+        return ['text'];
     }
 
     public static function getContentTypes(): array
@@ -127,6 +127,16 @@ class Text extends BlockType
     public static function getFileTypes(): array
     {
         return [];
+    }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Text'), _('Bild'), _('schreiben'), _('WYSIWIG'), _('eintippen'),
+            _('Editor'), _('Eingabe'), _('Eingabefeld'), _('Skript'), _('einfügen'),
+            _('Foto'), _('Inhalt'), _('Tabelle'), _('Inhalt erstellen'),
+            _('Veranschaulichung'), _('Visualisierung'), 'png', 'jpg', 'gif',
+        ];
     }
 
         /**

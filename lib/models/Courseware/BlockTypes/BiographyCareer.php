@@ -69,4 +69,15 @@ class BiographyCareer extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Portfolio'), _('Lebenslauf'), _('Zertifikat'), _('Bewerbung'), _('Qualifikation'),
+            _('Job'), _('Beruf'), _('Schule'), _('Berufserfahrung'), _('Arbeit'), _('CV'),
+            _('curriculum vitae'), _('Vita'), _('akademischer Lebenslauf'), _('Werdegang'),
+            _('Sammelmappe'), _('Biografie'), _('Hintergrund'), _('Praktikum'), _('Auslandsaufenthalt'),
+            _('Abschluss'), _('Zeugnis')
+        ];
+    }
 }

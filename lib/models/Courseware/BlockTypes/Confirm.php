@@ -57,4 +57,13 @@ class Confirm extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Fortschritt'), _('Review'), _('Markierung'), _('Kontrolle'), _('Häkchen'),
+            _('Sperre'), _('Lesebestätigung'), _('Selbstkontrolle'), _('Check'),
+            _('Zustimmung'), _('Vollständigkeit'), _('Abschluss'), _('Level')
+        ];
+    }
 }

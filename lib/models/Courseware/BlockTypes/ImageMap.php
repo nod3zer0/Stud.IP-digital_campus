@@ -87,4 +87,14 @@ class ImageMap extends BlockType
     {
         return ['image'];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Bild'), _('Link'), _('klicken'), _('Klickfläche'), _('Schaltfläche'),
+            _('Beschriftung'), _('Verweis'), _('Imagemap'), _('Karte'),
+            _('weiterleiten'), _('Weiterleitung'), _('Weiterführung'), _('Illustration'),
+            'jpg', 'png', 'gif',
+        ];
+    }
 }

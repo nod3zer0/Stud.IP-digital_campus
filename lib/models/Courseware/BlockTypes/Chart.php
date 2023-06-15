@@ -59,4 +59,16 @@ class Chart extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Darstellung'), _('Zahl'), _('Daten'), _('Säulendiagramm'), _('Balkendiagramm'),
+            _('Kreisdiagramm'), _('Ringdiagramm'), _('Polardiagramm'), _('Liniendiagramm'),
+            _('Visualisierung'), _('Informationsvisualisierung'), _('Datenvisualisierung'),
+            _('deskriptiv'), _('Statistik'), _('Datensatz'), _('Skala'), _('Illustration'),
+            _('Dekoration'), _('Datenpunkt'), _('Veranschaulichung'), _('Verlauf'), _('Zeitreihe'),
+            _('Entwicklung'), _('Korrelation'), _('Diagramm')
+        ];
+    }
 }

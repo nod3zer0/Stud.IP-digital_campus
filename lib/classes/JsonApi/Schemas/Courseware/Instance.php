@@ -58,6 +58,7 @@ class Instance extends SchemaProvider
             'categories' => $typeClass::getCategories(),
             'content_types' => $typeClass::getContentTypes(),
             'file_types' => $typeClass::getFileTypes(),
+            'tags' => $typeClass::getTags(),
         ];
     }
 

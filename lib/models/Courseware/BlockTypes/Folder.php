@@ -136,4 +136,16 @@ class Folder extends BlockType
     {
         return ['all'];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Hausaufgaben'), _('Upload'), _('Download'), _('Datei'), _('hochladen'),
+            _('herunterladen'), _('einstellen'), 'pdf', 'ppt', 'doc', 'xls',
+            'odt', 'ods', 'odp', 'PowerPoint', 'Word', 'Excel', 'LibreOffice',
+            'OpenOffice', _('Ordner'), _('Dokument'), _('Link'), _('verlinken'), _('Skript'),
+            _('Material'), _('Zusatz'), 'zip', _('Mappe'), _('Sammlung'), _('Sicherung'),
+            _('Literatur'), _('Zusatzmaterial'), _('Semesterapparat'), _('Infomaterial')
+        ];
+    }
 }

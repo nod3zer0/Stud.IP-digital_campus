@@ -60,4 +60,13 @@ class Link extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('URL'), _('Verlinkung'), _('Webseite'), _('extern'), _('weiterleiten'),
+            _('Material'), _('Zusatz'), _('Weiterleitung'), _('intern'), _('Verweis'),
+            _('Index'), _('Hyperlink'), _('Quellenangabe'), _('Linkliste'), _('Linksammlung')
+        ];
+    }
 }

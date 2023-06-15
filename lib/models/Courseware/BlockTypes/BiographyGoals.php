@@ -59,4 +59,14 @@ class BiographyGoals extends BlockType
     {
         return [];
     }
+
+    public static function getTags(): array
+    {
+        return [
+            _('Portfolio'), _('Lebenslauf'), _('Zertifikat'), _('Bewerbung'), _('Qualifikation'),
+            _('Job'), _('Beruf'), _('Zielstellung'), _('Fortschritt'), _('Bewertung'),
+            _('Selbsteinschätzung'), _('Review'), _('Kompetenzen'), _('Motivation'), _('Sammelmappe'),
+            _('persönlich'), _('Schulisches'), _('Berufliches'), _('Akademisches'), _('Abschluss')
+        ];
+    }
 }
