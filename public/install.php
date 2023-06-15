@@ -29,6 +29,7 @@ require_once 'lib/classes/LinkButton.class.php';
 require_once 'lib/classes/StudipInstaller.php';
 require_once 'lib/classes/SystemChecker.php';
 require_once 'lib/classes/Markup.class.php';
+require_once 'lib/exceptions/AccessDeniedException.php';
 require_once 'vendor/phpass/PasswordHash.php';
 
 // Mock gettext functions if extension is not available
