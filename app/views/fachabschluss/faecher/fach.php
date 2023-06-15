@@ -59,7 +59,7 @@
                 <li class="mvv-item-list-placeholder"><?= _('Es wurde noch keine verantwortliche Einrichtung angegeben.') ?></li>
             <? endif; ?>
             <? foreach ($fach->getFachbereiche() as $fachbereich) : ?>
-                <li id="fachbereiche_<?= $fachbereich->getId() ?>" class="drag-handle">
+                <li id="fachbereiche_<?= $fachbereich->getId() ?>" class="drag-handle sort_items">
                     <div class="mvv-item-list-text">
                         <? if ($fachbereich) : ?>
                             <?= htmlReady($fachbereich->getDisplayName()) ?>

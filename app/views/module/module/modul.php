@@ -320,7 +320,7 @@ if ($GLOBALS['MVV_MODUL']['SPRACHE']['default'] != $display_language) {
                     <?= _('Geben Sie gegebenenfalls beteiligte Einrichtungen an.') ?>
                 </li>
                 <? foreach ($modul->assigned_institutes as $assigned_institute) : ?>
-                    <li id="institut_<?= $assigned_institute->institut_id ?>" class="drag-handle">
+                    <li id="institut_<?= $assigned_institute->institut_id ?>" class="drag-handle sort_items">
                         <div class="mvv-item-list-text">
                             <? if ($assigned_institute->institute) : ?>
                                 <?= htmlReady($assigned_institute->institute->Name) ?>
@@ -371,7 +371,7 @@ if ($GLOBALS['MVV_MODUL']['SPRACHE']['default'] != $display_language) {
                 </li>
                 <? endif; ?>
                 <? foreach ($modul->languages as $assigned_language) : ?>
-                <li id="language_<?= $assigned_language->lang ?>" class="drag-handle">
+                <li id="language_<?= $assigned_language->lang ?>" class="drag-handle sort_items">
                     <div class="mvv-item-list-text"><?= htmlReady($assigned_language->getDisplayName()) ?></div>
                     <div class="mvv-item-list-buttons">
                         <a href="#" class="mvv-item-remove"><?= Icon::create('trash', 'clickable', array('title' => _('Sprache entfernen')))->asImg(); ?></a>

@@ -364,7 +364,7 @@ STUDIP.MVV.Sort = {
     },
     init: function(target) {
         target.sortable({
-            items: '> .drag-handle',
+            items: '> .sort_items',
             cursor: 'move',
             containment: 'parent',
             tolerance: 'pointer',
@@ -451,7 +451,7 @@ STUDIP.MVV.Content = {
             jQuery('<div class="mvv-item-list-text"/>')
                 .text(item_name).appendTo(item);
             if (target.hasClass('sortable')) {
-                item.addClass('drag-handle');
+                item.addClass('drag-handle sort_items');
             }
             target.children('.mvv-item-list-placeholder').hide();
             if (target.hasClass('mvv-assign-single')) {
