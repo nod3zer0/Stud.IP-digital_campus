@@ -1,6 +1,7 @@
 image: studip/studip:tests-php7.2
 
 variables:
+  FF_NETWORK_PER_BUILD: 1
   GIT_DEPTH: 1
   MYSQL_RANDOM_ROOT_PASSWORD: "true"
   MYSQL_DATABASE: studip_db
@@ -303,6 +304,55 @@ test-assets:
     - npm install
   script:
     - npm run webpack-dev
+
+test-e2e:
+  stage: test
+  #  needs: [lint-css, lint-js, lint-php]
+  image: mcr.microsoft.com/playwright:v1.33.0-jammy
+  services:
+    - mariadb
+  variables:
+    PHP_WEBSERVER_URL: localhost:65432
+    E2E_REPORT: $REPORT_DIR/e2e.xml
+  interruptible: true
+  when: manual
+  cache:
+    - *composer-cache
+    - *npm-cache
+  before_script:
+    - mkdir ./bin
+    - apt-get update
+    - apt -y install software-properties-common
+    - add-apt-repository ppa:ondrej/php
+    - apt-get update
+    - DEBIAN_FRONTEND=noninteractive
+      apt-get -yq install
+      make zip unzip mariadb-client
+      php7.4 libapache2-mod-php7.4 php7.4-common php7.4-curl php7.4-mbstring
+      php7.4-xmlrpc php7.4-mysql php7.4-gd php7.4-xml php7.4-intl php7.4-ldap
+      php7.4-imagick php7.4-json php7.4-cli
+    - echo "short_open_tag=On" >> /etc/php/7.4/php.ini
+    - echo "short_open_tag=On" >> /etc/php/7.4/cli/php.ini
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php  --install-dir=./bin --filename=composer
+    - export PATH="./bin:$PATH"
+    - php -r "unlink('composer-setup.php');"
+    - *mkdir-reports
+    - *initialize-studip-database
+    - ./cli/studip config:set SHOW_TERMS_ON_FIRST_LOGIN 0
+    - npm install playwright
+    - npm ci
+    - npx playwright install --with-deps
+  script:
+    - php -S $PHP_WEBSERVER_URL -t public -q &
+    - PHP_SERVER_PID=$!
+    - PLAYWRIGHT_JUNIT_OUTPUT_NAME="$E2E_REPORT"
+      PLAYWRIGHT_BASE_URL="http://$PHP_WEBSERVER_URL"
+      npx playwright test --reporter=junit --grep-invert a11y
+    - kill -3 $PHP_SERVER_PID
+  artifacts:
+    reports:
+      junit: $E2E_REPORT
 
 packaging:
   stage: packaging

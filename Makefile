@@ -72,6 +72,9 @@ test-functional: $(CODECEPT)
 test-jsonapi: $(CODECEPT)
 	$(CODECEPT) run jsonapi
 
+test-e2e: npm
+	npx playwright test
+
 test-unit: $(CODECEPT)
 	$(CODECEPT) run unit
 

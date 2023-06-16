@@ -1,5 +1,7 @@
 *~
 
+.env
+
 .webpack.*
 composer
 node_modules
@@ -40,6 +42,9 @@ tests/_helpers/TestGuy.php
 tests/_helpers/WebGuy.php
 tests/_helpers/_generated
 tests/_output/
+tests/e2e/.auth
+tests/e2e/test-results/*
+playwright-report/*
 
 .idea
 /config/oauth2/*.key
