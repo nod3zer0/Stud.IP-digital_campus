@@ -374,7 +374,7 @@ class StructuralElement extends \SimpleORMap implements \PrivacyObject
         $unit = $this->findUnit();
         return $GLOBALS['perm']->have_perm('root', $user->id)
             || $GLOBALS['perm']->have_studip_perm(
-                $unit->config['editing_permission'],
+                $unit->config['editing_permission'] ?? 'tutor',
                 $this->range_id,
                 $user->id
             );
