@@ -257,7 +257,9 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             $global_view = true;
             $selected_item_ids = $this->config->getValue('SelectInstitutes', 'institutesselected');
             // at least one institute has to be selected in the configuration
-            if (is_array($selected_item_ids)) {
+            if (!is_array($selected_item_ids)) {
+                // default to always show user for now
+            } else if ($this->config->getValue('Main', 'onlylecturers')) {
                 // is user lecturer ?
                 $current_semester = get_sem_num(time());
                 $stm = DBManager::get()->prepare(sprintf(
