@@ -2161,7 +2161,7 @@ get_title_for_status('dozent', 1, $this->status)));
                 $membership->position = $counter++;
                 $membership->store();
             },
-            "Seminar_id = ? AND user_id = IN (?)",
+            "Seminar_id = ? AND user_id IN (?)",
             [$this->id, $members]
         );
         return $this;
