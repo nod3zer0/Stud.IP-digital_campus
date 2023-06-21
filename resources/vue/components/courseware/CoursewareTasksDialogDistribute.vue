@@ -567,7 +567,6 @@ export default {
             this.loadStructuralElement({ id: id, options: { include: 'children' } });
         },
         async distributeTask() {
-            this.setShowTasksDistributeDialog(false);
             const taskGroup = {
                 attributes: {
                     title: this.taskTitle,
@@ -604,6 +603,8 @@ export default {
 
             await this.createTaskGroup({ taskGroup });
             this.companionSuccess({ info: this.$gettext('Aufgaben wurden verteilt.') });
+            this.$emit('newtask');
+            this.setShowTasksDistributeDialog(false);
         },
         validateSolvers() {
             if (

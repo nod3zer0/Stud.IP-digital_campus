@@ -216,7 +216,7 @@
                 </form>
             </template>
         </studip-dialog>
-        <courseware-tasks-dialog-distribute v-if="showTasksDistributeDialog"/>
+        <courseware-tasks-dialog-distribute v-if="showTasksDistributeDialog" @newtask="reloadTasks"/>
     </div>
 </template>
 
@@ -318,6 +318,7 @@ export default {
             copyStructuralElement: 'copyStructuralElement',
             companionSuccess: 'companionSuccess',
             companionError: 'companionError',
+            loadAllTasks: 'courseware-tasks/loadAll'
         }),
         addFeedback(task) {
             this.currentDialogFeedback.attributes = {};
@@ -388,6 +389,14 @@ export default {
             });
             this.currentDialogTask = {};
         },
+        reloadTasks() {
+            this.loadAllTasks({ 
+                options: {
+                    'filter[cid]': this.context.id,
+                    include: 'solver, structural-element, task-feedback, task-group, task-group.lecturer'
+                }
+            });
+        }
     },
 };
 </script>
