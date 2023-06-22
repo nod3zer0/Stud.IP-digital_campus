@@ -92,6 +92,7 @@ const mountApp = async (STUDIP, createApp, element) => {
                     'courseware-blocks',
                     'courseware-block-comments',
                     'courseware-block-feedback',
+                    'courseware-clipboards',
                     'courseware-containers',
                     'courseware-instances',
                     'courseware-public-links',
@@ -144,10 +145,18 @@ const mountApp = async (STUDIP, createApp, element) => {
     store.dispatch('oerEnabled', oer_enabled);
     store.dispatch('licenses', licenses);
     store.dispatch('courseware-templates/loadAll');
+    store.dispatch('loadUserClipboards', STUDIP.USER_ID);
 
     const pluginManager = new PluginManager();
     store.dispatch('setPluginManager', pluginManager);
     STUDIP.eventBus.emit('courseware:init-plugin-manager', pluginManager);
+
+    STUDIP.JSUpdater.register(
+        'coursewareclipboard',
+        () => { store.dispatch('loadUserClipboards', STUDIP.USER_ID)},
+        () => { return { 'counter' : store.getters['courseware-clipboards/all'].length };},
+        5000
+    );
 
     const app = createApp({
         render: (h) => h(IndexApp),

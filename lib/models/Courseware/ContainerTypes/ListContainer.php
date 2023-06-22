@@ -41,7 +41,7 @@ class ListContainer extends ContainerType
         ];
     }
 
-    public function addBlock($block): void
+    public function addBlock($block, $sectionIndex = null): void
     {
         $payload = $this->getPayload();
 

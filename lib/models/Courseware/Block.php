@@ -162,6 +162,25 @@ class Block extends \SimpleORMap implements \PrivacyObject
         return $user->getFullName();
     }
 
+    public function getClipboardBackup(): string
+    {
+        $block = [
+            'type' => 'courseware-blocks',
+            'id' => $this->id,
+            'attributes' => [
+                'position'=> $this->position,
+                'block-type'=> $this->type->getType(),
+                'title'=> $this->type->getTitle(),
+                'visible'=> $this->visible,
+                'payload'=> $this->type->getPayload(),
+                'mkdate'=> $this->mkdate,
+                'chdate'=> $this->chdate
+            ]
+        ];
+
+        return json_encode($block, true);
+    }
+
     /**
      * Copies this block into another container such that the given user is the owner of the copy.
      *
@@ -170,13 +189,13 @@ class Block extends \SimpleORMap implements \PrivacyObject
      *
      * @return Block the copy of this block
      */
-    public function copy(User $user, Container $container): Block
+    public function copy(User $user, Container $container, $sectionIndex = null): Block
     {
         /** @var StructuralElement $struct */
-        $struct = StructuralElement::find($container->structural_element_id);
+        $struct = $container->structural_element;
         $rangeId = $struct->getRangeId();
 
-        $block = self::build([
+        $block = self::create([
             'container_id' => $container->id,
             'owner_id' => $user->id,
             'editor_id' => $user->id,
@@ -187,10 +206,34 @@ class Block extends \SimpleORMap implements \PrivacyObject
             'visible' => 1,
         ]);
 
+        //update Container payload
+        $container->type->addBlock($block, $sectionIndex);
+        $container->store();
+
+        return $block;
+    }
+
+    public static function createFromData(User $user, $data, Container $container, $sectionIndex = null): Block
+    {
+        $struct = $container->structural_element;
+        $rangeId = $struct->getRangeId();
+
+        $block = self::create([
+            'container_id' => $container->id,
+            'owner_id' => $user->id,
+            'editor_id' => $user->id,
+            'edit_blocker_id' => null,
+            'position' => $container->countBlocks(),
+            'block_type' => $data->attributes->{'block-type'},
+            'visible' => 1,
+        ]);
+
+        $dataPayload = (array)$data->attributes->payload;
+        $block->payload = json_encode($block->type->copyPayload('', $dataPayload), true);
         $block->store();
 
         //update Container payload
-        $container->type->addBlock($block);
+        $container->type->addBlock($block, $sectionIndex);
         $container->store();
 
         return $block;

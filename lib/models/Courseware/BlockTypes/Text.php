@@ -88,9 +88,11 @@ class Text extends BlockType
         return $files;
     }
 
-    public function copyPayload(string $rangeId = ''): array
+    public function copyPayload(string $rangeId = '', $payload = null): array
     {
-        $payload = $this->getPayload();
+        if (!$payload) {
+            $payload = $this->getPayload();
+        }
         $document = new \DOMDocument();
 
         if ($payload['text']) {

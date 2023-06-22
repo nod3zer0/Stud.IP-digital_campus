@@ -41,11 +41,15 @@ class AccordionContainer extends ContainerType
         ];
     }
 
-    public function addBlock($block): void
+    public function addBlock($block, $sectionIndex = null): void
     {
         $payload = $this->getPayload();
 
-        array_push($payload['sections'][count($payload['sections']) - 1]['blocks'], $block->id);
+        if ($sectionIndex !== null) {
+            array_push($payload['sections'][$sectionIndex]['blocks'], $block->id);
+        } else {
+            array_push($payload['sections'][count($payload['sections']) - 1]['blocks'], $block->id);
+        }
 
         $this->setPayload($payload);
     }

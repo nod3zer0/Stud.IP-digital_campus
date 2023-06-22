@@ -80,9 +80,12 @@ class DialogCards extends BlockType
         return $files;
     }
 
-    public function copyPayload(string $rangeId = ''): array
+    public function copyPayload(string $rangeId = '', $payload = null): array
     {
-        $payload = $this->getPayload();
+        if (!$payload) {
+            $payload = $this->getPayload();
+        }
+
         foreach ($payload['cards'] as &$card) {
             if ('' != $card['front_file_id']) {
                 $card['front_file_id'] = $this->copyFileById($card['front_file_id'], $rangeId);

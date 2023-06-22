@@ -23,6 +23,7 @@
                     @showExportOptions="displayFeature('ExportOptions')"
                     @deleteBlock="displayDeleteDialog()"
                     @removeLock="displayRemoveLockDialog()"
+                    @copyToClipboard="copyToClipboard"
                 />
             </header>
             <div v-show="isOpen">
@@ -201,12 +202,14 @@ export default {
         ...mapActions({
             companionInfo: 'companionInfo',
             companionWarning: 'companionWarning',
+            companionSuccess: 'companionSuccess',
             deleteBlock: 'deleteBlockInContainer',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
             loadContainer: 'loadContainer',
             loadBlock: 'courseware-blocks/loadById',
             updateContainer: 'updateContainer',
+            createClipboard: 'courseware-clipboards/create'
         }),
         async displayFeature(element) {
             if (this.showEdit && element === 'Edit') {
@@ -358,6 +361,19 @@ export default {
             await this.unlockObject({ id: this.block.id , type: 'courseware-blocks' });
             await this.loadBlock({ id: this.block.id });
             this.showRemoveLockDialog = false;
+        },
+        async copyToClipboard() {
+            const clipboard = {
+                attributes: {
+                    name: this.block.attributes.title,
+                    'block-id': this.block.id,
+                    'object-type': this.block.type,
+                    'object-kind': this.block.attributes['block-type'],
+                }
+            };
+
+            await this.createClipboard(clipboard, { root: true });
+            this.companionSuccess({ info: this.$gettext('Block wurde in Merkliste abgelegt.') });
         }
 
     },

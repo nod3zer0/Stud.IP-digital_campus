@@ -98,6 +98,33 @@ class Container extends \SimpleORMap implements \PrivacyObject
         return Block::countBySql('container_id = ?', [$this->id]);
     }
 
+    public function getClipboardBackup(): string
+    {
+        $container = [
+            'type' => 'courseware-containers',
+            'id' => $this->id,
+            'attributes' => [
+                'position' => $this->position,
+                'site' => $this->site,
+                'container-type' => $this->type->getType(),
+                'title' => $this->type->getTitle(),
+                'visible' => $this->visible,
+                'payload' => $this->type->getPayload(),
+                'mkdate' => $this->mkdate,
+                'chdate' => $this->chdate
+            ],
+            'blocks' => $this->getClipboardBackupBlocks()
+        ];
+        return json_encode($container, true);
+    }
+
+    public function getClipboardBackupBlocks(): array
+    {
+        return $this->blocks->map(function (Block $block) {
+            return json_decode($block->getClipboardBackup());
+        });
+    }
+
     /**
      * Copies this block into another structural element such that the given user is the owner of the copy.
      *
@@ -108,7 +135,7 @@ class Container extends \SimpleORMap implements \PrivacyObject
      */
     public function copy(User $user, StructuralElement $element): array
     {
-        $container = self::build([
+        $container = self::create([
             'structural_element_id' => $element->id,
             'owner_id' => $user->id,
             'editor_id' => $user->id,
@@ -117,8 +144,6 @@ class Container extends \SimpleORMap implements \PrivacyObject
             'container_type' => $this->type->getType(),
             'payload' => $this['payload'],
         ]);
-
-        $container->store();
 
         list($blockMapIds, $blockMapObjs) = $this->copyBlocks($user, $container);
 
@@ -159,5 +184,36 @@ class Container extends \SimpleORMap implements \PrivacyObject
             $storage->addTabularData(_('Courseware Abschnitte'), 'cw_containers', $containers);
         }
         
+    }
+
+    public static function createFromData(User $user, $data, StructuralElement $element): Container
+    {
+        $container = self::create([
+            'structural_element_id' => $element->id,
+            'owner_id' => $user->id,
+            'editor_id' => $user->id,
+            'edit_blocker_id' => null,
+            'position' => $element->countContainers(),
+            'container_type' => $data->attributes->{'container-type'},
+            'payload' => json_encode($data->attributes->payload),
+        ]);
+
+        $blockMap = self::createBlocksFromData($user, $container, $data);
+        $container['payload'] = $container->type->copyPayload($blockMap);
+        $container->store();
+
+        return $container;
+    }
+
+    private static function createBlocksFromData($user, $container, $data): array
+    {
+        $blockMap = [];
+
+        foreach ($data->blocks as $block) {
+            $newBlock = Block::createFromData($user, $block, $container);
+            $blockMap[$block->id] = $newBlock->id;
+        }
+
+        return $blockMap;
     }
 }

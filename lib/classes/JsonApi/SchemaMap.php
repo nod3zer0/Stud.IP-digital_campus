@@ -54,6 +54,7 @@ class SchemaMap
             \Courseware\Block::class => Schemas\Courseware\Block::class,
             \Courseware\BlockComment::class => Schemas\Courseware\BlockComment::class,
             \Courseware\BlockFeedback::class => Schemas\Courseware\BlockFeedback::class,
+            \Courseware\Clipboard::class => Schemas\Courseware\Clipboard::class,
             \Courseware\Container::class => Schemas\Courseware\Container::class,
             \Courseware\Instance::class => Schemas\Courseware\Instance::class,
             \Courseware\StructuralElement::class => Schemas\Courseware\StructuralElement::class,

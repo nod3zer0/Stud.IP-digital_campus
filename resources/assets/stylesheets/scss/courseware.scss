@@ -1920,7 +1920,6 @@ b l o c k a d d e r
         &:hover {
             border-color: var(--base-color);
         }
-
         .cw-blockadder-item {
             padding: 64px 10px 4px 10px;
             @include background-icon(unit-test, clickable, 48);
@@ -1933,7 +1932,7 @@ b l o c k a d d e r
                     @include background-icon($icon, clickable, 48);
                 }
             }
-        
+            .cw-clipboard-item-title,
             .cw-blockadder-item-title {
                 display: inline-block;
                 font-weight: 600;
@@ -1953,7 +1952,6 @@ b l o c k a d d e r
         }
     }
 }
-
 
 .cw-block-adder-area {
     background-color: $white;
@@ -2072,6 +2070,63 @@ b l o c k a d d e r
             outline-style: auto;
             outline-width: 1px;
         }
+    }
+}
+.cw-element-inserter-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+.cw-clipboard-item-wrapper {
+    display: flex;
+    width: calc(50% - 4px);
+    border: solid thin var(--content-color-40);
+    margin-bottom: 4px;
+
+    &:hover {
+        border-color: var(--base-color);
+    }
+
+    .cw-clipboard-item {
+        width: 207px;
+        padding: 64px 10px 4px 10px;
+        @include background-icon(unit-test, clickable, 48);
+        background-position: 10px 10px;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        background-color: var(--white);
+        border: none;
+        text-align: left;
+        color: var(--base-color);
+
+        @each $item, $icon in $blockadder-items {
+            &.cw-clipboard-item-#{$item} {
+                @include background-icon($icon, clickable, 48);
+            }
+        }
+        @each $item, $icon in $containeradder-items {
+            &.cw-clipboard-item-#{$item} {
+                @include background-icon($icon, clickable, 48);
+            }
+        }
+    
+        .cw-clipboard-item-title {
+            display: inline-block;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+    }
+    .cw-clipboard-item-action-menu-wrapper {
+        padding: 8px;
+    }
+}
+.action-menu.is-open,
+.action-menu-wrapper.is-open {
+    &.cw-clipboard-item-action-menu {
+        z-index: 42;
     }
 }
 

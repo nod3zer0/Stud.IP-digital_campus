@@ -113,6 +113,7 @@ class JsupdaterController extends AuthenticatedController
     {
         $pageInfo = Request::getArray("page_info");
         $data = [
+            'coursewareclipboard' => $this->getCoursewareClipboardUpdates($pageInfo),
             'blubber' => $this->getBlubberUpdates($pageInfo),
             'messages' => $this->getMessagesUpdates($pageInfo),
             'personalnotifications' => $this->getPersonalNotificationUpdates($pageInfo),
@@ -257,5 +258,10 @@ class JsupdaterController extends AuthenticatedController
         );
 
         return $data;
+    }
+
+    private function getCoursewareClipboardUpdates($pageInfo)
+    {
+        return count(\Courseware\Clipboard::findUsersClipboards($GLOBALS["user"])) != $pageInfo['coursewareclipboard']['counter'];
     }
 }

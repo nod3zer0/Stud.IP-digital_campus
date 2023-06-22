@@ -5,6 +5,7 @@ namespace JsonApi\Routes\Courseware;
 use Courseware\Block;
 use Courseware\BlockComment;
 use Courseware\BlockFeedback;
+use Courseware\Clipboard;
 use Courseware\Container;
 use Courseware\Instance;
 use Courseware\StructuralElement;
@@ -511,5 +512,42 @@ class Authority
     {
         return $request_user->id === $user->id;
     }
+
+
+    public static function canShowClipboard(User $user, Clipboard $resource): bool
+    {
+        return $resource->user_id === $user->id;
+    }
+
+    public static function canIndexClipboardsOfAUser(User $request_user, User $user): bool
+    {
+        return $request_user->id === $user->id;
+    }
+
+    public static function canIndexClipboards(User $user): bool
+    {
+        return $GLOBALS['perm']->have_perm('root', $user->id);
+    }
+
+    public static function canCreateClipboard(User $user): bool
+    {
+        return true;
+    }
+
+    public static function canUpdateClipboard(User $user, Clipboard $resource): bool
+    {
+        return $resource->user_id === $user->id;
+    }
+
+    public static function canDeleteClipboard(User $user, Clipboard $resource): bool
+    {
+        return self::canUpdateClipboard($user, $resource);
+    }
+
+    public static function canDeleteClipboardsOfAUser(User $request_user, User $user): bool
+    {
+        return self::canIndexClipboardsOfAUser($request_user, $user);
+    }
+
 
 }

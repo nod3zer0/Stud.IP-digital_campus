@@ -8,6 +8,7 @@
             @showInfo="showInfo"
             @deleteBlock="deleteBlock"
             @removeLock="removeLock"
+            @copyToClipboard="copyToClipboard"
         />
     </div>
 </template>
@@ -53,7 +54,7 @@ export default {
                     if (!this.blocked) {
                         menuItems.push({ id: 1, label: this.$gettext('Block bearbeiten'), icon: 'edit', emit: 'editBlock' });
                         menuItems.push({
-                            id: 2,
+                            id: 3,
                             label: this.block.attributes.visible
                                 ? this.$gettext('unsichtbar setzen')
                                 : this.$gettext('sichtbar setzen'),
@@ -77,6 +78,12 @@ export default {
                             emit: 'deleteBlock' 
                         });
                     }
+                    menuItems.push({
+                        id: 2,
+                        label: this.$gettext('Block merken'),
+                        icon: 'clipboard',
+                        emit: 'copyToClipboard'
+                    });
                     menuItems.push({
                         id: 7,
                         label: this.$gettext('Informationen zum Block'),
@@ -135,6 +142,9 @@ export default {
         },
         removeLock() {
             this.$emit('removeLock');
+        },
+        copyToClipboard() {
+            this.$emit('copyToClipboard');
         }
     },
 };

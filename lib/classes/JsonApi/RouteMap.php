@@ -491,6 +491,16 @@ class RouteMap
         $group->delete('/courseware-units/{id}', Routes\Courseware\UnitsDelete::class);
         // not a JSON route
         $group->post('/courseware-units/{id}/copy', Routes\Courseware\UnitsCopy::class);
+
+        $group->get('/courseware-clipboards', Routes\Courseware\ClipboardsIndex::class);
+        $group->get('/users/{id}/courseware-clipboards', Routes\Courseware\UsersClipboardsIndex::class);
+        $group->delete('/users/{id}/courseware-clipboards/{type:courseware-blocks|courseware-containers}', Routes\Courseware\UsersClipboardsDelete::class);
+        $group->get('/courseware-clipboards/{id}', Routes\Courseware\ClipboardsShow::class);
+        $group->post('/courseware-clipboards', Routes\Courseware\ClipboardsCreate::class);
+        $group->patch('/courseware-clipboards/{id}', Routes\Courseware\ClipboardsUpdate::class);
+        $group->delete('/courseware-clipboards/{id}', Routes\Courseware\ClipboardsDelete::class);
+
+        $group->post('/courseware-clipboards/{id}/insert', Routes\Courseware\ClipboardsInsert::class);
     }
 
     private function addAuthenticatedFilesRoutes(RouteCollectorProxy $group): void

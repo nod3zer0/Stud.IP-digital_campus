@@ -29,14 +29,21 @@ class BlocksCopy extends NonJsonApiController
         $data = $request->getParsedBody()['data'];
 
         $block = \Courseware\Block::find($data['block']['id']);
+        if (!$block) {
+            throw new RecordNotFoundException();
+        }
         $container = \Courseware\Container::find($data['parent_id']);
+        if (!$container) {
+            throw new RecordNotFoundException();
+        }
+        $sectionIndex = $data['section'];
         $user = $this->getUser($request);
 
         if (!Authority::canCreateBlocks($user, $container) || !Authority::canUpdateBlock($user, $block)) {
             throw new AuthorizationFailedException();
         }
 
-        $new_block = $this->copyBlock($user, $block, $container);
+        $new_block = $this->copyBlock($user, $block, $container, $sectionIndex);
 
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write((string) json_encode($new_block));
@@ -44,19 +51,8 @@ class BlocksCopy extends NonJsonApiController
         return $response;
     }
 
-    private function copyBlock(\User $user, \Courseware\Block $remote_block, \Courseware\Container $container)
+    private function copyBlock(\User $user, \Courseware\Block $remote_block, \Courseware\Container $container, $sectionIndex)
     {
-
-        $block = $remote_block->copy($user, $container);
-
-        $this->updateContainer($container, $block);
-
-        return $block;
-    }
-
-    private function updateContainer(\Courseware\Container $container, \Courseware\Block $block)
-    {
-        //TODO update section block ids
-        return true;
+        return $remote_block->copy($user, $container, $sectionIndex);
     }
 }

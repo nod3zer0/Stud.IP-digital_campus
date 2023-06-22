@@ -429,17 +429,28 @@ export const actions = {
         return dispatch('folders/loadById', { id: folderId, options }, { root: true });
     },
 
-    copyBlock({ getters }, { parentId, block }) {
+    copyBlock({ getters }, { parentId, block, section }) {
         const copy = {
             data: {
                 block: block,
                 parent_id: parentId,
+                section: section
             },
         };
 
         return state.httpClient.post(`courseware-blocks/${block.id}/copy`, copy).then((resp) => {
             // console.log(resp);
         });
+    },
+    clipboardInsertBlock({ getters }, { parentId, clipboard, section }) {
+        const insert = {
+            data: {
+                parent_id: parentId,
+                section: section
+            },
+        };
+
+        return state.httpClient.post(`courseware-clipboards/${clipboard.id}/insert`, insert);
     },
     copyContainer({ getters }, { parentId, container }) {
         const copy = {
@@ -452,6 +463,15 @@ export const actions = {
         return state.httpClient.post(`courseware-containers/${container.id}/copy`, copy).then((resp) => {
             // console.log(resp);
         });
+    },
+    clipboardInsertContainer({ getters },{ parentId, clipboard }) {
+        const insert = {
+            data: {
+                parent_id: parentId,
+            },
+        };
+
+        return state.httpClient.post(`courseware-clipboards/${clipboard.id}/insert`, insert);
     },
     async copyStructuralElement({ dispatch, getters, rootGetters }, { parentId, elementId, removePurpose, migrate, modifications }) {
         const copy = { data: { parent_id: parentId, remove_purpose: removePurpose, migrate: migrate, modifications: modifications } };
@@ -1354,6 +1374,25 @@ export const actions = {
     async loadProgresses({ dispatch, commit, getters }) {
         const progresses = await dispatch('loadUnitProgresses', { unitId: getters.context.unit });
         commit('setProgresses', progresses);
+    },
+
+    loadUserClipboards({ dispatch }, uid) {
+        dispatch('courseware-clipboards/resetState');
+        const parent = { type: 'users', id: uid };
+        const relationship = 'courseware-clipboards';
+        const options = {}
+
+        return dispatch('loadRelatedPaginated', {
+            type: 'courseware-clipboards',
+            parent,
+            relationship,
+            options,
+        });
+    },
+
+    async deleteUserClipboards({ dispatch, rootGetters }, { uid, type }) {
+        await state.httpClient.delete(`users/${uid}/courseware-clipboards/${type}`);
+        dispatch('loadUserClipboards', uid);
     }
 };
 

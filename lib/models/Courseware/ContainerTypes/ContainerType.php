@@ -58,7 +58,7 @@ abstract class ContainerType
      *
      *  @param /Courseware/Block $block - block to be added to the container
      */
-    abstract public function addBlock($block): void;
+    abstract public function addBlock($block, $sectionIndex): void;
 
     /**
      * Returns all known types of containers: core types and plugin types as well.
@@ -197,8 +197,9 @@ abstract class ContainerType
 
         foreach ($payload['sections'] as &$section) {
             foreach ($section['blocks'] as &$block) {
-                $block = $block_map[$block] ?? null;
+                $block = strval($block_map[$block]) ?? null;
             }
+            $section['blocks'] = array_filter($section['blocks']);
         }
 
         return $payload;

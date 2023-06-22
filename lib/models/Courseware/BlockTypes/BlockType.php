@@ -232,9 +232,9 @@ abstract class BlockType
     }
 
     // TODO: (tgloeggl) DocBlock ergänzen
-    public function copyPayload(string $rangeId = ''): array
+    public function copyPayload(string $rangeId = '', $payload = null): array
     {
-        return $this->getPayload();
+        return $payload ?: $this->getPayload();
     }
 
     /**
@@ -339,6 +339,10 @@ abstract class BlockType
             return $file_map[$fileId];
         }
 
+        if ($rangeId === '') {
+            $rangeId = $this->block->container->structural_element->range_id;
+        }
+
         $user = \User::findCurrent();
         if ($file_ref = \FileRef::find($fileId)) {
             $copiedFile = \FileManager::copyFile(
@@ -373,6 +377,10 @@ abstract class BlockType
 
         if (isset($folder_map[$folderId])) {
             return $folder_map[$folderId];
+        }
+
+        if ($rangeId === '') {
+            $rangeId = $this->block->container->structural_element->range_id;
         }
 
         $user = \User::findCurrent();

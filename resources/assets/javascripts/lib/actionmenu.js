@@ -117,9 +117,10 @@ class ActionMenu {
         this.content = $('.action-menu-content', element);
         this.is_reversed = reversed;
         this.is_open = false;
+        const additionalClasses = Object.values({ ...this.element[0].classList }).filter((item) => item != 'action-menu');
         const menu_width  = this.content.width();
         const menu_height = this.content.height();
-
+        
         // Reposition the menu?
         if (position) {
             const form = this.element.closest('form');
@@ -135,6 +136,7 @@ class ActionMenu {
                 $('.action-menu-icon', element).clone().data('action-menu-element', element).prependTo(this.menu);
 
                 this.menu
+                    .addClass(additionalClasses.join(' '))
                     .offset(this.element.offset())
                     .appendTo(breakpoint);
 

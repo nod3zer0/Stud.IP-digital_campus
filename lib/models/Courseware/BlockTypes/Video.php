@@ -68,11 +68,13 @@ class Video extends BlockType
     }
 
 
-    public function copyPayload(string $rangeId = ''): array
+    public function copyPayload(string $rangeId = '', $payload = null): array
     {
-        $payload = $this->getPayload();
+        if (!$payload) {
+            $payload = $this->getPayload();
+        }
 
-        if ('' != $payload['file_id']) {
+        if (!empty($payload['file_id'])) {
             $payload['file_id'] = $this->copyFileById($payload['file_id'], $rangeId);
         }
 

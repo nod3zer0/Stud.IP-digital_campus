@@ -109,6 +109,9 @@ button.button {
 .button.arr_left {
     @include button-with-icon(arr_1left, clickable, info_alt);
 }
+.button.refresh {
+    @include button-with-icon(refresh, clickable, info_alt);
+}
 .button.arr_right {
     @include button-with-icon(arr_1right, clickable, info_alt);
     &::before {

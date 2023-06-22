@@ -104,11 +104,13 @@ class Folder extends BlockType
         return \FileRef::findByFolder_id($payload['folder_id']);
     }
 
-    public function copyPayload(string $rangeId = ''): array
+    public function copyPayload(string $rangeId = '', $payload = null): array
     {
-        $payload = $this->getPayload();
+        if (!$payload) {
+            $payload = $this->getPayload();
+        }
 
-        if ('' != $payload['folder_id']) {
+        if (!empty($payload['folder_id'])) {
             $payload['folder_id'] = $this->copyFolderById($payload['folder_id'], $rangeId);
         }
 

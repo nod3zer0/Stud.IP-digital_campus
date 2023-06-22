@@ -769,6 +769,12 @@ SQL;
         return $this->image ? $this->image->getDownloadURL() : null;
     }
 
+    public static function getClipboardBackup(): string
+    {
+        //TODO
+        return '';
+    }
+
     /**
      * Copies this instance into another course oder users contents.
      *

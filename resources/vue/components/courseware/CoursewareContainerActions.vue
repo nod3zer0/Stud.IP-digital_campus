@@ -7,6 +7,7 @@
             @changeContainer="changeContainer"
             @deleteContainer="deleteContainer"
             @removeLock="removeLock"
+            @copyToClipboard="copyToClipboard"
         />
     </div>
 </template>
@@ -43,12 +44,13 @@ export default {
                     menuItems.push({ id: 1, label: this.$gettext('Abschnitt bearbeiten'), icon: 'edit', emit: 'editContainer' });
                 }
                 menuItems.push({ id: 2, label: this.$gettext('Abschnitt verändern'), icon: 'settings', emit: 'changeContainer' });
-                menuItems.push({ id: 3, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' });
+                menuItems.push({ id: 3, label: this.$gettext('Abschnitt merken'), icon: 'clipboard', emit: 'copyToClipboard' });
+                menuItems.push({ id: 5, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' });
             }
 
             if (this.blocked && this.blockedByAnotherUser && this.userIsTeacher) {
                 menuItems.push({
-                    id: 4,
+                    id: 3,
                     label: this.$gettext('Sperre aufheben'),
                     icon: 'lock-unlocked',
                     emit: 'removeLock',
@@ -77,6 +79,9 @@ export default {
         },
         removeLock() {
             this.$emit('removeLock');
+        },
+        copyToClipboard() {
+            this.$emit('copyToClipboard');
         }
     },
 };
