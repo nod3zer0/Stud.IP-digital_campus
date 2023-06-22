@@ -73,6 +73,12 @@ class ContainersUpdate extends JsonApiController
                     'data.relationships.structural-element.data.id'
                 );
             }
+            if (self::arrayHas($json, 'data.attributes.container-type')) {
+                $resource->container_type = self::arrayGet(
+                    $json,
+                    'data.attributes.container-type'
+                );
+            }
 
             $resource->position = $json['data']['attributes']['position'];
 

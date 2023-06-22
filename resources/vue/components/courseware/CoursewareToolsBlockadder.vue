@@ -65,23 +65,39 @@
                 />
             </courseware-tab>
             <courseware-tab :name="$gettext('Abschnitte')" :selected="showContaineradder" :index="1" :style="{ maxHeight: maxHeight + 'px' }">
-                <courseware-collapsible-box
-                    v-for="(style, index) in containerStyles"
-                    :key="index"
-                    :title="style.title"
-                    :open="index === 0"
-                >
-                    <courseware-container-adder-item
-                        v-for="(container, index) in containerTypes"
-                        :key="index"
-                        :title="container.title"
-                        :type="container.type"
-                        :colspan="style.colspan"
-                        :description="container.description"
-                        :firstSection="$gettext('erstes Element')"
-                        :secondSection="$gettext('zweites Element')"
-                    ></courseware-container-adder-item>
-                </courseware-collapsible-box>
+                <div class="cw-container-style-selector" role="group" aria-labelledby="cw-containeradder-style">
+                    <p class="sr-only" id="cw-containeradder-style">{{ $gettext('Abschnitt-Stil') }}</p>
+                    <template
+                        v-for="style in containerStyles"
+                    >
+                        <input
+                            :key="style.key  + '-input'"
+                            type="radio"
+                            name="container-style"
+                            :id="'style-' + style.colspan"
+                            v-model="selectedContainerStyle"
+                            :value="style.colspan"
+                        />
+                        <label
+                            :key="style.key + '-label'"
+                            :for="'style-' + style.colspan"
+                            :class="[selectedContainerStyle === style.colspan ? 'cw-container-style-selector-active' : '', style.colspan]"
+                        >
+                            {{ style.title }}
+                        </label>
+                        
+                    </template>
+                </div>
+                <courseware-container-adder-item
+                    v-for="container in containerTypes"
+                    :key="container.type"
+                    :title="container.title"
+                    :type="container.type"
+                    :colspan="selectedContainerStyle"
+                    :description="container.description"
+                    :firstSection="$gettext('erstes Element')"
+                    :secondSection="$gettext('zweites Element')"
+                ></courseware-container-adder-item>
             </courseware-tab>
         </courseware-tabs>
     </div>
@@ -90,7 +106,6 @@
 <script>
 import CoursewareTabs from './CoursewareTabs.vue';
 import CoursewareTab from './CoursewareTab.vue';
-import CoursewareCollapsibleBox from './CoursewareCollapsibleBox.vue';
 import CoursewareBlockadderItem from './CoursewareBlockadderItem.vue';
 import CoursewareContainerAdderItem from './CoursewareContainerAdderItem.vue';
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
@@ -101,7 +116,6 @@ export default {
     components: {
         CoursewareTabs,
         CoursewareTab,
-        CoursewareCollapsibleBox,
         CoursewareBlockadderItem,
         CoursewareContainerAdderItem,
         CoursewareCompanionBox,
@@ -119,7 +133,8 @@ export default {
             searchInput: '',
             currentFilterCategory: '',
             filteredBlockTypes: [],
-            categorizedBlocks: []
+            categorizedBlocks: [],
+            selectedContainerStyle: 'full'
         };
     },
     computed: {
@@ -140,9 +155,9 @@ export default {
         },
         containerStyles() {
             return [
-                { title: this.$gettext('Standard'), colspan: 'full'},
-                { title: this.$gettext('Halbe Breite'), colspan: 'half' },
-                { title: this.$gettext('Halbe Breite (zentriert)'), colspan: 'half-center' },
+                { key: 0, title: this.$gettext('Volle Breite'), colspan: 'full'},
+                { key: 1, title: this.$gettext('Halbe Breite'), colspan: 'half' },
+                { key: 2, title: this.$gettext('Halbe Breite (zentriert)'), colspan: 'half-center' },
             ];
         },
         blockCategories() {

@@ -17,6 +17,7 @@
                     :canEdit="canEdit"
                     :container="container"
                     @editContainer="displayEditDialog"
+                    @changeContainer="displayChangeDialog"
                     @deleteContainer="displayDeleteDialog"
                     @removeLock="displayRemoveLockDialog"
                 />
@@ -46,6 +47,60 @@
                     <slot name="containerEditDialog"></slot>
                 </template>
             </studip-dialog>
+
+            <studip-dialog
+                v-if="showChangeDialog"
+                :title="$gettext('Abschnitt verändern')"
+                :confirmText="$gettext('Speichern')"
+                confirmClass="accept"
+                :closeText="$gettext('Abbrechen')"
+                closeClass="cancel"
+                @close="closeChange"
+                @confirm="storeChange"
+                height="520"
+                width="480"
+            >
+                <template v-slot:dialogContent>
+                    <form class="default" @submit.prevent="">
+                        <div class="cw-radioset-wrapper" role="group" aria-labelledby="container-type">
+                            <p id="container-type">{{ $gettext('Typ') }}</p>
+                            <div class="cw-radioset">
+                                <div 
+                                    v-for="(container, index) in containerTypes"
+                                    :key="index"
+                                    class="cw-radioset-box" 
+                                    :class="[container.type === changeType ? 'selected' : '']"
+                                >
+                                    <input type="radio" :id="'type-' + container.type" :value="container.type" v-model="changeType" name="container-type"/>    
+                                    <label :for="'type-' + container.type" >
+                                        <div class="label-icon" :class="[container.type, container.type === changeType ? 'selected' : '']"></div>
+                                        <p>{{ container.title }}</p>
+                                    </label>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cw-radioset-wrapper" role="group" aria-labelledby="container-style">
+                            <p id="container-style">{{ $gettext('Stil') }}</p>
+                            <div class="cw-radioset">
+                                <div
+                                v-for="(style, index) in containerStyles"
+                                :key="index"
+                                class="cw-radioset-box"
+                                :class="[style.colspan === changeStyle ? 'selected' : '']"
+                                >
+                                    <input type="radio" :id="'style-' + style.colspan" :value="style.colspan" v-model="changeStyle" name="container-style"/>
+                                    <label :for="'style-' + style.colspan">
+                                        <div class="label-icon" :class="[style.colspan, style.colspan === changeStyle ? 'selected' : '']"></div>
+                                        <p>{{ style.title }}</p>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </template>
+            </studip-dialog>
+
 
             <studip-dialog
                 v-if="showDeleteDialog"
@@ -92,6 +147,7 @@ export default {
         return {
             showDeleteDialog: false,
             showEditDialog: false,
+            showChangeDialog: false,
             showRemoveLockDialog: false,
             textEditConfirm: this.$gettext('Speichern'),
             textEditClose: this.$gettext('Schließen'),
@@ -101,6 +157,9 @@ export default {
             textRemoveLockTitle: this.$gettext('Sperre aufheben'),
             textRemoveLockAlert: this.$gettext('Möchten Sie die Sperre dieses Abschnitts wirklich aufheben?'),
             isOpen: true,
+
+            changeType: '',
+            changeStyle: '',
         };
     },
     computed: {
@@ -109,7 +168,8 @@ export default {
             userId: 'userId',
             userById: 'users/byId',
             viewMode: 'viewMode',
-            currentElementisLink: 'currentElementisLink'
+            currentElementisLink: 'currentElementisLink',
+            containerTypes: 'containerTypes',
         }),
         showEditMode() {
             return this.viewMode === 'edit' && !this.currentElementisLink;
@@ -139,11 +199,22 @@ export default {
         blockingUserName() {
             return this.blockingUser ? this.blockingUser.attributes['formatted-name'] : '';
         },
+        containerStyles() {
+            return [
+                { title: this.$gettext('Volle Breite'), colspan: 'full'},
+                { title: this.$gettext('Halbe Breite'), colspan: 'half' },
+                { title: this.$gettext('Halbe Breite (zentriert)'), colspan: 'half-center' },
+            ];
+        },
+        type() {
+            return this.container.attributes['container-type'];
+        }
     },
     methods: {
         ...mapActions({
             companionInfo: 'companionInfo',
             companionWarning: 'companionWarning',
+            updateContainer: 'updateContainer',
             loadContainer: 'courseware-containers/loadById',
             deleteContainer: 'deleteContainer',
             lockObject: 'lockObject',
@@ -160,6 +231,53 @@ export default {
 
             await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
             this.showEditDialog = true;
+        },
+        async displayChangeDialog() {
+            await this.loadContainer({ id: this.container.id, options: { include: 'edit-blocker' } });
+            if (this.blockedByAnotherUser) {
+                this.companionInfo({ info: this.$gettext('Dieser Abschnitt wird bereits bearbeitet.') });
+
+                return false;
+            }
+
+            await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
+            this.changeType = this.type;
+            this.changeStyle = this.colSpan;
+            this.showChangeDialog = true;
+        },
+        async storeChange() {
+            await this.loadContainer({ id: this.container.id, options: { include: 'edit-blocker' } });
+            this.closeChange();
+            if (this.blockedByAnotherUser) {
+                this.companionWarning({
+                    info: this.$gettextInterpolate(
+                        this.$gettext('Ihre Änderungen konnten nicht gespeichert werden, da %{blockingUserName} die Bearbeitung übernommen hat.'),
+                        {blockingUserName: this.blockingUserName}
+                    )
+                });
+                return;
+            }
+            if (this.blockerId === null) {
+                await this.lockObject({ id: this.container.id, type: 'courseware-containers' });
+            }
+
+            let container = this.container;
+            container.attributes['container-type'] = this.changeType;
+            container.attributes.payload.colspan = this.changeStyle;
+            await this.updateContainer({
+                container: container,
+                structuralElementId: this.container.relationships['structural-element'].data.id,
+            });
+            await this.unlockObject({ id: this.container.id, type: 'courseware-containers' });
+            await this.loadContainer({id : this.container.id });
+        },
+        async closeChange() {
+            await this.loadContainer({ id: this.container.id });
+            this.showChangeDialog = false;
+            if (this.blockedByThisUser) {
+                await this.unlockObject({ id: this.container.id, type: 'courseware-containers' });
+            }
+            await this.loadContainer({ id: this.container.id, options: { include: 'edit-blocker' } });
         },
         async closeEdit() {
             await this.loadContainer({ id: this.container.id });

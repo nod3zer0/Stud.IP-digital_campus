@@ -4,6 +4,7 @@
             :items="menuItems"
             :context="container.attributes.title"
             @editContainer="editContainer"
+            @changeContainer="changeContainer"
             @deleteContainer="deleteContainer"
             @removeLock="removeLock"
         />
@@ -41,7 +42,8 @@ export default {
                 if (this.container.attributes["container-type"] !== 'list') {
                     menuItems.push({ id: 1, label: this.$gettext('Abschnitt bearbeiten'), icon: 'edit', emit: 'editContainer' });
                 }
-                menuItems.push({ id: 2, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' });
+                menuItems.push({ id: 2, label: this.$gettext('Abschnitt verändern'), icon: 'settings', emit: 'changeContainer' });
+                menuItems.push({ id: 3, label: this.$gettext('Abschnitt löschen'), icon: 'trash', emit: 'deleteContainer' });
             }
 
             if (this.blocked && this.blockedByAnotherUser && this.userIsTeacher) {
@@ -66,6 +68,9 @@ export default {
         },
         editContainer() {
             this.$emit('editContainer');
+        },
+        changeContainer() {
+            this.$emit('changeContainer');
         },
         deleteContainer() {
             this.$emit('deleteContainer');

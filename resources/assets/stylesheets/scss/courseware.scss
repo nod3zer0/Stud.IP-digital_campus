@@ -2006,7 +2006,54 @@ b l o c k a d d e r
     }
 }
 
+.cw-container-style-selector {
+    display: flex;
+    margin-bottom: 8px;
 
+    label {
+        border: solid thin var(--content-color-40);
+        padding: calc(0.5em + 32px) 1em 0.5em 1em;
+        color: var(--base-color);
+        text-align: center;
+        width: 33%;
+        background-position: center 0.5em;
+        background-repeat: no-repeat;
+        cursor: pointer;
+
+        &.full {
+            @include background-icon(column-full, clickable, 32);
+        }
+        &.half {
+            @include background-icon(column-half, clickable, 32);
+        }
+        &.half-center {
+            @include background-icon(column-half-centered, clickable, 32);
+        }
+        &:hover {
+            color: var(--active-color);
+        }
+        &:not(:first-child) {
+            border-left: solid thin transparent;
+        }
+        &.cw-container-style-selector-active {
+            background-color: var(--content-color-20);
+            border: solid thin var(--base-color);
+        }
+
+    }
+    input[type=radio] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+
+        &:focus + label {
+            outline-color: Highlight;
+            outline-color: -webkit-focus-ring-color;
+            outline-style: auto;
+            outline-width: 1px;
+        }
+    }
+}
 
 /* * * * * * * * * * * * *
 b l o c k a d d e r  e n d
@@ -5577,3 +5624,75 @@ s h e l f  i t e m s
 /* * * * * * * * * * * * * * * * * *
 s h e l f  i t e m s  e n d
 * * * * * * * * * * * * * * * * * */
+
+/* * * * * * * * *
+r a d i o s e t
+* * * * * * * * */
+
+.cw-radioset {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 1em;
+    .cw-radioset-box {
+        width: 128px;
+        height: 128px;
+        text-align: center;
+        margin-right: 16px;
+        border: solid thin var(--content-color-40);
+        &.selected {
+            border-color: var(--base-color);
+            background-color: var(--content-color-20);
+        }
+        &:last-child {
+            margin-right: 0;
+        }
+        label {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            cursor: pointer;
+            .label-icon {
+                background-position: center 8px;
+                background-repeat: no-repeat;
+                height: 64px;
+                padding: 8px;
+                &.accordion {
+                    @include background-icon(block-accordion, clickable, 64);
+                }
+                &.list {
+                    @include background-icon(view-list, clickable, 64);
+                }
+                &.tabs {
+                    @include background-icon(block-tabs, clickable, 64);
+                }
+                &.full {
+                    @include background-icon(column-full, clickable, 64);
+                }
+                &.half {
+                    @include background-icon(column-half, clickable, 64);
+                }
+                &.half-center {
+                    @include background-icon(column-half-centered, clickable, 64);
+                }
+            }
+
+        }
+        input[type=radio] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+
+            &:focus + label {
+                outline-color: Highlight;
+                outline-color: -webkit-focus-ring-color;
+                outline-style: auto;
+                outline-width: 1px;
+            }
+        }
+    }
+}
+
+/* * * * * * * * * * * *
+r a d i o s e t  e n d 
+* * * * * * * * * * * */
