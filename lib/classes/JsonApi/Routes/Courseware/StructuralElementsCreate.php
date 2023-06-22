@@ -123,6 +123,20 @@ class StructuralElementsCreate extends JsonApiController
                 $new_container['payload'] = $new_container->type->copyPayload($blockMap);
                 $new_container->store();
             }
+        } else {
+            $new_container = \Courseware\Container::build([
+                'structural_element_id' => $struct->id,
+                'owner_id' => $user->id,
+                'editor_id' => $user->id,
+                'edit_blocker_id' => '',
+                'position' => 0,
+                'container_type' => 'list',
+                'payload' => json_encode([
+                    'colspan' => 'full',
+                    'sections' => [['name' => _('erstes Element'),'icon'=> '','blocks' =>[]]]
+                ]),
+            ]);
+            $new_container->store();
         }
 
         return $struct;
