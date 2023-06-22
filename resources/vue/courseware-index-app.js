@@ -136,6 +136,7 @@ const mountApp = async (STUDIP, createApp, element) => {
 
     if (entry_type === 'courses') {
         await store.dispatch('loadTeacherStatus', STUDIP.USER_ID);
+        store.dispatch('loadProgresses');
     }
 
     store.dispatch('coursewareCurrentElement', elem_id);

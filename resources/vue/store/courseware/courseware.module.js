@@ -60,7 +60,8 @@ const getDefaultState = () => {
         showSearchResults: false,
         searchResults: [],
 
-        assistiveLiveContents: ''
+        assistiveLiveContents: '',
+        progresses: null
     };
 };
 
@@ -254,6 +255,9 @@ const getters = {
     },
     assistiveLiveContents(state) {
         return state.assistiveLiveContents;
+    },
+    progresses(state) {
+        return state.progresses;
     }
 };
 
@@ -1339,6 +1343,18 @@ export const actions = {
             options,
         });
     },
+    async loadUnitProgresses({ getters }, { unitId }) {
+        const response = await state.httpClient.get(`courseware-units/${unitId}/courseware-user-progresses`);
+        if (response.status === 200) {
+           return response.data;
+        } else {
+           return null;
+        }
+    },
+    async loadProgresses({ dispatch, commit, getters }) {
+        const progresses = await dispatch('loadUnitProgresses', { unitId: getters.context.unit });
+        commit('setProgresses', progresses);
+    }
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -1526,6 +1542,9 @@ export const mutations = {
     },
     setAssistiveLiveContents(state, text) {
         state.assistiveLiveContents = text;
+    },
+    setProgresses(state, data) {
+        state.progresses = data;
     }
 };
 

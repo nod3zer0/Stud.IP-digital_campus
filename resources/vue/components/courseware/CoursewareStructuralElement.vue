@@ -35,6 +35,23 @@
                             >
                                 <span>{{ structuralElement.attributes.title || "–" }}</span>
                                 <span v-if="isTask">[ {{ solverName }} ]</span>
+                                <template v-if="!userIsTeacher && inCourse">
+                                    <studip-icon
+                                        v-if="complete"
+                                        shape="accept"
+                                        role="info"   
+                                        :title="$gettext('Diese Seite wurde von Ihnen vollständig bearbeitet')"
+                                    />
+                                    <span
+                                        v-else
+                                        :title="$gettextInterpolate(
+                                                    $gettext('Fortschritt: %{progress} %'),
+                                                    {progress: elementProgress}
+                                                )"
+                                    >
+                                        ({{ elementProgress }} %)
+                                    </span>
+                                </template>
                             </li>
                         </template>
                         <template #breadcrumbFallback>
@@ -831,6 +848,7 @@ export default {
             isLink: 'currentElementisLink',
 
             templates: 'courseware-templates/all',
+            progressData: 'progresses',
         }),
 
         currentId() {
@@ -1218,6 +1236,19 @@ export default {
                 return template.attributes.purpose === this.newChapterPurpose
             });
         },
+        complete() {
+            return this.elementProgress === 100;
+        },
+        elementProgress() {
+            if (this.structuralElementLoaded) {
+                return this.progressData?.[this.structuralElement.id].progress.self;
+            }
+            
+            return 0;
+        },
+        progressTitle() {
+            return '';
+        }
     },
 
     methods: {
@@ -1250,6 +1281,7 @@ export default {
             loadStructuralElement: 'loadStructuralElement',
             createLink: 'createLink',
             setCurrentElementId: 'coursewareCurrentElement',
+            loadProgresses: 'loadProgresses'
         }),
 
         initCurrent() {
@@ -1734,6 +1766,10 @@ export default {
 
             if (this.isLink) {
                 this.loadStructuralElement(this.structuralElement.attributes['target-id']);
+            }
+
+            if (this.inCourse && this.courseware.attributes['sequential-progression'] && !this.userIsTeacher) {
+               this.loadProgresses();
             }
         },
         containers() {

@@ -39,6 +39,24 @@
                     class="cw-tree-item-flag-cant-read"
                     :title="$gettext('Diese Seite kann von Teilnehmenden nicht gesehen werden')"
                 ></span>
+                <template v-if="!userIsTeacher && inCourse">
+                    <span
+                        v-if="complete"
+                        class="cw-tree-item-sequential cw-tree-item-sequential-complete"
+                        :title="$gettext('Diese Seite wurde von Ihnen vollständig bearbeitet')"
+                    >
+                    </span>
+                    <span
+                        v-else
+                        class="cw-tree-item-sequential cw-tree-item-sequential-percentage"
+                        :title="$gettextInterpolate(
+                                    $gettext('Fortschritt: %{progress}%'),
+                                    {progress: itemProgress}
+                                )"
+                    >
+                        {{ itemProgress }} %
+                    </span>
+            </template>
             </router-link>
         </div>
         <ol
@@ -141,6 +159,9 @@ export default {
             userById: 'users/byId',
             groupById: 'status-groups/byId',
             viewMode: 'viewMode',
+            courseware: 'courseware',
+            progressData: 'progresses',
+            userIsTeacher: 'userIsTeacher',
         }),
         draggableData() {
             return {
@@ -269,7 +290,19 @@ export default {
         },
         canEdit() {
             return this.element.attributes['can-edit'];
-        }
+        },
+        inCourse() {
+            return this.context.type === 'courses';
+        },
+        progress() {
+            return this.progressData?.[this.element.id];
+        },
+        itemProgress() {
+            return this.progress?.progress?.self ?? 0;
+        },
+        complete() {
+            return this.itemProgress === 100;
+        },
     },
     methods: {
         ...mapActions({

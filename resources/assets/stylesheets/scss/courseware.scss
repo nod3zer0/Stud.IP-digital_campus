@@ -27,7 +27,7 @@ $element-icons: (
 $tree-item-flag-icons: (
     date: date,
     write: edit,
-    cant-read: lock-locked2
+    cant-read: lock-locked2,
 );
 
 $tile-colors: (
@@ -381,6 +381,10 @@ $consum_ribbon_width: calc(100% - 58px);
                         &:hover {
                             color: $active-color;
                         }
+                    }
+
+                    img {
+                        vertical-align: text-top;
                     }
 
                     &.cw-ribbon-breadcrumb-item-current {
@@ -1388,7 +1392,7 @@ label[for="cw-keypoint-color"] {
                                         display: inline-block;
                                         border-bottom: none;
                                         font-size: 14px;
-                                        width: calc(100% - 14px);
+                                        width: calc(100% - 20px);
                                         background-repeat: no-repeat;
                                         padding-left: 18px;
                                         margin-left: 4px;
@@ -1454,6 +1458,22 @@ label[for="cw-keypoint-color"] {
             &.cw-tree-item-link-current .cw-tree-item-flag-#{$type} {
                 @include background-icon(#{$icon}, info, 16);
             }
+        }
+    }
+    .cw-tree-item-sequential {
+        display: inline-block;
+        position: absolute;
+        right: 8px;
+
+        &.cw-tree-item-sequential-complete {
+            width: 16px;
+            height: 16px;
+            vertical-align: top;
+            @include background-icon(accept, info, 16);
+        }
+        &.cw-tree-item-sequential-percentage {
+            color: $black;
+            font-size: 14px;
         }
     }
 
