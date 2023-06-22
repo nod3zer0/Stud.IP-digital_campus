@@ -78,13 +78,16 @@ $blockadder-items: (
     timeline: date-cycle,
     typewriter: block-typewriter,
     video: video2,
-    accordion: block-accordion,
-    list: view-list,
-    tabs: block-tabs,
     biography-achievements: medal,
     biography-career: ranking,
     biography-personal-information: own-license,
     biography-goals: radar
+);
+
+$containeradder-items: (
+    accordion: block-accordion,
+    list: view-list,
+    tabs: block-tabs,
 );
 
 $achievement-types: (
@@ -1864,29 +1867,59 @@ b l o c k a d d e r
     }
 }
 
-.cw-blockadder-item {
-    margin-bottom: 4px;
-    padding: 1em 1em 1em 6em;
-    @include background-icon(unit-test, clickable, 48);
-    background-position: 12px center;
-    background-repeat: no-repeat;
-    border: solid thin $content-color-40;
-    cursor: pointer;
+.cw-element-adder-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.cw-blockadder-item-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-auto-rows: auto;
+    grid-gap: 4px;
 
-    &:hover {
-        border-color: $base-color;
-    }
+    .cw-blockadder-item-wrapper {
+        display: flex;
+        border: solid thin var(--content-color-40);
+        max-width: 254px;
 
-    @each $item, $icon in $blockadder-items {
-        &.cw-blockadder-item-#{$item} {
-            @include background-icon($icon, clickable, 48);
+        &:hover {
+            border-color: var(--base-color);
+        }
+
+        .cw-blockadder-item {
+            padding: 64px 10px 4px 10px;
+            @include background-icon(unit-test, clickable, 48);
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            cursor: pointer;
+
+            @each $item, $icon in $blockadder-items {
+                &.cw-blockadder-item-#{$item} {
+                    @include background-icon($icon, clickable, 48);
+                }
+            }
+        
+            .cw-blockadder-item-title {
+                display: inline-block;
+                font-weight: 600;
+                margin-bottom: 2px;
+            }
+            .cw-blockadder-item-description {
+                display: inline-block;
+                margin: 0 0 4px;
+            }
+        }
+        .cw-blockadder-item-fav {
+            height: 32px;
+            padding: 8px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
         }
     }
-
-    .cw-blockadder-item-title {
-        font-weight: 600;
-    }
 }
+
 
 .cw-block-adder-area {
     background-color: $white;
@@ -1935,37 +1968,27 @@ b l o c k a d d e r
     margin-top: 5px;
 }
 
-.cw-element-adder-favs-wrapper {
-    display: flex;
-    .cw-element-adder-all-blocks {
-        &.fav-edit-active {
-            .cw-blockadder-item {
-                height: 5em;
-            }
-        }
+.cw-containeradder-item {
+    margin-bottom: 4px;
+    padding: 1em 1em 1em 6em;
+    @include background-icon(unit-test, clickable, 48);
+    background-position: 12px center;
+    background-repeat: no-repeat;
+    border: solid thin $content-color-40;
+    cursor: pointer;
 
+    &:hover {
+        border-color: $base-color;
     }
-    .cw-element-adder-favs {
 
-        .cw-block-fav-item {
-            @include background-icon(star-empty, clickable, 48);
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 5em;
-            width: 5em;
-            padding: 1em;
-            margin: 0 0 4px 4px;
-            border: solid thin $content-color-40;
-            cursor: pointer;
-
-            &:hover {
-                border-color: $base-color;
-            }
-
-            &.cw-block-fav-item-active {
-                @include background-icon(star, clickable, 48);
-            }
+    @each $item, $icon in $containeradder-items {
+        &.cw-containeradder-item-#{$item} {
+            @include background-icon($icon, clickable, 48);
         }
+    }
+
+    .cw-containeradder-item-title {
+        font-weight: 600;
     }
 }
 

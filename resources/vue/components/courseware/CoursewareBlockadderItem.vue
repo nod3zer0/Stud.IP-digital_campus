@@ -1,14 +1,22 @@
 <template>
-    <a href="#" @click.prevent="addBlock">
-        <div class="cw-blockadder-item" :class="['cw-blockadder-item-' + type]">
+    <div class="cw-blockadder-item-wrapper">
+        <a href="#" @click.prevent="addBlock" class="cw-blockadder-item" :class="['cw-blockadder-item-' + type]">
             <header class="cw-blockadder-item-title">
                 {{ title }}
             </header>
             <p class="cw-blockadder-item-description">
                 {{ description }}
             </p>
-        </div>
-    </a>
+        </a>
+        <button
+            class="cw-blockadder-item-fav"
+            :title="favButtonTitle"
+            @click="toggleFavItem()"
+        >
+            <studip-icon :shape="blockTypeIsFav ? 'star' : 'star-empty'" :size="20" />
+        </button>
+    </div>
+    
 </template>
 
 <script>
@@ -32,7 +40,24 @@ export default {
             blockAdder: 'blockAdder',
             blockById: 'courseware-blocks/byId',
             lastCreatedBlock: 'courseware-blocks/lastCreated',
+            favoriteBlockTypes: 'favoriteBlockTypes',
         }),
+        blockTypeIsFav() {
+            return this.favoriteBlockTypes.some((type) => type.type === this.type);
+        },
+        favButtonTitle() {
+            if (this.blockTypeIsFav) {
+                return this.$gettextInterpolate(
+                    this.$gettext('%{ blockName } Block aus den Favoriten entfernen'),
+                    { blockName: this.title }
+                );
+            }
+
+            return this.$gettextInterpolate(
+                    this.$gettext('%{ blockName } Block zu Favoriten hinzufügen'),
+                    { blockName: this.title }
+                );   
+        }
     },
     methods: {
         ...mapActions({
@@ -44,6 +69,8 @@ export default {
             unlockObject: 'unlockObject',
             loadBlock: 'courseware-blocks/loadById',
             updateContainer: 'updateContainer',
+            removeFavoriteBlockType: 'removeFavoriteBlockType',
+            addFavoriteBlockType: 'addFavoriteBlockType',
         }),
         async addBlock() {
             if (Object.keys(this.blockAdder).length !== 0) {
@@ -74,6 +101,13 @@ export default {
                 this.companionWarning({
                     info: this.$gettext('Bitte wählen Sie einen Ort aus, an dem der Block eingefügt werden soll.'),
                 });
+            }
+        },
+        toggleFavItem() {
+            if (this.blockTypeIsFav) {
+                this.removeFavoriteBlockType(this.type);
+            } else {
+                this.addFavoriteBlockType(this.type);
             }
         },
     },

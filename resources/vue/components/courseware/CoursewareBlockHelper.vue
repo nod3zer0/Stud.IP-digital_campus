@@ -1,7 +1,7 @@
 <template>
     <div class="block-helper">
         <courseware-companion-box :msgCompanion="currentQuestion.text" :mood="companionMood"/>
-        <div v-if="showBlocks" class="cw-block-helper-results">
+        <div v-if="showBlocks" class="cw-block-helper-results cw-element-adder-wrapper ">
             <courseware-blockadder-item
                 v-for="(block, index) in selectedBlockTypes"
                 :key="index"

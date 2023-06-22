@@ -48,7 +48,7 @@
                     </button>
                 </div>
 
-                <div v-if="filteredBlockTypes.length > 0">
+                <div v-if="filteredBlockTypes.length > 0" class="cw-blockadder-item-list">
                     <courseware-blockadder-item
                         v-for="(block, index) in filteredBlockTypes"
                         :key="index"
@@ -58,12 +58,11 @@
                         @blockAdded="$emit('blockAdded')"
                     />
                 </div>
-                <div v-else>
-                    <courseware-companion-box
-                        :msgCompanion="$gettext('Es wurden keine passenden Blöcke gefunden.')"
-                        mood="pointing"
-                    />
-                </div>
+                <courseware-companion-box
+                    v-else
+                    :msgCompanion="$gettext('Es wurden keine passenden Blöcke gefunden.')"
+                    mood="pointing"
+                />
             </courseware-tab>
             <courseware-tab :name="$gettext('Abschnitte')" :selected="showContaineradder" :index="1" :style="{ maxHeight: maxHeight + 'px' }">
                 <courseware-collapsible-box

@@ -1,10 +1,10 @@
 <template>
     <a href="#" @click.prevent="addContainer">
-        <div class="cw-blockadder-item" :class="['cw-blockadder-item-' + type]">
-            <header class="cw-blockadder-item-title">
+        <div class="cw-containeradder-item" :class="['cw-containeradder-item-' + type]">
+            <header class="cw-containeradder-item-title">
                 {{ title }}
             </header>
-            <p class="cw-blockadder-item-description">
+            <p class="cw-containeradder-item-description">
                 {{ description }}
             </p>
         </div>
