@@ -54,11 +54,9 @@ class StudipCacheFactory
 
 
     /**
-     * @param    Config       an instance of class Config which will be used to
-     *                        determine the class of the implementation of interface
-     *                        StudipCache
-     *
-     * @return void
+     * @param Config $config an instance of class Config which will be used to
+     *                       determine the class of the implementation of interface
+     *                       StudipCache
      */
     public static function setConfig($config)
     {
@@ -68,8 +66,6 @@ class StudipCacheFactory
 
     /**
      * Resets the configuration and voids the cache instance.
-     *
-     * @return void
      */
     public static function unconfigure()
     {
@@ -174,18 +170,26 @@ class StudipCacheFactory
     }
 
     /**
-     * Return an instance of a given class using some arguments
+     * Return an instance of a given class using some arguments. Unless the
+     * memory cache is instantiated, the cache will be wrapped in a wrapper
+     * class that uses a memory cache to reduce accesses to the cache.
      *
-     * @param  string  the name of the class
-     * @param  array   an array of arguments to be used by the constructor
+     * @param  string $class     the name of the class
+     * @param  array  $arguments an array of arguments to be used by the constructor
      *
      * @return StudipCache  an instance of the specified class
      */
     public static function instantiateCache($class, $arguments)
     {
         $reflection_class = new ReflectionClass($class);
-        return (is_array($arguments['config']) && count($arguments['config']) > 0)
+        $cache = (is_array($arguments['config']) && count($arguments['config']) > 0)
                ? $reflection_class->newInstanceArgs($arguments['config'])
                : $reflection_class->newInstance();
+
+        if ($class !== StudipMemoryCache::class) {
+            return new StudipCacheWrapper($cache);
+        }
+
+        return $cache;
     }
 }
