@@ -8,6 +8,9 @@
         "subtitle": {
             "type": "string"
         },
+        "second_subtitle": {
+            "type": "string"
+        },
         "style": {
             "type": "string"
         },
@@ -17,6 +20,9 @@
         "background_color": {
             "type": "string"
         },
+        "gradient": {
+            "type": "string"
+        },
         "background_image_id": {
             "type": "string"
         },
@@ -24,6 +30,9 @@
             "type": "string"
         },
         "text_color": {
+            "type": "string"
+        },
+        "text_background_color": {
             "type": "string"
         },
         "icon": {

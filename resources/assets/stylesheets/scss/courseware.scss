@@ -1,3 +1,6 @@
+@import "courseware_gradients.scss";
+
+
 /* definitions */
 
 $companion-types: (
@@ -47,11 +50,22 @@ $tile-colors: (
 );
 
 $icon-colors:(
+    icon-white: #ffffff,
+    icon-black: #000000,
     icon-red: #cb1800,
     icon-blue: #24437c,
     icon-green: #00962d,
     icon-gray: #6e6e6e,
     icon-yellow: #ffad00
+);
+$border-colors:(
+    white: #ffffff,
+    black: #000000,
+    studip-red: #cb1800,
+    studip-blue: #24437c,
+    studip-green: #00962d,
+    studip-gray: #6e6e6e,
+    studip-yellow: #ffad00
 );
 
 $blockadder-items: (
@@ -4191,6 +4205,10 @@ dialog cards block end
 /*
 headline block
 */
+$big-icon-size: 196;
+$big-icon-size-px: $big-icon-size + px;
+$large-icon-size: 128;
+$large-icon-size-px: $large-icon-size + px;
 
 .cw-block-headline {
     .cw-block-headline-content {
@@ -4204,21 +4222,42 @@ headline block
             min-height: 300px;
         }
 
+        &.quarter {
+            min-height: 150px;
+        }
+
         &.heavy {
-            padding: 2em;
-            h1, h2 {
-                display: inline;
-                border: none;
-                padding: 0.25em 0;
+
+            .cw-block-headline-iconbox {
+                display: none;
             }
-            h1 {
-                font-size: 10em;
-                line-height: 1.2em;
+            .cw-block-headline-textbox {
+                margin: 2em;
+                h1, h2 {
+                    display: inline;
+                    border: none;
+                    padding: 0.25em 0;
+                }
+                h1 {
+                    font-size: 10em;
+                    line-height: 1.2em;
+                }
+                h2 {
+                    font-size: 2em;
+                    line-height: 1em;
+                }
+
+                &.quarter {
+                    margin: 1.5em;
+                    h1 {
+                        font-size: 5em;
+                    }
+                    h2 {
+                        font-size: 1.5em;
+                    }
+                }
             }
-            h2 {
-                font-size: 2em;
-                line-height: 1em;
-            }
+
         }
         &.bigicon_top {
             .icon-layer {
@@ -4226,27 +4265,30 @@ headline block
                 background-position: center;
                 margin-top: 8em;
                 margin-bottom: 1em;
-                background-size: 196px;
-                height: 196px;
+                background-size: $big-icon-size-px;
+                height: $big-icon-size-px;
 
                 @each $icon in $icons {
                     &.icon-black-#{$icon} {
-                        @include background-icon($icon, info, 196);
+                        @include background-icon($icon, info, $big-icon-size);
                     }
                     &.icon-white-#{$icon} {
-                        @include background-icon($icon, info-alt, 196);
+                        @include background-icon($icon, info-alt, $big-icon-size);
                     }
                     &.icon-studip-blue-#{$icon} {
-                        @include background-icon($icon, clickable, 196);
+                        @include background-icon($icon, clickable, $big-icon-size);
                     }
                     &.icon-studip-red-#{$icon} {
-                        @include background-icon($icon, status-red, 196);
+                        @include background-icon($icon, status-red, $big-icon-size);
                     }
                     &.icon-studip-yellow-#{$icon} {
-                        @include background-icon($icon, status-yellow, 196);
+                        @include background-icon($icon, status-yellow, $big-icon-size);
                     }
                     &.icon-studip-green-#{$icon} {
-                        @include background-icon($icon, status-green, 196);
+                        @include background-icon($icon, status-green, $big-icon-size);
+                    }
+                    &.icon-studip-gray-#{$icon} {
+                        @include background-icon($icon, inactive, $big-icon-size);
                     }
                 };
 
@@ -4255,6 +4297,13 @@ headline block
                     background-size: 144px;
                     background-position: center;
                     margin-top: 2em;
+                    margin-bottom: 0;
+                }
+                &.quarter {
+                    height: 72px;
+                    background-size: 72px;
+                    background-position: center;
+                    margin-top: 1em;
                     margin-bottom: 0;
                 }
             }
@@ -4279,40 +4328,64 @@ headline block
                         margin-top: 10px;
                     }
                 }
+
+                &.quarter {
+                    padding-bottom: 1em;
+                    .cw-block-headline-title {
+                        h1 {
+                            font-size: 2.25em;
+                            margin: 0;
+                        }
+                    }
+                    .cw-block-headline-subtitle {
+                        h2 {
+                            font-size: 1em;
+                            margin: 0;
+                        }
+                    }
+                }
             }
         }
 
         &.bigicon_before {
             display: flex;
             align-items: center;
-            min-height: 600px;
             .icon-layer {
-                min-height: 196px;
-                min-width: 196px;
+                min-height: $big-icon-size-px;
+                min-width: $big-icon-size-px;
                 margin:0 28px 0 28px;
                 background-repeat: no-repeat;
                 background-position: left center;
 
                 @each $icon in $icons {
                     &.icon-black-#{$icon} {
-                        @include background-icon($icon, info, 196);
+                        @include background-icon($icon, info, $big-icon-size);
                     }
                     &.icon-white-#{$icon} {
-                        @include background-icon($icon, info-alt, 196);
+                        @include background-icon($icon, info-alt, $big-icon-size);
                     }
                     &.icon-studip-blue-#{$icon} {
-                        @include background-icon($icon, clickable, 196);
+                        @include background-icon($icon, clickable, $big-icon-size);
                     }
                     &.icon-studip-red-#{$icon} {
-                        @include background-icon($icon, status-red, 196);
+                        @include background-icon($icon, status-red, $big-icon-size);
                     }
                     &.icon-studip-yellow-#{$icon} {
-                        @include background-icon($icon, status-yellow, 196);
+                        @include background-icon($icon, status-yellow, $big-icon-size);
                     }
                     &.icon-studip-green-#{$icon} {
-                        @include background-icon($icon, status-green, 196);
+                        @include background-icon($icon, status-green, $big-icon-size);
+                    }
+                    &.icon-studip-gray-#{$icon} {
+                        @include background-icon($icon, inactive, $big-icon-size);
                     }
                 };
+
+                &.quarter {
+                    min-height: $large-icon-size-px;
+                    min-width: $large-icon-size-px;
+                    background-size: $large-icon-size-px;
+                }
             }
 
             .cw-block-headline-textbox {
@@ -4329,44 +4402,291 @@ headline block
                     display: none;
                 }
             }
-
-            &.half {
-                min-height: 300px;
-            }
         }
 
         &.ribbon {
-                display: flex;
-                align-items: center;
-                min-height: 600px;
+            display: flex;
+            align-items: center;
+
+            .cw-block-headline-textbox {
+                width: 100%;
+                padding: 1em 0;
+                margin: 3em 0;
+                background-color: fade-out($black, 0.5);
+                .cw-block-headline-title {
+                    h1 {
+                        border: none;
+                        font-size: 5em;
+                        text-align: center;
+                        margin-bottom: 0;
+                    }
+                }
+
+                .cw-block-headline-subtitle {
+                    h2 {
+                        border: none;
+                        font-size: 18px;
+                        text-align: center;
+                        margin-top: 10px;
+                    }
+                }
+            }
+        }
+
+        &.vertical {
+            .cw-block-headline-textbox {
+
+                .cw-block-headline-title {
+                    position: relative;
+                    top: 0;
+                    left: 5em;
+                    height: 5em;
+                    text-align: center;
+                    width: 600px;
+                    transform-origin: 0 0;
+                    transform: rotate(90deg);
+                    h1 {
+                        text-transform: uppercase;
+                        border: none;
+                        font-size: 2em;
+                        line-height: 2.5em;
+                    }
+                }
+
+                .cw-block-headline-subtitle {
+                    margin: 0 8em;
+                    padding: 2em;
+                    h2 {
+                        margin: 0;
+                        font-weight: 400;
+                    }
+                }
+            }
+            &.half {
+                .cw-block-headline-title {
+                    width: 300px;
+                }
+            }
+            &.quarter {
+                .cw-block-headline-title {
+                    width: 150px;
+                    h1 {
+                        font-size: 1em;
+                        line-height: 5em;
+                    }
+                }
+                .cw-block-headline-subtitle {
+                    margin: -2em 8em 0 8em;
+                    padding: 1em;
+                }
+            }
+        }
+
+        &.skew_text {
+            min-height: 600px;
+
+            .cw-block-headline-textbox {
+                font-size: 7em;
+                text-align: left;
+                text-transform: uppercase;
+                font-weight: 800;
+                font-family: sans-serif;
+                font-style: normal;
+                letter-spacing: -6px;
+                margin: 1.25em 0 1.5em 1em;
+                div {
+                    overflow: hidden;
+                    font-size: 1em;
+                    margin: -1px 0;
+                    white-space: nowrap;
+                    height: .8em;
+                    width: calc(100% - 1em);
+
+                    h1, h2 {
+                        font-size: 0.8em;
+                        margin: 0;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        line-height: .8em;
+                        height: .8em;
+                    }
+                }
+                .cw-block-headline-title,
+                .cw-block-headline-second-subtitle {
+                    transform: skew(60deg,-15deg) scaley(.66667);
+                }
+                .cw-block-headline-subtitle {
+                    transform: skew(0deg,-15deg) scaley(1.33333);
+                }
+                .cw-block-headline-subtitle {
+                    position: relative;
+	                left: 0.48em;
+                }
+                .cw-block-headline-second-subtitle {
+                    position: relative;
+	                left: 0.92em;
+                }
+            }
+
+            &.half {
+                min-height: 300px;
+                height: 300px;
+                .cw-block-headline-textbox {
+                    font-size: 4em;
+                    margin: 1.5em 0 1.5em 1em;
+                    div {
+                        width: calc(100% - 9em);
+                    }
+                }
+            }
+            &.quarter {
+                min-height: 150px;
+                height: 150px;
+                .cw-block-headline-textbox {
+                    font-size: 2em;
+                    margin: 0.75em 0 0.75em 1em;
+                    letter-spacing: -2px;
+                    div {
+                        width: calc(100% - 18em);
+                    }
+                }
+            }
+        }
+
+        &.icon_top_lines {
+            .cw-block-headline-iconbox {
+                margin: 32px;
+                &::before,
+                &::after {
+                    width: calc(50% - 96px);
+                    height: 64px;
+                    display: inline-block;
+                    border-top: solid 4px;
+                    content: '';
+                }
+                @each $name, $hex in $border-colors {
+                    &.border-#{""+$name}::before,
+                    &.border-#{""+$name}::after {
+                        border-color: $hex;
+                    }
+                }
+                .icon-layer {
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 128px;
+                    height: 128px;
+                    width: 192px;
+                    display: inline-block;
+                    margin: auto;
+    
+                    @each $icon in $icons {
+                        &.icon-black-#{$icon} {
+                            @include background-icon($icon, info, 128);
+                        }
+                        &.icon-white-#{$icon} {
+                            @include background-icon($icon, info-alt, 128);
+                        }
+                        &.icon-studip-blue-#{$icon} {
+                            @include background-icon($icon, clickable, 128);
+                        }
+                        &.icon-studip-red-#{$icon} {
+                            @include background-icon($icon, status-red, 128);
+                        }
+                        &.icon-studip-yellow-#{$icon} {
+                            @include background-icon($icon, status-yellow, 128);
+                        }
+                        &.icon-studip-green-#{$icon} {
+                            @include background-icon($icon, status-green, 128);
+                        }
+                        &.icon-studip-gray-#{$icon} {
+                            @include background-icon($icon, inactive, 128);
+                        }
+                    };
+    
+                   &.half {
+                        height: 128px;
+                        background-size: 128px;
+                    }
+                    &.quarter {
+                        height: 64px;
+                        width: 96px;
+                        background-size: 64px;
+                    }
+                }
+                &.half {
+                    margin: 16px 32px;
+                }
+                &.quarter {
+                    margin: 8px 32px 0 32px;
+                    &::before,
+                    &::after {
+                        width: calc(50% - 48px);
+                        height: 32px;
+                    }
+                }
+            }
+            .cw-block-headline-textbox {
+                width: calc(100% - 64px);
+                margin-bottom: 64px;
+                min-height: 350px;
+                margin: 0 auto;
+                border-bottom: solid 4px;
+                @each $name, $hex in $border-colors {
+                    &.border-#{""+$name} {
+                        border-color: $hex;
+                    }
+                }
+                .cw-block-headline-title {
+                    h1 {
+                        border: none;
+                        font-size: 5em;
+                        text-align: center;
+                    }
+                }
+
+                .cw-block-headline-subtitle {
+                    h2 {
+                        border: none;
+                        font-size: 18px;
+                        text-align: center;
+                        margin: 22px 64px;
+                    }
+                }
 
                 &.half {
-                    min-height: 300px;
-                }
-
-                .cw-block-headline-textbox {
-                    width: 100%;
-                    padding: 1em 0;
-                    margin: 3em 0;
-                    background-color: fade-out($black, 0.5);
+                    min-height: 0px;
+                    margin-bottom: 32px;
                     .cw-block-headline-title {
-
                         h1 {
-                            border: none;
-                            font-size: 5em;
-                            text-align: center;
+                            font-size: 4em;
                         }
                     }
-
+    
                     .cw-block-headline-subtitle {
                         h2 {
-                            border: none;
-                            font-size: 18px;
-                            text-align: center;
-                            margin-top: 10px;
+                            font-size: 1em;
+                            margin: 1em 64px;
                         }
                     }
                 }
+                &.quarter {
+                    min-height: 0;
+                    margin-bottom: 0;
+                    border: none;
+                    .cw-block-headline-title {
+                        h1 {
+                            font-size: 2em;
+                        }
+                    }
+    
+                    .cw-block-headline-subtitle {
+                        h2 {
+                            font-size: 1em;
+                            margin: 8px 64px;
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -4412,6 +4732,9 @@ headline block
                         }
                         &.icon-studip-green-#{$icon} {
                             @include background-icon($icon, status-green, 98);
+                        }
+                        &.icon-studip-gray-#{$icon} {
+                            @include background-icon($icon, inactive, 98);
                         }
                     };
 
@@ -4465,6 +4788,9 @@ headline block
                         &.icon-studip-green-#{$icon} {
                             @include background-icon($icon, status-green, 92);
                         }
+                        &.icon-studip-gray-#{$icon} {
+                            @include background-icon($icon, inactive, 92);
+                        }
                     };
                 }
 
@@ -4517,6 +4843,13 @@ headline block
                 }
                 .cw-block-headline-textbox .cw-block-headline-title h1 {
                     font-size: 4em;
+                }
+            }
+            &.skew_text {
+                min-height: 300px;
+                .cw-block-headline-textbox {
+                    font-size: 4em;
+                    letter-spacing: -4px;
                 }
             }
         }

@@ -1,0 +1,150 @@
+.faded-sun {
+    background: radial-gradient(
+            ellipse farthest-side at 76% 77%,
+            rgba(245, 228, 212, 0.25) 4%,
+            rgba(255, 255, 255, 0) calc(4% + 1px)
+        ),
+        radial-gradient(circle at 76% 40%, #fef6ec 4%, rgba(255, 255, 255, 0) 4.18%),
+        linear-gradient(135deg, #ff0000 0%, #000036 100%),
+        radial-gradient(ellipse at 28% 0%, #ffcfac 0%, rgba(98, 149, 144, 0.5) 100%),
+        linear-gradient(180deg, #cd6e8a 0%, #f5eab0 69%, #d6c8a2 70%, #a2758d 100%);
+    background-blend-mode: normal, normal, screen, overlay, normal;
+}
+
+.romantic-sun {
+    background: linear-gradient(180deg, #ffb7b7 0%, #727272 100%),
+        radial-gradient(60.91% 100% at 50% 0%, #ffd1d1 0%, #260000 100%),
+        linear-gradient(238.72deg, #ffdddd 0%, #720066 100%),
+        linear-gradient(127.43deg, #00ffff 0%, #ff4444 100%),
+        radial-gradient(100.22% 100% at 70.57% 0%, #ff0000 0%, #00ffe0 100%),
+        linear-gradient(127.43deg, #b7d500 0%, #3300ff 100%);
+    background-blend-mode: screen, overlay, hard-light, color-burn, color-dodge, normal;
+}
+
+.bright-rain {
+    background: radial-gradient(50% 123.47% at 50% 50%, #00ff94 0%, #720059 100%),
+        linear-gradient(121.28deg, #669600 0%, #ff0000 100%),
+        linear-gradient(360deg, #0029ff 0%, #8fff00 100%),
+        radial-gradient(100% 164.72% at 100% 100%, #6100ff 0%, #00ff57 100%),
+        radial-gradient(100% 148.07% at 0% 0%, #fff500 0%, #51d500 100%);
+    background-blend-mode: screen, color-dodge, overlay, difference, normal;
+}
+
+.soft-weather {
+    background: radial-gradient(80.99% 100% at 50% 0%, #00ff0a 0%, #36008e 100%),
+        radial-gradient(50% 123.47% at 50% 50%, #efe7c8 0%, #36008e 100%),
+        linear-gradient(301.28deg, #ff006b 0%, #48dd9e 100%),
+        linear-gradient(294.84deg, #5a60e4 0%, #d30000 100%),
+        linear-gradient(52.29deg, #000000 0%, #00ff85 100%),
+        radial-gradient(100% 138.69% at 100% 0%, #0007a5 0%, #ff7a00 100%),
+        radial-gradient(70.41% 100% at 50% 0%, #d5b300 0%, #2200aa 100%);
+    background-blend-mode: screen, screen, lighten, overlay, lighten, difference, normal;
+}
+
+.blue-bar {
+    background: linear-gradient(
+        123deg,
+        #e7ebf1 0%,
+        #e7ebf1 40%,
+        #d4dbe5 calc(40% + 1px),
+        #d4dbe5 60%,
+        #7e92b0 calc(60% + 1px),
+        #7e92b0 75%,
+        #28497c calc(75% + 1px),
+        #28497c 100%
+    );
+}
+.green-bar {
+    background: linear-gradient(
+        123deg,
+        #c5dea0 0%,
+        #c5dea0 40%,
+        #8bbd40 calc(40% + 1px),
+        #8bbd40 60%,
+        #129c94 calc(60% + 1px),
+        #129c94 75%,
+        #66b570 calc(75% + 1px),
+        #66b570 100%
+    );
+}
+
+.paper {
+    background-image: repeating-linear-gradient(0deg, #d8dadc 0px, #d8dadc 1px, transparent 1px, transparent 23px),
+        repeating-linear-gradient(90deg, #d8dadc 0px, #d8dadc 1px, transparent 1px, transparent 23px),
+        linear-gradient(#ffffff, #ffffff);
+}
+.blueprint {
+    background: #28497c;
+    background-image: 
+        radial-gradient(circle at center center, transparent 0%, #28497c 200%),
+        repeating-linear-gradient(0deg, #536d96 0px, #536d96 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(90deg, #536d96 0px, #536d96 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(0deg, #536d96 0px, #536d96 2px, transparent 1px, transparent 60px),
+        repeating-linear-gradient(90deg, #536d96 0px, #536d96 2px, transparent 1px, transparent 60px),
+        linear-gradient(#1f3f70, #1f3f70);
+}
+
+.color-blue {
+    background: #28497c;
+    background: -webkit-linear-gradient(90deg, #28497c, #28497c, #7e92b0);
+    background: linear-gradient(90deg, #28497c, #28497c, #7e92b0);
+}
+.color-purple {
+    background: #682c8b;
+    background: -webkit-linear-gradient(90deg, #682c8b, #682c8b, #a480b9);
+    background: linear-gradient(90deg, #682c8b, #682c8b, #a480b9);
+}
+.color-violet {
+    background: #af2d7b;
+    background: -webkit-linear-gradient(90deg, #af2d7b, #af2d7b, #cf81b0);
+    background: linear-gradient(90deg, #af2d7b, #af2d7b, #cf81b0);
+}
+.color-red {
+    background: #d60000;
+    background: -webkit-linear-gradient(90deg, #d60000, #d60000, #e76666);
+    background: linear-gradient(90deg, #d60000, #d60000, #e76666);
+}
+.color-orange {
+    background: #f26e00;
+    background: -webkit-linear-gradient(90deg, #f26e00, #f26e00, #f7a866);
+    background: linear-gradient(90deg, #f26e00, #f26e00, #f7a866);
+}
+.color-yellow {
+    background: #ffbd33;
+    background: -webkit-linear-gradient(90deg, #ffbd33, #ffbd33, #ffd785);
+    background: linear-gradient(90deg, #ffbd33, #ffbd33, #ffd785);
+}
+.color-green {
+    background: #6ead10;
+    background: -webkit-linear-gradient(90deg, #6ead10, #6ead10, #a8ce70);
+    background: linear-gradient(90deg, #6ead10, #6ead10, #a8ce70);
+}
+.color-petrol {
+    background: #129c94;
+    background: -webkit-linear-gradient(90deg, #129c94, #129c94, #70c3bf);
+    background: linear-gradient(90deg, #129c94, #129c94, #70c3bf);
+}
+.color-grey {
+    background: #3c454e;
+    background: -webkit-linear-gradient(90deg, #3c454e, #3c454e, #898f94);
+    background: linear-gradient(90deg, #3c454e, #3c454e, #898f94);
+}
+
+.grid {
+    background-image: radial-gradient(circle at center center, transparent 0%, #000000 95%),
+        repeating-linear-gradient(
+            45deg,
+            #3c454e 0,
+            #3c454e 1px,
+            transparent 1px,
+            transparent 7px
+        ),
+        repeating-linear-gradient(
+            135deg,
+            #3c454e 0,
+            #3c454e 1px,
+            transparent 1px,
+            transparent 14px
+        ),
+        linear-gradient(135deg, #000000, #000000);
+}

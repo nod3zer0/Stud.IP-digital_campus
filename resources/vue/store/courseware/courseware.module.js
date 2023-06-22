@@ -99,6 +99,9 @@ const getters = {
     currentElementisLink(state, getters, rootState, rootGetters) {
         return getters.currentStructuralElement?.attributes?.['is-link'] === 1;
     },
+    currentStructuralElementImageURL(state, getters) {
+        return getters.currentStructuralElement?.relationships?.image?.meta?.['download-url'];
+    },
     oerEnabled(state) {
         return state.oerEnabled;
     },

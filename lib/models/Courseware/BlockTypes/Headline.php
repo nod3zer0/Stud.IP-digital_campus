@@ -35,12 +35,15 @@ class Headline extends BlockType
         return [
             'title' => 'Courseware',
             'subtitle' => '',
+            'second_subtitle' => '',
             'style' => 'bigicon_before',
             'height' => 'half',
             'background_color' => '#28497c',
+            'gradient' => '',
             'background_image_id' => '',
             'background_type' => 'color',
             'text_color' => '#ffffff',
+            'text_background_color' => '#000000',
             'icon' => 'learnmodule',
             'icon_color' => 'white',
         ];
