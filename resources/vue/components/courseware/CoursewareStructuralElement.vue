@@ -367,62 +367,12 @@
                         </courseware-tabs>
                     </template>
                 </studip-dialog>
-
-                <studip-dialog
+                <courseware-structural-element-dialog-add
                     v-if="showAddDialog"
-                    :title="$gettext('Seite hinzufügen')"
-                    :confirmText="$gettext('Erstellen')"
-                    confirmClass="accept"
-                    :closeText="$gettext('Schließen')"
-                    closeClass="cancel"
-                    class="cw-structural-element-dialog"
-                    :height="inCourse ? '300' : '430'"
-                    @close="closeAddDialog"
-                    @confirm="createElement"
-                >
-                    <template v-slot:dialogContent>
-                        <form class="default" @submit.prevent="">
-                            <label>
-                                <translate>Position der neuen Seite</translate>
-                                <select v-model="newChapterParent">
-                                    <option v-if="!isRoot && canEditParent" value="sibling">
-                                        <translate>Neben der aktuellen Seite</translate>
-                                    </option>
-                                    <option value="descendant"><translate>Unterhalb der aktuellen Seite</translate></option>
-                                </select>
-                            </label>
-                            <label>
-                                <translate>Name der neuen Seite</translate><br />
-                                <input v-model="newChapterName" type="text" />
-                            </label>
-                            <label v-if="!inCourse">
-                                <translate>Art des Lernmaterials</translate>
-                                <select v-model="newChapterPurpose">
-                                    <option value="content"><translate>Inhalt</translate></option>
-                                    <option v-if="!inCourse" value="template"><translate>Aufgabenvorlage</translate></option>
-                                    <option value="oer"><translate>OER-Material</translate></option>
-                                    <option value="portfolio"><translate>ePortfolio</translate></option>
-                                    <option value="draft"><translate>Entwurf</translate></option>
-                                    <option value="other"><translate>Sonstiges</translate></option>
-                                </select>
-                            </label>
-                            <label v-if="!inCourse">
-                                <translate>Lernmaterialvorlage</translate>
-                                <select v-model="newChapterTemplate">
-                                    <option :value="null"><translate>ohne Vorlage</translate></option>
-                                    <option
-                                        v-for="template in selectableTemplates"
-                                        :key="template.id"
-                                        :value="template"
-                                    >
-                                        {{ template.attributes.name }}
-                                    </option>
-                                </select>
-                            </label>
-                        </form>
-                    </template>
-                </studip-dialog>
-
+                    :structuralElement="structuralElement"
+                    :isRoot="isRoot"
+                    :canEditParent="canEditParent"
+                />
                 <studip-dialog
                     v-if="showInfoDialog"
                     :title="textInfo.title"
@@ -682,6 +632,7 @@
 <script>
 import ContainerComponents from './container-components.js';
 import CoursewarePluginComponents from './plugin-components.js';
+import CoursewareStructuralElementDialogAdd from './CoursewareStructuralElementDialogAdd.vue';
 import CoursewareStructuralElementDialogCopy from './CoursewareStructuralElementDialogCopy.vue';
 import CoursewareStructuralElementDialogImport from './CoursewareStructuralElementDialogImport.vue';
 import CoursewareStructuralElementDialogLink from './CoursewareStructuralElementDialogLink.vue';
@@ -700,6 +651,7 @@ import CoursewareTab from './CoursewareTab.vue';
 import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import CoursewareOerMessage from '@/vue/mixins/courseware/oermessage.js';
 import colorMixin from '@/vue/mixins/courseware/colors.js';
+import wizardMixin from '@/vue/mixins/courseware/wizard.js';
 import CoursewareDateInput from './CoursewareDateInput.vue';
 import { FocusTrap } from 'focus-trap-vue';
 import IsoDate from './IsoDate.vue';
@@ -710,6 +662,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'courseware-structural-element',
     components: {
+        CoursewareStructuralElementDialogAdd,
         CoursewareStructuralElementDialogCopy,
         CoursewareStructuralElementDialogImport,
         CoursewareStructuralElementDialogLink,
@@ -733,14 +686,10 @@ export default {
     },
     props: ['canVisit', 'orderedStructuralElements', 'structuralElement'],
 
-    mixins: [CoursewareExport, CoursewareOerMessage, colorMixin],
+    mixins: [CoursewareExport, CoursewareOerMessage, colorMixin, wizardMixin],
 
     data() {
         return {
-            newChapterName: '',
-            newChapterParent: 'descendant',
-            newChapterPurpose: 'content',
-            newChapterTemplate: null,
             currentElement: '',
             uploadFileError: '',
             textCompanionWrongContext: this.$gettext('Die angeforderte Seite ist nicht Teil dieser Courseware.'),
@@ -1231,11 +1180,6 @@ export default {
         ownerName() {
             return this.owner?.attributes['formatted-name'] ?? '?';
         },
-        selectableTemplates() {
-            return this.templates.filter(template => {
-                return template.attributes.purpose === this.newChapterPurpose
-            });
-        },
         complete() {
             return this.elementProgress === 100;
         },
@@ -1253,7 +1197,6 @@ export default {
 
     methods: {
         ...mapActions({
-            createStructuralElementWithTemplate: 'createStructuralElementWithTemplate',
             updateStructuralElement: 'updateStructuralElement',
             deleteStructuralElement: 'deleteStructuralElement',
             lockObject: 'lockObject',
@@ -1316,8 +1259,6 @@ export default {
                     this.showElementEditDialog(true);
                     break;
                 case 'addElement':
-                    this.newChapterName = '';
-                    this.newChapterParent = 'descendant';
                     this.errorEmptyChapterName = false;
                     this.showElementAddDialog(true);
                     break;
@@ -1372,14 +1313,7 @@ export default {
             this.showElementAddDialog(false);
         },
         checkUploadFile() {
-            const file = this.$refs?.upload_image?.files[0];
-            if (file.size > 2097152) {
-                this.uploadFileError = this.$gettext('Diese Datei ist zu groß. Bitte wählen Sie eine kleinere Datei.');
-            } else if (!file.type.includes('image')) {
-                this.uploadFileError = this.$gettext('Diese Datei ist kein Bild. Bitte wählen Sie ein Bild aus.');
-            } else {
-                this.uploadFileError = '';
-            }
+            this.uploadFileError = this.checkUploadImageFile(this.$refs?.upload_image?.files[0]);
         },
         deleteImage() {
             if (!this.deletingPreviewImage) {
@@ -1551,57 +1485,6 @@ export default {
             .catch(error => {
                 this.companionError({ info: this.$gettext('Die Seite konnte nicht gelöscht werden.') });
             });
-        },
-        async createElement() {
-            const title = this.newChapterName; // this is the title of the new element
-            const purpose = this.newChapterPurpose;
-            let parent_id = this.currentId; // new page is descandant as default
-
-            this.errorEmptyChapterName = title.trim();
-            if (this.errorEmptyChapterName === '') {
-                return;
-            }
-            if (this.newChapterParent === 'sibling') {
-                parent_id = this.structuralElement.relationships.parent.data.id;
-            }
-            this.showElementAddDialog(false);
-            this.createStructuralElementWithTemplate({
-                attributes: {
-                    title: title,
-                    purpose: purpose,
-                },
-                templateId: this.newChapterTemplate ? this.newChapterTemplate.id : null,
-                parentId: parent_id,
-                currentId: this.currentId,
-            })
-            .then(() => {
-                let newElement = this.$store.getters['courseware-structural-elements/lastCreated'];
-                this.companionSuccess({
-                    info:
-                        this.$gettextInterpolate(
-                            this.$gettext('Die Seite %{ pageTitle } wurde erfolgreich angelegt.'),
-                            { pageTitle: newElement.attributes.title }
-                        )
-                });
-                this.$router.push(newElement.id);
-            })
-            .catch(e => {
-                let errorMessage = this.$gettext('Es ist ein Fehler aufgetreten. Die Seite konnte nicht erstellt werden.');
-                if (e.status === 403) {
-                    errorMessage = this.$gettext('Die Seite konnte nicht erstellt werden. Sie haben nicht die notwendigen Schreibrechte.');
-                }
-
-                this.companionError({ info: errorMessage });
-            });
-
-            let newElement = this.lastCreatedElement;
-            this.companionSuccess({
-                info: this.$gettextInterpolate(
-                    this.$gettext('Die Seite %{ pageTitle } wurde erfolgreich angelegt.'),
-                    {pageTitle: newElement.attributes.title}
-                )
-            });
-            this.newChapterName = '';
         },
         containerComponent(container) {
             return 'courseware-' + container.attributes['container-type'] + '-container';
