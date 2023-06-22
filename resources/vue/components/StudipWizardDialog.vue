@@ -129,7 +129,7 @@ export default {
         },
         width: {
             type: String,
-            default: '880'
+            default: '900'
         },
         slots: {
             type: Array,

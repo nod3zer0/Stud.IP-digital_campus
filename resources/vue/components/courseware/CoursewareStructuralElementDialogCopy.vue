@@ -21,10 +21,10 @@
                         :aria-description="text.sourceSelf"
                     />
                     <label v-if="inCourseContext" @click="source = 'self'" for="cw-element-copy-source-self">
-                        <div class="icon"><studip-icon shape="seminar" size="32"/></div>
+                        <div class="icon"><studip-icon shape="seminar" :size="32"/></div>
                         <div class="text">{{ text.sourceSelf }}</div>
-                        <studip-icon shape="radiobutton-unchecked" size="24" class="unchecked" />
-                        <studip-icon shape="check-circle" size="24" class="check" />
+                        <studip-icon shape="radiobutton-unchecked" :size="24" class="unchecked" />
+                        <studip-icon shape="check-circle" :size="24" class="check" />
                     </label>
                     <input
                         id="cw-element-copy-source-courses"
@@ -34,10 +34,10 @@
                         :aria-description="text.sourceCourses"
                     />
                     <label @click="source = 'courses'" for="cw-element-copy-source-courses">
-                        <div class="icon"><studip-icon shape="seminar" size="32"/></div>
+                        <div class="icon"><studip-icon shape="seminar" :size="32"/></div>
                         <div class="text">{{ text.sourceCourses }}</div>
-                        <studip-icon shape="radiobutton-unchecked" size="24" class="unchecked" />
-                        <studip-icon shape="check-circle" size="24" class="check" />
+                        <studip-icon shape="radiobutton-unchecked" :size="24" class="unchecked" />
+                        <studip-icon shape="check-circle" :size="24" class="check" />
                     </label>
                     <input
                         id="cw-element-copy-source-users"
@@ -47,10 +47,10 @@
                         :aria-description="text.sourceUsers"
                     />
                     <label @click="source = 'users'" for="cw-element-copy-source-users">
-                        <div class="icon"><studip-icon shape="content" size="32"/></div>
+                        <div class="icon"><studip-icon shape="content" :size="32"/></div>
                         <div class="text">{{ text.sourceUsers }}</div>
-                        <studip-icon shape="radiobutton-unchecked" size="24" class="unchecked" />
-                        <studip-icon shape="check-circle" size="24" class="check" />
+                        <studip-icon shape="radiobutton-unchecked" :size="24" class="unchecked" />
+                        <studip-icon shape="check-circle" :size="24" class="check" />
                     </label>
                 </fieldset>
                 <template v-if="source === 'courses'">
@@ -75,7 +75,7 @@
                         >
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"
-                                    ><studip-icon shape="arr_1down" size="10"
+                                    ><studip-icon shape="arr_1down" :size="10"
                                 /></span>
                             </template>
                             <template #no-options="{}">
@@ -113,10 +113,10 @@
                             :aria-description="unit.element.attributes.title"
                         />
                         <label :key="'label-' + unit.id" :for="'cw-element-copy-unit-' + unit.id">
-                            <div class="icon"><studip-icon shape="courseware" size="32"/></div>
+                            <div class="icon"><studip-icon shape="courseware" :size="32"/></div>
                             <div class="text">{{ unit.element.attributes.title }}</div>
-                            <studip-icon shape="radiobutton-unchecked" size="24" class="unchecked" />
-                            <studip-icon shape="check-circle" size="24" class="check" />
+                            <studip-icon shape="radiobutton-unchecked" :size="24" class="unchecked" />
+                            <studip-icon shape="check-circle" :size="24" class="check" />
                         </label>
                     </template>
                 </fieldset>
@@ -129,48 +129,17 @@
         </template>
         <template v-slot:element>
             <form v-if="selectedUnit" class="default" @submit.prevent="">
-                <fieldset class="radiobutton-set">
-                    <input id="cw-element-copy-element" type="radio" checked :aria-description="selectedElementTitle" />
-                    <label for="cw-element-copy-element"  @click="e => e.preventDefault()">
-                        <div class="icon"><studip-icon shape="content2" size="32"/></div>
-                        <div class="text">{{ selectedElementTitle }}</div>
-                        <studip-icon shape="check-circle" size="24" class="check" />
-                    </label>
-                </fieldset>
-                <button
-                    v-if="selectedElementParent"
-                    class="button"
-                    @click="selectElement(selectedElementParent.id)"
-                >
-                    {{ $gettextInterpolate(
-                        $gettext('zurück zu %{ parentTitle }'),
-                        { parentTitle: selectedElementParentTitle }
-                    ) }}
-                </button>
-                <fieldset>
-                    <legend>{{ $gettext('Unterseiten') }}</legend>
-                    <ul class="cw-element-selector-list">
-                        <li
-                            v-for="child in children"
-                            :key="child.id"
-                        >
-                            <button
-                                class="cw-element-selector-item"
-                                @click="selectElement(child.id)"
-                            >
-                                {{ child.attributes.title }}
-                            </button>
-                        </li>
-                        <li v-if="children.length === 0">
-                            {{ $gettext('Es wurden keine Unterseiten gefunden') }}
-                        </li>
-                    </ul>
-                </fieldset>
+                <courseware-structural-element-selector
+                    v-model="selectedElement"
+                    :rootId="selectedUnitRootId"
+                    :validateAncestors="true"
+                    :targetId="currentElement"
+                />
             </form>
             <courseware-companion-box
-                    v-else
-                    mood="pointing"
-                    :msgCompanion="$gettext('Bitte wählen Sie ein Lernmaterial aus.')"
+                v-else
+                mood="pointing"
+                :msgCompanion="$gettext('Bitte wählen Sie ein Lernmaterial aus.')"
             />
         </template>
         <template v-slot:edit>
@@ -190,7 +159,7 @@
                     >
                         <template #open-indicator="selectAttributes">
                             <span v-bind="selectAttributes"
-                                ><studip-icon shape="arr_1down" size="10"
+                                ><studip-icon shape="arr_1down" :size="10"
                             /></span>
                         </template>
                         <template #no-options>
@@ -222,6 +191,7 @@
 
 <script>
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
+import CoursewareStructuralElementSelector from './CoursewareStructuralElementSelector.vue';
 import colorMixin from '@/vue/mixins/courseware/colors.js';
 import StudipSelect from './../StudipSelect.vue';
 import StudipWizardDialog from './../StudipWizardDialog.vue';
@@ -233,6 +203,7 @@ export default {
     mixins: [colorMixin],
     components: {
         CoursewareCompanionBox,
+        CoursewareStructuralElementSelector,
         StudipWizardDialog,
         StudipSelect,
     },
@@ -244,7 +215,7 @@ export default {
                 { id: 2, valid: false, name: 'unit', title: this.$gettext('Lernmaterial'), icon: 'courseware',
                   description: this.$gettext('Wählen Sie das Lernmaterial aus, in dem sich der zu kopierende Lerninhalt befindet.') },
                 { id: 3, valid: false, name: 'element', title: this.$gettext('Seite'), icon: 'content2',
-                  description: this.$gettext('Wählen Sie die zu kopierende Seite aus. Vorausgewählt ist die oberste Seite des ausgewählten Lernmaterials. Unterseiten erreichen Sie über die Schaltflächen im Bereich "Unterseiten". Sie können über die "zurück zu" Schaltfläche das übergeordnete Element anwählen. Die ausgewählte Seite ist mit einem Kontrollhaken markiert.') },
+                  description: this.$gettext('Wählen Sie die zu kopierende Seite aus. Um Unterseiten anzuzeigen, klicken Sie auf den Seitennamen. Mit einem weiteren Klick werden die Unterseiten wieder zugeklappt.') },
                 { id: 4, valid: true, name: 'edit', title: this.$gettext('Anpassen'), icon: 'edit',
                   description: this.$gettext('Sie können hier die Daten der zu kopierenden Seite anpassen. Eine Anpassung ist optional, Sie können die Seite auch unverändert kopieren.') },
             ],
@@ -472,7 +443,7 @@ export default {
             if (newUnit !== null) {
                 this.wizardSlots[1].valid = true;
                 await this.loadStructuralElement({id: this.selectedUnitRootId, options: {include: 'children'}});
-                this.selectedElement = this.structuralElementById({id: this.selectedUnitRootId});
+                this.selectedElement = null;
             } else {
                 this.wizardSlots[1].valid = false;
             }

@@ -41,59 +41,24 @@
             />
         </template>
         <template v-slot:element>
-            <form class="default" @submit.prevent="">
-                <template v-if="selectedUnit">
-                    <fieldset class="radiobutton-set">
-                        <input id="cw-element-link-element"  type="radio" checked :aria-description="selectedElementTitle"/>
-                        <label for="cw-element-link-element" @click="e => e.preventDefault()">
-                            <div class="icon"><studip-icon shape="content2" size="32"/></div>
-                            <div class="text">{{ selectedElementTitle }}</div>
-                            <studip-icon shape="check-circle" size="24" class="check" />
-                        </label>
-                    </fieldset>
-                    <button
-                        v-if="selectedElementParent"
-                        class="button"
-                        @click="selectElement(selectedElementParent.id)"
-                    >
-                        {{ $gettextInterpolate(
-                            $gettext('zurück zu %{ parentTitle }'),
-                            { parentTitle: selectedElementParentTitle }
-                        ) }}
-                    </button>
-                    <fieldset>
-                        <legend>{{ $gettext('Unterseiten') }}</legend>
-                        <ul class="cw-element-selector-list">
-                            <li
-                                v-for="child in children"
-                                :key="child.id"
-                            >
-                                <button
-                                    class="cw-element-selector-item"
-                                    @click="selectElement(child.id)"
-                                >
-                                    {{ child.attributes.title }}
-                                </button>
-                                
-                            </li>
-                            <li v-if="children.length === 0">
-                                {{ $gettext('Es wurden keine Unterseiten gefunden.') }}
-                            </li>
-                        </ul>
-                    </fieldset>
-                </template>
-                <courseware-companion-box
-                    v-if="!selectedUnit"
-                    mood="pointing"
-                    :msgCompanion="$gettext('Bitte wählen Sie zuerst das Lernmaterial aus.')"
+            <form v-if="selectedUnit" class="default" @submit.prevent="">
+                <courseware-structural-element-selector
+                    v-model="selectedElement"
+                    :rootId="selectedUnitRootId"
                 />
             </form>
+            <courseware-companion-box
+                v-else
+                mood="pointing"
+                :msgCompanion="$gettext('Bitte wählen Sie zuerst das Lernmaterial aus.')"
+            />
         </template>
     </studip-wizard-dialog>
 </template>
 
 <script>
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
+import CoursewareStructuralElementSelector from './CoursewareStructuralElementSelector.vue';
 import StudipWizardDialog from './../StudipWizardDialog.vue';
 import StudipProgressIndicator from '../StudipProgressIndicator.vue';
 
@@ -103,6 +68,7 @@ export default {
     name: 'courseware-structural-element-dialog-link',
     components: {
         CoursewareCompanionBox,
+        CoursewareStructuralElementSelector,
         StudipWizardDialog,
         StudipProgressIndicator
     },
@@ -112,7 +78,7 @@ export default {
                 {id: 1, valid: false, name: 'unit', title: this.$gettext('Lernmaterial'), icon: 'courseware', 
                 description: this.$gettext('Wählen Sie das Lernmaterial aus, in dem sich der zu verknüpfende Lerninhalt befindet. Die Lerninhalte, die verknüpft werden können, müssen unter Arbeitsplatz/Courseware vorher erstellt werden.')},
                 {id: 2, valid: false, name: 'element', title: this.$gettext('Seite'), icon: 'content2', 
-                description: this.$gettext('Wählen Sie die zu verknüpfende Seite aus. Vorausgewählt ist die oberste Seite des ausgewählten Lernmaterials. Unterseiten erreichen Sie über die Schaltflächen im Bereich "Unterseiten". Sie können über die "zurück zu" Schaltfläche das übergeordnete Element anwählen. Die ausgewählte Seite ist mit einem Kontrollhaken markiert.')},            ],
+                description: this.$gettext('Wählen Sie die zu verknüpfende Seite aus. Um Unterseiten anzuzeigen, klicken Sie auf den Seitennamen. Mit einem weiteren Klick werden die Unterseiten wieder zugeklappt.')},            ],
             loadingUnits: false,
             selectedUnit: null,
             selectedElement: null,
@@ -237,6 +203,9 @@ export default {
             if (this.selectedUnit === null) {
                 this.requirements.push({slot: this.wizardSlots[0], text: this.$gettext('Lernmaterial') });
             }
+            if (this.selectedElement === null) {
+                this.requirements.push({slot: this.wizardSlots[1], text: this.$gettext('Seite') });
+            }
         }
     },
     watch: {
@@ -253,7 +222,7 @@ export default {
             if (newUnit !== null) {
                 this.wizardSlots[0].valid = true;
                 await this.loadStructuralElement({id: this.selectedUnitRootId, options: {include: 'children'}});
-                this.selectedElement = this.structuralElementById({id: this.selectedUnitRootId});
+                this.selectedElement = null;
             } else {
                 this.wizardSlots[0].valid = false;
             }

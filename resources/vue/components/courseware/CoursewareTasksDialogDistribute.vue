@@ -43,36 +43,11 @@
         </template>
         <template v-slot:task>
             <form v-if="selectedSourceUnit" class="default" @submit.prevent="">
-                <fieldset class="radiobutton-set">
-                    <input
-                        id="cw-task-dist-task"
-                        type="radio"
-                        :checked="selectedTaskIsTask"
-                        :aria-description="selectedTaskTitle"
-                    />
-                    <label for="cw-task-dist-task" @click="(e) => e.preventDefault()">
-                        <div class="icon"><studip-icon shape="content2" size="32" /></div>
-                        <div class="text">{{ selectedTaskTitle }}</div>
-                        <studip-icon v-if="selectedTaskIsTask" shape="check-circle" size="24" class="check" />
-                        <studip-icon v-else shape="decline-circle" size="24" class="unchecked" />
-                    </label>
-                </fieldset>
-                <button v-if="selectedTaskParent" class="button" @click="selectTask(selectedTaskParent.id)">
-                    {{ $gettext('zurück zur übergeordneten Seite') }}
-                </button>
-                <fieldset>
-                    <legend>{{ $gettext('Unterseiten') }}</legend>
-                    <ul class="cw-element-selector-list">
-                        <li v-for="child in taskChildren" :key="child.id">
-                            <button class="cw-element-selector-item" @click="selectTask(child.id)">
-                                {{ child.attributes.title }}
-                            </button>
-                        </li>
-                        <li v-if="taskChildren.length === 0">
-                            {{ $gettext('Es wurden keine Unterseiten gefunden.') }}
-                        </li>
-                    </ul>
-                </fieldset>
+                <courseware-structural-element-selector
+                    v-model="selectedTask"
+                    :rootId="selectedSourceUnitRootId"
+                    :selectablePurposes="['template']"
+                />
             </form>
             <courseware-companion-box
                 v-else
@@ -145,39 +120,10 @@
         </template>
         <template v-slot:targetelement>
             <form v-if="selectedTargetUnit && selectedTaskIsTask" class="default" @submit.prevent="">
-                <fieldset class="radiobutton-set">
-                    <input
-                        id="cw-task-dist-target-element"
-                        type="radio"
-                        checked
-                        :aria-description="selectedTargetElementTitle"
-                    />
-                    <label for="cw-task-dist-target-element" @click="(e) => e.preventDefault()">
-                        <div class="icon"><studip-icon shape="content2" size="32" /></div>
-                        <div class="text">{{ selectedTargetElementTitle }}</div>
-                        <studip-icon shape="check-circle" size="24" class="check" />
-                    </label>
-                </fieldset>
-                <button
-                    v-if="selectedTargetElementParent"
-                    class="button"
-                    @click="selectTargetElement(selectedTargetElementParent.id)"
-                >
-                    {{ $gettext('zurück zur übergeordneten Seite') }}
-                </button>
-                <fieldset>
-                    <legend>{{ $gettext('Unterseiten') }}</legend>
-                    <ul class="cw-element-selector-list">
-                        <li v-for="child in targetChildren" :key="child.id">
-                            <button class="cw-element-selector-item" @click="selectTargetElement(child.id)">
-                                {{ child.attributes.title }}
-                            </button>
-                        </li>
-                        <li v-if="targetChildren.length === 0">
-                            {{ $gettext('Es wurden keine Unterseiten gefunden.') }}
-                        </li>
-                    </ul>
-                </fieldset>
+                <courseware-structural-element-selector
+                    v-model="selectedTargetElement"
+                    :rootId="selectedTargetUnitRootId"
+                />
             </form>
             <courseware-companion-box
                 v-if="!selectedTaskIsTask"
@@ -292,6 +238,7 @@
 
 <script>
 import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
+import CoursewareStructuralElementSelector from './CoursewareStructuralElementSelector.vue';
 import StudipWizardDialog from './../StudipWizardDialog.vue';
 
 import { mapActions, mapGetters } from 'vuex';
@@ -300,6 +247,7 @@ export default {
     name: 'courseware-tasks-dialog-distribute',
     components: {
         CoursewareCompanionBox,
+        CoursewareStructuralElementSelector,
         StudipWizardDialog,
     },
     data() {
@@ -322,7 +270,7 @@ export default {
                     title: this.$gettext('Aufgabenvorlage'),
                     icon: 'category-task',
                     description: this.$gettext(
-                        'Wählen Sie die zu verteilende Aufgabenvorlage aus. Vorausgewählt ist die oberste Seite des ausgewählten Lernmaterials. Unterseiten erreichen Sie über die Schaltflächen im Bereich "Unterseiten". Sie können über die "zurück zu" Schaltfläche das übergeordnete Element anwählen. Die ausgewählte Aufgabenvorlage ist mit einem Kontrollhaken markiert. Nur Seiten der Kategorie "Aufgabenvorlage" können verteilt werden.'
+                        'Wählen Sie die zu verteilende Aufgabenvorlage aus. Vorausgewählt ist die oberste Seite des ausgewählten Lernmaterials. Um Unterseiten anzuzeigen, klicken Sie auf den Seitennamen. Mit einem weiteren Klick werden die Unterseiten wieder zugeklappt. Nur Seiten der Kategorie "Aufgabenvorlage" können verteilt werden.'
                     ),
                 },
                 {
@@ -352,7 +300,7 @@ export default {
                     title: this.$gettext('Zielseite'),
                     icon: 'content2',
                     description: this.$gettext(
-                        'Wählen Sie hier die Seite aus unterhalb der die Aufgabe verteilt werden soll. Zum bearbeiten der Aufgabe müssen Lernende Zugriff auf die Seite haben. Prüfen Sie ggf. die Leserechte und die Sichtbarkeit.'
+                        'Wählen Sie hier die Seite aus unterhalb der die Aufgabe verteilt werden soll. Um Unterseiten anzuzeigen, klicken Sie auf den Seitennamen. Mit einem weiteren Klick werden die Unterseiten wieder zugeklappt. Zum Bearbeiten der Aufgabe müssen Lernende Zugriff auf die Seite haben. Prüfen Sie ggf. die Leserechte und die Sichtbarkeit.'
                     ),
                 },
                 {
@@ -679,7 +627,7 @@ export default {
                     id: this.selectedTargetUnitRootId,
                     options: { include: 'children' },
                 });
-                this.selectedTargetElement = this.structuralElementById({ id: this.selectedTargetUnitRootId });
+                this.selectedTargetElement = null;
             } else {
                 this.wizardSlots[3].valid = false;
             }
