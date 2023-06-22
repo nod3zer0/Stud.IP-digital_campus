@@ -761,17 +761,24 @@ ribbon end
 
 .cw-structural-element-image-preview {
     display: block;
-    max-width: 300px;
-    max-height: 256px;
+    max-height: 200px;
+    max-width: 400px;
     width: auto;
     height: auto;
     margin: 0 auto;
+    padding-bottom: 1em;
 }
 
 .cw-structural-element-image-preview-placeholder {
-    width: 400px;
-    height: 225px;
-    background-color: $black;
+    width: 356px;
+    height: 200px;
+    margin: 0 auto;
+    background-color: var(--content-color-20);
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    @include background-icon(courseware, clickable, 128);
+    margin-bottom: 1em;
 }
 
 .cw-element-permissions {
@@ -5384,9 +5391,9 @@ cw tiles
     .preview-image {
         height: 180px;
         width: 100%;
-        background-size: auto 180px;
+        background-size: 100% auto;
         background-repeat: no-repeat;
-        background-color: $content-color-20;
+        background-color: var(--content-color-20);
         background-position: center;
         &.default-image {
                 @include background-icon(courseware, clickable, 128);

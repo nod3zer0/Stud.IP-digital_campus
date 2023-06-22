@@ -19,6 +19,7 @@
                     @showExport="openExportDialog"
                     @showProgress="openProgressDialog"
                     @showSettings="openSettingsDialog"
+                    @showLayout="openLayoutDialog"
                     @copyUnit="copy"
                 />
             </template>
@@ -54,6 +55,7 @@
 
         <courseware-unit-item-dialog-export v-if="showExportDialog" :unit="unit" @close="showExportDialog = false" />
         <courseware-unit-item-dialog-settings v-if="showSettingsDialog" :unit="unit" @close="closeSettingsDialog"/>
+        <courseware-unit-item-dialog-layout v-if="showLayoutDialog" :unitElement="unitElement" @close="closeLayoutDialog"/>
     </li>
 </template>
 
@@ -61,6 +63,7 @@
 import CoursewareTile from './CoursewareTile.vue';
 import CoursewareUnitItemDialogExport from './CoursewareUnitItemDialogExport.vue';
 import CoursewareUnitItemDialogSettings from './CoursewareUnitItemDialogSettings.vue';
+import CoursewareUnitItemDialogLayout from './CoursewareUnitItemDialogLayout.vue';
 import CoursewareUnitProgress from './CoursewareUnitProgress.vue';
 
 import { mapActions, mapGetters } from 'vuex';
@@ -70,6 +73,7 @@ export default {
     components: {
         CoursewareTile,
         CoursewareUnitItemDialogExport,
+        CoursewareUnitItemDialogLayout,
         CoursewareUnitItemDialogSettings,
         CoursewareUnitProgress,
     },
@@ -82,6 +86,7 @@ export default {
             showExportDialog: false,
             showSettingsDialog: false,
             showProgressDialog: false,
+            showLayoutDialog: false,
             progresses: null
         }
     },
@@ -100,9 +105,10 @@ export default {
                 menu.push({ id: 2, label: this.$gettext('Einstellungen'), icon: 'settings', emit: 'showSettings' });
             }
             if(this.userIsTeacher || !this.inCourseContext) {
-                menu.push({ id: 3, label: this.$gettext('Kopieren'), icon: 'copy', emit: 'copyUnit' });
-                menu.push({ id: 4, label: this.$gettext('Exportieren'), icon: 'export', emit: 'showExport' });
-                menu.push({ id: 5, label: this.$gettext('Löschen'), icon: 'trash', emit: 'showDelete' });
+                menu.push({ id: 4, label: this.$gettext('Darstellung'), icon: 'colorpicker', emit: 'showLayout' });
+                menu.push({ id: 4, label: this.$gettext('Kopieren'), icon: 'copy', emit: 'copyUnit' });
+                menu.push({ id: 5, label: this.$gettext('Exportieren'), icon: 'export', emit: 'showExport' });
+                menu.push({ id: 6, label: this.$gettext('Löschen'), icon: 'trash', emit: 'showDelete' });
             }
 
             return menu;
@@ -175,6 +181,12 @@ export default {
         },
         closeSettingsDialog() {
             this.showSettingsDialog = false;
+        },
+        openLayoutDialog() {
+            this.showLayoutDialog = true; 
+        },
+        closeLayoutDialog() {
+            this.showLayoutDialog = false;
         },
         async copy() {
             await this.copyUnit({unitId: this.unit.id, modified: null});

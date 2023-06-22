@@ -333,8 +333,15 @@
                                         {{ uploadFileError }}
                                     </div>
                                     <label v-if="!showPreviewImage">
-                                        <translate>Bild hochladen</translate>
-                                        <input ref="upload_image" type="file" accept="image/*" @change="checkUploadFile" />
+                                        <img
+                                            v-if="uploadImageURL"
+                                            :src="uploadImageURL"
+                                            class="cw-structural-element-image-preview"
+                                            :alt="$gettext('Vorschaubild')"
+                                        />
+                                        <div v-else class="cw-structural-element-image-preview-placeholder"></div>
+                                        {{ $gettext('Bild hochladen') }}
+                                        <input class="cw-file-input" ref="upload_image" type="file" accept="image/*" @change="checkUploadFile" />
                                     </label>
                                 </form>
                             </courseware-tab>
@@ -749,7 +756,8 @@ export default {
             deletingPreviewImage: false,
             processing: false,
             keyboardSelected: null,
-            assistiveLive: ''
+            assistiveLive: '',
+            uploadImageURL: null,
         };
     },
 
@@ -1231,6 +1239,7 @@ export default {
             this.currentElement = _.cloneDeep(this.structuralElement);
             this.uploadFileError = '';
             this.deletingPreviewImage = false;
+            this.uploadImageURL = null;
         },
         async menuAction(action) {
             switch (action) {
@@ -1313,7 +1322,12 @@ export default {
             this.showElementAddDialog(false);
         },
         checkUploadFile() {
+            const file = this.$refs?.upload_image?.files[0];
+            this.uploadImageURL = null;
             this.uploadFileError = this.checkUploadImageFile(this.$refs?.upload_image?.files[0]);
+            if (this.uploadFileError === '') {
+                this.uploadImageURL = window.URL.createObjectURL(file);
+            }
         },
         deleteImage() {
             if (!this.deletingPreviewImage) {

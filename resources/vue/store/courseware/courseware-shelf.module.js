@@ -565,6 +565,13 @@ export const actions = {
         });
     },
 
+    async deleteImageForStructuralElement({ dispatch, state }, structuralElement) {
+        const url = `courseware-structural-elements/${structuralElement.id}/image`;
+        await state.httpClient.delete(url);
+
+        return dispatch('loadStructuralElement', structuralElement.id);
+    },
+
     setImportFilesState({ commit }, state) {
         commit('setImportFilesState', state);
     },
