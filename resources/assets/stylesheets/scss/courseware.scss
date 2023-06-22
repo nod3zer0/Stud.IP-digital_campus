@@ -2987,25 +2987,6 @@ b e f o r e  a f t e r  b l o c k
 b e f o r e  a f t e r  b l o c k  e n d
 * * * * * * * * * * * * * * * * * * * */
 
-/* * * * * * * * * *
-c h a r t  b l o c k
-* * * * * * * * * */
-
-.cw-block-chart {
-    .cw-block-chart-item-remove {
-        float: right;
-        margin-right: 5px;
-        cursor: pointer;
-        img {
-            vertical-align: text-top;
-        }
-    }
-}
-
-/* * * * * * * * * * * * * *
-c h a r t  b l o c k  e n d
-* * * * * * * * * * * * * */
-
 /* * * * * * * * *
 c o d e  b l o c k
 * * * * * * * * */
@@ -3240,119 +3221,119 @@ c a n v a s  b l o c k
     }
 
     .cw-canvasblock-toolbar {
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
         border-bottom: none;
-    }
 
-    .cw-canvasblock-buttonset {
-        display: inline-block;
-        padding: 5px;
-        margin-right: 0.5em;
+        .cw-canvasblock-buttonset {
+            display: inline-block;
+            padding: 5px;
+            margin-right: 0.5em;
+    
+            button {
+                cursor: pointer;
+                user-select: none;
+                border: solid thin var(--content-color-40);
+                height: 32px;
+                width: 32px;
+                background-color: var(--white);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 24px 24px;
+        
+                &.cw-canvasblock-color {
+                    $colors: (
+                        white: #ffffff,
+                        blue: #3498db,
+                        green: #2ecc71,
+                        purple: #9b59b6,
+                        red: #e74c3c,
+                        yellow: #fed330,
+                        orange: #f39c12,
+                        grey: #95a5a6,
+                        darkgrey: #34495e,
+                        black: #000000,
+                    );
+        
+                    @each $name, $color in $colors {
+                        &.#{"" + $name} {
+                            background-color: $color;
+                        }
+                    }
+        
+                    &.selected-color {
+                        border: solid 2px var(--black);
+                    }
+                }
+        
+                &.cw-canvasblock-reset {
+                    @include background-icon(refresh, clickable, 24);
+                }
+        
+                &.cw-canvasblock-size {
+                    @include background-icon(stop, clickable);
+        
+                    &.cw-canvasblock-size-small {
+                        background-size: 8px 7px;
+                    }
+                    &.cw-canvasblock-size-normal {
+                        background-size: 16px 14px;
+                    }
+                    &.cw-canvasblock-size-large {
+                        background-size: 22px 20px;
+                    }
+                    &.cw-canvasblock-size-huge {
+                        background-size: 26px 24px;
+                    }
+                    &.selected-size {
+                        border: solid 2px var(--black);
+                    }
+                }
+        
+                &.cw-canvasblock-tool {
+                    &.cw-canvasblock-tool-pen {
+                        @include background-icon(comment, clickable);
+                    }
+        
+                    &.cw-canvasblock-tool-text {
+                        vertical-align: top;
+                        font-size: 22px;
+                        color: var(--base-color);
+                        font-weight: 600;
+                    }
+        
+                    &.selected-tool {
+                        border: solid 2px var(--black);
+                    }
+                }
+        
+                &.cw-canvasblock-undo {
+                    @include background-icon(arr_2left, clickable, 24);
+                }
+        
+                &.cw-canvasblock-download {
+                    @include background-icon(download, clickable, 24);
+                }
+                &.cw-canvasblock-store {
+                    @include background-icon(upload, clickable, 24);
+                }
+                &.cw-canvasblock-show-all {
+                    @include background-icon(group2, clickable, 24);
+                    &.selected-view {
+                        border: solid 2px var(--black);
+                    }
+                }
+                &.cw-canvasblock-show-own {
+                    @include background-icon(person, clickable, 24);
+                    &.selected-view {
+                        border: solid 2px var(--black);
+                    }
+                }
+            }
+        }
     }
 
     .cw-canvasblock-tool-selected-text {
         cursor: text;
-    }
-
-    button {
-        cursor: pointer;
-        user-select: none;
-        border: solid thin $content-color-40;
-        height: 32px;
-        width: 32px;
-        background-color: white;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: 24px 24px;
-
-        &.cw-canvasblock-color {
-            $colors: (
-                white: #ffffff,
-                blue: #3498db,
-                green: #2ecc71,
-                purple: #9b59b6,
-                red: #e74c3c,
-                yellow: #fed330,
-                orange: #f39c12,
-                grey: #95a5a6,
-                darkgrey: #34495e,
-                black: #000000,
-            );
-
-            @each $name, $color in $colors {
-                &.#{"" + $name} {
-                    background-color: $color;
-                }
-            }
-
-            &.selected-color {
-                border: solid 2px $black;
-            }
-        }
-
-        &.cw-canvasblock-reset {
-            @include background-icon(refresh, clickable, 24);
-        }
-
-        &.cw-canvasblock-size {
-            @include background-icon(stop, clickable);
-
-            &.cw-canvasblock-size-small {
-                background-size: 8px 7px;
-            }
-            &.cw-canvasblock-size-normal {
-                background-size: 16px 14px;
-            }
-            &.cw-canvasblock-size-large {
-                background-size: 22px 20px;
-            }
-            &.cw-canvasblock-size-huge {
-                background-size: 26px 24px;
-            }
-            &.selected-size {
-                border: solid 2px $black;
-            }
-        }
-
-        &.cw-canvasblock-tool {
-            &.cw-canvasblock-tool-pen {
-                @include background-icon(comment, clickable);
-            }
-
-            &.cw-canvasblock-tool-text {
-                vertical-align: top;
-                font-size: 22px;
-                color: $base-color;
-                font-weight: 600;
-            }
-
-            &.selected-tool {
-                border: solid 2px $black;
-            }
-        }
-
-        &.cw-canvasblock-undo {
-            @include background-icon(arr_2left, clickable, 24);
-        }
-
-        &.cw-canvasblock-download {
-            @include background-icon(download, clickable, 24);
-        }
-        &.cw-canvasblock-store {
-            @include background-icon(upload, clickable, 24);
-        }
-        &.cw-canvasblock-show-all {
-            @include background-icon(group2, clickable, 24);
-            &.selected-view {
-                border: solid 2px $black;
-            }
-        }
-        &.cw-canvasblock-show-own {
-            @include background-icon(person, clickable, 24);
-            &.selected-view {
-                border: solid 2px $black;
-            }
-        }
     }
 }
 /* * * * * * * * * * * * * * *

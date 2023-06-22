@@ -11,68 +11,94 @@
         >
             <template #content>
                 <TwentyTwenty v-if="!isEmpty" :before="currentBeforeUrl" :after="currentAfterUrl" />
+                <courseware-companion-box
+                    v-if="isEmpty && editMode"
+                    :msgCompanion="$gettext('Bitte wählen Sie ein Vorher- und ein Nachher-Bild aus.')"
+                    mood="pointing"
+                />
             </template>
             <template v-if="canEdit" #edit>
-                <form class="default" @submit.prevent="">
-                    <label>
-                        <translate>Quelle vorher</translate>
-                        <select v-model="currentBeforeSource">
-                            <option value="studip"><translate>Dateibereich</translate></option>
-                            <option value="web"><translate>Web-Adresse</translate></option>
-                        </select>
-                    </label>
-                    <label v-if="currentBeforeSource === 'web'">
-                        <translate>URL</translate>:
-                        <input type="text" v-model="currentBeforeWebUrl" />
-                    </label>
-                    <label v-if="currentBeforeSource === 'studip'">
-                        <translate>Datei</translate>
-                        <courseware-file-chooser
-                            v-model="currentBeforeFileId"
-                            :isImage="true"
-                            @selectFile="updateCurrentBeforeFile"
-                        />
-                    </label>
-                    <label>
-                        <translate>Quelle nachher</translate>
-                        <select v-model="currentAfterSource">
-                            <option value="studip"><translate>Dateibereich</translate></option>
-                            <option value="web"><translate>Web-Adresse</translate></option>
-                        </select>
-                    </label>
-                    <label v-if="currentAfterSource === 'web'">
-                        <translate>URL</translate>
-                        <input type="text" v-model="currentAfterWebUrl" />
-                    </label>
-                    <label v-if="currentAfterSource === 'studip'">
-                        <translate>Datei</translate>
-                        <courseware-file-chooser
-                            v-model="currentAfterFileId"
-                            :isImage="true"
-                            @selectFile="updateCurrentAfterFile"
-                        />
-                    </label>
-                </form>
+                <courseware-tabs>
+                    <courseware-tab
+                        :index="0"
+                        :name="$gettext('Vorher')"
+                        :selected="true"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Quelle') }}
+                                <select v-model="currentBeforeSource">
+                                    <option value="studip">{{ $gettext('Dateibereich') }}</option>
+                                    <option value="web">{{ $gettext('Web-Adresse') }}</option>
+                                </select>
+                            </label>
+                            <label v-if="currentBeforeSource === 'web'">
+                                {{ $gettext('URL') }}
+                                <input type="text" v-model="currentBeforeWebUrl" />
+                            </label>
+                            <label v-if="currentBeforeSource === 'studip'">
+                                {{ $gettext('Bilddatei') }}
+                                <courseware-file-chooser
+                                    v-model="currentBeforeFileId"
+                                    :isImage="true"
+                                    @selectFile="updateCurrentBeforeFile"
+                                />
+                            </label>
+                        </form>
+                    </courseware-tab>
+                    <courseware-tab
+                        :index="1"
+                        :name="$gettext('Nachher')"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Quelle') }}
+                                <select v-model="currentAfterSource">
+                                    <option value="studip">{{ $gettext('Dateibereich') }}</option>
+                                    <option value="web">{{ $gettext('Web-Adresse') }}</option>
+                                </select>
+                            </label>
+                            <label v-if="currentAfterSource === 'web'">
+                                {{ $gettext('URL') }}
+                                <input type="text" v-model="currentAfterWebUrl" />
+                            </label>
+                            <label v-if="currentAfterSource === 'studip'">
+                                {{ $gettext('Bilddatei') }}
+                                <courseware-file-chooser
+                                    v-model="currentAfterFileId"
+                                    :isImage="true"
+                                    @selectFile="updateCurrentAfterFile"
+                                />
+                            </label>
+                        </form>
+                    </courseware-tab>
+                </courseware-tabs>
             </template>
-            <template #info><translate>Informationen zum Bildvergleich-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Bildvergleich-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>
 
 <script>
+import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
 import { blockMixin } from './block-mixin.js';
 import TwentyTwenty from 'vue-twentytwenty';
 import 'vue-twentytwenty/dist/vue-twentytwenty.css';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-before-after-block',
     mixins: [blockMixin],
     components: {
+        CoursewareCompanionBox,
         CoursewareDefaultBlock,
         CoursewareFileChooser,
+        CoursewareTabs,
+        CoursewareTab,
         TwentyTwenty,
     },
     props: {
@@ -95,6 +121,9 @@ export default {
         };
     },
     computed: {
+        ...mapGetters({
+            viewMode: 'viewMode'
+        }),
         beforeSource() {
             return this.block?.attributes?.payload?.before_source;
         },
@@ -114,7 +143,7 @@ export default {
             return this.block?.attributes?.payload?.after_web_url;
         },
         currentBeforeUrl() {
-            if (this.currentBeforeSource === 'studip'&& this.currentBeforeFile?.meta) {
+            if (this.currentBeforeSource === 'studip' && this.currentBeforeFile?.meta) {
                 return this.currentBeforeFile.meta['download-url'];
             } else if (this.currentBeforeSource === 'web') {
                 return this.currentBeforeWebUrl;
@@ -123,7 +152,7 @@ export default {
             }
         },
         currentAfterUrl() {
-            if (this.currentAfterSource === 'studip'&& this.currentAfterFile?.meta) {
+            if (this.currentAfterSource === 'studip' && this.currentAfterFile?.meta) {
                 return this.currentAfterFile.meta['download-url'];
             } else if (this.currentAfterSource === 'web') {
                 return this.currentAfterWebUrl;
@@ -131,6 +160,12 @@ export default {
                 return '';
             }
         },
+        isEmpty() {
+            return this.currentBeforeUrl === '' || this.currentAfterUrl === '';
+        },
+        editMode() {
+            return this.viewMode === 'edit';
+        }
     },
     mounted() {
         this.loadFileRefs(this.block.id).then((response) => {

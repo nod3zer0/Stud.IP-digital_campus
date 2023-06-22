@@ -19,7 +19,7 @@
             />
             <div v-if="userIsTeacher" class="cw-block-feedback-create">
                 <textarea v-model="feedbackText" :placeholder="placeHolder" spellcheck="true"></textarea>
-                <button class="button" @click="postFeedback"><translate>Senden</translate></button>
+                <button class="button" @click="postFeedback">{{ $gettext('Senden') }}</button>
             </div>
         </div>
     </section>

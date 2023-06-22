@@ -22,45 +22,45 @@
                 </div>
             </template>
             <template v-if="canEdit" #edit>
-                <label class="cw-typewriter-content-label">
-                    <translate>Text</translate>
-                    <textarea v-model="currentText" name="cw-typewriter-content" class="cw-typewriter-content"></textarea>
-                </label>
-
-                <label class="cw-typewriter-speed-label">
-                    <translate>Geschwindigkeit</translate>
-                    <select v-model="currentSpeed" class="cw-typewriter-speed" name="cw-typewriter-speed" @change="restartTyping">
-                        <option value="0"><translate>Langsam</translate></option>
-                        <option value="1"><translate>Normal</translate></option>
-                        <option value="2"><translate>Schnell</translate></option>
-                        <option value="3"><translate>Sehr schnell</translate></option>
-                    </select>
-                </label>
-
-                <label class="cw-typewriter-font-label">
-                    <translate>Schriftart</translate>
-                    <select v-model="currentFont" class="cw-typewriter-font" name="cw-typewriter-font">
-                        <option value="font-default"><translate>Standard</translate></option>
-                        <option value="font-typewriter">Lucida Sans Typewriter</option>
-                        <option value="font-trebuchet">Trebuchet MS</option>
-                        <option value="font-tahoma">Tahoma</option>
-                        <option value="font-georgia">Georgia</option>
-                        <option value="font-narrow">Arial Narrow</option>
-                    </select>
-                </label>
-
-                <label class="cw-typewriter-size-label">
-                    <translate>Schriftgröße</translate>
-                    <select v-model="currentSize" class="cw-typewriter-size" name="cw-typewriter-size">
-                        <option value="size-default">100%</option>
-                        <option value="size-tall">125%</option>
-                        <option value="size-grande">150%</option>
-                        <option value="size-huge">200%</option>
-                    </select>
-                </label>
+                <form class="default" @submit.prevent="">
+                    <label class="col-4">
+                        {{ $gettext('Text') }}
+                        <textarea v-model="currentText" />
+                    </label>
+                    <br>
+                    <label class="col-1">
+                        {{ $gettext('Geschwindigkeit') }}
+                        <select v-model="currentSpeed" @change="restartTyping">
+                            <option value="0">{{ $gettext('Langsam') }}</option>
+                            <option value="1">{{ $gettext('Normal') }}</option>
+                            <option value="2">{{ $gettext('Schnell') }}</option>
+                            <option value="3">{{ $gettext('Sehr schnell') }}</option>
+                        </select>
+                    </label>
+                    <label class="col-1">
+                        {{ $gettext('Schriftart') }}
+                        <select v-model="currentFont">
+                            <option value="font-default">{{ $gettext('Standard') }}</option>
+                            <option value="font-typewriter">Lucida Sans Typewriter</option>
+                            <option value="font-trebuchet">Trebuchet MS</option>
+                            <option value="font-tahoma">Tahoma</option>
+                            <option value="font-georgia">Georgia</option>
+                            <option value="font-narrow">Arial Narrow</option>
+                        </select>
+                    </label>
+                    <label class="col-1">
+                        {{ $gettext('Schriftgröße') }}
+                        <select v-model="currentSize">
+                            <option value="size-default">100%</option>
+                            <option value="size-tall">125%</option>
+                            <option value="size-grande">150%</option>
+                            <option value="size-huge">200%</option>
+                        </select>
+                    </label>
+                </form>
             </template>
             <template #info>
-                <p><translate>Informationen zum Schreibmaschinen-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Schreibmaschinen-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>

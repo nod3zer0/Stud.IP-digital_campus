@@ -21,21 +21,21 @@
             <template v-if="canEdit" #edit>
                 <form class="default">
                     <label for="type">
-                        <span><translate>Ziel</translate></span>
+                        {{ $gettext('Ziel') }}
                         <select name="type" class="type" v-model="currentData.type">
-                            <option value="personal"><translate>Persönliches Ziel</translate></option>
-                            <option value="school"><translate>Schulisches Ziel</translate></option>
-                            <option value="academic"><translate>Akademisches Ziel</translate></option>
-                            <option value="professional"><translate>Berufliches Ziel</translate></option>
+                            <option value="personal">{{ $gettext('Persönliches Ziel') }}</option>
+                            <option value="school">{{ $gettext('Schulisches Ziel') }}</option>
+                            <option value="academic">{{ $gettext('Akademisches Ziel') }}</option>
+                            <option value="professional">{{ $gettext('Berufliches Ziel') }}</option>
                         </select>
                     </label>
                     <div class="label-text">
-                        <translate>Beschreibung</translate>
+                       {{ $gettext('>Beschreibung') }}
                     </div>
                     <studip-wysiwyg v-model="currentData.description"></studip-wysiwyg>
                 </form>
             </template>
-            <template #info><translate>Informationen zum Ziele-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Ziele-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>

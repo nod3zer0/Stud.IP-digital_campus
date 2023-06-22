@@ -1,13 +1,13 @@
 <template>
     <section class="cw-block-edit">
-        <header><translate>Bearbeiten</translate></header>
+        <header>{{ $gettext('Bearbeiten') }}</header>
         <div class="cw-block-features-content">
             <div @click="deactivateToolbar(); exitHandler = true;">
                 <slot name="edit" />
             </div>
             <div class="cw-button-box">
-                <button class="button accept" @click="$emit('store'); exitHandler = false;"><translate>Speichern</translate></button>
-                <button class="button cancel" @click="$emit('close'); exitHandler = false;"><translate>Abbrechen</translate></button>
+                <button class="button accept" @click="$emit('store'); exitHandler = false;">{{ $gettext('Speichern') }}</button>
+                <button class="button cancel" @click="$emit('close'); exitHandler = false;">{{ $gettext('Abbrechen') }}</button>
             </div>
         </div>
     </section>

@@ -28,13 +28,13 @@
                             <article>
                                 <header>{{ getItemTypeName(item.type) }}</header>
                                 <div v-if="item.type === 'school'">
-                                    <p><translate>Bezeichnung der Qualifikation</translate>: {{ item.qualification }}</p>
-                                    <p><translate>Hauptfächer / Schwerpunkt</translate>: {{ item.focus }}</p>
-                                    <p><translate>berufliche Fähigkeiten</translate>: {{ item.skills }}</p>
+                                    <p>{{ $gettext('Bezeichnung der Qualifikation') }}: {{ item.qualification }}</p>
+                                    <p>{{ $gettext('Hauptfächer / Schwerpunkt') }}: {{ item.focus }}</p>
+                                    <p>{{ $gettext('berufliche Fähigkeiten') }}: {{ item.skills }}</p>
                                 </div>
                                 <div v-if="item.type === 'experience'">
-                                    <p><translate>Name des Arbeitgebers</translate>: {{ item.employer }}</p>
-                                    <p><translate>Beruf / Funktion</translate>: {{ item.job }}</p>
+                                    <p>{{ $gettext('Name des Arbeitgebers') }}: {{ item.employer }}</p>
+                                    <p>{{ $gettext('Beruf / Funktion') }}: {{ item.job }}</p>
                                 </div>
                             </article>
                         </div>
@@ -44,15 +44,15 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Zeitliche Sortierung</translate>
+                        {{ $gettext('Zeitliche Sortierung') }}
                         <select v-model="currentSort">
-                            <option value="none"><translate>Keine</translate></option>
-                            <option value="asc"><translate>Aufsteigend</translate></option>
-                            <option value="desc"><translate>Absteigend</translate></option>
+                            <option value="none">{{ $gettext('Keine') }}</option>
+                            <option value="asc">{{ $gettext('Aufsteigend') }}</option>
+                            <option value="desc">{{ $gettext('Absteigend') }}</option>
                         </select>
                     </label>
                 </form>
-                <button class="button add" @click="addItem"><translate>Ereignis hinzufügen</translate></button>
+                <button class="button add" @click="addItem">{{ $gettext('Ereignis hinzufügen') }}</button>
                 <courseware-tabs
                     v-if="currentItems.length > 0"
                     :setSelected="setItemTab"
@@ -67,59 +67,59 @@
                         canBeEmpty
                     >
                         <form class="default" @submit.prevent="">
-                            <label>
-                                <translate>Startdatum</translate>
+                            <label class="col-1">
+                                {{ $gettext('Startdatum') }}
                                 <input type="date" v-model="item.date" required />
                             </label>
-                            <label>
-                                <translate>Enddatum</translate>
+                            <label class="col-1">
+                                {{ $gettext('Enddatum') }}
                                 <input type="date" v-model="item.enddate" />
                             </label>
                             <label>
-                                <translate>Art</translate>
+                                {{ $gettext('Art') }}
                                 <select v-model="item.type">
-                                    <option value="school"><translate>Schul- und Berufsbildung</translate></option>
-                                    <option value="experience"><translate>Berufserfahrung</translate></option>
+                                    <option value="school">{{ $gettext('Schul- und Berufsbildung') }}</option>
+                                    <option value="experience">{{ $gettext('Berufserfahrung') }}</option>
                                 </select>
                             </label>
                             <div v-show="item.type === 'school'">
                                 <label>
-                                    <translate>Bezeichnung der Qualifikation</translate>
+                                    {{ $gettext('Bezeichnung der Qualifikation') }}
                                     <input type="text" v-model="item.qualification" />
                                 </label>
                                 <label>
-                                    <translate>Hauptfächer / Schwerpunkt</translate>
+                                    {{ $gettext('Hauptfächer / Schwerpunkt') }}
                                     <input type="text" v-model="item.focus" />
                                 </label>
                                 <label>
-                                    <translate>berufliche Fähigkeiten</translate>
+                                    {{ $gettext('berufliche Fähigkeiten') }}
                                     <input type="text" v-model="item.skills" />
                                 </label>
                             </div>
                             <div v-show="item.type === 'experience'">
                                 <label>
-                                    <translate>Name des Arbeitgebers</translate>
+                                    {{ $gettext('Name des Arbeitgebers') }}
                                     <input type="text" v-model="item.employer" />
                                 </label>
                                 <label>
-                                    <translate>Beruf / Funktion</translate>
+                                    {{ $gettext('Beruf / Funktion') }}
                                     <input type="text" v-model="item.job" />
                                 </label>
                             </div>
                             <label>
-                                <translate>Beschreibung</translate>
+                                {{ $gettext('Beschreibung') }}
                                 <textarea v-model="item.description" />
                             </label>
                             <label v-if="currentItems.length > 1">
                                 <button class="button trash" @click="removeItem(index)">
-                                    <translate>Ereignis entfernen</translate>
+                                    {{ $gettext('Ereignis entfernen') }}
                                 </button>
                             </label>
                         </form>
                     </courseware-tab>
                 </courseware-tabs>
             </template>
-            <template #info><translate>Informationen zum Karriere-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Karriere-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>

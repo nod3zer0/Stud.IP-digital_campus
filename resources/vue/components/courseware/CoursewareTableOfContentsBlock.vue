@@ -77,20 +77,20 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Überschrift</translate>
+                        {{ $gettext('Überschrift') }}
                         <input type="text" v-model="currentTitle" />
                     </label>
                     <label>
-                        <translate>Layout</translate>
+                        {{ $gettext('Layout') }}
                         <select v-model="currentStyle">
-                            <option value="list"><translate>Liste</translate></option>
-                            <option value="list-details"><translate>Liste mit Beschreibung</translate></option>
-                            <option value="tiles"><translate>Kacheln</translate></option>
+                            <option value="list">{{ $gettext('Liste') }}</option>
+                            <option value="list-details">{{ $gettext('Liste mit Beschreibung') }}</option>
+                            <option value="tiles">{{ $gettext('Kacheln') }}</option>
                         </select>
                     </label>
                 </form>
             </template>
-            <template #info><translate>Informationen zum Inhaltsverzeichnis-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Inhaltsverzeichnis-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>

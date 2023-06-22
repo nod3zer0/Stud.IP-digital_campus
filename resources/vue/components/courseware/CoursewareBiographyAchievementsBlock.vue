@@ -16,21 +16,21 @@
                     </div>
                     <div class="cw-block-biography-details">
                         <h3>
-                            <translate>Titel</translate>: {{currentData.title}}
+                            {{ $gettext('Titel') }}: {{currentData.title}}
                         </h3>
                         <h4>
-                            <span v-show="currentData.type !== 'membership'"><translate>Datum</translate>:</span>
-                            <span v-show="currentData.type === 'membership'"><translate>Startdatum</translate>:</span>
+                            <span v-show="currentData.type !== 'membership'">{{ $gettext('Datum') }}:</span>
+                            <span v-show="currentData.type === 'membership'">{{ $gettext('Startdatum') }}:</span>
                             {{ getReadableDate(currentData.date) }}
                         </h4>
                         <h4 v-show="hasEndDate">
-                            <translate>Enddatum</translate>: {{ getReadableDate(currentData.end_date)}}
+                            {{ $gettext('Enddatum') }}: {{ getReadableDate(currentData.end_date)}}
                         </h4>
                         <h4 v-show="hasParticipation">
-                            <translate>Beteiligung</translate>: <span v-html="currentData.role"></span>
+                            {{ $gettext('Beteiligung') }}: <span v-html="currentData.role"></span>
                         </h4>
                         <div>
-                            <h4><translate>Beschreibung</translate>:</h4>
+                            <h4>{{ $gettext('Beschreibung') }}:</h4>
                             <p v-html="currentData.description"></p>
                         </div>
                     </div>
@@ -39,40 +39,40 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Type</translate>
+                        {{ $gettext('Type') }}
                         <select v-model="currentData.type">
-                            <option value="certificate"><translate>Zertifikat</translate></option>
-                            <option value="accreditation"><translate>Akkreditierung</translate></option>
-                            <option value="award"><translate>Auszeichnung</translate></option>
-                            <option value="book"><translate>Buch</translate></option>
-                            <option value="publication"><translate>Veröffentlichung</translate></option>
-                            <option value="membership"><translate>Mitgliedschaft</translate></option>
+                            <option value="certificate">{{ $gettext('Zertifikat') }}</option>
+                            <option value="accreditation">{{ $gettext('Akkreditierung') }}</option>
+                            <option value="award">{{ $gettext('Auszeichnung') }}</option>
+                            <option value="book">{{ $gettext('Buch') }}</option>
+                            <option value="publication">{{ $gettext('Veröffentlichung') }}</option>
+                            <option value="membership">{{ $gettext('Mitgliedschaft') }}</option>
                         </select>
                     </label>
                     <label>
-                        <translate>Titel</translate>
+                        {{ $gettext('Titel') }}
                         <input type="text" v-model="currentData.title">
                     </label>
                     <label>
-                        <span v-show="!hasEndDate"><translate>Datum</translate></span>
-                        <span v-show="hasEndDate"><translate>Startdatum</translate></span>
+                        <template v-if="!hasEndDate">{{ $gettext('Datum') }}</template>
+                        <template v-else>{{ $gettext('Startdatum') }}</template>
                         <input type="date" v-model="currentData.date" />
                     </label>
                     <label v-show="hasEndDate">
-                        <translate>Enddatum</translate>
+                        {{ $gettext('Enddatum') }}
                         <input type="date" v-model="currentData.end_date" />
                     </label>
                     <label v-show="hasParticipation">
-                        <translate>Beteiligung</translate>
+                        {{ $gettext('Beteiligung') }}
                         <input type="text" v-model="currentData.role">
                     </label>
                     <div class="label-text">
-                        <translate>Beschreibung</translate>
+                        {{ $gettext('Beschreibung') }}
                     </div>
                     <studip-wysiwyg v-model="currentData.description"></studip-wysiwyg>
                 </form>
             </template>
-            <template #info><translate>Informationen zum Erfolge-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Erfolge-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>

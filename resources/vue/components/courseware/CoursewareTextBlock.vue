@@ -16,7 +16,7 @@
             <template v-if="canEdit" #edit>
                 <ckeditor :editor="editor" v-model="currentText" :config="editorConfig" @ready="onReady"></ckeditor>
             </template>
-            <template #info><translate>Informationen zum Text-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Text-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>

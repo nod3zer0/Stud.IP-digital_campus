@@ -1,5 +1,6 @@
 .studip-v-select, .studip-v-select-detachted-ul {
     max-width: 48em;
+    margin-top: 0.5ex;
 
     .vs__option-with-icon{
         padding-left: 8px;
@@ -8,17 +9,21 @@
     .vs__option-color {
         border: solid thin $content-color-40;
         padding-left: 20px;
-        height: 20px;
+        height: 16px;
         margin-right: 4px;
     }
 
     .vs__dropdown-toggle {
-        border: solid thin $content-color-40;
-        border-radius: 0;
+        max-height: 32px;
+        padding: 0 0 5px;
     }
 
     .vs__dropdown-menu, &.vs__dropdown-menu {
         border-radius: 0;
+    }
+
+    .vs__actions {
+        align-items: end;
     }
 
     &.studip-v-select-drop-up {
@@ -35,4 +40,9 @@
     &.studip-v-select-ul-dialog {
         z-index: 3002;
     }
+}
+
+form.default .studip-v-select .vs__selected {
+    padding: 0;
+    margin: 2px 2px 0;
 }

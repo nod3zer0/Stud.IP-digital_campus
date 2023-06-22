@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div v-if="emptyAudio" class="cw-audio-empty">
-                    <p><translate>Es ist keine Audio-Datei verfügbar</translate></p>
+                    <p>{{ $gettext('Es ist keine Audio-Datei verfügbar') }}</p>
                 </div>
                 <div v-show="currentSource === 'studip_folder'" class="cw-audio-playlist-wrapper" :class="[!showRecorder && emptyAudio ? 'empty' : '']">
                     <ul v-show="hasPlaylist" class="cw-audio-playlist" :class="[showRecorder ? 'with-recorder' : '']">
@@ -71,45 +71,45 @@
                             :title="enableRecorderTitle"
                             @click="enableRecorder"
                         >
-                            <translate>Aufnahme aktivieren</translate>
+                            {{ $gettext('Aufnahme aktivieren') }}
                         </button>
                         <button
                             v-show="userRecorderEnabled && !isRecording && !newRecording"
                             class="button"
                             @click="startRecording"
                         >
-                            <translate>Aufnahme starten</translate>
+                            {{ $gettext('Aufnahme starten') }}
                         </button>
                         <button
                             v-show="newRecording && !isRecording"
                             class="button"
                             @click="startRecording"
                         >
-                            <translate>Aufnahme wiederholen</translate>
+                            {{ $gettext('Aufnahme wiederholen') }}
                         </button>
                         <button 
                             v-show="isRecording"
                             class="button"
                             @click="stopRecording"
                         >
-                            <translate>Aufnahme beenden</translate>
+                            {{ $gettext('Aufnahme beenden') }}
                         </button>
                         <button 
                             v-show="newRecording && !isRecording"
                             class="button"
                             @click="resetRecorder"
                         >
-                            <translate>Aufnahme löschen</translate>
+                            {{ $gettext('Aufnahme löschen') }}
                         </button>
                         <button 
                             v-show="newRecording && !isRecording"
                             class="button"
                             @click="storeRecording"
                         >
-                            <translate>Aufnahme speichern</translate>
+                            {{ $gettext('Aufnahme speichern') }}
                         </button>
                         <span v-show="isRecording">
-                            <translate>Aufnahme läuft</translate>: {{seconds2time(timer)}}
+                            {{ $gettext('Aufnahme läuft') }}: {{seconds2time(timer)}}
                         </span>
                     </div>
                 </div>
@@ -117,23 +117,23 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Überschrift</translate>
+                        {{ $gettext('Überschrift') }}
                         <input type="text" v-model="currentTitle" />
                     </label>
                     <label>
-                        <translate>Quelle</translate>
+                        {{ $gettext('Quelle') }}
                         <select v-model="currentSource">
-                            <option value="studip_file"><translate>Dateibereich Datei</translate></option>
-                            <option value="studip_folder"><translate>Dateibereich Ordner</translate></option>
-                            <option value="web"><translate>Web-Adresse</translate></option>
+                            <option value="studip_file">{{ $gettext('Dateibereich Datei') }}</option>
+                            <option value="studip_folder">{{ $gettext('Dateibereich Ordner') }}</option>
+                            <option value="web">{{ $gettext('Web-Adresse') }}</option>
                         </select>
                     </label>
                     <label v-show="currentSource === 'web'">
-                        <translate>URL</translate>
+                        {{ $gettext('URL') }}
                         <input type="text" v-model="currentWebUrl" />
                     </label>
                     <label v-show="currentSource === 'studip_file'">
-                        <translate>Datei</translate>
+                        {{ $gettext('Datei') }}
                         <courseware-file-chooser
                             v-model="currentFileId"
                             :isAudio="true"
@@ -141,24 +141,24 @@
                         />
                     </label>
                     <label v-show="currentSource === 'studip_folder'">
-                        <translate>Ordner</translate>
+                        {{ $gettext('Ordner') }}
                         <courseware-folder-chooser v-model="currentFolderId" allowUserFolders />
                     </label>
                     <label v-show="currentSource === 'studip_folder'">
-                        <translate>Audio Aufnahmen zulassen</translate>
+                        {{ $gettext('Audio Aufnahmen zulassen') }}
                         <span
                             class="tooltip tooltip-icon"
                             :data-tooltip="$gettext('Um Aufnahmen zu ermöglichen, muss ein Ordner ausgewählt werden.')"
                         ></span>
                         <select v-model="currentRecorderEnabled" :disabled="!folderSelected">
-                            <option :value="true"><translate>Ja</translate></option>
-                            <option :value="false"><translate>Nein</translate></option>
+                            <option :value="true">{{ $gettext('Ja') }}</option>
+                            <option :value="false">{{ $gettext('Nein') }}</option>
                         </select>
                     </label>
                 </form>
             </template>
             <template #info>
-                <p><translate>Informationen zum Audio-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Audio-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>

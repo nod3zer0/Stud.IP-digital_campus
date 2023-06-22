@@ -30,22 +30,22 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Titel</translate>
+                        {{ $gettext('Titel') }}
                         <input type="text" v-model="currentTitle" />
                     </label>
                     <label>
-                        <translate>Art des Links</translate>
+                        {{ $gettext('Art des Links') }}
                         <select v-model="currentType">
-                            <option value="external"><translate>Extern</translate></option>
-                            <option value="internal"><translate>Intern</translate></option>
+                            <option value="external">{{ $gettext('Extern') }}</option>
+                            <option value="internal">{{ $gettext('Intern') }}</option>
                         </select>
                     </label>
                     <label v-show="currentType === 'external'">
-                        <translate>URL</translate>
+                        {{ $gettext('URL') }}
                         <input type="text" v-model="currentUrl" @change="fixUrl" />
                     </label>
                     <label v-show="currentType === 'internal'">
-                        <translate>Seite</translate>
+                        {{ $gettext('Seite') }}
                         <select v-model="currentTarget">
                             <option v-for="(el, index) in courseware" :key="index" :value="el.id">
                                 {{ el.attributes.title }}
@@ -55,7 +55,7 @@
                 </form>
             </template>
             <template #info>
-                <p><translate>Informationen zum Link-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Link-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>

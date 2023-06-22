@@ -11,7 +11,7 @@
         >
             <template #content>
                 <div v-if="currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
-                <div v-if="oembedData !== null">
+                <template v-if="oembedData">
                     <div
                         v-if="oembedData.type === 'rich' || oembedData.type === 'video'"
                         v-html="oembedData.html"
@@ -26,37 +26,37 @@
                     <div v-if="oembedData.type === 'link' && oembedData.provider_name === 'DeviantArt'">
                         <img :src="oembedData.fullsize_url" />
                     </div>
-                </div>
-                <div class="cw-block-embed-info" v-if="oembedData !== null">
-                    <span class="cw-block-embed-title">{{ oembedData.title }}</span>
-                    <span class="cw-block-embed-author-name">
-                        <translate>erstellt von</translate>
-                        <a :href="oembedData.author_url" target="_blank">{{ oembedData.author_name }}</a></span
-                    >
-                    <span class="cw-block-embed-source">
-                        <translate>veröffentlicht auf</translate>
-                        <a :href="oembedData.provider_url" target="_blank">{{ oembedData.provider_name }}</a></span
-                    >
-                </div>
+                    <div class="cw-block-embed-info">
+                        <span class="cw-block-embed-title">{{ oembedData.title }}</span>
+                        <span class="cw-block-embed-author-name">
+                            {{ $gettext('erstellt von') }}
+                            <a :href="oembedData.author_url" target="_blank">{{ oembedData.author_name }}</a></span
+                        >
+                        <span class="cw-block-embed-source">
+                            {{ $gettext('veröffentlicht auf') }}
+                            <a :href="oembedData.provider_url" target="_blank">{{ oembedData.provider_name }}</a></span
+                        >
+                    </div>
+                </template>
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Überschrift</translate>
+                        {{ $gettext('Überschrift') }}
                         <input type="text" v-model="currentTitle" />
                     </label>
                     <label>
-                        <translate>Quelle</translate>
+                        {{ $gettext('Quelle') }}
                         <select v-model="currentSource">
                             <option v-for="(value, key) in endPoints" :key="key" :value="key">{{ key }}</option>
                         </select>
                     </label>
                     <label>
-                        <translate>URL</translate>
+                        {{ $gettext('URL') }}
                         <input type="text" v-model="currentUrl" />
                     </label>
-                    <label v-if="currentSource === 'youtube'">
-                        <translate>Startpunkt wählen</translate>
+                    <label v-if="currentSource === 'youtube'" class="col-1">
+                        {{ $gettext('Startpunkt') }}
                         <input
                             type="time"
                             v-model="currentStartTime"
@@ -66,8 +66,8 @@
                             @change="updateTime"
                         />
                     </label>
-                    <label v-if="currentSource === 'youtube'">
-                        <translate>Endpunkt wählen</translate>
+                    <label v-if="currentSource === 'youtube'" class="col-1">
+                        {{ $gettext('Endpunkt') }}
                         <input
                             type="time"
                             v-model="currentEndTime"
@@ -80,7 +80,7 @@
                 </form>
             </template>
             <template #info>
-                <p><translate>Informationen zum Embed-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Embed-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>
@@ -181,14 +181,14 @@ export default {
             this.currentStartTime = this.startTime;
             this.currentEndTime = this.endTime;
             this.oembedData = this.oembed;
-            if (this.oembedData !== null) {
+            if (this.oembedData) {
                 this.updateTime();
                 this.calcContentHeight();
             }
         },
         recalculateContentHeight(data){
             if (this.$parent._uid === data.uid) {
-                if (this.oembedData !== null) {
+                if (this.oembedData) {
                     this.calcContentHeight();
                 }
             }

@@ -35,41 +35,63 @@
                 </div>
                 <div v-else class="cw-block-download-content">
                     <div class="cw-block-download-file-item-not-available">
-                            <span class="cw-block-file-info cw-block-file-icon-none">
-                                <translate>Datei ist nicht verfügbar</translate>
-                            </span>
+                        <span class="cw-block-file-info cw-block-file-icon-none">
+                            {{ $gettext('Datei ist nicht verfügbar') }}
+                        </span>
                     </div>
                 </div>
             </template>
             <template v-if="canEdit" #edit>
-                <form class="default" @submit.prevent="">
-                    <label>
-                        <translate>Überschrift</translate>
-                        <input type="text" v-model="currentTitle" />
-                    </label>
-                    <label>
-                        <translate>Datei</translate>
-                        <courseware-file-chooser v-model="currentFileId" @selectFile="updateCurrentFile" />
-                    </label>
-                    <label>
-                        <translate>Infobox vor Download</translate>
-                        <input type="text" v-model="currentInfo" />
-                    </label>
-                    <label>
-                        <translate>Infobox nach Download</translate>
-                        <input type="text" v-model="currentSuccess" />
-                    </label>
-                    <label>
-                        <translate>Fortschritt erst beim Herunterladen</translate>
-                        <select v-model="currentGrade">
-                            <option value="false"><translate>Nein</translate></option>
-                            <option value="true"><translate>Ja</translate></option>
-                        </select>
-                    </label>
-                </form>
+                <courseware-tabs>
+                    <courseware-tab
+                        :index="0"
+                        :name="$gettext('Datei')"
+                        :selected="true"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Überschrift') }}
+                                <input type="text" v-model="currentTitle" />
+                            </label>
+                            <label>
+                                {{ $gettext('Datei') }}
+                                <courseware-file-chooser v-model="currentFileId" @selectFile="updateCurrentFile" />
+                            </label>
+                        </form>
+                    </courseware-tab>
+                    <courseware-tab
+                        :index="1"
+                        :name="$gettext('Infobox')"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Infobox vor Download') }}
+                                <input type="text" v-model="currentInfo" />
+                            </label>
+                            <label>
+                                {{ $gettext('Infobox nach Download') }}
+                                <input type="text" v-model="currentSuccess" />
+                            </label>
+                        </form>
+                    </courseware-tab>
+                    <courseware-tab
+                        :index="2"
+                        :name="$gettext('Fortschritt')"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Fortschritt erst beim Herunterladen') }}
+                                <select v-model="currentGrade">
+                                    <option value="false">{{ $gettext('Nein') }}</option>
+                                    <option value="true">{{ $gettext('Ja') }}</option>
+                                </select>
+                            </label>
+                        </form>
+                    </courseware-tab>
+                </courseware-tabs>
             </template>
             <template #info>
-                <p><translate>Informationen zum Download-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Download-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>
@@ -78,6 +100,8 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
 import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -87,6 +111,8 @@ export default {
     components: {
         CoursewareDefaultBlock,
         CoursewareFileChooser,
+        CoursewareTabs,
+        CoursewareTab,
     },
     props: {
         block: Object,

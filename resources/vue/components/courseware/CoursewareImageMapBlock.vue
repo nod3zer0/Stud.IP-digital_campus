@@ -71,7 +71,7 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Bilddatei</translate>
+                        {{ $gettext('Bilddatei') }}
                         <courseware-file-chooser
                             v-model="currentFileId"
                             :isImage="true"
@@ -79,9 +79,9 @@
                         />
                     </label>
                     <label>
-                        <a class="button add" @click="addShape('arc')"><translate>Kreis hinzufügen</translate></a>
-                        <a class="button add" @click="addShape('ellipse')"><translate>Oval hinzufügen</translate></a>
-                        <a class="button add" @click="addShape('rect')"><translate>Rechteck hinzufügen</translate></a>
+                        <a class="button add" @click="addShape('arc')">{{ $gettext('Kreis hinzufügen') }}</a>
+                        <a class="button add" @click="addShape('ellipse')">{{ $gettext('Oval hinzufügen') }}</a>
+                        <a class="button add" @click="addShape('rect')">{{ $gettext('Rechteck hinzufügen') }}</a>
                     </label>
                     <courseware-tabs v-if="currentShapes.length > 0">
                         <courseware-tab
@@ -92,8 +92,8 @@
                             :icon="shape.title === '' ? 'link-extern' : ''"
                             :selected="index === 0"
                         >
-                            <label>
-                                <translate>Farbe</translate>
+                            <label class="col-2">
+                                {{ $gettext('Farbe') }}
                                 <studip-select
                                     :options="colors"
                                     label="name"
@@ -106,7 +106,7 @@
                                         <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                                     </template>
                                     <template #no-options>
-                                        <translate>Es steht keine Auswahl zur Verfügung.</translate>
+                                        {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
                                     </template>
                                     <template #selected-option="{name, rgba}">
                                         <span class="vs__option-color" :style="{'background-color': rgba}"></span><span>{{name}}</span>
@@ -116,38 +116,8 @@
                                     </template>
                                 </studip-select>
                             </label>
-                            <label v-if="shape.type === 'arc'" class="cw-block-image-map-dimensions">
-                                X: <input type="number" v-model="shape.data.centerX" @change="drawScreen" /> Y:
-                                <input type="number" v-model="shape.data.centerY" @change="drawScreen" />
-                                <translate>Radius</translate>
-                                <input type="number" v-model="shape.data.radius" @change="drawScreen" />
-                            </label>
-                            <label v-if="shape.type === 'rect'" class="cw-block-image-map-dimensions">
-                                X: <input type="number" v-model="shape.data.X" @change="drawScreen" /> Y:
-                                <input type="number" v-model="shape.data.Y" @change="drawScreen" />
-                                <translate>Höhe</translate>
-                                <input type="number" v-model="shape.data.height" @change="drawScreen" />
-                                <translate>Breite</translate>
-                                <input type="number" v-model="shape.data.width" @change="drawScreen" />
-                            </label>
-                            <label v-if="shape.type === 'ellipse'" class="cw-block-image-map-dimensions">
-                                X: <input type="number" v-model="shape.data.X" @change="drawScreen" /> Y:
-                                <input type="number" v-model="shape.data.Y" @change="drawScreen" />
-                                <translate>Radius</translate> X:
-                                <input type="number" v-model="shape.data.radiusX" @change="drawScreen" />
-                                <translate>Radius</translate> Y:
-                                <input type="number" v-model="shape.data.radiusY" @change="drawScreen" />
-                            </label>
-                            <label>
-                                <translate>Bezeichnung</translate>
-                                <input type="text" v-model="shape.title" />
-                            </label>
-                            <label>
-                                <translate>Beschriftung</translate>
-                                <input type="text" v-model="shape.data.text" @change="drawScreen" />
-                            </label>
-                            <label>
-                                <translate>Textfarbe</translate>
+                            <label class="col-2">
+                                {{ $gettext('Textfarbe') }}
                                 <studip-select
                                     :options="colors"
                                     label="name"
@@ -160,7 +130,7 @@
                                         <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                                     </template>
                                     <template #no-options>
-                                        <translate>Es steht keine Auswahl zur Verfügung.</translate>
+                                        {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
                                     </template>
                                     <template #selected-option="{name, rgba}">
                                         <span class="vs__option-color" :style="{'background-color': rgba}"></span><span>{{name}}</span>
@@ -170,23 +140,83 @@
                                     </template>
                                 </studip-select>
                             </label>
-                            <label>
-                                <translate>Art des Links</translate>
+                            <br>
+                            <template v-if="shape.type === 'arc'">
+                                <label class="col-1">
+                                    X
+                                    <input type="number" v-model="shape.data.centerX" @change="drawScreen" />
+                                </label>
+                                <label class="col-1">
+                                    Y
+                                    <input type="number" v-model="shape.data.centerY" @change="drawScreen" />
+                                </label>
+                                <label class="col-1">
+                                    {{ $gettext('Radius') }}
+                                    <input type="number" v-model="shape.data.radius" @change="drawScreen" />
+                                </label>
+                            </template>
+                            <template v-if="shape.type === 'rect'">
+                                <label class="col-1">
+                                    X
+                                    <input type="number" v-model="shape.data.X" @change="drawScreen" />
+                                </label>
+                                <label class="col-1">
+                                    Y
+                                    <input type="number" v-model="shape.data.Y" @change="drawScreen" />
+                                </label>
+                                <label class="col-1">
+                                    {{ $gettext('Höhe') }}
+                                    <input type="number" v-model="shape.data.height" @change="drawScreen" />
+                                </label>
+                                <label class="col-1">
+                                    {{ $gettext('Breite') }}
+                                    <input type="number" v-model="shape.data.width" @change="drawScreen" />
+                                </label>
+                            </template>
+                            <template v-if="shape.type === 'ellipse'">
+                                <label class="col-1">
+                                    X
+                                    <input type="number" v-model="shape.data.X" @change="drawScreen" />
+                                </label>
+                                <label class="col-1">
+                                    Y
+                                    <input type="number" v-model="shape.data.Y" @change="drawScreen" />
+                                </label>
+                                <label class="col-1">
+                                    {{ $gettext('Radius') }} X
+                                    <input type="number" v-model="shape.data.radiusX" @change="drawScreen" />
+                                </label>
+                                <label class="col-1">
+                                    {{ $gettext('Radius') }} Y
+                                    <input type="number" v-model="shape.data.radiusY" @change="drawScreen" />
+                                </label>
+                            </template>
+                            <label class="col-4">
+                                {{ $gettext('Bezeichnung') }}
+                                <input type="text" v-model="shape.title" />
+                            </label>
+                            <label class="col-4">
+                                {{ $gettext('Beschriftung') }}
+                                <input type="text" v-model="shape.data.text" @change="drawScreen" />
+                            </label>
+                            <br>
+                            <label class="col-2">
+                                {{ $gettext('Art des Links') }}
                                 <select v-model="shape.link_type">
-                                    <option value="internal"><translate>Interner Link</translate></option>
-                                    <option value="external"><translate>Externer Link</translate></option>
+                                    <option value="internal">{{ $gettext('Interner Link') }}</option>
+                                    <option value="external">{{ $gettext('Externer Link') }}</option>
                                 </select>
                             </label>
-                            <label v-if="shape.link_type === 'internal'">
-                                <translate>Ziel des Links</translate>
+                            <label v-if="shape.link_type === 'internal'" class="col-2">
+                                {{ $gettext('Ziel des Links') }}
                                 <select v-model="shape.target_internal" @change="drawScreen">
                                     <option v-for="(el, index) in courseware" :key="index" :value="el.id">
                                         {{ el.attributes.title }}
                                     </option>
                                 </select>
                             </label>
-                            <label v-if="shape.link_type === 'external'">
-                                <translate>Ziel des Links</translate>
+                            <label v-if="shape.link_type === 'external'" class="col-2">
+                                {{ $gettext('Ziel des Links') }}
                                 <input
                                     type="text"
                                     placeholder="https://www.studip.de"
@@ -199,7 +229,7 @@
                             </label>
                             <label>
                                 <a class="button cancel" @click="removeShape(index)"
-                                    ><translate>Form entfernen</translate></a
+                                    >{{ $gettext('Form entfernen') }}</a
                                 >
                             </label>
                         </courseware-tab>
@@ -207,7 +237,7 @@
                 </form>
             </template>
             <template #info>
-                <p><translate>Informationen zum Verweissensitive-Grafik-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Verweissensitive-Grafik-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>

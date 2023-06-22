@@ -12,7 +12,7 @@
         >
             <template #content>
                 <div class="cw-block-title">
-                    <translate>Bestätigung</translate>
+                    {{ $gettext('Bestätigung') }}
                 </div>
                 <div class="cw-block-confirm-content">
                     <div class="cw-block-confirm-checkbox">
@@ -27,12 +27,12 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Text</translate>
+                        {{ $gettext('Text') }}
                         <input type="text" v-model="currentText" />
                     </label>
                 </form>
             </template>
-            <template #info><translate>Informationen zum Bestätigungs-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Bestätigungs-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>

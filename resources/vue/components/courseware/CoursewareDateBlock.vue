@@ -14,37 +14,37 @@
                     <div class="cw-date-countdown-digit" data-countdown="days">
                         <div class="cw-date-countdown-number">{{ countdownDays }}</div>
                         <div v-show="countdownDays === '01'" class="cw-date-countdown-label-sg">
-                            <translate>Tag</translate>
+                            {{ $gettext('Tag') }}
                         </div>
                         <div v-show="countdownDays !== '01'" class="cw-date-countdown-label-pl">
-                            <translate>Tage</translate>
+                            {{ $gettext('Tage') }}
                         </div>
                     </div>
                     <div class="cw-date-countdown-digit" data-countdown="hours">
                         <div class="cw-date-countdown-number">{{ countdownHours }}</div>
                         <div v-show="countdownHours === '01'" class="cw-date-countdown-label-sg">
-                            <translate>Stunde</translate>
+                            {{ $gettext('Stunde') }}
                         </div>
                         <div v-show="countdownHours !== '01'" class="cw-date-countdown-label-pl">
-                            <translate>Stunden</translate>
+                            {{ $gettext('Stunden') }}
                         </div>
                     </div>
                     <div class="cw-date-countdown-digit" data-countdown="minutes">
                         <div class="cw-date-countdown-number">{{ countdownMinutes }}</div>
                         <div v-show="countdownMinutes === '01'" class="cw-date-countdown-label-sg">
-                            <translate>Minute</translate>
+                            {{ $gettext('Minute') }}
                         </div>
                         <div v-show="countdownMinutes !== '01'" class="cw-date-countdown-label-pl">
-                            <translate>Minuten</translate>
+                            {{ $gettext('Minuten') }}
                         </div>
                     </div>
                     <div class="cw-date-countdown-digit" data-countdown="seconds">
                         <div class="cw-date-countdown-number">{{ countdownSeconds }}</div>
                         <div v-show="countdownSeconds === '01'" class="cw-date-countdown-label-sg">
-                            <translate>Sekunde</translate>
+                            {{ $gettext('Sekunde') }}
                         </div>
                         <div v-show="countdownSeconds !== '01'" class="cw-date-countdown-label-pl">
-                            <translate>Sekunden</translate>
+                            {{ $gettext('Sekunden') }}
                         </div>
                     </div>
                 </div>
@@ -61,23 +61,23 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Datum</translate>
+                        {{ $gettext('Datum') }}
                         <input type="date" v-model="currentDate" @change="computeTimestamp" />
                     </label>
                     <label>
-                        <translate>Uhrzeit</translate>
+                        {{ $gettext('Uhrzeit') }}
                         <input type="time" v-model="currentTime" @change="computeTimestamp" />
                     </label>
                     <label>
-                        <translate>Layout</translate>
+                        {{ $gettext('Layout') }}
                         <select v-model="currentStyle">
-                            <option value="countdown"><translate>Countdown</translate></option>
-                            <option value="date"><translate>Datum</translate></option>
+                            <option value="countdown">{{ $gettext('Countdown') }}</option>
+                            <option value="date">{{ $gettext('Datum') }}</option>
                         </select>
                     </label>
                 </form>
             </template>
-            <template #info><translate>Informationen zum Termin-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Termin-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>

@@ -56,7 +56,7 @@
                 </div>
             </template>
             <template v-if="canEdit" #edit>
-                <button class="button add" @click="addCard"><translate>Karte hinzufügen</translate></button>
+                <button class="button add" @click="addCard">{{ $gettext('Karte hinzufügen') }}</button>
                 <courseware-tabs
                     v-if="currentCards.length > 0"
                     :setSelected="setCardTab"
@@ -72,7 +72,7 @@
                     >
                         <form class="default" @submit.prevent="">
                             <label>
-                                <translate>Bild Vorderseite</translate>:
+                                {{ $gettext('Bild Vorderseite') }}:
                                 <courseware-file-chooser
                                     v-model="card.front_file_id"
                                     :isImage="true"
@@ -81,11 +81,11 @@
                                 />
                             </label>
                             <label>
-                                <translate>Text Vorderseite</translate>:
+                                {{ $gettext('Text Vorderseite') }}:
                                 <input type="text" v-model="card.front_text" />
                             </label>
                             <label>
-                                <translate>Bild Rückseite</translate>:
+                                {{ $gettext('Bild Rückseite') }}:
                                 <courseware-file-chooser
                                     v-model="card.back_file_id"
                                     :isImage="true"
@@ -94,12 +94,12 @@
                                 />
                             </label>
                             <label>
-                                <translate>Text Rückseite</translate>:
+                                {{ $gettext('Text Rückseite') }}:
                                 <input type="text" v-model="card.back_text" />
                             </label>
                             <label v-if="!onlyCard">
                                 <button class="button trash" @click="removeCard(index)">
-                                    <translate>Karte entfernen</translate>
+                                    {{ $gettext('Karte entfernen') }}
                                 </button>
                             </label>
                         </form>
@@ -107,7 +107,7 @@
                 </courseware-tabs>
             </template>
             <template #info>
-                <p><translate>Informationen zum Lernkarten-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Lernkarten-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>

@@ -22,82 +22,104 @@
                 <div v-if="currentCcInfo" class="cw-block-iframe-cc-data">
                     <span class="cw-block-iframe-cc" :class="['cw-block-iframe-cc-' + currentCcInfo]"></span>
                     <div class="cw-block-iframe-cc-infos">
-                        <p v-if="currentCcWork !== ''"><translate>Werk</translate> {{ currentCcWork }}</p>
-                        <p v-if="currentCcAuthor !== ''"><translate>Autor</translate> {{ currentCcAuthor }}</p>
-                        <p v-if="currentCcBase !== ''"><translate>Lizenz der Plattform</translate> {{ currentCcBase }}</p>
+                        <p v-if="currentCcWork">{{ $gettext('Werk') }}: {{ currentCcWork }}</p>
+                        <p v-if="currentCcAuthor">{{ $gettext('Autor') }}: {{ currentCcAuthor }}</p>
+                        <p v-if="currentCcBase">{{ $gettext('Lizenz der Plattform') }}: {{ currentCcBase }}</p>
                     </div>
                 </div>
                 <div v-show="!currentUrl.includes('http')" :style="{ height: currentHeight + 'px' }"></div>
             </template>
             <template v-if="canEdit" #edit>
-                <form class="default" @submit.prevent="">
-                    <label>
-                        <translate>Titel</translate>
-                        <input type="text" v-model="currentTitle" />
-                    </label>
-                    <label>
-                        <translate>URL</translate>
-                        <input type="text" v-model="currentUrl" @change="setProtocol" />
-                    </label>
-                    <label>
-                        <translate>Höhe</translate>
-                        <input type="number" v-model="currentHeight" min="0" />
-                    </label>
-                    <label>
-                        <translate>Nutzerspezifische ID übergeben</translate>
-                        <select v-model="currentSubmitUserId">
-                            <option value="false"><translate>Nein</translate></option>
-                            <option value="true"><translate>Ja</translate></option>
-                        </select>
-                    </label>
+                <courseware-tabs>
+                    <courseware-tab
+                        :index="0"
+                        :name="$gettext('Grunddaten')"
+                        :selected="true"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Titel') }}
+                                <input type="text" v-model="currentTitle" />
+                            </label>
+                            <label>
+                                {{ $gettext('URL') }}
+                                <input type="text" v-model="currentUrl" @change="setProtocol" />
+                            </label>
+                            <label>
+                                {{ $gettext('Höhe') }}
+                                <input type="number" v-model="currentHeight" min="0" />
+                            </label>
+                        </form>
+                    </courseware-tab>
+                    <courseware-tab
+                        :index="1"
+                        :name="$gettext('Nutzerspezifische ID')"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Nutzerspezifische ID übergeben') }}
+                                <select v-model="currentSubmitUserId">
+                                    <option value="false">{{ $gettext('Nein') }}</option>
+                                    <option value="true">{{ $gettext('Ja') }}</option>
+                                </select>
+                            </label>
 
-                    <label v-if="currentSubmitUserId === 'true'">
-                        <translate>Name des Übergabeparameters</translate>
-                        <input type="text" v-model="currentSubmitParam" />
-                    </label>
-                    <label v-if="currentSubmitUserId === 'true'">
-                        <translate>Zufallszeichen für Verschlüsselung (Salt)</translate>
-                        <input type="text" v-model="currentSalt" />
-                    </label>
-                    <label>
-                        <translate>Creative Commons Angaben</translate>
-                        <select v-model="currentCcInfo">
-                            <option value="false"><translate>Keine</translate></option>
-                            <option value="by">(by) <translate>Namensnennung</translate></option>
-                            <option value="by-sa">
-                                (by-sa) <translate>Namensnennung & Weitergabe unter gleichen Bedingungen</translate>
-                            </option>
-                            <option value="by-nc">
-                                (by-nc) <translate>Namensnennung & Nicht kommerziell</translate>
-                            </option>
-                            <option value="by-nd">
-                                (by-nd) <translate>Namensnennung & Keine Bearbeitung</translate>
-                            </option>
-                            <option value="by-nc-nd">
-                                (by-nc-nd) <translate>Namensnennung & Nicht kommerziell & Keine Bearbeitung</translate>
-                            </option>
-                            <option value="by-nc-sa">
-                                (by-nc-sa)
-                                <translate>Namensnennung & Nicht kommerziell & Weitergabe unter gleichen Bedingungen</translate>
-                            </option>
-                        </select>
-                    </label>
-                    <label v-if="currentCcInfo !== 'false'">
-                        CC <translate>Werk</translate>
-                        <input type="text" v-model="currentCcWork" />
-                    </label>
-                    <label v-if="currentCcInfo !== 'false'">
-                        CC <translate>Author</translate>
-                        <input type="text" v-model="currentCcAuthor" />
-                    </label>
-                    <label v-if="currentCcInfo !== 'false'">
-                        CC <translate>Lizenz der Plattform</translate>
-                        <input type="text" v-model="currentCcBase" />
-                    </label>
-                </form>
+                            <label v-if="currentSubmitUserId === 'true'">
+                                {{ $gettext('Name des Übergabeparameters') }}
+                                <input type="text" v-model="currentSubmitParam" />
+                            </label>
+                            <label v-if="currentSubmitUserId === 'true'">
+                                {{ $gettext('Zufallszeichen für Verschlüsselung (Salt)') }}
+                                <input type="text" v-model="currentSalt" />
+                            </label>
+                        </form>
+                    </courseware-tab>
+                    <courseware-tab
+                        :index="2"
+                        :name="$gettext('Creative Commons')"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Creative Commons Lizenz') }}
+                                <select v-model="currentCcInfo">
+                                    <option value="false">{{ $gettext('Keine') }}</option>
+                                    <option value="by">(by) {{ $gettext('Namensnennung') }}</option>
+                                    <option value="by-sa">
+                                        (by-sa) {{ $gettext('Namensnennung & Weitergabe unter gleichen Bedingungen') }}
+                                    </option>
+                                    <option value="by-nc">
+                                        (by-nc) {{ $gettext('Namensnennung & Nicht kommerziell') }}
+                                    </option>
+                                    <option value="by-nd">
+                                        (by-nd) {{ $gettext('Namensnennung & Keine Bearbeitung') }}
+                                    </option>
+                                    <option value="by-nc-nd">
+                                        (by-nc-nd) {{ $gettext('Namensnennung & Nicht kommerziell & Keine Bearbeitung') }}
+                                    </option>
+                                    <option value="by-nc-sa">
+                                        (by-nc-sa)
+                                        {{ $gettext('Namensnennung & Nicht kommerziell & Weitergabe unter gleichen Bedingungen') }}
+                                    </option>
+                                </select>
+                            </label>
+                            <label v-if="currentCcInfo !== 'false'">
+                                CC {{ $gettext('Werk') }}
+                                <input type="text" v-model="currentCcWork" />
+                            </label>
+                            <label v-if="currentCcInfo !== 'false'">
+                                CC {{ $gettext('Author') }}
+                                <input type="text" v-model="currentCcAuthor" />
+                            </label>
+                            <label v-if="currentCcInfo !== 'false'">
+                                CC {{ $gettext('Lizenz der Plattform') }}
+                                <input type="text" v-model="currentCcBase" />
+                            </label>
+                        </form>
+                    </courseware-tab>
+                </courseware-tabs>
             </template>
             <template #info>
-                <p><translate>Informationen zum IFrame-Block</translate></p>
+                <p>{{ $gettext('Informationen zum IFrame-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>
@@ -105,6 +127,8 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
 import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 import md5 from 'md5';
@@ -114,6 +138,8 @@ export default {
     mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
+        CoursewareTabs,
+        CoursewareTab,
     },
     props: {
         block: Object,

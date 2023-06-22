@@ -21,54 +21,70 @@
                 />
             </template>
             <template v-if="canEdit" #edit>
-                <form class="default" @submit.prevent="">
-                    <label>
-                        <translate>Überschrift</translate>
-                        <input type="text" v-model="currentTitle" />
-                    </label>
-                    <label>
-                        <translate>Quelle</translate>
-                        <select v-model="currentSource">
-                            <option value="studip"><translate>Dateibereich</translate></option>
-                            <option value="web"><translate>Web-Adresse</translate></option>
-                        </select>
-                    </label>
-                    <label v-show="currentSource === 'web'">
-                        <translate>URL</translate>
-                        <input type="text" v-model="currentWebUrl" />
-                    </label>
-                    <label v-show="currentSource === 'studip'">
-                        <translate>Datei</translate>
-                        <courseware-file-chooser
-                            v-model="currentFileId"
-                            :isVideo="true"
-                            @selectFile="updateCurrentFile"
-                        />
-                    </label>
-                    <label>
-                        <translate>Seitenverhältnis</translate>
-                        <select v-model="currentAspect">
-                            <option value="169">16:9</option>
-                            <option value="43">4:3</option>
-                        </select>
-                    </label>
-                    <label>
-                        <translate>Video startet automatisch</translate>
-                        <select v-model="currentAutoplay">
-                            <option value="disabled"><translate>Nein</translate></option>
-                            <option value="enabled"><translate>Ja</translate></option>
-                        </select>
-                    </label>
-                    <label>
-                        <translate>Contextmenü</translate>
-                        <select v-model="currentContextMenu">
-                            <option value="enabled"><translate>Erlauben</translate></option>
-                            <option value="disabled"><translate>Verhindern</translate></option>
-                        </select>
-                    </label>
-                </form>
+                <courseware-tabs>
+                    <courseware-tab
+                        :index="0"
+                        :name="$gettext('Grunddaten')"
+                        :selected="true"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Überschrift') }}
+                                <input type="text" v-model="currentTitle" />
+                            </label>
+                            <label>
+                                {{ $gettext('Quelle') }}
+                                <select v-model="currentSource">
+                                    <option value="studip">{{ $gettext('Dateibereich') }}</option>
+                                    <option value="web">{{ $gettext('Web-Adresse') }}</option>
+                                </select>
+                            </label>
+                            <label v-show="currentSource === 'web'">
+                                {{ $gettext('URL') }}
+                                <input type="text" v-model="currentWebUrl" />
+                            </label>
+                            <label v-show="currentSource === 'studip'">
+                                {{ $gettext('Datei') }}
+                                <courseware-file-chooser
+                                    v-model="currentFileId"
+                                    :isVideo="true"
+                                    @selectFile="updateCurrentFile"
+                                />
+                            </label>
+
+                        </form>
+                    </courseware-tab>
+                    <courseware-tab
+                        :index="1"
+                        :name="$gettext('Video Einstellungen')"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Seitenverhältnis') }}
+                                <select v-model="currentAspect">
+                                    <option value="169">16:9</option>
+                                    <option value="43">4:3</option>
+                                </select>
+                            </label>
+                            <label>
+                                {{ $gettext('Video startet automatisch') }}
+                                <select v-model="currentAutoplay">
+                                    <option value="disabled">{{ $gettext('Nein') }}</option>
+                                    <option value="enabled">{{ $gettext('Ja') }}</option>
+                                </select>
+                            </label>
+                            <label>
+                                {{ $gettext('Contextmenü') }}
+                                <select v-model="currentContextMenu">
+                                    <option value="enabled">{{ $gettext('Erlauben') }}</option>
+                                    <option value="disabled">{{ $gettext('Verhindern') }}</option>
+                                </select>
+                            </label>
+                        </form>
+                    </courseware-tab>
+                </courseware-tabs>
             </template>
-            <template #info><translate>Informationen zum Video-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Video-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>
@@ -76,6 +92,8 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
 import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -85,6 +103,8 @@ export default {
     components: {
         CoursewareDefaultBlock,
         CoursewareFileChooser,
+        CoursewareTabs,
+        CoursewareTab,
     },
     props: {
         block: Object,

@@ -15,16 +15,16 @@
                         <h2>{{currentData.name}}</h2>
                     </div>
                     <div class="cw-block-biography-details cw-block-biography-personal-information-details">
-                        <span><translate>Geburtsort</translate>:</span>
+                        <span>{{ $gettext('Geburtsort') }}:</span>
                         <span>{{currentData.birthplace}}</span>
 
-                        <span><translate>Geburtsdatum</translate>:</span>
+                        <span>{{ $gettext('Geburtsdatum') }}:</span>
                         <span>{{ getReadableDate(currentData.birthday) }}</span>
 
-                        <span><translate>Geschlecht</translate>:</span>
+                        <span>{{ $gettext('Geschlecht') }}:</span>
                         <span>{{displayGenderText(currentData.gender)}}</span>
 
-                        <span><translate>Familienstand</translate>:</span>
+                        <span>{{ $gettext('Familienstand') }}:</span>
                         <span>{{ displayStatusText(currentData.status) }}</span>
                     </div>
                 </div>
@@ -32,20 +32,20 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Name</translate>
+                        {{ $gettext('Name') }}
                         <input type="text" v-model="currentData.name">
                     </label>
                     <label>
-                        <translate>Geburtsort</translate>
+                        {{ $gettext('Geburtsort') }}
                         <input type="text" v-model="currentData.birthplace">
                     </label>
                     <label>
-                        <translate>Geburtsdatum</translate>
+                        {{ $gettext('Geburtsdatum') }}
                         <input type="date" v-model="currentData.birthday" />
                     </label>
                     <label>
-                        <translate>Geschlecht</translate>
-                            <select v-model="currentData.gender">
+                        {{ $gettext('Geschlecht') }}
+                        <select v-model="currentData.gender">
                             <option value="none">{{ displayGenderText('none') }}</option>
                             <option value="male">{{ displayGenderText('male') }}</option>
                             <option value="female">{{ displayGenderText('female') }}</option>
@@ -53,20 +53,20 @@
                         </select>
                     </label>
                     <label>
-                        <translate>Familienstand</translate>
-                            <select v-model="currentData.status">
-                                <option value="none">{{ displayStatusText('none') }}</option>
-                                <option value="single">{{ displayStatusText('single') }}</option>
-                                <option value="married">{{ displayStatusText('married') }}</option>
-                                <option value="widowed">{{ displayStatusText('widowed') }}</option>
-                                <option value="divorced">{{ displayStatusText('divorced') }}</option>
-                                <option value="registered-civil-partnership">{{ displayStatusText('registered-civil-partnership') }}</option>
-                                <option value="annulled-civil-partnership">{{ displayStatusText('annulled-civil-partnership') }}</option>
-                            </select>
+                        {{ $gettext('Familienstand') }}
+                        <select v-model="currentData.status">
+                            <option value="none">{{ displayStatusText('none') }}</option>
+                            <option value="single">{{ displayStatusText('single') }}</option>
+                            <option value="married">{{ displayStatusText('married') }}</option>
+                            <option value="widowed">{{ displayStatusText('widowed') }}</option>
+                            <option value="divorced">{{ displayStatusText('divorced') }}</option>
+                            <option value="registered-civil-partnership">{{ displayStatusText('registered-civil-partnership') }}</option>
+                            <option value="annulled-civil-partnership">{{ displayStatusText('annulled-civil-partnership') }}</option>
+                        </select>
                     </label>
                 </form>
             </template>
-            <template #info><translate>Informationen zum Persönlichen-Informationen-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Persönlichen-Informationen-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>

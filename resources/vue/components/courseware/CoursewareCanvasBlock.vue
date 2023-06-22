@@ -99,47 +99,62 @@
                 />
                 <div class="cw-canvasblock-hints">
                     <div v-show="write" class="messagebox messagebox_info cw-canvasblock-text-info">
-                        <translate>Texteingabe mit Enter-Taste bestätigen</translate>
+                        {{ $gettext('Texteingabe mit Enter-Taste bestätigen') }}
                     </div>
                 </div>
             </template>
             <template v-if="canEdit" #edit>
-                <form class="default" @submit.prevent="">
-                    <label>
-                        <translate>Überschrift</translate>
-                        <input type="text" v-model="currentTitle" />
-                    </label>
-                    <label>
-                        <translate>Hintergrundbild</translate>
-                        <select v-model="currentImage">
-                            <option value="true"><translate>Ja</translate></option>
-                            <option value="false"><translate>Nein</translate></option>
-                        </select>
-                    </label>
-                    <label v-if="currentImage === 'true'">
-                        <translate>Bilddatei</translate>
-                        <courseware-file-chooser
-                            v-model="currentFileId"
-                            :isImage="true"
-                            @selectFile="updateCurrentFile"
-                        />
-                    </label>
-                    <label>
-                        <translate>Speicherort</translate>
-                        <courseware-folder-chooser v-model="currentUploadFolderId" :unchoose="true"/>
-                    </label>
-                    <label>
-                        <translate>Werte anderer Nutzer anzeigen</translate>
-                        <select v-model="currentShowUserData">
-                            <option value="off"><translate>deaktiviert</translate></option>
-                            <option value="teacher"><translate>nur für Lehrende</translate></option>
-                            <option value="all"><translate>für alle</translate></option>
-                        </select>
-                    </label>
-                </form>
+                <courseware-tabs>
+                    <courseware-tab
+                        :index="0"
+                        :name="$gettext('Grunddaten')"
+                        :selected="true"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Überschrift') }}
+                                <input type="text" v-model="currentTitle" />
+                            </label>
+                            <label>
+                                {{ $gettext('Hintergrundbild') }}
+                                <select v-model="currentImage">
+                                    <option value="true">{{ $gettext('Ja') }}</option>
+                                    <option value="false">{{ $gettext('Nein') }}</option>
+                                </select>
+                            </label>
+                            <label v-if="currentImage === 'true'">
+                                {{ $gettext('Bilddatei') }}
+                                <courseware-file-chooser
+                                    v-model="currentFileId"
+                                    :isImage="true"
+                                    @selectFile="updateCurrentFile"
+                                />
+                            </label>
+                        </form>
+                    </courseware-tab>
+                    <courseware-tab
+                        :index="1"
+                        :name="$gettext('Einstellungen')"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Speicherort') }}
+                                <courseware-folder-chooser v-model="currentUploadFolderId" :unchoose="true"/>
+                            </label>
+                            <label>
+                                {{ $gettext('Werte anderer Nutzer anzeigen') }}
+                                <select v-model="currentShowUserData">
+                                    <option value="off">{{ $gettext('deaktiviert') }}</option>
+                                    <option value="teacher">{{ $gettext('nur für Lehrende') }}</option>
+                                    <option value="all">{{ $gettext('für alle') }}</option>
+                                </select>
+                            </label>
+                        </form>
+                    </courseware-tab>
+                </courseware-tabs>
             </template>
             <template #info>
-                <p><translate>Informationen zum Leinwand-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Leinwand-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>
@@ -149,6 +164,8 @@
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFileChooser from './CoursewareFileChooser.vue';
 import CoursewareFolderChooser from './CoursewareFolderChooser.vue';
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
 import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -159,6 +176,8 @@ export default {
         CoursewareDefaultBlock,
         CoursewareFileChooser,
         CoursewareFolderChooser,
+        CoursewareTabs,
+        CoursewareTab,
     },
     props: {
         block: Object,

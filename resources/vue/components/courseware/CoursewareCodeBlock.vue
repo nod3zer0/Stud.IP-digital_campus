@@ -18,17 +18,17 @@
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Sprache</translate>
+                        {{ $gettext('Sprache') }}
                         <input type="text" v-model="currentLang" />
                     </label>
                     <label>
-                        <translate>Quelltext</translate>
+                        {{ $gettext('Quelltext') }}
                         <textarea v-model="currentContent"></textarea>
                     </label>
                 </form>
             </template>
             <template #info>
-                <p><translate>Informationen zum Quelltext-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Quelltext-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>

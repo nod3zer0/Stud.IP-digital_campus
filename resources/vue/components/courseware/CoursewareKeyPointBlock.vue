@@ -17,8 +17,8 @@
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
-                    <label for="cw-keypoint-content">
-                        <translate>Merksatz</translate>
+                    <label class="col-4">
+                        {{ $gettext('Merksatz') }}
                         <input
                             type="text"
                             name="cw-keypoint-content"
@@ -27,9 +27,9 @@
                             spellcheck="true"
                         />
                     </label>
-
-                    <label for="cw-keypoint-color">
-                        <translate>Farbe</translate>
+                    <br>
+                    <label class="col-2">
+                        {{ $gettext('Farbe') }}
                         <studip-select
                             :options="colors"
                             label="icon"
@@ -41,7 +41,7 @@
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                             </template>
                             <template #no-options>
-                                <translate>Es steht keine Auswahl zur Verfügung.</translate>
+                                {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
                             </template>
                             <template #selected-option="{name, hex}">
                                 <span class="vs__option-color" :style="{'background-color': hex}"></span><span>{{name}}</span>
@@ -51,15 +51,14 @@
                             </template>
                         </studip-select>
                     </label>
-
-                    <label for="cw-keypoint-icons">
-                        <translate>Icon</translate>
+                    <label class="col-2">
+                        {{ $gettext('Icon') }}
                         <studip-select :options="icons" :clearable="false" v-model="currentIcon">
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                             </template>
                             <template #no-options>
-                                <translate>Es steht keine Auswahl zur Verfügung.</translate>
+                                {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
                             </template>
                             <template #selected-option="option">
                                 <studip-icon :shape="option.label"/> <span class="vs__option-with-icon">{{option.label}}</span>
@@ -72,7 +71,7 @@
                 </form>
             </template>
             <template #info>
-                <p><translate>Informationen zum Merksatz-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Merksatz-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>

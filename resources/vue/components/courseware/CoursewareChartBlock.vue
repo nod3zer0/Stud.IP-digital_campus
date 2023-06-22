@@ -14,70 +14,91 @@
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
-                    <label>
-                        <translate>Beschriftung</translate>
+                    <label class="col-3">
+                        {{ $gettext('Beschriftung') }}
                         <input type="text" v-model="currentLabel" @focusout="buildChart" />
                     </label>
-                    <label>
-                        <translate>Typ</translate>
-                        <select v-model="currentType">
-                            <option value="bar"><translate>Säulendiagramm</translate></option>
-                            <option value="horizontalBar"><translate>Balkendiagramm</translate></option>
-                            <option value="pie"><translate>Kreisdiagramm</translate></option>
-                            <option value="doughnut"><translate>Ringdiagramm</translate></option>
-                            <option value="polarArea"><translate>Polardiagramm</translate></option>
-                            <option value="line"><translate>Liniendiagramm</translate></option>
-                        </select>
+                    <label class="col-3">
+                        {{ $gettext('Typ') }}
+                        <studip-select
+                            v-model="currentType"
+                            :options="chartTypes"
+                            :reduce="chartTypes => chartTypes.value"
+                            :clearable="false"
+                            @option:selected="buildChart"
+                        >
+                            <template #open-indicator="selectAttributes">
+                                <span v-bind="selectAttributes"><studip-icon shape="arr_1down" :size="10"/></span>
+                            </template>
+                            <template #selected-option="{name}">
+                                <span>{{name}}</span>
+                            </template>
+                            <template #option="{name}">
+                                <span>{{name}}</span>
+                            </template>
+                        </studip-select>
                     </label>
-                    <fieldset v-for="(item, index) in currentContent" :key="index">
-                        <legend>
-                            <translate>Datensatz</translate> {{ index + 1 }}
-                            <span
-                                v-if="!onlyRecord"
-                                class="cw-block-chart-item-remove"
-                                :title="textRecordRemove"
-                                @click="removeItem(index)">
-                                <studip-icon shape="trash" />
-                            </span>
-                        </legend>
-                        <label>
-                            <translate>Wert</translate>
-                            <input type="number" v-model="item.value" @change="buildChart" />
-                        </label>
-                        <label>
-                            <translate>Bezeichnung</translate>
-                            <input type="text" v-model="item.label" @focusout="buildChart" />
-                        </label>
-                        <label>
-                            <translate>Farbe</translate>
-                            <studip-select
-                                :options="colors"
-                                :reduce="colors => colors.value"
-                                label="rgb"
-                                :clearable="false"
-                                v-model="item.color"
-                                @option:selected="buildChart"
-                            >
-                                <template #open-indicator="selectAttributes">
-                                    <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
-                                </template>
-                                <template #no-options>
-                                    <translate>Es steht keine Auswahl zur Verfügung.</translate>
-                                </template>
-                                <template #selected-option="{name, rgb}">
-                                    <span class="vs__option-color" :style="{'background-color': 'rgb(' + rgb + ')'}"></span><span>{{name}}</span>
-                                </template>
-                                <template #option="{name, rgb}">
-                                    <span class="vs__option-color" :style="{'background-color': 'rgb(' + rgb + ')'}"></span><span>{{name}}</span>
-                                </template>
-                            </studip-select>
-                        </label>
-                    </fieldset>
                 </form>
-                <button class="button add" @click="addItem"><translate>Datensatz hinzufügen</translate></button>
+                <button class="button add" @click="addItem">{{ $gettext('Datensatz hinzufügen') }}</button>
+                <courseware-tabs
+                    v-if="currentContent.length > 0"
+                    :setSelected="setItemTab"
+                    @selectTab="setItemTab = (parseInt($event.name.replace($gettext('Datensatz') +  ' ', ''), 10) - 1)"
+                >
+                    <courseware-tab
+                        v-for="(item, index) in currentContent"
+                        :key="index"
+                        :index="index"
+                        :name="$gettext('Datensatz') +  ' ' + (index + 1).toString()"
+                        :selected="index === 0"
+                        canBeEmpty
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label class="col-1">
+                                {{ $gettext('Wert') }}
+                                <input type="number" v-model="item.value" @change="buildChart" />
+                            </label>
+                            <label class="col-2">
+                                {{ $gettext('Farbe') }}
+                                <studip-select
+                                    :options="colors"
+                                    :reduce="colors => colors.value"
+                                    label="rgb"
+                                    :clearable="false"
+                                    v-model="item.color"
+                                    @option:selected="buildChart"
+                                >
+                                    <template #open-indicator="selectAttributes">
+                                        <span v-bind="selectAttributes"><studip-icon shape="arr_1down" :size="10"/></span>
+                                    </template>
+                                    <template #no-options>
+                                        {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
+                                    </template>
+                                    <template #selected-option="{name, rgb}">
+                                        <span class="vs__option-color" :style="{'background-color': 'rgb(' + rgb + ')'}"></span><span>{{name}}</span>
+                                    </template>
+                                    <template #option="{name, rgb}">
+                                        <span class="vs__option-color" :style="{'background-color': 'rgb(' + rgb + ')'}"></span><span>{{name}}</span>
+                                    </template>
+                                </studip-select>
+                            </label>
+                            <label class="col-3">
+                                {{ $gettext('Bezeichnung') }}
+                                <input type="text" v-model="item.label" @focusout="buildChart" />
+                            </label>
+                            <button
+                                v-if="currentContent.length > 1"
+                                class="button trash"
+                                @click="removeItem(index)"
+                            >
+                                {{ $gettext('Datensatz entfernen') }}
+                            </button>
+                        </form>
+                    </courseware-tab>
+                </courseware-tabs>                
             </template>
             <template #info>
-                <p><translate>Informationen zum Diagramm-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Diagramm-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>
@@ -85,16 +106,21 @@
 
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
+import StudipIcon from '../StudipIcon.vue';
 import { blockMixin } from './block-mixin.js';
 import Chart from 'chart.js';
 import { mapActions } from 'vuex';
-import StudipIcon from '../StudipIcon.vue';
+
 
 export default {
     name: 'courseware-chart-block',
     mixins: [blockMixin],
     components: {
         CoursewareDefaultBlock,
+        CoursewareTabs,
+        CoursewareTab,
         StudipIcon,
     },
     props: {
@@ -120,7 +146,16 @@ export default {
                 { name:this.$gettext('Hellgrau'), value: 'lightgrey', rgb: '149, 165, 166' },
                 { name:this.$gettext('Schwarz'), value: 'black', rgb: '0, 0, 0' },
             ],
+            chartTypes: [
+                { name: this.$gettext('Säulendiagramm'), value: 'bar'},
+                { name: this.$gettext('Balkendiagramm'), value: 'horizontalBar'},
+                { name: this.$gettext('Kreisdiagramm'), value: 'pie'},
+                { name: this.$gettext('Ringdiagramm'), value: 'doughnut'},
+                { name: this.$gettext('Polardiagramm'), value: 'polarArea'},
+                { name: this.$gettext('Liniendiagramm'), value: 'line'},
+            ],
             textRecordRemove: this.$gettext('Datensatz entfernen'),
+            setItemTab: 0,
         };
     },
     computed: {
@@ -148,6 +183,7 @@ export default {
             this.currentContent = this.content;
             this.currentLabel = this.label;
             this.currentType = this.type;
+            this.setItemTab = 0;
         },
         storeBlock() {
             let attributes = {};
@@ -165,6 +201,7 @@ export default {
 
         addItem() {
             this.currentContent.push({ value: '0', label: '', color: 'blue' });
+            this.$nextTick(() => { this.setItemTab = this.currentContent.length - 1; });
         },
 
         removeItem(recordIndex) {
@@ -172,6 +209,7 @@ export default {
                 return !(index === recordIndex);
             });
             this.buildChart();
+            this.$nextTick(() => { this.setItemTab = 0; });
         },
 
         buildChart() {

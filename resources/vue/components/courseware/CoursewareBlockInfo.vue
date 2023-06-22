@@ -1,30 +1,30 @@
 <template>
     <section class="cw-block-info">
-        <header><translate>Informationen</translate></header>
+        <header>{{ $gettext('Informationen') }}</header>
         <div class="cw-block-features-content cw-block-info-content">
             <table class="cw-block-info-table">
                 <tr>
-                    <td><translate>Blockbeschreibung</translate></td>
+                    <td>{{ $gettext('Blockbeschreibung') }}</td>
                     <td><slot name="info" /></td>
                 </tr>
                 <tr>
-                    <td><translate>Block wurde erstellt von</translate></td>
+                    <td>{{ $gettext('Block wurde erstellt von') }}</td>
                     <td>{{ owner }}</td>
                 </tr>
                 <tr>
-                    <td><translate>Block wurde erstellt am</translate>:</td>
+                    <td>{{ $gettext('Block wurde erstellt am') }}:</td>
                     <td><iso-date :date="block.attributes.mkdate" /></td>
                 </tr>
                 <tr>
-                    <td><translate>Zuletzt bearbeitet von</translate>:</td>
+                    <td>{{ $gettext('Zuletzt bearbeitet von') }}:</td>
                     <td>{{ editor }}</td>
                 </tr>
                 <tr>
-                    <td><translate>Zuletzt bearbeitet am</translate>:</td>
+                    <td>{{ $gettext('Zuletzt bearbeitet am') }}:</td>
                     <td><iso-date :date="block.attributes.chdate" /></td>
                 </tr>
             </table>
-            <button class="button" @click="$emit('close')"><translate>Schließen</translate></button>
+            <button class="button" @click="$emit('close')">{{ $gettext('Schließen') }}</button>
         </div>
     </section>
 </template>

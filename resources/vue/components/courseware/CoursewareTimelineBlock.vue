@@ -35,27 +35,26 @@
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
-                    <label>
-                        <translate>Zeitliche Sortierung</translate>
+                    <label class="col-2">
+                        {{ $gettext('Zeitliche Sortierung') }}
                         <select v-model="currentSort">
-                            <option value="none"><translate>Keine</translate></option>
-                            <option value="asc"><translate>Aufsteigend</translate></option>
-                            <option value="desc"><translate>Absteigend</translate></option>
+                            <option value="none">{{ $gettext('Keine') }}</option>
+                            <option value="asc">{{ $gettext('Aufsteigend') }}</option>
+                            <option value="desc">{{ $gettext('Absteigend') }}</option>
                         </select>
                     </label>
-
-                    <label>
-                        <translate>Zeitangabe</translate>
+                    <label class="col-2">
+                        {{ $gettext('Zeitangabe') }}
                         <select v-model="currentDateFormat">
-                            <option value="year"><translate>Jahr</translate></option>
-                            <option value="date"><translate>Datum</translate></option>
-                            <option value="time"><translate>Zeit</translate></option>
-                            <option value="datetime"><translate>Datum und Zeit</translate></option>
-                            <option value="none"><translate>Keine</translate></option>
+                            <option value="year">{{ $gettext('Jahr') }}</option>
+                            <option value="date">{{ $gettext('Datum') }}</option>
+                            <option value="time">{{ $gettext('Zeit') }}</option>
+                            <option value="datetime">{{ $gettext('Datum und Zeit') }}</option>
+                            <option value="none">{{ $gettext('Keine') }}</option>
                         </select>
                     </label>
                 </form>
-                <button class="button add" @click="addItem"><translate>Ereignis hinzufügen</translate></button>
+                <button class="button add" @click="addItem">{{ $gettext('Ereignis hinzufügen') }}</button>
                 <courseware-tabs
                     v-if="currentItems.length > 0"
                     :setSelected="setItemTab"
@@ -70,16 +69,18 @@
                         canBeEmpty
                     >
                         <form class="default" @submit.prevent="">
-                            <label>
-                                <translate>Titel</translate>
+                            <label class="col-4">
+                                {{ $gettext('Titel') }}
                                 <input type="text" v-model="item.title" />
                             </label>
-                            <label>
-                                <translate>Beschreibung</translate>
+                            <label class="col-4">
+                            
+                                {{ $gettext('Beschreibung') }}
                                 <textarea v-model="item.description" />
                             </label>
-                            <label>
-                                <translate>Farbe</translate>
+                            <br>
+                            <label class="col-2">
+                                {{ $gettext('Farbe') }}
                                 <studip-select
                                     :options="colors"
                                     label="icon"
@@ -91,7 +92,7 @@
                                         <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                                     </template>
                                     <template #no-options>
-                                        <translate>Es steht keine Auswahl zur Verfügung.</translate>
+                                        {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
                                     </template>
                                     <template #selected-option="{name, hex}">
                                         <span class="vs__option-color" :style="{'background-color': hex}"></span><span>{{name}}</span>
@@ -101,14 +102,14 @@
                                     </template>
                                 </studip-select>
                             </label>
-                            <label>
-                                <translate>Icon</translate>
+                            <label class="col-2">
+                                {{ $gettext('Icon') }}
                                 <studip-select :options="icons" :clearable="false" v-model="item.icon">
                                     <template #open-indicator="selectAttributes">
                                         <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
                                     </template>
                                     <template #no-options>
-                                        <translate>Es steht keine Auswahl zur Verfügung.</translate>
+                                        {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
                                     </template>
                                     <template #selected-option="option">
                                         <studip-icon :shape="option.label"/> <span class="vs__option-with-icon">{{option.label}}</span>
@@ -118,24 +119,25 @@
                                     </template>
                                 </studip-select>
                             </label>
-                            <label>
-                                <translate>Datum</translate>
+                            <br>
+                            <label class="col-1">
+                                {{ $gettext('Datum') }}
                                 <input type="date" v-model="item.date" required/>
                             </label>
-                            <label>
-                                <translate>Zeit</translate>
+                            <label class="col-1">
+                                {{ $gettext('Zeit') }}
                                 <input type="time" v-model="item.time" />
                             </label>
                             <label v-if="currentItems.length > 1">
                                 <button class="button trash" @click="removeItem(index)">
-                                    <translate>Ereignis entfernen</translate>
+                                    {{ $gettext('Ereignis entfernen') }}
                                 </button>
                             </label>
                         </form>
                     </courseware-tab>
                 </courseware-tabs>
             </template>
-            <template #info><translate>Informationen zum Zeitstrahl-Block</translate></template>
+            <template #info>{{ $gettext('Informationen zum Zeitstrahl-Block') }}</template>
         </courseware-default-block>
     </div>
 </template>
