@@ -126,7 +126,7 @@ export default {
             return this.userIsTeacher;
         },
         fallbackFocusElement(){
-            return this.$refs.tabs.getTabButtonByAlias(this.selectedToolbarItem);
+            return this.$refs.contents;
         }
     },
     methods: {
@@ -193,9 +193,10 @@ export default {
             }
         },
         toolsActive(newValue) {
-            if (newValue) {
+            const focusElement = this.$refs.tabs.getTabButtonByAlias(this.selectedToolbarItem);
+            if (newValue && focusElement) {
                 setTimeout(() => {
-                    this.initialFocusElement = this.$refs.tabs.getTabButtonByAlias(this.selectedToolbarItem);
+                    this.initialFocusElement = focusElement;
                     this.trap = true;
                 }, 300);
             }
