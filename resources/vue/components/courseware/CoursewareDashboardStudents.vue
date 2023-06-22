@@ -5,16 +5,26 @@
                 <col />
             </colgroup>
             <thead>
-                <tr>
-                    <th><translate>Status</translate></th>
-                    <th><translate>Aufgabentitel</translate></th>
-                    <th><translate>Teilnehmende/Gruppen</translate></th>
-                    <th><translate class="responsive-hidden">Seite</translate></th>
-                    <th><translate>bearbeitet</translate></th>
-                    <th><translate>Abgabefrist</translate></th>
-                    <th><translate>Abgabe</translate></th>
-                    <th class="responsive-hidden renewal"><translate>Verlängerungsanfrage</translate></th>
-                    <th class="responsive-hidden feedback"><translate>Feedback</translate></th>
+                <tr class="sortable">
+                    <th>{{ $gettext('Status') }}</th>
+                    <th :class="getSortClass('task-title')" @click="sort('task-title')">
+                        {{ $gettext('Aufgabentitel') }}
+                    </th>
+                    <th :class="getSortClass('solver-name')" @click="sort('solver-name')">
+                        {{ $gettext('Teilnehmende/Gruppen') }}
+                    </th>
+                    <th class="responsive-hidden" :class="getSortClass('page-title')" @click="sort('page-title')">
+                        {{ $gettext('Seite') }}
+                    </th>
+                    <th :class="getSortClass('progress')" @click="sort('progress')">
+                        {{ $gettext('bearbeitet') }}
+                    </th>
+                    <th :class="getSortClass('submission-date')" @click="sort('submission-date')">
+                        {{ $gettext('Abgabefrist') }}
+                    </th>
+                    <th>{{ $gettext('Abgabe') }}</th>
+                    <th class="responsive-hidden renewal">{{ $gettext('Verlängerungsanfrage') }}</th>
+                    <th class="responsive-hidden feedback">{{ $gettext('Feedback') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,14 +83,14 @@
                             class="button"
                             @click="solveRenewalRequest(task)"
                         >
-                            <translate>Anfrage bearbeiten</translate>
+                            {{ $gettext('Anfrage bearbeiten') }}
                         </button>
                         <span v-show="task.attributes.renewal === 'declined'">
                             <studip-icon shape="decline" role="status-red" />
-                            <translate>Anfrage abgelehnt</translate>
+                            {{ $gettext('Anfrage abgelehnt') }}
                         </span>
                         <span v-show="task.attributes.renewal === 'granted'">
-                            <translate>verlängert bis</translate>:
+                            {{ $gettext('verlängert bis') }}:
                             {{ getReadableDate(task.attributes['renewal-date']) }}
                         </span>
                         <studip-icon
@@ -102,7 +112,7 @@
                             "
                         >
                             <studip-icon shape="accept" role="status-green" />
-                            <translate>Feedback gegeben</translate>
+                            {{ $gettext('Feedback gegeben') }}
                             <studip-icon
                                 :title="$gettext('Feedback bearbeiten')"
                                 class="edit"
@@ -117,7 +127,7 @@
                             class="button"
                             @click="addFeedback(task)"
                         >
-                            <translate>Feedback geben</translate>
+                            {{ $gettext('Feedback geben') }}
                         </button>
                     </td>
                 </tr>
@@ -147,18 +157,18 @@
             <template v-slot:dialogContent>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Fristverlängerung</translate>
+                        {{ $gettext('Fristverlängerung') }}
                         <select v-model="currentDialogTask.attributes.renewal">
                             <option value="declined">
-                                <translate>ablehnen</translate>
+                                {{ $gettext('ablehnen') }}
                             </option>
                             <option value="granted">
-                                <translate>gewähren</translate>
+                                {{ $gettext('gewähren') }}
                             </option>
                         </select>
                     </label>
                     <label v-if="currentDialogTask.attributes.renewal === 'granted'">
-                        <translate>neue Frist</translate>
+                        {{ $gettext('neue Frist') }}
                         <courseware-date-input v-model="currentDialogTask.attributes['renewal-date']" class="size-l" />
                     </label>
                 </form>
@@ -188,7 +198,7 @@
                 />
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Feedback</translate>
+                        {{ $gettext('Feedback') }}
                         <textarea v-model="currentDialogFeedback.attributes.content" />
                     </label>
                 </form>
@@ -210,7 +220,7 @@
             <template v-slot:dialogContent>
                 <form class="default" @submit.prevent="">
                     <label>
-                        <translate>Feedback</translate>
+                        {{ $gettext('Feedback') }}
                         <textarea v-model="currentDialogFeedback.attributes.content" />
                     </label>
                 </form>
@@ -264,6 +274,8 @@ export default {
                     close: this.$gettext('Schließen'),
                 },
             },
+            sortBy: 'task-title',
+            sortASC: true,
         };
     },
     computed: {
@@ -278,7 +290,7 @@ export default {
             showTasksDistributeDialog: 'showTasksDistributeDialog'
         }),
         tasks() {
-            return this.allTasks.map((task) => {
+            const tasks = this.allTasks.map((task) => {
                 const result = {
                     task,
                     taskGroup: this.relatedTaskGroups({ parent: task, relationship: 'task-group' }),
@@ -287,13 +299,16 @@ export default {
                     user: null,
                     group: null,
                     feedback: null,
+                    solverName: null
                 };
                 let solver = task.relationships.solver.data;
                 if (solver.type === 'users') {
                     result.user = this.userById({ id: solver.id });
+                    result.solverName = result.user.attributes['formatted-name'];
                 }
                 if (solver.type === 'status-groups') {
                     result.group = this.statusGroupById({ id: solver.id });
+                    result.solverName = result.group.attributes['name'];
                 }
 
                 const feedbackId = task.relationships['task-feedback'].data?.id;
@@ -303,6 +318,8 @@ export default {
 
                 return result;
             });
+
+            return this.sortTasks(tasks);
         },
         managerUrl() {
             return STUDIP.URLHelper.getURL('dispatch.php/course/courseware/manager', {cid: this.context.id});
@@ -396,7 +413,69 @@ export default {
                     include: 'solver, structural-element, task-feedback, task-group, task-group.lecturer'
                 }
             });
-        }
+        },
+        getSortClass(col) {
+            if (col === this.sortBy) {
+                return this.sortASC ? 'sortasc' : 'sortdesc';
+            }
+        },
+        sort(sortBy) {
+            if (this.sortBy === sortBy) {
+                this.sortASC = !this.sortASC;
+            } else {
+                this.sortBy = sortBy;
+            }
+        },
+        sortTasks(tasks) {
+            switch (this.sortBy) {
+                case 'task-title':
+                    tasks = tasks.sort((a, b) => {
+                        if (this.sortASC) {
+                            return a.taskGroup.attributes.title < b.taskGroup.attributes.title ? -1 : 1;
+                        } else {
+                            return a.taskGroup.attributes.title > b.taskGroup.attributes.title ? -1 : 1;
+                        }
+                    });
+                    break;
+                case 'solver-name':
+                    tasks = tasks.sort((a, b) => {
+                        if (this.sortASC) {
+                            return a.solverName < b.solverName ? -1 : 1;
+                        } else {
+                            return a.solverName > b.solverName ? -1 : 1;
+                        }
+                    });
+                    break;
+                case 'page-title':
+                    tasks = tasks.sort((a, b) => {
+                        if (this.sortASC) {
+                            return a.element.attributes.title < b.element.attributes.title ? -1 : 1;
+                        } else {
+                            return a.element.attributes.title > b.element.attributes.title ? -1 : 1;
+                        }
+                    });
+                    break;
+                case 'progress':
+                    tasks = tasks.sort((a, b) => {
+                        if (this.sortASC) {
+                            return a.task.attributes.progress < b.task.attributes.progress ? -1 : 1;
+                        } else {
+                            return a.task.attributes.progress > b.task.attributes.progress ? -1 : 1;
+                        }
+                    });
+                    break;
+                case 'submission-date':
+                    tasks = tasks.sort((a, b) => {
+                        if (this.sortASC) {
+                            return new Date(a.task.attributes['submission-date']) - new Date(b.task.attributes['submission-date']);
+                        } else {
+                            return new Date(b.task.attributes['submission-date']) - new Date(a.task.attributes['submission-date']);
+                        }
+                    });
+                    break;
+            }
+            return tasks;
+        },
     },
 };
 </script>

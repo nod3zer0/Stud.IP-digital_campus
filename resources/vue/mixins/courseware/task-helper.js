@@ -59,7 +59,12 @@ export default {
             return `${STUDIP.URLHelper.base_url}dispatch.php/course/courseware/courseware/${unitId}?cid=${STUDIP.URLHelper.parameters.cid}#/structural_element/${element.id}`;
         },
         getReadableDate(date) {
-            return new Date(date).toLocaleDateString();
+            let locale = navigator.language ? navigator.language : 'de-DE';
+            return new Date(date).toLocaleDateString(locale, {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            });
         },
     },
 };
