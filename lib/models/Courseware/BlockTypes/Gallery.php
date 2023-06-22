@@ -59,6 +59,7 @@ class Gallery extends BlockType
                     'name'          => $folderFile->name,
                     'mime-type'     => $folderFile->mime_type,
                     'filesize'      => (int) $folderFile->size,
+                    'description'   => $fileRef->description,
                     'mkdate'        => date('c', $folderFile->mkdate),
                 ];
                 $file['relationships'] = [
@@ -89,11 +90,14 @@ class Gallery extends BlockType
     {
         return [
             'folder_id' => '',
+            'layout' => 'carousel',
             'autoplay' => 'false',
             'autoplay_timer' => '2',
             'nav' => 'true',
-            'height' => '610',
+            'height' => '620',
+            'cols' => '25',
             'show_filenames' => 'true',
+            'show_description' => 'false',
             'mouseover_filenames' => 'false',
         ];
     }

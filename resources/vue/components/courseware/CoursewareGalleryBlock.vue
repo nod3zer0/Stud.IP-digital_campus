@@ -10,82 +10,152 @@
             @closeEdit="closeEdit"
         >
             <template #content>
-                <div v-if="files.length !== 0" class="cw-block-gallery-content" :style="{ 'max-height': currentHeight + 'px' }">
-                    <div
-                        v-for="(image, index) in files"
-                        :key="image.id"
-                        ref="images"
-                        class="cw-block-gallery-slides cw-block-gallery-fade"
-                    >
-                        <div class="cw-block-gallery-number-text">{{ index + 1 }} / {{ files.length }}</div>
-                        <img
-                            :src="image.meta['download-url']"
-                            :style="{ 'max-height': currentHeight + 'px' }"
-                            @load="
-                                if (files.length - 1 === index) {
-                                    startGallery();
-                                }
-                            "
-                        />
-                        <div v-if="currentShowFileNames === 'true' && image?.attributes?.name" class="cw-block-gallery-file-name"
-                            :class="{'show-on-hover': currentMouseoverFileNames === 'true'}">
-                            <span>{{ image.attributes.name }}</span>
+                <template v-if="files.length !== 0">
+                    <div v-if="currentLayout === 'carousel'" class="cw-block-gallery-content" :style="{ height: `${currentHeight}px` }">
+                        <div
+                            v-for="(image, index) in files"
+                            :key="image.id"
+                            ref="images"
+                            class="cw-block-gallery-slides cw-block-gallery-fade"
+                        >
+                            <div class="cw-block-gallery-number-text">{{ index + 1 }} / {{ files.length }}</div>
+                            <img
+                                :src="image.meta['download-url']"
+                                :style="{ height: `${currentHeight}px` }"
+                                @load="
+                                    if (files.length - 1 === index) {
+                                        startGallery();
+                                    }
+                                "
+                            />
+                            <div class="cw-block-gallery-file-description"
+                                :class="{'show-on-hover': currentMouseoverFileNames === 'true'}">
+                                <p v-if="currentShowFileNames === 'true'">{{ image?.attributes?.name }}</p>
+                                <p v-if="currentShowFileDescription === 'true'">{{ image?.attributes?.description }}</p>
+                            </div>
+                        </div>
+                        <div v-if="currentNav === 'true'">
+                            <a class="cw-block-gallery-prev" @click="plusSlides(-1)"></a>
+                            <a class="cw-block-gallery-next" @click="plusSlides(1)"></a>
                         </div>
                     </div>
-                    <div v-if="currentNav === 'true'">
-                        <a class="cw-block-gallery-prev" @click="plusSlides(-1)"></a>
-                        <a class="cw-block-gallery-next" @click="plusSlides(1)"></a>
+                    <div v-if="currentLayout === 'grid'" class="cw-block-gallery-content">
+                        <div class="cw-block-gallery-grid formatted-content">
+                            <figure
+                                v-for="image in files"
+                                :key="image.id"
+                                :style="{ 'max-width': gridWidth }"
+                            >
+                                <img :src="image.meta['download-url']" :title="image?.attributes?.name"/>
+                                <figcaption v-if="showDescription">
+                                    <p v-if="currentShowFileNames === 'true'" class="cw-block-gallery-grid-file-name">
+                                        {{ image?.attributes?.name }}
+                                    </p>
+                                    <p v-if="currentShowFileDescription === 'true'" class="cw-block-gallery-grid-file-description">
+                                        {{ image?.attributes?.description }}
+                                    </p>
+                                </figcaption>
+                            </figure>
+                        </div>
                     </div>
-                </div>
+                </template>
             </template>
             <template v-if="canEdit" #edit>
-                <form class="default" @submit.prevent="">
-                    <label>
-                        <translate>Ordner</translate>
-                        <courseware-folder-chooser v-model="currentFolderId" allowUserFolders />
-                    </label>
-                    <label>
-                        <translate>Maximale Höhe</translate>
-                        <input type="number" min="0" max="800" v-model="currentHeight" />
-                    </label>
-                    <label>
-                        <translate>Autoplay</translate>
-                        <select v-model="currentAutoplay">
-                            <option value="true"><translate>Ja</translate></option>
-                            <option value="false"><translate>Nein</translate></option>
-                        </select>
-                    </label>
-                    <label v-if="currentAutoplay === 'true'">
-                        <translate>Autoplay Timer in Sekunden</translate>
-                        <input type="number" min="1" max="60" v-model="currentAutoplayTimer" />
-                    </label>
-                    <label v-if="currentAutoplay === 'true'">
-                        <translate>Navigation</translate>
-                        <select v-model="currentNav">
-                            <option value="true"><translate>Ja</translate></option>
-                            <option value="false"><translate>Nein</translate></option>
-                        </select>
-                    </label>
-                    <label>
-                        <translate>Dateinamen anzeigen</translate>
-                        <select v-model="currentShowFileNames">
-                            <option value="true"><translate>Ja</translate></option>
-                            <option value="false"><translate>Nein</translate></option>
-                        </select>
-                    </label>
-                    <label v-if="currentShowFileNames === 'true'">
-                        {{ $gettext('Dateiname erscheint bei Mouseover') }}
-                        <studip-tooltip-icon
-                            :text="$gettext('Der Dateiname wird angezeigt, wenn Sie den Mauszeiger über den Inhalt bewegen.')"/>
-                        <select v-model="currentMouseoverFileNames">
-                            <option value="true"><translate>Ja</translate></option>
-                            <option value="false"><translate>Nein</translate></option>
-                        </select>
-                    </label>
-                </form>
+                <courseware-tabs>
+                    <courseware-tab
+                        :index="0"
+                        :name="$gettext('Einstellungen')"
+                        :selected="true"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Layout') }}
+                                <select v-model="currentLayout">
+                                    <option value="carousel">{{ $gettext('Karussell') }}</option>
+                                    <option value="grid">{{ $gettext('Gitter') }}</option>
+                                </select>
+                            </label>
+                            <label>
+                                {{ $gettext('Ordner') }}
+                                <courseware-folder-chooser v-model="currentFolderId" allowUserFolders />
+                            </label>
+                            <label v-if="currentLayout === 'carousel'">
+                                {{ $gettext('Höhe') }}
+                                <input type="number" min="0" max="800" v-model="currentHeight" />
+                            </label>
+                            <label v-if="currentLayout === 'grid'">
+                                {{ $gettext('Gitter-Spalten') }}
+                                <select v-model="currentCols">
+                                    <option :value="100">1</option>
+                                    <option :value="50">2</option>
+                                    <option :value="33">3</option>
+                                    <option :value="25">4</option>
+                                    <option :value="20">5</option>
+                                </select>
+                            </label>
+                        </form>
+                    </courseware-tab>
+                    <courseware-tab
+                        :index="1"
+                        :name="$gettext('Beschreibung')"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Dateinamen anzeigen') }}
+                                <select v-model="currentShowFileNames">
+                                    <option value="true">{{ $gettext('Ja') }}</option>
+                                    <option value="false">{{ $gettext('Nein') }}</option>
+                                </select>
+                            </label>
+                            <label>
+                                {{ $gettext('Dateibeschreibung anzeigen') }}
+                                <select v-model="currentShowFileDescription">
+                                    <option value="true">{{ $gettext('Ja') }}</option>
+                                    <option value="false">{{ $gettext('Nein') }}</option>
+                                </select>
+                            </label>
+                            <label v-if="showDescription && currentLayout === 'carousel'">
+                                {{ $gettext('Beschreibung erscheint bei Mouseover') }}
+                                <studip-tooltip-icon
+                                    :text="$gettext('Der Beschreibungstext wird angezeigt, wenn Sie den Mauszeiger über das Bild bewegen.')"/>
+                                <select v-model="currentMouseoverFileNames">
+                                    <option value="true">{{ $gettext('Ja') }}</option>
+                                    <option value="false">{{ $gettext('Nein') }}</option>
+                                </select>
+                            </label>
+                        </form>
+                    </courseware-tab>
+                    <courseware-tab
+                        v-if="currentLayout === 'carousel'"
+                        :index="2"
+                        :name="$gettext('Autoplay')"
+                    >
+                        <form class="default" @submit.prevent="">
+                            <label>
+                                {{ $gettext('Autoplay') }}
+                                <select v-model="currentAutoplay">
+                                    <option value="true">{{ $gettext('Ja') }}</option>
+                                    <option value="false">{{ $gettext('Nein') }}</option>
+                                </select>
+                            </label>
+                            <label v-if="currentAutoplay === 'true'">
+                                {{ $gettext('Autoplay Timer in Sekunden') }}
+                                <input type="number" min="1" max="60" v-model="currentAutoplayTimer" />
+                            </label>
+                            <label v-if="currentAutoplay === 'true'">
+                                {{ $gettext('Navigation') }}
+                                <select v-model="currentNav">
+                                    <option value="true">{{ $gettext('Ja') }}</option>
+                                    <option value="false">{{ $gettext('Nein') }}</option>
+                                </select>
+                            </label>
+                        </form>
+                    </courseware-tab>
+
+                </courseware-tabs>
             </template>
             <template #info>
-                <p><translate>Informationen zum Galerie-Block</translate></p>
+                <p>{{ $gettext('Informationen zum Galerie-Block') }}</p>
             </template>
         </courseware-default-block>
     </div>
@@ -94,6 +164,8 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import CoursewareFolderChooser from './CoursewareFolderChooser.vue';
+import CoursewareTabs from './CoursewareTabs.vue';
+import CoursewareTab from './CoursewareTab.vue';
 import { blockMixin } from './block-mixin.js';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -103,6 +175,8 @@ export default {
     components: {
         CoursewareDefaultBlock,
         CoursewareFolderChooser,
+        CoursewareTabs,
+        CoursewareTab,
     },
     props: {
         block: Object,
@@ -112,10 +186,13 @@ export default {
     data() {
         return {
             currentFolderId: '',
+            currentLayout: '',
             currentAutoplay: '',
             currentNav: '',
             currentHeight: '',
+            currentCols: 33,
             currentShowFileNames: '',
+            currentShowFileDescription: '',
             currentMouseoverFileNames: '',
             currentAutoplayTimer: '',
             editModeFiles: [],
@@ -132,6 +209,9 @@ export default {
         folderId() {
             return this.block?.attributes?.payload?.folder_id;
         },
+        layout() {
+            return this.block?.attributes?.payload?.layout ?? 'carousel';
+        },
         autoplay() {
             return this.block?.attributes?.payload?.autoplay;
         },
@@ -144,8 +224,14 @@ export default {
         height() {
             return this.block?.attributes?.payload?.height;
         },
+        cols() {
+            return this.block?.attributes?.payload?.cols;
+        },
         showFileNames() {
             return this.block?.attributes?.payload?.show_filenames;
+        },
+        showFileDescription() {
+            return this.block?.attributes?.payload?.show_description ?? 'false';
         },
         mouseoverFileNames() {
             return this.block?.attributes?.payload?.mouseover_filenames ?? 'false';
@@ -155,6 +241,12 @@ export default {
                 return this.block?.attributes?.payload?.files;
             }
             return this.editModeFiles;
+        },
+        gridWidth() {
+            return 'calc(' + this.currentCols + '% - 8px)';
+        },
+        showDescription() {
+            return this.currentShowFileNames === 'true' || this.currentShowFileDescription === 'true';
         }
     },
     mounted() {
@@ -167,11 +259,14 @@ export default {
         }),
         initCurrentData() {
             this.currentFolderId = this.folderId;
+            this.currentLayout = this.layout;
             this.currentAutoplay = this.autoplay;
             this.currentAutoplayTimer = this.autoplayTimer;
             this.currentNav = this.nav;
             this.currentHeight = this.height;
+            this.currentCols = this.cols;
             this.currentShowFileNames = this.showFileNames;
+            this.currentShowFileDescription = this.showFileDescription;
             this.currentMouseoverFileNames = this.mouseoverFileNames;
         },
         startGallery() {
@@ -205,7 +300,8 @@ export default {
                 .map((file) => ({
                     id: file.id,
                     attributes: {
-                        name: file.attributes.name
+                        name: file.attributes.name,
+                        description: file.attributes.description
                     },
                     meta: {
                         'download-url': this.urlHelper.getURL(
@@ -228,11 +324,14 @@ export default {
             let attributes = {};
             attributes.payload = {};
             attributes.payload.folder_id = this.currentFolderId;
+            attributes.payload.layout = this.currentLayout;
             attributes.payload.autoplay = this.currentAutoplay;
             attributes.payload.autoplay_timer = this.currentAutoplayTimer;
             attributes.payload.nav = this.currentNav;
             attributes.payload.height = this.currentHeight;
+            attributes.payload.cols = this.currentCols;
             attributes.payload.show_filenames = this.currentShowFileNames;
+            attributes.payload.show_description = this.currentShowFileDescription;
             attributes.payload.mouseover_filenames = this.currentMouseoverFileNames;
 
             this.updateBlock({

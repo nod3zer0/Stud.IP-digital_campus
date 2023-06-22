@@ -5,6 +5,9 @@
         "folder_id": {
             "type": "string"
         },
+        "layout": {
+            "type": "string"
+        },
         "autoplay": {
             "type": "string"
         },
@@ -17,7 +20,13 @@
         "height": {
             "type": "string"
         },
+        "cols": {
+            "type": "string"
+        },
         "show_filenames": {
+            "type": "string"
+        },
+        "show_description": {
             "type": "string"
         },
         "mouseover_filenames": {
