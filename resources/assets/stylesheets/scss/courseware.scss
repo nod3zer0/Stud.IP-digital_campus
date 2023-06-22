@@ -2254,15 +2254,21 @@ c o m m e n t s  &  f e e d b a c k
     scroll-behavior: smooth;
 }
 
+.studip-dialog-content {
+    .cw-structural-element-feedback-items,
+    .cw-structural-element-comments-items,
+    .cw-block-feedback-items,
+    .cw-block-comments-items {
+        max-height: unset;
+    }
+}
+
 .cw-talk-bubble {
     margin: 10px 20px;
     position: relative;
     width: 85%;
     height: auto;
-    background-color: $dark-gray-color-10;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
+    background-color: var(--dark-gray-color-10);
     float: left;
 
     .cw-talk-bubble-talktext {
@@ -2271,7 +2277,7 @@ c o m m e n t s  &  f e e d b a c k
         line-height: 1.5em;
 
         .cw-talk-bubble-talktext-time {
-            color: $dark-gray-color-45;
+            color: var(--dark-gray-color-80);
             text-align: right;
             font-size: 0.8em;
             margin-bottom: -0.5em;
@@ -2290,10 +2296,7 @@ c o m m e n t s  &  f e e d b a c k
         top: 0px;
         bottom: auto;
         border: 22px solid;
-        border-color: $dark-gray-color-10 transparent transparent transparent;
-        border-radius: 5px;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
+        border-color: var(--dark-gray-color-10) transparent transparent transparent;
         left: -20px;
         right: auto;
     }
@@ -2312,7 +2315,7 @@ c o m m e n t s  &  f e e d b a c k
 
         span {
             padding-left: 4px;
-            color: $dark-gray-color-45;
+            color: var(--dark-gray-color-45);
             font-weight: 600;
             vertical-align: top;
         }
@@ -5697,3 +5700,14 @@ r a d i o s e t
 /* * * * * * * * * * * *
 r a d i o s e t  e n d 
 * * * * * * * * * * * */
+/* * * * * * * * * * * * * * * *
+c o m m e n t s  o v e r v i e w
+* * * * * * * * * * * * * * * */
+
+.cw-comments-overview-dialog-comments-context {
+    margin: 0 0 1.5em 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * *
+c o m m e n t s  o v e r v i e w  e n d
+* * * * * * * * * * * * * * * * * * * */

@@ -3,6 +3,7 @@
         class="cw-structural-element-comments"
         :class="[emptyComments ? 'cw-structural-element-comments-empty' : '']"
     >
+        <span class="sr-only" aria-live="polite">{{ srMessage }}</span>
         <div class="cw-structural-element-comments-items" v-show="!emptyComments" ref="commentsRef">
             <courseware-talk-bubble
                 v-for="comment in comments"
@@ -33,6 +34,7 @@ export default {
         return {
             createComment: '',
             placeHolder: this.$gettext('Stellen Sie eine Frage oder kommentieren Sie...'),
+            srMessage: ''
         };
     },
     computed: {
@@ -76,6 +78,7 @@ export default {
             });
         },
         async postComment() {
+            this.updateSrMessage(this.$gettext('Kommentar gesendet'));
             const data = {
                 attributes: {
                     comment: this.createComment
@@ -113,6 +116,10 @@ export default {
 
             return payload;
         },
+        updateSrMessage(message) {
+            this.srMessage = '';
+            this.srMessage = message;
+        }
     },
     mounted() {
         this.loadComments();

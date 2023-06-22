@@ -1,5 +1,6 @@
 <template>
     <section class="cw-block-comments" :class="[emptyComments ? 'cw-block-comments-empty' : '']">
+        <span class="sr-only" aria-live="polite">{{ srMessage }}</span>
         <div class="cw-block-features-content">
             <div class="cw-block-comments-items" v-show="!emptyComments" ref="commentsRef">
                 <courseware-talk-bubble
@@ -32,6 +33,7 @@ export default {
         return {
             createComment: '',
             placeHolder: this.$gettext('Stellen Sie eine Frage oder kommentieren Sie...'),
+            srMessage: ''
         };
     },
     computed: {
@@ -75,6 +77,7 @@ export default {
             });
         },
         async postComment() {
+            this.updateSrMessage(this.$gettext('Kommentar gesendet'));
             const data = {
                 attributes: {
                     comment: this.createComment
@@ -112,6 +115,10 @@ export default {
 
             return payload;
         },
+        updateSrMessage(message) {
+            this.srMessage = '';
+            this.srMessage = message;
+        }
     },
     mounted() {
         this.loadComments();

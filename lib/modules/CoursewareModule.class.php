@@ -67,6 +67,10 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule
             'tasks',
             new Navigation(_('Aufgaben'), 'dispatch.php/course/courseware/tasks?cid=' . $courseId)
         );
+        $navigation->addSubNavigation(
+            'comments',
+            new Navigation(_('Kommentare und Feedback'), 'dispatch.php/course/courseware/comments_overview?cid=' . $courseId)
+        );
 
         return ['courseware' => $navigation];
     }

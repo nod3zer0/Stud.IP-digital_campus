@@ -4,6 +4,7 @@
         class="cw-structural-element-feedback"
         :class="[emptyFeedback ? 'cw-structural-element-feedback-empty' : '']"
     >
+        <span class="sr-only" aria-live="polite">{{ srMessage }}</span>
         <div class="cw-structural-element-feedback-items" v-show="!emptyFeedback" ref="feedbacks">
             <courseware-talk-bubble
                 v-for="feedback in feedback"
@@ -42,6 +43,7 @@ export default {
         return {
             feedbackText: '',
             placeHolder: this.$gettext('Schreiben Sie ein Feedback...'),
+            srMessage: ''
         };
     },
     computed: {
@@ -99,6 +101,7 @@ export default {
             });
         },
         async postFeedback() {
+            this.updateSrMessage(this.$gettext('Feedback gesendet'));
             const data = {
                 attributes: {
                     feedback: this.feedbackText,
@@ -115,6 +118,10 @@ export default {
             await this.createFeedback( data, { root: true });
             this.feedbackText = '';
             this.loadFeedback();
+        },
+        updateSrMessage(message) {
+            this.srMessage = '';
+            this.srMessage = message;
         }
     },
     async mounted() {

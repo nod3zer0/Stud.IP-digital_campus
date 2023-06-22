@@ -86,4 +86,15 @@ STUDIP.domReady(() => {
             });
         });
     }
+
+    if (document.getElementById('courseware-comments-app')) {
+        STUDIP.Vue.load().then(({ createApp }) => {
+            import(
+                /* webpackChunkName: "courseware-comments-app" */
+                '@/vue/courseware-comments-app.js'
+            ).then(({ default: mountApp }) => {
+                return mountApp(STUDIP, createApp, '#courseware-comments-app');
+            });
+        });
+    }
 });
