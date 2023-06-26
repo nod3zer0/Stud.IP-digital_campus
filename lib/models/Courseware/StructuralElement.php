@@ -1035,7 +1035,7 @@ SQL;
             return '';
         }
         $doc->addPage();
-        $doc->Bookmark(htmlReady($this->title), $depth, 0, '', '', array(128,0,0));
+        $doc->Bookmark($this->title, $depth, 0, '', '', array(128,0,0));
         $html = "<h1>" . htmlReady($this->title) . "</h1>";
         $html .= $this->getContainerPdfExport();
         $doc->writeHTML($html);
