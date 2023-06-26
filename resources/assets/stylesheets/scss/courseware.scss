@@ -3173,14 +3173,11 @@ c o n f i r m  b l o c k
     .cw-block-confirm-content{
         border: solid thin $content-color-40;
         padding: 1em;
-        display: flex;
-        .cw-block-confirm-checkbox img{
+        margin: 0;
+
+        input[type=checkbox] {
             margin-right: 2em;
-            vertical-align: middle;
-            height: 100%;
-        }
-        .cw-block-confirm-text {
-            margin: 0;
+            vertical-align: bottom;
         }
     }
 }
