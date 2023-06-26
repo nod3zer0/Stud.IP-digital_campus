@@ -352,7 +352,7 @@ export default {
             semesters.every(semester => {
                 view.loadSemester({id: semester}).then( () => {
                     view.semesterMap.push(view.semesterById({id: semester}));
-                    view.semesterMap.sort((a, b) => a.attributes.start < b.attributes.start);
+                    view.semesterMap.sort((a, b) => new Date(b.attributes.start) - new Date(a.attributes.start));
                 });
                 return true;
             });
