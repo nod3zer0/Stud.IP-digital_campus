@@ -154,7 +154,7 @@ class StudipNews extends SimpleORMap implements PrivacyObject
         if (Config::get()->SORT_NEWS_BY_CHDATE) {
             $query .= "ORDER BY IF(prio = 0, 6, prio) DESC, chdate DESC, date DESC";
         } else {
-            $query .= "ORDER BY IF(prio = 0, 6, prio) prio DESC, date DESC, chdate DESC";
+            $query .= "ORDER BY IF(prio = 0, 6, prio) DESC, date DESC, chdate DESC";
         }
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$user_id]);
