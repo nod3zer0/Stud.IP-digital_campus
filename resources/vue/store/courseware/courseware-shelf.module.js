@@ -314,7 +314,7 @@ export const actions = {
 
          return items
             .filter(({ membership, course }) => {
-                return course.relationships.courseware;
+                return course.relationships.courseware.data;
             })
             .map(({ course }) => course);
 

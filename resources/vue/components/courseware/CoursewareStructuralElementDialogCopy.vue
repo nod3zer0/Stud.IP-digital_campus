@@ -300,7 +300,7 @@ export default {
                 .filter(Boolean);
         },
         filteredCourses() {
-            const courses = this.courses.filter((course) => { return course.id !== this.context.id});
+            const courses = this.courses.filter((course) => { return course.id !== this.context.id });
             if (this.selectedSemester === 'all') {
                 return courses;
             } else {
