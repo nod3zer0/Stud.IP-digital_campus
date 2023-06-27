@@ -170,7 +170,7 @@ class Request implements ArrayAccess, IteratorAggregate
             '',
             urldecode(self::path())
         );
-        return parse_url($path_info, PHP_URL_PATH);
+        return parse_url($path_info, PHP_URL_PATH) ?? '';
     }
 
     /**
