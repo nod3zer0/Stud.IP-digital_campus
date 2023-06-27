@@ -440,6 +440,8 @@ class Admin_UserController extends AuthenticatedController
             if (
                 $GLOBALS['perm']->have_perm('root')
                 && Config::get()->ALLOW_ADMIN_USERACCESS
+                && !StudipAuthAbstract::CheckField('auth_user_md5.password', $this->user->auth_plugin)
+                && $this->user->auth_plugin !== null
                 && (Request::get('pass_1') !== '' || Request::get('pass_2') !== '')
             ) {
                 if (Request::get('pass_1') === Request::get('pass_2')) {
