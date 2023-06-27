@@ -1008,7 +1008,7 @@ class UserManagement
 
         if ($delete_names) {
             $query = "UPDATE auth_user_md5
-                      SET username = ?, Vorname = NULL, Nachname = NULL, Email = NULL
+                      SET username = ?, Vorname = '', Nachname = '', Email = ''
                       WHERE user_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute([
