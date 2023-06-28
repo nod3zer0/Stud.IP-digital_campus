@@ -45,6 +45,9 @@ class Course_DatesController extends AuthenticatedController
             } else {
                 PageLayout::postInfo(_('Thema war schon mit dem Termin verknüpft.'));
             }
+
+            $this->redirect($this->indexURL());
+            return;
         }
         Navigation::activateItem('/course/schedule/dates');
 

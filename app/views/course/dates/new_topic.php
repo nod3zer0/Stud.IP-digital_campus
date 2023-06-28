@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var Course $course
+ * @var CourseDate $date
+ */
+?>
 <form action="<?= URLHelper::getLink("dispatch.php/course/dates") ?>" method="post" id="dates_add_topic" class="default">
     <input type="hidden" name="termin_id" value="<?= $date->getId() ?>">
     <fieldset>
@@ -16,8 +22,9 @@
                     jQuery(function () {
                         jQuery("#dates_add_topic .topic_title").autocomplete({
                             'source': <?= json_encode($course->topics->pluck('title')) ?>,
-                            'select': function () {
-                                jQuery("form#dates_add_topic").submit();
+                            'select': function (event, { item }) {
+                                $(this).val(item.value);
+                                jQuery("#dates_add_topic").trigger('submit');
                             }
                         });
                     });
