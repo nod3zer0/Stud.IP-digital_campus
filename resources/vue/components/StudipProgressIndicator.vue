@@ -31,7 +31,7 @@ export default {
             };
         },
         hasDescription () {
-            return this.description.trim().length > 0;
+            return this.description?.trim().length > 0;
         }
     }
 }

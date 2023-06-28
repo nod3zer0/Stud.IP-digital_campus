@@ -29,7 +29,7 @@
  * @property SimpleORMapCollection courses has_and_belongs_to_many Course
  */
 
-class StudipStudyArea extends SimpleORMap
+class StudipStudyArea extends SimpleORMap implements StudipTreeNode
 {
     /**
      * This constant represents the key of the root area.
@@ -49,10 +49,6 @@ class StudipStudyArea extends SimpleORMap
         $config['has_and_belongs_to_many']['courses'] = [
             'class_name' => Course::class,
             'thru_table' => 'seminar_sem_tree',
-        ];
-        $config['belongs_to']['institute'] = [
-            'class_name' => Institute::class,
-            'foreign_key' => 'studip_object_id',
         ];
         $config['belongs_to']['_parent'] = [
             'class_name' => StudipStudyArea::class,
@@ -124,11 +120,8 @@ class StudipStudyArea extends SimpleORMap
     /**
      * Get the display name of this study area.
      */
-    public function getName()
+    public function getName(): string
     {
-        if ($this->studip_object_id) {
-            return $this->institute ? $this->institute->name : _('Unbekannte Einrichtung');
-        }
         return $this->content['name'];
     }
 
@@ -284,26 +277,6 @@ class StudipStudyArea extends SimpleORMap
 
 
     /**
-     * Get the studip_object_id of this study area.
-     */
-    public function getStudipObjectId()
-    {
-        return $this->studip_object_id;
-    }
-
-
-    /**
-     * Set the studip_object_id of this study area.
-     */
-    public function setStudipObjectId($id)
-    {
-        $this->studip_object_id = (string) $id;
-        $this->resetRelation('institute');
-        return $this;
-    }
-
-
-    /**
      * Returns the children of this study area.
      */
     public function getChildren()
@@ -448,6 +421,193 @@ class StudipStudyArea extends SimpleORMap
 
         // plant the tree
         return $root;
+    }
+
+    public static function getNode($id): StudipTreeNode
+    {
+        if ($id === 'root') {
+            return static::build([
+                'id'   => 'root',
+                'name' => Config::get()->UNI_NAME_CLEAN,
+            ]);
+        }
+
+        return static::find($id);
+    }
+
+    public static function getCourseNodes(string $course_id): array
+    {
+        return Course::find($course_id)->study_areas->getArrayCopy();
+    }
+
+    public function getDescription(): string
+    {
+        return $this->getInfo();
+    }
+
+    /**
+     * @see StudipTreeNode::getImage()
+     */
+    public function getImage()
+    {
+        return null;
+    }
+
+    public function hasChildNodes(): bool
+    {
+        return count($this->_children) > 0;
+    }
+
+    /**
+     * @see StudipTreeNode::getChildNodes()
+     */
+    public function getChildNodes(bool $onlyVisible = false): array
+    {
+        if ($onlyVisible) {
+            $visibleTypes = array_filter($GLOBALS['SEM_TREE_TYPES'], function ($t) {
+                return isset($t['hidden']) ? !$t['hidden'] : true;
+            });
+
+            return static::findBySQL(
+                "`parent_id` = :parent AND `type` IN (:types) ORDER BY `priority`, `name`",
+                ['parent' => $this->id, 'types' => $visibleTypes]
+            );
+        } else {
+            return static::findByParent_id($this->id, "ORDER BY `priority`, `name`");
+        }
+    }
+
+    /**
+     * @see StudipTreeNode::countCourses()
+     */
+    public function countCourses($semester_id = 'all', $semclass = 0, $with_children = false) :int
+    {
+        if ($semester_id !== 'all') {
+            $query = "SELECT COUNT(DISTINCT t.`seminar_id`)
+                      FROM `seminar_sem_tree` t
+                      JOIN `seminare` s ON (s.`Seminar_id` = t.`seminar_id`)
+                      LEFT JOIN `semester_courses` sc ON (t.`seminar_id` = sc.`course_id`)
+                      WHERE t.`sem_tree_id` IN (:ids)
+                        AND (
+                          sc.`semester_id` = :semester
+                          OR sc.`semester_id` IS NULL
+                        )";
+            $parameters = [
+                'ids' => $with_children ? $this->getDescendantIds() : [$this->id],
+                'semester' => $semester_id
+            ];
+        } else {
+            $query = "SELECT COUNT(DISTINCT t.`seminar_id`)
+                      FROM `seminar_sem_tree` t
+                      JOIN `seminare` s ON (s.`Seminar_id` = t.`seminar_id`)
+                      WHERE `sem_tree_id` IN (:ids)";
+            $parameters = ['ids' => $with_children ? $this->getDescendantIds() : [$this->id]];
+        }
+
+        if ($semclass !== 0) {
+            $query .= "  AND s.`status` IN (:types)";
+            $parameters['types'] = array_map(
+                function ($type) {
+                    return $type['id'];
+                },
+                array_filter(
+                    SemType::getTypes(),
+                    function ($t) use ($semclass) { return $t['class'] === $semclass; }
+                )
+            );
+        }
+
+        return $this->id === 'root' && !$with_children ? 0 : DBManager::get()->fetchColumn($query, $parameters);
+    }
+
+    public function getCourses(
+        $semester_id = 'all',
+        $semclass = 0,
+        $searchterm = '',
+        $with_children = false,
+        array $courses = []
+    ): array
+    {
+        if ($semester_id !== 'all') {
+            $query = "SELECT DISTINCT s.*
+                      FROM `seminare` s
+                      JOIN `seminar_sem_tree` t ON (t.`seminar_id` = s.`Seminar_id`)
+                      LEFT JOIN `semester_courses` sem ON (sem.`course_id` = s.`Seminar_id`)
+                      WHERE t.`sem_tree_id` IN (:ids)
+                        AND (
+                          sem.`semester_id` = :semester
+                          OR sem.`semester_id` IS NULL
+                        )";
+            $parameters = [
+                'ids' => $with_children ? $this->getDescendantIds() : [$this->id],
+                'semester' => $semester_id
+            ];
+        } else {
+            $query = "SELECT DISTINCT s.*
+                      FROM `seminare` s
+                      JOIN `seminar_sem_tree` t ON (t.`seminar_id` = s.`Seminar_id`)
+                      WHERE t.`sem_tree_id` IN (:ids)";
+            $parameters = ['ids' => $with_children ? $this->getDescendantIds() : [$this->id]];
+        }
+
+        if ($semclass !== 0) {
+            $query .= "  AND s.`status` IN (:types)";
+            $parameters['types'] = array_map(
+                function ($type) {
+                    return $type['id'];
+                },
+                array_filter(
+                    SemType::getTypes(),
+                    function ($t) use ($semclass) { return $t['class'] === $semclass; }
+                )
+            );
+        }
+
+        if ($searchterm) {
+            $query .= " AND s.`Name` LIKE :searchterm";
+            $parameters['searchterm'] = '%' . trim($searchterm) . '%';
+        }
+
+        if ($courses) {
+            $query .= " AND t.`seminar_id` IN (:courses)";
+            $parameters['courses'] = $courses;
+        }
+
+        if (Config::get()->IMPORTANT_SEMNUMBER) {
+            $query .= " ORDER BY s.`start_time`, s.`VeranstaltungsNummer`, s.`Name`";
+        } else {
+            $query .= " ORDER BY s.`start_time`, s.`Name`";
+        }
+
+        return DBManager::get()->fetchAll($query, $parameters, 'Course::buildExisting');
+    }
+
+    public function getAncestors(): array
+    {
+        $path = [
+            [
+                'id' => $this->id,
+                'name' => $this->getName(),
+                'classname' => static::class
+            ]
+        ];
+
+        if ($this->parent_id) {
+            $path = array_merge($this->getNode($this->parent_id)->getAncestors(), $path);
+        }
+
+        return $path;
+    }
+
+    private function getDescendantIds()
+    {
+        $ids = [];
+
+        foreach ($this->_children as $child) {
+            $ids = array_merge($ids, [$child->id], $child->getDescendantIds());
+        }
+
+        return $ids;
     }
 
 }

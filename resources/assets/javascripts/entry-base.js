@@ -83,6 +83,7 @@ import "./bootstrap/cache-admin.js"
 import "./bootstrap/oer.js"
 import "./bootstrap/courseware.js"
 import "./bootstrap/responsive-navigation.js"
+import "./bootstrap/treeview.js"
 
 import "./mvv_course_wizard.js"
 import "./mvv.js"

@@ -1185,19 +1185,13 @@ class SemBrowse {
                     return new Navigation(_('Vorlesungsverzeichnis'),
                             URLHelper::getURL('dispatch.php/search/courses',
                                     [
-                                        'level' => 'vv',
-                                        'cmd'   => 'qs',
-                                        'sset'  => '0',
-                                        'option' => ''
+                                        'type' => 'semtree'
                                     ], true));
                 case 'rangetree':
                     return new Navigation(_('Einrichtungsverzeichnis'),
                             URLHelper::getURL('dispatch.php/search/courses',
                                     [
-                                        'level' => 'ev',
-                                        'cmd'   => 'qs',
-                                        'sset'  => '0',
-                                        'option' => ''
+                                        'type' => 'rangetree'
                                     ], true));
                 case 'module':
                     return new MVVSearchNavigation(_('Modulverzeichnis'),

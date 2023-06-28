@@ -1042,6 +1042,14 @@ class Admin_CoursesController extends AuthenticatedController
                 'attributes' => ['data-dialog' => 'size=auto'],
                 'partial'    => 'notice-action.php',
             ],
+            21 => [
+                'name'       => _('Mehrfachzuordnung von Studienbereichen'),
+                'title'      => _('Mehrfachzuordnung von Studienbereichen'),
+                'url'        => 'dispatch.php/admin/tree/batch_assign_semtree',
+                'dialogform' => true,
+                'multimode'  => true,
+                'partial'    => 'batch_assign_semtree.php'
+            ],
         ];
 
         if (!$GLOBALS['perm']->have_perm('admin')) {

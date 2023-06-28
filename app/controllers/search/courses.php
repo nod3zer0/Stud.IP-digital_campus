@@ -27,108 +27,30 @@ class Search_CoursesController extends AuthenticatedController
 
         PageLayout::setHelpKeyword('Basis.VeranstaltungenAbonnieren');
 
-        // activate navigation item
-        $nav_options = Config::get()->COURSE_SEARCH_NAVIGATION_OPTIONS;
-        URLHelper::bindLinkParam('option', $this->nav_option);
-        if (!empty($nav_options[$this->nav_option])
-                && Navigation::hasItem('/search/courses/' . $this->nav_option)) {
-            Navigation::activateItem('/search/courses/' . $this->nav_option);
-        } else {
-            URLHelper::removeLinkParam('option');
-            $level = Request::get('level', $_SESSION['sem_browse_data']['level'] ?? '');
-            $default_option = SemBrowse::getSearchOptionNavigation('sidebar');
-            if (!$level) {
-                PageLayout::setTitle(_($default_option->getTitle()));
-                $this->relocate($default_option->getURL());
-            } elseif ($level == 'f' && $nav_options['courses']['visible']) {
-                $course_option = SemBrowse::getSearchOptionNavigation('sidebar','courses');
-                PageLayout::setTitle(_($course_option->getTitle()));
-                Navigation::activateItem('/search/courses/semtree');
-            } elseif (($level == 'vv') && $nav_options['semtree']['visible']) {
-                $semtree_option = SemBrowse::getSearchOptionNavigation('sidebar','semtree');
-                PageLayout::setTitle(_($semtree_option->getTitle()));
-                Navigation::activateItem('/search/courses/semtree');
-            } elseif ($level == 'ev' && $nav_options['rangetree']['visible']) {
-                $rangetree_option = SemBrowse::getSearchOptionNavigation('sidebar','rangetree');
-                PageLayout::setTitle(_($rangetree_option->getTitle()));
-                Navigation::activateItem('/search/courses/rangetree');
-            } else {
-                throw new AccessDeniedException();
-            }
-        }
+        $this->type = Request::option('type', 'semtree');
+        $this->semester = Request::option('semester', Semester::findCurrent()->id);
+        $this->semClass = Request::int('semclass', 0);
     }
 
     public function index_action()
     {
-        SemBrowse::transferSessionData();
-        $this->sem_browse_obj = new SemBrowse();
-
-        if (!$GLOBALS['perm']->have_perm('root')) {
-            $this->sem_browse_obj->target_url = 'dispatch.php/course/details/';
-            $this->sem_browse_obj->target_id = 'sem_id';
-        } else {
-            $this->sem_browse_obj->target_url = 'seminar_main.php';
-            $this->sem_browse_obj->target_id = 'auswahl';
+        $nodeClass = '';
+        if (Request::option('type', 'semtree') === 'semtree') {
+            Navigation::activateItem('/search/courses/semtree');
+            $nodeClass = StudipStudyArea::class;
+            $this->treeTitle = _('Studienbereiche');
+            $this->breadcrumbIcon = 'literature';
+            $this->editUrl = $this->url_for('studyarea/edit');
+        } else if (Request::option('type', 'semtree') === 'rangetree') {
+            Navigation::activateItem('/search/courses/rangetree');
+            $nodeClass = RangeTreeNode::class;
+            $this->treeTitle = _('Einrichtungen');
+            $this->breadcrumbIcon = 'institute';
+            $this->editUrl = $this->url_for('rangetree/edit');
         }
+        $this->startId = Request::option('node_id', $nodeClass . '_root');
 
-        $sidebar = Sidebar::get();
-
-        // add search options to sidebar
-        $level = Request::get('level', $_SESSION['sem_browse_data']['level'] ?? '');
-
-        $widget = new OptionsWidget();
-        $widget->setTitle(_('Suche'));
-        //add a quicksearch input inside the widget
-        $search_content = $this->sem_browse_obj->getQuickSearchForm();
-        $search_element = new WidgetElement($search_content);
-        $widget->addElement($search_element);
-        $widget->addCheckbox(_('Erweiterte Suche anzeigen'),
-        $_SESSION['sem_browse_data']['cmd'] == "xts",
-        URLHelper::getURL('?level='.$level.'&cmd=xts&sset=0&option='),
-        URLHelper::getURL('?level='.$level.'&cmd=qs&sset=0&option='));
-        $sidebar->addWidget($widget);
-
-        SemBrowse::setSemesterSelector($this->url_for('search/courses/index'));
-        SemBrowse::setClassesSelector($this->url_for('search/courses/index'));
-
-
-        if ($this->sem_browse_obj->show_result
-                && count($_SESSION['sem_browse_data']['search_result'])) {
-            $actions = new ActionsWidget();
-            $actions->addLink(_('Download des Ergebnisses'),
-                    URLHelper::getURL('dispatch.php/search/courses/export_results'),
-                    Icon::create('file-office', 'clickable'));
-            $sidebar->addWidget($actions);
-
-            $grouping = new OptionsWidget();
-            $grouping->setTitle(_('Suchergebnis gruppieren:'));
-            foreach ($this->sem_browse_obj->group_by_fields as $i => $field) {
-                $grouping->addRadioButton(
-                    $field['name'],
-                    URLHelper::getURL('?', ['group_by' => $i,
-                        'keep_result_set' => 1]),
-                    $_SESSION['sem_browse_data']['group_by'] == $i
-                );
-            }
-            $sidebar->addWidget($grouping);
-        }
-
-        // show information about course class if class was changed
-        $class = $GLOBALS['SEM_CLASS'][$_SESSION['sem_browse_data']['show_class']] ?? null;
-        if (is_object($class) && $class->countSeminars() > 0) {
-            if (trim($GLOBALS['SEM_CLASS'][$_SESSION['sem_browse_data']['show_class']]['description'])) {
-                PageLayout::postInfo(sprintf(_('Gewählte Veranstaltungsklasse <i>%1s</i>: %2s'),
-                        $GLOBALS['SEM_CLASS'][$_SESSION['sem_browse_data']['show_class']]['name'],
-                        $GLOBALS['SEM_CLASS'][$_SESSION['sem_browse_data']['show_class']]['description']));
-            } else {
-                PageLayout::postInfo(sprintf(_('Gewählte Veranstaltungsklasse <i>%1s</i>.'),
-                        $GLOBALS['SEM_CLASS'][$_SESSION['sem_browse_data']['show_class']]['name']));
-            }
-        } elseif ($_SESSION['sem_browse_data']['show_class'] != 'all') {
-            PageLayout::postInfo(_('Im gewählten Semester ist in dieser Veranstaltungsklasse keine Veranstaltung verfügbar. Bitte wählen Sie eine andere Veranstaltungsklasse oder ein anderes Semester!'));
-        }
-
-        $this->controller = $this;
+        $this->setupSidebar();
     }
 
     public function export_results_action()
@@ -143,4 +65,33 @@ class Search_CoursesController extends AuthenticatedController
         }
     }
 
+    private function setupSidebar()
+    {
+        $sidebar = Sidebar::Get();
+
+        $semWidget = new SemesterSelectorWidget($this->url_for(''), 'semester');
+        $semWidget->includeAll(false);
+        $semWidget->setId('semester-selector');
+        $semWidget->setSelection($this->semester);
+        $sidebar->addWidget($semWidget);
+
+        $classWidget = $sidebar->addWidget(new SelectWidget(
+            _('Veranstaltungskategorie'),
+            URLHelper::getURL('', ['type' => $this->type, 'semester' => $this->semester]),
+            'semclass'
+        ));
+        $classWidget->addElement(new SelectElement(0, _('Alle')));
+        foreach (SemClass::getClasses() as $class) {
+            if (!$class['studygroup_mode']) {
+                $classWidget->addElement(new SelectElement(
+                    $class['id'],
+                    $class['name'],
+                    $this->semClass == $class['id']
+                ));
+            }
+        }
+
+        $sidebar->addWidget(new VueWidget('search-widget'));
+        $sidebar->addWidget(new VueWidget('export-widget'));
+    }
 }

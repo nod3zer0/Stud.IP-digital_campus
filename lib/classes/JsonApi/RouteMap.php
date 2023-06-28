@@ -132,6 +132,7 @@ class RouteMap
         $this->addAuthenticatedMessagesRoutes($group);
         $this->addAuthenticatedNewsRoutes($group);
         $this->addAuthenticatedStudyAreasRoutes($group);
+        $this->addAuthenticatedTreeRoutes($group);
         $this->addAuthenticatedWikiRoutes($group);
     }
 
@@ -279,6 +280,17 @@ class RouteMap
         $group->get('/study-areas/{id}/courses', Routes\StudyAreas\CoursesOfStudyAreas::class);
         $group->get('/study-areas/{id}/institute', Routes\StudyAreas\InstituteOfStudyAreas::class);
         $group->get('/study-areas/{id}/parent', Routes\StudyAreas\ParentOfStudyAreas::class);
+    }
+
+    private function addAuthenticatedTreeRoutes(RouteCollectorProxy $group): void
+    {
+        $group->get('/tree-node/{id}', Routes\Tree\TreeShow::class);
+
+        $group->get('/tree-node/{id}/children', Routes\Tree\ChildrenOfTreeNode::class);
+        $group->get('/tree-node/{id}/courseinfo', Routes\Tree\CourseInfoOfTreeNode::class);
+        $group->get('/tree-node/{id}/courses', Routes\Tree\CoursesOfTreeNode::class);
+        $group->get('/tree-node/course/pathinfo/{classname}/{id}', Routes\Tree\PathinfoOfTreeNodeCourse::class);
+        $group->get('/tree-node/course/details/{id}', Routes\Tree\DetailsOfTreeNodeCourse::class);
     }
 
     private function addAuthenticatedWikiRoutes(RouteCollectorProxy $group): void

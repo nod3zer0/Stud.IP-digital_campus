@@ -330,7 +330,7 @@ select.sidebar-selectlist {
 
                 .reset-search {
                     background-color: transparent;
-                    border: 1px solid $base-color-60;
+                    border: 1px solid var(--dark-gray-color-30);
                     border-left: 0;
                     border-right: 0;
                     display: inline-block;

@@ -43,7 +43,7 @@ class SchemaMap
             \JsonApi\Models\StudipProperty::class => Schemas\StudipProperty::class,
             \StudipComment::class => Schemas\StudipComment::class,
             \StudipNews::class => Schemas\StudipNews::class,
-            \StudipStudyArea::class => Schemas\StudyArea::class,
+            \StudipTreeNode::class => Schemas\TreeNode::class,
             \WikiPage::class => Schemas\WikiPage::class,
             \Studip\Activity\Activity::class => Schemas\Activity::class,
             \User::class => Schemas\User::class,

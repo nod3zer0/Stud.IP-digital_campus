@@ -1,6 +1,6 @@
 <?php
 
-namespace JsonApi\Routes\StudyAreas;
+namespace JsonApi\Routes\RangeTree;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -8,7 +8,7 @@ use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
 
-class StudyAreasShow extends JsonApiController
+class ParentOfRangeTreeNode extends JsonApiController
 {
     protected $allowedIncludePaths = [
         'children',
@@ -22,11 +22,11 @@ class StudyAreasShow extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $studyArea = \StudipStudyArea::find($args['id']);
-        if (!$studyArea && $args['id'] !== 'root') {
+        $node = \RangeTreeNode::find($args['id']);
+        if (!$node) {
             throw new RecordNotFoundException();
         }
 
-        return $this->getContentResponse($studyArea);
+        return $this->getContentResponse($node->getParent());
     }
 }

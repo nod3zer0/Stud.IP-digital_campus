@@ -1,20 +1,25 @@
 <?php
 
-namespace JsonApi\Routes\StudyAreas;
+namespace JsonApi\Routes\Tree;
 
+use JsonApi\Errors\BadRequestException;
+use Neomerx\JsonApi\Contracts\Http\ResponsesInterface;
+use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
+use Neomerx\JsonApi\Schema\Link;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
 
-class StudyAreasShow extends JsonApiController
+class TreeShow extends JsonApiController
 {
     protected $allowedIncludePaths = [
         'children',
+        'courseinfo',
         'courses',
         'institute',
-        'parent',
+        'parent'
     ];
 
     /**
@@ -22,11 +27,14 @@ class StudyAreasShow extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $studyArea = \StudipStudyArea::find($args['id']);
-        if (!$studyArea && $args['id'] !== 'root') {
+        list($classname, $id) = explode('_', $args['id']);
+
+        $node = $classname::getNode($id);
+        if (!$node) {
             throw new RecordNotFoundException();
         }
 
-        return $this->getContentResponse($studyArea);
+        return $this->getContentResponse($node);
     }
+
 }

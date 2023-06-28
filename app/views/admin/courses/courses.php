@@ -14,7 +14,8 @@ $colspan = 2
 ?>
 
 <? if (!empty($actions[$selected_action]['multimode'])) : ?>
-    <form action="<?= URLHelper::getLink($actions[$selected_action]['url']) ?>" method="post">
+    <form action="<?= URLHelper::getLink($actions[$selected_action]['url']) ?>" method="post"
+          <?= !empty($actions[$selected_action]['dialogform']) ? ' data-dialog="auto"' : '' ?>>
 <? endif ?>
 <?= CSRFProtection::tokenTag() ?>
 <table class="default course-admin">

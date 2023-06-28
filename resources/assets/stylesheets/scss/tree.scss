@@ -1,0 +1,384 @@
+$tree-outline: 1px solid var(--light-gray-color-40);
+
+.studip-tree {
+    &.studip-tree-navigatable {
+        > header {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+
+            h1 {
+                display: inline-block;
+                width: calc(100% - 28px);
+            }
+        }
+
+        .contentbar {
+            display: relative;
+
+            .contentbar-wrapper-right {
+                display: inherit;
+
+                .action-menu {
+                    button {
+                        top: -2px;
+                    }
+                }
+            }
+        }
+
+        .studip-tree-navigation-wrapper {
+            margin-right: 15px;
+            text-indent: 0;
+
+            .studip-tree-navigation {
+                background-color: var(--white);
+                border: 1px solid var(--content-color-40);
+                box-shadow: 2px 2px mix($base-gray, $white, 20%);
+                right: -20px;
+                padding: 10px;
+                position: absolute;
+                top: -15px;
+                width: 400px;
+                z-index: 3;
+
+                > header {
+                    border-bottom: 1px solid var(--content-color-40);
+                    display: flex;
+                    height: 60px;
+                    margin-bottom: 15px;
+                    margin-top: -15px;
+                    padding: 2px 0;
+
+                    h1 {
+                        line-height:60px;
+                        margin-bottom: 0;
+                        width: calc(100% - 40px);
+                    }
+
+                    button {
+                        flex: 0;
+                        padding-top: 10px;
+                    }
+                }
+
+                .studip-tree-node {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    section {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    button {
+        background: transparent;
+        border: 0;
+        color: var(--base-color);
+        cursor: pointer;
+        padding: 0;
+
+        &:hover {
+            .studip-tree-child-title {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .studip-tree-course {
+        .course-dates {
+            color: var(--dark-gray-color-80);
+            font-size: $font-size-small;
+            padding-left: 35px;
+        }
+
+        .course-details {
+            color: var(--dark-gray-color-80);
+            font-size: $font-size-small;
+            text-align: right;
+
+            .admission-state {
+                height: 18px;
+            }
+
+            .course-lecturers {
+                list-style: none;
+                padding-left: 0;
+            }
+        }
+    }
+
+    /* Display as foldable tree */
+    .studip-tree-node {
+
+        width: 100%;
+
+        a {
+            cursor: pointer;
+            display: flex;
+
+            img {
+                vertical-align: bottom;
+            }
+        }
+
+        .studip-tree-node-content {
+
+            display: flex;
+
+            &.studip-tree-node-active {
+                background-color: var(--light-gray-color-20);
+                margin: -5px;
+                padding: 5px;
+            }
+
+            .studip-tree-node-toggle {
+                margin-left: -2px;
+                margin-right: 5px;
+            }
+
+            .tooltip {
+                line-height: 24px;
+                margin-left: 5px;
+            }
+
+            .studip-tree-node-assignment-state {
+                margin-right: 10px;
+
+                img, svg {
+                    vertical-align: text-bottom;
+                }
+            }
+
+            a.studip-tree-node-edit-link {
+                opacity: 0;
+                visibility: hidden;
+
+            }
+
+            &:hover {
+                background-color: var(--light-gray-color-20);
+
+                a.studip-tree-node-edit-link {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+        }
+
+        .studip-tree-children {
+            list-style: none;
+            padding-left: 38px;
+
+            li {
+                border-left: $tree-outline;
+                display: flex;
+                margin-left: -31px;
+                padding: 5px 0 5px 5px;
+
+                &:before {
+                    border-bottom: $tree-outline;
+                    content: "";
+                    display: inline-block;
+                    height: 1em;
+                    left: -5px;
+                    position: relative;
+                    top: -5px;
+                    vertical-align: top;
+                    width: 10px;
+                }
+
+                &:last-child {
+                    border-left: none;
+
+                    &:before {
+                        border-left: $tree-outline;
+                    }
+                }
+            }
+        }
+    }
+
+    > .studip-tree-node {
+        width: calc(100% - 25px);
+    }
+
+    /* Top breadcrumb */
+    .studip-tree-breadcrumb {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        max-width: 100%;
+        padding: 1em;
+        top: 2px;
+
+        .contentbar-wrapper-left {
+            max-width: calc(100% - 25px);
+
+            &.with-navigation {
+                max-width: calc(100% - 50px);
+            }
+
+            &.editable {
+                max-width: calc(100% - 50px);
+            }
+
+            &.with-navigation-and-editable {
+                max-width: calc(100% - 75px);
+            }
+
+            img {
+                vertical-align: text-bottom;
+            }
+
+            .studip-tree-breadcrumb-list {
+                display: inline-block;
+                flex: 1;
+                line-height: 24px;
+                margin-left: 15px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        .action-menu {
+            position: relative;
+            top: 5px;
+            width: 30px;
+        }
+
+    }
+
+    /* Display as tiled list */
+    .studip-tree-list {
+        section, nav:not(.contentbar-nav) {
+            padding: 15px;
+        }
+
+        .studip-tree-children {
+            display: grid;
+            grid-gap: 15px;
+            grid-template-columns: repeat(auto-fit, $sidebar-width);
+            list-style: none;
+            overflow-wrap: break-word;
+            padding-left: 0;
+
+            .studip-tree-child {
+                background: var(--dark-gray-color-5);
+                border: solid thin var(--light-gray-color-40);
+                display: flex;
+                height: 130px;
+                padding: 10px;
+
+                /* Handle for drag&drop */
+                .drag-handle {
+                    background-position-y: 8px;
+                }
+
+                a {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10px;
+                    text-align: left;
+
+                    .studip-tree-child-title {
+                        font-size: 1.1em;
+                        font-weight: bold;
+                    }
+                }
+
+                &:hover {
+                    background: var(--white);
+
+                    button {
+                        .studip-tree-child-title {
+                            color: var(--red);
+                        }
+                    }
+                }
+            }
+        }
+
+        table {
+            tr {
+                td {
+                    line-height: 24px;
+                    padding: 10px;
+                    vertical-align: top;
+
+                    a {
+                        img {
+                            margin-right: 5px;
+                            vertical-align: bottom;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Display as table */
+    .studip-tree-table {
+        table {
+            .studip-tree-node-info {
+                font-size: 0.9em;
+                padding: 15px;
+            }
+
+            tbody {
+                tr {
+
+                    &.studip-tree-course {
+                        .course-dates {
+                            padding-left: 0;
+                        }
+                    }
+
+                    td {
+                        line-height: 28px;
+                        padding: 5px;
+                        vertical-align: top;
+
+                        /* Handle for drag&drop */
+                        .drag-handle {
+                            background-position-y: -5px;
+                            padding-right: 10px;
+                        }
+
+                        button {
+                            background: transparent;
+                            border: 0;
+                            color: var(--base-color);
+                            cursor: pointer;
+
+                            &:hover {
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .studip-tree-course-path {
+        font-size: 0.9em;
+        list-style: none;
+        padding: 5px;
+
+        button {
+            padding: 0;
+        }
+    }
+}
+
+form.default {
+    .studip-tree-node {
+        padding-top: unset !important;
+    }
+}
+
