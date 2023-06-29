@@ -21,6 +21,7 @@ import CoursewareIframeBlock from './CoursewareIframeBlock.vue';
 import CoursewareImageMapBlock from './CoursewareImageMapBlock.vue';
 import CoursewareKeyPointBlock from './CoursewareKeyPointBlock.vue';
 import CoursewareLinkBlock from './CoursewareLinkBlock.vue';
+import CoursewareLtiBlock from "./CoursewareLtiBlock.vue";
 import CoursewareTableOfContentsBlock from './CoursewareTableOfContentsBlock.vue';
 import CoursewareTextBlock from './CoursewareTextBlock.vue';
 import CoursewareTimelineBlock from './CoursewareTimelineBlock.vue';
@@ -56,6 +57,7 @@ const ContainerComponents = {
     CoursewareImageMapBlock,
     CoursewareKeyPointBlock,
     CoursewareLinkBlock,
+    CoursewareLtiBlock,
     CoursewareTableOfContentsBlock,
     CoursewareTextBlock,
     CoursewareTimelineBlock,

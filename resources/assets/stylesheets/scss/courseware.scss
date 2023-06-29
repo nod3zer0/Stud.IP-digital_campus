@@ -85,6 +85,7 @@ $blockadder-items: (
     folder: folder-full,
     headline: block-eyecatcher,
     iframe: door-enter,
+    lti: plugin,
     key-point: exclaim-circle,
     link: link-extern,
     table-of-contents: table-of-contents,
@@ -3679,6 +3680,30 @@ i f r a m e  b l o c k
 i f r a m e  b l o c k  e n d
 * * * * * * * * * * * * * */
 
+/* * * * * * * * +
+l t i  b l o c k
+* * * * * * * * */
+.cw-block-lti {
+    .cw-block-content {
+        .cw-block-lti-content {
+            border: solid thin $content-color-40;
+            box-sizing: border-box;
+        }
+        .cw-block-lti-icon-tool {
+            @include background-icon(plugin, info, 24);
+            background-repeat: no-repeat;
+
+            display: block;
+            padding: 16px 16px 16px 40px;
+            background-position: 10px center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+/* * * * * * * * * * * *
+l t i  b l o c k  e n d
+* * * * * * * * * * * */
 
 /* * * * * * * * * * * *
 f o l d e r  b l o c k

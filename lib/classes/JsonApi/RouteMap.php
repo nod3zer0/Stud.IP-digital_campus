@@ -129,6 +129,7 @@ class RouteMap
         $this->addAuthenticatedFilesRoutes($group);
         $this->addAuthenticatedForumRoutes($group);
         $this->addAuthenticatedInstitutesRoutes($group);
+        $this->addAuthenticatedLtiRoutes($group);
         $this->addAuthenticatedMessagesRoutes($group);
         $this->addAuthenticatedNewsRoutes($group);
         $this->addAuthenticatedStudyAreasRoutes($group);
@@ -249,6 +250,12 @@ class RouteMap
         $group->get('/institutes', Routes\Institutes\InstitutesIndex::class);
 
         $group->get('/institutes/{id}/status-groups', Routes\Institutes\StatusGroupsOfInstitutes::class);
+    }
+
+    private function addAuthenticatedLtiRoutes(RouteCollectorProxy $group): void
+    {
+        $group->get('/lti-tools/{id}', Routes\Lti\LtiToolsShow::class);
+        $group->get('/lti-tools', Routes\Lti\LtiToolsIndex::class);
     }
 
     private function addAuthenticatedNewsRoutes(RouteCollectorProxy $group): void

@@ -109,6 +109,7 @@ const mountApp = async (STUDIP, createApp, element) => {
                     'files',
                     'file-refs',
                     'folders',
+                    'lti-tools',
                     'status-groups',
                     'users',
                     'institutes',

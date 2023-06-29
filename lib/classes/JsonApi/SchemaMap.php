@@ -33,6 +33,7 @@ class SchemaMap
             \JsonApi\Models\ForumEntry::class => Schemas\ForumEntry::class,
             \Institute::class => Schemas\Institute::class,
             \InstituteMember::class => Schemas\InstituteMember::class,
+            \LtiTool::class => Schemas\LtiTool::class,
             \Message::class => Schemas\Message::class,
             \SemClass::class => Schemas\SemClass::class,
             \Semester::class => Schemas\Semester::class,

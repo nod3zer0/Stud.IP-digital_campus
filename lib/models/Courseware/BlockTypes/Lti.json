@@ -1,0 +1,37 @@
+{
+    "title": "Payload schema of Courseware\\BlockType\\LTI",
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "height": {
+            "type": "string"
+        },
+        "tool_id": {
+            "type": "string"
+        },
+        "launch_url": {
+            "type": "string"
+        },
+        "consumer_key": {
+            "type": "string"
+        },
+        "consumer_secret": {
+            "type": "string"
+        },
+        "oauth_signature_method": {
+            "type": "string"
+        },
+        "send_lis_person": {
+            "type": "boolean"
+        },
+        "custom_parameters": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "tool_id"
+    ],
+    "additionalProperties": true
+}

@@ -118,6 +118,7 @@ abstract class BlockType
             ImageMap::class,
             KeyPoint::class,
             Link::class,
+            Lti::class,
             TableOfContents::class,
             Text::class,
             Timeline::class,
