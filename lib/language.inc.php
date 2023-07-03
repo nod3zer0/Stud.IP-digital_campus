@@ -209,6 +209,7 @@ function restoreLanguage() {
 */
 function setLocaleEnv($language, $language_domain = ''){
     putenv('LANGUAGE'); //unset language preference
+    putenv('LC_ALL=' . $language . '.UTF-8'); //needed in MacOS since gettext doesnt read setlocale()
     $ret = setlocale(LC_ALL, $language . '.UTF-8');
     setlocale(LC_NUMERIC, 'C');
     if ($language_domain) {
