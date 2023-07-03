@@ -302,21 +302,22 @@ function my_substr($what, $start, $end)
  */
 function get_fullname($user_id = "", $format = "full" , $htmlready = false)
 {
-    static $cache;
-    global $user, $_fullname_sql;
+    static $cache = [];
+
+    $current_user = User::findCurrent();
 
     if (!$user_id) {
-        $user_id = $user->id;
+        $user_id = $current_user ? $current_user->id : null;
     }
 
-    if (User::findCurrent()->id === $user_id) {
-        $fullname = User::findCurrent()->getFullName($format);
+    if ($current_user && $current_user->id === $user_id) {
+        $fullname = $current_user->getFullName($format);
         return $htmlready ? htmlReady($fullname) : $fullname;
     }
 
     $hash = md5($user_id . $format);
     if (!isset($cache[$hash])) {
-        $query = "SELECT {$_fullname_sql[$format]}
+        $query = "SELECT {$GLOBALS['_fullname_sql'][$format]}
                   FROM auth_user_md5
                   LEFT JOIN user_info USING (user_id)
                   WHERE user_id = ?";

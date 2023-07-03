@@ -262,6 +262,7 @@ class JsupdaterController extends AuthenticatedController
 
     private function getCoursewareClipboardUpdates($pageInfo)
     {
-        return count(\Courseware\Clipboard::findUsersClipboards($GLOBALS["user"])) != $pageInfo['coursewareclipboard']['counter'];
+        $counter = $pageInfo['coursewareclipboard']['counter'] ?? 0;
+        return \Courseware\Clipboard::countByUser_id($GLOBALS['user']->id) != $counter;
     }
 }

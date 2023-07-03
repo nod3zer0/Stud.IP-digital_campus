@@ -28,19 +28,41 @@ class ProfileController extends AuthenticatedController
         URLHelper::addLinkParam('username', Request::username('username'));
         PageLayout::setHelpKeyword('Basis.Homepage');
 
-        $this->user         = User::findCurrent(); // current logged in user
-        $this->perm         = $GLOBALS['perm']; // perms of current logged in user
-        $this->current_user = User::findByUsername(Request::username('username', $this->user->username)); // current selected user
+        // current logged in user
+        $this->user = User::findCurrent();
+        // perms of current logged in user
+        $this->perm = $GLOBALS['perm'];
+        // current selected user
+        $this->current_user = User::findByUsername(Request::username(
+            'username',
+            $this->user ? $this->user->username : null
+        ));
         // get additional informations to selected user
-        $this->profile = new ProfileModel($this->current_user->user_id, $this->user->user_id);
+        $this->profile = new ProfileModel(
+            $this->current_user ? $this->current_user->id : null,
+            $this->user ? $this->user->id : null
+        );
 
         // set the page title depending on user selection
-        if ($this->current_user['user_id'] == $this->user->id && !$this->current_user['locked']) {
+        if (
+            $this->user
+            && $this->current_user->id === $this->user->id
+            && !$this->current_user->locked
+        ) {
             PageLayout::setTitle(_('Mein Profil'));
             UserConfig::get($this->user->id)->store('PROFILE_LAST_VISIT', time());
-        } elseif ($this->current_user['user_id'] && ($this->perm->have_perm('root') || (!$this->current_user['locked'] && get_visibility_by_id($this->current_user['user_id'])))) {
+        } elseif (
+            $this->current_user->id
+            && (
+                $this->perm->have_perm('root')
+                || (
+                    !$this->current_user->locked
+                    && get_visibility_by_id($this->current_user->id)
+                )
+            )
+        ) {
             PageLayout::setTitle(_('Profil von') . ' ' . $this->current_user->getFullname());
-            object_add_view($this->current_user->user_id);
+            object_add_view($this->current_user->id);
         } else {
             PageLayout::setTitle(_('Profil'));
             $action = 'not_available';

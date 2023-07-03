@@ -107,10 +107,14 @@ class UserDomain extends SimpleORMap
      * Get an array of all user domains for a specific user.
      * Returns an array of UserDomain objects.
      */
-    public static function getUserDomainsForUser ($user_id)
+    public static function getUserDomainsForUser($user_id)
     {
-        $domains = User::find($user_id)->domains;
-        return $domains ? $domains->getArrayCopy() : [];
+        $user = User::find($user_id);
+        if (!$user) {
+            return [];
+        }
+
+        return $user->domains ? $user->domains->getArrayCopy() : [];
     }
 
     /**

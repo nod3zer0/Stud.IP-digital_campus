@@ -891,16 +891,14 @@ class Admin_UserController extends AuthenticatedController
         }
 
         if ($GLOBALS['perm']->have_perm('root')) {
-            $sql
-                     = "SELECT Institut_id, Name, 1 AS is_fak
+            $sql = "SELECT Institut_id, Name, 1 AS is_fak
                     FROM Institute
                     WHERE Institut_id=fakultaets_id
                     ORDER BY Name";
             $faks    = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             $domains = UserDomain::getUserDomains();
         } else {
-            $sql
-                       = "SELECT a.Institut_id, Name, b.Institut_id = b.fakultaets_id AS is_fak
+            $sql = "SELECT a.Institut_id, Name, b.Institut_id = b.fakultaets_id AS is_fak
                     FROM user_inst a
                     LEFT JOIN Institute b USING (Institut_id)
                     WHERE a.user_id = ? AND a.inst_perms = 'admin'
@@ -911,8 +909,7 @@ class Admin_UserController extends AuthenticatedController
             $domains = UserDomain::getUserDomainsForUser(User::findCurrent()->id);
         }
 
-        $query
-                   = "SELECT Institut_id, Name
+        $query = "SELECT Institut_id, Name
                   FROM Institute
                   WHERE fakultaets_id = ? AND institut_id != fakultaets_id
                   ORDER BY Name";

@@ -82,14 +82,15 @@ function get_visibility_by_state ($state, $user_id) {
         return true;
     }
 
+    $user = User::findCurrent();
     $other_user = User::find($user_id);
-    if (!$other_user) {
+    if (!$user || !$other_user) {
         return false;
     }
 
     $same_domain = UserDomain::checkUserVisibility(
         $other_user->domains,
-        User::findCurrent()->domains
+        $user->domains
     );
 
     switch ($state) {

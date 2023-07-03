@@ -12,7 +12,9 @@ class Course_MessengerController extends AuthenticatedController
 
     public function course_action($thread_id = null)
     {
-        PageLayout::setTitle(Context::get()->getFullname() . ' - ' . _('Blubber'));
+        if (Context::get()) {
+            PageLayout::setTitle(Context::get()->getFullname() . ' - ' . _('Blubber'));
+        }
 
         if (Navigation::hasItem('/course/blubber')) {
             Navigation::activateItem('/course/blubber');

@@ -1,7 +1,7 @@
 <form class="default" action="<?= $controller->url_for('my_ilias_accounts/redirect/'.$ilias_index.'/new/'.$ilias_ref_id) ?>" method="post" target="_blank">
     <?= CSRFProtection::tokenTag() ?>
-	<input type="hidden" name="ilias_target" value="new">
-	<input type="hidden" name="ilias_ref_id" value="<?=$ilias_ref_id?>">
+    <input type="hidden" name="ilias_target" value="new">
+    <input type="hidden" name="ilias_ref_id" value="<?=$ilias_ref_id?>">
     <label>
         <span class="required"><?= _('Art des Lernobjekts') ?></span>
         <select name="ilias_module_type" required>

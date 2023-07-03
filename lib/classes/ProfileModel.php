@@ -54,7 +54,10 @@ class ProfileModel
      */
     public function getHomepageVisibilities()
     {
-        $visibilities = get_local_visibility_by_id($this->current_user->user_id, 'homepage');
+        $visibilities = get_local_visibility_by_id(
+            $this->current_user ? $this->current_user->id : null,
+            'homepage'
+        );
         if (is_array(json_decode($visibilities, true))) {
             return json_decode($visibilities, true);
         }
