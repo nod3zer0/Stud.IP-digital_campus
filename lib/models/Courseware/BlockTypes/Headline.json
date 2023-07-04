@@ -26,6 +26,9 @@
         "background_image_id": {
             "type": "string"
         },
+        "background_image_type": {
+            "type": "string"
+        },
         "background_type": {
             "type": "string"
         },

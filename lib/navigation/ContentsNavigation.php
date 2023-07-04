@@ -139,6 +139,13 @@ class ContentsNavigation extends Navigation
             $this->addSubNavigation('my_elearning', $elearning);
         }
 
+        if ($GLOBALS['perm']->have_perm('admin')) {
+            $pool = new Navigation(_('Bilder-Pool'), 'dispatch.php/stock_images', []);
+            $pool->setImage(Icon::create('picture'));
+            $pool->setDescription(_('Verwalten Sie den Pool frei verfügbarer Bilder.'));
+            $this->addSubNavigation('stock_images', $pool);
+        }
+
         if (!$GLOBALS['perm']->have_perm('root') && $GLOBALS['user']->getAuthenticatedUser()->hasRole('Hilfe-Administrator(in)')) {
             $help = new Navigation(_('Hilfe'), 'dispatch.php/help_content/admin_overview');
             $help->setImage(Icon::create('question-circle'));

@@ -34,12 +34,13 @@ class StructuralElementsImageUpload extends NonJsonApiController
         $fileRef = $this->handleUpload($request, $publicFolder, $structuralElement);
 
         // remove existing image
-        if ($structuralElement->image) {
+        if (is_a($structuralElement->image, \FileRef::class)) {
             $structuralElement->image->getFileType()->delete();
         }
 
         // refer to newly uploaded image
         $structuralElement->image_id = $fileRef->id;
+        $structuralElement->image_type = \FileRef::class;
         $structuralElement->store();
 
         return $response->withStatus(201);

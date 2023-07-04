@@ -572,6 +572,15 @@ export const actions = {
         return dispatch('loadStructuralElement', structuralElement.id);
     },
 
+    setStockImageForStructuralElement({ dispatch, state }, { structuralElement, stockImage }) {
+        const { id, type } = structuralElement;
+        structuralElement.relationships.image = { data: { type: 'stock-images', id: stockImage.id } };
+
+        return dispatch('lockObject', { id, type })
+            .then(() => dispatch('updateStructuralElement', { element: structuralElement, id }))
+            .then(() => dispatch('lockObject', { id, type }));
+    },
+
     setImportFilesState({ commit }, state) {
         commit('setImportFilesState', state);
     },

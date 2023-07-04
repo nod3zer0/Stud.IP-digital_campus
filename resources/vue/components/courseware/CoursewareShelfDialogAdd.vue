@@ -24,15 +24,31 @@
         <template v-slot:layout>
             <form class="default" @submit.prevent="">
                 <label>
-                        {{ $gettext('Bild') }}
+                        {{ $gettext('Bild hochladen') }}
                         <br>
                         <input class="cw-file-input" ref="upload_image" type="file" accept="image/*" @change="checkUploadFile"/>
-                        <courseware-companion-box
+                        <CoursewareCompanionBox
                             v-if="uploadFileError"
                             :msgCompanion="uploadFileError"
                             mood="sad"
                             class="cw-companion-box-in-form"
                         />
+                </label>
+                <template v-if="selectedStockImage">
+                    <StockImageSelectableImageCard :stock-image="selectedStockImage" />
+                    <label>
+                        <button class="button" type="button" @click="selectedStockImage = null">
+                            {{ $gettext('Bild entfernen') }}
+                        </button>
+                    </label>
+                </template>
+                <label v-else>
+                    {{ $gettext('oder') }}
+                    <br>
+                    <button class="button" type="button" @click="showStockImageSelector = true">
+                        {{ $gettext('Aus dem Bilderpool auswählen') }}
+                    </button>
+                    <StockImageSelector v-if="showStockImageSelector" @close="showStockImageSelector = false" @select="onSelectStockImage" />
                 </label>
                 <label>
                     {{ $gettext('Farbe') }}
@@ -44,7 +60,7 @@
                     >
                         <template #open-indicator="selectAttributes">
                             <span v-bind="selectAttributes"
-                                ><studip-icon shape="arr_1down" size="10"
+                                ><studip-icon shape="arr_1down" :size="10"
                             /></span>
                         </template>
                         <template #no-options>
@@ -116,6 +132,9 @@
 </template>
 
 <script>
+import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
+import StockImageSelectableImageCard from '../stock-images/SelectableImageCard.vue';
+import StockImageSelector from '../stock-images/SelectorDialog.vue';
 import StudipSelect from './../StudipSelect.vue';
 import StudipWizardDialog from './../StudipWizardDialog.vue';
 import colorMixin from '@/vue/mixins/courseware/colors.js';
@@ -125,6 +144,9 @@ export default {
     name: 'courseware-shelf-dialog-add',
     mixins: [colorMixin],
     components: {
+        CoursewareCompanionBox,
+        StockImageSelectableImageCard,
+        StockImageSelector,
         StudipWizardDialog,
         StudipSelect,
     },
@@ -144,7 +166,9 @@ export default {
             },
             addWizardData: {},
             uploadFileError: '',
-            requirements: []
+            requirements: [],
+            showStockImageSelector: false,
+            selectedStockImage: null,
         }
     },
     computed: {
@@ -171,6 +195,7 @@ export default {
             companionSuccess: 'companionSuccess',
             createCoursewareUnit: 'courseware-units/create',
             setShowUnitAddDialog: 'setShowUnitAddDialog',
+            setStockImageForStructuralElement: 'setStockImageForStructuralElement',
             loadStructuralElementById: 'courseware-structural-elements/loadById',
             uploadImageForStructuralElement: 'uploadImageForStructuralElement',
         }),
@@ -200,6 +225,7 @@ export default {
                 this.uploadFileError = this.$gettext('Diese Datei ist kein Bild. Bitte wählen Sie ein Bild aus.');
             } else {
                 this.uploadFileError = '';
+                this.selectedStockImage = null;
             }
         },
         async createUnit() {
@@ -239,19 +265,33 @@ export default {
             const newElementId = this.lastCreateCoursewareUnit.relationships['structural-element'].data.id
             await this.loadStructuralElementById({ id: newElementId });
             let newStructuralElement = this.structuralElementById({id: newElementId});
-            if (file) {
-                this.uploadImageForStructuralElement({
-                    structuralElement: newStructuralElement,
-                    file,
-                }).then(() => {
-                    this.loadStructuralElementById({id: newStructuralElement.id, options: {include: 'children'}});
-                })
-                .catch((error) => {
-                    console.error(error);
-                    this.companionError({ info: this.$gettext('Das Bild für das neue Lernmaterial konnte nicht gespeichert werden.') });
-                });
+
+            try {
+                if (file) {
+                    await this.uploadImageForStructuralElement({
+                        structuralElement: newStructuralElement,
+                        file,
+                    });
+                } else if (this.selectedStockImage) {
+                    await this.setStockImageForStructuralElement({
+                        structuralElement: newStructuralElement,
+                        stockImage: this.selectedStockImage,
+                    })
+                }
+
+                this.loadStructuralElementById({id: newStructuralElement.id, options: {include: 'children'}});
+            } catch(error) {
+                console.error(error);
+                this.companionError({ info: this.$gettext('Das Bild für das neue Lernmaterial konnte nicht gespeichert werden.') });
             }
-        }
+        },
+        onSelectStockImage(stockImage) {
+            if (this.$refs?.upload_image) {
+                this.$refs.upload_image.value = null;
+            }
+            this.selectedStockImage = stockImage;
+            this.showStockImageSelector = false;
+        },
     },
     watch: {
         addWizardData: {

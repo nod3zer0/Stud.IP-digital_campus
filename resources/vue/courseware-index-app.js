@@ -8,6 +8,7 @@ import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import axios from 'axios';
 import { mapResourceModules } from '@elan-ev/reststate-vuex';
+import { StockImagesPlugin } from './plugins/stock-images.js';
 
 const mountApp = async (STUDIP, createApp, element) => {
     const getHttpClient = () =>
@@ -164,6 +165,8 @@ const mountApp = async (STUDIP, createApp, element) => {
         router,
         store,
     });
+
+    Vue.use(StockImagesPlugin, { store });
 
     app.$mount(element);
 

@@ -1023,6 +1023,15 @@ export const actions = {
         });
     },
 
+    setStockImageForStructuralElement({ dispatch, state }, { structuralElement, stockImage }) {
+        const { id, type } = structuralElement;
+        structuralElement.relationships.image = { data: { type: 'stock-images', id: stockImage.id } };
+
+        return dispatch('lockObject', { id, type })
+            .then(() => dispatch('updateStructuralElement', { element: structuralElement, id }))
+            .then(() => dispatch('lockObject', { id, type }));
+    },
+
     async deleteImageForStructuralElement({ dispatch, state }, structuralElement) {
         const url = `courseware-structural-elements/${structuralElement.id}/image`;
         await state.httpClient.delete(url);

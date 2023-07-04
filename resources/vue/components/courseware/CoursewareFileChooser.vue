@@ -128,6 +128,12 @@ export default {
                 this.getFolderFiles();
             }
         },
+        value(newValue, oldValue) {
+            if (newValue === '') {
+                this.selectedFolderId = '';
+                this.currentValue = '';
+            }
+        },
     },
 };
 </script>

@@ -40,6 +40,7 @@ class SchemaMap
             \SemType::class => Schemas\SemType::class,
             \SeminarCycleDate::class => Schemas\SeminarCycleDate::class,
             \Statusgruppen::class => Schemas\StatusGroup::class,
+            \StockImage::class => Schemas\StockImage::class,
             \JsonApi\Models\Studip::class => Schemas\Studip::class,
             \JsonApi\Models\StudipProperty::class => Schemas\StudipProperty::class,
             \StudipComment::class => Schemas\StudipComment::class,

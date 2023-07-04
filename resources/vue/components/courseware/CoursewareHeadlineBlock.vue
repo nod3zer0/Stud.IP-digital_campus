@@ -103,7 +103,7 @@
                                     v-model="currentTextColor"
                                 >
                                     <template #open-indicator="selectAttributes">
-                                        <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
+                                        <span v-bind="selectAttributes"><studip-icon shape="arr_1down" :size="10"/></span>
                                     </template>
                                     <template #no-options>
                                         {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
@@ -126,7 +126,7 @@
                                     v-model="currentTextBackgroundColor"
                                 >
                                     <template #open-indicator="selectAttributes">
-                                        <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
+                                        <span v-bind="selectAttributes"><studip-icon shape="arr_1down" :size="10"/></span>
                                     </template>
                                     <template #no-options>
                                         {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
@@ -144,7 +144,7 @@
                                     {{ $gettext('Icon') }}
                                     <studip-select :clearable="false" :options="icons" v-model="currentIcon">
                                         <template #open-indicator="selectAttributes">
-                                            <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
+                                            <span v-bind="selectAttributes"><studip-icon shape="arr_1down" :size="10"/></span>
                                         </template>
                                         <template #no-options>
                                             {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
@@ -167,7 +167,7 @@
                                         v-model="currentIconColor"
                                     >
                                         <template #open-indicator="selectAttributes">
-                                            <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
+                                            <span v-bind="selectAttributes"><studip-icon shape="arr_1down" :size="10"/></span>
                                         </template>
                                         <template #no-options>
                                             {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
@@ -207,7 +207,7 @@
                                     :clearable="false"
                                 >
                                     <template #open-indicator="selectAttributes">
-                                        <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
+                                        <span v-bind="selectAttributes"><studip-icon shape="arr_1down" :size="10"/></span>
                                     </template>
                                     <template #no-options>
                                         {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
@@ -221,12 +221,43 @@
                                 </studip-select>
                             </label>
                             <label v-if="currentBackgroundType === 'image'">
-                                {{ $gettext('Hintergrundbild') }}
-                                <courseware-file-chooser
-                                    v-model="currentBackgroundImageId"
-                                    :isImage="true"
-                                    @selectFile="updateCurrentBackgroundImage"
-                                />
+
+                                <div>{{ $gettext('Hintergrundbild') }}</div>
+
+                                <template v-if="currentBackgroundImageId">
+                                    <template v-if="currentBackgroundImageType === 'file-refs'">
+                                        <StockImageThumbnail :url="currentBackgroundURL" width="8rem" contain />
+                                    </template>
+                                    <template v-if="currentBackgroundImageType === 'stock-images'">
+                                        <StockImageSelectableImageCard
+                                            :stock-image="selectedStockImage"
+                                            v-if="selectedStockImage"
+                                            />
+                                    </template>
+                                    <label>
+                                        <button class="button" type="button" @click="onClickRemoveBackgroundImage">
+                                            {{ $gettext('Bild entfernen') }}
+                                        </button>
+                                    </label>
+                                </template>
+
+                                <template v-if="!currentBackgroundImageId">
+                                    <courseware-file-chooser
+                                        v-model="currentBackgroundImageId"
+                                        :isImage="true"
+                                        @selectFile="onSelectFile"
+                                        />
+                                    <div style="margin-block-start: 1em">{{ $gettext('oder') }}</div>
+                                    <button class="button" type="button" @click="showStockImageSelector = true">
+                                        {{ $gettext('Aus dem Bilderpool auswählen') }}
+                                    </button>
+                                    <StockImageSelector
+                                        v-if="showStockImageSelector"
+                                        @close="showStockImageSelector = false"
+                                        @select="onSelectStockImage"
+                                        />
+                                </template>
+
                             </label>
                             <label v-if="currentBackgroundType === 'gradient'">
                                 {{ $gettext('Hintergrundfarbverlauf') }}
@@ -270,6 +301,9 @@ import { blockMixin } from './block-mixin.js';
 import colorMixin from '@/vue/mixins/courseware/colors.js';
 import { mapGetters, mapActions } from 'vuex';
 import contentIcons from './content-icons.js';
+import StockImageSelector from '../stock-images/SelectorDialog.vue';
+import StockImageSelectableImageCard from '../stock-images/SelectableImageCard.vue';
+import StockImageThumbnail from '../stock-images/Thumbnail.vue';
 
 export default {
     name: 'courseware-headline-block',
@@ -279,6 +313,9 @@ export default {
         CoursewareFileChooser,
         CoursewareTabs,
         CoursewareTab,
+        StockImageSelector,
+        StockImageSelectableImageCard,
+        StockImageThumbnail,
     },
     props: {
         block: Object,
@@ -299,14 +336,18 @@ export default {
             currentIconColor: '',
             currentBackgroundType: '',
             currentBackgroundImageId: '',
+            currentBackgroundImageType: '',
             currentBackgroundImage: {},
             currentBackgroundURL: '',
-            currentGradient: ''
+            currentGradient: '',
+            showStockImageSelector: false,
+            selectedStockImage: null,
         };
     },
     computed: {
         ...mapGetters({
             fileRefById: 'file-refs/byId',
+            stockImageById: 'stock-images/byId',
             urlHelper: 'urlHelper',
             relatedTermOfUse: 'terms-of-use/related',
             currentStructuralElementImageURL: 'currentStructuralElementImageURL'
@@ -347,6 +388,9 @@ export default {
         backgroundImageId() {
             return this.block?.attributes?.payload?.background_image_id;
         },
+        backgroundImageType() {
+            return this.block?.attributes?.payload?.background_image_type;
+        },
         backgroundImage() {
             return this.block?.attributes?.payload?.background_image;
         },
@@ -385,7 +429,7 @@ export default {
                 } else {
                     style['background-color'] = '#28497c';
                 }
-                
+
             }
             if (this.hasGradient) {
                 style['background-color'] = 'transparent';
@@ -424,6 +468,7 @@ export default {
     methods: {
         ...mapActions({
             loadFileRef: 'file-refs/loadById',
+            loadStockImage: 'stock-images/loadById',
             updateBlock: 'updateBlockInContainer',
         }),
         initCurrentData() {
@@ -440,31 +485,60 @@ export default {
             this.currentIconColor = this.iconColor;
             this.currentBackgroundType = this.backgroundType;
             this.currentBackgroundImageId = this.backgroundImageId;
+            this.currentBackgroundImageType = this.backgroundImageType ?? 'file-refs';
             if (this.currentBackgroundImageId !== '') {
                 this.loadFile();
             }
         },
         async loadFile() {
             const id = this.currentBackgroundImageId;
-            const options = { include: 'terms-of-use' };
-            await this.loadFileRef({ id: id, options });
-            const fileRef = this.fileRefById({ id: id });
-            if (fileRef && this.relatedTermOfUse({parent: fileRef, relationship: 'terms-of-use'}).attributes['download-condition'] === 0) {
-                this.updateCurrentBackgroundImage({
-                    id: fileRef.id,
-                    name: fileRef.attributes.name,
-                    download_url: this.urlHelper.getURL(
-                        'sendfile.php',
-                        { type: 0, file_id: fileRef.id, file_name: fileRef.attributes.name },
-                        true
-                    ),
-                });
+            const type = this.currentBackgroundImageType;
+
+            if (type === 'file-refs') {
+                const options = { include: 'terms-of-use' };
+                await this.loadFileRef({ id: id, options });
+                const fileRef = this.fileRefById({ id: id });
+                if (
+                    fileRef &&
+                    this.relatedTermOfUse({ parent: fileRef, relationship: 'terms-of-use' }).attributes[
+                        'download-condition'
+                    ] === 0
+                ) {
+                    this.updateCurrentBackgroundImage({
+                        id: fileRef.id,
+                        type: 'file-refs',
+                        name: fileRef.attributes.name,
+                        download_url: this.urlHelper.getURL(
+                            'sendfile.php',
+                            { type: 0, file_id: fileRef.id, file_name: fileRef.attributes.name },
+                            true
+                        ),
+                    });
+                }
+            } else if (type === 'stock-images') {
+                await this.loadStockImage({ id });
+                const stockImage = this.stockImageById({ id });
+                if (stockImage) {
+                    this.selectedStockImage = stockImage;
+                    this.updateCurrentBackgroundImage({
+                        id,
+                        type: 'stock-images',
+                        name: stockImage.attributes.title,
+                        download_url:
+                            stockImage.attributes['download-urls']['medium'] ??
+                            stockImage.attributes['download-urls']['small'],
+                    });
+                }
             }
         },
         updateCurrentBackgroundImage(file) {
             this.currentBackgroundImage = file;
             this.currentBackgroundImageId = file.id;
+            this.currentBackgroundImageType = file.type;
             this.currentBackgroundURL = file.download_url;
+        },
+        onSelectFile(file) {
+            this.updateCurrentBackgroundImage({ ...file, type: 'file-refs' });
         },
         storeText() {
             let attributes = {};
@@ -482,13 +556,14 @@ export default {
             attributes.payload.background_color = '';
             attributes.payload.gradient = '';
             attributes.payload.background_image_id = '';
+            attributes.payload.background_image_type = '';
 
             if (this.currentBackgroundType === 'color') {
                 attributes.payload.background_color = this.currentBackgroundColor;
             }
             if (this.currentBackgroundType === 'image') {
                 attributes.payload.background_image_id = this.currentBackgroundImageId;
-            }
+                attributes.payload.background_image_type = this.currentBackgroundImageType;            }
             if (this.currentBackgroundType === 'gradient') {
                 attributes.payload.gradient = this.currentGradient;
             }
@@ -537,7 +612,23 @@ export default {
             const RGB = this.calcRGB(hex);
 
             return 'rgba(' + RGB.r + ',' + RGB.g + ',' + RGB.b + ',' + a +')';
-        }
+        },
+        onSelectStockImage(stockImage) {
+            this.updateCurrentBackgroundImage({
+                id: stockImage.id,
+                type: 'stock-images',
+                name: stockImage.attributes.title,
+                download_url:
+                    stockImage.attributes['download-urls']['medium'] ?? stockImage.attributes['download-urls']['small'],
+            });
+            this.selectedStockImage = stockImage;
+            this.showStockImageSelector = false;
+        },
+        onClickRemoveBackgroundImage() {
+            this.currentBackgroundImageId = '';
+            this.currentBackgroundImageType = '';
+            this.selectedStockImage = null;
+        },
     },
 };
 </script>

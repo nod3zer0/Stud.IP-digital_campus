@@ -65,7 +65,7 @@ $commands = [
     Commands\User\GetUser::class,
 ];
 $creator = function ($command) {
-    return new $command();
+    return app($command);
 };
 $application->addCommands(array_map($creator, $commands));
 $application->run();

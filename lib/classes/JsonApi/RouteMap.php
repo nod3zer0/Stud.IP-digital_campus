@@ -132,6 +132,7 @@ class RouteMap
         $this->addAuthenticatedLtiRoutes($group);
         $this->addAuthenticatedMessagesRoutes($group);
         $this->addAuthenticatedNewsRoutes($group);
+        $this->addAuthenticatedStockImagesRoutes($group);
         $this->addAuthenticatedStudyAreasRoutes($group);
         $this->addAuthenticatedTreeRoutes($group);
         $this->addAuthenticatedWikiRoutes($group);
@@ -595,6 +596,17 @@ class RouteMap
 
         $group->delete('/forum-categories/{id}', Routes\Forum\ForumCategoriesDelete::class);
         $group->delete('/forum-entries/{id}', Routes\Forum\ForumEntriesDelete::class);
+    }
+
+    private function addAuthenticatedStockImagesRoutes(RouteCollectorProxy $group): void
+    {
+        $group->get('/stock-images', Routes\StockImages\StockImagesIndex::class);
+        $group->post('/stock-images', Routes\StockImages\StockImagesCreate::class);
+        $group->get('/stock-images/{id}', Routes\StockImages\StockImagesShow::class);
+        $group->patch('/stock-images/{id}', Routes\StockImages\StockImagesUpdate::class);
+        $group->delete('/stock-images/{id}', Routes\StockImages\StockImagesDelete::class);
+
+        $group->post('/stock-images/{id}/blob', Routes\StockImages\StockImagesUpload::class);
     }
 
     private function addRelationship(RouteCollectorProxy $group, string $url, string $handler): void

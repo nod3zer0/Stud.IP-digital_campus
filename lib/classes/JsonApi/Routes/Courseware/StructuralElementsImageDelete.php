@@ -21,11 +21,13 @@ class StructuralElementsImageDelete extends NonJsonApiController
             throw new AuthorizationFailedException();
         }
 
-        if ($structuralElement->image) {
+        // remove existing image
+        if (is_a($structuralElement->image, \FileRef::class)) {
             $structuralElement->image->getFileType()->delete();
         }
 
         $structuralElement->image_id = null;
+        $structuralElement->image_type = \FileRef::class;
         $structuralElement->store();
 
         return $response->withStatus(204);

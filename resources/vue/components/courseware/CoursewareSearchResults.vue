@@ -6,14 +6,14 @@
             buttonsClass="single-icon"
         >
             <template #buttons>
-                <studip-icon shape="search" size="24" />
+                <studip-icon shape="search" :size="24" />
             </template>
             <template #breadcrumbList>
                 <translate>Suchergebnisse</translate>
             </template>
             <template #menu>
                 <button :title="$gettext('Suchergebnisse schließen')" @click="closeResults">
-                    <studip-icon shape="decline" size="24"/>
+                    <studip-icon shape="decline" :size="24"/>
                 </button>
             </template>
         </courseware-ribbon>

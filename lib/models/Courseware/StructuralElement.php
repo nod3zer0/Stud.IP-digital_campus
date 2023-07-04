@@ -26,6 +26,7 @@ use User;
  * @property int                            $position           database column
  * @property string                         $title              database column
  * @property string                         $image_id           database column
+ * @property string                         $image_type         database column
  * @property string                         $purpose            database column
  * @property \JSONArrayObject               $payload            database column
  * @property int                            $public             database column
@@ -45,7 +46,7 @@ use User;
  * @property \User                          $owner              belongs_to User
  * @property \User                          $editor             belongs_to User
  * @property ?\User                         $edit_blocker       belongs_to User
- * @property ?\FileRef                      $image              has_one FileRef
+ * @property \FileRef|\StockImage|null      $image              has_one FileRef or StockImage
  * @property ?\Courseware\Task              $task               has_one Courseware\Task
  * @property \SimpleORMapCollection         $comments           has_many Courseware\StructuralElementComment
  * @property \SimpleORMapCollection         $feedback           has_many Courseware\StructuralElementFeedback
@@ -119,13 +120,6 @@ class StructuralElement extends \SimpleORMap implements \PrivacyObject
             'foreign_key' => 'edit_blocker_id',
         ];
 
-        $config['has_one']['image'] = [
-            'class_name' => \FileRef::class,
-            'foreign_key' => 'image_id',
-            'on_delete' => 'delete',
-            'on_store' => 'store',
-        ];
-
         $config['has_many']['comments'] = [
             'class_name' => StructuralElementComment::class,
             'assoc_foreign_key' => 'structural_element_id',
@@ -142,7 +136,56 @@ class StructuralElement extends \SimpleORMap implements \PrivacyObject
             'order_by' => 'ORDER BY chdate',
         ];
 
+        $config['additional_fields']['image'] = [
+            'get' => 'getImage',
+            'set' => 'setImage'
+        ];
+
+        $config['registered_callbacks']['before_delete'][] = 'cbBeforeDelete';
+
         parent::configure($config);
+    }
+
+    public function cbBeforeDelete()
+    {
+        $image = $this->getImage();
+        if (is_a($image, \FileRef::class)) {
+            $image->delete();
+        }
+    }
+
+    /**
+     * @return null|\FileRef|\StockImage
+     */
+    public function getImage()
+    {
+        if (!$this->image_id) {
+            return null;
+        }
+
+        if (!in_array($this->image_type, [\FileRef::class, \StockImage::class])) {
+            return null;
+        }
+
+        return $this->image_type::find($this->image_id);
+    }
+
+    /**
+     * @param $image null|\FileRef|\StockImage
+     */
+    public function setImage($image): void
+    {
+        if (is_null($image)) {
+            $this->image_id = null;
+        } elseif (is_a($image, \FileRef)) {
+            $this->image_id = $image->getId();
+            $this->image_type = \FileRef::class;
+        } elseif (is_a($image, \StockImage)) {
+            $this->image_id = $image->getId();
+            $this->image_type = \StockImage::class;
+        } else {
+            throw \BadMethodCallException('Invalid argument to method ' . __METHOD__);
+        }
     }
 
     /**
@@ -762,11 +805,20 @@ SQL;
     /**
      * Returns the URL of the image associated to this structural element.
      *
-     * @return string the image URL, if it exists; an empty string otherwise
+     * @return string|null the image URL, if it exists
      */
     public function getImageUrl()
     {
-        return $this->image ? $this->image->getDownloadURL() : null;
+        $image = $this->getImage();
+        if ($image) {
+            if (is_a($image, \FileRef::class)) {
+                return $image->getDownloadURL();
+            } elseif (is_a($image, \StockImage::class)) {
+                return $image->getDownloadURL(\StockImage::SIZE_SMALL);
+            }
+        }
+
+        return null;
     }
 
     public static function getClipboardBackup(): string
@@ -800,8 +852,9 @@ SQL;
 
         $element->store();
 
-        $file_ref_id = $this->copyImage($user, $element);
-        $element->image_id = $file_ref_id;
+        $image_id = $this->copyImage($user, $element);
+        $element->image_id = $image_id;
+        $element->image_type = $this->image_type;
         $element->store();
 
         $this->copyContainers($user, $element);
@@ -830,7 +883,7 @@ SQL;
         }
         static $mapping = [];
 
-        $file_ref_id = $this->copyImage($user, $parent);
+        $image_id = $this->copyImage($user, $parent);
 
         $element = self::build([
             'parent_id' => $parent->id,
@@ -843,7 +896,8 @@ SQL;
             'purpose' => empty($purpose) ? $this->purpose : $purpose,
             'position' => $parent->countChildren(),
             'payload' => $this->payload,
-            'image_id' => $file_ref_id,
+            'image_id' => $image_id,
+            'image_type' => $this->image_type,
             'read_approval' => $parent->read_approval,
             'write_approval' => $parent->write_approval
         ]);
@@ -876,19 +930,27 @@ SQL;
 
     private function copyImage(User $user, StructuralElement $parent) : ?string
     {
-        $file_ref_id = null;
-
-        /** @var ?\FileRef $original_file_ref */
-        $original_file_ref = \FileRef::find($this->image_id);
-        if ($original_file_ref) {
-            $instance = new Instance($this->getCourseware($parent->range_id, $parent->range_type));
-            $folder = \Courseware\Filesystem\PublicFolder::findOrCreateTopFolder($instance);
-            /** @var \FileRef $file_ref */
-            $file_ref = \FileManager::copyFile($original_file_ref->getFileType(), $folder, $user);
-            $file_ref_id = $file_ref->id;
+        if ($this->image_type === \StockImage::class) {
+            return $this->image_id;
         }
 
-        return $file_ref_id;
+        if ($this->image_type === \FileRef::class) {
+            $file_ref_id = null;
+
+            /** @var ?\FileRef $original_file_ref */
+            $original_file_ref = \FileRef::find($this->image_id);
+            if ($original_file_ref) {
+                $instance = new Instance($this->getCourseware($parent->range_id, $parent->range_type));
+                $folder = \Courseware\Filesystem\PublicFolder::findOrCreateTopFolder($instance);
+                /** @var \FileRef $file_ref */
+                $file_ref = \FileManager::copyFile($original_file_ref->getFileType(), $folder, $user);
+                $file_ref_id = $file_ref->id;
+            }
+
+            return $file_ref_id;
+        }
+
+        return null;
     }
 
     public function merge(User $user, StructuralElement $target): StructuralElement
@@ -896,6 +958,7 @@ SQL;
         // merge with target
         if (!$target->image_id) {
             $target->image_id = $this->copyImage($user, $target);
+            $target->image_type = $this->image_type;
         }
 
         if ($target->title === 'neue Seite' || $target->title === 'New page') {

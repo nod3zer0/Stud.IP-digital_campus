@@ -39,7 +39,7 @@
                                     <studip-icon
                                         v-if="complete"
                                         shape="accept"
-                                        role="info"   
+                                        role="info"
                                         :title="$gettext('Diese Seite wurde von Ihnen vollständig bearbeitet')"
                                     />
                                     <span
@@ -254,7 +254,7 @@
                                         >
                                             <template #open-indicator="selectAttributes">
                                                 <span v-bind="selectAttributes"
-                                                    ><studip-icon shape="arr_1down" size="10"
+                                                    ><studip-icon shape="arr_1down" :size="10"
                                                 /></span>
                                             </template>
                                             <template #no-options>
@@ -320,29 +320,35 @@
                             </courseware-tab>
                             <courseware-tab :name="textEdit.image" :index="2">
                                 <form class="default" @submit.prevent="">
-                                    <img
-                                        v-if="showPreviewImage"
-                                        :src="image"
-                                        class="cw-structural-element-image-preview"
-                                        :alt="$gettext('Vorschaubild')"
-                                    />
-                                    <label v-if="showPreviewImage">
-                                        <button class="button" @click="deleteImage" v-translate>Bild löschen</button>
-                                    </label>
+                                    <template v-if="hasImage">
+                                        <img
+                                            :src="image"
+                                            class="cw-structural-element-image-preview"
+                                            :alt="$gettext('Vorschaubild')"
+                                            />
+                                        <label>
+                                            <button class="button" @click="deleteImage" v-translate>Bild löschen</button>
+                                        </label>
+                                    </template>
+
+                                    <div v-else class="cw-structural-element-image-preview-placeholder"></div>
+
                                     <div v-if="uploadFileError" class="messagebox messagebox_error">
                                         {{ uploadFileError }}
                                     </div>
-                                    <label v-if="!showPreviewImage">
-                                        <img
-                                            v-if="uploadImageURL"
-                                            :src="uploadImageURL"
-                                            class="cw-structural-element-image-preview"
-                                            :alt="$gettext('Vorschaubild')"
-                                        />
-                                        <div v-else class="cw-structural-element-image-preview-placeholder"></div>
-                                        {{ $gettext('Bild hochladen') }}
-                                        <input class="cw-file-input" ref="upload_image" type="file" accept="image/*" @change="checkUploadFile" />
-                                    </label>
+
+                                    <div v-show="!hasImage">
+                                        <label>
+                                            {{ $gettext('Bild hochladen') }}
+                                            <input class="cw-file-input" ref="upload_image" type="file" accept="image/*" @change="checkUploadFile" />
+                                        </label>
+                                        {{ $gettext('oder') }}
+                                        <br>
+                                        <button class="button" type="button" @click="showStockImageSelector = true">
+                                            {{ $gettext('Aus dem Bilderpool auswählen') }}
+                                        </button>
+                                        <StockImageSelector v-if="showStockImageSelector" @close="showStockImageSelector = false" @select="onSelectStockImage" />
+                                    </div>
                                 </form>
                             </courseware-tab>
                             <courseware-tab v-if="(inCourse && !isTask) || inContent" :name="textEdit.approval" :index="3">
@@ -662,6 +668,7 @@ import wizardMixin from '@/vue/mixins/courseware/wizard.js';
 import CoursewareDateInput from './CoursewareDateInput.vue';
 import { FocusTrap } from 'focus-trap-vue';
 import IsoDate from './IsoDate.vue';
+import StockImageSelector from '../stock-images/SelectorDialog.vue';
 import StudipDialog from '../StudipDialog.vue';
 import draggable from 'vuedraggable';
 import { mapActions, mapGetters } from 'vuex';
@@ -688,6 +695,7 @@ export default {
         CoursewareDateInput,
         FocusTrap,
         IsoDate,
+        StockImageSelector,
         StudipDialog,
         draggable,
     },
@@ -758,6 +766,8 @@ export default {
             keyboardSelected: null,
             assistiveLive: '',
             uploadImageURL: null,
+            showStockImageSelector: false,
+            selectedStockImage: null,
         };
     },
 
@@ -885,11 +895,21 @@ export default {
         },
 
         image() {
+            if (this.selectedStockImage) {
+                return this.selectedStockImage.attributes['download-urls'].small
+            }
+            if (this.uploadImageURL) {
+                return this.uploadImageURL;
+            }
             return this.structuralElement.relationships?.image?.meta?.['download-url'] ?? null;
         },
 
-        showPreviewImage() {
-            return this.image !== null && this.deletingPreviewImage === false;
+        imageType() {
+            return this.structuralElement.relationships?.image?.data?.type ?? null;
+        },
+
+        hasImage() {
+            return (this.image || this.selectedStockImage ) && this.deletingPreviewImage === false;
         },
 
         structuralElementLoaded() {
@@ -1195,7 +1215,7 @@ export default {
             if (this.structuralElementLoaded) {
                 return this.progressData?.[this.structuralElement.id].progress.self;
             }
-            
+
             return 0;
         },
         progressTitle() {
@@ -1216,6 +1236,7 @@ export default {
             uploadImageForStructuralElement: 'uploadImageForStructuralElement',
             deleteImageForStructuralElement: 'deleteImageForStructuralElement',
             companionSuccess: 'companionSuccess',
+            setStockImageForStructuralElement: 'setStockImageForStructuralElement',
             showElementEditDialog: 'showElementEditDialog',
             showElementAddDialog: 'showElementAddDialog',
             showElementExportDialog: 'showElementExportDialog',
@@ -1326,6 +1347,7 @@ export default {
             this.uploadImageURL = null;
             this.uploadFileError = this.checkUploadImageFile(this.$refs?.upload_image?.files[0]);
             if (this.uploadFileError === '') {
+                this.deletingPreviewImage = false;
                 this.uploadImageURL = window.URL.createObjectURL(file);
             }
         },
@@ -1349,24 +1371,30 @@ export default {
             if (!this.blocked) {
                 await this.lockObject({ id: this.currentId, type: 'courseware-structural-elements' });
             }
+
             const file = this.$refs?.upload_image?.files[0];
-            if (file) {
-                if (file.size > 2097152) {
-                    return false;
+            try {
+                this.uploadFileError = '';
+                if (file) {
+                    await this.uploadImageForStructuralElement({
+                        structuralElement: this.currentElement,
+                        file,
+                    });
+                } else if (this.selectedStockImage) {
+                    await this.setStockImageForStructuralElement({
+                        structuralElement: this.currentElement,
+                        stockImage: this.selectedStockImage,
+                    })
+                } else if (this.deletingPreviewImage) {
+                    await this.deleteImageForStructuralElement(this.currentElement);
                 }
 
-                this.uploadFileError = '';
-                this.uploadImageForStructuralElement({
-                    structuralElement: this.currentElement,
-                    file,
-                }).catch((error) => {
-                    console.error(error);
-                    this.uploadFileError = this.$gettext('Fehler beim Hochladen der Datei.');
-                });
-                await this.loadStructuralElement(this.currentElement.id);
-            } else if (this.deletingPreviewImage) {
-                await this.deleteImageForStructuralElement(this.currentElement);
+                this.loadStructuralElement(this.currentElement.id);
+            } catch(error) {
+                console.error(error);
+                this.uploadFileError = this.$gettext('Das Bild für das neue Lernmaterial konnte nicht gespeichert werden.');
             }
+
             this.showElementEditDialog(false);
 
             if (this.currentElement.attributes['release-date'] !== '') {
@@ -1379,10 +1407,13 @@ export default {
                     new Date(this.currentElement.attributes['withdraw-date']).getTime() / 1000;
             }
 
-            await this.updateStructuralElement({
-                element: this.currentElement,
-                id: this.currentId,
-            });
+            const element = {
+                id: this.currentElement.id,
+                type: this.currentElement.type,
+                attributes: this.currentElement.attributes,
+            };
+
+            await this.updateStructuralElement({ element, id: this.currentId});
             await this.unlockObject({ id: this.currentId, type: 'courseware-structural-elements' });
             this.$emit('select', this.currentId);
             this.initCurrent();
@@ -1645,7 +1676,15 @@ export default {
                     , {containerTitle: container.attributes.title, pos: currentIndex + 1, listLength: this.containerList.length}
                 );
             this.storeSort();
-        }
+        },
+        onSelectStockImage(stockImage) {
+            if (this.$refs?.upload_image) {
+                this.$refs.upload_image.value = null;
+            }
+            this.selectedStockImage = stockImage;
+            this.showStockImageSelector = false;
+            this.deletingPreviewImage = false;
+        },
     },
     created() {
         this.pluginManager.registerComponentsLocally(this);

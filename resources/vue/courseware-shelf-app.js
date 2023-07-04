@@ -1,8 +1,10 @@
 import CoursewareShelfModule from './store/courseware/courseware-shelf.module';
 import ShelfApp from './components/courseware/ShelfApp.vue';
+import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import { mapResourceModules } from '@elan-ev/reststate-vuex';
+import { StockImagesPlugin } from './plugins/stock-images.js';
 
 const mountApp = async (STUDIP, createApp, element) => {
     const getHttpClient = () =>
@@ -82,6 +84,8 @@ const mountApp = async (STUDIP, createApp, element) => {
         await store.dispatch('loadUserUnits', entry_id);
         await store.dispatch('courseware-structural-elements-shared/loadAll', { options: { include: 'owner' } });
     }
+
+    Vue.use(StockImagesPlugin, { store });
 
     const app = createApp({
         render: (h) => h(ShelfApp),
