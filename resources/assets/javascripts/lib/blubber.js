@@ -41,19 +41,16 @@ const Blubber = {
         }
         elements.addClass('loading');
 
-        const promise = follow
-            ? STUDIP.api.POST(`blubber/threads/${thread_id}/follow`)
-            : STUDIP.api.DELETE(`blubber/threads/${thread_id}/follow`);
-
-        return promise
-            .then(() => {
-                elements.toggleClass('unfollowed', !follow);
-                return follow;
-            })
-            .always(() => {
-                elements.removeClass('loading');
-            })
-            .promise();
+        return STUDIP.Vue.load().then(async ({ store }) => {
+            return store.dispatch('studip/blubber/changeThreadSubscription', {
+                id: thread_id,
+                subscribe: follow,
+            });
+        }).then(() => {
+            elements.toggleClass('unfollowed', !follow);
+        }).finally(() => {
+            elements.removeClass('loading');
+        });
     },
     Composer: {
         vue: null,

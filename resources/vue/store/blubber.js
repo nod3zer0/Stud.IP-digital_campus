@@ -119,12 +119,9 @@ export default {
     },
     actions: {
         changeThreadSubscription({ dispatch, rootGetters }, { id, subscribe }) {
-            return STUDIP.Blubber.followunfollow(id, subscribe).done((state) => {
-                const thread = rootGetters['blubber-threads/byId']({ id });
-                thread.attributes['is-followed'] = state;
-
-                return dispatch('blubber-threads/storeRecord', thread, { root: true });
-            });
+            const thread = rootGetters['blubber-threads/byId']({ id });
+            thread.attributes['is-followed'] = subscribe;
+            return dispatch('blubber-threads/update', thread, { root: true });
         },
 
         createComment({ dispatch, rootGetters }, { id, content }) {

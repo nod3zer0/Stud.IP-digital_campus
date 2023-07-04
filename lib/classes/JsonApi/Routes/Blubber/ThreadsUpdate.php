@@ -35,10 +35,19 @@ class ThreadsUpdate extends JsonApiController
             throw new AuthorizationFailedException();
         }
 
-        $visitedAt = self::arrayGet($json, 'data.attributes.visited-at');
-        if ($visitedAt) {
+        if (self::arrayHas($json, 'data.attributes.visited-at')) {
+            $visitedAt = self::arrayGet($json, 'data.attributes.visited-at');
             $visitedDate = self::fromISO8601($visitedAt)->getTimestamp();
             $GLOBALS['user']->cfg->store('BLUBBERTHREAD_VISITED_' . $thread->getId(), $visitedDate);
+        }
+
+        if (self::arrayHas($json, 'data.attributes.is-followed')) {
+            $isFollowed = self::arrayGet($json, 'data.attributes.is-followed');
+            if ($isFollowed) {
+                $thread->addFollowingByUser($user->id);
+            } else {
+                $thread->removeFollowingByUser($user->id);
+            }
         }
 
         return $this->getContentResponse($thread);
@@ -50,6 +59,13 @@ class ThreadsUpdate extends JsonApiController
             $visitedAt = self::arrayGet($json, 'data.attributes.visited-at');
             if (!self::isValidTimestamp($visitedAt)) {
                 return '`visited-at` is not an ISO 8601 timestamp.';
+            }
+        }
+
+        if (self::arrayHas($json, 'data.attributes.is-followed')) {
+            $isFollowed = self::arrayGet($json, 'data.attributes.is-followed');
+            if (!is_bool($isFollowed)) {
+                return '`is-followed` is not a boolean value.';
             }
         }
     }
