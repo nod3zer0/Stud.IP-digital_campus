@@ -71,61 +71,67 @@ class QueryChecker
 
     protected function checkIncludePaths(ErrorCollection $errors, QueryParserInterface $queryParser): void
     {
-        $withinAllowed = $this->valuesWithinAllowed(
-            iterator_to_array($queryParser->getIncludePaths()),
+        $invalidValues = $this->getInvalidValues(
+            $queryParser->getIncludePaths(),
             $this->includePaths
         );
-        if (!$withinAllowed) {
+        foreach ($invalidValues as $value) {
             $errors->addQueryParameterError(
                 QueryParser::PARAM_INCLUDE,
-                'Include paths should contain only allowed ones.'
+                sprintf('Include path %s is not allowed.', $value)
             );
         }
     }
 
     protected function checkFieldSets(ErrorCollection $errors, QueryParserInterface $queryParser): void
     {
-        $withinAllowed = $this->isFieldsAllowed(iterator_to_array($queryParser->getFields()));
-        if (!$withinAllowed) {
-            $errors->addQueryParameterError(QueryParser::PARAM_FIELDS, 'Field sets should contain only allowed ones.');
+        $invalidFields = $this->getInvalidFields($queryParser->getFields());
+        foreach ($invalidFields as $field) {
+            $errors->addQueryParameterError(
+                QueryParser::PARAM_FIELDS,
+                sprintf('Field set %s is not allowed.', $field)
+            );
         }
     }
 
     protected function checkFiltering(ErrorCollection $errors, QueryParserInterface $queryParser): void
     {
-        $withinAllowed = $this->keysWithinAllowed(
-            iterator_to_array($queryParser->getFilters()),
+        $invalidKeys = $this->getInvalidKeys(
+            $queryParser->getFilters(),
             $this->filteringParameters
         );
-        if (!$withinAllowed) {
-            $errors->addQueryParameterError(QueryParser::PARAM_FILTER, 'Filter should contain only allowed values.');
+        foreach ($invalidKeys as $key) {
+            $errors->addQueryParameterError(
+                QueryParser::PARAM_FILTER,
+                sprintf('Filter parameter %s is not allowed.', $key)
+            );
         }
     }
 
     protected function checkSorting(ErrorCollection $errors, QueryParserInterface $queryParser): void
     {
-        $withinAllowed = $this->keysWithinAllowed(
-            iterator_to_array($queryParser->getSorts()),
+        $invalidKeys = $this->getInvalidKeys(
+            $queryParser->getSorts(),
             $this->sortParameters
         );
-        if (!$withinAllowed) {
+        foreach ($invalidKeys as $key) {
             $errors->addQueryParameterError(
                 QueryParser::PARAM_SORT,
-                'Sort parameter should contain only allowed values.'
+                sprintf('Sort parameter %s is not allowed.', $key)
             );
         }
     }
 
     protected function checkPaging(ErrorCollection $errors, QueryParserInterface $queryParser): void
     {
-        $withinAllowed = $this->keysWithinAllowed(
-            iterator_to_array($queryParser->getPagination()),
+        $invalidKeys = $this->getInvalidKeys(
+            $queryParser->getPagination(),
             $this->pagingParameters
         );
-        if (!$withinAllowed) {
+        foreach ($invalidKeys as $key) {
             $errors->addQueryParameterError(
                 QueryParser::PARAM_PAGE,
-                'Page parameter should contain only allowed values.'
+                sprintf('Page parameter %s is not allowed.', $key)
             );
         }
     }
@@ -139,48 +145,61 @@ class QueryChecker
         }
     }
 
-    private function keysWithinAllowed(array $toCheck = null, array $allowed = null): bool
+    private function getInvalidKeys(iterable $toCheck = null, iterable $allowed = null): array
     {
-        return null === $toCheck || null === $allowed || empty(array_diff_key($toCheck, $allowed));
+        if (null === $toCheck || null === $allowed) {
+            return [];
+        }
+
+        return array_keys(array_diff_key(
+            $this->ensureArray($toCheck),
+            $this->ensureArray($allowed)
+        ));
     }
 
-    private function valuesWithinAllowed(array $toCheck = null, array $allowed = null): bool
+    private function getInvalidValues(iterable $toCheck = null, iterable $allowed = null): array
     {
-        return null === $toCheck || null === $allowed || empty(array_diff($toCheck, $allowed));
+        if (null === $toCheck || null === $allowed) {
+            return [];
+        }
+
+        return array_diff(
+            $this->ensureArray($toCheck),
+            $this->ensureArray($allowed)
+        );
     }
 
-    /**
-     * @return array|null
-     */
-    private function flip(array $array = null)
+    private function ensureArray(iterable $input): array
+    {
+        return is_array($input) ? $input : iterator_to_array($input);
+    }
+
+    private function flip(array $array = null): ?array
     {
         return $array === null ? null : array_flip($array);
     }
 
     /**
      * Check input fields against allowed.
-     *
-     * @param array|null $fields
      */
-    private function isFieldsAllowed(array $fields = null): bool
+    private function getInvalidFields(iterable $fields = null): iterable
     {
-        if ($this->fieldSetTypes === null || $fields === null) {
-            return true;
-        }
-
-        foreach ($fields as $type => $requestedFields) {
-            if (array_key_exists($type, $this->fieldSetTypes) === false) {
-                return false;
+        if ($this->fieldSetTypes !== null && $fields !== null) {
+            foreach ($fields as $type => $requestedFields) {
+                if (
+                    !array_key_exists($type, $this->fieldSetTypes)
+                    || (
+                        // if not all fields are allowed and requested more fields than allowed
+                        isset($this->fieldSetTypes[$type])
+                        && !empty(array_diff(
+                            $this->ensureArray($requestedFields),
+                            $this->fieldSetTypes[$type]
+                        ))
+                    )
+                ) {
+                    yield $type;
+                }
             }
-
-            $allowedFields = $this->fieldSetTypes[$type];
-
-            // if not all fields are allowed and requested more fields than allowed
-            if ($allowedFields !== null && empty(array_diff($requestedFields, $allowedFields)) === false) {
-                return false;
-            }
         }
-
-        return true;
     }
 }
