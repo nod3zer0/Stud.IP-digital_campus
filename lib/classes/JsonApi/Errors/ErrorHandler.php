@@ -85,7 +85,7 @@ class ErrorHandler
             $errors = $this->createErrorCollection(
                 '500',
                 $exception->getMessage(),
-                null,
+                $exception->getFile() . '(' . $exception->getLine() . ')',
                 $exception,
                 $displayErrorDetails
             );
