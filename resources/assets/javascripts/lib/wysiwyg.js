@@ -56,169 +56,22 @@ function isEditorHidden(textarea) {
     return editor && editor.ui && $(editor.ui.element).is(':hidden');
 }
 
-function replaceTextarea(textarea) {
+async function replaceTextarea(textarea) {
+    await loadMathJax();
+
     setEditor(textarea, {});
+
+    const chunk = await STUDIP.loadChunk('wysiwyg');
+
     const $textarea = textarea instanceof jQuery ? textarea : $(textarea);
+    const { options, editorType } = parseEditorOptions($textarea.attr('data-editor'));
+    const editor = await createEditor(chunk, textarea, editorType, options);
+    enhanceEditor($textarea, editor);
 
-    let options = {};
+    setEditor(textarea, editor);
+    $textarea.trigger('load.wysiwyg');
 
-    if ($textarea.attr('data-editor')) {
-        const parsed = parseOptions($textarea.attr('data-editor'));
-
-        if (parsed.toolbar === 'small') {
-            options.toolbar = {
-                removeItems: [
-                    'undo',
-                    'redo',
-                    'findAndReplace',
-                    'strikethrough',
-                    'horizontalLine',
-                    'insertBlockQuote',
-                    'splitBlockQuote',
-                    'removeBlockQuote',
-                ]
-            };
-        } else if (parsed.toolbar === 'minimal') {
-            options.toolbar = {
-                items: [
-                    'bold',
-                    'italic',
-                    'underline',
-                    'subscript',
-                    'superscript',
-                    '|',
-                    'removeFormat',
-                    '|',
-                    'bulletedList',
-                    'numberedList',
-                    '|',
-                    'fontColor',
-                    'fontBackgroundColor',
-                    '|',
-                    'link',
-                    'math',
-                    'specialCharacters',
-                ]
-            };
-        }
-
-        if (parsed.removePlugins) {
-            options.removePlugins = parsed.removePlugins.split(",")
-        }
-
-        if (parsed.extraPlugins) {
-            const pluginMap = { WikiLink };
-            options.extraPlugins = parsed.extraPlugins.split(",").reduce((memo, plugin) => {
-                if (plugin in pluginMap) {
-                    memo.push(pluginMap[plugin]);
-                }
-                return memo;
-            }, []);
-        }
-    }
-
-    return STUDIP.loadChunk('wysiwyg')
-        .then(loadMathJax)
-        .then(createEditor)
-        .then(setEditorInstance)
-        .then(enhanceEditor)
-        .then(emitLoadEvent);
-
-    function createEditor(ClassicEditor) {
-        return ClassicEditor.create(textarea, options).then(editor => {
-            function getViewportOffsetTop() {
-                const topBar = document.getElementById('top-bar');
-                const responsiveContentbar = document.getElementById('responsive-contentbar');
-
-                let top = topBar.clientHeight + topBar.clientTop;
-                if (responsiveContentbar) {
-                    top += responsiveContentbar?.clientHeight + responsiveContentbar.clientTop;
-                }
-
-                return top;
-            }
-
-            function updateOffsetTop() {
-                // This needs to be delayed since some events will fire before
-                // changing the DOM
-                setTimeout(() => {
-                    editor.ui.viewportOffset = {top: getViewportOffsetTop()};
-                    editor.ui.update();
-                }, 50);
-            }
-
-            // Set initial offset top
-            updateOffsetTop();
-
-            // Listen to relevant events that may require the sticky panel to be misplaced
-            STUDIP.eventBus.on('toggle-compact-navigation', updateOffsetTop);
-            STUDIP.eventBus.on('switch-focus-mode', updateOffsetTop);
-
-            // Stop listening if editor is destroyed
-            editor.on('destroy', () => {
-                STUDIP.eventBus.off('toggle-compact-navigation', updateOffsetTop);
-                STUDIP.eventBus.off('switch-focus-mode', updateOffsetTop);
-            });
-
-            return editor;
-        });
-    }
-
-    function setEditorInstance(ckeditor) {
-        setEditor(textarea, ckeditor);
-        return ckeditor;
-    }
-
-    function enhanceEditor(ckeditor) {
-        // make sure HTML marker is always set, in
-        // case contents are cut-off by the backend
-        $textarea.closest('form').submit(() => {
-            ckeditor.setData(wysiwyg.markAsHtml(ckeditor.getData()));
-            ckeditor.updateSourceElement();
-        });
-
-        // focus the editor if requested
-        if ($textarea.is('[autofocus]')) {
-            ckeditor.focus();
-        }
-
-        ckeditor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
-            if (!isFocused) {
-                ckeditor.updateSourceElement(wysiwyg.markAsHtml(ckeditor.getData()));
-            }
-        });
-
-        const button = ckeditor.ui.view.toolbar.items.find( item => item.class === "ck-source-editing-button");
-        if (button) {
-            button.withText = false;
-        }
-
-        // Tell MathJax v2.7 to leave the editor alone
-        ckeditor.ui.element.classList.add('tex2jax_ignore');
-
-        return ckeditor;
-    }
-
-    function emitLoadEvent(ckeditor) {
-        $textarea.trigger('load.wysiwyg');
-
-        return ckeditor;
-    }
-
-    async function loadMathJax(ckeditor) {
-        let mathjaxP;
-
-        if (window.MathJax && window.MathJax.Hub) {
-            mathjaxP = Promise.resolve(window.MathJax);
-        } else if (window.STUDIP && window.STUDIP.loadChunk) {
-            mathjaxP = window.STUDIP.loadChunk('mathjax');
-        }
-
-        await mathjaxP;
-
-        //console.log('loading MathJaxP...', mathjaxP);
-        return ckeditor;
-    }
+    return editor;
 }
 
 function destroyTextarea(textarea) {
@@ -259,4 +112,128 @@ function setEditor(textarea, editor) {
 
 function unsetEditor(textarea) {
     instances.delete(textarea.id);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function parseEditorOptions(data) {
+    const result = { options: {}, editorType: 'classic' };
+
+    if (data) {
+        const parsed = parseOptions(data);
+
+        const toolbar = getToolbarOptions(parsed);
+        if (toolbar) {
+            result.options.toolbar = toolbar;
+        }
+
+        if (parsed.removePlugins) {
+            result.options.removePlugins = parsed.removePlugins.split(',');
+        }
+
+        if (parsed.extraPlugins) {
+            const pluginMap = { WikiLink };
+            result.options.extraPlugins = parsed.extraPlugins.split(',').reduce((memo, plugin) => {
+                return plugin in pluginMap ? [...memo, pluginMap[plugin]] : memo;
+            }, []);
+        }
+
+        if (parsed.type) {
+            if (['balloon', 'classic'].includes(parsed.type)) {
+                result.editorType = parsed.type;
+            }
+        }
+    }
+
+    return result;
+}
+
+function getToolbarOptions(parsed) {
+    if (parsed.toolbar === 'small') {
+        return {
+            removeItems: [
+                'undo',
+                'redo',
+                'findAndReplace',
+                'strikethrough',
+                'horizontalLine',
+                'insertBlockQuote',
+                'splitBlockQuote',
+                'removeBlockQuote',
+            ],
+        };
+    } else if (parsed.toolbar === 'minimal') {
+        return {
+            items: [
+                'bold',
+                'italic',
+                'underline',
+                'subscript',
+                'superscript',
+                '|',
+                'removeFormat',
+                '|',
+                'bulletedList',
+                'numberedList',
+                '|',
+                'fontColor',
+                'fontBackgroundColor',
+                '|',
+                'link',
+                'math',
+                'specialCharacters',
+            ],
+        };
+    }
+
+    return null;
+}
+
+function loadMathJax() {
+    if (window.MathJax && window.MathJax.Hub) {
+        return Promise.resolve(window.MathJax);
+    } else if (window.STUDIP && window.STUDIP.loadChunk) {
+        return window.STUDIP.loadChunk('mathjax');
+    }
+
+    return Promise.reject(new Error('Could not load MathJax'));
+}
+
+function createEditor(chunk, textarea, editorType, options) {
+    switch (editorType) {
+        case 'classic':
+            return chunk.createClassicEditorFromTextarea(textarea, options);
+        case 'balloon':
+            return chunk.createBalloonEditorFromTextarea(textarea, options);
+    }
+
+    throw new Error('No such type of WYSIWYG editor.');
+}
+
+function enhanceEditor($textarea, ckeditor) {
+    // make sure HTML marker is always set, in
+    // case contents are cut-off by the backend
+    $textarea.closest('form').submit(() => {
+        const data = wysiwyg.markAsHtml(ckeditor.getData());
+        ckeditor.setData(data);
+        ckeditor.updateSourceElement();
+        $textarea.get(0).value = data;
+    });
+
+    // focus the editor if requested
+    if ($textarea.is('[autofocus]')) {
+        ckeditor.focus();
+    }
+
+    ckeditor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
+        if (!isFocused) {
+            const data = wysiwyg.markAsHtml(ckeditor.getData());
+            ckeditor.updateSourceElement(data);
+            $textarea.get(0).value = data;
+        }
+    });
+
+    // Tell MathJax v2.7 to leave the editor alone
+    ckeditor.ui.element.classList.add('tex2jax_ignore');
+
+    return ckeditor;
 }

@@ -1,4 +1,4 @@
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from '@ckeditor/ckeditor5-core';
 import A11YDialogCommand from './command.js';
 
 export default class A11YDialogEditing extends Plugin {

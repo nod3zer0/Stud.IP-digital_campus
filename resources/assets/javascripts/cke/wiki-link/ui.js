@@ -1,5 +1,5 @@
-import { Plugin } from 'ckeditor5/src/core';
-import { createDropdown } from 'ckeditor5/src/ui';
+import { Plugin } from '@ckeditor/ckeditor5-core';
+import { createDropdown } from '@ckeditor/ckeditor5-ui';
 import WikiLinkFormView from './formview.js';
 import { $gettext } from '../../lib/gettext.js';
 

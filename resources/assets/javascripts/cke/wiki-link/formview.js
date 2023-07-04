@@ -10,8 +10,8 @@ import {
     injectCssTransitionDisabler,
     createDropdown,
     addListToDropdown,
-} from 'ckeditor5/src/ui';
-import { FocusTracker, KeystrokeHandler, Collection, Rect, isVisible } from 'ckeditor5/src/utils';
+} from '@ckeditor/ckeditor5-ui';
+import { FocusTracker, KeystrokeHandler, Collection, Rect, isVisible } from '@ckeditor/ckeditor5-utils';
 import { $gettext } from '../../lib/gettext.js';
 
 export default class WikiLinkFormView extends View {

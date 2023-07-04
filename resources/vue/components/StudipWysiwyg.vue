@@ -6,7 +6,7 @@
         @ready="prefill"
         v-model="currentText"
         @input="onInput"
-    ></ckeditor>
+    />
     <textarea
         v-else
         :value="text"
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import ClassicEditor from '../../assets/javascripts/chunks/wysiwyg.js';
+import { ClassicEditor, BalloonEditor } from '../../assets/javascripts/chunks/wysiwyg.js';
 import Toolbar from '../../assets/javascripts/lib/toolbar.js';
 
 export default {
@@ -27,16 +27,34 @@ export default {
         event: 'input',
     },
     props: {
-        text: String,
+        text: {
+            type: String,
+            required: true,
+        },
+        editorType: {
+            type: String,
+            validator: function (value) {
+                return ['classic', 'balloon'].includes(value);
+            },
+            default: 'classic',
+        },
     },
     data() {
         return {
             currentText: '',
-            editor: ClassicEditor,
             editorConfig: {},
         };
     },
     computed: {
+        editor() {
+            switch (this.editorType) {
+                case 'classic':
+                    return ClassicEditor;
+                case 'balloon':
+                    return BalloonEditor;
+            }
+            throw new Error('Unknown `editorType`');
+        },
         enabled() {
             return STUDIP.editor_enabled;
         },

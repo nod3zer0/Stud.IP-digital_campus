@@ -24,7 +24,7 @@
 <script>
 import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
 import { blockMixin } from './block-mixin.js';
-import ClassicEditor from '../../../assets/javascripts/chunks/wysiwyg.js'
+import { ClassicEditor, BalloonEditor } from '@/assets/javascripts/chunks/wysiwyg'
 import { mapActions } from 'vuex';
 
 export default {

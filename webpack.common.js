@@ -3,7 +3,7 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
-const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
+const { CKEditorTranslationsPlugin } = require( '@ckeditor/ckeditor5-dev-translations' );
 
 const { styles } = require('@ckeditor/ckeditor5-dev-utils');
 
@@ -142,7 +142,7 @@ module.exports = {
                 'resources/assets/javascripts/jquery/jstree/jquery.jstree.js',
             ]
         }),
-        new CKEditorWebpackPlugin({
+        new CKEditorTranslationsPlugin({
             language: 'de',
             addMainLanguageTranslationsToAllAssets: true
         }),

@@ -76,11 +76,9 @@ export const loadChunk = (function () {
 
             case 'wysiwyg':
                 promise = import(
-                    /* webpackChunkName: "vue.js" */
+                    /* webpackChunkName: "wysiwyg.js" */
                     './chunks/wysiwyg'
-                ).then(({default: ClassicEditor}) => {
-                    return ClassicEditor;
-                });
+                );
                 break;
 
             default:

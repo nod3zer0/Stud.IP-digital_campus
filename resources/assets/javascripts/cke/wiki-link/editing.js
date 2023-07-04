@@ -1,4 +1,4 @@
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from '@ckeditor/ckeditor5-core';
 import InsertCommand from './insertcommand';
 
 export default class WikiLinkEditing extends Plugin {

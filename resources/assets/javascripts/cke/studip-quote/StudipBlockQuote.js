@@ -1,7 +1,7 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import { $gettext } from '../../lib/gettext.js';
-import { Command, icons } from 'ckeditor5/src/core';
+import { Command, icons } from '@ckeditor/ckeditor5-core';
 
 const divideIcon =
     '<svg version="1.1" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="m9.3 2h2v16h-2zm-7.2987 8.423a6.5 6.5 0 0 1 6.056-6.408l0.038 0.67c-2.646 0.738-3.74 2.978-3.874 5.315h3.78c0.552 0 0.5 0.432 0.5 0.986v4.511c0 0.554-0.448 0.503-1 0.503h-5c-0.552 0-0.5-0.449-0.5-1.003zm10 0a6.5 6.5 0 0 1 6.056-6.408l0.038 0.67c-2.646 0.739-3.74 2.979-3.873 5.315h3.779c0.552 0 0.5 0.432 0.5 0.986v4.511c0 0.554-0.448 0.503-1 0.503h-5c-0.552 0-0.5-0.449-0.5-1.003z" stroke-width="1.1664"/></svg>';

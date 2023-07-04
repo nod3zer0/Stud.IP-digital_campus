@@ -1,5 +1,5 @@
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from '@ckeditor/ckeditor5-core';
 import { $gettext } from '../../lib/gettext.js';
 
 const a11yIcon =
