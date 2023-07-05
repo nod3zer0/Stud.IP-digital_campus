@@ -1226,4 +1226,71 @@ class Resources_AdminController extends AuthenticatedController
 
         $this->export_bookingtypes_default = $this->config->RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT;
     }
+
+    /**
+     * This action is called from the resource permission overview page.
+     * It is designed to be only called via HTTP POST.
+     */
+    public function delete_permissions_action()
+    {
+        CSRFProtection::verifyUnsafeRequest();
+        $type = Request::get('permission_type');
+        if (!$type) {
+            return;
+        }
+        if ($type === 'permanent' || $type === 'temporary') {
+            $user_id = Request::option('user_id');
+            $resource_ids = Request::optionArray('resource_ids');
+            $deleted = 0;
+            if ($type === 'permanent') {
+                $deleted = ResourcePermission::deleteBySQL(
+                    '`user_id` = :user_id AND `resource_id` IN ( :resource_ids )',
+                    [
+                        'user_id' => $user_id,
+                        'resource_ids' => $resource_ids
+                    ]
+                );
+            } elseif ($type === 'temporary') {
+                $deleted = ResourceTemporaryPermission::deleteBySQL(
+                    '`user_id` = :user_id AND `resource_id` IN ( :resource_ids )',
+                    [
+                        'user_id' => $user_id,
+                        'resource_ids' => $resource_ids
+                    ]
+                );
+            }
+            if ($deleted > 0) {
+                PageLayout::postSuccess(sprintf(
+                    ngettext(
+                        '%u Berechtigung wurde gelöscht.',
+                        '%u Berechtigungen wurden gelöscht.',
+                        $deleted
+                    ),
+                    $deleted
+                ));
+            }
+            $this->redirect('resources/admin/user_permissions', ['user_id' => $user_id]);
+        } elseif ($type === 'all_from_users') {
+            $user_ids = Request::optionArray('user_ids');
+            $deleted = ResourcePermission::deleteBySql(
+                '`user_id` IN ( :user_ids )',
+                ['user_ids' => $user_ids]
+            );
+            $deleted += ResourceTemporaryPermission::deleteBySql(
+                '`user_id` IN ( :user_ids )',
+                ['user_ids' => $user_ids]
+            );
+            if ($deleted > 0) {
+                PageLayout::postSuccess(sprintf(
+                    ngettext(
+                        'Die Berechtigungen von einer Person wurden gelöscht.',
+                        'Die Berechtigungen von %u Personen wurden gelöscht.',
+                        count($user_ids)
+                    ),
+                    count($user_ids)
+                ));
+            }
+            $this->redirect('resources/admin/user_permissions');
+        }
+    }
 }
