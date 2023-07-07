@@ -55,7 +55,7 @@ if (!$values['parent_course'] || !in_array($values['parent_course'], array_keys(
                 <? if ($GLOBALS['perm']->have_studip_perm("autor", $semid)) : ?>
                 <a href="<?= URLHelper::getLink('seminar_main.php', ['auswahl' => $semid]) ?>">
                     <? endif ?>
-                    <?= htmlReady(trim($values['Name'])) ?>
+                    <?= htmlReady($course->name) ?>
                     <? if ($GLOBALS['perm']->have_studip_perm("autor", $semid)) : ?>
                 </a>
             <? endif ?>

@@ -477,7 +477,7 @@ class Admin_CoursesController extends AuthenticatedController
 
             $data = [];
             foreach ($courses as $course_id => $course) {
-                $course_model = Course::buildExisting($course);
+                $course_model = Course::find($course_id);
                 $sem = new Seminar($course_model);
                 $row = [];
 
@@ -486,7 +486,7 @@ class Admin_CoursesController extends AuthenticatedController
                 }
 
                 if (in_array('name', $filter_config)) {
-                    $row['name'] = $course['Name'];
+                    $row['name'] = $course_model->name;
                 }
 
                 if (in_array('type', $filter_config)) {
@@ -542,7 +542,7 @@ class Admin_CoursesController extends AuthenticatedController
                 foreach (PluginManager::getInstance()->getPlugins('AdminCourseContents') as $plugin) {
                     foreach ($plugin->adminAvailableContents() as $index => $label) {
                         if (in_array($plugin->getPluginId() . "_" . $index, $filter_config)) {
-                            $content = $plugin->adminAreaGetCourseContent(Course::find($course_id), $index);
+                            $content = $plugin->adminAreaGetCourseContent($course_model, $index);
                             $row[$plugin->getPluginId() . "_" . $index] = strip_tags(is_a($content, 'Flexi_Template')
                                 ? $content->render()
                                 : $content
