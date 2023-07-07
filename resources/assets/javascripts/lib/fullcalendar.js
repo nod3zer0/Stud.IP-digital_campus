@@ -355,6 +355,9 @@ class Fullcalendar
             },
             minTime: '08:00:00',
             maxTime: '20:00:00',
+            validRange: {
+                start: '1970-01-01'
+            },
             height: 'auto',
             contentHeight: 'auto',
             firstDay: 1,
