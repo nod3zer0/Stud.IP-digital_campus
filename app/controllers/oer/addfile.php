@@ -18,23 +18,33 @@ class Oer_AddfileController extends AuthenticatedController
         if (Request::option("material_id")) {
             $material = OERMaterial::find(Request::option("material_id"));
             $uploaded_file = [
-                'name' => $material['filename'],
+                'name' => $material['name'],
                 'type' => $material['content_type'],
                 'content_terms_of_use_id' => "FREE_LICENSE",
                 'description' => $material['description']
             ];
-            if ($material['host_id']) {
-                $tmp_name = $GLOBALS['TMP_PATH']."/oer_".$material->getId();
-                $url = $material->getDownloadUrl();
-                file_put_contents($tmp_name, file_get_contents($url, false, get_default_http_stream_context($url)));
-                $uploaded_file['tmp_name'] = $tmp_name;
-                $uploaded_file['type'] = filesize($tmp_name);
-            } else {
-                $uploaded_file['tmp_name'] = $material->getFilePath();
-                $uploaded_file['size'] = filesize($material->getFilePath());
-            }
+            $url = $material->getDownloadUrl();
+            if ($url) {
+                if ($material['host_id']) {
+                    $tmp_name = $GLOBALS['TMP_PATH'] . '/oer_' . $material->getId();
+                    file_put_contents($tmp_name, file_get_contents($url, false, get_default_http_stream_context($url)));
+                    $uploaded_file['tmp_name'] = $tmp_name;
+                    $uploaded_file['size'] = filesize($tmp_name);
+                } else {
+                    $uploaded_file['tmp_name'] = $material->getFilePath();
+                    $uploaded_file['size'] = filesize($material->getFilePath());
+                }
 
-            $standardfile = StandardFile::create($uploaded_file);
+                $standardfile = StandardFile::create($uploaded_file);
+            } elseif($material['source_url']) {
+                $standardfile = URLFile::create([
+                    'url' => $material['source_url'],
+                    'name' => $material['name'],
+                    'author_name' => implode(', ', array_map(function ($a) { return $a['name']; }, $material)),
+                    'description' => $material['description'],
+                    'content_terms_of_use_id' => "FREE_LICENSE"
+                ]);
+            }
 
             if ($standardfile->getSize()) {
                 $error = $this->to_folder_type->validateUpload($standardfile, User::findCurrent()->id);
@@ -51,15 +61,15 @@ class Oer_AddfileController extends AuthenticatedController
                 }
                 if (!$newfile) {
                     PageLayout::postError(_('Daten konnten nicht kopiert werden!'));
+                } else {
+                    PageLayout::postSuccess(_('Datei wurde hinzugefügt.'));
                 }
-                PageLayout::postSuccess(_('Datei wurde hinzugefügt.'));
             } else {
                 if ($tmp_name) {
                     @unlink($tmp_name);
                 }
                 PageLayout::postError(_('Daten konnten nicht kopiert werden!'));
             }
-            PageLayout::postSuccess(_('Datei wurde hinzugefügt.'));
             return $this->redirectToFolder($this->to_folder_type);
         }
 
