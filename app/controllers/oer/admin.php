@@ -136,8 +136,8 @@ class Oer_AdminController extends AuthenticatedController
     public function toggle_server_active_action()
     {
         if (Request::isPost()) {
-            $host = new OERHost(Request::option("host_id"));
-            if (!$host->isMe()) {
+            $host = OERHost::find(Request::option("host_id"));
+            if ($host && !$host->isMe()) {
                 $host['active'] = Request::int("active", 0);
                 $host->store();
             }
