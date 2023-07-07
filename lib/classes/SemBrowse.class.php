@@ -601,7 +601,9 @@ class SemBrowse {
                 ++$row;
                 if (is_array($sem_ids['Seminar_id'])) {
                      foreach(array_keys($sem_ids['Seminar_id']) as $seminar_id){
-                        $sem_name = key($sem_data[$seminar_id]['Name']);
+                        $seminar_obj = new Seminar($seminar_id);
+
+                        $sem_name = $seminar_obj->getName();
                         $seminar_number = key($sem_data[$seminar_id]['VeranstaltungsNummer']);
                         $sem_number_start = key($sem_data[$seminar_id]['sem_number']);
                         $sem_number_end = key($sem_data[$seminar_id]['sem_number_end']);
@@ -611,8 +613,6 @@ class SemBrowse {
                         } elseif ($this->sem_browse_data['group_by']) {
                             $sem_name .= ' (' . $this->search_obj->sem_dates[$sem_number_start]['name'] . ')';
                         }
-                        //create Turnus field
-                        $seminar_obj = new Seminar($seminar_id);
                         // is this sem a studygroup?
                         $studygroup_mode = SeminarCategories::GetByTypeId($seminar_obj->getStatus())->studygroup_mode;
                         if ($studygroup_mode) {
@@ -621,6 +621,7 @@ class SemBrowse {
                             $sem_name .= ')';
                         }
                         $worksheet1->write_string($row, 0, mb_convert_encoding($sem_name, 'WINDOWS-1252'), $data_format);
+                        //create Turnus field
                         $temp_turnus_string = $seminar_obj->getFormattedTurnus(true);
                         //Shorten, if string too long (add link for details.php)
                         if (mb_strlen($temp_turnus_string) > 245) {
@@ -859,8 +860,7 @@ class SemBrowse {
             // is this sem a studygroup?
             $studygroup_mode = SeminarCategories::GetByTypeId($seminar_obj->getStatus())->studygroup_mode;
 
-            $sem_name = $SEM_TYPE[key($sem_data[$seminar_id]['status'])]['name']
-                    . ': ' . key($sem_data[$seminar_id]['Name']);
+            $sem_name = $seminar_obj->getFullName('type-name');
             $seminar_number = key($sem_data[$seminar_id]['VeranstaltungsNummer']);
 
             $visibleChildren = [];
