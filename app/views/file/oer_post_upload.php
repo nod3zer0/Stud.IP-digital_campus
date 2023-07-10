@@ -3,7 +3,7 @@ if (!isset($selected_oer_upload)) {
     $selected_oer_upload = 0;
 }
 ?>
-<form action="<?= $controller->link_for('file/oer_post_upload/', $file_ref_id)?>"
+<form action="<?= $controller->link_for('file/oer_post_upload/'. $file_ref_id)?>"
       method="post" class="default" data-dialog="reload-on-close">
     <?= CSRFProtection::tokenTag() ?>
 
