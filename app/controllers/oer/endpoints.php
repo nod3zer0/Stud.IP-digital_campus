@@ -3,6 +3,8 @@
 class Oer_EndpointsController extends StudipController
 {
 
+    protected $with_session = true;  //we do need to have a session for this controller
+
     public function index_action()
     {
         $this->controllerreflection = new ReflectionClass($this);
@@ -297,7 +299,7 @@ class Oer_EndpointsController extends StudipController
     public function download_action($material_id, $disposition = "inline")
     {
         $this->material = new OERMaterial($material_id);
-        if ($this->material['draft']) {
+        if ($this->material['draft'] && !$this->material->isMine()) {
             throw new AccessDeniedException();
         }
 
