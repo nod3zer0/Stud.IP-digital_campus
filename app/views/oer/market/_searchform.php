@@ -162,7 +162,7 @@
 <ul class="results oer_material_overview" v-if="results && results.length > 0">
     <li v-for="result in results" :key="result.material_id">
         <article class="contentbox" :title="result.name">
-            <a :href="getMaterialURL(result.material_id)">
+            <a :href="getMaterialURL(result.material_id)" target="_blank">
                 <header>
                     <h1>
                         <studip-icon :shape="getIconShape(result)"
