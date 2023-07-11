@@ -18,39 +18,17 @@
  *     public function addLectureshipFilter($event, $filter)
  *     {
  *         if ($GLOBALS['user']->cfg->getValue("LECTURESHIP_FILTER")) {
- *             $filter->settings['query']['joins']['lehrauftrag'] = array(
- *                 'join' => "INNER JOIN",
- *                 'on' => "seminare.Seminar_id = lehrauftrag.seminar_id"
- *             );
+ *             $filter->query->join('lehrauftrag', 'seminare.Seminar_id = lehrauftrag.seminar_id');
  *         }
  *     }
  *
- * Within this method you alter the public $filter->settings array, because this array
- * describes entirely the big query for the admin-search. In our example above
- * we simple add an INNER JOIN to filter for the course having an entry in
- * the lehrauftrag table.
- *
- * Description of this array is as follows:
- *
- * $filter->settings['query']            : The main sql query as a prepared statement.
- * $filter->settings['query']['select']  : An assoc array. $filter->settings['query']['select']['Number_of_teachers'] = "COUNT(DISTINCT dozenten.user_id)"
- *                                         will select the result of COUNT as the variable Number_of_teachers.
- * $filter->settings['query']['joins']   : Example $filter->settings['query']['joins']['dozenten'] = array(
- *                                          'join' => "INNER JOIN", //default value, else use "LEFT JOIN"
- *                                          'table' => "seminar_user", //can me omitted if you don't want to use a table-alias
- *                                          'on' => "dozenten.Seminar_id = seminare.Seminar_id AND dozenten.status = 'dozent'"
- *                                          )
- *                                         if 'table' differs from the index, the index will be the alias of the table.
- *                                         So normally you don't need to name a table if you don't want it to be aliased.
- * $filter->settings['query']['where']   : You might want to use the method $filter->where($sql, $parameter) instead.
- * $filter->settings['query']['orderby'] : You might want to use $filter->orderBy($attribute, $flag = "ASC") instead.
- * $filter->settings['parameter']        : An assoc array of parameter that will be passed to
- *                                         the prepared statement.
+ * Within this method you alter the public $filter->query object. That query object is of type SQLQuery.
  *
  */
 class AdminCourseFilter
 {
     static protected $instance = null;
+    public $query = null;
     public $max_show_courses = 500;
     public $settings = [];
 
@@ -68,288 +46,131 @@ class AdminCourseFilter
     }
 
     /**
-     * Constructor of the singleton-object. The settings might come from the session
-     * if $reset_settings is false.
-     * @param bool $reset_settings : should the session settings of the singleton be reset?
+     * Constructor of the singleton-object.
      */
-    public function __construct($reset_settings = false)
+    public function __construct()
     {
         $this->initSettings();
+    }
 
-        if ($reset_settings) {
-            $this->resetSettings();
+    protected function initSettings()
+    {
+        $this->query = SQLQuery::table('seminare');
+        $this->query->join('sem_types', 'sem_types', 'sem_types.id = seminare.status');
+        $this->query->join('sem_classes', 'sem_classes', 'sem_classes.id = sem_types.class');
+        $this->query->where("sem_classes.studygroup_mode = '0'");
+        $this->query->groupBy('seminare.Seminar_id');
+
+        if ($GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT) {
+            $this->query->join('teachers_su', 'seminar_user', "teachers_su.Seminar_id = seminare.Seminar_id AND teachers_su.status = 'dozent'");
+            $this->query->join('teachers', 'auth_user_md5', 'teachers.user_id = teachers_su.user_id');
+            $this->query->where(
+                'search',
+                "(seminare.name LIKE :search OR seminare.VeranstaltungsNummer LIKE :search OR seminare.untertitel LIKE :search OR CONCAT(teachers.Vorname, ' ', teachers.Nachname) LIKE :search)",
+                ['search' => '%'.$GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT.'%']
+            );
+        }
+        if (Request::option('course_id')) {
+            $this->query->where('course_id', 'seminare.Seminar_id = :course_id', ['course_id' => Request::option('course_id')]);
+        }
+        $inst_ids = [];
+
+        if (
+            !$GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT
+            || $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT === 'all'
+        ) {
+            $inst = new SimpleCollection(Institute::getMyInstitutes($GLOBALS['user']->id));
+            $inst_ids = $inst->map(function ($a) {
+                return $a['Institut_id'];
+            });
         } else {
-            $this->restoreSettings();
+            //We must check, if the institute ID belongs to a faculty
+            //and has the string _i appended to it.
+            //In that case we must display the courses of the faculty
+            //and all its institutes.
+            //Otherwise we just display the courses of the faculty.
+
+            $include_children = false;
+            $inst_id = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
+            if (str_contains($inst_id, '_')) {
+                $inst_id = substr($inst_id, 0, strpos($inst_id, '_'));
+                $include_children = true;
+            }
+            $inst_ids[] = $inst_id;
+
+            if ($include_children) {
+                $inst = Institute::find($inst_id);
+                if ($inst && $inst->isFaculty()) {
+                    foreach ($inst->sub_institutes->pluck('Institut_id') as $institut_id) {
+                        $inst_ids[] = $institut_id;
+                    }
+                }
+            }
         }
-    }
 
-    /**
-     * store settings in session
-     */
-    public function storeSettings()
-    {
-        $_SESSION['AdminCourseFilter_settings'] = $this->settings;
-    }
-
-    /**
-     * restore settings from session
-     */
-    public function restoreSettings()
-    {
-        if ($_SESSION['AdminCourseFilter_settings']) {
-            $this->settings = $_SESSION['AdminCourseFilter_settings'];
-        }
-    }
-
-    /**
-     * reset settings
-     */
-    public function resetSettings()
-    {
-        $this->initSettings();
-        unset($_SESSION['AdminCourseFilter_settings']);
-    }
-
-    /**
-     * initialize settings
-     */
-    public function initSettings()
-    {
-        $this->settings = [];
-
-        $this->settings['query']['select'] = [
-            'Institut' => "Institute.Name",
-            'teilnehmer' => "(SELECT COUNT(seminar_id)
-                          FROM seminar_user
-                          WHERE seminar_id = seminare.Seminar_id AND status != 'dozent' AND status != 'tutor')",
-            'prelim' => "(SELECT COUNT(seminar_id)
-                          FROM admission_seminar_user
-                          WHERE seminar_id = seminare.Seminar_id AND status = 'accepted')",
-            'waiting' => "(SELECT COUNT(seminar_id)
-                          FROM admission_seminar_user
-                          WHERE seminar_id = seminare.Seminar_id AND status = 'awaiting')",
-            'requests' => "(SELECT COUNT(id)
-                          FROM resource_requests
-                          WHERE course_id = seminare.Seminar_id)",
-            'course_set' => "(SELECT set_id FROM seminar_courseset WHERE seminar_id = seminare.Seminar_id LIMIT 1)"
-        ];
-        $this->settings['query']['joins'] = [
-            'seminar_inst' => [
-                'join' => "INNER JOIN",
-                'on' => "seminare.Seminar_id = seminar_inst.seminar_id"
-            ],
-            'Institute' => [
-                'join' => "INNER JOIN",
-                'on' => "seminar_inst.institut_id = Institute.Institut_id"
-            ],
-            'sem_types' => [
-                'join' => "LEFT JOIN",
-                'on' => "sem_types.id = seminare.status"
-            ],
-            'sem_classes' => [
-                'join' => "LEFT JOIN",
-                'on' => "sem_classes.id = sem_types.class"
-            ]
-        ];
-        $this->settings['query']['where'] = [];
-        $this->settings['query']['orderby'] = Config::get()->IMPORTANT_SEMNUMBER ? "seminare.veranstaltungsnummer, seminare.name" : "seminare.name";
-    }
-
-    /**
-     * Adds a filter for all courses of the given semester.
-     * @param string $semester_id : ID of the given semester.
-     * @return AdminCourseFilter
-     * @throws Exception if semester_id does not exist
-     */
-    public function filterBySemester($semester_id)
-    {
-        $semester = Semester::find($semester_id);
-        if (!$semester) {
-            throw new Exception("Das ausgewählte Semester scheint nicht zu existieren.");
-        }
-        $this->settings['query']['joins']['semester_courses'] = [
-            'join' => "LEFT JOIN",
-            'on' => "semester_courses.course_id = seminare.Seminar_id"
-        ];
-        $this->settings['query']['where']['semester'] = "(semester_courses.semester_id IS NULL OR semester_courses.semester_id = :semester_id)";
-        $this->settings['parameter']['semester_beginn'] = $semester['beginn'];
-        $this->settings['parameter']['semester_id'] = $semester['id'];
-        return $this;
-    }
-
-    /**
-     * Adds a filter for a sem_type or many sem_types if the parameter is an array.
-     * @param array|integer $type : id or ids of sem_types
-     * @return AdminCourseFilter
-     */
-    public function filterByType($type)
-    {
-        if (is_array($type)) {
-            $this->settings['query']['where']['status'] = "seminare.status IN (:types)";
-            $this->settings['parameter']['types'] = $type;
-        } else {
-            $this->settings['query']['where']['status'] = "seminare.status = :type";
-            $this->settings['parameter']['type'] = (int) $type;
-        }
-        return $this;
-    }
-
-    /**
-     * Adds a filter for an institut_id or many institut_ids if the parameter is an array.
-     * @param array|integer $institut_ids : id or ids of institutes
-     * @return AdminCourseFilter
-     */
-    public function filterByInstitute($institut_ids)
-    {
         if (Config::get()->ALLOW_ADMIN_RELATED_INST) {
             $sem_inst = 'seminar_inst';
+            $this->query->join('seminar_inst', 'seminar_inst', 'seminar_inst.seminar_id = seminare.Seminar_id');
         } else {
             $sem_inst = 'seminare';
         }
 
-        if (is_array($institut_ids)) {
-            $this->settings['query']['where']['institute'] = "$sem_inst.institut_id IN (:institut_ids)";
-            $this->settings['parameter']['institut_ids'] = $institut_ids;
-        } else {
-            $this->settings['query']['where']['status'] = "$sem_inst.institut_id = :institut_id";
-            $this->settings['parameter']['institut_id'] = (string) $institut_ids;
+        $this->query->where('seminar_inst', "$sem_inst.institut_id IN (:institut_ids)");
+        $this->query->parameter('institut_ids', $inst_ids);
+
+        if ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE) {
+            $this->query->join('semester_courses', 'semester_courses.course_id = seminare.Seminar_id');
+            $this->query->where('semester_id', '(semester_courses.semester_id = :semester_id OR semester_courses.semester_id IS NULL)', [
+                'semester_id' => $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE
+            ]);
         }
-        return $this;
-    }
 
-    /**
-     * Adds a filter for an stgteil_id or many stgteil_ids if the parameter is an array.
-     * @param array|integer $stgteil_ids : id or ids of stgteile
-     * @return AdminCourseFilter
-     */
-    public function filterByStgTeil($stgteil_ids)
-    {
-        $this->settings['query']['joins']['mvv_lvgruppe_seminar'] = [
-            'join' => "LEFT JOIN",
-            'table' => "mvv_lvgruppe_seminar",
-            'on' => "mvv_lvgruppe_seminar.seminar_id = seminare.Seminar_id"
-        ];
-        $this->settings['query']['joins']['mvv_lvgruppe_modulteil'] = [
-            'join' => "LEFT JOIN",
-            'table' => "mvv_lvgruppe_modulteil",
-            'on' => "mvv_lvgruppe_modulteil.lvgruppe_id = mvv_lvgruppe_seminar.lvgruppe_id"
-        ];
-        $this->settings['query']['joins']['mvv_modulteil'] = [
-            'join' => "LEFT JOIN",
-            'table' => "mvv_modulteil",
-            'on' => "mvv_modulteil.modulteil_id = mvv_lvgruppe_modulteil.modulteil_id"
-        ];
-        $this->settings['query']['joins']['mvv_stgteilabschnitt_modul'] = [
-            'join' => "LEFT JOIN",
-            'table' => "mvv_stgteilabschnitt_modul",
-            'on' => "mvv_stgteilabschnitt_modul.modul_id = mvv_modulteil.modul_id"
-        ];
-        $this->settings['query']['joins']['mvv_stgteilabschnitt'] = [
-            'join' => "LEFT JOIN",
-            'table' => "mvv_stgteilabschnitt",
-            'on' => "mvv_stgteilabschnitt.abschnitt_id = mvv_stgteilabschnitt_modul.abschnitt_id"
-        ];
-        $this->settings['query']['joins']['mvv_stgteilversion'] = [
-            'join' => "LEFT JOIN",
-            'table' => "mvv_stgteilversion",
-            'on' => "mvv_stgteilversion.version_id = mvv_stgteilabschnitt.version_id"
-        ];
+        if ($GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER && $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER !== 'all') {
+            if (str_contains(Request::option('course_type'), '_')) {
+                list($sem_class_id, $sem_type_id) = explode('_', $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER);
+                $this->query->where('course_type', 'seminare.status = :course_type', ['course_type' => $sem_type_id]);
+            } else {
+                //sem class
+                $this->query->where('course_class', 'sem_types.class = :course_class', [
+                    'course_class' => $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER
+                ]);
+            }
 
-        if (is_array($stgteil_ids)) {
-            $this->settings['query']['where']['mvv_stgteilversion'] = "mvv_stgteilversion.stgteil_id IN (:stgteil_ids)";
-            $this->settings['parameter']['stgteil_ids'] = $stgteil_ids;
-        } else {
-            $this->settings['query']['where']['mvv_stgteilversion'] = "mvv_stgteilversion.stgteil_id = :stgteil_id";
-            $this->settings['parameter']['stgteil_id'] = (string) $stgteil_ids;
         }
-        return $this;
-    }
 
-    /**
-     * @param array|string $user_ids
-     * @return AdminCourseFilter
-     */
-    public function filterByDozent($user_ids)
-    {
-        $this->settings['query']['joins']['dozenten'] = [
-            'join' => "INNER JOIN",
-            'table' => "seminar_user",
-            'on' => "dozenten.Seminar_id = seminare.Seminar_id AND dozenten.status = 'dozent'"
-        ];
-        if (is_array($user_ids)) {
-            $this->settings['query']['where']['dozenten'] = "dozenten.user_id IN (:dozenten_ids)";
-            $this->settings['parameter']['dozenten_ids'] = $user_ids;
-        } else {
-            $this->settings['query']['where']['dozenten'] = "dozenten.user_id = :dozenten_id";
-            $this->settings['parameter']['dozenten_id'] = (string) $user_ids;
+        if ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL) {
+            $this->query->join('mvv_lvgruppe_seminar', '`mvv_lvgruppe_seminar`.`seminar_id` = `seminare`.`Seminar_id`');
+            $this->query->join('mvv_lvgruppe_modulteil', '`mvv_lvgruppe_modulteil`.`lvgruppe_id` = `mvv_lvgruppe_seminar`.`lvgruppe_id`');
+            $this->query->join('mvv_modulteil', '`mvv_modulteil`.`modulteil_id` = `mvv_lvgruppe_modulteil`.`modulteil_id`');
+            $this->query->join('mvv_modul', '`mvv_modul`.`modul_id` = `mvv_modulteil`.`modul_id`');
+            $this->query->join('mvv_stgteilabschnitt_modul', '`mvv_stgteilabschnitt_modul`.`modul_id` = `mvv_modul`.`modul_id`');
+            $this->query->join('mvv_stgteilabschnitt', '`mvv_stgteilabschnitt`.`abschnitt_id` = `mvv_stgteilabschnitt_modul`.`abschnitt_id`');
+            $this->query->join('mvv_stgteilversion', '`mvv_stgteilversion`.`version_id` = `mvv_stgteilabschnitt`.`version_id`');
+            $this->query->where('stgteil', 'mvv_stgteilversion.stgteil_id = :stgteil_id', [
+                'stgteil_id' => $GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL
+            ]);
         }
-        return $this;
-    }
 
-    /**
-     * Adds a filter for a textstring, that can be the coursenumber, the name of the course
-     * or the last name of one of the dozenten.
-     * @param string $text the searchstring
-     * @return AdminCourseFilter
-     */
-    public function filterBySearchstring($text)
-    {
-        $this->settings['query']['joins']['dozenten'] = [
-            'join' => "INNER JOIN",
-            'table' => "seminar_user",
-            'on' => "dozenten.Seminar_id = seminare.Seminar_id AND dozenten.status = 'dozent'"
-        ];
-        $this->settings['query']['joins']['dozentendata'] = [
-            'join' => "INNER JOIN",
-            'table' => "auth_user_md5",
-            'on' => "dozenten.user_id = dozentendata.user_id"
-        ];
-        $this->settings['query']['where']['search'] = "(CONCAT_WS(' ', seminare.VeranstaltungsNummer, seminare.name, seminare.Untertitel, dozentendata.Nachname) LIKE :search
-            OR CONCAT(dozentendata.Nachname, ', ', dozentendata.Vorname) LIKE :search
-            OR CONCAT_WS(' ', dozentendata.Vorname, dozentendata.Nachname) LIKE :search
-            OR dozentendata.Vorname LIKE :search
-            OR dozentendata.Nachname LIKE :search
-        )";
-        $this->settings['parameter']['search'] = "%".$text."%";
-
-        return $this;
-    }
-
-    /**
-     * @param string $attribute : column, name of the column, yb whcih we should order the results
-     * @param string $flag : "ASC" or "DESC for ascending order or descending order,
-     * @return AdminCourseFilter
-     * @throws Exception if $flag does not exist
-     */
-    public function orderBy($attribute, $flag = 'ASC')
-    {
-        $flag = mb_strtoupper($flag);
-        if (!in_array($flag, words('ASC DESC'))) {
-            throw new Exception("Sortierreihenfolge undefiniert.");
+        if ($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER) {
+            $this->query->join('teachers_su', 'seminar_user', "teachers_su.Seminar_id = seminare.Seminar_id AND teachers_su.status = 'dozent'");
+            $this->query->where(
+                'teacher_filter',
+                "teachers_su.user_id = :teacher_id",
+                ['teacher_id' => $GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER]
+            );
         }
-        if (in_array($attribute, words('VeranstaltungsNummer Name status teilnehmer waiting prelim requests completion start_time Institute.Name'))) {
-            $this->settings['query']['orderby'] = $attribute . ' ' . $flag;
-        }
-        return $this;
-    }
 
-    /**
-     * Adds a where filter.
-     * @param string $where any where condition like "sem_classes.overview = 'CoreOverview'"
-     * @param array $parameter an array of parameter that appear in the $where query.
-     * @param null|string $id an id of the where-query. Use this to possibly
-     *                          avoid double where conditions or allow deleting the condition
-     *                          by plugins if necessary. Can be omitted.
-     * @return AdminCourseFilter
-     */
-    public function where($where, $parameter = [], $id = null)
-    {
-        if (!$id) {
-            $id = md5($where);
+
+
+        $datafields_filters = $GLOBALS['user']->cfg->ADMIN_COURSES_DATAFIELDS_FILTERS;
+        foreach ($datafields_filters as $datafield_id => $value) {
+            $this->query->join('de_'.$datafield_id, 'datafields_entries', 'de_'.$datafield_id.'.range_id = seminare.Seminar_id AND `de_'.$datafield_id.'`.datafield_id = :de_'.$datafield_id.'_id');
+            $this->query->where('de_' . $datafield_id . '_contents', 'de_' . $datafield_id . '.`content` LIKE :de_' . $datafield_id . '_content',
+                [
+                    'de_' . $datafield_id . '_id' => $datafield_id,
+                    'de_' . $datafield_id . '_content' => '%' . $value . '%'
+                ]);
         }
-        $this->settings['query']['where'][$id] = $where;
-        $this->settings['parameter'] = array_merge((array)($this->settings['parameter'] ?? []), $parameter);
-        return $this;
     }
 
     /**
@@ -359,16 +180,10 @@ class AdminCourseFilter
      * Plugins may register at this event to fully alter this AdminCourseFilter-object and so the resultset.
      * @return array associative array with seminar_ids as keys and seminar-data-arrays as values.
      */
-    public function getCourses($grouped = true)
+    public function getCourses()
     {
         NotificationCenter::postNotification("AdminCourseFilterWillQuery", $this);
-        if (empty($this->settings['query']['where'])) {
-            return [];
-        }
-        $statement = DBManager::get()->prepare($this->createQuery());
-        $statement->execute($this->settings['parameter']);
-        $_SESSION['AdminCourseFilter_settings'] = $this->settings;
-        return $statement->fetchAll($grouped ? (PDO::FETCH_GROUP | PDO::FETCH_ASSOC) : PDO::FETCH_ASSOC);
+        return $this->query->fetchAll(Course::class);
     }
 
     /**
@@ -377,10 +192,7 @@ class AdminCourseFilter
     public function countCourses()
     {
         NotificationCenter::postNotification("AdminCourseFilterWillQuery", $this);
-        if (empty($this->settings['query']['where'])) {
-            return 0;
-        }
-        return (int)DBManager::get()->fetchColumn($this->createQuery(true), $this->settings['parameter']);
+        return $this->query->count();
     }
 
     /**
@@ -400,54 +212,10 @@ class AdminCourseFilter
             $order = 'seminare.veranstaltungsnummer, seminare.name';
         }
         if ($count_courses && $count_courses <= $this->max_show_courses) {
-            $settings = $this->settings;
-            $this->settings['query']['select'] = [];
-            $this->settings['query']['orderby'] = $order;
-            $ret = $this->getCourses(false);
-            $this->settings = $settings;
-            return $ret;
+            $this->query->orderBy($order);
+            return $this->getCourses();
         }
         return [];
-    }
-
-    /**
-     * Creates the sql-query from the $this->settings['query']
-     * @param boolean $only_count : boolean
-     * @return string the big query
-     */
-    public function createQuery($only_count = false)
-    {
-        if ($only_count) {
-            $select_query = "COUNT(DISTINCT seminare.Seminar_id) ";
-        } else {
-            $select_query = "seminare.* ";
-            foreach ((array) $this->settings['query']['select'] as $alias => $select) {
-                $select_query .= ", ".$select." AS ".$alias." ";
-            }
-        }
-
-        $join_query = "";
-        foreach ((array) $this->settings['query']['joins'] as $alias => $joininfo) {
-            $table = isset($joininfo['table']) ? $joininfo['table']." AS ".$alias : $alias;
-            $on = isset($joininfo['on']) ? " ON (".$joininfo['on'].")" : "";
-            $join_query .= " ".(isset($joininfo['join']) ? $joininfo['join'] : "INNER JOIN")." ".$table.$on." ";
-        }
-
-        $where_query = "";
-        if (count($this->settings['query']['where']) > 0) {
-            $where_query .= implode(" AND ", $this->settings['query']['where']);
-        }
-
-        $query = "
-            SELECT ".$select_query."
-            FROM seminare
-                ".$join_query."
-            ".($where_query ? "WHERE ".$where_query : "");
-        if (!$only_count) {
-            $query .= " GROUP BY seminare.Seminar_id ORDER BY ".$this->settings['query']['orderby'].($this->settings['query']['orderby'] !== "seminare.name" ? ", seminare.name" : "");
-        }
-
-        return $query;
     }
 
 }

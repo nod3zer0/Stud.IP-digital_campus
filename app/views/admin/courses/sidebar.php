@@ -17,16 +17,16 @@
         </label>
 
         <label>
-            <input name="instituteActive" type="checkbox" value="1"
-                <?= (!empty($userSelectedElements['institute'])) ? 'checked' : '' ?>
-                >
-            <?= _('Einrichtung'); ?>
-        </label>
-        <label>
             <input name="semesterActive" type="checkbox" value="1"
-                <?= (!empty($userSelectedElements['semester'])) ? 'checked' : '' ?>
+                <?= !empty($userSelectedElements['semester']) ? 'checked' : '' ?>
                 >
             <?= _('Semester'); ?>
+        </label>
+        <label>
+            <input name="instituteActive" type="checkbox" value="1"
+                <?= !empty($userSelectedElements['institute']) ? 'checked' : '' ?>
+                >
+            <?= _('Einrichtung'); ?>
         </label>
         <label>
             <input name="stgteilActive" type="checkbox" value="1"
@@ -35,16 +35,16 @@
             <?= _('Studiengangteil'); ?>
         </label>
         <label>
-            <input name="courseTypeActive" type="checkbox" value="1"
-                <?= (!empty($userSelectedElements['courseType'])) ? 'checked' : '' ?>
-                >
-            <?= _('Veranstaltungstypfilter'); ?>
-        </label>
-        <label>
             <input name="teacherActive" type="checkbox" value="1"
                 <?= (!empty($userSelectedElements['teacher'])) ? 'checked' : '' ?>
-                >
+            >
             <?= _('Lehrperson'); ?>
+        </label>
+        <label>
+            <input name="courseTypeActive" type="checkbox" value="1"
+                <?= !empty($userSelectedElements['courseType']) ? 'checked' : '' ?>
+                >
+            <?= _('Veranstaltungstypfilter'); ?>
         </label>
         <label>
             <input name="viewFilterActive" type="checkbox" value="1"

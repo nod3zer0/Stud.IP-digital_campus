@@ -43,7 +43,7 @@ class ConfigValue extends SimpleORMap
         ];
 
         $config['registered_callbacks']['after_delete'][] = function (ConfigValue $value) {
-            if ($value->entry->type === 'i18n') {
+            if (isset($value->entry) && $value->entry->type === 'i18n') {
                 $value->getTypedValue()->removeTranslations();
             }
         };

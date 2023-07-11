@@ -34,8 +34,9 @@ class OptionsWidget extends ListWidget
         $toggle_url_off = isset($toggle_url_off) ? html_entity_decode($toggle_url_off) : null;
 
         $content = sprintf(
-            '<a href="%s" class="options-checkbox options-%s" %s>%s</a>',
+            '<a href="%s" role="checkbox" aria-checked="%s" class="options-checkbox options-%s" %s>%s</a>',
             htmlReady($state && $toggle_url_off !== null ? $toggle_url_off : $toggle_url),
+            $state ? 'true' : 'false',
             $state ? 'checked' : 'unchecked',
             arrayToHtmlAttributes($attributes),
             htmlReady($label)

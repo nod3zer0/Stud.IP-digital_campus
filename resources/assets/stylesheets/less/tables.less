@@ -438,6 +438,23 @@ table.default {
             }
         }
     }
+    > tbody > tr.selected > td {
+        background-color: var(--yellow-20);
+        &:first-child {
+            position: relative;
+            &::before {
+                display: block;
+                content: '';
+                position: absolute;
+
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: 2px;
+                background-color: var(--light-gray-color);
+            }
+        }
+    }
     > tbody > tr.new > td {
         font-weight: bold;
         &:first-child {
@@ -464,6 +481,9 @@ table.default {
     // Hover effect
     &:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td:not(.nohover) {
         background-color: fadeout(@light-gray-color, 80%);
+    }
+    &:not(.nohover) > tbody:not(.nohover) > tr.selected:not(.nohover):hover > td:not(.nohover) {
+        background-color: var(--yellow-40);
     }
     > tfoot {
         > tr > td {

@@ -149,7 +149,13 @@ class Course_StudyAreasController extends AuthenticatedController
         } else {
             PageLayout::postError($msg);
         }
-        $this->redirect($url);
+        if (Request::isDialog()) {
+            $this->response->add_header('X-Dialog-Close', 1);
+            $this->response->add_header('X-Dialog-Execute', 'STUDIP.AdminCourses.App.reloadCourse');
+            $this->render_text($this->course->id);
+        } else {
+            $this->redirect($url);
+        }
     }
 
     public function unassign()

@@ -8,6 +8,9 @@
  */
 class SelectWidget extends SidebarWidget
 {
+
+    protected $onsubmit = null;
+
     /**
      * Constructs the widget by defining a special template.
      *
@@ -125,6 +128,11 @@ class SelectWidget extends SidebarWidget
         }
     }
 
+    public function setOnSubmitHandler($onsubmit)
+    {
+        $this->onsubmit = $onsubmit;
+    }
+
     /**
      * Renders the select widget
      * @param  array  $variables Additional vaiarbles
@@ -141,6 +149,7 @@ class SelectWidget extends SidebarWidget
             }
             $this->template_variables['class'] .= ' submit-upon-select';
         }
+        $this->template_variables['onsubmit'] = $this->onsubmit;
 
         return parent::render($variables);
     }

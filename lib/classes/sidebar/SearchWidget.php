@@ -16,6 +16,7 @@ class SearchWidget extends SidebarWidget
     protected $filters = [];
     protected $method = 'get';
     protected $id = null;
+    protected $onsubmit = null;
 
     /**
      * Constructor for the widget.
@@ -105,6 +106,11 @@ class SearchWidget extends SidebarWidget
         return count($this->elements) + count($this->needles) + count($this->filters) > 0;
     }
 
+    public function setOnSubmitHandler($onsubmit)
+    {
+        $this->onsubmit = $onsubmit;
+    }
+
     /**
      * Renders the widget.
      *
@@ -167,6 +173,7 @@ class SearchWidget extends SidebarWidget
         $this->template_variables['filters'] = $this->filters;
 
         $this->template_variables['has_data'] = $this->hasData();
+        $this->template_variables['onsubmit'] = $this->onsubmit;
 
         return parent::render($variables);
     }

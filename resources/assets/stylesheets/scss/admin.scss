@@ -151,4 +151,7 @@ fieldset.attribute_table {
             background-image: url("#{$image-path}/loading-indicator.svg");
         }
     }
+    > tbody.loading > tr > td {
+        opacity: 0.5;
+    }
 }

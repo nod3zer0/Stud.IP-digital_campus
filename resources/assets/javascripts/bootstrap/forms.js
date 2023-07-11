@@ -108,6 +108,7 @@ $(document)
         // select was opened by click
         if (!is_default && shouldSubmit) {
             $(this.form).submit();
+            $('option', this).prop('defaultSelected', false).filter(':selected').prop('defaultSelected', true);
             return false;
         }
     });

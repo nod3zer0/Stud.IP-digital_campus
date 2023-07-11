@@ -283,20 +283,20 @@ class SQLQuery
             $on = isset($joindata['on']) ? " ON ({$joindata['on']})" : '';
             $sql .= " " . (isset($joindata['join']) ? $joindata['join'] : 'INNER JOIN') . " {$table}{$on} ";
         }
-        if ($this->settings['where']) {
+        if (!empty($this->settings['where'])) {
             $sql .= "WHERE (" . implode(") AND (", $this->settings['where']) . ") ";
         }
-        if ($this->settings['groupby']) {
+        if (!empty($this->settings['groupby'])) {
             $sql .= "GROUP BY {$this->settings['groupby']} ";
         }
-        if ($this->settings['having']) {
+        if (!empty($this->settings['having'])) {
             $sql .= "HAVING (" . implode(") AND (", $this->settings['having']) . ") ";
         }
 
-        if ($this->settings['order']) {
+        if (!empty($this->settings['order'])) {
             $sql .= "ORDER BY {$this->settings['order']} ";
         }
-        if ($this->settings['limit']) {
+        if (!empty($this->settings['limit'])) {
             $sql .= "LIMIT ". (int) $this->settings['limit'][0] . ", " . (int) $this->settings['limit'][1] . " ";
         }
         return $sql;

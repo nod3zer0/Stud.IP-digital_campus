@@ -196,8 +196,13 @@ class Course_LvgselectorController extends AuthenticatedController
             $url = $this->action_url('index');
         }
 
-
-        $this->redirect($url);
+        if (Request::isDialog()) {
+            $this->response->add_header('X-Dialog-Close', 1);
+            $this->response->add_header('X-Dialog-Execute', 'STUDIP.AdminCourses.App.reloadCourse');
+            $this->render_text($this->course_id);
+        } else {
+            $this->redirect($url);
+        }
     }
 
     /**

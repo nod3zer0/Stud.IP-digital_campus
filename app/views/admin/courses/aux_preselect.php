@@ -21,4 +21,4 @@
     <input type="checkbox" value="1" name="aux_all_forced">
     <?=_('Erzwungen')?>
 </label>
-<?= \Studip\Button::createAccept(_('Speichern'), 'all'); ?>
+<?= \Studip\Button::createAccept(_('Speichern'), 'all', ['formaction' => URLHelper::getURL('dispatch.php/admin/courses/set_aux_lockrule')]); ?>

@@ -331,24 +331,6 @@ STUDIP.domReady(function () {
     }
 });
 
-jQuery(document).on('click', '.course-admin td .course-completion', function () {
-    var href    = $(this).attr('href'),
-        timeout = window.setTimeout(function () {
-            $(this).addClass('ajaxing');
-        }.bind(this), 300);
-
-    $.getJSON(href).done(function (response) {
-        clearTimeout(timeout);
-
-        $(this).removeClass('ajaxing').attr({
-            'data-course-completion': response.state,
-            title: response.label
-        });
-    }.bind(this));
-
-    return false;
-});
-
 // Global handler:
 // Toggle a table element. The url of the link will be called, an ajax
 // indicator will be shown instead of the element and the whole table row

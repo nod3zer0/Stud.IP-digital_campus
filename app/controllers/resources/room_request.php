@@ -1997,6 +1997,8 @@ class Resources_RoomRequestController extends AuthenticatedController
         if ($save_only) {
             // redirect to reload all infos and showing the most current ones
             $this->redirect('resources/room_request/resolve/' . $request_id);
+        } elseif (Request::isDialog()) {
+            $this->response->add_header('X-Dialog-Execute', '{"func": "STUDIP.AdminCourses.App.reloadCourse", "payload": "'.Context::get()->id.'"}');
         }
     }
 

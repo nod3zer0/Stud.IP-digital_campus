@@ -1,9 +1,15 @@
-<form action="<?= URLHelper::getLink($url) ?>" method="<?= $method ?>">
+<form action="<?= URLHelper::getLink($url) ?>"
+      <?= $onsubmit ? 'onsubmit="'.htmlReady($onsubmit).'"' : '' ?>
+      method="<?= $method ?>">
     <?= \SelectWidget::arrayToHiddenInput($params) ?>
     <?= (strtolower($method) == 'post') ?  CSRFProtection::tokenTag() : ''; ?>
-    <select class="sidebar-selectlist <?= $class ?> <? if ($__is_nested): ?>nested-select<? endif; ?>" <? !empty($size) ? printf('size="%u"', $size) : '' ?> <?= !empty($attributes) ? arrayToHtmlAttributes($attributes) : '' ?>
-            name="<?= sprintf('%s%s', htmlReady($name), $multiple ? '[]' : '') ?>" <? if ($multiple) echo 'multiple'; ?>
-            aria-label="<?= htmlReady($title) ?>" <?= $dropdownAutoWidth ? 'data-dropdown-auto-width="1"' : '' ?>>
+    <select class="sidebar-selectlist <?= $class ?> <? if ($__is_nested): ?>nested-select<? endif; ?>"
+            <? !empty($size) ? printf('size="%u"', $size) : '' ?>
+            <?= !empty($attributes) ? arrayToHtmlAttributes($attributes) : '' ?>
+            name="<?= sprintf('%s%s', htmlReady($name), $multiple ? '[]' : '') ?>"
+            <? if ($multiple) echo 'multiple'; ?>
+            aria-label="<?= htmlReady($title) ?>"
+            <?= $dropdownAutoWidth ? 'data-dropdown-auto-width="1"' : '' ?>>
 
     <? foreach ($elements as $element): ?>
         <? if ($element instanceof SelectGroupElement && count($element->getElements()) > 0): ?>

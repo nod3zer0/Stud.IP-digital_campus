@@ -1,5 +1,7 @@
 <? if (!$locked) : ?>
-    <form action="<?= $controller->url_for('course/study_areas/save/' . $course->id, $url_params) ?>" method="post">
+    <form action="<?= $controller->link_for('course/study_areas/save/' . $course->id, $url_params) ?>"
+          <?= Request::isDialog() ? 'data-dialog' : '' ?>
+          method="post">
 <? endif?>
     <?= $tree ?>
     <div style="text-align: center;">

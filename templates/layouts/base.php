@@ -102,6 +102,7 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
 
     <?= $this->render_partial('footer', ['link_params' => $header_template->link_params]); ?>
     <?= SkipLinks::getHTML() ?>
+    <section class="sr-only" id="notes_for_screenreader" aria-live="polite"></section>
 </body>
 </html>
 <?php NotificationCenter::postNotification('PageDidRender', PageLayout::getBodyElementId());

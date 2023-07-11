@@ -4,6 +4,7 @@ import Vue from './lib/studip-vue.js';
 import ActionMenu from './lib/actionmenu.js';
 import ActivityFeed from './lib/activityfeed.js';
 import admin_sem_class from './lib/admin_sem_class.js';
+import AdminCourses from './lib/admin-courses.js';
 import Admission from './lib/admission.js';
 import Arbeitsgruppen from './lib/arbeitsgruppen.js';
 import Archive from './lib/archive.js';
@@ -66,6 +67,7 @@ import Resources from './lib/resources.js';
 import Responsive from './lib/responsive.js';
 import RESTAPI, { api } from './lib/restapi.js';
 import Schedule from './lib/schedule.js';
+import Screenreader from './lib/screenreader.js';
 import Scroll from './lib/scroll.js';
 import Search from './lib/search.js';
 import Sidebar from './lib/sidebar.js';
@@ -90,6 +92,7 @@ window.STUDIP = _.assign(window.STUDIP || {}, {
     ActionMenu,
     ActivityFeed,
     admin_sem_class,
+    AdminCourses,
     Admission,
     api,
     Arbeitsgruppen,
@@ -154,6 +157,7 @@ window.STUDIP = _.assign(window.STUDIP || {}, {
     RESTAPI,
     Schedule,
     Scroll,
+    Screenreader,
     Search,
     Sidebar,
     SkipLinks,

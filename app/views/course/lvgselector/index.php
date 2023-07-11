@@ -1,5 +1,7 @@
 <? if (!$locked) : ?>
-    <form action="<?= $controller->link_for('course/lvgselector/index/' . $course_id, $url_params ?? []) ?>" method="post">
+    <form action="<?= $controller->link_for('course/lvgselector/index/' . $course_id, $url_params ?? []) ?>"
+          <?= Request::isDialog() ? 'data-dialog' : '' ?>
+          method="post">
 <? endif ?>
 <h1><?= _('Lehrveranstaltungsgruppen') ?></h1>
 <div id="assigned" data-ajax-url="<?= $ajax_url ?>" data-forward-url="<?= $no_js_url ?>">

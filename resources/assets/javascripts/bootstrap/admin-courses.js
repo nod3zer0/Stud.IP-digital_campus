@@ -1,12 +1,25 @@
-STUDIP.Dialog.registerHeaderHandler('X-Dialog-Notice', json => {
-    json = JSON.parse(json);
+STUDIP.domReady(() => {
+    const node = document.querySelector('.admin-courses-vue-app');
+    if (!node) {
+        return;
+    }
 
-    $(`#course-${json.id} td.actions .button`)
-        .removeClass('has-notice has-no-notice')
-        .addClass(json.notice.length > 0 ? 'has-notice' : 'has-no-notice')
-        .attr('title', json.notice);
+    Promise.all([
+        STUDIP.Vue.load(),
+        import('../../../vue/store/AdminCoursesStore.js').then((config) => config.default),
+        import('../../../vue/components/AdminCourses.vue').then((component) => component.default),
+    ]).then(([{ createApp, store }, storeConfig, AdminCourses]) => {
+        store.registerModule('admincourses', storeConfig);
 
-    STUDIP.Dialog.close();
+        Object.entries(window.AdminCoursesStoreData ?? {}).forEach(([key, value]) => {
+            store.commit(`admincourses/${key}`, value);
+        })
 
-    return false;
+        const vm = createApp({
+            components: { AdminCourses },
+        });
+        vm.$mount(node);
+
+        STUDIP.AdminCourses.App = vm.$refs.app;
+    });
 });

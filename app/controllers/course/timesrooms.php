@@ -245,6 +245,9 @@ class Course_TimesroomsController extends AuthenticatedController
             $this->checked_dates = $_SESSION['_checked_dates'];
             unset($_SESSION['_checked_dates']);
         }
+        if (Request::isDialog()) {
+            $this->response->add_header('X-Dialog-Execute', '{"func": "STUDIP.AdminCourses.App.reloadCourse", "payload": "'.$this->course->getId().'"}');
+        }
     }
 
     /**
@@ -313,6 +316,9 @@ class Course_TimesroomsController extends AuthenticatedController
                     PageLayout::postMessage(MessageBox::$type($msg['title'], $msg['details']));
                 }
                 $this->relocate(str_replace('_', '/', Request::option('origin')));
+            }
+            if (Request::isDialog()) {
+                $this->response->add_header('X-Dialog-Execute', '{"func": "STUDIP.AdminCourses.App.reloadCourse", "payload": "'.$this->course->getId().'"}');
             }
         }
     }

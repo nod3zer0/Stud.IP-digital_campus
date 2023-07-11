@@ -1,4 +1,8 @@
-<form action="<?= URLHelper::getLink($url) ?>" method="<?= $method ?>" <? if (isset($id)) printf('id="%s"', htmlReady($id)); ?> class="sidebar-search">
+<form action="<?= URLHelper::getLink($url) ?>"
+      method="<?= $method ?>"
+      <? if (isset($id)) printf('id="%s"', htmlReady($id)); ?>
+      <?= $onsubmit ? 'onsubmit="'.htmlReady($onsubmit).'"' : '' ?>
+      class="sidebar-search">
 <? foreach ($url_params as $key => $value): ?>
     <?=addHiddenFields($key,$value)?>
 <? endforeach; ?>

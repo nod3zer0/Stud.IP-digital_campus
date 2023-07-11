@@ -224,6 +224,9 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         $config['default_values']['schreibzugriff'] = 1;
         $config['default_values']['duration_time'] = 0;
 
+        $config['additional_fields']['teachers'] = [
+            'get' => 'getTeachers'
+        ];
         $config['additional_fields']['end_time'] = true;
 
         $config['additional_fields']['start_semester'] = [
@@ -454,6 +457,13 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
         } else {
             return true;
         }
+    }
+
+    public function getTeachers()
+    {
+        return $this->members->filter(function ($m) {
+            return $m['status'] === 'dozent';
+        });
     }
 
     public function getFreeSeats()

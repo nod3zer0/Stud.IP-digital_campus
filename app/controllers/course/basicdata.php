@@ -524,7 +524,14 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = Request::get("open");
-        $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
+        if (Request::isDialog()) {
+            $this->response->add_header('X-Dialog-Close', 1);
+            $this->response->add_header('X-Dialog-Execute', 'STUDIP.AdminCourses.App.reloadCourse');
+            $this->render_text($course_id);
+        } else {
+            $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
+        }
+
     }
 
     public function add_member_action($course_id, $status = 'dozent')
