@@ -718,28 +718,26 @@ class MessagesController extends AuthenticatedController {
     /* delete all sent or received messages */
     public function purge_action($sndrec)
     {
-        if (Request::isPost()) {
-            CSRFProtection::verifyUnsafeRequest();
+        CSRFProtection::verifyUnsafeRequest();
 
-            $query = "SELECT message_id
-                      FROM message_user
-                      WHERE snd_rec = :sndrec
-                        AND user_id = :id
-                        AND deleted != 1";
-            $returnedMessages = DBManager::get()->fetchFirst($query, [
-                'sndrec' => $sndrec,
-                'id' => $GLOBALS['user']->id,
-            ]);
-            foreach ($returnedMessages as $returnedMessage) {
-                $this->deleteMessage($returnedMessage, $sndrec);
-            }
-            if ($sndrec === 'rec') {
-                PageLayout::postSuccess(_('Alle empfangenen Nachrichten wurden gelöscht.'));
-                $this->redirect('messages/overview');
-            } else if ($sndrec === 'snd') {
-                PageLayout::postSuccess(_('Alle gesendeten Nachrichten wurden gelöscht.'));
-                $this->redirect('messages/sent');
-            }
+        $query = "SELECT message_id
+                  FROM message_user
+                  WHERE snd_rec = :sndrec
+                    AND user_id = :id
+                    AND deleted != 1";
+        $returnedMessages = DBManager::get()->fetchFirst($query, [
+            'sndrec' => $sndrec,
+            'id' => $GLOBALS['user']->id,
+        ]);
+        foreach ($returnedMessages as $returnedMessage) {
+            $this->deleteMessage($returnedMessage, $sndrec);
+        }
+        if ($sndrec === 'rec') {
+            PageLayout::postSuccess(_('Alle empfangenen Nachrichten wurden gelöscht.'));
+            $this->redirect('messages/overview');
+        } else if ($sndrec === 'snd') {
+            PageLayout::postSuccess(_('Alle gesendeten Nachrichten wurden gelöscht.'));
+            $this->redirect('messages/sent');
         }
     }
 
@@ -1009,8 +1007,8 @@ class MessagesController extends AuthenticatedController {
                     _('Nachrichten im Posteingang löschen'),
                     $this->url_for('messages/purge/rec'),
                     Icon::create('trash'),
-                    ['onclick' => 'return STUDIP.Dialog.confirmAsPost("' . $message . '", this.href);']
-                );
+                    ['data-confirm' => $message]
+                )->asButton();
             }
         } elseif ($action === 'sent') {
             if (MessageUser::countBySQL("snd_rec = 'snd' AND user_id = :id AND deleted != 1 LIMIT 1", ['id' => $GLOBALS['user']->id])) {
