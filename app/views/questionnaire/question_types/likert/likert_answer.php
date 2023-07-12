@@ -40,7 +40,7 @@ $responseData = isset($response->answerdata['answers']) ? $response->answerdata[
                                title="<?= htmlReady($answer) ?>"
                                aria-labelledby="<?= $html_id ?>"
                                name="answers[<?= $vote->getId() ?>][answerdata][answers][<?= htmlReady($index) ?>]"
-                                <?= $responseData[$index] === $answer_index ? 'checked' : '' ?>
+                                <?= isset($responseData[$index]) && $responseData[$index] === $answer_index ? 'checked' : '' ?>
                                value="<?= htmlReady($answer_index) ?>">
                     </td>
                 <? endforeach ?>

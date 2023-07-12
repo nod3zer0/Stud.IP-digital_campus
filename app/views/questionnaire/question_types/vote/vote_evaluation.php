@@ -15,6 +15,9 @@ if ($numTaskAnswers > 0) {
         if ($vote->questiondata['multiplechoice']) {
             if (is_array($answer['answerdata']['answers']) || $answer['answerdata']['answers'] instanceof Traversable) {
                 foreach ($answer['answerdata']['answers'] as $a) {
+                    if (!isset($results[(int)$a])) {
+                        $results[(int)$a] = 0;
+                    }
                     $results[(int)$a]++;
                     $results_users[(int)$a][] = $answer['user_id'];
                 }
