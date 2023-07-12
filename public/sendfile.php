@@ -51,9 +51,6 @@ if (Request::int('disable_plugins') !== null && ($GLOBALS['user']->id === 'nobod
 }
 PluginEngine::loadPlugins();
 
-//basename() needs setlocale()
-init_i18n($_SESSION['_language']);
-
 // Set Base URL, otherwise links will fail on SENDFILE_LINK_MODE = rewrite
 URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
 
