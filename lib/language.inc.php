@@ -95,7 +95,7 @@ function get_accepted_languages(Psr\Http\Message\RequestInterface $request = nul
 */
 function init_i18n($_language) {
     global $_language_domain, $INSTALLED_LANGUAGES;
-
+    $_language_path = null;
     if (isset($_language_domain) && isset($_language)) {
         $_language_path = $INSTALLED_LANGUAGES[$_language]["path"];
         setLocaleEnv($_language, $_language_domain);
@@ -118,9 +118,7 @@ function getUserLanguage($uid)
     $query = "SELECT preferred_language FROM user_info WHERE user_id = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute([$uid]);
-    $language = $statement->fetchColumn() ?: Config::get()->DEFAULT_LANGUAGE;
-
-    return $language;
+    return $statement->fetchColumn() ?: Config::get()->DEFAULT_LANGUAGE;
 }
 
 /**
