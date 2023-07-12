@@ -1845,7 +1845,7 @@ class Admin_CoursesController extends AuthenticatedController
             ]);
         }
 
-        return $config;
+        return array_values($config);
     }
 
     /**
