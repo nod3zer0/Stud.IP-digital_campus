@@ -725,8 +725,8 @@ class Admin_CoursesController extends AuthenticatedController
                     if ($GLOBALS['user']->cfg->MY_COURSES_ACTION_AREA === get_class($plugin)) {
                         $output = $plugin->getAdminCourseActionTemplate($course->getId());
                         $d['action'] = $output instanceof Flexi_Template ? $output->render() : (string) $output;
+                        break;
                     }
-                    break;
                 }
         }
         $d['completion'] = $course->completion;
