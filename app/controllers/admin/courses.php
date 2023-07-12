@@ -1185,7 +1185,7 @@ class Admin_CoursesController extends AuthenticatedController
             $course->config->store('COURSE_ADMIN_NOTICE', trim(Request::get('notice')));
 
             if (Request::isXhr()) {
-                $this->response->add_header('X-Dialog-Execute', 'STUDIP.AdminCourses.App.reloadCourse');
+                $this->response->add_header('X-Dialog-Execute', 'STUDIP.AdminCourses.App.loadCourse');
                 $this->response->add_header('X-Dialog-Close', '1');
                 $this->render_text($course->id);
             } else {
