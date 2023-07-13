@@ -1,22 +1,31 @@
 const startpage = {
-    init: function() {
+    init() {
         $('.start-widgetcontainer .portal-widget-list').sortable({
             handle: '.widget-header',
             connectWith: 'ul.portal-widget-list',
-            start: function() {
+            start() {
                 $(this)
                     .closest('.start-widgetcontainer')
                     .find('.portal-widget-list')
-                    .addClass('ui-sortable move');
+                    .addClass('move');
             },
-            stop: function(event, ui) {
-                $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/start/storeNewOrder', {
-                    widget: $(ui.item).attr('id'),
-                    position: $(ui.item).index(),
-                    column: $(ui.item)
-                        .parent()
-                        .index()
-                });
+            update(event, ui) {
+                let lanes = [];
+                $(this)
+                    .closest('.start-widgetcontainer')
+                    .children('.portal-widget-list')
+                    .each((index, element) => {
+                        lanes[index] = $('.studip-widget-wrapper', element)
+                            .map((i, el) => el.getAttribute('id'))
+                            .get(); // Ensure we have an array
+                    });
+
+                $.post(
+                    STUDIP.URLHelper.getURL('dispatch.php/start/storeNewOrder'),
+                    {lanes}
+                );
+            },
+            stop() {
                 $(this)
                     .closest('.start-widgetcontainer')
                     .find('.portal-widget-list')
@@ -25,7 +34,7 @@ const startpage = {
         });
     },
 
-    init_edit: function(perm) {
+    init_edit(perm) {
         $('.edit-widgetcontainer .portal-widget-list').sortable({
             handle: '.widget-header',
             connectWith: '.edit-widgetcontainer .portal-widget-list',

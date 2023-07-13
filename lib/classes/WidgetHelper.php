@@ -63,37 +63,48 @@ class WidgetHelper
     /**
      * storeNewPositions - stores new Widget positions for a given user
      *
-     * @param array ids of widgets to be stored
+     * @param array $lanes array with column as index and ids array as value
      *
      * @return void
      */
-    public static function storeNewPositions($widget, $position, $column)
+    public static function storeNewPositions(array $lanes): void
     {
-        $db = DBManager::get();
-        $oldWidget = $db->fetchOne("SELECT position,col FROM widget_user WHERE id = ? AND range_id = ?", [$widget, $GLOBALS['user']->id]);
-        if ($oldWidget) {
+        // Query not displayed widgets to sort them to the bottom of a lane
+        $query = "SELECT `col`, `id`
+                  FROM `widget_user`
+                  WHERE `range_id` = ?
+                    AND `id` NOT IN (?)
+                  ORDER BY `col`, `position`";
+        $undisplayed = DBManager::get()->fetchGrouped($query, [
+            User::findCurrent()->id,
+            array_merge(...$lanes)
+        ], function ($row) {
+            return array_column($row, 'id');
+        });
 
-            if ($oldWidget['col'] == $column) {
-                // Insert element
-                $db->execute("UPDATE widget_user SET position = ? WHERE id = ? ", [$position, $widget]);
-                if ($oldWidget['position'] < $position) {
-                    //Move back items BETWEEN old and new position
-                    $db->execute("UPDATE widget_user SET position = position - 1 WHERE col = ? AND range_id = ? AND position > ? AND  position <= ? AND id <> ?", [$oldWidget['col'], $GLOBALS['user']->id, $oldWidget['position'], $position, $widget]);
-                } else {
-                    //Move forward items BETWEEN old and new position
-                    $db->execute("UPDATE widget_user SET position = position + 1 WHERE col = ? AND range_id = ? AND position < ? AND  position >= ? AND id <> ?", [$oldWidget['col'], $GLOBALS['user']->id, $oldWidget['position'], $position, $widget]);
-                }
-            } else {
-                // Push all entries in the new column one position away
-                $db->execute("UPDATE widget_user SET position = position + 1 WHERE range_id = ? AND col = ? AND position >= ?", [$GLOBALS['user']->id, $column, $position]);
+        // Set new positions
+        $query = "UPDATE `widget_user`
+                  SET `col` = :column,
+                      `position` = :position
+                  WHERE `id` = :id
+                    AND `range_id` = :user_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':user_id', User::findCurrent()->id);
 
-                // Insert element
-                $db->execute("UPDATE widget_user SET position = ?, col = ? WHERE id = ? ", [$position, $column, $widget]);
+        foreach ([0, 1] as $column) {
+            $statement->bindValue(':column', $column);
 
-                // Move positions in old column
-                $db->execute("UPDATE widget_user SET position = position - 1 WHERE col = ? AND range_id = ? AND position > ?", [$oldWidget['col'], $GLOBALS['user']->id, $oldWidget['position']]);
+            $ids = array_merge(
+                $lanes[$column] ?? [],
+                $undisplayed[$column] ?? []
+            );
+
+            $position = 0;
+            foreach ($ids as $id) {
+                $statement->bindValue(':position', $position++);
+                $statement->bindValue(':id', $id);
+                $statement->execute();
             }
-
         }
     }
 

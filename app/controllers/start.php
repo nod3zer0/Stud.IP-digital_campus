@@ -255,16 +255,17 @@ class StartController extends AuthenticatedController
 
     /**
      *  Action to store the widget placements
-     *
-     * @return void
      */
-    public function storeNewOrder_action()
+    public function storeNewOrder_action(): void
     {
-        WidgetHelper::storeNewPositions(
-            Request::get('widget'),
-            Request::get('position'),
-            Request::get('column')
-        );
+        if (!Request::isPost()) {
+            throw new MethodNotAllowedException();
+        }
+
+        $lanes = Request::getArray('lanes');
+
+        WidgetHelper::storeNewPositions($lanes);
+
         $this->render_nothing();
     }
 
