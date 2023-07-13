@@ -76,6 +76,7 @@ class ResourceTreeWidget extends SidebarWidget
         }
 
         $this->parameter_name = $parameter_name;
+        $this->forced_rendering = true;
     }
 
     /**
