@@ -81,6 +81,45 @@ abstract class StudIPPlugin
     }
 
     /**
+     * Returns the description of the plugin either from plugins-table or from the manifest's descriptionlong
+     * or description attribute.
+     * @return string|null
+     */
+    public function getPluginDescription()
+    {
+        $metadata = $this->getMetadata();
+        $language = getUserLanguage(User::findCurrent()->id);
+        if ($metadata['descriptionlong_' . $language]) {
+            return $metadata['descriptionlong_' . $language];
+        }
+        if ($metadata['description_' . $language]) {
+            return $metadata['description_' . $language];
+        }
+        $description = $metadata['descriptionlong'] ?? $metadata['description'];
+
+        if ($this->plugin_info['description_mode'] === 'override_description') {
+            return $this->plugin_info['description'];
+        } else {
+            return $description . $this->plugin_info['description'];
+        }
+    }
+
+    public function getDescriptionMode()
+    {
+        return $this->plugin_info['description_mode'];
+    }
+
+    public function isHighlighted()
+    {
+        return $this->plugin_info['highlight_until'] > time();
+    }
+
+    public function getHighlightText()
+    {
+        return $this->plugin_info['highlight_text'];
+    }
+
+    /**
      * Returns the version of this plugin as defined in manifest.
      * @return string
      */

@@ -117,12 +117,14 @@ class Blubber extends CorePlugin implements StudipModule
     public function getMetadata()
     {
         return [
-            'summary' => _('Schneller und einfacher Austausch von Informationen in Gesprächsform'),
+            'displayname' => _('Blubber'),
+            'summary' => _('Schneller Austausch von Informationen in Gesprächsform'),
             'description' => _('Blubber ist eine Kommunikationsform mit Ähnlichkeiten zu einem Forum, in dem aber in Echtzeit miteinander kommuniziert werden kann und das durch den etwas informelleren Charakter eher einem Chat anmutet. Anders als im Forum ist es nicht notwendig, die Seiten neu zu laden, um die neuesten Einträge (z. B. Antworten auf eigene Postings) sehen zu können: Die Seite aktualisiert sich selbst bei neuen Einträgen. Dateien (z.B. Fotos, Audiodateien, Links) können per Drag and Drop in das Feld gezogen und somit verlinkt werden. Auch Textformatierungen sind möglich.'),
             'descriptionlong' => _('Kommunikationsform mit Ähnlichkeiten zu einem Forum. Im Gegensatz zum Forum kann mit Blubber jedoch in Echtzeit miteinander kommuniziert werden. Das Tool ähnelt durch den etwas informelleren Charakter einem Messenger. Anders als im Forum ist es nicht notwendig, die Seiten neu zu laden, um die neuesten Einträge (z. B. Antworten auf eigene Postings) sehen zu können. Dateien (z. B. Fotos, Audiodateien, Links) können per drag and drop in das Feld gezogen und somit verlinkt werden. Auch Textformatierungen sind möglich.'),
             'category' => _('Kommunikation und Zusammenarbeit'),
             'keywords' => _('Einfach Text schreiben und mit <Enter> abschicken; Direktes Kontaktieren anderer Stud.IP-NutzerInnen (@Vorname Nachname); Setzen von und Suche nach Stichworten über Hashtags (#Stichwort); Einbinden von Dateien per drag and drop'),
             'icon' => Icon::create('blubber', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('blubber', Icon::ROLE_CLICKABLE),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Blubber',
                 'pictures' => [

@@ -120,6 +120,7 @@ class CoreElearningInterface extends CorePlugin implements StudipModule
                             Zugang zu externen Lernplattformen;
                             Aufgaben- und Test-Erstellung'),
             'icon' => Icon::create('learnmodule', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('learnmodule', Icon::ROLE_CLICKABLE),
             'descriptionshort' => _('Zugang zu extern erstellten Lernmodulen'),
             'descriptionlong' => _('Über diese Schnittstelle ist es möglich, Selbstlerneinheiten, '.
                                     'die in externen Programmen erstellt werden, in Stud.IP zur Verfügung '.

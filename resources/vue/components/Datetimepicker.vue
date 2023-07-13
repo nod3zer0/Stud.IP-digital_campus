@@ -33,8 +33,12 @@ export default {
         setUnixTimestamp () {
             let formatted_date = this.$refs.visibleInput.value;
             let date = formatted_date.match(/(\d+)/g);
-            date = new Date(`${date[2]}-${date[1]}-${date[0]} ${date[3]}:${date[4]}`);
-            this.$emit('input', Math.floor(date / 1000));
+            if (date) {
+                date = new Date(`${date[2]}-${date[1]}-${date[0]} ${date[3]}:${date[4]}`);
+                this.$emit('input', Math.floor(date / 1000));
+            } else {
+                this.$emit('input', null);
+            }
         }
     },
     mounted () {

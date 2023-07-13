@@ -154,7 +154,7 @@ class CoreDocuments extends CorePlugin implements StudipModule, OERModule
     public function getMetadata()
     {
         return [
-            'summary'          => _('Austausch von Dateien'),
+            'summary'          => _('Austausch von Dateien, Hausaufgabenordner & Terminordner'),
             'description'      => _('Im Dateibereich können Dateien sowohl von ' .
                 'Lehrenden als auch von Studierenden hoch- bzw. ' .
                 'heruntergeladen werden. Es können Ordner angelegt und ' .
@@ -183,6 +183,7 @@ class CoreDocuments extends CorePlugin implements StudipModule, OERModule
                 'können Im Dateibereich bestimmte Rechte (r, w, x, f) für Studierende, wie z.B. das ' .
                 'Leserecht (r), festgelegt werden.'),
             'icon'             => Icon::create('files', Icon::ROLE_INFO),
+            'icon_clickable'   => Icon::create('files', Icon::ROLE_CLICKABLE),
             'screenshots'      => [
                 'path'     => 'assets/images/plus/screenshots/Dateibereich_-_Dateiordnerberechtigung',
                 'pictures' => [

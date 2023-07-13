@@ -13,6 +13,7 @@ import RangeInput from './components/RangeInput.vue';
 import Datetimepicker from './components/Datetimepicker.vue';
 import TextareaWithToolbar from './components/TextareaWithToolbar.vue';
 import I18nTextarea from "./components/I18nTextarea.vue";
+import StudipWysiwyg from "./components/StudipWysiwyg.vue";
 // import StudipLoadingIndicator from './StudipLoadingIndicator.vue';
 import StudipMessageBox from './components/StudipMessageBox.vue';
 import StudipProxyCheckbox from './components/StudipProxyCheckbox.vue';
@@ -36,6 +37,7 @@ const BaseComponents = {
     StudipFolderSize,
     StudipIcon,
     I18nTextarea,
+    StudipWysiwyg,
 //    StudipLoadingIndicator,
     StudipMessageBox,
     StudipProxyCheckbox,

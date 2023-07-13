@@ -85,7 +85,11 @@ class PluginManager
                 'depends'                 => (int) $plugin['dependentonid'],
                 'core'                    => $plugin['pluginpath'] === '',
                 'automatic_update_url'    => $plugin['automatic_update_url'],
-                'automatic_update_secret' => $plugin['automatic_update_secret']
+                'automatic_update_secret' => $plugin['automatic_update_secret'],
+                'description'             => $plugin['description'],
+                'description_mode'         => $plugin['description_mode'],
+                'highlight_until'         => $plugin['highlight_until'],
+                'highlight_text'          => $plugin['highlight_text']
             ];
         }
     }
@@ -251,11 +255,16 @@ class PluginManager
             $activation->range_type = $range->getRangeType();
         }
         $plugin = $this->getPluginById($id);
+
         if ($active) {
             call_user_func([get_class($plugin), 'onActivation'], $id, $rangeId);
+            StudipLog::log('PLUGIN_ENABLE', $rangeId, $id, User::findCurrent()->id);
+            NotificationCenter::postNotification('PluginDidActivate', $rangeId, $id);
             return $activation->store();
         } else {
             call_user_func([get_class($plugin), 'onDeactivation'], $id, $rangeId);
+            StudipLog::log('PLUGIN_DISABLE', $rangeId, $id, User::findCurrent()->id);
+            NotificationCenter::postNotification('PluginDidDeactivate', $rangeId, $id);
             return $activation->delete();
         }
     }

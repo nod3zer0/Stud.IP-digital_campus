@@ -144,12 +144,14 @@ export default {
             values[this.selectedLanguage.id] = this.value;
             this.values = values;
         }
+        this.$emit('selectlanguage', this.selectedLanguage.id);
     },
     methods: {
         selectLanguage (e) {
             for (let i in this.languages) {
                 if (e.target.value === this.languages[i].id) {
                     this.selectedLanguage = this.languages[i];
+                    this.$emit('selectlanguage', this.languages[i].id);
                     this.$nextTick(() => {
                         if (typeof this.$refs.inputfield.focus === "function") {
                             this.$refs.inputfield.focus();

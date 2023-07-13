@@ -48,6 +48,6 @@ class Course_ChangeViewController extends AuthenticatedController
     public function reset_changed_view_action()
     {
         unset($_SESSION["seminar_change_view_{$this->course_id}"]);
-        $this->relocate('course/management');
+        $this->relocate('course/contentmodules');
     }
 }

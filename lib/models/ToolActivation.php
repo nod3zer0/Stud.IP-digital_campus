@@ -37,6 +37,7 @@ class ToolActivation extends SimpleORMap
         ];
 
         $config['serialized_fields']['metadata'] = 'JSONArrayObject';
+
         $config['registered_callbacks']['before_create'][] = 'setMaxPosition';
 
         parent::configure($config);
@@ -94,5 +95,4 @@ class ToolActivation extends SimpleORMap
             return 'nobody';
         }
     }
-
 }

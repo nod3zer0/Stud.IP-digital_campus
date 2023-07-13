@@ -53,7 +53,26 @@ class CourseNavigation extends Navigation
             return;
         }
 
-        foreach ($context->tools as $tool) {
+        $admin_plugin_ids = [];
+        $core_admin = PluginManager::getInstance()->getPlugin('CoreAdmin');
+        if ($core_admin) {
+            $admin_plugin_ids[] = $core_admin->getPluginId();
+        }
+        $core_studygroup_admin = PluginManager::getInstance()->getPlugin('CoreStudygroupAdmin');
+        if ($core_studygroup_admin) {
+            $admin_plugin_ids[] = $core_studygroup_admin->getPluginId();
+        }
+        $tools = $context->tools->getArrayCopy();
+        usort($tools, function ($a, $b) use ($admin_plugin_ids) {
+            if (in_array($a['plugin_id'], $admin_plugin_ids)) {
+                return -1;
+            }
+            if (in_array($b['plugin_id'], $admin_plugin_ids)) {
+                return 1;
+            }
+            return $a['position'] - $b['position'];
+        });
+        foreach ($tools as $tool) {
             if (Context::isInstitute() || Seminar_Perm::get()->have_studip_perm($tool->getVisibilityPermission(), $context->id)) {
                 $studip_module = $tool->getStudipModule();
                 if ($studip_module instanceof StudipModule) {

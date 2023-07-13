@@ -110,7 +110,10 @@ class CoreOverview extends CorePlugin implements StudipModule
     public function getMetadata()
     {
         return [
-            'displayname' => _('Übersicht')
+            'displayname' => _('Übersicht'),
+            'summary' => _('Ankündigungen, Termine, Fragebögen & Details'),
+            'icon' => Icon::create('home', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('home', Icon::ROLE_CLICKABLE)
         ];
     }
 

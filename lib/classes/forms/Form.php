@@ -18,6 +18,7 @@ class Form extends Part
     protected $save_button_name = '';
 
     protected $autoStore = false;
+    protected $debugmode = false;
     protected $success_message = '';
 
     protected $collapsable = false;
@@ -211,6 +212,17 @@ class Form extends Part
         return $this;
     }
 
+    public function setDebugMode(bool $debug = true): Form
+    {
+        $this->debugmode = $debug;
+        return $this;
+    }
+
+    public function getDebugMode(): bool
+    {
+        return $this->debugmode;
+    }
+
     public function getSuccessMessage() : string
     {
         return $this->success_message;
@@ -301,11 +313,9 @@ class Form extends Part
         $all_values = [];
         foreach ($this->getAllInputs() as $input) {
             $value = $this->getStorableValueFromRequest($input);
-            if ($value !== null) {
-                $callback = $this->getStoringCallback($input);
-                if (is_callable($callback)) {
-                    $stored += $callback($value, $input);
-                }
+            $callback = $this->getStoringCallback($input);
+            if (is_callable($callback)) {
+                $stored += $callback($value, $input);
                 $all_values[$input->getName()] = $value;
             }
         }
@@ -388,7 +398,11 @@ class Form extends Part
             return $input->store;
         }
         $context = $input->getParent()->getContextObject();
-        if ($context && is_subclass_of($context, \SimpleORMap::class)) {
+        if (
+            $context
+            && is_subclass_of($context, \SimpleORMap::class)
+            && $context->isField($input->getName())
+        ) {
             return function ($value) use ($context, $input) {
                 $context[$input->getName()] = $value;
             };

@@ -27,6 +27,7 @@ class Course extends SchemaProvider
     const REL_START_SEMESTER = 'start-semester';
     const REL_STATUS_GROUPS = 'status-groups';
     const REL_WIKI_PAGES = 'wiki-pages';
+    const REL_TOOLS = 'tools';
 
     public function getId($course): ?string
     {
@@ -82,6 +83,7 @@ class Course extends SchemaProvider
         $relationships = $this->getSemTypeRelationship($relationships, $course, $includeList);
         $relationships = $this->getStatusGroupsRelationship($relationships, $course, $includeList);
         $relationships = $this->getWikiPagesRelationship($relationships, $course, $includeList);
+        $relationships = $this->getToolsRelationship($relationships, $course, $includeList);
 
         return $relationships;
     }
@@ -296,6 +298,26 @@ class Course extends SchemaProvider
         ];
 
         return $relationships;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    private function getToolsRelationship(
+        array $relationships,
+        \Course $course,
+        $includeData
+    ) {
+        $relation = [
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->getRelationshipRelatedLink($course, self::REL_TOOLS),
+            ]
+        ];
+        if (in_array(self::REL_TOOLS, $includeData)) {
+            $relation[self::RELATIONSHIP_DATA] = $course->tools->getArrayCopy();
+        }
+
+        return array_merge($relationships, [self::REL_TOOLS => $relation]);
     }
 
     /**

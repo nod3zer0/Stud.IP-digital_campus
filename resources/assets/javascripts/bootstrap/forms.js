@@ -251,6 +251,8 @@ STUDIP.ready(function () {
                         params.STUDIPFORM_VALIDATIONNOTES = [];
                         params.STUDIPFORM_AUTOSAVEURL = f.dataset.autosave;
                         params.STUDIPFORM_REDIRECTURL = f.dataset.url;
+                        params.STUDIPFORM_SELECTEDLANGUAGES = {};
+                        params.STUDIPFORM_DEBUGMODE = JSON.parse(f.dataset.debugmode);
                         return params;
                     },
                     methods: {
@@ -278,8 +280,8 @@ STUDIP.ready(function () {
                                     data: params,
                                     type: 'post',
                                     success() {
-                                        if (v.STUDIPFORM_REDIRECTURL) {
-                                            window.location.href = v.STUDIPFORM_REDIRECTURL
+                                        if (v.STUDIPFORM_REDIRECTURL && !v.STUDIPFORM_DEBUGMODE) {
+                                            window.location.href = v.STUDIPFORM_REDIRECTURL;
                                         }
                                     }
                                 });
@@ -336,6 +338,13 @@ STUDIP.ready(function () {
                                     this[key] = value;
                                 }
                             }
+                        },
+                        selectLanguage(input_name, language_id) {
+                            let languages = {
+                                ...this.STUDIPFORM_SELECTEDLANGUAGES
+                            };
+                            languages[input_name] = language_id;
+                            this.STUDIPFORM_SELECTEDLANGUAGES = languages;
                         }
                     },
                     mounted () {

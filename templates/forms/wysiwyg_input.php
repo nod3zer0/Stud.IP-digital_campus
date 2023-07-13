@@ -7,12 +7,10 @@
             <span class="asterisk" title="<?= _('Dies ist ein Pflichtfeld') ?>" aria-hidden="true">*</span>
         <? endif ?>
     </label>
-    <i18n-textarea type="wysiwyg"
+    <studip-wysiwyg
                    id="<?= $id ?>"
-                   name="<?= htmlReady($name) ?>"
+                   v-model="<?= htmlReady($name) ?>"
                    value="<?= htmlReady($value) ?>"
-                   @allinputs="setInputs"
-                   @selectlanguage="(language_id) => selectLanguage('<?= htmlReady($this->name) ?>', language_id)"
-                   :wysiwyg_disabled="<?= \Config::get()->WYSIWYG ? 'false' : 'true' ?>" <?= $required ? 'required' : '' ?>>
-    </i18n-textarea>
+                   <?= $required ? 'required' : '' ?>>
+    </studip-wysiwyg>
     </div>

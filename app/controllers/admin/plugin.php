@@ -571,4 +571,49 @@ class Admin_PluginController extends AuthenticatedController
         }
     }
 
+    public function edit_description_action(Plugin $plugin)
+    {
+        $this->plugin = PluginManager::getInstance()->getPluginById($plugin->getId());
+        $this->metadata = $this->plugin->getMetadata();
+        $this->form = \Studip\Forms\Form::fromSORM($plugin, [
+            'legend' => _('Pluginbeschreibung'),
+            'fields' => [
+                'description' => [
+                    'label' => _('Beschreibung'),
+                    'type' => 'i18n_formatted'
+                ],
+                'manifest_info_de' => [
+                    'label' => _('Standardbeschreibung des Plugins'),
+                    'type' => 'info',
+                    'value' => $this->metadata['descriptionlong'] ?? $this->metadata['description'],
+                    'if' => "STUDIPFORM_SELECTEDLANGUAGES.description === 'de_DE'"
+                ],
+                'manifest_info_en' => [
+                    'label' => sprintf(_('Standardbeschreibung des Plugins (%s)'), _('Englisch')),
+                    'type' => 'info',
+                    'value' => $this->metadata['descriptionlong_en'] ?? $this->metadata['description_en'],
+                    'if' => "STUDIPFORM_SELECTEDLANGUAGES.description === 'en_GB'"
+                ],
+                'decription_mode' => [
+                    'label' => _('Modus der neuen Beschreibung'),
+                    'type' => 'select',
+                    'options' => [
+                        'add' => _('Hinzufügen zur Standardbeschreibung'),
+                        'override_description' => _('Standardbeschreibung überschreiben'),
+                        'replace_all' => _('Beschreibungsfenster komplett ersetzen durch Beschreibung')
+                    ]
+                ],
+                'highlight_until' => [
+                    'label' => _('In Veranstaltungen bewerben bis (oder leer lassen)'),
+                    'type' => 'datetimepicker'
+                ],
+                'highlight_text' => [
+                    'label' => _('Bewerbungs-Infotext')
+                ]
+            ]
+        ])->autoStore()
+          //->setDebugMode(true)
+          ->setURL(URLHelper::getURL('dispatch.php/admin/plugin/index'));
+    }
+
 }

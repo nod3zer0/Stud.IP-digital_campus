@@ -24,6 +24,7 @@ $form_id = md5(uniqid());
       novalidate
       id="<?= htmlReady($form_id) ?>"
       data-inputs="<?= htmlReady(json_encode($inputs)) ?>"
+      data-debugmode="<?= htmlReady(json_encode($form->getDebugMode())) ?>"
       data-required="<?= htmlReady(json_encode($required_inputs)) ?>"
       class="default studipform<?= $form->isCollapsable() ? ' collapsable' : '' ?>">
 
@@ -31,7 +32,7 @@ $form_id = md5(uniqid());
 
     <article aria-live="assertive"
              class="validation_notes studip"
-             v-if="(STUDIPFORM_REQUIRED.length > 0) || STUDIPFORM_DISPLAYVALIDATION">
+             v-if="STUDIPFORM_REQUIRED.length > 0 || STUDIPFORM_VALIDATIONNOTES.length > 0">
         <header>
             <h1>
                 <?= Icon::create('info-circle', Icon::ROLE_INFO)->asImg(17, ['class' => "text-bottom validation_notes_icon"]) ?>

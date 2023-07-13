@@ -35,6 +35,7 @@ class CoreStudygroupAdmin extends CorePlugin implements StudipModule
         $navigation->setImage(Icon::create('admin', Icon::ROLE_INFO_ALT));
         $navigation->setActiveImage(Icon::create('admin', Icon::ROLE_INFO));
 
+        $navigation->addSubNavigation('contentmodules', new Navigation(_('Werkzeuge'), "dispatch.php/course/contentmodules?cid={$course_id}"));
         $navigation->addSubNavigation('main', new Navigation(_('Verwaltung'), "dispatch.php/course/studygroup/edit/?cid={$course_id}"));
         $navigation->addSubNavigation('avatar', new Navigation(_('Infobild'), "dispatch.php/avatar/update/course/{$course_id}?cid={$course_id}"));
 

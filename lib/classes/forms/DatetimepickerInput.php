@@ -22,4 +22,13 @@ class DatetimepickerInput extends Input
         $template->attributes = $attributes;
         return $template->render();
     }
+
+    /**
+     * Turns an empty string into null value.
+     * @return integer|null
+     */
+    public function dataMapper($value)
+    {
+        return $value ?: null;
+    }
 }

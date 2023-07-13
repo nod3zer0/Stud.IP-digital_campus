@@ -196,6 +196,7 @@ class CoreForum extends CorePlugin implements ForumModule
             'category' => _('Kommunikation und Zusammenarbeit'),
             'keywords' => _('Möglichkeit zum intensiven, nachhaltigen textbasierten Austausch; (nachträgliche) Strukturierung der Beiträge; Editierfunktion für Lehrende'),
             'icon' => Icon::create('forum', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('forum', Icon::ROLE_CLICKABLE),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Forum',
                 'pictures' => [

@@ -139,6 +139,7 @@ class CoreScm extends CorePlugin implements StudipModule
                                     'Literatur. Sie kann aber auch für andere beliebige Zusatzinformationen (Links, Protokolle '.
                                     'etc.) verwendet werden.'),
             'icon' => Icon::create('infopage', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('infopage', Icon::ROLE_CLICKABLE),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Freie_Informationsseite',
                 'pictures' => [

@@ -108,6 +108,7 @@ class LtiToolModule extends CorePlugin implements StudipModule, SystemPlugin, Pr
             'category' => _('Kommunikation und Zusammenarbeit'),
             'keywords' => _('Einbindung von LTI-Tools (Version 1.x)'),
             'icon' => Icon::create('link-extern', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('link-extern', Icon::ROLE_CLICKABLE),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Lti',
                 'pictures' => [

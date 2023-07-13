@@ -71,10 +71,10 @@ class SemClass implements ArrayAccess
         $type = isset($INST_MODULES[$type]) ? $type : 'default';
 
         $data = [
-            'name'                => 'Generierte Standardinstitutsklasse',
+            'name'                => _('Generierte Standardinstitutsklasse'),
             'visible'             => 1,
-            'overview'            => 'CoreOverview', // always available
-            'admin'               => 'CoreAdmin'     // always available
+            'admin'               => 'CoreAdmin',     // always available
+            'overview'            => 'CoreOverview'   // always available
         ];
         $slots = [
             'forum'               => 'CoreForum',
@@ -86,8 +86,8 @@ class SemClass implements ArrayAccess
             'personal'            => 'CorePersonal'
         ];
         $modules = [
+            'CoreAdmin'           => ['activated' => 1, 'sticky' => 1],
             'CoreOverview'        => ['activated' => 1, 'sticky' => 1],
-            'CoreAdmin'           => ['activated' => 1, 'sticky' => 1]
         ];
 
         foreach ($slots as $slot => $module) {

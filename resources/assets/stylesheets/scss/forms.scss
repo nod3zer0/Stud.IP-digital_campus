@@ -324,6 +324,7 @@ form.default {
         > * {
             box-sizing: border-box;
             flex: 1 0 auto;
+            max-width: 400px;
 
             &:not(:first-child) {
                 margin-left: 3px;
@@ -596,3 +597,5 @@ form.inline {
         }
     }
 }
+
+

@@ -104,6 +104,16 @@ use Studip\Button, Studip\LinkButton;
                                 _('Zugriffsrechte bearbeiten'),
                                 Icon::create('edit', 'clickable', ['title' => _('Zugriffsrechte bearbeiten')])
                             ) ?>
+                            <?
+                            if (in_array('StudipModule', $plugin['type'])) {
+                                $actionMenu->addLink(
+                                    $controller->url_for('admin/plugin/edit_description/' . $pluginid),
+                                    _('Beschreibung und Hervorhebung'),
+                                    Icon::create('infopage', Icon::ROLE_CLICKABLE, ['title' => _('Beschreibung und Hervorhebung')]),
+                                    ['data-dialog' => 'size=big']
+                                );
+                            }
+                            ?>
 
                             <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version']) && !$plugin['core']): ?>
                                 <? $actionMenu->addLink(

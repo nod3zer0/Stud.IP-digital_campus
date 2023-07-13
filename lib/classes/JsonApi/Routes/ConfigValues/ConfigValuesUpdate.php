@@ -33,6 +33,7 @@ class ConfigValuesUpdate extends JsonApiController
         // TODO: zunächst kann diese Route nur Konfigurationseinstellungen vom Typ bool ändern
         if (
             'boolean' !== $resource->entry['type']
+            && $resource->entry['field'] !== 'CONTENTMODULES_TILED_DISPLAY'
             && $resource->entry['field'] !== 'MY_COURSES_OPEN_GROUPS'
             && $resource->entry['field'] !== 'MY_COURSES_VIEW_SETTINGS'
         ) {

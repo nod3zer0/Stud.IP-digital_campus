@@ -119,7 +119,7 @@ class CoreWiki extends CorePlugin implements StudipModule
     public function getMetadata()
     {
         return [
-            'summary' => _('Gemeinsames asynchrones Erstellen und Bearbeiten von Texten'),
+            'summary' => _('Gemeinsames Erstellen und Bearbeiten von Texten'),
             'description' => _('Im Wiki-Web oder kurz "Wiki" können '.
                 'verschiedene Autor/-innen gemeinsam Texte, Konzepte und andere '.
                 'schriftliche Arbeiten erstellen und gestalten, dies '.
@@ -151,6 +151,7 @@ class CoreWiki extends CorePlugin implements StudipModule
                                     'PDF-Datei ist integriert.'),
             'category' => _('Kommunikation und Zusammenarbeit'),
             'icon' => Icon::create('wiki', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('wiki', Icon::ROLE_CLICKABLE),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Wiki-Web',
                 'pictures' => [

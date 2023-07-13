@@ -147,6 +147,7 @@ class GradebookModule extends CorePlugin implements SystemPlugin, StudipModule
             'category' => _('Lehr- und Lernorganisation'),
             'keywords' => _('automatische und manuelle Erfassung von gewichteten Leistungen;Export von Leistungen;persönliche Fortschrittskontrolle'),
             'icon' => Icon::create('assessment', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('assessment', Icon::ROLE_CLICKABLE),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Gradebook',
                 'pictures' => [

@@ -49,6 +49,7 @@ class CoreCalendar extends CorePlugin implements StudipModule
             'summary' => _('Kalender'),
             'category' => _('Lehr- und Lernorganisation'),
             'icon' => Icon::create('schedule', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('schedule', Icon::ROLE_CLICKABLE),
             'displayname' => _('Planer'),
         ];
     }

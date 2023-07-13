@@ -106,6 +106,7 @@ class CoreSchedule extends CorePlugin implements StudipModule
                                     'inhaltlichen Einstimmung der Studierenden können Lehrende den Terminen ' .
                                     'Themen hinzufügen, die z. B. eine Kurzbeschreibung der Inhalte darstellen.'),
             'icon' => Icon::create('schedule', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('schedule', Icon::ROLE_CLICKABLE),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Ablaufplan',
                 'pictures' => [

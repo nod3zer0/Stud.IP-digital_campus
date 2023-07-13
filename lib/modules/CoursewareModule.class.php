@@ -81,11 +81,11 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule
     public function getIconNavigation($courseId, $last_visit, $user_id)
     {
         $statement = DBManager::get()->prepare("
-                SELECT COUNT(DISTINCT elem.id) 
-                FROM `cw_structural_elements` AS elem 
+                SELECT COUNT(DISTINCT elem.id)
+                FROM `cw_structural_elements` AS elem
                 INNER JOIN `cw_containers` as container ON (elem.id = container.structural_element_id)
                 INNER JOIN `cw_blocks` as blocks ON (container.id = blocks.container_id)
-                WHERE elem.range_type = 'course' 
+                WHERE elem.range_type = 'course'
                 AND elem.range_id = :range_id
                 AND blocks.payload != ''
                 AND blocks.chdate > :last_visit
@@ -141,6 +141,7 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule
             'displayname' => _('Courseware'),
             'category' => _('Lehr- und Lernorganisation'),
             'icon' => Icon::create('courseware', 'info'),
+            'icon_clickable' => Icon::create('courseware', Icon::ROLE_CLICKABLE),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/Courseware',
                 'pictures' => [

@@ -24,15 +24,13 @@ class CoreAdmin extends CorePlugin implements StudipModule
      */
     public function getTabNavigation($course_id)
     {
-        $sem_create_perm = in_array(Config::get()->SEM_CREATE_PERM, ['root','admin','dozent']) ? Config::get()->SEM_CREATE_PERM : 'dozent';
-
         if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
             $navigation = new Navigation(_('Verwaltung'));
             $navigation->setImage(Icon::create('admin', Icon::ROLE_INFO_ALT));
             $navigation->setActiveImage(Icon::create('admin', Icon::ROLE_INFO));
 
-            $main = new Navigation(_('Verwaltung'), 'dispatch.php/course/management');
-            $navigation->addSubNavigation('main', $main);
+            $main = new Navigation(_('Werkzeuge'), 'dispatch.php/course/contentmodules');
+            $navigation->addSubNavigation('contentmodules', $main);
 
             if (!Context::isInstitute()) {
                 $item = new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view/' . $course_id);

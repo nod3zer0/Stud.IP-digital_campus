@@ -60,6 +60,41 @@ abstract class CorePlugin
         return '';
     }
 
+    public function getPluginDescription()
+    {
+        $metadata = $this->getMetadata();
+        $language = getUserLanguage(User::findCurrent()->id);
+        if ($metadata['descriptionlong_' . $language]) {
+            return $metadata['descriptionlong_' . $language];
+        }
+        if ($metadata['description_' . $language]) {
+            return $metadata['description_' . $language];
+        }
+        $description = $metadata['descriptionlong'] ?? $metadata['description'];
+
+        if ($this->plugin_info['description_mode'] === 'override_description') {
+            return $this->plugin_info['description'];
+        } else {
+            return '<!-- HTML --><div>' . $description . '</div>' . $this->plugin_info['description'];
+        }
+    }
+
+    public function getDescriptionMode()
+    {
+        return $this->plugin_info['description_mode'];
+    }
+
+    public function isHighlighted()
+    {
+        return $this->plugin_info['highlight_until'] > time();
+    }
+
+    public function getHighlightText()
+    {
+        return $this->plugin_info['highlight_text'];
+    }
+
+
     /**
      * Checks if the plugin is a core-plugin. Returns true if this is the case.
      *

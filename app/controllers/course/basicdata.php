@@ -290,7 +290,8 @@ class Course_BasicdataController extends AuthenticatedController
         }
 
         //Daten sammeln:
-        $sem = Seminar::getInstance($this->course_id);
+        $course = Course::find($this->course_id);
+        $sem = new Seminar($course);
         $data = $sem->getData();
 
         //Erster, zweiter und vierter Reiter des Akkordions: Grundeinstellungen
@@ -365,10 +366,51 @@ class Course_BasicdataController extends AuthenticatedController
 
         $widget = new ActionsWidget();
 
+        $sem_create_perm = in_array(Config::get()->SEM_CREATE_PERM, ['root','admin','dozent']) ? Config::get()->SEM_CREATE_PERM : 'dozent';
+        if ($GLOBALS['perm']->have_perm($sem_create_perm)) {
+            if (!LockRules::check(Context::getId(), 'seminar_copy')) {
+                $widget->addLink(
+                    _('Veranstaltung kopieren'),
+                    $this->url_for(
+                         'course/wizard/copy/' . $this->course_id,
+                         ['studip_ticket' => Seminar_Session::get_ticket()]
+                    ),
+                    Icon::create('seminar')
+                );
+            }
+        }
         $widget->addLink(_('Bild ändern'),
-             $this->url_for('avatar/update/course', $course_id),
-             Icon::create('edit')
+            $this->url_for('avatar/update/course', $this->course_id),
+            Icon::create('edit')
         );
+        if ($GLOBALS['perm']->have_perm('admin')) {
+            $is_locked = $course->lock_rule;
+            $widget->addLink(
+                _('Sperrebene ändern') . ' (' . ($is_locked ? _('gesperrt') : _('nicht gesperrt')) . ')',
+                $this->url_for(
+                    'course/management/lock',
+                    ['studip_ticket' => Seminar_Session::get_ticket()]
+                ),
+                Icon::create('lock-' . ($is_locked ? 'locked' : 'unlocked'))
+            )->asDialog('size=auto');
+        }
+
+        if (
+            (Config::get()->ALLOW_DOZENT_VISIBILITY || $GLOBALS['perm']->have_perm('admin'))
+            && !LockRules::Check($this->course_id, 'seminar_visibility')
+        ) {
+            $is_visible = $course->visible;
+            if ($course->isOpenEnded() || $course->end_semester->visible) {
+                $widget->addLink(
+                    $is_visible ? _('Veranstaltung verstecken') : _('Veranstaltung sichtbar schalten'),
+                    $this->url_for(
+                        'course/management/change_visibility',
+                        ['studip_ticket' => Seminar_Session::get_ticket()]
+                    ),
+                    Icon::create('visibility-' . ($is_visible ? 'visible' : 'invisible'))
+                );
+            }
+        }
 
         if ($this->deputies_enabled) {
             if (Deputy::isDeputy($GLOBALS['user']->id, $this->course_id)) {
@@ -387,6 +429,16 @@ class Course_BasicdataController extends AuthenticatedController
                     Icon::create('persons')
                 );
             }
+        }
+        if (Config::get()->ALLOW_DOZENT_DELETE || $GLOBALS['perm']->have_perm('admin')) {
+            $widget->addLink(
+                _('Veranstaltung löschen'),
+                $this->url_for(
+                    'course/archive/confirm',
+                    ['studip_ticket' => Seminar_Session::get_ticket()]
+                ),
+                Icon::create('trash')
+            )->asDialog('size=auto');
         }
         $sidebar->addWidget($widget);
         if ($GLOBALS['perm']->have_studip_perm('admin', $this->course_id)) {

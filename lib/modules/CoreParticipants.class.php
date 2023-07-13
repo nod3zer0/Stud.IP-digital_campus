@@ -178,6 +178,7 @@ class CoreParticipants extends CorePlugin implements StudipModule
                                    'bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'category' => _('Lehr- und Lernorganisation'),
             'icon' => Icon::create('persons', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('persons', Icon::ROLE_CLICKABLE),
             'screenshots' => [
                 'path' => 'assets/images/plus/screenshots/TeilnehmerInnen',
                 'pictures' => [

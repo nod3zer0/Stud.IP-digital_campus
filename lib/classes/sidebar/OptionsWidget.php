@@ -55,8 +55,9 @@ class OptionsWidget extends ListWidget
         $url = html_entity_decode($url);
 
         $content = sprintf(
-            '<a href="%s" class="options-radio options-%s" %s>%s</a>',
+            '<a href="%s" role="radio" aria-checked="%s" class="options-radio options-%s" %s>%s</a>',
             htmlReady($url),
+            $checked ? 'true' : 'false',
             $checked ? 'checked' : 'unchecked',
             arrayToHtmlAttributes($attributes),
             htmlReady($label)

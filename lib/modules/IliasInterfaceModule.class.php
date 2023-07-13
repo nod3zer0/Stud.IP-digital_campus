@@ -153,6 +153,7 @@ class IliasInterfaceModule extends CorePlugin implements StudipModule, SystemPlu
                             Zugang zu ILIAS;
                             Aufgaben- und Test-Erstellung'),
             'icon'             => Icon::create('learnmodule', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('learnmodule', Icon::ROLE_CLICKABLE),
             'descriptionshort' => _('Zugang zu extern erstellten ILIAS-Lernobjekten'),
             'descriptionlong'  => _('Über diese Schnittstelle ist es möglich, Lernobjekte aus ' .
                 'einer ILIAS-Installation (> 5.3.8) in Stud.IP zur Verfügung ' .

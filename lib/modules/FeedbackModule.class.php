@@ -53,6 +53,7 @@ class FeedbackModule extends CorePlugin implements StudipModule, SystemPlugin
             'category'      => _('Kommunikation und Zusammenarbeit'),
             'keywords'      => _('Anlegen von Feedback-Elementen an verschiedenen Stellen; Auswahl verschiedener Feedback-Modi, wie Sternbewertung; Übersicht über alle Feedback-Elemente einer Veranstaltung'),
             'icon'          => Icon::create('star', Icon::ROLE_INFO),
+            'icon_clickable' => Icon::create('star', Icon::ROLE_CLICKABLE),
             'screenshots'   => [
                 'path'      => 'assets/images/plus/screenshots/Feedback',
                 'pictures'      => [
