@@ -27,11 +27,11 @@ export default {
     },
     computed: {
         selectorId() {
-            return '#' +this.index + '-' + this.name.toLowerCase().replace(/ /g, '-');
+            return '#' + this._uid + '-' + this.name.toLowerCase().replace(/ /g, '-');
         },
         id() {
-            return this.index + '-' + this.name.toLowerCase().replace(/ /g, '-') + '-tabpanel';
-        },
+            return this._uid + '-' + this.name.toLowerCase().replace(/ /g, '-') + '-tabpanel';
+        }
     },
     mounted() {
         this.isActive = this.selected;
