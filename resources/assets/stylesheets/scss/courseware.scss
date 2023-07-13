@@ -5823,3 +5823,12 @@ c o m m e n t s  o v e r v i e w
 /* * * * * * * * * * * * * * * * * * * *
 c o m m e n t s  o v e r v i e w  e n d
 * * * * * * * * * * * * * * * * * * * */
+
+#course-courseware-index,
+#contents-courseware-index,
+#course-courseware-courseware,
+#contents-courseware-courseware {
+    form.default input[type=date] {
+        max-width: 9em;
+    }
+}
