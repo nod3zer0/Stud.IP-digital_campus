@@ -1,3 +1,69 @@
+# 14.07.2023 v 5.3.1
+
+https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.3.1&state=all
+- Courseware: Error: `fallbackFocus` did not return a node [#1866]
+- Courseware: Sperrhinweis im Abschnittstitel bricht um [#2354]
+- OER: Fehler nach "Jetzt für den OER-Campus bereitstellen." [#2590]
+- Anfasser in der Courseware im Inhaltsverzeichnis verhalten sich bei längeren Titeln unerwartet [#2618]
+- Courseware: Ohne gesetzte Bearbeitungsrechte kann jeder Inhalte in einer VA bearbeiten [#2747]
+- Umsortieren von Personal wirft SQL Fehler [#2749]
+- Aufgaben-Ansicht in der Courseware [#2752]
+- Meldung "Passwort ist zu kurz" beim Ändern des globalen Status [#2755]
+- Sortierung in der Ansicht "Aufgaben" in der Courseware [#2756]
+- Fehler beim Aufruf von "public/web_migrate.php" [#2765]
+- Lernmaterial kopieren unlogische Semesterauswahl [#2770]
+- Um ein Lernmaterial zu kopieren darf ich Veranstaltungen auswählen die kein Lernmaterial enthalten [#2771]
+- Weitere PHP8-Fehler [#2803]
+- OER: Man verliert die Suchergebnisse, wenn man Material anschaut [#2831]
+- PHP Warnungen in language.inc.php [#2834]
+- PHP8-Warnung in public/sendfile.php [#2835]
+- Startseite: Arbeitsplatzwidget kürzt Erklärungstext nicht [#2851]
+
+# 14.07.2023 v 5.2.3
+
+https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.2.3&state=all
+- Barrierefreiheit: kontrastreiches Farbschema stellt Bilder und Smileys (in Blubber) schwarz dar. [#2536]
+- OER: Merkwürdigkeiten beim Dateiupload [#2589]
+- MVV: Fehler beim Nachladen der Studiengangsteile unter MVV_Versionen [#2731]
+- globale externe Seite vom Typ TemplatePersondetails zeigt keine Personen mehr an [#2741]
+- Typo auf Seite Raumverwaltung > Export > Belegungsplan-Seriendruck [#2744]
+- OER-Campus: Eintrag für OERSI geht beim Deaktivieren kaputt [#2811]
+
+# 14.07.2023 v 5.1.4
+
+https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.1.4&state=all
+- Courseware: HTML-Escaping im Inhaltsverzeichnis des PDF-Exports [#2556]
+- cli Kommando user:delete wirft unverständliche Fehlermeldung [#2786]
+- Fehler in StudipNews::GetNewsByAuthor() wenn SORT_NEW_BY_CHDATE deaktiviert ist [#2789]
+- JSONAPI: Unvollständige Informationen zu einer Exception [#2814]
+- JSONAPI: Möglichkeit zur Sortierung ist defekt [#2815]
+- JSONAPI: Check-Methoden für Query-Parameter geben nicht die konkreten fehlerhaften Felder aus [#2816]
+- Ressourcenbaum ist aus der Sidebar verschwunden [#2843]
+
+# 14.07.2023 v 5.0.6
+
+https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.0.6&state=all
+- Courseware Tabs erhalten keine eindeutige id [#700]
+- Fehlerhafte Einträge in mail_queue_entries [#1134]
+- Semester lassen sich überschneiden [#1956]
+- Courseware: Nach Anlegen einer Seite sollte man auf der Seite landen [#1974]
+- Terminkalender: Springen an Termine vor 1970 ist möglich [#2076]
+- Courseware: Checkbox im Bestätigungs-Block ist nicht tastaturbedienbar [#2114]
+- OER Campus: Bei Entwurf: Zugriff verweigert [#2527]
+- Systemeigenschaften eines Raumes sind unveränderbar [#2707]
+- PHP - Warnung in members.php [#2711]
+- MVV: Drag&Drop von Modulteilen bei 2 Elementen [#2732]
+- Installer: Class 'AccessDeniedException' not found [#2734]
+- Texte in Datumsfeldern werden abgeschnitten (Firefox) [#2760]
+- Verwaltung von Veranstaltungen zeigt immer deutsche Veranstaltungstitel an [#2761]
+- Vorlesungsverzeichnis zeigt immer deutsche Veranstaltungstitel an [#2763]
+- Liste aller Veranstaltungen der Einrichtung zeigt immer deutsche Veranstaltungstitel an [#2764]
+- Ablaufplan: "Thema hinzufügen" fügt den Suchbegriff statt des ausgewählten Themas hinzu [#2784]
+- Fehler beim Löschen von Nutzern [#2788]
+- Lokalisation klappt auf Mac OS nicht [#2809]
+- Startseite: Verschieben von Widgets inkonsistent [#2821]
+- Missing template "messages/purge" [#2830]
+
 # 14.06.2023 v 5.3
 
 https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.3&state=all
