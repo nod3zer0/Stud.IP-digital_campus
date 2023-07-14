@@ -55,13 +55,11 @@ class ImageMap extends BlockType
         return $files;
     }
 
-    public function copyPayload(string $rangeId = '', $payload = null): array
+    public function copyPayload(string $rangeId = ''): array
     {
-        if (!$payload) {
-            $payload = $this->getPayload();
-        }
+        $payload = $this->getPayload();
 
-        if (!empty($payload['file_id'])) {
+        if ('' != $payload['file_id']) {
             $payload['file_id'] = $this->copyFileById($payload['file_id'], $rangeId);
         }
 

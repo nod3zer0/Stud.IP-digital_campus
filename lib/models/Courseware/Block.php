@@ -178,7 +178,7 @@ class Block extends \SimpleORMap implements \PrivacyObject
             ]
         ];
 
-        return json_encode($block, true);
+        return json_encode($block);
     }
 
     /**
@@ -218,18 +218,18 @@ class Block extends \SimpleORMap implements \PrivacyObject
         $struct = $container->structural_element;
         $rangeId = $struct->getRangeId();
 
-        $block = self::create([
+        $block = self::build([
             'container_id' => $container->id,
             'owner_id' => $user->id,
             'editor_id' => $user->id,
             'edit_blocker_id' => null,
             'position' => $container->countBlocks(),
             'block_type' => $data->attributes->{'block-type'},
+            'payload' => json_encode($data->attributes->payload),
             'visible' => 1,
         ]);
 
-        $dataPayload = (array)$data->attributes->payload;
-        $block->payload = json_encode($block->type->copyPayload('', $dataPayload), true);
+        $block->payload = json_encode($block->type->copyPayload($rangeId));
         $block->store();
 
         //update Container payload

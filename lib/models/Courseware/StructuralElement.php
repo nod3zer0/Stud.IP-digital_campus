@@ -821,12 +821,6 @@ SQL;
         return null;
     }
 
-    public static function getClipboardBackup(): string
-    {
-        //TODO
-        return '';
-    }
-
     /**
      * Copies this instance into another course oder users contents.
      *

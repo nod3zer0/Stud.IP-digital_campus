@@ -115,13 +115,13 @@ class Container extends \SimpleORMap implements \PrivacyObject
             ],
             'blocks' => $this->getClipboardBackupBlocks()
         ];
-        return json_encode($container, true);
+        return json_encode($container);
     }
 
     public function getClipboardBackupBlocks(): array
     {
         return $this->blocks->map(function (Block $block) {
-            return json_decode($block->getClipboardBackup());
+            return json_decode($block->getClipboardBackup(), true);
         });
     }
 
@@ -195,11 +195,11 @@ class Container extends \SimpleORMap implements \PrivacyObject
             'edit_blocker_id' => null,
             'position' => $element->countContainers(),
             'container_type' => $data->attributes->{'container-type'},
-            'payload' => json_encode($data->attributes->payload),
+            'payload' => $data->attributes->payload,
         ]);
 
         $blockMap = self::createBlocksFromData($user, $container, $data);
-        $container['payload'] = $container->type->copyPayload($blockMap);
+        $container->payload = $container->type->copyPayload($blockMap);
         $container->store();
 
         return $container;

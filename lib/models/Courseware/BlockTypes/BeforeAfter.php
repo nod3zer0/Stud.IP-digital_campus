@@ -75,13 +75,11 @@ class BeforeAfter extends BlockType
         return $files;
     }
 
-    public function copyPayload(string $rangeId = '', $payload = null): array
+    public function copyPayload(string $rangeId = ''): array
     {
-        if (!$payload) {
-            $payload = $this->getPayload();
-        }
+        $payload = $this->getPayload();
 
-        if (!empty($payload['before_file_id'])) {
+        if ('' != $payload['before_file_id']) {
             $payload['before_file_id'] = $this->copyFileById($payload['before_file_id'], $rangeId);
         }
 

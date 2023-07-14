@@ -73,13 +73,11 @@ class Headline extends BlockType
         return $files;
     }
 
-    public function copyPayload(string $rangeId = '', $payload = null): array
+    public function copyPayload(string $rangeId = ''): array
     {
-        if (!$payload) {
-            $payload = $this->getPayload();
-        }
+        $payload = $this->getPayload();
 
-        if (!empty($payload['background_image_id'])) {
+        if ('' != $payload['background_image_id']) {
             $payload['background_image_id'] = $this->copyFileById($payload['background_image_id'], $rangeId);
             $payload['background_image'] = '';
         }
