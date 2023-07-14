@@ -50,7 +50,7 @@
                 <a href="<?= $plugin->getPluginURL().$metadata['screenshots']['path'].'/'.$pictures['source'] ?>"
                    data-lightbox="<?= htmlReady($metadata['displayname'] ?? $plugin->getPluginName()) ?>"
                    data-title="<?= htmlReady($pictures['title']) ?>">
-                    <img src="<?= $plugin->getPluginURL().$metadata['screenshots']['path'].'/'.$pictures['source'] ?>" alt="">
+                    <img src="<?= $plugin->getPluginURL() . ($plugin instanceof StudIPPlugin ? '/' : '') . $metadata['screenshots']['path'] . '/' . $pictures['source'] ?>" alt="">
                     <?= htmlReady($pictures['title']) ?>
                 </a>
             </li>
