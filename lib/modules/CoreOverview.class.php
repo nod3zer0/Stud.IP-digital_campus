@@ -41,8 +41,9 @@ class CoreOverview extends CorePlugin implements StudipModule
         }
 
         $nav = new Navigation(_('Ankündigungen'), '');
+        $url_params = ['redirect_to' => 'dispatch.php/course/overview'];
         if ($result['neue']) {
-            $nav->setURL('?new_news=true');
+            $url_params['new_news'] = true;
             $nav->setImage(Icon::create('news', Icon::ROLE_ATTENTION), [
                 'title' => sprintf(
                     ngettext(
@@ -67,6 +68,7 @@ class CoreOverview extends CorePlugin implements StudipModule
                 )
             ]);
         }
+        $nav->setURL(URLHelper::getURL('', $url_params));
         return $nav;
     }
 
