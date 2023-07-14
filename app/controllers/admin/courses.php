@@ -494,14 +494,16 @@ class Admin_CoursesController extends AuthenticatedController
                             $data['buttons_top'] = '<label>'._('Alle auswählen').'<input type="checkbox" data-proxyfor=".course-admin td:last-child :checkbox"></label>';
                             if ($multimode instanceof Flexi_Template) {
                                 $data['buttons_bottom'] = $multimode->render();
+                            } elseif ($multimode instanceof \Studip\Button) {
+                                $data['buttons_bottom'] = (string) $multimode;
                             } elseif (is_string($multimode)) {
                                 $data['buttons_bottom'] = (string) \Studip\Button::create($multimode, '', ['formaction' => $plugin->getAdminActionURL()]);
                             } else {
                                 $data['buttons_bottom'] = (string) \Studip\Button::create(_('Speichern'), '', ['formaction' => $plugin->getAdminActionURL()]);
                             }
                         }
+                        break;
                     }
-                    break;
                 }
         }
         if (!isset($data['buttons_top'])) {
