@@ -197,11 +197,14 @@ class Admin_SemesterController extends AuthenticatedController
 
         // Validation, step 3: Check overlapping with other semesters
         if (empty($errors)) {
-            $all_semester = SimpleCollection::createFromArray(Semester::getAll())->findBy('id', $this->semester->id, '<>');
-            $collisions = $all_semester->findBy('beginn', [$this->semester->beginn, $this->semester->ende], '>=<=');
-            $collisions->merge($all_semester->findBy('ende', [$this->semester->beginn, $this->semester->ende], '>=<='));
-            if ($collisions->count()) {
-                $errors[] = sprintf(_('Der angegebene Zeitraum des Semester überschneidet sich mit einem anderen Semester (%s)'), join(', ', $collisions->pluck('name')));
+            $collisions_beginn = Semester::findByTimestamp($this->semester->beginn);
+            if ($collisions_beginn && $collisions_beginn->id !== $this->semester->id) {
+                $errors[] = sprintf(_('Der Beginn des Semester überschneidet sich mit einem anderen Semester (%s)'), $collisions_beginn->name);
+            }
+
+            $collisions_ende = Semester::findByTimestamp($this->semester->ende);
+            if ($collisions_ende && $collisions_ende->id !== $this->semester->id) {
+                $errors[] = sprintf(_('Das Ende des Semester überschneidet sich mit einem anderen Semester (%s)'), $collisions_ende->name);
             }
         }
 
