@@ -666,13 +666,20 @@ class MyRealmModel
                     $_tmp_courses[$sem_key][''][$course['seminar_id']] = $course;
                 }
             }
-            uksort($_tmp_courses[$sem_key], function ($a, $b) use ($sem_tree_names) {
-                $the_tree = TreeAbstract::GetInstance(
-                    'StudipSemTree',
-                    ['build_index' => true]
-                );
-                return (int)($the_tree->tree_data[$a]['index'] ?? 0 - $the_tree->tree_data[$b]['index'] ?? 0);
+
+            // Create sort order for assigned sem_tree entries.
+            $entries = StudipStudyArea::findMany(array_keys($sem_tree_names));
+            $order = [];
+            foreach ($entries as $entry) {
+                $order[$entry->getId()] = $entry->getIndex();
+            }
+            $max = max(array_map('strlen', $order));
+
+            // Now sort courses by sem_tree entry order.
+            uksort($_tmp_courses[$sem_key], function ($a, $b) use ($order, $max) {
+                return (str_pad($order[$a], $max, '0') - str_pad($order[$b], $max, '0'));
             });
+
             //At this point the $_tmp_courses array is sorted by the ordering
             //of the sem_tree.
             //Now we have to replace the sem_tree IDs in the second layer

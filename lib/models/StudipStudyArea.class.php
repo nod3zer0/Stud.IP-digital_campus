@@ -610,4 +610,26 @@ class StudipStudyArea extends SimpleORMap implements StudipTreeNode
         return $ids;
     }
 
+    /**
+     * Constructs an index from the level hierarchy, This index is a number,
+     * containing the "depth" level and the priority on this level. For example,
+     * a node on level 2 with priority 3 will get an index of 23.
+     *
+     * @return int
+     */
+    public function getIndex()
+    {
+        $level = 1;
+        $index = (string) $level . (string) $this->priority;
+        $current = $this;
+
+        while ($current->getParent()) {
+            $current = $current->getParent();
+            $index .= $level . $current->priority;
+            $level++;
+        }
+
+        return $index;
+    }
+
 }
