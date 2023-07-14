@@ -6,15 +6,20 @@
             <div class="header">
                 <div class="image">
                     <?
-                    $icon = $metadata['icon'];
-                    if (!$icon) {
-                        $icon = Icon::create('plugin', Icon::ROLE_INFO);
+                    if ($metadata['icon']) {
+                        $icon = $metadata['icon'] instanceof Icon
+                            ? $metadata['icon']->asImagePath()
+                            : Icon::create($plugin->getPluginURL().'/'.$metadata['icon'])->asImagePath();
+                    } else {
+                        $icon = null;
                     }
-                    if (!is_a($icon, 'Icon')) {
+                    if ($icon && !is_a($icon, 'Icon')) {
                         $icon = Icon::create($icon);
                     }
                     ?>
-                    <?= $icon->asImg(100) ?>
+                    <? if ($icon) : ?>
+                        <?= $icon->asImg(100) ?>
+                    <? endif ?>
                 </div>
                 <div class="text">
                     <h1><?= htmlReady($metadata['displayname'] ?? $plugin->getPluginName()) ?></h1>
