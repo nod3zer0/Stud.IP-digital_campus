@@ -37,6 +37,7 @@ class Admin_AdditionalController extends AuthenticatedController
      */
     public function index_action()
     {
+        Navigation::activateItem('/course/admin/additional_data');
         /*
          * Updaterequest
          */
