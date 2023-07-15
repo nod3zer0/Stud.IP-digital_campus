@@ -2,15 +2,48 @@
     background: $white;
     border-left: 0;
     display: inline-block;
-    height: max-content;
     margin-bottom: $page-margin + 35px;
     margin-top: 15px;
     padding: 0 5px 7px 15px;
     position: sticky;
     text-align: left;
-    top: 50px;
+    top: 75px;
     width: $sidebar-width;
     z-index: 2;
+
+    &.adjusted {
+        height: calc(100vh - 265px);
+        position: fixed;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        top: 150px;
+        transition: all $transition-duration ease-in-out;
+
+        &::-webkit-scrollbar {
+            background-color: var(--white);
+            position: relative;
+            left: 35px;
+            width: 5px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: var(--light-gray-color-60);
+            border-radius: 5px;
+        }
+
+        &.no-footer {
+            height: calc(100vh - 225px);
+        }
+
+        &.fixed {
+            height: calc(100vh - 150px);
+            top: 40px;
+
+            &.no-footer {
+                height: calc(100vh - 125px);
+            }
+        }
+    }
 
     .sidebar-image {
         width: calc($sidebar-width - 2px);
@@ -88,6 +121,7 @@
         background: $white;
         border: 1px solid $content-color-40;
         margin: 15px 0 0;
+        position: relative;
         width: $sidebar-width - 5px;
     }
     .sidebar-widget-header,
@@ -109,6 +143,30 @@
     // Prevent selects from growing too large
     select {
         max-width: 100%;
+    }
+}
+
+#admin-courses-index {
+    #sidebar {
+        top: 50px;
+
+        &.adjusted {
+            height: calc(100vh - 250px);
+            top: 155px;
+
+            &.no-footer {
+                height: calc(100vh - 200px);
+            }
+
+            &.fixed {
+                height: calc(100vh - 125px);
+                top: 35px;
+
+                &.no-footer {
+                    height: calc(100vh - 100px);
+                }
+            }
+        }
     }
 }
 
@@ -352,3 +410,4 @@ select.sidebar-selectlist {
         }
     }
 }
+

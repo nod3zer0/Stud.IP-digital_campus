@@ -41,6 +41,30 @@ Vue.mixin({
         },
         getStudipConfig: store.getters['studip/getConfig']
     },
+    beforeCreate() {
+        eventBus.emit('vue:app:will-create', this);
+    },
+    created() {
+        eventBus.emit('vue:app:did-create', this);
+    },
+    beforeMount() {
+        eventBus.emit('vue:app:will-mount', this);
+    },
+    mounted() {
+        eventBus.emit('vue:app:did-mount', this);
+    },
+    beforeUpdate() {
+        eventBus.emit('vue:app:will-update', this);
+    },
+    updated() {
+        eventBus.emit('vue:app:did-update', this);
+    },
+    beforeDestroy() {
+        eventBus.emit('vue:app:will-destroy', this);
+    },
+    destroyed() {
+        eventBus.emit('vue:app:did-destroy', this);
+    }
 });
 
 Vue.use(CKEditor);

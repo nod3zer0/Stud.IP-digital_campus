@@ -201,7 +201,7 @@ function createSelect2(element) {
         minimumResultsForSearch: $(element).closest('#sidebar').length > 0 ? 15 : 10,
         placeholder: placeholder,
         dropdownAutoWidth: dropdownAutoWidth,
-        dropdownParent: $(element).closest('.ui-dialog,#sidebar,body'),
+        dropdownParent: $(element).closest('.ui-dialog,.sidebar-widget,#sidebar,#content-wrapper,body'),
         templateResult: function(data, container) {
             if (data.element) {
                 let option_classes = $(data.element).attr('class'),
