@@ -2,8 +2,11 @@ const Sidebar = {
 
     place() {
         const header = document.getElementById('main-header');
-        document.getElementById('sidebar').style.top =
-            header.offsetTop + header.offsetHeight + 'px';
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.style.top =
+                header.offsetTop + header.offsetHeight + 'px';
+        }
     },
 
     observeSidebar() {
@@ -16,8 +19,11 @@ const Sidebar = {
         /**
          * Observe if sidebar fits into viewport.
          */
-        const sObserver = new IntersectionObserver(STUDIP.Sidebar.fits, options);
-        sObserver.observe(document.getElementById('sidebar'));
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            const sObserver = new IntersectionObserver(STUDIP.Sidebar.fits, options);
+            sObserver.observe();
+        }
     },
 
     observeBody() {
@@ -87,18 +93,20 @@ const Sidebar = {
 
     footerVisible(entries, observer) {
         const sidebar = document.getElementById('sidebar');
-        entries.forEach(entry => {
-            // Footer is visible on current page.
-            if (entry.isIntersecting) {
-                if (sidebar.classList.contains('no-footer')) {
-                    sidebar.classList.remove('no-footer');
+        if (sidebar) {
+            entries.forEach(entry => {
+                // Footer is visible on current page.
+                if (entry.isIntersecting) {
+                    if (sidebar.classList.contains('no-footer')) {
+                        sidebar.classList.remove('no-footer');
+                    }
+                } else {
+                    if (!sidebar.classList.contains('no-footer')) {
+                        sidebar.classList.add('no-footer');
+                    }
                 }
-            } else {
-                if (!sidebar.classList.contains('no-footer')) {
-                    sidebar.classList.add('no-footer');
-                }
-            }
-        });
+            });
+        }
     }
 };
 
