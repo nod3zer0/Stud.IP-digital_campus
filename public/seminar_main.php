@@ -75,9 +75,11 @@ if ($redirect_to) {
 // der Nutzer zum ersten
 //Reiter der Veranstaltung weiter geleitet.
 if (Navigation::hasItem("/course")) {
-    foreach (Navigation::getItem("/course")->getSubNavigation() as $navigation) {
-        header('Location: ' . URLHelper::getURL($navigation->getURL()));
-        die;
+    foreach (Navigation::getItem("/course")->getSubNavigation() as $index => $navigation) {
+        if ($index !== 'admin') {
+            header('Location: ' . URLHelper::getURL($navigation->getURL()));
+            die;
+        }
     }
 }
 
