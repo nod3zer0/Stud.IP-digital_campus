@@ -1,5 +1,5 @@
 <? use Studip\Button; ?>
-
+<?= MessageBox::info(_('Das Passwort sollte mindestens 8 Zeichen lang sein.')) ?>
 <form id="edit_password" method="post" action="<?= $controller->url_for('settings/password/store') ?>" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">

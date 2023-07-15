@@ -1,5 +1,6 @@
 <form class="default" action="<?= $controller->url_for('new_password/set/' . $token_id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
+    <?= MessageBox::info(_('Das Passwort sollte mindestens 8 Zeichen lang sein.')) ?>
     <fieldset>
         <legend>
             <?= _('Neues Passwort setzen') ?>
