@@ -134,7 +134,7 @@
 
         <? $authors = $material->getAuthors() ?>
         <? if (count($authors)) : ?>
-            <h2><?= _('Zum Autor') ?></h2>
+            <h2><?= _('Autor/-in') ?></h2>
             <ul class="author_information clean">
                 <? foreach ($material->getAuthors() as $authordata) : ?>
                     <li>
