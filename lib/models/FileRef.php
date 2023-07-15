@@ -67,6 +67,7 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
 
         $config['registered_callbacks']['after_delete'][] = 'cbRemoveFileIfOrphaned';
         $config['registered_callbacks']['after_delete'][] = 'cbRemoveFeedbackElements';
+        $config['registered_callbacks']['before_delete'][] = 'cbLogDeleteFileRef';
         $config['registered_callbacks']['before_store'][] = 'cbMakeUniqueFilename';
 
         parent::configure($config);
@@ -76,6 +77,17 @@ class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
     protected $download_url;
     public $path_to_blob;
 
+
+    public function cbLogDeleteFileRef()
+    {
+        StudipLog::log('FILE_DELETE',
+            $this->id,
+            null,
+            sprintf(
+                $this->name
+            )
+        );
+    }
     /**
      * This callback is called after deleting a FileRef.
      * It removes the File object that is associated with the FileRef,

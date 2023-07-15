@@ -76,6 +76,7 @@ class Folder extends SimpleORMap implements FeedbackRange
 
         $config['registered_callbacks']['before_store'][] = 'cbMakeUniqueName';
         $config['registered_callbacks']['after_delete'][] = 'cbRemoveFeedbackElements';
+        $config['registered_callbacks']['before_delete'][] = 'cbLogDeleteFolder';
 
         $config['additional_fields']['is_empty']['get'] = function ($folder) {
             return count($folder->file_refs) + count($folder->subfolders) === 0;
@@ -84,6 +85,16 @@ class Folder extends SimpleORMap implements FeedbackRange
         parent::configure($config);
     }
 
+    protected function cbLogDeleteFolder()
+    {
+        StudipLog::log('FOLDER_DELETE',
+            $this->id,
+            null,
+            sprintf(
+                $this->name
+            )
+        );
+    }
     /**
      * Creates a top folder (root directory) for a Stud.IP object given by range_id and range_type.
      *
