@@ -90,11 +90,8 @@ class AdminNavigation extends Navigation
         $this->addSubNavigation('institute', $navigation);
         $navigation = new Navigation(_('Standort'));
 
-        if ($perm->have_perm(Config::get()->RANGE_TREE_ADMIN_PERM ? Config::get()->RANGE_TREE_ADMIN_PERM : 'admin')) {
+        if ($perm->have_perm('root')) {
             $navigation->addSubNavigation('range_tree', new Navigation(_('Einrichtungshierarchie'), 'dispatch.php/admin/tree/rangetree'));
-        }
-
-        if ($perm->have_perm(Config::get()->SEM_TREE_ADMIN_PERM ? Config::get()->SEM_TREE_ADMIN_PERM : 'admin') && $perm->is_fak_admin()) {
             $navigation->addSubNavigation('sem_tree', new Navigation(_('Veranstaltungshierarchie'), 'dispatch.php/admin/tree/semtree'));
         }
 
