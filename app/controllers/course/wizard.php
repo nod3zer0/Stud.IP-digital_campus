@@ -181,6 +181,11 @@ class Course_WizardController extends AuthenticatedController
                 } else {
                     $this->course = $this->createCourse();
                     if ($this->course) {
+                        if (!$GLOBALS['perm']->have_perm('root')) {
+                            $dest_url = 'course/contentmodules';
+                        } else {
+                            $dest_url = 'course/basicdata/view';
+                        }
                         // A studygroup has been created.
                         if (in_array($this->course->status, studygroup_sem_types())) {
                             $message = MessageBox::success(sprintf(
@@ -192,9 +197,10 @@ class Course_WizardController extends AuthenticatedController
 
                             // "Normal" course.
                         } elseif (Request::int('dialog') && $GLOBALS['perm']->have_perm('admin')) {
+
                             $message = MessageBox::success(sprintf(
                                 _('Die Veranstaltung <a class="link-intern" href="%s">"%s"</a> wurde angelegt.'),
-                                $this->link_for('course/management?cid=' . $this->course->id),
+                                $this->link_for($dest_url, ['cid' => $this->course->id]),
                                 htmlReady($this->course->getFullname())
                             ));
                             $target = $this->url_for('admin/courses');
@@ -203,7 +209,7 @@ class Course_WizardController extends AuthenticatedController
                                 _('Die Veranstaltung "%s" wurde angelegt. Sie können sie direkt hier weiter verwalten.'),
                                 htmlReady($this->course->getFullname())
                             ));
-                            $target = $this->url_for('course/management', ['cid' => $this->course->id]);
+                            $target = $this->url_for($dest_url, ['cid' => $this->course->id]);
                         }
 
                         PageLayout::postMessage($message);
