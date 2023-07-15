@@ -2,7 +2,7 @@
 $dates = CourseDate::findByRange_id($folder->range_id);
 ?>
 <label>
-    <?= _('Wählen sie einen zugehöriges Termin aus, der Titel wird automatisch aus dem Datum des Termins erzeugt.') ?>
+    <?= _('Wählen sie einen zugehörigen Termin aus, der Titel wird automatisch aus dem Datum des Termins erzeugt.') ?>
     <select name="course_date_folder_termin_id">
     <? if (count($dates) === 0): ?>
         <option value="">
