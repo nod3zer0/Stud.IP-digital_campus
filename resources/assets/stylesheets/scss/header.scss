@@ -80,7 +80,9 @@ html {
     z-index: 1003;
 
     .action-menu-icon {
-        border: 1px solid $dark-gray-color-40;
+        border-top: 1px solid $dark-gray-color-40;
+        border-right: 1px solid $dark-gray-color-40;
+        border-bottom: 1px solid $dark-gray-color-40;
         background-color: $dark-gray-color-5;
         height: 28px;
         margin: 0 32px 0 0;
