@@ -358,21 +358,16 @@ class StudipStudyArea extends SimpleORMap implements StudipTreeNode
     /**
      * Search for study areas whose name matches the given search term.
      *
-     * @param  string     the seach term
+     * @param string $searchTerm the seach term
      *
-     * @return type       <description>
+     * @return StudipStudyArea[] nodes
      */
     public static function search($searchTerm)
     {
-        $query =
-        "sem_tree_id IN (
-        SELECT sem_tree_id FROM sem_tree st1 WHERE name LIKE :searchTerm
-        UNION DISTINCT
-        SELECT sem_tree_id FROM Institute i
-        INNER JOIN sem_tree st2 ON st2.studip_object_id = i.Institut_id
-        WHERE i.Name LIKE :searchTerm )
-        ORDER BY priority";
-        return self::findBySql($query, ['searchTerm' => "%$searchTerm%"]);
+        return self::findBySql(
+            "sem_tree_id IN (SELECT sem_tree_id FROM sem_tree WHERE name LIKE :searchTerm ORDER BY priority)",
+            ['searchTerm' => "%$searchTerm%"]
+        );
     }
 
     /**
