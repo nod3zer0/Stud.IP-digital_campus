@@ -42,7 +42,7 @@
                         <button class="as-link"
                            @click.prevent="askForDeletingStatement(index)"
                            :title="$gettext('Aussage löschen')">
-                            <studip-icon shape="trash" role="clickable" size="20" alt=""></studip-icon>
+                            <studip-icon shape="trash" role="clickable" :size="20" alt=""></studip-icon>
                         </button>
                     </td>
                 </tr>
@@ -51,7 +51,7 @@
                 <tr>
                     <td :colspan="typeof val_clone.options !== 'undefined' ? val_clone.options.length + 3 : 3">
                         <button @click.prevent="addStatement" class="as-link" :title="$gettext('Aussage hinzufügen')">
-                            <studip-icon shape="add" role="clickable" size="20" alt=""></studip-icon>
+                            <studip-icon shape="add" role="clickable" :size="20" alt=""></studip-icon>
                         </button>
                     </td>
                 </tr>

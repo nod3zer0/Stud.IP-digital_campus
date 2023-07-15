@@ -28,7 +28,7 @@
                             <header>
                                 <h1>
                                     <studip-icon shape="<?= $icon_shape ?>"
-                                                 size="20"
+                                                 :size="20"
                                                  class="text-bottom">
                                     </studip-icon>
                                     <div id="oer_title">

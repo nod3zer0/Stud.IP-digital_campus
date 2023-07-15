@@ -8,7 +8,7 @@
                    @click.prevent="clearCategory"
                    class="erasefilter"
                    title="<?= _('Filter der Kategorie entfernen') ?>">
-                    <studip-icon shape="decline" role="clickable" size="16" class="text-bottom"></studip-icon>
+                    <studip-icon shape="decline" role="clickable" :size="16" class="text-bottom"></studip-icon>
                 </a>
             </span>
 
@@ -23,7 +23,7 @@
                    @click.prevent="clearDifficulty"
                    class="erasefilter"
                    title="<?= _('Filter des Niveaus entfernen') ?>">
-                    <studip-icon shape="decline" role="clickable" size="16" class="text-bottom"></studip-icon>
+                    <studip-icon shape="decline" role="clickable" :size="16" class="text-bottom"></studip-icon>
                 </a>
             </span>
 
@@ -56,35 +56,35 @@
                     <ul class="clean">
                         <li>
                             <a href="<?= $controller->link_for("oer/market", ['category' => "audio"]) ?>" @click.prevent="category = 'audio'">
-                                <studip-icon v-if="category != 'audio'" shape="radiobutton-unchecked" role="clickable" size="16" class="text-bottom"></studip-icon>
-                                <studip-icon v-if="category == 'audio'" shape="radiobutton-checked" role="clickable" size="16" class="text-bottom"></studip-icon>
+                                <studip-icon v-if="category != 'audio'" shape="radiobutton-unchecked" role="clickable" :size="16" class="text-bottom"></studip-icon>
+                                <studip-icon v-if="category == 'audio'" shape="radiobutton-checked" role="clickable" :size="16" class="text-bottom"></studip-icon>
                                 <?= _('Audio') ?>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $controller->link_for("oer/market", ['category' => "video"]) ?>" @click.prevent="category = 'video'">
-                                <studip-icon v-if="category != 'video'" shape="radiobutton-unchecked" role="clickable" size="16" class="text-bottom"></studip-icon>
-                                <studip-icon v-if="category == 'video'" shape="radiobutton-checked" role="clickable" size="16" class="text-bottom"></studip-icon>
+                                <studip-icon v-if="category != 'video'" shape="radiobutton-unchecked" role="clickable" :size="16" class="text-bottom"></studip-icon>
+                                <studip-icon v-if="category == 'video'" shape="radiobutton-checked" role="clickable" :size="16" class="text-bottom"></studip-icon>
                                 <?= _('Video') ?>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $controller->link_for("oer/market", ['category' => "presentation"]) ?>" @click.prevent="category = 'presentation'">
-                                <studip-icon v-if="category != 'presentation'" shape="radiobutton-unchecked" role="clickable" size="16" class="text-bottom"></studip-icon>
-                                <studip-icon v-if="category == 'presentation'" shape="radiobutton-checked" role="clickable" size="16" class="text-bottom"></studip-icon>
+                                <studip-icon v-if="category != 'presentation'" shape="radiobutton-unchecked" role="clickable" :size="16" class="text-bottom"></studip-icon>
+                                <studip-icon v-if="category == 'presentation'" shape="radiobutton-checked" role="clickable" :size="16" class="text-bottom"></studip-icon>
                                 <?= _('Folien') ?>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $controller->link_for("oer/market", ['category' => "elearning"]) ?>" @click.prevent="category = 'elearning'">
-                                <studip-icon v-if="category != 'elearning'" shape="radiobutton-unchecked" role="clickable" size="16" class="text-bottom"></studip-icon>
-                                <studip-icon v-if="category == 'elearning'" shape="radiobutton-checked" role="clickable" size="16" class="text-bottom"></studip-icon>
+                                <studip-icon v-if="category != 'elearning'" shape="radiobutton-unchecked" role="clickable" :size="16" class="text-bottom"></studip-icon>
+                                <studip-icon v-if="category == 'elearning'" shape="radiobutton-checked" role="clickable" :size="16" class="text-bottom"></studip-icon>
                                 <?= _('Lernmodule') ?>
                             </a>
                         </li>
                         <li>
                             <a href="<?= $controller->link_for("oer/market", ['get' => "all"]) ?>">
-                                <studip-icon shape="link-intern" role="clickable" size="16" class="text-bottom"></studip-icon>
+                                <studip-icon shape="link-intern" role="clickable" :size="16" class="text-bottom"></studip-icon>
                                 <?= _('Alles') ?>
                             </a>
                         </li>
@@ -140,7 +140,7 @@
             <?= _('Klicken Sie auf die Schlagwörter und entdecken Sie Lernmaterialien zum Thema.') ?>
         </div>
         <a v-if="tagHistory.length" href="" @click.prevent="backInCloud" class="back-button">
-            <studip-icon shape="arr_1left" role="clickable" size="50"></studip-icon>
+            <studip-icon shape="arr_1left" role="clickable" :size="50"></studip-icon>
         </a>
         <ul class="tags clean">
             <li v-for="tag in tags">
@@ -167,7 +167,7 @@
                     <h1>
                         <studip-icon :shape="getIconShape(result)"
                                      role="clickable"
-                                     size="20"
+                                     :size="20"
                                      class="text-bottom"></studip-icon>
                         {{ shortenName(result.name) }}
                     </h1>

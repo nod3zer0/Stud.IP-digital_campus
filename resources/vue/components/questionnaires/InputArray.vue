@@ -19,13 +19,13 @@
                 <button class="as-link"
                    :title="$gettext('Option löschen')"
                    @click.prevent="askForDeletingOption(index)">
-                    <studip-icon shape="trash" role="clickable" size="20" alt=""></studip-icon>
+                    <studip-icon shape="trash" role="clickable" :size="20" alt=""></studip-icon>
                 </button>
                 <button v-if="index == options.length - 1"
                    class="as-link"
                    :title="$gettext('Option hinzufügen')"
                    @click.prevent="addOption">
-                    <studip-icon shape="add" role="clickable" size="20" alt=""></studip-icon>
+                    <studip-icon shape="add" role="clickable" :size="20" alt=""></studip-icon>
                 </button>
             </li>
         </draggable>

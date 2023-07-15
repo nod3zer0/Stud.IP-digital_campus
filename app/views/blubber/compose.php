@@ -92,7 +92,7 @@
                     <input type="hidden" name="user_ids[]" :value="user.user_id">
                     <span>{{ user.name }}</span>
                     <a href="#" @click.prevent="removeUser">
-                        <studip-icon shape="trash" size="20" role="clickable"></studip-icon>
+                        <studip-icon shape="trash" :size="20" role="clickable"></studip-icon>
                     </a>
                 </li>
             </ul>
