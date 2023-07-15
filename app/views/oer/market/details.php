@@ -99,31 +99,11 @@
         <? endif ?>
 
         <? if ($material['difficulty_start'] != 1 || $material['difficulty_end'] != 12) : ?>
-            <h2><?= _('Niveau') ?></h2>
-            <div class="level_filter">
-                <div class="level_labels">
-                    <div><?= _('Leicht') ?></div>
-                    <div><?= _('Schwer') ?></div>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <? for ($i = 1; $i <= 12; $i++) : ?>
-                        <div><?= ($i < 10 ? "&nbsp;" : "").$i ?></div>
-                    <? endfor ?>
-                </div>
-                <div id="difficulty_slider" style="margin-left: 5px; margin-right: 9px;"></div>
-
-                <script>
-                    jQuery(function () {
-                        jQuery("#difficulty_slider").slider({
-                            range: true,
-                            min: 1,
-                            max: 12,
-                            disabled: true,
-                            values: [<?= htmlReady($material['difficulty_start']) ?>, <?= htmlReady($material['difficulty_end']) ?>]
-                        });
-                    });
-                </script>
-            </div>
+            <?= sprintf(
+                _('Niveau: %s-%s von 12'),
+                $material['difficulty_start'],
+                $material['difficulty_end']
+            ) . sprintf('<br>(%s)',  _('1 = leicht, 12 = schwer')) ?>
         <? endif ?>
 
         <? if (!Config::get()->OER_DISABLE_LICENSE) : ?>
