@@ -6,7 +6,6 @@ export { default as StockImagesImagesList } from './ImagesList.vue';
 export { default as StockImagesImagesListItem } from './ImagesListItem.vue';
 export { default as StockImagesImagesPagination } from './ImagesPagination.vue';
 export { default as StockImagesMetadataBox } from './MetadataBox.vue';
-export { default as StockImagesNavigationWidget } from './NavigationWidget.vue';
 export { default as StockImagesOrientationFilterWidget } from './OrientationFilterWidget.vue';
 export { default as StockImagesPage } from './Page.vue';
 export { default as StockImagesSearchWidget } from './SearchWidget.vue';

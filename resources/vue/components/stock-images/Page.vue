@@ -13,7 +13,6 @@
             />
         </ImagesPagination>
         <MountingPortal mountTo="#stock-images-widget" name="sidebar-stock-images">
-            <NavigationWidget />
             <SearchWidget :query="query" @search="onSearch" />
             <OrientationFilterWidget v-model="filters" />
             <ColorFilterWidget v-model="filters" />
@@ -41,7 +40,6 @@ import ColorFilterWidget from './ColorFilterWidget.vue';
 import EditDialog from './EditDialog.vue';
 import ImagesList from './ImagesList.vue';
 import ImagesPagination from './ImagesPagination.vue';
-import NavigationWidget from './NavigationWidget.vue';
 import OrientationFilterWidget from './OrientationFilterWidget.vue';
 import SearchWidget from './SearchWidget.vue';
 import UploadDialog from './UploadDialog.vue';
@@ -54,7 +52,6 @@ export default {
         EditDialog,
         ImagesList,
         ImagesPagination,
-        NavigationWidget,
         OrientationFilterWidget,
         SearchWidget,
         UploadDialog,

@@ -12,9 +12,7 @@ class StockImagesController extends AuthenticatedController
         URLHelper::removeLinkParam('cid');
         $GLOBALS['perm']->check('admin');
 
-        if (Navigation::hasItem('/contents/stock_images')) {
-            Navigation::activateItem('/contents/stock_images');
-        }
+        Navigation::activateItem('/admin/locations/stock_images');
         \PageLayout::setTitle(_('Verwaltung des Bilder-Pools'));
         $this->setSidebar();
     }
