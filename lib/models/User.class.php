@@ -231,15 +231,21 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
     protected function cbStudipLog($type)
     {
         if ($type == 'before_store' && !$this->isNew()) {
-            if ($this->isFieldDirty('locked') && $this->isFieldDirty('lock_comment') && (int)$this->locked === 1) {
-                StudipLog::log('USER_LOCK',
-                    $this->user_id,
-                    null,
-                    sprintf(
-                        'Kommentar: %s',
-                        $this->lock_comment
-                    )
-                );
+            if ($this->isFieldDirty('locked') && $this->isFieldDirty('lock_comment')) {
+                if ((int)$this->locked === 1) {
+                    StudipLog::log('USER_LOCK',
+                        $this->user_id,
+                        null,
+                        sprintf(
+                            'Kommentar: %s',
+                            $this->lock_comment
+                        )
+                    );
+                } else {
+                    StudipLog::log('USER_UNLOCK',
+                        $this->user_id
+                    );
+                }
             }
         }
     }
