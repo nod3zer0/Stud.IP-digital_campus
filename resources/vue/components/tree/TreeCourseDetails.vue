@@ -7,15 +7,15 @@
             <studip-icon :shape="details.admissionstate.icon" :role="details.admissionstate.role"
                          :title="details.admissionstate.info"></studip-icon>
         </div>
-        <ul class="course-lecturers">
-            <li v-for="(lecturer, index) in details.lecturers" :key="index">
+        <div class="course-lecturers">
+            <span v-for="(lecturer, index) in details.lecturers" :key="index">
                 <a :href="profileUrl(lecturer.username)"
                    :title="$gettextInterpolate($gettext('Zum Profil von %{ user }'),
                         { user: lecturer.name })">
                     {{ lecturer.name }}
-                </a>
-            </li>
-        </ul>
+                </a><template v-if="details.lecturers.length > 1 && index < details.lecturers.length - 1">, </template>
+            </span>
+        </div>
         <MountingPortal :mountTo="'#course-dates-' + course" :append="true">
             <span v-html="details.dates"></span>
         </MountingPortal>
