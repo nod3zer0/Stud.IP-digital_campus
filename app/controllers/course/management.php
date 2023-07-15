@@ -47,69 +47,7 @@ class Course_ManagementController extends AuthenticatedController
      */
     public function index_action()
     {
-        Navigation::activateItem('course/admin/main');
-
-        if (Context::isInstitute()) {
-            Helpbar::get()->addPlainText(_('Information'), _('Als Mitarbeiter Ihrer Einrichtung können Sie für diese Inhalte in mehreren Kategorien bereitstellen.Inhalte in Ihrer Einrichtung können von allen Stud.IP-Nutzern abgerufen werden.'));
-        } else {
-            Helpbar::get()->addPlainText(_('Information'), _('Sie können hier Ihre Veranstaltung in mehreren Kategorien anpassen. Informationen wie Grunddaten oder Termine und Einstellungen, Zugangsbeschränkungen und Funktionen können Sie hier administrieren.'));
-        }
-
-        $sidebar = Sidebar::get();
-
-        $course = Course::findCurrent();
-        $sem_create_perm = in_array(Config::get()->SEM_CREATE_PERM, ['root','admin','dozent']) ? Config::get()->SEM_CREATE_PERM : 'dozent';
-        if ($course) {
-            $actions = new ActionsWidget();
-            if ($GLOBALS['perm']->have_perm($sem_create_perm)) {
-                if (!LockRules::check($course->id, 'seminar_copy')) {
-                    $actions->addLink(
-                        _('Veranstaltung kopieren'),
-                        URLHelper::getURL($this->url_for('course/wizard/copy/'.$course->id), ['studip_ticket' => Seminar_Session::get_ticket()]),
-                        Icon::create('seminar')
-                    );
-                }
-
-                if (Config::get()->ALLOW_DOZENT_DELETE || $GLOBALS['perm']->have_perm('admin')) {
-                    $actions->addLink(
-                        _('Veranstaltung löschen'),
-                        URLHelper::getURL( $this->url_for('course/archive/confirm'), ['studip_ticket' => Seminar_Session::get_ticket()]),
-                        Icon::create('trash')
-                    )->asDialog('size=auto');
-                }
-
-                if ((Config::get()->ALLOW_DOZENT_VISIBILITY || $GLOBALS['perm']->have_perm('admin')) && !LockRules::Check($course->id, 'seminar_visibility')) {
-                    $is_visible = $course->visible;
-                    if ($course->isOpenEnded() || $course->end_semester->visible) {
-                        $actions->addLink(
-                            ($is_visible ? _('Veranstaltung verstecken') : _('Veranstaltung sichtbar schalten')),
-                            URLHelper::getURL($this->url_for('course/management/change_visibility'), ['studip_ticket' => Seminar_Session::get_ticket()]),
-                            Icon::create('visibility-' . ($is_visible ? 'visible' : 'invisible'))
-                        );
-                    }
-                }
-                if ($GLOBALS['perm']->have_perm('admin')) {
-                    $is_locked = $course->lock_rule;
-                    $actions->addLink(
-                        _('Sperrebene ändern') . ' (' .  ($is_locked ? _('gesperrt') : _('nicht gesperrt')) . ')',
-                        URLHelper::getURL($this->url_for('course/management/lock'), ['studip_ticket' => Seminar_Session::get_ticket()]),
-                        Icon::create('lock-' . ($is_locked  ? 'locked' : 'unlocked'))
-                    )->asDialog('size=auto');
-                }
-            }
-
-            $actions->addLink(
-                _('Studierendenansicht simulieren'),
-                URLHelper::getURL('dispatch.php/course/change_view/set_changed_view'),
-                Icon::create('visibility-invisible')
-            );
-            $sidebar->addWidget($actions);
-
-            if ($GLOBALS['perm']->have_studip_perm('admin', $course->id)) {
-                $widget = new CourseManagementSelectWidget();
-                $sidebar->addWidget($widget);
-            }
-        }
+        $this->redirect('course/contentmodules');
     }
 
     public function order_settings_action()
@@ -155,7 +93,7 @@ class Course_ManagementController extends AuthenticatedController
                 }
             }
         }
-        $this->redirect($this->action_url('index'));
+        $this->redirect('course/basicdata/view');
     }
 
     /**
