@@ -42,10 +42,23 @@ class MultipersonsearchController extends AuthenticatedController
 
         $output = [];
         foreach ($result as $user) {
+            if ($GLOBALS['perm']->have_perm('dozent')) {
+                $lock_string = (int)$user->locked === 1 ? sprintf(' [%s]', _('gesperrt')) : '';
+            } else {
+                $lock_string = '';
+            }
+            $text = sprintf(
+                '%s, %s%s -- %s (%s)',
+                $user->nachname,
+                $user->vorname,
+                $lock_string,
+                $user->perms,
+                $user->username
+            );
             $output[] = [
                 'user_id' => $user->id,
                 'avatar'  => Avatar::getAvatar($user->id)->getURL(Avatar::SMALL),
-                'text'    => "{$user->nachname}, {$user->vorname} -- {$user->perms} ({$user->username})",
+                'text'    => $text,
                 'member'  => in_array($user->id, $alreadyMember),
             ];
         }
