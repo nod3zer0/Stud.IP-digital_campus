@@ -10,7 +10,7 @@
  */
 use Studip\Button, Studip\LinkButton;
 ?>
-<form action="<?= $controller->store($rule) ?>" method="post" class="default">
+<form action="<?= $controller->store($rule) ?>" method="post" class="default" data-secure>
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend>
