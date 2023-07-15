@@ -41,19 +41,15 @@ final class TreeChanges extends Migration
     {
         // Restore config entries to their defaults.
         DBManager::get()->exec("INSERT IGNORE INTO `config`
-                ( `config_id` , `parent_id` , `field` , `value` ,
-                 `is_default` , `type` , `range` , `section` ,
-                  `position` , `mkdate` , `chdate` , `description` ,
-                   `comment` , `message_template` )
+                ( `field`, `value`, `type`, `range`, `section`, `mkdate`, `chdate`, `description`)
                 VALUES (
-                MD5( 'RANGE_TREE_ADMIN_PERM' ) , '', 'RANGE_TREE_ADMIN_PERM',
-                 'admin', '1', 'string', 'global', '', '0',
-                  UNIX_TIMESTAMP( ) , UNIX_TIMESTAMP( ) ,
-                   'mit welchem Status darf die Einrichtungshierarchie bearbeitet werden (admin oder root)', '', ''
+                    'RANGE_TREE_ADMIN_PERM', 'root', 'string', 'global', 'permissions',
+                    UNIX_TIMESTAMP(), UNIX_TIMESTAMP(),
+                    'mit welchem Status darf die Einrichtungshierarchie bearbeitet werden (admin oder root)'
                 ), (
-                MD5( 'SEM_TREE_ADMIN_PERM' ) , '', 'SEM_TREE_ADMIN_PERM',
-                 'admin', '1', 'string', 'global', '', '0', UNIX_TIMESTAMP( ) ,
-                  UNIX_TIMESTAMP( ) , 'mit welchem Status darf die Veranstaltungshierarchie bearbeitet werden (admin oder root)', '', ''
+                    'SEM_TREE_ADMIN_PERM', 'root', 'string', 'global', 'permissions',
+                    UNIX_TIMESTAMP(), UNIX_TIMESTAMP() ,
+                    'mit welchem Status darf die Veranstaltungshierarchie bearbeitet werden (admin oder root)'
                 )");
 
         // Add database column for sem_tree institute assignments.
