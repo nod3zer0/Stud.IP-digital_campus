@@ -231,6 +231,34 @@ class Course_ContentmodulesController extends AuthenticatedController
     {
         $this->plugin = PluginManager::getInstance()->getPluginById($plugin_id);
         $this->metadata = $this->plugin->getMetadata();
+        $this->screenshots = [];
+
+        if (isset($this->metadata['screenshot'])) {
+            $screenshots = explode('.', $this->metadata['screenshot']);
+            $ext = end($screenshots);
+            $title  = str_replace('_', ' ', basename($this->metadata['screenshot'], ".{$ext}"));
+            $source = "{$this->plugin->getPluginURL()}/{$this->metadata['screenshot']}";
+
+            $this->screenshots[] = compact('title', 'source');
+        }
+        if (isset($this->metadata['additionalscreenshots'])) {
+            foreach ($this->metadata['additionalscreenshots'] as $picture) {
+                $pictures = explode('.', $picture);
+                $ext = end($pictures);
+                $title  = str_replace('_', ' ', basename($picture, ".{$ext}"));
+                $source = "{$this->plugin->getPluginURL()}/{$picture}";
+
+                $this->screenshots[] = compact('title', 'source');
+            }
+        }
+        if (isset($this->metadata['screenshots'])) {
+            foreach ($this->metadata['screenshots']['pictures'] as $picture) {
+                $title  = $picture['title'];
+                $source = "{$this->plugin->getPluginURL()}/{$this->metadata['screenshots']['path']}/{$picture['source']}";
+                $this->screenshots[] = compact('title', 'source');
+            }
+        }
+
         PageLayout::setTitle(sprintf(_('Informationen über %s'), $this->metadata['displayname']));
     }
 

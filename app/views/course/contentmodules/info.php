@@ -43,15 +43,15 @@
                 <?= formatReady($plugin->getPluginDescription()) ?>
             </div>
         </div>
-        <? if (isset($metadata['screenshots']) && count($metadata['screenshots']['pictures'])) : ?>
+        <? if (isset($screenshots) && count($screenshots)) : ?>
         <ul class="screenshots clean">
-            <? foreach ($metadata['screenshots']['pictures'] as $pictures) : ?>
+            <? foreach ($screenshots as $screenshot) : ?>
             <li>
-                <a href="<?= $plugin->getPluginURL().$metadata['screenshots']['path'].'/'.$pictures['source'] ?>"
+                <a href="<?= htmlReady($screenshot['source']) ?>"
                    data-lightbox="<?= htmlReady($metadata['displayname'] ?? $plugin->getPluginName()) ?>"
-                   data-title="<?= htmlReady($pictures['title']) ?>">
-                    <img src="<?= $plugin->getPluginURL() . ($plugin instanceof StudIPPlugin ? '/' : '') . $metadata['screenshots']['path'] . '/' . $pictures['source'] ?>" alt="">
-                    <?= htmlReady($pictures['title']) ?>
+                   data-title="<?= htmlReady($screenshot['title']) ?>">
+                    <img src="<?= htmlReady($screenshot['source']) ?>" alt="">
+                    <?= htmlReady($screenshot['title']) ?>
                 </a>
             </li>
             <? endforeach ?>
