@@ -134,7 +134,6 @@ class RouteMap
         $this->addAuthenticatedNewsRoutes($group);
         $this->addAuthenticatedStockImagesRoutes($group);
         $this->addAuthenticatedStudyAreasRoutes($group);
-        $this->addAuthenticatedTreeRoutes($group);
         $this->addAuthenticatedWikiRoutes($group);
     }
 
@@ -158,6 +157,8 @@ class RouteMap
             $group->get('/public/courseware/{link_id}/courseware-structural-elements/{id}', Routes\Courseware\PublicStructuralElementsShow::class);
             $group->get('/public/courseware/{link_id}/courseware-structural-elements', Routes\Courseware\PublicStructuralElementsIndex::class);
         }
+
+        $this->addUnauthenticatedTreeRoutes($group);
     }
 
     private function getAuthenticator(): callable
@@ -290,7 +291,7 @@ class RouteMap
         $group->get('/study-areas/{id}/parent', Routes\StudyAreas\ParentOfStudyAreas::class);
     }
 
-    private function addAuthenticatedTreeRoutes(RouteCollectorProxy $group): void
+    private function addUnauthenticatedTreeRoutes(RouteCollectorProxy $group): void
     {
         $group->get('/tree-node/{id}', Routes\Tree\TreeShow::class);
 
