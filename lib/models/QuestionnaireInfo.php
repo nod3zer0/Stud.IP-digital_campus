@@ -12,7 +12,7 @@ class QuestionnaireInfo extends QuestionnaireQuestion implements QuestionType
      */
     public static function getIconShape()
     {
-        return 'info-circle';
+        return 'question-info';
     }
 
     public static function getName()
