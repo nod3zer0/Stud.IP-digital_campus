@@ -50,7 +50,14 @@ class NewsWidget extends CorePlugin implements PortalPlugin
             $icons[] = $navigation;
             if (Config::get()->NEWS_RSS_EXPORT_ENABLE) {
                 $navigation = new Navigation('', 'dispatch.php/news/rss_config/studip');
-                $navigation->setImage(Icon::create('rss', 'clickable', ["title" => _('RSS-Feed konfigurieren')]), ["rel" => 'size=auto']);
+                $navigation->setImage(
+                    Icon::create(
+                        'rss',
+                        Icon::ROLE_CLICKABLE,
+                        ['title' => _('RSS-Feed konfigurieren')]
+                    ),
+                    ['data-dialog' => 'size=auto']
+                );
                 $icons[] = $navigation;
             }
         }
