@@ -59,7 +59,7 @@ class Oer_MarketController extends StudipController
         }
         $this->new_ones = OERMaterial::findBySQL("LEFT JOIN oer_hosts ON (oer_hosts.host_id = oer_material.host_id)
             WHERE draft = '0'
-                AND (oer_material.host_id IS NULL OR oer_hosts.`active` = '1')
+                AND oer_material.host_id IS NULL
             ORDER BY mkdate DESC LIMIT 9");
 
         $statement = DBManager::get()->prepare("
