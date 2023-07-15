@@ -203,6 +203,20 @@ use Studip\Button, Studip\LinkButton;
                 </label>
             </div>
         </section>
+
+
+        <? if (!empty($user_roles)) : ?>
+            <section>
+                <span class="label-text">
+                <?= _('Zugewiesene Rollen') ?>
+            </span>
+                <ul>
+                    <? foreach($user_roles as $role) : ?>
+                        <li><?= htmlReady($role->rolename) ?> </li>
+                    <? endforeach ?>
+                </ul>
+            </section>
+        <? endif ?>
     </fieldset>
 
 
@@ -272,7 +286,7 @@ use Studip\Button, Studip\LinkButton;
             </select>
         </label>
 
-        
+
         <section class="col-2">
             <label for="expiration_date">
                 <?= _('Ablaufdatum') ?>

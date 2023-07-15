@@ -401,8 +401,8 @@ class Admin_UserController extends AuthenticatedController
             }
         }
 
-        //get user
         $this->user = User::find($user_id);
+        $this->user_roles = $this->user->getRoles();
 
         // Änderungen speichern
         if (Request::submitted('edit')) {
@@ -1805,25 +1805,12 @@ class Admin_UserController extends AuthenticatedController
                 );
             }
 
-            // Create link to role administration for this user
-            $extra = '';
-            $roles = $this->user->getRoles();
-            $roles_attributes   = [];
-            if ($roles) {
-                $extra = ' (' . count($roles) . ')';
-                $title = '• ' . implode("\n• ", array_map(function ($role) {
-                    return $role->rolename;
-                }, $roles));
-                $roles_attributes['data-tooltip'] = json_encode([
-                    'html' => htmlReady($title, true, true),
-                ]);
-            }
+
 
             $views->addLink(
-                _('Zur Rollenverwaltung') . $extra,
+                _('Zur Rollenverwaltung'),
                 $this->url_for("admin/role/assign_role/{$this->user->id}"),
-                Icon::create('roles2'),
-                $roles_attributes
+                Icon::create('roles2')
             );
         }
         $sidebar->insertWidget($views, 'user_actions', 'views');
