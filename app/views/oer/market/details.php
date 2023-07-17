@@ -29,6 +29,9 @@
         <iframe src="<?= htmlReady($url) ?>"
                 class="lernmarktplatz_player"></iframe>
     <? endif ?>
+<? elseif ($material->isImage()) : ?>
+        <img src="<?= htmlReady($url) ?>"
+                class="lernmarktplatz_player">
 <? elseif ($material['front_image_content_type']) : ?>
     <div style="background-image: url('<?= htmlReady($material->getLogoURL()) ?>');" class="lernmarktplatz_player image"></div>
 <? endif ?>
