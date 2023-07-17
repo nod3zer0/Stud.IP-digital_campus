@@ -1,7 +1,7 @@
 #sidebar {
-    background: $white;
     border-left: 0;
     display: inline-block;
+    height: max-content;
     margin-bottom: $page-margin + 35px;
     margin-top: 15px;
     padding: 0 5px 7px 15px;
@@ -11,7 +11,11 @@
     width: $sidebar-width;
     z-index: 2;
 
-    &.adjusted {
+    &.fixed {
+        top: 55px;
+    }
+
+    &.was-oversized {
         height: calc(100vh - 265px);
         position: fixed;
         overflow-x: hidden;

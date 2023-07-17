@@ -22,7 +22,7 @@ const Sidebar = {
         const sidebar = document.getElementById('sidebar');
         if (sidebar) {
             const sObserver = new IntersectionObserver(STUDIP.Sidebar.fits, options);
-            sObserver.observe();
+            sObserver.observe(sidebar, options);
         }
     },
 
@@ -36,11 +36,11 @@ const Sidebar = {
             for (const mutation of mutations) {
                 if ((!mutation.oldValue || mutation.oldValue.indexOf('fixed') === -1)
                     && mutation.target.classList.contains('fixed')) {
-                    sidebar.classList.add('fixed');
                     sidebar.style.top = '';
+                    sidebar.classList.add('fixed');
                 } else if (mutation.oldValue && mutation.oldValue.indexOf('fixed') !== -1
                     && !mutation.target.classList.contains('fixed')) {
-                    sidebar.classList.remove('fixed');
+                    STUDIP.Sidebar.reset();
                 }
             }
         });
@@ -64,17 +64,18 @@ const Sidebar = {
          * Observe if the footer is visible in viewport.
          */
         const fObserver = new IntersectionObserver(STUDIP.Sidebar.footerVisible, options);
-        fObserver.observe(document.getElementById('main-footer'));
+        fObserver.observe(document.getElementById('main-footer'), options);
 
     },
 
     reset() {
         const sidebar = document.getElementById('sidebar');
         if (sidebar) {
-            sidebar.classList.remove('oversized', 'adjusted', 'fixed');
+            sidebar.classList.remove('oversized', 'was-oversized', 'fixed');
             sidebar.style.top = '';
+            STUDIP.Sidebar.place();
+            STUDIP.Sidebar.observeSidebar();
         }
-        STUDIP.Sidebar.observe();
     },
 
     fits(entries, observer) {
@@ -85,7 +86,7 @@ const Sidebar = {
                 if (entry.isIntersecting) {
                     sidebar.classList.remove('oversized');
                 } else {
-                    sidebar.classList.add('oversized', 'adjusted');
+                    sidebar.classList.add('oversized', 'was-oversized');
                 }
             });
         }
@@ -97,13 +98,9 @@ const Sidebar = {
             entries.forEach(entry => {
                 // Footer is visible on current page.
                 if (entry.isIntersecting) {
-                    if (sidebar.classList.contains('no-footer')) {
-                        sidebar.classList.remove('no-footer');
-                    }
+                    sidebar.classList.remove('no-footer');
                 } else {
-                    if (!sidebar.classList.contains('no-footer')) {
-                        sidebar.classList.add('no-footer');
-                    }
+                    sidebar.classList.add('no-footer');
                 }
             });
         }
