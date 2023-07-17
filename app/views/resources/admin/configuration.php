@@ -14,14 +14,6 @@
     </fieldset>
     <fieldset>
         <legend><?= _('Anzeigeoptionen') ?></legend>
-        <label>
-            <input type="checkbox" name="resources_allow_view_resource_occupation"
-                   value="1"
-                   <?= $config->RESOURCES_ALLOW_VIEW_RESOURCE_OCCUPATION == '1'
-                     ? 'checked="checked"'
-                     : ''?>>
-            <?= _('Belegungen sind sichtbar für alle Nutzer') ?>
-        </label>
         <? if ($colours): ?>
             <? foreach ($colours as $colour): ?>
                 <label>

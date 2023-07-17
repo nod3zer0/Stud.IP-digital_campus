@@ -47,8 +47,7 @@
                             Icon::create('info-circle'),
                             ['data-dialog' => '']
                         );
-                        if (($room->booking_plan_is_public && Config::get()->RESOURCES_SHOW_PUBLIC_ROOM_PLANS)
-                            || ($room->userHasPermission($current_user, 'autor'))) {
+                        if ($room->bookingPlanVisibleForUser($current_user)) {
                             $actions->addLink(
                                 $room->getActionURL('booking_plan', $booking_plan_action_params),
                                 (

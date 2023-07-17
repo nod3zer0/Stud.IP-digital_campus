@@ -1149,11 +1149,6 @@ class Resources_AdminController extends AuthenticatedController
                 (bool)Request::get('resources_enable')
             );
             $this->config->store(
-                'RESOURCES_ALLOW_VIEW_RESOURCE_OCCUPATION',
-                (bool)Request::get('resources_allow_view_resource_occupation')
-            );
-
-            $this->config->store(
                 'RESOURCES_ALLOW_ROOM_PROPERTY_REQUESTS',
                 (bool)Request::get('resources_allow_room_property_requests')
             );

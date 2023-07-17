@@ -647,8 +647,8 @@ class Room extends Resource
      */
     public function bookingPlanVisibleForUser(?User $user, $time_range = [])
     {
-        return parent::bookingPlanVisibleForUser($user, $time_range)
-            || $this->booking_plan_is_public && Config::get()->RESOURCES_SHOW_PUBLIC_ROOM_PLANS;
+        return $this->booking_plan_is_public
+            || parent::bookingPlanVisibleForUser($user, $time_range);
     }
 
 
