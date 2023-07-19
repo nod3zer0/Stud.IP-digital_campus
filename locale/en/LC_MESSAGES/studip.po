@@ -20,10 +20,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-19 08:52+0200\n"
-"PO-Revision-Date: 2023-06-02 14:45+0000\n"
+"PO-Revision-Date: 2023-07-19 07:03+0000\n"
 "Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/stud-"
-"ip-main/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
+"stud-ip-main/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47504,9 +47504,9 @@ msgid "Gesperrt im Bereich vom %1$s bis zum %2$s"
 msgstr "Locked from %1$s to %2$s"
 
 #: lib/models/resources/ResourceBooking.class.php:551
-#, fuzzy, php-format
+#, php-format
 msgid "Gebucht im Bereich vom %1$s bis %2$s durch die Veranstaltung %3$s."
-msgstr "Booked in range from %1$s to %2$s"
+msgstr "Booked in the range from %1$s to %2$s by the course %3$s."
 
 #: lib/models/resources/ResourceBooking.class.php:558
 #, php-format
@@ -47514,9 +47514,9 @@ msgid "Gebucht im Bereich vom %1$s bis %2$s"
 msgstr "Booked in range from %1$s to %2$s"
 
 #: lib/models/resources/ResourceBooking.class.php:566
-#, fuzzy, php-format
+#, php-format
 msgid "Gebucht im Bereich vom %1$s bis zum %2$s durch die Veranstaltung %3$s."
-msgstr "Booked in range from %1$s to %2$s"
+msgstr "Booked in the range from %1$s to %2$s by the course %3$s."
 
 #: lib/models/resources/ResourceBooking.class.php:573
 #, php-format
