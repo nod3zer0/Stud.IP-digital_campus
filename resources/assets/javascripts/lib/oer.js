@@ -164,6 +164,10 @@ const OER = {
                         return p;
                     },
                     backInCloud: function () {
+                        if (this.tagHistory.length === 0) {
+                            this.browseMode = false;
+                            return;
+                        }
                         this.tagHistory.pop();
                         let tag_hash = null;
                         let tag_name = null;

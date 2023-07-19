@@ -139,7 +139,7 @@
             <h3><?= _('Wertvolle Materialien entdecken!') ?></h3>
             <?= _('Klicken Sie auf die Schlagwörter und entdecken Sie Lernmaterialien zum Thema.') ?>
         </div>
-        <a v-if="tagHistory.length" href="" @click.prevent="backInCloud" class="back-button">
+        <a href="" @click.prevent="backInCloud" class="back-button">
             <studip-icon shape="arr_1left" role="clickable" :size="50"></studip-icon>
         </a>
         <ul class="tags clean">
