@@ -15,7 +15,12 @@ if (Request::get('range_type')) {
     <form id="filechooser_course_search"
           action="<?= $controller->link_for('file/choose_file_from_course/' . $folder_id) ?>"
           data-dialog>
-        <?= QuickSearch::get('course_id', new StandardSearch('AnySeminar_id'))
+        <?= QuickSearch::get('course_id', new MyCoursesSearch('AnySeminar_id', $GLOBALS['perm']->get_perm(),
+            [
+                'userid'     => $GLOBALS['user']->id,
+                'exclude'    => Request::submitted('cid') ? [Request::get('cid')] : [],
+                'institutes' => array_column(Institute::getMyInstitutes(), 'Institut_id')
+            ]))
             ->fireJSFunctionOnSelect("function () { jQuery('#filechooser_course_search').submit(); }")
             ->setInputStyle('width: calc(100% - 40px); margin: 20px;')
             ->render() ?>
