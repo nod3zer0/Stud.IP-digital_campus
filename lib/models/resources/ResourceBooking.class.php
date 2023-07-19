@@ -531,18 +531,50 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                     ($this->isNew() ? [] : [$this->id])
                 );
                 if ($is_assigned) {
+                    //Find the other booking:
+                    $other_booking = self::findByResourceAndTimeRanges(
+                        $derived_resource,
+                        [$time_interval],
+                        [0, 2],
+                        [$this->id]
+                    );
+                    $course = null;
+                    if (
+                        count($other_booking) >= 1
+                        && !empty($other_booking[0]->assigned_course_date->course)
+                    ) {
+                        $course = $other_booking[0]->assigned_course_date->course;
+                    }
                     if ($time_interval['begin']->format('Ymd') == $time_interval['end']->format('Ymd')) {
-                        $time_interval_overlaps[] = sprintf(
-                            _('Gebucht im Bereich vom %1$s bis %2$s'),
-                            $time_interval['begin']->format('d.m.Y H:i'),
-                            $time_interval['end']->format('H:i')
-                        );
+                        if ($course) {
+                            $time_interval_overlaps[] = sprintf(
+                                    _('Gebucht im Bereich vom %1$s bis %2$s durch die Veranstaltung %3$s.'),
+                                    $time_interval['begin']->format('d.m.Y H:i'),
+                                    $time_interval['end']->format('H:i'),
+                                    $course->getFullName()
+                                );
+                        } else {
+                            $time_interval_overlaps[] = sprintf(
+                                _('Gebucht im Bereich vom %1$s bis %2$s'),
+                                $time_interval['begin']->format('d.m.Y H:i'),
+                                $time_interval['end']->format('H:i')
+                            );
+                        }
                     } else {
-                        $time_interval_overlaps[] = sprintf(
-                            _('Gebucht im Bereich vom %1$s bis zum %2$s'),
-                            $time_interval['begin']->format('d.m.Y H:i'),
-                            $time_interval['end']->format('d.m.Y H:i')
-                        );
+                        if ($course) {
+                            $time_interval_overlaps[] = sprintf(
+                                    _('Gebucht im Bereich vom %1$s bis zum %2$s durch die Veranstaltung %3$s.'),
+                                    $time_interval['begin']->format('d.m.Y H:i'),
+                                    $time_interval['end']->format('d.m.Y H:i'),
+                                    $course->getFullName()
+                                );
+                        } else {
+                            $time_interval_overlaps[] = sprintf(
+                                _('Gebucht im Bereich vom %1$s bis zum %2$s'),
+                                $time_interval['begin']->format('d.m.Y H:i'),
+                                $time_interval['end']->format('d.m.Y H:i')
+                            );
+                        }
                     }
                 }
             }
