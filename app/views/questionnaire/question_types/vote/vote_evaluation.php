@@ -65,17 +65,19 @@ rsort($ordered_results);
          class="ct-chart"></div>
 
     <script>
-         STUDIP.Questionnaire.initVoteEvaluation(
-             '#questionnaire_<?= $vote->getId() ?>_chart',
-             <?= json_encode(
-                 [
-                     "labels" => $ordered_answer_options,
-                     "series" => [$ordered_results],
-                 ]
-             ) ?>,
-             <?= json_encode(Request::isAjax()) ?>,
-             <?= json_encode($vote->questiondata['type'] === 'multiple') ?>
-         );
+        $(function () {
+             STUDIP.Questionnaire.initVoteEvaluation(
+                 '#questionnaire_<?= $vote->getId() ?>_chart',
+                 <?= json_encode(
+                     [
+                         "labels" => $ordered_answer_options,
+                         "series" => [$ordered_results],
+                     ]
+                 ) ?>,
+                 <?= json_encode(Request::isAjax()) ?>,
+                 <?= $vote->questiondata['multiplechoice'] ? 'true' : 'false' ?>
+             );
+        });
     </script>
 <? endif ?>
 

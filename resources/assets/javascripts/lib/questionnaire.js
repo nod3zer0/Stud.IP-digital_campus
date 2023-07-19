@@ -324,7 +324,6 @@ const Questionnaire = {
         if (jQuery('.questionnaire_' + questionnaire_id).is('.ui-dialog .questionnaire_results')) {
             jQuery('.questionnaire_' + questionnaire_id + ' [data-dialog-button]').hide();
         }
-        jQuery(document).trigger('dialog-open');
     },
     beforeAnswer: function() {
         var form = jQuery(this).closest('form')[0];
@@ -534,11 +533,7 @@ const Questionnaire = {
 
         const Chartist = await STUDIP.loadChunk('chartist');
 
-        if (isAjax) {
-            jQuery(document).add(".questionnaire_results").one("dialog-open", enhance);
-        } else {
-            jQuery(enhance);
-        }
+        jQuery(enhance);
 
         function enhance() {
             if (isMultiple) {
