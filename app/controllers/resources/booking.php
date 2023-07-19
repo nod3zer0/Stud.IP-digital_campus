@@ -633,7 +633,7 @@ class Resources_BookingController extends AuthenticatedController
     {
         $this->current_user = User::findCurrent();
 
-        $only_one_room = null;
+        $only_one_room = true;
 
         if (Request::submitted('semester_id')) {
             URLHelper::addLinkParam('semester_id', Request::get('semester_id'));
@@ -927,14 +927,12 @@ class Resources_BookingController extends AuthenticatedController
 
             if ($resource instanceof Room) {
                 $other_room_parts = Room::findOtherRoomParts($resource);
-                $simple_message = true;
                 if ($other_room_parts) {
                     $this->other_room_parts[$resource->id] = $other_room_parts;
                     $this->separable_rooms_selected = true;
 
-                    if ($only_one_room and $other_room_parts) {
+                    if ($only_one_room) {
                         //If there is only one room we can be informative.
-                        $simple_message = false;
                         $other_room_links = [];
                         foreach ($other_room_parts as $room_part) {
                             $other_room_links[] = sprintf(
@@ -950,13 +948,12 @@ class Resources_BookingController extends AuthenticatedController
                             ', ',
                             $other_room_links
                         );
+                    } else {
+                        $separable_room_messages[] = sprintf(
+                            _('Der Raum %1$s ist ein Teilraum eines teilbaren Raumes.'),
+                            htmlReady($resource->name)
+                        );
                     }
-                }
-                if ($simple_message) {
-                    $separable_room_messages[] = sprintf(
-                        _('Der Raum %1$s ist ein Teilraum eines teilbaren Raumes.'),
-                        htmlReady($resource->name)
-                    );
                 }
             }
         }
