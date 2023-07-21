@@ -67,7 +67,7 @@ class RevampQuestionnaires extends Migration
                 $questiondata = $task;
                 $questiondata['description'] = $etask['description'];
             }
-            $questiondata = array_merge($questiondata, json_decode($etask['options'], true));
+            $questiondata = array_merge($questiondata, (array) json_decode($etask['options'], true));
 
             $updatequestion->execute([
                 'question_id' => $question['question_id'],
