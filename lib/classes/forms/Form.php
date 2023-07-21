@@ -22,6 +22,7 @@ class Form extends Part
     protected $success_message = '';
 
     protected $collapsable = false;
+    protected $data_secure = true;
 
     //to identify a form element
     protected $id = null;
@@ -274,6 +275,21 @@ class Form extends Part
     {
         $this->store_callbacks[] = $c;
         return $this;
+    }
+
+    /**
+     * Sets if the form should be secured against accidental leaving of the page. Standard is on.
+     * @param $data_secure
+     * @return $this
+     */
+    public function setDataSecure($data_secure)
+    {
+        $this->data_secure = $data_secure;
+        return $this;
+    }
+
+    public function getDataSecure() {
+        return $this->data_secure;
     }
 
     /**

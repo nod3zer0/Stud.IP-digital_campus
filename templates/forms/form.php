@@ -22,6 +22,7 @@ $form_id = md5(uniqid());
       <? endif ?>
       @submit="submit"
       novalidate
+      <?= $form->getDataSecure() ? 'data-secure' : '' ?>
       id="<?= htmlReady($form_id) ?>"
       data-inputs="<?= htmlReady(json_encode($inputs)) ?>"
       data-debugmode="<?= htmlReady(json_encode($form->getDebugMode())) ?>"
