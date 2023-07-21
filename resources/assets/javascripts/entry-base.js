@@ -86,7 +86,6 @@ import "./bootstrap/contentmodules.js"
 import "./bootstrap/responsive-navigation.js"
 import "./bootstrap/treeview.js"
 import "./bootstrap/stock-images.js"
-import "./bootstrap/sidebar.js"
 
 import "./mvv_course_wizard.js"
 import "./mvv.js"
