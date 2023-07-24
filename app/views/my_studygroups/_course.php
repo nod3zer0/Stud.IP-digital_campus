@@ -2,8 +2,7 @@
     <tr>
         <td class="gruppe<?= $group['gruppe'] ?>"></td>
         <td>
-            <?= CourseAvatar::getAvatar($group['seminar_id'])->getImageTag(Avatar::SMALL, ['title' => $group['name']])
-            ?>
+            <?= StudygroupAvatar::getAvatar($group['seminar_id'])->getImageTag(Avatar::SMALL, ['title' => $group['name']]) ?>
         </td>
         <td style="text-align: left">
             <a href="<?= URLHelper::getLink('seminar_main.php', ['auswahl' => $group['seminar_id']]) ?>"
