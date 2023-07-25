@@ -87,7 +87,7 @@ class VirtualFolderType implements FolderType
      */
     public function __get($attribute)
     {
-        return $this->folderdata[$attribute];
+        return $this->folderdata[$attribute] ?? null;
     }
 
     /**
