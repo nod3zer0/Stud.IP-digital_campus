@@ -1060,7 +1060,7 @@ class FileManager
         }
 
         $new_folder = null;
-        if ($source_folder instanceof StandardFolder) {
+        if (($source_folder instanceof StandardFolder) && ($destination_folder instanceof StandardFolder)) {
             //Standard folders just have to be put below the
             //destination folder.
             $new_folder = $destination_folder->createSubfolder($source_folder);
