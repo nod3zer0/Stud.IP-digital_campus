@@ -131,6 +131,14 @@ class FileArchiveManager
                     return true;
                 }
             } else {
+                if (!($file_type instanceof StandardFile)) {
+                    $file_type = $file_type->convertToStandardFile();
+                }
+                if (!($file_type instanceof StandardFile)) {
+                    //The file type could not be converted to a standard file.
+                    //We cannot continue.
+                    return false;
+                }
                 //Get the file's path (if the file exists) and add the file to the archive:
                 $path = $file_type->getPath();
                 if ($path) {
