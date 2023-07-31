@@ -1100,15 +1100,13 @@ class FileManager
             }
 
             //now go through all files and move them, too:
-            foreach ($source_folder->getFiles() as $file_ref) {
-                if (!($file_ref instanceof FileRef)) {
-                    $file_ref = FileRef::build((array) $file_ref, false);
-                    $file_ref->setFolderType('foldertype', $source_folder);
-                }
-                $result = self::moveFile($file_ref->getFileType(), $new_folder, $user);
-                if (!$result instanceof FileRef) {
-                    //error
-                    return $result;
+            foreach ($source_folder->getFiles() as $file) {
+                if ($file instanceof FileType) {
+                    $result = self::moveFile($file, $new_folder, $user);
+                    if (!$result instanceof FileType) {
+                        //error
+                        return $result;
+                    }
                 }
             }
 
