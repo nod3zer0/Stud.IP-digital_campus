@@ -704,13 +704,12 @@ class FileController extends AuthenticatedController
         if (empty($fileref_id)) {
             $fileref_id = Request::getArray('fileref_id');
         } elseif ($fileref_id === 'bulk') {
-            $fileref_id = Request::optionArray('ids');
+            $fileref_id = Request::getArray('ids');
         }
         $this->copymode = $copymode;
         $this->fileref_id = $fileref_id;
 
         if (Request::get("from_plugin")) {
-
             if (is_array($fileref_id)) {
                 $file_id = $fileref_id[0];
             } else {
