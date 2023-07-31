@@ -43,6 +43,11 @@ class VirtualFolderType implements FolderType
     public function __construct($folderdata = [], $plugin_id = null)
     {
         $this->folderdata = $folderdata;
+        //Make sure the description field is not empty so that folders
+        //of this type are compatible with StandardFolder types:
+        if (empty($this->folderdata['description'])) {
+            $this->folderdata['description'] = '';
+        }
         $this->plugin_id  = $plugin_id;
     }
 
