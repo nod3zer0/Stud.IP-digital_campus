@@ -213,10 +213,8 @@ function enhanceEditor($textarea, ckeditor) {
     // make sure HTML marker is always set, in
     // case contents are cut-off by the backend
     $textarea.closest('form').submit(() => {
-        const data = wysiwyg.markAsHtml(ckeditor.getData());
-        ckeditor.setData(data);
+        ckeditor.setData(wysiwyg.markAsHtml(ckeditor.getData()));
         ckeditor.updateSourceElement();
-        $textarea.get(0).value = data;
     });
 
     // focus the editor if requested
@@ -226,9 +224,7 @@ function enhanceEditor($textarea, ckeditor) {
 
     ckeditor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
         if (!isFocused) {
-            const data = wysiwyg.markAsHtml(ckeditor.getData());
-            ckeditor.updateSourceElement(data);
-            $textarea.get(0).value = data;
+            ckeditor.sourceElement.value = wysiwyg.markAsHtml(ckeditor.getData());
         }
     });
 
