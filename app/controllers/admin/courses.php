@@ -486,6 +486,13 @@ class Admin_CoursesController extends AuthenticatedController
                 break;
             case 20: //Notiz
                 break;
+            case 21: //Mehrfachzuordnung Studienbereiche
+                $data['buttons_top'] = '<label>' . _('Alle auswählen') .
+                    '<input type="checkbox" data-proxyfor=".course-admin td:last-child :checkbox"></label>';
+                $data['buttons_bottom'] = (string) \Studip\Button::createAccept(
+                    _('Mehrfachzuordnung von Studienbereichen'), 'batch_assign_semtree',
+                    ['formaction' => URLHelper::getURL('dispatch.php/admin/tree/batch_assign_semtree')]);
+                break;
             default:
                 foreach (PluginManager::getInstance()->getPlugins('AdminCourseAction') as $plugin) {
                     if ($GLOBALS['user']->cfg->MY_COURSES_ACTION_AREA === get_class($plugin)) {
@@ -721,6 +728,11 @@ class Admin_CoursesController extends AuthenticatedController
                         'role' => 'button'
                     ]
                 );
+                break;
+            case 21: //Mehrfachzuweisung Studienbereiche
+                $template = $tf->open('admin/courses/batch_assign_semtree');
+                $template->course = $course;
+                $d['action'] = $template->render();
                 break;
             default:
                 foreach (PluginManager::getInstance()->getPlugins('AdminCourseAction') as $plugin) {
