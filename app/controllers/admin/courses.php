@@ -491,7 +491,10 @@ class Admin_CoursesController extends AuthenticatedController
                     '<input type="checkbox" data-proxyfor=".course-admin td:last-child :checkbox"></label>';
                 $data['buttons_bottom'] = (string) \Studip\Button::createAccept(
                     _('Mehrfachzuordnung von Studienbereichen'), 'batch_assign_semtree',
-                    ['formaction' => URLHelper::getURL('dispatch.php/admin/tree/batch_assign_semtree')]);
+                    [
+                        'formaction' => URLHelper::getURL('dispatch.php/admin/tree/batch_assign_semtree'),
+                        'data-dialog' => 'size=big'
+                    ]);
                 break;
             default:
                 foreach (PluginManager::getInstance()->getPlugins('AdminCourseAction') as $plugin) {
