@@ -828,7 +828,7 @@ class FileArchiveManager
      * @param FolderType $target_folder The folder where the file shall be stored.
      * @param User $user The user who wishes to extract the file from the archive.
      *
-     * @return FileRef|null FileRef instance on success, null otherwise.
+     * @return FileType|null FileType instance on success, null otherwise.
      */
     public static function extractFileFromArchive(
         Studip\ZipArchive $archive,
@@ -844,59 +844,62 @@ class FileArchiveManager
             return null;
         }
 
-        $file = new File();
-        $file->user_id   = $user->id;
-        $file->name      = $archive->convertArchiveFilename(basename($archive_path));
-        $file->mime_type = get_mime_type($file->name);
-        $file->size      = $file_info['size'];
-        $file->store();
+        $studip_file = new File();
+        $studip_file->user_id   = $user->id;
+        $studip_file->name      = $archive->convertArchiveFilename(basename($archive_path));
+        $studip_file->mime_type = get_mime_type($studip_file->name);
+        $studip_file->size      = $file_info['size'];
+        $studip_file->id = $studip_file->getNewId();
+        //$file->store();
 
         // Ok, we have a file object in the database. Now we must connect
         // it with the data file by extracting the data file into
         // the place, where the file's content has to be placed.
-        $file_path = pathinfo($file->getPath(), PATHINFO_DIRNAME);
+        $file_dir = pathinfo($studip_file->getPath(), PATHINFO_DIRNAME);
+        $file_path = $file_dir . '/' . $studip_file->id;
 
         // Create the directory for the file, if necessary:
-        if (!is_dir($file_path)) {
-            mkdir($file_path);
+        if (!is_dir($file_dir)) {
+            mkdir($file_dir);
         }
 
         // Ok, now we read all data from $file_resource and put it into
         // the file's path:
-        if (file_put_contents($file->getPath(), $file_resource) === false) {
+        if (file_put_contents($file_path, $file_resource) === false) {
             //Something went wrong: abort and clean up!
-            $file->delete();
+            //$file->delete();
             return null;
         }
 
-        // Ok, we now must create a FileRef:
+        // Ok, we now must create a File:
         $file_ref = new FileRef();
-        $file_ref->file_id   = $file->id;
+        $file_ref->file_id   = $studip_file->id;
         $file_ref->folder_id = $target_folder->getId();
         $file_ref->user_id   = $user->id;
-        $file_ref->name     = $file->name;
-        if ($file_ref->store()) {
-            return $file_ref;
+        $file_ref->name      = $studip_file->name;
+        $file_ref->file      = $studip_file;
+        $file = new StandardFile($file_ref);
+        if ($saved_file = $target_folder->addFile($file, $user->id)) {
+            return $saved_file;
         }
 
-        //Something went wrong: abort and clean up!
-        $file_ref->delete();
+        //Something went wrong:
         return null;
     }
 
     /**
      * Extracts an archive into a folder inside the Stud.IP file area.
      *
-     * @param FileRef $archive_file_ref The archive file which shall be extracted.
+     * @param FileType $archive_file The archive file which shall be extracted.
      * @param FolderType $folder The folder where the archive shall be extracted.
      * @param string $user_id The ID of the user who wants to extract the archive.
      *
-     * @return FileRef[] Array with extracted files, represented as FileRef objects.
+     * @return FileType[] Array with extracted files, represented as FileRef objects.
      */
     public static function extractArchiveFileToFolder(
-        FileRef $archive_file_ref,
+        FileType   $archive_file,
         FolderType $folder,
-        $user_id = null
+                   $user_id = null
     )
     {
         $user = $user_id ? User::find($user_id) : User::findCurrent();
@@ -913,11 +916,16 @@ class FileArchiveManager
         $keep_hierarchy = $folder->isSubfolderAllowed($user->id);
 
         $archive = new Studip\ZipArchive();
-        $archive->open($archive_file_ref->file->getPath());
+        $standard_archive_file = $archive_file->convertToStandardFile();
+        if (!($standard_archive_file instanceof StandardFile)) {
+            //Error converting the archive file.
+            return [];
+        }
+        $archive->open($standard_archive_file->getPath());
 
         // loop over all entries in the zip archive and put each entry
         // in the current folder or one of its subfolders:
-        $file_refs = [];
+        $files = [];
 
         for ($i = 0; $i < $archive->numFiles; $i++) {
             $entry_info = $archive->statIndex($i);
@@ -972,19 +980,19 @@ class FileArchiveManager
                 //we extract one file:
                 //$entry_info['name'] is necessary because we need the full path
                 //to the entry inside the archive.
-                $file_ref = self::extractFileFromArchive(
+                $file = self::extractFileFromArchive(
                     $archive,
                     $entry_info['name'],
                     $extracted_entry_destination_folder,
                     $user
                 );
 
-                if ($file_ref instanceof FileRef) {
-                    $file_refs[] = $file_ref;
+                if ($file instanceof FileType) {
+                    $files[] = $file;
                 }
             }
         }
 
-        return $file_refs;
+        return $files;
     }
 }

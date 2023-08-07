@@ -1,7 +1,7 @@
 <form action="<?= $controller->url_for('file/unzipquestion') ?>" method="post" data-dialog>
 
-<? foreach ($file_refs as $file_ref): ?>
-    <input type="hidden" name="file_refs[]" value="<?= htmlReady($file_ref->id) ?>">
+<? foreach ($files as $file): ?>
+    <input type="hidden" name="file_refs[]" value="<?= htmlReady($file->getId()) ?>">
 <? endforeach ?>
 
     <?= Icon::create('unit-test', Icon::ROLE_INACTIVE)->asImg(120, ['style' => 'display: block; margin-left: auto; margin-right: auto;']) ?>

@@ -1,8 +1,9 @@
 <form action="<?= $controller->link_for('file/edit_license', $origin_folder_id ?? null) ?>"
       method="post" class="default" data-dialog="reload-on-close">
 <input type="hidden" name="re_location" value="<?= htmlReady($re_location) ?>">
-<? foreach ($file_refs as $file_ref) : ?>
-    <input type="hidden" name="file_refs[]" value="<?= htmlReady($file_ref->id) ?>">
+    <input type="hidden" name="to_plugin" value="<?= $plugin ? $plugin->getPluginName() : '' ?>">
+<? foreach ($files as $file) : ?>
+    <input type="hidden" name="file_refs[]" value="<?= htmlReady($file->getId()) ?>">
 <? endforeach ?>
 
 
@@ -17,7 +18,7 @@
 
     <? endif ?>
 
-    <? if (count($file_refs) === 1) : ?>
+    <? if (count($files) === 1) : ?>
         <fieldset>
             <legend><?= _('Barrierefreiheit') ?></legend>
             <label>
@@ -30,7 +31,7 @@
 
         <?= $this->render_partial('file/_terms_of_use_select.php', [
             'content_terms_of_use_entries' => $licenses,
-            'selected_terms_of_use_id'     => $file_ref->content_terms_of_use_id
+            'selected_terms_of_use_id'     => $file_ref->content_terms_of_use_id ?? ''
         ]) ?>
 
     <footer data-dialog-button>
