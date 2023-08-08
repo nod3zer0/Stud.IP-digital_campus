@@ -305,7 +305,7 @@ class Course_MembersController extends AuthenticatedController
         } else {
             $text = sprintf(_('Es wurden %s neue Personen hinzugefügt.'), $countAdded);
         }
-        PageLayout::postSuccess($text, $msg);
+        PageLayout::postSuccess($text, $msg['success']);
         $this->redirect($this->indexURL());
     }
 
@@ -2016,7 +2016,6 @@ class Course_MembersController extends AuthenticatedController
         $messaging = new messaging;
 
         $status = 'autor';
-        $msg = [];
         // insert
         $copy_course = $accepted || $consider_contingent;
         $admission_user = CourseMember::insertCourseMember($this->course_id, $user_id, $status, $copy_course, $consider_contingent, true);
@@ -2039,8 +2038,8 @@ class Course_MembersController extends AuthenticatedController
                 sprintf('%s %s', _('Systemnachricht:'), _('Eintragung in Veranstaltung')),
                 true
             );
-            $msg['success'] = sprintf(
-                _('%1$s wurde in die Veranstaltung mit dem Status<b>%2$s</b> eingetragen.'),
+            $msg['success'][] = sprintf(
+                _('%1$s wurde in die Veranstaltung mit dem Status <b>%2$s</b> eingetragen.'),
                 $user->getFullName(),
                 $status
             );
