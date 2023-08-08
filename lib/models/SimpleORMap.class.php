@@ -1732,6 +1732,17 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
+     * check if given relation exists in this class
+     * @param string $field
+     * @return boolean
+     */
+    function isRelation($field)
+    {
+        $field = strtolower($field);
+        return array_key_exists($field, $this->relations);
+    }
+
+    /**
      * check if given column is additional
      * @param string $field
      * @return boolean

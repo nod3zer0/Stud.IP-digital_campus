@@ -417,7 +417,7 @@ class Form extends Part
         if (
             $context
             && is_subclass_of($context, \SimpleORMap::class)
-            && $context->isField($input->getName())
+            && ($context->isField($input->getName()) || $context->isRelation($input->getName()))
         ) {
             return function ($value) use ($context, $input) {
                 $context[$input->getName()] = $value;
