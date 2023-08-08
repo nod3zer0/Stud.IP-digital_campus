@@ -588,6 +588,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
     }
 
     $data_object = xml_open_tag($xml_groupnames_person['group']);
+    $person_out = [];
 
     foreach ($gruppe as $key1 => $val1) {
         $parameters = [];
@@ -696,14 +697,10 @@ function export_teilis($inst_id, $ex_sem_id = "no")
         $object_counter_tmp = $object_counter;
         if (count($data) > 0) {
             $data_object_tmp .= xml_open_tag($xml_groupnames_person['subgroup1'], $val1);
-            $person_out = [];
             foreach ($data as $row) {
-                if (!isset($person_out[$row['user_id']])) {
-                    $person_out[$row['user_id']] = false;
-                }
                 // Nur Personen ausgeben, die entweder einer Gruppe angehoeren
                 // oder zur Veranstaltung gehoeren und noch nicht ausgegeben wurden.
-                if ($key1 !== 'no' || !$person_out[$row['user_id']]) {
+                if ($key1 !== 'no' || empty($person_out[$row['user_id']])) {
                     $object_counter  += 1;
                     $data_object_tmp .= xml_open_tag($xml_groupnames_person["object"], $row['username']);
 
