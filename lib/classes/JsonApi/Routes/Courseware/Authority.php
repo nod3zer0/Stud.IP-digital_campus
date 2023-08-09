@@ -549,5 +549,9 @@ class Authority
         return self::canIndexClipboardsOfAUser($request_user, $user);
     }
 
+    public static function canInsertFromClipboard(User $user, Clipboard $resource)
+    {
+        return $resource->user_id === $user->id;
+    }
 
 }

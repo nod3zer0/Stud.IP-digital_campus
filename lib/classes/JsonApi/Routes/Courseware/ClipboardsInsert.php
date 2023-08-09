@@ -35,6 +35,11 @@ class ClipboardsInsert extends NonJsonApiController
         }
 
         $user = $this->getUser($request);
+
+        if (!Authority::canInsertFromClipboard($user, $clipboard)) {
+            throw new AuthorizationFailedException();
+        }
+
         $backup = json_decode($clipboard->backup);
 
         if ($clipboard->object_type === 'courseware-blocks') {
