@@ -21,7 +21,6 @@
  * @property string priority database column
  * @property string info database column
  * @property string name database column
- * @property string studip_object_id database column
  * @property string type database column
  * @property SimpleORMapCollection _children has_many StudipStudyArea
  * @property Institute institute belongs_to Institute

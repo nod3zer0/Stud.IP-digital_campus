@@ -1551,12 +1551,7 @@ class Seminar
             $this->createMessage(sprintf(_('%s Funktionen/Gruppen gelöscht.'), $count));
         }
 
-        // Alle Eintraege aus dem Vorlesungsverzeichnis rauswerfen
-        $sem_tree = TreeAbstract::GetInstance('StudipSemTree');
-        $db_ar = $sem_tree->DeleteSemEntries(null, $s_id);
-        if ($db_ar > 0) {
-            $this->createMessage(sprintf(_("%s Zuordnungen zu Bereichen archiviert."), $db_ar));
-        }
+        // seminar_sem_tree entries are deleted automatically on deletion of the Course object.
 
         // Alle Termine mit allem was dranhaengt zu diesem Seminar loeschen.
         if (($db_ar = SingleDateDB::deleteAllDates($s_id)) > 0) {
