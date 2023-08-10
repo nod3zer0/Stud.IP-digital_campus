@@ -332,7 +332,13 @@ abstract class BlockType
     {
         static $file_map = [];
 
-        if ($this->block->container->structural_element->range_id === $rangeId) {
+        $file_ref = \FileRef::find($fileId);
+
+        if (!$file_ref) {
+            return '';
+        }
+
+        if ($file_ref->getRangeCourseId() === $rangeId) {
             return $fileId;
         }
 
@@ -341,16 +347,15 @@ abstract class BlockType
         }
 
         $user = \User::findCurrent();
-        if ($file_ref = \FileRef::find($fileId)) {
-            $copiedFile = \FileManager::copyFile(
-                $file_ref->getFiletype(),
-                $this->getDestinationFolder($user, $rangeId),
-                $user
-            );
+        $destinationFolder = $this->getDestinationFolder($user, $rangeId);
+        $copiedFile = \FileManager::copyFile(
+            $file_ref->getFiletype(),
+            $destinationFolder,
+            $user
+        );
 
-            if (is_object($copiedFile)) {
-                return $file_map[$fileId] = $copiedFile->id;
-            }
+        if (is_object($copiedFile)) {
+            return $file_map[$fileId] = $copiedFile->id;
         }
 
         return '';
@@ -368,7 +373,13 @@ abstract class BlockType
     {
         static $folder_map = [];
 
-        if ($this->block->container->structural_element->range_id === $rangeId) {
+        $sourceFolder = \Folder::find($folderId);
+
+        if (!$sourceFolder) {
+            return '';
+        }
+
+        if ($sourceFolder->getRangeCourseId() === $rangeId) {
             return $folderId;
         }
 
@@ -378,16 +389,14 @@ abstract class BlockType
 
         $user = \User::findCurrent();
         $destinationFolder = $this->getDestinationFolder($user, $rangeId);
-        if ($sourceFolder = \Folder::find($folderId)) {
-            $copiedFolder = \FileManager::copyFolder(
-                $sourceFolder->getTypedFolder(),
-                $destinationFolder,
-                $user
-            );
+        $copiedFolder = \FileManager::copyFolder(
+            $sourceFolder->getTypedFolder(),
+            $destinationFolder,
+            $user
+        );
 
-            if (is_object($copiedFolder)) {
-                return $folder_map[$folderId] = $copiedFolder->id;
-            }
+        if (is_object($copiedFolder)) {
+            return $folder_map[$folderId] = $copiedFolder->id;
         }
 
         return '';
