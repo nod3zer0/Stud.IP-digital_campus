@@ -553,9 +553,9 @@ class Shared_ContactsController extends MVVController
         $contact_range->category = Request::option('contact_category');
         if ($contact_range->contact->contact_status === 'extern') {
             $extern_contact = MvvExternContact::find($contact_range->contact_id);
-            $extern_contact->name     = Request::get('contact_name');
+            $extern_contact->name     = Request::i18n('contact_name');
             $extern_contact->vorname  = Request::get('contact_vorname');
-            $extern_contact->homepage = Request::get('contact_homepage', '');
+            $extern_contact->homepage = Request::i18n('contact_homepage', '');
             $extern_contact->mail     = Request::get('contact_mail', '');
             $extern_contact->tel      = Request::get('contact_tel', '');
             if (!strlen($extern_contact->name)) {
