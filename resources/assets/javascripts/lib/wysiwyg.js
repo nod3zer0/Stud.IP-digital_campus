@@ -25,7 +25,7 @@ const wysiwyg = {
         if (this.hasHtmlMarker(text) || text.trim() == '') {
             return text; // marker already set, don't set twice
         }
-        return this.htmlMarker + '\n' + text;
+        return this.htmlMarker + text;
     },
 
     getEditor,

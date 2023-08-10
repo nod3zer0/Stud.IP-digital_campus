@@ -144,7 +144,7 @@ class Markup
         if (self::hasHtmlMarker($text) || trim($text) === '') {
             return $text; // marker already set, don't set twice
         }
-        return self::HTML_MARKER . PHP_EOL . $text;
+        return self::HTML_MARKER . $text;
     }
 
     /**
