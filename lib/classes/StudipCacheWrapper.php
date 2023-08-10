@@ -61,7 +61,10 @@ class StudipCacheWrapper implements StudipCache
      */
     public function write($name, $content, $expires = self::DEFAULT_EXPIRATION)
     {
-        $this->memory_cache->expire($name);
-        $this->actual_cache->write($name, $content, $expires);
+        if ($this->actual_cache->write($name, $content, $expires)) {
+            return $this->memory_cache->write($name, $content, $expires);
+        } else {
+            return false;
+        }
     }
 }
