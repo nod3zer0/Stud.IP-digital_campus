@@ -364,7 +364,7 @@ class StudipStudyArea extends SimpleORMap implements StudipTreeNode
     public static function search($searchTerm)
     {
         return self::findBySql(
-            "sem_tree_id IN (SELECT sem_tree_id FROM sem_tree WHERE name LIKE :searchTerm ORDER BY priority)",
+            "name LIKE :searchTerm ORDER BY priority",
             ['searchTerm' => "%$searchTerm%"]
         );
     }
