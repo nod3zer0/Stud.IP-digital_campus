@@ -13,6 +13,8 @@
  * @category    Stud.IP
  */
 
+define('K_PATH_IMAGES', $GLOBALS['STUDIP_BASE_PATH'] . '/public/assets/images/');
+
 /**
  * Class to create an PDF by putting in Stud.IP-formatted code.
  * Usage:
@@ -260,9 +262,8 @@ class ExportPDF extends TCPDF implements ExportDocument {
      * @param string $hs string to print on document header
      */
     public function setHeaderData($ln = '', $lw = 0, $ht = '', $hs = '', $tc = [], $lc = []) {
-        $logo_path = Config::get()->PDF_LOGO;
         if (!$ln) {
-            $ln = $logo_path ? $logo_path : '../../../../public/assets/images/logos/logoklein.png';
+            $ln = Config::get()->PDF_LOGO ?: 'logos/logoklein.png';
         }
         $lw = 30;
         $ht = ($ht == '' ? $this->h_title : $ht);
