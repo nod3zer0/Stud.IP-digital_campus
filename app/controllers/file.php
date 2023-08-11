@@ -737,6 +737,7 @@ class FileController extends AuthenticatedController
         }
         $this->copymode = $copymode;
         $this->fileref_id = $fileref_id;
+        $this->is_folder = false;
 
         if (Request::get("from_plugin")) {
             if (is_array($fileref_id)) {
@@ -756,13 +757,16 @@ class FileController extends AuthenticatedController
                 throw new Trails_Exception(404, _('Plugin existiert nicht.'));
             }
 
-            if (!Request::get("isfolder")) {
-                $this->file_ref = $plugin->getPreparedFile($file_id);
-            } else {
-                $this->parent_folder = $plugin->getFolder($file_id);
+            $this->file_ref = $plugin->getPreparedFile($file_id);
+            if (!$this->file_ref) {
+                //Maybe it is a folder:
+                $folder = $plugin->getFolder($file_id);
+                if ($folder instanceof FolderType) {
+                    $this->parent_folder = $folder->getParent();
+                    $this->is_folder = true;
+                }
             }
         } else {
-
             if (is_array($fileref_id)) {
                 $this->file_ref = FileRef::find($fileref_id[0]);
             } else {
@@ -782,6 +786,7 @@ class FileController extends AuthenticatedController
             if ($folder) {
                 $this->parent_folder = Folder::find($folder->parent_id);
                 $this->parent_folder = $this->parent_folder->getTypedFolder();
+                $this->is_folder = true;
             }
         } elseif (!$this->parent_folder) {
             throw new AccessDeniedException();

@@ -3,8 +3,9 @@ $options = array_filter([
     'from_plugin'   => Request::get('from_plugin'),
     'to_folder_id'  => Request::get('to_folder_id'),
     'copymode'      => Request::get('copymode', $copymode),
-    'isfolder'      => Request::get('isfolder'),
+    'isfolder'      => Request::get('isfolder', $is_folder),
     'fileref_id'    => Request::getArray('fileref_id') ?: $fileref_id,
+    'ids'           => Request::getArray('ids'),
     'direct_parent' => true,
 ], function ($value) {
     return $value !== null;
