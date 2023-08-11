@@ -519,8 +519,8 @@ class FilesController extends AuthenticatedController
 
             $this->addFiltersToOverviewSidebar(['time_range', 'course']);
             $this->table_title = _('Meine hochgeladenen Dateien');
-            $file_refs = FileRef::findUploadedFiles($GLOBALS['user']->id, $this->begin, $this->end, $this->course_id, $this->page_size, $offset);
-            $this->files_c = FileRef::countUploadedFiles($GLOBALS['user']->id, $this->begin, $this->end, $this->course_id);
+            $file_refs = FileRef::findUploadedFiles($GLOBALS['user']->id, $this->begin, $this->end, $this->course_id, false, $this->page_size, $offset);
+            $this->files_c = FileRef::countUploadedFiles($GLOBALS['user']->id, $this->begin, $this->end, $this->course_id, false);
             $pagination = Pagination::create(
                 $this->files_c,
                 $this->page - 1,
