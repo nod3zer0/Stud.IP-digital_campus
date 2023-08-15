@@ -31,6 +31,7 @@ class Course_CoursewareController extends CoursewareController
         object_set_visit_module($this->studip_module->getPluginId());
         $this->last_visitdate = object_get_visit(Context::getId(), $this->studip_module->getPluginId());
         $this->licenses = $this->getLicenses();
+        $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $GLOBALS['perm']->have_perm(Config::get()->OER_PUBLIC_STATUS);
         $this->unitsNotFound = Unit::countBySql('range_id = ?', [Context::getId()]) === 0;
     }
 
@@ -42,7 +43,7 @@ class Course_CoursewareController extends CoursewareController
 
     public function courseware_action($unit_id = null):  void
     {
-        global $perm, $user;
+        global $user;
         Navigation::activateItem('course/courseware/unit');
         if ($this->unitsNotFound) {
             PageLayout::postMessage(MessageBox::info(_('Es wurde kein Lernmaterial gefunden.')));

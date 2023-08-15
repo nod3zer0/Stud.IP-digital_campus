@@ -23,6 +23,7 @@ class Contents_CoursewareController extends CoursewareController
 
         $this->user = $GLOBALS['user'];
         $this->licenses = $this->getLicenses();
+        $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $GLOBALS['perm']->have_perm(Config::get()->OER_PUBLIC_STATUS);
         $this->unitsNotFound = Unit::countBySql('range_id = ?', [$this->user->id]) === 0;
     }
 
@@ -61,7 +62,7 @@ class Contents_CoursewareController extends CoursewareController
      */
     public function courseware_action($unit_id = null): void
     {
-        global $perm, $user;
+        global $user;
 
         Navigation::activateItem('/contents/courseware/courseware');
         if ($this->unitsNotFound) {
@@ -297,7 +298,7 @@ class Contents_CoursewareController extends CoursewareController
      */
     public function shared_content_courseware_action($entry_element_id): void
     {
-        global $perm, $user;
+        global $user;
 
         $navigation = new Navigation(_('Geteiltes Lernmaterial'), 'dispatch.php/contents/courseware/shared_content_courseware/' . $entry_element_id);
         Navigation::addItem('/contents/courseware/shared_content_courseware', $navigation);
@@ -319,9 +320,6 @@ class Contents_CoursewareController extends CoursewareController
         }
 
         $this->user_id = $struct->owner_id;
-
-
-        $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS);
 
         $this->setCoursewareSidebar();
     }

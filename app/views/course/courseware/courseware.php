@@ -5,7 +5,7 @@
         entry-type="courses"
         entry-id="<?= htmlReady(Context::getId()) ?>"
         unit-id="<?= htmlReady($unit_id) ?>"
-        oer-enabled="<?= htmlReady(Config::get()->OERCAMPUS_ENABLED) ?>"
+        oer-enabled='<?= htmlReady($oer_enabled) ?>'
         licenses='<?= htmlReady($licenses) ?>'
         >
     </div>

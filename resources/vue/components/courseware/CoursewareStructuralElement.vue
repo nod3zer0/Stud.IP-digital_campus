@@ -1030,9 +1030,14 @@ export default {
             let menu = [
                 { id: 4, label: this.$gettext('Informationen anzeigen'), icon: 'info', emit: 'showInfo' },
                 { id: 5, label: this.$gettext('Lesezeichen setzen'), icon: 'star', emit: 'setBookmark' },
-                { id: 6, label: this.$gettext('Lerninhalt für OER Campus vorschlagen'), icon: 'oer-campus',
-                    emit: 'showSuggest' }
             ];
+
+            if (this.oerEnabled) {
+                menu.push(
+                    { id: 6, label: this.$gettext('Lerninhalt für OER Campus vorschlagen'), icon: 'oer-campus',
+                        emit: 'showSuggest' }
+                );
+            }
 
             if (!document.documentElement.classList.contains('responsive-display')) {
                 menu.push(

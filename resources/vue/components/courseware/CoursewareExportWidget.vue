@@ -64,11 +64,15 @@ export default {
             return this.canVisit;
         },
         showOer() {
+            if (!this.oerEnabled) {
+                return false;
+            }
+
             if (this.context.type === 'users') {
                 return true;
             }
 
-            return this.oerEnabled && this.userIsTeacher && this.canVisit
+            return this.userIsTeacher && this.canVisit;
         }
     },
     methods: {
