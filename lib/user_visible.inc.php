@@ -207,12 +207,12 @@ function vis_chooser($vis, $new = false, $id = false) {
     }
     $txt = [];
     $txt[] = sprintf('<select name="visible"%s>', $id ? 'id="' . htmlReady($id) . '"' : '');
-    $txt[] = '<option value="global"'.($vis === "global" ? " selected" : "").'>'._("global").'</option>';
-    $txt[] = '<option value="always"'.($vis === "always" ? " selected" : "").'>'._("immer").'</option>';
-    $txt[] = '<option value="yes"'.($vis === "yes" ? " selected" : "").'>'._("ja").'</option>';
-    $txt[] = '<option value="unknown"'.(($new || $vis === "unknown") ? ' selected="selected"':'').'>'._("unbekannt").'</option>';
-    $txt[] = '<option value="no"'.($vis === "no" ? " selected" : "").'>'._("nein").'</option>';
-    $txt[] = '<option value="never"'.($vis === "never" ? " selected" : "").'>'._("niemals").'</option>';
+    $txt[] = '<option value="unknown"'.(($new || $vis === "unknown") ? ' selected="selected"':'').'>'._("Standardeinstellung").'</option>';
+    $txt[] = '<option value="global"'.($vis === "global" ? " selected" : "").'>'._("sichtbar für alle Nutzenden").'</option>';
+    $txt[] = '<option value="yes"'.($vis === "yes" ? " selected" : "").'>'._("sichtbar für eigene Nutzerdomäne").'</option>';
+    $txt[] = '<option value="no"'.($vis === "no" ? " selected" : "").'>'._("unsichtbar").'</option>';
+    $txt[] = '<option value="always"'.($vis === "always" ? " selected" : "").'>'._("Sichtbarkeit erzwingen").'</option>';
+    $txt[] = '<option value="never"'.($vis === "never" ? " selected" : "").'>'._("Unsichtbarkeit erzwingen").'</option>';
     $txt[] = '</select>';
     return implode("\n", $txt);
 }

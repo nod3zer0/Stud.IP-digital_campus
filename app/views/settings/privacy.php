@@ -27,7 +27,7 @@ use Studip\Button, Studip\LinkButton;
                 <select name="global_visibility" aria-describedby="global_vis_description" id="global_vis">
                 <?php
                     if (count($user_domains)) {
-                        printf("<option %s value=\"global\">" . _('sichtbar für alle Nutzer') . "</option>", $global_visibility === 'global' ? 'selected="selected"' : '');
+                        printf("<option %s value=\"global\">" . _('sichtbar für alle Nutzenden') . "</option>", $global_visibility === 'global' ? 'selected="selected"' : '');
                         $visible_text = _('sichtbar für eigene Nutzerdomäne');
                     } else {
                         $visible_text = _('sichtbar');
@@ -38,11 +38,11 @@ use Studip\Button, Studip\LinkButton;
                 </select>
             <? else: ?>
                 <? if ($global_visibility === 'never'): ?>
-                    <em><?= _('Ihre Kennung wurde von einem Administrator unsichtbar geschaltet.') ?></em>
+                    <em><?= _('Sie sind unsichtbar (durch Administrator/in eingestellt).') ?></em>
                 <? elseif ($user_perm == 'dozent' && Config::get()->DOZENT_ALWAYS_VISIBLE): ?>
                     <em><?= _('Sie haben Lehrendenrechte und sind daher immer global sichtbar.') ?></em>
                 <? else: ?>
-                    <em><?= _('Sie sind immer global sichtbar.') ?></em>
+                    <em><?= _('Sie sind immer global sichtbar (durch Administrator/in eingestellt).') ?></em>
                 <? endif; ?>
                 <input type="hidden" name="global_visibility" value="<?= $global_visibility ?>">
             <? endif; ?>
