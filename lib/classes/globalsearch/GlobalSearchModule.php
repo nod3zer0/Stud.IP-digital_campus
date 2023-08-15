@@ -218,7 +218,7 @@ abstract class GlobalSearchModule
                     return false;
                 }
 
-                if (in_array($module, ['GlobalSearchResources', 'GlobalSearchRoomAssignments'])
+                if (in_array($module, ['GlobalSearchResources', 'GlobalSearchRoomBookings'])
                     && !Config::get()->RESOURCES_ENABLE
                 ) {
                     return false;

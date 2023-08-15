@@ -131,34 +131,24 @@ class GlobalSearchController extends AuthenticatedController
         Navigation::activateItem('/admin/config/globalsearch');
 
         $this->config = Config::get()->GLOBALSEARCH_MODULES;
-
         $this->modules = [];
 
-        // Scan for available modules.
-        foreach (scandir($GLOBALS['STUDIP_BASE_PATH'] . '/lib/classes/globalsearch') as $filename) {
-            $path = pathinfo($filename);
-            if ($path['extension'] === 'php') {
-                class_exists($path['filename']);
+        foreach ($this->config as $className => $config) {
+            if (class_exists($className)) {
+                $this->modules[$className] = new $className();
             }
         }
 
         // Search declared classes for GlobalSearchModules
-        $endindex = 100;
         foreach (get_declared_classes() as $className) {
-            if (is_a($className, 'GlobalSearchModule', true)
-                    && $className !== 'GlobalSearchModule') {
-                $class = new $className();
+            if (is_subclass_of($className, 'GlobalSearchModule')) {
 
                 // Add new classes at module array end and not activated.
-                if (in_array($className, array_keys($this->config))) {
-                    $this->modules[$this->config[$className]['order']] = $class;
-                } else {
-                    $this->modules[$endindex++] = $class;
+                if (!isset($this->modules[$className])) {
+                    $this->modules[$className] = new $className();
                 }
             }
         }
-
-        ksort($this->modules);
     }
 
     /**
@@ -170,40 +160,19 @@ class GlobalSearchController extends AuthenticatedController
 
         $config = [];
 
-        $order = 1;
         foreach (Request::getArray('modules') as $module) {
             $config[$module['class']] = [
-                'order'    => $order,
                 'active'   => (bool)$module['active'],
                 'fulltext' => is_a($module['class'], 'GlobalSearchFulltext', true) && $module['fulltext']
             ];
-            $order++;
         }
 
-        $success = true;
-        if (Request::int('async_queries', 0) != Config::get()->GLOBALSEARCH_ASYNC_QUERIES) {
-            $success = Config::get()->store('GLOBALSEARCH_ASYNC_QUERIES',
-                ['value' => Request::int('async_queries', 0)]);
-            Config::get()->GLOBALSEARCH_ASYNC_QUERIES = Request::int('async_queries', 0);
-        }
+        Config::get()->store('GLOBALSEARCH_ASYNC_QUERIES', Request::int('async_queries', 0));
+        Config::get()->store('GLOBALSEARCH_MAX_RESULT_OF_TYPE', Request::int('entries_per_type', 3));
+        Config::get()->store('GLOBALSEARCH_MODULES', $config);
 
-        if (Request::int('entries_per_type', 3) != Config::get()->GLOBALSEARCH_MAX_RESULT_OF_TYPE) {
-            $success = Config::get()->store('GLOBALSEARCH_MAX_RESULT_OF_TYPE',
-                ['value' => Request::int('entries_per_type', 3)]);
-            Config::get()->GLOBALSEARCH_MAX_RESULT_OF_TYPE = Request::int('entries_per_type', 3);
-        }
+        PageLayout::postSuccess(_('Die Einstellungen wurden gespeichert.'));
 
-        if ($config != Config::get()->GLOBALSEARCH_MODULES) {
-            $success = Config::get()->store('GLOBALSEARCH_MODULES', ['value' => $config]);
-        }
-
-        if ($success) {
-            PageLayout::postSuccess(_('Die Einstellungen wurden gespeichert.'));
-        } else {
-            PageLayout::postError(_('Die Einstellungen konnten nicht gespeichert werden.'));
-        }
-
-        $this->relocate('globalsearch/settings');
+        $this->redirect('globalsearch/settings');
     }
-
 }
