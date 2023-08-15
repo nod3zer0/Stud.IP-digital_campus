@@ -68,9 +68,7 @@
                         <my-courses-navigation :navigation="getNavigationForCourse(course, true)" :icon-size="iconSize"></my-courses-navigation>
                     </td>
                     <td v-if="!responsiveDisplay" class="actions">
-                        <studip-action-menu :items="getActionMenuForCourse(course)"
-                                            :collapseAt="2"
-                        ></studip-action-menu>
+                        <studip-action-menu :items="getActionMenuForCourse(course)"></studip-action-menu>
                     </td>
                 </tr>
             </tbody>

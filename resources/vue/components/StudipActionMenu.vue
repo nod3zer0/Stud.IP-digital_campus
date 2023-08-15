@@ -111,7 +111,7 @@ export default {
             });
         },
         shouldCollapse () {
-            const collapseAt = this.collapseAt ?? this.getStudipConfig('ACTIONMENU_THRESHOLD');
+            const collapseAt = this.collapseAt ?? this.getStudipConfig('ACTIONMENU_THRESHOLD') + 1;
 
             if (collapseAt === false) {
                 return false;
