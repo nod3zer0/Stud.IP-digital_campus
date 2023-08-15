@@ -360,11 +360,11 @@ class PluginAdministration
         $plugins = $plugin_manager->getPluginInfos();
         $basepath = Config::get()->PLUGINS_PATH;
         foreach ($plugins as $id => $plugin) {
-            $plugindir = $basepath . '/' . $plugin['path'] . '/';
+            $plugindir = $basepath . '/' . $plugin['path'];
             if (is_dir($plugindir . '/migrations')) {
                 $schema_version = new DBSchemaVersion($plugin['name']);
                 $migrator = new Migrator($plugindir . '/migrations', $schema_version);
-                $info[$id]['migration_top_version'] = $migrator->topVersion();
+                $info[$id]['pending_migrations'] = count($migrator->relevantMigrations(null));
                 $info[$id]['schema_version'] = $schema_version->get();
             }
         }
@@ -381,12 +381,11 @@ class PluginAdministration
     {
         $plugin_manager = PluginManager::getInstance();
         $plugin = $plugin_manager->getPluginInfoById($plugin_id);
-        $basepath = Config::get()->PLUGINS_PATH;
-        $plugindir = $basepath . '/' . $plugin['path'] . '/';
+        $plugindir = Config::get()->PLUGINS_PATH . '/' . $plugin['path'];
         $log = '';
         if (is_dir($plugindir . '/migrations')) {
             $schema_version = new DBSchemaVersion($plugin['name']);
-            $migrator = new Migrator($plugindir .'/migrations', $schema_version, true);
+            $migrator = new Migrator($plugindir . '/migrations', $schema_version, true);
             ob_start();
             $migrator->migrateTo(null);
             $log = ob_get_clean();
