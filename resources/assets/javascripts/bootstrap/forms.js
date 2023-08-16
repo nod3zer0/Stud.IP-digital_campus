@@ -1,4 +1,4 @@
-import { $gettext } from '../lib/gettext.js';
+import { $gettext, $gettextInterpolate } from '../lib/gettext.js';
 
 // Allow fieldsets to collapse
 $(document).on(
@@ -313,18 +313,21 @@ STUDIP.ready(function () {
                             $(this.$el).find('input, select, textarea').each(function () {
                                 if (!this.validity.valid) {
                                     let note = {
-                                        'name': $(this.labels[0]).find('.textlabel').text(),
-                                        'description': "Fehler!".toLocaleString(),
-                                        'describedby': this.id
+                                        name: $(this.labels[0]).find('.textlabel').text(),
+                                        description: $gettext('Fehler!'),
+                                        describedby: this.id
                                     };
                                     if (this.validity.tooShort) {
-                                        note.description = "Geben Sie mindestens %s Zeichen ein.".toLocaleString().replace("%s", this.minLength);
+                                        note.description = $gettextInterpolate(
+                                            $gettext('Geben Sie mindestens %{min} Zeichen ein.'),
+                                            {min: this.minLength}
+                                        );
                                     }
                                     if (this.validity.valueMissing) {
                                         if (this.type === 'checkbox') {
-                                            note.description = "Dieses Feld muss ausgewählt sein.".toLocaleString();
+                                            note.description = $gettext('Dieses Feld muss ausgewählt sein.');
                                         } else {
-                                            note.description = "Hier muss ein Wert eingetragen werden.".toLocaleString();
+                                            note.description = $gettext('Hier muss ein Wert eingetragen werden.');
                                         }
                                     }
                                     v.STUDIPFORM_VALIDATIONNOTES.push(note);
