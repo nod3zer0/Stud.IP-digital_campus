@@ -67,13 +67,13 @@ abstract class Part
     /**
      * Adds an Input to this Part.
      * @param Input $input
-     * @return $this
+     * @return Input
      */
     public function addInput(Input $input)
     {
         $input->setParent($this);
         $this->parts[] = $input;
-        return $this;
+        return $input;
     }
 
     /**
@@ -81,15 +81,15 @@ abstract class Part
      *
      * @param string $text The text to be added.
      * @param bool $text_is_html Whether the text is HTML (true) or plain text (false). Defaults to true.
-     * @return $this
+     * @return Text The added text form part.
      */
-    public function addText(string $text, bool $text_is_html = true)
+    public function addText(string $text, bool $text_is_html = true): Text
     {
         $text_part = new Text();
         $text_part->setText($text, $text_is_html);
         $text_part->setParent($this);
         $this->parts[] = $text_part;
-        return $this;
+        return $text_part;
     }
 
     /**
@@ -100,16 +100,16 @@ abstract class Part
      * @param \Icon|null $icon The icon to be used for the link.
      * @param array $attributes Additional link attributes.
      *
-     * @return $this
+     * @return Link The Text form element containing the link as HTML.
      */
-    public function addLink(string $title, string $url, ?\Icon $icon = null, array $attributes = [])
+    public function addLink(string $title, string $url, ?\Icon $icon = null, array $attributes = []): Link
     {
         $link = new Link($url, $title, $icon);
         $link->setAttributes($attributes);
 
         $this->addPart($link);
 
-        return $this;
+        return $link;
     }
 
     /**
