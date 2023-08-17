@@ -72,24 +72,29 @@ body {
 #current-page-structure {
     background-color: #fff;
     border-radius: 0 0 2px 2px;
+    position: relative;
     width: 100%;
 
     &.oversized {
         overflow: visible;
     }
-}
-
-#navigation-level-2 {
-    position: relative;
 
     .colorblock {
         position: absolute;
         top: 0;
-        bottom: 0;
         left: 0;
+        bottom: 0;
         width: $page-margin;
     }
 
+    .contextless & {
+        .colorblock {
+            width: 0;
+        }
+    }
+}
+
+#navigation-level-2 {
     #context-title {
         font-size: 1.1em;
         height: 30px;
@@ -118,19 +123,8 @@ body {
     }
 
     .contextless & {
-        .colorblock {
-            width: 0;
-        }
-
         #context-title {
-            color: rgba(0, 0, 0, 0);
-            height: 0;
-            max-height: 35px;
-            // text-indent: -100%;
-            //
-            > .context_icon {
-                opacity: 0;
-            }
+            display: none;
         }
 
         .tabs_wrapper {
