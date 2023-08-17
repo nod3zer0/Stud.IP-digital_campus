@@ -119,7 +119,7 @@ class AdminCourseFilter
         $this->query->parameter('institut_ids', $inst_ids);
 
         if ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE) {
-            $this->query->join('semester_courses', 'semester_courses.course_id = seminare.Seminar_id');
+            $this->query->join('semester_courses', 'semester_courses.course_id = seminare.Seminar_id', 'LEFT JOIN');
             $this->query->where('semester_id', '(semester_courses.semester_id = :semester_id OR semester_courses.semester_id IS NULL)', [
                 'semester_id' => $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE
             ]);
