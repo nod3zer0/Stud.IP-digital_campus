@@ -161,12 +161,10 @@ if (!Request::isXhr() && $perm->have_perm('root')) {
             new DBSchemaVersion('studip')
         );
 
-        $migrations = $migrator->relevantMigrations(null);
-
         $_SESSION['migration-check'] = [
             'disabled'  => $_SESSION['migration-check']['disabled'] ?? false,
             'timestamp' => time(),
-            'count'     => count($migrations),
+            'count'     => $migrator->pendingMigrations()
         ];
     }
 

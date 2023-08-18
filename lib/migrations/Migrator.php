@@ -470,6 +470,25 @@ class Migrator
     }
 
     /**
+     * Returns the number of available, but not yet applied migrations.
+     *
+     * @return int  migration count
+     */
+    public function pendingMigrations()
+    {
+        $pending = 0;
+
+        foreach (array_keys($this->migrationClasses()) as $version) {
+            list($branch, $version) = $this->migrationBranchAndVersion($version);
+            if ($this->schema_version->get($branch) < $version) {
+                ++$pending;
+            }
+        }
+
+        return $pending;
+    }
+
+    /**
      * Overridable method used to return a textual representation of what's going
      * on in me. You can use me as you would use printf.
      *

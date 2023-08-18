@@ -364,7 +364,7 @@ class PluginAdministration
             if (is_dir($plugindir . '/migrations')) {
                 $schema_version = new DBSchemaVersion($plugin['name']);
                 $migrator = new Migrator($plugindir . '/migrations', $schema_version);
-                $info[$id]['pending_migrations'] = count($migrator->relevantMigrations(null));
+                $info[$id]['pending_migrations'] = $migrator->pendingMigrations();
                 $info[$id]['schema_version'] = $schema_version->get();
             }
         }

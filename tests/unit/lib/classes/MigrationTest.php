@@ -95,7 +95,7 @@ class MigrationTest extends \Codeception\Test\Unit
         $migrator = $this->getMigrator($schema_version);
         $migrator->migrateTo(null);
         $this->assertSame(10, $schema_version->get());
-        $this->assertSame(0, count($migrator->relevantMigrations(null)));
+        $this->assertSame(0, $migrator->pendingMigrations());
 
         return $schema_version;
     }
@@ -108,7 +108,7 @@ class MigrationTest extends \Codeception\Test\Unit
         $migrator = $this->getMigrator($schema_version);
         $migrator->migrateTo(0);
         $this->assertSame(0, $schema_version->get());
-        $this->assertSame(4, count($migrator->relevantMigrations(null)));
+        $this->assertSame(4, $migrator->pendingMigrations());
     }
 
     public function testGaps()

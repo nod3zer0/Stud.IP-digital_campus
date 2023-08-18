@@ -43,7 +43,7 @@ class PluginInfo extends AbstractPluginCommand
             if (is_dir($plugindir . '/migrations')) {
                 $schemaVersion = new \DBSchemaVersion($plugin['name']);
                 $migrator = new \Migrator($plugindir . '/migrations', $schemaVersion);
-                $plugin['pending_migrations'] = count($migrator->relevantMigrations(null));
+                $plugin['pending_migrations'] = $migrator->pendingMigrations();
                 $plugin['schema_version'] = $schemaVersion->get();
             }
 
