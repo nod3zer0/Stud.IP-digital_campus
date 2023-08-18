@@ -888,6 +888,15 @@ ribbon end
     }
 
     &.cw-container-active {
+        &.cw-container-colspan-half-center {
+            .cw-container-content {
+                max-width: unset;
+                .cw-block-wrapper {
+                    max-width: 540px;
+                    margin: auto;
+                }
+            }
+        }
         .cw-container-content {
             border: solid thin $content-color-40;
         }
