@@ -28,7 +28,7 @@
     <? if ($slot->block->confirmation_text): ?>
         <label>
             <?= _('Bitte lesen Sie sich den folgenden Hinweis durch:') ?>
-            <textarea disabled><?= htmlReady($slot->block->confirmation_text) ?></textarea>
+            <blockquote><?= htmlReady($slot->block->confirmation_text) ?></blockquote>
         </label>
 
         <label>
