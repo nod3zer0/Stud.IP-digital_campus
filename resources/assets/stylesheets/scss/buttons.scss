@@ -142,12 +142,13 @@ button.styleless {
     border: 0;
 }
 button.as-link {
-    border: none;
-    padding: 0px;
-    margin: 0px;
-    cursor: pointer;
     background-color: transparent;
+    border: none;
+    color: $base-color;
+    cursor: pointer;
+    margin: 0px;
+    padding: 0px;
     &:hover {
-        background-color: transparent;
+        color: $active-color;
     }
 }

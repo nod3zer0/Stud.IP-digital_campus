@@ -226,10 +226,9 @@ class LinkElement extends WidgetElement implements ArrayAccess
     protected function renderButton()
     {
         return sprintf(
-            '<form action="%1$s" method="post" %2$s>%3$s<button type="submit">%4$s</button></form>',
+            '<button formaction="%s" class="as-link" %s>%s</button>',
             htmlReady($this->url),
             arrayToHtmlAttributes((array) $this->attributes),
-            CSRFProtection::tokenTag(),
             htmlReady($this->label)
         );
     }
