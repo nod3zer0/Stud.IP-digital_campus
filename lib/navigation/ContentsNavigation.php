@@ -53,7 +53,7 @@ class ContentsNavigation extends Navigation
 
         $courseware->addSubNavigation(
             'shelf',
-            new Navigation(_('Übersicht'), 'dispatch.php/contents/courseware/index')
+            new Navigation(_('Lernmaterialien'), 'dispatch.php/contents/courseware/index')
         );
         $courseware->addSubNavigation(
             'courseware',
