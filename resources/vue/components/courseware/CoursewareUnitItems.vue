@@ -32,8 +32,8 @@
         <div v-if="!hasUnits && !inCourseContext" class="cw-contents-overview-teaser">
             <div class="cw-contents-overview-teaser-content">
                 <header>{{ $gettext('Ihre persönlichen Lernmaterialien') }}</header>
-                <p>{{ $gettext('Erstellen und verwalten Sie hier Ihre eigenen persönlichen Lernmaterialien in Form von ePorfolios,' +
-                               'Vorlagen für Veranstaltungen oder einfach nur persönliche Inhalte für das Studium.' +
+                <p>{{ $gettext('Erstellen und verwalten Sie hier Ihre eigenen persönlichen Lernmaterialien in Form von ePorfolios, ' +
+                               'Vorlagen für Veranstaltungen oder einfach nur persönliche Inhalte für das Studium. ' +
                                'Entwickeln Sie Ihre eigenen (Lehr-)Materialien für Studium oder die Lehre und teilen diese mit anderen Nutzenden.') }}</p>
                 <button class="button" @click="setShowUnitAddDialog(true)">
                     {{ $gettext('Neues Lernmaterial anlegen') }}
