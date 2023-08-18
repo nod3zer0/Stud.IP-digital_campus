@@ -2,14 +2,14 @@
    <div>
         <table class="default">
             <caption>
-                <translate>Von mir geteilte Lerninhalte</translate>
+                {{ $gettext('Von mir geteilte Seiten') }}
             </caption>
             <thead>
                 <tr>
-                    <th><translate>Seite</translate></th>
-                    <th><translate>Lesen</translate></th>
-                    <th><translate>Lesen & Schreiben</translate></th>
-                    <th class="actions"><translate>Aktionen</translate></th>
+                    <th>{{ $gettext('Seite') }}</th>
+                    <th>{{ $gettext('Lesen') }}</th>
+                    <th>{{ $gettext('Lesen & Schreiben') }}</th>
+                    <th class="actions">{{ $gettext('Aktionen') }}</th>
                 </tr>
             </thead>
              <tbody>
