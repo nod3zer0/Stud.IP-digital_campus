@@ -171,8 +171,6 @@ if ($navigation) {
                         </audio>
                     <? endif; ?>
                     </div>
-                <? else: ?>
-                    <div id="notification-container"></div>
                 <? endif; ?>
 
                 <? if (Navigation::hasItem('/avatar')): ?>
