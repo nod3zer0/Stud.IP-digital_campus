@@ -226,7 +226,7 @@ class LinkElement extends WidgetElement implements ArrayAccess
     protected function renderButton()
     {
         return sprintf(
-            '<button formaction="%s" class="as-link" %s>%s</button>',
+            '<button formaction="%s" %s>%s</button>',
             htmlReady($this->url),
             arrayToHtmlAttributes((array) $this->attributes),
             htmlReady($this->label)

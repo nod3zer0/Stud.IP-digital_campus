@@ -125,6 +125,7 @@ ul.widget-list {
     }
 
     button {
+        @extend .as-link;
         text-align: left;
         width: 100%;
     }
