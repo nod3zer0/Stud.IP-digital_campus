@@ -22,8 +22,13 @@ STUDIP.domReady(() => {
     });
 });
 
-STUDIP.dialogReady(() => {
-    const node = document.querySelector('.content-modules-controls-vue-app');
+STUDIP.dialogReady((event) => {
+    let target = event.target ?? document;
+    if (target instanceof jQuery) {
+        target = target.get(0);
+    }
+
+    const node = target.querySelector('.content-modules-controls-vue-app');
     if (!node) {
         return;
     }
