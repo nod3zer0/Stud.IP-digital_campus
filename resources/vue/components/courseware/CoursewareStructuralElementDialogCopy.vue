@@ -68,24 +68,15 @@
                         <studip-select
                             v-if="filteredCourses.length !== 0 && !loadingCourses"
                             :options="filteredCourses"
-                            label="title"
                             :clearable="false"
                             :reduce="option => option.id"
+                            :getOptionLabel="option => option.attributes.title"
                             v-model="selectedRange"
                         >
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"
                                     ><studip-icon shape="arr_1down" :size="10"
                                 /></span>
-                            </template>
-                            <template #no-options="{}">
-                                {{ $gettext('Es steht keine Auswahl zur Verfügung.') }}
-                            </template>
-                            <template #selected-option="{ attributes }">
-                                <span>{{ attributes.title }}</span>
-                            </template>
-                            <template #option="{ attributes }">
-                                <span>{{ attributes.title }}</span>
                             </template>
                         </studip-select>
                         <p v-if="loadingCourses">
