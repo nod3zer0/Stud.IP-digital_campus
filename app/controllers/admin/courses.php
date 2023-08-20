@@ -556,7 +556,8 @@ class Admin_CoursesController extends AuthenticatedController
             $d['type'] = $semtype['name'];
         }
         if (in_array('room_time', $activated_fields)) {
-            $d['room_time'] = Seminar::GetInstance($course->id)->getDatesHTML([
+            $seminar = new Seminar($course);
+            $d['room_time'] = $seminar->getDatesHTML([
                 'show_room'   => true,
             ]) ?: _('nicht angegeben');
         }
@@ -700,11 +701,13 @@ class Admin_CoursesController extends AuthenticatedController
             case 17: //Gesperrte Veranstaltungen
                 $cs = CourseSet::getSetForCourse($course->id);
                 if ($cs) {
-                    $locked = $cs->getId() === CourseSet::getGlobalLockedAdmissionSetId();
+                    $locked = true;
+                    $disabled = !$cs->hasAdmissionRule('LockedAdmission');
                 } else {
                     $locked = false;
+                    $disabled = false;
                 }
-                $d['action'] = '<input type="hidden" name="all_sem[]" value="'.htmlReady($course->id).'"><input type="checkbox" name="admission_locked['.$course->getId().']" '.($locked ? 'checked' : '').' value="1" aria-label="'.htmlReady(sprintf(_('Veranstaltung %s sperren'), $course->getFullName())).'">';
+                $d['action'] = '<input type="hidden" name="all_sem[]" value="'.htmlReady($course->id).'"><input type="checkbox" name="admission_locked['.$course->getId().']" '.($locked ? 'checked' : '').' '.($disabled ? 'disabled' : '').' value="1" aria-label="'.htmlReady(sprintf(_('Veranstaltung %s sperren'), $course->getFullName())).'">';
                 break;
             case 18: //Startsemester
                 $d['action'] = (string) \Studip\LinkButton::create(
