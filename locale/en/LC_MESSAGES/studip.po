@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-19 08:52+0200\n"
-"PO-Revision-Date: 2023-07-19 07:05+0000\n"
+"PO-Revision-Date: 2023-08-22 15:29+0000\n"
 "Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
 "stud-ip-main/en/>\n"
@@ -9050,6 +9050,7 @@ msgstr "Curriculum vitae"
 #: app/views/settings/details.php:61 lib/classes/LockRules.class.php:236
 #: lib/extern/elements/main/ExternElementMainPersondetails.class.php:73
 #: lib/extern/modules/ExternModulePersondetails.class.php:79
+#, fuzzy
 msgid "Schwerpunkte"
 msgstr "Research interests"
 
@@ -26968,6 +26969,7 @@ msgid "Die Zuordnung zu Nutzerdomänen wurde geändert!\n"
 msgstr "User domain allocation changed!\n"
 
 #: app/controllers/settings/details.php:35
+#, fuzzy
 msgid "Lebenslauf, Arbeitsschwerpunkte und Publikationen bearbeiten"
 msgstr "Edit CV, research interests and publications"
 
@@ -26989,6 +26991,7 @@ msgstr "Homepage address"
 
 #: app/controllers/settings/details.php:111 app/controllers/profile.php:174
 #: lib/models/User.class.php:912
+#, fuzzy
 msgid "Arbeitsschwerpunkte"
 msgstr "Research interests"
 
@@ -53956,6 +53959,7 @@ msgid "Das ist mein Lebenslauf."
 msgstr "This is my C.V."
 
 #: lib/extern/modules/views/persondetails_preview.inc.php:40
+#, fuzzy
 msgid "Das sind meine Arbeitsschwerpunkte."
 msgstr "These are my research interests."
 
