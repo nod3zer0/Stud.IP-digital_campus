@@ -1452,7 +1452,7 @@ class Resources_ResourceController extends AuthenticatedController
                 ]
             );
             //Add the file upload widget:
-            $upload_area = new LinksWidget();
+            $upload_area = new SidebarWidget();
             $upload_area->setTitle(_('Dateien hinzufügen'));
             $upload_area->addElement(
                 new WidgetElement(

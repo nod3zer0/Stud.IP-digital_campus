@@ -158,7 +158,7 @@ use Studip\Button, Studip\LinkButton;
 $sidebar = Sidebar::Get();
 
 if (Config::get()->PLUGINS_UPLOAD_ENABLE) {
-    $uploadArea = $sidebar->addWidget(new LinksWidget());
+    $uploadArea = $sidebar->addWidget(new SidebarWidget());
     $uploadArea->setTitle(_('Plugin als ZIP-Datei hochladen'));
     $uploadArea->addElement(new WidgetElement(
         $this->render_partial('admin/plugin/upload-drag-and-drop'))

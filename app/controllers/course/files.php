@@ -97,7 +97,7 @@ class Course_FilesController extends AuthenticatedController
         $sidebar->addWidget($actions);
 
         if ($this->topFolder->isWritable($GLOBALS['user']->id)) {
-            $uploadArea = new LinksWidget();
+            $uploadArea = new SidebarWidget();
             $uploadArea->setTitle(_("Dateien hochladen"));
             $uploadArea->addElement(new WidgetElement(
                     $this->render_template_as_string('files/upload-drag-and-drop'))
