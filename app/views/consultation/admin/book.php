@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Consultation_AdminController $controller
+ * @var ConsultationSlot $slot
+ * @var int $page
+ */
+?>
 <form action="<?= $controller->book($slot->block, $slot, $page) ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
 
@@ -31,10 +38,19 @@
             ])->withButton() ?>
         </label>
 
+    <? if ($slot->block->require_reason !== 'no'): ?>
         <label>
             <?= _('Grund') ?>
             <textarea name="reason"></textarea>
         </label>
+    <? endif; ?>
+
+    <? if ($slot->block->confirmation_text): ?>
+        <label>
+            <?= _('Bitte lesen Sie sich den folgenden Hinweis durch:') ?>
+            <blockquote><?= htmlReady($slot->block->confirmation_text) ?></blockquote>
+        </label>
+    <? endif; ?>
     </fieldset>
 
 
