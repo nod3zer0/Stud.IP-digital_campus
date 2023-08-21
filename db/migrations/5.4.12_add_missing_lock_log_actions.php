@@ -1,6 +1,6 @@
 <?php
 
-final class AddMissingLogActions extends Migration
+final class AddMissingLockLogActions extends Migration
 {
     public function description()
     {
