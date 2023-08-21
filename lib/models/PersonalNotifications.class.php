@@ -371,7 +371,7 @@ class PersonalNotifications extends SimpleORMap
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
-        return UserConfig::get($user_id)->getValue("PERSONAL_NOTIFICATIONS_DEACTIVATED") ? false : true;
+        return (new UserConfig($user_id))->getValue('PERSONAL_NOTIFICATIONS_DEACTIVATED') ? false : true;
     }
 
     /**
