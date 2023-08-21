@@ -91,7 +91,7 @@ class QuicksearchController extends AuthenticatedController
 
             if ($this->search instanceof StandardSearch && $this->search->extendedLayout) {
                 $formatted['item_name'] = $this->search->getAvatarImageTag($result[0], Avatar::MEDIUM, ['title' => '']) . $formatted['item_name'];
-                if($result[3]) {
+                if (!empty($result[3])) {
                     $formatted['item_description'] = sprintf('%s (%s)', $result[2], $result[3]);
                 } else {
                     $formatted['item_description'] = $result[2];
