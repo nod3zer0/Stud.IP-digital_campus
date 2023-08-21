@@ -261,9 +261,8 @@ class Seminar_Auth
 
             // then do login
             if (($authplugin = StudipAuthAbstract::GetInstance($provider))) {
-                $authplugin->authenticateUser('', '');
-                if ($authplugin->getUser()) {
-                    $user = $authplugin->getStudipUser($authplugin->getUser());
+                $user = $authplugin->authenticateUser('', '');
+                if ($user) {
                     if ($user->isExpired()) {
                         throw new AccessDeniedException(_('Dieses Benutzerkonto ist abgelaufen. Wenden Sie sich bitte an die Administration.'));
                     }
@@ -279,6 +278,8 @@ class Seminar_Auth
                     Metrics::increment('core.sso_login.succeeded');
 
                     return $user->id;
+                } else {
+                    PageLayout::postMessage(MessageBox::error($authplugin->plugin_name . ': ' . _('Login fehlgeschlagen'), $authplugin->error_msg ? [$authplugin->error_msg] : []),md5($authplugin->error_msg));
                 }
             }
         }
