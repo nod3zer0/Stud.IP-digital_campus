@@ -75,12 +75,12 @@
                 <td class="actions" v-html="course.action">
                 </td>
             </tr>
-            <tr v-if="sortedCourses.length === 0 && coursesCount <= 500 && displayLimitedLines && coursesLoaded">
+            <tr v-if="coursesCount === 0 && coursesLoaded">
                 <td :colspan="colspan">
                     {{ $gettext('Keine Ergebnisse') }}
                 </td>
             </tr>
-            <tr v-if="coursesCount > maxCourses && displayLimitedLines">
+            <tr v-if="coursesCount > 0 && sortedCourses.length === 0">
                 <td :colspan="colspan">
                     {{
                         $gettextInterpolate(
@@ -88,7 +88,7 @@
                             { n: coursesCount }
                         )
                     }}
-                    <a href="" @click.prevent="loadCourses({withoutLimit: true}); displayLimitedLines = false;">
+                    <a href="" @click.prevent="loadCourses({withoutLimit: true});">
                         {{ $gettext('Alle anzeigen') }}
                     </a>
                 </td>
@@ -130,7 +130,6 @@ export default {
                 direction: this.sortFlag,
             },
             currentLine: null,
-            displayLimitedLines: true,
             open_children: [],
         };
     },

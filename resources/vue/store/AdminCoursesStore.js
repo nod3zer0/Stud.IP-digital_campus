@@ -44,9 +44,9 @@ export default {
                 state.courses.push(payload.data);
             }
         },
-        setCourses(state, courses, count = null) {
-            state.courses = courses;
-            state.coursesCount = count ?? courses.length;
+        setCourses(state, payload) {
+            state.courses = payload.courses;
+            state.coursesCount = payload.count ?? payload.courses.length;
         },
         setCoursesLoaded(state, loaded = true) {
             state.coursesLoaded = loaded;
@@ -109,9 +109,14 @@ export default {
                 commit('setCoursesLoaded');
 
                 if (response.data === undefined) {
-                    commit('setCourses', [], response.count);
+                    commit('setCourses', {
+                        courses: [],
+                        count: response.count
+                    });
                 } else {
-                    commit('setCourses', response.data);
+                    commit('setCourses', {
+                        courses: response.data
+                    });
                 }
 
                 commit('setButtons', {
