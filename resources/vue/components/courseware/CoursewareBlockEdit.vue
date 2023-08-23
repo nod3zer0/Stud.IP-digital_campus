@@ -1,6 +1,6 @@
 <template>
     <section class="cw-block-edit">
-        <header>{{ $gettext('Bearbeiten') }}</header>
+        <header v-if="preview">{{ $gettext('Bearbeiten') }}</header>
         <div class="cw-block-features-content">
             <div @click="deactivateToolbar(); exitHandler = true;">
                 <slot name="edit" />
@@ -20,6 +20,7 @@ export default {
     name: 'courseware-block-edit',
     props: {
         block: Object,
+        preview: Boolean
     },
     data() {
         return {

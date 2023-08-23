@@ -39,6 +39,7 @@
                     <courseware-block-edit
                         v-if="canEdit && showEdit"
                         :block="block"
+                        :preview="preview"
                         @store="prepareStoreEdit"
                         @close="closeEdit"
                     >
