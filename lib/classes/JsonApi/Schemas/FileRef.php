@@ -179,7 +179,7 @@ class FileRef extends SchemaProvider
     private function addTermsRelationship(array $relationships, \FileRef $resource)
     {
         $relationships[self::REL_TERMS] = [
-            self::RELATIONSHIP_DATA => $resource->content_terms_of_use_id ? $resource->terms_of_use : null,
+            self::RELATIONSHIP_DATA => $resource->terms_of_use,
             self::RELATIONSHIP_LINKS_SELF => true,
         ];
 
