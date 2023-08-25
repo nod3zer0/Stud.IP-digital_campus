@@ -10,7 +10,7 @@ use JsonApi\JsonApiController;
 
 class CoursesIndex extends JsonApiController
 {
-    protected $allowedFilteringParameters = ['q', 'fields', 'semester'];
+    protected $allowedFilteringParameters = ['q', 'fields', 'semester', 'category', 'scope_choose', 'range_choose'];
 
     protected $allowedIncludePaths = [
         'blubber-threads',
@@ -92,9 +92,9 @@ class CoursesIndex extends JsonApiController
             'q' => '%%%',
             'fields' => 'all', // Titel, Lehrende...
             'semester' => 'all', // Semester
-            'search_sem_category' => null, // SEM_CLASS
-            'search_sem_scope_choose' => null, // Studienbereiche
-            'search_sem_range_choose' => null, // Einrichtungen,
+            'category' => null, // SEM_CLASS
+            'scope_choose' => null, // Studienbereiche
+            'range_choose' => null, // Einrichtungen,
             'combination' => 'OR', // OR|AND
         ];
 
@@ -112,8 +112,6 @@ class CoursesIndex extends JsonApiController
      */
     private function searchCourses(\User $user, array $filters)
     {
-        require_once 'lib/classes/searchtypes/SearchType.class.php';
-        require_once 'lib/classes/searchtypes/SeminarSearch.class.php';
 
         $visibleOnly = !(is_object($GLOBALS['perm'])
                          && $GLOBALS['perm']->have_perm(\Config::Get()->SEM_VISIBILITY_PERM, $user->id));
@@ -123,9 +121,9 @@ class CoursesIndex extends JsonApiController
                 'quick_search' => $filters['q'],
                 'qs_choose' => $filters['fields'],
                 'sem' => $filters['semester'],
-                'category' => $filters['search_sem_category'],
-                'scope_choose' => $filters['search_sem_scope_choose'],
-                'range_choose' => $filters['search_sem_range_choose'],
+                'category' => $filters['category'],
+                'scope_choose' => $filters['scope_choose'],
+                'range_choose' => $filters['range_choose'],
             ],
             $visibleOnly
         );
