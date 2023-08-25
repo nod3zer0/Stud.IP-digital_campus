@@ -46,6 +46,21 @@ class Text extends BlockType
 
     public function setPayload($payload): void
     {
+        $document = new \DOMDocument();
+        $old_libxml_error = libxml_use_internal_errors(true);
+        $document->loadHTML($payload['text']);
+        libxml_use_internal_errors($old_libxml_error);
+        $imageElements = $document->getElementsByTagName('img');
+        foreach ($imageElements as $element) {
+            if (!$element instanceof \DOMElement || !$element->hasAttribute('src')) {
+                continue;
+            }
+            $src = $element->getAttribute('src');
+            if (str_contains($src, 'sendfile.php') && !str_contains($src, $GLOBALS['ABSOLUTE_URI_STUDIP'])) {
+                $find = explode('sendfile.php', $src)[0];
+                $payload['text'] = str_replace($find, $GLOBALS['ABSOLUTE_URI_STUDIP'], $payload['text']);
+            }
+        }
         $payload['text'] = \Studip\Markup::purifyHtml(\Studip\Markup::markAsHtml($payload['text']));
 
         parent::setPayload($payload);
