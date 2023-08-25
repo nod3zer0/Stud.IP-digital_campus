@@ -238,6 +238,11 @@ export default {
     },
     mounted() {
         this.updateNestedChildren();
+    },
+    watch: {
+        structuralElements() {
+            this.updateNestedChildren();
+        }
     }
 };
 </script>
