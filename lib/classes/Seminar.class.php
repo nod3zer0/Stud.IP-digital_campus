@@ -1659,7 +1659,7 @@ class Seminar
         $query = "SELECT CONCAT(seminare.VeranstaltungsNummer, ' ', seminare.name, '(', semester_data.name, ')')
                   FROM seminare
                   LEFT JOIN semester_data ON (seminare.start_time = semester_data.beginn)
-                  WHERE seminare.Seminar_id='$s_id'";
+                  WHERE seminare.Seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$s_id]);
         $semlogname = $statement->fetchColumn() ?: sprintf('unknown sem_id: %s', $s_id);
