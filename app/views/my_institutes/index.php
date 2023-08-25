@@ -4,8 +4,8 @@
             _('Wollen Sie sich aus dem/der %s wirklich austragen?'),
             htmlReady($flash['name'])
         ),
-        $controller->declineURL($flash['inst_id'], ['cmd' => 'kill', 'studipticket' => $flash['studipticket']]),
-        $controller->declineURL($flash['inst_id'], ['cmd'=> 'back', 'studipticket' => $flash['studipticket']])
+        $controller->decline_instURL($flash['inst_id'], ['cmd' => 'kill', 'studipticket' => $flash['studipticket']]),
+        $controller->decline_instURL($flash['inst_id'], ['cmd'=> 'back', 'studipticket' => $flash['studipticket']])
     ) ?>
 <? endif ?>
 
