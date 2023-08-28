@@ -5,6 +5,20 @@ class Oer_EndpointsController extends StudipController
 
     protected $with_session = true;  //we do need to have a session for this controller
 
+    public function before_filter(&$action, &$args)
+    {
+        parent::before_filter($action, $args);
+        if (
+            !Config::get()->OERCAMPUS_ENABLED
+            || (
+                Config::get()->OER_PUBLIC_STATUS !== 'nobody'
+                && !$GLOBALS['perm']->have_perm(Config::get()->OER_PUBLIC_STATUS)
+            )
+        ) {
+            throw new AccessDeniedException();
+        }
+    }
+
     public function index_action()
     {
         $this->controllerreflection = new ReflectionClass($this);
