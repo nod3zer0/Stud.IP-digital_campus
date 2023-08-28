@@ -16,7 +16,7 @@
                     class="cw-audio-player"
                     ref="audio"
                     @timeupdate="onTimeUpdateListener"
-                    @loadeddata="setDuration"
+                    @durationchange="setDuration"
                     @ended="onEndedListener"
                 />
                 <div v-if="!emptyAudio" class="cw-audio-container">
@@ -464,9 +464,6 @@ export default {
         },
         onTimeUpdateListener() {
             this.currentSeconds = this.$refs.audio.currentTime;
-            if (this.durationSeconds === 0) {
-                this.setDuration();
-            }
         },
         onEndedListener() {
             this.stopAudio();
