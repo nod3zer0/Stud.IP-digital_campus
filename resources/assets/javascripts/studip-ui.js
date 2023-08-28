@@ -279,13 +279,13 @@ import eventBus from "./lib/event-bus.ts";
             $(this.selector).filter(function () {
                 return $(this).data('datetime-picker-init') === undefined;
             }).each(function () {
-                const dataOptions = $(this).data().datePicker;
+                const dataOptions = $(this).data().datetimePicker;
 
                 const options = {};
                 if (dataOptions?.disable_holidays === true) {
                     options.beforeShowDay = disableHolidaysBeforeShow;
                 }
-                $(this).data('date-picker-init', true).datepicker(options);
+                $(this).data('date-picker-init', true).datetimepicker(options);
             });
         },
         // Apply registered handlers. Take care: This happens upon before a
