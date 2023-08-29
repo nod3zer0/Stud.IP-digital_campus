@@ -166,12 +166,12 @@ class ProfileController extends AuthenticatedController
             $this->questionnaires = $response->body;
         }
 
-        // Hier werden Lebenslauf, Hobbys, Publikationen und Arbeitsschwerpunkte ausgegeben:
+        // Hier werden Lebenslauf, Hobbys, Publikationen und Schwerpunkte ausgegeben:
         $ausgabe_felder = [
             'lebenslauf' => _('Lebenslauf'),
             'hobby'      => _('Hobbys'),
             'publi'      => _('Publikationen'),
-            'schwerp'    => _('Arbeitsschwerpunkte'),
+            'schwerp'    => _('Schwerpunkte'),
         ];
 
         $ausgabe_inhalt = [];

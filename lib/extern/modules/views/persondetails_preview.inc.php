@@ -37,7 +37,7 @@ foreach ($order as $position) {
                 $data["content"] = str_repeat(_("Das ist mein Lebenslauf.") . " &nbsp;", 15);
                 break;
             case "schwerp" :
-                $data["content"] = str_repeat(_("Das sind meine Arbeitsschwerpunkte.") . " &nbsp;", 15);
+                $data["content"] = str_repeat(_("Das sind meine Schwerpunkte.") . " &nbsp;", 15);
                 break;
             case "publi" :
                 $data["content"] = str_repeat(_("Das sind meine Publikationen.") . " &nbsp;", 15);

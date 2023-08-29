@@ -32,7 +32,7 @@ class Settings_DetailsController extends Settings_SettingsController
 
         PageLayout::setHelpKeyword('Basis.HomepageLebenslauf');
         PageLayout::setTitle($this->user->perms == 'dozent'
-                             ? _('Lebenslauf, Arbeitsschwerpunkte und Publikationen bearbeiten')
+                             ? _('Lebenslauf, Schwerpunkte und Publikationen bearbeiten')
                              : _('Lebenslauf bearbeiten'));
         Navigation::activateItem('/profile/edit/details');
     }
@@ -108,7 +108,7 @@ class Settings_DetailsController extends Settings_SettingsController
             'motto'                 => _('Motto'),
             'hobby'                 => _('Hobbys'),
             'lebenslauf'            => _('Lebenslauf'),
-            'schwerp'               => _('Arbeitsschwerpunkte'),
+            'schwerp'               => _('Schwerpunkte'),
             'publi'                 => _('Publikationen'),
             'oercampus_description' => _('Beschreibung auf dem OER Campus')
         ];
