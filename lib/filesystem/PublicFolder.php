@@ -60,7 +60,7 @@ class PublicFolder extends StandardFolder
     public function __get($attribute)
     {
         if ($attribute === 'viewable') {
-            return $this->folderdata['data_content']['viewable'];
+            return !empty($this->folderdata['data_content']['viewable']);
         }
         return $this->folderdata[$attribute];
     }

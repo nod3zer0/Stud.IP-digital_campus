@@ -89,10 +89,10 @@ abstract class StudIPPlugin
     {
         $metadata = $this->getMetadata();
         $language = getUserLanguage(User::findCurrent()->id);
-        if ($metadata['descriptionlong_' . $language]) {
+        if (!empty($metadata['descriptionlong_' . $language])) {
             return $metadata['descriptionlong_' . $language];
         }
-        if ($metadata['description_' . $language]) {
+        if (!empty($metadata['description_' . $language])) {
             return $metadata['description_' . $language];
         }
         $description = $metadata['descriptionlong'] ?? $metadata['description'];

@@ -390,8 +390,10 @@ class OERMaterial extends SimpleORMap
         }
         $url = $this->getDownloadUrl();
         $headers = get_headers($url, true, get_default_http_stream_context($url));
-        if ($headers['Content-Disposition']
-            && substr($headers['Content-Disposition'], 0, strlen('attachment')) === 'attachment') {
+        if (
+            !empty($headers['Content-Disposition'])
+            && substr($headers['Content-Disposition'], 0, strlen('attachment')) === 'attachment'
+        ) {
             //in this case the server forces to download the document and we cannot display it in an iframe:
             return false;
         }

@@ -399,14 +399,13 @@ function symbol ($text = '')
 function mila ($titel, $size = 60) {
     global $auth;
 
-    if ($auth->auth["jscript"] AND $size == 60) {
+    if (!empty($auth->auth['jscript']) && $size == 60) {
         //hier wird die maximale Laenge berechnet, nach der Abgeschnitten wird (JS dynamisch)
-        if (mb_strlen ($titel) >$auth->auth["xres"] / 13)
-            $titel=mb_substr($titel, 0, $auth->auth["xres"] / 13)."... ";
-    }
-    else {
-        if (mb_strlen ($titel) >$size)
-            $titel=mb_substr($titel, 0, $size)."... ";
+        if (mb_strlen($titel) > $auth->auth['xres'] / 13) {
+            $titel = mb_substr($titel, 0, $auth->auth['xres'] / 13) . '... ';
+        }
+    } elseif (mb_strlen ($titel) >$size) {
+        $titel = mb_substr($titel, 0, $size) . '... ';
     }
     return $titel;
 }

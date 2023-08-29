@@ -341,7 +341,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     {
         $end_semester = $this->semesters->last();
         $start_semester = $this->semesters->first();
-        if ($start_semester->id === $semester->id) {
+        if ($start_semester && $start_semester->id === $semester->id) {
             return;
         }
         if ($end_semester) {
@@ -369,7 +369,9 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     {
         $end_semester = $this->semesters->last();
         $start_semester = $this->semesters->first();
-        if ((is_null($end_semester) && is_null($semester)) || ($end_semester->id === $semester->id)) {
+        if (
+            (is_null($end_semester) && is_null($semester))
+            || ($end_semester && $semester && $end_semester->id === $semester->id)) {
             return;
         }
         if ($start_semester) {

@@ -298,22 +298,22 @@ class Course_ContentmodulesController extends AuthenticatedController
                 'visibility'  => $visibility,
                 'active'      => (bool) $tool,
             ];
-            if ($metadata['icon_clickable']) {
+            if (!empty($metadata['icon_clickable'])) {
                 $list[$plugin_id]['icon'] = $metadata['icon_clickable'] instanceof Icon
                     ? $metadata['icon_clickable']->asImagePath()
                     : Icon::create($plugin->getPluginURL().'/'.$metadata['icon_clickable'])->asImagePath();
-            } elseif ($metadata['icon']) {
+            } elseif (!empty($metadata['icon'])) {
                 $list[$plugin_id]['icon'] = $metadata['icon'] instanceof Icon
                     ? $metadata['icon']->asImagePath()
                     : Icon::create($plugin->getPluginURL().'/'.$metadata['icon'])->asImagePath();
             } else {
                 $list[$plugin_id]['icon'] = null;
             }
-            $list[$plugin_id]['summary'] = $metadata['summary'];
+            $list[$plugin_id]['summary'] = $metadata['summary'] ?? null;
             $list[$plugin_id]['mandatory'] = $this->sem_class->isModuleMandatory(get_class($plugin));
             $list[$plugin_id]['highlighted'] = (bool) $plugin->isHighlighted();
             $list[$plugin_id]['highlight_text'] = $plugin->getHighlightText();
-            $list[$plugin_id]['category'] = $metadata['category'];
+            $list[$plugin_id]['category'] = $metadata['category'] ?? null;
         }
 
         return $list;

@@ -111,6 +111,7 @@ class NewPasswordController extends StudipController
             $password = Request::get('new_password');
             $confirm  = Request::get('new_password_confirm');
 
+            $errors = [];
             if (!$validator->ValidatePassword($password)) {
                 $errors[] = _('Das Passwort ist zu kurz. Es sollte mindestens 8 Zeichen lang sein.');
             } else if ($password !== $confirm) {

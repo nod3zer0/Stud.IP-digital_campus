@@ -57,7 +57,10 @@ class Course_ElearningController extends AuthenticatedController
         if (!isset($GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_select])) {
             unset($this->cms_select);
         }
-        if ($this->seminar_id != $_SESSION['elearning_open_close']["id"]) {
+        if (
+            isset($_SESSION['elearning_open_close']['id'])
+            && $this->seminar_id !== $_SESSION['elearning_open_close']['id']
+        ) {
             unset($_SESSION['cache_data']);
             unset($_SESSION['elearning_open_close']);
         }

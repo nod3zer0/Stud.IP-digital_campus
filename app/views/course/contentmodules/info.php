@@ -29,8 +29,8 @@
                 </div>
             </div>
             <div class="content-modules-controls-vue-app" is="ContentModulesControl" module_id="<?= htmlReady($plugin->getPluginId()) ?>"></div>
-            <? $keywords = preg_split( "/;/", $metadata['keywords'], -1, PREG_SPLIT_NO_EMPTY) ?>
-            <? if (count($keywords)) : ?>
+            <? $keywords = preg_split( "/;/", $metadata['keywords'] ?? '', -1, PREG_SPLIT_NO_EMPTY) ?>
+            <? if (count($keywords) > 0) : ?>
             <ul class="keywords">
                 <? foreach ($keywords as $keyword) : ?>
                 <li>

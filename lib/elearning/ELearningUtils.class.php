@@ -472,6 +472,7 @@ class ELearningUtils
                           FROM object_contentmodules
                           WHERE module_type = 'crs' AND object_id = " . $db->quote($sem_id))
                         ->fetchAll(PDO::FETCH_ASSOC);
+        $courses = [];
         foreach ($rs as $row) {
             $courses[$row['system_type']] = $row['module_id'];
         }
@@ -479,23 +480,26 @@ class ELearningUtils
         $connected_courses = [
             'courses' => [],
         ];
-        if (is_array($courses))
-            foreach ($courses as $system_type => $crs_id)
+        if (is_array($courses)) {
+            foreach ($courses as $system_type => $crs_id) {
                 if (self::isCMSActive($system_type)) {
                     self::loadClass($system_type);
                     $connected_courses['courses'][$system_type] = [
-                        'url' => URLHelper::getLink($connected_cms[$system_type]->link->cms_link . '?client_id=' . $connected_cms[$system_type]->getClientId() . '&cms_select=' . $system_type . '&ref_id=' . $crs_id . '&type=crs&target=start'),
-                        'cms_name' => $connected_cms[$system_type]->getName()];
+                        'url'      => URLHelper::getLink($connected_cms[$system_type]->link->cms_link . '?client_id=' . $connected_cms[$system_type]->getClientId() . '&cms_select=' . $system_type . '&ref_id=' . $crs_id . '&type=crs&target=start'),
+                        'cms_name' => $connected_cms[$system_type]->getName()
+                    ];
                     // gegebenenfalls zugeordnete Module aktualisieren
                     if (Request::option('update')) {
                         if ((method_exists($connected_cms[$system_type], "updateConnections"))) {
-                            $connected_cms[$system_type]->updateConnections( $crs_id );
+                            $connected_cms[$system_type]->updateConnections($crs_id);
                         }
                     }
                     if (method_exists($connected_cms[$system_type]->permissions, 'CheckUserPermissions')) {
                         $connected_cms[$system_type]->permissions->CheckUserPermissions($crs_id);
                     }
                 }
+            }
+        }
 
         if ($connected_courses['courses']) {
             if (count($connected_courses['courses']) > 1) {

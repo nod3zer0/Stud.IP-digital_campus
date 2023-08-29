@@ -344,13 +344,13 @@ class BasicDataWizardStep implements CourseWizardStep
         if (!trim($values['name'])) {
             $errors[] = _('Bitte geben Sie den Namen der Veranstaltung an.');
         }
-        if ($values['number'] != '') {
+        if (!empty($values['number'])) {
             $course_number_format = Config::get()->COURSE_NUMBER_FORMAT;
             if ($course_number_format && !preg_match('/^' . $course_number_format . '$/', $values['number'])) {
                 $errors[] = _('Die Veranstaltungsnummer hat ein ungültiges Format.');
             }
         }
-        if (!$values['lecturers']) {
+        if (empty($values['lecturers'])) {
             $errors[] = sprintf(
                 _('Bitte tragen Sie mindestens eine Person als %s ein.'),
                 htmlReady(get_title_for_status('dozent', 1, $values['coursetype']))
@@ -411,7 +411,7 @@ class BasicDataWizardStep implements CourseWizardStep
 
         $course->status = $values['coursetype'];
         $course->name = new I18NString($values['name'], $values['name_i18n'] ?? []);
-        $course->veranstaltungsnummer = $values['number'];
+        $course->veranstaltungsnummer = $values['number'] ?? null;
         $course->beschreibung = new I18NString($values['description'], $values['description_i18n'] ?? []);
         $course->start_semester = Semester::findByTimestamp($values['start_time']);
         $course->institut_id = $values['institute'];

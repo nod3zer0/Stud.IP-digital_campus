@@ -592,7 +592,7 @@ class SimpleCollection extends StudipArrayObject
     public function val($key)
     {
         $first = $this->first();
-        return $first[$key] ?: null;
+        return $first[$key] ?? null;
     }
 
     /**

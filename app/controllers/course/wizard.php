@@ -118,7 +118,7 @@ class Course_WizardController extends AuthenticatedController
             $values[$iterator->key()] = $iterator->current();
             $iterator->next();
         }
-        if ($this->steps[$step_number]['classname']) {
+        if (!empty($this->steps[$step_number]['classname'])) {
             $this->setStepValues($this->steps[$step_number]['classname'], $values);
         }
         // Back or forward button clicked -> set next step accordingly.
