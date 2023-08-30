@@ -344,7 +344,7 @@ class BasicDataWizardStep implements CourseWizardStep
         if (!trim($values['name'])) {
             $errors[] = _('Bitte geben Sie den Namen der Veranstaltung an.');
         }
-        if (!empty($values['number'])) {
+        if (isset($values['number']) && $values['number'] != '') {
             $course_number_format = Config::get()->COURSE_NUMBER_FORMAT;
             if ($course_number_format && !preg_match('/^' . $course_number_format . '$/', $values['number'])) {
                 $errors[] = _('Die Veranstaltungsnummer hat ein ungültiges Format.');
