@@ -42,18 +42,20 @@
     padding: 0;
 
     .content-item {
-        background-color: $dark-gray-color-5;
-        border: solid thin $light-gray-color-40;
-        height: 130px;
-        padding-bottom: 10px;
-        padding-top: 10px;
+        align-items: stretch;
+        background-color: var(--dark-gray-color-5);
+        border: solid thin var(--light-gray-color-40);
+        display: flex;
+        height: 150px;
+        justify-content: stretch;
 
         .content-item-link {
             color: unset;
             display: grid;
+            flex: 1;
             grid-template-columns: 74px auto;
             grid-gap: 5px;
-            padding: 15px 10px 0 10px;
+            padding: 25px 10px 10px;
             transition: 0.5s;
 
             .content-item-img-wrapper {
@@ -62,7 +64,7 @@
 
             .content-item-text {
                 .content-item-title {
-                    color: $base-color;
+                    color: var(--base-color);
                     font-size: 1.3em;
                     width: 100%;
                     max-width: 160px;
@@ -75,13 +77,13 @@
         }
 
         &:hover {
-            background-color: $white;
+            background-color: var(--white);
             color: unset;
 
             .content-item-link {
                 .content-item-text {
                     .content-item-title {
-                        color: $red;
+                        color: var(--red);
                     }
                 }
             }

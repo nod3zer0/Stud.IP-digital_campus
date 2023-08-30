@@ -5,7 +5,7 @@
     <ul class="content-items">
         <? foreach ($tiles as $key => $navigation): ?>
             <? if ($navigation->isVisible() && $key !== 'overview'): ?>
-                <li class="content-item content-item-courseware">
+                <li class="content-item content-item-<?= htmlReady($key) ?>">
                     <a href="<?= URLHelper::getLink($navigation->getURL()) ?>" class="content-item-link">
                         <div class="content-item-img-wrapper">
                             <? if ($navigation->getImage()): ?>
