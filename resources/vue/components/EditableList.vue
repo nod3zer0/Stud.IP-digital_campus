@@ -1,13 +1,19 @@
 <template>
     <div>
+        <div hidden>
+            <label class="hiddeninput" v-if="required && sortedItems.length === 0">
+                <span class="textlabel">{{ label }}</span>
+                <input type="text" required value="">
+            </label>
+        </div>
         <div class="formpart">
             <ul class="clean editablelist">
                 <li v-for="item in sortedItems" :key="item.id" :data-type="item.type">
-                    <studip-icon v-if="item.icon" :shape="item.icon" role="info" size="20" class="text-bottom" alt=""></studip-icon>
+                    <studip-icon v-if="item.icon" :shape="item.icon" role="info" :size="20" class="text-bottom" alt=""></studip-icon>
                     <input v-if="name" type="hidden" :name="name + '[]'" :value="item.value">
                     <span>{{item.name}}</span>
                     <button v-if="item.deletable" @click.prevent="deleteItem(item)" :title="$gettextInterpolate($gettext('%{ name } löschen'), {name: item.name})" class="undecorated">
-                        <studip-icon shape="trash" role="clickable" size="20" class="text-bottom"></studip-icon>
+                        <studip-icon shape="trash" role="clickable" :size="20" class="text-bottom"></studip-icon>
                     </button>
                 </li>
             </ul>
@@ -57,6 +63,15 @@ export default {
             type: Array,
             required: false,
             default: () => [],
+        },
+        required: {
+            required: false,
+            type: Boolean,
+            default: false
+        },
+        label: {
+            type: String,
+            required: false
         }
     },
     data () {

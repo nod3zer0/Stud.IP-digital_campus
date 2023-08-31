@@ -56,6 +56,7 @@ class NewsRangesInput extends Input
 
         $template = $GLOBALS['template_factory']->open('forms/news_ranges_input');
         $template->name = $this->name;
+        $template->title = $this->title;
         $template->items = $items;
         $template->searchtype = new \NewsRangesSearch();
         $template->selectable = $selectable;

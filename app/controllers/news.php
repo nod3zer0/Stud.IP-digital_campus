@@ -375,7 +375,7 @@ class NewsController extends StudipController
                 'legend' => _('In weiteren Bereichen anzeigen'),
                 'fields' => [
                     'news_ranges' => [
-                        'label' => _('Bereich auswählen'),
+                        'label' => _('In weiteren Bereichen anzeigen'),
                         'type' => 'NewsRanges',
                         'required' => true
                     ]
