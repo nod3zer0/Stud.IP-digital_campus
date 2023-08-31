@@ -7,7 +7,7 @@
             <span class="asterisk" title="<?= _('Dies ist ein Pflichtfeld') ?>" aria-hidden="true">*</span>
         <? endif ?>
     </label>
-    <select class="select2" name="<?= htmlReady($this->name) ?>" <?= ($this->required ? 'required aria-required="true"' : '') ?> id="<?= $id ?>" <?= $attributes ?>>
+    <select class="select2" v-model="<?= htmlReady($this->name) ?>" <?= ($this->required ? 'required aria-required="true"' : '') ?> id="<?= $id ?>" <?= $attributes ?>>
     <? foreach ($options as $key => $option) : ?>
         <option value="<?= htmlReady($key) ?>"<?= ($key == $value ? " selected" : "") ?>>
             <?= htmlReady($option) ?>
