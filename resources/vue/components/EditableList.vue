@@ -100,10 +100,10 @@ export default {
         },
         changed () {
             this.resort = !this.resort;
-            this.$emit('input', this.items.map(function (item) {
+            this.$emit('input', this.allItems.map(function (item) {
                 return item.value;
             }));
-            this.$emit('items', this.items.map(function (item) {
+            this.$emit('items', this.allItems.map(function (item) {
                 return {
                     value: item.value,
                     name: item.name,
@@ -134,9 +134,9 @@ export default {
             }
         },
         deleteItem (item) {
-            for (let i in this.items) {
-                if (this.items[i].value === item.value) {
-                    this.$delete(this.items, i);
+            for (let i in this.allItems) {
+                if (this.allItems[i].value === item.value) {
+                    this.$delete(this.allItems, i);
                 }
             }
             this.changed();
@@ -145,8 +145,8 @@ export default {
             if (id.includes('__')) {
                 id = id.split('__')[0];
             }
-            for (let i in this.items) {
-                if (this.items[i].value === id) {
+            for (let i in this.allItems) {
+                if (this.allItems[i].value === id) {
                     return true;
                 }
             }
@@ -171,7 +171,7 @@ export default {
         }
     },
     mounted () {
-        this.$emit('input', this.items.map(function (item) {
+        this.$emit('input', this.allItems.map(function (item) {
             return item.value;
         }));
     }
