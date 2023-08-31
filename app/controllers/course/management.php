@@ -103,7 +103,6 @@ class Course_ManagementController extends AuthenticatedController
      */
     public function lock_action()
     {
-        Navigation::activateItem('course/admin/main');
         PageLayout::setTitle(_('Sperrebene ändern'));
         $course = Course::findCurrent();
 
@@ -143,6 +142,6 @@ class Course_ManagementController extends AuthenticatedController
                 PageLayout::postSuccess($msg);
             }
         }
-        $this->relocate($this->action_url('index'));
+        $this->relocate('course/basicdata/view');
     }
 }
