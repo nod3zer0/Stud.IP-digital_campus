@@ -88,7 +88,7 @@ class Calendar_CalendarController extends AuthenticatedController
     {
         $tmpl_factory = $this->get_template_factory();
 
-        $filters = new OptionsWidget();
+        $filters = new SidebarWidget();
         $filters->setTitle('Auswahl');
 
         $tmpl = $tmpl_factory->open('calendar/single/_jump_to');
