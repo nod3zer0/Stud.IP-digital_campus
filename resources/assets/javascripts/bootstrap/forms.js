@@ -107,6 +107,9 @@ $(document)
         // Submit only if value has changed and either enter was pressed or
         // select was opened by click
         if (!is_default && shouldSubmit) {
+            if ($(this).data('formaction')) {
+                $(this.form).attr('action', $(this).data('formaction'));
+            }
             $(this.form).submit();
             $('option', this).prop('defaultSelected', false).filter(':selected').prop('defaultSelected', true);
             return false;

@@ -77,20 +77,26 @@ class OptionsWidget extends ListWidget
      */
     public function addSelect($label, $url, $name, $options, $selected_option = false, $attributes = [])
     {
-        $widget = new SelectWidget($label, $url, $name);
-        $widget->layout = false;
+        $option_content = '';
 
-        foreach ($options as $value => $option_label) {
-            $widget->addElement(new SelectElement($value, $option_label, $value === $selected_option));
+        foreach ($options as $value => $option) {
+            $selected = $value === $selected_option ? 'selected' : '';
+            $option_content .= sprintf(
+                '<option value="%s" %s>%s</option>', 
+                htmlReady($value),
+                $selected, 
+                htmlReady($option)
+            );
         }
 
-        if (isset($widget->attributes) && is_array($widget->attributes)) {
-            $widget->attributes = array_merge($widget->attributes, $attributes);
-        } else {
-            $widget->attributes = $attributes;
-        }
-
-        $content = $widget->render();
+        $content = sprintf(
+            '<select data-formaction="%s" class="sidebar-selectlist submit-upon-select" name="%s" aria-label="%s" %s>%s</select>',
+            htmlReady($url),
+            htmlReady($name),
+            htmlReady($label),
+            arrayToHtmlAttributes($attributes),
+            $option_content
+        );
 
         $this->addElement(new WidgetElement($content));
     }
