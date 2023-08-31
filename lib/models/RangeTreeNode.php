@@ -146,6 +146,10 @@ class RangeTreeNode extends SimpleORMap implements StudipTreeNode
             $parameters = ['ids' => $with_children ? $this->getDescendantIds() : [$this->id]];
         }
 
+        if (!$GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)) {
+            $query .= " AND s.`visible` = 1";
+        }
+
         if ($semclass !== 0) {
             $query .= "  AND s.`status` IN (:types)";
             $parameters['types'] = array_map(
@@ -198,6 +202,10 @@ class RangeTreeNode extends SimpleORMap implements StudipTreeNode
                           WHERE `item_id` IN (:ids)
                       )";
             $parameters = ['ids' => $with_children ? $this->getDescendantIds() : [$this->id]];
+        }
+
+        if (!$GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)) {
+            $query .= " AND s.`visible` = 1";
         }
 
         if ($searchterm) {
