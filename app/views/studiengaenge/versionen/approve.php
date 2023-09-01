@@ -11,7 +11,7 @@
     <? echo $this->render_partial('shared/version/_versionmodule', ['version' => $version]); ?>
     <div style="text-align: center;" data-dialog-button>
         <?= CSRFProtection::tokenTag(); ?>
-        <?= Studip\ Button::createAccept(_('Genehmigen'), 'approval', []) ?>
+        <?= Studip\Button::createAccept(_('Genehmigen'), 'approval', []) ?>
         <?= Studip\LinkButton::createCancel(_('Abbrechen')) ?>
     </div>
 </form>
