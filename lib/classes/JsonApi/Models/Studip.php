@@ -13,6 +13,8 @@ class Studip
     {
         $properties = [
             new StudipProperty('studip-version', 'Stud.IP-Version', $GLOBALS['SOFTWARE_VERSION']),
+            new StudipProperty('oer-campus-enabled', 'OERCAMPUS_ENABLED', \Config::get()->OERCAMPUS_ENABLED),
+            new StudipProperty('oer-enable-suggestions', 'OER_ENABLE_SUGGESTIONS', \Config::get()->OER_ENABLE_SUGGESTIONS),
         ];
 
         $copyrightDialog = self::getConfigOption('COPYRIGHT_DIALOG_ON_UPLOAD');

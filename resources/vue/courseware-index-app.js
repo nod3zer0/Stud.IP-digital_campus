@@ -24,7 +24,6 @@ const mountApp = async (STUDIP, createApp, element) => {
     let entry_id = null;
     let entry_type = null;
     let unit_id = null;
-    let oer_enabled = null;
     let licenses = null;
     let elem;
 
@@ -46,9 +45,6 @@ const mountApp = async (STUDIP, createApp, element) => {
                 unit_id = elem.attributes['unit-id'].value;
             }
 
-            if (elem.attributes['oer-enabled'] !== undefined) {
-                oer_enabled = elem.attributes['oer-enabled'].value;
-            }
             // we need a route for License SORM
             if (elem.attributes['licenses'] !== undefined) {
                 licenses = JSON.parse(elem.attributes['licenses'].value);
@@ -119,11 +115,20 @@ const mountApp = async (STUDIP, createApp, element) => {
                     'sem-classes',
                     'sem-types',
                     'terms-of-use',
-                    'user-data-field'
+                    'user-data-field',
+                    'studip-properties'
                 ],
                 httpClient,
             }),
         },
+    });
+
+    axios.get(
+        STUDIP.URLHelper.getURL('jsonapi.php/v1/studip/properties', {}, true)
+    ).then(response => {
+        response.data.data.forEach(prop => {
+            store.dispatch('studip-properties/storeRecord', prop);
+        });
     });
 
     store.dispatch('setUrlHelper', STUDIP.URLHelper);
@@ -144,7 +149,6 @@ const mountApp = async (STUDIP, createApp, element) => {
 
     store.dispatch('coursewareCurrentElement', elem_id);
 
-    store.dispatch('oerEnabled', oer_enabled);
     store.dispatch('licenses', licenses);
     store.dispatch('courseware-templates/loadAll');
     store.dispatch('loadUserClipboards', STUDIP.USER_ID);

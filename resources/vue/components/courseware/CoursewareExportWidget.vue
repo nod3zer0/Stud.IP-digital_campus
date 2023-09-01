@@ -40,7 +40,7 @@ export default {
     computed: {
         ...mapGetters({
             context: 'context',
-            oerEnabled: 'oerEnabled',
+            oerCampusEnabled: 'oerCampusEnabled',
             userIsTeacher: 'userIsTeacher',
         }),
         canEdit() {
@@ -64,7 +64,7 @@ export default {
             return this.canVisit;
         },
         showOer() {
-            if (!this.oerEnabled) {
+            if (!this.oerCampusEnabled) {
                 return false;
             }
 
