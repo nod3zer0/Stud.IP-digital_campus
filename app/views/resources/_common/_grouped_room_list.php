@@ -42,7 +42,7 @@
                                     <? foreach ($building_group['rooms'] as $resource) : ?>
                                         <?
                                         $room_link = '';
-                                        if ($link_template) {
+                                        if (!empty($link_template)) {
                                             $room_link = $controller->link_for(
                                                 sprintf(
                                                     $link_template,
