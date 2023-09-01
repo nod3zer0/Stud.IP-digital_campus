@@ -3,7 +3,7 @@
     <section class="hgroup">
         <?= _('Kalender') ?>
         <select class="sidebar-selectlist submit-upon-select" style="width: 16em;" name="range_id">
-            <option value="user.<?= get_username() ?>"<?= get_userid() === $range_id ? ' selected' : '' ?>>
+            <option value="<?= get_userid() ?>"<?= get_userid() === $range_id ? ' selected' : '' ?>>
                     <?= _("Eigener Kalender") ?>
             </option>
             <? $groups = Calendar::getGroups($GLOBALS['user']->id); ?>
