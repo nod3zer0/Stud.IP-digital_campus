@@ -31,6 +31,7 @@ class Course_TopicsController extends AuthenticatedController
     public function index_action()
     {
         $this->topics = CourseTopic::findBySeminar_id(Context::getId());
+        $this->topic_links = $this->createLinksForTopics($this->topics);
         $this->cancelled_dates_locked = LockRules::Check(Context::getId(), 'cancelled_dates');
     }
 
@@ -107,26 +108,25 @@ class Course_TopicsController extends AuthenticatedController
         $this->redirect($this->indexURL(['open' => $topic->id]));
     }
 
-    public function move_up_action(CourseTopic $topic)
+    public function swap_action(CourseTopic $a, CourseTopic $b)
     {
         if (!Request::isPost()) {
             throw new MethodNotAllowedException();
         }
 
-        $topic->increasePriority();
-
-        $this->redirect($this->indexURL(['open' => $topic->id]));
-    }
-
-    public function move_down_action(CourseTopic $topic)
-    {
-        if (!Request::isPost()) {
-            throw new MethodNotAllowedException();
+        if (
+            $a->seminar_id !== Context::getId()
+            || $b->seminar_id !== Context::getId()
+        ) {
+            throw new Exception(_('Eines oder mehrere Themen gehören nicht zur ausgewählten Veranstaltung.'));
         }
 
-        $topic->decreasePriority();
+        [$a->priority, $b->priority] = [$b->priority, $a->priority];
 
-        $this->redirect($this->indexURL(['open' => $topic->id]));
+        $a->store();
+        $b->store();
+
+        $this->redirect($this->indexURL(['open' => $a->id]));
     }
 
     public function allow_public_action()
@@ -262,5 +262,31 @@ class Course_TopicsController extends AuthenticatedController
                 $this->url_for('course/topics/allow_public')
             );
         }
+    }
+
+    private function createLinksForTopics(array $topics): array
+    {
+        $links = array_combine(
+            array_column($topics, 'id'),
+            array_fill(0, count($topics), ['previous' => null, 'next' => null])
+        );
+
+        $last = null;
+        foreach ($topics as $topic) {
+            if ($last !== null) {
+                $links[$topic->id]['previous'] = $last;
+            }
+            $last = $topic;
+        }
+
+        $next = null;
+        foreach (array_reverse($topics) as $topic) {
+            if ($next !== null) {
+                $links[$topic->id]['next'] = $next;
+            }
+            $next = $topic;
+        }
+
+        return $links;
     }
 }

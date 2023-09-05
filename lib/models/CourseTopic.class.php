@@ -197,6 +197,7 @@ class CourseTopic extends SimpleORMap
      * mean higher priority.
      *
      * @return boolean
+     * @todo Deprecated, remove for Stud.IP 6.0
      */
     public function increasePriority()
     {
@@ -227,6 +228,8 @@ class CourseTopic extends SimpleORMap
      * Decreases the priority of this topic. Meaning the topic will be sorted further down.
      * Be aware that this actually increases the priority property since higher numbers
      * mean lower priority.
+     *
+     * @todo Deprecated, remove for Stud.IP 6.0
      */
     public function decreasePriority()
     {

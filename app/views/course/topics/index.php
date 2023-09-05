@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var CourseTopic[] $topics
+ * @var Course_TopicsController $controller
+ * @var array<array{next: ?CourseTopic, previous: ?CourseTopic}> $topic_links
+ */
+?>
 <? if (count($topics) > 0) : ?>
 <table class="default withdetails">
     <colgroup>
@@ -102,13 +109,13 @@
                             <? endif ?>
 
                             <span class="button-group">
-                            <? if ($key > 0) : ?>
-                                <form action="<?= $controller->move_up($topic) ?>" method="post" style="display: inline;">
+                            <? if ($topic_links[$topic->id]['previous']) : ?>
+                                <form action="<?= $controller->swap($topic, $topic_links[$topic->id]['previous']) ?>" method="post" style="display: inline;">
                                     <?= Studip\Button::createMoveUp(_('nach oben verschieben')) ?>
                                 </form>
                             <? endif ?>
-                            <? if ($key < count($topics) - 1) : ?>
-                                <form action="<?=$controller->move_down($topic)?>" method="post" style="display: inline;">
+                            <? if ($topic_links[$topic->id]['next']) : ?>
+                                <form action="<?= $controller->swap($topic, $topic_links[$topic->id]['next']) ?>" method="post" style="display: inline;">
                                     <?= Studip\Button::createMoveDown(_('nach unten verschieben')) ?>
                                 </form>
                             <? endif ?>
