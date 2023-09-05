@@ -41,13 +41,6 @@ class ResourceNavigation extends Navigation
         );
     }
 
-
-    public function isActive()
-    {
-        return parent::isActive();
-    }
-
-
     public function initSubNavigation()
     {
         $user = User::findCurrent();
