@@ -29,10 +29,6 @@ a:hover.toolbar {
     color: #eee;
 }
 
-a.link-intern, a.link-extern {
-    white-space: nowrap;
-}
-
 a.link-intern {
     @include icon(before, link-intern, clickable, 16px, 2px);
 }
