@@ -25,13 +25,8 @@
     height: 15px;
 }
 
-// Display formatted content as inline so we don't break any existing code
-// that expects formatReady() to output an inline elements instead of a
-// block element.
-// If browser support for "display: contents" is given, this should be changed
-// to that instead.
 .formatted-content {
-    display: inline;
+    display: flow-root;
 
     a {
         word-break: break-all;
@@ -53,22 +48,6 @@
 
     pre {   // pre-formatted content breaks the Stud.IP Layout!
         white-space: pre-wrap;
-    }
-
-    figure.table {
-        display: table;
-        margin: 0.9em auto;
-
-        &:not([style]) {
-            margin-inline-start: 0;
-        }
-
-        table {
-            td {
-                min-width: 2em;
-                padding: 0.4em;
-            }
-        }
     }
 }
 

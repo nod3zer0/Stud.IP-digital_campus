@@ -9,7 +9,7 @@ require_once 'lib/wiki.inc.php';
 
 // Wrapper for formatted content (defined as a constant since it is used
 // in the unit test defined in tests/unit/lib/VisualTest.php as well).
-define('FORMATTED_CONTENT_WRAPPER', '<div class="formatted-content">%s</div>');
+define('FORMATTED_CONTENT_WRAPPER', '<div class="formatted-content ck-content">%s</div>');
 
 //// Functions for processing marked-up text (Stud.IP markup, HTML, JS).
 
