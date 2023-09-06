@@ -33,8 +33,6 @@ final class TreeChanges extends Migration
         foreach (DBManager::get()->fetchAll($query) as $institute) {
             $stmt->execute(['name' => $institute['Name'], 'inst' => $institute['Institut_id']]);
         }
-        // Remove institute assignments for sem_tree entries.
-        DBManager::get()->exec("ALTER TABLE `sem_tree` DROP `studip_object_id`");
     }
 
     protected function down()
@@ -51,12 +49,6 @@ final class TreeChanges extends Migration
                     UNIX_TIMESTAMP(), UNIX_TIMESTAMP() ,
                     'mit welchem Status darf die Veranstaltungshierarchie bearbeitet werden (admin oder root)'
                 )");
-
-        // Add database column for sem_tree institute assignments.
-        DBManager::get()->exec("ALTER TABLE `sem_tree` ADD
-            `studip_object_id` CHAR(32) CHARACTER SET latin1 COLLATE latin1_bin NULL DEFAULT NULL AFTER `name`");
-        // Add index for studip_object_id.
-        DBManager::get()->exec("ALTER TABLE `sem_tree` ADD INDEX `studip_object_id` (`studip_object_id`)");
     }
 
 }
