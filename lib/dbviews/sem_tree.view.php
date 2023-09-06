@@ -36,8 +36,8 @@ $_views['sem_number_sql'] = "INTERVAL(start_time," . join(",",$sem_start_times) 
 $_views['sem_number_end_sql'] = "IF(duration_time=-1,-1,INTERVAL(start_time+duration_time," . join(",",$sem_start_times) ."))";
 
 $_views["SEM_TREE_GET_DATA_NO_ENTRIES"] = ["pk"=>"sem_tree_id","temp_table_type"=>"HEAP",
-                            "query"=>"SELECT a.*, c.Name AS studip_object_name
-                             FROM sem_tree a LEFT JOIN Institute c ON (a.studip_object_id = c.Institut_id)
+                            "query"=>"SELECT a.*
+                             FROM sem_tree a
                             ORDER BY priority"];
 $_views["SEM_TREE_GET_ENTRIES"] = ["pk"=>"sem_tree_id","temp_table_type"=>"HEAP",
                             "query" => "SELECT st.sem_tree_id, count(b.Seminar_id) AS entries

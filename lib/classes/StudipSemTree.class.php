@@ -76,12 +76,8 @@ class StudipSemTree extends TreeAbstract
         $db = $this->view->get_query("view:SEM_TREE_GET_DATA_NO_ENTRIES");
 
         while ($db->next_record()){
-            $this->tree_data[$db->f("sem_tree_id")] = ['type' => $db->f('type'), "info" => $db->f("info"),"studip_object_id" => $db->f("studip_object_id"), "entries" => 0];
-            if ($db->f("studip_object_id")){
-                $name = $db->f("studip_object_name");
-            } else {
-                $name = $db->f("name");
-            }
+            $this->tree_data[$db->f("sem_tree_id")] = ['type' => $db->f('type'), "info" => $db->f("info"), "entries" => 0];
+            $name = $db->f("name");
             $this->storeItem($db->f("sem_tree_id"), $db->f("parent_id"), $name, $db->f("priority"));
         }
     }
@@ -205,10 +201,8 @@ class StudipSemTree extends TreeAbstract
         if ($item_id == "root")
             return "root";
         $ret_id = $item_id;
-        while (!$this->tree_data[$ret_id]['studip_object_id']){
+        while ($ret_id != "root"){
             $ret_id = $this->tree_data[$ret_id]['parent_id'];
-            if ($ret_id == "root")
-                break;
         }
         return $ret_id;
     }
