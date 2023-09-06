@@ -65,8 +65,8 @@ const mountApp = async (STUDIP, createApp, element) => {
 
     let base = new URL(
         STUDIP.URLHelper.parameters.cid
-            ? STUDIP.URLHelper.getURL('dispatch.php/course/courseware', { cid: STUDIP.URLHelper.parameters.cid }, true)
-            : STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/courseware')
+            ? STUDIP.URLHelper.getURL('dispatch.php/course/courseware/courseware/' + unit_id, { cid: STUDIP.URLHelper.parameters.cid }, true)
+            : STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/courseware/' + unit_id)
     );
     if (entry_type === 'courses') {
         base.search += '&';
