@@ -103,7 +103,7 @@ class Admin_CoursesController extends AuthenticatedController
                     false,
                     null,
                     null,
-                    $datafields_filters[$datafield->id]
+                    $datafields_filters[$datafield->id] ?? null
                 );
                 $textWidget->setOnSubmitHandler("STUDIP.AdminCourses.App.changeFilter({'df_".$datafield->id."': $(this).find('input').val()}); return false;");
                 return $textWidget;
@@ -866,9 +866,9 @@ class Admin_CoursesController extends AuthenticatedController
             $view_filters = $this->getViewFilters();
 
             $data = [];
-            foreach ($courses as $course_id => $course) {
-                $course_model = Course::find($course_id);
-                $sem = new Seminar($course_model);
+
+            foreach ($courses as $course) {
+                $sem = new Seminar($course);
                 $row = [];
 
                 if (in_array('number', $filter_config)) {
@@ -876,14 +876,14 @@ class Admin_CoursesController extends AuthenticatedController
                 }
 
                 if (in_array('name', $filter_config)) {
-                    $row['name'] = $course_model->name;
+                    $row['name'] = $course->name;
                 }
 
                 if (in_array('type', $filter_config)) {
                     $row['type'] = sprintf(
                         '%s: %s',
-                        $sem->getSemClass()['name'],
-                        $sem->getSemType()['name']
+                        $course->getSemClass()['name'],
+                        $course->getSemType()['name']
                     );
                 }
 
@@ -896,15 +896,18 @@ class Admin_CoursesController extends AuthenticatedController
                 }
 
                 if (in_array('requests', $filter_config)) {
-                    $row['requests'] = $course['room_requests'];
+                    $row['requests'] = $course->room_requests->count();
                 }
 
                 if (in_array('teachers', $filter_config)) {
                     $row['teachers'] = implode(
                         ', ',
-                        $course->teachers->map(function ($d) {
-                            return $d->user->getFullName();
-                        })
+                        array_map(
+                            function ($d) {
+                                return $d->getUserFullName();
+                            },
+                            CourseMember::findByCourseAndStatus($course->id, 'dozent')
+                        )
                     );
                 }
 
@@ -935,7 +938,7 @@ class Admin_CoursesController extends AuthenticatedController
                 foreach (PluginManager::getInstance()->getPlugins('AdminCourseContents') as $plugin) {
                     foreach ($plugin->adminAvailableContents() as $index => $label) {
                         if (in_array($plugin->getPluginId() . "_" . $index, $filter_config)) {
-                            $content = $plugin->adminAreaGetCourseContent($course_model, $index);
+                            $content = $plugin->adminAreaGetCourseContent($course, $index);
                             $row[$plugin->getPluginId() . "_" . $index] = strip_tags(is_a($content, 'Flexi_Template')
                                 ? $content->render()
                                 : $content
