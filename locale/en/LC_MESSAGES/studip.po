@@ -20,10 +20,11 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-04 14:31+0200\n"
-"PO-Revision-Date: 2023-08-22 15:29+0000\n"
-"Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/stud-"
-"ip-main/en/>\n"
+"PO-Revision-Date: 2023-09-07 13:29+0000\n"
+"Last-Translator: Hans Christian von Steuber <hans.christian.von.steuber@uni-"
+"oldenburg.de>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
+"stud-ip-main/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,7 +100,7 @@ msgstr "very high"
 
 #: app/controllers/news.php:129
 msgid "Ankündigung wirklich aus diesem Bereich entfernen?"
-msgstr "Do you really want to the announcement from this area?"
+msgstr "Do you really want to remove the announcement from this area?"
 
 #: app/controllers/news.php:144
 msgid "Ankündigung wirklich löschen?"
@@ -12865,7 +12866,7 @@ msgstr "Add new substitute"
 #: app/controllers/admin/plugin.php:592
 #, php-format
 msgid "Standardbeschreibung des Plugins (%s)"
-msgstr ""
+msgstr "Standard description of the plugin (%s)"
 
 #: app/controllers/admin/plugin.php:592 config/mvv_config.php:44
 #: config/mvv_config.php:121 config/mvv_config.php:237
@@ -12893,7 +12894,7 @@ msgstr "No description"
 
 #: app/controllers/admin/plugin.php:601
 msgid "Hinzufügen zur Standardbeschreibung"
-msgstr ""
+msgstr "Add to standard description"
 
 #: app/controllers/admin/plugin.php:602
 #, fuzzy
@@ -12902,7 +12903,7 @@ msgstr "Overwrite existing bookings"
 
 #: app/controllers/admin/plugin.php:603
 msgid "Beschreibungsfenster komplett ersetzen durch Beschreibung"
-msgstr ""
+msgstr "Replace entire description window content with description"
 
 #: app/controllers/admin/plugin.php:607
 #, fuzzy
@@ -23344,7 +23345,7 @@ msgstr "Tool name"
 #: app/views/course/contentmodules/rename.php:15
 #, php-format
 msgid "Ursprünglicher Werkzeugname ist \"%s\"."
-msgstr ""
+msgstr "Original tool name is \"%s\"."
 
 #: app/views/course/contentmodules/rename.php:21
 #, fuzzy
@@ -27946,7 +27947,7 @@ msgstr "To course"
 msgid ""
 "Name des Eintrags (wird bei Zuweisung zu einer Stud.IP-Einrichtung "
 "überschrieben)"
-msgstr ""
+msgstr "Name of entry (will be overwritten when assigned to a Stud.IP unit)"
 
 #: app/views/admin/tree/create.php:12 app/views/admin/tree/edit.php:15
 #, fuzzy
@@ -27977,7 +27978,7 @@ msgstr "Allocate to institutes"
 msgid ""
 "Name (kann hier nicht bearbeitet werden, da es sich um ein Stud.IP-Objekt "
 "handelt)"
-msgstr ""
+msgstr "Name (cannot be edited here as this is a Stud.IP object)"
 
 #: app/views/admin/configuration/configuration.php:12
 msgid "Globale Systemkonfigurationen"
@@ -29320,7 +29321,7 @@ msgstr "Automatic updates are set up"
 #: app/views/admin/plugin/index.php:89
 #, php-format
 msgid "%d ausstehende Migration(en)"
-msgstr ""
+msgstr "%d pending migrations"
 
 #: app/views/admin/plugin/index.php:103 app/views/admin/plugin/index.php:104
 msgid "Zugriffsrechte bearbeiten"
@@ -30334,6 +30335,8 @@ msgid ""
 "Ansonsten werden nur die Personen eingetragen, die bislang noch nicht über "
 "diesen Mechanismus eingetragen wurden."
 msgstr ""
+"Otherwise, only individuals who have not yet been entered via this mechanism "
+"will be registered."
 
 #: app/views/admin/autoinsert/manual.php:186
 msgid "Fehler bei der Übertragung"
@@ -35594,7 +35597,7 @@ msgstr "Entry %s - %s out of %s"
 
 #: app/views/oer/market/details.php:108
 msgid "1 = leicht, 12 = schwer"
-msgstr ""
+msgstr "1 = easy, 12 = hard"
 
 #: app/views/oer/market/details.php:124
 msgid "Was heißt das?"
@@ -39435,7 +39438,7 @@ msgstr "Students"
 
 #: lib/classes/StockImages/Scaler.php:46 lib/classes/StockImages/Scaler.php:65
 msgid "Unsupported image type."
-msgstr ""
+msgstr "Unsupported image type."
 
 #: lib/classes/FilesSearch/Cronjob.php:19
 msgid "Index der Dokumentensuche erneuern"
@@ -40481,16 +40484,18 @@ msgid ""
 "Das Verwenden von LESS-Stylesheets in Plugins ist deprecated und wird zu "
 "Stud.IP 6.0 entfernt."
 msgstr ""
+"The use of LESS stylesheets in plugins is deprecated and will be removed in "
+"Stud.IP 6.0."
 
 #: lib/classes/assets/LESSCompiler.php:64
 msgid "Als Alternative steht die Verwendung von SCSS bereit."
-msgstr ""
+msgstr "SCSS is available instead."
 
 #: lib/classes/assets/LESSCompiler.php:65
 msgid ""
 "Bitte stellen Sie Ihre Plugins entsprechend um bzw. geben den Plugin-"
 "AutorInnen Bescheid."
-msgstr ""
+msgstr "Please modify your plugins accordingly or inform the plugin authors."
 
 #: lib/classes/ForumEntry.php:118
 msgid "Zuletzt editiert von"
@@ -40527,7 +40532,7 @@ msgstr "Forbidden medialink deleted."
 
 #: lib/classes/SemClass.class.php:74
 msgid "Generierte Standardinstitutsklasse"
-msgstr ""
+msgstr "Standard institute class generated"
 
 #: lib/classes/SemClass.class.php:633
 msgid "Lehre"
@@ -42107,7 +42112,7 @@ msgstr "Pictures"
 
 #: lib/navigation/AdminNavigation.php:166
 msgid "Verwalten Sie den Pool frei verfügbarer Bilder."
-msgstr ""
+msgstr "Manage free image pool"
 
 #: lib/navigation/AdminNavigation.php:183
 msgid "Anlegeassistent"
@@ -43893,7 +43898,7 @@ msgstr "Page title reset"
 
 #: lib/models/Courseware/TaskFeedback.php:72
 msgid "Courseware Aufgaben Feedback"
-msgstr ""
+msgstr "Courseware task feedback"
 
 #: lib/models/Courseware/Bookmark.php:79
 #, fuzzy
@@ -43964,8 +43969,9 @@ msgid "Buch"
 msgstr "Book"
 
 #: lib/models/Courseware/BlockTypes/Document.php:100
+#, fuzzy
 msgid "Adobe Acrobat"
-msgstr ""
+msgstr "Adobe Acrobat"
 
 #: lib/models/Courseware/BlockTypes/Document.php:100
 #: lib/models/Courseware/BlockTypes/Download.php:102
@@ -43999,7 +44005,7 @@ msgstr "Download"
 #: lib/models/Courseware/BlockTypes/Folder.php:146
 #: lib/models/Courseware/BlockTypes/Text.php:151
 msgid "Skript"
-msgstr ""
+msgstr "Script"
 
 #: lib/models/Courseware/BlockTypes/Document.php:102
 #: lib/models/Courseware/BlockTypes/Download.php:101
@@ -44014,7 +44020,7 @@ msgstr "Medium"
 #: lib/models/Courseware/BlockTypes/BiographyPersonalInformation.php:70
 #: lib/models/Courseware/BlockTypes/Video.php:102
 msgid "Präsentation"
-msgstr ""
+msgstr "Presentation"
 
 #: lib/models/Courseware/BlockTypes/Document.php:102
 #: lib/models/Courseware/BlockTypes/Gallery.php:163
@@ -44027,8 +44033,9 @@ msgstr "Course"
 
 #: lib/models/Courseware/BlockTypes/Document.php:103
 #: lib/models/Courseware/BlockTypes/IFrame.php:75
+#, fuzzy
 msgid "Reader"
-msgstr ""
+msgstr "Reader"
 
 #: lib/models/Courseware/BlockTypes/Document.php:103
 #: lib/models/Courseware/BlockTypes/IFrame.php:75
@@ -44059,8 +44066,9 @@ msgid "Syntaxhervorhebung"
 msgstr "Mark topic"
 
 #: lib/models/Courseware/BlockTypes/Code.php:65
+#, fuzzy
 msgid "Monospace"
-msgstr ""
+msgstr "Monospace"
 
 #: lib/models/Courseware/BlockTypes/Code.php:66
 #, fuzzy
@@ -44069,7 +44077,7 @@ msgstr "C0de"
 
 #: lib/models/Courseware/BlockTypes/Code.php:66
 msgid "Programmcode"
-msgstr ""
+msgstr "Code"
 
 #: lib/models/Courseware/BlockTypes/Code.php:66
 #, fuzzy
@@ -44078,7 +44086,7 @@ msgstr "Import"
 
 #: lib/models/Courseware/BlockTypes/Code.php:66
 msgid "Pseudocode"
-msgstr ""
+msgstr "Pseudo code"
 
 #: lib/models/Courseware/BlockTypes/Code.php:68
 #, fuzzy
@@ -44106,7 +44114,7 @@ msgstr "Create"
 
 #: lib/models/Courseware/BlockTypes/Download.php:102
 msgid "Filesharing"
-msgstr ""
+msgstr "File sharing"
 
 #: lib/models/Courseware/BlockTypes/Download.php:105
 #: lib/models/Courseware/BlockTypes/Folder.php:147
@@ -44141,7 +44149,7 @@ msgstr "Course"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:161
 msgid "Bilderkarussell"
-msgstr ""
+msgstr "Image carousel"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:161
 #: lib/models/Courseware/BlockTypes/Chart.php:69
@@ -44157,7 +44165,7 @@ msgstr "Installation"
 #: lib/models/Courseware/BlockTypes/Gallery.php:162
 #: lib/models/Courseware/BlockTypes/Text.php:152
 msgid "Foto"
-msgstr ""
+msgstr "Photo"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:162
 #, fuzzy
@@ -44166,15 +44174,16 @@ msgstr "Enrolment"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:162
 msgid "Slideshow"
-msgstr ""
+msgstr "Slide show"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:163
 msgid "Diashow"
-msgstr ""
+msgstr "Slide show"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:163
+#, fuzzy
 msgid "Slider"
-msgstr ""
+msgstr "Slider"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:163
 #, fuzzy
@@ -44297,15 +44306,16 @@ msgstr "Publications"
 #: lib/models/Courseware/BlockTypes/BiographyGoals.php:67
 #: lib/models/Courseware/BlockTypes/BiographyAchievements.php:70
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:77
+#, fuzzy
 msgid "Job"
-msgstr ""
+msgstr "Job"
 
 #: lib/models/Courseware/BlockTypes/BiographyPersonalInformation.php:70
 #: lib/models/Courseware/BlockTypes/BiographyGoals.php:67
 #: lib/models/Courseware/BlockTypes/BiographyAchievements.php:71
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:77
 msgid "Beruf"
-msgstr ""
+msgstr "Job"
 
 #: lib/models/Courseware/BlockTypes/BiographyPersonalInformation.php:70
 #, fuzzy
@@ -44317,12 +44327,12 @@ msgstr "Birthday"
 #: lib/models/Courseware/BlockTypes/BiographyAchievements.php:71
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:79
 msgid "Sammelmappe"
-msgstr ""
+msgstr "Collection folder"
 
 #: lib/models/Courseware/BlockTypes/BiographyPersonalInformation.php:71
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:79
 msgid "Biografie"
-msgstr ""
+msgstr "Biography"
 
 #: lib/models/Courseware/BlockTypes/BiographyPersonalInformation.php:71
 #, fuzzy
@@ -44365,7 +44375,7 @@ msgstr "Newcomer"
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:69
 #: lib/models/Courseware/BlockTypes/Headline.php:117
 msgid "Design"
-msgstr ""
+msgstr "Design"
 
 #: lib/models/Courseware/BlockTypes/Typewriter.php:68
 #: lib/models/Courseware/BlockTypes/Headline.php:117
@@ -44391,7 +44401,7 @@ msgstr "Presents data sets in a chart."
 #: lib/models/Courseware/BlockTypes/Chart.php:66
 #: lib/models/Courseware/BlockTypes/Date.php:66
 msgid "Zahl"
-msgstr ""
+msgstr "Number"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:66
 #, fuzzy
@@ -44489,7 +44499,7 @@ msgstr "linked files"
 
 #: lib/models/Courseware/BlockTypes/Folder.php:147
 msgid "Mappe"
-msgstr ""
+msgstr "Folder"
 
 #: lib/models/Courseware/BlockTypes/Folder.php:147
 #, fuzzy
@@ -44506,8 +44516,9 @@ msgstr "Have the student confirm that the content has been looked at."
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:64
 #: lib/models/Courseware/BlockTypes/BiographyGoals.php:68
+#, fuzzy
 msgid "Review"
-msgstr ""
+msgstr "Review"
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:64
 #, fuzzy
@@ -44535,8 +44546,9 @@ msgid "Selbstkontrolle"
 msgstr "Self entry"
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:65
+#, fuzzy
 msgid "Check"
-msgstr ""
+msgstr "Check"
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:66
 #, fuzzy
@@ -44549,8 +44561,9 @@ msgid "Vollständigkeit"
 msgstr "incomplete"
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:66
+#, fuzzy
 msgid "Level"
-msgstr ""
+msgstr "Level"
 
 #: lib/models/Courseware/BlockTypes/Embed.php:24
 msgid "Embed"
@@ -44592,8 +44605,9 @@ msgstr ""
 
 #: lib/models/Courseware/BlockTypes/Embed.php:121
 #: lib/models/Courseware/BlockTypes/Audio.php:109
+#, fuzzy
 msgid "Podcast"
-msgstr ""
+msgstr "Podcast"
 
 #: lib/models/Courseware/BlockTypes/Embed.php:121
 #, fuzzy
@@ -44633,7 +44647,7 @@ msgstr "Waiting lists"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:124
 msgid "Vokabeln"
-msgstr ""
+msgstr "Vocabulary"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:124
 #, fuzzy
@@ -44651,8 +44665,9 @@ msgid "Glossar"
 msgstr "Glossary"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:125
+#, fuzzy
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:125
 #, fuzzy
@@ -44661,15 +44676,16 @@ msgstr "Quit"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:125
 msgid "umdrehen"
-msgstr ""
+msgstr "flip"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:125
 msgid "beidseitig"
-msgstr ""
+msgstr "two-sided"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:125
+#, fuzzy
 msgid "Quiz"
-msgstr ""
+msgstr "Quiz"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:125
 #, fuzzy
@@ -44677,8 +44693,9 @@ msgid "Selbsttest"
 msgstr "Self entry"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:126
+#, fuzzy
 msgid "Memory"
-msgstr ""
+msgstr "Memory"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:126
 #, fuzzy
@@ -44703,8 +44720,9 @@ msgstr "Displays a date or a countdown."
 #: lib/models/Courseware/BlockTypes/Timeline.php:73
 #: lib/models/Courseware/BlockTypes/TableOfContents.php:65
 #: lib/models/Courseware/BlockTypes/Headline.php:118
+#, fuzzy
 msgid "Layout"
-msgstr ""
+msgstr "Layout"
 
 #: lib/models/Courseware/BlockTypes/Date.php:65
 #, fuzzy
@@ -44712,8 +44730,9 @@ msgid "Erinnerung"
 msgstr "Orientation"
 
 #: lib/models/Courseware/BlockTypes/Date.php:66
+#, fuzzy
 msgid "Countdown"
-msgstr ""
+msgstr "Countdown"
 
 #: lib/models/Courseware/BlockTypes/Date.php:66
 #, fuzzy
@@ -44726,8 +44745,9 @@ msgid "Veranstaltungszeit"
 msgstr "Course dates"
 
 #: lib/models/Courseware/BlockTypes/Date.php:68
+#, fuzzy
 msgid "live"
-msgstr ""
+msgstr "live"
 
 #: lib/models/Courseware/BlockTypes/Date.php:68
 #, fuzzy
@@ -44750,8 +44770,9 @@ msgid "Konferenz"
 msgstr "Configure"
 
 #: lib/models/Courseware/BlockTypes/Date.php:68
+#, fuzzy
 msgid "Meeting"
-msgstr ""
+msgstr "Meeting"
 
 #: lib/models/Courseware/BlockTypes/Date.php:69
 #, fuzzy
@@ -44770,7 +44791,7 @@ msgstr "List of institutes"
 
 #: lib/models/Courseware/BlockTypes/Date.php:70
 msgid "Frist"
-msgstr ""
+msgstr "Deadline"
 
 #: lib/models/Courseware/BlockTypes/Date.php:70
 #, fuzzy
@@ -44788,7 +44809,7 @@ msgstr "Play video"
 
 #: lib/models/Courseware/BlockTypes/Video.php:101
 msgid "Film"
-msgstr ""
+msgstr "Film"
 
 #: lib/models/Courseware/BlockTypes/Video.php:101
 #, fuzzy
@@ -44811,8 +44832,9 @@ msgid "Lernfilm"
 msgstr "Lecturer filter"
 
 #: lib/models/Courseware/BlockTypes/Video.php:102
+#, fuzzy
 msgid "Screencast"
-msgstr ""
+msgstr "Screencast"
 
 #: lib/models/Courseware/BlockTypes/Video.php:102
 #: lib/models/Courseware/BlockTypes/Audio.php:110
@@ -44822,7 +44844,7 @@ msgstr "Notation"
 
 #: lib/models/Courseware/BlockTypes/Video.php:102
 msgid "Erklärfilm"
-msgstr ""
+msgstr "Explanatory film"
 
 #: lib/models/Courseware/BlockTypes/Video.php:104
 #: lib/models/Courseware/BlockTypes/Audio.php:111
@@ -44832,8 +44854,9 @@ msgid "Inhalt erstellen"
 msgstr "create"
 
 #: lib/models/Courseware/BlockTypes/Video.php:104
+#, fuzzy
 msgid "Input"
-msgstr ""
+msgstr "Input"
 
 #: lib/models/Courseware/BlockTypes/Video.php:104
 #, fuzzy
@@ -44851,7 +44874,7 @@ msgstr "Can display any number of events in chronological order."
 
 #: lib/models/Courseware/BlockTypes/Timeline.php:73
 msgid "Ereignis"
-msgstr ""
+msgstr "Event"
 
 #: lib/models/Courseware/BlockTypes/Timeline.php:73
 #, fuzzy
@@ -44870,7 +44893,7 @@ msgstr "Termination time"
 
 #: lib/models/Courseware/BlockTypes/Timeline.php:74
 msgid "Chronologie"
-msgstr ""
+msgstr "Chronology"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:29
 msgid ""
@@ -44905,7 +44928,7 @@ msgstr "File exchange"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:107
 msgid "Musik"
-msgstr ""
+msgstr "Music"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:108
 #, fuzzy
@@ -44923,7 +44946,7 @@ msgstr ""
 
 #: lib/models/Courseware/BlockTypes/Audio.php:108
 msgid "Zitat"
-msgstr ""
+msgstr "Quote"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:108
 #, fuzzy
@@ -44976,12 +44999,13 @@ msgid "Interview"
 msgstr "Interval"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:113
+#, fuzzy
 msgid "Radio"
-msgstr ""
+msgstr "Radio"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:113
 msgid "Tonspur"
-msgstr ""
+msgstr "Audio track"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:113
 #, fuzzy
@@ -45057,7 +45081,7 @@ msgstr "Headline"
 
 #: lib/models/Courseware/BlockTypes/ImageMap.php:94
 msgid "Klickfläche"
-msgstr ""
+msgstr "Button"
 
 #: lib/models/Courseware/BlockTypes/ImageMap.php:94
 #, fuzzy
@@ -45071,7 +45095,7 @@ msgstr "Description"
 
 #: lib/models/Courseware/BlockTypes/ImageMap.php:95
 msgid "Imagemap"
-msgstr ""
+msgstr "Image map"
 
 #: lib/models/Courseware/BlockTypes/ImageMap.php:95
 #: templates/courseware/block_types/dialog_cards.php:4
@@ -45097,12 +45121,14 @@ msgid "Karriere"
 msgstr "Career"
 
 #: lib/models/Courseware/BlockTypes/BiographyAchievements.php:71
+#, fuzzy
 msgid "Achievement"
-msgstr ""
+msgstr "Achievement"
 
 #: lib/models/Courseware/BlockTypes/BiographyAchievements.php:71
+#, fuzzy
 msgid "Badges"
-msgstr ""
+msgstr "Badges"
 
 #: lib/models/Courseware/BlockTypes/BiographyAchievements.php:71
 #, fuzzy
@@ -45180,8 +45206,9 @@ msgid "schreiben"
 msgstr "Write"
 
 #: lib/models/Courseware/BlockTypes/Canvas.php:98
+#, fuzzy
 msgid "Whiteboard"
-msgstr ""
+msgstr "Whiteboard"
 
 #: lib/models/Courseware/BlockTypes/Canvas.php:98
 #, fuzzy
@@ -45200,11 +45227,12 @@ msgstr "Background picture:"
 
 #: lib/models/Courseware/BlockTypes/Canvas.php:100
 msgid "Reflexion"
-msgstr ""
+msgstr "Reflection"
 
 #: lib/models/Courseware/BlockTypes/Canvas.php:100
+#, fuzzy
 msgid "Brainstorming"
-msgstr ""
+msgstr "Brainstorming"
 
 #: lib/models/Courseware/BlockTypes/IFrame.php:24
 msgid "IFrame"
@@ -45216,7 +45244,7 @@ msgstr "Embed from a website or file."
 
 #: lib/models/Courseware/BlockTypes/IFrame.php:73
 msgid "klickbar"
-msgstr ""
+msgstr "Clickable"
 
 #: lib/models/Courseware/BlockTypes/IFrame.php:73
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:68
@@ -45236,16 +45264,18 @@ msgid "Evaluation"
 msgstr "Evaluation"
 
 #: lib/models/Courseware/BlockTypes/IFrame.php:76
+#, fuzzy
 msgid "Survey"
-msgstr ""
+msgstr "Survey"
 
 #: lib/models/Courseware/BlockTypes/Text.php:30
 msgid "Erstellen von Inhalten mit dem WYSIWYG-Editor."
 msgstr "Creating content with wysiwyg editor."
 
 #: lib/models/Courseware/BlockTypes/Text.php:150
+#, fuzzy
 msgid "WYSIWIG"
-msgstr ""
+msgstr "WYSIWIG"
 
 #: lib/models/Courseware/BlockTypes/Text.php:150
 #, fuzzy
@@ -45283,11 +45313,11 @@ msgstr "Creates a mnemotechnic verse with icon and frame."
 
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:66
 msgid "Eselsbrücke"
-msgstr ""
+msgstr "Mnemonic"
 
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:66
 msgid "Tipp"
-msgstr ""
+msgstr "Hint"
 
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:67
 #, fuzzy
@@ -45301,7 +45331,7 @@ msgstr "No position"
 
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:67
 msgid "Fazit"
-msgstr ""
+msgstr "Conclusion"
 
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:67
 #, fuzzy
@@ -45329,7 +45359,7 @@ msgstr "Results"
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:69
 #: lib/models/Courseware/BlockTypes/Headline.php:119
 msgid "highlighten"
-msgstr ""
+msgstr "highlight"
 
 #: lib/models/Courseware/BlockTypes/Headline.php:25
 msgid "Blickfang"
@@ -45354,7 +45384,7 @@ msgstr ""
 
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:77
 msgid "Schule"
-msgstr ""
+msgstr "School"
 
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:77
 #, fuzzy
@@ -45373,11 +45403,11 @@ msgstr "CSV"
 
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:78
 msgid "curriculum vitae"
-msgstr ""
+msgstr "CV"
 
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:78
 msgid "Vita"
-msgstr ""
+msgstr "CV"
 
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:78
 #, fuzzy
@@ -45396,11 +45426,11 @@ msgstr "Background picture:"
 
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:79
 msgid "Auslandsaufenthalt"
-msgstr ""
+msgstr "Stay abroad"
 
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:80
 msgid "Zeugnis"
-msgstr ""
+msgstr "Certificate"
 
 #: lib/models/Courseware/BlockTypes/BeforeAfter.php:24
 #: templates/courseware/block_types/before_after.php:2
@@ -45413,7 +45443,7 @@ msgstr "Compares two images with a slider."
 
 #: lib/models/Courseware/BlockTypes/BeforeAfter.php:112
 msgid "Schieberegler"
-msgstr ""
+msgstr "Slider"
 
 #: lib/models/Courseware/BlockTypes/BeforeAfter.php:112
 #, fuzzy
@@ -45432,7 +45462,7 @@ msgstr "Move"
 
 #: lib/models/Courseware/BlockTypes/BeforeAfter.php:113
 msgid "bewegen"
-msgstr ""
+msgstr "move"
 
 #: lib/models/Courseware/BlockTypes/BeforeAfter.php:113
 #, fuzzy
@@ -45441,7 +45471,7 @@ msgstr "Write mail"
 
 #: lib/models/Courseware/BlockTypes/BeforeAfter.php:113
 msgid "Webbild"
-msgstr ""
+msgstr "web image"
 
 #: lib/models/Courseware/BlockTypes/BeforeAfter.php:113
 #, fuzzy
@@ -54242,6 +54272,13 @@ msgid ""
 "Audiodateien, Links) können per Drag and Drop in das Feld gezogen und somit "
 "verlinkt werden. Auch Textformatierungen sind möglich."
 msgstr ""
+"Blubber is a form of communication similar to a forum which allows people to "
+"communicate with each other in real time and which, due to its somewhat more "
+"informal character, looks more like a chat. Unlike the forum, it is not "
+"necessary to reload the pages to see the latest entries (e.g. replies to "
+"your own postings): The page refreshes itself when new entries are made. "
+"Files (e.g. photos, audio files, links) can be dragged and dropped into the "
+"field and thus linked. Text formatting is also possible."
 
 #: lib/modules/Blubber.class.php:123
 msgid ""
@@ -54356,7 +54393,7 @@ msgstr "There are new files."
 
 #: lib/modules/CoreDocuments.class.php:157
 msgid "Austausch von Dateien, Hausaufgabenordner & Terminordner"
-msgstr ""
+msgstr "Exchanging files, homework folders and appointment folders"
 
 #: lib/modules/CoreDocuments.class.php:158
 msgid ""
@@ -56110,7 +56147,7 @@ msgstr "Students"
 
 #: templates/filesystem/root_folder/edit.php:8
 msgid "Uploads sind weiterhin in entsprechenden Unterordnern möglich"
-msgstr ""
+msgstr "Uploads can still be performed in subfolders"
 
 #: templates/filesystem/date_folder/description.php:2
 msgid "Dieser Ordner ist einem Veranstaltungstermin zugeordnet."
