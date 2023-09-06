@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var Deputy[] $my_bosses
+ * @var bool $deputies_edit_about_enabled
+ * @var MyCoursesController $controller
+ */
+?>
 <table class="default" id="my_deputy_bosses">
     <caption>
         <?= _('Personen, deren Standardvertretung ich bin') ?>
@@ -18,10 +25,14 @@
         <? $boss_fullname = $boss->getBossFullname(); ?>
         <tr>
             <td>
-                <?= Avatar::getAvatar($boss->user_id)->getImageTag(Avatar::SMALL, ['title' => $boss_fullname]) ?>
+                <a href="<?= $controller->link_for('profile', ['username' => $boss->boss_username]) ?>">
+                    <?= Avatar::getAvatar($boss->range_id)->getImageTag(Avatar::SMALL, ['title' => $boss_fullname]) ?>
+                </a>
             </td>
             <td>
-                <?= htmlReady($boss_fullname)?>
+                <a href="<?= $controller->link_for('profile', ['username' => $boss->boss_username]) ?>">
+                    <?= htmlReady($boss_fullname)?>
+                </a>
             </td>
             <td class="actions">
             <? if ($boss->edit_about && $deputies_edit_about_enabled) : ?>
