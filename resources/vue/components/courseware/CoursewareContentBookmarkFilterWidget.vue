@@ -1,7 +1,10 @@
 <template>
     <select v-model="bookmarkFilter" class="sidebar-selectlist">
         <option value="all">
-            <translate>alle</translate>
+            {{ $gettext('alle') }}
+        </option>
+        <option value="contents">
+            {{ $gettext('Arbeitsplatz') }}
         </option>
         <option v-for="course in courses" :key="course.id" :value="course.id">
             {{ course.attributes.title }}

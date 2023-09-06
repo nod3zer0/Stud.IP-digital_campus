@@ -14,9 +14,7 @@
                         :style="getChildStyle(bookmark)"
                     ></div>
                     <div class="description">
-                        <header
-                            :class="[bookmark.attributes.purpose !== '' ? 'description-icon-' + bookmark.attributes.purpose : '']"
-                        >
+                        <header>
                             {{ bookmark.attributes.title }}
                         </header>
                         <div class="description-text-wrapper">
@@ -27,7 +25,7 @@
                                 <studip-icon shape="seminar" role="info_alt"/> {{ getCourseName(bookmark.relationships.course.data.id) }}
                             </span>
                             <span v-if="bookmark.relationships.user">
-                                <studip-icon shape="headache" role="info_alt"/> {{ getUserName(bookmark.relationships.user.data.id) }}
+                                <studip-icon shape="content2" role="info_alt"/> {{ $gettext('Arbeitsplatz') }}
                             </span>
                         </footer>
                     </div>
@@ -58,8 +56,13 @@ export default {
                 if (this.bookmarkFilter === 'all') {
                     return this.bookmarks;
                 }
+                if (this.bookmarkFilter === 'contents') {
+                    return this.bookmarks.filter(bookmark => {
+                        return bookmark.relationships.user?.data;
+                    });
+                }
                 return this.bookmarks.filter(bookmark => {
-                    return bookmark.relationships.course.data.id === this.bookmarkFilter;
+                    return bookmark.relationships.course?.data?.id === this.bookmarkFilter;
                 });
             }
             return [];
@@ -81,12 +84,14 @@ export default {
             return user.attributes['formatted-name'];
         },
         getElementUrl(element) {
-            if (element.relationships.course.data) {
-                let cid = element.relationships.course.data.id;
-                return STUDIP.URLHelper.base_url + 'dispatch.php/course/courseware/?cid='+ cid +'#/structural_element/' + element.id;
+            const unitId = element.relationships.unit.data.id;
+
+            if (element.relationships?.course?.data) {
+                const cid = element.relationships.course.data.id;
+                return STUDIP.URLHelper.base_url + 'dispatch.php/course/courseware/courseware/' + unitId + '?cid='+ cid +'#/structural_element/' + element.id;
             }
 
-            return STUDIP.URLHelper.base_url + 'dispatch.php/contents/courseware/courseware#/structural_element/' + element.id;
+            return STUDIP.URLHelper.base_url + 'dispatch.php/contents/courseware/courseware/' + unitId + '#/structural_element/' + element.id;
         },
         getChildStyle(element) {
             let url = element.relationships?.image?.meta?.['download-url'];
