@@ -2,7 +2,7 @@
     <div class="cw-tabs">
         <div role="tablist" class="cw-tabs-nav">
             <button
-                v-for="(tab, index) in sortedTabs"
+                v-for="(tab, index) in tabs"
                 :key="index"
                 :class="[
                     tab.isActive ? 'is-active' : '',
@@ -30,22 +30,17 @@
 export default {
     name: 'courseware-tabs',
     props: {
-        setSelected: { type: Number, required: false, default: 0 }
+        setSelected: { type: Number, required: false, default: 0 },
     },
     data() {
         return {
             tabs: [],
         };
     },
-    computed: {
-        sortedTabs() {
-            return [...this.tabs].sort((a, b) => {
-                return a.index - b.index;
-            });
-        }
-    },
     created() {
-        this.tabs = this.$children;
+        this.tabs = this.$children.sort((a, b) => {
+            return a.index - b.index;
+        });
     },
     methods: {
         selectTab(selectorId) {
@@ -83,11 +78,11 @@ export default {
                     break;
                 case 39: // right
                 case 40: // down
-                if (tablist.lastChild.id !== e.target.id) {
-                    this.selectTab(e.target.nextElementSibling.id);
-                } else {
-                    this.selectTab(tablist.firstChild.id);
-                }
+                    if (tablist.lastChild.id !== e.target.id) {
+                        this.selectTab(e.target.nextElementSibling.id);
+                    } else {
+                        this.selectTab(tablist.firstChild.id);
+                    }
                     break;
                 case 36: //pos1
                     this.selectTab(tablist.firstChild.id);
@@ -101,7 +96,7 @@ export default {
             return this.$refs[id][0];
         },
         getFirstTabButton() {
-            let selectorId = this.sortedTabs[0].selectorId;
+            let selectorId = this.tabs[0].selectorId;
             return this.$refs[selectorId][0];
         },
         getTabButtonByName(name) {
@@ -132,7 +127,7 @@ export default {
     watch: {
         setSelected(tab) {
             this.selectTabByIndex(tab);
-        }
-    }
+        },
+    },
 };
 </script>
