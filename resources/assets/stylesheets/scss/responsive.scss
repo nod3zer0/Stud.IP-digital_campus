@@ -546,6 +546,7 @@ $sidebarOut: -330px;
 
     #sidebar {
         height: 100%;
+        overflow-y: auto;
         position: fixed;
         top: 75px;
         transform: translateX($sidebarOut);
