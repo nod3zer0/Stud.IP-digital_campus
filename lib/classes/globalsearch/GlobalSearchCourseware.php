@@ -39,7 +39,7 @@ class GlobalSearchCourseware extends GlobalSearchModule implements GlobalSearchF
         if (!$search) {
             return null;
         }
-        $payload_search = str_replace('"', '', json_encode($search));
+        $payload_search = addcslashes(substr(json_encode($search), 1, -1), '\\_%');
 
         $query = DBManager::get()->quote("%{$search}%");
         $payload_query = DBManager::get()->quote("%{$payload_search}%");
