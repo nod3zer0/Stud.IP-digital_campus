@@ -37,6 +37,10 @@ class LtiToolModule extends CorePlugin implements StudipModule, SystemPlugin, Pr
      */
     public function getIconNavigation($course_id, $last_visit, $user_id)
     {
+        if ($user_id === 'nobody') {
+            return null;
+        }
+
         $title = CourseConfig::get($course_id)->LTI_TOOL_TITLE;
         $changed = LtiData::countBySQL('course_id = ? AND chdate > ?', [$course_id, $last_visit]);
 

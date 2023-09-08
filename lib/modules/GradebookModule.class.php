@@ -45,6 +45,10 @@ class GradebookModule extends CorePlugin implements SystemPlugin, StudipModule
      */
     public function getIconNavigation($courseId, $lastVisit, $userId)
     {
+        if ($userId === 'nobody') {
+            return null;
+        }
+
         $title = _('Gradebook');
         if ($GLOBALS['perm']->have_studip_perm('tutor', $courseId, $userId)) {
             $changed = Instance::countBySQL(

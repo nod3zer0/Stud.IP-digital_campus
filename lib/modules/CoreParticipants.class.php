@@ -16,6 +16,10 @@ class CoreParticipants extends CorePlugin implements StudipModule
      */
     public function getIconNavigation($course_id, $last_visit, $user_id)
     {
+        if ($user_id === 'nobody') {
+            return null;
+        }
+
         $auto_insert_perm = Config::get()->AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM;
         // show the participants-icon only if the course is not an auto-insert-sem
         if (
@@ -122,6 +126,10 @@ class CoreParticipants extends CorePlugin implements StudipModule
      */
     public function getTabNavigation($course_id)
     {
+        if ($GLOBALS['user']->id === 'nobody') {
+            return [];
+        }
+
         $navigation = new Navigation(_('Teilnehmende'));
         $navigation->setImage(Icon::create('persons', Icon::ROLE_INFO_ALT));
         $navigation->setActiveImage(Icon::create('persons', Icon::ROLE_INFO));
