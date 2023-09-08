@@ -780,30 +780,6 @@ function get_icon_for_mimetype($mime_type)
 }
 */
 
-
-if (!function_exists('preg_replace_callback_array')) {
-    /**
-     * Perform a regular expression search and replace using callbacks
-     * @link http://php.net/manual/en/function.preg-replace-callback-array.php
-     * @param array $patterns_and_callbacks
-     * @param mixed $subject
-     * @param int $limit [optional]
-     * @param int $count [optional]
-     * @return array|NUll  <p>preg_replace_callback_array() returns an array if the subject parameter is an array, or a string otherwise. On errors the return value is NULL</p>
-     * <p>If matches are found, the new subject will be returned, otherwise subject will be returned unchanged.</p>
-     */
-    function preg_replace_callback_array(array $patterns_and_callbacks, $subject, $limit = -1, &$count = null)
-    {
-        $count = 0;
-        foreach ($patterns_and_callbacks as $pattern => &$callback) {
-            $subject = preg_replace_callback($pattern, $callback, $subject, $limit, $partial_count);
-            $count += $partial_count;
-        }
-        return preg_last_error() == PREG_NO_ERROR ? $subject : null;
-    }
-
-}
-
 /**
  * Converts an array of attributes to an html attribute string.
  *
