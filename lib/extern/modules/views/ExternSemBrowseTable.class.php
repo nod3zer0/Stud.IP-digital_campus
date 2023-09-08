@@ -342,7 +342,8 @@ class ExternSemBrowseTable extends SemBrowse {
 
                 if (is_array($sem_ids['Seminar_id'])) {
                     foreach (array_keys($sem_ids['Seminar_id']) as $seminar_id) {
-                        $sem_name = key($sem_data[$seminar_id]["Name"]);
+                        $sem_object = Seminar::GetInstance($seminar_id);
+                        $sem_name = $sem_object->name;
                         $sem_number_start = key($sem_data[$seminar_id]["sem_number"]);
                         $sem_number_end = key($sem_data[$seminar_id]["sem_number_end"]);
                         if ($sem_number_start != $sem_number_end){
@@ -351,7 +352,7 @@ class ExternSemBrowseTable extends SemBrowse {
                         }
 
                         //create Turnus field
-                        $data["content"]["zeiten"] = Seminar::GetInstance($seminar_id)->getDatesExport(['show_room' => true]);
+                        $data["content"]["zeiten"] = $sem_object->getDatesExport(['show_room' => true]);
                         //Shorten, if string too long
                         if (mb_strlen($data["content"]["zeiten"]) >70) {
                             $data["content"]["zeiten"] = mb_substr($data["content"]["zeiten"], 0,
@@ -390,7 +391,7 @@ class ExternSemBrowseTable extends SemBrowse {
                                 "content" => htmlReady($sem_name)]);
                         $data["content"]["VeranstaltungsNummer"] =
                                 htmlReady(key($sem_data[$seminar_id]["VeranstaltungsNummer"]));
-                        $data["content"]["Untertitel"] = htmlReady(key($sem_data[$seminar_id]["Untertitel"]));
+                        $data["content"]["Untertitel"] = htmlReady($sem_object->untertitel);
 
                         $aliases_sem_type = $this->module->config->getValue("ReplaceTextSemType",
                                 "class_" . $SEM_TYPE[key($sem_data[$seminar_id]["status"])]['class']);
@@ -404,9 +405,9 @@ class ExternSemBrowseTable extends SemBrowse {
                                     ." (". $SEM_CLASS[$SEM_TYPE[key($sem_data[$seminar_id]["status"])]["class"]]["name"].")");
                         }
 
-                        $data["content"]["Ort"] = Seminar::getInstance($seminar_id)->getDatesTemplate('dates/seminar_export_location');
+                        $data["content"]["Ort"] = $sem_object->getDatesTemplate('dates/seminar_export_location');
                         if ($sem_data[$seminar_id]["art"])
-                            $data["content"]["art"] = htmlReady(key($sem_data[$seminar_id]["art"]));
+                            $data["content"]["art"] = htmlReady($sem_object->art);
                         else
                             $data["content"]["art"] = "";
 

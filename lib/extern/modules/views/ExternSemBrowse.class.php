@@ -448,7 +448,8 @@ class ExternSemBrowse extends SemBrowse {
         if (!key($sem_data[$seminar_id]['parent_course']) || !$sem_data[key($sem_data[$seminar_id]['parent_course'])] || $child) {
             extract($table_data);
 
-            $sem_name = key($sem_data[$seminar_id]["Name"]);
+            $sem_object = Seminar::GetInstance($seminar_id);
+            $sem_name = $sem_object->name;
             $sem_number_start = key($sem_data[$seminar_id]["sem_number"]);
             $sem_number_end = key($sem_data[$seminar_id]["sem_number_end"]);
             if ($sem_number_start != $sem_number_end) {
@@ -484,7 +485,7 @@ class ExternSemBrowse extends SemBrowse {
             }
             echo "</td></tr>\n";
             //create Turnus field
-            $temp_turnus_string = Seminar::GetInstance($seminar_id)->getDatesExport(['show_room' => true]);
+            $temp_turnus_string = $sem_object->getDatesExport(['show_room' => true]);
             //Shorten, if string too long (add link for details.php)
             if (mb_strlen($temp_turnus_string) > 70) {
                 $temp_turnus_string = mb_substr($temp_turnus_string, 0,

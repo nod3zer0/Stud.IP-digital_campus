@@ -543,14 +543,15 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             }
         }
 
+        $user_obj = User::find($this->user_id);
         if (Visibility::verify('lebenslauf', $this->user_id)) {
-            $content['PERSONDETAILS']['CV'] = ExternModule::ExtFormatReady($row['lebenslauf']);
+            $content['PERSONDETAILS']['CV'] = ExternModule::ExtFormatReady($user_obj->lebenslauf);
         }
         if (Visibility::verify('schwerp', $this->user_id)) {
-            $content['PERSONDETAILS']['RESEARCH-INTERESTS'] = ExternModule::ExtFormatReady($row['schwerp']);
+            $content['PERSONDETAILS']['RESEARCH-INTERESTS'] = ExternModule::ExtFormatReady($user_obj->schwerp);
         }
         if (Visibility::verify('publi', $this->user_id)) {
-            $content['PERSONDETAILS']['PUBLICATIONS'] = ExternModule::ExtFormatReady($row['publi']);
+            $content['PERSONDETAILS']['PUBLICATIONS'] = ExternModule::ExtFormatReady($user_obj->publi);
         }
 
         $content['PERSONDETAILS']['LECTURES'] = $this->elements['TemplateLectures']->toString(['content' => $this->getContentLectures(), 'subpart' => 'LECTURES']);
@@ -733,10 +734,12 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 }
                 $k = 0;
                 foreach ($result as $row) {
-                    $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['TITLE'] = ExternModule::ExtHtmlReady($row['Name']);
+                    $sem_object = Seminar::GetInstance($row['Seminar_id']);
+
+                    $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['TITLE'] = ExternModule::ExtHtmlReady($sem_object->name);
                     $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['LECTUREDETAILS-HREF'] = $this->elements['LinkInternLecturedetails']->createUrl(['link_args' => 'seminar_id=' . $row['Seminar_id']]);
                     if (trim($row['Untertitel']) != '') {
-                        $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['SUBTITLE'] = ExternModule::ExtHtmlReady($row['Untertitel']);
+                        $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['SUBTITLE'] = ExternModule::ExtHtmlReady($sem_object->untertitel);
                     }
                     if (trim($row['VeranstaltungsNummer']) != '') {
                         $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['NUMBER'] = ExternModule::ExtHtmlReady($row['VeranstaltungsNummer']);

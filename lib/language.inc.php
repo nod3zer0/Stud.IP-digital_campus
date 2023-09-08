@@ -97,6 +97,7 @@ function init_i18n($_language) {
     global $_language_domain, $INSTALLED_LANGUAGES;
     $_language_path = null;
     if (isset($_language_domain) && isset($_language)) {
+        $_SESSION['_language'] = $_language;
         $_language_path = $INSTALLED_LANGUAGES[$_language]["path"];
         setLocaleEnv($_language, $_language_domain);
     }

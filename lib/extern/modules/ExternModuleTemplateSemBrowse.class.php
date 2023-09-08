@@ -786,13 +786,15 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                         $k = 0;
                         $semester = Semester::findAllVisible();
                         foreach (array_keys($sem_ids['Seminar_id'])  as $seminar_id) {
+                            $sem_object = Seminar::GetInstance($seminar_id);
+
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSE_ID'] = $seminar_id;
-                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['TITLE'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['Name']));
+                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['TITLE'] = ExternModule::ExtHtmlReady($sem_object->name);
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSE-NO'] = $k + 1;
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSEDETAILS-HREF'] = $this->elements['LinkInternLecturedetails']->createUrl(['link_args' => 'seminar_id=' . $seminar_id]);
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSE_NUMBER'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['VeranstaltungsNummer']));
 
-                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['DESCRIPTION'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['Beschreibung']), true);
+                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['DESCRIPTION'] = ExternModule::ExtHtmlReady($sem_object->beschreibung, true);
 
                             $sem_number_start = key($sem_data[$seminar_id]["sem_number"]);
                             $sem_number_end = key($sem_data[$seminar_id]["sem_number_end"]);
@@ -809,13 +811,13 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                                 $content['RESULT']['GROUP'][$j]['COURSE'][$k]['NO_DATES_TEXT'] = [];
                             }
 
-                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['SUBTITLE'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['Untertitel']));
+                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['SUBTITLE'] = ExternModule::ExtHtmlReady($sem_object->untertitel);
                             $aliases_sem_type = $this->config->getValue('ReplaceTextSemType', 'class_' . $SEM_TYPE[key($sem_data[$seminar_id]['status'])]['class']);
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['SEMTYPE-SUBSTITUTE'] = $aliases_sem_type[$this->sem_types_position[key($sem_data[$seminar_id]['status'])] - 1];
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['SEMTYPE'] = ExternModule::ExtHtmlReady($SEM_TYPE[key($sem_data[$seminar_id]['status'])]['name']
                                         .' ('. $SEM_CLASS[$SEM_TYPE[key($sem_data[$seminar_id]['status'])]['class']]['name'] . ')');
-                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['LOCATION'] = ExternModule::ExtHtmlReady(trim(key($sem_data[$seminar_id]['Ort'])));
-                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['FORM'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['art']));
+                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['LOCATION'] = ExternModule::ExtHtmlReady(trim($sem_object->ort));
+                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['FORM'] = ExternModule::ExtHtmlReady($sem_object->art);
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['ECTS'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['ects']));
 
                             // generic data fields
@@ -1384,7 +1386,8 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                 if (is_array($sem_ids['Seminar_id'])) {
                     $semester = Semester::findAllVisible();
                     foreach (array_keys($sem_ids['Seminar_id']) as $seminar_id) {
-                        $sem_name = key($sem_data[$seminar_id]["Name"]);
+                        $seminar_obj = new Seminar($seminar_id);
+                        $sem_name = $seminar_obj->name;
                         $seminar_number = key($sem_data[$seminar_id]['VeranstaltungsNummer']);
                         $sem_number_start = key($sem_data[$seminar_id]["sem_number"]);
                         $sem_number_end = key($sem_data[$seminar_id]["sem_number_end"]);
@@ -1395,7 +1398,6 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                             $sem_name .= ' (' . $semester[$sem_number_start]['name'] . ")";
                         }
                         //create Turnus field
-                        $seminar_obj = new Seminar($seminar_id);
                         // is this sem a studygroup?
                         $studygroup_mode = SeminarCategories::GetByTypeId($seminar_obj->getStatus())->studygroup_mode;
                         if ($studygroup_mode) {

@@ -447,7 +447,8 @@ class ExternSemBrowseTemplate extends SemBrowse {
                 if (is_array($sem_ids['Seminar_id'])) {
                     $j = 0;
                     foreach(array_keys($sem_ids['Seminar_id']) as $seminar_id) {
-                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['TITLE'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['Name']));
+                        $sem_object = Seminar::GetInstance($seminar_id);
+                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['TITLE'] = ExternModule::ExtHtmlReady($sem_object->name);
 
                         $sem_number_start = key($sem_data[$seminar_id]['sem_number']);
                         $sem_number_end = key($sem_data[$seminar_id]['sem_number_end']);
@@ -459,7 +460,7 @@ class ExternSemBrowseTemplate extends SemBrowse {
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMESTER'] = $sem_semester;
 
                         // create turnus field
-                        $sem_turnus = Seminar::getInstance($seminar_id)->getDatesExport(['show_room' => true]);
+                        $sem_turnus = $sem_object->getDatesExport(['show_room' => true]);
 
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['CYCLE'] = ExternModule::ExtHtmlReady($sem_turnus);
 
@@ -491,13 +492,13 @@ class ExternSemBrowseTemplate extends SemBrowse {
 
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['LECTUREDETAILS-HREF'] = $this->module->elements['LinkInternLecturedetails']->createUrl(['link_args' => 'seminar_id=' . $seminar_id]);
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['NUMBER'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['VeranstaltungsNummer']));
-                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SUBTITLE'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['Untertitel']));
+                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SUBTITLE'] = ExternModule::ExtHtmlReady($sem_object->untertitel);
                         $aliases_sem_type = $this->module->config->getValue('ReplaceTextSemType', 'class_' . $SEM_TYPE[key($sem_data[$seminar_id]['status'])]['class']);
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMTYPE-SUBSTITUTE'] = $aliases_sem_type[$this->sem_types_position[key($sem_data[$seminar_id]['status'])] - 1];
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMTYPE'] = ExternModule::ExtHtmlReady($SEM_TYPE[key($sem_data[$seminar_id]['status'])]['name']
                                     .' ('. $SEM_CLASS[$SEM_TYPE[key($sem_data[$seminar_id]['status'])]['class']]['name'] . ')');
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['ROOM'] = ExternModule::ExtHtmlReady(Seminar::getInstance($seminar_id)->getDatesTemplate('dates/seminar_export_location'));
-                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['FORM'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['art']));
+                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['FORM'] = ExternModule::ExtHtmlReady($sem_object->art);
 
                         // generic data fields
                         if (is_array($generic_datafields)) {

@@ -140,6 +140,8 @@ if ($generic_datafields = $this->config->getValue("Main", "genericdatafields")) 
 //  $datafields = $datafields_obj->getLocalFields($row['user_id']);
 }
 
+$user_obj = User::find($row['user_id']);
+
 $order = $this->config->getValue("Main", "order");
 foreach ($order as $position) {
 
@@ -160,7 +162,7 @@ foreach ($order as $position) {
                     echo "<tr" . $this->config->getAttributes("TableParagraphText", "tr") . ">";
                     echo "<td" . $this->config->getAttributes("TableParagraphText", "td") . ">";
                     echo "$text_div<font" . $this->config->getAttributes("TableParagraphText", "font") . ">\n";
-                    echo formatReady($row[$data_field], TRUE, TRUE);
+                    echo formatReady($user_obj->$data_field, TRUE, TRUE);
                     echo "</font>$text_div_end</td></tr>\n</table>\n</td></tr>\n";
                 }
                 break;

@@ -141,11 +141,12 @@ class ExternModuleLecturedetails extends ExternModule {
         $visible = $this->config->getValue("Main", "visible");
         $j = -1;
         if ($row !== false) {
+            $sem_object = Seminar::getInstance($this->seminar_id);
 
-            $data["name"] = htmlReady($row['Name']);
+            $data["name"] = htmlReady($sem_object->name);
 
             if ($visible[++$j] && $row['Untertitel'])
-                $data["subtitle"] = htmlReady($row['Untertitel']);
+                $data["subtitle"] = htmlReady($sem_object->untertitel);
 
             if ($visible[++$j]) {
                 if (!$name_sql = $this->config->getValue("Main", "nameformat"))
@@ -170,7 +171,7 @@ class ExternModuleLecturedetails extends ExternModule {
             }
 
             if ($visible[++$j] && $row['art'])
-                $data["art"] = htmlReady($row['art']);
+                $data["art"] = htmlReady($sem_object->art);
 
             if ($visible[++$j]) {
                 // reorganize the $SEM_TYPE-array
@@ -193,20 +194,20 @@ class ExternModuleLecturedetails extends ExternModule {
             }
 
             if ($visible[++$j] && $row['Beschreibung'])
-                $data["description"] = formatLinks($row['Beschreibung']);
+                $data["description"] = formatLinks($sem_object->beschreibung);
 
             if ($visible[++$j])
-                $data["location"] = htmlReady(Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location'));
+                $data["location"] = htmlReady($sem_object->getDatesTemplate('dates/seminar_export_location'));
 
             if ($visible[++$j])
                 $data["semester"] = get_semester($this->seminar_id);
 
             if ($visible[++$j]) {
-                $data["time"] = htmlReady(Seminar::getInstance($this->seminar_id)->getDatesExport());
+                $data["time"] = htmlReady($sem_object->getDatesExport());
                 if ($first_app = vorbesprechung($this->seminar_id, 'export')) {
                     $data["time"] .= "<br>" . $this->config->getValue("Main", "aliaspredisc") . htmlReady($first_app);
                 }
-                if ($begin = Seminar::getInstance($this->seminar_id)->getFirstDate('export')) {
+                if ($begin = $sem_object->getFirstDate('export')) {
                     $data["time"] .= "<br>" . $this->config->getValue("Main", "aliasfirstmeeting") . htmlReady($begin);
                 }
             }
@@ -215,16 +216,16 @@ class ExternModuleLecturedetails extends ExternModule {
                 $data["number"] = htmlReady($row['VeranstaltungsNummer']);
 
             if ($visible[++$j] && $row['teilnehmer'])
-                $data["teilnehmer"] = htmlReady($row['teilnehmer']);
+                $data["teilnehmer"] = htmlReady($sem_object->teilnehmer);
 
             if ($visible[++$j] && $row['vorrausetzungen'])
-                $data["requirements"] = htmlReady($row['vorrausetzungen']);
+                $data["requirements"] = htmlReady($sem_object->vorrausetzungen);
 
             if ($visible[++$j] && $row['lernorga'])
-                $data["lernorga"] = htmlReady($row['lernorga']);
+                $data["lernorga"] = htmlReady($sem_object->lernorga);
 
             if ($visible[++$j] && $row['leistungsnachweis'])
-                $data["leistung"] = htmlReady($row['leistungsnachweis']);
+                $data["leistung"] = htmlReady($sem_object->leistungsnachweis);
 
             if ($visible[++$j]) {
                 $range_path_level = $this->config->getValue("Main", "rangepathlevel");
