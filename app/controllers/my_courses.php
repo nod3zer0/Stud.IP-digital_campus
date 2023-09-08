@@ -196,12 +196,12 @@ class MyCoursesController extends AuthenticatedController
             $add_query  = "LEFT JOIN seminar_user as su1 ON (su1.seminar_id=seminare.Seminar_id AND su1.status='dozent')";
         } elseif ($group_field === 'mvv') {
             $add_fields = ', mm.`modul_id` AS mvv';
-            $add_query  = "LEFT JOIN `mvv_lvgruppe_seminar` AS mls ON (mls.`seminar_id` = seminare.`Seminar_id`) 
+            $add_query  = "LEFT JOIN `mvv_lvgruppe_seminar` AS mls ON (mls.`seminar_id` = seminare.`Seminar_id`)
                            LEFT JOIN `mvv_lvgruppe` AS ml ON (mls.`lvgruppe_id` = ml.`lvgruppe_id`)
                            LEFT JOIN `mvv_lvgruppe_modulteil` AS mlm on(mls.`lvgruppe_id` = mlm.`lvgruppe_id`)
                            LEFT JOIN `mvv_modulteil` AS mmt ON (mlm.`modulteil_id` = mmt.`modulteil_id`)
                            LEFT JOIN `mvv_modul` AS mm ON (mmt.`modul_id` = mm.`modul_id`)";
-                              
+
         }
 
         $dbv = DbView::getView('sem_tree');
@@ -401,7 +401,10 @@ class MyCoursesController extends AuthenticatedController
 
         // Ensure last teacher cannot leave course
         $course = Course::find($course_id);
-        if ($course->members->findOneBy('user_id', $GLOBALS['user']->id)->status === 'dozent'
+        $teacher = $course->members->findOneBy('user_id', User::findCurrent()->id);
+        if (
+            $teacher
+            && $teacher->status === 'dozent'
             && count($course->getMembersWithStatus('dozent')) === 1
         ) {
             PageLayout::postError(sprintf(

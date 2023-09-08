@@ -161,7 +161,8 @@ class messaging
         $msg      = Message::find($message_id);
         $receiver = User::find($rec_user_id);
         $to       = $receiver->Email;
-
+        $reply_to = '';
+        $snd_fullname = '';
         // do not try to send mails to users without a mail address
         if (!$to) {
             return;
