@@ -77,7 +77,7 @@ class ThreadsIndex extends JsonApiController
     private function getPublicThreads(\User $observer)
     {
         return $this->paginateThreads(
-            $this->upgradeAndFilterThreads($observer, \BlubberThread::findBySQL('context_type = "public"'))
+            $this->upgradeAndFilterThreads($observer, \BlubberThread::findBySQL("context_type = 'public'"))
         );
     }
 

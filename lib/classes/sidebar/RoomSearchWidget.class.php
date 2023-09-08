@@ -22,7 +22,7 @@ class RoomSearchWidget extends SidebarWidget
             ]
         );
 
-        $resource_categories = ResourceCategory::findBySQL('`class_name` ="Room" ORDER by `name`');
+        $resource_categories = ResourceCategory::findBySQL("class_name = 'Room' ORDER by name");
         $categories = [
             '' => _('Alle Kategorien')
         ];
