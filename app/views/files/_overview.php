@@ -1,3 +1,19 @@
+<?php
+/**
+ * @var FilesController $controller
+ * @var array $vue_topfolder
+ * @var bool $show_download_column
+ * @var array $all_files
+ * @var int $all_files_c
+ * @var array $uploaded_files
+ * @var int $uploaded_files_c
+ * @var array $public_files
+ * @var int $public_files_c
+ * @var array $uploaded_unlic_files
+ * @var int   $uploaded_unlic_files_c
+ * @var bool|null $no_files
+ */
+?>
 <form class="default" method="get" action="<?= $controller->link_for('files_dashboard/search') ?>">
     <?= $this->render_partial('files_dashboard/_input-group-search') ?>
 </form>
@@ -12,9 +28,10 @@
         'href' => $controller->link_for('files/overview', ['view' => 'all_files'])
     ];
     ?>
-    <div class="vue-file-table"
-         data-topfolder="<?= htmlReady(json_encode($vue_topfolder)) ?>"
-         data-files="<?= htmlReady(json_encode($all_files)) ?>">
+    <form method="post"
+          class="vue-file-table"
+          data-topfolder="<?= htmlReady(json_encode($vue_topfolder)) ?>"
+          data-files="<?= htmlReady(json_encode($all_files)) ?>">
         <?= CSRFProtection::tokenTag() ?>
         <files-table :showdownloads="<?= $show_download_column ? "true" : "false" ?>"
                      :files="files"
@@ -24,7 +41,7 @@
                      :show_bulk_actions="false"
                      :tfoot_link="<?= htmlReady(json_encode($tfoot_link)) ?>"
         ></files-table>
-    </div>
+    </form>
 <? endif ?>
 
 <? if ($uploaded_files) : ?>
@@ -37,9 +54,10 @@
         'href' => $controller->link_for('files/overview', ['view' => 'my_uploaded_files'])
     ];
     ?>
-    <div class="vue-file-table"
-         data-topfolder="<?= htmlReady(json_encode($vue_topfolder)) ?>"
-         data-files="<?= htmlReady(json_encode($uploaded_files)) ?>">
+    <form method="post"
+          class="vue-file-table"
+          data-topfolder="<?= htmlReady(json_encode($vue_topfolder)) ?>"
+          data-files="<?= htmlReady(json_encode($uploaded_files)) ?>">
         <?= CSRFProtection::tokenTag() ?>
         <files-table :showdownloads="<?= $show_download_column ? "true" : "false" ?>"
                      :files="files"
@@ -49,7 +67,7 @@
                      :show_bulk_actions="false"
                      :tfoot_link="<?= htmlReady(json_encode($tfoot_link)) ?>"
         ></files-table>
-    </div>
+    </form>
 <? endif ?>
 
 <? if ($public_files) : ?>
@@ -62,9 +80,10 @@
         'href' => $controller->link_for('files/overview', ['view' => 'my_public_files'])
     ];
     ?>
-    <div class="vue-file-table"
-         data-topfolder="<?= htmlReady(json_encode($vue_topfolder)) ?>"
-         data-files="<?= htmlReady(json_encode($public_files)) ?>">
+    <form method="post"
+          class="vue-file-table"
+          data-topfolder="<?= htmlReady(json_encode($vue_topfolder)) ?>"
+          data-files="<?= htmlReady(json_encode($public_files)) ?>">
         <?= CSRFProtection::tokenTag() ?>
         <files-table :showdownloads="<?= $show_download_column ? "true" : "false" ?>"
                      :files="files"
@@ -74,7 +93,7 @@
                      :show_bulk_actions="false"
                      :tfoot_link="<?= htmlReady(json_encode($tfoot_link)) ?>"
         ></files-table>
-    </div>
+    </form>
 <? endif ?>
 
 <? if ($uploaded_unlic_files) : ?>
@@ -87,9 +106,10 @@
         'href' => $controller->link_for('files/overview', ['view' => 'my_uploaded_files_unknown_license'])
     ];
     ?>
-    <div class="vue-file-table"
-         data-topfolder="<?= htmlReady(json_encode($vue_topfolder)) ?>"
-         data-files="<?= htmlReady(json_encode($uploaded_unlic_files)) ?>">
+    <form method="post"
+          class="vue-file-table"
+          data-topfolder="<?= htmlReady(json_encode($vue_topfolder)) ?>"
+          data-files="<?= htmlReady(json_encode($uploaded_unlic_files)) ?>">
         <?= CSRFProtection::tokenTag() ?>
         <files-table :showdownloads="<?= $show_download_column ? "true" : "false" ?>"
                      :files="files"
@@ -99,7 +119,7 @@
                      :show_bulk_actions="false"
                      :tfoot_link="<?= htmlReady(json_encode($tfoot_link)) ?>"
         ></files-table>
-    </div>
+    </form>
 <? endif ?>
 
 <? if (!empty($no_files)) : ?>
