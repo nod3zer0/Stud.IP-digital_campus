@@ -14,7 +14,8 @@
                     <th>
                         <input type="checkbox" class="proxy"
                                data-proxyfor="input[name='building_ids[]']"
-                               data-activates="form.building-list button.bulk-action">
+                               data-activates="form.building-list button.bulk-action"
+                               aria-label="<?= _('Alle Gebäude auswählen') ?>">
                     </th>
                     <th><?= _('Name') ?></th>
                     <th><?= _('Nummer') ?></th>

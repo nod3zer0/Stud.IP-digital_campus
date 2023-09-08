@@ -84,6 +84,7 @@
         <td>
             <input type="checkbox" class="select-resource"
                    value="<?= htmlReady($resource->id) ?>"
+                   aria-label="<?= sprintf(_('%s auswählen'), htmlReady($show_full_name ? $resource->getFullName() : $resource->name)) ?>"
                 <?= arrayToHtmlAttributes($checkbox_data) ?>>
         </td>
     <? endif ?>
