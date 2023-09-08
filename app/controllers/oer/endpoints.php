@@ -132,39 +132,41 @@ class Oer_EndpointsController extends StudipController
         }
 
         $output = ['results' => []];
-        foreach ($this->materialien as $material) {
-            $data = [];
-            $data['host'] = [
-                'name' => $material->host ? $material->host['name'] : $host['name'],
-                'url' => $material->host ? $material->host['url'] : $host['url'],
-                'public_key' => $material->host ? $material->host['public_key'] : $host['public_key']
-            ];
-            $data['data'] = $material->toArray();
-            unset($data['data']['material_id']);
-            unset($data['data']['uri_hash']);
-            $data['users'] = [];
-            foreach ($material->users as $userdata) {
-                $user = $userdata['external_contact']
-                    ? ExternalUser::find($userdata['user_id'])
-                    : User::find($userdata['user_id']);
-                $data['users'][] = [
-                    'user_id' => $userdata['external_contact']
-                        ? $user->foreign_id
-                        : $userdata['user_id'],
-                    'name' => $userdata['external_contact']
-                        ? $user['name']
-                        : get_fullname($userdata['user_id']),
-                    'avatar' => $userdata['external_contact']
-                        ? $user->avatar_url
-                        : Avatar::getAvatar($userdata['user_id'])->getURL(Avatar::NORMAL),
-                    'host_url' => $material->host ? $material->host['url'] : $host['url']
+        if (isset($this->materialien)) {
+            foreach ($this->materialien as $material) {
+                $data = [];
+                $data['host'] = [
+                    'name' => $material->host ? $material->host['name'] : $host['name'],
+                    'url' => $material->host ? $material->host['url'] : $host['url'],
+                    'public_key' => $material->host ? $material->host['public_key'] : $host['public_key']
                 ];
+                $data['data'] = $material->toArray();
+                unset($data['data']['material_id']);
+                unset($data['data']['uri_hash']);
+                $data['users'] = [];
+                foreach ($material->users as $userdata) {
+                    $user = $userdata['external_contact']
+                        ? ExternalUser::find($userdata['user_id'])
+                        : User::find($userdata['user_id']);
+                    $data['users'][] = [
+                        'user_id' => $userdata['external_contact']
+                            ? $user->foreign_id
+                            : $userdata['user_id'],
+                        'name' => $userdata['external_contact']
+                            ? $user['name']
+                            : get_fullname($userdata['user_id']),
+                        'avatar' => $userdata['external_contact']
+                            ? $user->avatar_url
+                            : Avatar::getAvatar($userdata['user_id'])->getURL(Avatar::NORMAL),
+                        'host_url' => $material->host ? $material->host['url'] : $host['url']
+                    ];
+                }
+                $data['topics'] = [];
+                foreach ($material->getTopics() as $topic) {
+                    $data['topics'][] = $topic['name'];
+                }
+                $output['results'][] = $data;
             }
-            $data['topics'] = [];
-            foreach ($material->getTopics() as $topic) {
-                $data['topics'][] = $topic['name'];
-            }
-            $output['results'][] = $data;
         }
         $this->render_json($output);
     }
