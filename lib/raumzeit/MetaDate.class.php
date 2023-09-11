@@ -551,15 +551,16 @@ class MetaDate
             }
             if ($passed && ($sem_end >= $val['vorles_ende']) && ($startAfterTimeStamp <= $val['ende'])) {
                 // correction calculation, if the semester does not start on monday
-                $dow = date("w", $val['vorles_beginn']);
-                if ($dow <= 5)
-                    $corr = ($dow - 1) * -1;
-                elseif ($dow == 6)
-                    $corr = 2;
-                elseif ($dow == 0)
+                $dow = (int)date('w', $val['vorles_beginn']);
+                if ($dow === 0) {
                     $corr = 1;
-                else
+                } elseif ($dow <= 5) {
+                    $corr = ($dow - 1) * -1;
+                } elseif ($dow == 6) {
+                    $corr = 2;
+                } else {
                     $corr = 0;
+                }
                 $ret[$val['semester_id']] = $this->getVirtualSingleDatesForSemester($metadate_id, $val['vorles_beginn'], $val['vorles_ende'], $startAfterTimeStamp, $corr);
             }
         }
