@@ -44,7 +44,7 @@
 <th><?= _('Name') ?></th>
 <td><?= htmlReady($course['name']) ?></td>
 </tr>
-<? if ($course['untertitel']): ?>
+<? if (!empty($course['untertitel'])): ?>
 <tr>
 <th><?= _('Untertitel') ?></th>
 <td><?= htmlReady($course['untertitel']) ?></td>
@@ -77,7 +77,7 @@
 </table>
 <br><br>
 
-<? if ($course['children']) : ?>
+<? if (!empty($course['children'])) : ?>
     <?= $this->render_partial('my_courses/_exportcourse', [
         'course_collection' => $course['children'],
         'children'          => true,

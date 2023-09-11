@@ -17,7 +17,7 @@
         </div>
         <?= CSRFProtection::tokenTag() ?>
     </form>
-<? elseif ($priocourses): ?>
+<? elseif (!empty($priocourses)): ?>
     <form name="claim_admission" action="<?= $controller->action_link("claim/{$course_id}") ?>" method="post" class="default">
     <? if (is_array($priocourses)): ?>
         <?= $this->render_partial('course/enrolment/_priocourses.php') ?>

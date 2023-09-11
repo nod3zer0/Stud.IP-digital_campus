@@ -74,7 +74,8 @@ class Course_EnrolmentController extends AuthenticatedController
             $this->relocate(URLHelper::getLink('dispatch.php/course/details', ['sem_id' => $this->course_id]));
             return;
         }
-
+        $this->admission_error = '';
+        $this->admission_form = '';
         $this->course = Course::find($this->course_id);
 
         try {
