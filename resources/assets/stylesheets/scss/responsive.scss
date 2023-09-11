@@ -464,17 +464,7 @@ $sidebarOut: -330px;
 
         &.cw-ribbon {
             .cw-ribbon-tools {
-                width: 540px;
-
-                .cw-tabs-nav {
-                    height: 52px;
-
-                    button {
-                        &.is-active::after {
-                            margin-top: 10px;
-                        }
-                    }
-                }
+                max-width: calc(100% - 2px);
             }
         }
 
@@ -528,12 +518,6 @@ $sidebarOut: -330px;
     }
 
     #responsive-contentbar {
-        &.cw-ribbon {
-            .cw-ribbon-tools {
-                top: 40px;
-            }
-        }
-
         &.cw-ribbon-sticky {
             position: unset;
             width: calc(100vw - 30px);
