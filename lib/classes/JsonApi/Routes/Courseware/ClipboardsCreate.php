@@ -29,13 +29,14 @@ class ClipboardsCreate extends JsonApiController
     {
         $json = $this->validate($request);
         $user = $this->getUser($request);
-        if (!Authority::canCreateClipboard($user)) {
-            throw new AuthorizationFailedException();
-        }
         $object = $this->getObject($json);
         if (!$object) {
             throw new RecordNotFoundException();
         }
+        if (!Authority::canCreateClipboard($user, $object)) {
+            throw new AuthorizationFailedException();
+        }
+
         $clipboard = $this->createClipboard($user, $json, $object);
 
         return $this->getCreatedResponse($clipboard);

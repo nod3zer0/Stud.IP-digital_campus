@@ -529,9 +529,15 @@ class Authority
         return $GLOBALS['perm']->have_perm('root', $user->id);
     }
 
-    public static function canCreateClipboard(User $user): bool
+    public static function canCreateClipboard(User $user, $resource): bool
     {
-        return true;
+        if ($resource instanceof StructuralElement) {
+            $structural_element = $resource;
+        } else {
+            $structural_element = $resource->getStructuralElement();
+        }
+        
+        return $structural_element->canEdit($user);
     }
 
     public static function canUpdateClipboard(User $user, Clipboard $resource): bool
