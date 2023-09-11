@@ -90,8 +90,8 @@
                                 class="cw-radioset-box"
                                 :class="[style.colspan === changeStyle ? 'selected' : '']"
                                 >
-                                    <input type="radio" :id="'style-' + style.colspan" :value="style.colspan" v-model="changeStyle" name="container-style"/>
-                                    <label :for="'style-' + style.colspan">
+                                    <input type="radio" :id="'change-style-' + style.colspan" :value="style.colspan" v-model="changeStyle" name="change-container-style"/>
+                                    <label :for="'change-style-' + style.colspan">
                                         <div class="label-icon" :class="[style.colspan, style.colspan === changeStyle ? 'selected' : '']"></div>
                                         <p>{{ style.title }}</p>
                                     </label>
