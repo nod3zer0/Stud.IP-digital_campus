@@ -30,7 +30,7 @@
                         </select>
                     </label>
                     <div class="label-text">
-                       {{ $gettext('>Beschreibung') }}
+                       {{ $gettext('Beschreibung') }}
                     </div>
                     <studip-wysiwyg v-model="currentData.description"></studip-wysiwyg>
                 </form>
