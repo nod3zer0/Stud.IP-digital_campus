@@ -14,7 +14,7 @@
                     <div class="cw-block-biography-type" :class="'cw-block-biography-goals-type-' + currentData.type">
                         <h2>{{ goalTypeName }}</h2>
                     </div>
-                    <div class="cw-block-biography-details formatted-content" v-html="currentData.description">
+                    <div class="cw-block-biography-details formatted-content ck-content" v-html="currentData.description">
                     </div>
                 </div>
             </template>

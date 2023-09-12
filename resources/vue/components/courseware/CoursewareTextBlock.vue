@@ -11,7 +11,7 @@
             @closeEdit="initCurrent"
         >
             <template #content>
-                <section class="formatted-content" v-html="currentText" ref="content"></section>
+                <section class="formatted-content ck-content" v-html="currentText" ref="content"></section>
             </template>
             <template v-if="canEdit" #edit>
                 <ckeditor :editor="editor" v-model="currentText" :config="editorConfig" @ready="onReady"></ckeditor>

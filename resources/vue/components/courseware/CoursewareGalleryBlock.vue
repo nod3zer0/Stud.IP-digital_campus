@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div v-if="currentLayout === 'grid'" class="cw-block-gallery-content">
-                        <div class="cw-block-gallery-grid formatted-content">
+                        <div class="cw-block-gallery-grid">
                             <figure
                                 v-for="image in files"
                                 :key="image.id"

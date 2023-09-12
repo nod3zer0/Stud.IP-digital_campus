@@ -31,7 +31,7 @@
                         </h4>
                         <div>
                             <h4>{{ $gettext('Beschreibung') }}:</h4>
-                            <p v-html="currentData.description"></p>
+                            <div class="formatted-content ck-content" v-html="currentData.description"></div>
                         </div>
                     </div>
                 </div>
