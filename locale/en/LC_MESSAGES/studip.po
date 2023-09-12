@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-04 14:31+0200\n"
-"PO-Revision-Date: 2023-09-12 11:41+0000\n"
+"PO-Revision-Date: 2023-09-12 12:11+0000\n"
 "Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
 "stud-ip-main/en/>\n"
@@ -16602,6 +16602,7 @@ msgid "Angaben zur gefundenen Barriere"
 msgstr "Information about accessibility barrier found"
 
 #: app/controllers/accessibility/forms.php:36
+#, fuzzy
 msgid "Um welche Art von Barriere handelt es sich?"
 msgstr "Type of accessibility barrier"
 
@@ -25907,7 +25908,7 @@ msgstr "Room name"
 #: app/views/resources/resource/_add_edit_form.php:20
 #: app/views/resources/building/_add_edit_form.php:16
 msgid "Beschreibungstext"
-msgstr "Descritption text"
+msgstr "Description text"
 
 #: app/views/resources/room/_add_edit_form.php:33
 msgid "Raum ist wünschbar"
@@ -36245,7 +36246,7 @@ msgstr "Summer or winter semester"
 
 #: config/mvv_config.php:24
 msgid "Modulverantwortung"
-msgstr "Module responsibility "
+msgstr "module responsibility"
 
 #: config/mvv_config.php:26
 msgid "Modulberatung"
@@ -37728,7 +37729,7 @@ msgstr "This username is already authenticated via %s!"
 
 #: lib/classes/auth_plugins/StudipAuthStandard.class.php:76
 msgid "Das Passwort ist falsch!"
-msgstr "Incorrect password! "
+msgstr "The password is incorrect!"
 
 #: lib/classes/auth_plugins/StudipAuthLdapReadAndBind.class.php:50
 #, php-format
