@@ -227,6 +227,7 @@ class SiteinfoMarkupEngine {
         $this->siteinfoMarkup("/\(:indicator ([a-z_\-]*):\)/i", function ($m) {return $this->indicator($m[1]);});
         $this->siteinfoMarkup("/\(:history:\)/", [$this, 'history']);
         $this->siteinfoMarkup("/\(:terms:\)/", [$this, 'termsOfUse']);
+        $this->siteinfoMarkup("/\(:reportbarrierlink:\)/", [$this, 'reportBarrierLink']);
         $this->siteinfoMarkup("'\[style=(&quot;)?(.*?)(&quot;)?\]\s*(.*?)\s*\[/style\]'s", function ($m) {return $this->style($m[2], $m[4]);});
     }
 
@@ -571,6 +572,18 @@ class SiteinfoMarkupEngine {
         $style = str_replace('\"', '"', $style);
         $styled = str_replace('\"', '"', $styled);
         return '<div style="'.$style.'">'.$styled.'</div>';
+    }
+
+    public function reportBarrierLink(): string
+    {
+        return sprintf(
+            '<a href="%s">' . _('Barriere melden') . '</a>',
+            URLHelper::getLink(
+                'dispatch.php/accessibility/forms/report_barrier',
+                ['page' => Request::url(), 'cancel_login' => '1'],
+                true
+            )
+        );
     }
 }
 
