@@ -410,20 +410,7 @@ class Semester extends SimpleORMap
      */
     public function getCorrectedLectureBegin()
     {
-        $dow = (int)date('w', $this->vorles_beginn);
-
-        // Date is already on a monday
-        if ($dow === 1) {
-            return $this->vorles_beginn;
-        }
-
-        // Saturday or sunday: return next monday
-        if ($dow === 0 || $dow === 6) {
-            return strtotime('next monday', $this->vorles_beginn);
-        }
-
-        // Otherwise return last monday
-        return strtotime('last monday', $this->vorles_beginn);
+        return strtotime('this week monday', $this->vorles_beginn);
     }
 
 

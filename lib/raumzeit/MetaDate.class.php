@@ -550,18 +550,7 @@ class MetaDate
                 $passed = true;
             }
             if ($passed && ($sem_end >= $val['vorles_ende']) && ($startAfterTimeStamp <= $val['ende'])) {
-                // correction calculation, if the semester does not start on monday
-                $dow = (int)date('w', $val['vorles_beginn']);
-                if ($dow === 0) {
-                    $corr = 1;
-                } elseif ($dow <= 5) {
-                    $corr = ($dow - 1) * -1;
-                } elseif ($dow == 6) {
-                    $corr = 2;
-                } else {
-                    $corr = 0;
-                }
-                $ret[$val['semester_id']] = $this->getVirtualSingleDatesForSemester($metadate_id, $val['vorles_beginn'], $val['vorles_ende'], $startAfterTimeStamp, $corr);
+                $ret[$val['semester_id']] = $this->getVirtualSingleDatesForSemester($metadate_id, $val['vorles_beginn'], $val['vorles_ende'], $startAfterTimeStamp);
             }
         }
 
@@ -575,10 +564,10 @@ class MetaDate
      * @param int    timestamp of semester start
      * @param int    timestamp of semester end
      * @param int    alternative timestamp to start from
-     * @param int    correction calculation, if the semester does not start on monday (number of days?)
+     * @param int    correction calculation (obsolete)
      * @return array returns an array of two arrays of SingleDate objects: 'dates' => all new and surviving dates, 'dates_to_delete' => obsolete dates
      */
-    function getVirtualSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr)
+    function getVirtualSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr = 0)
     {
         $dates = [];
         $dates_to_delete = [];
