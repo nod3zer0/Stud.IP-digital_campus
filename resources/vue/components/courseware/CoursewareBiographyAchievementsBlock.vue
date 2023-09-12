@@ -27,7 +27,7 @@
                             {{ $gettext('Enddatum') }}: {{ getReadableDate(currentData.end_date)}}
                         </h4>
                         <h4 v-show="hasParticipation">
-                            {{ $gettext('Beteiligung') }}: <span v-html="currentData.role"></span>
+                            {{ $gettext('Beteiligung') }}: {{ currentData.role }}
                         </h4>
                         <div>
                             <h4>{{ $gettext('Beschreibung') }}:</h4>

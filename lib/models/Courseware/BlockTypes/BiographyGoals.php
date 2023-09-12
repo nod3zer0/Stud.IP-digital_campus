@@ -38,6 +38,21 @@ class BiographyGoals extends BlockType
         ];
     }
 
+    public function getPayload()
+    {
+        $payload = parent::getPayload();
+        $payload['description'] = \Studip\Markup::purifyHtml(\Studip\Markup::markAsHtml($payload['description']));
+
+        return $payload;
+    }
+
+    public function setPayload($payload): void
+    {
+        $payload['description'] = \Studip\Markup::purifyHtml(\Studip\Markup::markAsHtml($payload['description']));
+
+        parent::setPayload($payload);
+    }
+
     public static function getJsonSchema(): Schema
     {
         $schemaFile = __DIR__.'/BiographyGoals.json';
