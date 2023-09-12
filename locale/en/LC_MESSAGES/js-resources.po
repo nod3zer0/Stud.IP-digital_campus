@@ -2,10 +2,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2023-06-02 14:44+0000\n"
+"PO-Revision-Date: 2023-09-12 07:55+0000\n"
 "Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/stud-"
-"ip-main-js/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
+"stud-ip-main-js/en/>\n"
 "Language: en\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -67,11 +67,10 @@ msgid "%{ count } Unterebenen"
 msgstr "Sub-layer display"
 
 #: resources/vue/components/stock-images/ImagesList.vue:40
-#, fuzzy
 msgid "%{ n } Bild gefunden"
 msgid_plural "%{ n } Bilder gefunden"
-msgstr[0] "1 conflict found."
-msgstr[1] "%s conflicts found."
+msgstr[0] "%{ n } picture found"
+msgstr[1] "%{ n } pictures found"
 
 #: resources/vue/components/AdminCourses.vue:148
 #, fuzzy
@@ -91,9 +90,8 @@ msgid "%{ name } löschen"
 msgstr "Delete %{ name }"
 
 #: resources/vue/components/tree/TreeBreadcrumb.vue:50
-#, fuzzy
 msgid "%{ node } öffnen"
-msgstr "Delete %{ name }"
+msgstr "Open %{ node }"
 
 #: resources/vue/components/courseware/CoursewareAccordionContainer.vue:184
 #: resources/vue/components/courseware/CoursewareListContainer.vue:129
@@ -174,9 +172,8 @@ msgstr ""
 "%{listLength}."
 
 #: resources/vue/components/stock-images/ImagesListItem.vue:26
-#, fuzzy
 msgid "%{context} auswählen"
-msgstr "Select context"
+msgstr "Select %{context}"
 
 #: resources/vue/components/StudipFolderSize.vue:13
 msgid "%{count} Objekt"
@@ -249,28 +246,25 @@ msgstr "Select %{groupName}"
 
 #: resources/vue/components/courseware/CoursewareBlockCommentsOverview.vue:109
 #: resources/vue/components/courseware/CoursewareStructuralElementCommentsOverview.vue:107
-#, fuzzy
 msgid "%{length} Feedback"
 msgid_plural "%{length} Feedbacks"
-msgstr[0] "My feedback"
-msgstr[1] "My feedback"
+msgstr[0] "%{length} feedback"
+msgstr[1] "%{length} feedbacks"
 
 #: resources/vue/components/courseware/CoursewareBlockCommentsOverview.vue:98
 #: resources/vue/components/courseware/CoursewareStructuralElementCommentsOverview.vue:95
-#, fuzzy
 msgid "%{length} Kommentar"
 msgid_plural "%{length} Kommentare"
-msgstr[0] "%s comments"
-msgstr[1] "%s comments"
+msgstr[0] "%{length} comment"
+msgstr[1] "%{length} comments"
 
 #: resources/vue/components/RangeInput.vue:3
 msgid "%{myValue} von %{max}"
 msgstr "%{myValue} of %{max}"
 
 #: resources/vue/components/tree/StudipTreeList.vue:79
-#, fuzzy
 msgid "%{name} bearbeiten"
-msgstr "Edit room"
+msgstr "Edit %{name}"
 
 #: resources/vue/components/courseware/CoursewareUnitItemDialogExport.vue:29
 msgid "%{title} wird exportiert, bitte haben sie einen Moment Geduld..."
@@ -309,9 +303,8 @@ msgstr[0] "enrol <strong>%s</strong> in the course"
 msgstr[1] "enrol <strong>%s</strong> in the course"
 
 #: resources/vue/components/courseware/CoursewareBiographyGoalsBlock.vue:66
-#, fuzzy
 msgid ">Beschreibung"
-msgstr "Description"
+msgstr ">Description"
 
 #: resources/vue/components/courseware/CoursewareUnitItemDialogSettings.vue:158
 #: resources/vue/components/courseware/CoursewareUnitItemDialogSettings.vue:236
@@ -401,9 +394,8 @@ msgid "AbschlussKategorie suchen"
 msgstr "Search degree category"
 
 #: resources/vue/components/courseware/CoursewareClipboardItem.vue:82
-#, fuzzy
 msgid "Abschnitt %{name} einfügen"
-msgstr "Add section"
+msgstr "Add section %{name}"
 
 #: resources/vue/components/courseware/CoursewareBlockAdderArea.vue:5
 msgid "Abschnitt aktiv - Blöcke werden hier eingefügt"
@@ -436,9 +428,8 @@ msgstr "Delete section irreversibly"
 
 #: resources/vue/components/courseware/CoursewareContainerActions.vue:31
 #: resources/vue/components/courseware/CoursewareDefaultContainer.vue:104
-#, fuzzy
 msgid "Abschnitt verändern"
-msgstr "Add section"
+msgstr "Edit section"
 
 #: resources/vue/components/courseware/CoursewareDefaultContainer.vue:250
 #, fuzzy
@@ -446,9 +437,8 @@ msgid "Abschnitt wurde in Merkliste abgelegt."
 msgstr "The section has been successfully inserted."
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:136
-#, fuzzy
 msgid "Abschnitt-Stil"
-msgstr "Section"
+msgstr "Section style"
 
 #: resources/vue/mixins/courseware/import.js:255
 msgid ""
@@ -575,18 +565,16 @@ msgid "Alle Abschnitte aus Merkliste entfernen"
 msgstr "Remove contacts from group"
 
 #: resources/vue/components/AdminCourses.vue:176
-#, fuzzy
 msgid "Alle anzeigen"
-msgstr "display all"
+msgstr "Show all"
 
 #: resources/assets/javascripts/lib/forum.js:111
 msgid "Alle Bereiche werden dann nach \"Allgemein\" verschoben!"
 msgstr "All areas will be moved to the category \"general\"!"
 
 #: resources/vue/components/stock-images/ImagesList.vue:45
-#, fuzzy
 msgid "Alle Bilder auswählen"
-msgstr "Select all users account"
+msgstr "Select all images"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:197
 #, fuzzy
@@ -766,9 +754,8 @@ msgid "Art der Inhaltsabfolge"
 msgstr "Type of content order"
 
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogAdd.vue:101
-#, fuzzy
 msgid "Art der Vorlage"
-msgstr "Type of request"
+msgstr "Type of template"
 
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:8
 #: resources/vue/components/courseware/CoursewareAdminTemplates.vue:31
@@ -976,9 +963,8 @@ msgstr "August"
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:476
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:116
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:706
-#, fuzzy
 msgid "Aus dem Bilderpool auswählen"
-msgstr "Select image file"
+msgstr "Select from the image pool"
 
 #: resources/vue/mixins/MyCoursesMixin.js:102
 #: resources/vue/mixins/MyCoursesMixin.js:112
@@ -1929,7 +1915,7 @@ msgstr "The data field isn't available in the original language."
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:25
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:19
 msgid "Datensatz"
-msgstr "Data record"
+msgstr "Dataset"
 
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:50
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:176
@@ -3735,9 +3721,8 @@ msgstr ""
 "file."
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:371
-#, fuzzy
 msgid "Hintergrund"
-msgstr "Background picture:"
+msgstr "Background"
 
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:196
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:433
@@ -3746,7 +3731,7 @@ msgstr "Background picture:"
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:119
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:102
 msgid "Hintergrundbild"
-msgstr "Background image"
+msgstr "Background picture"
 
 #: resources/vue/components/courseware/CoursewareUnitItemDialogSettings.vue:124
 msgid "Hintergrundbild des Zertifikats wählen"
@@ -4231,9 +4216,8 @@ msgid "Inhaltsverzeichnis"
 msgstr "Table of contents"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:75
-#, fuzzy
 msgid "Interaktion"
-msgstr "Interactive"
+msgstr "Interaction"
 
 #: resources/vue/components/courseware/CoursewareLinkBlock.vue:85
 #: resources/vue/components/courseware/CoursewareLinkBlock.vue:31
