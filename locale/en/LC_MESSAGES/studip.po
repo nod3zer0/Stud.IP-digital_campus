@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-04 14:31+0200\n"
-"PO-Revision-Date: 2023-09-12 07:46+0000\n"
+"PO-Revision-Date: 2023-09-12 11:41+0000\n"
 "Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
 "stud-ip-main/en/>\n"
@@ -13820,11 +13820,11 @@ msgstr "Edit course hierarchy"
 
 #: app/controllers/admin/tree.php:189
 msgid "Veranstaltungszuordnungen bearbeiten"
-msgstr ""
+msgstr "Edit course allocations"
 
 #: app/controllers/admin/tree.php:246
 msgid "Die Zuordnungen wurden gespeichert."
-msgstr ""
+msgstr "The allocations have been saved."
 
 #: app/controllers/admin/tree.php:248
 #, fuzzy
@@ -44490,7 +44490,7 @@ msgstr "Multimedia"
 #: lib/models/Courseware/BlockTypes/Embed.php:121
 #: lib/models/Courseware/BlockTypes/Canvas.php:99
 msgid "Grafik"
-msgstr ""
+msgstr "Graphic"
 
 #: lib/models/Courseware/BlockTypes/Embed.php:121
 #: lib/models/Courseware/BlockTypes/Audio.php:109
@@ -44635,7 +44635,7 @@ msgstr "Research results"
 
 #: lib/models/Courseware/BlockTypes/Date.php:68
 msgid "VK"
-msgstr ""
+msgstr "VC"
 
 #: lib/models/Courseware/BlockTypes/Date.php:68
 #: lib/models/Courseware/BlockTypes/Timeline.php:74
@@ -44804,7 +44804,7 @@ msgstr "Sound recording"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:108
 msgid "O Ton"
-msgstr ""
+msgstr "Direct quote"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:108
 msgid "Zitat"
@@ -54108,6 +54108,13 @@ msgid ""
 "Dateien (z. B. Fotos, Audiodateien, Links) können per drag and drop in das "
 "Feld gezogen und somit verlinkt werden. Auch Textformatierungen sind möglich."
 msgstr ""
+"Communication form similar to a forum. Contrary to the forum, real-time "
+"communication with each other is possible with Blubber. The tool is similar "
+"to a messenger due to its informal character. Contrary to the forum, it is "
+"not necessary to reload the page to see the newest posts (for example "
+"answers to your own postings). Files (photos, audio files, links) can be "
+"linked via dragging and dropping them in the field. Text formatting is also "
+"possible."
 
 #: lib/modules/Blubber.class.php:125
 msgid ""
