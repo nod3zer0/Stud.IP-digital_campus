@@ -210,7 +210,7 @@ class ResourceNavigation extends Navigation
             $this->addSubNavigation('structure', $sub_navigation);
         }
 
-        if ($user_is_global_resource_user) {
+        if ($user_has_rooms || $user_is_global_resource_user) {
             //Export tab:
             $export_navigation = new Navigation(
                 _('Export'),
