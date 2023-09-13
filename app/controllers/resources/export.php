@@ -339,7 +339,8 @@ class Resources_ExportController extends AuthenticatedController
         foreach ($resources as $resource) {
             //Retrieve the bookings in the specified time range:
             $intervals = ResourceBookingInterval::findBySql(
-                'resource_id = :resource_id AND begin < :end AND end > :begin ORDER BY begin, end',
+                "`takes_place` = 1 AND `resource_id` = :resource_id AND `begin` < :end AND `end` > :begin
+                 ORDER BY `begin`, `end`",
                 [
                     'resource_id' => $resource->id,
                     'begin' => $this->begin->getTimestamp(),
