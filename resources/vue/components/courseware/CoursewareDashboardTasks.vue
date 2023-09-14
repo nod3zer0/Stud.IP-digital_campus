@@ -6,15 +6,14 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th><translate>Status</translate></th>
-                    <th class="responsive-hidden"><translate>Aufgabentitel</translate></th>
-                    <th><translate>Seite</translate></th>
-                    <th><translate>bearbeitet</translate></th>
-                    <th><translate>Abgabefrist</translate></th>
-                    <th><translate>Abgabe</translate></th>
-                    <th class="responsive-hidden"><translate>Verlängerungsanfrage</translate></th>
-                    <th class="responsive-hidden"><translate>Feedback</translate></th>
-                    <th><translate>Aktionen</translate></th>
+                    <th>{{ $gettext('Status') }}</th>
+                    <th>{{ $gettext('Aufgabe') }}</th>
+                    <th>{{ $gettext('bearbeitet') }}</th>
+                    <th>{{ $gettext('Abgabefrist') }}</th>
+                    <th>{{ $gettext('Abgabe') }}</th>
+                    <th class="responsive-hidden">{{ $gettext('Verlängerungsanfrage') }}</th>
+                    <th class="responsive-hidden">{{ $gettext('Feedback') }}</th>
+                    <th class="actions">{{ $gettext('Aktionen') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,19 +26,17 @@
                             :title="status.description"
                         />
                     </td>
-                    <td class="responsive-hidden">
-                        <studip-icon
-                            v-if="task.attributes['solver-type'] === 'group'"
-                            shape="group2"
-                            role="info"
-                            :title="$gettext('Gruppenaufgabe')"
-                        />
-                        {{ taskGroup.attributes.title }}
-                    </td>
                     <td>
-                        <a :href="getLinkToElement(element)">{{ element.attributes.title }}</a>
+                        <a :href="getLinkToElement(element)">
+                            <studip-icon
+                                v-if="task.attributes['solver-type'] === 'group'"
+                                shape="group2"
+                                :title="$gettext('Gruppenaufgabe')"
+                            />
+                            {{ taskGroup.attributes.title }}
+                        </a>
                     </td>
-                    <td>{{ task.attributes?.progress?.toFixed(2) || '-'}}%</td>
+                    <td>{{ task.attributes?.progress?.toFixed(0) || '-' }}%</td>
                     <td>{{ getReadableDate(task.attributes['submission-date']) }}</td>
                     <td>
                         <studip-icon v-if="task.attributes.submitted" shape="accept" role="status-green" />
@@ -47,14 +44,14 @@
                     <td class="responsive-hidden">
                         <span v-show="task.attributes.renewal === 'declined'">
                             <studip-icon shape="decline" role="status-red" />
-                            <translate>Anfrage abgelehnt</translate>
+                            {{ $gettext('Anfrage abgelehnt') }}
                         </span>
                         <span v-show="task.attributes.renewal === 'pending'">
                             <studip-icon shape="date" role="status-yellow" />
-                            <translate>Anfrage wird bearbeitet</translate>
+                            {{ $gettext('Anfrage wird bearbeitet') }}
                         </span>
                         <span v-show="task.attributes.renewal === 'granted'">
-                            <translate>verlängert bis</translate>: {{getReadableDate(task.attributes['renewal-date'])}}
+                            {{ $gettext('verlängert bis') }}: {{ getReadableDate(task.attributes['renewal-date']) }}
                         </span>
                     </td>
                     <td class="responsive-hidden">
@@ -69,7 +66,7 @@
                     </td>
                     <td class="actions">
                         <studip-action-menu
-                            :items="getTaskMenuItems(task, status)"
+                            :items="getTaskMenuItems(task, status, element)"
                             @submitTask="displaySubmitDialog(task)"
                             @renewalRequest="renewalRequest(task)"
                             @copyContent="copyContent(element)"
@@ -79,7 +76,7 @@
             </tbody>
         </table>
         <div v-else>
-            <courseware-companion-box 
+            <courseware-companion-box
                 mood="sad"
                 :msgCompanion="$gettext('Es wurden bisher keine Aufgaben gestellt.')"
             />
@@ -177,22 +174,28 @@ export default {
             companionSuccess: 'companionSuccess',
             companionError: 'companionError',
         }),
-        getTaskMenuItems(task, status) {
+        getTaskMenuItems(task, status, element) {
             let menuItems = [];
             if (!task.attributes.submitted && status.canSubmit) {
-                menuItems.push({ id: 1, label: this.$gettext('Aufgabe abgeben'), icon: 'service', emit: 'submitTask' });
+                menuItems.push({
+                    id: 1,
+                    label: this.$gettext('Aufgabe bearbeiten'),
+                    icon: 'edit',
+                    url: this.getLinkToElement(element),
+                });
+                menuItems.push({ id: 2, label: this.$gettext('Aufgabe abgeben'), icon: 'service', emit: 'submitTask' });
             }
 
             if (!task.attributes.submitted && !task.attributes.renewal) {
                 menuItems.push({
-                    id: 2,
+                    id: 3,
                     label: this.$gettext('Verlängerung beantragen'),
                     icon: 'date',
                     emit: 'renewalRequest',
                 });
             }
             if (task.attributes.submitted) {
-                menuItems.push({ id: 3, label: this.$gettext('Inhalt kopieren'), icon: 'export', emit: 'copyContent' });
+                menuItems.push({ id: 4, label: this.$gettext('Inhalt kopieren'), icon: 'export', emit: 'copyContent' });
             }
 
             return menuItems;
@@ -225,11 +228,7 @@ export default {
                 taskId: this.currentTask.id,
             });
             this.companionSuccess({
-                info:
-                    '"' +
-                    this.currentTask.attributes.title +
-                    '" ' +
-                    this.$gettext('wurde erfolgreich abgegeben.'),
+                info: '"' + this.currentTask.attributes.title + '" ' + this.$gettext('wurde erfolgreich abgegeben.'),
             });
             this.currentTask = null;
         },
@@ -243,7 +242,7 @@ export default {
                     parentId: ownCoursewareInstance.relationships.root.data.id,
                     elementId: element.id,
                     removeType: true,
-                    migrate: false
+                    migrate: false,
                 });
                 this.companionSuccess({
                     info: this.$gettext('Die Inhalte wurden zu Ihren persönlichen Lernmaterialien hinzugefügt.'),
