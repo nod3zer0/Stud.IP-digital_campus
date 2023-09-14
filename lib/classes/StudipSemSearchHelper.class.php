@@ -104,7 +104,7 @@ class StudipSemSearchHelper {
         if (isset($this->params['type']) && $this->params['type'] != 'all'){
             $sem_types = [$this->params['type']];
         }
-        if (!empty($sem_types) && is_array($sem_types)) {
+        if ($sem_types) {
             $clause = " AND c.status IN('" . join("','",$sem_types) . "') " . $clause;
         }
 
@@ -112,7 +112,7 @@ class StudipSemSearchHelper {
 
         if ($this->params['scope_choose'] && $this->params['scope_choose'] != 'root'){
             $sem_tree = TreeAbstract::GetInstance("StudipSemTree", false);
-            $view->params[0] = (is_array($sem_types) ? $sem_types : $sem_tree->sem_status);
+            $view->params[0] = $sem_types ?: $sem_tree->sem_status;
             $view->params[1] = $this->visible_only ? "c.visible=1" : "1";
 
             $view->params[2] = $sem_tree->getKidsKids($this->params['scope_choose']);
