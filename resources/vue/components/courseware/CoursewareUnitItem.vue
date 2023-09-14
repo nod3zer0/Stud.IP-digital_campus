@@ -15,6 +15,7 @@
                     class="cw-unit-action-menu"
                     :items="menuItems"  
                     :context="title"
+                    :collapseAt="0"
                     @showDelete="openDeleteDialog"
                     @showExport="openExportDialog"
                     @showProgress="openProgressDialog"
@@ -41,7 +42,7 @@
 
         <studip-dialog
             v-if="showProgressDialog"
-            :title="$gettext('Fortschritt')"
+            :title="userIsTeacher ? $gettext('Fortschritt aller Teilnehmenden') : $gettext('Mein Fortschritt')"
             :closeText="$gettext('Schließen')"
             closeClass="cancel"
             width="800"
@@ -49,7 +50,7 @@
             @close="closeProgressDialog"
         >
             <template v-slot:dialogContent>
-                <courseware-unit-progress :progressData="progresses" :unitId="unit.id" :rootId="unitElement.id"/>
+                <courseware-unit-progress :progressData="progresses" :unitId="unit.id" :rootId="parseInt(unitElement.id)"/>
             </template>
         </studip-dialog>
 

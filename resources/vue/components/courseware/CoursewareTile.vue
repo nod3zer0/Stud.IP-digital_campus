@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     name: "courseware-tile",
     props: {
@@ -103,6 +105,9 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            userIsTeacher: 'userIsTeacher'
+        }),
         hasImage() {
             return this.imageUrl !== "" && this.imageUrl !== undefined;
         },
@@ -121,7 +126,10 @@ export default {
             }
         },
         progressTitle() {
-            return this.$gettextInterpolate(this.$gettext("Fortschritt: %{progress}%"), { progress: this.progress });
+            if (this.userIsTeacher) {
+                return this.$gettextInterpolate(this.$gettext("Fortschritt aller Teilnehmenden: %{progress}%"), { progress: this.progress });    
+            }
+            return this.$gettextInterpolate(this.$gettext("Mein Fortschritt: %{progress}%"), { progress: this.progress });
         },
         hasDescriptionLink() {
             return this.descriptionLink !== '';

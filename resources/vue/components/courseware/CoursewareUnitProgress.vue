@@ -1,29 +1,29 @@
 <template>
     <div class="cw-unit-progress">
+        <p v-if="userIsTeacher">
+            {{
+                $gettext('Die Fortschrittsanzeige bezieht sich auf den Anteil der Teilnehmenden, die eine Seite aufgerufen haben.')
+            }}
+        </p>
         <nav aria-label="Breadcrumb" class="cw-unit-progress-breadcrumb">
-            <a
-                v-if="parent"
-                href="#"
-                :title="$gettext('Hauptseite')"
-                @click="visitRoot"
-            >
+            <a v-if="parent" href="#" :title="$gettext('Hauptseite')" @click="visitRoot">
                 <studip-icon shape="home" />
             </a>
-            <a
-                v-if="parent"
-                href="#"
-                :title="parent.name"
-                @click="selectChapter(parent.id)"
-            >
-                / {{ parent.name }}
+            <a v-if="parent && parent.id !== rootId" href="#" :title="parent.name" @click="selectChapter(parent.id)">
+                | {{ parent.name }}
             </a>
         </nav>
         <div v-if="selected" class="cw-unit-progress-chapter">
-            <a :href="chapterUrl" :title="$gettextInterpolate('%{ pageTitle } öffnen', {pageTitle: selected.name})">
-                <h1>{{ selected.name }}</h1>
-            </a>
+            <h1>
+                <a
+                    :href="chapterUrl"
+                    :title="$gettextInterpolate('%{ pageTitle } öffnen', { pageTitle: selected.name })"
+                >
+                    {{ selected.name }}
+                </a>
+            </h1>
             <courseware-progress-circle
-                :title="$gettext('diese Seite inkl. darunter liegende Seiten')"
+                :title="selected.id === rootId ? $gettext('Gesamtes Lernmaterial') : $gettext('diese Seite inkl. darunter liegender Seiten')"
                 :value="parseInt(selected.progress.cumulative)"
             />
             <courseware-progress-circle
@@ -32,7 +32,7 @@
                 :value="parseInt(selected.progress.self)"
             />
         </div>
-        <div class="cw-unit-progress-subchapter-list">
+        <div v-if="children.length > 0" class="cw-unit-progress-subchapter-list">
             <courseware-unit-progress-item
                 v-for="chapter in children"
                 :key="chapter.id"
@@ -41,12 +41,12 @@
                 :chapterId="chapter.id"
                 @selectChapter="selectChapter"
             />
-            <div v-if="!children.length" class="cw-unit-empty-info">
-                <courseware-companion-box 
-                    mood="sad"
-                    :msgCompanion="$gettext('Diese Seite enthält keine darunter liegenden Seiten.')"
-                />
-            </div>
+        </div>
+        <div v-else class="cw-unit-empty-info">
+            <courseware-companion-box
+                mood="sad"
+                :msgCompanion="$gettext('Diese Seite enthält keine darunter liegenden Seiten.')"
+            />
         </div>
     </div>
 </template>
@@ -56,6 +56,8 @@ import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
 import CoursewareUnitProgressItem from './CoursewareUnitProgressItem.vue';
 import CoursewareProgressCircle from './CoursewareProgressCircle.vue';
 import StudipIcon from '../StudipIcon.vue';
+
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-unit-progress',
@@ -68,7 +70,7 @@ export default {
     props: {
         progressData: Object,
         unitId: String,
-        rootId: String
+        rootId: Number,
     },
     data() {
         return {
@@ -76,13 +78,12 @@ export default {
         };
     },
     computed: {
+        ...mapGetters({
+            userIsTeacher: 'userIsTeacher',
+        }),
         chapterUrl() {
             return (
-                STUDIP.URLHelper.base_url +
-                'dispatch.php/course/courseware/courseware/'+
-                this.unitId +
-                '?cid=' +
-                STUDIP.URLHelper.parameters.cid +
+                STUDIP.URLHelper.getURL('dispatch.php/course/courseware/courseware/' + this.unitId) +
                 '#/structural_element/' +
                 this.selected.id
             );

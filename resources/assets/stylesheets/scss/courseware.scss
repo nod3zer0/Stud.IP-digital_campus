@@ -2578,14 +2578,9 @@ d a s h b o a r d  e n d
 * * * * * * * * * * * */
 .cw-unit-progress {
     .cw-unit-progress-breadcrumb {
-        padding: 10px;
-        span {
-            color: $base-color;
-            cursor: pointer;
-
-            &:hover {
-                color: $active-color;
-            }
+        padding: 10px 0;
+        a img {
+            vertical-align: top;
         }
     }
 
@@ -2615,7 +2610,7 @@ d a s h b o a r d  e n d
         border-top: solid thin $content-color-40;
         padding: 0 1em 0 1em;
 
-        .cw-dashboard-empty-info {
+        .cw-unit-empty-info {
             margin-top: 10px;
         }
     }
