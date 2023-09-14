@@ -34,14 +34,22 @@ class StudipNavigation extends Navigation
 
         // if the user is not logged in, he will see the free courses, otherwise
         // the my courses page will be shown.
-        if (is_object($user) && $user->id != 'nobody' || Config::get()->ENABLE_FREE_ACCESS) {
+        if ($user->id !== 'nobody' || Config::get()->ENABLE_FREE_ACCESS) {
             $this->addSubNavigation('browse', new BrowseNavigation());
         }
+
+        // if a course is selected, the navigation for it will be loaded
+        if (Context::getId()) {
+            $this->addSubNavigation('course', new CourseNavigation());
+        }
+
         try {
-            if (Config::get()->RESOURCES_ENABLE
+            if (
+                Config::get()->RESOURCES_ENABLE
                 && Config::get()->RESOURCES_SHOW_PUBLIC_ROOM_PLANS
-                && $user->id == 'nobody'
-                && Room::publicBookingPlansExists()) {
+                && $user->id === 'nobody'
+                && Room::publicBookingPlansExists()
+            ) {
                 //Show a navigation entry for the public booking plans overview.
                 $nav = new Navigation(
                     _('Belegungspläne'),
@@ -55,14 +63,8 @@ class StudipNavigation extends Navigation
             //Do nothing here.
         }
 
-        // if a course is selected, the navigation for it will be loaded, but
-        // it will not be shown in the main toolbar
-        if (Context::getId()) {
-            $this->addSubNavigation('course', new CourseNavigation());
-        }
-
         // contents pages
-        if (is_object($user) && $user->id != 'nobody') {
+        if ($user->id !== 'nobody') {
             $this->addSubNavigation('contents', new ContentsNavigation());
         }
 
@@ -71,7 +73,7 @@ class StudipNavigation extends Navigation
             $this->addSubNavigation('oer', new OERNavigation());
         }
 
-        if (is_object($user) && $user->id != 'nobody') {
+        if ($user->id !== 'nobody') {
             // internal message system
             $this->addSubNavigation('messaging', new MessagingNavigation());
 
@@ -89,8 +91,7 @@ class StudipNavigation extends Navigation
 
             // avatar menu
             $this->addSubNavigation('avatar', new AvatarNavigation());
-        } else if ($user->id == 'nobody'
-                && Config::get()->COURSE_SEARCH_IS_VISIBLE_NOBODY) {
+        } elseif (Config::get()->COURSE_SEARCH_IS_VISIBLE_NOBODY) {
             // search page
             $this->addSubNavigation('search', new SearchNavigation());
         }
@@ -126,7 +127,7 @@ class StudipNavigation extends Navigation
         }
 
         // admin page
-        if (is_object($user) && $perm->have_perm('admin')) {
+        if ($perm->have_perm('admin')) {
             $this->addSubNavigation('admin', new AdminNavigation());
         }
 
@@ -139,7 +140,7 @@ class StudipNavigation extends Navigation
         $links = new Navigation('Links');
 
         // login / logout
-        if (!is_object($user) && $user->id === 'nobody') {
+        if ($user->id === 'nobody') {
             if (in_array('CAS', $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
                 $links->addSubNavigation('login_cas', new Navigation(_('Login CAS'), Request::url(), ['again' => 'yes', 'sso' => 'cas']));
             }
