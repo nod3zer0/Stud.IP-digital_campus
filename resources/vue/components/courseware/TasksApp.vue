@@ -7,13 +7,15 @@
         <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions" v-if="userIsTeacher">
             <courseware-tasks-action-widget />
         </MountingPortal>
+        <courseware-companion-overlay />
     </div>
 </template>
 
 <script>
 import CoursewareTasksActionWidget from './CoursewareTasksActionWidget.vue';
-import CoursewareDashboardTasks from './CoursewareDashboardTasks.vue'
-import CoursewareDashboardStudents from './CoursewareDashboardStudents.vue'
+import CoursewareDashboardTasks from './CoursewareDashboardTasks.vue';
+import CoursewareDashboardStudents from './CoursewareDashboardStudents.vue';
+import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -21,6 +23,7 @@ export default {
         CoursewareTasksActionWidget,
         CoursewareDashboardTasks,
         CoursewareDashboardStudents,
+        CoursewareCompanionOverlay,
     },
     computed: {
         ...mapGetters({

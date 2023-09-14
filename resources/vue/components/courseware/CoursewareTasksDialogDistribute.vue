@@ -327,6 +327,7 @@ export default {
             selectedGroups: [],
             bulkSelectGroups: false,
             requirements: [],
+            distributing: false,
         };
     },
     computed: {
@@ -494,6 +495,7 @@ export default {
             copyStructuralElement: 'copyStructuralElement',
             companionError: 'companionError',
             companionSuccess: 'companionSuccess',
+            companionInfo: 'companionInfo',
             loadCourseMemberships: 'course-memberships/loadRelated',
             loadCourseStatusGroups: 'status-groups/loadRelated',
             createTaskGroup: 'createTaskGroup',
@@ -515,6 +517,11 @@ export default {
             this.loadStructuralElement({ id: id, options: { include: 'children' } });
         },
         async distributeTask() {
+            if (this.distributing) {
+                this.companionInfo({ info: this.$gettext('Aufgaben werden bereits verteilt.') });
+                return;
+            }
+            this.distributing = true;
             const taskGroup = {
                 attributes: {
                     title: this.taskTitle,
@@ -548,11 +555,12 @@ export default {
                 solvers = this.selectedGroups.map((id) => ({ type: 'status-groups', id }));
             }
             taskGroup.relationships.solvers.data = solvers;
-
             await this.createTaskGroup({ taskGroup });
             this.companionSuccess({ info: this.$gettext('Aufgaben wurden verteilt.') });
             this.$emit('newtask');
+            this.distributing = false;
             this.setShowTasksDistributeDialog(false);
+            
         },
         validateSolvers() {
             if (
