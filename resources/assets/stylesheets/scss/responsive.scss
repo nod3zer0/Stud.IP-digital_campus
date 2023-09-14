@@ -465,6 +465,8 @@ $sidebarOut: -330px;
         &.cw-ribbon {
             .cw-ribbon-tools {
                 max-width: calc(100% - 2px);
+                top: 0;
+                margin-right: 0;
             }
         }
 

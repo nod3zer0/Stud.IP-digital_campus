@@ -460,7 +460,7 @@ $consum_ribbon_width: calc(100% - 58px);
     box-shadow: 2px 2px #ccc;
     position: absolute;
     right: -570px;
-    top: 0;
+    top: 15px;
     height: 100%;
     max-width: calc(100% - 28px);
     display: flex;
@@ -470,6 +470,7 @@ $consum_ribbon_width: calc(100% - 58px);
 
     &.unfold {
         right: 0px;
+        margin-right: 15px;
     }
 
     &.cw-ribbon-tools-consume {
@@ -482,6 +483,7 @@ $consum_ribbon_width: calc(100% - 58px);
     &.cw-ribbon-tools-sticky {
         position: absolute;
         top: -1px;
+        margin-right: 0;
     }
 
     .cw-ribbon-tool-content {
@@ -592,7 +594,7 @@ $consum_ribbon_width: calc(100% - 58px);
 
 .cw-structural-element-consumemode {
     .cw-ribbon-tools {
-        top: 14px;
+        top: 25px;
     }
 }
 
