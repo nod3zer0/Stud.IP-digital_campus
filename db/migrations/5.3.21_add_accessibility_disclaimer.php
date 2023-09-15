@@ -234,22 +234,20 @@ class AddAccessibilityDisclaimer extends Migration
             $db->execute("INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `content`)
             VALUES (NULL, '1', NULL, 'Barrierefreiheitserklärung', ?)", [$text]);
             $result = $db->fetchOne($query);
-            $barrierefreiheits_url = "dispatch.php/siteinfo/show/{$result['rubric_id']}/{$result['detail_id']}";
         } else {
             //disable Plugin and prevent down migration
             $db->exec("UPDATE `plugins` SET `enabled` = 'no' WHERE `pluginclassname` = 'AccessibleForm'");
             $db->exec("DELETE FROM `schema_version` WHERE `domain` = 'Barrierefreies Formular'");
         }
-
+        $barrierefreiheits_url = "dispatch.php/siteinfo/show/{$result['rubric_id']}/{$result['detail_id']}";
         $db->execute(
             "INSERT IGNORE INTO `config`
              (`field`, `type`, `range`, `value`, `section`, `description`, `mkdate`, `chdate`)
              VALUES
              (
-                 'ACCESSIBILITY_DISCLAIMER_URL', 'string', 'global', ?, 'accessibility',
-                 'URL der Barrierefreiheitserklärung',
+                 'ACCESSIBILITY_DISCLAIMER_URL', 'string', 'global', '', 'accessibility', ?,
                  UNIX_TIMESTAMP(), UNIX_TIMESTAMP()
-             )", [$barrierefreiheits_url]
+             )", ['URL der Barrierefreiheitserklärung, die in der Fußleiste verlinkt wird. Wenn Sie den Mustertext im Impressum verwenden, tragen Sie diese URL ein: ' . $barrierefreiheits_url]
         );
     }
 
