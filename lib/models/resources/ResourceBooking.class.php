@@ -485,21 +485,32 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
             $this->booking_user = User::findCurrent();
         }
 
-        //Check if the user has booking rights on the resource.
-        //The user must have either permanent permissions or they have to
-        //have booking rights by a temporary permission in this moment
-        //(the moment this booking is saved).
         $derived_resource = $this->resource->getDerivedClassInstance();
-        $user_has_booking_rights = $derived_resource->userHasBookingRights(
-            $this->booking_user, $this->begin, $this->end
-        );
-        if (!$user_has_booking_rights) {
-            throw new ResourcePermissionException(
-                sprintf(
-                    _('Unzureichende Berechtigungen zum Buchen der Ressource %s!'),
-                    $this->resource->name
-                )
+
+        // check if the user needs booking rights on the resource
+        if (
+            $this->isFieldDirty('resource_id')
+            || $this->isFieldDirty('repetition_interval')
+            || $this->begin < $this->getPristineValue('begin')
+            || $this->end > $this->getPristineValue('end')
+            || $this->preparation_time > $this->getPristineValue('preparation_time')
+            || $this->repeat_end > $this->getPristineValue('repeat_end')
+        ) {
+
+            //Check if the user has booking rights on the resource.
+            //The user must have either permanent permissions or they have to
+            //have booking rights by a temporary permission in this moment
+            $user_has_booking_rights = $derived_resource->userHasBookingRights(
+                $this->booking_user, $this->begin, $this->end
             );
+            if (!$user_has_booking_rights) {
+                throw new ResourcePermissionException(
+                    sprintf(
+                        _('Unzureichende Berechtigungen zum Buchen der Ressource %s!'),
+                        $this->resource->name
+                    )
+                );
+            }
         }
 
         $time_intervals = $this->calculateTimeIntervals(true);
