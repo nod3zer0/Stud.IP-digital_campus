@@ -1445,6 +1445,15 @@ class FileController extends AuthenticatedController
                 User::findCurrent()
             );
 
+            if (is_array($newfile)) {
+                PageLayout::postError(
+                    _('Beim Kopieren ist ein Fehler aufgetreten'),
+                    array_map('htmlReady', $newfile)
+                );
+                $this->redirectToFolder($this->to_folder_type);
+                return;
+            }
+
             if (Request::isXhr()) {
                 $this->current_folder = $this->to_folder_type;
                 $this->marked_element_ids = [];
@@ -1468,57 +1477,13 @@ class FileController extends AuthenticatedController
                     'X-Dialog-Execute',
                     'STUDIP.Files.addFile'
                 );
-                return $this->render_json($payload);
+                $this->render_json($payload);
+                return;
             } else {
                 PageLayout::postSuccess(_('Datei wurde hinzugefügt.'));
-                return $this->redirectToFolder($this->to_folder_type);
+                $this->redirectToFolder($this->to_folder_type);
+                return;
             }
-
-            /*if ($file_ref instanceof FileRef) {
-                if (in_array($this->to_folder_type->range_type, ['course', 'institute']) && !$file_ref->content_terms_of_use_id) {
-                    $this->redirect($this->url_for(
-                        "file/edit_license/{$this->to_folder_type->getId()}",
-                        ['file_refs' => [$file_ref->id]]
-                    ));
-                    return;
-                } elseif (Request::isXhr()) {
-                    $this->file = $file_ref->getFileType();
-                    $this->current_folder = $this->to_folder_type;
-                    $this->marked_element_ids = [];
-
-                    $plugins = PluginManager::getInstance()->getPlugins('FileUploadHook');
-
-                    $redirects = [];
-                    foreach ($plugins as $plugin) {
-                        $url = $plugin->getAdditionalUploadWizardPage($file_ref);
-                        if ($url) {
-                            $redirects[] = $url;
-                        }
-                    }
-                    $payload = [
-                        'html'     => FilesystemVueDataManager::getFileVueData($this->file, $this->current_folder),
-                        'redirect' => $redirects[0],
-                        'url'      => $this->generateFilesUrl($this->current_folder, $this->file_ref),
-                    ];
-
-                    $this->response->add_header(
-                        'X-Dialog-Execute',
-                        'STUDIP.Files.addFile'
-                    );
-                    return $this->render_json($payload);
-                } else {
-                    PageLayout::postSuccess(_('Datei wurde hinzugefügt.'));
-                    return $this->redirectToFolder($this->to_folder_type);
-                }
-            } else {
-                if (is_array($file_ref)) {
-                    $error = $file_ref;
-                }
-                if(!is_array($error)) {
-                    $error = [$error];
-                }
-                PageLayout::postError(_('Konnte die Datei nicht hinzufügen.'), array_map('htmlReady', $error));
-            }*/
         }
 
         if (Request::get('from_plugin')) {
