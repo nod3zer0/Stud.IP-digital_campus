@@ -49,7 +49,7 @@ class RoomSearchWidget extends SidebarWidget
         if ($this->defined_properties) {
             foreach ($this->defined_properties as $property) {
                 $this->criteria[$property->name] = [
-                    'name' => $property->name,
+                    'name' => $property->id,
                     'title' => (
                         $property->display_name != ''
                         ? $property->display_name
@@ -188,23 +188,25 @@ class RoomSearchWidget extends SidebarWidget
 
         foreach ($this->criteria as $name => $data) {
             if ($name == 'special__time_range') {
-                if (Request::get($name . '_enabled')) {
+                if (Request::get($data['name'] . '_enabled')) {
                     $data['enabled'] = true;
                     $this->selected_criteria[$name] = $data;
-                    if (Request::submitted($name . '_begin_date')
-                        || Request::submitted($name . '_begin_time')
-                        || Request::submitted($name . '_end_date')
-                        || Request::submitted($name . '_end_time')) {
+                    if (Request::submittedSome(
+                        $data['name'] . '_begin_date',
+                        $data['name'] . '_begin_time',
+                        $data['name'] . '_end_date',
+                        $data['name'] . '_end_time'
+                    )) {
                             $submitted_begin = Request::getDateTime(
-                                $name . '_begin_date',
+                                $data['name'] . '_begin_date',
                                 'd.m.Y',
-                                $name . '_begin_time',
+                                $data['name'] . '_begin_time',
                                 'H:i'
                             );
                             $submitted_end = Request::getDateTime(
-                                $name . '_end_date',
+                                $data['name'] . '_end_date',
                                 'd.m.Y',
-                                $name . '_end_time',
+                                $data['name'] . '_end_time',
                                 'H:i'
                             );
                             if(!$submitted_begin || !$submitted_end) {
@@ -217,13 +219,13 @@ class RoomSearchWidget extends SidebarWidget
                         ];
                     }
                     $this->selected_criteria[$name]['day_of_week']['value'] =
-                        Request::get($name . '_day_of_week');
+                        Request::get($data['name'] . '_day_of_week');
                     $this->selected_criteria[$name]['semester']['value'] =
-                        Request::get($name . '_semester_id');
+                        Request::get($data['name'] . '_semester_id');
                 }
             } else {
                 if (!empty($data['switch'])) {
-                    if (Request::get($name . '_enabled')) {
+                    if (Request::get($data['name'] . '_enabled')) {
                         $data['enabled'] = true;
                     } else {
                         //The criteria isn't enabled. We can move on to the
@@ -233,21 +235,23 @@ class RoomSearchWidget extends SidebarWidget
                 }
                 if ($data['type'] == 'date') {
                     if ($data['range_search']) {
-                        if (Request::submitted($name . '_begin_date')
-                            || Request::submitted($name . '_begin_time')
-                            || Request::submitted($name . '_end_date')
-                            || Request::submitted($name . '_end_time')) {
+                        if (Request::submittedSome(
+                            $data['name'] . '_begin_date',
+                            $data['name'] . '_begin_time',
+                            $data['name'] . '_end_date',
+                            $data['name'] . '_end_time'
+                        )) {
                             $this->selected_criteria[$name] = $data;
                             $submitted_begin = Request::getDateTime(
-                                $name . '_begin_date',
+                                $data['name'] . '_begin_date',
                                 'd.m.Y',
-                                $name . '_begin_time',
+                                $data['name'] . '_begin_time',
                                 'H:i'
                             );
                             $submitted_end = Request::getDateTime(
-                                $name . '_end_date',
+                                $data['name'] . '_end_date',
                                 'd.m.Y',
-                                $name . '_end_time',
+                                $data['name'] . '_end_time',
                                 'H:i'
                             );
                             if(!$submitted_begin || !$submitted_end) {
@@ -260,36 +264,40 @@ class RoomSearchWidget extends SidebarWidget
                             ];
                         }
                     } else {
-                        if (Request::submitted($name . '_date')
-                            || Request::submitted($name . '_time')) {
+                        if (Request::submittedSome(
+                            $data['name'] . '_date',
+                            $data['name'] . '_time'
+                        )) {
                             $this->selected_criteria[$name] = $data;
                             $this->selected_criteria[$name]['value'] =
                                 Request::getDateTime(
-                                    $name . '_date',
+                                    $data['name'] . '_date',
                                     'd.m.Y',
-                                    $name . '_time',
+                                    $data['name'] . '_time',
                                     'H:i'
                                 );
                         }
                     }
                 } elseif ($data['type'] === 'num' && $data['range_search']) {
-                    if (Request::submitted($name . '_min')
-                        || Request::submitted($name . '_max')) {
+                    if (Request::submittedSome(
+                        $data['name'] . '_min',
+                        $data['name'] . '_max'
+                    )) {
                         $this->selected_criteria[$name]          = $data;
                         $this->selected_criteria[$name]['value'] = [
-                            Request::get($name . '_min'),
-                            Request::get($name . '_max')
+                            Request::get($data['name'] . '_min'),
+                            Request::get($data['name'] . '_max')
                         ];
                     }
                 } elseif ($data['type'] === 'bool') {
-                    if (Request::submitted('options_' . $name)) {
+                    if (Request::submitted('options_' . $data['name'])) {
                         $this->selected_criteria[$name]          = $data;
-                        $this->selected_criteria[$name]['value'] = Request::get($name);
+                        $this->selected_criteria[$name]['value'] = Request::get($data['name']);
                     }
                 } else {
-                    if (Request::submitted($name)) {
+                    if (Request::submitted($data['name'])) {
                         $this->selected_criteria[$name] = $data;
-                        $this->selected_criteria[$name]['value'] = Request::get($name);
+                        $this->selected_criteria[$name]['value'] = Request::get($data['name']);
                     }
                 }
             }

@@ -102,7 +102,7 @@
         <select class="criteria-selector"
                 title="<?= _('Bitte aus dieser Liste Kriterien für die Raumsuche auswählen.')?>">
             <option value=""></option>
-            <? foreach ($criteria as $c): ?>
+            <? foreach ($criteria as $name => $c): ?>
                 <? if (!$c['optional']) { continue; } ?>
                 <option data-title="<?= htmlReady($c['title'])?>"
                         value="<?= htmlReady($c['name'])?>"
@@ -116,7 +116,7 @@
                                 )
                                 : ''
                         ) ?>"
-                        <?= in_array($c['name'], array_keys($selected_criteria))
+                        <?= in_array($name, array_keys($selected_criteria))
                           ? 'class="invisible"'
                           : ''?>>
                     <?= htmlReady($c['title']) ?>
