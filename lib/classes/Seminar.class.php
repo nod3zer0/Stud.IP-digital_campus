@@ -2063,7 +2063,7 @@ get_title_for_status('dozent', 1, $this->status)));
     public function deleteMember($user_id): bool
     {
         $dozenten = $this->getMembers();
-        if (count($dozenten) >= 2 || !$dozenten[$user_id]) {
+        if (count($dozenten) >= 2 || empty($dozenten[$user_id])) {
             $result = CourseMember::deleteBySQL('Seminar_id = ? AND user_id = ?', [$this->id, $user_id]);
             if ($result === 0) {
                 return true;
@@ -2091,7 +2091,7 @@ get_title_for_status('dozent', 1, $this->status)));
                 }
             }
 
-            if ($dozenten[$user_id]) {
+            if (!empty($dozenten[$user_id])) {
                 $query = "SELECT termin_id FROM termine WHERE range_id = ?";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute([$this->id]);
