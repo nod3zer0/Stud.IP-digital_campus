@@ -5,12 +5,22 @@ use Courseware\Unit;
 
 abstract class CoursewareController extends AuthenticatedController
 {
+    public function before_filter(&$action, &$args): void
+    {
+        parent::before_filter($action, $args);
+
+        if ($action === 'index' && Request::int('element_id')) {
+            $element = StructuralElement::find(Request::int('element_id'));
+            $this->redirect($this->action_url('courseware#/structural_element/' . $element->id, $element->findUnit()->id));
+        }
+    }
+
     public function redirectToFirstUnit(string $context, string $rangeId, array $last): void
     {
         $path = $context === 'user' ? 'contents' : $context;
         $last_element = $this->getLastElement($last, $context, $rangeId);
         if ($last_element) {
-            $unit = $last_element->findUnit($last);
+            $unit = $last_element->findUnit();
         } else {
             $unit = Unit::findOneBySql('range_id = ? ORDER BY mkdate ASC', [$rangeId]);
         }

@@ -76,7 +76,7 @@ class Contents_CoursewareController extends CoursewareController
         /** @var array<mixed> $last */
         $last = UserConfig::get($this->user_id)->getValue('COURSEWARE_LAST_ELEMENT');
 
-        if ($unit_id === null) {
+        if (empty($unit_id)) {
             $this->redirectToFirstUnit('user', $this->user_id, $last);
 
             return;

@@ -44,6 +44,7 @@ class Course_CoursewareController extends CoursewareController
     public function courseware_action($unit_id = null):  void
     {
         global $user;
+        
         Navigation::activateItem('course/courseware/unit');
         if ($this->unitsNotFound) {
             PageLayout::postMessage(MessageBox::info(_('Es wurde kein Lernmaterial gefunden.')));
