@@ -225,7 +225,7 @@
                 (
                     $request_id
                     ? $controller->url_for(
-                        'course/room_requests/request_summary/' . $request_id
+                        'course/room_requests/request_show_summary/' . $request_id
                     )
                     :  $controller->url_for(
                         'course/room_requests/new_request/' . $request_id,

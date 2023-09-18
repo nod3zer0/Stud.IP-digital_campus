@@ -400,7 +400,7 @@
                 <?= \Studip\LinkButton::create(
                     _('Anfrage bearbeiten'),
                     URLHelper::getURL(
-                        'dispatch.php/course/room_requests/request_summary/' . $request->id,
+                        'dispatch.php/course/room_requests/request_show_summary/' . $request->id,
                         ['cid' => $request->getRangeId()]
                     )
                 ) ?>

@@ -122,8 +122,8 @@
         $edit_url            = '';
         $edit_url_attributes = [];
         if ($GLOBALS['perm']->have_studip_perm('tutor', $request->getRangeId())) {
-            $edit_url            = $controller->link_for(
-                'course/room_requests/request_summary/' . $request->id,
+            $edit_url            = $controller->url_for(
+                'course/room_requests/request_show_summary/' . $request->id,
                 ['cid' => $request->getRangeId()]
             );
             $edit_url_attributes = ['target' => '_blank'];
