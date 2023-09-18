@@ -10,6 +10,7 @@
                 :tabindex="0"
                 aria-describedby="operation"
                 ref="sortableHandle"
+                role="button"
                 @keydown="handleKeyEvent"
             >
             </span>
@@ -339,7 +340,7 @@ export default {
         },
         handleKeyEvent(e) {
             switch (e.keyCode) {
-                case 32: // space
+                case 13: // enter
                     e.preventDefault();
                     if (this.keyboardSelected) {
                         this.storeKeyboardSorting();

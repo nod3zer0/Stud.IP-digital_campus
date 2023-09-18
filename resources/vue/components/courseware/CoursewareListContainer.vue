@@ -42,7 +42,7 @@
                                 :class="{ 'cw-sortable-handle-dragging': isDragging }"
                                 class="cw-sortable-handle"
                                 tabindex="0"
-                                role="option"
+                                role="button"
                                 aria-describedby="operation"
                                 :ref="'sortableHandle' + block.id"
                                 @keydown="keyHandler($event, block.id)"
@@ -186,7 +186,7 @@ export default {
                 case 27: // esc
                     this.abortKeyboardSorting(blockId);
                     break;
-                case 32: // space
+                case 13: // enter
                     e.preventDefault();
                     if (this.keyboardSelected) {
                         this.storeKeyboardSorting(blockId);
