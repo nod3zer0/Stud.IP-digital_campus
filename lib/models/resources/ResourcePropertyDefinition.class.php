@@ -387,23 +387,6 @@ class ResourcePropertyDefinition extends SimpleORMap
 
     public function __toString()
     {
-        //I18N fields can be an instance of I18NString or not.
-        //They are I18NString instances if at least two content
-        //languages are set.
-        if ($this->display_name instanceof I18NString) {
-            $name = $this->display_name->__toString();
-            if ($name) {
-                return $name;
-            } else {
-                return $this->name;
-            }
-        } elseif ($this->display_name) {
-            //Only one content language is set so that the field
-            //contains the text string in that language.
-            return $this->display_name;
-        }
-        //No display name defined. We must return the name that
-        //is used internally.
-        return $this->name;
+        return trim($this->display_name) ?: $this->name;
     }
 }
