@@ -136,7 +136,7 @@ export default {
                 this.val_clone.statements.splice(position, 0, val || '');
             }
             this.$nextTick(() => {
-                this.$refs['statement_' + (v.value.statements.length - 1)][0].focus();
+                this.$refs['statement_' + (this.value.statements.length - 1)][0].focus();
             });
         },
         deleteStatement(index) {
