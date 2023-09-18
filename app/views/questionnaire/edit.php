@@ -10,19 +10,20 @@ $questiontypes['Vote'] = [
     'component' => Vote::getEditingComponent()
 ];
 foreach (get_declared_classes() as $class) {
-    if (is_subclass_of($class, 'QuestionType')) {
-        if (!isset($questiontypes[$class])) {
-            $questiontypes[$class] = [
-                'name' => $class::getName(),
-                'type' => $class,
-                'icon' => $class::getIconShape(),
-                'component' => $class::getEditingComponent()
-            ];
-        }
+    if (
+        is_subclass_of($class, QuestionType::class)
+        && !isset($questiontypes[$class])
+    ) {
+        $questiontypes[$class] = [
+            'name' => $class::getName(),
+            'type' => $class,
+            'icon' => $class::getIconShape(),
+            'component' => $class::getEditingComponent()
+        ];
     }
 }
 $questionnaire_data = [
-    'id' => $questionnaire->getId(),
+    'id' => $questionnaire->id,
     'title' => $questionnaire['title'],
     'startdate' => $questionnaire->isNew() ? _('sofort') : $questionnaire['startdate'],
     'stopdate' => $questionnaire['stopdate'],
@@ -34,14 +35,14 @@ $questionnaire_data = [
 $questions_data = [];
 foreach ($questionnaire->questions as $question) {
     $questions_data[] = [
-        'id' => $question->getId(),
+        'id' => $question->id,
         'questiontype' => $question['questiontype'],
         'internal_name' => $question['internal_name'],
         'questiondata' => $question['questiondata']->getArrayCopy()
     ];
 }
 ?>
-<form action="<?= URLHelper::getLink("dispatch.php/questionnaire/edit/".(!$questionnaire->isNew() ? $questionnaire->getId() : "")) ?>"
+<form action="<?= URLHelper::getLink('dispatch.php/questionnaire/edit/' . (!$questionnaire->isNew() ? $questionnaire->getId() : '')) ?>"
       method="post"
       enctype="multipart/form-data"
       class="questionnaire_edit default"
@@ -50,19 +51,17 @@ foreach ($questionnaire->questions as $question) {
       data-questions_data="<?= htmlReady(json_encode($questions_data)) ?>"
       data-range_type="<?= htmlReady(Request::get('range_type')) ?>"
       data-range_id="<?= htmlReady(Request::get('range_id')) ?>"
-    <?= Request::isAjax() ? "data-dialog" : "" ?>
+      <?= Request::isAjax() ? 'data-dialog' : '' ?>
       :data-secure="activateFormSecure">
-
 
     <div class="editor">
         <div class="rightside" aria-live="polite" tabindex="0" ref="rightside">
             <div class="admin" v-if="activeTab === 'admin'">
 
-                <article aria-live="assertive"
-                         class="validation_notes studip">
+                <article aria-live="assertive" class="validation_notes studip">
                     <header>
                         <h1>
-                            <?= Icon::create('info-circle', Icon::ROLE_INFO)->asImg(17, ['class' => "text-bottom validation_notes_icon"]) ?>
+                            <?= Icon::create('info-circle', Icon::ROLE_INFO)->asImg(['class' => 'text-bottom validation_notes_icon']) ?>
                             <?= _('Hinweise zum Ausfüllen des Formulars') ?>
                         </h1>
                     </header>
@@ -128,26 +127,25 @@ foreach ($questionnaire->questions as $question) {
                        :ref="key == Object.keys(questiontypes)[0] ? 'autofocus' : ''"
                        href=""
                        @click.prevent="addQuestion(questiontype.type)">
-                        <studip-icon :shape="questiontype.icon" :size="40" role="clickable"></studip-icon>
+                        <studip-icon :shape="questiontype.icon" :size="40"></studip-icon>
                         {{questiontype.name}}
                     </button>
                 </div>
             </div>
             <div v-else>
-                <? foreach ($questiontypes as $questiontype) : ?>
-                <component is="<?= htmlReady($questiontype['component'][0]) ?>"
-                           v-if="questiontypes[questions[getIndexForQuestion(activeTab)].questiontype].component[0] === '<?= htmlReady($questiontype['component'][0]) ?>'"
-                           v-model="questions[getIndexForQuestion(activeTab)].questiondata"
-                           :question_id="questions[getIndexForQuestion(activeTab)].id">
+                <component :is="questiontypes[questions[indexForQuestion].questiontype].component[0]"
+                           v-model="questions[indexForQuestion].questiondata"
+                           :question_id="questions[indexForQuestion].id"
+                           :key="questions[indexForQuestion].id">
                 </component>
-                <? endforeach ?>
             </div>
         </div>
         <aside>
-            <a :class="activeTab === 'admin' ? 'admin active' : 'admin'"
-               href=""
+            <a class="admin"
+               :class="{active: activeTab === 'admin'}"
+               href="#"
                @click.prevent="switchTab('admin')">
-                <span class="icon"><studip-icon shape="evaluation" role="clickable" :size="30" alt=""></studip-icon></span>
+                <span class="icon"><studip-icon shape="evaluation" :size="30" alt=""></studip-icon></span>
                 <?= _('Einstellungen') ?>
             </a>
             <draggable v-if="questions.length > 0" v-model="questions" handle=".drag-handle" group="questions" class="questions_container questions">
@@ -160,17 +158,17 @@ foreach ($questionnaire->questions as $question) {
                        @click.prevent="switchTab(question.id)">
                         <span class="drag-handle"></span>
                         <span class="icon type">
-                            <studip-icon :shape="questiontypes[question.questiontype].icon" role="clickable" :size="30" alt=""></studip-icon>
+                            <studip-icon :shape="questiontypes[question.questiontype].icon" :size="30" alt=""></studip-icon>
                         </span>
 
                         <div v-if="editInternalName !== question.id">{{ question.internal_name || questiontypes[question.questiontype].name}}</div>
                         <div v-else class="inline_editing">
                             <input type="text" ref="editInternalName" v-model="tempInternalName" class="inlineediting_internal_name">
                             <button @click="saveInternalName(question.id)">
-                                <studip-icon shape="accept" role="clickable" :size="20" title="<?= _('Internen Namen speichern') ?>"></studip-icon>
+                                <studip-icon shape="accept" :size="20" title="<?= _('Internen Namen speichern') ?>"></studip-icon>
                             </button>
                             <button @click="editInternalName = null">
-                                <studip-icon shape="decline" role="clickable" :size="20" title="<?= _('Internen Namen nicht speichern') ?>"></studip-icon>
+                                <studip-icon shape="decline" :size="20" title="<?= _('Internen Namen nicht speichern') ?>"></studip-icon>
                             </button>
                         </div>
                     </a>
@@ -180,33 +178,20 @@ foreach ($questionnaire->questions as $question) {
                                         @rename="renameInternalName(question.id)"
                                         @moveup="moveQuestionUp(question.id)"
                                         @movedown="moveQuestionDown(question.id)"
-                                        @delete="askForDeletingTheQuestion(question.id)"></studip-action-menu>
+                                        @delete="deleteQuestion(question.id)"></studip-action-menu>
                 </div>
             </draggable>
             <a :class="activeTab === 'add_question' ? 'add_question active' : 'add_question'"
-               href=""
+               href="#"
                @click.prevent="switchTab('add_question')">
-                <span class="icon"><studip-icon shape="add" role="clickable" :size="30" alt=""></studip-icon></span>
+                <span class="icon"><studip-icon shape="add" :size="30" alt=""></studip-icon></span>
                 <?= _('Element hinzufügen') ?>
             </a>
         </aside>
     </div>
 
 
-    <studip-dialog
-        v-if="askForDeletingQuestions"
-        title="<?= _('Bitte bestätigen Sie die Aktion') ?>"
-        question="<?= _('Wirklich löschen?') ?>"
-        confirmText="<?= _('Ja') ?>"
-        closeText="<?= _('Nein') ?>"
-        closeClass="cancel"
-        height="180"
-        @confirm="deleteQuestion"
-        @close="askForDeletingQuestions = false"
-    >
-    </studip-dialog>
-
     <footer data-dialog-button>
-        <?= \Studip\LinkButton::create(_("Speichern"), 'questionnaire_store', ['onclick' => 'STUDIP.Questionnaire.Editor.submit(); return false;']) ?>
+        <?= Studip\LinkButton::create(_('Speichern'), 'questionnaire_store', ['onclick' => 'STUDIP.Questionnaire.Editor.submit(); return false;']) ?>
     </footer>
 </form>

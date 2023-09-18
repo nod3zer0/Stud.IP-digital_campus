@@ -1,5 +1,24 @@
 <?php
-
+/**
+ * @property string $id
+ * @property string $questionnaire_id
+ * @property string $title
+ * @property string $description
+ * @property string $user_id
+ * @property int|null $startdate
+ * @property int|null $stopdate
+ * @property bool $visible
+ * @property bool $anonymous
+ * @property string $resultvisibility
+ * @property bool $editanswers
+ * @property bool $copyable
+ * @property string $chdate
+ * @property string $mkdate
+ *
+ * @property QuestionnaireQuestion[]|SimpleORMapCollection $questions
+ * @property QuestionnaireAssignment[]|SimpleORMapCollection $assignments
+ * @property QuestionnaireAnonymousAnswer[]|SimpleORMapCollection $anonymousanswers
+ */
 class Questionnaire extends SimpleORMap implements PrivacyObject
 {
     protected static function configure($config = [])

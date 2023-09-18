@@ -7,7 +7,7 @@ const Questionnaire = {
     delayedQueue: [],
     Editor: null,
     initEditor () {
-        $('.questionnaire_edit').each(function () {
+        $('.questionnaire_edit:not(.vueified)').addClass('vueified').each(function () {
             STUDIP.Vue.load().then(({createApp}) => {
                 let form = this;
                 let components = {};
@@ -26,15 +26,15 @@ const Questionnaire = {
                 components['questionnaire-info-edit'] = () => import('../../../vue/components/questionnaires/QuestionnaireInfoEdit.vue');
                 STUDIP.Questionnaire.Editor = createApp({
                     el: form,
+                    components,
                     data() {
                         return {
+                            questiontypes,
+
                             questions: $(form).data('questions_data'),
                             activeTab: 'admin',
                             hoverTab: null,
-                            questiontypes: questiontypes,
                             data: $(form).data('questionnaire_data'),
-                            askForDeletingQuestions: false,
-                            whatQuestionIndexShouldBeDeleted: null,
                             form_secured: true,
                             oldData: {
                                 questions: [],
@@ -44,21 +44,23 @@ const Questionnaire = {
                             range_id: $(form).data('range_id'),
                             editInternalName: null,
                             tempInternalName: '',
-                            validationNotice: false
+                            validationNotice: false,
                         };
                     },
                     methods: {
-                        addQuestion: function (questiontype) {
+                        addQuestion(questiontype) {
                             let id = md5(STUDIP.USER_ID + '_QUESTIONTYPE_' + Math.random());
+
                             this.questions.push({
                                 id: id,
                                 questiontype: questiontype,
                                 internal_name: '',
                                 questiondata: {},
                             });
+
                             this.activeTab = id;
                         },
-                        submit: function () {
+                        submit() {
                             if (!this.data.title) {
                                 this.switchTab('admin');
                                 this.validationNotice = true;
@@ -82,25 +84,18 @@ const Questionnaire = {
                                     questiondata: Object.assign({}, this.questions[i].questiondata),
                                 });
                             }
-                            let v = this;
-                            $.ajax({
-                                url: STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/questionnaire/store/' + (this.data.id || '')),
-                                data: {
-                                    questionnaire: data,
-                                    questions_data: questions,
-                                    range_type: this.range_type,
-                                    range_id: this.range_id
-                                },
-                                type: 'post',
-                                success: function () {
-                                    v.form_secured = false;
-                                    v.$nextTick(function () {
-                                        location.reload();
-                                    });
-                                },
-                                error: function () {
-                                    window.alert('Could not save questionnaire.');
-                                }
+                            $.post(STUDIP.URLHelper.getURL('dispatch.php/questionnaire/store/' + (this.data.id || '')), {
+                                questionnaire: data,
+                                questions_data: questions,
+                                range_type: this.range_type,
+                                range_id: this.range_id
+                            }).done(() => {
+                                this.form_secured = false;
+                                this.$nextTick(() => {
+                                    location.reload();
+                                });
+                            }).fail(() => {
+                                STUDIP.Report.error('Could not save questionnaire.');
                             });
                         },
                         getIndexForQuestion: function (question_id) {
@@ -121,19 +116,16 @@ const Questionnaire = {
                             });
                             this.activeTab = id;
                         },
-                        askForDeletingTheQuestion: function (question_id) {
-                            this.askForDeletingQuestions = true;
-                            this.whatQuestionIndexShouldBeDeleted = this.getIndexForQuestion(question_id);
+                        deleteQuestion(question_id) {
+                            STUDIP.Dialog.confirm(this.$gettext('Wirklich löschen?')).done(() => {
+                                this.$delete(this.questions, this.getIndexForQuestion(question_id));
+                                this.switchTab('add_question');
+                            })
                         },
-                        deleteQuestion: function () {
-                            this.$delete(this.questions, this.whatQuestionIndexShouldBeDeleted);
-                            this.switchTab('add_question');
-                            this.askForDeletingQuestions = false;
-                        },
-                        switchTab: function (tab_id) {
+                        switchTab(tab_id) {
                             this.activeTab = tab_id;
                             this.$nextTick(function () {
-                                if (typeof this.$refs.autofocus !== "undefined") {
+                                if (this.$refs.autofocus !== undefined) {
                                     if (Array.isArray(this.$refs.autofocus)) {
                                         if (typeof this.$refs.autofocus[0] !== "undefined") {
                                             this.$refs.autofocus[0].focus();
@@ -144,23 +136,23 @@ const Questionnaire = {
                                 }
                             });
                         },
-                        objectsEqual: function (obj1, obj2) {
+                        objectsEqual(obj1, obj2) {
                             return _.isEqual(obj1, obj2);
                         },
-                        renameInternalName: function (question_id) {
+                        renameInternalName(question_id) {
                             this.editInternalName = question_id;
                             let index = this.getIndexForQuestion(question_id);
                             this.tempInternalName = this.questions[index].internal_name;
-                            this.$nextTick(function () {
+                            this.$nextTick(() => {
                                 this.$refs.editInternalName[0].focus();
                             });
                         },
-                        saveInternalName: function (question_id) {
+                        saveInternalName(question_id) {
                             let index = this.getIndexForQuestion(question_id);
                             this.questions[index].internal_name = this.tempInternalName;
                             this.editInternalName = null;
                         },
-                        moveQuestionDown: function (question_id) {
+                        moveQuestionDown(question_id) {
                             let index = this.getIndexForQuestion(question_id);
                             if (index < this.questions.length - 1) {
                                 let question = this.questions[index];
@@ -169,7 +161,7 @@ const Questionnaire = {
                                 this.$forceUpdate();
                             }
                         },
-                        moveQuestionUp: function (question_id) {
+                        moveQuestionUp(question_id) {
                             let index = this.getIndexForQuestion(question_id);
                             if (index > 0) {
                                 let question = this.questions[index];
@@ -180,22 +172,33 @@ const Questionnaire = {
                         }
                     },
                     computed: {
-                        activateFormSecure: function () {
+                        activateFormSecure() {
                             let newData = {
-                                'questions': this.questions,
-                                'data': this.data
+                                questions: this.questions,
+                                data: this.data
                             };
                             return this.form_secured && !this.objectsEqual(this.oldData, newData);
-                        }
+                        },
+                        indexForQuestion() {
+                            for (let i in this.questions) {
+                                if (
+                                    this.questions[i].id === this.activeTab ||
+                                    this.questions[i].id === this.activeTab.substring(5)
+                                ) {
+                                    return typeof i === "string" ? parseInt(i, 10) : i;
+                                }
+                            }
+
+                            return null;
+                        },
                     },
-                    mounted: function () {
+                    mounted() {
                         this.$refs.autofocus.focus();
                         this.oldData = {
-                            'questions': [...this.questions],
-                            'data': Object.assign({}, this.data)
+                            questions: [...this.questions],
+                            data: Object.assign({}, this.data)
                         };
                     },
-                    components: components
                 });
 
             });
