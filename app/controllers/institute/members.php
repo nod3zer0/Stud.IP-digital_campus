@@ -37,6 +37,8 @@ class Institute_MembersController extends AuthenticatedController
         }
 
         if (!Institute::findCurrent()) {
+            $GLOBALS['perm']->check('admin');
+
             require_once 'lib/admin_search.inc.php';
 
             // TODO: We don't seem to need this since admin_search will stop the script
