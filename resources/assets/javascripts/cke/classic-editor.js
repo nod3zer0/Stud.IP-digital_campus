@@ -54,7 +54,7 @@ ClassicEditor.defaultConfig = {
             '|',
             'sourceEditing',
         ],
-        shouldNotGroupWhenFull: true,
+        shouldNotGroupWhenFull: false,
     },
 };
 

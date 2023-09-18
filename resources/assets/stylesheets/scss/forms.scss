@@ -172,6 +172,7 @@ form.default {
         box-sizing: border-box;
         border: solid 1px $content-color-40;
         margin: 0 0 10px;
+        min-width: auto;
         padding: $gap 10px 10px;
 
         > legend {

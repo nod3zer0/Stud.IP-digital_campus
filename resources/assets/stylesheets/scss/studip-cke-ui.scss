@@ -71,8 +71,8 @@
 .ck.ck-icon, .ck.ck-icon * {
     color: var(--base-color);
 }
-.ck.ck-button.ck-on:not(.ck-dropdown__button) .ck.ck-icon,
-.ck.ck-button.ck-on:not(.ck-dropdown__button) .ck.ck-icon *,
+.ck.ck-button.ck-on .ck.ck-icon,
+.ck.ck-button.ck-on .ck.ck-icon *,
 .ck.ck-button:not(.ck-dropdown__button.ck-button_with-text):not(.ck-disabled):hover .ck.ck-icon,
 .ck.ck-button:not(.ck-dropdown__button.ck-button_with-text):not(.ck-disabled):hover .ck.ck-icon * {
     color: var(--white);
@@ -112,9 +112,7 @@
 .ck.ck-button.ck-off.ck-button_with-text:hover {
     background-color: var(--base-color);
 }
-.ck.ck-button.ck-on.ck-dropdown__button,
-.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover,
-a.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
+.ck.ck-button.ck-button_with-text.ck-dropdown__button:not(.ck-disabled):hover {
     background-color: var(--white);
     color: var(--base-color);
 }
@@ -414,16 +412,18 @@ form.default .ck-source-editing-area textarea {
 .ck.ck-toolbar {
     background-color: var(--dark-gray-color-5);
 }
-/* toolbar fix for dialogs */
-.ck.ck-toolbar > .ck-toolbar__items {
-    max-width: calc(100% - 20px);
-}
 
 /* tooltip fix for balloon panel */
 .ck.ck-balloon-panel.ck-tooltip {
     padding: 0;
 }
 
+.ck.ck-dropdown .ck-dropdown__panel.ck-dropdown__panel_sw {
+    right: -5px;
+    top: calc(100% + 4px);
+}
+
+/* toolbar fix for dialogs */
 .studip-dialog {
     .ck-editor {
         overflow: hidden;
@@ -433,6 +433,15 @@ form.default .ck-source-editing-area textarea {
         }
     }
 }
+
+form.default textarea:not(.size-l) + .ck-editor {
+    .ck-toolbar__grouped-dropdown {
+        .ck-toolbar {
+            max-width: calc(48em - 2px);
+        }
+    }
+}
+
 /* balloon editor button*/
 .ck.ck-block-toolbar-button {
     background-color: var(--dark-gray-color-5);
