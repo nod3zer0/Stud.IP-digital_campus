@@ -35,8 +35,8 @@
                             </div>
                         </div>
                         <div v-if="currentNav === 'true'">
-                            <a class="cw-block-gallery-prev" @click="plusSlides(-1)"></a>
-                            <a class="cw-block-gallery-next" @click="plusSlides(1)"></a>
+                            <button class="cw-block-gallery-prev" :title="$gettext('Vorheriges Bild')" @click="plusSlides(-1)"></button>
+                            <button class="cw-block-gallery-next" :title="$gettext('Nächstes Bild')" @click="plusSlides(1)"></button>
                         </div>
                     </div>
                     <div v-if="currentLayout === 'grid'" class="cw-block-gallery-content">
