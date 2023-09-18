@@ -1892,6 +1892,10 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
 
         $booking_resource = Resource::find($this->resource_id);
         $booking_user = User::find($this->booking_user_id);
+        $booking_course = null;
+        if ($this->course_id) {
+            $booking_course = Course::find($this->course_id);
+        }
         if (!$booking_resource || !$booking_user) {
             //Nothing we can do here.
             return;
@@ -1913,6 +1917,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         $template->set_attribute('begin', $this->begin);
         $template->set_attribute('end', $this->end);
         $template->set_attribute('deleting_user', User::findCurrent());
+        $template->set_attribute('booking_course', $booking_course);
 
         $mail_text = $template->render();
 

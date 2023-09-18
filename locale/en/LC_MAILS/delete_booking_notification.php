@@ -6,6 +6,10 @@ Your booking of the resource <?= $resource->name ?> on <?= date('d.m.Y', $begin)
  from <?= date('H:i', $begin) ?> to <?= date('H:i', $end) ?> has been deleted.
 <? endif ?>
 
+<? if ($booking_course instanceof Course): ?>
+The booking deleted belonged to course <?= $booking_course->getFullname() ?>.
+<? endif ?>
+
 <? if ($deleting_user instanceof User) : ?>
 The deletion has been made by <?= $deleting_user->getFullName() ?>.
 <? endif ?>
