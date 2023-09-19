@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2023-09-12 09:38+0000\n"
-"Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
+"PO-Revision-Date: 2023-09-20 09:29+0000\n"
+"Last-Translator: Ron Lucke <lucke@elan-ev.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
 "stud-ip-main-js/en/>\n"
 "Language: en\n"
@@ -414,9 +414,8 @@ msgid "Abschnitt löschen"
 msgstr "Delete section"
 
 #: resources/vue/components/courseware/CoursewareContainerActions.vue:32
-#, fuzzy
 msgid "Abschnitt merken"
-msgstr "Add section"
+msgstr "Remember section"
 
 #: resources/vue/components/courseware/CoursewareDefaultContainer.vue:26
 #: resources/vue/components/courseware/CoursewareDefaultContainer.vue:25
@@ -429,9 +428,8 @@ msgid "Abschnitt verändern"
 msgstr "Edit section"
 
 #: resources/vue/components/courseware/CoursewareDefaultContainer.vue:250
-#, fuzzy
 msgid "Abschnitt wurde in Merkliste abgelegt."
-msgstr "The section has been successfully inserted."
+msgstr "Section has been placed in watch list."
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:136
 msgid "Abschnitt-Stil"
@@ -555,9 +553,8 @@ msgid "Alle"
 msgstr "All"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:225
-#, fuzzy
 msgid "Alle Abschnitte aus Merkliste entfernen"
-msgstr "Remove contacts from group"
+msgstr "Remove all sections from watch list"
 
 #: resources/vue/components/AdminCourses.vue:176
 msgid "Alle anzeigen"
@@ -572,9 +569,8 @@ msgid "Alle Bilder auswählen"
 msgstr "Select all images"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:197
-#, fuzzy
 msgid "Alle Blöcke aus Merkliste entfernen"
-msgstr "remove and add to clipboard"
+msgstr "Remove all blocks from watch list"
 
 #: resources/assets/javascripts/bootstrap/multi_select.js:8
 #: resources/assets/javascripts/lib/multi_person_search.js:34
@@ -1045,7 +1041,7 @@ msgstr "Author"
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:16
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:10
 msgid "Balkendiagramm"
-msgstr "Bar graph"
+msgstr "Bar chart"
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:143
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:23
@@ -1121,9 +1117,8 @@ msgid "beliebig"
 msgstr "any"
 
 #: resources/vue/components/stock-images/filters.js:29
-#, fuzzy
 msgid "Beliebige Ausrichtung"
-msgstr "vertical arrangement:"
+msgstr "Any orientation"
 
 #: resources/vue/components/blubber/ThreadSubscriber.vue:29
 #: resources/vue/components/BlubberThread.vue:93
@@ -1570,9 +1565,8 @@ msgid "Block löschen"
 msgstr "Delete block"
 
 #: resources/vue/components/courseware/CoursewareBlockActions.vue:67
-#, fuzzy
 msgid "Block merken"
-msgstr "Edit block"
+msgstr "Remember block"
 
 #: resources/vue/components/courseware/CoursewareDefaultBlock.vue:48
 msgid "Block unwiderruflich löschen"
@@ -1589,9 +1583,8 @@ msgid "Block wurde erstellt von"
 msgstr "Block created by"
 
 #: resources/vue/components/courseware/CoursewareDefaultBlock.vue:291
-#, fuzzy
 msgid "Block wurde in Merkliste abgelegt."
-msgstr "Block created on"
+msgstr "Block has been placed in watch list."
 
 #: resources/vue/components/courseware/CoursewareBlockAdderArea.vue:4
 msgid "Block zu diesem Abschnitt hinzufügen"
@@ -2082,14 +2075,12 @@ msgid "Die Inhalte wurden zu Ihren persönlichen Lernmaterialien hinzugefügt."
 msgstr "The contents have been added to your personal learning materials."
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:230
-#, fuzzy
 msgid "Die Merkliste enthält keine Abschnitte."
-msgstr "This element does not contain sections."
+msgstr "This watch list does not contain sections."
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:202
-#, fuzzy
 msgid "Die Merkliste enthält keine Blöcke."
-msgstr "This section does not contain blocks."
+msgstr "This watch list does not contain blocks."
 
 #: resources/assets/javascripts/studip-jquery.multi-select.tweaks.js:54
 msgid "Die Person ist bereits eingetragen."
@@ -2250,9 +2241,8 @@ msgstr "This page is already being edited."
 
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:189
 #: resources/vue/components/courseware/CoursewareTreeItem.vue:74
-#, fuzzy
 msgid "Diese Seite wurde von Ihnen vollständig bearbeitet"
-msgstr "This page is possibly being edited by %s."
+msgstr "This page has been viewed by you completely"
 
 #: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:43
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:44
@@ -2432,15 +2422,14 @@ msgstr ""
 "again in the overview."
 
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogAdd.vue:48
-#, fuzzy
 msgid ""
 "Ein Vorschaubild motiviert Lernende die Seite zu erkunden. Die Kombination "
 "aus Bild und Farbe erleichtert das wiederfinden der Seite in einem "
 "Inhaltsverzeichnisblock."
 msgstr ""
-"A preview image motivates lecturers to explore the learning material. The "
-"combination of image and colour faciliates finding the learning material "
-"again in the overview."
+"A preview image motivates learners to explore the page. The combination of "
+"image and color makes it easier to find the page in a table of contents "
+"block."
 
 #: resources/vue/components/courseware/CoursewareLtiBlock.vue:223
 msgid "Ein Wert pro Zeile, Beispiel: Review:Chapter=1.2.56"
@@ -2707,9 +2696,8 @@ msgid "Es gab einen Fehler beim Hochladen der Datei(en):"
 msgstr "An error occurred while uploading the file(s):"
 
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:329
-#, fuzzy
 msgid "Es gab einen Fehler. Bitte versuchen Sie es erneut!"
-msgstr "An error occurred during upload. Please try again."
+msgstr "An error occurred during upload. Please try again!"
 
 #: resources/assets/javascripts/lib/dialog.js:307
 msgid "Es ist ein Fehler aufgetreten"
@@ -2762,9 +2750,8 @@ msgstr ""
 "material under Work place/Courseware."
 
 #: resources/vue/components/stock-images/ImagesList.vue:72
-#, fuzzy
 msgid "Es konnten keine Bilder gefunden werden."
-msgstr "No resources could be found!"
+msgstr "No resources could be found."
 
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:130
 #: resources/vue/components/courseware/CoursewareTableOfContentsBlock.vue:137
@@ -2902,7 +2889,7 @@ msgstr "No results were found for \"<%= needle %>\"."
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:122
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:172
 msgid "Es wurden keine passenden Blöcke gefunden."
-msgstr "No matching blocks have been found!"
+msgstr "No matching blocks have been found."
 
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:284
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:394
@@ -3050,9 +3037,8 @@ msgid "Farbgruppierung ändern"
 msgstr "Change colour grouping"
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:384
-#, fuzzy
 msgid "Farbverlauf"
-msgstr "Leave"
+msgstr "Color gradient"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:72
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:34
@@ -3345,7 +3331,7 @@ msgstr "Birthplace"
 
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:350
 msgid "gedreht"
-msgstr ""
+msgstr "rotated"
 
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:47
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:43
@@ -3415,7 +3401,7 @@ msgstr "Grid"
 
 #: resources/vue/components/courseware/CoursewareGalleryBlock.vue:208
 msgid "Gitter-Spalten"
-msgstr ""
+msgstr "Grid columns"
 
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:49
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:45
@@ -3548,9 +3534,8 @@ msgid "halbjährlich"
 msgstr "biannual"
 
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:271
-#, fuzzy
 msgid "Hand-Werkzeug"
-msgstr "Tool"
+msgstr "Hand tool"
 
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:67
 msgid "Handelt es sich bei dem Inhalt hauptsächlich um Text?"
@@ -3627,13 +3612,12 @@ msgstr ""
 "especially interesting if the learning material is shared as OER."
 
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogAdd.vue:58
-#, fuzzy
 msgid ""
 "Hier können Sie detaillierte Angaben zur Seite eintragen. Diese sind "
 "besonders interessant wenn die Seite als OER geteilt wird."
 msgstr ""
-"Here you can enter detailed data to the learning material. These are "
-"especially interesting if the learning material is shared as OER."
+"Here you can enter detailed information about the page. These are especially "
+"interesting if the page is shared as OER."
 
 #: resources/assets/javascripts/bootstrap/forms.js:333
 #, fuzzy
@@ -3689,9 +3673,8 @@ msgid "Hintergrundfarbe"
 msgstr "Background color"
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:490
-#, fuzzy
 msgid "Hintergrundfarbverlauf"
-msgstr "Background color"
+msgstr "Background color gradient"
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:379
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:95
@@ -3717,7 +3700,7 @@ msgstr "Added by %{user} on %{time}"
 
 #: resources/vue/components/stock-images/filters.js:33
 msgid "Hochformat"
-msgstr ""
+msgstr "Portrait"
 
 #: resources/vue/components/courseware/CoursewareGalleryBlock.vue:195
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:154
@@ -3768,7 +3751,7 @@ msgstr "Icon"
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:147
 msgid "Icon oben mit Linien"
-msgstr ""
+msgstr "Top icon with line"
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:326
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:78
@@ -3804,12 +3787,11 @@ msgstr ""
 "Your changes could not be saved since %{blockingUserName} took over editing."
 
 #: resources/vue/components/courseware/CoursewareUnitItemDialogLayout.vue:79
-#, fuzzy
 msgid ""
 "Ihre Änderungen konnten nicht gespeichert werden, die Daten werden bereits "
 "von einem anderen Nutzer bearbeitet."
 msgstr ""
-"Your changes could not be saved since %{blockingUserName} took over editing."
+"Your changes could not be saved, the data is already edited by another user."
 
 #: resources/vue/components/courseware/CoursewareDashboardTasks.vue:101
 msgid "Ihre Anfrage wurde eingereicht."
@@ -4306,7 +4288,7 @@ msgstr "Flip card"
 
 #: resources/vue/components/courseware/CoursewareGalleryBlock.vue:179
 msgid "Karussell"
-msgstr ""
+msgstr "Carousel"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:98
 msgid "Kategorien Filter"
@@ -4478,9 +4460,8 @@ msgid "Konversationen"
 msgstr "Conversations"
 
 #: resources/vue/components/courseware/CoursewareClipboardItem.vue:65
-#, fuzzy
 msgid "Kopie des aktuellen Stands einfügen"
-msgstr "insert here"
+msgstr "Insert a copy of the current state"
 
 #: resources/vue/components/courseware/CoursewareShelfDialogCopy.vue:49
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogCopy.vue:40
@@ -4950,17 +4931,15 @@ msgstr "Memcached server"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:172
 msgid "Merkliste"
-msgstr "Clipboard"
+msgstr "Watch list"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:103
-#, fuzzy
 msgid "Merkliste für Abschnitte leeren"
-msgstr "add to clipboard"
+msgstr "Empty watch list for sections"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:100
-#, fuzzy
 msgid "Merkliste für Blöcke leeren"
-msgstr "add to clipboard"
+msgstr "Empty watch list for blocks"
 
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:56
 #: resources/vue/components/courseware/CoursewareKeyPointBlock.vue:12
@@ -5066,14 +5045,12 @@ msgid "Möchten Sie die Freigabe für %{ pageTitle} wirklich löschen?"
 msgstr "Do you really want to delete the share for %{ pageTitle }?"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:112
-#, fuzzy
 msgid "Möchten Sie die Merkliste für Abschnitte unwiderruflich leeren?"
-msgstr "Do you really want to delete this section?"
+msgstr "Do you want to clear the watch list for sections irrevocably?"
 
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:109
-#, fuzzy
 msgid "Möchten Sie die Merkliste für Blöcke unwiderruflich leeren?"
-msgstr "Do you really want to delete this block?"
+msgstr "Do you want to clear the watch list for blocks irrevocably?"
 
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:213
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:207
@@ -5745,9 +5722,8 @@ msgid "Quelltext"
 msgstr "Source code"
 
 #: resources/vue/components/stock-images/filters.js:32
-#, fuzzy
 msgid "Querformat"
-msgstr "Export format:"
+msgstr "Landscape"
 
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:311
 #: resources/vue/components/courseware/CoursewareImageMapBlock.vue:389
@@ -5781,7 +5757,7 @@ msgstr "huge"
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:18
 #: resources/vue/components/courseware/CoursewareChartBlock.vue:12
 msgid "Ringdiagramm"
-msgstr "Donut"
+msgstr "Donut chart"
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:509
 msgid "Romantic Sun"
@@ -5825,7 +5801,7 @@ msgstr "Bar chart"
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:148
 msgid "Schief"
-msgstr ""
+msgstr "Skew"
 
 #: resources/vue/components/courseware/CoursewareRibbonToolbar.vue:71
 #: resources/vue/components/courseware/CoursewareRibbonToolbar.vue:68
@@ -6204,9 +6180,8 @@ msgstr ""
 
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:308
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:24
-#, fuzzy
 msgid "Sie können diese Daten unter \"Seiteneinstellungen\" verändern."
-msgstr "You can modify the data via \"Edit page\"."
+msgstr "You can change this data under \"Page settings\"."
 
 #: resources/vue/components/courseware/CoursewareLtiBlock.vue:113
 msgid "Sie können direkt auf eine URL in der Anwendung verlinken."
@@ -7178,9 +7153,8 @@ msgid "von"
 msgstr "from"
 
 #: resources/vue/components/courseware/CoursewareContentShared.vue:28
-#, fuzzy
 msgid "Von mir geteilte Seiten"
-msgstr "Learning contents shared by me"
+msgstr "Pages shared by me"
 
 #: resources/assets/javascripts/studip-ui.js:627
 #: resources/assets/javascripts/studip-ui.js:626
@@ -7245,6 +7219,8 @@ msgid ""
 "angeordent sind. Beim anlegen der Seite, wird diese mit Abschnitten und "
 "Blöcken befüllt."
 msgstr ""
+"Templates contain sections and blocks that are already arranged for specific "
+"purposes. When the page is created, it is filled with sections and blocks."
 
 #: resources/assets/javascripts/studip-ui.js:692
 #: resources/assets/javascripts/studip-ui.js:691
@@ -7297,6 +7273,8 @@ msgid ""
 "Sie auf den Seitennamen. Mit einem weiteren Klick werden die Unterseiten "
 "wieder zugeklappt."
 msgstr ""
+"Select the page you want to copy. To display subpages, click on the page "
+"name. With another click the subpages are collapsed again."
 
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogLink.vue:22
 msgid ""
@@ -7304,6 +7282,8 @@ msgid ""
 "Sie auf den Seitennamen. Mit einem weiteren Klick werden die Unterseiten "
 "wieder zugeklappt."
 msgstr ""
+"Select the page you want to link. To display subpages, click on the page "
+"name. With another click the subpages are collapsed again."
 
 #: resources/vue/components/courseware/CoursewareTasksDialogDistribute.vue:33
 #, fuzzy
@@ -7321,19 +7301,16 @@ msgstr ""
 "of the category \"task template\" can be distributed."
 
 #: resources/vue/components/stock-images/OrientationFilterWidget.vue:14
-#, fuzzy
 msgid "Wählen Sie eine Seitenausrichtung"
-msgstr "Please select an institute: "
+msgstr "Choose an orientation"
 
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogAdd.vue:30
-#, fuzzy
 msgid ""
 "Wählen Sie einen kurzen, prägnanten Titel und beschreiben Sie in einigen "
 "Worten den Inhalt der Seite."
 msgstr ""
-"Select a short, concise title and describe the content of the learning "
-"material in some words. A description faciliates the selection of the "
-"learning material for lecturers."
+"Choose a short, concise title and describe the content of the page in a few "
+"words."
 
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:23
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:17
@@ -7422,9 +7399,9 @@ msgid ""
 "aus. Bei Courseware-Export-Archiven handelt es sich um Zip-Dateien. Diese "
 "sollten mindestens die Dateien files.json und courseware.json enthalten."
 msgstr ""
-"Select a Courseware export archive file from your hard drive here. "
-"Courseware export archives are ZIP files. These should at least contain the "
-"files files.json and courseware.json."
+"Select a Courseware export archive file from your hard disk here. Export "
+"archives are zip files. They should contain at least the files.json and "
+"courseware.json."
 
 #: resources/vue/components/courseware/CoursewareAudioBlock.vue:231
 #: resources/vue/components/courseware/CoursewareBeforeAfterBlock.vue:74
@@ -7779,9 +7756,8 @@ msgid "Zurück"
 msgstr "Back"
 
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:1291
-#, fuzzy
 msgid "Zurück zur Lernmaterialübersicht"
-msgstr "Back to overview"
+msgstr "Back to the learning material overview"
 
 #: resources/vue/components/courseware/CoursewareBlockHelper.vue:12
 #: resources/vue/components/courseware/CoursewareCanvasBlock.vue:61
