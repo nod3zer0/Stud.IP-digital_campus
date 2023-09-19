@@ -62,7 +62,7 @@ class StudipAutoloader
      */
     public static function register()
     {
-        spl_autoload_register('static::loadClass');
+        spl_autoload_register([static::class, 'loadClass']);
     }
 
 
@@ -71,7 +71,7 @@ class StudipAutoloader
      */
     public static function unregister()
     {
-        spl_autoload_unregister('static::loadClass');
+        spl_autoload_unregister([static::class, 'loadClass']);
     }
 
     /**
@@ -151,7 +151,7 @@ class StudipAutoloader
      */
     public static function addClassLookups(array $map)
     {
-        $map = array_map('self::sanitizePath', $map);
+        $map = array_map([self::class, 'sanitizePath'], $map);
         self::$class_lookup = array_merge(self::$class_lookup, $map);
     }
 
