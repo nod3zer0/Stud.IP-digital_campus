@@ -214,7 +214,7 @@ class Seminar_Register_Auth extends Seminar_Auth
         $token  = Token::create(7 * 24 * 60 * 60, $user->id); // Link is valid for 1 week
         $url    = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'email_validation.php?secret=' . $token;
         $mail   = new StudipMail();
-        $abuse  = $mail->getReplyToEmail();
+        $abuse  = StudipMail::getAbuseEmail();
 
         $lang_path = getUserLanguagePath($user->id);
 

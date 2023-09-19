@@ -226,7 +226,6 @@ class messaging
         // Now, let us send the message
         $mail = new StudipMail();
         $mail->setSubject($title)
-            ->setReplyToEmail('')
             ->addRecipient($to, $rec_fullname)
             ->setBodyText($mailmessage);
         if (mb_strlen($reply_to)) {
@@ -236,8 +235,7 @@ class messaging
                     ->setSenderName(sprintf(_('Stud.IP für %s'), $snd_fullname));
             } else {
                 $mail->setSenderEmail($reply_to)
-                    ->setSenderName($snd_fullname)
-                    ->setReplyToEmail('');
+                    ->setSenderName($snd_fullname);
             }
         }
         $user_cfg = UserConfig::get($rec_user_id);

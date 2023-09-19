@@ -70,6 +70,16 @@ class StudipMail
     }
 
     /**
+     * Gets the configured abuse mail contact
+     *
+     * @return string
+     */
+    public static function getAbuseEmail()
+    {
+        return $GLOBALS['MAIL_ABUSE'] ?: "abuse@{$mail_localhost}";
+    }
+
+    /**
      * convenience method for sending a qick, text based email message
      *
      * @param string $recipient
@@ -99,9 +109,8 @@ class StudipMail
     public static function sendAbuseMessage($subject, $text)
     {
         $mail = new StudipMail();
-        $abuse = $mail->getReplyToEmail();
+        $abuse = self::getAbuseEmail();
         return $mail->setSubject($subject)
-                    ->setReplyToEmail('')
                     ->addRecipient($abuse)
                     ->setBodyText($text)
                     ->send();
@@ -109,7 +118,7 @@ class StudipMail
 
     /**
      * sets some default values for sender and reply to from
-     * configuration settings. The return path is always set to MAIL_ABUSE
+     * configuration settings.
      *
      */
     public function __construct($data = null)
@@ -117,7 +126,6 @@ class StudipMail
         $mail_localhost = $GLOBALS['MAIL_LOCALHOST'] ?: $_SERVER['SERVER_NAME'];
         $this->setSenderEmail($GLOBALS['MAIL_ENV_FROM'] ?: "wwwrun@{$mail_localhost}");
         $this->setSenderName($GLOBALS['MAIL_FROM'] ?: 'Stud.IP - ' . Config::get()->UNI_NAME_CLEAN);
-        $this->setReplyToEmail($GLOBALS['MAIL_ABUSE'] ?: "abuse@{$mail_localhost}");
 
         if ($data) {
             $this->setData($data);
@@ -391,6 +399,7 @@ class StudipMail
             throw new Exception('no mail transport defined');
         }
         $transporter->ResetMessage();
+        $transporter->SetHeader('Return-Path', $this->getSenderEmail());
         $transporter->SetEncodedEmailHeader('From', $this->getSenderEmail(), self::quoteString($this->getSenderName()));
         if($this->getReplyToEmail()){
             $transporter->SetEncodedEmailHeader('Reply-To', $this->getReplyToEmail(), self::quoteString($this->getReplyToName()));

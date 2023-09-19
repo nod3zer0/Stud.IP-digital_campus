@@ -94,8 +94,7 @@ class ForumBulkMail extends messaging
                     $mail->addRecipient($to, get_fullname($user_id), 'Bcc');
                 }
 
-                $mail->setReplyToEmail('')
-                ->setBodyText($data['text']);
+                $mail->setBodyText($data['text']);
 
                 if (mb_strlen($data['reply_to'])) {
                     $mail->setSenderEmail($data['reply_to']);
