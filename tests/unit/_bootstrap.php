@@ -74,12 +74,17 @@ StudipAutoloader::addClassLookup(
 );
 
 // load config-variables
+$added_configs = [];
 StudipFileloader::load(
     'config_defaults.inc.php config_local.inc.php',
-    $GLOBALS,
+    $added_configs,
     compact('STUDIP_BASE_PATH', 'ABSOLUTE_URI_STUDIP', 'ASSETS_URL', 'CANONICAL_RELATIVE_PATH_STUDIP'),
     true
 );
+
+foreach ($added_configs as $key => $value) {
+    $GLOBALS[$key] = $value;
+}
 
 $config = Symfony\Component\Yaml\Yaml::parseFile(__DIR__ .'/../unit.suite.yml');
 
