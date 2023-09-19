@@ -751,7 +751,7 @@ class UserManagement
             $mailbody = sprintf(
                 _("Dies ist eine Bestätigungsmail des Stud.IP-Systems\n"
                     ."(Studienbegleitender Internetsupport von Präsenzlehre)\n- %1\$s -\n\n"
-                    ."Sie haben um die Zurücksetzung Ihres Passwortes gebeten.\n\n"
+                    ."Sie haben um die Zurücksetzung des Passwortes zu Ihrem Benutzernamen %5\$s gebeten.\n\n"
                     ."Diese E-Mail wurde Ihnen zugesandt um sicherzustellen,\n"
                     ."dass die angegebene E-Mail-Adresse tatsächlich Ihnen gehört.\n\n"
                     ."Wenn Sie um die Zurücksetzung Ihres Passwortes gebeten haben,\n"
@@ -771,7 +771,8 @@ class UserManagement
                 Config::get()->UNI_NAME_CLEAN,
                 $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/new_password/set/'. $token->token .'?cancel_login=1',
                 $spoken_expiration,
-                strftime('%x %X', $token->expiration)
+                strftime('%x %X', $token->expiration),
+                $user->username
             );
         }
 
