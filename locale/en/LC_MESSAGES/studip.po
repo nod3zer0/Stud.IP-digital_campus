@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-04 14:31+0200\n"
-"PO-Revision-Date: 2023-09-12 12:11+0000\n"
-"Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
+"PO-Revision-Date: 2023-09-20 09:29+0000\n"
+"Last-Translator: Ron Lucke <lucke@elan-ev.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
 "stud-ip-main/en/>\n"
 "Language: en\n"
@@ -18994,7 +18994,7 @@ msgstr "Level"
 #: app/views/contents/courseware/create_project.php:75
 #: lib/models/Courseware/BlockTypes/Headline.php:118
 msgid "Farbe"
-msgstr "Colour"
+msgstr "Color"
 
 #: app/views/contents/courseware/create_project.php:79
 msgid "Königliches Purpur"
@@ -44067,9 +44067,8 @@ msgstr "Show pictures from a folder in the file area."
 #: lib/models/Courseware/BlockTypes/Timeline.php:73
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:68
 #: lib/models/Courseware/BlockTypes/Headline.php:116
-#, fuzzy
 msgid "Gestaltung"
-msgstr "Course"
+msgstr "Layout"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:161
 msgid "Bilderkarussell"
@@ -44229,9 +44228,8 @@ msgid "Beruf"
 msgstr "Job"
 
 #: lib/models/Courseware/BlockTypes/BiographyPersonalInformation.php:70
-#, fuzzy
 msgid "Geburtsort"
-msgstr "Birthday"
+msgstr "Birthplace"
 
 #: lib/models/Courseware/BlockTypes/BiographyPersonalInformation.php:71
 #: lib/models/Courseware/BlockTypes/BiographyGoals.php:68
@@ -44311,14 +44309,12 @@ msgid "Zahl"
 msgstr "Number"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:66
-#, fuzzy
 msgid "Säulendiagramm"
-msgstr "Chart"
+msgstr "Bar chart"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:66
-#, fuzzy
 msgid "Balkendiagramm"
-msgstr "Chart"
+msgstr "Bar chart"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:67
 #, fuzzy
@@ -44326,9 +44322,8 @@ msgid "Kreisdiagramm"
 msgstr "Chart"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:67
-#, fuzzy
 msgid "Ringdiagramm"
-msgstr "Chart"
+msgstr "Donut chart"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:67
 #, fuzzy
@@ -44336,9 +44331,8 @@ msgid "Polardiagramm"
 msgstr "Chart"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:67
-#, fuzzy
 msgid "Liniendiagramm"
-msgstr "Chart"
+msgstr "Line chart"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:68
 #, fuzzy
@@ -44940,9 +44934,8 @@ msgid "Schaltfläche"
 msgstr "Button"
 
 #: lib/models/Courseware/BlockTypes/ImageMap.php:95
-#, fuzzy
 msgid "Beschriftung"
-msgstr "Description"
+msgstr "Labeling"
 
 #: lib/models/Courseware/BlockTypes/ImageMap.php:95
 msgid "Imagemap"
@@ -45215,9 +45208,8 @@ msgid "Schule"
 msgstr "School"
 
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:77
-#, fuzzy
 msgid "Berufserfahrung"
-msgstr "Execution"
+msgstr "Professional experience"
 
 #: lib/models/Courseware/BlockTypes/BiographyCareer.php:77
 msgid "Arbeit"
