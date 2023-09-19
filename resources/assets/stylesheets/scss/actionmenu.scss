@@ -141,6 +141,12 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
                 color: $active-color;
             }
         }
+
+        > hr {
+            border-style: none;
+            border-top: thin solid var(--dark-gray-color-45);
+            margin: 4px 0;
+        }
     }
 
     &.is-open {

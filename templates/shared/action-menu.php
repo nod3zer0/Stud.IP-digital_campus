@@ -48,6 +48,8 @@
                 <? endif ?>
             <? elseif ($action['type'] === 'multi-person-search'): ?>
                 <?= $action['object']->render() ?>
+            <? elseif ($action['type'] === 'separator'): ?>
+                <hr>
             <? endif ?>
             </li>
         <? endforeach ?>

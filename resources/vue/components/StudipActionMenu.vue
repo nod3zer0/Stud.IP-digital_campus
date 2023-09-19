@@ -11,10 +11,10 @@
             </div>
             <ul class="action-menu-list">
                 <li v-for="item in navigationItems" :key="item.id" class="action-menu-item">
-                    <a v-if="item.type === 'link'" v-bind="linkAttributes(item)" v-on="linkEvents(item)">
+                    <hr v-if="item.type === 'separator'">
+                    <a v-else-if="item.type === 'link'" v-bind="linkAttributes(item)" v-on="linkEvents(item)">
                         <studip-icon v-if="item.icon !== false" :shape="item.icon.shape" :role="item.icon.role"></studip-icon>
                         <span v-else class="action-menu-no-icon"></span>
-
                         {{ item.label }}
                     </a>
                     <label v-else-if="item.icon" class="undecorated" v-bind="linkAttributes(item)" v-on="linkEvents(item)">
@@ -33,7 +33,8 @@
     </div>
     <div v-else>
         <a v-for="item in navigationItems" :key="item.id" v-bind="linkAttributes(item)" v-on="linkEvents(item)">
-            <studip-icon :title="item.label" :shape="item.icon.shape" :role="item.icon.role" :size="20"></studip-icon>
+            <span v-if="item.type === 'separator'" class="quiet">|</span>
+            <studip-icon v-else :title="item.label" :shape="item.icon.shape" :role="item.icon.role" :size="20"></studip-icon>
         </a>
     </div>
 </template>
@@ -119,7 +120,7 @@ export default {
             if (collapseAt === true) {
                 return true;
             }
-            return Number.parseInt(collapseAt) <= this.items.length;
+            return Number.parseInt(collapseAt) <= this.items.filter((item) => item.type !== 'separator').length;
         },
         title () {
             return this.context ? this.$gettextInterpolate(this.$gettext('Aktionsmenü für %{context}'), {context: this.context}) : this.$gettext('Aktionsmenü');

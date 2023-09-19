@@ -30,5 +30,7 @@
         <? endif ?>
     <? elseif ($action['type'] === 'multi-person-search'): ?>
         <?= $action['object']->render(false) ?>
+    <? elseif ($action['type'] === 'separator'): ?>
+        <span class="quiet">|</span>
     <? endif ?>
 <? endforeach ?>

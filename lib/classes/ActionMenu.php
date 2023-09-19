@@ -97,6 +97,18 @@ class ActionMenu
     }
 
     /**
+     * Returns the number of action menu items (not counting separators).
+     *
+     * @return int count
+     */
+    protected function countActions(): int
+    {
+        return count(array_filter($this->actions, function($action) {
+            return $action['type'] !== 'separator';
+        }));
+    }
+
+    /**
      * Adds a link to the list of actions.
      *
      * @param String|StudipLink  $url        Link target, eithe as string or
@@ -214,6 +226,23 @@ class ActionMenu
     }
 
     /**
+     * Adds a separator line to the list of actions.
+     *
+     * @return ActionMenu instance to allow chaining
+     */
+    public function addSeparator(): ActionMenu
+    {
+        if ($this->checkCondition()) {
+            $this->actions[] = [
+                'type'   => 'separator',
+                'index'  => ''
+            ];
+        }
+
+        return $this;
+    }
+
+    /**
      * Adds a css classs to the root element in html.
      *
      * @param string $class Name of the css class
@@ -251,7 +280,7 @@ class ActionMenu
      */
     public function render()
     {
-        if (count($this->actions) === 0) {
+        if ($this->countActions() === 0) {
             return '';
         }
 
@@ -342,7 +371,7 @@ class ActionMenu
         $rendering_mode = $this->rendering_mode;
 
         if ($rendering_mode === null) {
-            $rendering_mode = count($this->actions) <= Config::get()->ACTION_MENU_THRESHOLD
+            $rendering_mode = $this->countActions() <= Config::get()->ACTION_MENU_THRESHOLD
                             ? self::RENDERING_MODE_ICONS
                             : self::RENDERING_MODE_MENU;
         }
