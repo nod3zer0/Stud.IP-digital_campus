@@ -42,10 +42,11 @@
             </colgroup>
             <thead>
                 <tr class="sortable">
-                    <th v-if="show_bulk_actions" data-sort="false">
+                    <th v-if="show_bulk_actions" data-sort="false" :aria-label="$gettext('Ordner und Dateien auswählen')">
                         <studip-proxy-checkbox
                             v-model="selectedIds"
                             :total="allIds"
+                            :title="$gettext('Alle Ordner und Dateien auswählen')"
                         ></studip-proxy-checkbox>
                     </th>
                     <th @click="sort('mime_type')" :class="sortClasses('mime_type')">
@@ -115,10 +116,11 @@
                             name="ids[]"
                             :value="folder.id"
                             v-model="selectedIds"
+                            :aria-label="getAriaLabelForFolder(folder)"
                         ></studip-proxied-checkbox>
                     </td>
                     <td class="document-icon">
-                        <a :href="folder.url">
+                        <a :href="folder.url" :id="`folder-${folder.id}`">
                             <studip-icon :shape="folder.icon" role="clickable" size="26" class="text-bottom"></studip-icon>
                         </a>
                     </td>
@@ -166,6 +168,7 @@
                             name="ids[]"
                             :value="file.id"
                             v-model="selectedIds"
+                            :aria-label="getAriaLabelForFile(file)"
                         ></studip-proxied-checkbox>
                     </td>
                     <td class="document-icon">
@@ -180,8 +183,7 @@
                            data-lightbox="gallery"></a>
                     </td>
                     <td :class="{'filter-match': valueMatchesFilter(file.name)}">
-
-                        <a :href="file.details_url" data-dialog>
+                        <a :href="file.details_url" data-dialog :id="`file-${file.id}`">
                             <span v-html="highlightString(file.name)"></span>
                             <studip-icon v-if="file.isAccessible"
                                          shape="accessibility"
@@ -393,6 +395,18 @@ export default {
                 highlighted = highlighted.replace(regExp, '<span class="filter-match">$&</span>');
             }
             return highlighted;
+        },
+        getAriaLabelForFolder(folder) {
+            return this.$gettextInterpolate(
+                this.$gettext('Ordner %{name} auswählen'),
+                {name: folder.name}
+            );
+        },
+        getAriaLabelForFile(file) {
+            return this.$gettextInterpolate(
+                this.$gettext('Datei %{name} auswählen'),
+                {name: file.name}
+            );
         }
     },
     computed: {
