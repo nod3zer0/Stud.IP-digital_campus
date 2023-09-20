@@ -72,11 +72,7 @@ class InstituteSelectWidget extends SelectWidget
         if ($this->include_all_option) {
             $element = new SelectElement(
                 'all',
-                (
-                    $GLOBALS['perm']->have_perm('root')
-                    ? _('Alle')
-                    : _('Alle meine Einrichtungen')
-                ),
+                _('Alle'),
                 in_array('all', $this->selected_element_ids)
             );
             $element->setAsHeader(true);
