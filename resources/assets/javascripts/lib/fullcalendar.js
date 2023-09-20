@@ -412,7 +412,7 @@ class Fullcalendar
                         );
                     } else if(extended_props.studip_parent_object_class == 'ResourceBooking' && $.inArray('for-course', event._def.ui.classNames) != -1) {
                         STUDIP.Dialog.fromURL(
-                            STUDIP.URLHelper.getURL('dispatch.php/resources/room_request/request_booking/' + extended_props.studip_parent_object_id)
+                            STUDIP.URLHelper.getURL('dispatch.php/resources/room_request/rerequest_booking/' + extended_props.studip_parent_object_id)
                         );
                     }
                     return false;
