@@ -7,7 +7,7 @@
 }
 
 a.message-tag {
-    $white-space: nowrap;
+    white-space: nowrap;
     @include icon(before, tag, clickable);
 }
 
@@ -50,7 +50,7 @@ a.message-tag {
     overflow: auto;
 
     li.adressee {
-        $white-space: nowrap;
+        white-space: nowrap;
     }
 }
 
