@@ -93,21 +93,22 @@ class StudipAuthShib extends StudipAuthSSO
             return $this->getUser();
         }
 
-        $remote_user = $_SERVER[$this->env_remote_user];
-
-        if (empty($remote_user)) {
-            $remote_user = $_SERVER['REMOTE_USER'];
-        }
+        $remote_user = $_SERVER[$this->env_remote_user] ?? $_SERVER['REMOTE_USER'] ?? '';
 
         if (empty($remote_user) || isset($this->validate_url)) {
             if (Request::get('sso') === $this->plugin_name) {
                 // force Shibboleth authentication (lazy session)
-                $shib_url = $this->session_initiator;
-                $shib_url .= strpos($shib_url, '?') === false ? '?' : '&';
-                $shib_url .= 'target=' . urlencode($this->getURL());
+                $shib_url = URLHelper::getURL(
+                    $this->session_initiator,
+                    ['target' => $this->getURL()],
+                    true
+                );
 
                 // break redirection loop in case of misconfiguration
-                if (strstr($_SERVER['HTTP_REFERER'], 'target=') === false) {
+                if (
+                    isset($_SERVER['HTTP_REFERER'])
+                    && !str_contains($_SERVER['HTTP_REFERER'], 'target=')
+                ) {
                     header('Location: ' . $shib_url);
                     echo '<html></html>';
                     exit();
