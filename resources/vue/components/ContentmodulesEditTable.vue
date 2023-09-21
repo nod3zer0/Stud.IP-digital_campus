@@ -77,21 +77,19 @@ export default {
 }
 </script>
 <style lang="scss">
-@use '../../assets/stylesheets/mixins/colors.scss';
-
 table.admin_contentmodules > tbody > tr  {
     > td:first-child {
-        background-image: linear-gradient(colors.$dark-gray-color-60, colors.$dark-gray-color-60);
+        background-image: linear-gradient(var(--dark-gray-color-60), var(--dark-gray-color-60));
         background-repeat: no-repeat;
         background-position: left;
         background-size: 10px auto;
         padding-left: 15px;
     }
     &.visibility-visible > td:first-child {
-        background-image: linear-gradient(colors.$green, colors.$green);
+        background-image: linear-gradient(var(--green), var(--green));
     }
     &.visibility-invisible > td:first-child {
-        background-image: linear-gradient(colors.$yellow, colors.$yellow);
+        background-image: linear-gradient(var(--yellow), var(--yellow));
     }
     > td {
         height: 31px; //to make all rows equally high

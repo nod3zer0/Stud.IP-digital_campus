@@ -6,27 +6,27 @@ a.day {
 }
 
 a.sday {
-    color: @red;
+    color: var(--red);
     font-weight: bold;
 }
 
 a.hday {
-    color: @red-80;
+    color: var(--red-80);
     font-weight: bold;
 }
 
 span.kwmin {
-    color: @dark-gray-color-80;
+    color: var(--dark-gray-color-80);
     font-weight: bold;
 }
 
 a.lightday {
-    color: @base-color-40;
+    color: var(--base-color-40);
     font-weight: bold;
 }
 
 a.lightsday {
-    color: @red-40;
+    color: var(--red-40);
     font-weight: bold;
 }
 
@@ -37,7 +37,7 @@ a.lightsday {
 .precol1w {
     font-size: 12pt;
     font-weight: bold;
-    color: @light-gray-color;
+    color: var(--light-gray-color);
     text-align: center;
     vertical-align: top;
 }
@@ -45,31 +45,31 @@ a.lightsday {
 .precol2w {
     font-size: 8pt;
     font-weight: bold;
-    color: @light-gray-color;
+    color: var(--light-gray-color);
     text-align: center;
 }
 
 td.calhead, div.calhead {
     font-size: 18pt;
     font-weight: bold;
-    color: @light-gray-color;
+    color: var(--light-gray-color);
     text-align: center;
 }
 
 a:link.calhead {
-    color: @base-color-60;
+    color: var(--base-color-60);
     white-space: nowrap;
     font-weight: bold;
 }
 
 a:hover.calhead {
-    color: @red-60;
+    color: var(--red-60);
 }
 
 .calhead label {
   cursor: pointer;
   &:hover {
-    color: @base-color-40;
+    color: var(--base-color-40);
   }
 
   .media-breakpoint-small-down({
@@ -83,20 +83,20 @@ a:hover.calhead {
 }
 
 .celltoday {
-    background-color: @red-20;
+    background-color: var(--red-20);
 }
 
 td.weekend {
-    background-color: @dark-gray-color-15;
+    background-color: var(--dark-gray-color-15);
 }
 
 td.weekday {
-    background-color: @dark-gray-color-5;
+    background-color: var(--dark-gray-color-5);
 }
 
 td.current {
     padding: 2px;
-    border: 2px solid @red;
+    border: 2px solid var(--red);
 }
 
 table.calendar-week, table.calendar-day {
@@ -159,7 +159,7 @@ nav.calendar-nav {
   }
 
   .calhead {
-    color: @base-color;
+    color: var(--base-color);
   }
 }
 
@@ -175,7 +175,7 @@ nav.calendar-nav {
     }
     & td {
         padding: 3px;
-        border-bottom: 1px solid @dark-gray-color-5;
+        border-bottom: 1px solid var(--dark-gray-color-5);
     }
 }
 
@@ -183,14 +183,14 @@ nav.calendar-nav {
     overflow: hidden;
     text-overflow: ellipsis;
     a {
-        color: @dark-gray-color;
+        color: var(--dark-gray-color);
     }
 }
 
 .calendar-category-mixin(@color-bg) {
     vertical-align: top;
     font-size: 11px;
-    color: @white;
+    color: var(--white);
     padding: 0;
     /* necessary for All-day Events */
     a {
@@ -511,8 +511,8 @@ a.Calendar-course-event-text255 {
 }
 
 .calendar-group-events {
-    background: linear-gradient(to right, #8E8EB2, #BABAD4) repeat-x #8E8EB2;
-    border: solid 1px #505064;
+    background: linear-gradient(to right, var(--base-color-60), var(--content-color-60)) repeat-x var(--base-color-60);
+    border: solid 1px var(--base-gray);
 }
 
 #exc-dates {
@@ -522,7 +522,7 @@ a.Calendar-course-event-text255 {
     min-height: 5em;
     max-height: 10em;
     overflow: auto;
-    border: 1px solid #888;
+    border: 1px solid var(--dark-gray-color-60);
 
     img {
         vertical-align: text-top;
@@ -539,18 +539,18 @@ table.tabdaterow {
 }
 
 td.tddaterowp {
-    border: 1px solid #FFFFFF;
-    background-color: #f0f0f0;
+    border: 1px solid var(--white);
+    background-color: var(--dark-gray-color-10);
     font-weight: bold;
-    color: #009900;
+    color: var(--dark-green);
     font-size: 8pt;
 }
 
 td.tddaterowpx {
-    border: 1px solid #D00000;
-    background-color: #f0f0f0;
+    border: 1px solid var(--active-color);
+    background-color: var(--dark-gray-color-10);
     font-weight: bold;
-    color: #009900;
+    color: var(--dark-green);
     font-size: 8pt;
 }
 

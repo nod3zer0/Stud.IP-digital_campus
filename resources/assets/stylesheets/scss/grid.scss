@@ -14,7 +14,7 @@ $grid-element-width: 270px;
 }
 
 .studip-grid-element {
-    border: 1px solid $light-gray-color;
+    border: 1px solid var(--light-gray-color);
 }
 
 // Responsive displays

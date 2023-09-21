@@ -3,7 +3,7 @@ div.wikitoc {
     margin-bottom: 5px;
 
     h1, h2, h3, h4 {
-        color: black;
+        color: var(--black);
         font-size: 1em;
         margin: 0 0 0 -10px;
     }
@@ -94,36 +94,36 @@ a.wiki-restricted {
 }
 
 $authors: (
-     0: $dark-gray-color-20,
-     1: $red-20,
-     2: $green-20,
-     3: $brown-20,
-     4: $dark-violet-20,
-     5: $orange-20,
-     6: $dark-green-20,
-     7: $violet-20,
-     8: $yellow-20,
-     9: $petrol-20,
-    10: $dark-gray-color-40,
-    11: $red-40,
-    12: $green-40,
-    13: $brown-40,
-    14: $dark-violet-40,
-    15: $orange-40,
-    16: $dark-green-40,
-    17: $violet-40,
-    18: $yellow-40,
-    19: $petrol-40,
-    20: $dark-gray-color-60,
-    21: $red-60,
-    22: $green-60,
-    23: $brown-60,
-    24: $dark-violet-60,
-    25: $orange-60,
-    26: $dark-green-60,
-    27: $violet-60,
-    28: $yellow-60,
-    29: $petrol-60
+     0: var(--dark-gray-color-20),
+     1: var(--red-20),
+     2: var(--green-20),
+     3: var(--brown-20),
+     4: var(--dark-violet-20),
+     5: var(--orange-20),
+     6: var(--dark-green-20),
+     7: var(--violet-20),
+     8: var(--yellow-20),
+     9: var(--petrol-20),
+    10: var(--dark-gray-color-40),
+    11: var(--red-40),
+    12: var(--green-40),
+    13: var(--brown-40),
+    14: var(--dark-violet-40),
+    15: var(--orange-40),
+    16: var(--dark-green-40),
+    17: var(--violet-40),
+    18: var(--yellow-40),
+    19: var(--petrol-40),
+    20: var(--dark-gray-color-60),
+    21: var(--red-60),
+    22: var(--green-60),
+    23: var(--brown-60),
+    24: var(--dark-violet-60),
+    25: var(--orange-60),
+    26: var(--dark-green-60),
+    27: var(--violet-60),
+    28: var(--yellow-60),
+    29: var(--petrol-60)
 );
 
 @each $index, $bgcolor in $authors {

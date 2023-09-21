@@ -9,8 +9,8 @@ $width: 270px;
         align-items: stretch;
         width: 100%;
         aside {
-            background: $white;
-            border: 1px solid $content-color-40;
+            background: var(--white);
+            border: 1px solid var(--content-color-40);
             min-width: $width;
             width: $width;
             .questions_container {
@@ -24,7 +24,7 @@ $width: 270px;
             > .admin, > .add_question, .questions > * {
                 width: calc(100% - 8px);
                 padding: 4px;
-                border-bottom: 1px solid $content-color-40;
+                border-bottom: 1px solid var(--content-color-40);
                 min-height: 40px;
                 display: flex;
                 justify-content: start;
@@ -37,7 +37,7 @@ $width: 270px;
                     margin-left: 15px;
                 }
                 &.active {
-                    background-color: $yellow-40;
+                    background-color: var(--yellow-40);
 
                     &::before {
                         content: '';
@@ -46,7 +46,7 @@ $width: 270px;
                         width: 0px;
                         border-top: 25px transparent solid;
                         border-bottom: 25px transparent solid;
-                        border-left: 7px $content-color-40 solid;
+                        border-left: 7px var(--content-color-40) solid;
                         right: -8px;
                     }
                     &::after {
@@ -56,7 +56,7 @@ $width: 270px;
                         width: 0px;
                         border-top: 25px transparent solid;
                         border-bottom: 25px transparent solid;
-                        border-left: 7px $yellow-40 solid;
+                        border-left: 7px var(--yellow-40) solid;
                         right: -7px;
                     }
                 }
@@ -90,7 +90,7 @@ $width: 270px;
 
         }
         .rightside {
-            border: 1px solid $content-color-40;
+            border: 1px solid var(--content-color-40);
             border-left: none;
             width: 100%;
             padding: 10px;
@@ -134,10 +134,10 @@ $width: 270px;
             align-items: center;
             input {
                 width: calc(100% - 74px);
-                border: 1px solid $light-gray-color-40;
+                border: 1px solid var(--light-gray-color-40);
             }
             button {
-                border: 1px solid $light-gray-color-40;
+                border: 1px solid var(--light-gray-color-40);
                 width: 32px;
                 height: 32px;
                 padding: 6px;
@@ -158,7 +158,7 @@ $width: 270px;
     /* ab hier der alte kram */
 
     section {
-        border: thin solid $black;
+        border: thin solid var(--black);
         margin: 3px;
     }
 
@@ -227,12 +227,12 @@ $width: 270px;
         flex-wrap: wrap;
         justify-content: center;
         align-items: stretch;
-        border: thin dashed $content-color-40;
+        border: thin dashed var(--content-color-40);
 
         > a {
             background-color: transparent;
             margin: 10px;
-            border: thin solid $content-color-20;
+            border: thin solid var(--content-color-20);
             padding: 5px;
             width: 100px;
             min-width: 100px;
@@ -270,35 +270,35 @@ $width: 270px;
 
     .ct-label {
         color: rgba(0, 0, 0, 0.8);
-        text-shadow: -1px 0px $white, 0px 1px $white, 1px 0px $white, 0px -1px $white;
+        text-shadow: -1px 0px var(--white), 0px 1px var(--white), 1px 0px var(--white), 0px -1px var(--white);
         font-size: x-small;
-        fill: $black;
+        fill: var(--black);
     }
 
     .ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
         //Balkenfarbe
-        stroke: $red;
+        stroke: var(--red);
     }
 
     //Tortenstücke:
     .ct-series-a .ct-area, .ct-series-a .ct-slice-pie {
-        fill: $red;
+        fill: var(--red);
     }
 
     .ct-series-b .ct-area, .ct-series-b .ct-slice-pie {
-        fill: $brand-color-dark;
+        fill: var(--brand-color-dark);
     }
 
     .ct-series-c .ct-area, .ct-series-c .ct-slice-pie {
-        fill: $activity-color;
+        fill: var(--activity-color);
     }
 
     .ct-series-d .ct-area, .ct-series-d .ct-slice-pie {
-        fill: $content-color;
+        fill: var(--content-color);
     }
 
     .ct-series-e .ct-area, .ct-series-e .ct-slice-pie {
-        fill: $orange;
+        fill: var(--orange);
     }
 
     table tbody tr:last-child td {
@@ -338,7 +338,7 @@ $width: 270px;
         }
 
         .invalidation_notice {
-            color: $red;
+            color: var(--red);
         }
     }
 }
@@ -357,20 +357,20 @@ $width: 270px;
 
 .questionnaire .terms, .questionnaire_results .terms {
     text-align: center;
-    border-top: thin solid $content-color-40;
-    color: $light-gray-color;
+    border-top: thin solid var(--content-color-40);
+    color: var(--light-gray-color);
     margin: 0 -10px;
 }
 
 #qr_code {
     display: none;
-    background-color: $white;
+    background-color: var(--white);
     width: 100%;
     height: 100%;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    color: $dark-gray-color;
+    color: var(--dark-gray-color);
 
     .code > div {
         margin-left: auto;

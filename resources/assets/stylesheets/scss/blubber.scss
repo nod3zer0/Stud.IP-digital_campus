@@ -29,8 +29,8 @@
 }
 
 .blubber_thread {
-    border: 1px solid $content-color-40;
-    background-color: $dark-gray-color-5;
+    border: 1px solid var(--content-color-40);
+    background-color: var(--dark-gray-color-5);
 
     width: 100%;
     max-width: 100%;
@@ -67,22 +67,22 @@
     }
 
     &.dragover {
-        background-color: $yellow-40;
+        background-color: var(--yellow-40);
         .writer > textarea {
-            background-color: $yellow-40;
+            background-color: var(--yellow-40);
         }
         ol.comments > li.mine > .content::after,
         ol.comments > li.theirs > .content::after {
-            background-color: $yellow-40;
+            background-color: var(--yellow-40);
         }
     }
 
     .context_info {
-        border-bottom: 1px solid $content-color-40;
+        border-bottom: 1px solid var(--content-color-40);
         text-align: center;
     }
     .writer {
-        border-top: 1px solid $content-color-40;
+        border-top: 1px solid var(--content-color-40);
     }
 
 
@@ -142,12 +142,12 @@
                 display: flex;
                 flex-direction: row-reverse;
                 > .content {
-                    background-color: $base-color;
-                    color: $white;
+                    background-color: var(--base-color);
+                    color: var(--white);
 
                     .opengraph {
-                        background-color: $base-color-80;
-                        border-color: $base-color-60;
+                        background-color: var(--base-color-80);
+                        border-color: var(--base-color-60);
                     }
 
                     a.link-extern {
@@ -170,7 +170,7 @@
                     a,
                     a:link,
                     a:visited {
-                        color: $white;
+                        color: var(--white);
                         opacity: 0.8;
                         transition: opacity 200ms;
                     }
@@ -179,7 +179,7 @@
                     a:hover.index,
                     a:active.index,
                     a:hover.tree {
-                        color: $white;
+                        color: var(--white);
                         opacity: 1;
                         transition: opacity 200ms;
                     }
@@ -198,7 +198,7 @@
                         content: '';
                         height: 10px;
                         width: 10px;
-                        background-color: $dark-gray-color-5;
+                        background-color: var(--dark-gray-color-5);
                         position: absolute;
                         pointer-events: none;
                         left: 100%;
@@ -218,7 +218,7 @@
             &.theirs {
                 display: flex;
                 > .content {
-                    background-color: $content-color-20;
+                    background-color: var(--content-color-20);
                     @include arrow-left(10px, $content-color-20);
                     &::before {
                         top: 100%;
@@ -227,19 +227,19 @@
                         content: '';
                         height: 10px;
                         width: 10px;
-                        background-color: $dark-gray-color-5;
+                        background-color: var(--dark-gray-color-5);
                         position: absolute;
                         pointer-events: none;
                         left: -10px;
                         top: 100%;
                     }
                     > .name {
-                        color: $base-color;
+                        color: var(--base-color);
                         font-size: 0.8em;
                         display: block;
 
                         &:hover {
-                            color: $red;
+                            color: var(--red);
                         }
                     }
                 }
@@ -264,7 +264,7 @@
             }
             > .time {
                 font-size: 0.8em;
-                color: $black;
+                color: var(--black);
                 time {
                     @media screen and (max-width: $major-breakpoint-small) {
                         display: none;
@@ -276,8 +276,8 @@
     }
 
     .writer {
-        background-color: $white;
-        background-image: linear-gradient(to left, $content-color-60, $content-color-60);
+        background-color: var(--white);
+        background-image: linear-gradient(to left, var(--content-color-60), var(--content-color-60));
         background-size: 0% 100%;
         background-repeat: no-repeat;
         padding: 5px;
@@ -289,8 +289,8 @@
         transition: all 0.5s ease-out;
 
         > textarea {
-            border: 1px solid $content-color-40;
-            background-color: $white;
+            border: 1px solid var(--content-color-40);
+            background-color: var(--white);
             width: calc(100% - 140px);
             height: 34px;
             resize: none;
@@ -316,18 +316,18 @@
     }
 
     .thread_posting {
-        border-bottom: 1px solid $content-color-40;
-        background-color: $white;
+        border-bottom: 1px solid var(--content-color-40);
+        background-color: var(--white);
 
         .contextinfo {
-            background-color: $content-color-20;
-            border-bottom: 1px solid $content-color-40;
-            color: $dark-gray-color-60;
+            background-color: var(--content-color-20);
+            border-bottom: 1px solid var(--content-color-40);
+            color: var(--dark-gray-color-60);
             font-size: 0.8em;
             padding: 7px 5px 5px 75px;
             position: relative;
             a {
-                color: $dark-gray-color-60;
+                color: var(--dark-gray-color-60);
             }
             time {
                 float: right;
@@ -386,7 +386,7 @@
     max-width: 270px;
 
     margin-left: 5px;
-    border: 1px solid $content-color-40;
+    border: 1px solid var(--content-color-40);
     box-sizing: border-box;
 
     max-height: calc(100vh - 140px);
@@ -396,7 +396,7 @@
         padding: 10px;
     }
     .new_section {
-        border-top: 1px solid $content-color-40;
+        border-top: 1px solid var(--content-color-40);
     }
 
     .members {
@@ -404,9 +404,9 @@
         li {
             padding-top: 10px;
             padding-bottom: 10px;
-            border-bottom: 1px solid $content-color-40;
+            border-bottom: 1px solid var(--content-color-40);
             &:first-child {
-                border-top: 1px solid $content-color-40;
+                border-top: 1px solid var(--content-color-40);
             }
         }
         &.topless li:first-child {
@@ -447,7 +447,7 @@
     }
 
     .context_info {
-        border-bottom: 1px solid $content-color-40;
+        border-bottom: 1px solid var(--content-color-40);
 
         .blubber_course_info {
 
@@ -473,7 +473,7 @@
 }
 
 .lowprio_info {
-    color: $black;
+    color: var(--black);
 }
 
 .studip-dialog {
@@ -536,21 +536,21 @@
             padding-left: 0px;
 
             li {
-                border-bottom: thin solid $content-color-40;
+                border-bottom: thin solid var(--content-color-40);
 
                 height: 50px;
                 max-height: 50px;
                 overflow: hidden;
                 padding: 10px;
                 cursor: pointer;
-                color: $base-color;
+                color: var(--base-color);
                 font-weight: bold;
                 &:last-child {
                     border-bottom: none;
                 }
 
                 &.unseen {
-                    border-left: 3px solid $active-color;
+                    border-left: 3px solid var(--active-color);
                     padding-left: 7px;
                 }
 
@@ -566,7 +566,7 @@
                 }
 
                 &.active {
-                    background-color: $yellow-40;
+                    background-color: var(--yellow-40);
 
                     &::before {
                         content: '';
@@ -575,7 +575,7 @@
                         width: 0px;
                         border-top: 35px transparent solid;
                         border-bottom: 35px transparent solid;
-                        border-left: 10px $content-color-40 solid;
+                        border-left: 10px var(--content-color-40) solid;
                         right: -2px;
                         margin-top: -10px;
                     }
@@ -586,7 +586,7 @@
                         width: 0px;
                         border-top: 35px transparent solid;
                         border-bottom: 35px transparent solid;
-                        border-left: 10px $yellow-40 solid;
+                        border-left: 10px var(--yellow-40) solid;
                         right: -1px;
                         margin-top: -70px;
                     }
@@ -617,7 +617,7 @@
                         time {
                             font-size: 0.8em;
                             font-weight: normal;
-                            color: $black;
+                            color: var(--black);
                         }
                     }
 

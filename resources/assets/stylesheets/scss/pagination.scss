@@ -30,14 +30,14 @@
     .pagination--link {
         background-color: transparent;
         border: 0;
-        color: $base-color;
+        color: var(--base-color);
         cursor: pointer;
         padding: 0;
     }
 
     .current .pagination--link {
         font-weight: bold;
-        color: $black;
+        color: var(--black);
     }
 
     .prev,
@@ -68,4 +68,3 @@
         margin-left: auto;
     }
 }
-

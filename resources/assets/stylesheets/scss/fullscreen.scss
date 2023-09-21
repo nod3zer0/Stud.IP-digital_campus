@@ -1,5 +1,3 @@
-$transition-duration: 300ms;
-
 .fullscreen-container {
     flex-grow: 1;
     margin-right: 12px;
@@ -9,7 +7,6 @@ $transition-duration: 300ms;
     background: none;
     border: none;
     cursor: pointer;
-    float: right;
     height: 28px;
 
     @include background-icon(zoom-in2, clickable, 20);
@@ -25,8 +22,6 @@ $transition-duration: 300ms;
     position: relative;
     top: 1px;
     right: 12px;
-
-    cursor: pointer;
 
     z-index: 100;
 }
@@ -62,8 +57,8 @@ html.is-fullscreen {
 
     #main-footer {
         opacity: 0;
-        max-height: 0px;
-        padding: 0px;
+        max-height: 0;
+        padding: 0;
     }
 
     .fullscreen-toggle.unfullscreen {

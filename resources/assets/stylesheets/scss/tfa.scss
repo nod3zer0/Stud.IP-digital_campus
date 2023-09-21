@@ -20,7 +20,7 @@ form.default {
     .tfa-code-input {
         text-align: center;
         .tfa-code-wrapper {
-            border: 1px solid $base-gray;
+            border: 1px solid var(--base-gray);
             display: inline-block;
             font-size: 2em;
             line-height: 2em;
@@ -28,7 +28,7 @@ form.default {
         }
 
         input[type="number"] {
-            background: $dark-gray-color-10;
+            background: var(--dark-gray-color-10);
             border: 0;
             box-sizing: unset;
             font-family: monospace;
@@ -40,15 +40,15 @@ form.default {
             text-align: center;
             vertical-align: top;
 
-            color: $base-gray;
+            color: var(--base-gray);
             &:focus {
-                background-color: $activity-color-20;
-                color:$black;
+                background-color: var(--activity-color-20);
+                color:var(--black);
                 outline: 0;
             }
             &:invalid {
                 box-shadow: none;
-                color: $base-gray;
+                color: var(--base-gray);
                 outline: 0;
             }
 

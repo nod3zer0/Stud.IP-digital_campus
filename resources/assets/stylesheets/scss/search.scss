@@ -1,12 +1,12 @@
 $icon-size: 32px;
 label.inactive-settings-category {
-    color: $red;
+    color: var(--red);
 }
 
 #search {
     // "Searching..." info
     #searching-gif {
-        color: $dark-gray-color-45;
+        color: var(--dark-gray-color-45);
         display: none;
         text-align: center;
 
@@ -42,13 +42,13 @@ label.inactive-settings-category {
         }
 
         article {
-            border: 1px solid $content-color-40;
+            border: 1px solid var(--content-color-40);
             margin-bottom: 8px;
             margin-top: 8px;
 
             > header {
-                background-color: $content-color-20;
-                color: $base-color;
+                background-color: var(--content-color-20);
+                color: var(--base-color);
 
                 display: flex;
                 flex-direction: row;
@@ -85,11 +85,11 @@ label.inactive-settings-category {
                 }
 
                 &:not(:first-child) {
-                    border-top: 1px solid $content-color-40;
+                    border-top: 1px solid var(--content-color-40);
                 }
 
                 &:hover {
-                    background-color: $light-gray-color-20;
+                    background-color: var(--light-gray-color-20);
                 }
 
                 &.search-extended-result {
@@ -131,7 +131,7 @@ label.inactive-settings-category {
                     }
 
                     .search-result-details {
-                        color: $dark-gray-color-80;
+                        color: var(--dark-gray-color-80);
                         font-size: $font-size-small;
                     }
                 }
@@ -145,7 +145,7 @@ label.inactive-settings-category {
 
 
                     .search-result-time {
-                        color: $dark-gray-color-80;
+                        color: var(--dark-gray-color-80);
                         flex: 1;
                         font-size: $font-size-small;
                         text-align: right;
@@ -153,7 +153,7 @@ label.inactive-settings-category {
                     }
 
                     .search-result-additional {
-                        color: $dark-gray-color-80;
+                        color: var(--dark-gray-color-80);
                         font-size: $font-size-small;
                         text-align: right;
                     }
@@ -180,7 +180,7 @@ label.inactive-settings-category {
 }
 
 a.no-result {
-    color: $base-gray;
+    color: var(--base-gray);
     pointer-events: none;
     cursor: default;
 }
@@ -191,9 +191,9 @@ div#div-search-input {
 
     // visual adjustments for the reset button
     button#reset-search {
-        background-color: $white;
-        border-bottom: 1px solid $light-gray-color-40;
-        border-top: 1px solid $light-gray-color-40;
+        background-color: var(--white);
+        border-bottom: 1px solid var(--light-gray-color-40);
+        border-top: 1px solid var(--light-gray-color-40);
         margin-left: -1px;
         padding-left: 10px;
     }
@@ -212,8 +212,8 @@ div#div-search-input {
 
     .filter-items {
         .button {
-            background-color: $content-color-20;
-            color: $brand-color-dark;
+            background-color: var(--content-color-20);
+            color: var(--brand-color-dark);
             min-width: auto;
             border: 0;
             white-space: nowrap;

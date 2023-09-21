@@ -1,6 +1,6 @@
 // Turns a vertical list into a horizontal one spaced with separators
 .contact-legend {
-    color: #555;
+    color: var(--base-gray);
     text-align: center;
 
     ul, li {
@@ -10,7 +10,7 @@
     }
     ul { display: inline; }
     li {
-        border-left: 1px solid #333;
+        border-left: 1px solid var(--base-gray);
         display: inline-block;
         padding: 0 0.5em;
 
@@ -26,25 +26,25 @@ table.contact-header {
 
     img { vertical-align: text-top; }
     td {
-        background-color: #f2f2f2;
+        background-color: var(--content-color-10);
         padding: 3px 0.5em;
         text-align: center;
         vertical-align: middle;
 
-        &:hover { background-color: #ced8f2; }
+        &:hover { background-color: var(--base-color-20); }
 
         // Active state
         &.active {
-            background-color: #e2e2e2;
-            border: 1px solid #888;
+            background-color: var(--dark-gray-color-15);
+            border: 1px solid var(--dark-gray-color-60);
 
-            &:hover { background-color: #b7c2e2; }
+            &:hover { background-color: var(--content-color-60); }
 
             a {
-                color: $red;
+                color: var(--red);
                 font-weight: bold;
             }
         }
-        &.empty a { color: #999; }
+        &.empty a { color: var(--dark-gray-color-60); }
     }
 }

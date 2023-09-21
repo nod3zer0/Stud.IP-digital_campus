@@ -14,9 +14,9 @@
     }
 
     .ui-dialog-titlebar {
-        background: $brand-color-darker;
+        background: var(--brand-color-darker);
         border: 0;
-        color: $contrast-content-white;
+        color: var(--contrast-content-white);
         font-size:1.3em;
         font-weight: normal;
     }
@@ -60,7 +60,7 @@
     .ui-dialog-buttonpane {
         padding: 0.5em 0.4em;
         margin: 0 1em;
-        border-color: $base-color-20;
+        border-color: var(--base-color-20);
 
         .ui-dialog-buttonset {
             text-align: center;
@@ -93,12 +93,12 @@
 
             &.disabled,
             &[disabled] {
-                background: $light-gray-color-20;
+                background: var(--light-gray-color-20);
                 cursor: default;
                 opacity: 0.65;
 
                 &:hover {
-                    color: $base-color;
+                    color: var(--base-color);
                 }
             }
 
@@ -144,7 +144,7 @@
     min-width: 30em;
 
     .ui-dialog-titlebar {
-        background-color: $yellow;
+        background-color: var(--yellow);
         color: text-contrast($yellow, $black, $white);
         text-align: left;
     }
@@ -234,7 +234,7 @@
                 top: 50%;
                 transform: translate(0, -50%);
 
-                background-color: $white;
+                background-color: var(--white);
                 content: '';
                 display: block;
 
@@ -262,7 +262,7 @@
                 top: 50%;
                 transform: translate(0, -50%);
 
-                background-color: $white;
+                background-color: var(--white);
                 content: '';
                 display: block;
 
@@ -326,7 +326,7 @@ v u e  d i a l o g
 }
 .studip-dialog-body {
     position: absolute;
-    background: $white;
+    background: var(--white);
     box-shadow: 0 0 8px fade-out($black, 0.5);
     overflow-x: auto;
     display: flex;
@@ -341,9 +341,9 @@ v u e  d i a l o g
         display: flex;
     }
     .studip-dialog-header {
-        background: $base-color none repeat scroll 0 0;
-        border-bottom: 1px solid $dark-gray-color-10;
-        color: $white;
+        background: var(--base-color) none repeat scroll 0 0;
+        border-bottom: 1px solid var(--dark-gray-color-10);
+        color: var(--white);
         justify-content: space-between;
         font-size: 1.3em;
         padding: 0.5em 1em;
@@ -367,7 +367,7 @@ v u e  d i a l o g
         cursor: pointer;
     }
     .studip-dialog-content {
-        color: $black;
+        color: var(--black);
         position: relative;
         padding: 15px;
         overflow-y: auto;
@@ -375,7 +375,7 @@ v u e  d i a l o g
         box-sizing: border-box;
     }
     .studip-dialog-footer {
-        border-top: 1px solid $dark-gray-color-10;
+        border-top: 1px solid var(--dark-gray-color-10);
         justify-content: space-between;
     }
 
@@ -393,7 +393,7 @@ v u e  d i a l o g
 
     &.studip-dialog-alert {
         .studip-dialog-header {
-            background: $active-color none repeat scroll 0 0;
+            background: var(--active-color) none repeat scroll 0 0;
         }
         .studip-dialog-content {
             @include background-icon(question-circle-full, attention, 32);
@@ -401,8 +401,8 @@ v u e  d i a l o g
     }
     &.studip-dialog-warning {
         .studip-dialog-header {
-            color: $black;
-            background: $activity-color none repeat scroll 0 0;
+            color: var(--black);
+            background: var(--activity-color) none repeat scroll 0 0;
         }
         .studip-dialog-close-button {
             @include background-icon(decline, clickable);

@@ -24,7 +24,7 @@
     }
 
     li:not(.empty-placeholder) {
-        color: $base-color;
+        color: var(--base-color);
         cursor: pointer;
         margin: 1px 0;
         padding-right: 0.5em;
@@ -39,7 +39,7 @@
     }
 
     .studip-selection-selectable li.empty-placeholder {
-        color: $text-color;
+        color: var(--text-color);
         padding-left: 20px;
         position: relative;
 
@@ -106,7 +106,7 @@
             }
 
             .studip-selection-label {
-                color: $active-color;
+                color: var(--active-color);
             }
         }
     }

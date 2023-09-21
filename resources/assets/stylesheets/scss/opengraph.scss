@@ -7,15 +7,15 @@
         text-align: right;
 
         li {
-            border-top: thin solid $dark-gray-color-20;
+            border-top: thin solid var(--dark-gray-color-20);
             display: inline-block;
             padding: 5px;
 
             &:first-child {
-                border-left: thin solid $dark-gray-color-20;
+                border-left: thin solid var(--dark-gray-color-20);
             }
             &:last-child {
-                border-right: thin solid $dark-gray-color-20;
+                border-right: thin solid var(--dark-gray-color-20);
             }
         }
         .switch-left, .switch-right {
@@ -58,7 +58,7 @@
     @include clearfix();
 
     font-size: 0.8em;
-    border: 1px solid $dark-gray-color-20;
+    border: 1px solid var(--dark-gray-color-20);
     padding: $padding;
     min-height: $height;
 
@@ -87,11 +87,11 @@
 
     a.info {
         box-sizing: border-box;
-        color: $black;
+        color: var(--black);
         display: block;
         word-break: normal !important;
         &:hover {
-            color: $black;
+            color: var(--black);
         }
     }
     .image {

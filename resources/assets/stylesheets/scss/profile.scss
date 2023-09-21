@@ -77,7 +77,7 @@
 }
 
 #select_fach_abschluss > tbody > tr:last-child > td {
-    border-bottom: 1px solid $table-header-color;
+    border-bottom: 1px solid var(--table-header-color);
 }
 
 @include media-breakpoint-small-up(){

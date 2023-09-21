@@ -2,11 +2,11 @@
     .content {
         font-weight: bold;
     }
-    border: 2px solid $red;
+    border: 2px solid var(--red);
     display: inline-block;
     padding: 5px;
     margin: 5px 0;
-    background: $white;
+    background: var(--white);
 }
 
 .mycourses-group-selector {

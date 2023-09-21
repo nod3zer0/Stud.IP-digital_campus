@@ -35,8 +35,8 @@ a.fc-event, td.fc-event {
 .fc button.fc-button.fc-state-active {
     box-shadow: none;
 
-    background-color: $base-color !important;
-    color: $white;
+    background-color: var(--base-color) !important;
+    color: var(--white);
 }
 
 /* adjust height: */
@@ -48,7 +48,7 @@ a.fc-event, td.fc-event {
 .studip-fullcalendar-header {
     /* This shall look like a table caption. */
     background-color: transparent;
-    color: $base-gray;
+    color: var(--base-gray);
     font-size: 1.4em;
     text-align: left;
 
@@ -75,15 +75,15 @@ a.fc-event, td.fc-event {
 
 
     .fullcalendar-dialogwidget-widget {
-        background: $white;
-        border: 1px solid $content-color-40;
+        background: var(--white);
+        border: 1px solid var(--content-color-40);
         margin: 15px 0px 0;
     }
 
     .fullcalendar-dialogwidget-widget-header {
         @include clearfix();
-        background: $content-color-20;
-        color: $base-color;
+        background: var(--content-color-20);
+        color: var(--base-color);
         font-weight: bold;
         padding: 4px;
     }
@@ -94,7 +94,7 @@ a.fc-event, td.fc-event {
     }
 
     .fullcalendar-dialogwidget-widget-content {
-        border-top: 1px solid $content-color-40;
+        border-top: 1px solid var(--content-color-40);
         padding: 4px;
         transition: all 0.5s;
     }
@@ -108,8 +108,8 @@ a.fc-event, td.fc-event {
     td.fc-event {
         border-radius: 0;
         margin: 2px 0px;
-        background-color: $content-color;
-        border: 1px solid $brand-color-light;
+        background-color: var(--content-color);
+        border: 1px solid var(--brand-color-light);
     }
 }
 
@@ -119,14 +119,14 @@ a.fc-event, td.fc-event {
     }
 
     th.fc-day-header, .fc-axis, th.fc-resource-cell {
-        background-color: $content-color-10;
+        background-color: var(--content-color-10);
     }
 }
 
 .calendar-caption {
     background-color: transparent;
     padding-top: 0;
-    color: $base-gray;
+    color: var(--base-gray);
     font-size: 1.4em;
     text-align: left;
     margin-bottom: -10px;
@@ -200,7 +200,7 @@ a.fc-event, td.fc-event {
         display: none;
     }
     th span a {
-        color: $black;
+        color: var(--black);
     }
 
     td.fc-today {

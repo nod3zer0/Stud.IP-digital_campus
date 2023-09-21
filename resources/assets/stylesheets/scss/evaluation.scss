@@ -2,19 +2,19 @@
 .eval_title {
     font-size: 1.2em;
     font-weight: bold;
-    color: $base-color;
+    color: var(--base-color);
 }
 
 .eval_error {
-    color: $red;
+    color: var(--red);
 }
 
 .eval_success {
-    color: $green;
+    color: var(--green);
 }
 
 .eval_info {
-    color: #333333;
+    color: var(--base-gray);
 }
 
 .eval_metainfo {
@@ -22,11 +22,11 @@
 }
 
 .eval_highlight {
-    background-color: #b8c3e8;
+    background-color: var(--content-color-60);
 }
 
 .eval_gray {
-    background: #d5d5dd none;
+    background: var(--dark-gray-color-20) none;
 }
 .evaluation_item {
     box-sizing: border-box;
@@ -35,6 +35,6 @@
 
 h3.eval {
     font-size: 1.3em;
-    color: $black;
+    color: var(--black);
     font-weight: bold;
 }

@@ -29,7 +29,6 @@ export default {
 </script>
 
 <style lang="scss">
-@use '../../assets/stylesheets/mixins.scss';
 $icon-padding: 3px;
 
 .my-courses-navigation {
@@ -65,7 +64,7 @@ $icon-padding: 3px;
 }
 .my-courses-navigation-important {
     $border-width: 1px;
-    border: $border-width solid mixins.$red;
+    border: $border-width solid var(--red);
 
     a {
         padding: $icon-padding - $border-width;

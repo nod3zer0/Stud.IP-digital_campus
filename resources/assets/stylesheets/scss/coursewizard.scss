@@ -21,7 +21,7 @@ div {
     width: calc(50% - 10px);
   }
   &#studyareas {
-    border-left: 1px solid $base-gray;
+    border-left: 1px solid var(--base-gray);
     float: left;
     padding-left: 10px;
     width: calc(50% - 20px);

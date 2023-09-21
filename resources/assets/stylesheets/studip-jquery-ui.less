@@ -20,14 +20,14 @@
 
     .ms-selectable,
     .ms-selection {
-        color: @dark-gray-color;
+        color: var(--dark-gray-color);
         width: 47%;
 
         li.ms-elem-selectable,
         li.ms-elem-selection {
-            background: #fff;
-            border-bottom-color: @content-color-20;
-            color: @dark-gray-color;
+            background: var(--white);
+            border-bottom-color: var(--content-color-20);
+            color: var(--dark-gray-color);
             padding: @element-padding;
         }
         li {
@@ -38,12 +38,12 @@
             }
 
             &.ms-hover, &:hover {
-              background: @brand-color-dark;
-              color: #fff;
+              background: var(--brand-color-dark);
+              color: var(--white);
             }
             &.disabled {
-              background-color: @content-color-20;
-              color: @dark-gray-color;
+              background-color: var(--content-color-20);
+              color: var(--dark-gray-color);
               cursor: not-allowed;
             }
             &[style*="background-image"] {
@@ -68,7 +68,7 @@
             visibility: hidden;
         }
         &:hover {
-            background-color: @brand-color-dark;
+            background-color: var(--brand-color-dark);
             &::after {
                 visibility: visible;
             }
@@ -92,7 +92,7 @@
             visibility: hidden;
         }
         &:hover {
-            background-color: @brand-color-dark;
+            background-color: var(--brand-color-dark);
             &::before {
                 visibility: visible;
             }
@@ -101,12 +101,12 @@
 
     .ms-list {
         border-radius: 0;
-        border-color: @light-gray-color-40;
+        border-color: var(--light-gray-color-40);
         position: relative;
     }
 
     .ms-optgroup-label {
-        color: @dark-gray-color-60;
+        color: var(--dark-gray-color-60);
     }
 
     // Default multi select with STUDIP.MultiSelect.create()
@@ -132,8 +132,8 @@
             align-items: center;
             justify-content: space-between;
 
-            background: @dark-gray-color-10;
-            border: 1px solid @dark-gray-color-30;
+            background: var(--dark-gray-color-10);
+            border: 1px solid var(--dark-gray-color-30);
             border-bottom: 0;
 
             padding-left: 0.5em;
@@ -144,7 +144,7 @@
         }
 
         .ms-focus {
-            border-color: @brand-color-dark;
+            border-color: var(--brand-color-dark);
             box-shadow: none;
         }
 

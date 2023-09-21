@@ -27,7 +27,7 @@
     }
 
     &.uploadbar-outer {
-        border: @base-color solid 1px;
+        border: var(--base-color) solid 1px;
     }
     &.uploadbar-inner {
         position: absolute;
@@ -35,7 +35,7 @@
         right: 100%;
         bottom: 0;
         left: 0;
-        background-color: @base-color;
+        background-color: var(--base-color);
         overflow: hidden;
         white-space: nowrap;
 
@@ -45,9 +45,9 @@
         transition: right 200ms;
 
         img {
-            background-color: @base-color;
+            background-color: var(--base-color);
             flex: 0;
-            outline: 10px solid @base-color;
+            outline: 10px solid var(--base-color);
         }
         .ufo {
             animation: ufoflight 1.5s linear infinite;
@@ -69,14 +69,6 @@
 
         color: (#fff - @base-color);
         font-size: large;
-        //text-shadow: 0 1px 0 @base-color,
-        //             1px 1px 0 @base-color,
-        //             1px 0 0 @base-color,
-        //             1px -1px 0 @base-color,
-        //             0 -1px 0 @base-color,
-        //             -1px 1px 0 @base-color,
-        //             0 1px 0 @base-color,
-        //             -1px -1px 0 @base-color;
     }
 }
 
@@ -112,7 +104,7 @@ div.file_select_possibilities, .folder_type_select_possibilities {
             cursor: pointer;
             background-color: transparent;
             margin: 10px;
-            border: thin solid @content-color-20;
+            border: thin solid var(--content-color-20);
             padding: 10px;
             width: @width;
             min-width: @width;
@@ -134,8 +126,8 @@ div.file_select_possibilities, .folder_type_select_possibilities {
 
         > .important-item {
             min-width: calc(100% - 1.5em);
-            background-color: #E7EBF1;
-            border-color: @base-color-60;
+            background-color: var(--content-color-20);
+            border-color: var(--base-color-60);
             display: flex;
             flex-direction: row;
             height: initial;
@@ -149,7 +141,7 @@ div.file_select_possibilities, .folder_type_select_possibilities {
                 width: 100%;
                 text-align: left;
                 margin-left: 1em;
-                color: @black;
+                color: var(--black);
             }
         }
     }
@@ -200,8 +192,8 @@ div.file_select_possibilities, .folder_type_select_possibilities {
 
     input[name=content_terms_of_use_id]:checked + label,
     input[name=oer_upload]:checked + label {
-        background-color: @brand-color-darker;
-        color: @contrast-content-white;
+        background-color: var(--brand-color-darker);
+        color: var(--contrast-content-white);
 
         img {
             filter: invert(100%) brightness(200%);
@@ -216,8 +208,8 @@ div.file_select_possibilities, .folder_type_select_possibilities {
     }
 
     input[name=folder_type]:checked + label {
-        background-color: @brand-color-darker;
-        color: @contrast-content-white;
+        background-color: var(--brand-color-darker);
+        color: var(--contrast-content-white);
 
         img {
             filter: invert(100%) brightness(200%);
@@ -428,7 +420,7 @@ form.default {
         }
         > label {
             cursor: pointer;
-            border: 1px solid @content-color-40;
+            border: 1px solid var(--content-color-40);
             transition: background-color 200ms;
             display: flex;
             justify-content: space-between;
@@ -449,17 +441,17 @@ form.default {
             }
         }
         > label:first-of-type {
-            border-top: 1px solid @content-color-40;
+            border-top: 1px solid var(--content-color-40);
         }
         > div {
-            border: 1px solid @content-color-40;
+            border: 1px solid var(--content-color-40);
             border-top: none;
             display: none;
             padding: 10px;
 
         }
         > input[type=radio]:checked + label {
-            background-color: @content-color-20;
+            background-color: var(--content-color-20);
             transition: background-color 200ms;
             > .arrow {
                 display: none;
@@ -490,7 +482,7 @@ form.default {
 
 table.documents {
     tr:target {
-        background-color: @activity-color-20;
+        background-color: var(--activity-color-20);
     }
 }
 
@@ -500,7 +492,7 @@ table.documents {
 h2.search-result-info {
     font-weight: normal;
     font-size: 1.4em;
-    color: @base-gray;
+    color: var(--base-gray);
     border-bottom: none;
     margin-top: 0;
 }

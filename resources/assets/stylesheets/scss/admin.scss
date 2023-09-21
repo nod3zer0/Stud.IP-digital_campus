@@ -7,12 +7,12 @@
     padding-left: 0px;
     position: relative;
     text-align: center;
-    background-color: $content-color-20;
+    background-color: var(--content-color-20);
     @include background-icon(upload, clickable, 50);
     background-repeat: no-repeat;
     background-position: center 10px;
     padding-top: 70px;
-    color: $base-color;
+    color: var(--base-color);
     cursor: pointer;
 
     input[type=file] {
@@ -27,9 +27,9 @@
     }
 
     &.hovered {
-        background-color: $base-color;
+        background-color: var(--base-color);
         @include background-icon(upload, info_alt, 50);
-        color: $white;
+        color: var(--white);
     }
 }
 .js .widget-links .drag-and-drop {
@@ -62,7 +62,7 @@ fieldset.attribute_table {
         width: 150px;
         max-width: 150px;
         overflow: hidden;
-        border: thin solid #cccccc;
+        border: thin solid var(--dark-gray-color-30);
         vertical-align: top;
         margin-top: 3px;
         margin-bottom: 3px;
@@ -70,7 +70,7 @@ fieldset.attribute_table {
     div[container] > h2 {
         display: block;
         width: 100%;
-        background-color: #dddddd;
+        background-color: var(--dark-gray-color-20);
         font-size: 12px;
         text-align: center;
         margin: 0;
@@ -81,12 +81,10 @@ fieldset.attribute_table {
     }
     div[container] > div.droparea > div.plugin {
         cursor: move;
-        border: thin solid #cccccc;
+        border: thin solid var(--dark-gray-color-30);
         border-radius: 5px;
-        background-color: #dddddd;
-        margin: 5px;
-        margin-left: 7px;
-        margin-right: 7px;
+        background-color: var(--dark-gray-color-20);
+        margin: 5px 7px;
         display: inline-block;
         min-width: 132px;
         max-width: 132px;
@@ -94,10 +92,10 @@ fieldset.attribute_table {
     div[container] > div.droparea > div > h2 {
         display: block;
         width: 100%;
-        background-color: #cccccc;
+        background-color: var(--dark-gray-color-30);
         font-size: 12px;
         text-align: center;
-        margin: 0px;
+        margin: 0;
     }
     div[container] > div.droparea > div.deactivated {
         opacity: 0.5;
@@ -110,8 +108,8 @@ fieldset.attribute_table {
     }
     hr {
         height: 1px;
-        color: #aaaaaa;
-        background-color: #aaaaaa;
+        color: var(--dark-gray-color-45);
+        background-color: var(--dark-gray-color-45);
         border: none;
     }
     div[container]#deactivated_modules {

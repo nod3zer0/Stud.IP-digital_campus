@@ -1,5 +1,5 @@
 section.contentbox {
-    border-color: $content-color-40;
+    border-color: var(--content-color-40);
     border-style: solid;
     border-width: 1px;
     margin-bottom: 10px;
@@ -12,11 +12,11 @@ section.contentbox {
         justify-content: space-between;
 
         padding: 2px;
-        background-color: $content-color-20;
+        background-color: var(--content-color-20);
 
         span.title {
             font-size: medium;
-            color: $base-color;
+            color: var(--base-color);
 
             &.no-overflow {
                 width: calc(100% - 1.5em);
@@ -26,7 +26,7 @@ section.contentbox {
                 &:after {
                     content: "";
                     width: 4em;
-                    background: linear-gradient(to right, transparent, $content-color-20);
+                    background: linear-gradient(to right, transparent, var(--content-color-20));
                     position: absolute;
                     height: 1.5em;
                     right: 2.5em;
@@ -38,7 +38,7 @@ section.contentbox {
             flex: 1 0 0;
             padding: 5px;
             margin: 0;
-            color: $base-color;
+            color: var(--base-color);
             border-bottom: none;
             font-size: medium;
 
@@ -69,10 +69,10 @@ section.contentbox {
 
     footer {
         text-align: center;
-        border-color: $content-color-40;
+        border-color: var(--content-color-40);
         border-top-style: solid;
         border-width: 1px;
-        background-color: $white;
+        background-color: var(--white);
     }
 
     section {
@@ -89,7 +89,7 @@ section.contentbox {
     }
 
     > article {
-        border-color: $content-color-40;
+        border-color: var(--content-color-40);
         border-style: solid;
         border-width: 1px;
         margin: 10px;
@@ -128,7 +128,7 @@ section.contentbox {
                     font-size: small;
                     width: 100%;
                     font-weight: bold;
-                    color: $black;
+                    color: var(--black);
                 }
             }
 
@@ -169,7 +169,7 @@ section.contentbox {
                     }
 
                     display: inline-block;
-                    border-right: 1px solid $content-color;
+                    border-right: 1px solid var(--content-color);
                     padding: 0 5px;
                 }
 
@@ -183,10 +183,10 @@ section.contentbox {
 
         footer {
             text-align: center;
-            border-color: $content-color-40;
+            border-color: var(--content-color-40);
             border-top-style: none;
             border-width: 1px;
-            background-color: $white;
+            background-color: var(--white);
 
             h1 {
                 font-size: 1em;
@@ -197,7 +197,7 @@ section.contentbox {
 
             article.comment {
                 border: 0;
-                border-top: 1px solid $light-gray-color-40;
+                border-top: 1px solid var(--light-gray-color-40);
                 max-width: 1260px;
                 margin: auto auto 4px;
                 text-align: left;
@@ -209,7 +209,7 @@ section.contentbox {
                 time {
                     float: right;
                     font-size: 0.8em;
-                    color: $light-gray-color-40;
+                    color: var(--light-gray-color-40);
                 }
             }
         }

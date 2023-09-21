@@ -8,7 +8,7 @@
     }
 
     > li:nth-child(n+2) {
-        border-top: 1px solid $content-color-40;
+        border-top: 1px solid var(--content-color-40);
     }
 }
 
@@ -23,13 +23,13 @@
     flex-wrap: wrap;
 
     span {
-        border-right: 1px solid $content-color-40;
+        border-right: 1px solid var(--content-color-40);
         margin-right: 0.3em;
         padding-right: 0.4em;
     }
 
     span:not(.document-name) {
-        color: $dark-gray-color-75;
+        color: var(--dark-gray-color-75);
     }
 
     .document-name, span:last-child {
@@ -85,7 +85,7 @@
         }
 
         .files-search-active-filter {
-            background-color: $light-gray-color-20;
+            background-color: var(--light-gray-color-20);
             padding: 0.25em 0.25em 0.25em 0.6em;
             font-size: 0.9em;
             margin-bottom: 1px;
@@ -143,10 +143,10 @@ form div.files-search {
             .button {
                 margin: 0;
                 line-height: 1.5;
-                background-color: $content-color-20;
-                color: $brand-color-dark;
+                background-color: var(--content-color-20);
+                color: var(--brand-color-dark);
                 min-width: auto;
-                border: 1px solid $light-gray-color-40;
+                border: 1px solid var(--light-gray-color-40);
                 border-left: none;
             }
 

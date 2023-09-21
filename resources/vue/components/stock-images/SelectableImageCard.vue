@@ -33,7 +33,7 @@ export default {
     position: relative;
 }
 .stock-images-selectable-image > :last-child {
-    background: #ffffff;
+    background: var(--white);
     overflow: hidden;
     text-overflow: ellipsis;
     width: 8rem;

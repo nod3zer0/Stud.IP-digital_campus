@@ -45,6 +45,7 @@ $transition-duration: .3s;
 :root {
     // The special handling for -- as #{"--"} seems to be neccessary to make
     // scss evaluate the color variables
+    #{"--"}text-color: $text-color;
     #{"--"}active-color: $active-color;
     #{"--"}activity-color: $activity-color;
     #{"--"}activity-color-20: $activity-color-20;

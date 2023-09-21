@@ -12,7 +12,7 @@
         z-index: 1;
     
         > a, ul {
-            background-color: $white;
+            background-color: var(--white);
             padding: 5px;
         }
         > a {
@@ -21,7 +21,7 @@
 
         &.extendable:hover {
             > a, > ul {
-                box-shadow: 0 4px 3px $base-gray;
+                box-shadow: 0 4px 3px var(--base-gray);
             }
             ul {
                 display: flex;
@@ -63,7 +63,7 @@
         text-align: center;
     }
     > div {
-        border-left: 1px dashed $dark-gray-color;
+        border-left: 1px dashed var(--dark-gray-color);
         margin-left: $info-width;
         min-height: 100%;
         max-height: 100%;
@@ -85,18 +85,18 @@
 
 .documents.dragging {
     [data-file]:not([data-folder]) {
-        background-color: $light-gray-color-40;
+        background-color: var(--light-gray-color-40);
         opacity: 0.6;
     }
 }
 .documents {
     [data-folder].dropping {
-        background-color: $red-40;
+        background-color: var(--red-40);
     }
 }
 
 .document-draggable-helper {
-    background-color: $activity-color-40 !important;
+    background-color: var(--activity-color-40) !important;
     opacity: 1 !important;
     td {
         border-bottom: 0 !important;

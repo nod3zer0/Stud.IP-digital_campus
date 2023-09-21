@@ -2,10 +2,10 @@
 
 @mixin button() {
     background: white;
-    border: 1px solid $base-color;
+    border: 1px solid var(--base-color);
     border-radius: 0;
     box-sizing: border-box;
-    color: $base-color;
+    color: var(--base-color);
     cursor: pointer;
     display: inline-block;
     font-family: $font-family-base;
@@ -24,19 +24,19 @@
 
     &:hover,
     &:active  {
-        background: $base-color;
+        background: var(--base-color);
         color: white;
     }
 
     &.disabled,
     &[disabled] {
         box-shadow: none;
-        background: $light-gray-color-20;
+        background: var(--light-gray-color-20);
         cursor: default;
         opacity: 0.65;
 
         &:hover {
-            color: $base-color;
+            color: var(--base-color);
         }
     }
 
@@ -144,11 +144,11 @@ button.styleless {
 button.as-link {
     background-color: transparent;
     border: none;
-    color: $base-color;
+    color: var(--base-color);
     cursor: pointer;
     margin: 0px;
     padding: 0px;
     &:hover {
-        color: $active-color;
+        color: var(--active-color);
     }
 }

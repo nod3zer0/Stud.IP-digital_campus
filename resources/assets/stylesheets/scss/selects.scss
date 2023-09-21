@@ -1,5 +1,5 @@
-$select-border: 1px solid $light-gray-color-40;
-$select-border-focus: 1px solid $brand-color-dark;
+$select-border: 1px solid var(--light-gray-color-40);
+$select-border-focus: 1px solid var(--brand-color-dark);
 $select-border-radius: 0;
 $select-height-default: 30px;
 $select-arrow-size: 10;
@@ -8,7 +8,7 @@ select {
     // Reset appearance
     box-sizing: border-box;
     appearance: none;
-    background-color: $white;
+    background-color: var(--white);
     font-size: 1em;
     vertical-align: baseline;
     &::-ms-expand {

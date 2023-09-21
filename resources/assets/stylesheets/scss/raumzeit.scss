@@ -15,14 +15,14 @@ div.at_least_one_teacher {
 }
 
 .is_ex_termin {
-    color: $dark-gray-color-80;
+    color: var(--dark-gray-color-80);
     text-decoration: line-through;
 }
 
 .contentbox.timesrooms {
     > form {
         article {
-            border-color: $content-color-40;
+            border-color: var(--content-color-40);
             border-style: solid;
             border-width: 1px;
             margin: 10px;
@@ -76,13 +76,13 @@ div.at_least_one_teacher {
     }
     article header {
         &.red {
-            border-left: 3px solid $red;
+            border-left: 3px solid var(--red);
         }
         &.yellow {
-            border-left: 3px solid $activity-color;
+            border-left: 3px solid var(--activity-color);
         }
         &.green {
-            border-left: 3px solid $green;
+            border-left: 3px solid var(--green);
         }
         &.red .tooltip-icon {
             @include icon(before, radiobutton-checked, status-red);

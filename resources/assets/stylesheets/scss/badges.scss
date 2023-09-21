@@ -16,8 +16,8 @@
         margin: 0;
         padding: 1px 5px;
 
-        background-color: $red;
-        color: $white;
+        background-color: var(--red);
+        color: var(--white);
 
         font-size: 10px;
         font-weight: bold;
@@ -28,6 +28,6 @@
         text-shadow: rgba(0, 0, 0, 0.496094) 0px -1px 0px;
 
         border-radius: 9px;
-        box-shadow: $black 0 1px 3px;
+        box-shadow: var(--black) 0 1px 3px;
     }
 }

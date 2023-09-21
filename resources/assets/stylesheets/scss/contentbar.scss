@@ -1,6 +1,6 @@
 .contentbar {
-    background-color: $dark-gray-color-5;
-    border: solid thin $dark-gray-color-30;
+    background-color: var(--dark-gray-color-5);
+    border: solid thin var(--dark-gray-color-30);
     display: flex;
     flex-wrap: wrap;
     height: auto;
@@ -54,10 +54,10 @@
                     white-space: nowrap;
 
                     a {
-                        color: $base-color;
+                        color: var(--base-color);
                         text-decoration: none;
                         &:hover {
-                            color: $active-color;
+                            color: var(--active-color);
                         }
                     }
 

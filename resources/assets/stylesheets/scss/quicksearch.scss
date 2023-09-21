@@ -5,9 +5,9 @@ form#search_sem_quick_search_frame {
 }
 
 input.quicksearchbox {
-    background-color: $dark-gray-color-10;
-    border: 1px solid $dark-gray-color-40;
-    color: $base-color;
+    background-color: var(--dark-gray-color-10);
+    border: 1px solid var(--dark-gray-color-40);
+    color: var(--base-color);
     font-size: 14px;
     width: 250px;
     height: 19px;
@@ -21,7 +21,7 @@ div.quicksearch_frame {
         box-sizing: border-box;
         border-width: 1px 30px 1px 1px;
         border-style: solid;
-        border-color: $base-color-60;
+        border-color: var(--base-color-60);
         border-image: none;
         display: inline-block !important;
     }
@@ -85,7 +85,7 @@ div.quicksearch_frame {
         float: none;
         margin-left: 0;
         height: 30px;
-        background-color: $base-color-60;
+        background-color: var(--base-color-60);
         background-position: center center;
     }
 }
@@ -106,8 +106,8 @@ div.quicksearch_frame {
         .autocomplete__results {
             list-style-type: none;
             padding: 1px;
-            border: 1px solid $light-gray-color-40;
-            background-color: $white;
+            border: 1px solid var(--light-gray-color-40);
+            background-color: var(--white);
             max-height: 275px;
             width: 600px;
             overflow-x: auto;
@@ -120,8 +120,8 @@ div.quicksearch_frame {
                 align-items: flex-start;
 
                 &:hover, &.autocomplete__result--selected {
-                    background-color: $base-color;
-                    color: $white;
+                    background-color: var(--base-color);
+                    color: var(--white);
                 }
 
                 img {

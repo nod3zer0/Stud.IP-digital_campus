@@ -1049,8 +1049,8 @@ a:hover.tree {
 
 /* Text formatting */
 .cke_button_on {
-    background-color: $base-color !important;
-    border: 1px solid $white;
+    background-color: var(--base-color) !important;
+    border: 1px solid var(--white);
 
     .cke_button_icon {
         filter: brightness(10) !important;
@@ -1060,8 +1060,8 @@ a:hover.tree {
 /* Blubber */
 .blubber_thread,
 .blubber_sideinfo {
-    background-color: $white;
-    border: 2px solid $black;
+    background-color: var(--white);
+    border: 2px solid var(--black);
 }
 
 .blubber_thread .empty_blubber_background {
@@ -1214,14 +1214,14 @@ table.course-search {
                 padding-top: -2px;
 
                 .content-item-title {
-                    color: $base-color;
+                    color: var(--base-color);
                 }
             }
 
         }
 
         &:hover {
-            background-color: $black;
+            background-color: var(--black);
             color: unset;
 
             .content-item-img-wrapper > img {
@@ -1370,12 +1370,12 @@ table.course-search {
 /* Everything else */
 /* Selections */
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: $base-color;
+    background-color: var(--base-color);
 }
 
 /* tile view Veranstaltungen */
 .tiles-grid-element-header {
-    background-color: $white !important;
+    background-color: var(--white) !important;
 }
 
 .tiles-grid-element-options .action-menu-icon {
@@ -1384,12 +1384,12 @@ table.course-search {
 
 /* Veranstaltungskategorien */
 fieldset.attribute_table div[container] > div.droparea > div.plugin {
-    border: 1px solid $black;
-    background-color: $white;
+    border: 1px solid var(--black);
+    background-color: var(--white);
 }
 
 .helpbar {
-    background-color: $black;
+    background-color: var(--black);
 }
 
 .fc-unthemed td {

@@ -13,13 +13,13 @@ a.message-tag {
 
 #statusbar_container {
     > .statusbar {
-        border: thin solid $light-gray-color;
+        border: thin solid var(--light-gray-color);
         min-width: 100%;
         max-width: 100%;
-        background-color: $content-color-40;
+        background-color: var(--content-color-40);
 
         > .progress {
-            background-color: $content-color;
+            background-color: var(--content-color);
             width: 100%;
             min-width: 0;
             max-width: 0;
@@ -27,14 +27,14 @@ a.message-tag {
             line-height: 20px;
 
             &.progress-error {
-                background-color: $red;
+                background-color: var(--red);
             }
         }
 
         > .progresstext {
             margin-top: -20px;
             text-align: center;
-            color: $white;
+            color: var(--white);
             height: 20px;
             line-height: 20px;
         }
@@ -55,7 +55,7 @@ a.message-tag {
 }
 
 .message_body {
-    background-color: $content-color-20;
+    background-color: var(--content-color-20);
     margin: 3px;
     padding: 10px;
 }
@@ -63,7 +63,7 @@ a.message-tag {
 .responsive_author {
     margin: 0;
     font-size: 0.8em;
-    color: $base-gray;
+    color: var(--base-gray);
 }
 
 form.default {

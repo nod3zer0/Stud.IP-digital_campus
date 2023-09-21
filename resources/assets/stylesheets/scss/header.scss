@@ -5,9 +5,9 @@
 }
 
 #top-bar {
-    background-color: $base-color;
-    border: 1px $brand-color-darker;
-    color: $contrast-content-white;
+    background-color: var(--base-color);
+    border: 1px var(--brand-color-darker);
+    color: var(--contrast-content-white);
     border-bottom-style: solid;
     height: $bar-bottom-container-height;
     width: 100%;
@@ -43,7 +43,7 @@ html {
 
 #header-links {
     > ul > li > a {
-        color: $white;
+        color: var(--white);
         margin: 0 6px;
         text-decoration: none;
         &:hover {
@@ -81,7 +81,7 @@ html {
 
     .action-menu-icon {
         border: 1px solid var(--dark-gray-color-40);
-        background-color: $dark-gray-color-5;
+        background-color: var(--dark-gray-color-5);
         height: 28px;
         margin: 0 32px 0 0;
         position: relative;
@@ -123,22 +123,22 @@ html {
         right: 0;
 
         /*padding: 4px 28px 4px 8px;*/
-        background: $white;
-        box-shadow: 1px 1px 1px $dark-gray-color-60;
+        background: var(--white);
+        box-shadow: 1px 1px 1px var(--dark-gray-color-60);
         text-align: left;
         white-space: nowrap;
 
         a:link,
         a:visited {
-            color: $base-color;
+            color: var(--base-color);
         }
         a:hover,
         a:active {
-            color: $active-color;
+            color: var(--active-color);
         }
 
         div {
-            color: $black;
+            color: var(--black);
         }
     }
 }
@@ -150,7 +150,7 @@ html {
 
 #site-title {
     flex: 1;
-    color: $white;
+    color: var(--white);
     margin-left: 0;
     z-index: 1002;
     line-height: $bar-bottom-container-height;
@@ -176,7 +176,7 @@ html {
 }
 
 #navigation-level-1 {
-    background-color: $dark-gray-color-5;
+    background-color: var(--dark-gray-color-5);
     height: $header-height;
     z-index: 3;
 }

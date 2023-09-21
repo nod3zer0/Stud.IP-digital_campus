@@ -5,7 +5,7 @@
         height: 20px;
         overflow: hidden;
         font-size: 15px;
-        background-color: $light-gray-color-20;
+        background-color: var(--light-gray-color-20);
         margin: 0.5em 0;
     }
 
@@ -13,10 +13,10 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        color: $white;
+        color: var(--white);
         text-align: center;
         white-space: nowrap;
-        background-color: $base-color;
+        background-color: var(--base-color);
     }
 }
 
@@ -26,7 +26,7 @@
 
 .gradebook-lecturer-overview .gradebook-column-total,
 .gradebook-lecturer-overview .gradebook-column-category {
-    border-left: 1px solid $light-gray-color-20;
+    border-left: 1px solid var(--light-gray-color-20);
 }
 
 .gradebook-lecturer-overview .gradebook-column-category {
@@ -50,7 +50,7 @@ form.gradebook-lecturer-weights label.gradebook-weight {
     }
 
     output {
-        color: $light-gray-color;
+        color: var(--light-gray-color);
     }
 
     output:before {
@@ -104,8 +104,6 @@ section.gradebook-student-category {
 
 .gradebook-lecturer-custom-definitions .gradebook-lecturer-blank-slate {
     text-align: center;
-    // border-left: 1px solid $dark-gray-color-15;
-    // border-bottom: 1px solid $brand-color-darker;
 }
 
 table.default .gradebook-grade-input,

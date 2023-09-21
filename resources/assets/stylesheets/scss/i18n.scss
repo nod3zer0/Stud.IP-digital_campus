@@ -3,7 +3,7 @@ div.i18n_group {
     position: relative;
 
     > select.i18n {
-        border: 1px solid $light-gray-color-40;
+        border: 1px solid var(--light-gray-color-40);
         border-radius: 0;
         box-sizing: border-box;
         margin: 0 !important;

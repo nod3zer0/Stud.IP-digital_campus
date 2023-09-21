@@ -191,7 +191,7 @@ export default {
             display: flex;
             flex-direction: row;
             .iconwrapper {
-                background-color: white;
+                background-color: var(--white);
                 border-radius: 50px;
                 display: flex;
                 align-items: center;

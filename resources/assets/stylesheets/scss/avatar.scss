@@ -3,7 +3,7 @@ div.avatar-widget {
         display: block;
         margin: 5px;
         padding: 0;
-        color: $white;
+        color: var(--white);
 
         width: $avatar-normal;
         height: $avatar-normal;
@@ -38,7 +38,7 @@ div.avatar-widget {
             left: -2px;
             top: -2px;
             background-color: fade-out($base-color-40, 0.333);
-            border: 2px dashed $base-color;
+            border: 2px dashed var(--base-color);
             opacity: 1;
         }
     }
@@ -142,11 +142,11 @@ form.settings-avatar {
         margin-right: auto;
 
         .cropper-view-box {
-            outline: 1px solid $base-color-80;
+            outline: 1px solid var(--base-color-80);
         }
 
         .cropper-line, .cropper-point {
-            background-color: $base-color-80;
+            background-color: var(--base-color-80);
         }
     }
 

@@ -33,11 +33,10 @@ ul.numberedchapters {
     position: absolute;
     right: -22px;
     top: -25px;
-    background-color: $white;
-    border: 1px solid #d0d7e3;
+    background-color: var(--white);
+    border: 1px solid var(--content-color-40);
     margin-bottom: 10px;
-    -webkit-box-shadow: 2px 2px #ccc;
-    box-shadow: 2px 2px #ccc;
+    box-shadow: 2px 2px var(--dark-gray-color-30);
 
 
     > section {
@@ -56,10 +55,10 @@ ul.numberedchapters {
 #toc_header {
     height: 58px;
     overflow: hidden;
-    background-color: $white;
-    color: $black;
+    background-color: var(--white);
+    color: var(--black);
     margin-bottom: -0.5em;
-    border-bottom: thin solid #d0d7e3;
+    border-bottom: thin solid var(--content-color-40);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -72,7 +71,7 @@ ul.numberedchapters {
 }
 
 #toc_h1 {
-    color: $black;
+    color: var(--black);
     font-weight: 500;
     margin-left: 10px;
     margin-bottom: unset;
@@ -93,7 +92,7 @@ ul.numberedchapters {
 #toc_nav {
     height: 40px;
     position: fixed;
-    background-color: $brand-color-darker;
+    background-color: var(--brand-color-darker);
 }
 
 #toc_icon {
@@ -131,7 +130,7 @@ section > .toc {
         font-size: 1em;
 
         > div {
-            border-bottom: 1px solid #E9E9E9;
+            border-bottom: 1px solid var(--dark-gray-color-10);
             margin-bottom: 5px;
         }
     }
@@ -147,21 +146,21 @@ section > .toc {
     }
 
     li div:hover {
-        background-color: $light-gray-color-20;
-        color: $base-color;
+        background-color: var(--light-gray-color-20);
+        color: var(--base-color);
 
     }
 
     li.active > div {
-        color: $black;
+        color: var(--black);
     }
 
     li.active > div:hover {
-        color: $white;
+        color: var(--white);
     }
 
     li.active > div a {
-        color: $black;
+        color: var(--black);
     }
 
     .toc > li {
@@ -176,14 +175,14 @@ section > .toc {
 
     .toc >li .selected {
         font-weight: 700;
-        background-color: $light-gray-color-20;
+        background-color: var(--light-gray-color-20);
     }
 
 }
 
 #wikifooter {
-    background-color: $content-color-20;
-    border-top: 1px solid $brand-color-darker;
+    background-color: var(--content-color-20);
+    border-top: 1px solid var(--brand-color-darker);
     clear: both;
     padding: 0;
     height: 58px;
@@ -234,8 +233,7 @@ section > .toc {
 
 
 #toc-button {
-    background-image: url(../images/icons/blue/table-of-contents.svg);
-    background-size: 24px;
+    background-image: url('#{$icon-path}blue/table-of-contents.svg');
 
     height: 24px;
     width: 24px;

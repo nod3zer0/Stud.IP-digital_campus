@@ -27,10 +27,10 @@
                         padding: 2px 0;
                         background-color: transparent;
                         border: none;
-                        color: $base-color;
+                        color: var(--base-color);
                         cursor: pointer;
                         &:hover {
-                            color: $red;
+                            color: var(--red);
                         }
                     }
                     img {
@@ -47,7 +47,7 @@
         margin-left: 15px;
 
         h2 span.required {
-            color: $red;
+            color: var(--red);
         }
 
         .wizard-progress {
@@ -59,7 +59,7 @@
                 display: inline-block;
                 position: relative;
                 margin-right: 60px;
-                border: solid 2px $base-color;
+                border: solid 2px var(--base-color);
                 button {
                     padding: 6px 0;
                     height: 36px;
@@ -69,25 +69,21 @@
                     border: none;
                 }
                 &.valid {
-                    background-color: $base-color;
+                    background-color: var(--base-color);
                 }
                 &.invalid {
                     background-color: white;
                 }
                 &.optional {
-                    border: dashed thin $base-color;
+                    border: dashed thin var(--base-color);
                 }
                 &::before {
                     position: absolute;
                     content: "";
                     width: 62px;
-                    border: solid thin $base-color;
+                    border: solid thin var(--base-color);
                     top: 50%;
                     transform: translateY(-50%);
-                    -o-transform: translateY(-50%);
-                    -ms-transform: translateY(-50%);
-                    -moz-transform: translateY(-50%);
-                    -webkit-transform: translateY(-50%);
                     left: 100%;
                 }
                 &.active::after {
@@ -95,7 +91,7 @@
                     content: "";
                     width: 38px;
                     height: 3px;
-                    background: $base-color;
+                    background: var(--base-color);
                     top: 44px;
                     left: -1px;
                 }
@@ -118,10 +114,10 @@
                     max-height: 475px;
                     overflow-y: auto;
                     scrollbar-width: thin;
-                    scrollbar-color: $base-color #f5f5f5;
+                    scrollbar-color: var(--base-color) var(--dark-gray-color-5);
 
                     .wizard-required {
-                        color: $red;
+                        color: var(--red);
                     }
 
                     textarea {
@@ -130,7 +126,7 @@
 
                     input[type="text"]::placeholder,
                     textarea::placeholder {
-                        color: $dark-gray-color-60;
+                        color: var(--dark-gray-color-60);
                     }
                 }
             }
@@ -158,7 +154,7 @@ form.default fieldset.radiobutton-set {
     }
     > label {
         cursor: pointer;
-        border: 1px solid $content-color-40;
+        border: 1px solid var(--content-color-40);
         transition: background-color 200ms;
         display: flex;
         justify-content: space-between;
@@ -182,20 +178,20 @@ form.default fieldset.radiobutton-set {
         }
     }
     > label:first-of-type {
-        border-top: 1px solid $content-color-40;
+        border-top: 1px solid var(--content-color-40);
     }
     > label:last-child::after {
         content: none;
     }
     > div {
-        border: 1px solid $content-color-40;
+        border: 1px solid var(--content-color-40);
         border-top: none;
         display: none;
         padding: 10px;
 
     }
     > input[type=radio]:checked + label {
-        background-color: $content-color-20;
+        background-color: var(--content-color-20);
         transition: background-color 200ms;
         > .unchecked {
             display: none;

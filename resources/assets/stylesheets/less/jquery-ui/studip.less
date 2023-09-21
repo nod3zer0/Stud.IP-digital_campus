@@ -20,11 +20,11 @@
 }
 
 .ui-widget-content {
-    background: #fff;
+    background: var(--white);
 }
 
 .ui-widget-header {
-    background-color: @brand-color-lighter;
+    background-color: var(--brand-color-lighter);
     background-image: none;
 }
 .ui-widget_columnl {
@@ -42,7 +42,7 @@
 }
 
 .ui-widget_head {
-    background-color: @brand-color-lighter;
+    background-color: var(--brand-color-lighter);
     color: white;
     font-size: 1.3em;
     line-height: 30px;
@@ -80,7 +80,7 @@
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-    background-color: @brand-color-light;
+    background-color: var(--brand-color-light);
     color: white;
 }
 
@@ -89,12 +89,12 @@
     .ui-state-default,
     .ui-state-active,
     .ui-state-hover {
-        background: @content-color-20;
+        background: var(--content-color-20);
         border-radius: 0;
         border: none;
-        border-top: 1px solid @light-gray-color-20;
-        border-bottom: 1px solid @light-gray-color-20;
-        color: #000;
+        border-top: 1px solid var(--light-gray-color-20);
+        border-bottom: 1px solid var(--light-gray-color-20);
+        color: var(--black);
         font-size: 10pt;
         margin: 0;
         padding: 5px 5px 5px 30px;
@@ -103,11 +103,11 @@
 }
 
 .ui-accordion .ui-accordion-content {
-    background: #ffffff;
+    background: var(--white);
     margin: 0;
     padding: 0;
     border: 0;
-    border-bottom: 1px solid @light-gray-color-20;
+    border-bottom: 1px solid var(--light-gray-color-20);
 }
 
 .ui-state-hover, .ui-widget-content .ui-state-hover,
@@ -117,7 +117,7 @@
 }
 
 .ui-autocomplete {
-    border: 1px solid @dark-gray-color-45;
+    border: 1px solid var(--dark-gray-color-45);
     padding: 1px;
 
     .ui-menu-item {
@@ -127,7 +127,7 @@
             text-overflow: ellipsis;
 
             &.ui-state-active {
-                background: @base-color;
+                background: var(--base-color);
                 border: 0;
                 margin: 0;
             }
@@ -146,7 +146,7 @@
 
 /* --- textarea resizer ----------------------------------------------------- */
 textarea.ui-resizable-handle.ui-resizable-s {
-    background: #eee url("@{image-path}/vendor/handle_background.png") no-repeat center;
+    background: var(--dark-gray-color-10) url("@{image-path}/vendor/handle_background.png") no-repeat center;
     bottom: 0;
     cursor: s-resize;
     height: 12px;
@@ -154,7 +154,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
 
 // Date picker
 .ui-datepicker-header {
-    background-color: @brand-color-light;
+    background-color: var(--brand-color-light);
 }
 
 .ui-datepicker-header .ui-icon {
@@ -162,14 +162,14 @@ textarea.ui-resizable-handle.ui-resizable-s {
 }
 
 .ui-datepicker-calendar .ui-state-active {
-    background-color: @white;
-    color: @brand-color-darker;
-    border: 1px solid @base-gray;
+    background-color: var(--white);
+    color: var(--brand-color-darker);
+    border: 1px solid var(--base-gray);
 }
 
 .ui-datepicker-calendar .ui-state-active.ui-state-hover {
-    background-color: @brand-color-light;
-    color: @white;
+    background-color: var(--brand-color-light);
+    color: var(--white);
 }
 
 .hasDatepicker,
@@ -181,9 +181,9 @@ textarea.ui-resizable-handle.ui-resizable-s {
     background-position: right 3px center;
     background-repeat: no-repeat;
     min-width: 12ex;
-    border: 1px solid @light-gray-color-40;
+    border: 1px solid var(--light-gray-color-40);
     &:focus {
-        border-color: @brand-color-dark;
+        border-color: var(--brand-color-dark);
     }
 }
 .hasTimepicker,
@@ -193,9 +193,9 @@ textarea.ui-resizable-handle.ui-resizable-s {
     background-position: right 3px center;
     background-repeat: no-repeat;
     min-width: 10ex;
-    border: 1px solid @light-gray-color-40;
+    border: 1px solid var(--light-gray-color-40);
     &:focus {
-        border-color: @brand-color-dark;
+        border-color: var(--brand-color-dark);
     }
 }
 [data-datetime-picker],
@@ -205,6 +205,6 @@ textarea.ui-resizable-handle.ui-resizable-s {
 
 .ui-slider {
     .ui-slider-range {
-        background-color: @base-color;
+        background-color: var(--base-color);
     }
 }

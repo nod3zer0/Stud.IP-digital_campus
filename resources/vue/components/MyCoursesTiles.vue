@@ -178,7 +178,7 @@ $tile-padding: 10px;
         flex-direction: column;
         position: relative; // For color picker
 
-        border: $tile-border-width solid mixins.$base-color-20;
+        border: $tile-border-width solid var(--base-color-20);
 
         padding: $tile-padding;
     }
@@ -221,7 +221,7 @@ $tile-padding: 10px;
 
 .group-label,
 .course-group-label {
-    color: mixins.$base-gray;
+    color: var(--base-gray);
 }
 
 .group-label {
@@ -245,15 +245,15 @@ article.studip.my-courses--group-hidden {
 
 // Border below according to selected group
 $group-colors: (
-    0: mixins.$group-color-0,
-    1: mixins.$group-color-1,
-    2: mixins.$group-color-2,
-    3: mixins.$group-color-3,
-    4: mixins.$group-color-4,
-    5: mixins.$group-color-5,
-    6: mixins.$group-color-6,
-    7: mixins.$group-color-7,
-    8: mixins.$group-color-8,
+    0: var(--group-color-0),
+    1: var(--group-color-1),
+    2: var(--group-color-2),
+    3: var(--group-color-3),
+    4: var(--group-color-4),
+    5: var(--group-color-5),
+    6: var(--group-color-6),
+    7: var(--group-color-7),
+    8: var(--group-color-8),
 );
 @for $i from 0 through 8 {
     .studip-grid-element.my-courses-group-#{$i} {
@@ -286,7 +286,7 @@ $group-colors: (
     left: 0;
     z-index: 2;
 
-    background: mixins.$white;
+    background: var(--white);
     grid-gap: $gap;
     padding: $gap;
 }

@@ -1,18 +1,18 @@
 /* --- Tabellen ------------------------------------------------------------- */
 table.header, .table_header { //normale Tabellenheader
-    background-color:  @table-header-color;
-    border-bottom: 1px solid #575757;
-    color: #000;
+    background-color:  var(--table-header-color);
+    border-bottom: 1px solid var(--dark-gray-color-80);
+    color: var(--black);
     padding: 4px;
 
 }
 
 .table_header_bold { //formerly known as topic(-header)
-    background-color: @brand-color-lighter;
-    border-color: @brand-color-darker;
+    background-color: var(--brand-color-lighter);
+    border-color: var(--brand-color-darker);
     border-style: solid;
     border-width: 0 0 1px 0;
-    color: @white;
+    color: var(--white);
     font-size: 12pt;
     padding: 3px 5px;
 
@@ -20,7 +20,7 @@ table.header, .table_header { //normale Tabellenheader
 }
 
 
-table.links1 { background-color: @white; }
+table.links1 { background-color: var(--white); }
 table.logintable {
     background-image: url("@{image-path}/login.jpg");
     background-size: 750px 350px;
@@ -33,7 +33,7 @@ table.logintable {
 
 .gradient-bar(@flow-content: true) {
     #gradient > .vertical-three-colors(#cdd9ed, #e3eaf6, 40%, #e3eaf6);
-    border-top: 1px solid @brand-color-lighter;
+    border-top: 1px solid var(--brand-color-lighter);
     line-height: 17pt;
     height: 25px;
 }
@@ -54,36 +54,36 @@ td.toolbar, td.printhead {
 }
 
 td {
-    &.aufklapp { background-color: #fffaee; }
-    &.angemeldet { border: 1px solid #000; }
+    &.aufklapp { background-color: var(--dark-gray-color-5); }
+    &.angemeldet { border: 1px solid var(--black); }
     &.nix { background-color: transparent; }
     &.quote {
-        border: 1px solid #000;
+        border: 1px solid var(--black);
         font-size: 8px;
     }
     &.rahmen_steel {
-        background-color: #f3f5f8;
-        border: 1px solid #000;
+        background-color: var(--content-color-10);
+        border: 1px solid var(--black);
     }
     &.rahmen_table_row_odd {
-        background-color: @content-color-20;
-        border: 1px solid #000;
+        background-color: var(--content-color-20);
+        border: 1px solid var(--black);
     }
     &.rahmen_white {
-        background: #fff;
-        border: 1px solid #000;
+        background: var(--white);
+        border: 1px solid var(--black);
     }
     &.table_header_bold_red {
         border: none;
-        background-color: #fdc6c6;
-        border-bottom: 1px solid #990000;
-        color: #000;
+        background-color: var(--red-20);
+        border-bottom: 1px solid var(--red);
+        color: var(--red);
         height: 20px;
     }
 }
 
 table.blank, td.blank, td.onlineinfo, td.blanksmall {
-    background-color: #fff;
+    background-color: var(--white);
 }
 
 td.tree-indent {
@@ -120,13 +120,13 @@ td.tree-elbow-line, td.tree-elbow-end {
     }
 
     .toggle-indicator {
-        color: #000;
+        color: var(--black);
         font-weight: bold;
 
         a {
             background: left center no-repeat;
             .background-icon('arr_1down', 'clickable');
-            color: #000;
+            color: var(--black);
             cursor: pointer;
             display: block;
         }
@@ -162,15 +162,15 @@ td.tree-elbow-line, td.tree-elbow-end {
 }
 
 /* --- Sonstige ------------------------------------------------------------- */
-.gruppe0 { background-color: @group-color-0 !important; }
-.gruppe1 { background-color: @group-color-1 !important; }
-.gruppe2 { background-color: @group-color-2 !important; }
-.gruppe3 { background-color: @group-color-3 !important; }
-.gruppe4 { background-color: @group-color-4 !important; }
-.gruppe5 { background-color: @group-color-5 !important; }
-.gruppe6 { background-color: @group-color-6 !important; }
-.gruppe7 { background-color: @group-color-7 !important; }
-.gruppe8 { background-color: @group-color-8 !important; }
+.gruppe0 { background-color: var(--group-color-0) !important; }
+.gruppe1 { background-color: var(--group-color-1) !important; }
+.gruppe2 { background-color: var(--group-color-2) !important; }
+.gruppe3 { background-color: var(--group-color-3) !important; }
+.gruppe4 { background-color: var(--group-color-4) !important; }
+.gruppe5 { background-color: var(--group-color-5) !important; }
+.gruppe6 { background-color: var(--group-color-6) !important; }
+.gruppe7 { background-color: var(--group-color-7) !important; }
+.gruppe8 { background-color: var(--group-color-8) !important; }
 
 #my_seminars, #settings-notifications {
     .gruppe0, .gruppe1, .gruppe2, .gruppe3, .gruppe4,
@@ -185,31 +185,31 @@ td.tree-elbow-line, td.tree-elbow-end {
     }
 }
 
-.grey      { background: #bbb none; }
-.white     { background: #fff none; }
+.grey      { background: var(--dark-gray-color-40) none; }
+.white     { background: var(--white) none; }
 
 .red_gradient {
     #gradient > .vertical-three-colors(#e3969a, #e8b6b9, 60%, #e8b6b9);
-    border-top: 2px solid #b35357;
+    border-top: 2px solid var(--brown);
 }
 
 /* --- Styles fuer printhead und printcontent ------------------------------- */
 table {
     td.printcontent {
-        background-color: @dark-gray-color-5;
+        background-color: var(--dark-gray-color-5);
         text-align: left;
     }
     td.printcontent:hover {
-        background-color: @dark-gray-color-5;
+        background-color: var(--dark-gray-color-5);
     }
     td.printhead2 {
         background-image: url("@{image-path}/content_object_arr-right.png");
-        border-top: 1px solid @brand-color-lighter;
+        border-top: 1px solid var(--brand-color-lighter);
         padding: 0;
     }
     td.printhead3 {
         background-image: url("@{image-path}/content_object_arr-down.png");
-        border-top: 1px solid @brand-color-lighter;
+        border-top: 1px solid var(--brand-color-lighter);
         padding: 0;
     }
 }
@@ -279,9 +279,9 @@ tr.sortable {
     }
     td:first-child[colspan], .divider > th, .divider > td {
         background-color: lighten(@brand-color-lighter, 20%);
-        border-bottom: 1px solid #444;
-        border-top: 1px solid #444;
-        color: #000;
+        border-bottom: 1px solid var(--base-gray);
+        border-top: 1px solid var(--base-gray);
+        color: var(--black);
         font-weight: bold;
         text-align: center;
     }
@@ -297,15 +297,15 @@ tr.sortable {
     }
     tfoot {
         td {
-            background: @table-footer-color;
+            background: var(--table-footer-color);
             text-align: center;
         }
         tr:first-child td {
-            border-top: 1px solid #575757;
+            border-top: 1px solid var(--dark-gray-color-80);
         }
     }
     label.required:after {
-        color: red;
+        color: var(--red);
         content:'*';
         font-size: 1.5em;
         padding-left: 5px;
@@ -317,8 +317,8 @@ tr.sortable {
         &:nth-child(-n+2) { text-align: left; }
     }
     .bordered {
-        &.left  { border-left: 1px solid @brand-color-lighter; }
-        &.right { border-right: 1px solid @brand-color-lighter; }
+        &.left  { border-left: 1px solid var(--brand-color-lighter); }
+        &.right { border-right: 1px solid var(--brand-color-lighter); }
     }
 }
 
@@ -343,19 +343,19 @@ table.tree {
         }
     }
     td.blank {
-        background: #fff;
+        background: var(--white);
         border: 0;
     }
     td.in-between {
-        background: #fff url("@{image-path}/tree-line.gif") center repeat-y;
+        background: var(--white) url("@{image-path}/tree-line.gif") center repeat-y;
         border: 0;
     }
     td.leaf {
-        background: #fff url("@{image-path}/tree-leaf.gif") center no-repeat;
+        background: var(--white) url("@{image-path}/tree-leaf.gif") center no-repeat;
         border: 0;
     }
     td.end {
-        background: #fff url("@{image-path}/tree-end.gif") center no-repeat;
+        background: var(--white) url("@{image-path}/tree-end.gif") center no-repeat;
         border: 0;
     }
     .centered {
@@ -365,8 +365,8 @@ table.tree {
 }
 
 .table_footer, .table_footer td {
-    background-color: #e9e9e9;
-    border-top: 1px solid #c8c8c8;
+    background-color: var(--dark-gray-color-10);
+    border-top: 1px solid var(--dark-gray-color-30);
 }
 
 // New table definition
@@ -393,7 +393,7 @@ table.default {
     > caption {
         background-color: transparent;
         padding-top: 0px;
-        color: @headings-color;
+        color: var(--headings-color);
         font-size: 1.4em;
         text-align: left;
 
@@ -415,26 +415,26 @@ table.default {
     }
     > thead {
         > tr > th {
-            background-color: @content-color-20;
+            background-color: var(--content-color-20);
             border-bottom: 1px solid fadeout(@brand-color-lighter, 80%);
-            border-top: 1px solid @brand-color-darker;
+            border-top: 1px solid var(--brand-color-darker);
             font-size: 1.0em;
         }
     }
     > tbody {
         > tr {
             > th {
-                background-color: @content-color-20;
-                border-top: 1px solid @brand-color-darker;
+                background-color: var(--content-color-20);
+                border-top: 1px solid var(--brand-color-darker);
                 border-bottom: 1px solid fadeout(@brand-color-lighter, 80%);
                 text-align: left;
             }
             > td {
-                border-bottom: 1px solid @table-header-color;
+                border-bottom: 1px solid var(--table-header-color);
                 transition: background-color 0.3s;
             }
             &.dragover > td {
-                background-color: @yellow-20;
+                background-color: var(--yellow-20);
             }
         }
     }
@@ -468,7 +468,7 @@ table.default {
                 bottom: 0;
                 left: 0;
                 width: 2px;
-                background-color: @red;
+                background-color: var(--red);
             }
         }
         .action-menu {
@@ -476,7 +476,7 @@ table.default {
         }
     }
     > tbody:last-of-type > tr:last-child > td {
-        border-bottom: 1px solid @brand-color-darker;
+        border-bottom: 1px solid var(--brand-color-darker);
     }
     // Hover effect
     &:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td:not(.nohover) {
@@ -487,8 +487,8 @@ table.default {
     }
     > tfoot {
         > tr > td {
-            background-color: @content-color-20;
-            border-top: 1px solid @brand-color-darker;
+            background-color: var(--content-color-20);
+            border-top: 1px solid var(--brand-color-darker);
             padding-left: 10px;
             padding-right: 10px;
         }
@@ -506,7 +506,7 @@ table.default {
     }
     > caption .actions {
         font-size: @font-size-base;
-        border-left: 1px solid @brand-color-darker;
+        border-left: 1px solid var(--brand-color-darker);
         margin-bottom: -5px;
         min-height: 26px;
         padding-bottom: 3px;
@@ -526,7 +526,7 @@ table.default {
         }
         .caption-content {
             flex-grow: 1;
-            border-right: 1px solid @brand-color-darker;
+            border-right: 1px solid var(--brand-color-darker);
             padding-bottom: 5px;
             padding-right: 0.5em;
             margin-right: 0.5em;
@@ -647,7 +647,7 @@ table.withdetails {
             padding-bottom: 10px;
             > .detailscontainer {
                 padding: 5px;
-                border: 1px solid @table-header-color;
+                border: 1px solid var(--table-header-color);
                 margin-top: -1px;
                 border-top-color: white;
             }
@@ -676,9 +676,9 @@ table.withdetails {
     .tablesorter-header:not(.sorter-false) {
         white-space: nowrap;
 
-        color: @base-color;
+        color: var(--base-color);
         &:hover {
-            color: @active-color;
+            color: var(--active-color);
             cursor: pointer;
         }
         &.tablesorter-headerDesc:hover .tablesorter-header-inner::after {
@@ -710,7 +710,7 @@ table#schedule_data {
             td {
                 text-align: center;
                 vertical-align: top;
-                background-color: @content-color-20;
+                background-color: var(--content-color-20);
                 padding-right: 2px;
                 padding: 0px;
                 &:first-child {
@@ -728,7 +728,7 @@ table#schedule_data {
         td:first-child {
             text-align: right;
             vertical-align: top;
-            background-color: @content-color-20;
+            background-color: var(--content-color-20);
             padding-right: 2px;
             padding: 0px;
         }
@@ -745,15 +745,15 @@ table.course-search{
     @max-width-s: 8em;
     @max-width-m: 48em;
     @max-width-l: 100%;
-    border: 1px solid @content-color-40;
+    border: 1px solid var(--content-color-40);
     padding: 0px;
     border-top: 0;
     caption.legend {
         box-sizing: border-box;
         background-color: @fieldset-header;
-        border: 1px solid @content-color-40;
+        border: 1px solid var(--content-color-40);
         border-bottom: 0;
-        color: @brand-color-dark;
+        color: var(--brand-color-dark);
         font-size: 12pt;
         font-weight: bold;
         line-height: 2em;
@@ -768,7 +768,7 @@ table.show-tree {
     width:100%;
     padding: 0px 10px 10px 10px;
     td.b-top-va-center {
-        border-top: 1px solid @content-color-40;
+        border-top: 1px solid var(--content-color-40);
         padding-top: 10px;
         vertical-align:middle;
     }
@@ -815,7 +815,7 @@ table.show-tree {
             }
             a:hover{
                 background-color: @fieldset-header !important;
-                color: @base-color !important;
+                color: var(--base-color) !important;
             }
         }
 

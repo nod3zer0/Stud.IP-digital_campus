@@ -21,7 +21,7 @@ $border-width: 4px;
 
     h2, h3 {
         border-bottom: 0;
-        color: $white;
+        color: var(--white);
         font-size: 1em;
         font-weight: normal;
         margin: 0;
@@ -33,7 +33,7 @@ $border-width: 4px;
     }
 
     h3 {
-        border-bottom: 1px dotted $base-color-80;
+        border-bottom: 1px dotted var(--base-color-80);
         font-size: 1.1em;
         margin-bottom: 2px;
         padding-bottom: 2px;
@@ -46,7 +46,7 @@ $border-width: 4px;
 }
 
 .helpbar {
-    background-color: $base-color;
+    background-color: var(--base-color);
     padding: 8px;
     box-sizing: border-box;
     position: absolute;
@@ -57,7 +57,7 @@ $border-width: 4px;
     z-index: 1000;
 
     &::before {
-        border-bottom: 2px solid $base-color-80;
+        border-bottom: 2px solid var(--base-color-80);
         border-left: $border-width solid transparent;
         border-right: $border-width solid transparent;
         content: '';
@@ -79,7 +79,7 @@ $border-width: 4px;
     }
 
     .helpbar-widgets {
-        color: $white;
+        color: var(--white);
         list-style: none;
         padding: 0;
 
@@ -88,16 +88,16 @@ $border-width: 4px;
         }
 
         a:link, a:visited {
-            color: $white;
+            color: var(--white);
         }
 
         a:hover, a:active {
-            color: $white;
+            color: var(--white);
             text-decoration: underline;
         }
 
         > li {
-            border-top: 1px solid $content-color;
+            border-top: 1px solid var(--content-color);
             padding: 3px 0;
             margin: 0 .25em;
         }
@@ -135,8 +135,8 @@ $border-width: 4px;
 }
 
 section.big-help-box {
-    background-color: $content-color-40;
-    border: 1px solid $content-color-80;
+    background-color: var(--content-color-40);
+    border: 1px solid var(--content-color-80);
     padding: 0.5em;
     margin-top: 0.5em;
     text-align: center;

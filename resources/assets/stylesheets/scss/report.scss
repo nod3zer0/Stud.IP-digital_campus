@@ -34,8 +34,8 @@
 
     &-info {
         .ui-dialog-titlebar {
-            background-color: $base-color;
-            color: white;
+            background-color: var(--base-color);
+            color: var(--white);
         }
         .ui-dialog-content {
             background-image: url("#{$image-path}/messagebox/info.png");
@@ -44,8 +44,8 @@
 
     &-success {
         .ui-dialog-titlebar {
-            background-color: $dark-green;
-            color: white;
+            background-color: var(--dark-green);
+            color: var(--white);
         }
 
         .ui-dialog-content {
@@ -55,7 +55,7 @@
 
     &-warning {
         .ui-dialog-titlebar {
-            background-color: $yellow;
+            background-color: var(--yellow);
             color: black;
         }
 
@@ -84,8 +84,8 @@
 
     &-error {
         .ui-dialog-titlebar {
-            background-color: $red;
-            color: white;
+            background-color: var(--red);
+            color: var(--white);
         }
         .ui-dialog-content {
             background-image: url("#{$image-path}/messagebox/error.png");

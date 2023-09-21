@@ -5,14 +5,14 @@
     overflow-y: auto;
 
     .activity {
-        border: 1px solid $content-color-40;
+        border: 1px solid var(--content-color-40);
         width: 95%;
         margin: 30px auto;
 
     }
 
     .activity header {
-        color: $base-color;
+        color: var(--base-color);
         padding: 5px;
         display: flex;
         position: relative;
@@ -22,10 +22,10 @@
             border-radius: 50%;
             width: 42px;
             height: 42px;
-            background: $base-color;
+            background: var(--base-color);
             position: absolute;
             top: -20px;
-            border: 3px solid $white;
+            border: 3px solid var(--white);
             cursor: pointer;
 
             &.left {
@@ -51,7 +51,7 @@
             }
             h3 {
                 display: inline;
-                color: $base-color;
+                color: var(--base-color);
                 border-bottom: none;
                 font-size: 14px;
                 vertical-align: 6px;
@@ -62,7 +62,7 @@
             max-width: 25px;
         }
         .activity-date{
-            color: $base-gray;
+            color: var(--base-gray);
             font-size: 0.75em ;
             margin: 0 0 0 30px;
             display: block;
@@ -73,7 +73,7 @@
 
     .activity-content{
         padding: 5px;
-        background-color: $white;
+        background-color: var(--white);
         margin-left: 30px;
         display: none;
     }
@@ -117,7 +117,7 @@
 
 
     .activity-day {
-        color: $base-gray;
+        color: var(--base-gray);
         font-size: 0.75em ;
         margin: 0 45%;
     }
@@ -129,7 +129,7 @@
     }
 
     .loading-indicator span {
-        background-color: $light-gray-color;
+        background-color: var(--light-gray-color);
         border-radius: 50%;
         height: 10px;
         position: relative;

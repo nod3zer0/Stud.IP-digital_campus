@@ -1,13 +1,13 @@
 /* --- Links ---------------------------------------------------------------- */
 a, a:link, a:visited {
-    color: $base-color;
+    color: var(--base-color);
     text-decoration: none;
 
-    &.index     { color: #444; }
-    &.printhead { color: #339; }
-    &.tree      { color: #000; }
+    &.index     { color: var(--base-gray); }
+    &.printhead { color: var(--base-color); }
+    &.tree      { color: var(--black); }
     &.toolbar {
-        color: #91a2b6;
+        color: var(--brand-color-lighter);
         font-size: 9px;
     }
 }
@@ -21,12 +21,12 @@ a[disabled] {
 }
 
 a:hover, a:active, a:hover.index, a:active.index, a:hover.tree {
-    color: $active-color;
+    color: var(--active-color);
     text-decoration: none;
 }
 
 a:hover.toolbar {
-    color: #eee;
+    color: var(--dark-gray-color-10);
 }
 
 a.link-intern {

@@ -44,8 +44,8 @@ article.studip.feedback-stream {
     .feedback-entry {
         margin-top: 10px;
         padding: 5px;
-        background-color: $content-color-10;
-        border: 1px solid $content-color-40;
+        background-color: var(--content-color-10);
+        border: 1px solid var(--content-color-40);
 
         header {
             background: transparent;
@@ -70,7 +70,7 @@ article.studip.feedback-stream {
             }
         }
         .date {
-            color: $base-gray;
+            color: var(--base-gray);
             text-align: right;
             font-size: 12px;
         }
@@ -98,7 +98,7 @@ table.feedback {
 .percentage-bar {
     margin-left: -5px;
     padding: 0 5px;
-    color: $content-color-10;
-    background-color: $base-color;
+    color: var(--content-color-10);
+    background-color: var(--base-color);
     min-width: 20px;
 }

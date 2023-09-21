@@ -101,19 +101,19 @@ body#install {
                 &::before {
                     content: url('#{$icon-path}red/decline.svg') ' ';
                 }
-                color: $red;
+                color: var(--red);
             }
             &.success {
                 &::before {
                     content: url('#{$icon-path}green/accept.svg') ' ';
                 }
-                color: $green;
+                color: var(--green);
             }
             &.notice {
                 &::before {
                     content: url('#{$icon-path}blue/info-circle.svg') ' ';
                 }
-                color: black;
+                color: var(--black);
             }
 
             code {
@@ -163,15 +163,15 @@ body#install {
                 -moz-appearance: none;
                 appearance: none;
 
-                border: 1px solid #000;
-                color: $base-color-60;
+                border: 1px solid var(--black);
+                color: var(--base-color-60);
                 margin-left: 1em;
                 width: 550px;
                 height: 20px;
 
                 &::-moz-progress-bar,
                 &::-webkit-progress-bar {
-                    background-color: $base-color-60;
+                    background-color: var(--base-color-60);
                 }
 
                 + div {
@@ -202,15 +202,15 @@ body#install {
     }
 
     code {
-        background-color: $dark-gray-color;
-        color: $white;
+        background-color: var(--dark-gray-color);
+        color: var(--white);
         padding: 2px 4px;
     }
 
     div.type-text {
         &.required {
             label::after {
-                color: $red;
+                color: var(--red);
                 content: '*';
             }
         }
@@ -244,7 +244,7 @@ body#install {
     }
 
     strong.required::after {
-        color: $red;
+        color: var(--red);
         content: '*';
     }
 
@@ -255,14 +255,14 @@ body#install {
         -moz-appearance: none;
         appearance: none;
 
-        color: $base-color-60;
+        color: var(--base-color-60);
         margin: 0 1em -4px;
         width: calc(100% - 2em);
         height: 4px;
 
         &::-moz-progress-bar,
         &::-webkit-progress-bar {
-            background-color: $base-color-60;
+            background-color: var(--base-color-60);
         }
     }
 }

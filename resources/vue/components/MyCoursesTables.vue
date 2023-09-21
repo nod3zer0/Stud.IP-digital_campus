@@ -145,8 +145,6 @@ export default {
 </script>
 
 <style lang="scss">
-@use '../../assets/stylesheets/mixins/colors.scss' as *;
-
 table.mycourses {
     tbody td {
         vertical-align: top;
@@ -162,10 +160,10 @@ table.mycourses {
     }
 
     tr.has-subcourses td {
-        border-bottom: 1px solid $dark-gray-color-75;
+        border-bottom: 1px solid var(--dark-gray-color-75);
     }
     tr.subcourses {
-        background-color: $dark-gray-color-5;
+        background-color: var(--dark-gray-color-5);
 
         td.subcourse-indented {
             padding-left: 20px;

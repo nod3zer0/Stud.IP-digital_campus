@@ -1,7 +1,7 @@
 /* skiplink-area highlighting -------------------------------------------- */
 #skip_link_navigation {
-    background-color: $white;
-    border: 2px solid $orange;
+    background-color: var(--white);
+    border: 2px solid var(--orange);
     left: 50vw;
     margin: 0;
     padding: 10px;
@@ -30,15 +30,15 @@
 
 button.skiplink {
     border: 0;
-    background-color: $white;
-    color: $base-color;
+    background-color: var(--white);
+    color: var(--base-color);
     cursor: pointer;
     line-height: 1em;
     margin-bottom: 0.1em;
 
     &:hover,
     &:active {
-        color: $active-color;
+        color: var(--active-color);
     }
 
     @media not prefers-reduced-motion {

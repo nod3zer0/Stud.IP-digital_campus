@@ -1,27 +1,27 @@
 .content_title {
-    background-color: #e3eaf6;
-    background-image: linear-gradient(#cdd9ed, #e3eaf6 40%, #e3eaf6);
+    background-color: var(--content-color-20);
+    background-image: linear-gradient(var(--content-color-40), var(--content-color-20) 40%, var(--content-color-20));
     background-repeat: no-repeat;
-    border-top: 1px solid $content-color;
+    border-top: 1px solid var(--content-color);
     line-height: 17pt;
     height: 25px;
 }
 
 .content_body {
-    background-color: #f8f8f8;
+    background-color: var(--dark-gray-color-5);
 }
 
 .content_body_panel {
-    background-color: #dfe2e9;
-    border-left: 1px solid #ccc;
+    background-color: var(--dark-gray-color-15);
+    border-left: 1px solid var(--dark-gray-color-30);
 }
 
 .content_seperator,
 .content_seperator td  {
-    background-color: #adadad;
-    background-image: linear-gradient(#e0e0e0, #bcbcbc 15%, #adadad);
+    background-color: var(--dark-gray-color-45);
+    background-image: linear-gradient(var(--dark-gray-color-15), var(--dark-gray-color-40) 15%, var(--dark-gray-color-45));
     background-repeat: no-repeat;
-    border-top: 1px solid #c7c7c7;
+    border-top: 1px solid var(--dark-gray-color-30);
     height: 15px;
 }
 

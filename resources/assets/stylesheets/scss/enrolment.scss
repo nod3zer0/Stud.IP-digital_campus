@@ -1,6 +1,6 @@
 #enrollment {
     ul {
-        border-top: 1px solid $base-color;
+        border-top: 1px solid var(--base-color);
         list-style: none inside;
         margin: 0;
         overflow-x: auto;
@@ -10,7 +10,7 @@
             max-height: 200px;
         }
         li {
-            border-bottom: 1px solid $base-color;
+            border-bottom: 1px solid var(--base-color);
             padding: 5px;
 
             &.ui-draggable.ui-draggable-handle {
@@ -42,14 +42,14 @@
     #available-courses li.visible,
     #selected-courses li {
         &:hover {
-            background-color: $base-color-20;
+            background-color: var(--base-color-20);
         }
     }
 
     #available-courses li.ui-draggable.ui-draggable-dragging,
     #selected-courses li.ui-sortable-helper {
-        background-color: $base-color-20;
-        border: 1px solid $base-color;
+        background-color: var(--base-color-20);
+        border: 1px solid var(--base-color);
         list-style: none inside;
         padding: 5px;
         width: auto;
@@ -68,7 +68,7 @@
         }
 
         &.ui-sortable-placeholder {
-            background-color: $yellow-20;
+            background-color: var(--yellow-20);
         }
     }
 
@@ -81,7 +81,7 @@
     }
 
     .ui-state-highlight {
-        background: $red;
+        background: var(--red);
         border: 0;
         height: 30px;
         padding: 10px;

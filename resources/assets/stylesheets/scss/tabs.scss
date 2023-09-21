@@ -19,7 +19,7 @@ div.clear
     }
     li { float: left; }
     a {
-        color: $black;
+        color: var(--black);
     }
 }
 
@@ -31,16 +31,16 @@ div.clear
     .quiet img { opacity: 0.25; }
 
     li {
-        background-color: $dark-gray-color-10;
+        background-color: var(--dark-gray-color-10);
 
         &:last-child {
             border-right: none;
         }
         &.current {
-            color: $base-color;
+            color: var(--base-color);
         }
         &:hover {
-            color: $base-color;
+            color: var(--base-color);
             padding-top: 0;
         }
 
@@ -48,12 +48,12 @@ div.clear
             padding-top: 0;
             line-height: 25px;
             a, span.quiet {
-                color: $base-color;
+                color: var(--base-color);
             }
         }
     }
     a, span.quiet {
-        color: $black;
+        color: var(--black);
         float: left;
         display: block;
 
@@ -92,8 +92,8 @@ div.clear
         right: inherit;
         padding: 0 0 10px 0;
         margin-top: 10px;
-        background: $content-color-20;
-        box-shadow: 1px 1px 1px $dark-gray-color-60;
+        background: var(--content-color-20);
+        box-shadow: 1px 1px 1px var(--dark-gray-color-60);
         text-align: left;
         white-space: nowrap;
 
@@ -103,7 +103,7 @@ div.clear
         }
 
         a:hover {
-            color: $red !important;
+            color: var(--red) !important;
         }
 
     }
@@ -122,13 +122,13 @@ div.clear
 
     .action-menu-content:before {
         border-color: rgba(194, 225, 245, 0);
-        border-bottom-color: $dark-gray-color-60;
+        border-bottom-color: var(--dark-gray-color-60);
         border-width: 9px;
         margin-left: -8px;
     }
     .action-menu-content:after {
         border-color: rgba(194, 225, 245, 0);
-        border-bottom-color: $content-color-20;
+        border-bottom-color: var(--content-color-20);
         border-width: 8px;
         margin-left: -8px;
     }

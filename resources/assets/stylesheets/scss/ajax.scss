@@ -1,8 +1,8 @@
 /* --- AJAX indicator ------------------------------------------------------- */
 #ajax_notification {
-    background-color: #7387ac;
+    background-color: var(--base-color-60);
     bottom: 0;
-    color: $white;
+    color: var(--white);
     display: none;
     font-size: 1.3em;
     font-weight: bold;
@@ -21,7 +21,7 @@
 
     .notification {
         background: rgba(255, 255, 255, 0.5) url("#{$image-path}/loading-indicator.svg") center center no-repeat;
-        border: 1px solid #ccc;
+        border: 1px solid var(--dark-gray-color-30);
         border-radius: 8px;
         display: inline-block;
         height: 16px;

@@ -73,9 +73,9 @@
 
     // List display
     #globalsearch-list {
-        background-color: $white;
-        box-shadow: 1px 1px 1px $light-gray-color-80;
-        color: $text-color;
+        background-color: var(--white);
+        box-shadow: 1px 1px 1px var(--light-gray-color-80);
+        color: var(--text-color);
         display: none;
         max-height: 90vh;
         overflow: auto;
@@ -84,18 +84,18 @@
         width: $width;
 
         a {
-            color: $base-color;
+            color: var(--base-color);
 
             &:hover {
-                color: $active-color;
+                color: var(--active-color);
             }
         }
 
         section {
-            color: $text-color;
+            color: var(--text-color);
 
             header {
-                color: $base-color;
+                color: var(--base-color);
                 margin: 5px;
                 margin-bottom: 0;
             }
@@ -115,7 +115,7 @@
     #globalsearch-searching {
         $icon-size: 32px;
 
-        color: $dark-gray-color-45;
+        color: var(--dark-gray-color-45);
         display: none;
         text-align: center;
 
@@ -141,14 +141,14 @@
         }
 
         article {
-            border: 1px solid $content-color-40;
+            border: 1px solid var(--content-color-40);
             margin: 3px;
             margin-bottom: 8px;
             margin-top: 8px;
 
             > header {
-                background-color: $content-color-20;
-                color: $base-color;
+                background-color: var(--content-color-20);
+                color: var(--base-color);
 
                 display: flex;
                 flex-direction: row;
@@ -179,11 +179,11 @@
 
                 padding: 6px 6px 6px 0;
 
-                border-top: 1px solid $content-color-40;
+                border-top: 1px solid var(--content-color-40);
                 transition: background-color $transition-duration;
 
                 &:hover {
-                    background-color: $dark-gray-color-20;
+                    background-color: var(--dark-gray-color-20);
                 }
 
                 &.globalsearch-extended-result {
@@ -222,13 +222,13 @@
                     }
 
                     .globalsearch-result-details {
-                        color: $black;
+                        color: var(--black);
                         font-size: $font-size-small;
                     }
                 }
 
                 .globalsearch-result-time {
-                    color: $dark-gray-color-80;
+                    color: var(--dark-gray-color-80);
                     flex: 0;
                     font-size: $font-size-small;
                     text-align: right;

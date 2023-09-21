@@ -20,7 +20,7 @@
 /* --- Standardvorgaben ----------------------------------------------------- */
 //TODO: the Body-Background color should be similar to A:link.toolbar and A:visited.toolbar for best effect!!
 body {
-    background-color: #d8dadc;
+    background-color: var(--dark-gray-color-20);
     background-repeat: repeat-x;
     margin: 0;
 }
@@ -42,7 +42,7 @@ table.content {
     border-collapse: collapse;
 
     td {
-        border: thin solid #666;
+        border: thin solid var(--dark-gray-color-80);
         padding: 3px;
     }
 
@@ -125,7 +125,7 @@ ul.clean, ol.clean {
 .nodisplay   { display: none; }
 
 .bordered    {
-    border: 1px solid @content-color-40;
+    border: 1px solid var(--content-color-40);
     padding: 10px;
 }
 .bordered + .bordered {
@@ -140,13 +140,13 @@ table.index_box {
 }
 
 td.index_box_cell {
-    background-color: @content-color-20;
+    background-color: var(--content-color-20);
     padding: 4px;
 }
 
 /* overdiv */
 div.overdiv {
-    background-color: @content-color-20;
+    background-color: var(--content-color-20);
     margin: 0;
     padding: 0;
     position: absolute;
@@ -159,12 +159,12 @@ div.overdiv {
         float: right;
     }
     div.title {
-        background: @brand-color-lighter;
+        background: var(--brand-color-lighter);
         height: 1.4em;
         padding: 0;
     }
     h4.title {
-        color: #fff;
+        color: var(--white);
         float: left;
         font-size: 1em;
         overflow: hidden;
@@ -173,7 +173,7 @@ div.overdiv {
     }
 
     div.content {
-        background-color: @content-color-20;
+        background-color: var(--content-color-20);
         clear: both;
         margin: 0;
         overflow: hidden;
@@ -201,7 +201,7 @@ div.overdiv {
         .right { float: right; }
 
         .ui-button {
-            background: @dark-gray-color-15;
+            background: var(--dark-gray-color-15);
             display: inline-block;
             height: 1.4em;
             line-height: 1.4;
@@ -209,8 +209,8 @@ div.overdiv {
             padding-bottom: 6px;
 
             &:hover {
-                background-color: @base-color-60;
-                color: @contrast-content-white;
+                background-color: var(--base-color-60);
+                color: var(--contrast-content-white);
             }
         }
     }
@@ -283,8 +283,8 @@ div.overdiv {
 
     a {
         box-sizing: border-box;
-        background-color: @content-color-20;
-        border: 1px solid #D0D0D0;
+        background-color: var(--content-color-20);
+        border: 1px solid var(--dark-gray-color-30);
         display: block;
         height: 11em;
         margin: 0 0 1em;
@@ -293,10 +293,12 @@ div.overdiv {
         position: relative;
 
         &:hover {
-            background-color: #F2F2F2;
-            border-color: #A4A4A4;
+            background-color: var(--content-color-10);
+            border-color: var(--dark-gray-color-45);
 
-            p { color: #000; }
+            p {
+                color: var(--black);
+            }
         }
     }
     img {
@@ -317,7 +319,7 @@ div.overdiv {
         padding: 0;
     }
     p {
-        color: #666;
+        color: var(--dark-gray-color-80);
     }
 }
 
@@ -353,9 +355,9 @@ h1:hover, h2:hover, h3:hover, h4:hover {
 
 /* error message */
 .error {
-    background-color: #fcc;
-    border: 1px solid #fcc;
-    color: #000;
+    background-color: var(--red-20);
+    border: 1px solid var(--red-20);
+    color: var(--black);
     display: none;
     font-size: 11px;
     padding: 4px 10px;
@@ -363,7 +365,7 @@ h1:hover, h2:hover, h3:hover, h4:hover {
     p { margin: 0; }
     div.arrow {
         border: 10px solid;
-        border-color: transparent transparent #FCC transparent;
+        border-color: transparent transparent var(--red-20) transparent;
         height: 0;
         left: 60px;
         position: absolute;
@@ -376,7 +378,7 @@ h1:hover, h2:hover, h3:hover, h4:hover {
     font-size: 0.9em;
     font-style: italic;
     text-align: right;
-    color: #444;
+    color: var(--base-gray);
 }
 
 pre.usercode {
@@ -535,5 +537,5 @@ details.studip {
 }
 
 mark {
-    background-color: @activity-color-60;
+    background-color: var(--activity-color-60);
 }

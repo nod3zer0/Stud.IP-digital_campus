@@ -72,11 +72,11 @@ div.messagebox_details {
     }
 }
 
-.messagebox(info,      #000, white,   @base-color);
-.messagebox(success,   #000, white,   @dark-green);
-.messagebox(error,     #000, white,   @red);
-.messagebox(exception, @red, @red-20, @red);
-.messagebox(warning,   #000, white,   @yellow-60, 'advice');
+.messagebox(info, var(--black), var(--white), var(--base-color));
+.messagebox(success, var(--black), var(--white), var(--dark-green));
+.messagebox(error, var(--black), var(--white), var(--red));
+.messagebox(exception, var(--red), var(--red-20), var(--red));
+.messagebox(warning, var(--black), var(--white), var(--yellow-60), 'advice');
 
 // Define modal messagebox
 .modaloverlay {
@@ -109,7 +109,7 @@ div.messagebox_details {
         width: auto;
 
         color: #000;
-        border-color: @yellow;
+        border-color: var(--yellow);
         background-color: white;
         background-image: url("@{image-path}/messagebox/question.png");
         background-size: 32px 32px;

@@ -1,10 +1,10 @@
 /* --- ablaufplan / dates --------------------------------------------------- */
 .dates_items th, .dates_items td {
-    border-bottom: 3px solid @white;
+    border-bottom: 3px solid var(--white);
 }
 
 .dates_opened td {
-    border-bottom: 3px solid #f3f5f8;
+    border-bottom: 3px solid var(--content-color-10);
 }
 
 .dates_content td {
@@ -18,27 +18,27 @@
 
 #schedule_headings {
     margin-left: 41px;
-    background-color: #e8eef7;
+    background-color: var(--content-color-20);
 }
 
 table.schedule_headings td {
-    background-color: #e8eef7;
+    background-color: var(--content-color-20);
 }
 
 div.schedule_day {
-    border-right: 3px double #ddd;
+    border-right: 3px double var(--dark-gray-color-20);
     position: relative;
 }
 
 div.schedule_marker {
-    border-bottom: 1px dotted #ddd;
-    border-top: 1px solid #ddd;
+    border-bottom: 1px dotted var(--dark-gray-color-20);
+    border-top: 1px solid var(--dark-gray-color-20);
     padding: 0;
 }
 
 div.schedule_hours {
-    border-top: 1px solid #ddd;
-    border-right: 1px solid #ddd;
+    border-top: 1px solid var(--dark-gray-color-20);
+    border-right: 1px solid var(--dark-gray-color-20);
     color: black;
     padding-bottom: 1px;
     padding-right: 3px;
@@ -93,8 +93,8 @@ div.snatch {
 }
 
 #schedule_new_entry {
-    background-color: #e8eef7;
-    border: 2px solid #e0e0f0;
+    background-color: var(--content-color-20);
+    border: 2px solid var(--dark-gray-color-15);
     height: 230px;
     position: absolute;
     width: 400px;
@@ -102,15 +102,15 @@ div.snatch {
 }
 #schedule_entry_new {
     dl {
-        border: 1px solid #5c2d64;
-        background-color: #7c5783;
+        border: 1px solid var(--dark-violet);
+        background-color: var(--dark-violet-80);
     }
-    dt { background-color: #5c2d64; }
+    dt { background-color: var(--dark-violet); }
 }
 
 div.schedule_edit_entry, #schedule_settings {
-    background-color: #E8EEF7;
-    border: 2px solid #E0E0F0;
+    background-color: var(--content-color-20);
+    border: 2px solid var(--dark-gray-color-15);
     height: auto;
     left: 50%;
     margin-left: -25%;
@@ -150,7 +150,7 @@ div.invisible_entry {
 }
 
 span.invisible_entry {
-    background-color: #600;
+    background-color: var(--red);
     font-style: italic;
 }
 
@@ -200,7 +200,7 @@ td.schedule-adminbind {
         display: none;
 
         &:checked + label {
-            outline: 1px solid @black;
+            outline: 1px solid var(--black);
 
             position: relative;
             .icon('before', 'accept', 'info', 24px);
@@ -209,13 +209,13 @@ td.schedule-adminbind {
                 left: 50%;
                 top: 50%;
                 transform: translate(-50%, -50%);
-                filter: drop-shadow(0 0 2px @white);
+                filter: drop-shadow(0 0 2px var(--white));
             }
         }
     }
 
     label {
-        border: 1px solid @white;
+        border: 1px solid var(--white);
         display: inline-block;
         height: 32px;
         width: 32px;

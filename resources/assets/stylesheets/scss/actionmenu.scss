@@ -1,5 +1,5 @@
 $action-menu-icon-size: 20px;
-$action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
+$action-menu-shadow: 1px 1px 1px var(--dark-gray-color-60);
 
 .action-menu {
     display: inline-block;
@@ -31,8 +31,8 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
 
         padding: 4px 8px;
 
-        background: $white;
-        border: thin solid $dark-gray-color-45;
+        background: var(--white);
+        border: thin solid var(--dark-gray-color-45);
         box-shadow: $action-menu-shadow;
         font-weight: normal;
         text-align: left;
@@ -60,7 +60,7 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
 
             display: block;
             position: absolute;
-            background:  $base-color;
+            background: var(--base-color);
             border-radius: 50%;
             opacity: 1;
             left: 50%;
@@ -107,7 +107,7 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
             > label {
                 &,
                 &:hover {
-                    color: $dark-gray-color-80;
+                    color: var(--dark-gray-color-80);
                     cursor: default;
                 }
             }
@@ -135,10 +135,10 @@ $action-menu-shadow: 1px 1px 1px $dark-gray-color-60;
 
         > label,
         > button {
-            color: $base-color;
+            color: var(--base-color);
             cursor: pointer;
             &:hover {
-                color: $active-color;
+                color: var(--active-color);
             }
         }
 

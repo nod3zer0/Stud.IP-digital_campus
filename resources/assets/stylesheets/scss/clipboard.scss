@@ -20,17 +20,17 @@
     position: fixed;
     z-index: $drag_and_drop_z_index;
     border: $drag_and_drop_border;
-    color: $base-color;
+    color: var(--base-color);
     font-weight: bold;
     font-size: $font-size-large;
-    background-color: $white;
+    background-color: var(--white);
 }
 
 div.clipboard-area-container {
     margin-bottom: 0.5em;
     overflow-y: scroll;
     max-height: 15em;
-    border: 1px solid $content-color-40;
+    border: 1px solid var(--content-color-40);
 }
 
 table.clipboard-area {
@@ -81,10 +81,10 @@ table.clipboard-area tr.empty-clipboard-message > td {
 
 @keyframes drop-animation {
     0% {
-        background-color: $yellow-60;
+        background-color: var(--yellow-60);
     }
 
     100% {
-        background-color: $white;
+        background-color: var(--white);
     }
 }

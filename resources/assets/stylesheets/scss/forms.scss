@@ -33,7 +33,7 @@ form.default {
     }
 
     span.empty {
-        color: $light-gray-color-40;
+        color: var(--light-gray-color-40);
         font-style: italic;
     }
 
@@ -42,8 +42,8 @@ form.default {
     textarea, select {
         box-sizing: border-box;
 
-        border: 1px solid $light-gray-color-40;
-        color: $dark-gray-color;
+        border: 1px solid var(--light-gray-color-40);
+        color: var(--dark-gray-color);
         max-width: $max-width-m;
         padding: 5px;
         vertical-align: middle;
@@ -51,7 +51,7 @@ form.default {
         transition: all $transition-duration ease-out;
 
         &:focus {
-            border-color: $brand-color-dark;
+            border-color: var(--brand-color-dark);
         }
 
         &.size-s {
@@ -66,7 +66,7 @@ form.default {
         }
 
         &[readonly] {
-            background-color: $light-gray-color-20;
+            background-color: var(--light-gray-color-20);
         }
     }
 
@@ -170,17 +170,17 @@ form.default {
 
     fieldset {
         box-sizing: border-box;
-        border: solid 1px $content-color-40;
+        border: solid 1px var(--content-color-40);
         margin: 0 0 10px;
         min-width: auto;
         padding: $gap 10px 10px;
 
         > legend {
             box-sizing: border-box;
-            background-color: $fieldset-header;
-            border: 1px solid $content-color-40;
+            background-color: var(--fieldset-header);
+            border: 1px solid var(--content-color-40);
             border-bottom: 0;
-            color: $brand-color-dark;
+            color: var(--brand-color-dark);
             font-size: 12pt;
             font-weight: bold;
             line-height: 2em;
@@ -215,13 +215,13 @@ form.default {
         font-weight: bold;
         &::after {
             content: "*";
-            color: $red;
+            color: var(--red);
         }
     }
     .studiprequired {
         font-weight: bold;
         .asterisk {
-            color: $red;
+            color: var(--red);
         }
     }
 
@@ -230,7 +230,7 @@ form.default {
     }
 
     select[disabled] {
-        background-color: $dark-gray-color-15;
+        background-color: var(--dark-gray-color-15);
     }
 
     .tooltip.tooltip-icon::before {
@@ -238,8 +238,8 @@ form.default {
     }
 
     footer {
-        background-color: $content-color-20;
-        border-top: 1px solid $brand-color-darker;
+        background-color: var(--content-color-20);
+        border-top: 1px solid var(--brand-color-darker);
         clear: both;
         margin-left: 0;
         padding: 5px 10px;
@@ -260,14 +260,14 @@ form.default {
         background-size: 20px 20px;
         cursor: pointer;
         padding-left: 30px;
-        color: $base-color;
+        color: var(--base-color);
 
         input[type=file] {
             display: none;
         }
         .filename {
             padding-left: 0.5em;
-            color: $light-gray-color-80;
+            color: var(--light-gray-color-80);
         }
     }
 
@@ -291,7 +291,7 @@ form.default {
             transition: all $transition-duration ease-out;
 
             &:focus {
-                border-color: $brand-color-dark;
+                border-color: var(--brand-color-dark);
             }
 
             &.size-s {
@@ -402,7 +402,7 @@ form.default {
         bottom: 100%;
         right: 0;
 
-        color: $light-gray-color;
+        color: var(--light-gray-color);
         font-size: 0.8em;
     }
 
@@ -433,13 +433,13 @@ form.default {
     }
 
     .invalid {
-        border: 2px dotted $red ! important;
+        border: 2px dotted var(--red) ! important;
     } // an invalid form entry
 
     .invalid_message {
         display: none;
         font-weight: bold;
-        color: $red;
+        color: var(--red);
     }
 
     .select2-container {
@@ -490,7 +490,7 @@ form.default {
             display: inline-block;
         }
         textarea:invalid, input[type=text]:invalid {
-            border-left: 4px solid $red;
+            border-left: 4px solid var(--red);
         }
     }
 
@@ -509,11 +509,11 @@ form.default {
         input[type=range] {
             &::-moz-range-track {
                 height: 11px;
-                border: 1px solid $content-color;
+                border: 1px solid var(--content-color);
                 background-color: transparent;
             }
             &::-moz-range-progress {
-                background-color: $base-color;
+                background-color: var(--base-color);
                 height: 11px;
             }
             &::-moz-range-thumb {
@@ -522,7 +522,7 @@ form.default {
                 height: 1.2em;
             }
             &::-moz-range-thumb:hover {
-                background-color: $content-color;
+                background-color: var(--content-color);
             }
         }
         output {
@@ -556,7 +556,7 @@ form.narrow {
 .content-title {
     background-color: transparent;
     padding-top: 0;
-    color: $base-gray;
+    color: var(--base-gray);
     font-size: 1.4em;
     text-align: left;
 }
@@ -598,5 +598,3 @@ form.inline {
         }
     }
 }
-
-

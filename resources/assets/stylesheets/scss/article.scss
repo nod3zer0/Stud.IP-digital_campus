@@ -1,7 +1,7 @@
 $article-padding: 10px;
 
 article.studip {
-    border: 1px solid $content-color-40;
+    border: 1px solid var(--content-color-40);
 
     margin-bottom: $article-padding;
     padding: $article-padding;
@@ -18,7 +18,7 @@ article.studip {
         flex-wrap: wrap;
 
         padding: 2px;
-        background-color: $content-color-20;
+        background-color: var(--content-color-20);
         margin: -$article-padding;
         margin-bottom: $article-padding;
 
@@ -35,7 +35,7 @@ article.studip {
         h1 {
             padding: 5px;
             margin: 0;
-            color: $base-color;
+            color: var(--base-color);
             border-bottom: none;
             font-size: medium;
 
@@ -60,7 +60,7 @@ article.studip {
             padding: 2px;
 
             > * {
-                border-right: 1px solid $content-color;
+                border-right: 1px solid var(--content-color);
                 padding-right: 4px;
                 margin-right: 4px;
 
@@ -120,7 +120,7 @@ article.studip {
 
     > footer {
         text-align: center;
-        border-top: 1px solid $content-color-40;
+        border-top: 1px solid var(--content-color-40);
         margin: -$article-padding;
         margin-top: $article-padding;
 

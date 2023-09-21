@@ -146,7 +146,7 @@ c o n t e n t s
 
 .cw-contents-overview-teaser {
     max-width: 782px;
-    background-color: $content-color-20;
+    background-color: var(--content-color-20);
     background-image: url("#{$image-path}/courseware-keyvisual-negative.svg");
     background-repeat: no-repeat;
     background-size: 196px;
@@ -198,7 +198,7 @@ c o n t e n t s
     }
 
     .loading-indicator span {
-        background-color: #CCCCDD;
+        background-color: var(--content-color-40);
         border-radius: 50%;
         height: 10px;
         position: relative;
@@ -279,7 +279,7 @@ $consum_ribbon_width: calc(100% - 58px);
 .cw-ribbon-wrapper-consume {
     position: fixed;
     padding: 15px;
-    background-color: $white;
+    background-color: var(--white);
     width: $consum_ribbon_width;
     height: 46px;
     z-index: 42;
@@ -290,7 +290,7 @@ $consum_ribbon_width: calc(100% - 58px);
     height: 15px;
     left: 0;
     width: calc(100% - 1em);
-    background-color: $white;
+    background-color: var(--white);
     z-index: 40;
 }
 
@@ -299,7 +299,7 @@ $consum_ribbon_width: calc(100% - 58px);
     top: 40px;
     height: 20px;
     width: calc(100% - 314px);
-    background-color: $white;
+    background-color: var(--white);
     z-index: 39;
 }
 .cw-ribbon-sticky-bottom {
@@ -307,7 +307,7 @@ $consum_ribbon_width: calc(100% - 58px);
     top: 110px;
     height: 16px;
     width: calc(100% - 314px);
-    background-color: $white;
+    background-color: var(--white);
     z-index: 39;
 }
 .cw-ribbon-sticky-spacer {
@@ -318,11 +318,11 @@ $consum_ribbon_width: calc(100% - 58px);
     flex-wrap: wrap;
     height: auto;
     min-height: 30px;
-    border: solid thin $dark-gray-color-30;
+    border: solid thin var(--dark-gray-color-30);
     margin-bottom: 15px;
     padding: 1em;
     justify-content: space-between;
-    background-color: $dark-gray-color-5;
+    background-color: var(--dark-gray-color-5);
 
     &.cw-ribbon-sticky {
         position: fixed;
@@ -377,10 +377,10 @@ $consum_ribbon_width: calc(100% - 58px);
                     white-space: nowrap;
 
                     a {
-                        color: $base-color;
+                        color: var(--base-color);
                         text-decoration: none;
                         &:hover {
-                            color: $active-color;
+                            color: var(--active-color);
                         }
                     }
 
@@ -455,9 +455,9 @@ $consum_ribbon_width: calc(100% - 58px);
 }
 
 .cw-ribbon-tools {
-    background-color: $white;
-    border: solid thin $content-color-40;
-    box-shadow: 2px 2px #ccc;
+    background-color: var(--white);
+    border: solid thin var(--content-color-40);
+    box-shadow: 2px 2px var(--dark-gray-color-30);
     position: absolute;
     right: -570px;
     top: 15px;
@@ -489,7 +489,7 @@ $consum_ribbon_width: calc(100% - 58px);
     .cw-ribbon-tool-content {
         height: 100%;
         width: 540px;
-        background-color:$white;
+        background-color: var(--white);
         padding: 0;
         overflow: hidden;
 
@@ -498,10 +498,10 @@ $consum_ribbon_width: calc(100% - 58px);
             position: sticky;
             height: 100%;
             top: 0;
-            background-color: $white;
+            background-color: var(--white);
             margin: 0;
             padding: 0;
-            color: $base-color;
+            color: var(--base-color);
             display: flex;
             z-index: 43;
 
@@ -521,7 +521,7 @@ $consum_ribbon_width: calc(100% - 58px);
                 background-repeat: no-repeat;
                 background-size: 24px;
                 background-position: center right;
-                background-color: #fff;
+                background-color: var(--white);
             }
 
             >.cw-ribbon-tool-content-tablist {
@@ -544,7 +544,7 @@ $consum_ribbon_width: calc(100% - 58px);
                 }
                 >.cw-tabs-content {
                     border: none;
-                    border-top: solid thin $content-color-40;
+                    border-top: solid thin var(--content-color-40);
                     padding: 0;
                     height: calc(100% - 58px);
 
@@ -555,7 +555,7 @@ $consum_ribbon_width: calc(100% - 58px);
                         overflow-y: auto;
                         overflow-x: hidden;
                         scrollbar-width: thin;
-                        scrollbar-color: $base-color $white;
+                        scrollbar-color: var(--base-color) var(--white);
 
                         &.cw-ribbon-tool-blockadder-tab {
                             height: 100%;
@@ -573,7 +573,7 @@ $consum_ribbon_width: calc(100% - 58px);
             overflow-y: auto;
             overflow-x: hidden;
             scrollbar-width: thin;
-            scrollbar-color: $base-color $white;
+            scrollbar-color: var(--base-color) var(--white);
         }
     }
 }
@@ -633,12 +633,12 @@ ribbon end
         height: 100%;
         width: 100%;
         padding: 0;
-        background-color: $white;
+        background-color: var(--white);
         z-index: 1004;
         overflow-y: scroll;
         overflow-x: hidden;
         scrollbar-width: thin;
-        scrollbar-color: $base-color #f5f5f5;
+        scrollbar-color: var(--base-color) var(--dark-gray-color-5);
     }
 
     .cw-welcome-screen {
@@ -646,7 +646,7 @@ ribbon end
             margin: 14px 0 42px 0;
             width: 100%;
             height: 400px;
-            background-image: url('../../assets/images/courseware-keyvisual.svg');
+            background-image: url('#{$image-path}/courseware-keyvisual.svg');
             background-repeat: no-repeat;
             background-position: center center;
         }
@@ -695,7 +695,7 @@ ribbon end
         resize: none;
     }
     .cw-structural-element-color {
-        color: $white;
+        color: var(--white);
         &.black {
             background-color: map-get($tile-colors, "black");
         }
@@ -855,7 +855,7 @@ ribbon end
     }
 
     .cw-container-header {
-        background-color: $content-color-20;
+        background-color: var(--content-color-20);
         padding: 4px 10px 4px 22px;
 
         .cw-container-header-toggle {
@@ -864,7 +864,7 @@ ribbon end
         }
 
         span {
-            color: $base-color;
+            color: var(--base-color);
             font-weight: 700;
             line-height: 2em;
             font-size: 1.1em;
@@ -900,7 +900,7 @@ ribbon end
             }
         }
         .cw-container-content {
-            border: solid thin $content-color-40;
+            border: solid thin var(--content-color-40);
         }
     }
 
@@ -997,7 +997,7 @@ form.cw-container-dialog-edit-form {
     }
 }
 .cw-content-wrapper-active {
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     .cw-block-content {
         padding: $cw-wrapper-gap;
     }
@@ -1016,7 +1016,7 @@ form.cw-container-dialog-edit-form {
     }
 }
 .cw-block-header {
-    background-color: $content-color-20;
+    background-color: var(--content-color-20);
     padding: 4px 10px 4px 22px;
 
     .cw-block-header-toggle {
@@ -1025,7 +1025,7 @@ form.cw-container-dialog-edit-form {
     }
 
     span {
-        color: $base-color;
+        color: var(--base-color);
         font-weight: 700;
         line-height: 2em;
         font-size: 1.1em;
@@ -1054,8 +1054,8 @@ form.cw-container-dialog-edit-form {
 .cw-block-features {
 
     header{
-        background-color: $content-color-20;
-        color: $base-color;
+        background-color: var(--content-color-20);
+        color: var(--base-color);
         font-weight: 600;
         padding: 0.5em;
     }
@@ -1198,7 +1198,7 @@ label[for="cw-keypoint-color"] {
     display: inline-block !important;
 }
 .cw-keypoint-icons {
-    background-color: $white;
+    background-color: var(--white);
 }
 .cw-keypoint-bg-red {
     background-color: map-get($icon-colors, 'icon-red');
@@ -1233,7 +1233,7 @@ label[for="cw-keypoint-color"] {
     width: -moz-available;
     height: -moz-available;
     min-height: 8em;
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     resize: none;
 }
 
@@ -1366,7 +1366,7 @@ label[for="cw-keypoint-color"] {
             padding-left: 0;
             > li.cw-tree-item {
                 > .cw-tree-item-wrapper {
-                    border-bottom: solid thin $content-color-40;
+                    border-bottom: solid thin var(--content-color-40);
                     display: block;
                     > a.cw-tree-item-link {
                         display: block;
@@ -1384,7 +1384,7 @@ label[for="cw-keypoint-color"] {
                         margin: 28px 0 0 0;
                         > .cw-tree-item-wrapper {
                             display: block;
-                            border-bottom: solid thin $content-color-40;
+                            border-bottom: solid thin var(--content-color-40);
                             margin-bottom: 12px;
                             > a.cw-tree-item-link {
                                 display: inline-block;
@@ -1444,15 +1444,15 @@ label[for="cw-keypoint-color"] {
     }
     .cw-tree-item-link {
         &:hover {
-            background-color: $light-gray-color-20;
-            color: $active-color;
+            background-color: var(--light-gray-color-20);
+            color: var(--active-color);
         }
         &.cw-tree-item-link-current {
-            color: $black;
+            color: var(--black);
             font-weight: 600;
             cursor: default;
             &::before {
-                color: $black;
+                color: var(--black);
             }
         }
         &.cw-tree-item-link-selected {
@@ -1489,7 +1489,7 @@ label[for="cw-keypoint-color"] {
             @include background-icon(accept, info, 16);
         }
         &.cw-tree-item-sequential-percentage {
-            color: $black;
+            color: var(--black);
             font-size: 14px;
         }
     }
@@ -1508,18 +1508,18 @@ c o l l a p s i b l e   b o x
 * * * * * * * * * * * * * * */
 .cw-collapsible {
 
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     margin-bottom: -1px;
 
     .cw-collapsible-title {
         @include background-icon(arr_1right, clickable);
         background-position: 6px center;
         background-repeat: no-repeat;
-        background-color: $content-color-20;
+        background-color: var(--content-color-20);
         padding: 0.5em 2em;
         margin: 0;
         font-weight: 600;
-        color: $base-color;
+        color: var(--base-color);
         cursor: pointer;
 
         &.cw-collapsible-open {
@@ -1673,15 +1673,15 @@ $icons: (
     list-style: none;
     padding: 0;
     margin: 0;
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     border-bottom: none;
 
     button {
-        background-color: $white;
+        background-color: var(--white);
         border: none;
         padding: 1em 0 4px 0;
         margin: 0 7px 0 21px;
-        color: $base-color;
+        color: var(--base-color);
         cursor: pointer;
         text-align: center;
         flex-grow: 1;
@@ -1694,14 +1694,14 @@ $icons: (
             margin-left: -14px;
             width: calc(100% + 28px);
             content: '';
-            border-bottom: solid 3px $dark-gray-color-75;
+            border-bottom: solid 3px var(--dark-gray-color-75);
             transform: scaleX(0);
             transition: transform 300ms ease-in-out;
         }
 
         &.is-active,
         &:hover {
-            color: $black;
+            color: var(--black);
             &:after {
                 transform: scaleX(1);
             }
@@ -1763,7 +1763,7 @@ $icons: (
     }
 }
 .cw-tabs-content {
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     padding: 4px;
 }
 .cw-block-wrapper-active {
@@ -1778,7 +1778,7 @@ $icons: (
         .cw-tab-in-dialog {
             .cw-tabs-nav {
                 border: none;
-                border-bottom: solid thin $content-color-40;
+                border-bottom: solid thin var(--content-color-40);
                 margin-bottom: 4px;
             }
             .cw-tabs-content {
@@ -1787,7 +1787,7 @@ $icons: (
                 min-height: 400px;
                 overflow-y: auto;
                 scrollbar-width: thin;
-                scrollbar-color: $base-color #f5f5f5;
+                scrollbar-color: var(--base-color) var(--dark-gray-color-5);
             }
         }
     }
@@ -1831,7 +1831,7 @@ b l o c k a d d e r
     .cw-tabs-nav {
         margin-top: 4px;
         border: none;
-        border-bottom: solid thin $content-color-40;
+        border-bottom: solid thin var(--content-color-40);
 
         button {
             max-width: unset;
@@ -1844,7 +1844,7 @@ b l o c k a d d e r
         overflow-x: hidden;
         overflow-y: auto;
         scrollbar-width: thin;
-        scrollbar-color: $base-color #f5f5f5;
+        scrollbar-color: var(--base-color) var(--dark-gray-color-5);
 
         .input-group.files-search {
             &.search {
@@ -1894,7 +1894,7 @@ b l o c k a d d e r
             padding: 2px;
             border: thin solid var(--dark-gray-color-30);
             border-top: none;
-            background-color: #fff;
+            background-color: var(--white);
 
             .button {
                 min-width: inherit;
@@ -1971,23 +1971,23 @@ b l o c k a d d e r
 }
 
 .cw-block-adder-area {
-    background-color: $white;
-    border: solid thin $content-color-40;
+    background-color: var(--white);
+    border: solid thin var(--content-color-40);
     padding: 1em 0;
-    color: $base-color;
+    color: var(--base-color);
     text-align: center;
     width: 100%;
     font-weight: 600;
     cursor: pointer;
 
     &:hover {
-        border-color: $base-color;
+        border-color: var(--base-color);
     }
 
     &.cw-block-adder-active {
-        border: solid thin $base-color;
-        background-color: $base-color;
-        color: $white;
+        border: solid thin var(--base-color);
+        background-color: var(--base-color);
+        color: var(--white);
     }
 
     img {
@@ -2023,11 +2023,11 @@ b l o c k a d d e r
     @include background-icon(unit-test, clickable, 48);
     background-position: 12px center;
     background-repeat: no-repeat;
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     cursor: pointer;
 
     &:hover {
-        border-color: $base-color;
+        border-color: var(--base-color);
     }
 
     @each $item, $icon in $containeradder-items {
@@ -2163,12 +2163,12 @@ c o m p a n i o n  o v e r l a y
     max-width: calc(100% - 140px);
     height: 120px;
     z-index: 42000;
-    border: solid thin $content-color-40;
-    background-color: $white;
+    border: solid thin var(--content-color-40);
+    background-color: var(--white);
     background-repeat: no-repeat;
     background-position: 1em center;
     background-size: 100px;
-    box-shadow: 5px 5px #ececed;
+    box-shadow: 5px 5px var(--dark-gray-color-10);
     padding-left: 120px;
     transform: translateX(100%);
     transition: transform .5s ease;
@@ -2193,7 +2193,7 @@ c o m p a n i o n  o v e r l a y
 
     .cw-compantion-overlay-close {
         @include background-icon(decline);
-        background-color: $white;
+        background-color: var(--white);
         background-repeat: no-repeat;
 
         position: absolute;
@@ -2209,8 +2209,8 @@ c o m p a n i o n  o v e r l a y
 .cw-companion-box {
     display: flex;
     height: 120px;
-    border: solid thin $content-color-40;
-    background-color: $white;
+    border: solid thin var(--content-color-40);
+    background-color: var(--white);
     background-repeat: no-repeat;
     background-position: 1em center;
     background-size: 100px;
@@ -2398,14 +2398,14 @@ c o m m e n t s  &  f e e d b a c k
 .cw-structural-element-comment-create,
 .cw-block-feedback-create,
 .cw-block-comment-create {
-    border-top: solid thin $content-color-40;
+    border-top: solid thin var(--content-color-40);
     padding-top: 1em;
     textarea {
         width: calc(100% - 6px);
         resize: none;
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
         &:active {
-            border: solid thin $content-color-80;
+            border: solid thin var(--content-color-80);
         }
     }
 }
@@ -2513,7 +2513,7 @@ d a s h b o a r d
         padding: 0;
 
         .cw-activity-item {
-            border-bottom: solid thin $content-color-40;
+            border-bottom: solid thin var(--content-color-40);
             padding: 0.5em;
 
             &:last-child {
@@ -2609,7 +2609,7 @@ d a s h b o a r d  e n d
     }
 
     .cw-unit-progress-subchapter-list {
-        border-top: solid thin $content-color-40;
+        border-top: solid thin var(--content-color-40);
         padding: 0 1em 0 1em;
 
         .cw-unit-empty-info {
@@ -2620,7 +2620,7 @@ d a s h b o a r d  e n d
 
 .cw-unit-progress-item {
     display: block;
-    border-bottom: solid thin $content-color-40;
+    border-bottom: solid thin var(--content-color-40);
     padding: 10px 0;
 
     &:hover{
@@ -2639,7 +2639,7 @@ d a s h b o a r d  e n d
 
     .cw-unit-progress-item-value {
         width: 70px;
-        color: $base-color;
+        color: var(--base-color);
         font-size: xx-large;
 
         .cw-progress-circle {
@@ -2648,11 +2648,7 @@ d a s h b o a r d  e n d
         }
     }
     .cw-unit-progress-item-description {
-        color: $base-color;
-        padding-left: 14px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        color: var(--base-color);
         padding: 0.5em 0 0 1em;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -2674,7 +2670,7 @@ p r o g r e s s  c i r c l e
     padding: 0;
     width: 5em;
     height: 5em;
-    background-color: $dark-gray-color-10;
+    background-color: var(--dark-gray-color-10);
     border-radius: 50%;
     line-height: 5em;
 
@@ -2698,7 +2694,7 @@ p r o g r e s s  c i r c l e
         width: 5em;
         text-align: center;
         display: block;
-        color: $base-color;
+        color: var(--base-color);
         z-index: 2;
     }
 
@@ -2720,14 +2716,14 @@ p r o g r e s s  c i r c l e
         width: 5em;
         height: 5em;
         border-radius: 50%;
-        border: 0.45em solid $base-color;
+        border: 0.45em solid var(--base-color);
         box-sizing: border-box;
     }
 
     &.over50 .first50-bar {
         position: absolute;
         clip: rect(0, 5em, 5em, 2.5em);
-        background-color: $base-color;
+        background-color: var(--base-color);
         border-radius: 50%;
         width: 5em;
         height: 5em;
@@ -2761,7 +2757,7 @@ p r o g r e s s  c i r c l e  e n d
     }
     .progress-bar-wrapper {
         width: 100%;
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
 
         .progress-bar {
             display: flex;
@@ -2770,7 +2766,7 @@ p r o g r e s s  c i r c l e  e n d
             color: white;
             text-align: center;
             white-space: nowrap;
-            background-color: $base-color;
+            background-color: var(--base-color);
         }
     }
 }
@@ -2781,11 +2777,11 @@ b l o c k s
 
 .cw-block-title {
     padding: 4px;
-    background-color: $content-color-20;
-    color: $base-color;
+    background-color: var(--content-color-20);
+    color: var(--base-color);
     font-weight: 700;
     text-align: center;
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     border-bottom: none;
 }
 /* * * * * * * * *
@@ -2797,7 +2793,7 @@ a u d i o  b l o c k
 * * * * * * * * * * */
 .cw-block-audio {
     .cw-audio-container {
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
         padding-top: 1em;
     }
     .cw-audio-controls {
@@ -2810,25 +2806,25 @@ a u d i o  b l o c k
             border: 0;
         }
         &.ui-widget-content {
-            background-color: $base-color;
+            background-color: var(--base-color);
         }
         .ui-widget-header {
-            background-color: $dark-gray-color-5;
+            background-color: var(--dark-gray-color-5);
         }
         .ui-slider-handle {
             border-radius: 20px;
             width: 1em;
             height: 1.7em;
             top: -0.5em;
-            background-color: $dark-gray-color-20;
-            border-color: $content-color-40;
+            background-color: var(--dark-gray-color-20);
+            border-color: var(--content-color-40);
             cursor: pointer;
             margin-left: -2px;
         }
     }
     .cw-audio-button {
-        border: solid thin $content-color-40;
-        background-color: $white;
+        border: solid thin var(--content-color-40);
+        background-color: var(--white);
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 24px;
@@ -2849,7 +2845,7 @@ a u d i o  b l o c k
         display: inline-block;
 
         &:hover {
-            background-color: $base-color;
+            background-color: var(--base-color);
         }
 
         @each $button, $icon in $media-buttons {
@@ -2866,7 +2862,7 @@ a u d i o  b l o c k
     .cw-audio-time {
         position: relative;
         top: -1em;
-        color: $base-gray;
+        color: var(--base-gray);
     }
 
     .cw-audio-range {
@@ -2882,40 +2878,40 @@ a u d i o  b l o c k
     }
 
     .cw-audio-range::-webkit-slider-runnable-track {
-        background: $dark-gray-color-20;
+        background: var(--dark-gray-color-20);
     }
 
     .cw-audio-range::-webkit-slider-thumb {
         -webkit-appearance: none;
         width: 9px; /* 1 */
         height: 18px;
-        background: $white;
-        box-shadow: -100vw 0 0 100vw $base-color;
-        border: solid thin $content-color-40;
+        background: var(--white);
+        box-shadow: -100vw 0 0 100vw var(--base-color);
+        border: solid thin var(--content-color-40);
     }
 
     .cw-audio-range::-moz-range-track {
         height: 18px;
-        background: $dark-gray-color-10;
+        background: var(--dark-gray-color-10);
     }
 
     .cw-audio-range::-moz-range-thumb {
-        background: $white;
+        background: var(--white);
         height: 18px;
         width: 9px;
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
         border-radius: 0 !important;
-        box-shadow: -100vw 0 0 100vw $base-color;
+        box-shadow: -100vw 0 0 100vw var(--base-color);
         box-sizing: border-box;
     }
 
     .cw-audio-range::-ms-fill-lower {
-        background: $base-color;
+        background: var(--base-color);
     }
 
     .cw-audio-range::-ms-thumb {
-        background: $white;
-        border: solid thin $content-color-40;
+        background: var(--white);
+        border: solid thin var(--content-color-40);
         height: 18px;
         width: 9px;
         box-sizing: border-box;
@@ -2930,7 +2926,7 @@ a u d i o  b l o c k
     }
 
     .cw-audio-range::-ms-track {
-        background: $dark-gray-color-20;
+        background: var(--dark-gray-color-20);
         color: transparent;
         height: 18px;
         border: none;
@@ -2942,7 +2938,7 @@ a u d i o  b l o c k
     .cw-audio-playlist-wrapper {
         margin-top: -1em;
         padding-top: 1em;
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
         border-top: none;
 
         &.empty {
@@ -2955,13 +2951,13 @@ a u d i o  b l o c k
             cursor: pointer;
 
             &.with-recorder {
-                border-bottom: solid thin $content-color-40;
+                border-bottom: solid thin var(--content-color-40);
             }
 
             li {
                 margin: 0 1em;
                 &:not(:last-child) {
-                    border-bottom: solid thin $dark-gray-color-30;
+                    border-bottom: solid thin var(--dark-gray-color-30);
                 }
 
                 .cw-playlist-item {
@@ -2973,9 +2969,9 @@ a u d i o  b l o c k
                     margin: 1em 0;
                     padding: 1em;
                     padding-left: 4em;
-                    color: $base-color;
+                    color: var(--base-color);
                     &:hover {
-                        color: $active-color;
+                        color: var(--active-color);
                     }
                     &.current-item {
                         @include background-icon(play, clickable, 24);
@@ -3007,7 +3003,7 @@ a u d i o  b l o c k
     }
     .cw-audio-empty {
         @include background-icon(file, info, 96);
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
         background-position: center 1em;
         background-repeat: no-repeat;
         min-height: 140px;
@@ -3027,7 +3023,7 @@ f o r  m u l t i m e d i a  b l o c k s
 * * * * * * * * * * * * * * * * * * * */
 .cw-file-empty {
     @include background-icon(file, info, 96);
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     background-position: center 1em;
     background-repeat: no-repeat;
     min-height: 140px;
@@ -3089,15 +3085,15 @@ c o d e  b l o c k
       display: block;
       overflow-x: auto;
       padding: 0.5em;
-      background: $dark-gray-color-5;
+      background: var(--dark-gray-color-5);
       color: black;
-      border: solid thin $content-color-40;
+      border: solid thin var(--content-color-40);
     }
 
     .hljs-comment,
     .hljs-quote,
     .hljs-variable {
-      color: $dark-green;
+      color: var(--dark-green);
     }
 
     .hljs-keyword,
@@ -3106,7 +3102,7 @@ c o d e  b l o c k
     .hljs-built_in,
     .hljs-name,
     .hljs-tag {
-      color: $base-color;
+      color: var(--base-color);
       font-weight: 600;
     }
 
@@ -3119,7 +3115,7 @@ c o d e  b l o c k
     .hljs-template-variable,
     .hljs-type,
     .hljs-addition {
-      color: $orange-80;
+      color: var(--orange-80);
       font-weight: 400;
     }
 
@@ -3127,24 +3123,24 @@ c o d e  b l o c k
     .hljs-selector-attr,
     .hljs-selector-pseudo,
     .hljs-meta {
-      color: $petrol;
+      color: var(--petrol);
       font-weight: 400;
     }
 
     .hljs-doctag {
-      color: $dark-gray-color-75;
+      color: var(--dark-gray-color-75);
       font-weight: 400;
     }
 
     .hljs-attr {
-      color: $active-color;
+      color: var(--active-color);
       font-weight: 400;
     }
 
     .hljs-symbol,
     .hljs-bullet,
     .hljs-link {
-      color: $petrol;
+      color: var(--petrol);
       font-weight: 400;
     }
 
@@ -3158,12 +3154,12 @@ c o d e  b l o c k
     }
 
     .code-lang {
-        background: $dark-gray-color-5;
-        border: solid thin $content-color-40;
+        background: var(--dark-gray-color-5);
+        border: solid thin var(--content-color-40);
         border-top: none;
         padding: 5px 10px;
         text-align: right;
-        color: $dark-gray-color-45;
+        color: var(--dark-gray-color-45);
         font-family: monospace;
         text-transform: full-width;
     }
@@ -3178,7 +3174,7 @@ c o n f i r m  b l o c k
 * * * * * * * * * * * * */
 .cw-block-confirm {
     .cw-block-confirm-content{
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
         padding: 1em;
         margin: 0;
 
@@ -3288,7 +3284,7 @@ c a n v a s  b l o c k
 .cw-block-canvas {
     .cw-canvasblock-canvas {
         max-width: 100%;
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
     }
 
     .cw-canvasblock-upload-message{
@@ -3631,12 +3627,12 @@ i f r a m e  b l o c k
 .cw-block-iframe {
     .cw-block-content {
         iframe {
-            border: solid thin $content-color-40;
+            border: solid thin var(--content-color-40);
             width: calc(100% - 2px);
         }
 
         .cw-block-iframe-cc-data {
-            border: solid thin $content-color-40;
+            border: solid thin var(--content-color-40);
             border-top: none;
             margin-top: -6px;
             padding-top: 10px;
@@ -3692,7 +3688,7 @@ l t i  b l o c k
 .cw-block-lti {
     .cw-block-content {
         .cw-block-lti-content {
-            border: solid thin $content-color-40;
+            border: solid thin var(--content-color-40);
             box-sizing: border-box;
         }
         .cw-block-lti-icon-tool {
@@ -3715,13 +3711,13 @@ l t i  b l o c k  e n d
 f o l d e r  b l o c k
 * * * * * * * * * * * */
 .cw-block-folder-info {
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     padding: 10px 10px 0 10px;
     overflow: hidden;
     border-bottom: none;
 }
 .cw-block-folder-list {
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     padding: 0;
     list-style: none;
 
@@ -3729,7 +3725,7 @@ f o l d e r  b l o c k
         list-style: none;
 
         &:not(:last-child) {
-            border-bottom: solid thin $content-color-40;
+            border-bottom: solid thin var(--content-color-40);
         }
         a {
             display: block;
@@ -3749,7 +3745,7 @@ f o l d e r  b l o c k
     }
 }
 .cw-block-folder-upload {
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     padding: 1em 10px;
     border-top: none;
 
@@ -3771,11 +3767,11 @@ f o l d e r  b l o c k
     text-overflow: ellipsis;
 
     &.cw-block-file-icon-empty {
-        color: $black;
+        color: var(--black);
         @include background-icon(folder-empty, info, 24);
     }
     &.cw-block-file-icon-none {
-        color: $black;
+        color: var(--black);
         @include background-icon(file, info, 24);
     }
     &.cw-block-file-icon-audio {
@@ -3843,7 +3839,7 @@ f o l d e r  b l o c k
     margin-top: -16px;
     padding-left: 40px;
     padding-bottom: 16px;
-    color: $dark-gray-color;
+    color: var(--dark-gray-color);
 }
 .cw-block-file-owner,
 .cw-block-file-mkdate {
@@ -3862,7 +3858,7 @@ d o w n l o a d  b l o c k
 * * * * * * * * * * * * * */
 .cw-block-download {
     .cw-block-download-content {
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
         .cw-block-download-file-item {
             a {
                 display: block;
@@ -3929,7 +3925,7 @@ g a l l e r y  b l o c k
     border: none;
 
     &:hover {
-        background-color: $base-color;
+        background-color: var(--base-color);
     }
 }
 
@@ -4070,7 +4066,7 @@ b i o g r a p h y  b l o c k
         min-height: 200px;
         flex-direction: row;
         padding: 2em 2em 2em 1em;
-        border: 2px solid $base-color;
+        border: 2px solid var(--base-color);
 
         .cw-block-biography-type {
             margin: auto 1em auto 0;
@@ -4167,8 +4163,8 @@ l i n k  b l o c k
         text-decoration: none;
     }
     .cw-link {
-        border: solid thin $content-color-40;
-        color: $base-color;
+        border: solid thin var(--content-color-40);
+        color: var(--base-color);
         height: 20px;
         padding: 1em;
 
@@ -4177,9 +4173,9 @@ l i n k  b l o c k
         }
 
         &:hover {
-            background-color: $base-color;
-            border: solid thin $base-color;
-            color: $white;
+            background-color: var(--base-color);
+            border: solid thin var(--base-color);
+            color: var(--white);
         }
 
         &.internal {
@@ -4219,7 +4215,7 @@ l i n k  b l o c k
                     font-weight: 600;
                 }
                 .cw-link-og-description {
-                    color: $base-color-80;
+                    color: var(--base-color-80);
                     text-align: justify;
                 }
             }
@@ -4271,7 +4267,7 @@ dialog cards block
             position: absolute;
             width: 100%;
             height: 100%;
-            color: $black;
+            color: var(--black);
             text-align: center;
             font-weight: bold;
             font-size: 1.2em;
@@ -4312,14 +4308,14 @@ dialog cards block
 
         .card__face--front {
             @include background-icon(arr_1right, clickable);
-            background-color: $white;
+            background-color: var(--white);
             background-repeat: no-repeat;
             background-position: 95% 95%;
         }
 
         .card__face--back {
             @include background-icon(arr_1left, clickable);
-            background-color: $white;
+            background-color: var(--white);
             background-repeat: no-repeat;
             background-position: 5% 95%;
             transform: rotateY(180deg);
@@ -4330,11 +4326,10 @@ dialog cards block
         color: transparent;
         width: 35px;
         height: 35px;
-        background-color: #bbb;
         border-radius: 2px;
         background-position: 50%;
         background-repeat: no-repeat;
-        background-color: $base-color;
+        background-color: var(--base-color);
         border: none;
         display: block;
         z-index: 4;
@@ -4354,7 +4349,7 @@ dialog cards block
 
         &.cw-dialogcards-prev-disabled,
         &.cw-dialogcards-next-disabled {
-            background-color: $light-gray-color-40;
+            background-color: var(--light-gray-color-40);
         }
     }
 
@@ -4807,7 +4802,6 @@ $large-icon-size-px: $large-icon-size + px;
             }
             .cw-block-headline-textbox {
                 width: calc(100% - 64px);
-                margin-bottom: 64px;
                 min-height: 350px;
                 margin: 0 auto;
                 border-bottom: solid 4px;
@@ -5052,10 +5046,10 @@ toc block
 .cw-block-table-of-contents-list {
     padding: 0;
     list-style: none;
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     li {
         &:not(:last-child) {
-            border-bottom: solid thin $dark-gray-color-30;
+            border-bottom: solid thin var(--dark-gray-color-30);
         }
         a {
             display: block;
@@ -5070,10 +5064,10 @@ toc block
 .cw-block-table-of-contents-list-details {
     padding: 0;
     list-style: none;
-    border: solid thin $content-color-40;
+    border: solid thin var(--content-color-40);
     li {
         &:not(:last-child) {
-            border-bottom: solid thin $dark-gray-color-30;
+            border-bottom: solid thin var(--dark-gray-color-30);
         }
 
         &:hover {
@@ -5099,7 +5093,7 @@ toc block
     };
 
     p, p:hover {
-        color: $black;
+        color: var(--black);
     }
 }
 
@@ -5162,7 +5156,7 @@ text block end
         content:"";
         width: 3px;
         height: 100%;
-        background: $content-color-40;
+        background: var(--content-color-40);
         left: 50%;
         top: 0;
         position: absolute;
@@ -5181,7 +5175,7 @@ text block end
         @extend %clearfix;
 
         .cw-timeline-item-icon {
-            background: $white;
+            background: var(--white);
             width: 50px;
             height: 50px;
             position: absolute;
@@ -5252,13 +5246,13 @@ text block end
 
         .cw-timeline-item-content {
             width: 40%;
-            background: $white;
+            background: var(--white);
             padding: 20px;
             transition: all $transition-duration ease;
 
             h3 {
                 padding: 15px;
-                color: #fff;
+                color: var(--white);
                 margin: -20px -20px 0 -20px;
                 font-weight: 700;
                 min-height: 1.1em;
@@ -5266,7 +5260,7 @@ text block end
 
             article {
                 min-height: 2em;
-                border: solid thin $content-color-20;
+                border: solid thin var(--content-color-20);
                 border-top: none;
                 margin: 0 -20px;
                 padding: 15px;
@@ -5310,18 +5304,18 @@ text block end
 
             @each $name, $color in $tile-colors {
                 &.cw-timeline-item-content-color-#{"" + $name} {
-                    border-color: $color;
+                    border-color: var(--color);
                     h3 {
-                        background-color: $color;
+                        background-color: var(--color);
                     }
                     &.left {
                         &:before {
-                            border-left: 7px solid $color;
+                            border-left: 7px solid var(--color);
                         }
                     }
                     &.right {
                         &:before {
-                            border-right: 7px solid $color;
+                            border-right: 7px solid var(--color);
                         }
                     }
                 }
@@ -5404,7 +5398,7 @@ cw tiles
     height: 420px;
     width: 270px;
     margin: 0;
-    background-color: $base-color;
+    background-color: var(--base-color);
     &:last-child {
         margin-right: 0;
     }
@@ -5457,14 +5451,14 @@ cw tiles
     .description {
         height: 220px;
         padding: 14px;
-        color: $white;
+        color: var(--white);
         position: relative;
         display: block;
 
         header {
             font-size: 20px;
             line-height: 22px;
-            color: $white;
+            color: var(--white);
             border: none;
             width: 240px;
             overflow: hidden;
@@ -5524,7 +5518,7 @@ cw tiles
         footer {
             width: 242px;
             text-align: right;
-            color: $white;
+            color: var(--white);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -5544,7 +5538,7 @@ cw tiles
     a.description:visited,
     a.description:hover {
         height: 210px;
-        color: $white;
+        color: var(--white);
         text-decoration: unset;
     }
 }
@@ -5577,21 +5571,21 @@ cw tiles end
         }
 
         .cw-template-preview-container-content {
-            border: solid thin $content-color-40;
+            border: solid thin var(--content-color-40);
         }
 
         .cw-template-preview-container-title {
             font-weight: 700;
             padding: 4px 4px 4px 8px;
-            color: $base-color;
-            background-color: $content-color-20;
+            color: var(--base-color);
+            background-color: var(--content-color-20);
         }
 
         .cw-template-preview-blocks {
-            border: solid thin $content-color-40;
+            border: solid thin var(--content-color-40);
             padding: 1em;
             margin: 5px;
-            background-color: $white;
+            background-color: var(--white);
 
         }
     }
@@ -5603,34 +5597,34 @@ cw tiles end
 * * * * * * * * * */
  .cw-file-input {
      width: stretch;
-     border: solid thin $base-color;
+     border: solid thin var(--base-color);
      font-size: 14px;
     cursor: pointer;
 
     &::file-selector-button {
         font-family: inherit;
         border: none;
-        border-right: solid thin $base-color;
-        background-color: $white;
+        border-right: solid thin var(--base-color);
+        background-color: var(--white);
         padding: 6px 15px;
         margin-right: 10px;
-        color: $base-color;
+        color: var(--base-color);
 
         &:hover {
-            background-color: $base-color;
-            color: $white;
+            background-color: var(--base-color);
+            color: var(--white);
         }
      }
  }
  .cw-file-input-change {
-    border: solid thin $base-color;
+    border: solid thin var(--base-color);
 
     button.button {
         padding: 0.5em 1.5em;
         margin: 0 0 0 -1px;
         line-height: 100%;
         border: none;
-        border-right: solid thin $base-color;
+        border-right: solid thin var(--base-color);
     }
     span {
         padding: 0.5em 1.5em 0.5em 0.5em;
@@ -5685,17 +5679,17 @@ w i z a r d  e l e m e n t s
     .cw-element-selector-item {
         display: block;
         width: 100%;
-        border: solid thin $content-color-40;
+        border: solid thin var(--content-color-40);
         padding: 0.5em;
         margin-bottom: 5px;
-        background-color: $white;
-        color: $base-color;
+        background-color: var(--white);
+        color: var(--base-color);
         text-align: left;
         cursor: pointer;
 
         &:hover {
-            color: $white;
-            background-color: $base-color;
+            color: var(--white);
+            background-color: var(--base-color);
         }
     }
 }
