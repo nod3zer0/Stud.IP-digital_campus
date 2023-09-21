@@ -4,7 +4,7 @@ table.dates {
         background-color: transparent;
     }
     tr.ausfall {
-        transition: opacity 300ms;
+        transition: opacity var(--transition-duration);
         opacity: 0.5;
 
         &:hover {

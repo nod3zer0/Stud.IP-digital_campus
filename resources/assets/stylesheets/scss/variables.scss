@@ -150,4 +150,10 @@ $transition-duration: .3s;
     #{"--"}group-color-6: $dark-green;
     #{"--"}group-color-7: $petrol;
     #{"--"}group-color-8: $brown;
+
+    #{"--"}transition-duration: $transition-duration;
+
+    @media (prefers-reduced-motion) {
+        #{"--"}transition-duration: 0s;
+    }
 }

@@ -54,7 +54,7 @@
 
     // Selected and selectable lists
     .studip-selection-image img {
-        transition: opacity 300ms;
+        transition: opacity var(--transition-duration);
     }
 
     .studip-selection-selected .studip-selection-label {

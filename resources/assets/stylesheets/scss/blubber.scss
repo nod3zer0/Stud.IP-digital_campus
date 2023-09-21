@@ -94,7 +94,7 @@
         > li {
             display: none;
             &.new {
-                animation: blubber-scaling 300ms ease-out;
+                animation: blubber-scaling var(--transition-duration) ease-out;
             }
             align-items: flex-end;
             justify-content: flex-start;

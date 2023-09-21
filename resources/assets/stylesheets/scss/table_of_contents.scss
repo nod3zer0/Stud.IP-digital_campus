@@ -77,10 +77,8 @@ ul.numberedchapters {
     margin-bottom: unset;
 }
 
-@media not prefers-reduced-motion {
-    .toc_transform {
-        transition: all 0.8s ease;
-    }
+.toc_transform {
+    transition: all var(--transition-duration) ease;
 }
 
 #main_content {

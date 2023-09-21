@@ -78,7 +78,7 @@ label.inactive-settings-category {
                 flex-wrap: nowrap;
 
                 padding: 8px;
-                transition: background-color $transition-duration;
+                transition: background-color var(--transition-duration);
 
                 &.search-is-subcourse {
                     padding-left: 30px;

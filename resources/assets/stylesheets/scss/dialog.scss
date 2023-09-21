@@ -197,7 +197,7 @@
 
         .next,
         .previous {
-            transition: opacity 300ms;
+            transition: opacity var(--transition-duration);
             background-repeat: no-repeat;
             display: block;
             opacity: 0.1;

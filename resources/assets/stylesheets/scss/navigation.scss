@@ -84,9 +84,7 @@ body:not(.fixed) #navigation-level-1-items {
     // Hide all navigation item title on hover and display only the currently
     // hovered one
     .navtitle {
-        @media not prefers-reduced-motion {
-            transition: opacity 300ms; // Smooth change when entering
-        }
+        transition: opacity var(--transition-duration); // Smooth change when entering
     }
     &:hover {
         > li.active .navtitle {
@@ -94,9 +92,7 @@ body:not(.fixed) #navigation-level-1-items {
         }
         > li:hover .navtitle {
             opacity: 1;
-            @media not prefers-reduced-motion {
-                transition: opacity 0ms; // Quick change when leaving
-            }
+            transition: opacity 0ms; // Quick change when leaving
         }
     }
 
@@ -129,17 +125,13 @@ body:not(.fixed) #navigation-level-1-items {
 
         // Rotate icon
         > label img {
-            @media not prefers-reduced-motion {
-                transition: transform 300ms;
-            }
+            transition: transform var(--transition-duration);
             transform: rotate(90deg);
         }
 
         // Define transition duration for possible badge on overflow
         > label > a[data-badge]::before {
-            @media not prefers-reduced-motion {
-                transition: opacity 300ms;
-            }
+            transition: opacity var(--transition-duration);
         }
 
         // Display menu on activation

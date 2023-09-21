@@ -41,9 +41,7 @@ button.skiplink {
         color: var(--active-color);
     }
 
-    @media not prefers-reduced-motion {
-        transition: color $transition-duration;
-    }
+    transition: color var(--transition-duration);
 }
 
 #skiplink_list {

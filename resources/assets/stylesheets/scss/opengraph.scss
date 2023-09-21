@@ -73,7 +73,7 @@
         background-size: 100% auto;
         .play {
             border-radius: 100px;
-            transition: background-color 300ms;
+            transition: background-color var(--transition-duration);
             background-color: rgba(0, 0, 0, 0.7);
             padding: 10px;
         }

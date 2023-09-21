@@ -16,7 +16,7 @@
 
     &.shortened {
         @include icon(before, info-circle, info, 12px, 5px);
-        transition: opacity 300ms;
+        transition: opacity var(--transition-duration);
         &:not(:hover)::after {
             opacity: 0.5;
         }

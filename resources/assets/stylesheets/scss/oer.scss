@@ -183,7 +183,7 @@ ul.reviews, ol.reviews {
         max-width: 270px;
         box-sizing: border-box;
         border: solid 1px var(--base-color-60);
-        transition: all 300ms ease 0s;
+        transition: all var(--transition-duration) ease 0s;
         position: relative;
 
         header {

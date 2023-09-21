@@ -4,7 +4,6 @@
 #globalsearch-searchbar {
     $width: 423px;
     $hidden-width: 215px;
-    $transition-duration: 300ms;
 
     position: relative;
     top: 4px;
@@ -30,7 +29,7 @@
         height: 29px;
         padding-left: 5px;
         width: $hidden-width;
-        transition: width $transition-duration;
+        transition: width var(--transition-duration);
     }
     &.is-visible #globalsearch-input {
         width: $width;
@@ -180,7 +179,7 @@
                 padding: 6px 6px 6px 0;
 
                 border-top: 1px solid var(--content-color-40);
-                transition: background-color $transition-duration;
+                transition: background-color var(--transition-duration);
 
                 &:hover {
                     background-color: var(--dark-gray-color-20);

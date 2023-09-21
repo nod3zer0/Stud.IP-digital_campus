@@ -1696,7 +1696,7 @@ $icons: (
             content: '';
             border-bottom: solid 3px var(--dark-gray-color-75);
             transform: scaleX(0);
-            transition: transform 300ms ease-in-out;
+            transition: transform var(--transition-duration) ease-in-out;
         }
 
         &.is-active,
@@ -5248,7 +5248,7 @@ text block end
             width: 40%;
             background: var(--white);
             padding: 20px;
-            transition: all $transition-duration ease;
+            transition: all var(--transition-duration) ease;
 
             h3 {
                 padding: 15px;

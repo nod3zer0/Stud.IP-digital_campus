@@ -606,39 +606,37 @@ export default {
 </script>
 
 <style lang="scss">
-@media not prefers-reduced-motion {
-    .slide-enter-active,
-    .slide-leave-active {
-        transition: all .3s ease;
-    }
+.slide-enter-active,
+.slide-leave-active {
+    transition: all var(--transition-duration) ease;
+}
 
-    .slide-enter-to,
-    .slide-leave-from,
-    .slide-leave {
-        margin-left: -3px;
-    }
+.slide-enter-to,
+.slide-leave-from,
+.slide-leave {
+    margin-left: -3px;
+}
 
-    .slide-enter,
-    .slide-enter-from,
-    .slide-leave-to {
-        margin-left: -50px;
-    }
+.slide-enter,
+.slide-enter-from,
+.slide-leave-to {
+    margin-left: -50px;
+}
 
-    .appear-enter-active,
-    .appear-leave-active {
-        transition: opacity .3s ease;
-    }
+.appear-enter-active,
+.appear-leave-active {
+    transition: opacity var(--transition-duration) ease;
+}
 
-    .appear-leave,
-    .appear-leave-from,
-    .appear-enter-to {
-        opacity: 1;
-    }
+.appear-leave,
+.appear-leave-from,
+.appear-enter-to {
+    opacity: 1;
+}
 
-    .appear-enter,
-    .appear-enter-from,
-    .appear-leave-to {
-        opacity: 0;
-    }
+.appear-enter,
+.appear-enter-from,
+.appear-leave-to {
+    opacity: 0;
 }
 </style>

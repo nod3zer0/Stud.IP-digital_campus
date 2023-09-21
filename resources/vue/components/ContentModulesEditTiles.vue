@@ -109,7 +109,7 @@ export default {
     flex-direction: row;
     background-color: var(--white);
     border-left: 1px solid var(--dark-gray-color-60);
-    transition: all 500ms ease, border-left-color 300ms ease;
+    transition: all var(--transition-duration) ease;
     &.visibility-visible {
         border-left-color: var(--green);
         > div {
@@ -126,7 +126,7 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: all 500ms ease, border-left-color 300ms ease;
+        transition: all var(--transition-duration) ease;
         border-left: 10px solid var(--dark-gray-color-60);
         min-height: 150px;
         width: 100%;

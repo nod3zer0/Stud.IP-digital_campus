@@ -66,7 +66,7 @@
             &::-moz-progress-bar,
             &::-webkit-progress-value {
                 background-color: var(--yellow-40);
-                transition: all $transition-duration;
+                transition: all var(--transition-duration);
             }
         }
 

@@ -12,9 +12,7 @@ a, a:link, a:visited {
     }
 }
 a[href] {
-    @media not prefers-reduced-motion {
-        transition: color $transition-duration;
-    }
+    transition: color var(--transition-duration);
 }
 a[disabled] {
     pointer-events: none;
