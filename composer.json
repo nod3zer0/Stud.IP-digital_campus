@@ -60,7 +60,9 @@
         "symfony/polyfill-php80": "^1.27",
         "symfony/polyfill-php81": "^1.27",
         "phpowermove/docblock": "^2.0",
-        "ksubileau/color-thief-php": "^2.0"
+        "ksubileau/color-thief-php": "^2.0",
+        "symfony/polyfill-php82": "^1.28",
+        "symfony/polyfill-php83": "^1.28"
     },
     "replace": {
         "symfony/polyfill-php54": "*",
