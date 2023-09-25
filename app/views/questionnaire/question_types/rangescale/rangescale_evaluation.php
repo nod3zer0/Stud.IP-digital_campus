@@ -30,7 +30,7 @@ $options = range($vote->questiondata['minimum'], $vote->questiondata['maximum'])
         <? foreach ($vote->questiondata['statements'] as $key => $statement) : ?>
         <tr>
             <td>
-                <strong><?= formatReady($statement) ?></strong>
+                <strong><?= htmlReady($statement) ?></strong>
             </td>
 
             <? foreach($options as $option) : ?>

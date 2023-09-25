@@ -28,7 +28,7 @@
             <? endif ?>
         </div>
     <? endif ?>
-        <?= formatReady($answer['answerdata']['text']) ?>
+        <?= htmlReady($answer['answerdata']['text']) ?>
     </li>
     <? endif ?>
 <? endforeach ?>

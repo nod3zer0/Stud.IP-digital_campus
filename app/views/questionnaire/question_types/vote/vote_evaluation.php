@@ -42,7 +42,7 @@ $ordered_answer_options = [];
 $ordered_users = [];
 foreach ($ordered_results as $index => $value) {
     if ($value > 0) {
-        $ordered_answer_options[] = strip_tags(formatReady($options[$index]));
+        $ordered_answer_options[] = $options[$index];
     } else {
         unset($ordered_results[$index]);
     }
@@ -89,7 +89,7 @@ rsort($ordered_results);
             <? $percentage = ($countAnswers && isset($results[$key])) ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>
 
             <td style="text-align: right; background-size: <?= $percentage ?>% 100%; background-position: right center; background-image: url('<?= Assets::image_path("vote_lightgrey.png") ?>'); background-repeat: no-repeat;" width="50%">
-                <strong><?= formatReady($answer) ?></strong>
+                <strong><?= htmlReady($answer) ?></strong>
             </td>
 
             <td style="white-space: nowrap;">

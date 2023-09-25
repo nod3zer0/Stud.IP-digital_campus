@@ -38,7 +38,7 @@ $responseData = $response['answerdata'] ? $response['answerdata']->getArrayCopy(
                                <?= isset($responseData['answers']) && $index == $responseData['answers'] ? 'checked' : '' ?>>
                     <? endif ?>
 
-                    <?= formatReady($answers[$index]) ?>
+                    <?= htmlReady($answers[$index]) ?>
 
                 </label>
             </li>
