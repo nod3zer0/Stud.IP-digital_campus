@@ -30,10 +30,10 @@ $options = array_filter([
         <div>
         <? if (isset($parent_folder) && ($parent_folder->isWritable($GLOBALS['user']->id) || count($parent_folder->getSubfolders()))): ?>
             <div class="clickable">
-                <?= Icon::create('folder-parent', Icon::ROLE_CLICKABLE)->asInput(50, ['formaction' => $controller->action_url('choose_folder/' . $parent_folder->getId()), 'to_plugin' => $options['from_plugin']]) ?>
+                <?= Icon::create('folder-parent', Icon::ROLE_CLICKABLE)->asInput(50, ['formaction' => $controller->action_url('choose_folder/' . $parent_folder->getId()), 'to_plugin' => $options['from_plugin'] ?? null]) ?>
                 <button
                     class="undecorated"
-                    formaction="<?= $controller->action_link('choose_folder/' . $parent_folder->getId()) ?>" <? if ($options['from_plugin']): ?> name="to_plugin" value="<?= htmlReady($options['from_plugin']) ?>"<? endif; ?>>
+                    formaction="<?= $controller->action_link('choose_folder/' . $parent_folder->getId()) ?>" <? if ($options['from_plugin']): ?> name="to_plugin" value="<?= htmlReady($options['from_plugin'] ?? null) ?>"<? endif; ?>>
                     <?= _('Aktueller Ordner') ?>
                 </button>
             </div>

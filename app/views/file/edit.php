@@ -3,7 +3,7 @@
 
     <div id="file_management_forms">
         <form method="post" data-dialog class="default"
-            action="<?= $controller->action_link('edit/' . $file_ref->id, ['from_plugin' => $from_plugin]) ?>">
+            action="<?= $controller->action_link('edit/' . $file_ref->id, ['from_plugin' => $from_plugin ?? null]) ?>">
 
             <?= CSRFProtection::tokenTag() ?>
             <fieldset>
