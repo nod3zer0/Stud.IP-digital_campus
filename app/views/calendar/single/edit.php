@@ -31,7 +31,7 @@
             <input type="text" name="start_date" id="start-date" value="<?= strftime('%x', $event->getStart()) ?>" size="12" required>
         </label>
 
-        <div class="col-3">
+        <label class="col-3">
             <?= _('Uhrzeit') ?>
 
             <div class="hgroup">
@@ -51,7 +51,7 @@
                        maxlength="2"<?= $event->isDayEvent() ? ' disabled' : '' ?>
                        aria-label="Minuten">
             </div>
-        </div>
+        </label>
 
         <section class="required">
             <?= _('Ende') ?>
@@ -62,7 +62,7 @@
             <input type="text" name="end_date" id="end-date" value="<?= strftime('%x', $event->getEnd()) ?>" size="12" required>
         </label>
 
-        <div class="col-3">
+        <label class="col-3">
             <?= _('Uhrzeit') ?>
 
             <div class="hgroup">
@@ -82,7 +82,7 @@
                        aria-label="<?= _("Minuten") ?>"
                        maxlength="2"<?= $event->isDayEvent() ? ' disabled' : '' ?>>
             </div>
-        </div>
+        </label>
 
         <label>
             <span class="required">

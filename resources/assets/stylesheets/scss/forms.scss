@@ -312,7 +312,7 @@ form.default {
     .hgroup-btn {
         display: flex;
         flex-wrap: wrap;
-        align-items: flex-start;
+        align-items: baseline;
         max-width: $max-width-m;
 
         &.size-s {
