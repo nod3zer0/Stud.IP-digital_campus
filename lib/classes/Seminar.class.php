@@ -2150,10 +2150,9 @@ get_title_for_status('dozent', 1, $this->status)));
      */
     public function setMemberPriority($members): Seminar
     {
-        $counter = 0;
         CourseMember::findEachBySQL(
-            function (CourseMember $membership) use (&$counter) {
-                $membership->position = $counter++;
+            function (CourseMember $membership) use (&$members) {
+                $membership->position = array_search($membership->user_id, $members);
                 $membership->store();
             },
             "Seminar_id = ? AND user_id IN (?)",
