@@ -11,12 +11,14 @@
         <section v-else>
             <h1>
                 {{ currentNode.attributes.name }}
-                <a v-if="isEditable && currentNode.attributes.id !== 'root'"
+
+                <a v-if="editable && currentNode.attributes.id !== 'root'"
                    :href="editUrl + '/' + currentNode.attributes.id"
                    @click.prevent="editNode(editUrl, currentNode.id)" data-dialog="size=medium"
                    :title="$gettextInterpolate($gettext('%{name} bearbeiten'), {name: currentNode.attributes.name})">
                     <studip-icon shape="edit" :size="20"></studip-icon>
                 </a>
+
             </h1>
             <p v-if="currentNode.attributes.description?.trim() !== ''" class="studip-tree-node-info"
                v-html="currentNode.attributes['description-formatted']">
@@ -51,20 +53,17 @@
             {{ $gettext('Auf dieser Ebene sind keine Veranstaltungen zugeordnet.')}}
         </section>
 
-        <section v-if="thisLevelCourses + subLevelsCourses > 0">
+        <section v-if="thisLevelCourses + subLevelsCourses > 0" class="levels-actions">
             <span v-if="withCourses && showingAllCourses">
                 <button type="button" @click="showAllCourses(false)"
                         :title="$gettext('Veranstaltungen auf dieser Ebene anzeigen')">
-                    Veranstaltungen auf dieser Ebene anzeigen
+                    {{ $gettext('Veranstaltungen auf dieser Ebene anzeigen') }}
                 </button>
             </span>
-            <template v-if="thisLevelCourses > 0 && subLevelsCourses > 0">
-                |
-            </template>
             <span v-if="withCourses && subLevelsCourses > 0 && !showingAllCourses">
                 <button type="button" @click="showAllCourses(true)"
                         :title="$gettext('Veranstaltungen auf allen Unterebenen anzeigen')">
-                    Veranstaltungen auf allen Unterebenen anzeigen
+                    {{ $gettext('Veranstaltungen auf allen Unterebenen anzeigen') }}
                 </button>
             </span>
         </section>
@@ -357,3 +356,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+.levels-actions > span:not(:first-child)::before {
+    content: ' | ';
+}
+</style>

@@ -9,7 +9,7 @@
                                    :placeholder="$gettext('Veranstaltung suchen')"
                                    :aria-label="$gettext('Veranstaltung suchen')">
                             <a v-if="isActive" @click.prevent="cancelSearch" class="reset-search">
-                                <studip-icon shape="decline" size="20"></studip-icon>
+                                <studip-icon shape="decline" :size="20"></studip-icon>
                             </a>
                             <button type="submit" class="submit-search" :title="$gettext('Suchen')"
                                     @click.prevent="doSearch">
