@@ -225,10 +225,6 @@ form.default {
         }
     }
 
-    input[type=checkbox], input[type=radio] {
-        vertical-align: text-bottom;
-    }
-
     select[disabled] {
         background-color: var(--dark-gray-color-15);
     }
