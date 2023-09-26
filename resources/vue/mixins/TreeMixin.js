@@ -37,7 +37,7 @@ export const TreeMixin = {
                 parameters['filter[semclass]'] = semClass;
             }
 
-            if (recursive) {
+            if (node.attributes['has-children'] && recursive) {
                 parameters['filter[recursive]'] = true;
             }
 

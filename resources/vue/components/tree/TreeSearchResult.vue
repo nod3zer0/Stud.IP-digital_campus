@@ -1,6 +1,8 @@
 <template>
     <div v-if="isLoading">
-        <studip-progress-indicator></studip-progress-indicator>
+        <studip-progress-indicator v-if="showLoadingAnimation"
+                                   :description="searchDescription"
+        ></studip-progress-indicator>
     </div>
     <article v-else class="studip-tree-table">
         <table v-if="courses.length > 0" class="default studip-tree-table">
@@ -45,6 +47,10 @@
                 </tr>
             </tbody>
         </table>
+        <studip-message-box v-else type="info">
+            {{ $gettextInterpolate($gettext('Es wurden keine Ergebnisse zu Ihrem Suchbegriff "%{term}" gefunden.'),
+                { term: searchConfig.searchterm }) }}
+        </studip-message-box>
     </article>
 </template>
 
@@ -54,10 +60,11 @@ import StudipProgressIndicator from '../StudipProgressIndicator.vue';
 import StudipIcon from '../StudipIcon.vue';
 import TreeNodeCoursePath from './TreeNodeCoursePath.vue';
 import TreeCourseDetails from './TreeCourseDetails.vue';
+import StudipMessageBox from "../StudipMessageBox.vue";
 
 export default {
     name: 'TreeSearchResult',
-    components: { StudipIcon, StudipProgressIndicator, TreeNodeCoursePath, TreeCourseDetails },
+    components: {StudipMessageBox, StudipIcon, StudipProgressIndicator, TreeNodeCoursePath, TreeCourseDetails },
     mixins: [ TreeMixin ],
     props: {
         searchConfig: {
@@ -67,19 +74,47 @@ export default {
     },
     data() {
         return {
+            courses: [],
+            isLoading: true,
             node: null,
-            isLoading: false,
-            isLoaded: false,
-            courses: []
+            showLoadingAnimation: false,
+            timeout: null,
         }
     },
-    mounted() {
-        this.getNode(this.searchConfig.classname + '_root').then(response => {
-            this.getNodeCourses(response.data.data, this.searchConfig.semester,0, this.searchConfig.searchterm, true)
-                .then(courses => {
-                    this.courses = courses.data.data;
-                });
-        });
+    computed: {
+        searchDescription() {
+            return this.$gettextInterpolate(
+                this.$gettext('Suche nach dem Begriff "%{ term }"'),
+                {term: this.searchConfig.searchterm}
+            );
+        }
+    },
+    watch: {
+        searchConfig: {
+            handler(current, previous) {
+                if (current.searchterm !== previous?.searchterm) {
+                    this.isLoading = true;
+
+                    this.timeout = setTimeout(
+                        () => this.showLoadingAnimation = true,
+                        this.showProgressIndicatorTimeout
+                    );
+
+                    this.getNode(this.searchConfig.startId).then(response => {
+                        return this.getNodeCourses(response.data.data, this.searchConfig.semester, 0, this.searchConfig.searchterm, true);
+                    }).then(courses => {
+                        this.courses = courses.data.data;
+
+                        clearTimeout(this.timeout);
+
+                        this.isLoading = false;
+                        this.showLoadingAnimation = false;
+                    });
+                }
+            },
+            immediate: true,
+            deep: true
+        }
     }
 }
 </script>

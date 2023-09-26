@@ -31,7 +31,7 @@
             <tree-search-result :search-config="searchConfig"></tree-search-result>
         </div>
         <MountingPortal v-if="withSearch" mountTo="#search-widget" name="sidebar-search">
-            <search-widget></search-widget>
+            <search-widget :min-length="3"></search-widget>
         </MountingPortal>
     </div>
 </template>
@@ -199,9 +199,12 @@ export default {
         axios.interceptors.request.eject(loadingIndicator);
 
         this.globalOn('do-search', searchterm => {
-            this.searchConfig.searchterm = searchterm;
-            this.searchConfig.semester = this.semester;
-            this.searchConfig.classname = this.startNode.attributes.classname;
+            this.searchConfig = {
+                searchterm,
+                semester: this.semester,
+                classname: this.startNode.attributes.classname,
+                startId: this.currentNode.id,
+            };
             this.isSearching = true;
         });
 

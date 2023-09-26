@@ -115,7 +115,7 @@
                 </tr>
             </draggable>
         </table>
-        <MountingPortal v-if="withExport" mountTo="#export-widget" name="sidebar-export">
+        <MountingPortal v-if="showExport" mountTo="#export-widget" name="sidebar-export">
             <tree-export-widget v-if="courses.length > 0" :title="$gettext('Download des Ergebnisses')" :url="exportUrl()"
                                 :export-data="courses"></tree-export-widget>
         </MountingPortal>
@@ -216,6 +216,11 @@ export default {
             subLevelsCourses: 0,
             thisLevelCourses: 0,
             showingAllCourses: false
+        }
+    },
+    computed: {
+        showExport() {
+            return this.withExport && document.getElementById('export-widget');
         }
     },
     methods: {

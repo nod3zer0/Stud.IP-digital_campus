@@ -5,7 +5,7 @@
                 <ul class="needles">
                     <li>
                         <div class="input-group files-search">
-                            <input type="text" id="searchterm" name="searchterm" v-model="searchterm"
+                            <input type="text" id="searchterm" name="searchterm" v-model.trim="searchterm"
                                    :placeholder="$gettext('Veranstaltung suchen')"
                                    :aria-label="$gettext('Veranstaltung suchen')">
                             <a v-if="isActive" @click.prevent="cancelSearch" class="reset-search">
@@ -13,7 +13,10 @@
                             </a>
                             <button type="submit" class="submit-search" :title="$gettext('Suchen')"
                                     @click.prevent="doSearch">
-                                <studip-icon shape="search" :size="20"></studip-icon>
+                                <studip-icon shape="search"
+                                             :role="maySearch ? 'clickable' : 'inactive'"
+                                             :size="20"
+                                ></studip-icon>
                             </button>
                         </div>
                     </li>
@@ -33,17 +36,34 @@ export default {
         StudipIcon,
         SidebarWidget
     },
+    props: {
+        minLength: {
+            type: Number,
+            default: 0,
+        }
+    },
     data() {
         return {
             searchterm: '',
             isActive: false
         };
     },
+    computed: {
+        maySearch() {
+            return this.searchterm.length >= this.minLength;
+        }
+    },
     methods: {
         doSearch() {
+            if (!this.maySearch) {
+                return;
+            }
+
             if (this.searchterm !== '') {
                 this.isActive = true;
                 STUDIP.eventBus.emit('do-search', this.searchterm);
+            } else {
+                this.cancelSearch();
             }
         },
         cancelSearch() {
