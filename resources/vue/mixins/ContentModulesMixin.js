@@ -19,6 +19,9 @@ export default {
         activeModules() {
             return this.sortedModules.filter(module => module.active);
         },
+        inactiveModules() {
+            return this.sortedModules.filter(module => !module.active);
+        },
         sortedModules: {
             get() {
                 return Object.values(this.modules)
@@ -89,6 +92,7 @@ export default {
             });
         },
         toggleModuleActivation(module) {
+            module.pulse = true;
             this.setModuleActive({
                 moduleId: module.id,
                 active: !module.active,
@@ -96,6 +100,7 @@ export default {
                 if (output.tabs) {
                     $('.tabs_wrapper').replaceWith(output.tabs);
                 }
+                module.pulse = false;
             });
         },
         toggleModuleVisibility(module) {
@@ -115,11 +120,17 @@ export default {
             return STUDIP.URLHelper.getURL(`dispatch.php/course/contentmodules/info/${module.id}`);
         },
         getModuleCSSClasses(module, active= null) {
+            let classes = [];
+            classes.push(module.pulse ? 'pulse' : '');
+
             if (!(active ?? module.active)) {
-                return 'inactive';
+                classes.push('inactive');
+            } else {
+                classes.push(module.visibility === 'tutor' ? 'visibility-invisible' : 'visibility-visible');
             }
 
-            return module.visibility === 'tutor' ? 'visibility-invisible' : 'visibility-visible';
+
+            return classes.join(' ');
         },
     },
 };
