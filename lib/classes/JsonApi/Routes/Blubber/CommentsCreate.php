@@ -54,9 +54,14 @@ class CommentsCreate extends JsonApiController
 
     protected function validateResourceDocument($json, $id = null)
     {
-        if (empty(self::arrayGet($json, 'data.attributes.content'))) {
+        if (!self::arrayHas($json, 'data.attributes.content')) {
+            return 'No comment provided';
+        }
+
+        if (mb_strlen(trim(self::arrayGet($json, 'data.attributes.content'))) === 0) {
             return 'Comment should not be empty.';
         }
+
         if (!$id && !$this->getThreadFromJson($json)) {
             return 'Invalid `block` relationship.';
         }
