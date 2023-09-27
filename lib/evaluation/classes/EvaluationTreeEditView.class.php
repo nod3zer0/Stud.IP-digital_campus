@@ -489,18 +489,6 @@ class EvaluationTreeEditView
         $path = "<a name=\"anchor\">&nbsp;</a>\n"
             . _("Sie sind hier:")
             . "&nbsp;";
-        if (0 && $this->startItemID != ROOT_ITEM) {
-
-
-            $path .= "<a class=\"tree\" href=\""
-                . URLHelper::getLink($this->getSelf("itemID=root"))
-                . "\">"
-#       . Icon::create('arr_1right', 'attention')->asImg()
-#       . "width=\"10\" hight=\"20\">"
-#       . "&nbsp;"
-                . _("Evaluation")
-                . "</a>";
-        }
         $path .= "<a class=\"tree\" href=\""
             . URLHelper::getLink($this->getSelf("itemID=" . ROOT_BLOCK, false))
             . "\">"
