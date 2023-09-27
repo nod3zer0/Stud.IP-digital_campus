@@ -57,6 +57,9 @@ $border-width: 4px;
     width: $helpbar-width;
     z-index: 1000;
 
+    overflow: auto;
+    max-height: calc(100vh - 200px);
+
     &::before {
         border-bottom: 2px solid var(--base-color-80);
         border-left: $border-width solid transparent;
