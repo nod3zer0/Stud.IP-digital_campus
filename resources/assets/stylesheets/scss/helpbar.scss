@@ -42,6 +42,7 @@ $border-width: 4px;
     > .helpbar-toggler {
         float: right;
         margin-top: 2px;
+        margin-right: 5px;
     }
 }
 
@@ -74,8 +75,8 @@ $border-width: 4px;
     }
 
     .helpbar-toggler {
-        margin-top: -7px;
-        margin-right: -6px;
+        margin-top: -5px;
+        margin-right: -1px;
     }
 
     .helpbar-widgets {
@@ -99,7 +100,7 @@ $border-width: 4px;
         > li {
             border-top: 1px solid var(--content-color);
             padding: 3px 0;
-            margin: 0 .25em;
+            margin: .4em .25em;
         }
     }
 
