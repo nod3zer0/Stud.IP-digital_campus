@@ -177,10 +177,10 @@ class StructuralElement extends \SimpleORMap implements \PrivacyObject
     {
         if (is_null($image)) {
             $this->image_id = null;
-        } elseif (is_a($image, \FileRef)) {
+        } elseif (is_a($image, \FileRef::class)) {
             $this->image_id = $image->getId();
             $this->image_type = \FileRef::class;
-        } elseif (is_a($image, \StockImage)) {
+        } elseif (is_a($image, \StockImage::class)) {
             $this->image_id = $image->getId();
             $this->image_type = \StockImage::class;
         } else {
@@ -1167,6 +1167,6 @@ SQL;
         if ($structuralElements) {
             $storage->addTabularData(_('Courseware Seiten'), 'cw_structural_elements', $structuralElements);
         }
-        
+
     }
 }

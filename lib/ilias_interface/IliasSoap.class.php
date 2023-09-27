@@ -377,18 +377,9 @@ class IliasSoap extends StudipSoapClient
          if ($user_id != "")
             $param["user_id"] = $user_id;
         $result = $this->call('searchObjects', $param);
-        if ($result != false)
+        if ($result)
         {
-            //$objects = $this->parseXML($result);
-            $objects = $this->parseIliasObject($result);
-//            var_dump($objects);
-            return $objects;
-            if (count(objects)){
-                foreach($all_objects as $one_object){
-                    $ret[$one_object['ref_id']] = $one_object;
-                }
-                return $ret;
-            }
+            return $this->parseIliasObject($result);
         }
         return false;
 
