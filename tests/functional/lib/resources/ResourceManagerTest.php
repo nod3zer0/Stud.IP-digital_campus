@@ -31,7 +31,7 @@ class ResourceManagerTest extends \Codeception\Test\Unit
         \DBManager::getInstance()->setConnection('studip', $this->db_handle);
 
         // Workaround old-style Stud.IP-API using $GLOBALS['user']
-        $this->oldUser = $GLOBALS['user'];
+        $this->oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['user'] = new \Seminar_User(
             \User::findByUsername('root@studip')
         );

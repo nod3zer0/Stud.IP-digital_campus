@@ -52,11 +52,11 @@ class ResourceAssignmentTest extends \Codeception\Test\Unit
         \Config::get()->setValue('LOG_ENABLE', false);
 
         // Workaround old-style Stud.IP-API using $GLOBALS['user']
-        $this->oldUser = $GLOBALS['user'];
+        $this->oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['user'] = new \Seminar_User(
             \User::findByUsername('root@studip')
         );
-        $this->oldPerm = $GLOBALS['perm'];
+        $this->oldPerm = $GLOBALS['perm'] ?? null;
         $GLOBALS['perm'] = new \Seminar_Perm();
 
         //As a final step we create the SORM objects for our test cases:

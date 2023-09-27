@@ -194,7 +194,7 @@ function setTempLanguage ($uid = FALSE, $temp_language = "") {
 */
 function restoreLanguage() {
     global $_language_domain;
-    setLocaleEnv($_SESSION['_language'] ?: Config::get()->DEFAULT_LANGUAGE, $_language_domain);
+    setLocaleEnv($_SESSION['_language'] ?? Config::get()->DEFAULT_LANGUAGE, $_language_domain);
 }
 
 /**

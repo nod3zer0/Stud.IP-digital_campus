@@ -2,9 +2,9 @@
 in der Raumverwaltung erstellt.
 
 
-<? if ($requested_room): ?>
+<? if (!empty($requested_room)): ?>
 Angefragter Raum: <?= $requested_room ?>
-<? elseif ($requested_resource): ?>
+<? elseif (!empty($requested_resource)): ?>
 Angefragte Ressource: <?= $requested_resource ?>
 <? endif ?>
 

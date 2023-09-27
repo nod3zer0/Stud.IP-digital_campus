@@ -1,9 +1,21 @@
 <?php
 
+global $STUDIP_BASE_PATH, $ABSOLUTE_URI_STUDIP, $CACHING_ENABLE, $CACHING_FILECACHE_PATH, $SYMBOL_SHORT, $TMP_PATH, $UPLOAD_PATH, $ASSETS_URL;
+
+// common set-up, usually done by lib/bootstraph.php and
+// config/config_local.inc.php when run on web server
+if (!isset($STUDIP_BASE_PATH)) {
+    $STUDIP_BASE_PATH = dirname(__DIR__, 2);
+    $ABSOLUTE_PATH_STUDIP = $STUDIP_BASE_PATH.'/public/';
+    $UPLOAD_PATH = $STUDIP_BASE_PATH.'/data/upload_doc';
+    $TMP_PATH = $TMP_PATH ?: '/tmp';
+    $ASSETS_URL = '';
+}
+
 // set include path
 $inc_path = ini_get('include_path');
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/../..';
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/../../config';
+$inc_path .= PATH_SEPARATOR . __DIR__ . '/../..';
+$inc_path .= PATH_SEPARATOR . __DIR__ . '/../../config';
 ini_set('include_path', $inc_path);
 
 require 'lib/classes/StudipAutoloader.php';
@@ -37,7 +49,7 @@ $added_configs = [];
 StudipFileloader::load(
     'config_defaults.inc.php config_local.inc.php',
     $added_configs,
-    compact('STUDIP_BASE_PATH', 'ABSOLUTE_URI_STUDIP', 'ASSETS_URL', 'CANONICAL_RELATIVE_PATH_STUDIP'),
+    compact('STUDIP_BASE_PATH', 'ABSOLUTE_URI_STUDIP', 'ASSETS_URL'),
     true
 );
 foreach($added_configs as $key => $value) {

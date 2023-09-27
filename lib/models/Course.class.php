@@ -880,7 +880,7 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
             $this->setEndSemester($this->duration_time == -1 ? null : Semester::findByTimestamp($this->start_time + $this->duration_time));
         }
         if ($this->isOpenEnded()) {
-            $this->start_time = $this->start_time ?: Semester::findCurrent()->beginn;
+            $this->start_time = $this->start_time ?: Semester::findCurrent()->beginn ?? time();
             $this->duration_time = -1;
         } else {
             $this->start_time = $this->getStartSemester()->beginn;
