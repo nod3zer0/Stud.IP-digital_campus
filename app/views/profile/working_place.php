@@ -17,7 +17,7 @@ $fields = [
             </a>
 
         <? foreach ($fields as $key => $label): ?>
-            <? if ($institute[$key]): ?>
+            <? if (trim($institute[$key])): ?>
                 <br>
                 <strong><?= htmlReady($label) ?>:</strong>
                 <?= htmlReady($institute[$key]) ?>
