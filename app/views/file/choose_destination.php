@@ -33,7 +33,8 @@ $options = array_filter([
                 <?= Icon::create('folder-parent', Icon::ROLE_CLICKABLE)->asInput(50, ['formaction' => $controller->action_url('choose_folder/' . $parent_folder->getId()), 'to_plugin' => $options['from_plugin'] ?? null]) ?>
                 <button
                     class="undecorated"
-                    formaction="<?= $controller->action_link('choose_folder/' . $parent_folder->getId()) ?>" <? if ($options['from_plugin']): ?> name="to_plugin" value="<?= htmlReady($options['from_plugin'] ?? null) ?>"<? endif; ?>>
+                    formaction="<?= $controller->action_link('choose_folder/' . $parent_folder->getId()) ?>" <? if ($options['from_plugin']): ?> name="to_plugin" value="<?= htmlReady($options['from_plugin'] ?? null) ?>"<? endif; ?>
+                    data-dialog="size=medium">
                     <?= _('Aktueller Ordner') ?>
                 </button>
             </div>
@@ -42,8 +43,7 @@ $options = array_filter([
                 <?= Icon::create('files')->asInput(50, ['formaction' => $controller->action_url('choose_folder/' . Folder::findTopFolder($GLOBALS['user']->id)->getId())]) ?>
                 <button
                     class="undecorated"
-                    formaction="<?= $controller->action_link('choose_folder/' . Folder::findTopFolder($GLOBALS['user']->id)->getId()) ?>">
-
+                    formaction="<?= $controller->action_link('choose_folder/' . Folder::findTopFolder($GLOBALS['user']->id)->getId()) ?>" data-dialog="size=medium">
                     <?= _('Persönlicher Dateibereich') ?>
                 </button>
             </div>
@@ -51,7 +51,7 @@ $options = array_filter([
             <div class="clickable">
                 <?= Icon::create('seminar')->asinput(50, ['formaction' => $controller->action_url('choose_folder_from_course')]) ?>
                 <button class="undecorated"
-                        formaction="<?= $controller->action_link('choose_folder_from_course') ?>">
+                        formaction="<?= $controller->action_link('choose_folder_from_course') ?>" data-dialog="size=medium">
                     <?= _('Meine Veranstaltungen') ?>
                 </button>
             </div>
@@ -59,7 +59,7 @@ $options = array_filter([
             <div class="clickable">
                 <?= Icon::create('institute')->asInput(50, ['formaction' => $controller->action_url('choose_folder_from_institute')]) ?>
                 <button class="undecorated"
-                        formaction="<?= $controller->action_link('choose_folder_from_institute') ?>">
+                        formaction="<?= $controller->action_link('choose_folder_from_institute') ?>" data-dialog="size=medium">
                     <?= _('Meine Einrichtungen') ?>
                 </button>
             </div>

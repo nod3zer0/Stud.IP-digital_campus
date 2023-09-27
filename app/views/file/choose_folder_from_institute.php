@@ -22,19 +22,19 @@ $options = array_filter([
     ?>
 <? else : ?>
 <form action="#" method="post" data-dialog>
-    <table class="default">
+    <table class="default sortable-table">
         <thead>
             <tr>
                 <th><?= _('Bild') ?></th>
-                <th><?= _('Name') ?></th>
+                <th data-sort="text"><?= _('Name') ?></th>
             </tr>
         </thead>
         <tbody>
         <? foreach (Institute::getMyInstitutes($GLOBALS['user']->id) as $institut) : ?>
             <tr>
-                <td>
+                <td data-sort-value="<?= htmlReady($institut['Name']) ?>">
                     <input type="image" class="undecorated"
-                           style="width: 50px; height: 50px;"
+                           style="width: 20px; height: 20px;"
                            formaction="<?= $controller->link_for('file/choose_folder_from_institute') ?>"
                            name="Institut_id"
                            value="<?= htmlReady($institut['Institut_id']) ?>"
@@ -43,7 +43,10 @@ $options = array_filter([
                                 ) ?>">
                 </td>
                 <td>
-                    <button formaction="<?= $controller->link_for('file/choose_folder_from_institute') ?>" name="Institut_id" value="<?= htmlReady($institut['Institut_id']) ?>" class="undecorated">
+                    <button formaction="<?= $controller->link_for('file/choose_folder_from_institute') ?>"
+                            name="Institut_id"
+                            value="<?= htmlReady($institut['Institut_id']) ?>"
+                            class="undecorated">
                         <?= htmlReady($institut['Name']) ?>
                     </button>
                 </td>

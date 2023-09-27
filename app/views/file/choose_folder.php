@@ -203,13 +203,13 @@ switch ($top_folder->range_type) {
     <!-- neu -->
     <?= Studip\Button::create(_('Zurück'), [
         'formaction'  => $controller->action_url('choose_folder_from_course'),
-        'data-dialog' => '',
+        'data-dialog' => 'size=medium',
     ]) ?>
 <? elseif($top_folder->range_type === 'institute'): ?>
     <!-- neu -->
     <?= Studip\Button::create(_('Zurück'), [
         'formaction'  => $controller->action_url('choose_folder_from_institute'),
-        'data-dialog' => '',
+        'data-dialog' => 'size=medium',
     ]) ?>
 <? endif; ?>
 </footer>

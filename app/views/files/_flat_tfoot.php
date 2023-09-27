@@ -33,7 +33,7 @@ if ($table_id) {
                 <? endif ?>
                 <?= Studip\Button::create(_('Kopieren'), 'copy', [
                     'formaction'  => $controller->url_for('file/choose_destination/copy/bulk'),
-                    'data-dialog' => ''
+                    'data-dialog' => 'size=auto'
                 ]) ?>
                 <? if ($writable): ?>
                     <?= Studip\Button::create(_('Löschen'), 'delete', [

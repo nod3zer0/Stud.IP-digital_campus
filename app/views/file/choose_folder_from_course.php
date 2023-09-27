@@ -29,12 +29,12 @@ jQuery(function ($) {
         ->render() ?>
 <? else : ?>
 <form action="#" method="post" data-dialog>
-    <table class="default">
+    <table class="default sortable-table">
         <thead>
             <tr>
                 <th><?= _('Bild') ?></th>
-                <th><?= _('Name') ?></th>
-                <th><?= _('Semester') ?></th>
+                <th data-sort="text"><?= _('Name') ?></th>
+                <th data-sort="htmldata"><?= _('Semester') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -42,17 +42,23 @@ jQuery(function ($) {
             <tr>
                 <td>
                     <!-- neu -->
-                    <button formaction="<?= $controller->link_for('file/choose_folder_from_course') ?>" name="course_id" value="<?= htmlReady($course->id) ?>" class="undecorated">
-                        <?= CourseAvatar::getAvatar($course->id)->getImageTag(Avatar::MEDIUM, ['style' => 'width: 50px; height: 50px;']) ?>
+                    <button formaction="<?= $controller->link_for('file/choose_folder_from_course') ?>"
+                            name="course_id"
+                            value="<?= htmlReady($course->id) ?>"
+                            class="undecorated">
+                        <?= CourseAvatar::getAvatar($course->id)->getImageTag(Avatar::MEDIUM, ['style' => 'width: 20px; height: 20px;']) ?>
                     </button>
                 </td>
-                <td>
+                <td data-sort-value="<?= Semester::find($course->id)->beginn ?>">
                     <!-- neu -->
-                    <button formaction="<?= $controller->link_for('file/choose_folder_from_course') ?>" name="course_id" value="<?= htmlReady($course->id) ?>" class="undecorated">
+                    <button formaction="<?= $controller->link_for('file/choose_folder_from_course') ?>"
+                            name="course_id"
+                            value="<?= htmlReady($course->id) ?>"
+                            class="undecorated">
                         <?= htmlReady($course->getFullname()) ?>
                     </button>
                 </td>
-                <td>
+                <td data-sort-value="<?= htmlReady($course->getTextualSemester()) ?>">
                     <?= htmlReady($course->getTextualSemester()) ?>
                 </td>
             </tr>
