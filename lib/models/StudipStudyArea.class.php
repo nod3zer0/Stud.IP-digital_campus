@@ -30,6 +30,8 @@
 
 class StudipStudyArea extends SimpleORMap implements StudipTreeNode
 {
+    use StudipTreeNodeCachableTrait;
+
     /**
      * This constant represents the key of the root area.
      */
@@ -53,6 +55,9 @@ class StudipStudyArea extends SimpleORMap implements StudipTreeNode
             'class_name' => StudipStudyArea::class,
             'foreign_key' => 'parent_id',
         ];
+
+        $config = self::registerCachableCallbacks($config);
+
         parent::configure($config);
     }
 
@@ -64,7 +69,7 @@ class StudipStudyArea extends SimpleORMap implements StudipTreeNode
     /**
      * Returns the children of the study area with the specified ID.
      */
-    static function findByParent($parent_id)
+    public static function findByParent($parent_id)
     {
         return self::findByparent_id($parent_id, "ORDER BY priority,name");
     }
@@ -599,17 +604,6 @@ class StudipStudyArea extends SimpleORMap implements StudipTreeNode
         }
 
         return $path;
-    }
-
-    private function getDescendantIds()
-    {
-        $ids = [];
-
-        foreach ($this->_children as $child) {
-            $ids = array_merge($ids, [$child->id], $child->getDescendantIds());
-        }
-
-        return $ids;
     }
 
     /**

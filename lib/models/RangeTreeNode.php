@@ -27,6 +27,8 @@
  */
 class RangeTreeNode extends SimpleORMap implements StudipTreeNode
 {
+    use StudipTreeNodeCachableTrait;
+
     protected static function configure($config = [])
     {
         $config['db_table'] = 'range_tree';
@@ -41,11 +43,12 @@ class RangeTreeNode extends SimpleORMap implements StudipTreeNode
         ];
         $config['has_many']['children'] = [
             'class_name'  => RangeTreeNode::class,
-            'foreign_key' => 'item_id',
             'assoc_foreign_key' => 'parent_id',
             'order_by' => 'ORDER BY priority, name',
-            'on_delete' => 'delete'
+            'on_delete' => 'delete',
         ];
+
+        $config = self::registerCachableCallbacks($config);
 
         parent::configure($config);
     }
@@ -238,17 +241,6 @@ class RangeTreeNode extends SimpleORMap implements StudipTreeNode
         }
 
         return DBManager::get()->fetchAll($query, $parameters, 'Course::buildExisting');
-    }
-
-    public function getDescendantIds()
-    {
-        $ids = [];
-
-        foreach ($this->children as $child) {
-            $ids = array_merge($ids, [$child->id], $child->getDescendantIds());
-        }
-
-        return $ids;
     }
 
     public function getAncestors(): array
