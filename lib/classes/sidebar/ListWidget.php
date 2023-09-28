@@ -38,6 +38,16 @@ class ListWidget extends SidebarWidget
     }
 
     /**
+     * Adds a separator to the widget
+     *
+     * @param array  $attributes  Optional additional attributes
+     */
+    public function addSeparator($attributes = [])
+    {
+        $this->addElement(new SeparatorElement($attributes));
+    }
+
+    /**
      * 
      */
     public function render($variables = [])

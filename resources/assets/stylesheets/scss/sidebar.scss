@@ -124,6 +124,12 @@ ul.widget-list {
         word-wrap: break-word;
     }
 
+    hr {
+        border-style: none;
+        border-top: thin solid var(--content-color-40);
+        margin: 4px 0px 4px -20px;
+    }
+
     button {
         @extend .as-link;
         text-align: left;

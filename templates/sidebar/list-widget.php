@@ -2,6 +2,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <ul class="<?= implode(' ', $css_classes) ?>" aria-label="<?= htmlReady($title) ?>">
     <? foreach ($elements as $index => $element): ?>
+        <? $icon = null ?>
         <? if ($element instanceof LinkElement): ?>
             <? $icon = $element->icon ?? null ?>
             <? if ($icon && $element->isDisabled()): ?>
