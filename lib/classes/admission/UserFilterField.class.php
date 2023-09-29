@@ -59,6 +59,9 @@ class UserFilterField
 
     public static $isParameterized = false;
 
+    protected static $cached_valid_values;
+    protected static $available_filter_fields;
+
     /**
      * Database tables and fields to get valid values and concrete user values
      * from.
@@ -92,12 +95,17 @@ class UserFilterField
             '!=' => _('ist nicht')
         ];
         if ($this->valuesDbNameField) {
-            // Get all available values from database.
-            $stmt = DBManager::get()->query(
-                "SELECT DISTINCT `".$this->valuesDbIdField."`, `".$this->valuesDbNameField."` ".
-                "FROM `".$this->valuesDbTable."` ORDER BY `".$this->valuesDbNameField."` ASC");
-            while ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $this->validValues[$current[$this->valuesDbIdField]] = $current[$this->valuesDbNameField];
+            if (isset(self::$cached_valid_values[static::class])) {
+                $this->validValues = self::$cached_valid_values[static::class];
+            } else {
+                // Get all available values from database.
+                $stmt = DBManager::get()->query(
+                        "SELECT DISTINCT `" . $this->valuesDbIdField . "`, `" . $this->valuesDbNameField . "` " .
+                        "FROM `" . $this->valuesDbTable . "` ORDER BY `" . $this->valuesDbNameField . "` ASC");
+                while ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $this->validValues[$current[$this->valuesDbIdField]] = $current[$this->valuesDbNameField];
+                }
+                self::$cached_valid_values[static::class] = $this->validValues;
             }
         }
         if ($fieldId) {
@@ -186,6 +194,7 @@ class UserFilterField
      */
     public static function getAvailableFilterFields()
     {
+        if (self::$available_filter_fields === null) {
         $fields = [];
         // Load all PHP class files found in the condition field folder.
         foreach (glob(realpath(dirname(__FILE__).'/userfilter').'/*.class.php') as $file) {
@@ -204,8 +213,11 @@ class UserFilterField
             }
         }
         asort($fields);
-        return $fields;
+            self::$available_filter_fields = $fields;
+        }
+        return self::$available_filter_fields;
     }
+
 
     /**
      * Which compare operator is set?

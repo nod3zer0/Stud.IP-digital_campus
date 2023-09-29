@@ -19,9 +19,6 @@ require_once realpath(__DIR__ . '/..') . '/UserFilterField.class.php';
 class SubjectConditionAny extends UserFilterField
 {
     // --- ATTRIBUTES ---
-    public $valuesDbTable = 'fach';
-    public $valuesDbIdField = 'fach_id';
-    public $valuesDbNameField = 'name';
     public $userDataDbTable = 'user_studiengang';
     public $userDataDbField = 'fach_id';
 
