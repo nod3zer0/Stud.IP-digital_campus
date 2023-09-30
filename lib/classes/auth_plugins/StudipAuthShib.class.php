@@ -14,7 +14,7 @@
 
 class StudipAuthShib extends StudipAuthSSO
 {
-    public $env_remote_user = 'HTTP_REMOTE_USER';
+    public $env_remote_user = 'REMOTE_USER';
     public $local_domain;
     public $session_initiator;
     public $validate_url;
@@ -60,29 +60,6 @@ class StudipAuthShib extends StudipAuthSSO
     }
 
     /**
-     * Return the current URL (including parameters).
-     */
-    function getURL()
-    {
-        $url = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
-        $url .= '://';
-
-        if (empty($_SERVER['SERVER_NAME'])) {
-            $url .= $_SERVER['HTTP_HOST'];
-        } else {
-            $url .= $_SERVER['SERVER_NAME'];
-        }
-
-        if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
-            $_SERVER['HTTPS'] != 'on' && $_SERVER['SERVER_PORT'] != 80) {
-            $url .= ':' . $_SERVER['SERVER_PORT'];
-        }
-
-        $url .= $_SERVER['REQUEST_URI'];
-        return $url;
-    }
-
-    /**
      * Validate the username passed to the auth plugin.
      * Note: This triggers authentication if needed.
      */
@@ -93,24 +70,20 @@ class StudipAuthShib extends StudipAuthSSO
             return $this->getUser();
         }
 
-        $remote_user = $_SERVER[$this->env_remote_user] ?? $_SERVER['REMOTE_USER'] ?? '';
+        $remote_user = $_SERVER[$this->env_remote_user] ?? null;
 
         if (empty($remote_user) || isset($this->validate_url)) {
             if (Request::get('sso') === $this->plugin_name) {
                 // force Shibboleth authentication (lazy session)
                 $shib_url = URLHelper::getURL(
                     $this->session_initiator,
-                    ['target' => $this->getURL()],
+                    ['target' => Request::url()],
                     true
                 );
 
                 // break redirection loop in case of misconfiguration
-                if (
-                    isset($_SERVER['HTTP_REFERER'])
-                    && !str_contains($_SERVER['HTTP_REFERER'], 'target=')
-                ) {
+                if (strpos($_SERVER['HTTP_REFERER'] ?? '', 'target=') === false) {
                     header('Location: ' . $shib_url);
-                    echo '<html></html>';
                     exit();
                 }
             }
